@@ -25,7 +25,7 @@ export const BADGE_SIZE_BY_LABEL = Object.freeze({
   1: [54, 42], 2: [54, 42], 3: [54, 42], 4: [54, 42], 5: [54, 42], 6: [54, 42], 7: [54, 42], 8: [54, 42], 9: [54, 42],
   10: [57, 42], 11: [54, 42], 12: [55, 42], 13: [55, 42], 14: [56, 42], 15: [55, 42], 16: [55, 42], 17: [54, 42], 18: [55, 42]
 });
-const UNITS = { plateOffsetPx: 'px (bbox centre to dark-plate centre)', bboxPx: 'px', confidence: 'fraction (reader confidence)', counts: 'count (badges)' };
+const UNITS = { plateOffsetPx: 'px (bbox centre to dark-plate centre)', expectedSize: 'px [width, height]', confidence: 'fraction (reader confidence)', badges: 'count (badges)', merged: 'count (badges)' };
 
 export function observeBadges(badges) {
   const rows = badges.map((b) => {
