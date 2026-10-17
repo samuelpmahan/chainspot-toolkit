@@ -18,13 +18,19 @@
  *   testimonyTeePoints(annotation, cropReceipt)
  *                         Sam's annotated tee points converted from the
  *                         annotation (source) frame to the canonical frame by
- *                         the S0 crop receipt (y - upperRowsRemoved)
+ *                         the S0 crop receipt (y - upperRowsRemoved); the
+ *                         runner's fn.testimony.teePoints Calculation produces
+ *                         the Part testimony.source.teePoints with it, from
+ *                         the Parts testimony.source.annotation and
+ *                         tk.source.cropReceipt
  *   judgeMembers(members, points, { padPx })
  *                         per member: agrees (an annotated tee point inside the
  *                         member's frame bbox padded by padPx) or disagrees;
  *                         per point: covered or uncovered (recall info only)
  *   compareTeeFamilies({ contract, crop })
- *                         the comparableForkJoin comparator: geometric join,
+ *                         the comparableForkJoin comparator (reads each
+ *                         branch store's slot Part and px.image.cropped by
+ *                         address): geometric join,
  *                         matched / only-in-<branch> lists with each branch's
  *                         judge verdicts, per-branch precision, a ledger frame
  *                         and one crop contact-sheet frame per only-in-one
@@ -71,6 +77,23 @@ export function testimonyTeePoints(annotation, cropReceipt) {
     .sort((a, b) => a.hole - b.hole);
 }
 
+/**
+ * fn.testimony.teePoints, browser-safe: the Part testimony.source.teePoints
+ * from the Parts testimony.source.annotation ({ path, bytes, ... }, Sam's
+ * annotation file) and tk.source.cropReceipt. Registered by the runner
+ * (ports/early/earlyStore.mjs) and by tests, never re-implemented.
+ */
+export const TEE_POINTS_CALCULATION = Object.freeze({
+  inParts: ['testimony.source.annotation', 'tk.source.cropReceipt'],
+  outParts: ['testimony.source.teePoints'],
+  note: 'annotated tee points, source frame -> canonical frame by the crop receipt',
+  calculate: (io) => {
+    const annotation = JSON.parse(new TextDecoder().decode(io.in('testimony.source.annotation').bytes));
+    const crop = io.in('tk.source.cropReceipt');
+    return { 'testimony.source.teePoints': { frame: 'canonical', rule: `canonical y = source y - ${crop.upperRowsRemoved} (S0 cropReceipt.upperRowsRemoved)`, points: testimonyTeePoints(annotation, crop) } };
+  }
+});
+
 export const insidePadded = ([x, y], [bx, by, bw, bh], pad) => x >= bx - pad && x <= bx + bw + pad && y >= by - pad && y <= by + bh + pad;
 
 export function judgeMembers(members, points, { padPx = TEE_FAMILY_SLOT.judgePadPx } = {}) {
@@ -105,7 +128,7 @@ export function compareTeeFamilies({ contract, crop, part = TEE_FAMILY_SLOT.part
     const view = {};
     for (const n of names) {
       const b = branches[n];
-      const value = b.board?.has?.(part) ? b.board.get(part) : null;
+      const value = b.store?.has?.(part) ? b.store.get(part) : null;
       const precision = b.records?.[TEE_FAMILY_SLOT.precision];
       view[n] = {
         error: b.error, members: value?.members ?? [],
@@ -158,7 +181,7 @@ export function compareTeeFamilies({ contract, crop, part = TEE_FAMILY_SLOT.part
     });
 
     // Frames 2..: one crop contact sheet per only-in-one member.
-    const raster = names.map((n) => branches[n].board).find((b) => b?.has?.('px.image.cropped'))?.get('px.image.cropped');
+    const raster = names.map((n) => branches[n].store).find((b) => b?.has?.('px.image.cropped'))?.get('px.image.cropped');
     for (const n of names) for (const r of only[n]) {
       const m = view[n].members[r[n].index];
       const sheet = raster ? crop({ rgba: raster.rgba, width: raster.widthPx, height: raster.heightPx }, {

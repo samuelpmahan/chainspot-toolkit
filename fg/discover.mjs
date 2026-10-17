@@ -12,8 +12,13 @@
  *                               below the root are skipped, so scanning fg/
  *                               never picks up test fixtures.
  *   <root>/<slot>/<name>.mjs    default-exports one implementation (a
- *                               function) of Calculation slot <slot>, e.g.
- *                               impl/fn.toy.findFamily/bySize.mjs.
+ *                               function parts => value of the slot's Part)
+ *                               of Calculation slot <slot>, e.g.
+ *                               impl/fn.toy.findFamily/bySize.mjs, with
+ *                               named exports `reads` (the Part addresses it
+ *                               may get) and `calls` (the fn.* Calculations
+ *                               it may call); loaded as { calculate, reads,
+ *                               calls }.
  *   <stagesDir>/*.json          stage declarations; their "guarantees"
  *                               entries are what crossCheck compares the
  *                               discovered FGs against.
@@ -73,7 +78,10 @@ export async function discoverImplementations(root, slot) {
   for (const name of readdirSync(dir).filter((n) => n.endsWith('.mjs') && !n.endsWith('.test.mjs')).sort()) {
     const mod = await import(pathToFileURL(join(dir, name)).href);
     if (typeof mod.default !== 'function') throw new Error(`fg discover: ${join(dir, name)} does not default-export an implementation function`);
-    impls[basename(name, '.mjs')] = mod.default;
+    for (const key of ['reads', 'calls'])
+      if (mod[key] !== undefined && !(Array.isArray(mod[key]) && mod[key].every((a) => typeof a === 'string' && a)))
+        throw new Error(`fg discover: ${join(dir, name)} export ${key} must be a list of addresses`);
+    impls[basename(name, '.mjs')] = Object.freeze({ calculate: mod.default, reads: Object.freeze([...(mod.reads ?? [])]), calls: Object.freeze([...(mod.calls ?? [])]) });
   }
   return impls;
 }

@@ -14,12 +14,15 @@
  *       automatically. Duplicate ids, a missing required id, and cycles
  *       throw: those are wiring errors, not guarantee failures.
  *
- *   runGuarantees({ guarantees, board, sink, only?, lanes?, branch?, env?, hash? })
+ *   runGuarantees({ guarantees, store | board, sink, only?, lanes?, branch?, hash? })
  *       -> { records, frames, outputs, timings }
- *       records: { [id]: record } in run order; frames: every FG's frames
- *       concatenated in run order (the flipbook stream); outputs: { [id]:
- *       { [address]: value } }, what each FG ctx.publish()ed for the caller
- *       (env and hash pass through to every FG); timings: the
+ *       store: the PartStore every FG reads its declared Parts from and
+ *       calls its declared Calculations through (a plain board is wrapped
+ *       once, so every FG of the run shares one store); records: { [id]:
+ *       record } in run order; frames: every FG's frames concatenated in
+ *       run order (the flipbook stream); outputs: { [id]: { [address]:
+ *       value } }, what each FG ctx.publish()ed for the caller (hash, the
+ *       runtime's artifact hashing, passes through); timings: the
  *       nondeterministic sidecar [{ guarantee, elapsedMs }], never inside
  *       a record. A lane-gated FG whose lane is not enabled, or any FG
  *       requiring a dormant one, gets a dormant record instead of running.
@@ -36,7 +39,7 @@
  *       `requires` mentions that the FG does not require (the prose is the
  *       only place those dependencies are written down today).
  */
-import { dormantRecord, runGuarantee, GuaranteeFailure } from './guarantee.mjs';
+import { asStore, dormantRecord, runGuarantee, GuaranteeFailure } from './guarantee.mjs';
 import { createMemorySink } from './sinks.mjs';
 
 const now = () => globalThis.performance?.now?.() ?? Date.now();
@@ -66,7 +69,8 @@ export function orderGuarantees(fgs, only = null) {
   return order;
 }
 
-export function runGuarantees({ guarantees, board, sink = createMemorySink(), only = null, lanes = [], branch = null, env = {}, hash }) {
+export function runGuarantees({ guarantees, store, board, sink = createMemorySink(), only = null, lanes = [], branch = null, hash }) {
+  const parts = asStore(store ?? board);
   const enabled = new Set(lanes);
   const records = {};
   const outputs = {};
@@ -79,7 +83,7 @@ export function runGuarantees({ guarantees, board, sink = createMemorySink(), on
     const required = Object.fromEntries(fg.requires.map((id) => [id, records[id]]));
     const started = now();
     try {
-      const out = runGuarantee(fg, { board, records: required, sink, branch, env, ...(hash ? { hash } : {}) });
+      const out = runGuarantee(fg, { store: parts, records: required, sink, branch, ...(hash ? { hash } : {}) });
       records[fg.id] = out.record;
       outputs[fg.id] = out.outputs;
       frames.push(...out.frames);

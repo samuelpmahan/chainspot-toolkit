@@ -15,7 +15,8 @@
  *   7. The node file sink round-trips through disk and refuses overwrites.
  *   8. The browser-safe core imports no node:* module.
  *   9. reads (not guards) are presence-checked, so an FG can certify a Part
- *      it derives; ctx.env exposes only the declared env names.
+ *      it derives; an FG reads only its declared Parts and calls only its
+ *      declared, registered Calculations, each failure named; env is gone.
  *  10. ctx.publish hands uncopied, key-order-preserving values to the caller
  *      outside the record (the S1 port's legacy receipt objects).
  *  11. The artifact path option decouples file layout from artifact id
@@ -31,6 +32,7 @@ import { canonicalJson, sha256Hex } from './canon.mjs';
 import { defineGuarantee, GuaranteeFailure, recordJson, runGuarantee } from './guarantee.mjs';
 import { orderGuarantees, runGuarantees } from './registry.mjs';
 import { createMemorySink, scopeSink } from './sinks.mjs';
+import { createPartStore } from './store.mjs';
 import { createFileSink } from './node-sink.mjs';
 import { toyBoard, rect } from './fixtures/board.mjs';
 import blobsFg from './fixtures/fgs/fg.toy.blobs.materialize.fg.mjs';
@@ -39,7 +41,7 @@ import experimentalFg from './fixtures/fgs/lanes/fg.toy.family.experimental.fg.m
 import bySize from './fixtures/impl/fn.toy.findFamily/bySize.mjs';
 
 const guarantees = [familyFg, blobsFg, experimentalFg];
-const boardWithFamily = (options) => { const board = toyBoard(options); bySize(board); return board; };
+const boardWithFamily = (options) => { const board = toyBoard(options); board.set('px.blobs.family', bySize(board)); return board; };
 
 test('pure-JS sha256 matches node:crypto across block boundaries', () => {
   for (const len of [0, 1, 55, 56, 63, 64, 65, 127, 128, 1000]) {
@@ -56,7 +58,7 @@ test('two FGs run in requires order; the second gates against the first record',
   const { records, frames, timings } = runGuarantees({ guarantees, board: boardWithFamily(), sink });
   assert.deepEqual(Object.keys(records), ['fg.toy.blobs.materialize', 'fg.toy.family.materialize', 'fg.toy.family.experimental']);
   const base = records['fg.toy.blobs.materialize'];
-  assert.deepEqual(Object.keys(base), ['guarantee', 'status', 'reason', 'guards', 'reads', 'env', 'requires', 'lane', 'totals', 'checks', 'witnesses', 'artifacts', 'frames', 'published', 'blobIds']);
+  assert.deepEqual(Object.keys(base), ['guarantee', 'status', 'reason', 'guards', 'reads', 'calls', 'requires', 'lane', 'totals', 'checks', 'witnesses', 'artifacts', 'frames', 'published', 'blobIds']);
   assert.equal(base.status, 'held');
   assert.deepEqual(base.totals, { blobCount: 4, pxUnion: 23 });
   assert.deepEqual(base.checks.map((c) => [c.name, c.ok]), [['read:px.blobs', true], ['everyBlobHasPx', true], ['pxInBounds', true]]);
@@ -83,7 +85,7 @@ test('two FGs run in requires order; the second gates against the first record',
 
 test('a failing check raises a named GuaranteeFailure with the failed record and frames', () => {
   const board = toyBoard({ extra: [{ id: 'e', px: [] }] });
-  bySize(board);
+  board.set('px.blobs.family', bySize(board));
   let error;
   try { runGuarantees({ guarantees, board }); } catch (e) { error = e; }
   assert.ok(error instanceof GuaranteeFailure);
@@ -166,7 +168,7 @@ test('node file sink round-trips through disk and refuses to overwrite', () => {
 });
 
 test('the browser-safe core imports no node:* module', () => {
-  for (const file of ['canon.mjs', 'guarantee.mjs', 'registry.mjs', 'forkjoin.mjs', 'sinks.mjs', 'flipbook.mjs']) {
+  for (const file of ['canon.mjs', 'guarantee.mjs', 'registry.mjs', 'forkjoin.mjs', 'sinks.mjs', 'flipbook.mjs', 'store.mjs', 's3/teeFamily.mjs']) {
     const source = readFileSync(new URL(file, import.meta.url), 'utf8');
     assert.ok(!/from\s+['"]node:|import\(\s*['"]node:/.test(source), `${file} imports node:*`);
     for (const [, dep] of source.matchAll(/from\s+'\.\/([\w-]+\.mjs)'/g))
@@ -174,25 +176,44 @@ test('the browser-safe core imports no node:* module', () => {
   }
 });
 
-test('reads, not guards, are presence-checked; env is scoped to the declared names', () => {
-  const board = toyBoard();
-  // certifies a Part it derives itself: px.blobs.count is never on the board
+test('reads, not guards, are presence-checked; reads and calls are the only inputs', () => {
+  const store = createPartStore({ base: toyBoard() });
+  store.register('fn.toy.scale', { calculate: ({ args }) => args.n * 2 });
+  // certifies a Part it derives itself: px.blobs.count is never on the store
   const derives = defineGuarantee({
-    id: 'fg.toy.count.materialize', guards: ['px.blobs.count'], reads: ['px.blobs'], env: ['scale'],
-    run(ctx) {
-      assert.deepEqual(Object.keys(ctx.env), ['scale'], 'undeclared env names are not reachable');
-      return { totals: { count: ctx.board.get('px.blobs').blobs.length * ctx.env.scale } };
-    }
+    id: 'fg.toy.count.materialize', guards: ['px.blobs.count'], reads: ['px.blobs'], calls: ['fn.toy.scale'],
+    run: (ctx) => ({ totals: { count: ctx.call('fn.toy.scale', { n: ctx.get('px.blobs').blobs.length }) } })
   });
-  const { record } = runGuarantee(derives, { board, sink: createMemorySink(), env: { scale: 2, secret: 'x' } });
+  const { record } = runGuarantee(derives, { store, sink: createMemorySink() });
   assert.equal(record.status, 'held');
   assert.deepEqual(record.totals, { count: 8 });
-  assert.deepEqual(record.checks.map((c) => c.name), ['read:px.blobs', 'env:scale']);
-  assert.deepEqual([record.guards, record.reads, record.env], [['px.blobs.count'], ['px.blobs'], ['scale']]);
-  assert.throws(() => runGuarantee(derives, { board, sink: createMemorySink(), env: {} }),
-    (e) => e instanceof GuaranteeFailure && e.failed.includes('env:scale'));
+  assert.deepEqual(record.checks.map((c) => c.name), ['read:px.blobs', 'call:fn.toy.scale']);
+  assert.deepEqual([record.guards, record.reads, record.calls], [['px.blobs.count'], ['px.blobs'], ['fn.toy.scale']]);
   // reads default to guards (the certified Part is the input)
   assert.deepEqual(blobsFg.reads, ['px.blobs']);
+  // env is gone: declaring it is a definition error that names the fix
+  assert.throws(() => defineGuarantee({ id: 'fg.toy.env', guards: ['px.blobs'], env: ['dist'], run: () => ({}) }), /env was removed; declare data as Parts in reads/);
+});
+
+test('an FG reading an undeclared address or calling an unregistered Calculation fails by name', () => {
+  const store = createPartStore({ base: toyBoard() });
+  store.register('fn.toy.registered', { calculate: () => 1 });
+  const sink = createMemorySink();
+  // reads an address it did not declare (even one that IS on the store)
+  const sneaky = defineGuarantee({ id: 'fg.toy.sneaky', guards: ['px.blobs'], run: (ctx) => ({ totals: { n: ctx.get('px.blobs.family') } }) });
+  store.register('fn.toy.family', { outParts: ['px.blobs.family'], calculate: () => ({ 'px.blobs.family': { members: [] } }) });
+  assert.throws(() => runGuarantee(sneaky, { store, sink }), (e) => e instanceof GuaranteeFailure && e.guarantee === 'fg.toy.sneaky'
+    && e.reason === 'read of undeclared address px.blobs.family (declare it in reads)');
+  // calls a registered Calculation it did not declare
+  const undeclaredCall = defineGuarantee({ id: 'fg.toy.undeclaredCall', guards: ['px.blobs'], run: (ctx) => ({ totals: ctx.call('fn.toy.registered') }) });
+  assert.throws(() => runGuarantee(undeclaredCall, { store, sink }), { reason: 'call of undeclared Calculation fn.toy.registered (declare it in calls)' });
+  // declares a Calculation nobody registered: the automatic call: check fails by name, run() never starts
+  const unregistered = defineGuarantee({ id: 'fg.toy.unregistered', guards: ['px.blobs'], calls: ['fn.toy.nowhere'], run: () => assert.fail('must not run') });
+  assert.throws(() => runGuarantee(unregistered, { store, sink }), (e) => e instanceof GuaranteeFailure && e.failed.includes('call:fn.toy.nowhere')
+    && e.record.checks.find((c) => c.name === 'call:fn.toy.nowhere').detail.calculation === 'fn.toy.nowhere');
+  // an undeclared read inside a witness still fails the guarantee by name
+  const inWitness = defineGuarantee({ id: 'fg.toy.inWitness', guards: ['px.blobs'], run: (ctx) => { ctx.witness('w', () => ctx.get('px.secret')); return {}; } });
+  assert.throws(() => runGuarantee(inWitness, { store, sink }), { reason: 'read of undeclared address px.secret (declare it in reads)' });
 });
 
 test('publish hands uncopied values to the caller, outside the record', () => {

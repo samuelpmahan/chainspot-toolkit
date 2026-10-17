@@ -10,7 +10,13 @@
  *
  * The certified Part (badgeGlyphTemplate) exists only on the FG's own
  * branch, so this FG runs a Calculation itself: it reads px.badges from the
- * live board and everything else from the restored S1 snapshot (env).
+ * live board and the compiled template-on plan as the Part
+ * tk.s1.badgeGlyphTemplate.plan (fn.provider.S1.badgeGlyphTemplate.compile),
+ * restores a branch with fn.provider.restore.S1 (inParts
+ * tk.stage.S1.snapshot), executes the op there with
+ * fn.provider.S1.badgeGlyphTemplate.execute and witnesses with
+ * fn.provider.S1.classifyBadgeAgainstTemplates. The restored branch is the
+ * value fn.provider.restore.S1 returns, read directly by this FG.
  * Ported from runEarly.mjs with a byte-identical artifact
  * (artifacts/s1/badgeGlyphTemplate.json) and stage record
  * (stages[S1].glyphTemplateMaterialization, materializations.S1BadgeGlyphTemplate).
@@ -22,47 +28,27 @@ const ID = 'fg.s1.badgeGlyphTemplate.materialize';
 const PART = 'badgeGlyphTemplate';
 const PRODUCED_BY = 'badgeGlyphTemplate (g1.badgeGlyphTemplate)';
 const SEAM = 'classifyBadgeAgainstTemplates(localImage, read, viewportTopPx, DEFAULT_BADGE_GLYPH_TEMPLATE_KNOBS)';
+const PLAN = 'tk.s1.badgeGlyphTemplate.plan';
+const RESTORE = 'fn.provider.restore.S1';
+const EXECUTE = 'fn.provider.S1.badgeGlyphTemplate.execute';
+const CLASSIFY = 'fn.provider.S1.classifyBadgeAgainstTemplates';
 const WITNESS_FIELDS = ['badgeId', 'currentLabel', 'templateLabel', 'templateBestLabel', 'templateScore', 'templateMargin', 'templateAbstention', 'readerConfidence', 'agreement'];
 
 export default defineGuarantee({
   id: ID,
   guards: [PART],
-  reads: ['px.badges'],
-  env: ['dist', 'stageSnapshots', 'restorePxC', 'instrument'],
+  reads: ['px.badges', PLAN],
+  calls: [RESTORE, EXECUTE, CLASSIFY],
   run(ctx) {
-    const { dist, stageSnapshots, restorePxC, instrument } = ctx.env;
-    const { resolveConfig, DEFAULT_EXECUTION, canonicalJson } = dist('detectors/threeFactor');
-    const { compileExecutionPlan } = dist('exec/compile');
-    const { executeCompiledPlan } = dist('exec/gateway');
-    const { createMemorySink } = dist('exec/sink');
-    const { operationImpls, operationCalculationBindings, ARTIFACT_EXTRACTORS } = dist('exec/operations');
-    const { sha256HexSyncText } = dist('exec/sha256');
-    const { nullFeatureContext, defaultKnobs } = dist('detectors/threeFactor/features/types');
-    const { classifyBadgeAgainstTemplates } = dist('detectors/threeFactor/features/g1.badgeGlyphTemplate');
-    const { DEFAULT_BADGE_GLYPH_TEMPLATE_KNOBS } = dist('detectors/threeFactor/digits/badgeGlyphTemplateMath');
-    const onConfig = structuredClone(dist('detectors/threeFactor/configs/badge-glyph-template-on.json'));
-    const resolvedTemplate = resolveConfig(onConfig, DEFAULT_EXECUTION);
-    const templateParamsHash = sha256HexSyncText(canonicalJson(resolvedTemplate));
-    const templatePlan = compileExecutionPlan(resolvedTemplate, templateParamsHash);
-    const templateOp = templatePlan.ops.find((op) => op.id === 'badgeGlyphTemplate');
-    if (!templateOp) ctx.fail('badgeGlyphTemplate operation unavailable in the compiled template-on plan');
-    const branch = restorePxC(stageSnapshots.S1);
-    const templateCtx = {
-      ...nullFeatureContext,
-      resolve(feature) {
-        if (feature.id === 'badgeGlyphTemplate') return { enabled: true, knobs: defaultKnobs(feature) };
-        return nullFeatureContext.resolve(feature);
-      }
-    };
-    instrument('s1.badgeGlyphTemplate', executeCompiledPlan,
-      { ops: [templateOp], bindings: templatePlan.bindings ?? {}, planFingerprint: templatePlan.planFingerprint, paramsHash: templateParamsHash },
-      branch, templateCtx, createMemorySink(),
-      { implementations: operationImpls, calculationBindings: operationCalculationBindings, artifactExtractors: ARTIFACT_EXTRACTORS }
-    );
+    const template = ctx.get(PLAN);
+    if (!template.op) ctx.fail('badgeGlyphTemplate operation unavailable in the compiled template-on plan');
+    const templateOp = template.op;
+    const branch = ctx.call(RESTORE);
+    ctx.call(EXECUTE, { board: branch });
     if (!branch.has(PART)) ctx.fail('badgeGlyphTemplate branch produced no verdicts');
     const verdicts = branch.get(PART);
     const reads = branch.get('badges');
-    const badges = ctx.board.get('px.badges');
+    const badges = ctx.get('px.badges');
     if (!Array.isArray(verdicts) || verdicts.length !== badges.length) ctx.fail(`template verdicts (${verdicts?.length}) disagree with px.badges (${badges.length})`);
     const serializedVerdicts = verdicts.map(legacyPlain);
     // Independent witness: the provider's pure classifier over the same
@@ -72,7 +58,7 @@ export default defineGuarantee({
       const bitmap = { width: localImage.width, height: localImage.height, data: localImage.data };
       const { topPx } = branch.get('viewport');
       for (let i = 0; i < reads.length; i++) {
-        const w = classifyBadgeAgainstTemplates(bitmap, reads[i], topPx, DEFAULT_BADGE_GLYPH_TEMPLATE_KNOBS);
+        const w = ctx.call(CLASSIFY, { bitmap, read: reads[i], topPx });
         for (const k of WITNESS_FIELDS)
           if (JSON.stringify(w[k] ?? null) !== JSON.stringify(serializedVerdicts[i][k] ?? null))
             return { ok: false, verdict: i, field: k, serialized: serializedVerdicts[i][k] ?? null, witness: w[k] ?? null };
@@ -85,7 +71,7 @@ export default defineGuarantee({
       counts[v.agreement]++;
     }
     const agreementCountsSum = ctx.check('agreementCountsSum', Object.values(counts).reduce((a, b) => a + b, 0) === serializedVerdicts.length, { counts, verdicts: serializedVerdicts.length });
-    const config = { name: onConfig.name, paramsHash: templateParamsHash, planFingerprint: templatePlan.planFingerprint };
+    const { config } = template;
     const witnessSummary = { kind: 'provider pure function', seam: SEAM, fieldsCompared: WITNESS_FIELDS, matches: witness.ok };
     const templateArtifact = {
       schema: 'nctk-s1-badge-glyph-template-artifact@1', part: PART, producedBy: PRODUCED_BY,

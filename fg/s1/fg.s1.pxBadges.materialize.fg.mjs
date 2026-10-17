@@ -4,6 +4,11 @@
  * against the provider's own materializer (materializeS1Subtractions). An
  * opaque or mismatched px.badges fails the run; it never passes silently.
  *
+ * Inputs are Parts and registered Calculations only: px.badges from the
+ * provider board, tk.stage.S1.captured (the S1 clean gateway's own run
+ * result, produced by fn.provider.S1.gateway) and the provider materializer
+ * as fn.provider.S1.materializeSubtractions (inParts tk.stage.S1.captured).
+ *
  * Ported from the inline block in ports/early/runEarly.mjs with byte-
  * identical artifacts (artifacts/s1/px.badges.json, badgePx.rgba.bin,
  * muted.rgba.bin) and a byte-identical stage record, which it publishes
@@ -16,17 +21,19 @@ import { legacyArtifact, legacyPlain, prettyJsonBytes, unionOf } from './legacy.
 const ID = 'fg.s1.pxBadges.materialize';
 const PART = 'px.badges';
 const PRODUCED_BY = 'Badge.findPx';
+const CAPTURED = 'tk.stage.S1.captured';
+const MATERIALIZER = 'fn.provider.S1.materializeSubtractions';
 
 export default defineGuarantee({
   id: ID,
   guards: [PART],
-  env: ['dist', 'captured'],
+  reads: [PART, CAPTURED],
+  calls: [MATERIALIZER],
   run(ctx) {
-    const { dist, captured } = ctx.env;
-    const { materializeS1Subtractions } = dist('stages/S1/clean/index');
-    const badges = ctx.board.get(PART);
+    const badges = ctx.get(PART);
+    const captured = ctx.get(CAPTURED);
     if (!Array.isArray(badges) || !badges.length) ctx.fail('px.badges is missing or empty on the board after S1');
-    if (!captured.S1?.badges || captured.S1.badges.length !== badges.length) ctx.fail('captured S1 run badges disagree with the board px.badges');
+    if (!captured?.badges || captured.badges.length !== badges.length) ctx.fail('captured S1 run badges disagree with the board px.badges');
     const serializedBadges = badges.map((badge, index) => {
       if (!badge.px || !badge.has?.mute?.px) ctx.fail(`badge ${index} lacks px or has.mute.px (opaque badge object)`);
       return {
@@ -39,7 +46,7 @@ export default defineGuarantee({
         mute: { fn: badge.has.mute.fn, radiusPx: badge.has.mute.radiusPx, px: [...badge.has.mute.px], pxCount: badge.has.mute.px.length }
       };
     });
-    const subtractions = materializeS1Subtractions(captured.S1);
+    const subtractions = ctx.call(MATERIALIZER);
     const totals = {
       badgePx: unionOf(serializedBadges.map((b) => b.px)).size,
       whitePx: serializedBadges.reduce((n, b) => n + b.whitePx, 0),

@@ -20,6 +20,8 @@ node toolkit.mjs neat --recipe recipes/chainspot-s0-s7.json --specimen golden --
 node toolkit.mjs run  --recipe recipes/chainspot-s0-s7.json --specimen golden --until 3 --checkpoint ID
 ```
 
+**Parts, not env.** FunctionalGuarantees (`fg/**/*.fg.mjs`) and fork-join implementations (`impl/<slot>/*.mjs`) read only the Part addresses they declare in `reads` and call only the registered `fn.*` Calculations they declare in `calls`, through the run's addressed store (`fg/store.mjs`, an overlay on the provider PxC); an undeclared address or Calculation fails by name. Toolkit data lives at `tk.*` (source intake, gateway captures `tk.stage.<S>.captured`, snapshots `tk.stage.<S>.snapshot`, `tk.source.cropReceipt`), `view.*` (`view.source.background` for every flipbook) and `testimony.*` (`testimony.source.annotation`, `testimony.source.teePoints`), each produced once by a Calculation that declares its inParts/outParts; provider capabilities are `fn.provider.*` (restore, `executeCompiledPlan`, materializers). The full table is in `ports/early/earlyStore.mjs`. Every Calculation call is timed into `stage-output/early/instrumentation.json` (`calculations`, plus the store manifest), never into the receipt.
+
 Every refinement defaults OFF. To test one lane, pass the same `--lanes NAME` selection to neat and run. The names are:
 
 | Stage | Lane | Scope |

@@ -12,7 +12,8 @@ import { pathToFileURL } from 'node:url';
 import { computeFamilyFix, rederiveFamilyFixVerdicts, FAMILY_FIX, FIX_BOUNDS, ringKeyOf } from './s3FamilyFix.mjs';
 import { computeBasketAssembly, rederiveBasketDecomposition, BASKET_ASSEMBLY } from './s2BasketAssembly.mjs';
 import { computeTeeAssembly, rederiveTeeInterior, TEE_ASSEMBLY } from './s3TeeAssembly.mjs';
-import { createInstrumentation, executePlanInstrumented } from './instrument.mjs';
+import { createInstrumentation } from './instrument.mjs';
+import { createEarlyStore, sealStage } from './earlyStore.mjs';
 import { runStageGuarantees, attachPublished } from './stageGuarantees.mjs';
 
 // Experiment code (what run-stages passes) -> lane name (what an FG's
@@ -45,8 +46,6 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   const source = resolve(root, sourcePath);
   const out = resolve(root, outDir);
   mkdirSync(out, { recursive: true });
-  const sourceBytes = readFileSync(source);
-  const sourceSha256 = hash(sourceBytes);
   const require = createRequire(pathToFileURL(join(provider, 'package.json')));
   const dist = (path) => require(resolve(provider, 'packages/alg/dist', path));
   const { decodeNodeFile } = dist('adapters/node');
@@ -65,23 +64,20 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   // it never enters the receipt, whose bytes are hashed into evidence.
   const instrumentation = createInstrumentation();
 
-  const captured = {};
-  for (const [id, path, name] of [
-    ['S0', 'stages/S0/clean/index', 'executeS0'],
-    ['S1', 'stages/S1/clean/index', 'executeS1BadgesCandidate'],
-    ['S2', 'stages/S2/clean/index', 'executeS2BasketsCandidate'],
-    ['S3', 'stages/S3/clean/index', 'executeS3VisibleTees']
-  ]) {
-    const mod = dist(path);
-    const original = mod[name];
-    if (typeof original !== 'function') throw new Error(`Missing pinned ${id} implementation ${name}`);
-    mod[name] = (...args) => {
-      const result = original(...args);
-      return result instanceof Promise
-        ? result.then((value) => (captured[id] = value, value))
-        : (captured[id] = result, result);
-    };
-  }
+  // The run's addressed store (ports/early/earlyStore.mjs): an overlay on
+  // the live provider board. Toolkit Parts (source intake, gateway
+  // captures, stage snapshots, the crop receipt, the flipbook background,
+  // testimony) are written once by their declared producing Calculations;
+  // provider capabilities (restore, plan execution, materializers, hashing)
+  // are registered fn.* Calculations. FGs, fork-join implementations and the
+  // sidecar writers read by address; every Calculation call is timed into
+  // the instrumentation sidecar. The pinned clean gateways are routed
+  // through fn.provider.<S>.gateway, producing tk.stage.<S>.captured.
+  let pxc;
+  const store = createEarlyStore({ forkRoot: root, source, getBoard: () => pxc, dist, restorePxC, instrumentation });
+  store.call('fn.tk.source.intake');
+  const sourceSha256 = store.get('tk.source.sha256');
+  const captured = (id) => (store.has(`tk.stage.${id}.captured`) ? store.get(`tk.stage.${id}.captured`) : undefined);
 
   const tickView = (pcr) => (pcr?.ticks ?? []).map(({ operation, testimony }) => ({
     id: testimony.opId,
@@ -92,25 +88,25 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   }));
 
   const stages = [];
-  let pxc;
   let initialPixels;
-  const stageSnapshots = {};
   for (const id of stageOrder.slice(0, lastIndex + 1)) {
     const started = Date.now();
-    const inputSnapshotSha256 = pxc ? hash(stageSnapshots[stageOrder[stageOrder.indexOf(id) - 1]]) : null;
+    const inputSnapshotSha256 = pxc ? store.get(`tk.stage.${stageOrder[stageOrder.indexOf(id) - 1]}.snapshotSha256`) : null;
     const contract = dist(`stages/${id}/contract`).stageContract;
     const result = await contract.execute({ source, inputLabel: basename(source), decode: decodeNodeFile, ...(pxc ? { pxc } : {}) });
     pxc = result.pxc;
     const image = pxc.get(id === 'S0' ? 'px.course.canonicalPixels' : ComponentPxC.image);
     const canonicalRgbaSha256 = hash(image.rgba);
-    if (id === 'S0') initialPixels = canonicalRgbaSha256;
-    else if (canonicalRgbaSha256 !== initialPixels) throw new Error(`${id} changed canonical S0 source pixels`);
-    if (!captured[id]?.pcr) throw new Error(`${id} did not expose its clean PCR`);
+    if (id === 'S0') {
+      initialPixels = store.get('tk.stage.S0.canonicalRgbaSha256');
+      if (initialPixels !== canonicalRgbaSha256) throw new Error('tk.stage.S0.canonicalRgbaSha256 disagrees with the S0 canonical pixels');
+    } else if (canonicalRgbaSha256 !== initialPixels) throw new Error(`${id} changed canonical S0 source pixels`);
+    if (!captured(id)?.pcr) throw new Error(`${id} did not expose its clean PCR`);
     const stage = {
       id,
       receipt: result.receiptText,
-      pcr: captured[id].pcr,
-      ticks: tickView(captured[id].pcr),
+      pcr: captured(id).pcr,
+      ticks: tickView(captured(id).pcr),
       durationMs: Date.now() - started,
       invocationLimit: 'one clean gateway invocation for this stage in this run',
       inputSourceSha256: id === 'S0' ? sourceSha256 : null,
@@ -121,16 +117,16 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
       panels: result.panels.map((panel) => ({ label: panel.label, widthPx: panel.widthPx, heightPx: panel.heightPx }))
     };
     stages.push(stage);
-    const available = [...new Set([
+    const addresses = [...new Set([
       'px.source.selectedInput', 'px.source.fullImage', 'px.course.canonicalPixels',
       'localImage', 'viewport',
       ...Object.values(ComponentPxC).map((key) => key.address),
       ...Object.values(BadgePxC).map((key) => key.address),
       ...Object.values(BasketPxC).map((key) => key.address),
       ...Object.values(TeePxC).map((key) => key.address)
-    ])].filter((address) => pxc.has(address));
-    stageSnapshots[id] = capturePxC(pxc, available);
-    stage.outputSnapshotSha256 = hash(stageSnapshots[id]);
+    ])];
+    sealStage(store, id, { addresses, capturePxC });
+    stage.outputSnapshotSha256 = store.get(`tk.stage.${id}.snapshotSha256`);
   }
   // S1 FunctionalGuarantees (stages/s1.json "guarantees"): one file per
   // guarantee under fg/s1/<id>.fg.mjs, discovered and run by the fg
@@ -142,22 +138,13 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   // <outDir>/fg/. Any failed guarantee throws and fails the run.
   const s1Materializations = {};
   const s1Branches = {};
-  // Every flipbook draws its pages over the source image itself (a data URL
-  // of the original bytes), shifted by S0's recorded crop insets into
-  // canonical coordinates; flipbooks are sidecars only, never receipt bytes.
-  const sourceCrop = captured.S0?.cropReceipt;
-  const flipbookBackground = sourceCrop?.originalPx ? {
-    src: `data:image/${sourceBytes[0] === 0x89 ? 'png' : 'jpeg'};base64,${sourceBytes.toString('base64')}`,
-    width: sourceCrop.originalPx.width, height: sourceCrop.originalPx.height, x: 0, y: -sourceCrop.upperRowsRemoved
-  } : null;
+  // Every flipbook draws its pages over the Part view.source.background
+  // (fn.view.source.background, from tk.source.bytes and
+  // tk.source.cropReceipt), read by address by the sidecar writers.
   if (lastIndex >= 1) {
     const s1 = await runStageGuarantees({
-      forkRoot: root, stage: 's1', board: pxc, outDir: out, background: flipbookBackground,
-      lanes: experiments.map((id) => EXPERIMENT_LANES[id]).filter(Boolean),
-      env: {
-        dist, captured, stageSnapshots, restorePxC, sha256: hash, canonicalRgbaSha256: initialPixels,
-        instrument: (site, ...args) => executePlanInstrumented(instrumentation, site, ...args)
-      }
+      forkRoot: root, stage: 's1', store, outDir: out,
+      lanes: experiments.map((id) => EXPERIMENT_LANES[id]).filter(Boolean)
     });
     attachPublished(s1.published, { stages, materializations: s1Materializations, branches: s1Branches });
   }
@@ -177,7 +164,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     const { materializeS1Subtractions } = dist('stages/S1/clean/index');
     const baskets = pxc.get(BasketPxC.objects.address);
     if (!Array.isArray(baskets) || !baskets.length) fail('px.baskets is missing or empty on the board after S2');
-    if (!captured.S2?.baskets || captured.S2.baskets.length !== baskets.length) fail('captured S2 run baskets disagree with the board px.baskets');
+    if (!captured('S2')?.baskets || captured('S2').baskets.length !== baskets.length) fail('captured S2 run baskets disagree with the board px.baskets');
     const plain = (value) => ArrayBuffer.isView(value) ? [...value]
       : Array.isArray(value) ? value.map(plain)
       : value && typeof value === 'object' ? Object.fromEntries(Object.entries(value).map(([k, v]) => [k, plain(v)]))
@@ -200,7 +187,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     const claimedVisits = serializedBaskets.reduce((n, b) => n + b.pxCount, 0);
     // Independent witness: the provider's own S2 materializer over the
     // captured run (not the board serialization above).
-    const witness = materializeS2Subtraction(captured.S2.image, captured.S2.baskets);
+    const witness = materializeS2Subtraction(captured('S2').image, captured('S2').baskets);
     if (witness.basketPx !== claimed.size) fail(`serialized basket px union ${claimed.size} != materializer basketPx ${witness.basketPx}`);
     if (witness.overlapPx !== claimedVisits - claimed.size) fail(`materializer overlapPx ${witness.overlapPx} != serialized visits-union ${claimedVisits - claimed.size}`);
     let witnessZeroed = 0;
@@ -229,7 +216,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     };
     // Raster recount of the layer arithmetic: canonical raster, zero the S1
     // consumed union, count; zero the claimed set, count again.
-    const layerRgba = new Uint8ClampedArray(captured.S2.image.rgba);
+    const layerRgba = new Uint8ClampedArray(captured('S2').image.rgba);
     for (const pixel of s1Consumed) layerRgba[pixel * 4 + 3] = 0;
     let opaqueEntering = 0;
     for (let pixel = 0; pixel < framePx; pixel++) if (layerRgba[pixel * 4 + 3] !== 0) opaqueEntering++;
@@ -248,7 +235,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     if (layerIntegrity.explainedByMuteOverlap) { layerIntegrity.setArithmeticLeavingPx = remainingLeaving; layerIntegrity.remainingLeavingPx = opaqueLeaving; }
     if (!layerIntegrity.rasterRecountHolds && !layerIntegrity.explainedByMuteOverlap) fail(`layer raster recount (${opaqueEntering} in, ${opaqueLeaving} out) disagrees with set arithmetic (${remainingEntering} in, ${remainingLeaving} out); basket px already consumed by S1: owned ${layerIntegrity.intersections.vsS1Owned}, muted ${layerIntegrity.intersections.vsS1Muted}`);
     // S1 witness agreement for the entering layer (same run, same board).
-    const s1Witness = materializeS1Subtractions(captured.S1);
+    const s1Witness = materializeS1Subtractions(captured('S1'));
     layerIntegrity.s1WitnessRemainingAfterMutedPx = s1Witness.muted.remainingOpaquePx;
     layerIntegrity.s1WitnessAgrees = s1Witness.muted.remainingOpaquePx === remainingEntering;
     const { widthPx, heightPx } = witness;
@@ -279,8 +266,8 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     s2Materialization = {
       guarantee: 'fg.s2.pxBaskets.materialize', part: 'px.baskets', producedBy: 'Basket.findPx',
       basketCount: serializedBaskets.length,
-      familyCount: captured.S2.family.members.length,
-      shellMemberCount: captured.S2.shellFamily.members.length,
+      familyCount: captured('S2').family.members.length,
+      shellMemberCount: captured('S2').shellFamily.members.length,
       totals: basketSetArtifact.totals,
       witness: basketSetArtifact.witness,
       layerIntegrity,
@@ -316,9 +303,6 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   if (lastIndex >= 2 && experiments.includes('S2ASM')) {
     const failAsm = (reason) => { throw new Error(`S2 basket assembly FunctionalGuarantee failed: ${reason}`); };
     if (!s2Materialization) failAsm('the fg.s2.pxBaskets.materialize record is missing; the assembly has no baseline totals to gate against');
-    const { executeCompiledPlan } = dist('exec/gateway');
-    const { nullFeatureContext } = dist('detectors/threeFactor/features/types');
-    const { createMemorySink } = dist('exec/sink');
     const { sha256HexSyncText } = dist('exec/sha256');
     const canon = (value) => Array.isArray(value) ? `[${value.map(canon).join(',')}]`
       : value && typeof value === 'object' ? `{${Object.keys(value).sort().map(k => `${JSON.stringify(k)}:${canon(value[k])}`).join(',')}}`
@@ -330,7 +314,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
       note: 'Declared spec delta refine.s2.basketAssembly.bodyFirst: each Basket Part is re-assembled from its component evidence through the phase-1 assembly shape with the bright body as the declared base and the shell fused onto it, the tip carried as the anchor, and window ownership accounted against the semantic bbox. Branch from the S2 snapshot; base emissions unchanged.'
     };
     const runAssemblyBranch = () => {
-      const branch = restorePxC(stageSnapshots.S2);
+      const branch = store.call('fn.provider.restore.S2');
       for (const address of asmOp.consumes)
         if (!branch.has(address)) failAsm(`restored S2 branch is missing ${address}; the basket component evidence is not exposed on the S2 snapshot`);
       const before = hash(branch.get(ComponentPxC.image.address).rgba);
@@ -344,7 +328,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
         implementations: new Map([[asmOp.id, (board) => { const part = calculate(...asmOp.consumes.map((address) => board.get(address))); board.set(BASKET_ASSEMBLY.part, part); }]]),
         calculationBindings: new Map([[asmOp.id, [{ address: BASKET_ASSEMBLY.assemblyCalculation, calculate }]]])
       };
-      const ticks = executePlanInstrumented(instrumentation, 's2.basketAssembly', executeCompiledPlan, plan, branch, nullFeatureContext, createMemorySink(), runtime);
+      const ticks = store.call('fn.provider.executeCompiledPlan', { site: 's2.basketAssembly', plan, board: branch, runtime });
       const after = hash(branch.get(ComponentPxC.image.address).rgba);
       if (before !== after || before !== initialPixels) failAsm('basket assembly branch mutated canonical pixels');
       return { branch, ticks, asmPart };
@@ -459,7 +443,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     stages.find(s => s.id === 'S2').basketAssemblyMaterialization = s2BasketAssemblyMaterialization;
     s2AssemblyBranchEvidence = {
       mode: 'ON', status: 'SPEC_DELTA_ORACLE_UNKNOWN', lane: 's2-basket-assembly',
-      baseSnapshotSha256: hash(stageSnapshots.S2),
+      baseSnapshotSha256: store.get('tk.stage.S2.snapshotSha256'),
       benefit: 'Every Basket Part is re-derived body-first from its component evidence, so the assembly structure (body base, fused shell, tip anchor, window residue) crosses the toolkit seam as named Parts instead of a flat px array with two counts.',
       falsifier: 'A basket fused set differs from the accepted px.baskets set, the fused union differs from 36,362, a basket component overlap is nonzero, or a basket window residue falls outside the phase-1 band of 1,172 to 1,177 px.',
       oracle: 'UNKNOWN', partAddress: BASKET_ASSEMBLY.part,
@@ -498,7 +482,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     // own materializer over the captured run.
     const tees = pxc.get(TeePxC.objects.address);
     if (!Array.isArray(tees) || !tees.length) fail('px.tees is missing or empty on the board after S3');
-    if (!captured.S3?.tees || captured.S3.tees.length !== tees.length) fail('captured S3 run tees disagree with the board px.tees');
+    if (!captured('S3')?.tees || captured('S3').tees.length !== tees.length) fail('captured S3 run tees disagree with the board px.tees');
     const serializedTees = tees.map((tee, index) => {
       if (!tee.px || !tee.bbox) fail(`tee ${index} lacks px or bbox (opaque tee object)`);
       return {
@@ -513,7 +497,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     });
     const claimed = unionOf(serializedTees.map(t => t.px));
     const claimedVisits = serializedTees.reduce((n, t) => n + t.pxCount, 0);
-    const witness = materializeS3Subtraction(captured.S3.image, captured.S3.tees);
+    const witness = materializeS3Subtraction(captured('S3').image, captured('S3').tees);
     if (witness.teePx !== claimed.size) fail(`serialized tee px union ${claimed.size} != materializer teePx ${witness.teePx}`);
     if (witness.overlapPx !== claimedVisits - claimed.size) fail(`materializer overlapPx ${witness.overlapPx} != serialized visits-union ${claimedVisits - claimed.size}`);
     let witnessZeroed = 0;
@@ -557,7 +541,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     }
     // Raster recount of the stack arithmetic: canonical raster, zero each
     // prior layer in turn and count, then zero the claimed set and count.
-    const layerRgba = new Uint8ClampedArray(captured.S3.image.rgba);
+    const layerRgba = new Uint8ClampedArray(captured('S3').image.rgba);
     for (const pixel of s1Consumed) layerRgba[pixel * 4 + 3] = 0;
     for (const pixel of s2Claimed) layerRgba[pixel * 4 + 3] = 0;
     let opaqueEntering = 0;
@@ -576,7 +560,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
       && layerIntegrity.intersections.vsS1Owned === 0 && layerIntegrity.intersections.vsS2Claimed === 0 && opaqueLeaving - remainingLeaving === muteOverlap;
     if (!layerIntegrity.rasterRecountHolds && !layerIntegrity.explainedByMuteOverlap) fail(`stack raster recount (${opaqueEntering} in, ${opaqueLeaving} out) disagrees with set arithmetic (${remainingEntering} in, ${remainingLeaving} out)`);
     // S1 witness agreement for the bottom of the stack (same run, same board).
-    const s1Witness = materializeS1Subtractions(captured.S1);
+    const s1Witness = materializeS1Subtractions(captured('S1'));
     layerIntegrity.s1WitnessRemainingAfterMutedPx = s1Witness.muted.remainingOpaquePx;
     layerIntegrity.s1WitnessAgrees = s1Witness.muted.remainingOpaquePx === framePx - s1Consumed.size;
     if (!layerIntegrity.s1WitnessAgrees) fail('S1 witness remaining-after-muted disagrees with the stack arithmetic');
@@ -594,7 +578,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
       schema: 'nctk-s3-tees-artifact@1', part: 'px.tees', producedBy: 'Tee.findPx',
       guarantee: 'fg.s3.pxTees.materialize', teeCount: serializedTees.length,
       note: 'Tees carry no engine label; label is the 1-based order used by the pinned S3 contract receipt.',
-      planFingerprint: captured.S3.plan.planFingerprint,
+      planFingerprint: captured('S3').plan.planFingerprint,
       image: { widthPx, heightPx },
       totals: { claimedPx: claimed.size, claimedVisits, overlapWithinLayerPx: claimedVisits - claimed.size },
       witness: { teePx: witness.teePx, overlapPx: witness.overlapPx, remainingOpaquePx: witness.remainingOpaquePx },
@@ -609,7 +593,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     s3Materialization = {
       guarantee: 'fg.s3.pxTees.materialize', part: 'px.tees', producedBy: 'Tee.findPx',
       teeCount: serializedTees.length,
-      planFingerprint: captured.S3.plan.planFingerprint,
+      planFingerprint: captured('S3').plan.planFingerprint,
       totals: teeSetArtifact.totals,
       witness: teeSetArtifact.witness,
       layerIntegrity,
@@ -636,8 +620,8 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     const rings = pxc.get(TeePxC.rings.address);
     const family = pxc.get(TeePxC.family.address);
     if (!rings || !family) failRF('px.tees.rings or px.tees.family is missing on the board after S3');
-    if (!captured.S3?.rings || captured.S3.rings.candidates.length !== rings.candidates.length) failRF('captured S3 rings disagree with the board px.tees.rings');
-    if (!captured.S3?.family || captured.S3.family.members.length !== family.members.length) failRF('captured S3 family disagrees with the board px.tees.family');
+    if (!captured('S3')?.rings || captured('S3').rings.candidates.length !== rings.candidates.length) failRF('captured S3 rings disagree with the board px.tees.rings');
+    if (!captured('S3')?.family || captured('S3').family.members.length !== family.members.length) failRF('captured S3 family disagrees with the board px.tees.family');
     const ringTuple = (r) => [r.cx, r.cy, r.bboxX, r.bboxY, r.bboxW, r.bboxH, r.kind];
     const tupleKey = (t) => JSON.stringify(t);
     const multiset = (tuples) => { const map = new Map(); for (const t of tuples) map.set(tupleKey(t), (map.get(tupleKey(t)) ?? 0) + 1); return map; };
@@ -692,7 +676,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     const ringsFamilyArtifact = {
       schema: 'nctk-s3-rings-family-artifact@1', parts: ['px.tees.rings', 'px.tees.family'], producedBy: 'Tee.detectRings + Tee.findFamily',
       guarantee: 'fg.s3.pxTeesRingsFamily.materialize',
-      planFingerprint: captured.S3.plan.planFingerprint,
+      planFingerprint: captured('S3').plan.planFingerprint,
       image: { widthPx, heightPx },
       counts: {
         enclosed: serializedRings.enclosed.length, elongated: serializedRings.elongated.length,
@@ -738,9 +722,6 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     // other than the declared specimen expectation is a finding.
     if (experiments.includes('S3FIX')) {
       const failFix = (reason) => { throw new Error(`S3 findFamily structural-fix materialization FunctionalGuarantee failed: ${reason}`); };
-      const { executeCompiledPlan } = dist('exec/gateway');
-      const { nullFeatureContext } = dist('detectors/threeFactor/features/types');
-      const { createMemorySink } = dist('exec/sink');
       const { sha256HexSyncText } = dist('exec/sha256');
       const { Tee } = dist('stages/S3/clean/Tee');
       const { componentRef, materializeRasterComponentPixels } = dist('detectors/threeFactor/componentAssembly');
@@ -754,7 +735,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
         note: 'Declared spec delta refine.s3.findFamily.structural: membership in px.tees.family becomes structural (anchored pad model, fitted-size / border / band / interior / whiteness tests, occlusion excuses only by named prior-layer Parts) instead of resemblance-based. Branch from the S3 snapshot; base emissions unchanged.'
       };
       const runFixBranch = () => {
-        const branch = restorePxC(stageSnapshots.S3);
+        const branch = store.call('fn.provider.restore.S3');
         const before = hash(branch.get(ComponentPxC.image.address).rgba);
         let fixResult = null;
         const calculate = (ringsIn, familyIn, fieldsIn, imageIn, badgesIn, basketsIn, baseTeesIn) => {
@@ -774,7 +755,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
           implementations: new Map([[fixOp.id, (board) => { const part = calculate(...fixOp.consumes.map((address) => board.get(address))); board.set(FAMILY_FIX.familyPart, part); board.set(FAMILY_FIX.teesPart, fixResult.tees); }]]),
           calculationBindings: new Map([[fixOp.id, [{ address: FAMILY_FIX.refinedCalculation, calculate }]]])
         };
-        const ticks = executePlanInstrumented(instrumentation, 's3.findFamilyStructuralFix', executeCompiledPlan, plan, branch, nullFeatureContext, createMemorySink(), runtime);
+        const ticks = store.call('fn.provider.executeCompiledPlan', { site: 's3.findFamilyStructuralFix', plan, board: branch, runtime });
         const after = hash(branch.get(ComponentPxC.image.address).rgba);
         if (before !== after || before !== initialPixels) throw new Error('S3 findFamily structural-fix branch mutated canonical pixels');
         return { branch, ticks, fixResult };
@@ -816,7 +797,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
       // serialized baseline rings/family Parts and the board rasters (a
       // separate code path in s3FamilyFix.mjs that never sees the branch
       // result). The serialized ledger must match it row for row.
-      const witness = rederiveFamilyFixVerdicts({ ringsPlain: serializedRings, familyPlain: serializedFamily, fields, image: captured.S3.image, badges, baskets });
+      const witness = rederiveFamilyFixVerdicts({ ringsPlain: serializedRings, familyPlain: serializedFamily, fields, image: captured('S3').image, badges, baskets });
       if (familyPart.candidates.length !== witness.rows.length)
         failFix(`serialized verdict rows (${familyPart.candidates.length}) != witness rows (${witness.rows.length})`);
       if (canon(familyPart.model) !== canon(witness.model))
@@ -876,7 +857,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
       // the set each artifact claims (corrected tee union; eliminated framed
       // candidates' frame-component px).
       const refinedUnion = unionOf(serializedRefinedTees.map(t => t.px));
-      const refinedRgba = new Uint8ClampedArray(captured.S3.image.rgba);
+      const refinedRgba = new Uint8ClampedArray(captured('S3').image.rgba);
       for (const pixel of refinedUnion) refinedRgba[pixel * 4 + 3] = 0;
       let refinedZeroed = 0;
       for (let pixel = 0; pixel < framePx; pixel++) if (refinedRgba[pixel * 4 + 3] === 0) refinedZeroed++;
@@ -896,7 +877,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
         };
       });
       const eliminatedUnion = unionOf(serializedEliminated.map(t => t.px));
-      const eliminatedRgba = new Uint8ClampedArray(captured.S3.image.rgba);
+      const eliminatedRgba = new Uint8ClampedArray(captured('S3').image.rgba);
       for (const pixel of eliminatedUnion) eliminatedRgba[pixel * 4 + 3] = 0;
       let eliminatedZeroed = 0;
       for (let pixel = 0; pixel < framePx; pixel++) if (eliminatedRgba[pixel * 4 + 3] === 0) eliminatedZeroed++;
@@ -914,7 +895,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
         schema: 'nctk-s3-family-refined-artifact@1', parts: [FAMILY_FIX.familyPart, FAMILY_FIX.teesPart],
         guarantee: 'fg.s3.pxTeesFamilyFix.materialize', specDelta: FAMILY_FIX.specDelta,
         calculation: FAMILY_FIX.calculation, refinedCalculation: FAMILY_FIX.refinedCalculation,
-        planFingerprint: captured.S3.plan.planFingerprint,
+        planFingerprint: captured('S3').plan.planFingerprint,
         image: { widthPx, heightPx }, boundsRule: FIX_BOUNDS,
         model: familyPart.model, counts: familyPart.counts,
         candidates: familyPart.candidates, correctedFamily: familyPart.correctedFamily, piles: familyPart.piles,
@@ -928,7 +909,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
         schema: 'nctk-s3-tees-refined-artifact@1', part: FAMILY_FIX.teesPart, producedBy: FAMILY_FIX.refinedCalculation,
         guarantee: 'fg.s3.pxTeesFamilyFix.materialize', teeCount: serializedRefinedTees.length,
         note: 'Corrected tee set under the declared spec delta. Labels are the corrected order; baselineLabel records the baseline tee identity for members carried over unchanged.',
-        planFingerprint: captured.S3.plan.planFingerprint,
+        planFingerprint: captured('S3').plan.planFingerprint,
         image: { widthPx, heightPx },
         totals: { claimedPx: refinedUnion.size, claimedVisits: serializedRefinedTees.reduce((n, t) => n + t.pxCount, 0) },
         tees: serializedRefinedTees
@@ -937,7 +918,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
         schema: 'nctk-s3-tees-eliminated-artifact@1', part: 'px.tees.eliminated', producedBy: FAMILY_FIX.refinedCalculation,
         guarantee: 'fg.s3.pxTeesFamilyFix.materialize', teeCount: serializedEliminated.length,
         note: 'Eliminated FRAMED candidates only: the set is each candidate frame component px. Eliminated unframed candidates have no frame pixel set and live in the verdict ledger (px.tees.family-refined.json) only.',
-        planFingerprint: captured.S3.plan.planFingerprint,
+        planFingerprint: captured('S3').plan.planFingerprint,
         image: { widthPx, heightPx },
         totals: { claimedPx: eliminatedUnion.size },
         tees: serializedEliminated
@@ -965,7 +946,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
       s3FamilyFixMaterialization = {
         guarantee: 'fg.s3.pxTeesFamilyFix.materialize', specDelta: FAMILY_FIX.specDelta,
         parts: [FAMILY_FIX.familyPart, FAMILY_FIX.teesPart], producedBy: FAMILY_FIX.refinedCalculation,
-        planFingerprint: captured.S3.plan.planFingerprint,
+        planFingerprint: captured('S3').plan.planFingerprint,
         counts: familyPart.counts, model: familyPart.model, delta,
         witnesses: familyRefinedArtifact.witnesses,
         checks: {
@@ -979,7 +960,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
       stages.find(s => s.id === 'S3').familyFixMaterialization = s3FamilyFixMaterialization;
       s3FixBranchEvidence = {
         mode: 'ON', status: 'SPEC_DELTA_ORACLE_UNKNOWN', lane: 's3-findfamily-structural-fix',
-        baseSnapshotSha256: hash(stageSnapshots.S3),
+        baseSnapshotSha256: store.get('tk.stage.S3.snapshotSha256'),
         benefit: 'Membership in the tee family becomes a structural verdict per candidate, so same-scale map chrome is eliminated at S3 with named failed tests instead of surviving to S4 attrition.',
         falsifier: 'A genuine pad is eliminated or excused, a chrome candidate is admitted, or an admitted tee tuple differs from the pinned baseline tuple.',
         oracle: 'UNKNOWN', partAddress: FAMILY_FIX.familyPart, teesPartAddress: FAMILY_FIX.teesPart,
@@ -1011,9 +992,6 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   if (lastIndex >= 3 && experiments.includes('S3ASM')) {
     const failAsm = (reason) => { throw new Error(`S3 tee assembly FunctionalGuarantee failed: ${reason}`); };
     if (!s3Materialization) failAsm('the fg.s3.pxTees.materialize record is missing; the assembly has no baseline totals to gate against');
-    const { executeCompiledPlan } = dist('exec/gateway');
-    const { nullFeatureContext } = dist('detectors/threeFactor/features/types');
-    const { createMemorySink } = dist('exec/sink');
     const { sha256HexSyncText } = dist('exec/sha256');
     const canon = (value) => Array.isArray(value) ? `[${value.map(canon).join(',')}]`
       : value && typeof value === 'object' ? `{${Object.keys(value).sort().map(k => `${JSON.stringify(k)}:${canon(value[k])}`).join(',')}}`
@@ -1025,7 +1003,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
       note: 'Declared spec delta refine.s3.teeAssembly.interiorFirst: each baseline Tee Part is assembled whole from its evidence through the phase-1 assembly shape with the enclosed interior as the declared base and the frame component fused onto it, the ring center carried as the anchor, and window ownership accounted against the frame bbox. Branch from the S3 snapshot; base emissions unchanged.'
     };
     const runAssemblyBranch = () => {
-      const branch = restorePxC(stageSnapshots.S3);
+      const branch = store.call('fn.provider.restore.S3');
       for (const address of asmOp.consumes)
         if (!branch.has(address)) failAsm(`restored S3 branch is missing ${address}; the tee component evidence is not exposed on the S3 snapshot`);
       const before = hash(branch.get(ComponentPxC.image.address).rgba);
@@ -1039,7 +1017,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
         implementations: new Map([[asmOp.id, (board) => { const part = calculate(...asmOp.consumes.map((address) => board.get(address))); board.set(TEE_ASSEMBLY.part, part); }]]),
         calculationBindings: new Map([[asmOp.id, [{ address: TEE_ASSEMBLY.assemblyCalculation, calculate }]]])
       };
-      const ticks = executePlanInstrumented(instrumentation, 's3.teeAssembly', executeCompiledPlan, plan, branch, nullFeatureContext, createMemorySink(), runtime);
+      const ticks = store.call('fn.provider.executeCompiledPlan', { site: 's3.teeAssembly', plan, board: branch, runtime });
       const after = hash(branch.get(ComponentPxC.image.address).rgba);
       if (before !== after || before !== initialPixels) failAsm('tee assembly branch mutated canonical pixels');
       return { branch, ticks, asmPart };
@@ -1149,7 +1127,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     stages.find(s => s.id === 'S3').teeAssemblyMaterialization = s3TeeAssemblyMaterialization;
     s3AssemblyBranchEvidence = {
       mode: 'ON', status: 'SPEC_DELTA_ORACLE_UNKNOWN', lane: 's3-tee-assembly',
-      baseSnapshotSha256: hash(stageSnapshots.S3),
+      baseSnapshotSha256: store.get('tk.stage.S3.snapshotSha256'),
       benefit: 'Every baseline Tee Part is assembled whole from its evidence (enclosed interior base, frame fused on, ring-center anchor, window-residue accounting), so the interior pixels the baseline Part never claimed are owned by the Part instead of living only as ring geometry on px.tees.rings, and the assembly structure crosses the toolkit seam as named Parts instead of a frame-only px array.',
       falsifier: 'A tee frame set differs from the accepted px.tees set, the frame union differs from 4,884, a tee interior size differs from its ring\'s recorded holeArea, or a tee component overlap is nonzero.',
       oracle: 'UNKNOWN', partAddress: TEE_ASSEMBLY.part,
@@ -1176,8 +1154,8 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   if (lastIndex >= 3 && experiments.includes('S3FJ')) {
     const { runTeeFamilyForkJoin } = await import('./s3ForkJoin.mjs');
     s3ForkJoinEvidence = {
-      baseSnapshotSha256: hash(stageSnapshots.S3),
-      ...await runTeeFamilyForkJoin({ forkRoot: root, outDir: out, snapshot: stageSnapshots.S3, restorePxC, dist, cropReceipt: captured.S0.cropReceipt, sourceSha256, background: flipbookBackground })
+      baseSnapshotSha256: store.get('tk.stage.S3.snapshotSha256'),
+      ...await runTeeFamilyForkJoin({ forkRoot: root, outDir: out, store })
     };
   }
 
@@ -1212,9 +1190,6 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   };
   const branchResults = {};
   if (experiments.some((id) => ['S0', 'S1', 'S2'].includes(id))) {
-    const { executeCompiledPlan } = dist('exec/gateway');
-    const { nullFeatureContext } = dist('detectors/threeFactor/features/types');
-    const { createMemorySink } = dist('exec/sink');
     const { sha256HexSyncText } = dist('exec/sha256');
     const audits = {
       S0: { opId: 'early.S0.edgeBandAudit', consumes: ['px.source.fullImage', 'px.course.canonicalPixels', 'px.early.s0.cropReceipt'], produces: 'px.early.s0.edgeBandAudit', fn: 'fn.early.S0.edgeBandAudit',
@@ -1226,31 +1201,31 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     };
     for (const id of ['S0', 'S1', 'S2']) if (experiments.includes(id) && stageOrder.indexOf(id) <= lastIndex) {
       const a = audits[id];
-      const branch = restorePxC(stageSnapshots[id]);
-      if (id === 'S0') branch.set('px.early.s0.cropReceipt', captured.S0.cropReceipt);
+      const branch = store.call(`fn.provider.restore.${id}`);
+      if (id === 'S0') branch.set('px.early.s0.cropReceipt', store.get('tk.source.cropReceipt'));
       const calculate = (...args) => a.calculate(...args);
       const op = { id: a.opId, kind: 'measure', gate: 'shared', unit: `early-${id.toLowerCase()}-audit`, consumes: a.consumes, produces: [a.produces], calculations: [a.fn], accessConformance: 'exact', note: `${gates[id].benefit} Validation evidence only; source outputs unchanged.` };
       const plan = { ops: [op], bindings: {}, planFingerprint: sha256HexSyncText(JSON.stringify(op)) };
       const runtime = { implementations: new Map([[a.opId, (board) => { const value = calculate(...a.consumes.map((address) => board.get(address))); board.set(a.produces, value); }]]), calculationBindings: new Map([[a.opId, [{ address: a.fn, calculate }]]]) };
-      const ticks = executePlanInstrumented(instrumentation, `early.${id}.audit`, executeCompiledPlan, plan, branch, nullFeatureContext, createMemorySink(), runtime);
+      const ticks = store.call('fn.provider.executeCompiledPlan', { site: `early.${id}.audit`, plan, board: branch, runtime });
       const evidence = branch.get(a.produces);
       const offBaseline = id === 'S0'
-        ? { ...captured.S0.cropReceipt }
+        ? { ...store.get('tk.source.cropReceipt') }
         : id === 'S1'
-          ? { familyCount: captured.S1.family.length, badgeCount: captured.S1.badges.length }
-          : { familyCount: captured.S2.family.members.length, shellMemberCount: captured.S2.shellFamily.members.length, basketCount: captured.S2.baskets.length };
-      branchResults[id] = { mode: 'ON', status: 'VALIDATION_ONLY_NO_CV_CHANGE', baseSnapshotSha256: hash(stageSnapshots[id]), benefit: gates[id].benefit, falsifier: gates[id].falsifier, oracle: 'UNKNOWN', partAddress: a.produces, offBaseline, onEvidence: evidence, canonicalRgbaSha256Off: stages[stageOrder.indexOf(id)].canonicalRgbaSha256, canonicalRgbaSha256On: hash(branch.get(id === 'S0' ? 'px.course.canonicalPixels' : ComponentPxC.image).rgba), ticks: ticks.map(t => ({ id: t.opId, declared: { consumes: op.consumes, produces: op.produces, calculations: op.calculations }, actual: { consumes: t.actualConsumes, produces: t.actualProduces, writes: t.writes }, frozenCalculations: t.frozenCalculations })) };
+          ? { familyCount: captured('S1').family.length, badgeCount: captured('S1').badges.length }
+          : { familyCount: captured('S2').family.members.length, shellMemberCount: captured('S2').shellFamily.members.length, basketCount: captured('S2').baskets.length };
+      branchResults[id] = { mode: 'ON', status: 'VALIDATION_ONLY_NO_CV_CHANGE', baseSnapshotSha256: store.get(`tk.stage.${id}.snapshotSha256`), benefit: gates[id].benefit, falsifier: gates[id].falsifier, oracle: 'UNKNOWN', partAddress: a.produces, offBaseline, onEvidence: evidence, canonicalRgbaSha256Off: stages[stageOrder.indexOf(id)].canonicalRgbaSha256, canonicalRgbaSha256On: hash(branch.get(id === 'S0' ? 'px.course.canonicalPixels' : ComponentPxC.image).rgba), ticks: ticks.map(t => ({ id: t.opId, declared: { consumes: op.consumes, produces: op.produces, calculations: op.calculations }, actual: { consumes: t.actualConsumes, produces: t.actualProduces, writes: t.writes }, frozenCalculations: t.frozenCalculations })) };
     }
   }
   if (experiments.includes('S3') && until.toUpperCase() === 'S3') {
-    const branch = restorePxC(stageSnapshots.S2);
+    const branch = store.call('fn.provider.restore.S2');
     const before = hash(branch.get(ComponentPxC.image).rgba);
     const contract = dist('stages/S3/exp/fill-consistent/contract').stageContract;
     const result = await contract.execute({ source, inputLabel: basename(source), decode: decodeNodeFile, pxc: branch });
     const after = hash(branch.get(ComponentPxC.image).rgba);
     if (before !== after || before !== initialPixels) throw new Error('S3 experiment mutated original canonical pixels');
     const pcr = branch.get('px.tees.exp.pcr');
-    const baselineTees = captured.S3.tees;
+    const baselineTees = captured('S3').tees;
     const treatmentTees = branch.get(TeePxC.objects);
     const objectIdentity = (tees) => hash(JSON.stringify(tees.map((tee) => ({ center: tee.center, bbox: tee.bbox, innerBbox: tee.innerBbox, pxSha256: hash(Buffer.from(tee.px.buffer, tee.px.byteOffset, tee.px.byteLength)) }))));
     branchResults.S3 = { mode: 'ON', status: 'EXPERIMENTAL_ORACLE_UNKNOWN', receipt: result.receiptText,
@@ -1266,7 +1241,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   if (s3AssemblyBranchEvidence) branchResults.S3ASM = s3AssemblyBranchEvidence;
   if (s3ForkJoinEvidence) branchResults.S3FJ = s3ForkJoinEvidence;
 
-  const sourceInfo = { path: source, sha256: sourceSha256, widthPx: captured.S0.fullImage.widthPx, heightPx: captured.S0.fullImage.heightPx };
+  const sourceInfo = { path: source, sha256: sourceSha256, widthPx: captured('S0').fullImage.widthPx, heightPx: captured('S0').fullImage.heightPx };
   const final = pxc;
   const provenance = JSON.parse(readFileSync(resolve(provider, 'REPLAY-PROVENANCE.json'), 'utf8'));
   const sourceAlgSha256 = treeIdentity(resolve(provider, 'packages/alg/src'), /\.(ts|json|yaml)$/);
@@ -1278,7 +1253,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     provider: { provenanceVerified, provenanceSha256: hash(readFileSync(resolve(provider, 'REPLAY-PROVENANCE.json'))), sourceAlgSha256, compiledAlgSha256 },
     stages,
     materializations: { ...s1Materializations, ...(s2Materialization ? { S2: s2Materialization } : {}), ...(s2BasketAssemblyMaterialization ? { S2BasketAssembly: s2BasketAssemblyMaterialization } : {}), ...(s3Materialization ? { S3: s3Materialization } : {}), ...(s3RingsFamilyMaterialization ? { S3RingsFamily: s3RingsFamilyMaterialization } : {}), ...(s3FamilyFixMaterialization ? { S3FamilyFix: s3FamilyFixMaterialization } : {}), ...(s3TeeAssemblyMaterialization ? { S3TeeAssembly: s3TeeAssemblyMaterialization } : {}) },
-    crop: captured.S0.cropReceipt,
+    crop: store.get('tk.source.cropReceipt'),
     snapshot: snapshotBytes ? { path: snapshotPath, relativePath: 's3.pxc.bin', sha256: snapshotSha256, addresses: presentAddresses } : null,
     counts: { ...(final.has(BadgePxC.objects.address) ? { badges: final.get(BadgePxC.objects).length } : {}), ...(final.has(BasketPxC.objects.address) ? { baskets: final.get(BasketPxC.objects).length } : {}), ...(final.has(TeePxC.objects.address) ? { tees: final.get(TeePxC.objects).length } : {}) },
     experiments: { gates, branches: branchResults },
@@ -1290,7 +1265,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   // Auto-instrumentation sidecar: per-op timing and verbatim emits for every
   // compiled-plan op this runner executed. A sidecar, not receipt content,
   // because elapsed times are nondeterministic and the receipt is hashed.
-  writeFileSync(join(out, 'instrumentation.json'), json(instrumentation.document()));
+  writeFileSync(join(out, 'instrumentation.json'), json(instrumentation.document({ store: store.manifest() })));
   return receipt;
 }
 

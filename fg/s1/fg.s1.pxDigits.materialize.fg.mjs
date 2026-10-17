@@ -13,6 +13,11 @@
  * the move from mute to digit-owned is receipted as a spec delta with exact
  * per-badge pixel accounting. px.badges itself is not rewritten.
  *
+ * Inputs are Parts and registered Calculations only: the board reads,
+ * px.badges, px.components, localImage and px.image.cropped (the S1 gateway's
+ * croppedImage is that same board Part), and the provider seam as
+ * fn.provider.S1.detectBadges (inParts localImage).
+ *
  * The certified Part px.badges.digits is not on the board: this FG derives
  * it from the board reads ('badges'), so it guards px.badges.digits and
  * reads the Parts it is derived from. Ported from runEarly.mjs with
@@ -27,6 +32,7 @@ const ID = 'fg.s1.pxDigits.materialize';
 const PART = 'px.badges.digits';
 const PRODUCED_BY = 'fn.readCourseBadges (g1.digits)';
 const SEAM = 'detectors/threeFactor/measure.detectBadges(localImage, 0)';
+const DETECT = 'fn.provider.S1.detectBadges';
 // Established golden-specimen counter table (Sam's identification,
 // 2026-10-16): the enclosed counters of the loop digits. Recorded as a
 // specimen expectation in the artifact; the guarantee itself enforces the
@@ -54,14 +60,13 @@ const canonicalCounterTable = (table) => Object.fromEntries(
 export default defineGuarantee({
   id: ID,
   guards: [PART],
-  reads: ['badges', 'px.badges', 'px.components', 'localImage'],
-  env: ['dist', 'captured'],
+  reads: ['badges', 'px.badges', 'px.components', 'localImage', 'px.image.cropped'],
+  calls: [DETECT],
   run(ctx) {
-    const { dist, captured } = ctx.env;
-    const { detectBadges } = dist('detectors/threeFactor/measure');
-    const reads = ctx.board.get('badges');
-    const badges = ctx.board.get('px.badges');
-    const fields = ctx.board.get('px.components');
+    const reads = ctx.get('badges');
+    const badges = ctx.get('px.badges');
+    const fields = ctx.get('px.components');
+    const croppedImage = ctx.get('px.image.cropped');
     if (!Array.isArray(reads) || reads.length !== badges.length) ctx.fail(`board reads (${reads?.length}) disagree with px.badges (${badges.length})`);
     const serializedReads = reads.map(serializeDigits);
     for (let i = 0; i < badges.length; i++) {
@@ -75,7 +80,7 @@ export default defineGuarantee({
     // Independent witness: the provider's public digit seam re-executed over
     // the same cropped image the gateway consumed.
     const witness = ctx.witness('serializerMatchesWitness', () => {
-      const witnessDigits = detectBadges(ctx.board.get('localImage'), 0).map(serializeDigits);
+      const witnessDigits = ctx.call(DETECT).map(serializeDigits);
       if (JSON.stringify(serializedReads) === JSON.stringify(witnessDigits)) return true;
       let at = -1;
       for (let i = 0; i < Math.max(serializedReads.length, witnessDigits.length); i++)
@@ -84,7 +89,7 @@ export default defineGuarantee({
     });
 
     // Counter attribution, ownership by enclosure.
-    const { widthPx, heightPx } = captured.S1.croppedImage;
+    const { widthPx, heightPx } = croppedImage;
     const darkLabels = fields.dark.labels;
     const componentPixels = (comp) => {
       const px = [];
@@ -164,7 +169,7 @@ export default defineGuarantee({
     if (serializedCounterPx !== counterPxTotal) ctx.fail(`serialized counter px ${serializedCounterPx} != counter union ${counterPxTotal}`);
     // Counter subtraction raster + independent recount of the same set. The
     // canonical raster is fully opaque, so zeroed alpha == the set size.
-    const counterRgba = new Uint8ClampedArray(captured.S1.croppedImage.rgba);
+    const counterRgba = new Uint8ClampedArray(croppedImage.rgba);
     for (const p of counterUnion) counterRgba[p * 4 + 3] = 0;
     let counterZeroed = 0;
     for (let p = 0; p < widthPx * heightPx; p++) if (counterRgba[p * 4 + 3] === 0) counterZeroed++;

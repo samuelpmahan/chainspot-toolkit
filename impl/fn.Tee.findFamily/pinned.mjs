@@ -6,16 +6,19 @@
  * components): the largest set of framed candidates whose frame
  * major/minor/area sit within log-ratios 1.25/1.25/1.5 of a seed.
  *
- * (board, env) -> members (fg/s3/teeFamily.mjs memberPose). env.selectTeeFamily
- * is the pinned provider function, injected by the runner because the
- * provider is reached through its dist() loader, not an import path.
+ * parts -> members (fg/s3/teeFamily.mjs memberPose). Reads px.tees.family
+ * by address and calls the pinned provider function as the registered
+ * Calculation fn.provider.S3.selectTeeFamily (the provider is reached
+ * through the runner's store, never an injected value).
  */
 import { memberPose } from '../../fg/s3/teeFamily.mjs';
 
-export default function pinned(board, env) {
-  if (typeof env?.selectTeeFamily !== 'function') throw new Error('pinned findFamily needs env.selectTeeFamily (the pinned provider function)');
-  const family = board.get('px.tees.family');
-  const selected = env.selectTeeFamily(family.measured);
+export const reads = ['px.tees.family'];
+export const calls = ['fn.provider.S3.selectTeeFamily'];
+
+export default function pinned(parts) {
+  const family = parts.get('px.tees.family');
+  const selected = parts.call('fn.provider.S3.selectTeeFamily', { measured: family.measured });
   return selected.members
     .map((m) => memberPose(m.ring, m.frame, { rule: 'selectTeeFamily resemblance', anchor: selected.anchor ? selected.anchor.ring === m.ring : false }))
     .sort((a, b) => (a.center[1] - b.center[1]) || (a.center[0] - b.center[0]));
