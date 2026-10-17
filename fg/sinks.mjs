@@ -7,7 +7,10 @@
  * the same boundary so a FunctionalGuarantee can run unchanged in the
  * toolkit runner (files), the Svelte FE (memory) and tests (memory):
  *
- *   putArtifact(kind, id, bytes, dims?) -> { id, kind, sha256, bytes, uri, dims? }
+ *   putArtifact(kind, id, bytes, dims?, { path }?) -> { id, kind, sha256, bytes, uri, dims? }
+ *     path: optional sink-relative file path, for sinks that have files (the
+ *     S1 layout writes artifact id s1.badgePx.rgba to s1/badgePx.rgba.bin,
+ *     which no id->filename rule derives); the memory sink ignores it
  *   readArtifact(id) -> Uint8Array | undefined      (optional)
  *
  * readArtifact is what turns the old "writeFileSync, readFileSync, rehash"
@@ -47,7 +50,8 @@ export function createMemorySink() {
 export function scopeSink(sink, prefix) {
   const scoped = (id) => `${prefix}/${id}`;
   return {
-    putArtifact: (kind, id, bytes, dims) => sink.putArtifact(kind, scoped(id), bytes, dims),
+    putArtifact: (kind, id, bytes, dims, options) =>
+      sink.putArtifact(kind, scoped(id), bytes, dims, options?.path ? { ...options, path: scoped(options.path) } : options),
     ...(typeof sink.readArtifact === 'function' ? { readArtifact: (id) => sink.readArtifact(id) } : {})
   };
 }

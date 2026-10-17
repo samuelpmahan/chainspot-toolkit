@@ -14,10 +14,12 @@
  *       automatically. Duplicate ids, a missing required id, and cycles
  *       throw: those are wiring errors, not guarantee failures.
  *
- *   runGuarantees({ guarantees, board, sink, only?, lanes?, branch? })
- *       -> { records, frames, timings }
+ *   runGuarantees({ guarantees, board, sink, only?, lanes?, branch?, env?, hash? })
+ *       -> { records, frames, outputs, timings }
  *       records: { [id]: record } in run order; frames: every FG's frames
- *       concatenated in run order (the flipbook stream); timings: the
+ *       concatenated in run order (the flipbook stream); outputs: { [id]:
+ *       { [address]: value } }, what each FG ctx.publish()ed for the caller
+ *       (env and hash pass through to every FG); timings: the
  *       nondeterministic sidecar [{ guarantee, elapsedMs }], never inside
  *       a record. A lane-gated FG whose lane is not enabled, or any FG
  *       requiring a dormant one, gets a dormant record instead of running.
@@ -64,9 +66,10 @@ export function orderGuarantees(fgs, only = null) {
   return order;
 }
 
-export function runGuarantees({ guarantees, board, sink = createMemorySink(), only = null, lanes = [], branch = null }) {
+export function runGuarantees({ guarantees, board, sink = createMemorySink(), only = null, lanes = [], branch = null, env = {}, hash }) {
   const enabled = new Set(lanes);
   const records = {};
+  const outputs = {};
   const frames = [];
   const timings = [];
   for (const fg of orderGuarantees(guarantees, only)) {
@@ -76,21 +79,22 @@ export function runGuarantees({ guarantees, board, sink = createMemorySink(), on
     const required = Object.fromEntries(fg.requires.map((id) => [id, records[id]]));
     const started = now();
     try {
-      const out = runGuarantee(fg, { board, records: required, sink, branch });
+      const out = runGuarantee(fg, { board, records: required, sink, branch, env, ...(hash ? { hash } : {}) });
       records[fg.id] = out.record;
+      outputs[fg.id] = out.outputs;
       frames.push(...out.frames);
     } catch (error) {
       timings.push({ guarantee: fg.id, elapsedMs: roundMs(now() - started) });
       if (error instanceof GuaranteeFailure) {
         records[fg.id] = error.record;
         frames.push(...error.frames);
-        Object.assign(error, { records, frames, timings });
+        Object.assign(error, { records, frames, outputs, timings });
       }
       throw error;
     }
     timings.push({ guarantee: fg.id, elapsedMs: roundMs(now() - started) });
   }
-  return { records, frames, timings };
+  return { records, frames, outputs, timings };
 }
 
 export function createRegistry(guarantees) {

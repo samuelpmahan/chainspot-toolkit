@@ -12,26 +12,47 @@
  * write, and attach { guarantee, part, producedBy, totals, checks,
  * artifacts } to the stage. This module is that skeleton, once:
  *
- *   defineGuarantee({ id, guards, requires?, lane?, run(ctx) })
+ *   defineGuarantee({ id, guards, reads?, env?, requires?, lane?, run(ctx) })
  *     id:       'fg.<stage>.<part>.<verb>', the id stages/*.json declares.
- *     guards:   Part addresses the FG guards; each must be on the board
- *               before run() is called (an automatic check, so no FG
- *               hand-writes "px.badges is missing").
+ *     guards:   the Part addresses the FG certifies (the declaration's
+ *               `part`). A certified Part need not be on the board: an FG
+ *               may itself derive it (serialize the reads into
+ *               px.badges.digits, run the op on a restored branch to get
+ *               badgeGlyphTemplate), which is what three of S1's four do.
+ *     reads:    board addresses that must be on the board before run() is
+ *               called (an automatic `read:<address>` check, so no FG
+ *               hand-writes "px.badges is missing"). Defaults to guards,
+ *               the case where the certified Part is itself an input.
+ *     env:      names of runner-injected inputs that are not board Parts
+ *               (the provider's dist() loader, captured gateway results,
+ *               stage snapshots, restorePxC, the instrumentation hook).
+ *               Each must be present (automatic `env:<name>` check) and
+ *               ctx.env exposes exactly the declared names, so the FG's
+ *               declared inputs are the only inputs it can reach.
  *     requires: FG ids whose RECORDS this FG gates against; the registry
  *               runs them first and ctx.records holds exactly those.
  *     lane:     optional lane name; the FG is dormant unless that lane is
  *               enabled (the declared "with lane X ON (default OFF)").
  *     run(ctx): returns { totals, ...extra }; extra keys land on the record.
  *
- *   ctx = { id, board, records, sink,
+ *   ctx = { id, board, env, records, sink,
  *           fail(reason)            throw now (an opaque Part, a missing input)
  *           check(name, ok, detail) record a named verdict; returns ok
  *           witness(name, fn)       run an independent re-derivation; fn returns
  *                                   a boolean or { ok, ...detail }; a throw is a
  *                                   failed witness, not a crash
- *           artifact(id, kind, bytes|json, dims?)  put through the sink, our own
- *                                   sha256 must equal the sink's, and a sink that
- *                                   can read back is re-read and rehashed
+ *           artifact(id, kind, bytes|json, dims?, { path }?)  put through the
+ *                                   sink, our own sha256 must equal the sink's,
+ *                                   and a sink that can read back is re-read and
+ *                                   rehashed. json is written as canonicalJson;
+ *                                   an FG with a fixed legacy byte layout passes
+ *                                   bytes. path (optional) is the sink-relative
+ *                                   file path when no id->filename rule fits
+ *           publish(address, value) hand a value to the CALLER, uncopied and
+ *                                   outside the record (e.g. the legacy receipt
+ *                                   object a runner attaches to its stage, whose
+ *                                   key order is its byte layout); returned as
+ *                                   outputs beside the record
  *           frame({ title, parts, tick?, calculation?, verdicts?, receipt? }) }
  *
  * A Frame is one flipbook page the FG decides to emit:
@@ -45,9 +66,9 @@
  * flipbook (fg/flipbook.mjs), the FE, an agent reading JSON, and tests.
  *
  * The record (fixed key order, every value canonical JSON):
- *   { guarantee, status: 'held'|'failed'|'dormant', reason, guards, requires,
- *     lane, totals, checks, witnesses, artifacts, frames: [{ seq, title, sha256 }],
- *     ...extra (sorted) }
+ *   { guarantee, status: 'held'|'failed'|'dormant', reason, guards, reads, env,
+ *     requires, lane, totals, checks, witnesses, artifacts,
+ *     frames: [{ seq, title, sha256 }], published: [address], ...extra (sorted) }
  * No timings: elapsed time is nondeterministic and the record is hashed
  * evidence, so timings go to the caller's sidecar (registry.runGuarantees
  * returns them separately, as ports/early/instrument.mjs does).
@@ -77,26 +98,30 @@ export class GuaranteeFailure extends Error {
 
 class Abort extends Error {}
 
-export function defineGuarantee({ id, guards, requires = [], lane = null, run }) {
+const nameList = (list) => Array.isArray(list) && list.every((a) => typeof a === 'string' && a);
+
+export function defineGuarantee({ id, guards, reads = guards, env = [], requires = [], lane = null, run }) {
   if (typeof id !== 'string' || !ID.test(id)) throw new Error(`defineGuarantee: id ${JSON.stringify(id)} is not an fg.* id`);
-  if (!Array.isArray(guards) || !guards.length || !guards.every((a) => typeof a === 'string' && a))
+  if (!nameList(guards) || !guards.length)
     throw new Error(`defineGuarantee ${id}: guards must be a non-empty list of Part addresses`);
+  if (!nameList(reads)) throw new Error(`defineGuarantee ${id}: reads must be a list of board addresses`);
+  if (!nameList(env)) throw new Error(`defineGuarantee ${id}: env must be a list of injected input names`);
   if (!Array.isArray(requires) || !requires.every((r) => typeof r === 'string' && ID.test(r)))
     throw new Error(`defineGuarantee ${id}: requires must be a list of fg.* ids`);
   if (requires.includes(id)) throw new Error(`defineGuarantee ${id}: requires itself`);
   if (lane !== null && (typeof lane !== 'string' || !lane)) throw new Error(`defineGuarantee ${id}: lane must be a lane name or null`);
   if (typeof run !== 'function') throw new Error(`defineGuarantee ${id}: run(ctx) is required`);
-  return Object.freeze({ [GUARANTEE]: true, id, guards: [...guards], requires: [...requires], lane, run });
+  return Object.freeze({ [GUARANTEE]: true, id, guards: [...guards], reads: [...reads], env: [...env], requires: [...requires], lane, run });
 }
 
 export const isGuarantee = (value) => Boolean(value && value[GUARANTEE]);
 
 function baseRecord(fg) {
-  return { guarantee: fg.id, status: null, reason: null, guards: fg.guards, requires: fg.requires, lane: fg.lane };
+  return { guarantee: fg.id, status: null, reason: null, guards: fg.guards, reads: fg.reads, env: fg.env, requires: fg.requires, lane: fg.lane };
 }
 
 export function dormantRecord(fg, reason) {
-  return { ...baseRecord(fg), status: 'dormant', reason, totals: null, checks: [], witnesses: [], artifacts: [], frames: [] };
+  return { ...baseRecord(fg), status: 'dormant', reason, totals: null, checks: [], witnesses: [], artifacts: [], frames: [], published: [] };
 }
 
 /** Frame emitter shared by guarantees and comparableForkJoin comparisons. */
@@ -125,14 +150,18 @@ export function createFrameEmitter({ fg, branch = null, onFail = (reason) => { t
 
 /**
  * Run one guarantee. records: { [requiredId]: record } (exactly fg.requires).
- * Returns { record, frames }; throws GuaranteeFailure.
+ * env: the runner's injected inputs (ctx.env sees only fg.env of them).
+ * hash: bytes -> sha256 hex for artifacts; defaults to the pure-JS digest,
+ * a Node runner passes node:crypto's (10 MB rasters are hashed 3x each).
+ * Returns { record, frames, outputs }; throws GuaranteeFailure.
  */
-export function runGuarantee(fg, { board, records = {}, sink, branch = null }) {
+export function runGuarantee(fg, { board, records = {}, sink, branch = null, env = {}, hash = sha256Hex }) {
   if (!isGuarantee(fg)) throw new Error('runGuarantee: not a defineGuarantee() value');
   if (!sink || typeof sink.putArtifact !== 'function') throw new Error(`runGuarantee ${fg.id}: a sink with putArtifact is required`);
   const checks = [];
   const witnesses = [];
   const artifacts = [];
+  const outputs = {};
   const names = new Set();
   let abortReason = null;
   let mark = { checks: 0, witnesses: 0 };
@@ -155,10 +184,13 @@ export function runGuarantee(fg, { board, records = {}, sink, branch = null }) {
 
   const required = {};
   for (const id of fg.requires) if (records[id]) required[id] = records[id];
+  const scopedEnv = {};
+  for (const name of fg.env) if (env?.[name] !== undefined) scopedEnv[name] = env[name];
 
   const ctx = Object.freeze({
     id: fg.id,
     board,
+    env: Object.freeze(scopedEnv),
     records: Object.freeze(required),
     sink,
     fail: abort,
@@ -181,22 +213,27 @@ export function runGuarantee(fg, { board, records = {}, sink, branch = null }) {
       witnesses.push(outcome);
       return outcome;
     },
-    artifact(id, kind, data, dims) {
+    artifact(id, kind, data, dims, { path } = {}) {
       if (typeof id !== 'string' || !id) abort('artifact id is required');
       if (artifacts.some((a) => a.id === id)) abort(`artifact ${id} put twice`);
       const bytes = ArrayBuffer.isView(data) || data instanceof ArrayBuffer ? new Uint8Array(toBytes(data)) : utf8(canonicalJson(data) + '\n');
-      const sha256 = sha256Hex(bytes);
-      const ref = sink.putArtifact(kind, id, bytes, dims);
+      const sha256 = hash(bytes);
+      const ref = sink.putArtifact(kind, id, bytes, dims, path ? { path } : undefined);
       if (!ref || ref.sha256 !== sha256) abort(`artifact ${id}: sink hash ${ref?.sha256} != computed ${sha256}`);
       let rehashed = false;
       if (typeof sink.readArtifact === 'function') {
         const back = sink.readArtifact(ref.id);
-        if (!back || sha256Hex(back) !== sha256) abort(`artifact ${id} hash mismatch after write`);
+        if (!back || hash(back) !== sha256) abort(`artifact ${id} hash mismatch after write`);
         rehashed = true;
       }
       const entry = { id, kind, sha256, bytes: bytes.length, uri: ref.uri ?? null, dims: dims ? plain(dims) : null, rehashed };
       artifacts.push(entry);
       return entry;
+    },
+    publish(address, value) {
+      if (typeof address !== 'string' || !address) abort('publish needs an address');
+      if (Object.hasOwn(outputs, address)) abort(`published ${address} twice`);
+      outputs[address] = value;
     },
     frame: (spec) => emitter.emit(spec)
   });
@@ -206,8 +243,10 @@ export function runGuarantee(fg, { board, records = {}, sink, branch = null }) {
   try {
     for (const id of fg.requires)
       if (!required[id] || required[id].status !== 'held') abort(`required record ${id} is ${required[id]?.status ?? 'missing'}`);
-    for (const address of fg.guards)
-      ctx.check(`guarded:${address}`, typeof board?.has === 'function' && board.has(address), { address });
+    for (const address of fg.reads)
+      ctx.check(`read:${address}`, typeof board?.has === 'function' && board.has(address), { address });
+    for (const name of fg.env)
+      ctx.check(`env:${name}`, Object.hasOwn(scopedEnv, name), { name });
     if (checks.every((c) => c.ok)) result = fg.run(ctx);
     if (result && typeof result.then === 'function') abort('run() returned a Promise; guarantees are synchronous');
   } catch (error) {
@@ -221,7 +260,8 @@ export function runGuarantee(fg, { board, records = {}, sink, branch = null }) {
   const record = {
     ...baseRecord(fg), status, reason,
     totals: plain(totals), checks, witnesses, artifacts,
-    frames: emitter.frames.map((f) => ({ seq: f.seq, title: f.title, sha256: digest(f) }))
+    frames: emitter.frames.map((f) => ({ seq: f.seq, title: f.title, sha256: digest(f) })),
+    published: Object.keys(outputs)
   };
   for (const key of Object.keys(extra).sort()) {
     if (key in record) { record.status = 'failed'; record.reason = `run() returned reserved record key ${key}`; break; }
@@ -229,7 +269,7 @@ export function runGuarantee(fg, { board, records = {}, sink, branch = null }) {
   }
   if (record.status !== 'held')
     throw new GuaranteeFailure(fg.id, record.reason, { failed, record, frames: emitter.frames, cause: thrown ?? undefined });
-  return { record, frames: emitter.frames };
+  return { record, frames: emitter.frames, outputs };
 }
 
 /** Canonical bytes of a record (what gets hashed or diffed). */
