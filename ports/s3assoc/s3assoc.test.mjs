@@ -45,27 +45,30 @@ test('basketPoint: sprite bottom-centre plus the spoke-solved offset', () => {
   assert.deepEqual(basketPoint([100, 200, 46, 72]), [122.5 + BASKET_POINT_OFFSET[0], 271 + BASKET_POINT_OFFSET[1]]);
 });
 
-test('associate: one obvious badge, straight hole to a BasketPoint, and the ambiguous and no-badge cases', () => {
+test('associate: one obvious badge, straight hole to a BasketPoint, exclusivity, ambiguity and no consistent badge', () => {
   const th = (30 * Math.PI) / 180, u = [Math.cos(th), Math.sin(th)];
-  const at = (t, lat = 0) => [100 + u[0] * t - u[1] * lat, 100 + u[1] * t + u[0] * lat];
+  const at = (t, lat = 0, o = [100, 100]) => [o[0] + u[0] * t - u[1] * lat, o[1] + u[1] * t + u[0] * lat];
   const bp = at(260, 0.8); // BasketPoint 260 px down the axis, 0.8 px off it
   const basket = { index: 4, bbox: [bp[0] - 22.5 - BASKET_POINT_OFFSET[0], bp[1] - 71 - BASKET_POINT_OFFSET[1], 46, 72] };
   const badges = [{ label: '7', center: at(120, 0.4) }, { label: '9', center: at(-150, 5.5) }, { label: '3', center: at(40, 30) }];
   const [r] = associate({ tees: [{ label: '1', center: [100, 100], thRad: th }], badges, baskets: [basket], padLengthPx: 25 });
-  assert.equal(r.best.badge, '7');
-  assert.equal(r.candidates.length, 2);
-  assert.equal(r.verdict, 'ASSOCIATED');
-  assert.ok(r.ratio >= 2);
-  assert.equal(r.straight.basket, 4);
-  assert.equal(r.straight.verdict, 'STRAIGHT_CANDIDATE');
-  assert.ok(Math.abs(r.straight.latPx - 0.8) < 0.02);
+  assert.equal(r.best.badge, '7'); assert.equal(r.verdict, 'ASSOCIATED'); assert.ok(r.best.z < 1);
+  assert.equal(r.straight.basket, 4); assert.equal(r.straight.verdict, 'STRAIGHT_CANDIDATE'); assert.ok(Math.abs(r.straight.latPx - 0.8) < 0.02);
+  assert.equal(r.nearest.length, 3, 'nothing is dropped: the 3 lowest-z badges are tracked');
+  // exclusivity: pad A sees badges a (z~1.2) and b (z~0.5); pad B sees b at z~0.1, so A gets a
+  const ex2 = associate({ tees: [{ label: 'A', center: [100, 100], thRad: th }, { label: 'B', center: at(-240, 0.35), thRad: th }],
+    badges: [{ label: 'a', center: at(120, 1.0) }, { label: 'b', center: at(-120, 0.4) }], baskets: [], padLengthPx: 25 });
+  const A = ex2.find((x) => x.tee === 'A'), Bt = ex2.find((x) => x.tee === 'B');
+  assert.equal(Bt.best.badge, 'b'); assert.equal(A.best.badge, 'a'); assert.equal(A.verdict, 'ASSOCIATED_BY_EXCLUSIVITY');
+  assert.equal(A.resolvedBy[0].takenByTee, 'B');
+  // ambiguous: two consistent badges, nobody else claims the loser
   const amb = associate({ tees: [{ label: '2', center: [100, 100], thRad: th }], badges: [{ label: 'a', center: at(120, 1.0) }, { label: 'b', center: at(-120, 1.4) }], baskets: [], padLengthPx: 25 });
-  assert.equal(amb[0].verdict, 'AMBIGUOUS');
+  assert.equal(amb[0].verdict, 'AMBIGUOUS'); assert.equal(amb[0].inspect, true);
   const none = associate({ tees: [{ label: '3', center: [100, 100], thRad: th }], badges: [{ label: 'a', center: at(100, 40) }], baskets: [], padLengthPx: 25 });
-  assert.equal(none[0].verdict, 'NO_BADGE');
+  assert.equal(none[0].verdict, 'NO_CONSISTENT_BADGE'); assert.equal(none[0].nearest[0].badge, 'a');
 });
 
-test('pathSide: finds the side a light ribbon leaves the pad, and the ribbon side breaks an opposite-sense tie', async () => {
+test('pathSide: finds the side a light ribbon leaves the pad and is recorded beside the association', async () => {
   const { pathSide } = await import('./associate.mjs');
   const W = 200, H = 120, rgba = new Uint8Array(W * H * 4), th = 0.2, c = [100, 60], ax = [Math.cos(th), Math.sin(th)];
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
@@ -76,6 +79,6 @@ test('pathSide: finds the side a light ribbon leaves the pad, and the ribbon sid
   const side = pathSide({ raster: { rgba, widthPx: W, heightPx: H }, center: c, thRad: th, L: 25, W: 17.4 });
   assert.equal(side.sense, 1); assert.equal(side.decisive, true);
   const at = (t) => [c[0] + ax[0] * t, c[1] + ax[1] * t];
-  const [r] = associate({ tees: [{ label: 't', center: c, thRad: th, pathSide: side }], badges: [{ label: 'ahead', center: at(140) }, { label: 'behind', center: at(-140) }], baskets: [], padLengthPx: 25 });
-  assert.equal(r.verdict, 'ASSOCIATED_BY_PATH_SIDE'); assert.equal(r.best.badge, 'ahead'); assert.equal(r.badgeOnPathSide, true);
+  const [r] = associate({ tees: [{ label: 't', center: c, thRad: th, pathSide: side }], badges: [{ label: 'ahead', center: at(140) }], baskets: [], padLengthPx: 25 });
+  assert.equal(r.best.badge, 'ahead'); assert.equal(r.badgeOnPathSide, true);
 });

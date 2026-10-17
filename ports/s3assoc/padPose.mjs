@@ -151,9 +151,23 @@ export function fitPadPose({ raster, occ, seed, tmpl, fixShape = false, R = 28 }
     }
   }
   const sse = objective(fixShape ? q.slice(0, 3) : q);
+  // Pose uncertainty from the fit itself (profile curvature): theta is perturbed by +-h with the centre
+  // re-optimised, the centre by +-hc with theta held. sigma^2 = 2 s^2 / curvature, s^2 = SSE / dof.
+  // Residuals are spatially correlated (JPEG, background model), so these are scaled downstream by a factor
+  // calibrated on Sam-confirmed pairings, never trusted raw.
+  const shape = q.slice(3), dof = Math.max(1, idx.length * 3 - 3), s2 = sse / dof;
+  const obj3 = (p) => objective(fixShape ? p : [...p, ...shape]);
+  const sseAt = (cx, cy, th) => obj3([cx, cy, th]);
+  const profTheta = (th) => nelderMead((p) => obj3([p[0], p[1], th]), [q[0], q[1]], [0.15, 0.15], 120).f;
+  const h = (0.5 * Math.PI) / 180, hc = 0.25;
+  const cTh = (profTheta(q[2] + h) + profTheta(q[2] - h) - 2 * sse) / (h * h);
+  const cX = (sseAt(q[0] + hc, q[1], q[2]) + sseAt(q[0] - hc, q[1], q[2]) - 2 * sse) / (hc * hc);
+  const cY = (sseAt(q[0], q[1] + hc, q[2]) + sseAt(q[0], q[1] - hc, q[2]) - 2 * sse) / (hc * hc);
+  const sig = (c) => (c > 0 ? Math.sqrt((2 * s2) / c) : Infinity);
+  const sigma = { thDeg: (sig(cTh) * 180) / Math.PI, xPx: sig(cX), yPx: sig(cY), raw: true };
   let clean = true;
   for (let i = 0; i < n * n; i++) if (occW[i] && inRect(X(i), Y(i), q[0], q[1], q[2], q[3], q[4], 3.0)) { clean = false; break; }
   if (q[4] > q[3]) q = [q[0], q[1], q[2] + Math.PI / 2, q[4], q[3], q[6], q[5]];
   q[2] = ((q[2] + Math.PI / 2) % Math.PI + Math.PI) % Math.PI - Math.PI / 2;
-  return { cx: q[0], cy: q[1], thRad: q[2], thDeg: (q[2] * 180) / Math.PI, L: q[3], W: q[4], se: q[5], ss: q[6], rms: Math.sqrt(sse / (idx.length * 3)), nEval: idx.length, clean };
+  return { cx: q[0], cy: q[1], thRad: q[2], thDeg: (q[2] * 180) / Math.PI, L: q[3], W: q[4], se: q[5], ss: q[6], rms: Math.sqrt(sse / (idx.length * 3)), nEval: idx.length, clean, sigma };
 }

@@ -55,3 +55,33 @@ deg (Heritage's badges are only 45-128 px away).
 - Path side is crude and calibrated on golden/heritage/alex (badge on the
   path side 15/15, 11/11, 11/12). On lenard (8/16) and townelake (13/17) the
   strip test itself is suspect, so it is only used to break ties.
+
+## Uncertainty, not degrees: association by z, global and one-to-one (Sam: "several of those pads are off just enough to favor a different badge")
+
+![z](inspect3.png)
+
+- **Pose-only refit.** Pads are rigid per course, so pass 2 refits pose only
+  against the course template. Size can no longer trade against angle.
+  Near-axis-aligned pads moved the most: heritage S3 #13 by 1.28 deg and
+  S3 #14 by 1.63 deg. Each fit also reports its own angle sigma, from
+  profile curvature.
+- **Calibration** (`calib_sigma.py`, 76 confirmed pairings). The lateral miss
+  is a constant sigma0 = 0.85 px and does not grow with distance over
+  45-214 px. |z| median is 0.76 (0.67 expected), max 2.16.
+- **Why badges looked favoured.** Ranking by deg made far badges look better:
+  heritage S3 #2's badge 15 at 814 px read as 0.24 deg against badge 8 at
+  0.64 deg. In px, with each pad's own angle sigma, such badges sit at
+  z 2-8.
+- **Rule.** z = lateral / sqrt(0.85^2 + (dist x sigma_theta)^2). Badges with
+  z <= 3 are consistent. Pairs are taken in increasing z, each badge and pad
+  once.
+
+Results:
+- **63/63 agree with Sam; Alex 13/13 associated.**
+- 5 pads have a second consistent badge owned by a better-fitting pad:
+  lenard S3 #7, townelake S3 #9, heritage S3 #14, alex S3 #10 and #12.
+- 1 is AMBIGUOUS: heritage S3 #2. Its alternative, badge 15 at 814 px
+  (z 2.59), is unclaimed only because heritage tee 15 is not visible. S4
+  recovering that tee settles it.
+- The path side agrees with the chosen badge in all 6 cases. It is recorded
+  as evidence, not used to decide.

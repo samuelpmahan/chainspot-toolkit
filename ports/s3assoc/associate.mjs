@@ -15,17 +15,17 @@ export const BASKET_POINT_OFFSET = Object.freeze([0.34, 0.73]);
 export const basketPoint = (bbox) => [bbox[0] + (bbox[2] - 1) / 2 + BASKET_POINT_OFFSET[0], bbox[1] + bbox[3] - 1 + BASKET_POINT_OFFSET[1]];
 
 export const ASSOC_BOUNDS = Object.freeze({
-  badgeWindowDeg: 3.0,        // deg: badge candidates within this angle of the pad axis (either sense)
+  sigma0Px: 0.85,              // px: badge + pad centre error, calibrated on 76 Sam-confirmed pairings (5 courses)
+  sigmaThetaFloorRad: 0.0005,  // rad (0.03 deg): floor on a pad's own angle sigma
+  zMax: 3,                     // z: a badge within 3 sigma of the axis is consistent with the pad
   badgeMinDistPadLengths: 0.6, // pad lengths: nearer badges are overlapping chrome, not a pairing
   badgeMaxDistPadLengths: 12,  // pad lengths
-  inspectLateralPx: 2.0,       // px: flag a pairing for inspection past this; all 76 pads on 5 courses sit within 1.90 px
-  obviousRatio: 2.0,           // ratio: the 2nd candidate's lateral miss must be at least this times the best's
   straightLateralPx: 3.0       // px: axis-to-BasketPoint miss that reads as a straight hole; a coincidental hit on a bent
                                // hole (golden 7, 14 at 507-552 px) is S6's to reject by the ribbon, not a length cutoff
 });
 export const ASSOC_UNITS = Object.freeze({
   resDeg: 'deg (pad axis to badge centre)', latPx: 'px (badge centre to pad axis line)', distPx: 'px (pad centre to badge centre)',
-  alongPx: 'px (pad centre to BasketPoint along the axis)', ratio: 'ratio (2nd candidate lateral / best lateral)'
+  alongPx: 'px (pad centre to BasketPoint along the axis)', z: 'z (lateral miss / its expected sigma)'
 });
 
 const sub = (a, b) => [a[0] - b[0], a[1] - b[1]];
@@ -60,48 +60,46 @@ export function pathSide({ raster, occ = null, center, thRad, L, W }) {
   return { sense: ahead >= behind ? 1 : -1, excess: [r2(ahead), r2(behind)], decisive: Math.abs(ahead - behind) >= 8 };
 }
 
+/**
+ * tees: [{ label, center:[x,y], thRad, sigmaThRad?, pathSide? }]; badges: [{ label, center }]; baskets: [{ index, bbox }].
+ * Every badge gets a z per pad: lateral miss / sqrt(sigma0^2 + (dist * sigmaTheta)^2). sigma0 = 0.85 px was calibrated on
+ * the 76 Sam-confirmed pairings (5 courses; the miss does not grow with distance over 45-214 px); sigmaTheta is the
+ * pad's own profile-curvature angle sigma (a floor, never zero). Badges within z <= 3 are consistent. Association is
+ * global and one-to-one: consistent pairs are taken in increasing z, each badge and pad once, so a far badge a pad
+ * cannot rule out is settled by the pad it actually belongs to. Nothing is dropped: every pad keeps its 3 lowest-z badges.
+ */
 export function associate({ tees, badges, baskets, padLengthPx, bounds = ASSOC_BOUNDS }) {
   const bps = baskets.map((k) => ({ index: k.index, point: basketPoint(k.bbox) }));
-  return tees.map((t) => {
-    const ax = [Math.cos(t.thRad), Math.sin(t.thRad)];
-    const cands = [];
-    for (const b of badges) {
+  const per = tees.map((t) => {
+    const ax = [Math.cos(t.thRad), Math.sin(t.thRad)], sTh = Math.max(t.sigmaThRad ?? 0, bounds.sigmaThetaFloorRad);
+    const all = badges.map((b) => {
       const v = sub(b.center, t.center), dist = Math.hypot(...v);
-      if (dist < bounds.badgeMinDistPadLengths * padLengthPx || dist > bounds.badgeMaxDistPadLengths * padLengthPx) continue;
-      const sense = dot(v, ax) > 0 ? 1 : -1, u = [ax[0] * sense, ax[1] * sense], nrm = [-u[1], u[0]];
-      const resDeg = (Math.atan2(Math.abs(dot(v, nrm)), dot(v, u)) * 180) / Math.PI;
-      if (resDeg <= bounds.badgeWindowDeg) cands.push({ badge: String(b.label), resDeg: r2(resDeg), latPx: r2(Math.abs(dot(v, nrm))), distPx: r2(dist), sense });
-    }
-    cands.sort((a, b) => a.latPx - b.latPx);
-    // Never drop a pad: the nearest badges by axis residual (no angle cutoff) are tracked for inspection,
-    // because a miss is as likely our measurement as the scene.
-    const nearest = badges.map((b) => {
-      const v = sub(b.center, t.center), dist = Math.hypot(...v);
-      const sense = dot(v, ax) > 0 ? 1 : -1, u = [ax[0] * sense, ax[1] * sense], nrm = [-u[1], u[0]];
-      return { badge: String(b.label), resDeg: r2((Math.atan2(Math.abs(dot(v, nrm)), dot(v, u)) * 180) / Math.PI), latPx: r2(Math.abs(dot(v, nrm))), distPx: r2(dist), sense };
-    }).filter((k) => k.distPx >= bounds.badgeMinDistPadLengths * padLengthPx).sort((a, b) => a.resDeg - b.resDeg).slice(0, 3);
-    const best = cands[0] ?? null;
-    const ratio = cands.length > 1 ? r2(cands[1].latPx / Math.max(best.latPx, 0.05)) : null;
-    let verdict = !best ? 'NO_BADGE' : cands.length > 2 ? 'AMBIGUOUS' : cands.length === 2 && ratio < bounds.obviousRatio ? 'AMBIGUOUS' : 'ASSOCIATED';
-    // Tie-break by the path: the badge lies on the side the hole path leaves the pad.
-    const side = t.pathSide ?? null;
-    let best_ = best;
-    if (verdict === 'AMBIGUOUS' && side?.decisive) {
-      const onPath = cands.filter((k) => k.sense === side.sense);
-      if (onPath.length === 1) { best_ = onPath[0]; verdict = 'ASSOCIATED_BY_PATH_SIDE'; }
-    }
+      const sense = dot(v, ax) > 0 ? 1 : -1, u = [ax[0] * sense, ax[1] * sense], nrm = [-u[1], u[0]], lat = Math.abs(dot(v, nrm));
+      return { badge: String(b.label), z: r2(lat / Math.sqrt(bounds.sigma0Px ** 2 + (dist * sTh) ** 2)), latPx: r2(lat), resDeg: r2((Math.atan2(lat, dot(v, u)) * 180) / Math.PI), distPx: r2(dist), sense };
+    }).filter((k) => k.distPx >= bounds.badgeMinDistPadLengths * padLengthPx).sort((a, b) => a.z - b.z);
+    return { t, ax, all, consistent: all.filter((k) => k.z <= bounds.zMax) };
+  });
+  // global one-to-one assignment by increasing z
+  const pairs = per.flatMap((p, i) => p.consistent.map((k) => ({ i, k }))).sort((a, b) => a.k.z - b.k.z);
+  const taken = new Set(), chosen = new Map();
+  for (const { i, k } of pairs) if (!chosen.has(i) && !taken.has(k.badge)) { chosen.set(i, k); taken.add(k.badge); }
+  const owner = new Map([...chosen].map(([i, k]) => [k.badge, i]));
+  return per.map((p, i) => {
+    const { t, ax, all, consistent } = p, best = chosen.get(i) ?? null, side = t.pathSide ?? null;
+    const others = consistent.filter((k) => k !== best);
+    let verdict = !best ? (consistent.length ? 'ALL_CONSISTENT_BADGES_TAKEN' : 'NO_CONSISTENT_BADGE') : others.length === 0 ? 'ASSOCIATED' : 'ASSOCIATED_BY_EXCLUSIVITY';
+    const resolvedBy = others.map((k) => ({ badge: k.badge, z: k.z, distPx: k.distPx, takenByTee: owner.has(k.badge) ? tees[owner.get(k.badge)].label : null }));
+    if (verdict === 'ASSOCIATED_BY_EXCLUSIVITY' && resolvedBy.some((r) => r.takenByTee === null)) verdict = 'AMBIGUOUS';
     let straight = null;
-    if (best_) {
-      const best = best_;
+    if (best) {
       const u = [ax[0] * best.sense, ax[1] * best.sense], nrm = [-u[1], u[0]];
       const hits = bps.map((k) => { const v = sub(k.point, t.center); return { basket: k.index, latPx: r2(Math.abs(dot(v, nrm))), alongPx: r2(dot(v, u)) }; })
         .filter((h) => h.alongPx > best.distPx * 0.5).sort((a, b) => a.latPx - b.latPx);
       const h = hits[0];
-      if (h) straight = { ...h, nextLatPx: hits[1]?.latPx ?? null,
-        verdict: h.latPx <= bounds.straightLateralPx ? 'STRAIGHT_CANDIDATE' : 'NOT_STRAIGHT_OR_BASKET_UNSEEN' };
+      if (h) straight = { ...h, nextLatPx: hits[1]?.latPx ?? null, verdict: h.latPx <= bounds.straightLateralPx ? 'STRAIGHT_CANDIDATE' : 'NOT_STRAIGHT_OR_BASKET_UNSEEN' };
     }
-    const inspect = verdict !== 'ASSOCIATED' || (best_ && best_.latPx > bounds.inspectLateralPx) || (straight && straight.verdict !== 'STRAIGHT_CANDIDATE' && straight.latPx < 10);
-    return { tee: t.label, center: t.center.map(r2), thDeg: r2((t.thRad * 180) / Math.PI), candidates: cands, nearest, best: best_, ratio, verdict, inspect, pathSide: side,
-      badgeOnPathSide: best_ && side?.sense ? best_.sense === side.sense : null, straight };
+    const inspect = verdict !== 'ASSOCIATED' || (straight && straight.verdict !== 'STRAIGHT_CANDIDATE' && straight.latPx < 10);
+    return { tee: t.label, center: t.center.map(r2), thDeg: r2((t.thRad * 180) / Math.PI), best, candidates: consistent, nearest: all.slice(0, 3), resolvedBy,
+      verdict, inspect, pathSide: side, badgeOnPathSide: best && side?.sense ? best.sense === side.sense : null, straight };
   });
 }
