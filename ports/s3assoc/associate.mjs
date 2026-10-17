@@ -18,6 +18,7 @@ export const ASSOC_BOUNDS = Object.freeze({
   badgeWindowDeg: 3.0,        // deg: badge candidates within this angle of the pad axis (either sense)
   badgeMinDistPadLengths: 0.6, // pad lengths: nearer badges are overlapping chrome, not a pairing
   badgeMaxDistPadLengths: 12,  // pad lengths
+  inspectLateralPx: 2.0,       // px: flag a pairing for inspection past this; all 76 pads on 5 courses sit within 1.90 px
   obviousRatio: 2.0,           // ratio: the 2nd candidate's lateral miss must be at least this times the best's
   straightLateralPx: 3.0       // px: axis-to-BasketPoint miss that reads as a straight hole; a coincidental hit on a bent
                                // hole (golden 7, 14 at 507-552 px) is S6's to reject by the ribbon, not a length cutoff
@@ -72,6 +73,13 @@ export function associate({ tees, badges, baskets, padLengthPx, bounds = ASSOC_B
       if (resDeg <= bounds.badgeWindowDeg) cands.push({ badge: String(b.label), resDeg: r2(resDeg), latPx: r2(Math.abs(dot(v, nrm))), distPx: r2(dist), sense });
     }
     cands.sort((a, b) => a.latPx - b.latPx);
+    // Never drop a pad: the nearest badges by axis residual (no angle cutoff) are tracked for inspection,
+    // because a miss is as likely our measurement as the scene.
+    const nearest = badges.map((b) => {
+      const v = sub(b.center, t.center), dist = Math.hypot(...v);
+      const sense = dot(v, ax) > 0 ? 1 : -1, u = [ax[0] * sense, ax[1] * sense], nrm = [-u[1], u[0]];
+      return { badge: String(b.label), resDeg: r2((Math.atan2(Math.abs(dot(v, nrm)), dot(v, u)) * 180) / Math.PI), latPx: r2(Math.abs(dot(v, nrm))), distPx: r2(dist), sense };
+    }).filter((k) => k.distPx >= bounds.badgeMinDistPadLengths * padLengthPx).sort((a, b) => a.resDeg - b.resDeg).slice(0, 3);
     const best = cands[0] ?? null;
     const ratio = cands.length > 1 ? r2(cands[1].latPx / Math.max(best.latPx, 0.05)) : null;
     let verdict = !best ? 'NO_BADGE' : cands.length > 2 ? 'AMBIGUOUS' : cands.length === 2 && ratio < bounds.obviousRatio ? 'AMBIGUOUS' : 'ASSOCIATED';
@@ -92,7 +100,8 @@ export function associate({ tees, badges, baskets, padLengthPx, bounds = ASSOC_B
       if (h) straight = { ...h, nextLatPx: hits[1]?.latPx ?? null,
         verdict: h.latPx <= bounds.straightLateralPx ? 'STRAIGHT_CANDIDATE' : 'NOT_STRAIGHT_OR_BASKET_UNSEEN' };
     }
-    return { tee: t.label, center: t.center.map(r2), thDeg: r2((t.thRad * 180) / Math.PI), candidates: cands, best: best_, ratio, verdict, pathSide: side,
+    const inspect = verdict !== 'ASSOCIATED' || (best_ && best_.latPx > bounds.inspectLateralPx) || (straight && straight.verdict !== 'STRAIGHT_CANDIDATE' && straight.latPx < 10);
+    return { tee: t.label, center: t.center.map(r2), thDeg: r2((t.thRad * 180) / Math.PI), candidates: cands, nearest, best: best_, ratio, verdict, inspect, pathSide: side,
       badgeOnPathSide: best_ && side?.sense ? best_.sense === side.sense : null, straight };
   });
 }

@@ -59,7 +59,9 @@ export function runAssociation({ attempt, specimen, root = ROOT }) {
   const template = { L: median(clean.map((f) => f.L)), W: median(clean.map((f) => f.W)), se: median(clean.map((f) => f.se)), ss: median(clean.map((f) => f.ss)), fromCleanPads: clean.length };
 
   const badges = badgesArt.badges.map((b) => {
-    const fr = b.findPx.parts.find((p) => p.polarity === 'bright'), [x, y, w, h] = fr?.bbox ?? b.bbox;
+    // Centre of the whole badge sprite (bbox; the dark plate shares it). Not the first bright part: on badges whose
+    // white frame is not its own S1 part (lenard 12; heritage 12, 13, 15; alex 18) that part is the digit "1".
+    const [x, y, w, h] = b.bbox;
     return { label: String(b.label), center: [x + (w - 1) / 2, y + (h - 1) / 2] };
   });
   const rows = associate({ tees: fits.map((f, i) => ({ label: f.label, center: [f.cx, f.cy], thRad: f.thRad, pathSide: pathSide({ raster, occ: occAll, center: [f.cx, f.cy], thRad: f.thRad, L: template.L, W: template.W }) })), badges, baskets: baskets.map((k, i) => ({ index: k.index ?? i, bbox: k.bbox })), padLengthPx: template.L });
@@ -92,7 +94,7 @@ export function runAssociation({ attempt, specimen, root = ROOT }) {
     schema: 'nctk-s3-tee-association@1', part: 'px.tees.association', producedBy: 'fn.Tee.associate (+ fn.Tee.poseAA)', specimen, attempt,
     image: { widthPx, heightPx }, bounds: ASSOC_BOUNDS, units: { ...ASSOC_UNITS, pose: 'px, deg; rmsRgb RGB level' }, basketPointOffsetPx: BASKET_POINT_OFFSET,
     template: { ...Object.fromEntries(Object.entries(template).map(([k, v]) => [k, typeof v === 'number' && k !== 'fromCleanPads' ? r3(v) : v])), unit: 'px' },
-    counts: { tees: rows.length, associated: rows.filter((r) => r.verdict === 'ASSOCIATED').length, associatedByPathSide: rows.filter((r) => r.verdict === 'ASSOCIATED_BY_PATH_SIDE').length, badgeOnPathSide: rows.filter((r) => r.badgeOnPathSide === true).length, badgeOffPathSide: rows.filter((r) => r.badgeOnPathSide === false).map((r) => r.tee), ambiguous: rows.filter((r) => r.verdict === 'AMBIGUOUS').length, noBadge: rows.filter((r) => r.verdict === 'NO_BADGE').length, straightCandidates: rows.filter((r) => r.straight?.verdict === 'STRAIGHT_CANDIDATE').length },
+    counts: { tees: rows.length, inspect: rows.filter((r) => r.inspect).map((r) => r.tee), associated: rows.filter((r) => r.verdict === 'ASSOCIATED').length, associatedByPathSide: rows.filter((r) => r.verdict === 'ASSOCIATED_BY_PATH_SIDE').length, badgeOnPathSide: rows.filter((r) => r.badgeOnPathSide === true).length, badgeOffPathSide: rows.filter((r) => r.badgeOnPathSide === false).map((r) => r.tee), ambiguous: rows.filter((r) => r.verdict === 'AMBIGUOUS').length, noBadge: rows.filter((r) => r.verdict === 'NO_BADGE').length, straightCandidates: rows.filter((r) => r.straight?.verdict === 'STRAIGHT_CANDIDATE').length },
     rows, judgement
   };
 }
