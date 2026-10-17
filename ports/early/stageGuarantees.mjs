@@ -19,6 +19,11 @@
  * id tie-breaks), because the receipt objects' key order is part of the
  * receipt bytes. attachPublished puts each value where its address says.
  *
+ * Every FG reads its declared Parts from, and calls its declared
+ * Calculations through, the run's PartStore (ports/early/earlyStore.mjs);
+ * nothing is passed beside it. The flipbook reads its background the same
+ * way, as the Part view.source.background.
+ *
  * Sidecars (never in the receipt): <outDir>/fg/<stage>.records.json (uniform
  * records + the declaration cross-check), <stage>.frames.json,
  * <stage>.flipbook.html, <stage>.timings.json. They are written before a
@@ -31,7 +36,7 @@ import { createFileSink, nodeSha256 } from '../../fg/node-sink.mjs';
 import { framesJson, renderFlipbook } from '../../fg/flipbook.mjs';
 import { canonicalJson } from '../../fg/canon.mjs';
 
-export async function runStageGuarantees({ forkRoot, stage, board, outDir, lanes = [], env = {}, background = null }) {
+export async function runStageGuarantees({ forkRoot, stage, store, outDir, lanes = [] }) {
   const { registry, declarations, report } = await loadRegistry({ root: join(forkRoot, 'fg'), stagesDir: join(forkRoot, 'stages') });
   const declared = declarations.filter((d) => d.stage === stage);
   const ids = declared.map((d) => d.id);
@@ -50,12 +55,13 @@ export async function runStageGuarantees({ forkRoot, stage, board, outDir, lanes
       failure
     }) + '\n');
     writeFileSync(join(sidecarDir, `${stage}.frames.json`), framesJson(frames) + '\n');
+    const background = store.has('view.source.background') ? store.get('view.source.background') : null;
     writeFileSync(join(sidecarDir, `${stage}.flipbook.html`), renderFlipbook(frames, { title: `${stage} FunctionalGuarantees`, background }));
     writeFileSync(join(sidecarDir, `${stage}.timings.json`), JSON.stringify(timings, null, 2) + '\n');
   };
   let run;
   try {
-    run = registry.run({ board, sink, only: ids, lanes, env, hash: nodeSha256 });
+    run = registry.run({ store, sink, only: ids, lanes, hash: nodeSha256 });
   } catch (error) {
     if (error?.name === 'GuaranteeFailure')
       writeSidecars(error, { guarantee: error.guarantee, reason: error.reason, failed: error.failed });

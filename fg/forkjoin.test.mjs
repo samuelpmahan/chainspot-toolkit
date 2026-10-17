@@ -7,9 +7,11 @@
  *      implemented-but-undeclared without throwing, and the real stages/
  *      declarations load and cross-check against fg/ (nothing ported yet).
  *   2. Two discovered fn.toy.findFamily implementations fork from the same
- *      restored board under the same FGs; the comparison lists the
- *      per-candidate disagreement (blob c) with its own frames; a branch
- *      failing a guarantee is a comparison result, not a crash.
+ *      restored board under the same FGs, each run as the registered
+ *      Calculation fn.toy.findFamily on its branch store; the comparison
+ *      lists the per-candidate disagreement (blob c) with its own frames; a
+ *      branch failing a guarantee, or an implementation reading an
+ *      undeclared Part, is a comparison result, not a crash.
  *   3. The flipbook has one page per frame and embeds the raster.
  */
 import assert from 'node:assert/strict';
@@ -26,6 +28,7 @@ import { toyBoard } from './fixtures/board.mjs';
 const here = fileURLToPath(new URL('.', import.meta.url));
 const fixtures = join(here, 'fixtures');
 const SLOT = 'fn.toy.findFamily';
+const PART = 'px.blobs.family';
 
 /** The comparator: per candidate blob, each branch's membership; disagreements named. */
 function compareFamilies({ branches, frame }) {
@@ -36,7 +39,7 @@ function compareFamilies({ branches, frame }) {
     id, ...Object.fromEntries(names.map((n) => [n, branches[n].error ? null : branches[n].records['fg.toy.family.materialize'].members.includes(id)]))
   }));
   const disagreements = candidates.filter((c) => new Set(names.map((n) => c[n])).size > 1);
-  const blobs = branches[held[0]].board.get('px.blobs');
+  const blobs = branches[held[0]].store.get('px.blobs');
   frame({
     title: `${SLOT}: ${disagreements.length} disagreeing candidate(s)`, calculation: SLOT,
     parts: [
@@ -84,8 +87,9 @@ test('real stages/*.json declarations load; scanning fg/ skips fixtures; S1 is f
 test('comparableForkJoin runs two discovered implementations under the same FGs and names the disagreement', async () => {
   const implementations = await discoverImplementations(join(fixtures, 'impl'), SLOT);
   assert.deepEqual(Object.keys(implementations), ['byRow', 'bySize']);
+  assert.deepEqual(implementations.bySize.reads, ['px.blobs'], 'an implementation declares its reads as a named export');
   const { registry } = await loadRegistry({ root: join(fixtures, 'fgs') });
-  const run = () => comparableForkJoin({ slot: SLOT, implementations, restore: () => toyBoard(), guarantees: registry.guarantees, compare: compareFamilies });
+  const run = () => comparableForkJoin({ slot: SLOT, part: PART, implementations, restore: () => toyBoard(), guarantees: registry.guarantees, compare: compareFamilies });
   const result = run();
   assert.deepEqual(Object.keys(result.branches), ['byRow', 'bySize']);
   for (const name of ['byRow', 'bySize']) {
@@ -110,23 +114,26 @@ test('comparableForkJoin runs two discovered implementations under the same FGs 
 
 test('a branch that fails a guarantee is a comparison result, not a crash', () => {
   const implementations = {
-    good: (board) => board.set('px.blobs.family', { rule: 'all', members: ['a', 'b', 'c', 'd'] }),
-    phantom: (board) => board.set('px.blobs.family', { rule: 'phantom', members: ['a', 'ghost'] }),
-    broken: () => { throw new Error('impl crashed'); }
+    good: () => ({ rule: 'all', members: ['a', 'b', 'c', 'd'] }),
+    phantom: () => ({ rule: 'phantom', members: ['a', 'ghost'] }),
+    broken: () => { throw new Error('impl crashed'); },
+    sneaky: (parts) => ({ rule: 'sneaky', members: parts.get('px.blobs').blobs.map((b) => b.id) }) // reads px.blobs without declaring it
   };
   return discoverGuarantees(join(fixtures, 'fgs')).then((guarantees) => {
-    const result = comparableForkJoin({ slot: SLOT, implementations, restore: () => toyBoard(), guarantees, compare: compareFamilies });
+    const result = comparableForkJoin({ slot: SLOT, part: PART, implementations, restore: () => toyBoard(), guarantees, compare: compareFamilies });
     assert.deepEqual(result.branches.phantom.error, { stage: 'guarantee', guarantee: 'fg.toy.family.materialize', message: 'fg.toy.family.materialize FunctionalGuarantee failed: failed: membersAreMaterializedBlobs' });
     assert.equal(result.branches.phantom.records['fg.toy.family.materialize'].status, 'failed');
     assert.equal(result.branches.broken.error.stage, 'apply');
-    assert.deepEqual(result.comparison.value.failedBranches, ['broken', 'phantom']);
+    // an implementation reads only its declared Parts, exactly like an FG
+    assert.deepEqual(result.branches.sneaky.error, { stage: 'apply', guarantee: null, message: `${SLOT} read 'px.blobs', which is not among its declared inParts` });
+    assert.deepEqual(result.comparison.value.failedBranches, ['broken', 'phantom', 'sneaky']);
   });
 });
 
 test('flipbook renders one page per frame, over an embedded raster', async () => {
   const implementations = await discoverImplementations(join(fixtures, 'impl'), SLOT);
   const guarantees = await discoverGuarantees(join(fixtures, 'fgs'));
-  const frames = forkJoinFrames(comparableForkJoin({ slot: SLOT, implementations, restore: () => toyBoard(), guarantees, compare: compareFamilies }));
+  const frames = forkJoinFrames(comparableForkJoin({ slot: SLOT, part: PART, implementations, restore: () => toyBoard(), guarantees, compare: compareFamilies }));
   assert.equal(frames.length, 2 * 3 + 1);
   const rgba = new Uint8Array(16 * 8 * 4).fill(200);
   const html = renderFlipbook(frames, { raster: { width: 16, height: 8, rgba }, title: 'toy findFamily fork' });

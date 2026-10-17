@@ -13,7 +13,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { inflateSync } from 'node:zlib';
-import { judgeMembers, testimonyTeePoints, compareTeeFamilies, TEE_FAMILY_SLOT, memberPose } from './teeFamily.mjs';
+import { judgeMembers, testimonyTeePoints, compareTeeFamilies, TEE_FAMILY_SLOT, TEE_POINTS_CALCULATION, memberPose } from './teeFamily.mjs';
+import { createPartStore } from '../store.mjs';
 import materialize from './fg.s3.teeFamily.materialize.fg.mjs';
 import precision from './fg.s3.teeFamily.precision.fg.mjs';
 import { comparableForkJoin } from '../forkjoin.mjs';
@@ -40,7 +41,18 @@ function board(extra = {}) {
   ]);
   return { get: (a) => parts.get(a), set: (a, v) => parts.set(a, v), has: (a) => parts.has(a) };
 }
-const env = { testimony: { path: 'testimony/t.annotation.json', bytes: utf8(JSON.stringify(annotation)) }, cropReceipt: crop, sourceSha256: 'src' };
+// The toolkit Parts the precision judge reads, each with a named producer:
+// a constant fixture standing in for the runner's intake/S0/locate
+// Calculations, and the real fn.testimony.teePoints.
+function testimonyStore(base, { sourceSha256 = 'src' } = {}) {
+  const store = createPartStore({ base, name: 'test' });
+  store.constant('fn.test.fixture', {
+    'testimony.source.annotation': { path: 'testimony/t.annotation.json', specimen: 't', sha256: 'x', bytes: utf8(JSON.stringify(annotation)) },
+    'tk.source.cropReceipt': crop, 'tk.source.sha256': sourceSha256
+  });
+  store.register('fn.testimony.teePoints', TEE_POINTS_CALCULATION);
+  return store;
+}
 const members = (list) => list.map(([x, y]) => memberPose(ring(x, y), frame(x, y)));
 
 test('testimony converts by the crop receipt; the judge reports precision, not acceptance', () => {
@@ -57,31 +69,38 @@ test('testimony converts by the crop receipt; the judge reports precision, not a
 });
 
 test('the two FGs hold on a branch and refuse what they must', () => {
-  const ok = runGuarantees({ guarantees: [materialize, precision], board: board({ [TEE_FAMILY_SLOT.part]: { implementation: 'stub', members: members([[30, 30], [150, 20]]) } }), lanes: [TEE_FAMILY_SLOT.lane], env });
+  const ok = runGuarantees({ guarantees: [materialize, precision], store: testimonyStore(board({ [TEE_FAMILY_SLOT.part]: { implementation: 'stub', members: members([[30, 30], [150, 20]]) } })), lanes: [TEE_FAMILY_SLOT.lane] });
   const rec = ok.records[TEE_FAMILY_SLOT.precision];
   assert.equal(rec.status, 'held');
   assert.equal(rec.totals.precision, 0.5);
   assert.match(rec.acceptance, /^UNKNOWN/);
   assert.equal(rec.testimony.path, 'testimony/t.annotation.json');
   assert.ok(rec.witnesses.every((w) => w.ok));
+  assert.deepEqual(rec.witnesses.map((w) => w.name), ['teePointsFromAnnotation', 'pointMajorAgrees']);
+  assert.ok(rec.reads.includes('testimony.source.teePoints') && !('env' in rec));
   // dormant with the lane OFF
-  const off = runGuarantees({ guarantees: [materialize, precision], board: board(), env });
+  const off = runGuarantees({ guarantees: [materialize, precision], store: testimonyStore(board()) });
   assert.equal(off.records[TEE_FAMILY_SLOT.precision].status, 'dormant');
   // a member that is not an S3 candidate fails materialize
   assert.throws(() => runGuarantees({ guarantees: [materialize], board: board({ [TEE_FAMILY_SLOT.part]: { implementation: 'x', members: members([[31, 30]]) } }), lanes: [TEE_FAMILY_SLOT.lane] }),
     (e) => e.name === 'GuaranteeFailure' && e.failed.includes('membersAreCandidates'));
   // testimony for another image fails precision
-  assert.throws(() => runGuarantees({ guarantees: [materialize, precision], board: board({ [TEE_FAMILY_SLOT.part]: { implementation: 'x', members: [] } }), lanes: [TEE_FAMILY_SLOT.lane], env: { ...env, sourceSha256: 'other' } }),
+  assert.throws(() => runGuarantees({ guarantees: [materialize, precision], store: testimonyStore(board({ [TEE_FAMILY_SLOT.part]: { implementation: 'x', members: [] } }), { sourceSha256: 'other' }), lanes: [TEE_FAMILY_SLOT.lane] }),
     (e) => e.name === 'GuaranteeFailure' && e.failed.includes('testimonyNamesThisSource'));
+  // no testimony Part on the store: the read check fails by the Part's name
+  assert.throws(() => runGuarantees({ guarantees: [materialize, precision], board: board({ [TEE_FAMILY_SLOT.part]: { implementation: 'x', members: [] } }), lanes: [TEE_FAMILY_SLOT.lane] }),
+    (e) => e.name === 'GuaranteeFailure' && e.guarantee === TEE_FAMILY_SLOT.precision && e.failed.includes('read:testimony.source.annotation'));
 });
 
 test('the comparator lists matched and only-in members with verdicts and a crop per only-in-one member', () => {
   const result = comparableForkJoin({
     slot: TEE_FAMILY_SLOT.slot,
+    part: TEE_FAMILY_SLOT.part,
     implementations: { loose: () => members([[30, 30], [100, 60], [150, 20], [60, 100]]), strict: () => [{ ...members([[100, 60]])[0], center: [100.5, 60.4], angleRad: Math.PI - 0.01 }, ...members([[30, 30]])] },
+    store: testimonyStore(null),
     restore: () => board(),
-    apply: (b, impl, name) => b.set(TEE_FAMILY_SLOT.part, { implementation: name, members: impl(b) }),
-    guarantees: [materialize, precision], lanes: [TEE_FAMILY_SLOT.lane], env,
+    apply: (parts, impl, name) => ({ implementation: name, members: impl(parts) }),
+    guarantees: [materialize, precision], lanes: [TEE_FAMILY_SLOT.lane],
     compare: compareTeeFamilies({ contract: teePose, crop: cropWindow })
   });
   const v = result.comparison.value;

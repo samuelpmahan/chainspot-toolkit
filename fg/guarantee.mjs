@@ -10,32 +10,45 @@
  * board, re-execute an independent witness, cross-check totals (often
  * against another FG's record), write artifacts and rehash them after the
  * write, and attach { guarantee, part, producedBy, totals, checks,
- * artifacts } to the stage. This module is that skeleton, once:
+ * artifacts } to the stage. This module is that skeleton, once.
  *
- *   defineGuarantee({ id, guards, reads?, env?, requires?, lane?, run(ctx) })
+ * Inputs (Sam, 2026-10-17: "The point of PxC is that parts go to addressed
+ * store so this shouldn't happen. Calcs declare inParts + outParts for this
+ * reason."): an FG reads ONLY addressed Parts it declares in `reads` and
+ * invokes ONLY registered Calculations it declares in `calls`, both through
+ * the PartStore (fg/store.mjs). There is no env side channel: data a runner
+ * used to inject (captured gateway results, snapshots, the crop receipt,
+ * testimony bytes, hashes) is a Part with a producing Calculation, and code
+ * (provider functions, restore, plan execution, hashing) is a registered
+ * fn.* Calculation, auto-instrumented by the store on every call.
+ *
+ *   defineGuarantee({ id, guards, reads?, calls?, requires?, lane?, run(ctx) })
  *     id:       'fg.<stage>.<part>.<verb>', the id stages/*.json declares.
  *     guards:   the Part addresses the FG certifies (the declaration's
- *               `part`). A certified Part need not be on the board: an FG
+ *               `part`). A certified Part need not be on the store: an FG
  *               may itself derive it (serialize the reads into
  *               px.badges.digits, run the op on a restored branch to get
  *               badgeGlyphTemplate), which is what three of S1's four do.
- *     reads:    board addresses that must be on the board before run() is
- *               called (an automatic `read:<address>` check, so no FG
- *               hand-writes "px.badges is missing"). Defaults to guards,
- *               the case where the certified Part is itself an input.
- *     env:      names of runner-injected inputs that are not board Parts
- *               (the provider's dist() loader, captured gateway results,
- *               stage snapshots, restorePxC, the instrumentation hook).
- *               Each must be present (automatic `env:<name>` check) and
- *               ctx.env exposes exactly the declared names, so the FG's
- *               declared inputs are the only inputs it can reach.
+ *     reads:    the ONLY addresses ctx.get/ctx.has may touch; each must
+ *               resolve before run() is called (an automatic
+ *               `read:<address>` check, so no FG hand-writes "px.badges is
+ *               missing"; a toolkit Part is produced lazily by its
+ *               Calculation here). Defaults to guards, the case where the
+ *               certified Part is itself an input.
+ *     calls:    the ONLY fn.* Calculations ctx.call may invoke; each must be
+ *               registered on the store (automatic `call:<fn>` check).
  *     requires: FG ids whose RECORDS this FG gates against; the registry
  *               runs them first and ctx.records holds exactly those.
  *     lane:     optional lane name; the FG is dormant unless that lane is
  *               enabled (the declared "with lane X ON (default OFF)").
  *     run(ctx): returns { totals, ...extra }; extra keys land on the record.
+ *   (`env` was removed; passing it is a definition error naming the fix.)
  *
- *   ctx = { id, board, env, records, sink,
+ *   ctx = { id, records, sink,
+ *           get(address) / has(address)  a declared read (any other address
+ *                                   fails the guarantee by name)
+ *           call(fn, args?)         a declared, registered Calculation (any
+ *                                   other fails by name); synchronous
  *           fail(reason)            throw now (an opaque Part, a missing input)
  *           check(name, ok, detail) record a named verdict; returns ok
  *           witness(name, fn)       run an independent re-derivation; fn returns
@@ -66,23 +79,26 @@
  * flipbook (fg/flipbook.mjs), the FE, an agent reading JSON, and tests.
  *
  * The record (fixed key order, every value canonical JSON):
- *   { guarantee, status: 'held'|'failed'|'dormant', reason, guards, reads, env,
+ *   { guarantee, status: 'held'|'failed'|'dormant', reason, guards, reads, calls,
  *     requires, lane, totals, checks, witnesses, artifacts,
  *     frames: [{ seq, title, sha256 }], published: [address], ...extra (sorted) }
  * No timings: elapsed time is nondeterministic and the record is hashed
  * evidence, so timings go to the caller's sidecar (registry.runGuarantees
- * returns them separately, as ports/early/instrument.mjs does).
+ * returns them separately; the store's onCall hook times every Calculation).
  *
- * Failure: any failed check or witness, a fail() call, or a throw inside
- * run() raises GuaranteeFailure (name 'GuaranteeFailure') carrying the
- * guarantee id, the reason, the failed verdict names, the fully assembled
- * failed record and the frames emitted so far, so a failure still renders.
+ * Failure: any failed check or witness, a fail() call, an undeclared read or
+ * call, or a throw inside run() raises GuaranteeFailure (name
+ * 'GuaranteeFailure') carrying the guarantee id, the reason, the failed
+ * verdict names, the fully assembled failed record and the frames emitted so
+ * far, so a failure still renders.
  */
 import { canonicalJson, digest, plain, sha256Hex, toBytes, utf8 } from './canon.mjs';
+import { createPartStore, isPartStore } from './store.mjs';
 
 export const FRAME_KINDS = Object.freeze(['pxset', 'bbox', 'points', 'ledger', 'scalar', 'raster']);
 const GUARANTEE = Symbol.for('chainspot.fg.guarantee');
 const ID = /^fg\.[A-Za-z0-9_.-]+$/;
+const FN = /^fn\.[A-Za-z0-9_.\-/@]+$/;
 
 export class GuaranteeFailure extends Error {
   constructor(guarantee, reason, { failed = [], record = null, frames = [], cause } = {}) {
@@ -100,24 +116,31 @@ class Abort extends Error {}
 
 const nameList = (list) => Array.isArray(list) && list.every((a) => typeof a === 'string' && a);
 
-export function defineGuarantee({ id, guards, reads = guards, env = [], requires = [], lane = null, run }) {
+export function defineGuarantee({ id, guards, reads = guards, calls = [], requires = [], lane = null, run, ...rest }) {
   if (typeof id !== 'string' || !ID.test(id)) throw new Error(`defineGuarantee: id ${JSON.stringify(id)} is not an fg.* id`);
+  if ('env' in rest)
+    throw new Error(`defineGuarantee ${id}: env was removed; declare data as Parts in reads and capabilities as registered fn.* Calculations in calls`);
+  const unknown = Object.keys(rest);
+  if (unknown.length) throw new Error(`defineGuarantee ${id}: unknown option(s) ${unknown.join(', ')}`);
   if (!nameList(guards) || !guards.length)
     throw new Error(`defineGuarantee ${id}: guards must be a non-empty list of Part addresses`);
-  if (!nameList(reads)) throw new Error(`defineGuarantee ${id}: reads must be a list of board addresses`);
-  if (!nameList(env)) throw new Error(`defineGuarantee ${id}: env must be a list of injected input names`);
+  if (!nameList(reads)) throw new Error(`defineGuarantee ${id}: reads must be a list of Part addresses`);
+  if (!nameList(calls) || !calls.every((fn) => FN.test(fn))) throw new Error(`defineGuarantee ${id}: calls must be a list of fn.* Calculation addresses`);
   if (!Array.isArray(requires) || !requires.every((r) => typeof r === 'string' && ID.test(r)))
     throw new Error(`defineGuarantee ${id}: requires must be a list of fg.* ids`);
   if (requires.includes(id)) throw new Error(`defineGuarantee ${id}: requires itself`);
   if (lane !== null && (typeof lane !== 'string' || !lane)) throw new Error(`defineGuarantee ${id}: lane must be a lane name or null`);
   if (typeof run !== 'function') throw new Error(`defineGuarantee ${id}: run(ctx) is required`);
-  return Object.freeze({ [GUARANTEE]: true, id, guards: [...guards], reads: [...reads], env: [...env], requires: [...requires], lane, run });
+  return Object.freeze({ [GUARANTEE]: true, id, guards: [...guards], reads: [...reads], calls: [...calls], requires: [...requires], lane, run });
 }
 
 export const isGuarantee = (value) => Boolean(value && value[GUARANTEE]);
 
+/** A PartStore over `store` (as is), or over a plain board (wrapped as the store's provider base). */
+export const asStore = (storeOrBoard) => (isPartStore(storeOrBoard) ? storeOrBoard : createPartStore({ base: storeOrBoard ?? null }));
+
 function baseRecord(fg) {
-  return { guarantee: fg.id, status: null, reason: null, guards: fg.guards, reads: fg.reads, env: fg.env, requires: fg.requires, lane: fg.lane };
+  return { guarantee: fg.id, status: null, reason: null, guards: fg.guards, reads: fg.reads, calls: fg.calls, requires: fg.requires, lane: fg.lane };
 }
 
 export function dormantRecord(fg, reason) {
@@ -149,15 +172,19 @@ export function createFrameEmitter({ fg, branch = null, onFail = (reason) => { t
 }
 
 /**
- * Run one guarantee. records: { [requiredId]: record } (exactly fg.requires).
- * env: the runner's injected inputs (ctx.env sees only fg.env of them).
- * hash: bytes -> sha256 hex for artifacts; defaults to the pure-JS digest,
- * a Node runner passes node:crypto's (10 MB rasters are hashed 3x each).
+ * Run one guarantee. store: a PartStore (fg/store.mjs), or a plain board
+ * (`board`), which is wrapped as the provider base of a fresh store.
+ * records: { [requiredId]: record } (exactly fg.requires).
+ * hash: bytes -> sha256 hex for the runtime's own artifact hashing (never
+ * reachable by the FG); defaults to the pure-JS digest, a Node runner
+ * passes node:crypto's (10 MB rasters are hashed 3x each).
  * Returns { record, frames, outputs }; throws GuaranteeFailure.
  */
-export function runGuarantee(fg, { board, records = {}, sink, branch = null, env = {}, hash = sha256Hex }) {
+export function runGuarantee(fg, { store, board, records = {}, sink, branch = null, hash = sha256Hex }) {
   if (!isGuarantee(fg)) throw new Error('runGuarantee: not a defineGuarantee() value');
   if (!sink || typeof sink.putArtifact !== 'function') throw new Error(`runGuarantee ${fg.id}: a sink with putArtifact is required`);
+  const parts = asStore(store ?? board);
+  const view = parts.scope({ who: fg.id, reads: fg.reads, calls: fg.calls });
   const checks = [];
   const witnesses = [];
   const artifacts = [];
@@ -184,15 +211,26 @@ export function runGuarantee(fg, { board, records = {}, sink, branch = null, env
 
   const required = {};
   for (const id of fg.requires) if (records[id]) required[id] = records[id];
-  const scopedEnv = {};
-  for (const name of fg.env) if (env?.[name] !== undefined) scopedEnv[name] = env[name];
 
   const ctx = Object.freeze({
     id: fg.id,
-    board,
-    env: Object.freeze(scopedEnv),
     records: Object.freeze(required),
     sink,
+    get(address) {
+      if (!fg.reads.includes(address)) abort(`read of undeclared address ${address} (declare it in reads)`);
+      return view.get(address);
+    },
+    has(address) {
+      if (!fg.reads.includes(address)) abort(`read of undeclared address ${address} (declare it in reads)`);
+      return view.has(address);
+    },
+    call(fn, args) {
+      if (!fg.calls.includes(fn)) abort(`call of undeclared Calculation ${fn} (declare it in calls)`);
+      if (!parts.registered(fn)) abort(`call of unregistered Calculation ${fn}`);
+      const result = view.call(fn, args);
+      if (result && typeof result.then === 'function') { result.catch(() => {}); abort(`Calculation ${fn} returned a Promise; guarantees are synchronous`); }
+      return result;
+    },
     fail: abort,
     check(name, ok, detail = null) {
       claim(name);
@@ -244,9 +282,9 @@ export function runGuarantee(fg, { board, records = {}, sink, branch = null, env
     for (const id of fg.requires)
       if (!required[id] || required[id].status !== 'held') abort(`required record ${id} is ${required[id]?.status ?? 'missing'}`);
     for (const address of fg.reads)
-      ctx.check(`read:${address}`, typeof board?.has === 'function' && board.has(address), { address });
-    for (const name of fg.env)
-      ctx.check(`env:${name}`, Object.hasOwn(scopedEnv, name), { name });
+      ctx.check(`read:${address}`, parts.has(address), { address });
+    for (const fn of fg.calls)
+      ctx.check(`call:${fn}`, parts.registered(fn), { calculation: fn });
     if (checks.every((c) => c.ok)) result = fg.run(ctx);
     if (result && typeof result.then === 'function') abort('run() returned a Promise; guarantees are synchronous');
   } catch (error) {

@@ -16,6 +16,14 @@
  * fg.s1.pxDigits.materialize (counter attribution), which the registry runs
  * first because this FG requires them.
  *
+ * Inputs are Parts and registered Calculations only: the consumed board
+ * Parts, tk.stage.S0.canonicalRgbaSha256 and tk.stage.S1.snapshotSha256;
+ * branches come from fn.provider.restore.S1, the op runs through
+ * fn.provider.executeCompiledPlan (auto-instrumented, site
+ * s1.badgeAssembly), the plan fingerprint is fn.provider.sha256Text and
+ * byte/text hashes are fn.tk.sha256. The restored branch is the value
+ * fn.provider.restore.S1 returns, read directly by this FG.
+ *
  * Ported from runEarly.mjs with a byte-identical artifact
  * (artifacts/s1assembly/px.badges.assembly.json), stage record
  * (stages[S1].badgeAssemblyMaterialization, materializations.S1BadgeAssembly)
@@ -30,25 +38,27 @@ const MATERIALIZE = 'fg.s1.pxBadges.materialize';
 const DIGITS = 'fg.s1.pxDigits.materialize';
 const LANE = 's1-badge-assembly';
 const CONSUMES = ['px.badges', 'badges', 'px.components'];
+const CANONICAL = 'tk.stage.S0.canonicalRgbaSha256';
+const SNAPSHOT_SHA = 'tk.stage.S1.snapshotSha256';
+const RESTORE = 'fn.provider.restore.S1';
+const EXECUTE = 'fn.provider.executeCompiledPlan';
+const SHA_TEXT = 'fn.provider.sha256Text';
+const SHA = 'fn.tk.sha256';
+const imageAddress = 'px.image.cropped'; // ComponentPxC.image
 const samePx = (a, b) => legacyCanon([...a].sort((x, y) => x - y)) === legacyCanon([...b].sort((x, y) => x - y));
 
 export default defineGuarantee({
   id: ID,
   guards: [BADGE_ASSEMBLY.part],
-  reads: CONSUMES,
-  env: ['dist', 'stageSnapshots', 'restorePxC', 'instrument', 'canonicalRgbaSha256', 'sha256'],
+  reads: [...CONSUMES, CANONICAL, SNAPSHOT_SHA],
+  calls: [RESTORE, EXECUTE, SHA_TEXT, SHA],
   requires: [MATERIALIZE, DIGITS],
   lane: LANE,
   run(ctx) {
-    const { dist, stageSnapshots, restorePxC, instrument, canonicalRgbaSha256, sha256 } = ctx.env;
     const baseline = ctx.records[MATERIALIZE].totals;
     const digits = ctx.records[DIGITS].totals;
-    const { executeCompiledPlan } = dist('exec/gateway');
-    const { nullFeatureContext } = dist('detectors/threeFactor/features/types');
-    const { createMemorySink } = dist('exec/sink');
-    const { sha256HexSyncText } = dist('exec/sha256');
-    const { ComponentPxC } = dist('stages/componentPxC');
-    const imageAddress = ComponentPxC.image.address;
+    const canonicalRgbaSha256 = ctx.get(CANONICAL);
+    const sha256 = (bytes) => ctx.call(SHA, { bytes });
     const asmOp = {
       id: 'early.S1.badgeAssembly', kind: 'measure', gate: 'shared', unit: 'early-s1-badge-assembly',
       consumes: CONSUMES,
@@ -56,7 +66,7 @@ export default defineGuarantee({
       note: 'Declared spec delta refine.s1.badgeAssembly.plateFirst: each Badge Part is re-assembled from its component evidence through the phase-1 assembly shape with the plate as the declared base, the white frame/ribbon and the per-digit glyph components fused onto it, and digit counters carried as digit-owned sub-structure. Branch from the S1 snapshot; base emissions unchanged.'
     };
     const runAssemblyBranch = () => {
-      const branch = restorePxC(stageSnapshots.S1);
+      const branch = ctx.call(RESTORE);
       for (const address of asmOp.consumes)
         if (!branch.has(address)) ctx.fail(`restored S1 branch is missing ${address}; the badge component evidence is not exposed on the S1 snapshot`);
       const before = sha256(branch.get(imageAddress).rgba);
@@ -65,12 +75,12 @@ export default defineGuarantee({
         asmPart = computeBadgeAssembly({ badges: badgesIn, reads: readsIn, fields: fieldsIn });
         return asmPart;
       };
-      const plan = { ops: [asmOp], bindings: {}, planFingerprint: sha256HexSyncText(JSON.stringify(asmOp)) };
+      const plan = { ops: [asmOp], bindings: {}, planFingerprint: ctx.call(SHA_TEXT, { text: JSON.stringify(asmOp) }) };
       const runtime = {
         implementations: new Map([[asmOp.id, (board) => { const part = calculate(...asmOp.consumes.map((address) => board.get(address))); board.set(BADGE_ASSEMBLY.part, part); }]]),
         calculationBindings: new Map([[asmOp.id, [{ address: BADGE_ASSEMBLY.assemblyCalculation, calculate }]]])
       };
-      const ticks = instrument('s1.badgeAssembly', executeCompiledPlan, plan, branch, nullFeatureContext, createMemorySink(), runtime);
+      const ticks = ctx.call(EXECUTE, { site: 's1.badgeAssembly', plan, board: branch, runtime });
       const after = sha256(branch.get(imageAddress).rgba);
       if (before !== after || before !== canonicalRgbaSha256) ctx.fail('badge assembly branch mutated canonical pixels');
       return { branch, ticks, asmPart, after };
@@ -80,7 +90,7 @@ export default defineGuarantee({
     if (!assemblyPart || !Array.isArray(assemblyPart.badges)) ctx.fail('branch did not produce px.badges.assembly');
     // Exact reproduction gates against the accepted baseline on this same
     // live board (the objects fg.s1.pxBadges.materialize serialized).
-    const baseBadges = ctx.board.get('px.badges');
+    const baseBadges = ctx.get('px.badges');
     if (assemblyPart.badges.length !== baseBadges.length)
       ctx.fail(`assembly badge count ${assemblyPart.badges.length} != baseline px.badges count ${baseBadges.length}`);
     const reproduction = assemblyPart.badges.map((rec, i) => {
@@ -119,8 +129,8 @@ export default defineGuarantee({
     // Witness 2: independent re-derivation of badge 10's components from the
     // raster component fields by a separate code path that never reads the
     // findPx component refs; every role set must match the assembly.
-    const fields = ctx.board.get('px.components');
-    const reads = ctx.board.get('badges');
+    const fields = ctx.get('px.components');
+    const reads = ctx.get('badges');
     const witnessIndex = assemblyPart.badges.findIndex((r) => r.label === '10');
     if (witnessIndex < 0) ctx.fail('badge 10 is absent from the assembly; the independent witness has no subject');
     let witness = null;
@@ -202,7 +212,7 @@ export default defineGuarantee({
     ctx.publish('materializations.S1BadgeAssembly', record);
     ctx.publish('experiments.branches.S1ASM', {
       mode: 'ON', status: 'SPEC_DELTA_ORACLE_UNKNOWN', lane: LANE,
-      baseSnapshotSha256: sha256(stageSnapshots.S1),
+      baseSnapshotSha256: ctx.get(SNAPSHOT_SHA),
       benefit: 'Every Badge Part is re-derived plate-first from its component evidence, so the assembly structure (plate base, fused frame and digit components, digit-owned counters, anchor, window residue) crosses the toolkit seam as named Parts instead of a flat px array with two counts.',
       falsifier: 'A badge fused set differs from the accepted px.badges set, the fused union differs from 37,002, the counters differ from the accepted attribution, or the owned total differs from 37,295.',
       oracle: 'UNKNOWN', partAddress: BADGE_ASSEMBLY.part,

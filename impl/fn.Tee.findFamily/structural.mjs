@@ -10,16 +10,18 @@
  * instead of materializing tee objects (that is fg.s3.pxTeesFamilyFix's job
  * on its own lane).
  *
- * (board, env) -> members (fg/s3/teeFamily.mjs memberPose).
+ * parts -> members (fg/s3/teeFamily.mjs memberPose).
  */
 import { memberPose } from '../../fg/s3/teeFamily.mjs';
 import { computeFamilyFix } from '../../ports/early/s3FamilyFix.mjs';
 
-export default function structural(board) {
+export const reads = ['px.tees.rings', 'px.tees.family', 'px.components', 'px.image.cropped', 'px.badges', 'px.baskets'];
+
+export default function structural(parts) {
   const { rows } = computeFamilyFix({
-    rings: board.get('px.tees.rings'), family: board.get('px.tees.family'),
-    fields: board.get('px.components'), image: board.get('px.image.cropped'),
-    badges: board.get('px.badges'), baskets: board.get('px.baskets'),
+    rings: parts.get('px.tees.rings'), family: parts.get('px.tees.family'),
+    fields: parts.get('px.components'), image: parts.get('px.image.cropped'),
+    badges: parts.get('px.badges'), baskets: parts.get('px.baskets'),
     makeTee: (pair) => pair
   });
   return rows.filter((r) => r.verdict !== 'ELIMINATED')

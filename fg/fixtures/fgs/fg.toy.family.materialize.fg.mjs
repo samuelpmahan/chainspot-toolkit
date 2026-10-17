@@ -11,11 +11,12 @@ import { defineGuarantee } from '../../guarantee.mjs';
 export default defineGuarantee({
   id: 'fg.toy.family.materialize',
   guards: ['px.blobs.family'],
+  reads: ['px.blobs.family', 'px.blobs'],
   requires: ['fg.toy.blobs.materialize'],
   run(ctx) {
     const base = ctx.records['fg.toy.blobs.materialize'];
-    const family = ctx.board.get('px.blobs.family');
-    const blobs = ctx.board.get('px.blobs');
+    const family = ctx.get('px.blobs.family');
+    const blobs = ctx.get('px.blobs');
     const members = [...family.members].sort();
     const unknown = members.filter((id) => !base.blobIds.includes(id));
     ctx.check('membersAreMaterializedBlobs', unknown.length === 0, { unknown });

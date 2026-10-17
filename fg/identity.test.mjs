@@ -89,16 +89,17 @@ test('a fork-join comparator joins two implementations by the Contract', () => {
     const parts = new Map([['px.cands', [tee(10, 10, 0), tee(40, 12, 0.5), tee(80, 80, 1.2)]]]);
     return { get: (a) => parts.get(a), set: (a, v) => parts.set(a, v), has: (a) => parts.has(a) };
   };
-  const fg = defineGuarantee({ id: 'fg.toy.poses.materialize', guards: ['px.members'], run: (ctx) => ({ totals: { members: ctx.board.get('px.members').length } }) });
+  const fg = defineGuarantee({ id: 'fg.toy.poses.materialize', guards: ['px.members'], run: (ctx) => ({ totals: { members: ctx.get('px.members').length } }) });
   const result = comparableForkJoin({
     slot: 'fn.toy.findTees',
+    part: 'px.members',
     implementations: {
-      all: (b) => b.set('px.members', b.get('px.cands').map((m) => ({ ...m, center: [m.center[0] + 0.4, m.center[1]] }))),
-      firstTwo: (b) => b.set('px.members', b.get('px.cands').slice(0, 2).reverse())
+      all: { reads: ['px.cands'], calculate: (p) => p.get('px.cands').map((m) => ({ ...m, center: [m.center[0] + 0.4, m.center[1]] })) },
+      firstTwo: { reads: ['px.cands'], calculate: (p) => p.get('px.cands').slice(0, 2).reverse() }
     },
     restore: board,
     guarantees: [fg],
-    compare: ({ branches }) => geometricJoin({ sets: Object.fromEntries(Object.entries(branches).map(([n, br]) => [n, br.board.get('px.members')])), contract: teePose })
+    compare: ({ branches }) => geometricJoin({ sets: Object.fromEntries(Object.entries(branches).map(([n, br]) => [n, br.store.get('px.members')])), contract: teePose })
   });
   const v = result.comparison.value;
   assert.equal(v.matched.length, 2);

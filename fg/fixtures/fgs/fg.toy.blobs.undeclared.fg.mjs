@@ -5,6 +5,6 @@ export default defineGuarantee({
   id: 'fg.toy.blobs.undeclared',
   guards: ['px.blobs'],
   run(ctx) {
-    return { totals: { blobCount: ctx.board.get('px.blobs').blobs.length } };
+    return { totals: { blobCount: ctx.get('px.blobs').blobs.length } };
   }
 });

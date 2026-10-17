@@ -9,13 +9,18 @@
  *   uncovered  annotated tee points no member covers: recall information,
  *              never a failure at S3 (recall is S4's job)
  *
- * Testimony is runner-injected (env.testimony: the annotation file's bytes
- * and repo path), parsed and hashed HERE, so the record carries the hash of
- * exactly the testimony that judged. The annotation frame is the source
- * frame; the canonical y is source y minus the S0 crop receipt's
- * upperRowsRemoved (env.cropReceipt), and the guarantee checks that the
- * annotation names this run's source image (sha256) and that the receipt's
- * crop arithmetic matches the canonical raster on the board.
+ * Testimony is a Part, never an injected value: testimony.source.annotation
+ * (produced by the runner's fn.testimony.locate from tk.source.sha256: the
+ * one testimony/<specimen>/*.annotation.json whose sourceImage names this
+ * run's source; value { path, specimen, sha256, bytes }) is parsed and
+ * hashed HERE, so the record carries the hash of exactly the testimony that
+ * judged. The annotation frame is the source frame; the canonical points
+ * are the Part testimony.source.teePoints (fn.testimony.teePoints over the
+ * annotation and tk.source.cropReceipt: canonical y = source y minus the S0
+ * crop receipt's upperRowsRemoved), which a witness re-derives from the
+ * annotation bytes. The guarantee checks that the annotation names this
+ * run's source image (tk.source.sha256) and that the receipt's crop
+ * arithmetic matches the canonical raster on the board.
  *
  * The guarantee certifies the JUDGEMENT (faithful testimony, frame
  * conversion, every member judged exactly once, both directions of the
@@ -23,25 +28,28 @@
  * as data, not a guarantee failure, and nothing here claims acceptance.
  */
 import { defineGuarantee } from '../guarantee.mjs';
-import { sha256Hex } from '../canon.mjs';
+import { canonicalJson, sha256Hex } from '../canon.mjs';
 import { ACCEPTANCE, TEE_FAMILY_SLOT, insidePadded, judgeMembers, testimonyTeePoints } from './teeFamily.mjs';
 
 const { part: PART, slot: SLOT, judgePadPx: PAD } = TEE_FAMILY_SLOT;
+const ANNOTATION = 'testimony.source.annotation';
+const TEE_POINTS = 'testimony.source.teePoints';
 
 export default defineGuarantee({
   id: TEE_FAMILY_SLOT.precision,
   guards: [PART],
-  reads: [PART, 'px.image.cropped'],
-  env: ['testimony', 'cropReceipt', 'sourceSha256'],
+  reads: [PART, 'px.image.cropped', ANNOTATION, TEE_POINTS, 'tk.source.cropReceipt', 'tk.source.sha256'],
   requires: [TEE_FAMILY_SLOT.materialize],
   lane: TEE_FAMILY_SLOT.lane,
   run(ctx) {
-    const { testimony, cropReceipt, sourceSha256 } = ctx.env;
-    const bytes = testimony.bytes instanceof Uint8Array ? testimony.bytes : ctx.fail('env.testimony.bytes must be the annotation file bytes');
+    const testimony = ctx.get(ANNOTATION);
+    const cropReceipt = ctx.get('tk.source.cropReceipt');
+    const sourceSha256 = ctx.get('tk.source.sha256');
+    const bytes = testimony?.bytes instanceof Uint8Array ? testimony.bytes : ctx.fail(`${ANNOTATION}.bytes must be the annotation file bytes`);
     const testimonySha256 = sha256Hex(bytes);
     let annotation;
     try { annotation = JSON.parse(new TextDecoder().decode(bytes)); } catch (e) { ctx.fail(`testimony ${testimony.path} is not JSON: ${e.message}`); }
-    const image = ctx.board.get('px.image.cropped');
+    const image = ctx.get('px.image.cropped');
     ctx.check('testimonyNamesThisSource', annotation.sourceImage?.sha256 === sourceSha256, { annotated: annotation.sourceImage?.sha256 ?? null, run: sourceSha256 });
     ctx.check('testimonyFrameIsSourceFrame', annotation.sourceImage?.widthPx === cropReceipt.originalPx.width && annotation.sourceImage?.heightPx === cropReceipt.originalPx.height,
       { annotation: [annotation.sourceImage?.widthPx, annotation.sourceImage?.heightPx], source: [cropReceipt.originalPx.width, cropReceipt.originalPx.height] });
@@ -49,8 +57,11 @@ export default defineGuarantee({
       image.widthPx === cropReceipt.originalPx.width && image.heightPx === cropReceipt.originalPx.height - cropReceipt.upperRowsRemoved - cropReceipt.lowerRowsRemoved,
       { canonical: [image.widthPx, image.heightPx], receipt: { upperRowsRemoved: cropReceipt.upperRowsRemoved, lowerRowsRemoved: cropReceipt.lowerRowsRemoved, originalPx: cropReceipt.originalPx } });
 
-    const points = testimonyTeePoints(annotation, cropReceipt);
-    const members = ctx.board.get(PART).members;
+    const { points } = ctx.get(TEE_POINTS);
+    // Witness: the canonical points re-derived here from the annotation
+    // bytes and the crop receipt equal the Part the judge consumes.
+    ctx.witness('teePointsFromAnnotation', () => canonicalJson(testimonyTeePoints(annotation, cropReceipt)) === canonicalJson(points));
+    const members = ctx.get(PART).members;
     const judged = judgeMembers(members, points, { padPx: PAD });
     const t = judged.totals;
     ctx.check('everyMemberJudgedOnce', judged.verdicts.length === members.length && judged.verdicts.every((v, i) => v.index === i), { members: members.length, verdicts: judged.verdicts.length });
@@ -63,7 +74,7 @@ export default defineGuarantee({
       return disagree.length ? { ok: false, disagree } : true;
     });
 
-    const label = ctx.board.get(PART).implementation;
+    const label = ctx.get(PART).implementation;
     const agree = judged.verdicts.filter((v) => v.verdict === 'agrees');
     const disagree = judged.verdicts.filter((v) => v.verdict === 'disagrees');
     ctx.frame({

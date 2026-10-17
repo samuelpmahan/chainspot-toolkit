@@ -30,6 +30,18 @@
  * evidence as its own new file; no existing artifact, snapshot, or receipt
  * byte changes because this module exists.
  *
+ * Every Calculation call (Sam's "auto-instrument every Calculation"): the
+ * run's PartStore (fg/store.mjs, built by ports/early/earlyStore.mjs) calls
+ * the onCall hook once per invocation of any registered fn.* Calculation,
+ * whoever invokes it (an FG, a fork-join implementation, a lazy Part read,
+ * the provider's own stage contract through the gateway wrapper, another
+ * Calculation). Each entry lands in `calculations` as { seq, parent, depth,
+ * calculation, store, caller, site, inParts, outParts, elapsedMs, status,
+ * error }: entry/exit in seq/parent/depth, the declared Part traffic in
+ * inParts/outParts, the time in elapsedMs. The document also carries the
+ * store manifest (every toolkit Part with its producedBy and inParts, every
+ * registered Calculation). Same sidecar, same reason: never hashed.
+ *
  * timingScope is 'op' when the plan carries exactly one op (every plan the
  * early runner executes today). For a multi-op plan the whole call is timed
  * once and every op entry carries that elapsed time with timingScope
@@ -40,10 +52,12 @@ import { performance } from 'node:perf_hooks';
 
 export function createInstrumentation() {
   const ops = [];
+  const calculations = [];
   return {
     ops,
-    document() {
-      return { schema: 'nctk-instrumentation@1', ops };
+    calculations,
+    document({ store = null } = {}) {
+      return { schema: 'nctk-instrumentation@1', ops, calculations: [...calculations].sort((a, b) => a.seq - b.seq), ...(store ? { store } : {}) };
     }
   };
 }

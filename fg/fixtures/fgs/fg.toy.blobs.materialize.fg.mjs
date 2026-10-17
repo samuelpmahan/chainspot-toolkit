@@ -16,7 +16,7 @@ export default defineGuarantee({
   id: 'fg.toy.blobs.materialize',
   guards: ['px.blobs'],
   run(ctx) {
-    const part = ctx.board.get('px.blobs');
+    const part = ctx.get('px.blobs');
     if (!Array.isArray(part?.blobs)) ctx.fail('px.blobs carries no blob list (opaque Part)');
     const { width, height } = part;
     const blobs = part.blobs.map((b) => ({ id: b.id, px: [...b.px].sort((p, q) => p - q), pxCount: b.px.length, bbox: b.px.length ? bboxOf(b.px, width) : null }));

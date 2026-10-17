@@ -23,10 +23,10 @@ export default defineGuarantee({
   reads: [PART, 'px.tees.rings'],
   lane: TEE_FAMILY_SLOT.lane,
   run(ctx) {
-    const value = ctx.board.get(PART);
+    const value = ctx.get(PART);
     if (!value || !Array.isArray(value.members)) ctx.fail(`${PART} is not { implementation, members: [...] }`);
     const members = value.members;
-    const candidates = ctx.board.get('px.tees.rings').candidates;
+    const candidates = ctx.get('px.tees.rings').candidates;
     const candidateKeys = new Set(candidates.map((r) => ringKey({ cx: r.cx, cy: r.cy, bbox: [r.bboxX, r.bboxY, r.bboxW, r.bboxH] })));
     const finite = (...v) => v.every(Number.isFinite);
     const badPose = members.map((m, i) => {
