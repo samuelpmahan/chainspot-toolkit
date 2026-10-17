@@ -168,7 +168,7 @@ test('node file sink round-trips through disk and refuses to overwrite', () => {
 });
 
 test('the browser-safe core imports no node:* module', () => {
-  for (const file of ['canon.mjs', 'guarantee.mjs', 'registry.mjs', 'forkjoin.mjs', 'sinks.mjs', 'flipbook.mjs', 'store.mjs', 's3/teeFamily.mjs']) {
+  for (const file of ['canon.mjs', 'guarantee.mjs', 'registry.mjs', 'forkjoin.mjs', 'sinks.mjs', 'flipbook.mjs', 'store.mjs', 's3/teeFamily.mjs', 'compose.mjs', 'mixins.mjs', 'branchOp.mjs', 'layers.mjs', 'legacy.mjs']) {
     const source = readFileSync(new URL(file, import.meta.url), 'utf8');
     assert.ok(!/from\s+['"]node:|import\(\s*['"]node:/.test(source), `${file} imports node:*`);
     for (const [, dep] of source.matchAll(/from\s+'\.\/([\w-]+\.mjs)'/g))

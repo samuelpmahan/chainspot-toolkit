@@ -69,6 +69,19 @@ export const FIX_BOUNDS = {
   sizeExpansion: 1.1,
   coverageFactor: 0.85
 };
+/**
+ * The unit of every FIX_BOUNDS number ("numbers without units are
+ * meaningless"; fg/mixins.mjs unitful checks this map covers the object).
+ */
+export const FIX_BOUNDS_UNITS = Object.freeze({
+  marginMin: 'px', marginMax: 'px', marginSpreadMax: 'px',
+  bandFillMin: 'fraction of band area (frame px / (major*minor - holeArea))', bandFillMax: 'fraction of band area (frame px / (major*minor - holeArea))',
+  interiorDeltaMin: 'RGB level (mean-luminance difference, interior vs frame)', interiorBrightMax: 'fraction of ring-bbox px that are bright',
+  interiorToneFloor: 'RGB level per channel', interiorToneExpansion: 'ratio (tolerance / largest anchor tone deviation)',
+  whiteFracMin: 'fraction of frame px with luminance >= 200',
+  sizeExpansion: 'ratio (bound / anchor extreme)',
+  coverageFactor: 'ratio (bound / smallest anchor band coverage)'
+});
 
 const round4 = (v) => Math.round(v * 10000) / 10000;
 export const ringTupleOf = (r) => [r.cx, r.cy, r.bboxX, r.bboxY, r.bboxW, r.bboxH, r.kind];
