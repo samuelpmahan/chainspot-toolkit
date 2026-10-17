@@ -1,0 +1,36 @@
+{
+	"schema": "threeFactor-config@1",
+	"name": "tee-family-on",
+	"note": "Compatibility config with the frozen G3 intact visible tee family stated explicitly and frozen G4 shard recovery retained.",
+	"execution": [
+		"badgeStage",
+		"badges",
+		"baskets",
+		"tees",
+		"teeFamily",
+		"supportField",
+		"badgeOcclusionPatch",
+		"rawPairs",
+		"measurement",
+		"assignment",
+		"teeRecovery",
+		"zfit"
+	],
+	"gates": {
+		"G3": {
+			"teeFamily": {
+				"enabled": true,
+				"knobs": {
+					"frameAreaMin": 10,
+					"frameAreaMax": 500,
+					"frameMaxWidth": 50,
+					"frameMaxHeight": 50,
+					"majorRatioToleranceFactor": 1.25,
+					"minorRatioToleranceFactor": 1.25,
+					"areaRatioToleranceFactor": 1.5,
+					"fillRatioToleranceFactor": 1.25
+				}
+			}
+		}
+	}
+}
