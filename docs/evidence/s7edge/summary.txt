@@ -1,0 +1,30 @@
+alex: unique BasketPoint 14/18; Sam basket within 6 px on 3/3 (wrong basket: holes []); Sam bends matched 4 (err median 4.94 px, max 143.94), unmatched bends on holes []; agrees with badge-only seed (end+bends) on 17/18; methods {'straight segment': 7, 'traced from the associated pad': 5, 'badge scan': 6}
+   alex hole 4: lost: no BasketPoint reached | traced from the associated pad | Sam basket err None px, bends err None
+   alex hole 7: lost: no BasketPoint reached | traced from the associated pad (straight test fail | Sam basket err None px, bends err None
+   alex hole 10: lost: no BasketPoint reached | badge scan (no frozen association) | Sam basket err None px, bends err None
+   alex hole 18: lost: no BasketPoint reached | traced from the associated pad | Sam basket err None px, bends err None
+golden: unique BasketPoint 16/18; Sam basket within 6 px on 16/16 (wrong basket: holes []); Sam bends matched 8 (err median 3.48 px, max 9.53), unmatched bends on holes [18]; agrees with badge-only seed (end+bends) on 14/18; methods {'traced from the associated pad': 9, 'badge scan': 3, 'straight segment': 6}
+   golden hole 6: lost: no BasketPoint reached | traced from the associated pad | Sam basket err None px, bends err []
+   golden hole 18: lost: no BasketPoint reached | traced from the associated pad | Sam basket err None px, bends err [None, None]
+lenard: unique BasketPoint 16/18; Sam basket within 6 px on 16/16 (wrong basket: holes []); Sam bends matched 0 (err median nan px, max nan), unmatched bends on holes []; agrees with badge-only seed (end+bends) on 15/18; methods {'traced from the associated pad': 5, 'badge scan': 4, 'straight segment': 9}
+   lenard hole 9: lost: no BasketPoint reached | traced from the associated pad | Sam basket err None px, bends err []
+   lenard hole 12: lost: no BasketPoint reached | traced from the associated pad | Sam basket err None px, bends err []
+townelake: unique BasketPoint 16/18; Sam basket within 6 px on 16/16 (wrong basket: holes []); Sam bends matched 1 (err median 1.13 px, max 1.13), unmatched bends on holes [11, 16]; agrees with badge-only seed (end+bends) on 14/18; methods {'straight segment': 13, 'traced from the associated pad': 4, 'badge scan': 1}
+   townelake hole 11: lost: no BasketPoint reached | traced from the associated pad | Sam basket err None px, bends err [None]
+   townelake hole 16: lost: no BasketPoint reached | traced from the associated pad (straight test fail | Sam basket err None px, bends err [None]
+heritage: unique BasketPoint 7/18; Sam basket within 6 px on 3/7 (wrong basket: holes [1, 9, 14, 17]); Sam bends matched 8 (err median 57.36 px, max 82.64), unmatched bends on holes [2, 3, 5, 8, 10, 11, 12, 13, 15, 16, 18]; agrees with badge-only seed (end+bends) on 11/18; methods {'traced from the associated pad': 12, 'badge scan': 6}
+   heritage hole 1: ok | traced from the associated pad (straight test fail | Sam basket err 149.12 px, bends err [57.83]
+   heritage hole 2: lost: no BasketPoint reached | traced from the associated pad | Sam basket err None px, bends err [None]
+   heritage hole 3: lost: no BasketPoint reached | traced from the associated pad | Sam basket err None px, bends err [None]
+   heritage hole 5: lost: no BasketPoint reached | badge scan (no frozen association) | Sam basket err None px, bends err [None]
+   heritage hole 8: lost: no BasketPoint reached | badge scan (no frozen association) | Sam basket err None px, bends err [None]
+   heritage hole 9: ok | traced from the associated pad (straight test fail | Sam basket err 273.79 px, bends err [66.52, 24.2]
+   heritage hole 10: lost: no BasketPoint reached | badge scan (no frozen association) | Sam basket err None px, bends err [None]
+   heritage hole 11: lost: no BasketPoint reached | traced from the associated pad | Sam basket err None px, bends err [None]
+   heritage hole 12: lost: no BasketPoint reached | traced from the associated pad | Sam basket err None px, bends err [None]
+   heritage hole 13: lost: no BasketPoint reached | traced from the associated pad | Sam basket err None px, bends err [None]
+   heritage hole 14: ok | traced from the associated pad | Sam basket err 121.84 px, bends err [82.64]
+   heritage hole 15: lost: no BasketPoint reached | badge scan (no frozen association) | Sam basket err None px, bends err [None, None]
+   heritage hole 16: lost: no BasketPoint reached | traced from the associated pad | Sam basket err None px, bends err [None]
+   heritage hole 17: ok | badge scan (pad trace lost at [454.26, 1623.18]) | Sam basket err 123.57 px, bends err []
+   heritage hole 18: lost: no BasketPoint reached | traced from the associated pad | Sam basket err None px, bends err [None]
