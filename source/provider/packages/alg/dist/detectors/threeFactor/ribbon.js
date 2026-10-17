@@ -1,0 +1,301 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DEFAULT_RIBBON_KNOBS = void 0;
+exports.computeRibbonSupport = computeRibbonSupport;
+exports.buildSupportCost = buildSupportCost;
+exports.patchBadgeOcclusion = patchBadgeOcclusion;
+exports.DEFAULT_RIBBON_KNOBS = {
+    gaussianSigma: 0.8,
+    blurRadiusSigmas: 4,
+    gradientDeltaMultiplier: 4,
+    normalizationPercentile: 0.995,
+    supportGamma: 0.7,
+    costMultiplier: 4,
+    haloSupportThreshold: 0.5,
+    patchReachMargin: 6,
+    sampleOffsetPx: 2.5,
+    patchOrientations: 24,
+    centerOuterGrayMargin: 8,
+    liftThreshold: 45,
+    patchAcceptanceThreshold: 0.5,
+    patchedCellSupportCap: 0.85,
+    haloBboxMargin: 3,
+    insideBadgeMargin: 2
+};
+function reflect(index, size) {
+    if (size <= 1)
+        return 0;
+    if (index < 0)
+        return -index;
+    if (index >= size)
+        return 2 * size - 2 - index;
+    return index;
+}
+function areaResizeRgb(image, width, height) {
+    const out = new Float32Array(width * height * 3);
+    const sx = image.width / width;
+    const sy = image.height / height;
+    for (let y = 0; y < height; y++) {
+        const y0 = y * sy;
+        const y1 = y0 + sy;
+        for (let x = 0; x < width; x++) {
+            const x0 = x * sx;
+            const x1 = x0 + sx;
+            let r = 0;
+            let g = 0;
+            let b = 0;
+            let total = 0;
+            for (let yy = Math.floor(y0); yy < Math.min(image.height, Math.ceil(y1)); yy++) {
+                const wy = Math.min(y1, yy + 1) - Math.max(y0, yy);
+                for (let xx = Math.floor(x0); xx < Math.min(image.width, Math.ceil(x1)); xx++) {
+                    const weight = wy * (Math.min(x1, xx + 1) - Math.max(x0, xx));
+                    const p = (yy * image.width + xx) * 4;
+                    r += image.data[p] * weight;
+                    g += image.data[p + 1] * weight;
+                    b += image.data[p + 2] * weight;
+                    total += weight;
+                }
+            }
+            const o = (y * width + x) * 3;
+            out[o] = r / total;
+            out[o + 1] = g / total;
+            out[o + 2] = b / total;
+        }
+    }
+    return out;
+}
+function blurRgb(image, width, height, knobs) {
+    const radius = Math.max(1, Math.round(knobs.blurRadiusSigmas * knobs.gaussianSigma));
+    const kernel = [];
+    let total = 0;
+    for (let i = -radius; i <= radius; i++) {
+        const value = Math.exp(-(i * i) / (2 * knobs.gaussianSigma * knobs.gaussianSigma));
+        kernel.push(value);
+        total += value;
+    }
+    for (let i = 0; i < kernel.length; i++)
+        kernel[i] /= total;
+    const horizontal = new Float32Array(image.length);
+    const output = new Float32Array(image.length);
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const o = (y * width + x) * 3;
+            for (let k = -radius; k <= radius; k++) {
+                const p = (y * width + reflect(x + k, width)) * 3;
+                const weight = kernel[k + radius];
+                horizontal[o] += image[p] * weight;
+                horizontal[o + 1] += image[p + 1] * weight;
+                horizontal[o + 2] += image[p + 2] * weight;
+            }
+        }
+    }
+    for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+            const o = (y * width + x) * 3;
+            for (let k = -radius; k <= radius; k++) {
+                const p = (reflect(y + k, height) * width + x) * 3;
+                const weight = kernel[k + radius];
+                output[o] += horizontal[p] * weight;
+                output[o + 1] += horizontal[p + 1] * weight;
+                output[o + 2] += horizontal[p + 2] * weight;
+            }
+        }
+    }
+    return output;
+}
+/** One orientation/width pair translates every integer support-field cell by
+ * four fixed offsets. Floor/reflection/fraction are axis-separable and depend
+ * only on that offset, so compute them once per row/column instead of twelve
+ * times per cell. The bilinear arithmetic itself remains byte-for-byte the
+ * same channel expression as the original sampleRgb. */
+function axisSampleMap(size, offset) {
+    const lo = new Int32Array(size);
+    const hi = new Int32Array(size);
+    const fraction = new Float64Array(size);
+    for (let index = 0; index < size; index++) {
+        const coordinate = index + offset;
+        const base = Math.floor(coordinate);
+        lo[index] = reflect(base, size);
+        hi[index] = reflect(base + 1, size);
+        fraction[index] = coordinate - base;
+    }
+    return { lo, hi, fraction };
+}
+function sampleRgbDifferenceMappedInto(image, width, xMapA, yMapA, xMapB, yMapB, x, y, out, offset) {
+    const axA = xMapA.fraction[x];
+    const ayA = yMapA.fraction[y];
+    const p00A = (yMapA.lo[y] * width + xMapA.lo[x]) * 3;
+    const p10A = (yMapA.lo[y] * width + xMapA.hi[x]) * 3;
+    const p01A = (yMapA.hi[y] * width + xMapA.lo[x]) * 3;
+    const p11A = (yMapA.hi[y] * width + xMapA.hi[x]) * 3;
+    const axB = xMapB.fraction[x];
+    const ayB = yMapB.fraction[y];
+    const p00B = (yMapB.lo[y] * width + xMapB.lo[x]) * 3;
+    const p10B = (yMapB.lo[y] * width + xMapB.hi[x]) * 3;
+    const p01B = (yMapB.hi[y] * width + xMapB.lo[x]) * 3;
+    const p11B = (yMapB.hi[y] * width + xMapB.hi[x]) * 3;
+    for (let channel = 0; channel < 3; channel++) {
+        const a = image[p00A + channel] * (1 - axA) * (1 - ayA) + image[p10A + channel] * axA * (1 - ayA) + image[p01A + channel] * (1 - axA) * ayA + image[p11A + channel] * axA * ayA;
+        const b = image[p00B + channel] * (1 - axB) * (1 - ayB) + image[p10B + channel] * axB * (1 - ayB) + image[p01B + channel] * (1 - axB) * ayB + image[p11B + channel] * axB * ayB;
+        out[offset + channel] = a - b;
+    }
+}
+function percentile(values, fraction) {
+    if (!values.length)
+        return 1;
+    values.sort((a, b) => a - b);
+    return values[Math.min(values.length - 1, Math.floor(fraction * (values.length - 1)))];
+}
+function computeRibbonSupport(image, parameters, knobs = exports.DEFAULT_RIBBON_KNOBS) {
+    const scale = parameters.fieldScale;
+    const width = Math.max(1, Math.floor(image.width / scale));
+    const height = Math.max(1, Math.floor(image.height / scale));
+    const blurred = blurRgb(areaResizeRgb(image, width, height), width, height, knobs);
+    const raw = new Float32Array(width * height);
+    const bestTheta = new Float32Array(width * height);
+    const delta = Math.max(1, knobs.gradientDeltaMultiplier / scale);
+    const gradients = new Float64Array(6);
+    for (let orientation = 0; orientation < parameters.orientations; orientation++) {
+        const theta = (Math.PI * orientation) / parameters.orientations;
+        const nx = -Math.sin(theta);
+        const ny = Math.cos(theta);
+        for (const widthSrc of parameters.widthsSrc) {
+            const radius = widthSrc / (2 * scale);
+            const distanceA = -(radius - delta);
+            const distanceB = -(radius + delta);
+            const distanceC = radius - delta;
+            const distanceD = radius + delta;
+            const xA = axisSampleMap(width, nx * distanceA);
+            const yA = axisSampleMap(height, ny * distanceA);
+            const xB = axisSampleMap(width, nx * distanceB);
+            const yB = axisSampleMap(height, ny * distanceB);
+            const xC = axisSampleMap(width, nx * distanceC);
+            const yC = axisSampleMap(height, ny * distanceC);
+            const xD = axisSampleMap(width, nx * distanceD);
+            const yD = axisSampleMap(height, ny * distanceD);
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    sampleRgbDifferenceMappedInto(blurred, width, xA, yA, xB, yB, x, y, gradients, 0);
+                    sampleRgbDifferenceMappedInto(blurred, width, xC, yC, xD, yD, x, y, gradients, 3);
+                    const d1r = gradients[0];
+                    const d1g = gradients[1];
+                    const d1b = gradients[2];
+                    const d2r = gradients[3];
+                    const d2g = gradients[4];
+                    const d2b = gradients[5];
+                    const dot = d1r * d2r + d1g * d2g + d1b * d2b;
+                    if (dot <= 0)
+                        continue;
+                    const n1 = Math.hypot(d1r, d1g, d1b);
+                    const n2 = Math.hypot(d2r, d2g, d2b);
+                    const score = Math.min(n1, n2) * Math.min(1, dot / (n1 * n2 + 1e-6));
+                    const cell = y * width + x;
+                    if (score > raw[cell]) {
+                        raw[cell] = score;
+                        bestTheta[cell] = theta;
+                    }
+                }
+            }
+        }
+    }
+    const norm = Math.max(percentile(Array.from(raw).filter((value) => value > 0), knobs.normalizationPercentile), 1e-6);
+    const support = new Float32Array(raw.length);
+    for (let i = 0; i < raw.length; i++)
+        support[i] = Math.pow(Math.min(1, raw[i] / norm), knobs.supportGamma);
+    return {
+        width,
+        height,
+        scale,
+        support,
+        bestTheta,
+        parameters: {
+            orientations: parameters.orientations,
+            widthsSrc: [...parameters.widthsSrc],
+            gaussianSigma: knobs.gaussianSigma,
+            normalizationPercentile: knobs.normalizationPercentile,
+            gamma: knobs.supportGamma
+        }
+    };
+}
+function buildSupportCost(field, knobs = exports.DEFAULT_RIBBON_KNOBS) {
+    const cost = new Float32Array(field.support.length);
+    for (let i = 0; i < cost.length; i++) {
+        const support = field.support[i];
+        cost[i] = 1 + knobs.costMultiplier * (1 - support) ** 2;
+    }
+    return cost;
+}
+function patchBadgeOcclusion(field, image, badges, widthPx, knobs = exports.DEFAULT_RIBBON_KNOBS) {
+    let haloCells = 0;
+    let patchedCells = 0;
+    const half = widthPx / 2;
+    const gray = (x, y) => {
+        const ix = Math.round(x);
+        const iy = Math.round(y);
+        if (ix < 0 || iy < 0 || ix >= image.width || iy >= image.height)
+            return null;
+        const p = (iy * image.width + ix) * 4;
+        return (image.data[p] + image.data[p + 1] + image.data[p + 2]) / 3;
+    };
+    const inside = (x, y) => badges.some((badge) => {
+        const [bx, by, bw, bh] = badge.bbox;
+        return x >= bx - knobs.insideBadgeMargin && x <= bx + bw + knobs.insideBadgeMargin && y >= by - knobs.insideBadgeMargin && y <= by + bh + knobs.insideBadgeMargin;
+    });
+    for (const badge of badges) {
+        const [bx, by, bw, bh] = badge.bbox;
+        const x0 = Math.max(0, Math.floor((bx - knobs.haloBboxMargin) / field.scale));
+        const x1 = Math.min(field.width - 1, Math.ceil((bx + bw + knobs.haloBboxMargin) / field.scale));
+        const y0 = Math.max(0, Math.floor((by - knobs.haloBboxMargin) / field.scale));
+        const y1 = Math.min(field.height - 1, Math.ceil((by + bh + knobs.haloBboxMargin) / field.scale));
+        for (let y = y0; y <= y1; y++)
+            for (let x = x0; x <= x1; x++) {
+                const cell = y * field.width + x;
+                if (field.support[cell] > knobs.haloSupportThreshold) {
+                    field.support[cell] = knobs.haloSupportThreshold;
+                    haloCells++;
+                }
+            }
+        if (!widthPx)
+            continue;
+        const reach = half + knobs.patchReachMargin;
+        for (let y = Math.max(0, Math.floor((by - reach) / field.scale)); y <= Math.min(field.height - 1, Math.ceil((by + bh + reach) / field.scale)); y++) {
+            for (let x = Math.max(0, Math.floor((bx - reach) / field.scale)); x <= Math.min(field.width - 1, Math.ceil((bx + bw + reach) / field.scale)); x++) {
+                const sx = x * field.scale + field.scale / 2;
+                const sy = y * field.scale + field.scale / 2;
+                let best = 0;
+                for (let orientation = 0; orientation < knobs.patchOrientations; orientation++) {
+                    const theta = (orientation * Math.PI) / knobs.patchOrientations;
+                    const nx = -Math.sin(theta);
+                    const ny = Math.cos(theta);
+                    const points = [[sx - nx * (half - knobs.sampleOffsetPx), sy - ny * (half - knobs.sampleOffsetPx)], [sx - nx * (half + knobs.sampleOffsetPx), sy - ny * (half + knobs.sampleOffsetPx)], [sx + nx * (half - knobs.sampleOffsetPx), sy + ny * (half - knobs.sampleOffsetPx)], [sx + nx * (half + knobs.sampleOffsetPx), sy + ny * (half + knobs.sampleOffsetPx)]];
+                    const leftBlocked = inside(points[0][0], points[0][1]) || inside(points[1][0], points[1][1]);
+                    const rightBlocked = inside(points[2][0], points[2][1]) || inside(points[3][0], points[3][1]);
+                    if (leftBlocked === rightBlocked)
+                        continue;
+                    const side = leftBlocked ? [2, 3] : [0, 1];
+                    const inner = gray(points[side[0]][0], points[side[0]][1]);
+                    const outer = gray(points[side[1]][0], points[side[1]][1]);
+                    if (inner === null || outer === null || inside(points[side[0]][0], points[side[0]][1]) || inside(points[side[1]][0], points[side[1]][1]))
+                        continue;
+                    const lift = inner - outer;
+                    if (lift <= 0)
+                        continue;
+                    const center = gray(sx, sy);
+                    if (center !== null && !inside(sx, sy) && center - outer < -knobs.centerOuterGrayMargin)
+                        continue;
+                    best = Math.max(best, Math.min(1, lift / knobs.liftThreshold));
+                }
+                if (best >= knobs.patchAcceptanceThreshold) {
+                    const cell = y * field.width + x;
+                    const next = Math.min(knobs.patchedCellSupportCap, best);
+                    if (next > field.support[cell]) {
+                        field.support[cell] = next;
+                        patchedCells++;
+                    }
+                }
+            }
+        }
+    }
+    return { haloCells, patchedCells };
+}
+//# sourceMappingURL=ribbon.js.map
