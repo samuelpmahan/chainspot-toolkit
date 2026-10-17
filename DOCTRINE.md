@@ -23,6 +23,16 @@ right and the repo is behind. Every number carries a unit.
 - **Anti-aliasing pixels must be owned.** Brightness detectors are blind to
   their biggest distractor otherwise: about 155 px per basket (white-black
   seam) are unowned today. Exact owned pixels refine everything downstream.
+- **Do not mute AA pixels yet.** First a baseline all the way through S7;
+  then muting AA is one AblationForkJoin row, measured against that
+  baseline across every stage. Muting also blinds the brightness-driven CV:
+  hole paths read brighter than terrain because of their alpha, so the
+  effect on S6/S7 must be observed, not assumed. (Golden..alex contact
+  sheets, 2026-10-17: unowned AA blend = 32,365 px over 81 baskets, 10,329
+  px over 76 tees; badges' existing 2-px mute already covers all of theirs.)
+- **Fit sprites as anti-aliased renders, not thresholded masks.**
+  Thresholding drops the blend on both edges of a stroke, which shrinks
+  pads; the blend pixels carry the sub-pixel edge position.
 - Each basket's C1 has a light spoke that points at the **front edge** of
   the next hole's tee (the end facing its badge); median 1.0-2.6 deg.
 - Visible path width differs from the annotation corridor; treat
