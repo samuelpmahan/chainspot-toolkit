@@ -14,6 +14,12 @@
  *   6. Wiring errors: cycles and missing requires throw.
  *   7. The node file sink round-trips through disk and refuses overwrites.
  *   8. The browser-safe core imports no node:* module.
+ *   9. reads (not guards) are presence-checked, so an FG can certify a Part
+ *      it derives; ctx.env exposes only the declared env names.
+ *  10. ctx.publish hands uncopied, key-order-preserving values to the caller
+ *      outside the record (the S1 port's legacy receipt objects).
+ *  11. The artifact path option decouples file layout from artifact id
+ *      (scoped by scopeSink), and an injected hash does every hashing.
  */
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
@@ -24,7 +30,7 @@ import { join } from 'node:path';
 import { canonicalJson, sha256Hex } from './canon.mjs';
 import { defineGuarantee, GuaranteeFailure, recordJson, runGuarantee } from './guarantee.mjs';
 import { orderGuarantees, runGuarantees } from './registry.mjs';
-import { createMemorySink } from './sinks.mjs';
+import { createMemorySink, scopeSink } from './sinks.mjs';
 import { createFileSink } from './node-sink.mjs';
 import { toyBoard, rect } from './fixtures/board.mjs';
 import blobsFg from './fixtures/fgs/fg.toy.blobs.materialize.fg.mjs';
@@ -50,10 +56,10 @@ test('two FGs run in requires order; the second gates against the first record',
   const { records, frames, timings } = runGuarantees({ guarantees, board: boardWithFamily(), sink });
   assert.deepEqual(Object.keys(records), ['fg.toy.blobs.materialize', 'fg.toy.family.materialize', 'fg.toy.family.experimental']);
   const base = records['fg.toy.blobs.materialize'];
-  assert.deepEqual(Object.keys(base), ['guarantee', 'status', 'reason', 'guards', 'requires', 'lane', 'totals', 'checks', 'witnesses', 'artifacts', 'frames', 'blobIds']);
+  assert.deepEqual(Object.keys(base), ['guarantee', 'status', 'reason', 'guards', 'reads', 'env', 'requires', 'lane', 'totals', 'checks', 'witnesses', 'artifacts', 'frames', 'published', 'blobIds']);
   assert.equal(base.status, 'held');
   assert.deepEqual(base.totals, { blobCount: 4, pxUnion: 23 });
-  assert.deepEqual(base.checks.map((c) => [c.name, c.ok]), [['guarded:px.blobs', true], ['everyBlobHasPx', true], ['pxInBounds', true]]);
+  assert.deepEqual(base.checks.map((c) => [c.name, c.ok]), [['read:px.blobs', true], ['everyBlobHasPx', true], ['pxInBounds', true]]);
   assert.deepEqual(base.witnesses, [{ name: 'unionByBitmap', ok: true, detail: { count: 23 } }]);
   assert.equal(base.artifacts.length, 1);
   assert.equal(base.artifacts[0].rehashed, true);
@@ -65,7 +71,7 @@ test('two FGs run in requires order; the second gates against the first record',
   // frames: 2 from materialize, 1 from family; hashed parts; receipt slices partition the verdicts
   assert.equal(frames.length, 3);
   assert.deepEqual(frames.map((f) => [f.fg, f.seq]), [['fg.toy.blobs.materialize', 0], ['fg.toy.blobs.materialize', 1], ['fg.toy.family.materialize', 0]]);
-  assert.deepEqual(frames[0].receipt.checks.map((c) => c.name), ['guarded:px.blobs', 'everyBlobHasPx', 'pxInBounds']);
+  assert.deepEqual(frames[0].receipt.checks.map((c) => c.name), ['read:px.blobs', 'everyBlobHasPx', 'pxInBounds']);
   assert.deepEqual(frames[0].receipt.witnesses.map((c) => c.name), ['unionByBitmap']);
   assert.deepEqual(frames[1].receipt, { checks: [], witnesses: [] });
   assert.ok(frames.every((f) => f.parts.every((p) => /^[0-9a-f]{64}$/.test(p.sha256))));
@@ -101,7 +107,7 @@ test('a downstream gate against the required record fails by name', () => {
     && e.records['fg.toy.blobs.materialize'].status === 'held');
 });
 
-test('fail(), a throwing run, a missing guarded Part and a throwing witness are all named failures', () => {
+test('fail(), a throwing run, a missing read Part and a throwing witness are all named failures', () => {
   const sink = createMemorySink();
   const board = toyBoard();
   const failing = defineGuarantee({ id: 'fg.toy.fails', guards: ['px.blobs'], run: (ctx) => ctx.fail('opaque Part') });
@@ -109,7 +115,7 @@ test('fail(), a throwing run, a missing guarded Part and a throwing witness are 
   const throwing = defineGuarantee({ id: 'fg.toy.throws', guards: ['px.blobs'], run: () => { throw new TypeError('bug'); } });
   assert.throws(() => runGuarantee(throwing, { board, sink }), (e) => e.reason === 'run threw: bug' && e.cause instanceof TypeError);
   const missing = defineGuarantee({ id: 'fg.toy.missing', guards: ['px.nothing'], run: () => assert.fail('must not run') });
-  assert.throws(() => runGuarantee(missing, { board, sink }), (e) => e.failed[0] === 'guarded:px.nothing');
+  assert.throws(() => runGuarantee(missing, { board, sink }), (e) => e.failed[0] === 'read:px.nothing');
   const witness = defineGuarantee({ id: 'fg.toy.witness', guards: ['px.blobs'], run: (ctx) => { ctx.witness('w', () => { throw new Error('diverged'); }); return {}; } });
   assert.throws(() => runGuarantee(witness, { board, sink }), (e) => e.record.witnesses[0].detail.error === 'diverged');
 });
@@ -166,4 +172,66 @@ test('the browser-safe core imports no node:* module', () => {
     for (const [, dep] of source.matchAll(/from\s+'\.\/([\w-]+\.mjs)'/g))
       assert.ok(!['node-sink.mjs', 'discover.mjs'].includes(dep), `${file} imports node-only ${dep}`);
   }
+});
+
+test('reads, not guards, are presence-checked; env is scoped to the declared names', () => {
+  const board = toyBoard();
+  // certifies a Part it derives itself: px.blobs.count is never on the board
+  const derives = defineGuarantee({
+    id: 'fg.toy.count.materialize', guards: ['px.blobs.count'], reads: ['px.blobs'], env: ['scale'],
+    run(ctx) {
+      assert.deepEqual(Object.keys(ctx.env), ['scale'], 'undeclared env names are not reachable');
+      return { totals: { count: ctx.board.get('px.blobs').blobs.length * ctx.env.scale } };
+    }
+  });
+  const { record } = runGuarantee(derives, { board, sink: createMemorySink(), env: { scale: 2, secret: 'x' } });
+  assert.equal(record.status, 'held');
+  assert.deepEqual(record.totals, { count: 8 });
+  assert.deepEqual(record.checks.map((c) => c.name), ['read:px.blobs', 'env:scale']);
+  assert.deepEqual([record.guards, record.reads, record.env], [['px.blobs.count'], ['px.blobs'], ['scale']]);
+  assert.throws(() => runGuarantee(derives, { board, sink: createMemorySink(), env: {} }),
+    (e) => e instanceof GuaranteeFailure && e.failed.includes('env:scale'));
+  // reads default to guards (the certified Part is the input)
+  assert.deepEqual(blobsFg.reads, ['px.blobs']);
+});
+
+test('publish hands uncopied values to the caller, outside the record', () => {
+  const legacy = { z: 1, a: { y: 2, b: 3 } }; // insertion order is the legacy byte layout
+  const publisher = defineGuarantee({
+    id: 'fg.toy.publish', guards: ['px.blobs'],
+    run(ctx) { ctx.publish('stages.S9.toy', legacy); ctx.publish('materializations.S9', legacy); return {}; }
+  });
+  const { records, outputs } = runGuarantees({ guarantees: [publisher], board: toyBoard() });
+  assert.equal(outputs['fg.toy.publish']['stages.S9.toy'], legacy, 'same reference, not a canonical copy');
+  assert.deepEqual(Object.keys(outputs['fg.toy.publish']['stages.S9.toy']), ['z', 'a']);
+  assert.deepEqual(records['fg.toy.publish'].published, ['stages.S9.toy', 'materializations.S9']);
+  assert.ok(!recordJson(records).includes('"z":1'), 'published values are not record content');
+  const twice = defineGuarantee({ id: 'fg.toy.twice', guards: ['px.blobs'], run(ctx) { ctx.publish('a', 1); ctx.publish('a', 2); } });
+  assert.throws(() => runGuarantee(twice, { board: toyBoard(), sink: createMemorySink() }), { reason: 'published a twice' });
+});
+
+test('artifact path option and injected hash: file layout independent of artifact id', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'fg-path-'));
+  try {
+    const calls = [];
+    const hash = (bytes) => { calls.push(bytes.length); return createHash('sha256').update(bytes).digest('hex'); };
+    const fg = defineGuarantee({
+      id: 'fg.toy.layout', guards: ['px.blobs'],
+      run(ctx) {
+        const raster = ctx.artifact('s9.toy.rgba', 'rgba', new Uint8Array([1, 2, 3, 4]), { width: 1, height: 1 }, { path: 's9/toy.rgba.bin' });
+        const pretty = ctx.artifact('px.toy', 'toy-json', new TextEncoder().encode('{\n  "b": 1\n}\n'), undefined, { path: 's9/px.toy.json' });
+        return { totals: { uris: [raster.uri, pretty.uri] } };
+      }
+    });
+    const sink = createFileSink(join(dir, 'artifacts'), { relativeTo: dir });
+    const { record } = runGuarantee(fg, { board: toyBoard(), sink, hash });
+    assert.deepEqual(record.totals.uris, ['artifacts/s9/toy.rgba.bin', 'artifacts/s9/px.toy.json']);
+    assert.equal(readFileSync(join(dir, 'artifacts/s9/px.toy.json'), 'utf8'), '{\n  "b": 1\n}\n', 'pre-serialized bytes are written verbatim');
+    assert.ok(record.artifacts.every((a) => a.rehashed));
+    assert.deepEqual(calls, [4, 4, 13, 13], 'the injected hash computes and rehashes every artifact');
+    assert.throws(() => sink.putArtifact('json', 'x', new Uint8Array(1), undefined, { path: '../x.json' }), /not a safe relative path/);
+    // scopeSink prefixes the path too, so fork branches stay apart on disk
+    const scoped = scopeSink(createFileSink(join(dir, 'b'), { relativeTo: dir }), 'fn.toy/a');
+    assert.equal(scoped.putArtifact('json', 'p', new Uint8Array(1), undefined, { path: 's9/p.json' }).uri, 'b/fn.toy/a/s9/p.json');
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });

@@ -17,7 +17,7 @@
  *                         restorePxC(stageSnapshots.S1)); never shared
  *     apply?,             (board, impl, name) => void; default impl(board)
  *     guarantees,         defineGuarantee values, run via runGuarantees
- *     only?, lanes?, sink?  passed through; the sink is scoped per branch
+ *     only?, lanes?, sink?, env?  passed through; the sink is scoped per branch
  *                         (artifact ids become '<slot>/<name>/<id>')
  *     compare,            ({ branches, frame }) => value; branches is
  *                         { name: { board, records, frames, error } } and
@@ -41,7 +41,7 @@ import { digest, plain } from './canon.mjs';
 
 export function comparableForkJoin({
   slot, implementations, restore, apply = (board, impl) => impl(board),
-  guarantees, compare, only = null, lanes = [], sink = createMemorySink()
+  guarantees, compare, only = null, lanes = [], sink = createMemorySink(), env = {}
 }) {
   if (typeof slot !== 'string' || !slot.startsWith('fn.')) throw new Error(`comparableForkJoin: slot ${JSON.stringify(slot)} is not a fn.* Calculation`);
   const names = Object.keys(implementations ?? {}).sort();
@@ -59,7 +59,7 @@ export function comparableForkJoin({
       continue;
     }
     try {
-      const { records, frames } = runGuarantees({ guarantees, board, sink: branchSink, only, lanes, branch: name });
+      const { records, frames } = runGuarantees({ guarantees, board, sink: branchSink, only, lanes, branch: name, env });
       live[name] = { board, records, frames, error: null };
     } catch (error) {
       if (!(error instanceof GuaranteeFailure)) throw error;

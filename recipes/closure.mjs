@@ -4,7 +4,7 @@ import { canonical, sha, snapshotPaths } from '../facts.mjs';
 import { compileStageRecipe } from './compile.mjs';
 
 export const STAGE_RUNTIME = [
-  'source/provider', 'ports/run-stages.mjs', 'ports/early', 'recipes',
+  'source/provider', 'ports/run-stages.mjs', 'ports/early', 'fg', 'recipes',
   'policies', 'dependencies', 'toolkit.mjs', 'facts.mjs',
   'provider-adapter.mjs', 'models.mjs'
 ];
