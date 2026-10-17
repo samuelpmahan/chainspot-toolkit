@@ -1,0 +1,7 @@
+{
+  "kind":"stage-refinement-lane","stage":"stages/s4.json","name":"s4.openFrame","default":"OFF","type":"existing-experimental-contract",
+  "candidate":"Run the pinned open-frame S4 contract on the same fresh S3 PxC snapshot as the axis-local baseline; compare with the recipe's explicit broad-shard recovery.",
+  "expectedBenefit":"Recover source-supported open pad fragments while leaving human fit and hole ownership UNKNOWN.",
+  "falsifier":"Candidate rectangle has no source fragment support or loses an already supported native fit.",
+  "metrics":["baselineResolved","broadAcceptedShards","openFrameCandidates","unresolvedHoleReads"],"acceptance":"UNKNOWN"
+}

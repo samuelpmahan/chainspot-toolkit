@@ -1,0 +1,97 @@
+{
+  "schema": "nctk-semantic-native-comparison@1",
+  "providerInvocation": {
+    "mode": "heading",
+    "stem": "IMG_5641",
+    "badgeId": "badge-9",
+    "teeId": "tee-7"
+  },
+  "selector": {
+    "teeId": "tee-7",
+    "badgeId": "badge-9",
+    "basketId": "basket-10"
+  },
+  "variants": {
+    "heading-baseline": {
+      "rowSha256": "1117c583dc87e861d7de237a2d6f86b72041925d3b1d44c42b0534dc68683fc8",
+      "receiptSha256": "ec0d39d8979c3b886d1c391aad353e7e03db33c7a2e1c443c5a78378f1f87211",
+      "receiptBytes": 6353,
+      "rowFileSha256InReceipt": "1117c583dc87e861d7de237a2d6f86b72041925d3b1d44c42b0534dc68683fc8",
+      "selectedRowId": "s6ray:tee-7:plus:badge-9:basket-10",
+      "headingDeg": 2.74449259623379,
+      "trace": {
+        "outcome": "unknown",
+        "reason": "petered-out",
+        "lengthPx": 64.75,
+        "bendCount": 1,
+        "nextStraightProbe": {
+          "point": [
+            509.92069286248625,
+            955.2400743546343
+          ],
+          "support": 0.42506906390190125,
+          "insideOwnBadge": false
+        }
+      }
+    },
+    "heading-formatting": {
+      "rowSha256": "ffa4c8a08ced7da97d92a426835af3378fe4e01ae9437ca4d90cd3fc8a611d92",
+      "receiptSha256": "9fd521e2c9908de1180a2562d924dbce0d5c990d1e2ce0551f100a834fe9e1f4",
+      "receiptBytes": 6355,
+      "rowFileSha256InReceipt": "ffa4c8a08ced7da97d92a426835af3378fe4e01ae9437ca4d90cd3fc8a611d92",
+      "selectedRowId": "s6ray:tee-7:plus:badge-9:basket-10",
+      "headingDeg": 2.74449259623379,
+      "trace": {
+        "outcome": "unknown",
+        "reason": "petered-out",
+        "lengthPx": 64.75,
+        "bendCount": 1,
+        "nextStraightProbe": {
+          "point": [
+            509.92069286248625,
+            955.2400743546343
+          ],
+          "support": 0.42506906390190125,
+          "insideOwnBadge": false
+        }
+      }
+    },
+    "heading-axis": {
+      "rowSha256": "c5211541191157ecb499f4a98d940f1d0baa39b34f106495ea9b283c702a09cc",
+      "receiptSha256": "200e062301fd15a2f73908059a8661843eba647560df830ea7859474aaeb8518",
+      "receiptBytes": 6351,
+      "rowFileSha256InReceipt": "c5211541191157ecb499f4a98d940f1d0baa39b34f106495ea9b283c702a09cc",
+      "selectedRowId": "s6ray:tee-7:plus:badge-9:basket-10",
+      "headingDeg": 2.8017198979279154,
+      "trace": {
+        "outcome": "unknown",
+        "reason": "petered-out",
+        "lengthPx": 64.75,
+        "bendCount": 1,
+        "nextStraightProbe": {
+          "point": [
+            509.92380756211924,
+            955.2757382228739
+          ],
+          "support": 0.42506906390190125,
+          "insideOwnBadge": false
+        }
+      }
+    }
+  },
+  "comparisons": {
+    "heading-formatting": {
+      "parsedPartEqual": true,
+      "geometryObservationEqual": true,
+      "wholeReceiptEqual": false,
+      "traceEqual": true
+    },
+    "heading-axis": {
+      "parsedPartEqual": false,
+      "geometryObservationEqual": false,
+      "wholeReceiptEqual": false,
+      "traceEqual": false
+    }
+  },
+  "interpretation": "Native S7 receipts bind row bytes. Semantic equality of a selected Part or geometry observation does not confer whole-receipt identity or reuse; receipt re-attestation is required."
+}

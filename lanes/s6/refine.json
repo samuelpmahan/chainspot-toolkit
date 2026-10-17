@@ -1,0 +1,7 @@
+{
+  "kind":"stage-refinement-lane","stage":"stages/s6.json","name":"s6.axisPropagation","default":"OFF","type":"same-direct-two-ray-with-alternate-axis",
+  "candidate":"Run the same corrected direct two-ray S6 Ticks over the S5 exact-cell alternate axes as a separate comparison branch. The base two-ray calculation always runs for S6.",
+  "expectedBenefit":"Show which unowned zero-bend candidates are sensitive to tee axis provenance.",
+  "falsifier":"Gained geometry candidates are remote false rays, bbox-only plate hits, or predicted tops without visible source support.",
+  "metrics":["baseCandidates","alternateCandidates","gained","lost","noAxisUnknown"],"acceptance":"UNKNOWN"
+}

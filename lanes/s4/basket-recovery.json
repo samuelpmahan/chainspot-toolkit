@@ -1,0 +1,7 @@
+{
+  "kind":"stage-refinement-lane","stage":"stages/s4.json","name":"s4.basketRecovery","default":"OFF","type":"existing-smart-basket-gateway-branch",
+  "candidate":"Invoke pinned basket sprite matcher on the fresh S3 PxC in a separate S4 gateway Tick; compare semantic boxes to the unchanged S2 baskets and retain all accepted and rejected decisions.",
+  "expectedBenefit":"Localize missing basket proposals on source pixels while preserving exact S2 matches and original S2 Part identity.",
+  "falsifier":"A new proposal lacks source-pixel shell support, duplicates an S2 basket, or disturbs downstream base basket tops.",
+  "metrics":["existingS2BasketCount","exactSemanticBboxMatches","recoveredProposalCount","rejectedCount","sourceSemanticBbox"],"acceptance":"UNKNOWN"
+}

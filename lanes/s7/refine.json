@@ -1,0 +1,13 @@
+{
+  "kind":"stage-refinement-lane",
+  "stage":"stages/s7.json",
+  "name":"s5-axis-heading",
+  "default":"OFF",
+  "candidate":"Supply the fresh S6 two-ray row's S5 axis as a badge-exit heading hypothesis to the existing S7 diagnostic.",
+  "baseline":"Existing legacy geodesic final-approach heading; no course ownership claim.",
+  "runArgs":{"mode":"heading"},
+  "expectedBenefit":"Longer source-supported partial trace without silently assigning a basket.",
+  "falsifier":"A negative crossing or weak-source interval after the badge exit, or no extension against identical field/config.",
+  "priorEvidence":{"specimen":"IMG_5641","baselineLengthPx":27.75,"candidateLengthPx":64.75,"candidateBends":1,"bothOutcome":"unknown/petered-out","scope":"prior isolated diagnostic, not this composed pipeline"},
+  "acceptance":"UNKNOWN"
+}

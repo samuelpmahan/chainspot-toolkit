@@ -1,0 +1,7 @@
+{
+  "kind":"stage-refinement-lane","stage":"stages/s5.json","name":"s5.exactCellPose","default":"OFF","type":"existing-pixel-pose-alternative",
+  "candidate":"Use the existing minimum-area exact observed pixel-cell rectangle as a side-branch S5 tee axis instead of the fresh S3/recovered tee axis, then measure signed perpendicular and angle residuals on both ray directions.",
+  "expectedBenefit":"Expose pose-sensitive badge geometry without assigning tee→badge ownership.",
+  "falsifier":"A lower geometric residual lacks source support, or the candidate degrades supported native axes.",
+  "metrics":["axisCount","pairMeasurements","perpendicularDeltaPx","angleResidualDeltaDeg","noAxisUnknown"],"acceptance":"UNKNOWN"
+}
