@@ -2,6 +2,8 @@
  * fg.s2.basketInvariants.observe (stages/s2.json): the S2 checks that used to
  * be manual, now instrumented on every run; judged and recorded, never gated.
  *
+ * Baskets are named as candidates (`Basket ca`, `Basket cb`, ...; fg/names.mjs) until S5 proves which hole each ends.
+ *
  * Learned from the 6 single-image dev courses (98 baskets, 2026-10-17):
  *   - the basket sprite is 46 x 72 px on every course (BASKET_SIZE);
  *   - its BasketPoint (where every C1 spoke meets the stem's bottom edge) is
@@ -13,6 +15,7 @@
  */
 import { guarantee, pipe, read, step } from '../compose.mjs';
 import { framed, judged, published, unitful } from '../mixins.mjs';
+import { nameCandidates } from '../names.mjs';
 
 const ID = 'fg.s2.basketInvariants.observe';
 const PART = 'px.baskets';
@@ -24,25 +27,26 @@ const DUPLICATE_WITHIN_PX = 10;
 const touch = (a, b) => !(a[0] + a[2] < b[0] || b[0] + b[2] < a[0] || a[1] + a[3] < b[1] || b[1] + b[3] < a[1]);
 
 export function observeBaskets(baskets, badges) {
+  const names = nameCandidates('Basket', baskets, (k) => basketPoint(k.bbox));
   const rows = baskets.map((k, i) => {
     const bbox = [...k.bbox], p = basketPoint(bbox);
     return {
-      index: i, bbox, basketPoint: p.map((v) => Math.round(v * 100) / 100), sizeMatches: bbox[2] === BASKET_SIZE[0] && bbox[3] === BASKET_SIZE[1],
-      touchesBadges: badges.filter((b) => touch(bbox, b.bbox)).map((b) => String(b.label)),
-      touchesBaskets: baskets.map((o, j) => j).filter((j) => j !== i && touch(bbox, baskets[j].bbox))
+      index: i, name: names[i], bbox, basketPoint: p.map((v) => Math.round(v * 100) / 100), sizeMatches: bbox[2] === BASKET_SIZE[0] && bbox[3] === BASKET_SIZE[1],
+      touchesBadges: badges.filter((b) => touch(bbox, b.bbox)).map((b) => `Badge ${b.label}`),
+      touchesBaskets: baskets.map((o, j) => j).filter((j) => j !== i && touch(bbox, baskets[j].bbox)).map((j) => names[j])
     };
   });
   const dup = [];
   for (let i = 0; i < rows.length; i++) for (let j = i + 1; j < rows.length; j++)
-    if (Math.hypot(rows[i].basketPoint[0] - rows[j].basketPoint[0], rows[i].basketPoint[1] - rows[j].basketPoint[1]) < DUPLICATE_WITHIN_PX) dup.push([i, j]);
+    if (Math.hypot(rows[i].basketPoint[0] - rows[j].basketPoint[0], rows[i].basketPoint[1] - rows[j].basketPoint[1]) < DUPLICATE_WITHIN_PX) dup.push([rows[i].name, rows[j].name]);
   return {
     rows,
     findings: {
       baskets: rows.length, badges: badges.length, deficit: Math.max(0, badges.length - rows.length),
-      sizeConstant: rows.every((r) => r.sizeMatches), offSize: rows.filter((r) => !r.sizeMatches).map((r) => r.index),
+      sizeConstant: rows.every((r) => r.sizeMatches), offSize: rows.filter((r) => !r.sizeMatches).map((r) => r.name),
       duplicates: dup, overBadgeCount: rows.length > badges.length,
-      touchingBadges: rows.filter((r) => r.touchesBadges.length).map((r) => ({ basketIndex: r.index, badgeLabels: r.touchesBadges })),
-      touchingBaskets: rows.filter((r) => r.touchesBaskets.length).map((r) => ({ basketIndex: r.index, basketIndices: r.touchesBaskets }))
+      touchingBadges: rows.filter((r) => r.touchesBadges.length).map((r) => ({ basket: r.name, badges: r.touchesBadges })),
+      touchingBaskets: rows.filter((r) => r.touchesBaskets.length).map((r) => ({ basket: r.name, baskets: r.touchesBaskets }))
     }
   };
 }
@@ -61,10 +65,10 @@ const frames = framed((s) => [{
   title: `basket invariants: ${s.findings.baskets} baskets for ${s.findings.badges} badges (S4 recovers ${s.findings.deficit}); robust base ${s.judged.robustBase.matches ? 'holds' : 'BREAKS'}`,
   calculation: 'Basket.findPx', tick: ID,
   parts: [
-    { address: `${PART}#invariants`, kind: 'bbox', data: { boxes: s.rows.map((r) => [...r.bbox, `basket ${r.index}${r.sizeMatches ? '' : ' off-size'}${r.touchesBadges.length ? ' touches badge ' + r.touchesBadges.join('/') : ''}`]) } },
-    { address: `${PART}#basketPoints`, kind: 'points', data: { points: s.rows.map((r) => [...r.basketPoint, `BP ${r.index}`]) } }
+    { address: `${PART}#invariants`, kind: 'bbox', data: { boxes: s.rows.map((r) => [...r.bbox, `${r.name}${r.sizeMatches ? '' : ' off-size'}${r.touchesBadges.length ? ' touches ' + r.touchesBadges.join('/') : ''}`]) } },
+    { address: `${PART}#basketPoints`, kind: 'points', data: { points: s.rows.map((r) => [...r.basketPoint, `${r.name} point`]) } }
   ],
-  verdicts: s.rows.map((r) => ({ name: `basket ${r.index}: ${r.bbox[2]}x${r.bbox[3]} px, BasketPoint (${r.basketPoint.join(', ')})`, ok: r.sizeMatches }))
+  verdicts: s.rows.map((r) => ({ name: `${r.name}: ${r.bbox[2]}x${r.bbox[3]} px, BasketPoint (${r.basketPoint.join(', ')})`, ok: r.sizeMatches }))
 }]);
 
 export default guarantee({
@@ -74,5 +78,5 @@ export default guarantee({
   published({
     stage: 'S2', key: 'basketInvariants', materialization: 'S2BasketInvariants',
     header: () => ({ part: PART, observedBy: ID }),
-    body: (s) => ({ robustBaseHolds: s.judged.robustBase.matches, findings: s.findings, basketPoints: s.rows.map((r) => r.basketPoint) })
+    body: (s) => ({ robustBaseHolds: s.judged.robustBase.matches, findings: s.findings, basketPoints: Object.fromEntries(s.rows.map((r) => [r.name, r.basketPoint])) })
   })));

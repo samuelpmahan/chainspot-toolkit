@@ -81,5 +81,9 @@ right and the repo is behind. Every number carries a unit.
   A field that looks like an id but isn't one (Alex's annotation `number` is
   its order, not the hole) gets an explicit map in the data
   (`testimony/alex/hole-numbers.json`), never a remembered inference.
+- **Candidates are named Excel style** (Sam, 2026-10-17): `{Tee|Badge|Basket}
+  c[a-z]+` (ca, cb, ... cz, caa) in raster order of their centres, until
+  their identity is proven; then `Tee 12`. A letter code can never be read
+  as a hole number, a count or a list index (`fg/names.mjs`).
 - Progress course by course, stage by stage; explain each stage's numbers
   against the stage before. Each thing learned is part of the long tail.

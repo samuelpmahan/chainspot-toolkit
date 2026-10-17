@@ -11,8 +11,8 @@ test('size, deficit vs badges, touching and duplicates are findings', () => {
   const baskets = [{ bbox: [0, 0, 46, 72] }, { bbox: [40, 0, 46, 72] }, { bbox: [990, 0, 46, 72] }, { bbox: [2, 1, 46, 72] }, { bbox: [500, 500, 47, 72] }];
   const o = observeBaskets(baskets, badges);
   assert.equal(o.findings.deficit, 13);
-  assert.equal(o.findings.sizeConstant, false); assert.deepEqual(o.findings.offSize, [4]);
-  assert.deepEqual(o.findings.duplicates, [[0, 3]]);
-  assert.ok(o.findings.touchingBadges.some((t) => t.basketIndex === 2 && t.badgeLabels.includes('1')));
-  assert.ok(o.findings.touchingBaskets.some((t) => t.basketIndex === 0 && t.basketIndices.includes(1)));
+  assert.equal(o.findings.sizeConstant, false); assert.deepEqual(o.findings.offSize, ['Basket ce']);
+  assert.deepEqual(o.findings.duplicates, [['Basket ca', 'Basket cd']]);
+  assert.ok(o.findings.touchingBadges.some((t) => t.basket === 'Basket cc' && t.badges.includes('Badge 1')));
+  assert.ok(o.findings.touchingBaskets.some((t) => t.basket === 'Basket ca' && t.baskets.includes('Basket cb')));
 });

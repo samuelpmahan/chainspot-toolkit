@@ -20,6 +20,7 @@
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fitPadPose } from './padPose.mjs';
+import { nameCandidates } from '../../fg/names.mjs';
 import { associate, basketPoint, pathSide, ASSOC_BOUNDS, ASSOC_UNITS, BASKET_POINT_OFFSET } from './associate.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
@@ -73,7 +74,8 @@ export function runAssociation({ attempt, specimen, root = ROOT }) {
     return { label: String(b.label), center: [x + (w - 1) / 2, y + (h - 1) / 2] };
   });
   const rows = associate({ tees: fits.map((f, i) => ({ label: f.label, center: [f.cx, f.cy], thRad: f.thRad, sigmaThRad: (f.sigma.thDeg * Math.PI) / 180, pathSide: pathSide({ raster, occ: occAll, center: [f.cx, f.cy], thRad: f.thRad, L: template.L, W: template.W }) })), badges, baskets: baskets.map((k, i) => ({ index: k.index ?? i, bbox: k.bbox })), padLengthPx: template.L });
-  rows.forEach((r, i) => { const f = fits[i]; r.pose = { cx: r3(f.cx), cy: r3(f.cy), thDeg: r3(f.thDeg), sigmaRaw: { thDeg: r3(f.sigma.thDeg), xPx: r3(f.sigma.xPx), yPx: r3(f.sigma.yPx) }, freeShapeThDeg: r3(f.freeShape.thDeg), L: r3(f.L), W: r3(f.W), se: r3(f.se), ss: r3(f.ss), rmsRgb: r3(f.rms), clean: f.clean, s3AngleDiffDeg: r3(((f.thDeg - f.s3.angleDeg + 90) % 180 + 180) % 180 - 90) }; });
+  const teeNames = nameCandidates('Tee', tees, (t) => t.center);
+  rows.forEach((r, i) => { r.candidate = teeNames[i]; r.identity = r.best ? `Tee ${r.best.badge}` : null; const f = fits[i]; r.pose = { cx: r3(f.cx), cy: r3(f.cy), thDeg: r3(f.thDeg), sigmaRaw: { thDeg: r3(f.sigma.thDeg), xPx: r3(f.sigma.xPx), yPx: r3(f.sigma.yPx) }, freeShapeThDeg: r3(f.freeShape.thDeg), L: r3(f.L), W: r3(f.W), se: r3(f.se), ss: r3(f.ss), rmsRgb: r3(f.rms), clean: f.clean, s3AngleDiffDeg: r3(((f.thDeg - f.s3.angleDeg + 90) % 180 + 180) % 180 - 90) }; });
 
   // Judge against Sam's testimony (agreement only).
   let judgement = null;
