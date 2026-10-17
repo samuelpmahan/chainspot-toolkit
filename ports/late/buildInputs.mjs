@@ -16,8 +16,11 @@ export function buildLateInputs({forkRoot,sourcePath,sourceSha256,cropTopPx,s4,b
   const {fitMinimumAreaPixelRect}=dist('detectors/threeFactor/features/g3.teeMinAreaPoseMath');
   const {DEFAULT_SMART_BASKET_OPTIONS}=dist('detectors/threeFactor/smartBasket');
   const sprite=JSON.parse(readFileSync(resolve(forkRoot,'packages/alg/src/detectors/threeFactor/assets/basket-sprite.json')));
-  const jpeg=require(resolve(forkRoot,'node_modules/jpeg-js'));
-  const sourceRgb=jpeg.decode(readFileSync(resolve(sourcePath)),{useTArray:true});
+  // Same decoders as the provider's decodeNodeFile: the dev specimens are PNG.
+  const sourceBytes=readFileSync(resolve(sourcePath));
+  const sourceRgb=sourceBytes[0]===0x89&&sourceBytes[1]===0x50
+    ?require(resolve(forkRoot,'node_modules/pngjs')).PNG.sync.read(sourceBytes)
+    :require(resolve(forkRoot,'node_modules/jpeg-js')).decode(sourceBytes,{useTArray:true});
   const firstInkY=sprite.rows.findIndex(row=>row.includes('1'));
   const topXs=[...sprite.rows[firstInkY]].flatMap((v,i)=>v==='1'?[i]:[]);
   const topInkMidX=(topXs[0]+topXs.at(-1))/2;
