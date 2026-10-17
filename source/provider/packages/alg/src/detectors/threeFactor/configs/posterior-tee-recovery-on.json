@@ -1,0 +1,25 @@
+{
+	"schema": "threeFactor-config@1",
+	"name": "posterior-tee-recovery-on",
+	"note": "Frozen Dev6 endpoint baseline with posteriorTeeRecovery enabled. It publishes each selected endpoint and commits that exact tee-to-badge decision to final assignment.",
+	"execution": [
+		"badgeStage",
+		"badges",
+		"baskets",
+		"tees",
+		"teeFamily",
+		"supportField",
+		"badgeOcclusionPatch",
+		"rawPairs",
+		"measurement",
+		"assignment",
+		"teeRecovery",
+		"teeBadgeLock"
+	],
+	"gates": {
+		"G4": {
+			"teeBadgeLock": { "enabled": true },
+			"posteriorTeeRecovery": { "enabled": true }
+		}
+	}
+}

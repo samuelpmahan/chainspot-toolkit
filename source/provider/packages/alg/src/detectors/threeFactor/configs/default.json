@@ -1,0 +1,26 @@
+{
+	"schema": "threeFactor-config@1",
+	"name": "dev6-106-default",
+	"note": "Frozen Dev6 106/108 tee-to-badge baseline from daada50 (2026-08-29): G2/G3 endpoint detection, assignment, and post-assignment teeRecovery feed the ray-first teeBadgeLock lane. The two remaining locks stay named abstentions; 108/108 work is experimental on top of this baseline. Phantom tee completion and zfit remain out of the default schedule.",
+	"execution": [
+		"badgeStage",
+		"badges",
+		"baskets",
+		"tees",
+		"teeFamily",
+		"supportField",
+		"badgeOcclusionPatch",
+		"rawPairs",
+		"measurement",
+		"assignment",
+		"teeRecovery",
+		"teeBadgeLock"
+	],
+	"gates": {
+		"G4": {
+			"teeBadgeLock": {
+				"enabled": true
+			}
+		}
+	}
+}

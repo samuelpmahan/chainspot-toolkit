@@ -1,0 +1,76 @@
+// Feature registry. New features register with ONE import + list entry
+// (the LAB registry's basketFamily.ts out-of-band precedent). The tail of
+// this module is an import-time integrity check mirroring
+// scripts/chainspot-lab/invariants.ts: duplicate ids or bad knob specs
+// refuse to load rather than silently drifting.
+
+import type { ABFeature } from './types';
+import { zfitFeature } from './g5.zfit';
+import { phantomTeeFeature } from './g3.phantomTee';
+import { g4ScoringFeature } from './g4.scoring';
+import { g4SearchFeature } from './g4.search';
+import { g5RibbonFeature } from './g5.ribbon';
+import { g5RoutingFeature } from './g5.routing';
+import { g3EndpointsFeature } from './g3.endpoints';
+import { badgeM2AaFeature } from './g5.badgeM2Aa';
+import { g2SpriteFeature } from './g2.sprite';
+import { cleanBasketFamilyFeature } from './g2.cleanBasketFamily';
+import { g1BadgesFeature } from './g1.badges';
+import { g1DigitsFeature } from './g1.digits';
+import { badgeGlyphTemplateFeature } from './g1.badgeGlyphTemplate';
+import { sharedHsvFeature } from './shared.hsv';
+import { teeFamilyFeature } from './g3.teeFamily';
+import { teeMinAreaPoseFeature } from './g3.teeMinAreaPose';
+import { teeRecoveryFeature } from './g3.teeRecovery';
+import { teeBadgeLockFeature } from './g4.teeBadgeLock';
+import { posteriorTeeRecoveryFeature } from './g4.posteriorTeeRecovery';
+import { fourLaneSensorFeature } from './st.fourLaneSensor';
+import { straightTestFeature } from './st.straightTest';
+
+export const ALL_FEATURES: readonly ABFeature[] = [
+	zfitFeature,
+	phantomTeeFeature,
+	g4ScoringFeature,
+	g4SearchFeature,
+	g5RibbonFeature,
+	g5RoutingFeature,
+	badgeM2AaFeature,
+	g3EndpointsFeature,
+	g2SpriteFeature,
+	cleanBasketFamilyFeature,
+	g1BadgesFeature,
+	g1DigitsFeature,
+	badgeGlyphTemplateFeature,
+	sharedHsvFeature,
+	teeFamilyFeature,
+	teeMinAreaPoseFeature,
+	teeRecoveryFeature,
+	teeBadgeLockFeature,
+	posteriorTeeRecoveryFeature,
+	fourLaneSensorFeature,
+	straightTestFeature
+];
+
+export function featureById(id: string): ABFeature | undefined {
+	return ALL_FEATURES.find((feature) => feature.id === id);
+}
+
+// --- integrity check (import-time) -----------------------------------------
+{
+	const seen = new Set<string>();
+	for (const feature of ALL_FEATURES) {
+		if (seen.has(feature.id)) throw new Error(`Duplicate ABFeature id: ${feature.id}`);
+		seen.add(feature.id);
+		if (feature.kind === 'deviation' && feature.defaultEnabled) {
+			throw new Error(`ABFeature ${feature.id}: deviations must default OFF (frozen parity).`);
+		}
+		for (const [name, spec] of Object.entries(feature.knobs)) {
+			if (spec.validate) {
+				const error = spec.validate(spec.default);
+				if (error !== null) {
+					throw new Error(`ABFeature ${feature.id}: default for knob '${name}' invalid: ${error}`);
+				}
+			}
+		}
+	}
+}
