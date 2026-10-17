@@ -1,0 +1,13 @@
+{
+  "schema": "nctk-testimony-hole-map@1",
+  "annotation": "AlexClark-full.annotation.json",
+  "field": "holes[].number",
+  "fieldMeans": "the annotation's own order (1, 2, 3), NOT a hole number",
+  "map": [
+    { "annotationNumber": 1, "holeNumber": 16 },
+    { "annotationNumber": 2, "holeNumber": 13 },
+    { "annotationNumber": 3, "holeNumber": 6 }
+  ],
+  "matchedBy": "geometry, 2026-10-17: each annotated tee lies on the axis of the pad associated with that badge, and each annotated basket lies within 3.2 px of an S2 BasketPoint",
+  "frame": { "name": "source", "canonicalY": "annotation y - 4 px (S0 upperRowsRemoved)" }
+}

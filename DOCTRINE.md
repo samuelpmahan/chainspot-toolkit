@@ -75,5 +75,11 @@ right and the repo is behind. Every number carries a unit.
 - Build from what is certain; let interfaces reveal themselves through
   need. Wherever friction emerges is an opportunity to abstract and
   automate. Pragmatic and cross-verifiable beats perfect rule following.
+- **Every number names its referent, not just its unit**: what was counted,
+  out of what, where. "3 missing" says nothing; "S2 found 15 of Alex's 18
+  basket sprites; Sam annotated 3 baskets (holes 16, 13, 6), all found" does.
+  A field that looks like an id but isn't one (Alex's annotation `number` is
+  its order, not the hole) gets an explicit map in the data
+  (`testimony/alex/hole-numbers.json`), never a remembered inference.
 - Progress course by course, stage by stage; explain each stage's numbers
   against the stage before. Each thing learned is part of the long tail.
