@@ -1,0 +1,21 @@
+golden: course width 41.51 px (from 3-point straight holes)
+  hole  1: traced from the S3 tee           end BP0 bends 1  || Sam: OK end 3.7 px, stays within 3.4 px of Sam's centreline (half-width 20.8), bends 1/1 off [4.8]
+  hole  2: traced from the S3 tee           end BP2 bends 1  || Sam: OK end 3.7 px, stays within 3.6 px of Sam's centreline (half-width 20.8), bends 1/1 off [3.7]
+  hole  3: badge-only seed (no S3 tee)      end BP3 bends 0  || Sam: OK end 1.1 px, stays within 0.4 px of Sam's centreline (half-width 20.8), bends 0/0 off []
+  hole  4: traced from the S3 tee           end BP6 bends 1  || Sam: OK end 3.7 px, stays within 5.2 px of Sam's centreline (half-width 20.8), bends 1/1 off [5.8]
+  hole  5: badge-only seed (no S3 tee)      end BP3 bends 1  || Sam: X end 255.9 px, stays within 190.4 px of Sam's centreline (half-width 20.8), bends 1/1 off [139.5]
+  hole  6: traced from the S3 tee           NO END (lost)  || Sam: X no BasketPoint reached
+  hole  7: traced from the S3 tee           end BP7 bends 1  [3-point straight rejected: edge {'edge': np.float64(1.7), 'width': np.float64(42.2)}]  || Sam: OK end 3.7 px, stays within 3.6 px of Sam's centreline (half-width 20.8), bends 1/1 off [6.9]
+  hole  8: traced from the S3 tee           end BP10 bends 1  || Sam: OK end 3.7 px, stays within 3.7 px of Sam's centreline (half-width 20.8), bends 1/1 off [1.6]
+  hole  9: 3-point straight, verified       end BP12 bends 0  [width 41.54 px, centre -0.02 px, edges 13.7 lum/px]  || Sam: OK end 3.7 px, stays within 3.7 px of Sam's centreline (half-width 20.8), bends 0/0 off []
+  hole 10: 3-point straight, verified       end BP15 bends 0  [width 41.42 px, centre -0.19 px, edges 11.3 lum/px]  || Sam: OK end 3.7 px, stays within 3.7 px of Sam's centreline (half-width 20.8), bends 0/0 off []
+  hole 11: 3-point straight, verified       end BP16 bends 0  [width 41.42 px, centre -0.13 px, edges 12.4 lum/px]  || Sam: OK end 3.7 px, stays within 3.7 px of Sam's centreline (half-width 20.8), bends 0/0 off []
+  hole 12: badge-only seed (no S3 tee)      end BP13 bends 0  || Sam: OK end 3.7 px, stays within 3.9 px of Sam's centreline (half-width 20.8), bends 0/0 off []
+  hole 13: 3-point straight, verified       end BP14 bends 0  [width 41.68 px, centre +0.20 px, edges 9.1 lum/px]  || Sam: OK end 3.7 px, stays within 3.7 px of Sam's centreline (half-width 20.8), bends 0/0 off []
+  hole 14: traced from the S3 tee           end BP11 bends 1  [3-point straight rejected: edge {'edge': np.float64(2.5), 'width': np.float64(42.12)}]  || Sam: OK end 3.7 px, stays within 3.4 px of Sam's centreline (half-width 20.8), bends 1/1 off [1.0]
+  hole 15: traced from the S3 tee           end BP9 bends 1  [3-point straight rejected: edge {'edge': np.float64(2.0), 'width': np.float64(41.78)}]  || Sam: OK end 0.9 px, stays within 1.5 px of Sam's centreline (half-width 20.8), bends 1/1 off [3.2]
+  hole 16: 3-point straight, verified       end BP4 bends 0  [width 41.23 px, centre -0.15 px, edges 9.1 lum/px]  || Sam: OK end 3.7 px, stays within 0.2 px of Sam's centreline (half-width 20.8), bends 0/0 off []
+  hole 17: 3-point straight, verified       end BP8 bends 0  [width 41.52 px, centre -0.13 px, edges 8.7 lum/px]  || Sam: OK end 3.7 px, stays within 3.7 px of Sam's centreline (half-width 20.8), bends 0/0 off []
+  hole 18: traced from the S3 tee           end BP1 bends 2  || Sam: OK end 3.7 px, stays within 6.3 px of Sam's centreline (half-width 20.8), bends 2/2 off [16.3, 6.1]
+  agreement with Sam: 16/18 holes
+  run 227.2 s; cache {'width': {'hit': 0, 'miss': 1, 's': 1.9}, 'teeBadgeLearn': {'hit': 0, 'miss': 1, 's': 1.7}, 'verifyStraight': {'hit': 0, 'miss': 9, 's': 0.2}, 'traceFromTee': {'hit': 0, 'miss': 9, 's': 118.0}, 'refine': {'hit': 0, 'miss': 8, 's': 46.6}, 'badgeSeed': {'hit': 0, 'miss': 3, 's': 55.7}}; output sha256 ec39488efbd33dd7
