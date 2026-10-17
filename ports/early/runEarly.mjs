@@ -143,8 +143,16 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   const s1Materializations = {};
   const s1Branches = {};
   if (lastIndex >= 1) {
+    // The flipbook draws every page over the source image itself (a data
+    // URL of the original bytes), shifted by S0's recorded crop insets into
+    // canonical coordinates; a sidecar only, never receipt bytes.
+    const crop = captured.S0?.cropReceipt;
+    const background = crop?.originalPx ? {
+      src: `data:image/${sourceBytes[0] === 0x89 ? 'png' : 'jpeg'};base64,${sourceBytes.toString('base64')}`,
+      width: crop.originalPx.width, height: crop.originalPx.height, x: 0, y: -crop.upperRowsRemoved
+    } : null;
     const s1 = await runStageGuarantees({
-      forkRoot: root, stage: 's1', board: pxc, outDir: out,
+      forkRoot: root, stage: 's1', board: pxc, outDir: out, background,
       lanes: experiments.map((id) => EXPERIMENT_LANES[id]).filter(Boolean),
       env: {
         dist, captured, stageSnapshots, restorePxC, sha256: hash, canonicalRgbaSha256: initialPixels,

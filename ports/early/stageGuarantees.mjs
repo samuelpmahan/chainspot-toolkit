@@ -31,7 +31,7 @@ import { createFileSink, nodeSha256 } from '../../fg/node-sink.mjs';
 import { framesJson, renderFlipbook } from '../../fg/flipbook.mjs';
 import { canonicalJson } from '../../fg/canon.mjs';
 
-export async function runStageGuarantees({ forkRoot, stage, board, outDir, lanes = [], env = {} }) {
+export async function runStageGuarantees({ forkRoot, stage, board, outDir, lanes = [], env = {}, background = null }) {
   const { registry, declarations, report } = await loadRegistry({ root: join(forkRoot, 'fg'), stagesDir: join(forkRoot, 'stages') });
   const declared = declarations.filter((d) => d.stage === stage);
   const ids = declared.map((d) => d.id);
@@ -50,7 +50,7 @@ export async function runStageGuarantees({ forkRoot, stage, board, outDir, lanes
       failure
     }) + '\n');
     writeFileSync(join(sidecarDir, `${stage}.frames.json`), framesJson(frames) + '\n');
-    writeFileSync(join(sidecarDir, `${stage}.flipbook.html`), renderFlipbook(frames, { title: `${stage} FunctionalGuarantees` }));
+    writeFileSync(join(sidecarDir, `${stage}.flipbook.html`), renderFlipbook(frames, { title: `${stage} FunctionalGuarantees`, background }));
     writeFileSync(join(sidecarDir, `${stage}.timings.json`), JSON.stringify(timings, null, 2) + '\n');
   };
   let run;

@@ -42,6 +42,24 @@ function base64(bytes) {
   return btoa(out);
 }
 
+// The drawn bounds of a page: the union of its pxset/bbox/points data,
+// padded and clamped to the frame extent, so a page shows what it is about
+// instead of a whole course at thumbnail scale.
+function crop(frame, [w, h], pad = 24) {
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  const add = (x, y, bw = 1, bh = 1) => { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x + bw); y1 = Math.max(y1, y + bh); };
+  for (const part of frame.parts) {
+    const d = part.data;
+    if (!d || !DRAWN.has(part.kind)) continue;
+    if (part.kind === 'pxset') for (const px of d.px ?? []) add(px % (d.width || 1), Math.floor(px / (d.width || 1)));
+    if (part.kind === 'bbox') for (const [x, y, bw, bh] of d.boxes ?? []) add(x, y, bw, bh);
+    if (part.kind === 'points') for (const [x, y] of d.points ?? []) add(x, y);
+  }
+  if (x0 === Infinity) return [0, 0, w, h];
+  const cx = Math.max(0, Math.floor(x0 - pad)), cy = Math.max(0, Math.floor(y0 - pad));
+  return [cx, cy, Math.min(w, Math.ceil(x1 + pad)) - cx, Math.min(h, Math.ceil(y1 + pad)) - cy];
+}
+
 function extent(frame, raster) {
   if (raster) return [raster.width, raster.height];
   let w = 1, h = 1;
@@ -75,10 +93,10 @@ function scalarHtml(data) {
   return `<span class="scalar">${esc(typeof value === 'object' ? canonicalJson(value) : value)}${unit}</span>`;
 }
 
-function pageHtml(frame, index, total, raster) {
+function pageHtml(frame, index, total, raster, view) {
   const drawn = frame.parts.filter((p) => DRAWN.has(p.kind) && p.data);
-  const [w, h] = extent(frame, raster);
-  const scale = Math.max(1, Math.floor(640 / Math.max(w, h)));
+  const [, , w, h] = view;
+  const scale = Math.min(6, Math.max(1, Math.floor(640 / Math.max(w, h))));
   const meta = [
     ['fg', frame.fg], ['branch', frame.branch], ['tick', frame.tick], ['calculation', frame.calculation]
   ].filter(([, v]) => v !== null && v !== undefined).map(([k, v]) => `<span><b>${k}</b> ${esc(v)}</span>`).join(' ');
@@ -102,9 +120,16 @@ ${verdicts ? `<h3>verdicts</h3><ul class="verdicts">${verdicts}</ul>` : ''}
 </section>`;
 }
 
-export function renderFlipbook(frames, { raster = null, title = 'FG flipbook' } = {}) {
+//   background: optional { src, width, height, x?, y? }: an image URL (e.g. a
+//   data: URL of the source JPEG) drawn under every page, its top-left at
+//   (x, y) in frame coordinates. Far cheaper than an embedded RGBA raster.
+export function renderFlipbook(frames, { raster = null, background = null, title = 'FG flipbook' } = {}) {
   if (!Array.isArray(frames)) throw new TypeError('renderFlipbook: frames must be an array');
-  const draw = frames.map((f) => f.parts.map((p, i) => DRAWN.has(p.kind) && p.data ? { kind: p.kind, color: PALETTE[i % PALETTE.length], data: p.data } : null).filter(Boolean));
+  const fullExtent = (f) => raster ? [raster.width, raster.height]
+    : background ? [background.width + (background.x ?? 0), background.height + (background.y ?? 0)] : extent(f, null);
+  const views = frames.map((f) => crop(f, fullExtent(f)));
+  const draw = frames.map((f, k) => ({ view: views[k], parts: f.parts.map((p, i) => DRAWN.has(p.kind) && p.data ? { kind: p.kind, color: PALETTE[i % PALETTE.length], data: p.data } : null).filter(Boolean) }));
+  const image = background ? { src: background.src, x: background.x ?? 0, y: background.y ?? 0 } : null;
   const bg = raster ? { width: raster.width, height: raster.height, rgba: base64(raster.rgba instanceof Uint8Array ? raster.rgba : new Uint8Array(raster.rgba)) } : null;
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -125,15 +150,19 @@ pre{overflow-x:auto;font-size:12px}
 </style></head><body>
 <nav><button id="prev" type="button">&larr; prev</button><input id="slider" type="range" min="0" max="${Math.max(0, frames.length - 1)}" value="0"><button id="next" type="button">next &rarr;</button><span id="where"></span></nav>
 <main>
-${frames.length ? frames.map((f, i) => pageHtml(f, i, frames.length, raster)).join('\n') : '<p class="muted">no frames</p>'}
+${frames.length ? frames.map((f, i) => pageHtml(f, i, frames.length, raster, views[i])).join('\n') : '<p class="muted">no frames</p>'}
 </main>
 <script type="application/json" id="fg-draw">${scriptJson(draw)}</script>
 <script type="application/json" id="fg-raster">${scriptJson(bg)}</script>
+<script type="application/json" id="fg-image">${scriptJson(image)}</script>
 <script>
 (() => {
   const draw = JSON.parse(document.getElementById('fg-draw').textContent);
   const bg = JSON.parse(document.getElementById('fg-raster').textContent);
+  const image = JSON.parse(document.getElementById('fg-image').textContent);
   const pages = [...document.querySelectorAll('section.page')];
+  let img = null;
+  if (image) { img = new Image(); img.onload = () => { const again = [...drawn]; drawn.clear(); again.forEach(paint); }; img.src = image.src; }
   let bgCanvas = null;
   if (bg) {
     const bin = atob(bg.rgba); const bytes = new Uint8ClampedArray(bin.length);
@@ -146,8 +175,11 @@ ${frames.length ? frames.map((f, i) => pageHtml(f, i, frames.length, raster)).jo
     if (drawn.has(i)) return; drawn.add(i);
     const canvas = document.querySelector('canvas[data-frame="' + i + '"]'); if (!canvas) return;
     const ctx = canvas.getContext('2d');
+    const [vx, vy] = draw[i].view;
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.translate(-vx, -vy);
     if (bgCanvas) { ctx.globalAlpha = 0.6; ctx.drawImage(bgCanvas, 0, 0); ctx.globalAlpha = 1; }
-    for (const part of draw[i]) {
+    if (img && img.complete && img.naturalWidth) { ctx.globalAlpha = 0.7; ctx.drawImage(img, image.x, image.y); ctx.globalAlpha = 1; }
+    for (const part of draw[i].parts) {
       const d = part.data; ctx.fillStyle = part.color; ctx.strokeStyle = part.color;
       if (part.kind === 'pxset') { ctx.globalAlpha = 0.75; for (const p of d.px || []) ctx.fillRect(p % d.width, Math.floor(p / d.width), 1, 1); ctx.globalAlpha = 1; }
       if (part.kind === 'bbox') { ctx.lineWidth = Math.max(1, canvas.width / 400); for (const [x, y, w, h] of d.boxes || []) ctx.strokeRect(x + 0.5, y + 0.5, Math.max(0, w - 1), Math.max(0, h - 1)); }
@@ -161,7 +193,9 @@ ${frames.length ? frames.map((f, i) => pageHtml(f, i, frames.length, raster)).jo
     at = Math.max(0, Math.min(pages.length - 1, i));
     pages.forEach((p, j) => { p.hidden = j !== at; });
     slider.value = at; where.textContent = (at + 1) + ' / ' + pages.length;
-    if (location.hash !== '#' + at) history.replaceState(null, '', '#' + at);
+    // Sandboxed viewers (srcdoc iframes) refuse history writes; the page
+    // number is a convenience, never worth failing the paint for.
+    try { if (location.hash !== '#' + at) history.replaceState(null, '', '#' + at); } catch {}
     paint(at);
   };
   document.getElementById('prev').onclick = () => show(at - 1);
