@@ -59,6 +59,7 @@ export const FIX_BOUNDS = {
   marginMin: 2, marginMax: 7, marginSpreadMax: 3,
   fillMin: 0.30, fillMax: 0.50,
   interiorDeltaMin: 30, interiorBrightMax: 0.5,
+  interiorToneFloor: 12, interiorToneExpansion: 1.5,
   whiteFracMin: 0.95,
   sizeExpansion: 1.1,
   coverageFactor: 0.85
@@ -74,6 +75,30 @@ function median(values) {
   return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
 }
 const rangeOf = (values) => ({ min: Math.min(...values), max: Math.max(...values), median: median(values) });
+
+// The pad interior is a course-constant painted tone (Sam, 2026-10-17: the
+// grey inner section of every pad on a course is the same). A candidate's
+// tone is the per-channel median RGB of the NOT-bright pixels inside its
+// ring bbox (the frame excluded); the model's tone is the per-channel median
+// of the anchors' tones, with tolerance max(floor, expansion * the largest
+// anchor channel deviation from it). A blue button interior that merely
+// differs from its white frame no longer passes for a pad.
+function interiorTone(rgba, brightMask, ring, width) {
+  const ch = [[], [], []];
+  for (let y = ring.bboxY; y < ring.bboxY + ring.bboxH; y++) for (let x = ring.bboxX; x < ring.bboxX + ring.bboxW; x++) {
+    const i = y * width + x;
+    if (brightMask[i]) continue;
+    ch[0].push(rgba[i * 4]); ch[1].push(rgba[i * 4 + 1]); ch[2].push(rgba[i * 4 + 2]);
+  }
+  return ch[0].length ? ch.map(median) : null;
+}
+function toneModel(tones) {
+  const usable = tones.filter(Boolean);
+  const med = [0, 1, 2].map((c) => median(usable.map((t) => t[c])));
+  const maxDev = Math.max(0, ...usable.flatMap((t) => [0, 1, 2].map((c) => Math.abs(t[c] - med[c]))));
+  return { median: med.map(round4), maxDev: round4(maxDev), tolerance: round4(Math.max(FIX_BOUNDS.interiorToneFloor, maxDev * FIX_BOUNDS.interiorToneExpansion)) };
+}
+const toneDistance = (tone, model) => tone ? round4(Math.max(...[0, 1, 2].map((c) => Math.abs(tone[c] - model.median[c])))) : null;
 
 function luminanceStats(rgba, pixels) {
   let sum = 0, ge200 = 0;
@@ -98,7 +123,7 @@ function interiorStats(rgba, brightMask, darkMask, ring) {
     total++; sum += (rgba[i * 4] + rgba[i * 4 + 1] + rgba[i * 4 + 2]) / 3;
     if (brightMask[i]) bright++; else if (darkMask && darkMask[i]) dark++;
   }
-  return { lumMean: round4(sum / total), brightFrac: round4(bright / total), darkFrac: round4(dark / total) };
+  return { lumMean: round4(sum / total), brightFrac: round4(bright / total), darkFrac: round4(dark / total), tone: interiorTone(rgba, brightMask, ring, ring.width) };
 }
 
 // Rotated border band of the fitted frame: pixels inside the frame's axis
@@ -158,7 +183,8 @@ function buildModel(anchorEntries) {
   const model = {
     anchorCount: anchorEntries.length,
     major: rangeOf(majors), minor: rangeOf(minors), area: rangeOf(areas), holeArea: rangeOf(holes),
-    meanMargin: round4(meanMargin), bandT
+    meanMargin: round4(meanMargin), bandT,
+    interiorTone: toneModel(anchorEntries.map(e => e.measured.interior.tone))
   };
   const e = FIX_BOUNDS.sizeExpansion;
   model.bounds = {
@@ -218,11 +244,13 @@ export function computeFamilyFix({ rings, family, fields, image, badges, baskets
       if (frame) { const cov = bandCoverage(frame, new Set(measured.framePixels), ctx, model.bandT); entry.band = cov; measured.bandCoverage = cov.coverage; }
       else measured.bandCoverage = null;
     }
-    const tests = { 'frame-present': measured.framed, 'ring-white': null, 'interior-different': null, 'fitted-size': null, 'border-complete': null, 'band-coverage': null };
+    const tests = { 'frame-present': measured.framed, 'ring-white': null, 'interior-different': null, 'interior-tone': null, 'fitted-size': null, 'border-complete': null, 'band-coverage': null };
+    measured.interior.toneDistance = toneDistance(measured.interior.tone, model.interiorTone);
     if (measured.framed) {
       const f = measured.frameStats, interior = measured.interior;
       tests['ring-white'] = f.fracGe200 >= FIX_BOUNDS.whiteFracMin;
       tests['interior-different'] = Math.abs(interior.lumMean - f.lumMean) >= FIX_BOUNDS.interiorDeltaMin && interior.brightFrac <= FIX_BOUNDS.interiorBrightMax;
+      tests['interior-tone'] = interior.toneDistance !== null && interior.toneDistance <= model.interiorTone.tolerance;
       const b = model.bounds;
       tests['fitted-size'] = f.major >= b.major[0] && f.major <= b.major[1] && f.minor >= b.minor[0] && f.minor <= b.minor[1]
         && f.area >= b.area[0] && f.area <= b.area[1] && ring.holeArea >= b.holeArea[0] && ring.holeArea <= b.holeArea[1];
@@ -291,7 +319,7 @@ export function computeFamilyFix({ rings, family, fields, image, badges, baskets
     boundsRule: FIX_BOUNDS,
     model: {
       anchorCount: model.anchorCount, major: model.major, minor: model.minor, area: model.area, holeArea: model.holeArea,
-      meanMargin: model.meanMargin, bandT: model.bandT, anchorBandCoverageMin: model.anchorBandCoverageMin, bounds: model.bounds
+      meanMargin: model.meanMargin, bandT: model.bandT, interiorTone: model.interiorTone, anchorBandCoverageMin: model.anchorBandCoverageMin, bounds: model.bounds
     },
     counts: {
       candidates: rows.length, framed: rows.filter(r => r.frame).length, unframed: rows.filter(r => !r.frame).length,
@@ -347,7 +375,7 @@ export function rederiveFamilyFixVerdicts({ ringsPlain, familyPlain, fields, ima
       const i = y * width + x; inTot++; inSum += (rgba[i * 4] + rgba[i * 4 + 1] + rgba[i * 4 + 2]) / 3;
       if (bright[i]) inBright++; else if (dark && dark[i]) inDark++;
     }
-    const interior = { lumMean: round4(inSum / inTot), brightFrac: round4(inBright / inTot), darkFrac: round4(inDark / inTot) };
+    const interior = { lumMean: round4(inSum / inTot), brightFrac: round4(inBright / inTot), darkFrac: round4(inDark / inTot), tone: interiorTone(rgba, bright, ring, width) };
     const frame = frameByRing.get(key(ring)) ?? null;
     if (!frame) return { index, ring, frame: null, interior, margins: null, frameStats: null, framePixelSet: null };
     const pxs = [];
@@ -377,6 +405,7 @@ export function rederiveFamilyFixVerdicts({ ringsPlain, familyPlain, fields, ima
     meanMargin: round4(anchors.reduce((n, a) => n + (a.margins.left + a.margins.top + a.margins.right + a.margins.bottom) / 4, 0) / anchors.length)
   };
   model.bandT = Math.round(model.meanMargin);
+  model.interiorTone = toneModel(anchors.map(a => a.interior.tone));
   const e = FIX_BOUNDS.sizeExpansion;
   model.bounds = {
     major: [round4(model.major.min / e), round4(model.major.max * e)], minor: [round4(model.minor.min / e), round4(model.minor.max * e)],
@@ -393,13 +422,15 @@ export function rederiveFamilyFixVerdicts({ ringsPlain, familyPlain, fields, ima
   const anchorKeys = new Set(anchors.map(a => key(a.ring)));
 
   const rows = measured.map((m) => {
-    const tests = { 'frame-present': !!m.frame, 'ring-white': null, 'interior-different': null, 'fitted-size': null, 'border-complete': null, 'band-coverage': null };
+    const tests = { 'frame-present': !!m.frame, 'ring-white': null, 'interior-different': null, 'interior-tone': null, 'fitted-size': null, 'border-complete': null, 'band-coverage': null };
+    m.interior.toneDistance = toneDistance(m.interior.tone, model.interiorTone);
     let bandCoverage = null, missingEvidence = null;
     if (m.frame) {
       bandCoverage = m.bandCoverage ?? coverageOf(m);
       const f = m.frameStats, b = model.bounds;
       tests['ring-white'] = f.fracGe200 >= FIX_BOUNDS.whiteFracMin;
       tests['interior-different'] = Math.abs(m.interior.lumMean - f.lumMean) >= FIX_BOUNDS.interiorDeltaMin && m.interior.brightFrac <= FIX_BOUNDS.interiorBrightMax;
+      tests['interior-tone'] = m.interior.toneDistance !== null && m.interior.toneDistance <= model.interiorTone.tolerance;
       tests['fitted-size'] = f.major >= b.major[0] && f.major <= b.major[1] && f.minor >= b.minor[0] && f.minor <= b.minor[1] && f.area >= b.area[0] && f.area <= b.area[1] && m.ring.holeArea >= b.holeArea[0] && m.ring.holeArea <= b.holeArea[1];
       tests['border-complete'] = m.margins.min >= FIX_BOUNDS.marginMin && m.margins.max <= FIX_BOUNDS.marginMax && m.margins.spread <= FIX_BOUNDS.marginSpreadMax;
       tests['band-coverage'] = bandCoverage !== null && bandCoverage >= model.bounds.bandCoverage;
