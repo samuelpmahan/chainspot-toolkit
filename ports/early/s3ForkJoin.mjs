@@ -80,7 +80,7 @@ export async function runTeeFamilyForkJoin({ forkRoot, outDir, store }) {
   writeFileSync(join(sidecarDir, `${SIDECAR}.records.json`), canonicalJson({ schema: 'nctk-fg-forkjoin-records@1', slot: result.slot, guarantees: FGS, branches: records, comparison: { address: result.comparison.address, sha256: result.comparison.sha256 } }) + '\n');
   writeFileSync(join(sidecarDir, `${SIDECAR}.frames.json`), framesJson(frames) + '\n');
   const background = store.has('view.source.background') ? store.get('view.source.background') : null;
-  writeFileSync(join(sidecarDir, `${SIDECAR}.flipbook.html`), renderFlipbook(frames, { title: `S3 ${TEE_FAMILY_SLOT.slot} fork-join: ${result.comparison.implementations.join(' vs ')}`, background }));
+  writeFileSync(join(sidecarDir, `${SIDECAR}.flipbook.html`), renderFlipbook(frames, { title: `S3 ${TEE_FAMILY_SLOT.slot} fork-join: ${result.comparison.implementations.join(' vs ')}`, background, records: { branches: records }, stage: 'S3' }));
   writeFileSync(join(sidecarDir, `${SIDECAR}.timings.json`), JSON.stringify({ restoreMs: restores }, null, 2) + '\n');
 
   const v = result.comparison.value;

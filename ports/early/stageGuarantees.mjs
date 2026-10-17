@@ -56,7 +56,7 @@ export async function runStageGuarantees({ forkRoot, stage, store, outDir, lanes
     }) + '\n');
     writeFileSync(join(sidecarDir, `${stage}.frames.json`), framesJson(frames) + '\n');
     const background = store.has('view.source.background') ? store.get('view.source.background') : null;
-    writeFileSync(join(sidecarDir, `${stage}.flipbook.html`), renderFlipbook(frames, { title: `${stage} FunctionalGuarantees`, background }));
+    writeFileSync(join(sidecarDir, `${stage}.flipbook.html`), renderFlipbook(frames, { title: `${stage} FunctionalGuarantees`, background, records, stage: stage.toUpperCase() }));
     writeFileSync(join(sidecarDir, `${stage}.timings.json`), JSON.stringify(timings, null, 2) + '\n');
   };
   let run;
