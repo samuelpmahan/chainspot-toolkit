@@ -128,5 +128,6 @@ async function main() {
   print({policy:'tidy',...tidy(checkpoint,await inventory(root),resolved,plan,record),attemptId:id,process:record.process,error:record.error});
   if (record.execution!=='PASS') process.exitCode=1;
 }
-(argv.includes('--recipe') ? stageToolkit(root,command,argv) : main())
+(command === 'ablate' ? import('./ports/ablation/run.mjs').then(m => m.cli(root, argv))
+  : argv.includes('--recipe') ? stageToolkit(root,command,argv) : main())
   .catch(error => { console.error(String(error.code).startsWith('CHECKPOINT_') ? `Error: ${error.message}` : error.stack??error); process.exitCode=1; });
