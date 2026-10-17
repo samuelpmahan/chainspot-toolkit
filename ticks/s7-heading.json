@@ -1,0 +1,7 @@
+{
+  "kind": "tick",
+  "name": "s7-heading",
+  "operation": "existing-width-probe-with-sealed-axis",
+  "dependencies": ["source/provider", "source/chainspot-teams/s7/width-probe.mjs", "source/chainspot-teams/s7/input/IMG_5641-rows.json", "provider-adapter.mjs", "dependencies/localci.mjs", "toolkit.mjs", "facts.mjs", "policies/kompoze.mjs", "policies/crisp.mjs"],
+  "testimony": "One Node process receives the sealed S6 row as heading argument before tracing; process exit and probe receipt only, no new inner Calculation instrumentation or ownership acceptance"
+}
