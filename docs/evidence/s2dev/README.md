@@ -7,11 +7,11 @@ Lenard-1..5 are held back until we do screenshot assembly.
 | course | baskets / badges | S4 recovers | missing per Sam | false positives | BasketPoint vs Sam (median / max) |
 |---|---|---|---|---|---|
 | golden | 17 / 18 | 1 | hole 6 (the 4-6 cluster) | 0 | 3.75 / 3.75 px (golden's annotation offset) |
-| alex | 15 / 18 | 3 | no basket testimony | - | - |
+| alex | 15 / 18 | 3 | none: all 3 annotated baskets (holes 16, 13, 6; Sam labels only the bent holes) are found | 0 | 2.79 / 3.20 px |
 | lenard | 16 / 18 | 2 | holes 9, 12 | 0 | 1.09 / 3.27 px |
 | townelake | 18 / 18 | 0 | - | 0 | 0.88 / 2.47 px |
 | heritage | 15 / 18 | 3 | holes 12, 13, 17 | 0 | 0.88 / 3.75 px |
-| northpark | 17 / 18 | 1 | no testimony | - | - |
+| northpark | 17 / 18 | 1 | not annotated (not in dev/Annotated) | - | - |
 
 Robust base, now observed on every run by
 `fg/s2/fg.s2.basketInvariants.observe.fg.mjs` (recorded in the S2 receipt,
