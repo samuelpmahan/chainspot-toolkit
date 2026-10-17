@@ -27,7 +27,9 @@
  * build the registry (which throws on a requires cycle or a missing
  * required id), and return the crossCheck report beside it. The report
  * never throws: declared-but-unimplemented is the expected state while
- * the inline runEarly blocks are being ported one at a time.
+ * a guarantee is declared before its file exists (every S1-S3 guarantee
+ * now has one; ports/early/stageGuarantees.mjs refuses to run a stage
+ * whose declared guarantee has no implementation).
  */
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';

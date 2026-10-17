@@ -32,6 +32,11 @@
  *   testimony.source.annotation      fn.testimony.locate                 tk.source.sha256
  *   testimony.source.teePoints       fn.testimony.teePoints              testimony.source.annotation,
  *                                                                         tk.source.cropReceipt
+ *   tk.<fgId>.record                 fn.<fgId>                           that FG's declared reads
+ *                                    (registered by ports/early/stageGuarantees.mjs once the FG
+ *                                    held: how a later stage's FG gates against an earlier
+ *                                    stage's record, e.g. S3 reads
+ *                                    tk.fg.s2.pxBaskets.materialize.record)
  *
  * Every Part except the gateway captures, intake and snapshots is produced
  * LAZILY on first read, so a lane that never reads testimony never looks
@@ -53,6 +58,10 @@
  *                                    args { board }, calls fn.provider.executeCompiledPlan
  *   fn.provider.S1.classifyBadgeAgainstTemplates  args { bitmap, read, topPx }
  *   fn.provider.S3.selectTeeFamily           args { measured }
+ *   fn.provider.S2.materializeSubtraction    inParts tk.stage.S2.captured
+ *   fn.provider.S3.materializeSubtraction    inParts tk.stage.S3.captured
+ *   fn.provider.S3.detectTeeRings            inParts px.components (its bright mask)
+ *   fn.provider.S3.makeTee                   args { member, fields } -> a provider Tee
  *   fn.provider.sha256Text                   args { text } (the provider's sha256HexSyncText)
  *   fn.tk.sha256                             args { bytes } (node:crypto; bytes or text)
  */
@@ -215,6 +224,32 @@ export function createEarlyStore({ forkRoot, source, getBoard, dist, restorePxC,
   });
   store.register('fn.provider.S3.selectTeeFamily', {
     calculate: ({ args: { measured } }) => dist('stages/S3/clean/index').selectTeeFamily(measured)
+  });
+  store.register('fn.provider.S2.materializeSubtraction', {
+    inParts: ['tk.stage.S2.captured'], note: "the provider's S2 basket subtraction over the captured S2 run",
+    calculate: (io) => { const c = io.in('tk.stage.S2.captured'); return dist('stages/S2/clean/index').materializeS2Subtraction(c.image, c.baskets); }
+  });
+  store.register('fn.provider.S3.materializeSubtraction', {
+    inParts: ['tk.stage.S3.captured'], note: "the provider's S3 tee subtraction over the captured S3 run",
+    calculate: (io) => { const c = io.in('tk.stage.S3.captured'); return dist('stages/S3/clean/index').materializeS3Subtraction(c.image, c.tees); }
+  });
+  store.register('fn.provider.S3.detectTeeRings', {
+    inParts: ['px.components'], note: "the provider's pure detectTeeRings over the board's bright mask",
+    calculate: (io) => {
+      const fields = io.in('px.components');
+      if (!fields?.bright?.mask) throw new Error('px.components has no bright mask; cannot detect tee rings');
+      return dist('detectors/threeFactor/endpoints').detectTeeRings(fields.bright.mask);
+    }
+  });
+  store.register('fn.provider.S3.makeTee', {
+    note: "a provider Tee object for a family member the baseline did not materialize: the member's bright frame component, materialized against the given component fields",
+    calculate: ({ args: { member, fields } }) => {
+      const { Tee } = dist('stages/S3/clean/Tee');
+      const { componentRef, materializeRasterComponentPixels } = dist('detectors/threeFactor/componentAssembly');
+      const frame = componentRef('bright', member.frame);
+      const raster = { width: fields.bright.mask.width, height: fields.bright.mask.height, topPx: 0, brightLabels: fields.bright.labels, darkLabels: fields.dark.labels };
+      return new Tee(member, { frame, px: materializeRasterComponentPixels(frame, raster) });
+    }
   });
 
   // --- the pinned clean stage gateways, as Calculations producing

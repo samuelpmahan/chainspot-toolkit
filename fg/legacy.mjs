@@ -1,12 +1,14 @@
 /**
- * Legacy byte layouts shared by the S1 FunctionalGuarantees (not an FG
- * file: discovery only loads *.fg.mjs).
+ * Legacy byte layouts shared by the S1-S3 FunctionalGuarantees (not an FG
+ * file: discovery only loads *.fg.mjs; moved here from fg/s1/ when S2 and
+ * S3 were ported onto the same mechanism).
  *
- * The S1 FGs were ported out of inline blocks in ports/early/runEarly.mjs
- * under a byte-identity gate: every artifact and every stage-attached
- * receipt object must stay exactly what the inline code wrote. Those bytes
- * were not written with fg/canon.mjs, so the port reproduces the inline
- * helpers here verbatim instead of using the fg defaults:
+ * The FGs were ported out of inline blocks in ports/early/runEarly.mjs, and
+ * their artifacts keep the inline layout (pretty JSON in insertion order,
+ * the receipt's { id, kind, path, sha256, bytes, dims? } entries) so every
+ * reader of artifacts/s1..s3fix/*.json is unchanged. Those bytes were not
+ * written with fg/canon.mjs, so the port reproduces the inline helpers here
+ * instead of using the fg defaults:
  *
  *   prettyJsonBytes   artifacts are JSON.stringify(value, null, 2) + '\n' in
  *                     insertion order (canonicalJson sorts keys, no indent)
@@ -21,7 +23,7 @@
  *                     bytes, dims? }, with dims in the caller's own key order
  *                     (the fg entry carries canonical, key-sorted dims)
  */
-import { utf8 } from '../canon.mjs';
+import { utf8 } from './canon.mjs';
 
 export const prettyJsonBytes = (value) => utf8(JSON.stringify(value, null, 2) + '\n');
 
@@ -41,4 +43,20 @@ export const unionOf = (lists) => {
   const set = new Set();
   for (const list of lists) for (const pixel of list) set.add(pixel);
   return set;
+};
+
+export const intersectCount = (a, b) => {
+  let n = 0;
+  for (const pixel of a) if (b.has(pixel)) n++;
+  return n;
+};
+
+/** The bytes of a typed array (a px list), for fn.tk.sha256. */
+export const viewBytes = (typed) => new Uint8Array(typed.buffer, typed.byteOffset, typed.byteLength);
+
+/** Count pixels whose alpha is zero in an RGBA raster. */
+export const zeroAlphaCount = (rgba) => {
+  let n = 0;
+  for (let i = 3; i < rgba.length; i += 4) if (rgba[i] === 0) n++;
+  return n;
 };

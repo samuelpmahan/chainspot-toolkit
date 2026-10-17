@@ -26,7 +26,7 @@
  */
 import { defineGuarantee } from '../guarantee.mjs';
 import { sha256Hex } from '../canon.mjs';
-import { legacyArtifact, prettyJsonBytes, unionOf } from './legacy.mjs';
+import { legacyArtifact, prettyJsonBytes, unionOf } from '../legacy.mjs';
 
 const ID = 'fg.s1.pxDigits.materialize';
 const PART = 'px.badges.digits';
