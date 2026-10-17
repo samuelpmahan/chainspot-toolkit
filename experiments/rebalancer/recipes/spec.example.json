@@ -1,0 +1,422 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "chainspot-rebalancer-live",
+    "scope": "example-12-extractions"
+  },
+  "workers": [
+    "W1",
+    "W2",
+    "W3",
+    "W4",
+    "W5",
+    "W6"
+  ],
+  "policy": {
+    "extract_priority": 100,
+    "review_priority": 200,
+    "repair_priority": 300
+  },
+  "review_policy": {
+    "enabled": true,
+    "review_prefix": "R",
+    "reviewer_must_differ_from_extractor": true
+  },
+  "jobs": [
+    {
+      "id": "E01",
+      "kind": "extract",
+      "sha": "633f38691e85cffc64a65ee9a2123d2b1365b04c",
+      "parent": "1a7d3e64ed27a6948ef21681e681e969b9e49ab8",
+      "parents": [
+        "1a7d3e64ed27a6948ef21681e681e969b9e49ab8"
+      ],
+      "subject": "Centralize UI-scale formula at calibration boundary",
+      "files": [
+        {
+          "status": "M",
+          "path": "src/lib/autoAnnotation/cvCalibration.ts"
+        }
+      ]
+    },
+    {
+      "id": "E02",
+      "kind": "extract",
+      "sha": "2bf65691b75aed7479dffb60ac5a36255e4eabf8",
+      "parent": "b8323db72faed0b16b0724eb24747e15ed55484e",
+      "parents": [
+        "b8323db72faed0b16b0724eb24747e15ed55484e"
+      ],
+      "subject": "Consolidate four cross-route session modules into src/lib/session.ts",
+      "files": [
+        {
+          "status": "M",
+          "path": "README.md"
+        },
+        {
+          "status": "M",
+          "path": "docs/course-memory.md"
+        },
+        {
+          "status": "D",
+          "path": "src/lib/annotatedRoundSession.ts"
+        },
+        {
+          "status": "D",
+          "path": "src/lib/courseBadgeSession.ts"
+        },
+        {
+          "status": "D",
+          "path": "src/lib/editorSession.ts"
+        },
+        {
+          "status": "A",
+          "path": "src/lib/handoffImport.ts"
+        },
+        {
+          "status": "A",
+          "path": "src/lib/session.ts"
+        },
+        {
+          "status": "D",
+          "path": "src/lib/stitch/handoff.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/routes/annotate-round/+page.svelte"
+        },
+        {
+          "status": "M",
+          "path": "src/routes/create-graphics/+page.svelte"
+        },
+        {
+          "status": "M",
+          "path": "src/routes/stitch-map/+page.svelte"
+        },
+        {
+          "status": "M",
+          "path": "tests/e2e/stitchMap.spec.ts"
+        },
+        {
+          "status": "M",
+          "path": "tests/unit/annotateRoundPage.test.ts"
+        },
+        {
+          "status": "M",
+          "path": "tests/unit/annotatedRoundReceipt.test.ts"
+        },
+        {
+          "status": "M",
+          "path": "tests/unit/courseRecognitionBanner.test.ts"
+        }
+      ]
+    },
+    {
+      "id": "E03",
+      "kind": "extract",
+      "sha": "1f8f522f32b5ad1039bfcf942560d0b6ae69c21d",
+      "parent": "2f1ffcd1913b92ac2ac1a291bdd2a38530ba2c98",
+      "parents": [
+        "2f1ffcd1913b92ac2ac1a291bdd2a38530ba2c98"
+      ],
+      "subject": "Canonicalize point types: domain PointCoordinates, alignment AlignmentPoint, merged GeoPoint",
+      "files": [
+        {
+          "status": "M",
+          "path": "src/lib/alignment/affine.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/alignment/residuals.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/alignment/similarity.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/alignment/transform.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/alignment/types.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/coords.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/courseSignature.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/geocode.ts"
+        }
+      ]
+    },
+    {
+      "id": "E04",
+      "kind": "extract",
+      "sha": "f071020f481fe838fb8660a5c6af9a7d6257ffc7",
+      "parent": "fc96d7274099895af2a1b28c362adb094c456064",
+      "parents": [
+        "fc96d7274099895af2a1b28c362adb094c456064"
+      ],
+      "subject": "BUG2: add shared NOT FOUND / hole-sort helper (notFoundRows.ts) + BUG1 intake test scaffold",
+      "files": [
+        {
+          "status": "A",
+          "path": "scripts/chainspot-lab/sweep/notFoundRows.ts"
+        },
+        {
+          "status": "A",
+          "path": "tests/unit/labIntakeAlreadyCanonical.test.ts"
+        }
+      ]
+    },
+    {
+      "id": "E05",
+      "kind": "extract",
+      "sha": "35db5a44ec9cf4e1ce4c466ee5f8f9c6196058f7",
+      "parent": "c10ca4e8c71a2f2bfd2162fb02b69b9d0c907b05",
+      "parents": [
+        "c10ca4e8c71a2f2bfd2162fb02b69b9d0c907b05"
+      ],
+      "subject": "CHSPT-82: extract g5.routing knob cluster (9 knobs, baseline parity)",
+      "files": [
+        {
+          "status": "M",
+          "path": "src/lib/detectors/threeFactor/assignment.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/detectors/threeFactor/config.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/detectors/threeFactor/configs/threeFactor-config.schema.json"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/detectors/threeFactor/engine.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/detectors/threeFactor/features/g3.phantomTee.ts"
+        },
+        {
+          "status": "A",
+          "path": "src/lib/detectors/threeFactor/features/g5.routing.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/detectors/threeFactor/features/registry.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/detectors/threeFactor/measure.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/detectors/threeFactor/routing.ts"
+        },
+        {
+          "status": "M",
+          "path": "tests/unit/threeFactorConfig.test.ts"
+        }
+      ]
+    },
+    {
+      "id": "E06",
+      "kind": "extract",
+      "sha": "d8dd79775797599470312612d016cfd7861b021b",
+      "parent": "35db5a44ec9cf4e1ce4c466ee5f8f9c6196058f7",
+      "parents": [
+        "35db5a44ec9cf4e1ce4c466ee5f8f9c6196058f7"
+      ],
+      "subject": "CHSPT-82: extract g3.endpoints knob cluster (17 knobs, baseline parity)",
+      "files": [
+        {
+          "status": "M",
+          "path": "src/lib/detectors/threeFactor/configs/threeFactor-config.schema.json"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/detectors/threeFactor/endpoints.ts"
+        },
+        {
+          "status": "A",
+          "path": "src/lib/detectors/threeFactor/features/g3.endpoints.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/detectors/threeFactor/features/registry.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/detectors/threeFactor/measure.ts"
+        },
+        {
+          "status": "M",
+          "path": "tests/unit/threeFactorConfig.test.ts"
+        }
+      ]
+    },
+    {
+      "id": "E07",
+      "kind": "extract",
+      "sha": "8eefbd038c897a96a18036c40880bca336801006",
+      "parent": "97e83c64f7b17976493599368ce641fe26d5019b",
+      "parents": [
+        "97e83c64f7b17976493599368ce641fe26d5019b"
+      ],
+      "subject": "CHSPT-82: extract g4.search knob cluster (4 knobs, baseline parity)",
+      "files": [
+        {
+          "status": "M",
+          "path": "src/lib/detectors/threeFactor/assignment.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/detectors/threeFactor/configs/threeFactor-config.schema.json"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/detectors/threeFactor/engine.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/detectors/threeFactor/features/g3.phantomTee.ts"
+        },
+        {
+          "status": "A",
+          "path": "src/lib/detectors/threeFactor/features/g4.search.ts"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/detectors/threeFactor/features/registry.ts"
+        },
+        {
+          "status": "M",
+          "path": "tests/unit/threeFactorConfig.test.ts"
+        }
+      ]
+    },
+    {
+      "id": "E08",
+      "kind": "extract",
+      "sha": "c124e150b2ed79637d53e56912caa6777bd961a0",
+      "parent": "9c04ff9e594397c27de3593a14d46b8c00a1e0f4",
+      "parents": [
+        "9c04ff9e594397c27de3593a14d46b8c00a1e0f4"
+      ],
+      "subject": "KERCHOOOOO v2: reuse recovery poses and support sampling geometry",
+      "files": [
+        {
+          "status": "D",
+          "path": ".github/kerchooo_v2_patch.py"
+        },
+        {
+          "status": "D",
+          "path": ".github/workflows/kerchooo-v2.yml"
+        },
+        {
+          "status": "M",
+          "path": "packages/alg/src/detectors/threeFactor/features/g3.teeRecovery.ts"
+        },
+        {
+          "status": "M",
+          "path": "packages/alg/src/detectors/threeFactor/ribbon.ts"
+        }
+      ]
+    },
+    {
+      "id": "E09",
+      "kind": "extract",
+      "sha": "7970f06e6f037a52bfe174bb56ca3fc9d3c4ccda",
+      "parent": "edf100aa47858a9463bd6b95cd51216a5e1d20a9",
+      "parents": [
+        "edf100aa47858a9463bd6b95cd51216a5e1d20a9"
+      ],
+      "subject": "Stage KERCHOOOOO v6 recovery dedup",
+      "files": [
+        {
+          "status": "A",
+          "path": ".github/kerchooo_v6_patch.py"
+        }
+      ]
+    },
+    {
+      "id": "E10",
+      "kind": "extract",
+      "sha": "5c90a9afa7e03a0d26f9e9778beb18ce11e53495",
+      "parent": "bccc9e8cedfc0a7447cd92c2e453d40934618f5f",
+      "parents": [
+        "bccc9e8cedfc0a7447cd92c2e453d40934618f5f"
+      ],
+      "subject": "Fix M2 sweep blow-up: stop re-embedding margins in the serialized frame",
+      "files": [
+        {
+          "status": "M",
+          "path": "packages/alg/src/detectors/threeFactor/features/g5.badgeM2Aa.ts"
+        },
+        {
+          "status": "M",
+          "path": "packages/alg/src/detectors/threeFactor/m2RawFrameStatsControl.ts"
+        },
+        {
+          "status": "M",
+          "path": "packages/alg/src/detectors/threeFactor/m2Representation.ts"
+        },
+        {
+          "status": "M",
+          "path": "scripts/tmp-render-m2-frame-receipt.mjs"
+        },
+        {
+          "status": "M",
+          "path": "src/lib/evidence-workbench/m2Projection.ts"
+        },
+        {
+          "status": "M",
+          "path": "tests/unit/badgeM2AaFeatureIntegration.test.ts"
+        },
+        {
+          "status": "M",
+          "path": "tests/unit/badgeM2RawFrameAcceptance.test.ts"
+        },
+        {
+          "status": "M",
+          "path": "tests/unit/m2Representation.test.ts"
+        }
+      ]
+    },
+    {
+      "id": "E11",
+      "kind": "extract",
+      "sha": "139fcb9d0043dc02b075f4ecca3b397173462696",
+      "parent": "11b7bccf43078129d116d9362e7b2584b4791d4d",
+      "parents": [
+        "11b7bccf43078129d116d9362e7b2584b4791d4d"
+      ],
+      "subject": "Handoff protocol: replay the Script; let use decide helper custody",
+      "files": []
+    },
+    {
+      "id": "E12",
+      "kind": "extract",
+      "sha": "e61855ad408bd2c477629dd1d26842bd4a00d666",
+      "parent": "0543dcbd80b76197f1cc020f2fda926e1bfe2fab",
+      "parents": [
+        "0543dcbd80b76197f1cc020f2fda926e1bfe2fab"
+      ],
+      "subject": "Derive tee-pad detection's raw-pixel constants from uiScale",
+      "files": [
+        {
+          "status": "M",
+          "path": "src/lib/autoAnnotation/teePadDetection.ts"
+        }
+      ]
+    }
+  ]
+}
