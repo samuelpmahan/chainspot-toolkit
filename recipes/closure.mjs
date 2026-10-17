@@ -6,7 +6,10 @@ import { compileStageRecipe } from './compile.mjs';
 export const STAGE_RUNTIME = [
   'source/provider', 'ports/run-stages.mjs', 'ports/early', 'fg', 'recipes',
   'policies', 'dependencies', 'toolkit.mjs', 'facts.mjs',
-  'provider-adapter.mjs', 'models.mjs'
+  'provider-adapter.mjs', 'models.mjs',
+  // ComparableForkJoin inputs: competing implementations by slot, equality
+  // Contracts for the geometric join, and Sam's annotation testimony.
+  'impl', 'contracts', 'testimony'
 ];
 export const STAGE_SOURCES = {
   golden: 'source/provider/artifacts/replay/source/IMG_5641.jpg',

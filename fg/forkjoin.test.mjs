@@ -65,12 +65,15 @@ test('discovery picks up the fixture FG dir and cross-checks declarations withou
 test('real stages/*.json declarations load; scanning fg/ skips fixtures; S1 is fully ported', async () => {
   const { registry, report } = await loadRegistry({ root: here, stagesDir: join(here, '..', 'stages') });
   const s1 = ['fg.s1.badgeGlyphTemplate.materialize', 'fg.s1.pxBadges.assembly', 'fg.s1.pxBadges.materialize', 'fg.s1.pxDigits.materialize'];
-  assert.deepEqual(registry.ids, s1, 'only the S1 FG files, no fixtures');
-  assert.equal(report.implemented, 4);
+  const s3fj = ['fg.s3.teeFamily.materialize', 'fg.s3.teeFamily.precision'];
+  assert.deepEqual(registry.ids, [...s1, ...s3fj], 'the S1 FG files plus the S3 findFamily fork-join FGs, no fixtures');
+  assert.equal(report.implemented, 6);
   assert.deepEqual(report.implementedUndeclared, []);
-  assert.deepEqual(report.mismatches, [], 'part, lane and prose-named requires agree with stages/s1.json');
-  assert.ok(!report.declaredUnimplemented.some((id) => id.startsWith('fg.s1.')));
-  assert.equal(report.declared, report.declaredUnimplemented.length + 4);
+  assert.deepEqual(report.mismatches, [], 'part, lane and prose-named requires agree with stages/s1.json and stages/s3.json');
+  assert.ok(!report.declaredUnimplemented.some((id) => id.startsWith('fg.s1.') || s3fj.includes(id)));
+  assert.equal(report.declared, report.declaredUnimplemented.length + 6);
+  for (const id of s3fj) assert.equal(registry.guarantees.find((fg) => fg.id === id).lane, 's3-findfamily-forkjoin');
+  assert.ok(registry.order().indexOf('fg.s3.teeFamily.precision') > registry.order().indexOf('fg.s3.teeFamily.materialize'));
   // the assembly runs after the two records it gates against
   const order = registry.order();
   assert.ok(order.indexOf('fg.s1.pxBadges.assembly') > order.indexOf('fg.s1.pxBadges.materialize'));
