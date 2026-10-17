@@ -26,3 +26,20 @@ alex until-7 attempt `attempt-1792263349086-27173a1f38f5` and
 - Loose (+1 px basket AA fringe): slide 10.25 px.
 - The cap is hidden for every slide, so it adds no constraint here.
 - S2 basket 2 left 154 white/black seam px unowned; they punched holes in the occluder until filled.
+
+## Worked back from basket 12's tip (Sam, 2026-10-17)
+
+![from tip](ac12-from-tip.png)
+
+- Tip = basket sprite bottom-centre (bbox x + 22.5 px, bbox y + 71 px).
+- On the 8 visible straight Alex holes, the pad axis passes its basket's tip
+  within 0.14-1.31 px, 105-315 px away (at most 0.43 deg). The bent holes
+  miss by 16-120 px.
+- The hole-12 ribbon, fitted over 155 px from basket 12's tip, is 33.50 px wide
+  at -41.86 deg and passes the tip at -1.26 px.
+- Feasible set: centre x 456.80..459.65 px, y 224.50..227.86 px,
+  theta -42.76..-41.26 deg, a 3.80 px slide.
+- Pinning the centreline exactly through the tip moves the box about
+  0.8 px down; the slide stays 3.80 px.
+- Sam's sketch (centre 457.8, 224.1 px) lies 1.13 px into the slide and
+  2.17 px off the centreline.
