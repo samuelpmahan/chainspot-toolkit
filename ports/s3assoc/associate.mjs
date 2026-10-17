@@ -17,7 +17,9 @@ export const basketPoint = (bbox) => [bbox[0] + (bbox[2] - 1) / 2 + BASKET_POINT
 export const ASSOC_BOUNDS = Object.freeze({
   sigma0Px: 0.85,              // px: badge + pad centre error, calibrated on 76 Sam-confirmed pairings (5 courses)
   sigmaThetaFloorRad: 0.0005,  // rad (0.03 deg): floor on a pad's own angle sigma
-  zMax: 3,                     // z: a badge within 3 sigma of the axis is consistent with the pad
+  zMax: 3,
+  zGate: 8,                    // z: loose gate for a pad no consistent badge is left for (assigned ASSOCIATED_WEAK, inspected)
+  straight3TlsPx: 1.5,         // px: 3-point (tee, badge, BasketPoint) TLS max residual for a 0-bend hole; calibrated below                     // z: a badge within 3 sigma of the axis is consistent with the pad
   badgeMinDistPadLengths: 0.6, // pad lengths: nearer badges are overlapping chrome, not a pairing
   badgeMaxDistPadLengths: 12,  // pad lengths
   straightLateralPx: 3.0       // px: axis-to-BasketPoint miss that reads as a straight hole; a coincidental hit on a bent
@@ -68,6 +70,28 @@ export function pathSide({ raster, occ = null, center, thRad, L, W }) {
  * global and one-to-one: consistent pairs are taken in increasing z, each badge and pad once, so a far badge a pad
  * cannot rule out is settled by the pad it actually belongs to. Nothing is dropped: every pad keeps its 3 lowest-z badges.
  */
+/** Hungarian algorithm (square cost matrix, minimisation); returns row -> column. O(n^3), n = pads + badges. */
+export function hungarian(a) {
+  const n = a.length, u = new Array(n + 1).fill(0), v = new Array(n + 1).fill(0), p = new Array(n + 1).fill(0), way = new Array(n + 1).fill(0);
+  for (let i = 1; i <= n; i++) {
+    p[0] = i; let j0 = 0; const minv = new Array(n + 1).fill(Infinity), used = new Array(n + 1).fill(false);
+    do {
+      used[j0] = true; const i0 = p[j0]; let delta = Infinity, j1 = 0;
+      for (let j = 1; j <= n; j++) if (!used[j]) {
+        const cur = a[i0 - 1][j - 1] - u[i0] - v[j];
+        if (cur < minv[j]) { minv[j] = cur; way[j] = j0; }
+        if (minv[j] < delta) { delta = minv[j]; j1 = j; }
+      }
+      for (let j = 0; j <= n; j++) if (used[j]) { u[p[j]] += delta; v[j] -= delta; } else minv[j] -= delta;
+      j0 = j1;
+    } while (p[j0] !== 0);
+    do { const j1 = way[j0]; p[j0] = p[j1]; j0 = j1; } while (j0);
+  }
+  const row = new Array(n);
+  for (let j = 1; j <= n; j++) if (p[j]) row[p[j] - 1] = j - 1;
+  return row;
+}
+
 export function associate({ tees, badges, baskets, padLengthPx, bounds = ASSOC_BOUNDS }) {
   const bps = baskets.map((k) => ({ index: k.index, point: basketPoint(k.bbox) }));
   const per = tees.map((t) => {
@@ -79,15 +103,26 @@ export function associate({ tees, badges, baskets, padLengthPx, bounds = ASSOC_B
     }).filter((k) => k.distPx >= bounds.badgeMinDistPadLengths * padLengthPx).sort((a, b) => a.z - b.z);
     return { t, ax, all, consistent: all.filter((k) => k.z <= bounds.zMax) };
   });
-  // global one-to-one assignment by increasing z
-  const pairs = per.flatMap((p, i) => p.consistent.map((k) => ({ i, k }))).sort((a, b) => a.k.z - b.k.z);
-  const taken = new Set(), chosen = new Map();
-  for (const { i, k } of pairs) if (!chosen.has(i) && !taken.has(k.badge)) { chosen.set(i, k); taken.add(k.badge); }
+  // Global one-to-one assignment: minimum total cost sum(z^2) over all pads (Hungarian), a pad left without a badge
+  // costing zGate^2. Greedy best-first is not optimal: one pad grabbing a neighbour's badge strands that neighbour.
+  const nT = per.length, labels = badges.map((b) => String(b.label)), nB = labels.length, BIG = 1e9;
+  const n = nT + nB, cost = Array.from({ length: n }, () => new Array(n).fill(0));
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+    if (i < nT && j < nB) { const k = per[i].all.find((x) => x.badge === labels[j]); cost[i][j] = k && k.z <= bounds.zGate ? k.z * k.z : BIG; }
+    else if (i < nT) cost[i][j] = bounds.zGate ** 2;   // pad unmatched
+    else cost[i][j] = 0;                               // badge unmatched (its tee is hidden: S4's to recover)
+  }
+  const match = hungarian(cost);
+  const chosen = new Map(), weak = new Set();
+  for (let i = 0; i < nT; i++) {
+    const j = match[i];
+    if (j < nB && cost[i][j] < BIG) { const k = per[i].all.find((x) => x.badge === labels[j]); chosen.set(i, k); if (k.z > bounds.zMax) weak.add(i); }
+  }
   const owner = new Map([...chosen].map(([i, k]) => [k.badge, i]));
   return per.map((p, i) => {
     const { t, ax, all, consistent } = p, best = chosen.get(i) ?? null, side = t.pathSide ?? null;
     const others = consistent.filter((k) => k !== best);
-    let verdict = !best ? (consistent.length ? 'ALL_CONSISTENT_BADGES_TAKEN' : 'NO_CONSISTENT_BADGE') : others.length === 0 ? 'ASSOCIATED' : 'ASSOCIATED_BY_EXCLUSIVITY';
+    let verdict = !best ? (consistent.length ? 'ALL_CONSISTENT_BADGES_TAKEN' : 'NO_CONSISTENT_BADGE') : weak.has(i) ? 'ASSOCIATED_WEAK' : others.length === 0 ? 'ASSOCIATED' : 'ASSOCIATED_BY_EXCLUSIVITY';
     const resolvedBy = others.map((k) => ({ badge: k.badge, z: k.z, distPx: k.distPx, takenByTee: owner.has(k.badge) ? tees[owner.get(k.badge)].label : null }));
     if (verdict === 'ASSOCIATED_BY_EXCLUSIVITY' && resolvedBy.some((r) => r.takenByTee === null)) verdict = 'AMBIGUOUS';
     let straight = null;
@@ -98,8 +133,26 @@ export function associate({ tees, badges, baskets, padLengthPx, bounds = ASSOC_B
       const h = hits[0];
       if (h) straight = { ...h, nextLatPx: hits[1]?.latPx ?? null, verdict: h.latPx <= bounds.straightLateralPx ? 'STRAIGHT_CANDIDATE' : 'NOT_STRAIGHT_OR_BASKET_UNSEEN' };
     }
+    // Sam's 3-point straight test (0-bend holes): tee centre, badge centre and a BasketPoint are collinear.
+    // Uses no pad angle: the line is tee centre -> badge centre, the residual is the TLS max distance of the 3 points.
+    let straight3 = null;
+    if (best) {
+      const B = badges.find((b) => String(b.label) === best.badge).center, d = sub(B, t.center), L = Math.hypot(...d), u = [d[0] / L, d[1] / L], nrm = [-u[1], u[0]];
+      const tls = (P) => { // max perpendicular distance of points P from their total-least-squares line
+        const m = [P.reduce((a, q) => a + q[0], 0) / P.length, P.reduce((a, q) => a + q[1], 0) / P.length];
+        let sxx = 0, sxy = 0, syy = 0; for (const q of P) { const a = q[0] - m[0], b = q[1] - m[1]; sxx += a * a; sxy += a * b; syy += b * b; }
+        const th = 0.5 * Math.atan2(2 * sxy, sxx - syy), n2 = [-Math.sin(th), Math.cos(th)];
+        return Math.max(...P.map((q) => Math.abs((q[0] - m[0]) * n2[0] + (q[1] - m[1]) * n2[1])));
+      };
+      const hits = bps.map((k) => { const v = sub(k.point, t.center); return { basket: k.index, latPx: r2(Math.abs(dot(v, nrm))), alongPx: r2(dot(v, u)), tlsMaxPx: r2(tls([t.center, B, k.point])) }; })
+        .filter((h) => h.alongPx > L).sort((a, b) => a.tlsMaxPx - b.tlsMaxPx);
+      // A straight hole ends at the FIRST basket its line reaches (consecutive baskets can lie on one line, lenard).
+      const onLine = hits.filter((x) => x.tlsMaxPx <= bounds.straight3TlsPx).sort((a, b) => a.alongPx - b.alongPx);
+      const h = onLine[0] ?? hits[0];
+      if (h) straight3 = { ...h, nextTlsMaxPx: hits[1]?.tlsMaxPx ?? null, verdict: h.tlsMaxPx <= bounds.straight3TlsPx ? 'STRAIGHT' : 'BENT_OR_BASKET_UNSEEN' };
+    }
     const inspect = verdict !== 'ASSOCIATED' || (straight && straight.verdict !== 'STRAIGHT_CANDIDATE' && straight.latPx < 10);
     return { tee: t.label, center: t.center.map(r2), thDeg: r2((t.thRad * 180) / Math.PI), best, candidates: consistent, nearest: all.slice(0, 3), resolvedBy,
-      verdict, inspect, pathSide: side, badgeOnPathSide: best && side?.sense ? best.sense === side.sense : null, straight };
+      verdict, inspect, pathSide: side, badgeOnPathSide: best && side?.sense ? best.sense === side.sense : null, straight, straight3 };
   });
 }

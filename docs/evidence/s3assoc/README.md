@@ -85,3 +85,47 @@ Results:
   recovering that tee settles it.
 - The path side agrees with the chosen badge in all 6 cases. It is recorded
   as evidence, not used to decide.
+
+## Frozen, and the perturbation test (Sam: "freeze it and run the perturbation test")
+
+Frozen per hole in `baselines/s3assoc/<course>.json`: tee centre, ray to the
+badge, z, and the 3-point straight test. Every check compares geometry, not
+bytes, through `contracts/s5.pair@1` plus the 3-point verdict and BasketPoint
+(`node ports/s3assoc/freeze.mjs --specimen X --attempt ID`).
+
+The 3-point test (Sam's order: tee -> badge -> 0-bend holes by the 3-point
+test -> n-bend holes by pathfinding) checks that tee centre, badge centre and
+a BasketPoint are collinear. It uses no pad angle.
+- All 35 straight holes whose basket S2 found pass with the right basket.
+  TLS max is <= 0.76 px; the threshold is 1.5 px.
+- 7 bent holes line up with ANOTHER hole's basket by chance: golden 7, 14
+  and 15, townelake 16, heritage 1, 8 and 9. The hallway must reject them.
+
+`perturb.mjs` adds Gaussian error to every pad (centre and angle) and every
+badge centre, re-runs association, and counts per hole how often the
+DECISION changes (200 draws per level).
+
+![perturbation](perturb-heat.png)
+
+The test found three defects, all fixed before the freeze:
+1. Greedy assignment stranded a pad when a neighbour took its badge (lenard
+   hole 11's tee took badge 9, so hole 9 lost its tee). Fixed with a
+   minimum-cost one-to-one matching (Hungarian, sum z^2).
+2. A hard z <= 3 cutoff dropped pads. Unmatched pads now take a badge up to
+   z 8, flagged weak.
+3. Straight holes took the most collinear basket, not the first one on the
+   line. The frozen lenard holes 2 and 4 were 448 px and 708 px from Sam's
+   basket; with the first-on-line rule both are 1.1 px from it.
+
+At extra error equal to our measured error (0.6 px per point, 0.1 deg):
+- **Badge pairing changes in 1 hole.** Heritage hole 8 (10%) is pulled to
+  badge 15, which is unclaimed because heritage tee 15 is hidden.
+- **3-point verdict on straight holes changes <= 5%**, except lenard 12
+  (12%), whose basket S2 did not find.
+- Badge pairing stays stable to 1 deg / 1.2 px. Only heritage 8 and alex
+  holes 3, 5 and 7 (badges 3 and 5 on one line) move by more than 10%.
+- The 3-point test has about 1x margin: at 1.2 px straight holes drop to
+  BENT in 10-28% of draws. That direction is safe, since a straight hole
+  sent to pathfinding still gets solved. The unsafe direction is BENT ->
+  STRAIGHT (heritage 1, 3, 11, 13; lenard 12), so the hallway must confirm
+  every STRAIGHT.

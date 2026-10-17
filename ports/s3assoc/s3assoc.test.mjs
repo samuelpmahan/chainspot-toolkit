@@ -56,7 +56,8 @@ test('associate: one obvious badge, straight hole to a BasketPoint, exclusivity,
   assert.equal(r.straight.basket, 4); assert.equal(r.straight.verdict, 'STRAIGHT_CANDIDATE'); assert.ok(Math.abs(r.straight.latPx - 0.8) < 0.02);
   assert.equal(r.nearest.length, 3, 'nothing is dropped: the 3 lowest-z badges are tracked');
   // exclusivity: pad A sees badges a (z~1.2) and b (z~0.5); pad B sees b at z~0.1, so A gets a
-  const ex2 = associate({ tees: [{ label: 'A', center: [100, 100], thRad: th }, { label: 'B', center: at(-240, 0.35), thRad: th }],
+  const thB = th + Math.PI / 2, bC = at(-120, 0.4), Bc = [bC[0] - Math.cos(thB) * 100, bC[1] - Math.sin(thB) * 100]; // B's own axis runs through b
+  const ex2 = associate({ tees: [{ label: 'A', center: [100, 100], thRad: th }, { label: 'B', center: Bc, thRad: thB }],
     badges: [{ label: 'a', center: at(120, 1.0) }, { label: 'b', center: at(-120, 0.4) }], baskets: [], padLengthPx: 25 });
   const A = ex2.find((x) => x.tee === 'A'), Bt = ex2.find((x) => x.tee === 'B');
   assert.equal(Bt.best.badge, 'b'); assert.equal(A.best.badge, 'a'); assert.equal(A.verdict, 'ASSOCIATED_BY_EXCLUSIVITY');
@@ -81,4 +82,10 @@ test('pathSide: finds the side a light ribbon leaves the pad and is recorded bes
   const at = (t) => [c[0] + ax[0] * t, c[1] + ax[1] * t];
   const [r] = associate({ tees: [{ label: 't', center: c, thRad: th, pathSide: side }], badges: [{ label: 'ahead', center: at(140) }], baskets: [], padLengthPx: 25 });
   assert.equal(r.best.badge, 'ahead'); assert.equal(r.badgeOnPathSide, true);
+});
+
+test('hungarian: minimum-cost assignment beats greedy', async () => {
+  const { hungarian } = await import('./associate.mjs');
+  // greedy takes (0,0)=1 then (1,1)=10 -> 11; optimum (0,1)=2 + (1,0)=3 -> 5
+  assert.deepEqual(hungarian([[1, 2], [3, 10]]), [1, 0]);
 });

@@ -89,14 +89,17 @@ export function runAssociation({ attempt, specimen, root = ROOT }) {
       const kb = bps.reduce((a, b) => (Math.hypot(b.p[0] - h.basket[0], b.p[1] - h.basket[1]) < Math.hypot(a.p[0] - h.basket[0], a.p[1] - h.basket[1]) ? b : a));
       const kbDist = Math.hypot(kb.p[0] - h.basket[0], kb.p[1] - h.basket[1]);
       return { tee: r.tee, hole: h.n, bent: h.bent, badgeAgrees: r.best?.badge === String(h.n), straightCandidate: r.straight?.verdict === 'STRAIGHT_CANDIDATE',
-        straightBasketAgrees: r.straight?.verdict === 'STRAIGHT_CANDIDATE' ? (kbDist < 12 && r.straight.basket === kb.index) : null, samBasketSeenInS2: kbDist < 12 };
+        straightBasketAgrees: r.straight?.verdict === 'STRAIGHT_CANDIDATE' ? (kbDist < 12 && r.straight.basket === kb.index) : null, samBasketSeenInS2: kbDist < 12,
+        straight3: r.straight3?.verdict === 'STRAIGHT', straight3BasketAgrees: r.straight3?.verdict === 'STRAIGHT' ? (kbDist < 12 && r.straight3.basket === kb.index) : null };
     });
     const j = per.filter((p) => p.hole);
     judgement = { rule: 'agreement with Sam\'s annotation; never acceptance', canonicalDy: TESTIMONY_DY[specimen], perTee: per,
       badge: { agree: j.filter((p) => p.badgeAgrees).length, of: j.length },
       straight: { straightHolesCalledStraight: j.filter((p) => !p.bent && p.straightCandidate).length, straightHoles: j.filter((p) => !p.bent).length,
         straightHolesWithBasketUnseenInS2: j.filter((p) => !p.bent && !p.samBasketSeenInS2).length,
-        bentHolesCalledStraight: j.filter((p) => p.bent && p.straightCandidate).map((p) => p.hole), basketAgrees: j.filter((p) => p.straightBasketAgrees === true).length, basketDisagrees: j.filter((p) => p.straightBasketAgrees === false).map((p) => p.hole) } };
+        bentHolesCalledStraight: j.filter((p) => p.bent && p.straightCandidate).map((p) => p.hole), basketAgrees: j.filter((p) => p.straightBasketAgrees === true).length, basketDisagrees: j.filter((p) => p.straightBasketAgrees === false).map((p) => p.hole) },
+      straight3: { straightHolesCalledStraight: j.filter((p) => !p.bent && p.straight3).length, straightHolesWithBasketSeen: j.filter((p) => !p.bent && p.samBasketSeenInS2).length,
+        bentHolesCalledStraight: j.filter((p) => p.bent && p.straight3).map((p) => p.hole), basketAgrees: j.filter((p) => p.straight3BasketAgrees === true).length, basketDisagrees: j.filter((p) => !p.bent && p.straight3BasketAgrees === false).map((p) => p.hole) } };
   }
   return {
     schema: 'nctk-s3-tee-association@1', part: 'px.tees.association', producedBy: 'fn.Tee.associate (+ fn.Tee.poseAA)', specimen, attempt,
@@ -114,5 +117,5 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(new URL(import.meta.
   const out = arg('--out') ?? join(ROOT, 'attempts', 'stages', attempt, 'fork', 'stage-output', 's3assoc');
   const t0 = Date.now(); const res = runAssociation({ attempt, specimen });
   mkdirSync(out, { recursive: true }); writeFileSync(join(out, 'px.tees.association.json'), JSON.stringify(res, null, 1));
-  console.log(JSON.stringify({ specimen, out, seconds: (Date.now() - t0) / 1000, template: res.template, counts: res.counts, badge: res.judgement?.badge ?? null, straight: res.judgement?.straight ?? null }));
+  console.log(JSON.stringify({ specimen, out, seconds: (Date.now() - t0) / 1000, template: res.template, counts: res.counts, badge: res.judgement?.badge ?? null, straight: res.judgement?.straight ?? null, straight3: res.judgement?.straight3 ?? null }));
 }
