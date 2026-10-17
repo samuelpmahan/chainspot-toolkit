@@ -14,7 +14,7 @@ test('judge: named TP/FN/FP and association counts against complete testimony', 
   mkdirSync(join(root, 'testimony', 'golden'), { recursive: true });
   const holes = Array.from({ length: 18 }, (_, i) => ({ number: i + 1, tee: { xPx: 100 + 50 * i, yPx: 104 }, basket: { xPx: 100 + 50 * i, yPx: 504 }, corridorBends: i % 2 ? [{ xPx: 1, yPx: 1 }] : [] }));
   writeFileSync(join(root, 'testimony', 'golden', 'x.annotation.json'), JSON.stringify({ holes }));
-  writeFileSync(join(A, 's1', 'px.badges.json'), JSON.stringify({ image: { widthPx: 1290 }, badges: holes.map((h) => ({ label: String(h.number), px: [], mute: { px: [] } })) }));
+  writeFileSync(join(A, 's1', 'px.badges.json'), JSON.stringify({ image: { widthPx: 1290 }, badges: holes.map((h) => ({ label: String(h.number), bbox: [h.tee.xPx + 20, 200, 54, 42], px: [], mute: { px: [] } })) }));
   const bb = (x, y) => [x - 22.5 - 0.34, y - 71 - 0.73, 46, 72];
   writeFileSync(join(A, 's2', 'px.baskets.json'), JSON.stringify({ baskets: [...holes.slice(0, 17).map((h) => ({ bbox: bb(h.basket.xPx, 500), px: [] })), { bbox: bb(1200, 900), px: [] }] }));
   writeFileSync(join(A, 's3fix', 'px.tees.refined.json'), JSON.stringify({ tees: holes.slice(0, 16).map((h) => ({ center: [h.tee.xPx, 100] })) }));

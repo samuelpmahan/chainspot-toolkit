@@ -14,9 +14,12 @@ import { join, resolve } from 'node:path';
 import { loadTestimony } from './testimony.mjs';
 import { nameCandidates } from '../../fg/names.mjs';
 import { basketPoint } from '../../fg/s2/fg.s2.basketInvariants.observe.fg.mjs';
+import { ringsForBaskets, HolePath, occludersOf } from '../../fg/scene/parts.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
-export const MATCH_PX = Object.freeze({ basket: 12, tee: 8 });   // px: a detection IS the annotated sprite within this distance
+export const MATCH_PX = Object.freeze({ basket: 12, tee: 8 });
+/** px, hallway width per course measured from tee->badge segments (docs/evidence/s7main) */
+const hallwayWidth = { golden: 41.58, lenard: 35.75, townelake: 36.83, heritage: 31.03, alex: 33.60 };   // px: a detection IS the annotated sprite within this distance
 const r2 = (v) => Math.round(v * 100) / 100;
 const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 
@@ -63,7 +66,7 @@ export function judgeAttempt({ specimen, attempt, root = ROOT }) {
   const kj = JSON.parse(readFileSync(join(A, 's2', 'px.baskets.json'), 'utf8')).baskets;
   const kNames = nameCandidates('Basket', kj, (k) => basketPoint(k.bbox));
   const S2 = detectionStage('Basket', kj.map((k, i) => ({ name: kNames[i], point: basketPoint(k.bbox) })), T, (h) => h.basket, MATCH_PX.basket);
-  delete S2.holeOfDetection; report.stages.S2 = S2;
+  const S2hole = S2.holeOfDetection; delete S2.holeOfDetection; report.stages.S2 = S2;
 
   // S3: visible tees (S3 structural fix), pad centre vs Sam's tee point.
   const tf = join(A, 's3fix', 'px.tees.refined.json');
@@ -72,16 +75,37 @@ export function judgeAttempt({ specimen, attempt, root = ROOT }) {
     const tNames = nameCandidates('Tee', tees, (t) => t.center);
     const S3 = detectionStage('Tee', tees.map((t, i) => ({ name: tNames[i], point: t.center })), T, (h) => h.tee, MATCH_PX.tee);
     const holeOfTee = S3.holeOfDetection; delete S3.holeOfDetection; report.stages.S3 = S3;
-    // Why each FN: Sam marks an occluded pad at the centroid of its VISIBLE part, so test the pad's footprint, not the point:
-    // if any owned sprite px (badge px + mute, basket px + shell) lies within half the pad diagonal of Sam's point, the pad is
-    // (partly) hidden and S4 recovers it; otherwise it was fully visible and S3 missed it.
+    // Why each FN, by name: every scene Part that crosses the pad footprint (half the pad diagonal around Sam's point;
+    // Sam marks an occluded pad at the centroid of its VISIBLE part). Opaque sprites by their pixel sets, translucent
+    // C1S / C2D rings (baselines/scene/<course>.rings.json) and HolePath tee-badge segments by geometry.
     const W = JSON.parse(readFileSync(join(A, 's1', 'px.badges.json'), 'utf8')).image.widthPx;
-    const owned = new Set([...badges.flatMap((b) => [...b.px, ...b.mute.px]), ...kj.flatMap((k) => [...k.px, ...(k.shell?.blackPx ?? [])])]);
     const fam = join(A, 's3fix', 'px.tees.family-refined.json');
     const model = existsSync(fam) ? JSON.parse(readFileSync(fam, 'utf8')).model : null;
     const R = model ? Math.hypot(model.major.median, model.minor.median) / 2 : 15;
-    const under = ([x, y]) => { for (let dy = -Math.ceil(R); dy <= R; dy++) for (let dx = -Math.ceil(R); dx <= R; dx++) if (dx * dx + dy * dy <= R * R && owned.has(Math.round(y + dy) * W + Math.round(x + dx))) return true; return false; };
-    S3.fn = S3.fn.map((t) => { const h = T.holes.get(Number(t.split(' ')[1])); return `${t} (${under(h.tee) ? 'pad touches a sprite, (partly) hidden: S4' : 'fully visible: S3 missed it'})`; });
+    const basketName = (i) => (S2hole.has(i) ? `Basket ${S2hole.get(i)}` : kNames[i]);
+    const ownedPx = new Map([...badges.map((b) => [`Badge ${b.label}`, new Set([...b.px, ...b.mute.px])]), ...kj.map((k, i) => [basketName(i), new Set([...k.px, ...(k.shell?.blackPx ?? [])])]),
+      ...tees.map((t, i) => [holeOfTee.has(i) ? `Tee ${holeOfTee.get(i)}` : tNames[i], new Set(t.px ?? [])])]);
+    const ringFile = join(root, 'baselines', 'scene', `${specimen}.rings.json`);
+    const parts = existsSync(ringFile) ? ringsForBaskets(kj.map((k, i) => ({ name: basketName(i), point: basketPoint(k.bbox) })), JSON.parse(readFileSync(ringFile, 'utf8'))) : [];
+    const af0 = join(out, 's3assoc', 'px.tees.association.json');
+    if (existsSync(af0)) {
+      const rows0 = JSON.parse(readFileSync(af0, 'utf8'));
+      const bc = new Map(badges.map((b) => [String(b.label), [b.bbox[0] + (b.bbox[2] - 1) / 2, b.bbox[1] + (b.bbox[3] - 1) / 2]]));
+      for (const r of rows0.rows) if (r.best && Array.isArray(r.center) && bc.has(r.best.badge)) parts.push(HolePath({ name: `HolePath ${r.best.badge} (tee-badge segment)`, vertices: [r.center, bc.get(r.best.badge)], widthPx: hallwayWidth[specimen] ?? 30 }));
+    }
+    // Rings of baskets S2 never found cannot come from the pipeline yet (S4 recovers them); the judge may still name them
+    // from Sam's basket point, labelled as such, so a miss is never blamed on S3 for a ring nobody has modelled.
+    const unrecovered = existsSync(ringFile) ? ringsForBaskets([...T.holes.values()].filter((h) => !kj.some((k) => dist(basketPoint(k.bbox), h.basket) <= MATCH_PX.basket))
+      .map((h) => ({ name: `Basket ${h.hole} [not in S2; Sam's point]`, point: h.basket })), JSON.parse(readFileSync(ringFile, 'utf8'))) : [];
+    const occl = (pt) => occludersOf(pt, R, { parts: [...parts, ...unrecovered], ownedPx, widthPx: W });
+    S3.occluders = {};
+    S3.fn = S3.fn.map((t) => {
+      const h = T.holes.get(Number(t.split(' ')[1])), hits = occl(h.tee).filter((o) => o.name !== t);
+      S3.occluders[t] = hits;
+      const opaque = hits.filter((o) => o.opaque), clear = hits.length === 0;
+      const why = clear ? 'nothing crosses it: S3 missed a clear pad' : opaque.length ? `partly hidden by ${opaque.map((o) => `${o.name} (${Math.round(o.fraction * 100)}%)`).join(', ')}: S4` : `crossed only by translucent ${hits.map((o) => `${o.name} (${Math.round(o.fraction * 100)}%)`).join(', ')}: S3 must see through them`;
+      return `${t} (${why})`;
+    });
 
     // S3 association (ports/s3assoc): each TP tee's badge vs its true hole.
     const af = join(out, 's3assoc', 'px.tees.association.json');

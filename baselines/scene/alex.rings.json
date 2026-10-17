@@ -1,0 +1,42 @@
+{
+ "schema": "nctk-scene-rings@1",
+ "course": "alex",
+ "measuredBy": "docs/evidence/scene/ringfit.py (radial luminance around every BasketPoint, opaque sprites masked; C1/C2 fitted as the pair R, 2R)",
+ "C1S": {
+  "radiusPx": 36.0,
+  "strokeFwhmPx": 2.75,
+  "peakLumAboveBase": 9.9,
+  "colourRgb": [
+   166.0,
+   175.0,
+   176.0
+  ]
+ },
+ "C2D": {
+  "radiusPx": 71.75,
+  "ratioToC1": 1.993,
+  "strokeFwhmPx": 4.0,
+  "peakLumAboveBase": 27.9,
+  "dashPeriodPx": 21.29,
+  "dashPeriodIQR": [
+   21.29,
+   21.29
+  ],
+  "litFraction": 0.63,
+  "basketsMeasured": 12,
+  "colourRgb": [
+   169.0,
+   172.0,
+   179.0
+  ],
+  "dashStructure": "OPEN: period 21-32 px across courses; golden and alex ~21 dashes per circle, lenard and townelake ~10"
+ },
+ "units": {
+  "radiusPx": "px",
+  "strokeFwhmPx": "px (full width at half maximum of the radial profile)",
+  "peakLumAboveBase": "RGB level",
+  "dashPeriodPx": "px of arc",
+  "litFraction": "fraction of the circumference",
+  "ratioToC1": "ratio"
+ }
+}

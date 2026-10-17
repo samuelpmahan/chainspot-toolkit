@@ -3,7 +3,7 @@ golden (attempt-1792256170903-b68743f9e95c); testimony testimony/golden/DashsTra
   S2 baskets: 17 found; TP 17 / FN 1 / FP 0; error median 3.75 px, max 3.75 px (match within 12 px)
       FN: Basket 6
   S3 visible tees: 15 found; TP 15 / FN 3 / FP 0; error median 0.28 px, max 1.32 px (match within 8 px)
-      FN: Tee 3 (fully visible: S3 missed it), Tee 5 (fully visible: S3 missed it), Tee 12 (pad touches a sprite, (partly) hidden: S4)
+      FN: Tee 3 (crossed only by translucent C2D of Basket 5 (15%): S3 must see through them), Tee 5 (crossed only by translucent C2D of Basket 6 [not in S2; Sam's point] (13%), C1S of Basket 4 (11%): S3 must see through them), Tee 12 (partly hidden by Basket 11 (10%): S4)
   S3 association: 15 judged tees; associated correctly 15, incorrectly 0, not associated 0
   S5 3-point straight test: 15 judged holes; TP 6 / FP 3 / FN 1 / TN 5; straight with wrong basket 0
       FP (bent called straight): Hole 7, Hole 15, Hole 14
@@ -14,7 +14,7 @@ lenard (attempt-1792256225103-92dacbe97c0f); testimony testimony/lenard/Lenard-f
   S2 baskets: 16 found; TP 16 / FN 2 / FP 0; error median 1.09 px, max 3.27 px (match within 12 px)
       FN: Basket 9, Basket 12
   S3 visible tees: 17 found; TP 17 / FN 1 / FP 0; error median 0.19 px, max 2.39 px (match within 8 px)
-      FN: Tee 3 (fully visible: S3 missed it)
+      FN: Tee 3 (crossed only by translucent C2D of Basket 12 [not in S2; Sam's point] (26%): S3 must see through them)
   S3 association: 17 judged tees; associated correctly 17, incorrectly 0, not associated 0
   S5 3-point straight test: 17 judged holes; TP 15 / FP 0 / FN 2 / TN 0; straight with wrong basket 0
       FN (straight called bent): Hole 9 (its basket is missing from S2: S4), Hole 12 (its basket is missing from S2: S4)
@@ -23,7 +23,7 @@ townelake (attempt-1792256243822-fb785314ae52); testimony testimony/townelake/To
   S1 badges: 18 found; annotated hole labels present 18, missing [], duplicate []
   S2 baskets: 18 found; TP 18 / FN 0 / FP 0; error median 0.88 px, max 2.47 px (match within 12 px)
   S3 visible tees: 17 found; TP 17 / FN 1 / FP 0; error median 0.16 px, max 2.38 px (match within 8 px)
-      FN: Tee 13 (pad touches a sprite, (partly) hidden: S4)
+      FN: Tee 13 (partly hidden by Basket 14 (7%): S4)
   S3 association: 17 judged tees; associated correctly 17, incorrectly 0, not associated 0
   S5 3-point straight test: 17 judged holes; TP 14 / FP 1 / FN 0 / TN 2; straight with wrong basket 0
       FP (bent called straight): Hole 16
@@ -33,7 +33,7 @@ heritage (attempt-1792256261126-6ee7ff71e848); testimony testimony/heritage/Heri
   S2 baskets: 15 found; TP 15 / FN 3 / FP 0; error median 0.88 px, max 3.75 px (match within 12 px)
       FN: Basket 12, Basket 13, Basket 17
   S3 visible tees: 14 found; TP 14 / FN 4 / FP 0; error median 0.22 px, max 1.48 px (match within 8 px)
-      FN: Tee 5 (pad touches a sprite, (partly) hidden: S4), Tee 6 (pad touches a sprite, (partly) hidden: S4), Tee 10 (pad touches a sprite, (partly) hidden: S4), Tee 15 (pad touches a sprite, (partly) hidden: S4)
+      FN: Tee 5 (partly hidden by Basket 4 (51%): S4), Tee 6 (partly hidden by Basket 5 (68%): S4), Tee 10 (partly hidden by Basket 9 (64%): S4), Tee 15 (partly hidden by Badge 15 (40%): S4)
   S3 association: 14 judged tees; associated correctly 14, incorrectly 0, not associated 0
   S5 3-point straight test: 14 judged holes; TP 0 / FP 3 / FN 1 / TN 10; straight with wrong basket 0
       FP (bent called straight): Hole 8, Hole 9, Hole 1
@@ -43,7 +43,7 @@ alex (attempt-1792263349086-27173a1f38f5); testimony testimony/alex/AlexClark-fu
   S1 badges: 18 found; annotated hole labels present 3, missing [], duplicate []
   S2 baskets: 15 found; TP 3 / FN 0 / FP unjudged (12 unjudged: hole not annotated); error median 2.79 px, max 3.2 px (match within 12 px)
   S3 visible tees: 13 found; TP 2 / FN 1 / FP unjudged (11 unjudged: hole not annotated); error median 3.49 px, max 3.49 px (match within 8 px)
-      FN: Tee 13 (pad touches a sprite, (partly) hidden: S4)
+      FN: Tee 13 (partly hidden by Basket cb (68%): S4)
   S3 association: 2 judged tees; associated correctly 2, incorrectly 0, not associated 0; 11 tees unjudged
   S5 3-point straight test: 2 judged holes; TP 0 / FP 0 / FN 0 / TN 2; straight with wrong basket 0
 
