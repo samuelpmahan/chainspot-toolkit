@@ -35,6 +35,10 @@ right and the repo is behind. Every number carries a unit.
   pads; the blend pixels carry the sub-pixel edge position.
 - Each basket's C1 has a light spoke that points at the **front edge** of
   the next hole's tee (the end facing its badge); median 1.0-2.6 deg.
+- **BasketPoint** (Sam, 2026-10-17: the spokes meet the stem's tip edge at
+  a precise point) = basket bbox (x + 22.5, y + 71) + (+0.34, +0.73) px: the
+  bottom edge of the stem, solved from 59 spokes on 5 courses (residual
+  median 0.38 px). See `docs/evidence/basketpoint/`.
 - Visible path width differs from the annotation corridor; treat
   `corridorWidthPx` as a tolerance, not pixel truth.
 
@@ -44,7 +48,7 @@ right and the repo is behind. Every number carries a unit.
 |---|---|---|
 | S1 | badges and numerals; needs no external truth | count = holes, labels 1..N |
 | S2 | baskets, **precision only** | Sam's basket points |
-| S3 | visible tees, **precision only**; recall is S4's | Sam's tee points |
+| S3 | visible tees, **precision only**; recall is S4's. Initial association (Sam, 2026-10-17): each unoccluded pad pairs with at most 2 badges, one obviously better; continuing its axis to a BasketPoint starts S5's straight-hole matching before recovery (`ports/s3assoc/`) | Sam's tee points, hole numbers |
 | S4 | recover tees and baskets until counts match badge cardinality N; occlusion-aware by default: assume the sought sprite is occluded; entail from what must be true | Sam's points |
 | S5 | a tee's **long axis points directly at its badge**; residual indicts the tee fit | hole n's tee pairs with badge n |
 | S6 | straight holes are the trivial case: objective path loss along tee to basket; learn the course-local path transparency profile there | straight-hole residual |
