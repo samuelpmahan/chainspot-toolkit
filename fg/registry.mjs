@@ -38,7 +38,8 @@
  *       undeclared, and per-FG mismatches: a Part the declared `part`
  *       names ('px.tees.rings + px.tees.family' names two) not among the
  *       FG's guards; the lane parsed from appliesTo ("with lane X ON")
- *       differing from the FG's lane; the declaration's site (default
+ *       differing from the FG's lane; declared "properties" differing from
+ *       the FG's composed properties (propertyMismatch); the declaration's site (default
  *       'stage') differing from the FG's; and fg.* ids the declaration's prose
  *       `requires` mentions that the FG does not require (the prose is the
  *       only place those dependencies are written down today).
@@ -131,6 +132,25 @@ export function declarationMentions(declaration) {
 /** The Part addresses a declaration's `part` names ('a + b' names two: an FG may certify several Parts). */
 export const declaredParts = (part) => String(part).split(/\s*\+\s*/).filter(Boolean);
 
+/**
+ * Declared vs implemented properties (fg/compose.mjs): the declaration's
+ * "properties" list must name exactly the FG's composed properties, as a
+ * multiset (the implementation's order is its execution order; the stage
+ * file may list them in reading order). Default properties a composition
+ * gets without asking (DEFAULT_PROPERTIES) need not be declared. A composed
+ * FG whose declaration names no properties is a mismatch (the stage file
+ * would not be readable without the code); a hand-written FG with no
+ * declared properties is not.
+ */
+export const DEFAULT_PROPERTIES = Object.freeze(['instrumented', 'rendered']);
+export function propertyMismatch(declaredList, implementedList) {
+  const implemented = implementedList.filter((p) => !DEFAULT_PROPERTIES.includes(p) || (declaredList ?? []).includes(p));
+  if (declaredList === undefined && !implemented.length) return null;
+  const a = [...(declaredList ?? [])].sort(), b = [...implemented].sort();
+  if (a.length === b.length && a.every((p, i) => p === b[i])) return null;
+  return { declared: declaredList ?? null, implemented: implementedList, missing: b.filter((p) => !a.includes(p)), undeclaredInCode: a.filter((p) => !b.includes(p)) };
+}
+
 export function crossCheck(fgs, declarations) {
   const declared = new Map(declarations.map((d) => [d.id, d]));
   const implemented = new Map(fgs.map((fg) => [fg.id, fg]));
@@ -145,6 +165,8 @@ export function crossCheck(fgs, declarations) {
     if (site !== (fg.site ?? 'stage')) mismatches.push({ id, field: 'site', declared: site, implemented: fg.site ?? 'stage' });
     const unrequired = declarationMentions(d).filter((m) => declared.has(m) && !fg.requires.includes(m));
     if (unrequired.length) mismatches.push({ id, field: 'requires', declared: unrequired, implemented: fg.requires });
+    const props = propertyMismatch(d.properties, fg.properties ?? []);
+    if (props) mismatches.push({ id, field: 'properties', ...props });
   }
   return {
     declared: declared.size,

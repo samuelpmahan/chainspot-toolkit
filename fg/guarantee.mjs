@@ -47,6 +47,11 @@
  *               comparableForkJoin (fg/forkjoin.mjs), never by the stage
  *               runner. The stage declaration names the same site.
  *     run(ctx): returns { totals, ...extra }; extra keys land on the record.
+ *     properties / plan: set by fg/compose.mjs guarantee(): the property
+ *               (mixin) names the FG is composed of, carried on every record
+ *               (dormant ones too) and cross-checked against the stage
+ *               declaration's "properties"; plan is the composition's
+ *               inspectable execution order. A hand-written FG has neither.
  *   (`env` was removed; passing it is a definition error naming the fix.)
  *
  *   ctx = { id, records, sink,
@@ -123,7 +128,7 @@ const nameList = (list) => Array.isArray(list) && list.every((a) => typeof a ===
 
 export const GUARANTEE_SITES = Object.freeze(['stage', 'forkjoin']);
 
-export function defineGuarantee({ id, guards, reads = guards, calls = [], requires = [], lane = null, site = 'stage', run, ...rest }) {
+export function defineGuarantee({ id, guards, reads = guards, calls = [], requires = [], lane = null, site = 'stage', properties = [], plan = null, run, ...rest }) {
   if (typeof id !== 'string' || !ID.test(id)) throw new Error(`defineGuarantee: id ${JSON.stringify(id)} is not an fg.* id`);
   if ('env' in rest)
     throw new Error(`defineGuarantee ${id}: env was removed; declare data as Parts in reads and capabilities as registered fn.* Calculations in calls`);
@@ -139,7 +144,9 @@ export function defineGuarantee({ id, guards, reads = guards, calls = [], requir
   if (lane !== null && (typeof lane !== 'string' || !lane)) throw new Error(`defineGuarantee ${id}: lane must be a lane name or null`);
   if (!GUARANTEE_SITES.includes(site)) throw new Error(`defineGuarantee ${id}: site must be one of ${GUARANTEE_SITES.join(', ')}`);
   if (typeof run !== 'function') throw new Error(`defineGuarantee ${id}: run(ctx) is required`);
-  return Object.freeze({ [GUARANTEE]: true, id, guards: [...guards], reads: [...reads], calls: [...calls], requires: [...requires], lane, site, run });
+  if (!nameList(properties)) throw new Error(`defineGuarantee ${id}: properties must be a list of property names (fg/compose.mjs)`);
+  return Object.freeze({ [GUARANTEE]: true, id, guards: [...guards], reads: [...reads], calls: [...calls], requires: [...requires], lane, site,
+    properties: Object.freeze([...properties]), plan: plan ? Object.freeze(plan) : null, run });
 }
 
 export const isGuarantee = (value) => Boolean(value && value[GUARANTEE]);
@@ -148,7 +155,8 @@ export const isGuarantee = (value) => Boolean(value && value[GUARANTEE]);
 export const asStore = (storeOrBoard) => (isPartStore(storeOrBoard) ? storeOrBoard : createPartStore({ base: storeOrBoard ?? null }));
 
 function baseRecord(fg) {
-  return { guarantee: fg.id, status: null, reason: null, guards: fg.guards, reads: fg.reads, calls: fg.calls, requires: fg.requires, lane: fg.lane };
+  return { guarantee: fg.id, status: null, reason: null, guards: fg.guards, reads: fg.reads, calls: fg.calls, requires: fg.requires, lane: fg.lane,
+    ...(fg.properties?.length ? { properties: fg.properties } : {}) };
 }
 
 export function dormantRecord(fg, reason) {

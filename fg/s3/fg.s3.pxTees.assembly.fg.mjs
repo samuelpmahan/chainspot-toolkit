@@ -1,171 +1,146 @@
 /**
  * fg.s3.pxTees.assembly (stages/s3.json), the materialization guarantee of
  * the declared spec delta refine.s3.teeAssembly.interiorFirst. Lane
- * s3-tee-assembly, default OFF: with the lane off this FG is dormant and the
- * stage reproduces the pinned baseline exactly. With the lane on, a branch
- * from the S3 snapshot runs the toolkit-layer interior-first tee assembly
- * Calculation (ports/early/s3TeeAssembly.mjs) over the pinned S3 evidence
- * (the tee's findPx frame component ref materialized against the bright
- * label field; the interior derived from the bright mask as the enclosed
- * complement component and gated exactly against the ring's recorded
- * holeArea and bbox). The base board is never written. This delta is
- * additive, not a reproduction: the gates are that the frame reproduces the
- * baseline tee px element for element, the interior equals the ring record
- * exactly, and the overlap is zero.
+ * s3-tee-assembly, default OFF (dormant; the stage reproduces the pinned
+ * baseline exactly). With the lane on, the toolkit interior-first tee
+ * assembly Calculation (ports/early/s3TeeAssembly.mjs) runs on a branch
+ * restored from the S3 snapshot; the base board is never written. The
+ * delta is additive, not a reproduction: the FRAME component's M1
+ * base-delta vs its px.tees object must be empty (delta:px.tees), the
+ * interior must equal the ring's recorded holeArea, the overlap is zero,
+ * and the frame union gates against fg.s3.pxTees.materialize's claimed
+ * union; a second branch reproduces the Part, and tee 1's interior is
+ * re-derived from the raster fields (witnessed:rederiveTeeInterior).
  *
- * Gates against the RECORD of fg.s3.pxTees.materialize (claimed union),
- * which it requires. Inputs are Parts and registered Calculations only; the
- * branch op runs through fg/branchOp.mjs (site s3.teeAssembly).
- *
- * Ported from runEarly.mjs; artifact artifacts/s3assembly/px.tees.assembly.json,
+ * Artifact artifacts/s3assembly/px.tees.assembly.json (bytes unchanged),
  * record stages[S3].teeAssemblyMaterialization / materializations.S3TeeAssembly,
  * lane evidence experiments.branches.S3ASM.
  */
-import { defineGuarantee } from '../guarantee.mjs';
-import { BRANCH_CALLS, runBranchOp, tickEvidence } from '../branchOp.mjs';
+import { branchRun, guarantee, pipe, step } from '../compose.mjs';
+import { delta, framed, gated, lane, materialized, published, sameCanon, unitful, witnessed } from '../mixins.mjs';
 import { computeTeeAssembly, rederiveTeeInterior, TEE_ASSEMBLY } from '../../ports/early/s3TeeAssembly.mjs';
-import { legacyArtifact, legacyCanon, prettyJsonBytes } from '../legacy.mjs';
+import { legacyCanon } from '../legacy.mjs';
 
 const ID = 'fg.s3.pxTees.assembly';
 const MATERIALIZE = 'fg.s3.pxTees.materialize';
-const LANE = 's3-tee-assembly';
 const CONSUMES = ['px.tees', 'px.tees.rings', 'px.components'];
-const CANONICAL = 'tk.stage.S0.canonicalRgbaSha256';
-const SNAPSHOT_SHA = 'tk.stage.S3.snapshotSha256';
-const RESTORE = 'fn.provider.restore.S3';
-const SHA = 'fn.tk.sha256';
-const samePx = (a, b) => legacyCanon([...a].sort((x, y) => x - y)) === legacyCanon([...b].sort((x, y) => x - y));
+const PART = TEE_ASSEMBLY.part;
+const UNITS = { holeArea: 'px', exactTees: 'count (tees)', ofTees: 'count (tees)', anchor: 'px', frameCentroid: 'px' };
 const rowsWhere = (rows, bad, say) => rows.filter(bad).map(say);
+const component = (rec, name) => rec.components.find((c) => c.name === name);
 
-export default defineGuarantee({
-  id: ID,
-  guards: [TEE_ASSEMBLY.part],
-  reads: [...CONSUMES, CANONICAL, SNAPSHOT_SHA],
-  calls: [RESTORE, ...BRANCH_CALLS],
-  requires: [MATERIALIZE],
-  lane: LANE,
-  run(ctx) {
-    const baseline = ctx.records[MATERIALIZE].totals;
-    const canonicalRgbaSha256 = ctx.get(CANONICAL);
-    const sha256 = (bytes) => ctx.call(SHA, { bytes });
-    const asmOp = {
-      id: 'early.S3.teeAssembly', kind: 'measure', gate: 'shared', unit: 'early-s3-tee-assembly',
-      consumes: CONSUMES,
-      produces: [TEE_ASSEMBLY.part], calculations: [TEE_ASSEMBLY.assemblyCalculation], accessConformance: 'exact',
-      note: 'Declared spec delta refine.s3.teeAssembly.interiorFirst: each baseline Tee Part is assembled whole from its evidence through the phase-1 assembly shape with the enclosed interior as the declared base and the frame component fused onto it, the ring center carried as the anchor, and window ownership accounted against the frame bbox. Branch from the S3 snapshot; base emissions unchanged.'
-    };
-    const runAssemblyBranch = () => runBranchOp(ctx, {
-      restore: RESTORE, op: asmOp, site: 's3.teeAssembly', canonicalRgbaSha256,
-      calculate: (tees, rings, fields) => computeTeeAssembly({ tees, rings, fields })
-    });
-    const branchA = runAssemblyBranch();
-    const assemblyPart = branchA.branch.get(TEE_ASSEMBLY.part);
-    if (!assemblyPart || !Array.isArray(assemblyPart.tees)) ctx.fail('branch did not produce px.tees.assembly');
-    const baseTees = ctx.get('px.tees');
-    if (assemblyPart.tees.length !== baseTees.length)
-      ctx.fail(`assembly tee count ${assemblyPart.tees.length} != baseline px.tees count ${baseTees.length}`);
-    const reproduction = assemblyPart.tees.map((rec, i) => {
-      const baseSet = new Set(baseTees[i].px);
-      const frameSet = new Set(rec.components[1].px);
-      let frameDifferingPx = 0;
-      for (const p of baseSet) if (!frameSet.has(p)) frameDifferingPx++;
-      for (const p of frameSet) if (!baseSet.has(p)) frameDifferingPx++;
-      return {
-        index: i, label: rec.label,
-        framePxCount: rec.components[1].pxCount, baselinePxCount: baseSet.size,
-        interiorPxCount: rec.components[0].pxCount, holeArea: rec.ring.holeArea,
-        fusedPxCount: rec.fusedPxCount,
-        componentOverlapPx: rec.componentOverlapPx,
-        residuePx: rec.residuePx,
-        anchor: rec.anchor.value, frameCentroid: rec.anchor.frameCentroid,
-        anchorDistancePx: rec.anchor.distanceToFrameCentroidPx,
-        frameDifferingPx, interiorDifferingPx: Math.abs(rec.components[0].pxCount - rec.ring.holeArea),
-        exact: frameDifferingPx === 0 && rec.components[1].pxCount === baseSet.size && rec.components[0].pxCount === rec.ring.holeArea
-      };
-    });
-    const t = assemblyPart.totals;
-    const checks = {
-      allFramesReproducedExactly: ctx.check('allFramesReproducedExactly', reproduction.every((r) => r.frameDifferingPx === 0 && r.framePxCount === r.baselinePxCount),
-        { inexact: rowsWhere(reproduction, (r) => r.frameDifferingPx !== 0 || r.framePxCount !== r.baselinePxCount, (r) => `tee ${r.label} frame differs by ${r.frameDifferingPx} px (assembly frame ${r.framePxCount} vs baseline ${r.baselinePxCount})`) }),
-      interiorsMatchHoleArea: ctx.check('interiorsMatchHoleArea', reproduction.every((r) => r.interiorDifferingPx === 0),
-        { inexact: rowsWhere(reproduction, (r) => r.interiorDifferingPx !== 0, (r) => `tee ${r.label} interior differs by ${r.interiorDifferingPx} px (derived ${r.interiorPxCount} vs ring holeArea ${r.holeArea})`) }),
-      componentOverlapZero: ctx.check('componentOverlapZero', reproduction.every((r) => r.componentOverlapPx === 0),
-        { overlapping: rowsWhere(reproduction, (r) => r.componentOverlapPx !== 0, (r) => `tee ${r.label} overlaps by ${r.componentOverlapPx} px`) }),
-      fusedUnionArithmetic: ctx.check('fusedUnionArithmetic', t.frameUnionPx === baseline.claimedPx && t.fusedUnionPx === t.frameUnionPx + t.interiorUnionPx,
-        { frameUnionPx: t.frameUnionPx, [`${MATERIALIZE}.claimedPx`]: baseline.claimedPx, fusedUnionPx: t.fusedUnionPx, interiorUnionPx: t.interiorUnionPx }),
-      ownedOutsideWindowZero: ctx.check('ownedOutsideWindowZero', assemblyPart.tees.every((r) => r.ownership.ownedOutsideWindowPx === 0),
-        { outside: rowsWhere(assemblyPart.tees, (r) => r.ownership.ownedOutsideWindowPx !== 0, (r) => `tee ${r.label} owns ${r.ownership.ownedOutsideWindowPx} px outside`) })
-    };
-    // Witness 1: deterministic re-execution on a second restored branch.
-    const canonicalAsm = sha256(legacyCanon(assemblyPart));
-    const reexecution = ctx.witness('reexecutionExact', () => {
-      const second = sha256(legacyCanon(runAssemblyBranch().result));
-      return second === canonicalAsm ? true : { ok: false, first: canonicalAsm, second };
-    });
-    // Witness 2: independent re-derivation of tee 1's interior from the
-    // raster fields (the not-bright component containing the tee center;
-    // never the findPx refs or the ring record).
-    const witnessIndex = 0;
-    const wRec = assemblyPart.tees[witnessIndex];
-    let witness = null;
-    const rederivation = ctx.witness('rederivationExact', () => {
-      witness = rederiveTeeInterior({ tee: baseTees[witnessIndex], fields: ctx.get('px.components') });
-      return samePx(witness.interior.px, wRec.components.find((c) => c.name === 'interior').px) ? true : { ok: false, disagrees: 'interior' };
-    });
-    const witnesses = {
-      reexecution: { canonicalSha256: canonicalAsm, exact: reexecution.ok },
-      rederivation: witness && { teeLabel: wRec.label, teeIndex: witnessIndex, interiorPx: witness.interior.px.length, holeArea: wRec.ring.holeArea, exact: rederivation.ok }
-    };
-    const assemblyArtifact = {
-      schema: 'nctk-s3-tee-assembly-artifact@1', part: TEE_ASSEMBLY.part, producedBy: TEE_ASSEMBLY.assemblyCalculation,
-      guarantee: ID, specDelta: TEE_ASSEMBLY.specDelta, calculation: TEE_ASSEMBLY.calculation,
-      image: assemblyPart.image, totals: t, emits: assemblyPart.emits,
-      reproduction, witnesses,
-      tees: assemblyPart.tees
-    };
-    const entry = ctx.artifact('px.tees.assembly', 'tee-assembly-json', prettyJsonBytes(assemblyArtifact), undefined, { path: 's3assembly/px.tees.assembly.json' });
-    checks.reexecutionExact = reexecution.ok;
-    checks.rederivationExact = rederivation.ok;
-    checks.artifactsRehashedAfterWrite = ctx.check('artifactsRehashedAfterWrite', entry.rehashed);
-    const reread = JSON.parse(new TextDecoder().decode(ctx.sink.readArtifact(entry.id)));
-    checks.artifactsReReadAndCompared = ctx.check('artifactsReReadAndCompared',
-      legacyCanon(reread.tees) === legacyCanon(assemblyPart.tees) && legacyCanon(reread.totals) === legacyCanon(t));
+const OP = {
+  id: 'early.S3.teeAssembly', kind: 'measure', gate: 'shared', unit: 'early-s3-tee-assembly',
+  consumes: CONSUMES,
+  produces: [PART], calculations: [TEE_ASSEMBLY.assemblyCalculation], accessConformance: 'exact',
+  note: 'Declared spec delta refine.s3.teeAssembly.interiorFirst: each baseline Tee Part is assembled whole from its evidence through the phase-1 assembly shape with the enclosed interior as the declared base and the frame component fused onto it, the ring center carried as the anchor, and window ownership accounted against the frame bbox. Branch from the S3 snapshot; base emissions unchanged.'
+};
 
-    const exactTees = reproduction.filter((r) => r.exact).length;
-    const { widthPx: width, heightPx: height } = assemblyPart.image;
-    ctx.frame({
-      title: `px.tees.assembly: ${exactTees}/${reproduction.length} tees assembled interior-first (+${t.interiorUnionPx} interior px)`, calculation: TEE_ASSEMBLY.assemblyCalculation, tick: asmOp.id,
-      parts: [
-        { address: `${TEE_ASSEMBLY.part}#interior`, kind: 'pxset', data: { width, height, px: assemblyPart.tees.flatMap((r) => r.components.find((c) => c.name === 'interior').px) } },
-        { address: `${TEE_ASSEMBLY.part}#frame`, kind: 'pxset', data: { width, height, px: assemblyPart.tees.flatMap((r) => r.components.find((c) => c.name === 'frame').px) } },
-        { address: `${TEE_ASSEMBLY.part}#anchor`, kind: 'points', data: { points: assemblyPart.tees.map((r) => [...r.anchor.value, r.label]) } },
-        { address: TEE_ASSEMBLY.part, kind: 'ledger', artifact: entry, data: { rows: reproduction.map((r) => ({ ...r, anchor: r.anchor.map((v) => v.toFixed(2)).join(','), frameCentroid: Array.isArray(r.frameCentroid) ? r.frameCentroid.map((v) => v.toFixed(2)).join(',') : r.frameCentroid })) } }
-      ],
-      verdicts: reproduction.map((r) => ({ name: `tee ${r.label}: frame ${r.framePxCount}/${r.baselinePxCount}, interior ${r.interiorPxCount}/${r.holeArea}`, ok: r.exact && r.componentOverlapPx === 0 }))
-    });
+const subject = step('read the branch Part', (env, s) => {
+  const assembly = s.branch.branch.get(PART);
+  if (!assembly || !Array.isArray(assembly.tees)) env.fail('branch did not produce px.tees.assembly');
+  const base = env.get('px.tees');
+  if (assembly.tees.length !== base.length) env.fail(`assembly tee count ${assembly.tees.length} != baseline px.tees count ${base.length}`);
+  return { assembly, base, totals: assembly.totals };
+}, { reads: CONSUMES });
 
-    const record = {
-      guarantee: ID, specDelta: TEE_ASSEMBLY.specDelta,
-      part: TEE_ASSEMBLY.part, producedBy: TEE_ASSEMBLY.assemblyCalculation,
-      teeCount: t.teeCount, totals: t,
-      reproduction: { exactTees, ofTees: reproduction.length, tees: reproduction },
-      witnesses, checks,
-      artifacts: [legacyArtifact(entry)]
+const reproduction = step('reproduction ledger', (env, s) => {
+  const rows = s.assembly.tees.map((rec, i) => {
+    const d = s.delta.perObject[`#${i}`];
+    return {
+      index: i, label: rec.label,
+      framePxCount: rec.components[1].pxCount, baselinePxCount: d.basePx,
+      interiorPxCount: rec.components[0].pxCount, holeArea: rec.ring.holeArea,
+      fusedPxCount: rec.fusedPxCount,
+      componentOverlapPx: rec.componentOverlapPx,
+      residuePx: rec.residuePx,
+      anchor: rec.anchor.value, frameCentroid: rec.anchor.frameCentroid,
+      anchorDistancePx: rec.anchor.distanceToFrameCentroidPx,
+      frameDifferingPx: d.differingPx, interiorDifferingPx: Math.abs(rec.components[0].pxCount - rec.ring.holeArea),
+      exact: d.differingPx === 0 && rec.components[1].pxCount === d.basePx && rec.components[0].pxCount === rec.ring.holeArea
     };
-    ctx.publish('stages.S3.teeAssemblyMaterialization', record);
-    ctx.publish('materializations.S3TeeAssembly', record);
-    ctx.publish('experiments.branches.S3ASM', {
-      mode: 'ON', status: 'SPEC_DELTA_ORACLE_UNKNOWN', lane: LANE,
-      baseSnapshotSha256: ctx.get(SNAPSHOT_SHA),
-      benefit: 'Every baseline Tee Part is assembled whole from its evidence (enclosed interior base, frame fused on, ring-center anchor, window-residue accounting), so the interior pixels the baseline Part never claimed are owned by the Part instead of living only as ring geometry on px.tees.rings, and the assembly structure crosses the toolkit seam as named Parts instead of a frame-only px array.',
-      falsifier: 'A tee frame set differs from the accepted px.tees set, the frame union differs from 4,884, a tee interior size differs from its ring\'s recorded holeArea, or a tee component overlap is nonzero.',
-      oracle: 'UNKNOWN', partAddress: TEE_ASSEMBLY.part,
-      totals: t,
-      delta: { frameOnlyBaselinePx: baseline.claimedPx, interiorAddedPx: t.interiorUnionPx, fusedUnionPx: t.fusedUnionPx },
-      reproduction: { exactTees, ofTees: reproduction.length },
-      canonicalRgbaSha256Off: canonicalRgbaSha256, canonicalRgbaSha256On: branchA.after,
-      ticks: tickEvidence(asmOp, branchA.ticks)
-    });
-    return { totals: t, teeCount: t.teeCount, specDelta: TEE_ASSEMBLY.specDelta, exactTees };
+  });
+  env.check('interiorsMatchHoleArea', rows.every((r) => r.interiorDifferingPx === 0),
+    { inexact: rowsWhere(rows, (r) => r.interiorDifferingPx !== 0, (r) => `tee ${r.label} interior differs by ${r.interiorDifferingPx} px (derived ${r.interiorPxCount} vs ring holeArea ${r.holeArea})`) });
+  env.check('componentOverlapZero', rows.every((r) => r.componentOverlapPx === 0),
+    { overlapping: rowsWhere(rows, (r) => r.componentOverlapPx !== 0, (r) => `tee ${r.label} overlaps by ${r.componentOverlapPx} px`) });
+  env.check('ownedOutsideWindowZero', s.assembly.tees.every((r) => r.ownership.ownedOutsideWindowPx === 0),
+    { outside: rowsWhere(s.assembly.tees, (r) => r.ownership.ownedOutsideWindowPx !== 0, (r) => `tee ${r.label} owns ${r.ownership.ownedOutsideWindowPx} px outside`) });
+  return { reproduction: rows, exactTees: rows.filter((r) => r.exact).length };
+});
+
+// Tee 1's interior: the not-bright component containing the tee center, never the findPx refs or the ring record.
+const rederived = witnessed.path('rederiveTeeInterior', {
+  name: 'rederivationExact', as: 'rederivation', reads: ['px.components'],
+  run: (s, env) => {
+    const w = rederiveTeeInterior({ tee: s.base[0], fields: env.get('px.components') });
+    const rec = s.assembly.tees[0];
+    const summary = { teeLabel: rec.label, teeIndex: 0, interiorPx: w.interior.px.length, holeArea: rec.ring.holeArea };
+    const same = sameCanon([...w.interior.px].sort((a, b) => a - b), [...component(rec, 'interior').px].sort((a, b) => a - b));
+    return same ? { ok: true, summary } : { ok: false, disagrees: 'interior', summary };
   }
 });
+
+const assemble = step('assemble the assembly artifact', (env, s) => {
+  const r = s.witnessReturns.rederivation;
+  const witnesses = { reexecution: s.witnesses.reexecution, rederivation: r?.summary ? { ...r.summary, exact: s.witnesses.rederivation.ok } : null };
+  return {
+    receiptWitnesses: witnesses,
+    artifact: {
+      schema: 'nctk-s3-tee-assembly-artifact@1', part: PART, producedBy: TEE_ASSEMBLY.assemblyCalculation,
+      guarantee: ID, specDelta: TEE_ASSEMBLY.specDelta, calculation: TEE_ASSEMBLY.calculation,
+      image: s.assembly.image, totals: s.totals, emits: s.assembly.emits,
+      reproduction: s.reproduction, witnesses,
+      tees: s.assembly.tees
+    }
+  };
+});
+
+const frames = framed((s) => {
+  const { widthPx: width, heightPx: height } = s.assembly.image;
+  const tees = s.assembly.tees;
+  return [{
+    title: `px.tees.assembly: ${s.exactTees}/${s.reproduction.length} tees assembled interior-first (+${s.totals.interiorUnionPx} interior px)`, calculation: TEE_ASSEMBLY.assemblyCalculation, tick: OP.id,
+    parts: [
+      { address: `${PART}#interior`, kind: 'pxset', data: { width, height, px: tees.flatMap((r) => component(r, 'interior').px) } },
+      { address: `${PART}#frame`, kind: 'pxset', data: { width, height, px: tees.flatMap((r) => component(r, 'frame').px) } },
+      { address: `${PART}#anchor`, kind: 'points', data: { points: tees.map((r) => [...r.anchor.value, r.label]) } },
+      { address: PART, kind: 'ledger', artifact: s.entries[PART], data: { rows: s.reproduction.map((r) => ({ ...r, anchor: r.anchor.map((v) => v.toFixed(2)).join(','), frameCentroid: Array.isArray(r.frameCentroid) ? r.frameCentroid.map((v) => v.toFixed(2)).join(',') : r.frameCentroid })) } }
+    ],
+    verdicts: s.reproduction.map((r) => ({ name: `tee ${r.label}: frame ${r.framePxCount}/${r.baselinePxCount}, interior ${r.interiorPxCount}/${r.holeArea}`, ok: r.exact && r.componentOverlapPx === 0 }))
+  }];
+});
+
+export default guarantee({
+  id: ID, guards: [PART], audit: [unitful({ units: UNITS })],
+  result: (s) => ({ totals: s.totals, teeCount: s.totals.teeCount, specDelta: TEE_ASSEMBLY.specDelta, exactTees: s.exactTees })
+}, pipe(
+  branchRun({ restore: 'fn.provider.restore.S3', op: OP, site: 's3.teeAssembly', calculate: (tees, rings, fields) => computeTeeAssembly({ tees, rings, fields }) }),
+  lane('s3-tee-assembly'),
+  subject,
+  delta({ out: `${PART}#frame`, base: 'px.tees', by: TEE_ASSEMBLY.assemblyCalculation, exact: 'allFramesReproducedExactly',
+    outPx: (s) => s.assembly.tees.map((r, i) => [`#${i}`, r.components[1].px]), basePx: (s) => s.base.map((t, i) => [`#${i}`, t.px]) }),
+  gated(MATERIALIZE, { checks: [{ name: 'fusedUnionArithmetic',
+    mine: (s) => [s.totals.frameUnionPx, s.totals.fusedUnionPx], theirs: (r, s) => [r.totals.claimedPx, s.totals.frameUnionPx + s.totals.interiorUnionPx] }] }),
+  reproduction,
+  witnessed.branch({ canonical: (s, run) => legacyCanon(run.result) }),
+  rederived,
+  assemble,
+  materialized({
+    artifacts: (s) => [{ id: PART, kind: 'tee-assembly-json', path: 's3assembly/px.tees.assembly.json', json: s.artifact }],
+    reread: (s, read) => { const back = read(PART); return sameCanon(back.tees, s.assembly.tees) && sameCanon(back.totals, s.totals); }
+  }),
+  frames,
+  published({
+    stage: 'S3', key: 'teeAssemblyMaterialization', materialization: 'S3TeeAssembly',
+    header: () => ({ specDelta: TEE_ASSEMBLY.specDelta, part: PART, producedBy: TEE_ASSEMBLY.assemblyCalculation }),
+    body: (s) => ({ teeCount: s.totals.teeCount, totals: s.totals, reproduction: { exactTees: s.exactTees, ofTees: s.reproduction.length, tees: s.reproduction }, witnesses: s.receiptWitnesses }),
+    branch: {
+      key: 'S3ASM',
+      benefit: 'Every baseline Tee Part is assembled whole from its evidence (enclosed interior base, frame fused on, ring-center anchor, window-residue accounting), so the interior pixels the baseline Part never claimed are owned by the Part instead of living only as ring geometry on px.tees.rings, and the assembly structure crosses the toolkit seam as named Parts instead of a frame-only px array.',
+      falsifier: 'A tee frame set differs from the accepted px.tees set, the frame union differs from 4,884, a tee interior size differs from its ring\'s recorded holeArea, or a tee component overlap is nonzero.',
+      body: (s) => ({ partAddress: PART, totals: s.totals,
+        delta: { frameOnlyBaselinePx: s.records[MATERIALIZE].totals.claimedPx, interiorAddedPx: s.totals.interiorUnionPx, fusedUnionPx: s.totals.fusedUnionPx },
+        reproduction: { exactTees: s.exactTees, ofTees: s.reproduction.length } })
+    }
+  })));
