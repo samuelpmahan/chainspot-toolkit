@@ -1,0 +1,6 @@
+{"kind":"stage","position":9,"guarantees":[
+{"id":"fg.toy.blobs.materialize","kind":"functional-guarantee","part":"px.blobs","appliesTo":"every toy run","requires":["px.blobs serialized from the live board into a blob-set artifact"]},
+{"id":"fg.toy.family.materialize","kind":"functional-guarantee","part":"px.blobs.family","appliesTo":"every toy run","requires":["members reconcile with the fg.toy.blobs.materialize record"]},
+{"id":"fg.toy.family.experimental","kind":"functional-guarantee","part":"px.blobs.family","appliesTo":"every toy run with lane toy-lane ON (default OFF; dormant otherwise)","requires":["non-empty family per fg.toy.family.materialize"]},
+{"id":"fg.toy.declaredOnly","kind":"functional-guarantee","part":"px.blobs","appliesTo":"every toy run","requires":["declared in prose, not yet implemented"]}
+]}
