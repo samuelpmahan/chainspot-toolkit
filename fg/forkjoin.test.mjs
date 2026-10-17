@@ -67,8 +67,8 @@ test('discovery picks up the fixture FG dir and cross-checks declarations withou
 
 test('real stages/*.json declarations load; scanning fg/ skips fixtures; S1-S3 are fully ported', async () => {
   const { registry, report } = await loadRegistry({ root: here, stagesDir: join(here, '..', 'stages') });
-  const s1 = ['fg.s1.badgeGlyphTemplate.materialize', 'fg.s1.pxBadges.assembly', 'fg.s1.pxBadges.materialize', 'fg.s1.pxDigits.materialize'];
-  const s2 = ['fg.s2.pxBaskets.assembly', 'fg.s2.pxBaskets.materialize'];
+  const s1 = ['fg.s1.badgeGlyphTemplate.materialize', 'fg.s1.badgeInvariants.observe', 'fg.s1.pxBadges.assembly', 'fg.s1.pxBadges.materialize', 'fg.s1.pxDigits.materialize'];
+  const s2 = ['fg.s2.basketInvariants.observe', 'fg.s2.pxBaskets.assembly', 'fg.s2.pxBaskets.materialize'];
   const s3 = ['fg.s3.pxTees.assembly', 'fg.s3.pxTees.materialize', 'fg.s3.pxTeesFamilyFix.materialize', 'fg.s3.pxTeesRingsFamily.materialize'];
   const s3fj = ['fg.s3.teeFamily.materialize', 'fg.s3.teeFamily.precision'];
   const all = [...s1, ...s2, ...s3, ...s3fj];

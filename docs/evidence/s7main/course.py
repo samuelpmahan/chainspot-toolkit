@@ -7,7 +7,11 @@ COURSES={'alex':('attempt-1792263349086-27173a1f38f5',SP+'/aafit/alex-pads.json'
          'golden':('attempt-1792256170903-b68743f9e95c',SP+'/aafit/pads-golden.json'),
          'lenard':('attempt-1792256225103-92dacbe97c0f',None),
          'townelake':('attempt-1792256243822-fb785314ae52',None),
-         'heritage':('attempt-1792256261126-6ee7ff71e848',None)}
+         'heritage':('attempt-1792256261126-6ee7ff71e848',None),
+         # invariant ledger (docs/evidence/ledger/): northpark and the zoomed Lenard views, S3 structural fix on
+         'northpark':('attempt-1792280536732-17ca01ed60ea',None),'lenard1':('attempt-1792280475576-d2ac09b8a95e',None),
+         'lenard2':('attempt-1792280485821-a43d06513f8a',None),'lenard3':('attempt-1792280427142-df55fc0dc44d',None),
+         'lenard4':('attempt-1792280454564-4bcfa80a7409',None),'lenard5':('attempt-1792280465277-cc8f2983d237',None)}
 TESTIMONY={'golden':('golden/DashsTrack-full.annotation.json',-4),'lenard':('lenard/Lenard-full.annotation.json',-2),
            'townelake':('townelake/TowneLake-full.annotation.json',-1),'heritage':('heritage/HeritagePark-full.annotation.json',-2)}
 DELTA=np.array(json.load(open(SP+'/bp/basketpoint.json'))['delta'])   # BasketPoint = sprite tip + DELTA (px), from 59 spokes
@@ -44,7 +48,9 @@ class Course:
         s.MASK=(s.sprite|s.ring).astype(float)
     def _r1(s):
         # mean radial luminance profile around all basket points (sprites masked): C1 is the stronger ring, C2 = 2 x C1
-        th=np.radians(np.arange(0,360,1.0)); rs=np.arange(10,110,0.5); prof=[]
+        # radius range must hold 2 x R1 at every scale: R1 is LOCAL (21 px full heritage .. 56 px zoomed Lenard); the old
+        # 10-110 px range silently capped R1 at 54.75 px
+        th=np.radians(np.arange(0,360,1.0)); rs=np.arange(10,260,0.5); prof=[]
         SPR=s.sprite.astype(float)
         for r in rs:
             v=[]

@@ -38,7 +38,7 @@ const UNITS = {
   // the fitted pad model (ports/early/s3FamilyFix.mjs fitModel) and its bounds
   major: 'px (oriented outer extent)', minor: 'px (oriented outer extent)', area: 'px (pixel count)', holeArea: 'px (pixel count)',
   bandT: 'px (band thickness)', meanMargin: 'px (mean border thickness)', anchorBandCoverageMin: 'fraction of band', bandCoverage: 'fraction of band',
-  bandFill: 'fraction of band area', interiorTone: 'RGB level per channel', interiorToneDistance: 'RGB level (max channel distance)',
+  bandFill: 'fraction of band area (frame px / (major*minor - holeArea)); in the model {median, min, max}: the same fraction, of: count (margin-passing candidates)', interiorTone: 'RGB level per channel', interiorToneDistance: 'RGB level (max channel distance)',
   // verdict counts and the recorded delta
   admitted: CANDIDATES, anchors: CANDIDATES, candidates: CANDIDATES, correctedMembers: CANDIDATES, eliminated: CANDIDATES, excused: CANDIDATES, framed: CANDIDATES, unframed: CANDIDATES,
   admittedNonMembers: CANDIDATES, excusedNonMembers: CANDIDATES, eliminatedNonMembers: CANDIDATES, excusedBaselineMembers: CANDIDATES,

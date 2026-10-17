@@ -14,10 +14,29 @@ right and the repo is behind. Every number carries a unit.
 - **C2 = 2 x C1 exactly**, both centred on the basket. Measured ratio
   1.96-2.06 across four courses; the spread is our fit error. Their radius
   gives the course scale in px per m.
-- **Tee pads are one rigid template per course.** Pad size scales with the
-  map; frame stroke (about 3.5 px ends, 3.0 px sides) and C2 dash period
-  (about 25.5 px) are constant in screen px. The pad interior is a
-  course-constant grey (golden RGB 158/157/159).
+- **Tee pads are one rigid template per image.** A pad is a 6.0 m x 4.0 m
+  ground rectangle (0.597 x R1 by 0.399 x R1) outlined by a screen-px
+  frame stroke (3.53-3.62 px ends, 3.01-3.05 px sides): length = 3.53 px +
+  0.597 x R1, width = 2.99 px + 0.399 x R1, max residual 0.27 px on 6 full
+  courses and 5 zoomed views. The pad interior is an image-constant grey
+  (golden RGB 158/157/159). The C2 dash period is NOT screen-constant (an
+  earlier reading said 25.5 px): it is 21.5-33.5 px, see the ledger below.
+- **Constant means constant across courses AND zoom scales** (Sam,
+  2026-10-17). Every claim carries its scope (`fg/scene/invariants.mjs`,
+  `docs/evidence/ledger/`):
+  GLOBAL (holds on full courses and zoomed views): basket sprite 46 x 72
+  px; badge sprite size by label; frame and ring strokes in screen px;
+  C2 = 2 x C1; the pad model in R1.
+  LOCAL (one value per image, measured on every run, free orientation in a
+  blind run): R1 (21-56 px), pad template, pad frame px, S3 band fill,
+  hallway width (31-52 px), C2 dash period. Hallway width / R1 and dashes
+  per C2 circle fall in two scale regimes (1.46-1.49 and ~10 dashes when
+  R1 <= 27 px; 0.93-0.94 and ~21 dashes when R1 >= 36 px; full Lenard and
+  its zooms sit on opposite sides): measured, never assumed.
+  VARIABLE: counts in view (a zoomed view can show a basket whose badge is
+  off-screen). A bound in absolute px on a map-scaled quantity is a hidden
+  scale assumption: S3's band fill bound and the s7main R1 search range
+  both broke at zoom.
 - **Z-order is not perfectly consistent**: learn it by cropping and
   inspecting. Overpaint is subtractive (it removes pixels, never fuses).
 - **Anti-aliasing pixels must be owned.** Brightness detectors are blind to

@@ -1,0 +1,875 @@
+{
+ "schema": "nctk-invariant-ledger@1",
+ "rule": "GLOBAL only when it holds on full courses AND zoomed views",
+ "images": {
+  "golden": "full",
+  "alex": "full",
+  "lenard": "full",
+  "townelake": "full",
+  "heritage": "full",
+  "northpark": "full",
+  "lenard1": "zoom",
+  "lenard2": "zoom",
+  "lenard3": "zoom",
+  "lenard4": "zoom",
+  "lenard5": "zoom"
+ },
+ "padModel": {
+  "lengthPx": [
+   3.532,
+   0.5971
+  ],
+  "widthPx": [
+   2.985,
+   0.3994
+  ],
+  "unit": "px = a px + b x R1 px",
+  "maxResidualPx": [
+   0.27,
+   0.16
+  ]
+ },
+ "regime": {
+  "thresholdR1Px": [
+   27,
+   36
+  ],
+  "hallwayOverR1": {
+   "R1<=27": [
+    1.46,
+    1.494
+   ],
+   "R1>=36": [
+    0.928,
+    0.943
+   ]
+  },
+  "dashesPerC2": {
+   "R1<=27": [
+    9.9,
+    10.47
+   ],
+   "R1>=36": [
+    20.91,
+    21.04
+   ]
+  }
+ },
+ "entries": [
+  {
+   "quantity": "basket sprite size",
+   "unit": "px [width, height]",
+   "scope": "GLOBAL",
+   "value": [
+    46,
+    72
+   ],
+   "perImage": {
+    "golden": [
+     46,
+     72
+    ],
+    "alex": [
+     46,
+     72
+    ],
+    "lenard": [
+     46,
+     72
+    ],
+    "townelake": [
+     46,
+     72
+    ],
+    "heritage": [
+     46,
+     72
+    ],
+    "northpark": [
+     46,
+     72
+    ],
+    "lenard1": [
+     46,
+     72
+    ],
+    "lenard2": [
+     46,
+     72
+    ],
+    "lenard3": [
+     46,
+     72
+    ],
+    "lenard4": [
+     46,
+     72
+    ],
+    "lenard5": [
+     46,
+     72
+    ]
+   },
+   "imagesFull": [
+    "golden",
+    "alex",
+    "lenard",
+    "townelake",
+    "heritage",
+    "northpark"
+   ],
+   "imagesZoom": [
+    "lenard1",
+    "lenard2",
+    "lenard3",
+    "lenard4",
+    "lenard5"
+   ],
+   "evidence": "127 baskets on 11 images: one size, no exception",
+   "use": "S2 size test; BasketPoint = bbox (x + 22.5, y + 71) + offset"
+  },
+  {
+   "quantity": "badge sprite size by label",
+   "unit": "px [width, height]",
+   "scope": "GLOBAL",
+   "value": {
+    "1": [
+     54,
+     42
+    ],
+    "2": [
+     54,
+     42
+    ],
+    "3": [
+     54,
+     42
+    ],
+    "4": [
+     54,
+     42
+    ],
+    "5": [
+     54,
+     42
+    ],
+    "6": [
+     54,
+     42
+    ],
+    "7": [
+     54,
+     42
+    ],
+    "8": [
+     54,
+     42
+    ],
+    "9": [
+     54,
+     42
+    ],
+    "10": [
+     57,
+     42
+    ],
+    "11": [
+     54,
+     42
+    ],
+    "12": [
+     55,
+     42
+    ],
+    "13": [
+     55,
+     42
+    ],
+    "14": [
+     56,
+     42
+    ],
+    "15": [
+     55,
+     42
+    ],
+    "16": [
+     55,
+     42
+    ],
+    "17": [
+     54,
+     42
+    ],
+    "18": [
+     55,
+     42
+    ]
+   },
+   "perImage": {
+    "golden": 18,
+    "alex": 16,
+    "lenard": 16,
+    "townelake": 18,
+    "heritage": 14,
+    "northpark": 16,
+    "lenard1": 7,
+    "lenard2": 7,
+    "lenard3": 4,
+    "lenard4": 6,
+    "lenard5": 7
+   },
+   "imagesFull": [
+    "golden",
+    "alex",
+    "lenard",
+    "townelake",
+    "heritage",
+    "northpark"
+   ],
+   "imagesZoom": [
+    "lenard1",
+    "lenard2",
+    "lenard3",
+    "lenard4",
+    "lenard5"
+   ],
+   "evidence": "129 clean badges (frame is its own S1 part), every label one size on every image it appears on",
+   "use": "S1 merged-frame detector (off-size <=> frame merged)"
+  },
+  {
+   "quantity": "pad frame stroke, ends",
+   "unit": "px (AA render fit)",
+   "scope": "GLOBAL",
+   "value": [
+    3.534,
+    3.617
+   ],
+   "perImage": {
+    "golden": 3.584,
+    "alex": 3.564,
+    "lenard": 3.615,
+    "townelake": 3.613,
+    "heritage": 3.617,
+    "northpark": 3.6,
+    "lenard1": 3.534,
+    "lenard2": 3.543,
+    "lenard3": 3.557,
+    "lenard4": 3.567,
+    "lenard5": 3.547
+   },
+   "imagesFull": [
+    "golden",
+    "alex",
+    "lenard",
+    "townelake",
+    "heritage",
+    "northpark"
+   ],
+   "imagesZoom": [
+    "lenard1",
+    "lenard2",
+    "lenard3",
+    "lenard4",
+    "lenard5"
+   ],
+   "evidence": "R1 grows x2.65 across these images; the stroke spread is 0.08 px",
+   "use": "pad render model; S3 border margins (2-7 px)"
+  },
+  {
+   "quantity": "pad frame stroke, sides",
+   "unit": "px (AA render fit)",
+   "scope": "GLOBAL",
+   "value": [
+    3.012,
+    3.054
+   ],
+   "perImage": {
+    "golden": 3.037,
+    "alex": 3.035,
+    "lenard": 3.054,
+    "townelake": 3.024,
+    "heritage": 3.044,
+    "northpark": 3.026,
+    "lenard1": 3.038,
+    "lenard2": 3.023,
+    "lenard3": 3.016,
+    "lenard4": 3.012,
+    "lenard5": 3.014
+   },
+   "imagesFull": [
+    "golden",
+    "alex",
+    "lenard",
+    "townelake",
+    "heritage",
+    "northpark"
+   ],
+   "imagesZoom": [
+    "lenard1",
+    "lenard2",
+    "lenard3",
+    "lenard4",
+    "lenard5"
+   ],
+   "evidence": "spread 0.042 px",
+   "use": "pad render model"
+  },
+  {
+   "quantity": "C1S stroke",
+   "unit": "px (FWHM of the mean radial profile, 0.25 px steps)",
+   "scope": "GLOBAL",
+   "value": [
+    2.75,
+    3.5
+   ],
+   "perImage": {
+    "golden": 3.25,
+    "alex": 2.75,
+    "lenard": 2.75,
+    "townelake": 2.75,
+    "heritage": 2.75,
+    "northpark": 2.75,
+    "lenard1": 3.0,
+    "lenard2": 3.25,
+    "lenard3": 3.5,
+    "lenard4": 3.25,
+    "lenard5": 3.25
+   },
+   "imagesFull": [
+    "golden",
+    "alex",
+    "lenard",
+    "townelake",
+    "heritage",
+    "northpark"
+   ],
+   "imagesZoom": [
+    "lenard1",
+    "lenard2",
+    "lenard3",
+    "lenard4",
+    "lenard5"
+   ],
+   "evidence": "spread 0.75 px (3 radial steps) while R1 grows x2.65; screen-constant, not map-scaled",
+   "use": "C1S Part stroke"
+  },
+  {
+   "quantity": "C2D radius / C1S radius",
+   "unit": "ratio",
+   "scope": "GLOBAL",
+   "value": 2,
+   "perImage": {
+    "golden": 2.006,
+    "alex": 1.993,
+    "lenard": 1.99,
+    "townelake": 1.97,
+    "heritage": 1.953,
+    "northpark": 1.991,
+    "lenard1": 1.995,
+    "lenard2": 2.0,
+    "lenard3": 1.987,
+    "lenard4": 2.014,
+    "lenard5": 1.982
+   },
+   "imagesFull": [
+    "golden",
+    "alex",
+    "lenard",
+    "townelake",
+    "heritage",
+    "northpark"
+   ],
+   "imagesZoom": [
+    "lenard1",
+    "lenard2",
+    "lenard3",
+    "lenard4",
+    "lenard5"
+   ],
+   "evidence": "1.953-2.014 (radius resolution 0.25 px)",
+   "use": "C2D Part = 2 x R1 around the BasketPoint"
+  },
+  {
+   "quantity": "C1S radius R1 (10 m)",
+   "unit": "px",
+   "scope": "LOCAL",
+   "value": [
+    21.25,
+    56.25
+   ],
+   "perImage": {
+    "golden": 44.25,
+    "alex": 36.0,
+    "lenard": 24.0,
+    "townelake": 25.0,
+    "heritage": 21.25,
+    "northpark": 27.0,
+    "lenard1": 55.5,
+    "lenard2": 55.75,
+    "lenard3": 56.25,
+    "lenard4": 55.5,
+    "lenard5": 56.25
+   },
+   "imagesFull": [
+    "golden",
+    "alex",
+    "lenard",
+    "townelake",
+    "heritage",
+    "northpark"
+   ],
+   "imagesZoom": [
+    "lenard1",
+    "lenard2",
+    "lenard3",
+    "lenard4",
+    "lenard5"
+   ],
+   "evidence": "one radius per image (pair fit (R, 2R) over every basket); zoomed Lenard 55.5-56.25 px vs full Lenard 24 px",
+   "use": "the image scale: everything map-scaled is a multiple of it"
+  },
+  {
+   "quantity": "pad length",
+   "unit": "px (AA render fit, template median per image)",
+   "scope": "LOCAL",
+   "value": [
+    16.06,
+    36.946
+   ],
+   "perImage": {
+    "golden": 30.139,
+    "alex": 25.019,
+    "lenard": 17.961,
+    "townelake": 18.412,
+    "heritage": 16.06,
+    "northpark": 19.709,
+    "lenard1": 36.628,
+    "lenard2": 36.901,
+    "lenard3": 36.904,
+    "lenard4": 36.946,
+    "lenard5": 36.897
+   },
+   "imagesFull": [
+    "golden",
+    "alex",
+    "lenard",
+    "townelake",
+    "heritage",
+    "northpark"
+   ],
+   "imagesZoom": [
+    "lenard1",
+    "lenard2",
+    "lenard3",
+    "lenard4",
+    "lenard5"
+   ],
+   "evidence": "GLOBAL model: L = 3.532 px + 0.5971 x R1 (max residual 0.27 px on 11 images): a 5.97 m body plus a screen-px stroke (3.532 px ~ the end stroke)",
+   "use": "pad template predicted from R1 before any pad is fitted"
+  },
+  {
+   "quantity": "pad width",
+   "unit": "px (AA render fit, template median per image)",
+   "scope": "LOCAL",
+   "value": [
+    11.382,
+    25.324
+   ],
+   "perImage": {
+    "golden": 20.766,
+    "alex": 17.377,
+    "lenard": 12.65,
+    "townelake": 12.911,
+    "heritage": 11.382,
+    "northpark": 13.797,
+    "lenard1": 25.171,
+    "lenard2": 25.324,
+    "lenard3": 25.297,
+    "lenard4": 25.29,
+    "lenard5": 25.304
+   },
+   "imagesFull": [
+    "golden",
+    "alex",
+    "lenard",
+    "townelake",
+    "heritage",
+    "northpark"
+   ],
+   "imagesZoom": [
+    "lenard1",
+    "lenard2",
+    "lenard3",
+    "lenard4",
+    "lenard5"
+   ],
+   "evidence": "GLOBAL model: W = 2.985 px + 0.3994 x R1 (max residual 0.16 px): a 3.99 m body plus the side stroke",
+   "use": "pad template predicted from R1"
+  },
+  {
+   "quantity": "pad frame pixel count",
+   "unit": "px (count, S3 frame part, median per image)",
+   "scope": "LOCAL",
+   "value": [
+    129.0,
+    344.0
+   ],
+   "perImage": {
+    "golden": 266.0,
+    "alex": 217.0,
+    "lenard": 149.0,
+    "townelake": 147.0,
+    "heritage": 129.0,
+    "northpark": 159.0,
+    "lenard1": 336.0,
+    "lenard2": 341.0,
+    "lenard3": 327.0,
+    "lenard4": 344.0,
+    "lenard5": 330.0
+   },
+   "imagesFull": [
+    "golden",
+    "alex",
+    "lenard",
+    "townelake",
+    "heritage",
+    "northpark"
+   ],
+   "imagesZoom": [
+    "lenard1",
+    "lenard2",
+    "lenard3",
+    "lenard4",
+    "lenard5"
+   ],
+   "evidence": "~linear in R1: 0.519 px + 5.9974 x R1 (max residual 10.87 px): a screen-px stroke around a map-scaled perimeter",
+   "use": "S3 size bounds relative to R1, never absolute"
+  },
+  {
+   "quantity": "S3 band fill (frame px / band area)",
+   "unit": "fraction",
+   "scope": "LOCAL",
+   "value": {
+    "full": [
+     0.798,
+     0.822
+    ],
+    "zoom": [
+     0.606,
+     0.641
+    ]
+   },
+   "perImage": {
+    "golden": {
+     "median": 0.815,
+     "min": 0.755,
+     "max": 0.88,
+     "anchors": 15
+    },
+    "alex": {
+     "median": 0.822,
+     "min": 0.765,
+     "max": 0.839,
+     "anchors": 13
+    },
+    "lenard": {
+     "median": 0.814,
+     "min": 0.747,
+     "max": 0.846,
+     "anchors": 17
+    },
+    "townelake": {
+     "median": 0.807,
+     "min": 0.756,
+     "max": 0.841,
+     "anchors": 16
+    },
+    "heritage": {
+     "median": 0.808,
+     "min": 0.738,
+     "max": 0.967,
+     "anchors": 14
+    },
+    "northpark": {
+     "median": 0.798,
+     "min": 0.706,
+     "max": 0.83,
+     "anchors": 16
+    },
+    "lenard1": {
+     "median": 0.641,
+     "min": 0.541,
+     "max": 0.667,
+     "anchors": 8
+    },
+    "lenard2": {
+     "median": 0.631,
+     "min": 0.531,
+     "max": 0.658,
+     "anchors": 7
+    },
+    "lenard3": {
+     "median": 0.627,
+     "min": 0.57,
+     "max": 0.633,
+     "anchors": 4
+    },
+    "lenard4": {
+     "median": 0.614,
+     "min": 0.569,
+     "max": 0.648,
+     "anchors": 6
+    },
+    "lenard5": {
+     "median": 0.606,
+     "min": 0.524,
+     "max": 0.634,
+     "anchors": 6
+    }
+   },
+   "imagesFull": [
+    "golden",
+    "alex",
+    "lenard",
+    "townelake",
+    "heritage",
+    "northpark"
+   ],
+   "imagesZoom": [
+    "lenard1",
+    "lenard2",
+    "lenard3",
+    "lenard4",
+    "lenard5"
+   ],
+   "evidence": "anchor medians [0.798, 0.822] on full courses vs [0.606, 0.641] zoomed: the old absolute bound 0.65-1.05 found no anchor pad on Lenard-3/-4/-5",
+   "use": "S3 structural fix bounds it relative to the image median (0.75-1.3 x)"
+  },
+  {
+   "quantity": "hallway width",
+   "unit": "px (edge-pair fit on tee->badge segments, median per image)",
+   "scope": "LOCAL",
+   "value": [
+    31.03,
+    52.38
+   ],
+   "perImage": {
+    "golden": 41.51,
+    "alex": 33.6,
+    "lenard": 35.73,
+    "townelake": 36.83,
+    "heritage": 31.03,
+    "northpark": 40.33,
+    "lenard1": 51.66,
+    "lenard2": 52.010000000000005,
+    "lenard3": 52.38,
+    "lenard4": 52.31,
+    "lenard5": 52.2
+   },
+   "imagesFull": [
+    "golden",
+    "alex",
+    "lenard",
+    "townelake",
+    "heritage",
+    "northpark"
+   ],
+   "imagesZoom": [
+    "lenard1",
+    "lenard2",
+    "lenard3",
+    "lenard4",
+    "lenard5"
+   ],
+   "evidence": "within an image IQR <= 0.54 px; between images 31-52 px. Width / R1 has two values: 0.928-0.943 when R1 >= 36 px (golden, alex, lenard1, lenard2, lenard3, lenard4, lenard5), 1.460-1.494 when R1 <= 27 px (lenard, townelake, heritage, northpark); Lenard is in both (full 1.489, zoom 0.93), so the regime follows map scale, not the course",
+   "use": "HolePath width: learn per image from its 18 tee->badge segments"
+  },
+  {
+   "quantity": "C2D dash period",
+   "unit": "px of arc (pooled sinusoid fit, 0.25 px steps)",
+   "scope": "LOCAL",
+   "value": [
+    21.5,
+    33.5
+   ],
+   "perImage": {
+    "golden": 26.5,
+    "alex": 21.5,
+    "lenard": 30.25,
+    "townelake": 31.25,
+    "heritage": 25.0,
+    "northpark": 32.25,
+    "lenard1": 33.25,
+    "lenard2": 33.5,
+    "lenard3": 33.5,
+    "lenard4": 33.5,
+    "lenard5": 33.5
+   },
+   "imagesFull": [
+    "golden",
+    "alex",
+    "lenard",
+    "townelake",
+    "heritage",
+    "northpark"
+   ],
+   "imagesZoom": [
+    "lenard1",
+    "lenard2",
+    "lenard3",
+    "lenard4",
+    "lenard5"
+   ],
+   "evidence": "doctrine said ~25.5 px screen-constant: it is not (21.5-33.5 px). Dashes per C2 circle: 20.91-21.04 when R1 >= 36 px, 9.9-10.47 when R1 <= 27 px (same split as the hallway)",
+   "use": "C2D dash phase model (open)"
+  },
+  {
+   "quantity": "hallway width / R1, dashes per C2 circle (regime)",
+   "unit": "ratio; count (dashes)",
+   "scope": "LOCAL",
+   "value": {
+    "R1 <= 27 px": [
+     1.46,
+     1.494
+    ],
+    "R1 >= 36 px": [
+     0.928,
+     0.943
+    ]
+   },
+   "perImage": {
+    "golden": {
+     "hallwayOverR1": 0.938,
+     "dashesPerC2": 21.04
+    },
+    "alex": {
+     "hallwayOverR1": 0.933,
+     "dashesPerC2": 20.97
+    },
+    "lenard": {
+     "hallwayOverR1": 1.489,
+     "dashesPerC2": 9.92
+    },
+    "townelake": {
+     "hallwayOverR1": 1.473,
+     "dashesPerC2": 9.9
+    },
+    "heritage": {
+     "hallwayOverR1": 1.46,
+     "dashesPerC2": 10.43
+    },
+    "northpark": {
+     "hallwayOverR1": 1.494,
+     "dashesPerC2": 10.47
+    },
+    "lenard1": {
+     "hallwayOverR1": 0.931,
+     "dashesPerC2": 20.93
+    },
+    "lenard2": {
+     "hallwayOverR1": 0.933,
+     "dashesPerC2": 20.91
+    },
+    "lenard3": {
+     "hallwayOverR1": 0.931,
+     "dashesPerC2": 20.96
+    },
+    "lenard4": {
+     "hallwayOverR1": 0.943,
+     "dashesPerC2": 20.96
+    },
+    "lenard5": {
+     "hallwayOverR1": 0.928,
+     "dashesPerC2": 20.91
+    }
+   },
+   "imagesFull": [
+    "golden",
+    "alex",
+    "lenard",
+    "townelake",
+    "heritage",
+    "northpark"
+   ],
+   "imagesZoom": [
+    "lenard1",
+    "lenard2",
+    "lenard3",
+    "lenard4",
+    "lenard5"
+   ],
+   "evidence": "two signals agree on the regime on all 11 images; the threshold lies between R1 27 and 36 px (no image in between): a hypothesis, measured per image, never assumed",
+   "use": "orientation: measure R1 and the dash count, predict the hallway width, then confirm it on the tee->badge segments"
+  },
+  {
+   "quantity": "baskets vs badges in view",
+   "unit": "count",
+   "scope": "VARIABLE",
+   "value": null,
+   "perImage": {
+    "golden": {
+     "badges": 18,
+     "baskets": 17
+    },
+    "alex": {
+     "badges": 16,
+     "baskets": 15
+    },
+    "lenard": {
+     "badges": 16,
+     "baskets": 16
+    },
+    "townelake": {
+     "badges": 18,
+     "baskets": 18
+    },
+    "heritage": {
+     "badges": 14,
+     "baskets": 15
+    },
+    "northpark": {
+     "badges": 16,
+     "baskets": 17
+    },
+    "lenard1": {
+     "badges": 7,
+     "baskets": 7
+    },
+    "lenard2": {
+     "badges": 7,
+     "baskets": 7
+    },
+    "lenard3": {
+     "badges": 4,
+     "baskets": 3
+    },
+    "lenard4": {
+     "badges": 6,
+     "baskets": 7
+    },
+    "lenard5": {
+     "badges": 7,
+     "baskets": 5
+    }
+   },
+   "imagesFull": [
+    "golden",
+    "alex",
+    "lenard",
+    "townelake",
+    "heritage",
+    "northpark"
+   ],
+   "imagesZoom": [
+    "lenard1",
+    "lenard2",
+    "lenard3",
+    "lenard4",
+    "lenard5"
+   ],
+   "evidence": "a partial view can show a basket whose badge is off-screen (lenard4: 7 baskets, 6 badges); only a full view (labels 1..18) makes \"baskets <= badges\" and the S4 deficit meaningful",
+   "use": "S2 observer: deficit/overBadgeCount judged on full views only"
+  }
+ ]
+}

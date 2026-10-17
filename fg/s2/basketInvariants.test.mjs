@@ -16,3 +16,14 @@ test('size, deficit vs badges, touching and duplicates are findings', () => {
   assert.ok(o.findings.touchingBadges.some((t) => t.basket === 'Basket cc' && t.badges.includes('Badge 1')));
   assert.ok(o.findings.touchingBaskets.some((t) => t.basket === 'Basket ca' && t.baskets.includes('Basket cb')));
 });
+
+test('partial view: more baskets than badges is not a finding, and there is no S4 deficit to hand off', () => {
+  const badges = [1, 2, 3, 4, 11, 12].map((l, i) => ({ label: l, bbox: [1000, i * 50, 54, 42] }));
+  const baskets = Array.from({ length: 7 }, (_, i) => ({ bbox: [i * 100, 600, 46, 72] }));
+  const o = observeBaskets(baskets, badges);
+  assert.equal(o.findings.view, 'partial');
+  assert.equal(o.findings.deficit, null); assert.equal(o.findings.overBadgeCount, null);
+  const full = observeBaskets(baskets.concat(baskets.map((k) => ({ bbox: [k.bbox[0], 800, 46, 72] }))).concat(baskets.map((k) => ({ bbox: [k.bbox[0], 900, 46, 72] }))),
+    Array.from({ length: 18 }, (_, i) => ({ label: i + 1, bbox: [1100, i * 50, 54, 42] })));
+  assert.equal(full.findings.view, 'full'); assert.equal(full.findings.overBadgeCount, true);
+});

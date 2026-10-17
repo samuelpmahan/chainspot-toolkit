@@ -58,11 +58,15 @@ export const FAMILY_FIX = {
 export const FIX_BOUNDS = {
   marginMin: 2, marginMax: 7, marginSpreadMax: 3,
   // Band fill: frame area over the band between the oriented outer extent
-  // and the enclosed hole, major*minor - holeArea. Scale-free, because the
-  // frame stroke is constant in screen px while pads scale with the map
-  // (golden 0.82, Lenard 0.83); the old raw fill 0.30-0.50 was golden-fit
-  // and found no anchors on Lenard's smaller pads.
-  bandFillMin: 0.65, bandFillMax: 1.05,
+  // and the enclosed hole, major*minor - holeArea. It is a LOCAL constant,
+  // not a global one (invariant ledger, docs/evidence/ledger/, 2026-10-17):
+  // every pad on an image shares it, but it moves with map scale (members
+  // 0.71-0.97 on the 6 full courses, 0.52-0.67 on the 5 zoomed Lenard views),
+  // so an absolute bound (the old 0.65-1.05, and before it the golden-fit raw
+  // fill 0.30-0.50) finds no anchors on some scale. The bound is relative to
+  // the image's own median band fill over the candidates that pass the
+  // screen-px tests (margins: the frame stroke, constant in screen px).
+  bandFillRelMin: 0.75, bandFillRelMax: 1.3,
   interiorDeltaMin: 30, interiorBrightMax: 0.5,
   interiorToneFloor: 12, interiorToneExpansion: 1.5,
   whiteFracMin: 0.95,
@@ -75,7 +79,7 @@ export const FIX_BOUNDS = {
  */
 export const FIX_BOUNDS_UNITS = Object.freeze({
   marginMin: 'px', marginMax: 'px', marginSpreadMax: 'px',
-  bandFillMin: 'fraction of band area (frame px / (major*minor - holeArea))', bandFillMax: 'fraction of band area (frame px / (major*minor - holeArea))',
+  bandFillRelMin: 'ratio (band fill / the image median band fill of margin-passing candidates)', bandFillRelMax: 'ratio (band fill / the image median band fill of margin-passing candidates)',
   interiorDeltaMin: 'RGB level (mean-luminance difference, interior vs frame)', interiorBrightMax: 'fraction of ring-bbox px that are bright',
   interiorToneFloor: 'RGB level per channel', interiorToneExpansion: 'ratio (tolerance / largest anchor tone deviation)',
   whiteFracMin: 'fraction of frame px with luminance >= 200',
@@ -183,14 +187,21 @@ function measureCandidate(ring, frame, ctx) {
   return { framed: true, margins, frameStats, interior, framePixels };
 }
 
-function passAAnchor(measured) {
+// Screen-px structure (GLOBAL): the frame stroke margins, the interior/frame contrast and the white frame.
+function passAStructural(measured) {
   if (!measured.framed) return false;
   const m = measured.margins, f = measured.frameStats, interior = measured.interior;
   return m.min >= FIX_BOUNDS.marginMin && m.max <= FIX_BOUNDS.marginMax && m.spread <= FIX_BOUNDS.marginSpreadMax
-    && f.bandFill >= FIX_BOUNDS.bandFillMin && f.bandFill <= FIX_BOUNDS.bandFillMax
     && Math.abs(interior.lumMean - f.lumMean) >= FIX_BOUNDS.interiorDeltaMin && interior.brightFrac <= FIX_BOUNDS.interiorBrightMax
     && f.fracGe200 >= FIX_BOUNDS.whiteFracMin;
 }
+// Band fill (LOCAL): within [relMin, relMax] x the image's own median over the structural passers.
+export function localBandFillBounds(bandFills) {
+  if (!bandFills.length) return null;
+  const med = median(bandFills);
+  return { median: round4(med), min: round4(med * FIX_BOUNDS.bandFillRelMin), max: round4(med * FIX_BOUNDS.bandFillRelMax), of: bandFills.length };
+}
+const inBand = (b, v) => !!b && v >= b.min && v <= b.max;
 
 function buildModel(anchorEntries) {
   const majors = anchorEntries.map(e => e.measured.frameStats.major);
@@ -244,9 +255,12 @@ export function computeFamilyFix({ rings, family, fields, image, badges, baskets
   });
 
   // Pass A: anchors, then the fitted pad model from the anchors alone.
-  const anchors = entries.filter(e => passAAnchor(e.measured));
+  const structural = entries.filter(e => passAStructural(e.measured));
+  const bandFill = localBandFillBounds(structural.map(e => e.measured.frameStats.bandFill));
+  const anchors = structural.filter(e => inBand(bandFill, e.measured.frameStats.bandFill));
   if (!anchors.length) throw new Error('findFamily structural refinement found no anchor pads; cannot fit the pad model');
   const model = buildModel(anchors);
+  model.bandFill = bandFill;
   // Anchor band coverage under the fitted band thickness sets the coverage bound.
   for (const e of anchors) {
     const cov = bandCoverage(e.frame, new Set(e.measured.framePixels), ctx, model.bandT);
@@ -338,7 +352,7 @@ export function computeFamilyFix({ rings, family, fields, image, badges, baskets
     boundsRule: FIX_BOUNDS,
     model: {
       anchorCount: model.anchorCount, major: model.major, minor: model.minor, area: model.area, holeArea: model.holeArea,
-      meanMargin: model.meanMargin, bandT: model.bandT, interiorTone: model.interiorTone, anchorBandCoverageMin: model.anchorBandCoverageMin, bounds: model.bounds
+      meanMargin: model.meanMargin, bandT: model.bandT, interiorTone: model.interiorTone, anchorBandCoverageMin: model.anchorBandCoverageMin, bandFill: model.bandFill, bounds: model.bounds
     },
     counts: {
       candidates: rows.length, framed: rows.filter(r => r.frame).length, unframed: rows.filter(r => !r.frame).length,
@@ -411,11 +425,12 @@ export function rederiveFamilyFixVerdicts({ ringsPlain, familyPlain, fields, ima
     return { index, ring, frame, interior, margins, frameStats, framePixelSet: new Set(pxs) };
   });
 
-  const isAnchor = (m) => !!m.frame && m.margins.min >= FIX_BOUNDS.marginMin && m.margins.max <= FIX_BOUNDS.marginMax && m.margins.spread <= FIX_BOUNDS.marginSpreadMax
-    && m.frameStats.bandFill >= FIX_BOUNDS.bandFillMin && m.frameStats.bandFill <= FIX_BOUNDS.bandFillMax
+  const isStructural = (m) => !!m.frame && m.margins.min >= FIX_BOUNDS.marginMin && m.margins.max <= FIX_BOUNDS.marginMax && m.margins.spread <= FIX_BOUNDS.marginSpreadMax
     && Math.abs(m.interior.lumMean - m.frameStats.lumMean) >= FIX_BOUNDS.interiorDeltaMin && m.interior.brightFrac <= FIX_BOUNDS.interiorBrightMax
     && m.frameStats.fracGe200 >= FIX_BOUNDS.whiteFracMin;
-  const anchors = measured.filter(isAnchor);
+  const structural = measured.filter(isStructural);
+  const bandFill = localBandFillBounds(structural.map(m => m.frameStats.bandFill));
+  const anchors = structural.filter(m => inBand(bandFill, m.frameStats.bandFill));
   if (!anchors.length) throw new Error('witness re-derivation found no anchor pads');
   const rng = (vals) => ({ min: Math.min(...vals), max: Math.max(...vals), median: median(vals) });
   const model = {
@@ -426,6 +441,7 @@ export function rederiveFamilyFixVerdicts({ ringsPlain, familyPlain, fields, ima
   };
   model.bandT = Math.round(model.meanMargin);
   model.interiorTone = toneModel(anchors.map(a => a.interior.tone));
+  model.bandFill = bandFill;
   const e = FIX_BOUNDS.sizeExpansion;
   model.bounds = {
     major: [round4(model.major.min / e), round4(model.major.max * e)], minor: [round4(model.minor.min / e), round4(model.minor.max * e)],

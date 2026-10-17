@@ -5,8 +5,10 @@
  * image breaks it.
  *
  * Learned from the whole dev set (11 images, 140 badges, 2026-10-17):
- *   - a badge sprite's size is a function of its LABEL only (one size per
- *     label across every image; BADGE_SIZE_BY_LABEL);
+ *   - GLOBAL (holds on the 6 full courses AND the 5 zoomed Lenard views;
+ *     docs/evidence/ledger/): a badge sprite's size is a function of its
+ *     LABEL only, in screen px (one size per label on every image;
+ *     BADGE_SIZE_BY_LABEL), it does not scale with the map;
  *   - a badge whose size differs from its label's size is exactly a badge
  *     whose white frame merged into a touching white sprite (11 of 11, no
  *     exceptions either way): its frame is then not its own S1 bright part,

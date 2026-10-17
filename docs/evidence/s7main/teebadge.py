@@ -1,7 +1,7 @@
 # Learn each course's hallway from its TEE -> BADGE segments (always straight: the badge precedes the first bend).
 # Per segment: free width search on the along-path averaged profile (unmasked stations), then per-station edge contrast
 # at that width; course model = medians. Cached per course + code.
-import sys, json, math, numpy as np
+import sys, os, json, math, numpy as np
 from course import Course
 from track import profile, edge_pair
 from contrast import station_contrast
@@ -9,7 +9,7 @@ import badgeseed, pxcache
 import s3first as _s3; course_sha=_s3.course_sha; TRACE_DEPS=_s3.TRACE_DEPS
 TK='/home/user/chainspot-toolkit'
 def learn(name):
-    C=Course(name); base=json.load(open(f'{TK}/baselines/s3assoc/{name}.json'))['holes']; CS=course_sha(name)
+    C=Course(name); base=json.load(open(os.path.join(os.environ.get('BASELINE_DIR', f'{TK}/baselines/s3assoc'), f'{name}.json')))['holes']; CS=course_sha(name)
     def _do():
         rows=[]
         for h,b in base.items():

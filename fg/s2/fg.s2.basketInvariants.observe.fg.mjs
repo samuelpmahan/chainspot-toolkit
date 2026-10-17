@@ -4,14 +4,16 @@
  *
  * Baskets are named as candidates (`Basket ca`, `Basket cb`, ...; fg/names.mjs) until S5 proves which hole each ends.
  *
- * Learned from the 6 single-image dev courses (98 baskets, 2026-10-17):
- *   - the basket sprite is 46 x 72 px on every course (BASKET_SIZE);
- *   - its BasketPoint (where every C1 spoke meets the stem's bottom edge) is
- *     bbox (x + 22.5, y + 71) + BASKET_POINT_OFFSET, solved from 59 spokes on
- *     5 courses; Sam's basket points sit at a median 0.88-1.09 px from it;
- *   - S2 has no false positive on any annotated course; what it misses
- *     (stacked or covered baskets) is S4's to recover: the deficit against
- *     S1's badge count is recorded as the hand-off.
+ * Scopes (invariant ledger, docs/evidence/ledger/; GLOBAL = holds on full courses AND zoomed views):
+ *   - GLOBAL: the basket sprite is 46 x 72 px (BASKET_SIZE) on all 127 baskets of 6 full courses and 5 zoomed Lenard
+ *     views: it is drawn in screen px, it does not scale with the map;
+ *   - its BasketPoint (where every C1 spoke meets the stem's bottom edge) is bbox (x + 22.5, y + 71) +
+ *     BASKET_POINT_OFFSET, solved from 59 spokes on 5 full courses (not yet re-solved at zoom; the sprite it is measured
+ *     in is identical there); Sam's basket points sit at a median 0.88-1.09 px from it;
+ *   - VARIABLE: the basket count against the badge count. In a full view (badge labels 1..18) every basket has a badge,
+ *     so more baskets than badges is a finding and the deficit is S4's hand-off; a partial (zoomed) view can show a
+ *     basket whose badge is off-screen (Lenard-4: 7 baskets, 6 badges), so neither is judged there;
+ *   - S2 has no false positive on any annotated course; what it misses (stacked or covered baskets) is S4's to recover.
  */
 import { guarantee, pipe, read, step } from '../compose.mjs';
 import { framed, judged, published, unitful } from '../mixins.mjs';
@@ -22,7 +24,9 @@ const PART = 'px.baskets';
 export const BASKET_SIZE = Object.freeze([46, 72]);                 // px [width, height]
 export const BASKET_POINT_OFFSET = Object.freeze([0.34, 0.73]);     // px from the sprite's bottom-centre pixel
 export const basketPoint = ([x, y, w, h]) => [x + (w - 1) / 2 + BASKET_POINT_OFFSET[0], y + h - 1 + BASKET_POINT_OFFSET[1]];
-const UNITS = { basketPoint: 'px', basketPoints: 'px', basketIndices: 'ordinal (S2 basket index)', duplicates: 'ordinal (S2 basket index pairs)', offSize: 'ordinal (S2 basket index)', expectedSize: 'px [width, height]', duplicateWithinPx: 'px', baskets: 'count (baskets)', badges: 'count (badges)', deficit: 'count (baskets S4 must recover)' };
+const UNITS = { basketPoint: 'px', basketPoints: 'px', basketIndices: 'ordinal (S2 basket index)', duplicates: 'ordinal (S2 basket index pairs)', offSize: 'ordinal (S2 basket index)', expectedSize: 'px [width, height]', duplicateWithinPx: 'px', baskets: 'count (baskets)', badges: 'count (badges)', deficit: 'count (baskets S4 must recover; full view only)', view: 'enum (full: badge labels 1..18; partial)' };
+export const FULL_VIEW_LABELS = 18;   // count (badge labels 1..N in a full view)
+export const isFullView = (badges) => { const l = new Set(badges.map((b) => Number(b.label))); return l.size === FULL_VIEW_LABELS && [...Array(FULL_VIEW_LABELS)].every((_, i) => l.has(i + 1)); };
 const DUPLICATE_WITHIN_PX = 10;
 const touch = (a, b) => !(a[0] + a[2] < b[0] || b[0] + b[2] < a[0] || a[1] + a[3] < b[1] || b[1] + b[3] < a[1]);
 
@@ -36,15 +40,15 @@ export function observeBaskets(baskets, badges) {
       touchesBaskets: baskets.map((o, j) => j).filter((j) => j !== i && touch(bbox, baskets[j].bbox)).map((j) => names[j])
     };
   });
-  const dup = [];
+  const full = isFullView(badges), dup = [];
   for (let i = 0; i < rows.length; i++) for (let j = i + 1; j < rows.length; j++)
     if (Math.hypot(rows[i].basketPoint[0] - rows[j].basketPoint[0], rows[i].basketPoint[1] - rows[j].basketPoint[1]) < DUPLICATE_WITHIN_PX) dup.push([rows[i].name, rows[j].name]);
   return {
     rows,
     findings: {
-      baskets: rows.length, badges: badges.length, deficit: Math.max(0, badges.length - rows.length),
+      view: full ? 'full' : 'partial', baskets: rows.length, badges: badges.length, deficit: full ? Math.max(0, badges.length - rows.length) : null,
       sizeConstant: rows.every((r) => r.sizeMatches), offSize: rows.filter((r) => !r.sizeMatches).map((r) => r.name),
-      duplicates: dup, overBadgeCount: rows.length > badges.length,
+      duplicates: dup, overBadgeCount: full ? rows.length > badges.length : null,
       touchingBadges: rows.filter((r) => r.touchesBadges.length).map((r) => ({ basket: r.name, badges: r.touchesBadges })),
       touchingBaskets: rows.filter((r) => r.touchesBaskets.length).map((r) => ({ basket: r.name, baskets: r.touchesBaskets }))
     }
@@ -58,11 +62,11 @@ const observe = step('observe the basket invariants', (env, s) => {
 });
 
 const holds = judged('robustBase', {
-  judge: (s) => { const f = s.findings; return { matches: f.sizeConstant && f.duplicates.length === 0 && !f.overBadgeCount, findings: f }; }
+  judge: (s) => { const f = s.findings; return { matches: f.sizeConstant && f.duplicates.length === 0 && f.overBadgeCount !== true, findings: f }; }
 });
 
 const frames = framed((s) => [{
-  title: `basket invariants: ${s.findings.baskets} baskets for ${s.findings.badges} badges (S4 recovers ${s.findings.deficit}); robust base ${s.judged.robustBase.matches ? 'holds' : 'BREAKS'}`,
+  title: `basket invariants (${s.findings.view} view): ${s.findings.baskets} baskets for ${s.findings.badges} badges${s.findings.deficit == null ? '' : ` (S4 recovers ${s.findings.deficit})`}; robust base ${s.judged.robustBase.matches ? 'holds' : 'BREAKS'}`,
   calculation: 'Basket.findPx', tick: ID,
   parts: [
     { address: `${PART}#invariants`, kind: 'bbox', data: { boxes: s.rows.map((r) => [...r.bbox, `${r.name}${r.sizeMatches ? '' : ' off-size'}${r.touchesBadges.length ? ' touches ' + r.touchesBadges.join('/') : ''}`]) } },

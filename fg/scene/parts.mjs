@@ -2,14 +2,18 @@
  * Scene Parts with structure (Sam, 2026-10-17: "give each thing Structure which is hopefully Legible").
  * Every rendered element is a Part with geometry, so occlusion is accounted for by name, opaque or translucent:
  *
- *   C1S       solid ring, centre = its basket's BasketPoint, radius R1, stroke w1 (translucent, colour ~(166,171,180))
- *   C2D       dashed ring, centre = BasketPoint, radius R2 = 2 x R1 (measured 1.95-2.01), stroke w2; dash phase not modelled
- *             yet, so coverage is the whole annulus (conservative)
+ *   C1S       solid ring, centre = its basket's BasketPoint, radius R1 (LOCAL: the image's map scale, 10 m), stroke w1
+ *             (GLOBAL, screen px 2.75-3.5) (translucent, colour ~(166,171,180))
+ *   C2D       dashed ring, centre = BasketPoint, radius R2 = 2 x R1 (GLOBAL ratio, measured 1.95-2.01), stroke w2; dash
+ *             period LOCAL (21.5-33.5 px; ~10 or ~21 dashes per circle by scale regime); dash phase not modelled yet, so
+ *             coverage is the whole annulus (conservative)
  *   HolePath  the hallway: TeeBadgeSegment (tee front stroke -> past the badge, always straight: the badge precedes the
- *             first bend) + Badge -> [Bend]* -> BasketPoint; width W per course, round caps (translucent tint)
+ *             first bend) + Badge -> [Bend]* -> BasketPoint; width W LOCAL per image (31-52 px; learn it from the image's
+ *             own tee->badge segments), round caps (translucent tint)
+ * Scopes: fg/scene/invariants.mjs and docs/evidence/ledger/ (GLOBAL = holds on full courses AND zoomed views).
  *   Badge / Basket / Tee sprites are opaque and keep their S1-S3 pixel sets.
  *
- * Course ring structure lives in baselines/scene/<course>.rings.json (measured, with units).
+ * Ring structure per image lives in baselines/scene/<course>.rings.json (measured, with units).
  */
 const segDist = (p, a, b) => {
   const dx = b[0] - a[0], dy = b[1] - a[1], L2 = dx * dx + dy * dy || 1e-9;
