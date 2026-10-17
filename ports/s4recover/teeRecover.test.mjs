@@ -97,8 +97,19 @@ for (const badgeRay of [true, false]) {
     assert.ok(t.evidence.occludedBy.basket > 0, 'occluded px are counted per occluder');
     // ownership: the recovered pad's px are now owned
     assert.ok(ctx.owned.some((v) => v === OCC.recoveredTee));
-    // the judge: a Sam point at the true center lands it on hole 4
-    const j = judgeRecovered(g.recovered, [{ hole: 4, canonical: [target.cx, target.cy] }], ctx.tees);
+    // the judge: Sam marks an occluded pad at the centroid of its VISIBLE hole
+    // (interior px not under the opaque basket); that point lands it on hole 4,
+    // and the recovered visibleCenter reproduces it within 1 px
+    const [bx, by, bw, bh] = [284, 136, 28, 40];
+    let sx = 0, sy = 0, n = 0;
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      if (x >= bx && x < bx + bw && y >= by && y < by + bh) continue;
+      const dx = x - target.cx, dy = y - target.cy, c = Math.cos(target.th), s = Math.sin(target.th);
+      if (padClass(dx * c + dy * s, -dx * s + dy * c) === 'interior') { sx += x + 0.5; sy += y + 0.5; n++; }
+    }
+    const samPoint = [sx / n, sy / n];
+    assert.ok(Math.hypot(t.visibleCenter[0] - samPoint[0], t.visibleCenter[1] - samPoint[1]) <= 1, `visible-hole centroid ${t.visibleCenter} vs ${samPoint}`);
+    const j = judgeRecovered(g.recovered, [{ hole: 4, canonical: samPoint }], ctx.tees);
     assert.equal(j.totals.landsOwnHole, 1);
   });
 }

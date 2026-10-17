@@ -323,7 +323,7 @@ export function evaluatePose(ctx, cx, cy, angleRad, { collect = false } = {}) {
   const { cls, occ, owned, W, H, tpl } = ctx;
   let frameTotal = 0, interiorTotal = 0, visFrame = 0, visInterior = 0, negFrame = 0, negInterior = 0, outWhite = 0;
   const occluded = emptyOccluded();
-  const px = collect ? { visibleFrame: [], negative: [], occluded: [], pad: [] } : null;
+  const px = collect ? { visibleFrame: [], visibleInterior: [], tintInterior: [], negative: [], occluded: [], pad: [] } : null;
   forTemplatePx(tpl, cx, cy, angleRad, W, H, (i, zone) => {
     if (zone === ZONE.OUTSIDE) {
       if (i >= 0 && !owned[i] && !occ[i] && cls[i] === CLASS.WHITE) { outWhite++; if (px) px.negative.push(i); }
@@ -335,10 +335,10 @@ export function evaluatePose(ctx, cx, cy, angleRad, { collect = false } = {}) {
     const o = owned[i] || occ[i];
     if (o) { occluded[OCC_NAMES[o]]++; if (px) px.occluded.push(i); return; }
     const k = cls[i];
-    if (k === CLASS.TINT) { occluded.tint++; if (px) px.occluded.push(i); return; }
+    if (k === CLASS.TINT) { occluded.tint++; if (px) { px.occluded.push(i); if (zone !== ZONE.FRAME) px.tintInterior.push(i); } return; }
     if (zone === ZONE.FRAME) {
       if (k === CLASS.WHITE) { visFrame++; if (px) px.visibleFrame.push(i); } else { negFrame++; if (px) px.negative.push(i); }
-    } else if (k === CLASS.INTERIOR) visInterior++; else { negInterior++; if (px) px.negative.push(i); }
+    } else if (k === CLASS.INTERIOR) { visInterior++; if (px) px.visibleInterior.push(i); } else { negInterior++; if (px) px.negative.push(i); }
   });
   const positive = visFrame + visInterior, negative = negFrame + negInterior;
   const score = positive - negative - RULES.outsideWhiteWeight * outWhite;
@@ -494,9 +494,16 @@ export function greedyRecover(ctx, { badgeRay = true } = {}) {
 export function recoveredTee(ctx, bi, e, extra = {}) {
   const badge = ctx.badges[bi];
   const { px, ...rest } = e;
+  // Sam (2026-10-17): the tee is the FULL pad; its centre is `center`. His
+  // annotation of an occluded pad marks the centroid of the VISIBLE hole, so
+  // the visible-hole centroid rides along for judging against testimony. A
+  // semi-transparent C1/C2 tint does not hide the hole (the pad reads through
+  // it); only opaque sprites do, so tinted interior px count as visible.
+  const vis = [...(px?.visibleInterior ?? []), ...(px?.tintInterior ?? [])];
+  const visibleCenter = vis.length ? [r3(vis.reduce((n, i) => n + (i % ctx.W), 0) / vis.length + 0.5), r3(vis.reduce((n, i) => n + Math.floor(i / ctx.W), 0) / vis.length + 0.5)] : null;
   return {
     hole: badge.label, badgeIndex: bi,
-    center: rest.center, angleRad: rest.angleRad, angleDeg: r3(rest.angleRad * DEG),
+    center: rest.center, visibleCenter, visibleInteriorPx: vis.length, angleRad: rest.angleRad, angleDeg: r3(rest.angleRad * DEG),
     sizePx: [ctx.tpl.lengthPx, ctx.tpl.widthPx],
     corners: padCorners(ctx.tpl, rest.center, rest.angleRad),
     badgeRayResidualDeg: r3(badgeRayDeg(rest.center, rest.angleRad, badge.plateCenter)),

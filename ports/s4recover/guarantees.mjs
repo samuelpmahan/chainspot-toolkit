@@ -66,14 +66,20 @@ export const materialize = defineGuarantee({
 export function judgeRecovered(recovered, points, s3Tees, hitRadiusPx = TEE_RECOVER_SLOT.hitRadiusPx) {
   const near = (c) => points.map((p) => ({ hole: p.hole, distancePx: Math.hypot(p.canonical[0] - c[0], p.canonical[1] - c[1]) })).sort((a, b) => a.distancePx - b.distancePx)[0] ?? null;
   const s3Holes = new Set(points.filter((p) => s3Tees.some((t) => Math.hypot(t.center[0] - p.canonical[0], t.center[1] - p.canonical[1]) <= hitRadiusPx)).map((p) => p.hole));
+  // Sam's tee points are the centroid of the VISIBLE hole (golden 12: 4.4 px
+  // toward the visible side of an occluded pad). Testimony is therefore judged
+  // against the recovered visible-interior centroid when the implementation
+  // reports one; the full-pad-centre error is reported beside it.
   const verdicts = recovered.map((t, index) => {
-    const n = near(t.center);
+    const at = t.visibleCenter ?? t.center;
+    const n = near(at);
     const lands = Boolean(n && n.distancePx <= hitRadiusPx);
     const own = points.find((p) => String(p.hole) === String(t.hole));
     return {
-      index, hole: t.hole, center: t.center,
+      index, hole: t.hole, center: t.center, visibleCenter: t.visibleCenter ?? null,
       nearestHole: n?.hole ?? null, nearestDistancePx: n ? r3(n.distancePx) : null,
-      ownHoleErrorPx: own ? r3(Math.hypot(own.canonical[0] - t.center[0], own.canonical[1] - t.center[1])) : null,
+      ownHoleErrorPx: own ? r3(Math.hypot(own.canonical[0] - at[0], own.canonical[1] - at[1])) : null,
+      padCentreErrorPx: own ? r3(Math.hypot(own.canonical[0] - t.center[0], own.canonical[1] - t.center[1])) : null,
       verdict: lands ? (String(n.hole) === String(t.hole) ? 'lands-own-hole' : 'lands-other-hole') : 'impostor',
       onS3Hole: lands ? s3Holes.has(n.hole) : false
     };
