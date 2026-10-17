@@ -105,7 +105,7 @@ for (const badgeRay of [true, false]) {
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
       if (x >= bx && x < bx + bw && y >= by && y < by + bh) continue;
       const dx = x - target.cx, dy = y - target.cy, c = Math.cos(target.th), s = Math.sin(target.th);
-      if (padClass(dx * c + dy * s, -dx * s + dy * c) === 'interior') { sx += x + 0.5; sy += y + 0.5; n++; }
+      if (padClass(dx * c + dy * s, -dx * s + dy * c) === 'interior') { sx += x; sy += y; n++; }
     }
     const samPoint = [sx / n, sy / n];
     assert.ok(Math.hypot(t.visibleCenter[0] - samPoint[0], t.visibleCenter[1] - samPoint[1]) <= 1, `visible-hole centroid ${t.visibleCenter} vs ${samPoint}`);

@@ -500,7 +500,9 @@ export function recoveredTee(ctx, bi, e, extra = {}) {
   // semi-transparent C1/C2 tint does not hide the hole (the pad reads through
   // it); only opaque sprites do, so tinted interior px count as visible.
   const vis = [...(px?.visibleInterior ?? []), ...(px?.tintInterior ?? [])];
-  const visibleCenter = vis.length ? [r3(vis.reduce((n, i) => n + (i % ctx.W), 0) / vis.length + 0.5), r3(vis.reduce((n, i) => n + Math.floor(i / ctx.W), 0) / vis.length + 0.5)] : null;
+  // Pixel-index convention (pixel i's centre is at i), as S3 ring centres and
+  // Sam's tee points use (median offset 0.00 / -0.07 px on golden).
+  const visibleCenter = vis.length ? [r3(vis.reduce((n, i) => n + (i % ctx.W), 0) / vis.length), r3(vis.reduce((n, i) => n + Math.floor(i / ctx.W), 0) / vis.length)] : null;
   return {
     hole: badge.label, badgeIndex: bi,
     center: rest.center, visibleCenter, visibleInteriorPx: vis.length, angleRad: rest.angleRad, angleDeg: r3(rest.angleRad * DEG),
