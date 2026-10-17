@@ -37,7 +37,7 @@ BasketPoint = basket sprite tip (bbox x + 22.5, bbox y + 71) + (+0.34, +0.73) px
 | Golden | 16/18 (lost: 6, 18) | 16/16 | 8 matched, median 3.48 px, max 9.53 px | 14/18 |
 | Lenard | 16/18 (lost: 9, 12) | 16/16 | none annotated | 15/18 |
 | Townelake | 16/18 (lost: 11, 16) | 16/16 | hole 7: 1.13 px | 14/18 |
-| Alex | 14/18 (lost: 4, 7, 18 = the three baskets S2 missed; 10) | 3/3 | 16: 0.8 px; 13: 1.2 px; 6: 5.7 px | 17/18 |
+| Alex | 14/18 (lost: 4, 7, 18 = the three baskets S2 missed; 10) | 3/3 | 16: 1.72 px; 13: 0.67 px; 6: 8.15 px (Sam's first kink 143.9 px, see failures) | 17/18 |
 | Heritage | 7/18 | 3/7 (wrong basket: 1, 9, 14, 17) | mostly unmatched | 11/18 |
 
 Tee-seeded vs badge-only, on holes with a visible tee: Alex 11/12 and Golden 11/12 agree on end and bend count. Their bend vertices agree within 0.22–2.33 px.
