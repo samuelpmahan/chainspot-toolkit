@@ -54,7 +54,7 @@ function findTestimony(forkRoot, sourceSha256) {
   return found[0];
 }
 
-export async function runTeeFamilyForkJoin({ forkRoot, outDir, snapshot, restorePxC, dist, cropReceipt, sourceSha256 }) {
+export async function runTeeFamilyForkJoin({ forkRoot, outDir, snapshot, restorePxC, dist, cropReceipt, sourceSha256, background = null }) {
   const { registry, report } = await loadRegistry({ root: join(forkRoot, 'fg'), stagesDir: join(forkRoot, 'stages') });
   const missing = FGS.filter((id) => report.declaredUnimplemented.includes(id) || !registry.ids.includes(id) || report.implementedUndeclared.includes(id));
   if (missing.length) throw new Error(`${TEE_FAMILY_SLOT.lane}: FunctionalGuarantees not both declared in stages/s3.json and implemented under fg/: ${missing.join(', ')}`);
@@ -94,7 +94,7 @@ export async function runTeeFamilyForkJoin({ forkRoot, outDir, snapshot, restore
   const records = Object.fromEntries(Object.entries(result.branches).map(([n, b]) => [n, { error: b.error, records: b.records }]));
   writeFileSync(join(sidecarDir, `${SIDECAR}.records.json`), canonicalJson({ schema: 'nctk-fg-forkjoin-records@1', slot: result.slot, guarantees: FGS, branches: records, comparison: { address: result.comparison.address, sha256: result.comparison.sha256 } }) + '\n');
   writeFileSync(join(sidecarDir, `${SIDECAR}.frames.json`), framesJson(frames) + '\n');
-  writeFileSync(join(sidecarDir, `${SIDECAR}.flipbook.html`), renderFlipbook(frames, { title: `S3 ${TEE_FAMILY_SLOT.slot} fork-join: ${result.comparison.implementations.join(' vs ')}` }));
+  writeFileSync(join(sidecarDir, `${SIDECAR}.flipbook.html`), renderFlipbook(frames, { title: `S3 ${TEE_FAMILY_SLOT.slot} fork-join: ${result.comparison.implementations.join(' vs ')}`, background }));
   writeFileSync(join(sidecarDir, `${SIDECAR}.timings.json`), JSON.stringify({ restoreMs: restores }, null, 2) + '\n');
 
   const v = result.comparison.value;

@@ -142,17 +142,17 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   // <outDir>/fg/. Any failed guarantee throws and fails the run.
   const s1Materializations = {};
   const s1Branches = {};
+  // Every flipbook draws its pages over the source image itself (a data URL
+  // of the original bytes), shifted by S0's recorded crop insets into
+  // canonical coordinates; flipbooks are sidecars only, never receipt bytes.
+  const sourceCrop = captured.S0?.cropReceipt;
+  const flipbookBackground = sourceCrop?.originalPx ? {
+    src: `data:image/${sourceBytes[0] === 0x89 ? 'png' : 'jpeg'};base64,${sourceBytes.toString('base64')}`,
+    width: sourceCrop.originalPx.width, height: sourceCrop.originalPx.height, x: 0, y: -sourceCrop.upperRowsRemoved
+  } : null;
   if (lastIndex >= 1) {
-    // The flipbook draws every page over the source image itself (a data
-    // URL of the original bytes), shifted by S0's recorded crop insets into
-    // canonical coordinates; a sidecar only, never receipt bytes.
-    const crop = captured.S0?.cropReceipt;
-    const background = crop?.originalPx ? {
-      src: `data:image/${sourceBytes[0] === 0x89 ? 'png' : 'jpeg'};base64,${sourceBytes.toString('base64')}`,
-      width: crop.originalPx.width, height: crop.originalPx.height, x: 0, y: -crop.upperRowsRemoved
-    } : null;
     const s1 = await runStageGuarantees({
-      forkRoot: root, stage: 's1', board: pxc, outDir: out, background,
+      forkRoot: root, stage: 's1', board: pxc, outDir: out, background: flipbookBackground,
       lanes: experiments.map((id) => EXPERIMENT_LANES[id]).filter(Boolean),
       env: {
         dist, captured, stageSnapshots, restorePxC, sha256: hash, canonicalRgbaSha256: initialPixels,
@@ -1162,7 +1162,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     const { runTeeFamilyForkJoin } = await import('./s3ForkJoin.mjs');
     s3ForkJoinEvidence = {
       baseSnapshotSha256: hash(stageSnapshots.S3),
-      ...await runTeeFamilyForkJoin({ forkRoot: root, outDir: out, snapshot: stageSnapshots.S3, restorePxC, dist, cropReceipt: captured.S0.cropReceipt, sourceSha256 })
+      ...await runTeeFamilyForkJoin({ forkRoot: root, outDir: out, snapshot: stageSnapshots.S3, restorePxC, dist, cropReceipt: captured.S0.cropReceipt, sourceSha256, background: flipbookBackground })
     };
   }
 
