@@ -238,7 +238,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     for (let pixel = 0; pixel < framePx; pixel++) if (layerRgba[pixel * 4 + 3] !== 0) opaqueLeaving++;
     layerIntegrity.rasterRecount = { remainingEnteringPx: opaqueEntering, remainingLeavingPx: opaqueLeaving };
     layerIntegrity.rasterRecountHolds = opaqueEntering === remainingEntering && opaqueLeaving === remainingLeaving;
-    if (!layerIntegrity.rasterRecountHolds) fail(`layer raster recount (${opaqueEntering} in, ${opaqueLeaving} out) disagrees with set arithmetic (${remainingEntering} in, ${remainingLeaving} out)`);
+    if (!layerIntegrity.rasterRecountHolds) fail(`layer raster recount (${opaqueEntering} in, ${opaqueLeaving} out) disagrees with set arithmetic (${remainingEntering} in, ${remainingLeaving} out); basket px already consumed by S1: owned ${layerIntegrity.intersections.vsS1Owned}, muted ${layerIntegrity.intersections.vsS1Muted}`);
     // S1 witness agreement for the entering layer (same run, same board).
     const s1Witness = materializeS1Subtractions(captured.S1);
     layerIntegrity.s1WitnessRemainingAfterMutedPx = s1Witness.muted.remainingOpaquePx;
