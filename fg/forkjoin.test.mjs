@@ -65,23 +65,49 @@ test('discovery picks up the fixture FG dir and cross-checks declarations withou
   assert.deepEqual(drift.mismatches.map((m) => m.field), ['lane', 'requires']);
 });
 
-test('real stages/*.json declarations load; scanning fg/ skips fixtures; S1 is fully ported', async () => {
+test('real stages/*.json declarations load; scanning fg/ skips fixtures; S1-S3 are fully ported', async () => {
   const { registry, report } = await loadRegistry({ root: here, stagesDir: join(here, '..', 'stages') });
   const s1 = ['fg.s1.badgeGlyphTemplate.materialize', 'fg.s1.pxBadges.assembly', 'fg.s1.pxBadges.materialize', 'fg.s1.pxDigits.materialize'];
+  const s2 = ['fg.s2.pxBaskets.assembly', 'fg.s2.pxBaskets.materialize'];
+  const s3 = ['fg.s3.pxTees.assembly', 'fg.s3.pxTees.materialize', 'fg.s3.pxTeesFamilyFix.materialize', 'fg.s3.pxTeesRingsFamily.materialize'];
   const s3fj = ['fg.s3.teeFamily.materialize', 'fg.s3.teeFamily.precision'];
-  assert.deepEqual(registry.ids, [...s1, ...s3fj], 'the S1 FG files plus the S3 findFamily fork-join FGs, no fixtures');
-  assert.equal(report.implemented, 6);
+  const all = [...s1, ...s2, ...s3, ...s3fj];
+  assert.deepEqual(registry.ids, all, 'every S1-S3 FG file, no fixtures');
+  assert.equal(report.implemented, all.length);
   assert.deepEqual(report.implementedUndeclared, []);
-  assert.deepEqual(report.mismatches, [], 'part, lane and prose-named requires agree with stages/s1.json and stages/s3.json');
-  assert.ok(!report.declaredUnimplemented.some((id) => id.startsWith('fg.s1.') || s3fj.includes(id)));
-  assert.equal(report.declared, report.declaredUnimplemented.length + 6);
-  for (const id of s3fj) assert.equal(registry.guarantees.find((fg) => fg.id === id).lane, 's3-findfamily-forkjoin');
-  assert.ok(registry.order().indexOf('fg.s3.teeFamily.precision') > registry.order().indexOf('fg.s3.teeFamily.materialize'));
-  // the assembly runs after the two records it gates against
+  assert.deepEqual(report.declaredUnimplemented, [], 'no S1-S3 guarantee is still an inline block');
+  assert.deepEqual(report.mismatches, [], 'part (incl. multi-Part a + b), lane, site and prose-named requires agree with stages/s1-s3.json');
+  assert.equal(report.declared, all.length);
+  for (const id of s3fj) {
+    const fg = registry.guarantees.find((g) => g.id === id);
+    assert.equal(fg.lane, 's3-findfamily-forkjoin');
+    assert.equal(fg.site, 'forkjoin', 'fork-join FGs never run on the stage store');
+  }
+  for (const id of [...s1, ...s2, ...s3]) assert.equal(registry.guarantees.find((g) => g.id === id).site, 'stage');
   const order = registry.order();
-  assert.ok(order.indexOf('fg.s1.pxBadges.assembly') > order.indexOf('fg.s1.pxBadges.materialize'));
-  assert.ok(order.indexOf('fg.s1.pxBadges.assembly') > order.indexOf('fg.s1.pxDigits.materialize'));
-  assert.equal(registry.guarantees.find((fg) => fg.id === 'fg.s1.pxBadges.assembly').lane, 's1-badge-assembly');
+  assert.ok(order.indexOf('fg.s3.teeFamily.precision') > order.indexOf('fg.s3.teeFamily.materialize'));
+  // every assembly / fix runs after the records it gates against
+  for (const [later, earlier] of [
+    ['fg.s1.pxBadges.assembly', 'fg.s1.pxBadges.materialize'], ['fg.s1.pxBadges.assembly', 'fg.s1.pxDigits.materialize'],
+    ['fg.s2.pxBaskets.assembly', 'fg.s2.pxBaskets.materialize'], ['fg.s3.pxTees.assembly', 'fg.s3.pxTees.materialize'],
+    ['fg.s3.pxTeesFamilyFix.materialize', 'fg.s3.pxTees.materialize'], ['fg.s3.pxTeesFamilyFix.materialize', 'fg.s3.pxTeesRingsFamily.materialize']
+  ]) assert.ok(order.indexOf(later) > order.indexOf(earlier), `${later} after ${earlier}`);
+  const lanes = Object.fromEntries(registry.guarantees.map((g) => [g.id, g.lane]));
+  assert.equal(lanes['fg.s1.pxBadges.assembly'], 's1-badge-assembly');
+  assert.equal(lanes['fg.s2.pxBaskets.assembly'], 's2-basket-assembly');
+  assert.equal(lanes['fg.s3.pxTees.assembly'], 's3-tee-assembly');
+  assert.equal(lanes['fg.s3.pxTeesFamilyFix.materialize'], 's3-findfamily-structural-fix');
+  // cross-stage records travel as Parts, never as requires
+  assert.ok(registry.guarantees.find((g) => g.id === 'fg.s3.pxTees.materialize').reads.includes('tk.fg.s2.pxBaskets.materialize.record'));
+  for (const fg of registry.guarantees) for (const r of fg.requires) assert.equal(r.split('.')[1], fg.id.split('.')[1], `${fg.id} requires ${r} across a stage boundary`);
+});
+
+test('crossCheck: a multi-Part declaration names every guarded Part, and a site drift is reported', () => {
+  const fg = { id: 'fg.toy.multi', guards: ['px.a'], requires: [], lane: null, site: 'stage' };
+  const decl = { id: 'fg.toy.multi', part: 'px.a + px.b', appliesTo: 'every run', requires: [] };
+  assert.deepEqual(crossCheck([fg], [decl]).mismatches.map((m) => m.field), ['part']);
+  assert.deepEqual(crossCheck([{ ...fg, guards: ['px.a', 'px.b'] }], [decl]).mismatches, []);
+  assert.deepEqual(crossCheck([{ ...fg, guards: ['px.a', 'px.b'] }], [{ ...decl, site: 'forkjoin' }]).mismatches.map((m) => m.field), ['site']);
 });
 
 test('comparableForkJoin runs two discovered implementations under the same FGs and names the disagreement', async () => {

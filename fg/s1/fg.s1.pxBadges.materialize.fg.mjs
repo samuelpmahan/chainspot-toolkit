@@ -16,7 +16,7 @@
  * materializations.S1.
  */
 import { defineGuarantee } from '../guarantee.mjs';
-import { legacyArtifact, legacyPlain, prettyJsonBytes, unionOf } from './legacy.mjs';
+import { legacyArtifact, legacyPlain, prettyJsonBytes, unionOf } from '../legacy.mjs';
 
 const ID = 'fg.s1.pxBadges.materialize';
 const PART = 'px.badges';

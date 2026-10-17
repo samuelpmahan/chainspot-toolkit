@@ -18,11 +18,13 @@
  *
  * Inputs are Parts and registered Calculations only: the consumed board
  * Parts, tk.stage.S0.canonicalRgbaSha256 and tk.stage.S1.snapshotSha256;
- * branches come from fn.provider.restore.S1, the op runs through
- * fn.provider.executeCompiledPlan (auto-instrumented, site
- * s1.badgeAssembly), the plan fingerprint is fn.provider.sha256Text and
- * byte/text hashes are fn.tk.sha256. The restored branch is the value
- * fn.provider.restore.S1 returns, read directly by this FG.
+ * branches come from fn.provider.restore.S1 and the op runs through
+ * fg/branchOp.mjs (restore, one-op plan fingerprinted by
+ * fn.provider.sha256Text, fn.provider.executeCompiledPlan auto-instrumented
+ * at site s1.badgeAssembly, pixel invariance), the same mechanism the S2/S3
+ * spec-delta FGs use; byte/text hashes are fn.tk.sha256. The restored
+ * branch is the value fn.provider.restore.S1 returns, read directly by
+ * this FG.
  *
  * Ported from runEarly.mjs with a byte-identical artifact
  * (artifacts/s1assembly/px.badges.assembly.json), stage record
@@ -30,8 +32,9 @@
  * and lane branch evidence (experiments.branches.S1ASM).
  */
 import { defineGuarantee } from '../guarantee.mjs';
+import { BRANCH_CALLS, runBranchOp, tickEvidence } from '../branchOp.mjs';
 import { computeBadgeAssembly, rederiveBadgeComponents, BADGE_ASSEMBLY } from '../../ports/early/s1BadgeAssembly.mjs';
-import { legacyArtifact, legacyCanon, prettyJsonBytes } from './legacy.mjs';
+import { legacyArtifact, legacyCanon, prettyJsonBytes } from '../legacy.mjs';
 
 const ID = 'fg.s1.pxBadges.assembly';
 const MATERIALIZE = 'fg.s1.pxBadges.materialize';
@@ -41,17 +44,14 @@ const CONSUMES = ['px.badges', 'badges', 'px.components'];
 const CANONICAL = 'tk.stage.S0.canonicalRgbaSha256';
 const SNAPSHOT_SHA = 'tk.stage.S1.snapshotSha256';
 const RESTORE = 'fn.provider.restore.S1';
-const EXECUTE = 'fn.provider.executeCompiledPlan';
-const SHA_TEXT = 'fn.provider.sha256Text';
 const SHA = 'fn.tk.sha256';
-const imageAddress = 'px.image.cropped'; // ComponentPxC.image
 const samePx = (a, b) => legacyCanon([...a].sort((x, y) => x - y)) === legacyCanon([...b].sort((x, y) => x - y));
 
 export default defineGuarantee({
   id: ID,
   guards: [BADGE_ASSEMBLY.part],
   reads: [...CONSUMES, CANONICAL, SNAPSHOT_SHA],
-  calls: [RESTORE, EXECUTE, SHA_TEXT, SHA],
+  calls: [RESTORE, ...BRANCH_CALLS],
   requires: [MATERIALIZE, DIGITS],
   lane: LANE,
   run(ctx) {
@@ -66,24 +66,11 @@ export default defineGuarantee({
       note: 'Declared spec delta refine.s1.badgeAssembly.plateFirst: each Badge Part is re-assembled from its component evidence through the phase-1 assembly shape with the plate as the declared base, the white frame/ribbon and the per-digit glyph components fused onto it, and digit counters carried as digit-owned sub-structure. Branch from the S1 snapshot; base emissions unchanged.'
     };
     const runAssemblyBranch = () => {
-      const branch = ctx.call(RESTORE);
-      for (const address of asmOp.consumes)
-        if (!branch.has(address)) ctx.fail(`restored S1 branch is missing ${address}; the badge component evidence is not exposed on the S1 snapshot`);
-      const before = sha256(branch.get(imageAddress).rgba);
-      let asmPart = null;
-      const calculate = (badgesIn, readsIn, fieldsIn) => {
-        asmPart = computeBadgeAssembly({ badges: badgesIn, reads: readsIn, fields: fieldsIn });
-        return asmPart;
-      };
-      const plan = { ops: [asmOp], bindings: {}, planFingerprint: ctx.call(SHA_TEXT, { text: JSON.stringify(asmOp) }) };
-      const runtime = {
-        implementations: new Map([[asmOp.id, (board) => { const part = calculate(...asmOp.consumes.map((address) => board.get(address))); board.set(BADGE_ASSEMBLY.part, part); }]]),
-        calculationBindings: new Map([[asmOp.id, [{ address: BADGE_ASSEMBLY.assemblyCalculation, calculate }]]])
-      };
-      const ticks = ctx.call(EXECUTE, { site: 's1.badgeAssembly', plan, board: branch, runtime });
-      const after = sha256(branch.get(imageAddress).rgba);
-      if (before !== after || before !== canonicalRgbaSha256) ctx.fail('badge assembly branch mutated canonical pixels');
-      return { branch, ticks, asmPart, after };
+      const { branch, ticks, result, after } = runBranchOp(ctx, {
+        restore: RESTORE, op: asmOp, site: 's1.badgeAssembly', canonicalRgbaSha256,
+        calculate: (badges, reads, fields) => computeBadgeAssembly({ badges, reads, fields })
+      });
+      return { branch, ticks, asmPart: result, after };
     };
     const branchA = runAssemblyBranch();
     const assemblyPart = branchA.branch.get(BADGE_ASSEMBLY.part);
@@ -219,7 +206,7 @@ export default defineGuarantee({
       totals: assemblyPart.totals,
       reproduction: { exactBadges, ofBadges: reproduction.length },
       canonicalRgbaSha256Off: canonicalRgbaSha256, canonicalRgbaSha256On: branchA.after,
-      ticks: branchA.ticks.map((tk) => ({ id: tk.opId, declared: { consumes: asmOp.consumes, produces: asmOp.produces, calculations: asmOp.calculations }, actual: { consumes: tk.actualConsumes, produces: tk.actualProduces, writes: tk.writes }, frozenCalculations: tk.frozenCalculations }))
+      ticks: tickEvidence(asmOp, branchA.ticks)
     });
     return { totals: assemblyPart.totals, badgeCount: assemblyPart.totals.badgeCount, specDelta: BADGE_ASSEMBLY.specDelta, exactBadges };
   }

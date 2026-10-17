@@ -2,10 +2,12 @@
  * FunctionalGuarantee registry: automatic wiring (browser-safe).
  *
  * Sam's direction: "make wiring automatic so we can impl as needed and
- * compare". Today each FG is a hand-placed block in runEarly.mjs and its
- * dependencies are implicit (fg.s1.pxBadges.assembly reaches for the
- * s1Materialization and s1DigitsMaterialization locals and fails if they
- * are null). Here an FG declares `requires`, and the registry does the
+ * compare". Each FG used to be a hand-placed block in runEarly.mjs whose
+ * dependencies were implicit (fg.s1.pxBadges.assembly reached for the
+ * s1Materialization and s1DigitsMaterialization locals and failed if they
+ * were null). Within a stage, `requires` + ctx.records is the dependency;
+ * across stages a record travels as the Part tk.<id>.record (written by
+ * ports/early/stageGuarantees.mjs), never as a requires. Here an FG declares `requires`, and the registry does the
  * rest:
  *
  *   orderGuarantees(fgs, only?)  topological order by requires, ties broken
@@ -33,9 +35,11 @@
  *   crossCheck(fgs, declarations) -> report (never throws). declarations
  *       are the stages/*.json "guarantees" entries (fg/discover.mjs loads
  *       them). It reports declared-but-unimplemented, implemented-but-
- *       undeclared, and per-FG mismatches: the declared `part` not among
- *       the FG's guards; the lane parsed from appliesTo ("with lane X ON")
- *       differing from the FG's lane; and fg.* ids the declaration's prose
+ *       undeclared, and per-FG mismatches: a Part the declared `part`
+ *       names ('px.tees.rings + px.tees.family' names two) not among the
+ *       FG's guards; the lane parsed from appliesTo ("with lane X ON")
+ *       differing from the FG's lane; the declaration's site (default
+ *       'stage') differing from the FG's; and fg.* ids the declaration's prose
  *       `requires` mentions that the FG does not require (the prose is the
  *       only place those dependencies are written down today).
  */
@@ -124,6 +128,9 @@ export function declarationMentions(declaration) {
     .filter((id) => id !== declaration.id).sort();
 }
 
+/** The Part addresses a declaration's `part` names ('a + b' names two: an FG may certify several Parts). */
+export const declaredParts = (part) => String(part).split(/\s*\+\s*/).filter(Boolean);
+
 export function crossCheck(fgs, declarations) {
   const declared = new Map(declarations.map((d) => [d.id, d]));
   const implemented = new Map(fgs.map((fg) => [fg.id, fg]));
@@ -131,9 +138,11 @@ export function crossCheck(fgs, declarations) {
   for (const [id, fg] of [...implemented].sort(([a], [b]) => a.localeCompare(b))) {
     const d = declared.get(id);
     if (!d) continue;
-    if (d.part && !fg.guards.includes(d.part)) mismatches.push({ id, field: 'part', declared: d.part, implemented: fg.guards });
+    if (d.part && !declaredParts(d.part).every((part) => fg.guards.includes(part))) mismatches.push({ id, field: 'part', declared: d.part, implemented: fg.guards });
     const lane = declarationLane(d.appliesTo);
     if (lane !== fg.lane) mismatches.push({ id, field: 'lane', declared: lane, implemented: fg.lane });
+    const site = d.site ?? 'stage';
+    if (site !== (fg.site ?? 'stage')) mismatches.push({ id, field: 'site', declared: site, implemented: fg.site ?? 'stage' });
     const unrequired = declarationMentions(d).filter((m) => declared.has(m) && !fg.requires.includes(m));
     if (unrequired.length) mismatches.push({ id, field: 'requires', declared: unrequired, implemented: fg.requires });
   }

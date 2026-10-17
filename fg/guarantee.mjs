@@ -4,8 +4,9 @@
  * Sam's vocabulary: a FunctionalGuarantee (FG) wraps a sequence of
  * Calculations with its own Calculations, and it is the ONE mechanism that
  * logging, tests, metrics, contact sheets and renders all are. The S1-S3
- * FGs are declared as prose in stages/s*.json "guarantees" and enforced by
- * copy-pasted ~80-line blocks in ports/early/runEarly.mjs, each repeating
+ * FGs are declared as prose in stages/s*.json "guarantees" and were once
+ * enforced by copy-pasted ~80-line blocks in ports/early/runEarly.mjs; all
+ * of them now live under fg/s1..s3/<id>.fg.mjs. Each block repeated
  * the same skeleton: a fail() helper, serialize the guarded Part from the
  * board, re-execute an independent witness, cross-check totals (often
  * against another FG's record), write artifacts and rehash them after the
@@ -41,6 +42,10 @@
  *               runs them first and ctx.records holds exactly those.
  *     lane:     optional lane name; the FG is dormant unless that lane is
  *               enabled (the declared "with lane X ON (default OFF)").
+ *     site:     'stage' (default): run once per stage on the run's store by
+ *               the stage runner; 'forkjoin': run once per branch by a
+ *               comparableForkJoin (fg/forkjoin.mjs), never by the stage
+ *               runner. The stage declaration names the same site.
  *     run(ctx): returns { totals, ...extra }; extra keys land on the record.
  *   (`env` was removed; passing it is a definition error naming the fix.)
  *
@@ -116,7 +121,9 @@ class Abort extends Error {}
 
 const nameList = (list) => Array.isArray(list) && list.every((a) => typeof a === 'string' && a);
 
-export function defineGuarantee({ id, guards, reads = guards, calls = [], requires = [], lane = null, run, ...rest }) {
+export const GUARANTEE_SITES = Object.freeze(['stage', 'forkjoin']);
+
+export function defineGuarantee({ id, guards, reads = guards, calls = [], requires = [], lane = null, site = 'stage', run, ...rest }) {
   if (typeof id !== 'string' || !ID.test(id)) throw new Error(`defineGuarantee: id ${JSON.stringify(id)} is not an fg.* id`);
   if ('env' in rest)
     throw new Error(`defineGuarantee ${id}: env was removed; declare data as Parts in reads and capabilities as registered fn.* Calculations in calls`);
@@ -130,8 +137,9 @@ export function defineGuarantee({ id, guards, reads = guards, calls = [], requir
     throw new Error(`defineGuarantee ${id}: requires must be a list of fg.* ids`);
   if (requires.includes(id)) throw new Error(`defineGuarantee ${id}: requires itself`);
   if (lane !== null && (typeof lane !== 'string' || !lane)) throw new Error(`defineGuarantee ${id}: lane must be a lane name or null`);
+  if (!GUARANTEE_SITES.includes(site)) throw new Error(`defineGuarantee ${id}: site must be one of ${GUARANTEE_SITES.join(', ')}`);
   if (typeof run !== 'function') throw new Error(`defineGuarantee ${id}: run(ctx) is required`);
-  return Object.freeze({ [GUARANTEE]: true, id, guards: [...guards], reads: [...reads], calls: [...calls], requires: [...requires], lane, run });
+  return Object.freeze({ [GUARANTEE]: true, id, guards: [...guards], reads: [...reads], calls: [...calls], requires: [...requires], lane, site, run });
 }
 
 export const isGuarantee = (value) => Boolean(value && value[GUARANTEE]);

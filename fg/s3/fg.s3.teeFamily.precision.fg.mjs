@@ -41,6 +41,7 @@ export default defineGuarantee({
   reads: [PART, 'px.image.cropped', ANNOTATION, TEE_POINTS, 'tk.source.cropReceipt', 'tk.source.sha256'],
   requires: [TEE_FAMILY_SLOT.materialize],
   lane: TEE_FAMILY_SLOT.lane,
+  site: 'forkjoin',
   run(ctx) {
     const testimony = ctx.get(ANNOTATION);
     const cropReceipt = ctx.get('tk.source.cropReceipt');

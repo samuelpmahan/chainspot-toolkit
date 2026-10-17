@@ -19,6 +19,12 @@
  * id tie-breaks), because the receipt objects' key order is part of the
  * receipt bytes. attachPublished puts each value where its address says.
  *
+ * Only FGs whose site is 'stage' run here; a site 'forkjoin' FG is declared
+ * in the same stages/*.json but runs once per branch inside its fork-join
+ * runner (ports/early/s3ForkJoin.mjs). Each held record is then written to
+ * the store as the Part tk.<id>.record (producer fn.<id>, inParts the FG's
+ * reads), which is how a later stage's FG reads an earlier stage's record.
+ *
  * Every FG reads its declared Parts from, and calls its declared
  * Calculations through, the run's PartStore (ports/early/earlyStore.mjs);
  * nothing is passed beside it. The flipbook reads its background the same
@@ -39,11 +45,15 @@ import { canonicalJson } from '../../fg/canon.mjs';
 export async function runStageGuarantees({ forkRoot, stage, store, outDir, lanes = [] }) {
   const { registry, declarations, report } = await loadRegistry({ root: join(forkRoot, 'fg'), stagesDir: join(forkRoot, 'stages') });
   const declared = declarations.filter((d) => d.stage === stage);
-  const ids = declared.map((d) => d.id);
-  const missing = report.declaredUnimplemented.filter((id) => ids.includes(id));
+  const declaredIds = declared.map((d) => d.id);
+  const missing = report.declaredUnimplemented.filter((id) => declaredIds.includes(id));
   if (missing.length) throw new Error(`${stage} declares FunctionalGuarantees with no fg/**/<id>.fg.mjs implementation: ${missing.join(', ')}`);
-  const drift = report.mismatches.filter((m) => ids.includes(m.id));
+  const drift = report.mismatches.filter((m) => declaredIds.includes(m.id));
   if (drift.length) throw new Error(`${stage} FunctionalGuarantee implementations drift from stages/${stage}.json: ${JSON.stringify(drift)}`);
+  // Only site 'stage' FGs run here, on the run's store; site 'forkjoin' FGs
+  // (fg.s3.teeFamily.*) run once per branch inside their fork-join runner.
+  const byId = new Map(registry.guarantees.map((fg) => [fg.id, fg]));
+  const ids = declaredIds.filter((id) => byId.get(id).site === 'stage');
 
   const sink = createFileSink(join(outDir, 'artifacts'), { relativeTo: outDir });
   const sidecarDir = join(outDir, 'fg');
@@ -68,6 +78,22 @@ export async function runStageGuarantees({ forkRoot, stage, store, outDir, lanes
     throw error;
   }
   writeSidecars(run);
+  // Every held record becomes a Part, tk.<id>.record, produced by the
+  // Calculation fn.<id> (the FG itself) whose inParts are the FG's declared
+  // reads: how a LATER stage's FG gates against this stage's record (S3's
+  // stack ledger reads tk.fg.s2.pxBaskets.materialize.record). Within a
+  // stage, requires + ctx.records stays the mechanism.
+  for (const id of ids) {
+    const record = run.records[id];
+    if (record?.status !== 'held') continue;
+    const fn = `fn.${id}`;
+    store.register(fn, {
+      inParts: byId.get(id).reads, outParts: [`tk.${id}.record`], lazy: false,
+      note: `the FunctionalGuarantee ${id} (stages/${stage}.json), as the Calculation that produced its record`,
+      calculate: () => ({ [`tk.${id}.record`]: record })
+    });
+    store.call(fn, undefined, { caller: `stageGuarantees.${stage}` });
+  }
   const published = ids.flatMap((id) => Object.entries(run.outputs[id] ?? {}));
   return { records: run.records, published };
 }

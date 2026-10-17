@@ -22,7 +22,7 @@
  * (stages[S1].glyphTemplateMaterialization, materializations.S1BadgeGlyphTemplate).
  */
 import { defineGuarantee } from '../guarantee.mjs';
-import { legacyArtifact, legacyPlain, prettyJsonBytes } from './legacy.mjs';
+import { legacyArtifact, legacyPlain, prettyJsonBytes } from '../legacy.mjs';
 
 const ID = 'fg.s1.badgeGlyphTemplate.materialize';
 const PART = 'badgeGlyphTemplate';

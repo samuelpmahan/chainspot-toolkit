@@ -22,6 +22,7 @@ export default defineGuarantee({
   guards: [PART],
   reads: [PART, 'px.tees.rings'],
   lane: TEE_FAMILY_SLOT.lane,
+  site: 'forkjoin',
   run(ctx) {
     const value = ctx.get(PART);
     if (!value || !Array.isArray(value.members)) ctx.fail(`${PART} is not { implementation, members: [...] }`);
