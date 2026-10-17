@@ -50,11 +50,11 @@ async function worker() {
     until:`S${earlyLast}`,experiments:request.lanes.filter(name=>({
       's0-chrome-conservatism':'S0','s1-badge-cardinality-audit':'S1',
       's2-shell-ownership-audit':'S2','fill-consistent-tee-selection':'S3',
-      's3-findfamily-structural-fix':'S3FIX','s1-badge-assembly':'S1ASM','s2-basket-assembly':'S2ASM','s3-tee-assembly':'S3ASM'
+      's3-findfamily-structural-fix':'S3FIX','s1-badge-assembly':'S1ASM','s2-basket-assembly':'S2ASM','s3-tee-assembly':'S3ASM','s3-findfamily-forkjoin':'S3FJ'
     })[name]).map(name=>({
       's0-chrome-conservatism':'S0','s1-badge-cardinality-audit':'S1',
       's2-shell-ownership-audit':'S2','fill-consistent-tee-selection':'S3',
-      's3-findfamily-structural-fix':'S3FIX','s1-badge-assembly':'S1ASM','s2-basket-assembly':'S2ASM','s3-tee-assembly':'S3ASM'
+      's3-findfamily-structural-fix':'S3FIX','s1-badge-assembly':'S1ASM','s2-basket-assembly':'S2ASM','s3-tee-assembly':'S3ASM','s3-findfamily-forkjoin':'S3FJ'
     })[name])});
   let late=null,s7=null;
   if(request.until>=4) {
@@ -93,6 +93,7 @@ async function worker() {
     ...(early.experiments?.branches?.S2ASM?{basketAssembly:early.experiments.branches.S2ASM}:{}),
     ...(s.teeAssemblyMaterialization?{teeAssemblyMaterialization:s.teeAssemblyMaterialization}:{}),
     ...(early.experiments?.branches?.S3ASM?{teeAssembly:early.experiments.branches.S3ASM}:{}),
+    ...(s.id==='S3'&&early.experiments?.branches?.S3FJ?{familyForkJoin:early.experiments.branches.S3FJ}:{}),
     canonicalRgbaSha256:s.canonicalRgbaSha256,
     inputSnapshotSha256:s.inputSnapshotSha256??null,outputSnapshotSha256:s.outputSnapshotSha256??null,
     summary:s.id==='S0'?early.crop??null:s.id==='S1'?{badges:early.counts?.badges??null}:

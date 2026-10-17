@@ -20,7 +20,10 @@
  *   ledger  data { rows: [{...}] } or [{...}]           table
  *   scalar  data { value, unit? } or a bare value        value
  *   raster  ref only (artifact uri) or data { width, height }: listed; the
- *           pixels come from the optional `raster` background
+ *           pixels come from the optional `raster` background. data
+ *           { width, height, png } (base64 PNG, e.g. fg/png.mjs cropWindow)
+ *           renders inline as an <img>, scaled 3x pixelated: the contact-sheet
+ *           path for small crops, one per page
  * pxset/bbox/points share one canvas per page, drawn over the optional
  * background raster { width, height, rgba } (embedded as base64), one
  * colour per part in part order with a legend. The canvas extent is the
@@ -69,6 +72,12 @@ function ledgerHtml(data) {
     rows.map((r) => `<tr>${cols.map((c) => `<td>${cell(r[c])}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
 }
 
+function imageHtml(data) {
+  if (!data || typeof data.png !== 'string' || !/^[A-Za-z0-9+/=]+$/.test(data.png)) return '';
+  const w = Number(data.width) || 0, h = Number(data.height) || 0;
+  return `<img class="crop" alt="" width="${w}" height="${h}" style="width:${w * 3}px;height:${h * 3}px" src="data:image/png;base64,${data.png}">`;
+}
+
 function scalarHtml(data) {
   const value = data !== null && typeof data === 'object' && 'value' in data ? data.value : data;
   const unit = data !== null && typeof data === 'object' && data.unit ? ` ${esc(data.unit)}` : '';
@@ -84,7 +93,7 @@ function pageHtml(frame, index, total, raster) {
   ].filter(([, v]) => v !== null && v !== undefined).map(([k, v]) => `<span><b>${k}</b> ${esc(v)}</span>`).join(' ');
   const legend = drawn.map((p) => `<li><i style="background:${PALETTE[frame.parts.indexOf(p) % PALETTE.length]}"></i>${esc(p.address)} <small>${p.kind}</small></li>`).join('');
   const others = frame.parts.filter((p) => !DRAWN.has(p.kind) || !p.data).map((p) => {
-    const body = p.kind === 'ledger' ? ledgerHtml(p.data) : p.kind === 'scalar' ? scalarHtml(p.data) : '';
+    const body = p.kind === 'ledger' ? ledgerHtml(p.data) : p.kind === 'scalar' ? scalarHtml(p.data) : p.kind === 'raster' ? imageHtml(p.data) : '';
     return `<div class="part"><h3>${esc(p.address)} <small>${p.kind}${p.ref ? ` · ${esc(p.ref)}` : ''}</small></h3>${body}</div>`;
   }).join('');
   const verdicts = (frame.verdicts ?? []).map((v) => {
@@ -121,7 +130,7 @@ canvas{max-width:100%;image-rendering:pixelated;border:1px solid var(--line);bac
 .legend{list-style:none;padding:0;margin:0}.legend i{display:inline-block;width:12px;height:12px;margin-right:6px;vertical-align:middle}
 table{border-collapse:collapse;font-variant-numeric:tabular-nums;display:block;overflow-x:auto}td,th{border:1px solid var(--line);padding:2px 8px;text-align:left}
 .scalar{font-size:24px;font-variant-numeric:tabular-nums}.ok::marker{content:"\\2713  ";color:var(--ok)}.bad::marker{content:"\\2717  ";color:var(--bad)}.bad{color:var(--bad)}
-pre{overflow-x:auto;font-size:12px}
+pre{overflow-x:auto;font-size:12px}${frames.some((f) => f.parts.some((p) => p.kind === 'raster' && typeof p.data?.png === 'string')) ? 'img.crop{image-rendering:pixelated;max-width:100%;border:1px solid var(--line)}' : ''}
 </style></head><body>
 <nav><button id="prev" type="button">&larr; prev</button><input id="slider" type="range" min="0" max="${Math.max(0, frames.length - 1)}" value="0"><button id="next" type="button">next &rarr;</button><span id="where"></span></nav>
 <main>

@@ -20,7 +20,7 @@ import { runStageGuarantees, attachPublished } from './stageGuarantees.mjs';
 const EXPERIMENT_LANES = {
   S0: 's0-chrome-conservatism', S1: 's1-badge-cardinality-audit', S2: 's2-shell-ownership-audit',
   S3: 'fill-consistent-tee-selection', S3FIX: 's3-findfamily-structural-fix', S1ASM: 's1-badge-assembly',
-  S2ASM: 's2-basket-assembly', S3ASM: 's3-tee-assembly'
+  S2ASM: 's2-basket-assembly', S3ASM: 's3-tee-assembly', S3FJ: 's3-findfamily-forkjoin'
 };
 const hash = (value) => createHash('sha256').update(value).digest('hex');
 const json = (value) => JSON.stringify(value, null, 2);
@@ -1142,6 +1142,22 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     };
   }
 
+  // --- ComparableForkJoin over fn.Tee.findFamily (lane s3-findfamily-forkjoin,
+  // default OFF). Each implementation under impl/fn.Tee.findFamily/ runs on
+  // its own board restored from the S3 snapshot under the same FGs
+  // (fg/s3/fg.s3.teeFamily.*.fg.mjs); the branches are joined by geometric
+  // identity (contracts/tee.pose@1) and judged against Sam's annotation
+  // testimony. With the lane off the module is never imported and nothing
+  // below touches the receipt, so lane-off receipts stay byte-identical.
+  let s3ForkJoinEvidence = null;
+  if (lastIndex >= 3 && experiments.includes('S3FJ')) {
+    const { runTeeFamilyForkJoin } = await import('./s3ForkJoin.mjs');
+    s3ForkJoinEvidence = {
+      baseSnapshotSha256: hash(stageSnapshots.S3),
+      ...await runTeeFamilyForkJoin({ forkRoot: root, outDir: out, snapshot: stageSnapshots.S3, restorePxC, dist, cropReceipt: captured.S0.cropReceipt, sourceSha256 })
+    };
+  }
+
   if (hash(readFileSync(source)) !== sourceSha256) throw new Error('Source image bytes changed during replay');
 
   const addresses = [...new Set([
@@ -1168,7 +1184,8 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     ...(experiments.includes('S2ASM') ? { S2ASM: { id: 's2-basket-assembly', default: 'OFF', status: 'AVAILABLE_OFF', declaration: 'stages/s2.json refinements: refine.s2.basketAssembly.bodyFirst', benefit: 'Every Basket Part is re-assembled body-first from its component evidence (bright body base; shell fused on; tip anchor; window-residue accounting), so the assembly structure crosses the toolkit seam as named Parts instead of a flat px array with two counts.', falsifier: 'A basket fused set differs from the accepted px.baskets set, the fused union differs from 36,362, a basket component overlap is nonzero, or a basket window residue falls outside the phase-1 band of 1,172 to 1,177 px.', reason: 'Declared spec delta on fn.Basket.findPx assembly structure, enforced in this wiring as a branch from the S2 snapshot; the pinned provider and the base board emissions are unchanged. This gate entry is recorded only when the lane runs, so lane-off receipts stay byte-identical.' } } : {}),
     S3: { id: 'fill-consistent-tee-selection', default: 'OFF', status: 'AVAILABLE_OFF', contract: 'stages/S3/exp/fill-consistent/contract' },
     S3FIX: { id: 's3-findfamily-structural-fix', default: 'OFF', status: 'AVAILABLE_OFF', declaration: 'stages/s3.json refinements: refine.s3.findFamily.structural', benefit: 'Membership in the tee family becomes a structural verdict per candidate (anchored pad model; fitted-size, border, band, interior and whiteness tests; occlusion excuses only by named prior-layer Parts), so same-scale map chrome is eliminated at S3 with named failed tests instead of surviving to S4 attrition.', falsifier: 'A genuine pad is eliminated or excused, a chrome candidate is admitted, or an admitted tee tuple differs from the pinned baseline tuple.', reason: 'Declared spec delta on fn.Tee.findFamily, enforced in this wiring as a branch from the S3 snapshot; the pinned provider and the base board emissions are unchanged.' },
-    ...(experiments.includes('S3ASM') ? { S3ASM: { id: 's3-tee-assembly', default: 'OFF', status: 'AVAILABLE_OFF', declaration: 'stages/s3.json refinements: refine.s3.teeAssembly.interiorFirst', benefit: 'Every baseline Tee Part is assembled whole from its evidence (enclosed interior base, derived from the bright mask and gated exactly against the ring record; frame fused on; ring-center anchor; window-residue accounting), so the tee owns the interior pixels its frame surrounds instead of carrying only the frame.', falsifier: 'A tee frame set differs from the accepted px.tees set, the frame union differs from 4,884, a tee interior size differs from its ring\'s recorded holeArea, or a tee component overlap is nonzero.', reason: 'Declared spec delta on fn.Tee.findPx assembly structure, enforced in this wiring as a branch from the S3 snapshot; the pinned provider and the base board emissions are unchanged. This gate entry is recorded only when the lane runs, so lane-off receipts stay byte-identical.' } } : {})
+    ...(experiments.includes('S3ASM') ? { S3ASM: { id: 's3-tee-assembly', default: 'OFF', status: 'AVAILABLE_OFF', declaration: 'stages/s3.json refinements: refine.s3.teeAssembly.interiorFirst', benefit: 'Every baseline Tee Part is assembled whole from its evidence (enclosed interior base, derived from the bright mask and gated exactly against the ring record; frame fused on; ring-center anchor; window-residue accounting), so the tee owns the interior pixels its frame surrounds instead of carrying only the frame.', falsifier: 'A tee frame set differs from the accepted px.tees set, the frame union differs from 4,884, a tee interior size differs from its ring\'s recorded holeArea, or a tee component overlap is nonzero.', reason: 'Declared spec delta on fn.Tee.findPx assembly structure, enforced in this wiring as a branch from the S3 snapshot; the pinned provider and the base board emissions are unchanged. This gate entry is recorded only when the lane runs, so lane-off receipts stay byte-identical.' } } : {}),
+    ...(experiments.includes('S3FJ') ? { S3FJ: { id: 's3-findfamily-forkjoin', default: 'OFF', status: 'AVAILABLE_OFF', declaration: 'lanes/s3/findfamily-forkjoin.json; stages/s3.json guarantees fg.s3.teeFamily.materialize, fg.s3.teeFamily.precision', benefit: 'Competing implementations of fn.Tee.findFamily (impl/fn.Tee.findFamily/*.mjs) run side by side on identical restored S3 boards under identical FunctionalGuarantees, are joined member by member by geometric identity (contracts/tee.pose@1), and each member is judged against Sam\'s annotation testimony.', falsifier: 'A branch sees different inputs, a member is not an S3 candidate, the join pairs by key instead of pose, or S0-S3 baseline emissions change.', reason: 'ComparableForkJoin on branches restored from the S3 snapshot; the pinned provider and the base board emissions are unchanged. Precision against Sam\'s testimony is reported, never accepted. This gate entry is recorded only when the lane runs, so lane-off receipts stay byte-identical.' } } : {})
   };
   const branchResults = {};
   if (experiments.some((id) => ['S0', 'S1', 'S2'].includes(id))) {
@@ -1224,6 +1241,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   Object.assign(branchResults, s1Branches);
   if (s2AssemblyBranchEvidence) branchResults.S2ASM = s2AssemblyBranchEvidence;
   if (s3AssemblyBranchEvidence) branchResults.S3ASM = s3AssemblyBranchEvidence;
+  if (s3ForkJoinEvidence) branchResults.S3FJ = s3ForkJoinEvidence;
 
   const sourceInfo = { path: source, sha256: sourceSha256, widthPx: captured.S0.fullImage.widthPx, heightPx: captured.S0.fullImage.heightPx };
   const final = pxc;

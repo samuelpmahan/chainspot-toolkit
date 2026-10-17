@@ -28,6 +28,7 @@ Every refinement defaults OFF. To test one lane, pass the same `--lanes NAME` se
 | S1 | `s1-badge-cardinality-audit` | Gateway-backed badge count/source audit; validation only |
 | S2 | `s2-shell-ownership-audit` | Gateway-backed basket shell audit; validation only |
 | S3 | `fill-consistent-tee-selection` | Existing fill-consistent tee alternative; independent side branch |
+| S3 | `s3-findfamily-forkjoin` | ComparableForkJoin of `fn.Tee.findFamily` implementations (`impl/fn.Tee.findFamily/*.mjs`) on restored S3 snapshots under the same FGs, joined by geometric identity (`contracts/tee.pose@1`) and judged for precision against Sam's annotation (`testimony/golden/`); comparison + flipbook in `stage-output/early/fg/s3.findfamily-forkjoin.*` |
 | S4 | `s4.openFrame` | Existing open-frame tee alternative over fresh S3 snapshot |
 | S4 | `s4.basketRecovery` | Fresh S3 smart-basket gateway proposal branch; S2 unchanged |
 | S4 | `s4.singletonPropagation` | Native pre-winner recovery fits from fresh S3 Parts; exact source-cell support queues lock uncontested singleton holes, then native rank evaluates reduced residual queues. Conditional geometry only; physical acceptance UNKNOWN. |
