@@ -16,6 +16,7 @@ import { test } from 'node:test';
 import { readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { assembleSprite } from './assembly.mjs';
+import { withAttempt } from '../../scripts/golden-attempt.mjs';
 
 const anchor = { value: [0, 0], derivation: 'synthetic anchor for shape tests' };
 
@@ -64,9 +65,11 @@ test('assembly accounts window residue as the px not owned', () => {
   assert.equal(part.ownership.residuePx, 3);
 });
 
-test('the 17 accepted S2 basket Parts re-assemble exactly through the shape', () => {
-  const artifactPath = resolve(import.meta.dirname,
-    '../../attempts/stages/attempt-1792188256180-f51916a6db5f/fork/stage-output/early/artifacts/s2/px.baskets.json');
+test('the 17 accepted S2 basket Parts re-assemble exactly through the shape', (t) => {
+  const file = 'stage-output/early/artifacts/s2/px.baskets.json';
+  const attempt = withAttempt(t, [file]);
+  if (!attempt) return;
+  const artifactPath = attempt.path(file);
   const artifact = JSON.parse(readFileSync(artifactPath, 'utf8'));
   assert.equal(artifact.basketCount, 17);
   assert.equal(artifact.totals.claimedPx, 36362);

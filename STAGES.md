@@ -13,6 +13,13 @@ node toolkit.mjs compare --recipe recipes/chainspot-s0-s7.json --specimen golden
 
 Use `--specimen alex` consistently in neat and subsequent commands for AlexClark-original.jpg. `--until 3` stops after S3. `--stage 5` selects S5 while executing its necessary S0→S5 prefix; combine it with a named lane whose stage is within that prefix. A changed specimen requires a new neat checkpoint. An exact repeat of run reuses only if all expected native evidence files still hash correctly. `tidy` distinguishes changed source, result freshness, process execution, and human acceptance. `compare` shows A byte inventory, B declared Stage boundary graph, and C Attempt/evidence lineage from the same request. The compiler rejects missing/ambiguous/forward Stage Part producer declarations; the pinned provider's inner Calculation catalog remains native, with actual Tick testimony in PCR.
 
+**Parallel work.** Checkpoints are immutable files `attempts/stages/checkpoints/ID.json`; `neat` prints `checkpointId` and a ready `next` command. Every later command accepts `--checkpoint ID` (full ID or unique prefix); without it the shared pointer `attempts/stages/checkpoint.json` (whatever the last `neat` wrote, possibly another agent's) is used. Either way the request's specimen, lanes and `--until` are checked against what the checkpoint was made for, and a mismatch names both and lists matching checkpoints. By default `neat` closes over the working tree, so another agent's in-progress edit makes the checkpoint stale; the refusal lists each modified/added file and the command to re-run. To pin committed state while others edit, use `neat ... --from-git HEAD` (any commit-ish): the commit is extracted once into `attempts/stages/trees/COMMIT` and that checkpoint reads and forks only from there. `run --fresh` (also `crisp --fresh`) executes a new Attempt even when a verified one would be reused. Run the tracked tests with `node scripts/test.mjs` (a bare `node --test` also collects the test copies inside `attempts/` forks); evidence-backed tests find the latest matching golden Attempt themselves and skip, naming the command, when none exists.
+
+```bash
+node toolkit.mjs neat --recipe recipes/chainspot-s0-s7.json --specimen golden --until 3 --from-git HEAD   # prints checkpointId
+node toolkit.mjs run  --recipe recipes/chainspot-s0-s7.json --specimen golden --until 3 --checkpoint ID
+```
+
 Every refinement defaults OFF. To test one lane, pass the same `--lanes NAME` selection to neat and run. The names are:
 
 | Stage | Lane | Scope |

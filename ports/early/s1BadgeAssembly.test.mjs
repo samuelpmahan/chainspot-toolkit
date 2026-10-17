@@ -23,6 +23,7 @@ import { test } from 'node:test';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { computeBadgeAssembly, rederiveBadgeComponents } from './s1BadgeAssembly.mjs';
+import { withAttempt } from '../../scripts/golden-attempt.mjs';
 
 const W = 20, H = 16;
 const idx = (x, y) => y * W + x;
@@ -110,8 +111,10 @@ test('the assembly refuses opaque badges, ambiguous plates, and ambiguous glyph 
   assert.throws(() => computeBadgeAssembly({ badges: [badge], reads: [twoDigits], fields }), /enclosed by 2 digit bboxes/);
 });
 
-test('the accepted specimen evidence decomposes plate-first for all 18 badges', () => {
-  const base = resolve(import.meta.dirname, '../../attempts/stages/attempt-1792188256180-f51916a6db5f/fork/stage-output/early/artifacts/s1');
+test('the accepted specimen evidence decomposes plate-first for all 18 badges', (t) => {
+  const attempt = withAttempt(t, ['stage-output/early/artifacts/s1/px.badges.json', 'stage-output/early/artifacts/s1/px.digits.json']);
+  if (!attempt) return;
+  const base = attempt.path('stage-output/early/artifacts/s1');
   const badgesArtifact = JSON.parse(readFileSync(resolve(base, 'px.badges.json'), 'utf8'));
   const digitsArtifact = JSON.parse(readFileSync(resolve(base, 'px.digits.json'), 'utf8'));
   assert.equal(badgesArtifact.totals.badgePx, 37002);

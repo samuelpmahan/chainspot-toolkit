@@ -18,11 +18,14 @@ export async function crisp(root, resolved, previousAttempts = []) {
   return {decision:'RUN',fingerprint,reason:'No verified successful evidence for this exact target digest'};
 }
 
-/** Cache a whole prefix only while all native receipt bytes still verify. */
-export async function crispStages(root,resolved,attempts=[]) {
+/** Cache a whole prefix only while all native receipt bytes still verify; `fresh` forces a new run. */
+export async function crispStages(root,resolved,attempts=[],options={}) {
   for(const attempt of attempts.slice().reverse()) {
     if(attempt.schema!=='nctk-stage-attempt@1'||attempt.fingerprint!==resolved.fingerprint||attempt.execution!=='PASS')continue;
-    if(await verifiedEvidence(root,attempt.evidence))return {decision:'REUSE',fingerprint:resolved.fingerprint,
+    if(!await verifiedEvidence(root,attempt.evidence))continue;
+    if(options.fresh)return {decision:'RUN',fingerprint:resolved.fingerprint,reusable:attempt.id,
+      reason:`--fresh: verified Attempt ${attempt.id} would be reused; executing a new independent run instead`};
+    return {decision:'REUSE',fingerprint:resolved.fingerprint,
       attemptId:attempt.id,reason:'Exact source, prefix, lanes, runtime closure and native evidence hashes match'};
   }
   return {decision:'RUN',fingerprint:resolved.fingerprint,reason:'No verified result for this exact recipe prefix and evidence'};

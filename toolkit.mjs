@@ -129,4 +129,4 @@ async function main() {
   if (record.execution!=='PASS') process.exitCode=1;
 }
 (argv.includes('--recipe') ? stageToolkit(root,command,argv) : main())
-  .catch(error => { console.error(error.stack??error); process.exitCode=1; });
+  .catch(error => { console.error(String(error.code).startsWith('CHECKPOINT_') ? `Error: ${error.message}` : error.stack??error); process.exitCode=1; });

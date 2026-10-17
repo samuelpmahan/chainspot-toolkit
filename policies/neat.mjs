@@ -21,6 +21,8 @@ export async function neatStages(root, options={}) {
   const checkpoint={schema:'nctk-stage-checkpoint@1',base:BASE,
     selectedPaths:[state.recipe.path,...state.stages.flatMap(s=>[s.path,s.lane.path]),state.source.path],
     request:stageRequest(state),closedPaths:state.files.map(f=>f.path),files:state.files};
+  // A git-tree checkpoint records where its bytes live; working-tree checkpoints keep their historical identity.
+  if(options.origin)checkpoint.origin=options.origin;
   checkpoint.id=sha(canonical(checkpoint));
   return checkpoint;
 }

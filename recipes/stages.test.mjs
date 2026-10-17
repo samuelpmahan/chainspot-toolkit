@@ -6,6 +6,8 @@ import { join, resolve } from 'node:path';
 import { compileStageRecipe } from './compile.mjs';
 import { stageState, stageRequest, stageFingerprint } from './closure.mjs';
 import { crispStages } from '../policies/crisp.mjs';
+import { neatStages } from '../policies/neat.mjs';
+import { kompozeStages, checkpointMismatch } from '../policies/kompoze.mjs';
 import { tidyStages } from '../policies/tidy.mjs';
 import { sha } from '../facts.mjs';
 import { compareStageModels } from './stage-models.mjs';
@@ -76,4 +78,26 @@ test('the same facts yield distinct native answers and explicit joins',()=>{
   assert.equal(result.graph.nativeAnswer.stagePrerequisites,'CLOSED');
   assert.equal(result.lineage.nativeAnswer.resultFreshness,'VERIFIED');
   assert.equal(result.lineage.nativeAnswer.humanAcceptance,'UNKNOWN');
+});
+
+test('checkpoints name their specimen/lanes; a mismatched request is refused with both; --fresh forces RUN',async()=>{
+  const lane=await neatStages(root,{selection:{until:3,lanes:['s3-findfamily-structural-fix']}});
+  const base=await stageState(root,{selection:{until:3}});
+  const alex=await stageState(root,{sourcePath:'source/provider/artifacts/replay/source/AlexClark-original.jpg',selection:{until:3,lanes:['s3-findfamily-structural-fix']}});
+  assert.deepEqual(checkpointMismatch(lane,base),['lanes']);
+  assert.deepEqual(checkpointMismatch(lane,alex),['specimen']);
+  assert.deepEqual(checkpointMismatch(lane,await stageState(root,{selection:{until:2}})),[]);
+  await assert.rejects(()=>kompozeStages(root,lane,{selection:{until:3}}),
+    e=>e.code==='CHECKPOINT_MISMATCH'&&/lanes \[s3-findfamily-structural-fix\]/.test(e.message)&&/lanes \[none\]/.test(e.message));
+  const edited={...lane,files:lane.files.map(f=>f.path==='policies/crisp.mjs'?{...f,sha256:'0'.repeat(64)}:f).filter(f=>f.path!=='policies/tidy.mjs')};
+  await assert.rejects(()=>kompozeStages(root,edited,{selection:{until:3,lanes:['s3-findfamily-structural-fix']}}),
+    e=>e.code==='CHECKPOINT_STALE'&&/modified policies\/crisp\.mjs/.test(e.message)&&/added {4}policies\/tidy\.mjs/.test(e.message));
+  const folder=await mkdtemp(join(tmpdir(),'nctk-stages-fresh-'));
+  try {
+    const bytes=Buffer.from('{}\n');await writeFile(join(folder,'r.json'),bytes);
+    const attempt={schema:'nctk-stage-attempt@1',id:'one',fingerprint:'f',execution:'PASS',evidence:[{path:'r.json',sha256:sha(bytes),size:bytes.length}]};
+    assert.equal((await crispStages(folder,{fingerprint:'f'},[attempt])).decision,'REUSE');
+    const fresh=await crispStages(folder,{fingerprint:'f'},[attempt],{fresh:true});
+    assert.equal(fresh.decision,'RUN');assert.equal(fresh.reusable,'one');
+  } finally { await rm(folder,{recursive:true,force:true}); }
 });

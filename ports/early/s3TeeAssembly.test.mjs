@@ -28,6 +28,7 @@ import { test } from 'node:test';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { computeTeeAssembly, rederiveTeeInterior } from './s3TeeAssembly.mjs';
+import { withAttempt } from '../../scripts/golden-attempt.mjs';
 
 const W = 64, H = 64;
 const idx = (x, y) => y * W + x;
@@ -107,9 +108,10 @@ test('the assembly refuses holeArea drift, opaque tees, frame drift, and unliste
   assert.throws(() => computeTeeAssembly({ tees: [shiftedRing], rings, fields }), /ring is not among the px.tees.rings candidates/);
 });
 
-test('the accepted specimen evidence supports interior-first assembly for all 18 tees', () => {
-  const base = resolve(import.meta.dirname,
-    '../../attempts/stages/attempt-1792220456308-58f6a9c973af/fork/stage-output/early/artifacts/s3');
+test('the accepted specimen evidence supports interior-first assembly for all 18 tees', (t) => {
+  const attempt = withAttempt(t, ['stage-output/early/artifacts/s3/px.tees.json', 'stage-output/early/artifacts/s3/px.tees.rings-family.json']);
+  if (!attempt) return;
+  const base = attempt.path('stage-output/early/artifacts/s3');
   const teeArtifact = JSON.parse(readFileSync(resolve(base, 'px.tees.json'), 'utf8'));
   const ringsArtifact = JSON.parse(readFileSync(resolve(base, 'px.tees.rings-family.json'), 'utf8'));
   assert.equal(teeArtifact.teeCount, 18);

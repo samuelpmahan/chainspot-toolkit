@@ -23,6 +23,7 @@ import { test } from 'node:test';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { computeBasketAssembly, rederiveBasketDecomposition } from './s2BasketAssembly.mjs';
+import { withAttempt } from '../../scripts/golden-attempt.mjs';
 
 const W = 64, H = 96;
 const idx = (x, y) => y * W + x;
@@ -98,9 +99,11 @@ test('the assembly refuses opaque baskets, count drift, and misalignment', () =>
   assert.throws(() => computeBasketAssembly({ baskets: [basket], shellFamily, fields: holedFields }), /materialized 2771 px, its declared area is 2772/);
 });
 
-test('the accepted specimen evidence decomposes body-first for all 17 baskets', () => {
-  const artifactPath = resolve(import.meta.dirname,
-    '../../attempts/stages/attempt-1792188256180-f51916a6db5f/fork/stage-output/early/artifacts/s2/px.baskets.json');
+test('the accepted specimen evidence decomposes body-first for all 17 baskets', (t) => {
+  const file = 'stage-output/early/artifacts/s2/px.baskets.json';
+  const attempt = withAttempt(t, [file]);
+  if (!attempt) return;
+  const artifactPath = attempt.path(file);
   const artifact = JSON.parse(readFileSync(artifactPath, 'utf8'));
   assert.equal(artifact.basketCount, 17);
   assert.equal(artifact.totals.claimedPx, 36362);
