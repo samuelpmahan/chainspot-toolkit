@@ -18,7 +18,11 @@ export const STAGE_SOURCES = {
   // validation/ stay out). Testimony lives under testimony/<specimen>/.
   lenard: 'specimens/dev/Lenard-full.png',
   townelake: 'specimens/dev/TowneLake-full.png',
-  heritage: 'specimens/dev/HeritagePark-full.png'
+  heritage: 'specimens/dev/HeritagePark-full.png',
+  // Unannotated dev images (no testimony): NorthPark, and Lenard's five partial captures.
+  northpark: 'specimens/dev/NorthPark-full.png',
+  lenard1: 'specimens/dev/Lenard-1.png', lenard2: 'specimens/dev/Lenard-2.png', lenard3: 'specimens/dev/Lenard-3.png',
+  lenard4: 'specimens/dev/Lenard-4.png', lenard5: 'specimens/dev/Lenard-5.png'
 };
 
 /** One literal authoring path list closes an execution; no second registration table. */
