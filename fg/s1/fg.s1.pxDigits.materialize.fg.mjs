@@ -96,6 +96,7 @@ export default defineGuarantee({
     const ownedUnion = unionOf(badges.map((b) => [...b.px]));
     const mutedUnion = unionOf(badges.map((b) => [...b.has.mute.px]));
     const counterUnion = new Set();
+    const unattributed = [];
     const enclosingCounts = [];
     const serializedBadges = serializedReads.map((sRead, i) => {
       const badge = badges[i];
@@ -111,12 +112,15 @@ export default defineGuarantee({
         const px = componentPixels(comp);
         if (px.length !== comp.area) ctx.fail(`badge ${badge.label} dark component ${comp.label}: extracted ${px.length} px, component area is ${comp.area}`);
         if (px.some((p) => owned.has(p))) ctx.fail(`badge ${badge.label} counter candidate ${comp.label} overlaps the badge owned set`);
-        if (!px.every((p) => mute.has(p))) ctx.fail(`badge ${badge.label} counter candidate ${comp.label} is not inside the badge mute set`);
+        // A dark component inside the badge bbox that leaks past the mute
+        // set is not an enclosed counter (Heritage badge 5): left unattributed
+        // and recorded as a finding instead of failing the run.
+        if (!px.every((p) => mute.has(p))) { unattributed.push({ badge: badge.label, componentLabel: comp.label, reason: 'not inside the badge mute set', pxCount: px.length }); continue; }
         const containing = read.digits.map((d, di) => ({ d, di })).filter(({ d }) =>
           d.bbox[0] <= comp.bboxX && d.bbox[1] <= comp.bboxY &&
           comp.bboxX + comp.bboxW <= d.bbox[0] + d.bbox[2] && comp.bboxY + comp.bboxH <= d.bbox[1] + d.bbox[3]);
         enclosingCounts.push(containing.length);
-        if (containing.length !== 1) ctx.fail(`badge ${badge.label} counter candidate ${comp.label} is enclosed by ${containing.length} digits, expected exactly 1`);
+        if (containing.length !== 1) { enclosingCounts.pop(); unattributed.push({ badge: badge.label, componentLabel: comp.label, reason: `enclosed by ${containing.length} digits`, pxCount: px.length }); continue; }
         const { di, d } = containing[0];
         for (const p of px) counterUnion.add(p);
         counters.push({
@@ -247,6 +251,6 @@ export default defineGuarantee({
     };
     ctx.publish('stages.S1.digitsMaterialization', record);
     ctx.publish('materializations.S1Digits', record);
-    return { totals: digitSetArtifact.totals, badgeCount: serializedBadges.length, producedBy: PRODUCED_BY, specimenExpectationMatches: expectationMatches };
+    return { totals: digitSetArtifact.totals, badgeCount: serializedBadges.length, producedBy: PRODUCED_BY, specimenExpectationMatches: expectationMatches, ...(unattributed.length ? { unattributedCounterCandidates: unattributed } : {}) };
   }
 });

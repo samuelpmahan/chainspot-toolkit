@@ -57,7 +57,12 @@ export const FAMILY_FIX = {
 // Class definitions (Pass A) and the uniform model-expansion rule (Pass B).
 export const FIX_BOUNDS = {
   marginMin: 2, marginMax: 7, marginSpreadMax: 3,
-  fillMin: 0.30, fillMax: 0.50,
+  // Band fill: frame area over the band between the oriented outer extent
+  // and the enclosed hole, major*minor - holeArea. Scale-free, because the
+  // frame stroke is constant in screen px while pads scale with the map
+  // (golden 0.82, Lenard 0.83); the old raw fill 0.30-0.50 was golden-fit
+  // and found no anchors on Lenard's smaller pads.
+  bandFillMin: 0.65, bandFillMax: 1.05,
   interiorDeltaMin: 30, interiorBrightMax: 0.5,
   interiorToneFloor: 12, interiorToneExpansion: 1.5,
   whiteFracMin: 0.95,
@@ -161,6 +166,7 @@ function measureCandidate(ring, frame, ctx) {
   margins.min = Math.min(margins.left, margins.top, margins.right, margins.bottom);
   margins.max = Math.max(margins.left, margins.top, margins.right, margins.bottom);
   margins.spread = margins.max - margins.min;
+  frameStats.bandFill = round4(frame.area / Math.max(1, frame.major * frame.minor - ring.holeArea));
   return { framed: true, margins, frameStats, interior, framePixels };
 }
 
@@ -168,7 +174,7 @@ function passAAnchor(measured) {
   if (!measured.framed) return false;
   const m = measured.margins, f = measured.frameStats, interior = measured.interior;
   return m.min >= FIX_BOUNDS.marginMin && m.max <= FIX_BOUNDS.marginMax && m.spread <= FIX_BOUNDS.marginSpreadMax
-    && f.fill >= FIX_BOUNDS.fillMin && f.fill <= FIX_BOUNDS.fillMax
+    && f.bandFill >= FIX_BOUNDS.bandFillMin && f.bandFill <= FIX_BOUNDS.bandFillMax
     && Math.abs(interior.lumMean - f.lumMean) >= FIX_BOUNDS.interiorDeltaMin && interior.brightFrac <= FIX_BOUNDS.interiorBrightMax
     && f.fracGe200 >= FIX_BOUNDS.whiteFracMin;
 }
@@ -384,6 +390,7 @@ export function rederiveFamilyFixVerdicts({ ringsPlain, familyPlain, fields, ima
     for (const p of pxs) { const l = (rgba[p * 4] + rgba[p * 4 + 1] + rgba[p * 4 + 2]) / 3; vals.push(l); sum += l; if (l >= 200) ge++; }
     vals.sort((a, b) => a - b);
     const frameStats = { pxCount: pxs.length, lumMean: round4(sum / pxs.length), lumP10: round4(vals[Math.min(vals.length - 1, Math.floor(0.1 * vals.length))]), fracGe200: round4(ge / pxs.length), area: frame.area, major: round4(frame.major), minor: round4(frame.minor), fill: round4(frame.fill), angle: round4(frame.angle) };
+    frameStats.bandFill = round4(frame.area / Math.max(1, frame.major * frame.minor - ring.holeArea));
     const margins = { left: ring.bboxX - frame.bboxX, top: ring.bboxY - frame.bboxY, right: (frame.bboxX + frame.bboxW) - (ring.bboxX + ring.bboxW), bottom: (frame.bboxY + frame.bboxH) - (ring.bboxY + ring.bboxH) };
     margins.min = Math.min(margins.left, margins.top, margins.right, margins.bottom);
     margins.max = Math.max(margins.left, margins.top, margins.right, margins.bottom);
@@ -392,7 +399,7 @@ export function rederiveFamilyFixVerdicts({ ringsPlain, familyPlain, fields, ima
   });
 
   const isAnchor = (m) => !!m.frame && m.margins.min >= FIX_BOUNDS.marginMin && m.margins.max <= FIX_BOUNDS.marginMax && m.margins.spread <= FIX_BOUNDS.marginSpreadMax
-    && m.frameStats.fill >= FIX_BOUNDS.fillMin && m.frameStats.fill <= FIX_BOUNDS.fillMax
+    && m.frameStats.bandFill >= FIX_BOUNDS.bandFillMin && m.frameStats.bandFill <= FIX_BOUNDS.bandFillMax
     && Math.abs(m.interior.lumMean - m.frameStats.lumMean) >= FIX_BOUNDS.interiorDeltaMin && m.interior.brightFrac <= FIX_BOUNDS.interiorBrightMax
     && m.frameStats.fracGe200 >= FIX_BOUNDS.whiteFracMin;
   const anchors = measured.filter(isAnchor);

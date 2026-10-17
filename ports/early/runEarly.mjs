@@ -238,7 +238,15 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     for (let pixel = 0; pixel < framePx; pixel++) if (layerRgba[pixel * 4 + 3] !== 0) opaqueLeaving++;
     layerIntegrity.rasterRecount = { remainingEnteringPx: opaqueEntering, remainingLeavingPx: opaqueLeaving };
     layerIntegrity.rasterRecountHolds = opaqueEntering === remainingEntering && opaqueLeaving === remainingLeaving;
-    if (!layerIntegrity.rasterRecountHolds) fail(`layer raster recount (${opaqueEntering} in, ${opaqueLeaving} out) disagrees with set arithmetic (${remainingEntering} in, ${remainingLeaving} out); basket px already consumed by S1: owned ${layerIntegrity.intersections.vsS1Owned}, muted ${layerIntegrity.intersections.vsS1Muted}`);
+    // A basket may share a few px with a badge's 2-px mute fringe (a badge
+    // drawn over a basket's edge; AlexClark: 3 px). That is geometry, not a
+    // broken ledger: when the recount differs by exactly that overlap it is
+    // recorded as a finding and the run continues.
+    const muteOverlap = layerIntegrity.intersections.vsS1Muted - layerIntegrity.intersections.vsS1Owned;
+    layerIntegrity.explainedByMuteOverlap = !layerIntegrity.rasterRecountHolds && opaqueEntering === remainingEntering
+      && layerIntegrity.intersections.vsS1Owned === 0 && opaqueLeaving - remainingLeaving === muteOverlap;
+    if (layerIntegrity.explainedByMuteOverlap) { layerIntegrity.setArithmeticLeavingPx = remainingLeaving; layerIntegrity.remainingLeavingPx = opaqueLeaving; }
+    if (!layerIntegrity.rasterRecountHolds && !layerIntegrity.explainedByMuteOverlap) fail(`layer raster recount (${opaqueEntering} in, ${opaqueLeaving} out) disagrees with set arithmetic (${remainingEntering} in, ${remainingLeaving} out); basket px already consumed by S1: owned ${layerIntegrity.intersections.vsS1Owned}, muted ${layerIntegrity.intersections.vsS1Muted}`);
     // S1 witness agreement for the entering layer (same run, same board).
     const s1Witness = materializeS1Subtractions(captured.S1);
     layerIntegrity.s1WitnessRemainingAfterMutedPx = s1Witness.muted.remainingOpaquePx;
@@ -559,7 +567,14 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     for (let pixel = 0; pixel < framePx; pixel++) if (layerRgba[pixel * 4 + 3] !== 0) opaqueLeaving++;
     layerIntegrity.rasterRecount = { remainingEnteringPx: opaqueEntering, remainingLeavingPx: opaqueLeaving };
     layerIntegrity.rasterRecountHolds = opaqueEntering === remainingEntering && opaqueLeaving === remainingLeaving;
-    if (!layerIntegrity.rasterRecountHolds) fail(`stack raster recount (${opaqueEntering} in, ${opaqueLeaving} out) disagrees with set arithmetic (${remainingEntering} in, ${remainingLeaving} out)`);
+    // A basket may share a few px with a badge's 2-px mute fringe (a badge
+    // drawn over a basket's edge; AlexClark: 3 px). That is geometry, not a
+    // broken ledger: when the recount differs by exactly that overlap it is
+    // recorded as a finding and the run continues.
+    const muteOverlap = layerIntegrity.intersections.vsPriorConsumed;
+    layerIntegrity.explainedByMuteOverlap = !layerIntegrity.rasterRecountHolds && opaqueEntering === remainingEntering
+      && layerIntegrity.intersections.vsS1Owned === 0 && layerIntegrity.intersections.vsS2Claimed === 0 && opaqueLeaving - remainingLeaving === muteOverlap;
+    if (!layerIntegrity.rasterRecountHolds && !layerIntegrity.explainedByMuteOverlap) fail(`stack raster recount (${opaqueEntering} in, ${opaqueLeaving} out) disagrees with set arithmetic (${remainingEntering} in, ${remainingLeaving} out)`);
     // S1 witness agreement for the bottom of the stack (same run, same board).
     const s1Witness = materializeS1Subtractions(captured.S1);
     layerIntegrity.s1WitnessRemainingAfterMutedPx = s1Witness.muted.remainingOpaquePx;

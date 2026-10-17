@@ -9,11 +9,16 @@ export const STAGE_RUNTIME = [
   'provider-adapter.mjs', 'models.mjs',
   // ComparableForkJoin inputs: competing implementations by slot, equality
   // Contracts for the geometric join, and Sam's annotation testimony.
-  'impl', 'contracts', 'testimony'
+  'impl', 'contracts', 'testimony', 'specimens'
 ];
 export const STAGE_SOURCES = {
   golden: 'source/provider/artifacts/replay/source/IMG_5641.jpg',
-  alex: 'source/provider/artifacts/replay/source/AlexClark-original.jpg'
+  alex: 'source/provider/artifacts/replay/source/AlexClark-original.jpg',
+  // Dev courses from chainspot-corpus dev/ (Sam's annotated set; sealed/ and
+  // validation/ stay out). Testimony lives under testimony/<specimen>/.
+  lenard: 'specimens/dev/Lenard-full.png',
+  townelake: 'specimens/dev/TowneLake-full.png',
+  heritage: 'specimens/dev/HeritagePark-full.png'
 };
 
 /** One literal authoring path list closes an execution; no second registration table. */

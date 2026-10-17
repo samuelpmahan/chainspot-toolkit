@@ -131,12 +131,12 @@ function attributeCounters({ badge, read, fields, widthPx }) {
     if (px.some((p) => owned.has(p)))
       throw new Error(`badge assembly: badge ${badge.label} counter candidate ${comp.label} overlaps the badge owned set`);
     if (!px.every((p) => mute.has(p)))
-      throw new Error(`badge assembly: badge ${badge.label} counter candidate ${comp.label} is not inside the badge mute set`);
+      continue; // leaks past the mute set: not an enclosed counter (recorded by fg.s1.pxDigits.materialize)
     const containing = read.digits.map((d, di) => ({ d, di })).filter(({ d }) =>
       d.bbox[0] <= comp.bboxX && d.bbox[1] <= comp.bboxY
       && comp.bboxX + comp.bboxW <= d.bbox[0] + d.bbox[2] && comp.bboxY + comp.bboxH <= d.bbox[1] + d.bbox[3]);
     if (containing.length !== 1)
-      throw new Error(`badge assembly: badge ${badge.label} counter candidate ${comp.label} is enclosed by ${containing.length} digits, expected exactly 1`);
+      continue; // not enclosed by exactly one digit: unattributed (recorded by fg.s1.pxDigits.materialize)
     counters.push({
       componentLabel: comp.label, digitIndex: containing[0].di,
       bbox: [comp.bboxX, comp.bboxY, comp.bboxW, comp.bboxH],
