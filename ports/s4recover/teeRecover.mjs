@@ -90,7 +90,9 @@ export const RULES = Object.freeze({
   hallwaySubsamplePx: 3,       // feasible hidden centres are hallway-tested on this grid
   peekMinFramePx: 3,           // frame-white px of a hidden pad visible outside its occluder: direct evidence, pins the pose
   boundaryDirs: 16,            // occluder search: rays from the seed along which the feasible region's edge is bisected
-  boundaryTolPx: 0.5           // bisection stops within this (px)
+  boundaryTolPx: 0.5,          // bisection stops within this (px)
+  visibleSeeds: 'components',  // visible search: centres near unowned bright components ('disk': near any white px)
+  seedStepPx: 2                // grid of component-seeded centres (px); refinement goes sub-pixel
 });
 
 import { nameCandidates } from '../../fg/names.mjs';
@@ -346,7 +348,7 @@ export function createRecoveryContext(inputs) {
   ];
   return {
     W: raster.widthPx, H: raster.heightPx, raster, tpl, cls, occ, owned: new Uint8Array(raster.widthPx * raster.heightPx), sprites,
-    adjacent: inputs.adjacent ?? null,
+    adjacent: inputs.adjacent ?? null, unowned: inputs.unowned ?? null,
     ev: evidencePlane(cls, occ, raster.widthPx * raster.heightPx),
     badges: inputs.badges, tees: inputs.tees, assignment, seeds: inputs.seeds ?? [],
     searchRadiusPx: r3(RULES.searchRadiusFactor * maxAssignedPx),
@@ -548,8 +550,48 @@ const anglesFor = (badgeRay, cx, cy, plate) => {
 };
 
 /** Best template pose for one badge. badgeRay: theta within badgeRayTolDeg of the direction to the badge. */
+/**
+ * Candidate centres seeded from components (Sam): only near the frame-white px of S1 bright components that no Part
+ * owns and that reach into the badge's search disk, on a SEED_STEP_PX grid; refinement then works at sub-pixel as
+ * before. The old disk path (every centre near any unoccluded white px) stays as RULES.visibleSeeds = 'disk'.
+ */
+function componentMask(ctx, badge) {
+  const { W, H, cls, ev, tpl } = ctx;
+  const R = ctx.searchRadiusPx, [bx, by] = badge.plateCenter, R2 = R * R, reach = tpl.halfLengthOutPx, step = RULES.seedStepPx;
+  const x0 = Math.max(0, Math.floor(bx - R)), x1 = Math.min(W - 1, Math.ceil(bx + R));
+  const y0 = Math.max(0, Math.floor(by - R)), y1 = Math.min(H - 1, Math.ceil(by + R));
+  const bw = x1 - x0 + 1, bh = y1 - y0 + 1, mask = new Uint8Array(bw * bh);
+  const rr = Math.ceil(reach), reach2 = reach * reach;
+  let seeds = 0;
+  // each component's frame-white px and bbox are computed once per context, not once per search
+  ctx.seedWhite ??= ctx.unowned.map((c) => {
+    const white = Int32Array.from(c.px.filter((i) => cls[i] === CLASS.WHITE && ev[i] < 8));
+    let ax = Infinity, ay = Infinity, bx2 = -Infinity, by2 = -Infinity;
+    for (const i of white) { const x = i % W, y = (i / W) | 0; if (x < ax) ax = x; if (x > bx2) bx2 = x; if (y < ay) ay = y; if (y > by2) by2 = y; }
+    return { white, box: [ax, ay, bx2, by2] };
+  }).filter((c) => c.white.length >= RULES.minVisibleFramePx);
+  const near = (b) => { const dx = Math.max(b[0] - bx, 0, bx - b[2]), dy = Math.max(b[1] - by, 0, by - b[3]); return dx * dx + dy * dy <= (R + reach) ** 2; };
+  for (const c of ctx.seedWhite) {
+    if (!near(c.box)) continue;
+    const white = c.white.filter((i) => ev[i] < 8);   // a pad recovered since is no longer evidence
+    if (white.length < RULES.minVisibleFramePx) continue;
+    seeds++;
+    for (const i of white) {
+      const x = i % W, y = (i / W) | 0;
+      for (let dy = -rr; dy <= rr; dy++) {
+        const yy = y + dy; if (yy < y0 || yy > y1 || (yy - y0) % step) continue;
+        for (let dx = -rr; dx <= rr; dx++) {
+          const xx = x + dx; if (xx < x0 || xx > x1 || (xx - x0) % step || dx * dx + dy * dy > reach2) continue;
+          mask[(yy - y0) * bw + (xx - x0)] = 1;
+        }
+      }
+    }
+  }
+  return { mask, x0, y0, bw, bh, seedComponents: seeds };
+}
+
 export function searchBadge(ctx, badge, { badgeRay = true } = {}) {
-  const { mask, x0, y0, bw, bh } = candidateMask(ctx, badge);
+  const { mask, x0, y0, bw, bh } = RULES.visibleSeeds === 'components' && ctx.unowned ? componentMask(ctx, badge) : candidateMask(ctx, badge);
   const R2 = ctx.searchRadiusPx ** 2, plate = badge.plateCenter;
   const top = [];
   let evaluated = 0;
@@ -862,7 +904,8 @@ export function recoveryInputs(get) {
   return {
     raster, badges, baskets, recoveredBasketBoxes, tees,
     anchors: fam.anchors, interiorTone: fam.model.interiorTone, seeds: padFragmentSeeds(fam),
-    adjacent: get('tk.s4.adjacentBrightComponents')
+    adjacent: get('tk.s4.adjacentBrightComponents'),
+    unowned: get('tk.s4.unownedBrightComponents')
   };
 }
 
@@ -882,11 +925,18 @@ export const S4_CALCULATIONS = Object.freeze([
     }) }) }],
   ['fn.tk.s4.basketBodies', { inParts: ['px.baskets'], outParts: ['tk.s4.basketBodies'], calculate: (io) => ({
     'tk.s4.basketBodies': io.in('px.baskets').map((b, index) => ({ index, label: index, bbox: b.bbox, px: b.px })) }) }],
-  ['fn.tk.s4.adjacentBrightComponents', { inParts: ['px.components', 'px.badges', 'px.baskets', 'px.tees.refined'], outParts: ['tk.s4.adjacentBrightComponents'],
-    calculate: (io) => ({ 'tk.s4.adjacentBrightComponents': adjacentBrightComponents(io.in('px.components').bright, io.in('px.badges'), io.in('px.baskets'), io.in('px.tees.refined')) }) }]
+  ['fn.tk.s4.unownedBrightComponents', { inParts: ['px.components', 'px.badges', 'px.baskets', 'px.tees.refined'], outParts: ['tk.s4.unownedBrightComponents'],
+    calculate: (io) => ({ 'tk.s4.unownedBrightComponents': unownedBrightComponents(io.in('px.components').bright, io.in('px.badges'), io.in('px.baskets'), io.in('px.tees.refined')) }) }],
+  ['fn.tk.s4.adjacentBrightComponents', { inParts: ['tk.s4.unownedBrightComponents'], outParts: ['tk.s4.adjacentBrightComponents'],
+    calculate: (io) => ({ 'tk.s4.adjacentBrightComponents': io.in('tk.s4.unownedBrightComponents').filter(isAdjacentFragment) }) }]
 ]);
 
-export function adjacentBrightComponents(bright, badges, baskets, tees, { touchPx = 2, minUnownedFrac = 0.5 } = {}) {
+/**
+ * The unowned remainder of every S1 bright component: its px owned by no Part, with the opaque Parts it touches (maybe
+ * none) and whether it is mostly unowned. A component can merge into a Part's own white (a pad frame touching a badge
+ * frame is one component); its unowned px are still evidence, so nothing is dropped here.
+ */
+export function unownedBrightComponents(bright, badges, baskets, tees, { touchPx = 2, minUnownedFrac = 0.5 } = {}) {
   const W = bright.mask.width, H = bright.mask.height, labels = bright.labels, owner = new Int32Array(W * H).fill(-1), names = [];
   const own = (name, px) => { const k = names.push(name) - 1; for (const p of px) owner[p] = k; };
   badges.forEach((b) => own(`Badge ${b.label}`, [...b.px, ...(b.has?.mute?.px ?? [])]));
@@ -906,7 +956,13 @@ export function adjacentBrightComponents(bright, badges, baskets, tees, { touchP
       if (opaque(o)) { if (!touches.has(l)) touches.set(l, new Set()); touches.get(l).add(names[o]); }
     }
   }
-  return [...touches].filter(([l]) => unowned.get(l) / area.get(l) >= minUnownedFrac).map(([l, set]) => ({ label: l, areaPx: area.get(l), unownedPx: unowned.get(l), touches: [...set].sort(), px: pxOf.get(l) }));
+  return [...pxOf.keys()].map((l) => ({ label: l, areaPx: area.get(l), unownedPx: unowned.get(l), mostlyUnowned: unowned.get(l) / area.get(l) >= minUnownedFrac,
+    touches: [...(touches.get(l) ?? [])].sort(), px: pxOf.get(l) }));
+}
+/** Sam's query: components touching an opaque Part and mostly owned by no Part. */
+export const isAdjacentFragment = (c) => c.mostlyUnowned && c.touches.length > 0;
+export function adjacentBrightComponents(bright, badges, baskets, tees, opts) {
+  return unownedBrightComponents(bright, badges, baskets, tees, opts).filter(isAdjacentFragment);
 }
 
-export const SLOT_READS = Object.freeze(['px.image.cropped', 'tk.s4.badgePlates', 'tk.s4.basketBodies', 'tk.s4.basketRecovery', 'px.tees.refined', 'px.tees.familyRefined', 'tk.s4.adjacentBrightComponents']);
+export const SLOT_READS = Object.freeze(['px.image.cropped', 'tk.s4.badgePlates', 'tk.s4.basketBodies', 'tk.s4.basketRecovery', 'px.tees.refined', 'px.tees.familyRefined', 'tk.s4.adjacentBrightComponents', 'tk.s4.unownedBrightComponents']);
