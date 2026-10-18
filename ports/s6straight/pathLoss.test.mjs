@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createPartStore, RENDER_PART } from '../../fg/store.mjs';
 import { ALPHA_PROFILE_PART } from '../../contracts/alpha.profile@1.mjs';
-import { registerPathLoss, registerAlphaAbsent, PATH_LOSS_PART, PATH_PAIRS_PART, PATH_MASK_PART, HALLWAY_PART, PATH_CALLS, TESTIMONY_PART, localPathQueries, measurePairs } from './pathLoss.mjs';
+import { pathMaskPart, registerPathLoss, registerAlphaAbsent, PATH_LOSS_PART, PATH_PAIRS_PART, PATH_MASK_PART, HALLWAY_PART, PATH_CALLS, TESTIMONY_PART, localPathQueries, measurePairs } from './pathLoss.mjs';
 import { ribbonRaster, FIXTURE_PROFILE, FIXTURE_ALPHA } from './fixtures/ribbon.mjs';
 
 // A toy course: hole 1 straight (ribbon tee -> badge -> basket), hole 2 bent (the ribbon turns after its badge, away
@@ -35,7 +35,7 @@ function toyStore({ profile = null, testimony = true, recoveredBoxes = [] } = {}
   const { board, rows, straight, bent } = toyCourse();
   const store = createPartStore({ base: { has: (a) => a in board, get: (a) => board[a] } });
   store.constant('fn.tk.s6test.laneOutputs', {
-    'px.tees.association': { rows, template: { L: 10 } }, 'px.tees.refined': [], 'tk.s4.basketRecovery': { recoveredBoxes },
+    'px.tees.association': { rows, template: { L: 10 } }, 'px.tees.refined': [], 'tk.s6.basketRecovery': { recoveredBoxes },
     [TESTIMONY_PART]: testimony ? { path: 'toy', holes: [{ hole: 1, teePx: straight.tee, basketPx: straight.basket, bent: false }, { hole: 2, teePx: bent.tee, basketPx: bent.basket, bent: true }] } : { path: null, holes: [] }
   });
   if (profile) store.constant('fn.tk.s7test.alphaProfile', { [ALPHA_PROFILE_PART]: profile }); else registerAlphaAbsent(store, 'lane s7 not merged into lane/s6');
@@ -59,6 +59,18 @@ test('fn.tk.s6.pairs: straight3 only when STRAIGHT; otherwise the S2 + S4 basket
   assert.match(p.pairs[1].pair, /-> S4 Basket c[a-z]+ \(via Badge 2\)$/);
   const q = toyStore().get(PATH_PAIRS_PART);
   assert.equal(q.pairs[1].basketSource, 'S2'); assert.deepEqual(q.pairs[1].basketPx, [230, 100]);
+});
+
+test('pathMask: the S2-only mask is the baseline; S4-recovered baskets add their box and rings at the same R1', () => {
+  const { board } = toyCourse(), raster = board['px.image.cropped'], parts = { baskets: board['px.baskets'], badges: board['px.badges'], tees: [] };
+  const s2 = pathMaskPart(raster, parts), box = bboxAt([200, 128]), both = pathMaskPart(raster, { ...parts, recoveredBoxes: [box] });
+  assert.equal(both.r1Px, s2.r1Px, 'R1 is course-constant, measured on the S2 baskets');
+  let lost = 0; for (let i = 0; i < s2.mask.length; i++) if (s2.mask[i] && !both.mask[i]) lost++;
+  assert.equal(lost, 0, 'everything the S2 mask hides stays hidden');
+  let inBox = 0, newly = 0, open = 0;
+  for (let y = Math.round(box[1]); y < Math.round(box[1] + box[3]); y++) for (let x = Math.round(box[0]); x < Math.round(box[0] + box[2]); x++) { if (y < 0 || y >= H) continue; inBox++; if (!both.mask[y * W + x]) open++; if (!s2.mask[y * W + x]) newly++; }
+  assert.ok(inBox > 0 && open === 0 && newly > 0, `the recovered sprite box is masked (${newly} of ${inBox} px newly)`);
+  assert.equal(both.extraBasketsCount, 1); assert.equal(s2.extraBasketsCount, 0);
 });
 
 test('fn.tk.s6.pathMask and fn.tk.s6.hallway: owned px masked, the width learned on the tee -> badge segments', () => {

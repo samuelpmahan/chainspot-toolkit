@@ -221,15 +221,21 @@ export function ringMaskOf(W, H, bps, R1) {
   }
   return ring;
 }
-/** The path mask Part value: opaque sprites (filled, dilated 2 px) OR the C1/C2 rings. */
-export function pathMaskOf(raster, lists, bps, { r1Range = [10, 260, 0.5], r1Px = null } = {}) {
-  const W = raster.widthPx, H = raster.heightPx, { sprite } = spriteMaskOf(W, H, lists);
-  const R1 = r1Px ?? ringRadiusOf(lumOf(raster), sprite, W, H, bps, { rs: r1Range });
-  const ring = R1 ? ringMaskOf(W, H, bps, R1) : new Uint8Array(W * H), mask = new Uint8Array(W * H);
+/**
+ * The path mask Part value: opaque sprites (filled, dilated 2 px) OR the C1/C2 rings. extra: sprites known only by a box
+ * and a BasketPoint (S4-recovered baskets: { lists, bps }): their box px join the sprites and their rings join the rings,
+ * at the course-constant R1 measured on the base baskets (course.py _r1), so the base mask and R1 are unchanged without them.
+ */
+export function pathMaskOf(raster, lists, bps, { r1Range = [10, 260, 0.5], r1Px = null, extra = null } = {}) {
+  const W = raster.widthPx, H = raster.heightPx, base = spriteMaskOf(W, H, lists);
+  const R1 = r1Px ?? ringRadiusOf(lumOf(raster), base.sprite, W, H, bps, { rs: r1Range });
+  const sprite = extra?.lists?.length ? spriteMaskOf(W, H, [...lists, ...extra.lists]).sprite : base.sprite;
+  const allBps = [...bps, ...(extra?.bps ?? [])];
+  const ring = R1 ? ringMaskOf(W, H, allBps, R1) : new Uint8Array(W * H), mask = new Uint8Array(W * H);
   let spriteN = 0, ringN = 0, n = 0;
   for (let i = 0; i < W * H; i++) { if (sprite[i]) spriteN++; if (ring[i]) ringN++; if (sprite[i] || ring[i]) { mask[i] = 1; n++; } }
-  return { widthPx: W, heightPx: H, mask, r1Px: R1, spriteCount: spriteN, ringCount: ringN, maskedCount: n,
-    rule: 'course.py MASK: owned sprite px (fill holes, dilate 2, cross) OR rings |d - R1| <= 3.5, |d - 2 R1| <= 4.5 px around BasketPoints; R1 = course.py _r1' };
+  return { widthPx: W, heightPx: H, mask, r1Px: R1, spriteCount: spriteN, ringCount: ringN, maskedCount: n, extraBasketsCount: extra?.bps?.length ?? 0,
+    rule: 'course.py MASK: owned sprite px (fill holes, dilate 2, cross) OR rings |d - R1| <= 3.5, |d - 2 R1| <= 4.5 px around BasketPoints; R1 = course.py _r1 on the base baskets' + (extra?.bps?.length ? '; plus S4-recovered baskets: box px as sprite, rings at the same R1' : '') };
 }
 
 // ------------------------------------------------------------------ the second measure: alpha overlay fraction on the same stations

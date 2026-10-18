@@ -6,11 +6,13 @@
  *                       proved identical: pathSpace.prove.mjs), registerPathQueries(store)
  *   fn.tk.s6.pathMask   course.py MASK: the board's OWNED pixel lists (px.baskets, px.badges by ownedPx; the S3
  *                       structural tees px.tees.refined), holes filled, dilated 2 px, OR the C1 / C2 rings around every
- *                       BasketPoint at R1 (course.py _r1, from the rings only) -> tk.s6.pathMask
+ *                       BasketPoint at R1 (course.py _r1, from the rings only); PLUS the S4-recovered baskets
+ *                       (tk.s6.basketRecovery: box and rings, same rule, same R1) -> tk.s6.pathMask. Without recovered
+ *                       baskets it is course.py's mask exactly (pathSpace.prove.mjs)
  *   fn.tk.s6.hallway    teebadge.py learn: the course hallway width from every S3 tee -> badge segment (always straight:
  *                       the badge precedes the first bend) -> tk.s6.hallway (LOCAL, measured on this image)
  *   fn.tk.s6.pairs      per S3-associated tee: the tee cap S = T + u FRONT L (badgeseed.py FRONT = 10.6 / 25.02) ->
- *                       straight3's BasketPoint when its verdict is STRAIGHT, else the S2 + S4-recovered (tk.s4.basketRecovery)
+ *                       straight3's BasketPoint when its verdict is STRAIGHT, else the S2 + S4-recovered (tk.s6.basketRecovery)
  *                       basket nearest the tee axis beyond the badge -> tk.s6.pairs
  *   fn.tk.s6.pathLoss   per pair, on the stations 0.6 W .. |K - S| - 2 (s3first.py seg_fit's trims), side by side:
  *                       the EDGE TEST (proven: min-side contrast > 8 lum) and the ALPHA OVERLAY FRACTION (new) -> tk.s6.pathLoss
@@ -64,14 +66,19 @@ export function registerAlphaAbsent(store, reason) {
 
 // ------------------------------------------------------------------ fn.tk.s6.pathMask
 
-export function pathMaskPart(raster, { baskets, badges, tees }) {
+export function pathMaskPart(raster, { baskets, badges, tees, recoveredBoxes = [] }) {
   const W = raster.widthPx, H = raster.heightPx, lists = [];
   const own = (part) => { const px = []; forEach(ownedPx(W, H, part), (i) => px.push(i)); lists.push(px); };
   baskets.forEach(own); badges.forEach(own); (tees ?? []).forEach(own);
   const bps = baskets.map((k) => basketPoint(k.bbox));
-  const m = space.pathMaskOf(raster, lists, bps);
-  return { ...m, basketPoints: bps.map((p) => p.map(r3)), ownedFrom: { basketsCount: baskets.length, badgesCount: badges.length, teesCount: (tees ?? []).length },
-    emits: { r1Px: m.r1Px, maskedPx: m.maskedCount, spritePx: m.spriteCount, ringPx: m.ringCount } };
+  // S4-recovered baskets (Sam: the mask describes the scene's sprites; S4 established these are there): the sprite box
+  // from the semanticBbox, and its BasketPoint for the rings, by the same geometry rule as the S2 baskets
+  const boxPx = ([x0, y0, w, h]) => { const px = []; for (let y = Math.max(0, Math.round(y0)); y < Math.min(H, Math.round(y0 + h)); y++) for (let x = Math.max(0, Math.round(x0)); x < Math.min(W, Math.round(x0 + w)); x++) px.push(y * W + x); return px; };
+  const extra = { lists: recoveredBoxes.map(boxPx), bps: recoveredBoxes.map((b) => basketPoint(b)) };
+  const m = space.pathMaskOf(raster, lists, bps, { extra });
+  return { ...m, basketPoints: bps.map((p) => p.map(r3)), recoveredBasketPoints: extra.bps.map((p) => p.map(r3)),
+    ownedFrom: { basketsCount: baskets.length, recoveredBasketsCount: recoveredBoxes.length, badgesCount: badges.length, teesCount: (tees ?? []).length },
+    emits: { r1Px: m.r1Px, maskedPx: m.maskedCount, spritePx: m.spriteCount, ringPx: m.ringCount, recoveredBasketsCount: recoveredBoxes.length } };
 }
 
 // ------------------------------------------------------------------ fn.tk.s6.hallway (teebadge.py learn)
@@ -110,7 +117,7 @@ export function hallwayOf(q, { association, badges }) {
 export function pairsOf(baskets, association, recovery = null) {
   const rows = association?.rows ?? [], L = association?.template?.L;
   if (!rows.length) return { schema: 'nctk-s6-pairs@1', condition: association?.condition ?? 'no S3 association rows', rule: null, pairs: [], skipped: [], emits: { pairsCount: 0 } };
-  // basket candidates: S2 baskets PLUS the S4 recovered ones (tk.s4.basketRecovery semanticBbox), BasketPoint the same way
+  // basket candidates: S2 baskets PLUS the S4 recovered ones (tk.s6.basketRecovery semanticBbox), BasketPoint the same way
   const recovered = recovery?.recoveredBoxes ?? [];
   const cands = [...baskets.map((k, i) => ({ source: 'S2', index: i, bbox: k.bbox })), ...recovered.map((b, i) => ({ source: 'S4 recovered', index: i, bbox: b }))];
   const names = nameCandidates('Basket', cands, (k) => basketPoint(k.bbox));
@@ -220,15 +227,15 @@ export const localPathQueries = (parts) => (name, a) => {
 const CODE = sha256Hex([pathMaskPart, hallwayOf, pairsOf, measurePairs, ...Object.values(space).filter((f) => typeof f === 'function')].map(String).join('\n'));   // the helpers the calculations wrap
 
 export const S6_PATH_CALCULATIONS = Object.freeze([
-  ['fn.tk.s6.pathMask', { inParts: ['px.image.cropped', 'px.baskets', 'px.badges', 'px.tees.refined'], outParts: [PATH_MASK_PART], code: CODE,
+  ['fn.tk.s6.pathMask', { inParts: ['px.image.cropped', 'px.baskets', 'tk.s6.basketRecovery', 'px.badges', 'px.tees.refined'], outParts: [PATH_MASK_PART], code: CODE,
     note: 'course.py MASK from the board\'s owned pixel lists and the rings (ports/s6straight/pathLoss.mjs)',
-    calculate: (io) => ({ [PATH_MASK_PART]: pathMaskPart(io.in('px.image.cropped'), { baskets: io.in('px.baskets'), badges: io.in('px.badges'), tees: io.in('px.tees.refined') }) }) }],
+    calculate: (io) => ({ [PATH_MASK_PART]: pathMaskPart(io.in('px.image.cropped'), { baskets: io.in('px.baskets'), badges: io.in('px.badges'), tees: io.in('px.tees.refined'), recoveredBoxes: io.in('tk.s6.basketRecovery').recoveredBoxes ?? [] }) }) }],
   ['fn.tk.s6.hallway', { inParts: ['px.image.cropped', PATH_MASK_PART, 'px.badges', 'px.tees.association'], outParts: [HALLWAY_PART], calls: [PATH_CALLS.width, PATH_CALLS.stationContrast], code: CODE,
     note: 'teebadge.py: the course hallway width from the tee -> badge segments',
     calculate: (io) => ({ [HALLWAY_PART]: hallwayOf((n, a) => io.call(PATH_CALLS[n], a).value, { association: io.in('px.tees.association'), badges: io.in('px.badges') }) }) }],
-  ['fn.tk.s6.pairs', { inParts: ['px.baskets', 'tk.s4.basketRecovery', 'px.tees.association'], outParts: [PATH_PAIRS_PART], code: CODE,
+  ['fn.tk.s6.pairs', { inParts: ['px.baskets', 'tk.s6.basketRecovery', 'px.tees.association'], outParts: [PATH_PAIRS_PART], code: CODE,
     note: 'tee cap -> BasketPoint (straight3 when STRAIGHT, else nearest the tee axis among S2 + S4 recovered) per associated tee',
-    calculate: (io) => ({ [PATH_PAIRS_PART]: pairsOf(io.in('px.baskets'), io.in('px.tees.association'), io.in('tk.s4.basketRecovery')) }) }],
+    calculate: (io) => ({ [PATH_PAIRS_PART]: pairsOf(io.in('px.baskets'), io.in('px.tees.association'), io.in('tk.s6.basketRecovery')) }) }],
   ['fn.tk.s6.pathLoss', { inParts: ['px.image.cropped', PATH_MASK_PART, HALLWAY_PART, PATH_PAIRS_PART, ALPHA_PROFILE_PART, TESTIMONY_PART], outParts: [PATH_LOSS_PART], calls: [PATH_CALLS.overlayFraction, PATH_CALLS.loss], code: CODE,
     note: 'edge test and alpha overlay fraction along tee cap -> basket per pair',
     calculate: (io) => ({ [PATH_LOSS_PART]: measurePairs((n, a) => io.call(PATH_CALLS[n], a).value, { pairs: io.in(PATH_PAIRS_PART), hallway: io.in(HALLWAY_PART), profile: io.in(ALPHA_PROFILE_PART), testimony: io.in(TESTIMONY_PART) }) }) }]
