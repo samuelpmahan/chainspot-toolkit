@@ -140,7 +140,8 @@ right and the repo is behind. Every number carries a unit.
   (`has.mute.px`). The artifact JSON reshapes the same Part with different
   field names, which is how two consumers came to pick fields by hand.
 - **A PixelCache holds one raster and views on it** (Sam, 2026-10-18: "PixelCache
-  should mean this is 9 views on the same single raster"). An attempt today
+  should mean this is 9 views on the same single raster"; he calls this an
+  illustrative metaphor, not a ruling: the direction, not a mandate). An attempt today
   writes nine full-frame RGBA artifacts (badgePx, muted, counters, basketPx,
   remaining x2, teePx, refinedPx, eliminatedPx; 10.7 MB each, 96 MB of a
   217 MB attempt), every one `px.image.cropped` with alpha zeroed on a pixel
@@ -150,6 +151,11 @@ right and the repo is behind. Every number carries a unit.
   same rule as the Calculations: served, not stored. Attempts are
   reproducible from the recipe, so unreferenced ones are deleted
   (`state --prune`); the ReproducibleRecipe is the artifact.
+- **S0's autocrop stays** (Sam, 2026-10-18). It was added in August to quiet an
+  agent, and it stays for two reasons: (1) to expand later; (2) so that agents
+  are broken of over-reliance on sha-based equivalence (a crop changes every
+  hash downstream while the geometry is the same; "hash discrepancies are not
+  geometry"). Never remove it to make hashes line up.
 - **Interface vs TypedInterface; delegates are FGs** (Sam, 2026-10-18).
   An address list is an Interface; a TypedInterface also says what kind
   of Part sits at each address. A slot is a C#-style delegate: a typed
