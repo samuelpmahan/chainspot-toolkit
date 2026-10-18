@@ -22,8 +22,11 @@
  *                                              cell; --course: these courses only), then print
  *   node scripts/pxc.mjs state --freeze        record rows and closures in docs/evidence/dev-s1s4/frozen.json; later
  *                                              matrices show each row as same / changed / new against it
+ *   node scripts/pxc.mjs state --prune [--dry-run]  delete every attempt under attempts/stages that nothing under
+ *                                              docs/evidence references (Sam: "Reproducibility is the key"); --retest prunes
+ *                                              automatically once it has finished
  */
-import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { join, resolve } from 'node:path';
 import { deserialize } from 'node:v8';
@@ -276,6 +279,32 @@ export async function retest(root, inputs, { all = false, only = null, log = () 
   return [...attempts];
 }
 
+// ------------------------------------------------------------------------------------------------ prune
+
+/** Every attempt id named anywhere under docs/evidence (ATTEMPTS files, judge and s4r JSON, notes) plus the current ATTEMPTS. */
+export function referencedAttempts(root = ROOT) {
+  const ids = new Set(readAttempts(root).map(([, a]) => a));
+  const walk = (dir) => { for (const e of readdirSync(dir, { withFileTypes: true })) { const p = join(dir, e.name); if (e.isDirectory()) walk(p); else if (/\.(md|json|py|mjs|txt)$/.test(e.name) || e.name === 'ATTEMPTS') for (const m of readFileSync(p, 'utf8').matchAll(/attempt-\d+-[0-9a-f]+/g)) ids.add(m[0]); } };
+  if (existsSync(join(root, 'docs', 'evidence'))) walk(join(root, 'docs', 'evidence'));
+  return ids;
+}
+const dirBytes = (dir) => { let n = 0; for (const e of readdirSync(dir, { withFileTypes: true })) { const p = join(dir, e.name); n += e.isDirectory() ? dirBytes(p) : statSync(p).size; } return n; };
+
+/** Attempts are reproducible from the recipe; only the ones evidence names are kept. Returns what was (or would be) removed. */
+export function pruneAttempts(root = ROOT, { dryRun = false } = {}) {
+  const keep = referencedAttempts(root), dir = join(root, 'attempts', 'stages');
+  if (!existsSync(dir)) return { removed: [], kept: [], bytes: 0 };
+  const all = readdirSync(dir).filter((d) => d.startsWith('attempt-')), removed = [], kept = [];
+  let bytes = 0;
+  for (const name of all) {
+    const id = name.replace(/\.json$/, '');
+    if (keep.has(id)) { kept.push(id); continue; }
+    const p = join(dir, name); bytes += statSync(p).isDirectory() ? dirBytes(p) : statSync(p).size;
+    removed.push(name); if (!dryRun) rmSync(p, { recursive: true, force: true });
+  }
+  return { removed, kept: [...new Set(kept)], bytes };
+}
+
 // ------------------------------------------------------------------------------------------------ CLI
 
 export async function stateCommand(args, { root = ROOT, say = (s = '') => process.stdout.write(s + '\n') } = {}) {
@@ -284,6 +313,12 @@ export async function stateCommand(args, { root = ROOT, say = (s = '') => proces
     const inputs = await loadStateInputs(root);
     const all = args[retestAt + 1] === 'all', at = args.indexOf('--course');
     await retest(root, inputs, { all, only: at >= 0 ? args[at + 1].split(',') : null, log: say });
+    const p = pruneAttempts(root); say(`pruned ${p.removed.length} unreferenced attempts (${(p.bytes / 1e9).toFixed(2)} GB); kept ${p.kept.length}`);
+  }
+  if (args.includes('--prune')) {
+    const p = pruneAttempts(root, { dryRun: args.includes('--dry-run') });
+    say(`${args.includes('--dry-run') ? 'would remove' : 'removed'} ${p.removed.length} unreferenced attempts (${(p.bytes / 1e9).toFixed(2)} GB); kept ${p.kept.length}: ${p.kept.join(', ')}`);
+    if (args.includes('--dry-run')) return { removed: p.removed, kept: p.kept };
   }
   const { matrix, written, store } = await stateMatrix(root);
   if (args.includes('--freeze')) { const inputs = store.get('tk.state.inputs'); const doc = await freeze(root, matrix, inputs); written.push(FROZEN_FILE); say(`frozen ${doc.rows.length} rows at ${doc.at}`); }
