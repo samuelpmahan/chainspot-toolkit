@@ -151,3 +151,20 @@ test('a constant is keyed per Part by its content without its locators (attempt,
   assert.deepEqual(open({ run: 'run-2', attempt: 'att-2', rows: [1, 2] }, { v: 1 }), { 'fn.tk.x.a': true, 'fn.tk.x.b': true });
   assert.deepEqual(open({ run: 'run-3', attempt: 'att-2', rows: [1, 2, 3] }, { v: 1 }), { 'fn.tk.x.a': false, 'fn.tk.x.b': true });
 });
+
+test('a Calculation that reads through queries is keyed by the roots it can reach: two boards never share its entry', async () => {
+  const { createPartStore, registerQueries } = await import('./store.mjs');
+  const cache = new Map();
+  const make = (pixels) => {
+    const s = createPartStore({ base: new Map([['px.raster', pixels]]), cache });
+    registerQueries(s, { 'fn.q.toy.sum': ({ raster }) => ({ value: raster.reduce((a, b) => a + b, 0), unit: 'level' }) });
+    s.register('fn.toy.readsNothing', { outParts: ['tk.toy.sum'], calls: ['fn.q.toy.sum'], calculate: (io) => ({ 'tk.toy.sum': io.call('fn.q.toy.sum', { raster: 'px.raster' }).value }) });
+    return s;
+  };
+  const golden = make(new Uint8Array([1, 2, 3])), lenard = make(new Uint8Array([9, 9, 9]));
+  assert.equal(golden.get('tk.toy.sum'), 6);
+  assert.equal(lenard.get('tk.toy.sum'), 27, 'declared inParts are empty; the roots key keeps the courses apart');
+  assert.equal(make(new Uint8Array([1, 2, 3])).get('tk.toy.sum'), 6);
+  const again = make(new Uint8Array([1, 2, 3])); again.get('tk.toy.sum');
+  assert.ok(again.calls().some((e) => e.calculation === 'fn.toy.readsNothing' && e.cached), 'same pixels: a hit');
+});

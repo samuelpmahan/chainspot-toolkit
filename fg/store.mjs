@@ -252,6 +252,19 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
     if (onBase(address)) throw new PartStoreError(`Part '${address}' is a provider-board address; a toolkit Calculation (${producedBy}) may not shadow it`);
     parts.set(address, Object.freeze({ value, producedBy, inParts, key }));
   };
+  // The roots key: every root input this store can reach (provider-board Parts and constant Parts, along the chain). A
+  // Calculation that calls queries can read any Part through them (queries declare no inParts), so its declared inParts do
+  // not bound what it saw: its cache key carries the roots key instead (a cross-run cache otherwise serves one course's
+  // answer to another: golden's S4 recovered tees on lenard, 2026-10-18).
+  const rootsKey = () => {
+    const rows = [];
+    for (const s of chain()) {
+      const b = s === self ? board() : null;
+      if (b && typeof b.keys === 'function') for (const address of b.keys()) rows.push([address, keyOf(address)]);
+      for (const [fn, spec] of s._calcs) if (spec.rootKey) for (const address of spec.outParts) rows.push([address, keyOf(address)]);
+    }
+    return digest(rows.sort((x, y) => (x[0] < y[0] ? -1 : x[0] > y[0] ? 1 : 0)));
+  };
   // the content key of any Part this store can see: a produced Part carries the key of the call that made it; a provider
   // or constant Part is digested once (by object identity, so a raster hashes once per run)
   const keyOf = (address) => {
@@ -399,7 +412,7 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
           }
         });
         // the cache key of this call: the Calculation, its code, its arguments and the content keys of its inputs
-        key = spec.outParts.length && !spec.rootKey && cacheable(args) ? digest({ fn, code: spec.code, args: plain(args ?? null), inputs: spec.inParts.map((a) => [a, keyOf(a)]) }) : null;
+        key = spec.outParts.length && !spec.rootKey && cacheable(args) ? digest({ fn, code: spec.code, args: plain(args ?? null), inputs: spec.inParts.map((a) => [a, keyOf(a)]), ...(spec.calls?.length ? { roots: rootsKey() } : {}) }) : null;
         entry.key = key;
         const finish = (result, fromCache = false) => {
           if (spec.outParts.length) {
