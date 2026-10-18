@@ -1,0 +1,366 @@
+{
+ "specimen": "townelake",
+ "attempt": "attempt-1792282168809-c064abc75889",
+ "testimony": {
+  "file": "testimony/townelake/TowneLake-full.annotation.json",
+  "annotatedHoles": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18
+  ],
+  "complete": true
+ },
+ "stages": {
+  "S1": {
+   "found": 18,
+   "labelsPresent": 18,
+   "labelsMissing": [],
+   "duplicates": []
+  },
+  "S2": {
+   "found": 18,
+   "annotated": 18,
+   "TP": 18,
+   "FN": 0,
+   "FP": 0,
+   "unjudged": 0,
+   "tp": [
+    "Basket ck = Basket 14 (0.43 px)",
+    "Basket ci = Basket 13 (0.76 px)",
+    "Basket cj = Basket 18 (0.88 px)",
+    "Basket ch = Basket 12 (0.88 px)",
+    "Basket co = Basket 15 (0.88 px)",
+    "Basket cb = Basket 10 (0.88 px)",
+    "Basket cc = Basket 8 (0.88 px)",
+    "Basket cd = Basket 11 (0.88 px)",
+    "Basket ce = Basket 7 (0.88 px)",
+    "Basket cg = Basket 6 (0.88 px)",
+    "Basket cl = Basket 5 (0.88 px)",
+    "Basket cn = Basket 2 (0.88 px)",
+    "Basket cq = Basket 17 (0.88 px)",
+    "Basket ca = Basket 9 (0.88 px)",
+    "Basket cr = Basket 16 (1.09 px)",
+    "Basket cp = Basket 3 (2.05 px)",
+    "Basket cm = Basket 4 (2.27 px)",
+    "Basket cf = Basket 1 (2.47 px)"
+   ],
+   "fn": [],
+   "fp": [],
+   "errorPx": {
+    "median": 0.88,
+    "max": 2.47
+   },
+   "matchWithinPx": 12
+  },
+  "S3": {
+   "found": 17,
+   "annotated": 18,
+   "TP": 17,
+   "FN": 1,
+   "FP": 0,
+   "unjudged": 0,
+   "tp": [
+    "Tee ck = Tee 6 (0.02 px)",
+    "Tee co = Tee 3 (0.06 px)",
+    "Tee cl = Tee 5 (0.09 px)",
+    "Tee cp = Tee 16 (0.1 px)",
+    "Tee cb = Tee 9 (0.13 px)",
+    "Tee cg = Tee 7 (0.14 px)",
+    "Tee cm = Tee 4 (0.14 px)",
+    "Tee cq = Tee 17 (0.15 px)",
+    "Tee ce = Tee 12 (0.16 px)",
+    "Tee cn = Tee 18 (0.26 px)",
+    "Tee ca = Tee 10 (0.29 px)",
+    "Tee ch = Tee 2 (0.5 px)",
+    "Tee cf = Tee 1 (0.52 px)",
+    "Tee ci = Tee 14 (1.83 px)",
+    "Tee cj = Tee 15 (2.06 px)",
+    "Tee cd = Tee 8 (2.2 px)",
+    "Tee cc = Tee 11 (2.38 px)"
+   ],
+   "fn": [
+    "Tee 13 (partly hidden by Basket 14 (7%): S4)"
+   ],
+   "fp": [],
+   "errorPx": {
+    "median": 0.16,
+    "max": 2.38
+   },
+   "matchWithinPx": 8,
+   "occluders": {
+    "Tee 13": [
+     {
+      "name": "C2D of Basket 14",
+      "opaque": false,
+      "fraction": 0.263
+     },
+     {
+      "name": "Basket 14",
+      "opaque": true,
+      "fraction": 0.069
+     }
+    ]
+   }
+  },
+  "S3association": {
+   "judgedTees": 17,
+   "associatedCorrectly": 17,
+   "associatedIncorrectly": 0,
+   "notAssociated": 0,
+   "unjudgedTees": 0,
+   "correct": [
+    "Tee ca -> Badge 10",
+    "Tee cb -> Badge 9",
+    "Tee cc -> Badge 11",
+    "Tee cd -> Badge 8",
+    "Tee ce -> Badge 12",
+    "Tee cf -> Badge 1",
+    "Tee cg -> Badge 7",
+    "Tee ch -> Badge 2",
+    "Tee ci -> Badge 14",
+    "Tee cj -> Badge 15",
+    "Tee ck -> Badge 6",
+    "Tee cl -> Badge 5",
+    "Tee cm -> Badge 4",
+    "Tee cn -> Badge 18",
+    "Tee co -> Badge 3",
+    "Tee cp -> Badge 16",
+    "Tee cq -> Badge 17"
+   ],
+   "incorrect": [],
+   "none": []
+  },
+  "S5straight": {
+   "judgedHoles": 17,
+   "TP": 14,
+   "FP": 1,
+   "FN": 0,
+   "TN": 2,
+   "straightWithWrongBasket": 0,
+   "tp": [
+    "Hole 10",
+    "Hole 9",
+    "Hole 8",
+    "Hole 12",
+    "Hole 1",
+    "Hole 2",
+    "Hole 14",
+    "Hole 15",
+    "Hole 6",
+    "Hole 5",
+    "Hole 4",
+    "Hole 18",
+    "Hole 3",
+    "Hole 17"
+   ],
+   "fp": [
+    "Hole 16"
+   ],
+   "fn": [],
+   "wrongBasket": [],
+   "note": "TP = straight called straight; FP = bent called straight (the hallway must reject); FN = straight called bent (sent to pathfinding, safe); TN = bent called bent"
+  },
+  "S4baskets": {
+   "found": 18,
+   "annotated": 18,
+   "TP": 18,
+   "FN": 0,
+   "FP": 0,
+   "unjudged": 0,
+   "tp": [
+    "Basket ck = Basket 14 (0.43 px)",
+    "Basket ci = Basket 13 (0.76 px)",
+    "Basket cj = Basket 18 (0.88 px)",
+    "Basket ch = Basket 12 (0.88 px)",
+    "Basket co = Basket 15 (0.88 px)",
+    "Basket cb = Basket 10 (0.88 px)",
+    "Basket cc = Basket 8 (0.88 px)",
+    "Basket cd = Basket 11 (0.88 px)",
+    "Basket ce = Basket 7 (0.88 px)",
+    "Basket cg = Basket 6 (0.88 px)",
+    "Basket cl = Basket 5 (0.88 px)",
+    "Basket cn = Basket 2 (0.88 px)",
+    "Basket cq = Basket 17 (0.88 px)",
+    "Basket ca = Basket 9 (0.88 px)",
+    "Basket cr = Basket 16 (1.09 px)",
+    "Basket cp = Basket 3 (2.05 px)",
+    "Basket cm = Basket 4 (2.27 px)",
+    "Basket cf = Basket 1 (2.47 px)"
+   ],
+   "fn": [],
+   "fp": [],
+   "errorPx": {
+    "median": 0.88,
+    "max": 2.47
+   },
+   "matchWithinPx": 12,
+   "recovered": 0,
+   "recoveredTP": [],
+   "recoveredFP": []
+  },
+  "S4tees": {
+   "run": "run-2026-10-18T00-09-44-129Z",
+   "branches": {
+    "greedyOccluded": {
+     "found": 18,
+     "annotated": 18,
+     "TP": 18,
+     "FN": 0,
+     "FP": 0,
+     "unjudged": 0,
+     "tp": [
+      "Tee ck = Tee 6 (0.02 px)",
+      "Tee co = Tee 3 (0.06 px)",
+      "Tee cl = Tee 5 (0.09 px)",
+      "Tee cp = Tee 16 (0.1 px)",
+      "Tee cb = Tee 9 (0.13 px)",
+      "Tee cg = Tee 7 (0.14 px)",
+      "Tee cm = Tee 4 (0.14 px)",
+      "Tee cq = Tee 17 (0.15 px)",
+      "Tee ce = Tee 12 (0.16 px)",
+      "Tee cn = Tee 18 (0.26 px)",
+      "Tee ca = Tee 10 (0.29 px)",
+      "Tee ch = Tee 2 (0.5 px)",
+      "Tee cf = Tee 1 (0.52 px)",
+      "S4 Tee ca = Tee 13 (1.5 px)",
+      "Tee ci = Tee 14 (1.83 px)",
+      "Tee cj = Tee 15 (2.06 px)",
+      "Tee cd = Tee 8 (2.2 px)",
+      "Tee cc = Tee 11 (2.38 px)"
+     ],
+     "fn": [],
+     "fp": [],
+     "errorPx": {
+      "median": 0.26,
+      "max": 2.38
+     },
+     "matchWithinPx": 8,
+     "recovered": 1,
+     "recoveredTP": [
+      "S4 Tee ca = Tee 13 (1.5 px)"
+     ],
+     "recoveredFP": [],
+     "recoveredForHoleCorrectly": 1,
+     "recoveredForWrongHole": 0,
+     "association": {
+      "correct": [
+       "S4 Tee ca for Hole 13 (1.5 px)"
+      ],
+      "incorrect": [],
+      "unjudged": []
+     }
+    },
+    "greedyOccludedNoBadgeRay": {
+     "found": 18,
+     "annotated": 18,
+     "TP": 18,
+     "FN": 0,
+     "FP": 0,
+     "unjudged": 0,
+     "tp": [
+      "Tee ck = Tee 6 (0.02 px)",
+      "Tee co = Tee 3 (0.06 px)",
+      "Tee cl = Tee 5 (0.09 px)",
+      "Tee cp = Tee 16 (0.1 px)",
+      "Tee cb = Tee 9 (0.13 px)",
+      "Tee cg = Tee 7 (0.14 px)",
+      "Tee cm = Tee 4 (0.14 px)",
+      "Tee cq = Tee 17 (0.15 px)",
+      "Tee ce = Tee 12 (0.16 px)",
+      "Tee cn = Tee 18 (0.26 px)",
+      "Tee ca = Tee 10 (0.29 px)",
+      "Tee ch = Tee 2 (0.5 px)",
+      "Tee cf = Tee 1 (0.52 px)",
+      "S4 Tee ca = Tee 13 (1.5 px)",
+      "Tee ci = Tee 14 (1.83 px)",
+      "Tee cj = Tee 15 (2.06 px)",
+      "Tee cd = Tee 8 (2.2 px)",
+      "Tee cc = Tee 11 (2.38 px)"
+     ],
+     "fn": [],
+     "fp": [],
+     "errorPx": {
+      "median": 0.26,
+      "max": 2.38
+     },
+     "matchWithinPx": 8,
+     "recovered": 1,
+     "recoveredTP": [
+      "S4 Tee ca = Tee 13 (1.5 px)"
+     ],
+     "recoveredFP": [],
+     "recoveredForHoleCorrectly": 1,
+     "recoveredForWrongHole": 0,
+     "association": {
+      "correct": [
+       "S4 Tee ca for Hole 13 (1.5 px)"
+      ],
+      "incorrect": [],
+      "unjudged": []
+     }
+    },
+    "pinned": {
+     "found": 17,
+     "annotated": 18,
+     "TP": 17,
+     "FN": 1,
+     "FP": 0,
+     "unjudged": 0,
+     "tp": [
+      "Tee ck = Tee 6 (0.02 px)",
+      "Tee co = Tee 3 (0.06 px)",
+      "Tee cl = Tee 5 (0.09 px)",
+      "Tee cp = Tee 16 (0.1 px)",
+      "Tee cb = Tee 9 (0.13 px)",
+      "Tee cg = Tee 7 (0.14 px)",
+      "Tee cm = Tee 4 (0.14 px)",
+      "Tee cq = Tee 17 (0.15 px)",
+      "Tee ce = Tee 12 (0.16 px)",
+      "Tee cn = Tee 18 (0.26 px)",
+      "Tee ca = Tee 10 (0.29 px)",
+      "Tee ch = Tee 2 (0.5 px)",
+      "Tee cf = Tee 1 (0.52 px)",
+      "Tee ci = Tee 14 (1.83 px)",
+      "Tee cj = Tee 15 (2.06 px)",
+      "Tee cd = Tee 8 (2.2 px)",
+      "Tee cc = Tee 11 (2.38 px)"
+     ],
+     "fn": [
+      "Tee 13"
+     ],
+     "fp": [],
+     "errorPx": {
+      "median": 0.16,
+      "max": 2.38
+     },
+     "matchWithinPx": 8,
+     "recovered": 0,
+     "recoveredTP": [],
+     "recoveredFP": [],
+     "recoveredForHoleCorrectly": 0,
+     "recoveredForWrongHole": 0,
+     "association": {
+      "correct": [],
+      "incorrect": [],
+      "unjudged": []
+     }
+    }
+   }
+  }
+ }
+}

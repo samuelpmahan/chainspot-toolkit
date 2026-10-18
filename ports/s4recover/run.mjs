@@ -37,11 +37,12 @@ import contract from '../../contracts/tee.pose@1.mjs';
 import { TEE_RECOVER_SLOT } from './teeRecover.mjs';
 import { GUARANTEES } from './guarantees.mjs';
 import { compareRecovered } from './compare.mjs';
+import { loadTestimony, TESTIMONY_DY as JUDGE_TESTIMONY_DY } from '../judge/testimony.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 
 /** Measured annotation-frame -> canonical-frame row offsets (px), per testimony/<specimen>/README.md. */
-export const TESTIMONY_DY = Object.freeze({ golden: 4, lenard: 2, townelake: 1, heritage: 2 });
+export const TESTIMONY_DY = JUDGE_TESTIMONY_DY;   // one table: ports/judge/testimony.mjs
 
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
 
@@ -88,15 +89,12 @@ export function loadAttemptParts({ attempt, specimen, root = ROOT }) {
     })
   };
 
-  const dy = TESTIMONY_DY[specimen];
-  if (!Number.isFinite(dy)) throw new Error(`no testimony offset for specimen ${specimen}`);
-  const tdir = join(root, 'testimony', specimen);
-  const annName = readdirSync(tdir).find((f) => f.endsWith('.annotation.json'));
-  const ann = readJson(join(tdir, annName));
-  const teePoints = {
-    frame: 'canonical', path: `testimony/${specimen}/${annName}`, rule: `canonical y = annotation y - ${dy} px (testimony/${specimen}/README.md measured mapping); tee points are ring-hole centroids`,
-    points: ann.holes.filter((h) => h.tee).map((h) => ({ hole: h.number, source: [h.tee.xPx, h.tee.yPx], canonical: [h.tee.xPx, h.tee.yPx - dy] })).sort((a, b) => a.hole - b.hole)
-  };
+  // Testimony only feeds the judge guarantee; recovery itself runs blind (a course without testimony still recovers).
+  const T = loadTestimony(specimen, root);
+  const teePoints = T ? {
+    frame: 'canonical', path: T.file, rule: `canonical y = annotation y - ${T.dy} px (testimony/${specimen}/README.md measured mapping); tee points are ring-hole centroids`,
+    points: [...T.holes.values()].map((h) => ({ hole: h.hole, source: [h.tee[0], h.tee[1] + T.dy], canonical: h.tee })).sort((a, b) => a.hole - b.hole)
+  } : { frame: 'canonical', path: null, rule: `no testimony for ${specimen}: blind run, nothing judged`, points: [] };
 
   const srcPath = join(fork, record.request.sourcePath);
   const bytes = existsSync(srcPath) ? readFileSync(srcPath) : null;

@@ -9,7 +9,7 @@
  * FP is only judged where Sam annotated every hole (complete testimony); otherwise detections that
  * match no annotated hole are "unjudged", never counted as errors.
  */
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { loadTestimony } from './testimony.mjs';
 import { nameCandidates } from '../../fg/names.mjs';
@@ -137,6 +137,41 @@ export function judgeAttempt({ specimen, attempt, root = ROOT }) {
         note: 'TP = straight called straight; FP = bent called straight (the hallway must reject); FN = straight called bent (sent to pathfinding, safe); TN = bent called bent' };
     }
   }
+
+  // S4 recovery, judged by the same rule as S2/S3 (one match radius per kind), on the union with what S2/S3 found.
+  // Baskets: S2 + the accepted S4 proposals that are not an S2 basket (basket-bridge). Tees: S3 + each fn.Tee.recover
+  // branch (ports/s4recover, latest run); a recovered tee carries the hole it was recovered for, judged as association.
+  const bridgeFile = join(out, 'basket-bridge', 'basket-recovery.part.json');
+  if (existsSync(bridgeFile)) {
+    const rec = (JSON.parse(readFileSync(bridgeFile, 'utf8')).comparisons?.accepted ?? []).filter((d) => d.classification !== 'existing-s2-exact').map((d) => d.semanticBbox);
+    const rNames = nameCandidates('Basket', rec, (b) => basketPoint(b)).map((n) => `S4 ${n}`);
+    const dets = [...kj.map((k, i) => ({ name: kNames[i], point: basketPoint(k.bbox) })), ...rec.map((b, i) => ({ name: rNames[i], point: basketPoint(b) }))];
+    const S4b = detectionStage('Basket', dets, T, (h) => h.basket, MATCH_PX.basket); delete S4b.holeOfDetection;
+    S4b.recovered = rec.length; S4b.recoveredTP = S4b.tp.filter((s) => s.startsWith('S4 ')); S4b.recoveredFP = S4b.fp.filter((s) => s.startsWith('S4 '));
+    report.stages.S4baskets = S4b;
+  }
+  const s4dir = join(out, 's4recover'), tf4 = join(A, 's3fix', 'px.tees.refined.json');
+  const runs = existsSync(s4dir) ? readdirSync(s4dir).filter((d) => d.startsWith('run-')).sort() : [];
+  if (runs.length && existsSync(tf4)) {
+    const tees = JSON.parse(readFileSync(tf4, 'utf8')).tees, tNames = nameCandidates('Tee', tees, (t) => t.center);
+    const base = join(s4dir, runs.at(-1), 'artifacts', 'fn.Tee.recover');
+    report.stages.S4tees = { run: runs.at(-1), branches: {} };
+    for (const branch of readdirSync(base).sort()) {
+      const R = JSON.parse(readFileSync(join(base, branch, 'recovered.json'), 'utf8')).recovered ?? [];
+      const rNames = nameCandidates('Tee', R, (t) => t.center).map((n) => `S4 ${n}`);
+      const dets = [...tees.map((t, i) => ({ name: tNames[i], point: t.center })), ...R.map((t, i) => ({ name: rNames[i], point: t.center }))];
+      const s = detectionStage('Tee', dets, T, (h) => h.tee, MATCH_PX.tee);
+      const holeOf = s.holeOfDetection; delete s.holeOfDetection;
+      const assoc = { correct: [], incorrect: [], unjudged: [] };
+      R.forEach((t, i) => {
+        const truth = holeOf.get(tees.length + i);
+        if (truth == null) return;
+        (Number(t.hole) === truth ? assoc.correct : assoc.incorrect).push(`${rNames[i]} for Hole ${t.hole}${Number(t.hole) === truth ? '' : `, is Tee ${truth}`} (${r2(dist(t.center, T.holes.get(truth).tee))} px)`);
+      });
+      report.stages.S4tees.branches[branch] = { ...s, recovered: R.length, recoveredTP: s.tp.filter((x) => x.startsWith('S4 ')), recoveredFP: s.fp.filter((x) => x.startsWith('S4 ')),
+        recoveredForHoleCorrectly: assoc.correct.length, recoveredForWrongHole: assoc.incorrect.length, association: assoc };
+    }
+  }
   return report;
 }
 
@@ -156,6 +191,14 @@ export function formatReport(r) {
   const s5 = r.stages.S5straight;
   if (s5) { L.push(`  S5 3-point straight test: ${s5.judgedHoles} judged holes; TP ${s5.TP} / FP ${s5.FP} / FN ${s5.FN} / TN ${s5.TN}; straight with wrong basket ${s5.straightWithWrongBasket}`);
     if (s5.fp.length) L.push(`      FP (bent called straight): ${s5.fp.join(', ')}`); if (s5.fn.length) L.push(`      FN (straight called bent): ${s5.fn.join(', ')}`); if (s5.wrongBasket.length) L.push(`      wrong basket: ${s5.wrongBasket.join(', ')}`); }
+  const b4 = r.stages.S4baskets;
+  if (b4) { L.push(`  S4 baskets (S2 + ${b4.recovered} recovered): TP ${b4.TP} / FN ${b4.FN} / FP ${b4.FP ?? 'unjudged'}; recovered TP [${b4.recoveredTP.join(', ')}], recovered FP [${b4.recoveredFP.join(', ')}]`);
+    if (b4.fn.length) L.push(`      FN: ${b4.fn.join(', ')}`); }
+  const t4 = r.stages.S4tees;
+  if (t4) for (const [b, s] of Object.entries(t4.branches)) {
+    L.push(`  S4 tees, ${b} (S3 + ${s.recovered} recovered): TP ${s.TP} / FN ${s.FN} / FP ${s.FP ?? 'unjudged'}; recovered for the right hole ${s.recoveredForHoleCorrectly}, wrong hole ${s.recoveredForWrongHole}; recovered FP [${s.recoveredFP.join(', ')}]`);
+    if (s.fn.length) L.push(`      FN: ${s.fn.join(', ')}`); if (s.association.incorrect.length) L.push(`      wrong hole: ${s.association.incorrect.join('; ')}`);
+  }
   return L.join('\n');
 }
 

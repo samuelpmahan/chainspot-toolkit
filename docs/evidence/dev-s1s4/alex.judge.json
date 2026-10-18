@@ -1,0 +1,229 @@
+{
+ "specimen": "alex",
+ "attempt": "attempt-1792282212276-88268971bd43",
+ "testimony": {
+  "file": "testimony/alex/AlexClark-full.annotation.json",
+  "annotatedHoles": [
+   6,
+   13,
+   16
+  ],
+  "complete": false
+ },
+ "stages": {
+  "S1": {
+   "found": 18,
+   "labelsPresent": 3,
+   "labelsMissing": [],
+   "duplicates": []
+  },
+  "S2": {
+   "found": 15,
+   "annotated": 3,
+   "TP": 3,
+   "FN": 0,
+   "FP": null,
+   "unjudged": 12,
+   "tp": [
+    "Basket ci = Basket 16 (1.4 px)",
+    "Basket cd = Basket 13 (2.79 px)",
+    "Basket cm = Basket 6 (3.2 px)"
+   ],
+   "fn": [],
+   "fp": [],
+   "errorPx": {
+    "median": 2.79,
+    "max": 3.2
+   },
+   "matchWithinPx": 12
+  },
+  "S3": {
+   "found": 13,
+   "annotated": 3,
+   "TP": 2,
+   "FN": 1,
+   "FP": null,
+   "unjudged": 11,
+   "tp": [
+    "Tee cc = Tee 16 (1.08 px)",
+    "Tee ck = Tee 6 (3.49 px)"
+   ],
+   "fn": [
+    "Tee 13 (partly hidden by Basket cb (68%): S4)"
+   ],
+   "fp": [],
+   "errorPx": {
+    "median": 3.49,
+    "max": 3.49
+   },
+   "matchWithinPx": 8,
+   "occluders": {
+    "Tee 13": [
+     {
+      "name": "Basket cb",
+      "opaque": true,
+      "fraction": 0.68
+     },
+     {
+      "name": "C1S of Basket cb",
+      "opaque": false,
+      "fraction": 0.151
+     }
+    ]
+   }
+  },
+  "S3association": {
+   "judgedTees": 2,
+   "associatedCorrectly": 2,
+   "associatedIncorrectly": 0,
+   "notAssociated": 0,
+   "unjudgedTees": 11,
+   "correct": [
+    "Tee cc -> Badge 16",
+    "Tee ck -> Badge 6"
+   ],
+   "incorrect": [],
+   "none": []
+  },
+  "S5straight": {
+   "judgedHoles": 2,
+   "TP": 0,
+   "FP": 0,
+   "FN": 0,
+   "TN": 2,
+   "straightWithWrongBasket": 0,
+   "tp": [],
+   "fp": [],
+   "fn": [],
+   "wrongBasket": [],
+   "note": "TP = straight called straight; FP = bent called straight (the hallway must reject); FN = straight called bent (sent to pathfinding, safe); TN = bent called bent"
+  },
+  "S4baskets": {
+   "found": 18,
+   "annotated": 3,
+   "TP": 3,
+   "FN": 0,
+   "FP": null,
+   "unjudged": 15,
+   "tp": [
+    "Basket ci = Basket 16 (1.4 px)",
+    "Basket cd = Basket 13 (2.79 px)",
+    "Basket cm = Basket 6 (3.2 px)"
+   ],
+   "fn": [],
+   "fp": [],
+   "errorPx": {
+    "median": 2.79,
+    "max": 3.2
+   },
+   "matchWithinPx": 12,
+   "recovered": 3,
+   "recoveredTP": [],
+   "recoveredFP": []
+  },
+  "S4tees": {
+   "run": "run-2026-10-18T00-11-19-950Z",
+   "branches": {
+    "greedyOccluded": {
+     "found": 17,
+     "annotated": 3,
+     "TP": 3,
+     "FN": 0,
+     "FP": null,
+     "unjudged": 14,
+     "tp": [
+      "Tee cc = Tee 16 (1.08 px)",
+      "S4 Tee ca = Tee 13 (3.01 px)",
+      "Tee ck = Tee 6 (3.49 px)"
+     ],
+     "fn": [],
+     "fp": [],
+     "errorPx": {
+      "median": 3.01,
+      "max": 3.49
+     },
+     "matchWithinPx": 8,
+     "recovered": 4,
+     "recoveredTP": [
+      "S4 Tee ca = Tee 13 (3.01 px)"
+     ],
+     "recoveredFP": [],
+     "recoveredForHoleCorrectly": 1,
+     "recoveredForWrongHole": 0,
+     "association": {
+      "correct": [
+       "S4 Tee ca for Hole 13 (3.01 px)"
+      ],
+      "incorrect": [],
+      "unjudged": []
+     }
+    },
+    "greedyOccludedNoBadgeRay": {
+     "found": 17,
+     "annotated": 3,
+     "TP": 3,
+     "FN": 0,
+     "FP": null,
+     "unjudged": 14,
+     "tp": [
+      "Tee cc = Tee 16 (1.08 px)",
+      "S4 Tee ca = Tee 13 (3.01 px)",
+      "Tee ck = Tee 6 (3.49 px)"
+     ],
+     "fn": [],
+     "fp": [],
+     "errorPx": {
+      "median": 3.01,
+      "max": 3.49
+     },
+     "matchWithinPx": 8,
+     "recovered": 4,
+     "recoveredTP": [
+      "S4 Tee ca = Tee 13 (3.01 px)"
+     ],
+     "recoveredFP": [],
+     "recoveredForHoleCorrectly": 1,
+     "recoveredForWrongHole": 0,
+     "association": {
+      "correct": [
+       "S4 Tee ca for Hole 13 (3.01 px)"
+      ],
+      "incorrect": [],
+      "unjudged": []
+     }
+    },
+    "pinned": {
+     "found": 15,
+     "annotated": 3,
+     "TP": 2,
+     "FN": 1,
+     "FP": null,
+     "unjudged": 13,
+     "tp": [
+      "Tee cc = Tee 16 (1.08 px)",
+      "Tee ck = Tee 6 (3.49 px)"
+     ],
+     "fn": [
+      "Tee 13"
+     ],
+     "fp": [],
+     "errorPx": {
+      "median": 3.49,
+      "max": 3.49
+     },
+     "matchWithinPx": 8,
+     "recovered": 2,
+     "recoveredTP": [],
+     "recoveredFP": [],
+     "recoveredForHoleCorrectly": 0,
+     "recoveredForWrongHole": 0,
+     "association": {
+      "correct": [],
+      "incorrect": [],
+      "unjudged": []
+     }
+    }
+   }
+  }
+ }
+}
