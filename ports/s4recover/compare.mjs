@@ -88,7 +88,7 @@ export function compareRecovered({ contract, parentStore }) {
       parts: [
         ...names.map((n) => ({ address: `cmp.${TEE_RECOVER_SLOT.slot}.${n}`, kind: 'points', data: { points: view[n].recovered.map((t) => [...t.center, `${n} hole ${t.hole}`]) } })),
         { address: 'testimony.tees', kind: 'points', data: { points: tp.points.map((p) => [...p.canonical, `hole ${p.hole}`]) } },
-        { address: `cmp.${TEE_RECOVER_SLOT.slot}.table`, kind: 'ledger', data: { rows: names.map((n) => ({ branch: n, recovered: perBranch[n].recovered, landsOwnHole: perBranch[n].landsOwnHole, landsOtherHole: perBranch[n].landsOtherHole, impostors: perBranch[n].impostors, meanErrorPx: perBranch[n].meanErrorPx, maxErrorPx: perBranch[n].maxErrorPx, stillMissingHoles: (perBranch[n].stillMissingHoles ?? []).join(' '), error: perBranch[n].error })) } },
+        { address: `cmp.${TEE_RECOVER_SLOT.slot}.table`, kind: 'ledger', data: { rows: names.map((n) => ({ branch: n, recovered: perBranch[n].recovered, landsOwnHole: perBranch[n].landsOwnHole, landsOtherHole: perBranch[n].landsOtherHole, impostors: perBranch[n].impostors, unjudged: perBranch[n].unjudged, meanErrorPx: perBranch[n].meanErrorPx, maxErrorPx: perBranch[n].maxErrorPx, stillMissingHoles: (perBranch[n].stillMissingHoles ?? []).join(' '), error: perBranch[n].error })) } },
         { address: `cmp.${TEE_RECOVER_SLOT.slot}.identities`, kind: 'ledger', data: { rows: identities.map((r) => ({ ...r, centerPx: r.centerPx.join(', '), in: r.in.join(' ') })) } }
       ],
       verdicts: names.map((n) => ({ name: `${n}: ${perBranch[n].landsOwnHole ?? '?'}/${perBranch[n].recovered} land on their own annotated hole (<= ${TEE_RECOVER_SLOT.hitRadiusPx} px)`, ok: perBranch[n].impostors === 0 })),

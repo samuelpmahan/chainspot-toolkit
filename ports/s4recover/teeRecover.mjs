@@ -51,7 +51,7 @@ export const TEE_RECOVER_SLOT = Object.freeze({
   part: 'px.tees.recovered',
   materialize: 'fg.s4.teeRecover.materialize',
   testimony: 'fg.s4.teeRecover.testimony',
-  hitRadiusPx: 3,
+  hitRadiusPx: 8,            // judging only: the one tee match rule (AGENTS.md: tee 8 px, basket 12 px); S4's own geometry never reads it
   cropPx: 64,
   cropScale: 5
 });

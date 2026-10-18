@@ -10,7 +10,7 @@
  *     written as an artifact (pixel sets omitted) with a frame
  *   fg.s4.teeRecover.testimony  judged against Sam's annotation (tee points
  *     are ring-hole centroids, canonical frame): a recovered tee LANDS when
- *     an annotated tee point is within hitRadiusPx (3 px); it is an
+ *     an annotated tee point is within hitRadiusPx (8 px, the one tee match rule of AGENTS.md); it is an
  *     IMPOSTOR otherwise; per tee the error in px to the nearest annotated
  *     point and whether that point's hole is the badge it was recovered for.
  *     Still-missing holes: annotated holes no S3 tee and no recovered tee
@@ -66,12 +66,11 @@ export const materialize = defineGuarantee({
 export function judgeRecovered(recovered, points, s3Tees, hitRadiusPx = TEE_RECOVER_SLOT.hitRadiusPx) {
   const near = (c) => points.map((p) => ({ hole: p.hole, distancePx: Math.hypot(p.canonical[0] - c[0], p.canonical[1] - c[1]) })).sort((a, b) => a.distancePx - b.distancePx)[0] ?? null;
   const s3Holes = new Set(points.filter((p) => s3Tees.some((t) => Math.hypot(t.center[0] - p.canonical[0], t.center[1] - p.canonical[1]) <= hitRadiusPx)).map((p) => p.hole));
-  // Sam's tee points are the centroid of the VISIBLE hole (golden 12: 4.4 px
-  // toward the visible side of an occluded pad). Testimony is therefore judged
-  // against the recovered visible-interior centroid when the implementation
-  // reports one; the full-pad-centre error is reported beside it.
+  // One match rule per kind (AGENTS.md): the pad centre within 8 px of Sam's point, the same rule and the same
+  // point the judge (ports/judge) applies, so the pointer rule and the state matrix agree. The visible-interior
+  // centroid's error is reported beside it (Sam's marks on an occluded pad lean toward the visible side: golden 12).
   const verdicts = recovered.map((t, index) => {
-    const at = t.visibleCenter ?? t.center;
+    const at = t.center;
     const n = near(at);
     const lands = Boolean(n && n.distancePx <= hitRadiusPx);
     const own = points.find((p) => String(p.hole) === String(t.hole));
@@ -79,14 +78,15 @@ export function judgeRecovered(recovered, points, s3Tees, hitRadiusPx = TEE_RECO
       index, hole: t.hole, center: t.center, visibleCenter: t.visibleCenter ?? null,
       nearestHole: n?.hole ?? null, nearestDistancePx: n ? r3(n.distancePx) : null,
       ownHoleErrorPx: own ? r3(Math.hypot(own.canonical[0] - at[0], own.canonical[1] - at[1])) : null,
-      padCentreErrorPx: own ? r3(Math.hypot(own.canonical[0] - t.center[0], own.canonical[1] - t.center[1])) : null,
-      verdict: lands ? (String(n.hole) === String(t.hole) ? 'lands-own-hole' : 'lands-other-hole') : 'impostor',
+      visibleCentreErrorPx: own && t.visibleCenter ? r3(Math.hypot(own.canonical[0] - t.visibleCenter[0], own.canonical[1] - t.visibleCenter[1])) : null,
+      // a tee recovered for a hole Sam did not annotate, landing on no annotated point, is unjudged (partial testimony), not an impostor
+      verdict: lands ? (String(n.hole) === String(t.hole) ? 'lands-own-hole' : 'lands-other-hole') : own ? 'impostor' : 'unjudged',
       onS3Hole: lands ? s3Holes.has(n.hole) : false
     };
   });
-  const landed = new Set(verdicts.filter((v) => v.verdict !== 'impostor').map((v) => v.nearestHole));
+  const landed = new Set(verdicts.filter((v) => v.verdict.startsWith('lands')).map((v) => v.nearestHole));
   const stillMissing = points.filter((p) => !s3Holes.has(p.hole) && !landed.has(p.hole)).map((p) => p.hole);
-  const errs = verdicts.filter((v) => v.verdict !== 'impostor').map((v) => v.nearestDistancePx);
+  const errs = verdicts.filter((v) => v.verdict.startsWith('lands')).map((v) => v.nearestDistancePx);
   return {
     hitRadiusPx, verdicts,
     s3CoveredHoles: [...s3Holes].sort((a, b) => a - b),
@@ -96,6 +96,7 @@ export function judgeRecovered(recovered, points, s3Tees, hitRadiusPx = TEE_RECO
       landsOwnHole: verdicts.filter((v) => v.verdict === 'lands-own-hole').length,
       landsOtherHole: verdicts.filter((v) => v.verdict === 'lands-other-hole').length,
       impostors: verdicts.filter((v) => v.verdict === 'impostor').length,
+      unjudged: verdicts.filter((v) => v.verdict === 'unjudged').length,
       meanErrorPx: errs.length ? r3(errs.reduce((a, b) => a + b, 0) / errs.length) : null,
       maxErrorPx: errs.length ? r3(Math.max(...errs)) : null,
       stillMissing: stillMissing.length
