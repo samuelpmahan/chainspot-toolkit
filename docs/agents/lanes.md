@@ -21,8 +21,10 @@ Nothing is understood from the code alone. Run it, read what it wrote, then ask 
    - `node ports/s3assoc/run.mjs --specimen golden --attempt <id>`;
    - `node ports/s4recover/run.mjs --specimen golden --attempt <id>`: open `s4recover.flipbook.html` (profile page, Part pages, pose frames), `instrumentation.json`, `cmp.fn.Tee.recover.json`;
    - `node ports/judge/judge.mjs --specimen golden --attempt <id>`.
-3. **Repeat for the other five dev courses**, one subagent per course (see below). Compare with
-   `docs/evidence/dev-s1s4/scoreboard.md`, the frozen record of S1-S4 on dev (2026-10-18).
+3. **Repeat for the other five dev courses**, one subagent per course (see below). Then `node scripts/pxc.mjs state`:
+   the derived matrix of every stage on every course (goal, expected, result, status, freshness). Compare with
+   `docs/evidence/dev-s1s4/scoreboard.md`, the frozen record of S1-S4 on dev (2026-10-18); once `frozen.json` exists
+   the matrix shows each row as same / changed / new against it.
 4. **Then work with Sam on goals and motivations.** `DOCTRINE.md` holds his rulings; `stages/s*.json` holds each
    stage's `responsibility`. Ask him what each stage is for and why before proposing a signal. Implement his general
    rules as he gives them; no detours he did not ask for.
@@ -35,7 +37,8 @@ Nothing is understood from the code alone. Run it, read what it wrote, then ask 
 - **Call the shot before the run.** For a behaviour change, write the predicted judged delta per course (which
   holes change from FN to TP, which stay) before running; grade it after. An uncalled change in the result is not
   a foul, it is a finding to investigate (alex Tee 12 fell out of a pose-search refactor and was real).
-- **A refactor gives identical output on every dev course** before it is claimed.
+- **A refactor gives identical output on every dev course** before it is claimed: `node scripts/pxc.mjs state --retest`
+  re-runs only the cells your change made stale, then every row reads `same` against `frozen.json`.
 - **Testimony is optional and impeachable.** Sam's marks are often a few px off. A disagreement is a render to
   cross-reference by eye, never a verdict against the pipeline.
 - **Render to decide.** Legible: labelled, coloured by status, with a legend. Sam often sees the differentiator in a

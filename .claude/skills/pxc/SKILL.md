@@ -18,6 +18,7 @@ Start from what the task is, load only the page it needs (`node scripts/pxc.mjs 
 | a reusable check on a stage | `explain fg` | `node scripts/pxc.mjs scaffold mixin <name>` |
 | reporting, rendering, judging, claiming a constant | `explain evidence` | `node ports/judge/judge.mjs ...`; `fn.q.part.render` |
 | is this run healthy / profiled / renderable? | | `node scripts/pxc.mjs doctor --attempt <id>` |
+| where does every stage stand on every dev course; what did my change make stale? | | `node scripts/pxc.mjs state [--retest]` |
 
 ## Defaults you get without writing anything
 

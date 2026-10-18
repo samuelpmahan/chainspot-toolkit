@@ -8,6 +8,8 @@ This file is the map; the details are one step away:
   calculations, fg, evidence, lanes (two agents: platform and algorithm, who owns what, how the algorithm lane starts).
 - `node scripts/pxc.mjs doctor [file | --attempt id]` shows what is outside the system, with the fix.
 - `node scripts/pxc.mjs scaffold query | calculation | mixin ...` writes the right shape, with a passing test.
+- `node scripts/pxc.mjs state [--retest] [--freeze]` derives the state of every stage on every dev course (goal, expected,
+  result, status, freshness) and re-runs only the stale cells. Status is never typed by hand.
 
 **Prototype freely.** Scratch scripts, Python and direct pixel loops are fine while an idea is unproven, and
 nothing blocks them. When it works, graduate it (`explain prototyping`): doctor, then scaffold, then prove identical
@@ -75,7 +77,8 @@ output.
 ## Changing code
 
 - **A refactor must give identical output** on every dev course (`docs/evidence/dev-s1s4/ATTEMPTS`) before you
-  claim it. Diff recovered poses, scores, evidence and misses.
+  claim it. Diff recovered poses, scores, evidence and misses. `node scripts/pxc.mjs state --retest` re-runs the
+  stale cells and shows every row against `frozen.json` (same / changed / new).
 - **A behaviour change must be judged** (`node ports/judge/judge.mjs --specimen X --attempt ID`) and reported as
   TP/FN/FP plus right/wrong hole, per course.
 - **Checks:**

@@ -12,6 +12,9 @@
   agreement class can be trusted on the annotated courses first (`docs/evidence/crossval/`).
 - **Constants:** GLOBAL only if it holds across courses AND zoom scales. LOCAL is measured per image; VARIABLE
   depends on the view. Never put an absolute px bound on a map-scaled quantity (`docs/evidence/ledger/`).
+- **State:** `node scripts/pxc.mjs state` derives, for every stage on every dev course, the goal, expected, result,
+  status (met / unmet / unjudged / missing / stale) and freshness; `--retest` re-runs only stale cells; `--freeze`
+  records the rows as `docs/evidence/dev-s1s4/frozen.json`, which later matrices are compared against.
 - **Refactors:** identical output on every dev course is the claim. **Behaviour changes:** judged, per course.
 - **Sam's rules:** implement his general rules as he gives them before inventing signals. Make no detours he did not
   ask for.

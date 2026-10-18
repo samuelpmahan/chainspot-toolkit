@@ -9,6 +9,8 @@
  *   node scripts/pxc.mjs scaffold query <family>          fg/queries/<family>.mjs + test (fn.q.<family>.*)
  *   node scripts/pxc.mjs scaffold calculation <dir> <name>   <dir>/<name>.calc.mjs + test (a Calculation with emits)
  *   node scripts/pxc.mjs scaffold mixin <name>            fg/mixins.<name>.mjs + test (an FG property)
+ *   node scripts/pxc.mjs state [--retest [all]] [--freeze] [--json]   every stage on every dev course: goal, expected,
+ *                                                         result, status (derived), freshness; retest re-runs only stale cells
  * Scaffolds never overwrite a file.
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
@@ -172,6 +174,7 @@ test('${name} composes onto any FG and keeps the defaults', () => {
 }
 
 if (cmd === 'explain') explain(rest[0]);
+else if (cmd === 'state') await (await import('../ports/state/matrix.mjs')).stateCommand(rest, { say });
 else if (cmd === 'doctor') await doctor(rest);
 else if (cmd === 'scaffold') scaffold(rest);
 else say(readFileSync(new URL(import.meta.url)).toString().split('*/')[0].split('\n').slice(2).map((l) => l.replace(/^ \* ?/, '')).join('\n'));
