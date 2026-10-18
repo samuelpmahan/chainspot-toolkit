@@ -10,7 +10,8 @@
  *   fn.tk.s6.hallway    teebadge.py learn: the course hallway width from every S3 tee -> badge segment (always straight:
  *                       the badge precedes the first bend) -> tk.s6.hallway (LOCAL, measured on this image)
  *   fn.tk.s6.pairs      per S3-associated tee: the tee cap S = T + u FRONT L (badgeseed.py FRONT = 10.6 / 25.02) ->
- *                       the BasketPoint its tee -> badge line reaches best (S3's 3-point test, straight3) -> tk.s6.pairs
+ *                       straight3's BasketPoint when its verdict is STRAIGHT, else the S2 + S4-recovered (tk.s4.basketRecovery)
+ *                       basket nearest the tee axis beyond the badge -> tk.s6.pairs
  *   fn.tk.s6.pathLoss   per pair, on the stations 0.6 W .. |K - S| - 2 (s3first.py seg_fit's trims), side by side:
  *                       the EDGE TEST (proven: min-side contrast > 8 lum) and the ALPHA OVERLAY FRACTION (new) -> tk.s6.pathLoss
  *                       The overlay's course-local level is LEARNED ON THE STRAIGHT HOLES (DOCTRINE S6): the median
@@ -106,27 +107,40 @@ export function hallwayOf(q, { association, badges }) {
 
 // ------------------------------------------------------------------ fn.tk.s6.pairs
 
-export function pairsOf(baskets, association) {
+export function pairsOf(baskets, association, recovery = null) {
   const rows = association?.rows ?? [], L = association?.template?.L;
   if (!rows.length) return { schema: 'nctk-s6-pairs@1', condition: association?.condition ?? 'no S3 association rows', rule: null, pairs: [], skipped: [], emits: { pairsCount: 0 } };
-  const bps = baskets.map((k) => basketPoint(k.bbox)), kNames = nameCandidates('Basket', baskets, (k) => basketPoint(k.bbox));
+  // basket candidates: S2 baskets PLUS the S4 recovered ones (tk.s4.basketRecovery semanticBbox), BasketPoint the same way
+  const recovered = recovery?.recoveredBoxes ?? [];
+  const cands = [...baskets.map((k, i) => ({ source: 'S2', index: i, bbox: k.bbox })), ...recovered.map((b, i) => ({ source: 'S4 recovered', index: i, bbox: b }))];
+  const names = nameCandidates('Basket', cands, (k) => basketPoint(k.bbox));
+  cands.forEach((k, i) => { k.point = basketPoint(k.bbox); k.name = k.source === 'S2' ? names[i] : `S4 ${names[i]}`; });
   const pairs = [], skipped = [];
   rows.forEach((r, i) => {
     const name = r.candidate ?? `row ${i}`;
     if (!r.best) { skipped.push({ candidate: name, reason: 'no badge associated' }); return; }
-    const k = r.straight3?.basket;
-    if (k == null || !bps[k]) { skipped.push({ candidate: name, reason: 'no basket beyond the badge on the tee -> badge line' }); return; }
-    const u = axisOf(r), S = [r.center[0] + u[0] * FRONT * L, r.center[1] + u[1] * FRONT * L], K = bps[k];
+    const u = axisOf(r), n = [-u[1], u[0]], T = r.center, badgeAlong = r.best.distPx ?? 0;
+    const onAxis = (k) => { const d = [k.point[0] - T[0], k.point[1] - T[1]]; return { k, alongPx: d[0] * u[0] + d[1] * u[1], lateralPx: Math.abs(d[0] * n[0] + d[1] * n[1]) }; };
+    let pick, by;
+    if (r.straight3?.verdict === 'STRAIGHT' && cands[r.straight3.basket]) { pick = onAxis(cands[r.straight3.basket]); by = 'straight3 STRAIGHT: its basket'; }
+    else {
+      // not 3-point straight: the candidate basket nearest the tee's axis, beyond its badge, among S2 + S4 recovered
+      pick = cands.map(onAxis).filter((h) => h.alongPx > badgeAlong).sort((a, b) => a.lateralPx - b.lateralPx)[0];
+      by = `straight3 ${r.straight3?.verdict ?? 'none'}: the S2 + S4 basket nearest the tee axis beyond the badge`;
+    }
+    if (!pick) { skipped.push({ candidate: name, reason: 'no basket beyond the badge along the tee axis (S2 + S4)' }); return; }
+    const S = [T[0] + u[0] * FRONT * L, T[1] + u[1] * FRONT * L], K = pick.k.point;
     pairs.push({
-      pair: `${name} -> ${kNames[k]} (via Badge ${r.best.badge})`, candidate: name, row: i, badge: String(r.best.badge),
-      teePx: r.center.map(r3), capPx: S.map(r3), basketIndex: k, basketCandidate: kNames[k], basketPx: K.map(r3),
-      phiRad: Math.atan2(K[1] - S[1], K[0] - S[0]), lengthPx: r3(dist(S, K)), straight3: r.straight3.verdict, straight3TlsMaxPx: r.straight3.tlsMaxPx ?? null
+      pair: `${name} -> ${pick.k.name} (via Badge ${r.best.badge})`, candidate: name, row: i, badge: String(r.best.badge),
+      teePx: T.map(r3), capPx: S.map(r3), basketSource: pick.k.source, basketIndex: pick.k.index, basketCandidate: pick.k.name, basketPx: K.map(r3),
+      basketLateralPx: r3(pick.lateralPx), basketBy: by,
+      phiRad: Math.atan2(K[1] - S[1], K[0] - S[0]), lengthPx: r3(dist(S, K)), straight3: r.straight3?.verdict ?? null, straight3TlsMaxPx: r.straight3?.tlsMaxPx ?? null
     });
   });
   return {
-    schema: 'nctk-s6-pairs@1', condition: null, padLengthPx: L ?? null,
-    rule: 'per S3-associated tee: the tee cap S = T + u FRONT L (L: association template) -> BasketPoint of straight3.basket (the 3-point TLS test), canonical px',
-    pairs, skipped, emits: { pairsCount: pairs.length, skippedCount: skipped.length, straight3Count: pairs.filter((p) => p.straight3 === 'STRAIGHT').length }
+    schema: 'nctk-s6-pairs@1', condition: null, padLengthPx: L ?? null, basketCandidates: { s2Count: baskets.length, s4RecoveredCount: recovered.length },
+    rule: 'per S3-associated tee: the tee cap S = T + u FRONT L (L: association template) -> a BasketPoint: straight3.basket when the 3-point verdict is STRAIGHT, else the S2 + S4-recovered basket nearest the tee axis beyond the badge (lateral px recorded); canonical px',
+    pairs, skipped, emits: { pairsCount: pairs.length, skippedCount: skipped.length, straight3Count: pairs.filter((p) => p.straight3 === 'STRAIGHT').length, s4BasketCount: pairs.filter((p) => p.basketSource === 'S4 recovered').length }
   };
 }
 
@@ -212,9 +226,9 @@ export const S6_PATH_CALCULATIONS = Object.freeze([
   ['fn.tk.s6.hallway', { inParts: ['px.image.cropped', PATH_MASK_PART, 'px.badges', 'px.tees.association'], outParts: [HALLWAY_PART], calls: [PATH_CALLS.width, PATH_CALLS.stationContrast], code: CODE,
     note: 'teebadge.py: the course hallway width from the tee -> badge segments',
     calculate: (io) => ({ [HALLWAY_PART]: hallwayOf((n, a) => io.call(PATH_CALLS[n], a).value, { association: io.in('px.tees.association'), badges: io.in('px.badges') }) }) }],
-  ['fn.tk.s6.pairs', { inParts: ['px.baskets', 'px.tees.association'], outParts: [PATH_PAIRS_PART], code: CODE,
-    note: 'tee cap -> straight3 BasketPoint per associated tee',
-    calculate: (io) => ({ [PATH_PAIRS_PART]: pairsOf(io.in('px.baskets'), io.in('px.tees.association')) }) }],
+  ['fn.tk.s6.pairs', { inParts: ['px.baskets', 'tk.s4.basketRecovery', 'px.tees.association'], outParts: [PATH_PAIRS_PART], code: CODE,
+    note: 'tee cap -> BasketPoint (straight3 when STRAIGHT, else nearest the tee axis among S2 + S4 recovered) per associated tee',
+    calculate: (io) => ({ [PATH_PAIRS_PART]: pairsOf(io.in('px.baskets'), io.in('px.tees.association'), io.in('tk.s4.basketRecovery')) }) }],
   ['fn.tk.s6.pathLoss', { inParts: ['px.image.cropped', PATH_MASK_PART, HALLWAY_PART, PATH_PAIRS_PART, ALPHA_PROFILE_PART, TESTIMONY_PART], outParts: [PATH_LOSS_PART], calls: [PATH_CALLS.overlayFraction, PATH_CALLS.loss], code: CODE,
     note: 'edge test and alpha overlay fraction along tee cap -> basket per pair',
     calculate: (io) => ({ [PATH_LOSS_PART]: measurePairs((n, a) => io.call(PATH_CALLS[n], a).value, { pairs: io.in(PATH_PAIRS_PART), hallway: io.in(HALLWAY_PART), profile: io.in(ALPHA_PROFILE_PART), testimony: io.in(TESTIMONY_PART) }) }) }]

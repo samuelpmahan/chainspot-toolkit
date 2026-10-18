@@ -31,11 +31,11 @@ function toyCourse() {
   ];
   return { board, rows, straight, bent };
 }
-function toyStore({ profile = null, testimony = true } = {}) {
+function toyStore({ profile = null, testimony = true, recoveredBoxes = [] } = {}) {
   const { board, rows, straight, bent } = toyCourse();
   const store = createPartStore({ base: { has: (a) => a in board, get: (a) => board[a] } });
   store.constant('fn.tk.s6test.laneOutputs', {
-    'px.tees.association': { rows, template: { L: 10 } }, 'px.tees.refined': [],
+    'px.tees.association': { rows, template: { L: 10 } }, 'px.tees.refined': [], 'tk.s4.basketRecovery': { recoveredBoxes },
     [TESTIMONY_PART]: testimony ? { path: 'toy', holes: [{ hole: 1, teePx: straight.tee, basketPx: straight.basket, bent: false }, { hole: 2, teePx: bent.tee, basketPx: bent.basket, bent: true }] } : { path: null, holes: [] }
   });
   if (profile) store.constant('fn.tk.s7test.alphaProfile', { [ALPHA_PROFILE_PART]: profile }); else registerAlphaAbsent(store, 'lane s7 not merged into lane/s6');
@@ -50,6 +50,15 @@ test('fn.tk.s6.pairs: tee cap -> straight3 BasketPoint per associated tee; the r
   assert.ok(Math.abs(p.pairs[0].capPx[0] - (24 + 10 * 10.6 / 25.02)) < 1e-3, 'S = T + u FRONT L');
   assert.equal(p.skipped[0].reason, 'no badge associated');
   assert.match(p.pairs[0].pair, /^Tee ca -> Basket c[a-z]+ \(via Badge 1\)$/);
+});
+
+test('fn.tk.s6.pairs: straight3 only when STRAIGHT; otherwise the S2 + S4 basket nearest the tee axis', () => {
+  const p = toyStore({ recoveredBoxes: [bboxAt([200, 128])] }).get(PATH_PAIRS_PART);
+  assert.equal(p.pairs[0].basketSource, 'S2'); assert.match(p.pairs[0].basketBy, /straight3 STRAIGHT/);
+  assert.equal(p.pairs[1].basketSource, 'S4 recovered'); assert.equal(p.pairs[1].basketLateralPx, 2);
+  assert.match(p.pairs[1].pair, /-> S4 Basket c[a-z]+ \(via Badge 2\)$/);
+  const q = toyStore().get(PATH_PAIRS_PART);
+  assert.equal(q.pairs[1].basketSource, 'S2'); assert.deepEqual(q.pairs[1].basketPx, [230, 100]);
 });
 
 test('fn.tk.s6.pathMask and fn.tk.s6.hallway: owned px masked, the width learned on the tee -> badge segments', () => {

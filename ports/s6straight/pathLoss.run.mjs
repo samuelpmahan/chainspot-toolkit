@@ -55,7 +55,7 @@ export function runPathLoss({ attempt, specimen, outDir = null, root = ROOT }) {
   const testimony = T ? { path: T.file, rule: `canonical frame (annotation y - ${T.dy} px); bent = corridorBends non-empty`, holes: [...T.holes.values()].map((h) => ({ hole: h.hole, teePx: h.tee, basketPx: h.basket, bent: h.bent })) }
     : { path: null, rule: `no testimony for ${specimen}: nothing judged`, holes: [] };
   const { store, document: instrumentation } = instrumentedStore({ name: `s6pathLoss:${specimen}`, base: loaded.board });
-  store.constant('fn.tk.s6pathLoss.laneOutputs', { 'px.tees.refined': loaded.values['px.tees.refined'], 'px.tees.association': { rows: association.rows, template: association.template ?? null, condition: association.condition ?? null }, [TESTIMONY_PART]: testimony });
+  store.constant('fn.tk.s6pathLoss.laneOutputs', { 'px.tees.refined': loaded.values['px.tees.refined'], 'tk.s4.basketRecovery': loaded.values['tk.s4.basketRecovery'], 'px.tees.association': { rows: association.rows, template: association.template ?? null, condition: association.condition ?? null }, [TESTIMONY_PART]: testimony });
   const alphaAbsent = registerAlphaAbsent(store, 'lane s7 not merged into lane/s6: no tk.s7.alphaProfile Calculation registered');
   registerPathLoss(store);
   const value = store.get(PATH_LOSS_PART);   // tk.s6.pathMask, tk.s6.hallway, tk.s6.pairs: produced on first need
