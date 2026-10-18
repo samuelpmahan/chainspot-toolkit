@@ -304,7 +304,14 @@ export function assignTeesToBadges(tees, badges) {
  */
 export function createRecoveryContext(inputs) {
   const { raster } = inputs;
-  const tpl = fitPadTemplate(raster, inputs.anchors, inputs.interiorTone);
+  // No usable template (no S3 anchors, or their profiles gave no frame crossings) is data, not a stop: the context
+  // carries why, recovery returns nothing recovered with that reason, and everything downstream still runs.
+  let tpl;
+  try { tpl = fitPadTemplate(raster, inputs.anchors, inputs.interiorTone); }
+  catch (e) {
+    return { W: raster.widthPx, H: raster.heightPx, raster, tpl: null, unavailable: e.message, badges: inputs.badges, tees: inputs.tees,
+      assignment: assignTeesToBadges(inputs.tees, inputs.badges), seeds: inputs.seeds ?? [], searchRadiusPx: null, searchRule: null };
+  }
   const cls = classifyRaster(raster, tpl);
   const occ = buildOccluders(raster, inputs, tpl);
   const assignment = assignTeesToBadges(inputs.tees, inputs.badges);
@@ -464,6 +471,11 @@ export function searchBadge(ctx, badge, { badgeRay = true } = {}) {
  */
 export function greedyRecover(ctx, { badgeRay = true } = {}) {
   const N = ctx.badges.length;
+  if (!ctx.tpl) {
+    const assigned = new Set(ctx.assignment.map((a) => a.badge));
+    return { recovered: [], log: [], rounds: 0, evaluatedPoses: 0, need: Math.max(0, N - ctx.tees.length),
+      missed: ctx.badges.map((b, i) => i).filter((i) => !assigned.has(i)).map((i) => ({ badgeIndex: i, hole: ctx.badges[i].label, reason: `no pad template: ${ctx.unavailable}` })) };
+  }
   const assignedBadges = new Set(ctx.assignment.map((a) => a.badge));
   const pending = new Set(ctx.badges.map((_, i) => i).filter((i) => !assignedBadges.has(i)));
   const need = Math.max(0, N - ctx.tees.length);

@@ -63,7 +63,9 @@ export function loadAttemptParts({ attempt, specimen, root = ROOT }) {
     return { index: b.index, label: b.label, bbox: b.bbox, px: b.px, mutePx: b.mute?.px ?? [], plateCenter: [bb[0] + bb[2] / 2, bb[1] + bb[3] / 2], plateHalfMinPx: Math.min(bb[2], bb[3]) / 2, plateRule: dark ? 'center of the S1 dark plate part bbox' : 'center of the S1 badge bbox' };
   });
   const baskets = readJson(join(A, 's2', 'px.baskets.json')).baskets.map((b) => ({ index: b.index, label: b.label, bbox: b.bbox, px: b.px }));
-  const bridge = readJson(join(out, 'basket-bridge', 'basket-recovery.part.json'));
+  // Optional upstream outputs: absent means that lane did not run; record it and feed forward with nothing from it.
+  const readOpt = (p, absent) => (existsSync(p) ? readJson(p) : absent);
+  const bridge = readOpt(join(out, 'basket-bridge', 'basket-recovery.part.json'), { comparisons: { accepted: [] }, absent: 'basket-bridge lane not run: no recovered basket boxes' });
   const recoveredBoxes = (bridge.comparisons?.accepted ?? []).filter((d) => d.classification !== 'existing-s2-exact').map((d) => d.semanticBbox);
   const refined = readJson(join(A, 's3fix', 'px.tees.refined.json')).tees.map((t) => ({ label: t.label, center: t.center, angleRad: t.angleRad, bbox: t.bbox, px: t.px }));
   const fam = readJson(join(A, 's3fix', 'px.tees.family-refined.json'));
@@ -76,8 +78,9 @@ export function loadAttemptParts({ attempt, specimen, root = ROOT }) {
   const receipt = readJson(join(out, 'early', 'run.receipt.json'));
   const upper = findKey(receipt, 'upperRowsRemoved');
   const originalPx = findKey(receipt, 'originalPx');
-  const geo = readJson(join(out, 'late', 'geometry.json'));
+  const geo = readOpt(join(out, 'late', 'geometry.json'), { refinedAxes: { recovered: [] }, badgePlates: [], absent: 'late S4 not run: the pinned branch has nothing' });
   const lateGeometry = {
+    absent: geo.absent ?? null,
     rule: `late/geometry.json refinedAxes.recovered, source px -> canonical: y - ${upper} (S0 upperRowsRemoved); hole from resultRef tee-shard-badge-<plate index> -> badgePlates[index].holeRead`,
     recovered: geo.refinedAxes.recovered.map((r) => {
       const m = /badge-(\d+)/.exec(r.resultRef ?? '');

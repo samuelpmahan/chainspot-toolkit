@@ -202,6 +202,31 @@ export function localBandFillBounds(bandFills) {
   return { median: round4(med), min: round4(med * FIX_BOUNDS.bandFillRelMin), max: round4(med * FIX_BOUNDS.bandFillRelMax), of: bandFills.length };
 }
 const inBand = (b, v) => !!b && v >= b.min && v <= b.max;
+/**
+ * Anchors feed forward, they never stop the run: the first non-empty rung wins and is recorded.
+ *   1 structural + local band fill   2 structural only   3 baseline S3 family members with a frame   4 any framed candidate
+ * An empty result (no framed candidate at all) means no pad model; the caller eliminates every candidate as 'no-pad-model'.
+ * xs: [{ structural, bandFill, baselineMember, framed }] (any extra fields are carried).
+ */
+export function chooseAnchors(xs) {
+  const structural = xs.filter((x) => x.structural);
+  const bandFill = localBandFillBounds(structural.map((x) => x.bandFill));
+  const rungs = [
+    ['structural tests + local band fill', structural.filter((x) => inBand(bandFill, x.bandFill))],
+    ['structural tests only (band fill outside the local bound)', structural],
+    ['baseline S3 family members with a frame (no structural passer)', xs.filter((x) => x.framed && x.baselineMember)],
+    ['any framed candidate (no structural passer, no framed baseline member)', xs.filter((x) => x.framed)]
+  ];
+  const [source, anchors] = rungs.find(([, a]) => a.length) ?? ['none: no framed candidate, no pad model', []];
+  return { anchors, source, bandFill };
+}
+
+/** No anchor at all: a model whose bounds admit nothing, so every candidate is eliminated with its tests recorded. */
+function noPadModel() {
+  const none = { min: null, max: null, median: null }, nothing = [Infinity, -Infinity];
+  return { anchorCount: 0, major: none, minor: none, area: none, holeArea: none, meanMargin: null, bandT: 0,
+    interiorTone: { median: [null, null, null], maxDev: null, tolerance: -1 }, bounds: { major: nothing, minor: nothing, area: nothing, holeArea: nothing } };
+}
 
 function buildModel(anchorEntries) {
   const majors = anchorEntries.map(e => e.measured.frameStats.major);
@@ -255,12 +280,10 @@ export function computeFamilyFix({ rings, family, fields, image, badges, baskets
   });
 
   // Pass A: anchors, then the fitted pad model from the anchors alone.
-  const structural = entries.filter(e => passAStructural(e.measured));
-  const bandFill = localBandFillBounds(structural.map(e => e.measured.frameStats.bandFill));
-  const anchors = structural.filter(e => inBand(bandFill, e.measured.frameStats.bandFill));
-  if (!anchors.length) throw new Error('findFamily structural refinement found no anchor pads; cannot fit the pad model');
-  const model = buildModel(anchors);
-  model.bandFill = bandFill;
+  const pick = chooseAnchors(entries.map(e => ({ e, structural: passAStructural(e.measured), bandFill: e.measured.frameStats?.bandFill ?? null, framed: e.measured.framed, baselineMember: baselineMemberIndex.has(ringKeyOf(e.ring)) })));
+  const anchors = pick.anchors.map(x => x.e), bandFill = pick.bandFill;
+  const model = anchors.length ? buildModel(anchors) : noPadModel();
+  model.bandFill = bandFill; model.anchorSource = pick.source;
   // Anchor band coverage under the fitted band thickness sets the coverage bound.
   for (const e of anchors) {
     const cov = bandCoverage(e.frame, new Set(e.measured.framePixels), ctx, model.bandT);
@@ -352,7 +375,7 @@ export function computeFamilyFix({ rings, family, fields, image, badges, baskets
     boundsRule: FIX_BOUNDS,
     model: {
       anchorCount: model.anchorCount, major: model.major, minor: model.minor, area: model.area, holeArea: model.holeArea,
-      meanMargin: model.meanMargin, bandT: model.bandT, interiorTone: model.interiorTone, anchorBandCoverageMin: model.anchorBandCoverageMin, bandFill: model.bandFill, bounds: model.bounds
+      meanMargin: model.meanMargin, bandT: model.bandT, interiorTone: model.interiorTone, anchorBandCoverageMin: model.anchorBandCoverageMin, bandFill: model.bandFill, anchorSource: model.anchorSource, bounds: model.bounds
     },
     counts: {
       candidates: rows.length, framed: rows.filter(r => r.frame).length, unframed: rows.filter(r => !r.frame).length,
@@ -428,25 +451,26 @@ export function rederiveFamilyFixVerdicts({ ringsPlain, familyPlain, fields, ima
   const isStructural = (m) => !!m.frame && m.margins.min >= FIX_BOUNDS.marginMin && m.margins.max <= FIX_BOUNDS.marginMax && m.margins.spread <= FIX_BOUNDS.marginSpreadMax
     && Math.abs(m.interior.lumMean - m.frameStats.lumMean) >= FIX_BOUNDS.interiorDeltaMin && m.interior.brightFrac <= FIX_BOUNDS.interiorBrightMax
     && m.frameStats.fracGe200 >= FIX_BOUNDS.whiteFracMin;
-  const structural = measured.filter(isStructural);
-  const bandFill = localBandFillBounds(structural.map(m => m.frameStats.bandFill));
-  const anchors = structural.filter(m => inBand(bandFill, m.frameStats.bandFill));
-  if (!anchors.length) throw new Error('witness re-derivation found no anchor pads');
+  const pick = chooseAnchors(measured.map(m => ({ m, structural: isStructural(m), bandFill: m.frameStats?.bandFill ?? null, framed: !!m.frame, baselineMember: memberIndex.has(key(m.ring)) })));
+  const anchors = pick.anchors.map(x => x.m), bandFill = pick.bandFill;
   const rng = (vals) => ({ min: Math.min(...vals), max: Math.max(...vals), median: median(vals) });
-  const model = {
-    anchorCount: anchors.length,
-    major: rng(anchors.map(a => a.frameStats.major)), minor: rng(anchors.map(a => a.frameStats.minor)),
-    area: rng(anchors.map(a => a.frameStats.area)), holeArea: rng(anchors.map(a => a.ring.holeArea)),
-    meanMargin: round4(anchors.reduce((n, a) => n + (a.margins.left + a.margins.top + a.margins.right + a.margins.bottom) / 4, 0) / anchors.length)
-  };
-  model.bandT = Math.round(model.meanMargin);
-  model.interiorTone = toneModel(anchors.map(a => a.interior.tone));
-  model.bandFill = bandFill;
-  const e = FIX_BOUNDS.sizeExpansion;
-  model.bounds = {
-    major: [round4(model.major.min / e), round4(model.major.max * e)], minor: [round4(model.minor.min / e), round4(model.minor.max * e)],
-    area: [round4(model.area.min / e), round4(model.area.max * e)], holeArea: [round4(model.holeArea.min / e), round4(model.holeArea.max * e)]
-  };
+  let model;
+  if (anchors.length) {
+    model = {
+      anchorCount: anchors.length,
+      major: rng(anchors.map(a => a.frameStats.major)), minor: rng(anchors.map(a => a.frameStats.minor)),
+      area: rng(anchors.map(a => a.frameStats.area)), holeArea: rng(anchors.map(a => a.ring.holeArea)),
+      meanMargin: round4(anchors.reduce((n, a) => n + (a.margins.left + a.margins.top + a.margins.right + a.margins.bottom) / 4, 0) / anchors.length)
+    };
+    model.bandT = Math.round(model.meanMargin);
+    model.interiorTone = toneModel(anchors.map(a => a.interior.tone));
+    const e = FIX_BOUNDS.sizeExpansion;
+    model.bounds = {
+      major: [round4(model.major.min / e), round4(model.major.max * e)], minor: [round4(model.minor.min / e), round4(model.minor.max * e)],
+      area: [round4(model.area.min / e), round4(model.area.max * e)], holeArea: [round4(model.holeArea.min / e), round4(model.holeArea.max * e)]
+    };
+  } else model = noPadModel();
+  model.bandFill = bandFill; model.anchorSource = pick.source;
   const coverageOf = (m) => {
     const band = rotatedBandPixels(m.frame, width, height, model.bandT);
     let hit = 0; for (const p of band) if (m.framePixelSet.has(p)) hit++;

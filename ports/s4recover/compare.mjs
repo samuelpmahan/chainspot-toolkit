@@ -28,7 +28,7 @@ export function renderHoleCrop(ctx, { center, size = TEE_RECOVER_SLOT.cropPx, sc
     if (sx < 0 || sy < 0 || sx >= W || sy >= H) continue;
     const i = sy * W + sx, k = i * 4;
     let c = [rgba[k], rgba[k + 1], rgba[k + 2]];
-    const shade = OCC_SHADE[occ[i]] ?? (cls[i] === CLASS.TINT ? TINT_SHADE : null);
+    const shade = occ ? (OCC_SHADE[occ[i]] ?? (cls[i] === CLASS.TINT ? TINT_SHADE : null)) : null;   // no template: no occluder classes
     if (shade) c = c.map((v, j) => Math.round(0.6 * v + 0.4 * shade[j]));
     for (let yy = 0; yy < scale; yy++) for (let xx = 0; xx < scale; xx++) { const d = ((y * scale + yy) * S + x * scale + xx) * 3; rgb[d] = c[0]; rgb[d + 1] = c[1]; rgb[d + 2] = c[2]; }
   }
@@ -42,8 +42,7 @@ export function renderHoleCrop(ctx, { center, size = TEE_RECOVER_SLOT.cropPx, sc
   const cross = (p, col, arm) => { const [X, Y] = P(p); for (let d = -arm; d <= arm; d++) for (const w of [-1, 0, 1]) { put(X + d, Y + w, col); put(X + w, Y + d, col); } };
   for (const ps of poses) {
     if (plate) line(ps.center, plate, [255, 255, 255], 4);
-    const cs = padCorners(ctx.tpl, ps.center, ps.angleRad);
-    for (let k = 0; k < 4; k++) line(cs[k], cs[(k + 1) % 4], ps.color);
+    if (ctx.tpl) { const cs = padCorners(ctx.tpl, ps.center, ps.angleRad); for (let k = 0; k < 4; k++) line(cs[k], cs[(k + 1) % 4], ps.color); }
     cross(ps.center, ps.color, 3);
   }
   if (plate && plate[0] >= x0 && plate[1] >= y0 && plate[0] < x0 + size && plate[1] < y0 + size) cross(plate, [255, 255, 255], 6);

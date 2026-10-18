@@ -129,3 +129,12 @@ test('cardinality: nothing is recovered when S3 already holds N tees', () => {
   assert.equal(g.need, 0);
   assert.equal(g.recovered.length, 0);
 });
+
+test('no S3 anchors is data, not a stop: recovery returns nothing recovered, every pending badge missed with the reason', () => {
+  const W = 40, H = 40, rgba = new Uint8Array(W * H * 4).fill(90);
+  const badges = [{ index: 0, label: '1', bbox: [5, 5, 10, 8], px: [], mutePx: [], plateCenter: [10, 9] }];
+  const ctx = createRecoveryContext({ raster: { rgba, widthPx: W, heightPx: H }, badges, baskets: [], recoveredBasketBoxes: [], tees: [], anchors: [], interiorTone: { median: [158, 157, 159], tolerance: 22.5 } });
+  assert.equal(ctx.tpl, null); assert.match(ctx.unavailable, /no S3 anchors/);
+  const g = greedyRecover(ctx);
+  assert.deepEqual(g.recovered, []); assert.equal(g.missed.length, 1); assert.match(g.missed[0].reason, /no pad template/);
+});
