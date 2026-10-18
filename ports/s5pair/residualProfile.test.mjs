@@ -4,9 +4,11 @@ import { createPartStore, RENDER_PART } from '../../fg/store.mjs';
 import { renderValue } from '../../fg/render.mjs';
 import { coverageAt } from '../s3assoc/padPose.mjs';
 import { basketPoint } from '../s3assoc/associate.mjs';
-import { composite, noProfile, ALPHA_PROFILE_PART, ALPHA_PROFILE_SCHEMA } from '../../contracts/alpha.profile@1.mjs';
+import { composite, ALPHA_PROFILE_PART, ALPHA_PROFILE_SCHEMA } from '../../contracts/alpha.profile@1.mjs';
 import { registerPairQueries, padWindow, fillDiscs, residual, axisOf, PAIR_QUERY_NAMES } from './pairSpace.mjs';
 import { S5_RESIDUAL_CALCULATIONS, RESIDUAL_PROFILE_PART, RESIDUAL_STRIPS_PART, STRAIGHT_TRUTH_PART, RECORDED_ASSOC_PART, distribution } from './residualProfile.mjs';
+import { registerAlphaProfile } from '../../fg/alpha/run.mjs';
+import { toyBoard as alphaToyBoard } from '../../fg/alpha/synthetic.mjs';
 
 const D2R = Math.PI / 180;
 const FRAME = [247, 247, 247], INNER = [158, 157, 159];
@@ -133,20 +135,28 @@ function toyBoard({ withTruth = true } = {}) {
   const truth = withTruth ? { course: 'toy', source: 'fixture', rule: 'fixture', matchTeePx: 8, holes: pads.map((p, i) => ({ hole: i + 1, tee: [p.cx, p.cy], bent: i === 2 })) } : { course: 'toy', status: 'no testimony', holes: [], matchTeePx: 8 };
   return { pads, values: { 'px.image.cropped': { widthPx: W, heightPx: H, rgba }, 'px.tees': tees, 'px.badges': badges, 'px.baskets': [] }, truth };
 }
-const toyStore = ({ withTruth = true, profile = noProfile('S7 lane not merged (fixture)') } = {}) => {
+/** profile: a fixture profile value; omitted, tk.s7.alphaProfile is produced by fn.tk.s7.alphaProfile as the runner registers it. */
+const toyStore = ({ withTruth = true, profile = null } = {}) => {
   const t = toyBoard({ withTruth }), s = createPartStore({ base: board(t.values) });
   const recorded = { source: 'fixture', holes: { 1: { badgeLabel: '1', z: 0.4, latPx: 0.3 }, 2: { badgeLabel: '2', z: 0.2, latPx: 0.2 }, 3: { badgeLabel: '3', z: 0.5, latPx: 0.4 } } };
-  s.constant('fn.t.roots', { [STRAIGHT_TRUTH_PART]: t.truth, [ALPHA_PROFILE_PART]: profile, [RECORDED_ASSOC_PART]: recorded });
+  if (profile) s.constant('fn.t.roots', { [STRAIGHT_TRUTH_PART]: t.truth, [ALPHA_PROFILE_PART]: profile, [RECORDED_ASSOC_PART]: recorded });
+  else {
+    // the runner's roots for the S7 Calculations (S4's tk.s4.hallway: absent on this toy board; no S3 association)
+    s.constant('fn.t.roots', { [STRAIGHT_TRUTH_PART]: t.truth, [RECORDED_ASSOC_PART]: recorded, 'px.tees.refined': t.values['px.tees'], 'tk.s4.hallway': null });
+    registerAlphaProfile(s, { association: { absent: 'fixture: no S3 association' }, course: 'toy' });
+  }
   registerPairQueries(s);
   for (const [fn, spec] of S5_RESIDUAL_CALCULATIONS) s.register(fn, spec);
   return { s, t };
 };
 
-test('tk.s5.residualProfile: the straight-pair distribution on a toy board, bent pairs a referent, no alpha profile recorded', () => {
+test('tk.s5.residualProfile: the straight-pair distribution on a toy board, bent pairs a referent, no fill class fitted recorded', () => {
   const { s, t } = toyStore();
   const P = s.get(RESIDUAL_PROFILE_PART);
   assert.equal(P.condition, null);
-  assert.equal(P.alpha.status, 'no alpha profile');
+  assert.equal(s.provenance(ALPHA_PROFILE_PART).producedBy, 'fn.tk.s7.alphaProfile', 'the profile is produced on first need by the S7 Calculation');
+  assert.equal(s.get(ALPHA_PROFILE_PART).overlays.c1Fill.status, 'not fitted', 'no rings on the toy board: the Calculation records it');
+  assert.equal(P.alpha.status, 'no alpha profile'); assert.match(P.alpha.reason, /no fill class fitted/);
   assert.equal(P.straight.unmixed.status, 'no alpha profile');
   assert.equal(P.counts.straightPairs, 2); assert.equal(P.counts.bentPairs, 1);
   for (const r of P.rows) {
@@ -184,4 +194,33 @@ test('tk.s5.residualProfile: with a fixture alpha profile both raw and unmixed a
   assert.equal(B.straight.raw.signedAngleResidualDeg.n, 0);
   assert.equal(B.lineUp.nPads, 0);
   assert.notEqual(blind.call(RENDER_PART, { a: RESIDUAL_STRIPS_PART }).value.kind, 'unrenderable');
+});
+
+test('tk.s5.residualProfile: on a board with C1 / C2 fills, the profile produced by fn.tk.s7.alphaProfile un-composites the pad', () => {
+  // the S7 synthetic board (rings, fills, straight ribbons) with one S5 pad drawn above the fills inside a C2 annulus
+  const t = alphaToyBoard({ c1: { rgb: [150, 240, 190], alpha: 0.3 }, c2: { rgb: [150, 220, 180], alpha: 0.2 }, path: { rgb: [225, 228, 232], alpha: 0.35 } });
+  const P0 = { cx: 310.3, cy: 265.4, th: 4 * D2R, L: 25, Wd: 17.4, se: 3.56, ss: 3.04 }, delta = 0.5, along = 150;   // Basket (265, 265): 45 px off, R1 30 px
+  const { widthPx: W } = t.raster, rgba = new Uint8ClampedArray(t.raster.rgba), px = [];
+  for (let y = 230; y < 300; y++) for (let x = 270; x < 350; x++) {
+    const [ao, ai] = coverageAt(x, y, P0.cx, P0.cy, P0.th, P0.L, P0.Wd, P0.se, P0.ss), af = ao - ai, g = (y * W + x) * 4;
+    if (ao > 0) for (let k = 0; k < 3; k++) rgba[g + k] = Math.round(rgba[g + k] * (1 - ao) + af * FRAME[k] + ai * INNER[k]);
+    if (af > 0.5) px.push(y * W + x);
+  }
+  const a = P0.th + delta * D2R, bc = [P0.cx + along * Math.cos(a), P0.cy + along * Math.sin(a)];
+  const tee = { center: [P0.cx + 0.4, P0.cy - 0.3], angleRad: P0.th - 1 * D2R, px: Uint32Array.from(px) };
+  const s = createPartStore({ base: board({ 'px.image.cropped': { ...t.raster, rgba }, 'px.tees': [tee], 'px.badges': [...t.badges, { label: '3', bbox: [bc[0] - 5, bc[1] - 5, 11, 11], px: [] }], 'px.baskets': t.baskets }) });
+  s.constant('fn.t.roots', { [STRAIGHT_TRUTH_PART]: { course: 'toy', source: 'fixture', rule: 'fixture', matchTeePx: 8, holes: [{ hole: 3, tee: [P0.cx, P0.cy], bent: false }] },
+    [RECORDED_ASSOC_PART]: { status: 'no recorded association', reason: 'fixture' }, 'px.tees.refined': [tee], 'tk.s4.hallway': t.hallway });
+  registerAlphaProfile(s, { association: t.association, course: 'toy' });
+  registerPairQueries(s);
+  for (const [fn, spec] of S5_RESIDUAL_CALCULATIONS) s.register(fn, spec);
+  const P = s.get(RESIDUAL_PROFILE_PART);
+  assert.equal(s.provenance(ALPHA_PROFILE_PART).producedBy, 'fn.tk.s7.alphaProfile');
+  assert.equal(P.alpha.status, 'applied'); assert.deepEqual(P.alpha.classes, ['c2Fill', 'c1Fill']);
+  const [r] = P.rows;
+  assert.ok(r.unmixed.unmixedPx > 0, `unmixed ${r.unmixed.unmixedPx} px`);
+  assert.ok(Math.abs(r.signedAngleResidualDeg - delta) < 0.15 && Math.abs(r.unmixed.signedAngleResidualDeg - delta) < 0.15, `raw ${r.signedAngleResidualDeg} deg, unmixed ${r.unmixed.signedAngleResidualDeg} deg vs ${delta} deg`);
+  const e = s.calls().find((c) => c.calculation === 'fn.tk.s5.residualProfile').emits;
+  assert.ok(e.unmixedPx > 0 && e.alphaProfile === 1, 'the store records the un-composite');
+  assert.ok(s.calls().some((c) => c.calculation === 'fn.tk.s7.alphaProfile'), 'the S7 Calculation is profiled by the store');
 });

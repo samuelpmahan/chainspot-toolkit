@@ -7,8 +7,11 @@
  * Reads a completed attempt (never re-runs the provider). The S3 PxC (early/s3.pxc.bin) is the store's board; lane
  * outputs not on it enter as one constant (fn.tk.s6pathLoss.laneOutputs): the S3 structural tees (px.tees.refined, via
  * ports/s4recover loadAttemptParts), the S3 association rows (s3assoc/px.tees.association.json; absent = recorded) and
- * Sam's testimony (testimony.s6.holes; split of the emits only). tk.s7.alphaProfile is the S7 lane's Part when its
- * Calculation is registered here; until lane/s7 is merged it is the contract's recorded `no alpha profile`.
+ * Sam's testimony (testimony.s6.holes; split of the emits only). tk.s7.alphaProfile (an inPart of tk.s6.pathLoss) is
+ * produced on first need by the S7 Calculations, registered as fg/alpha/run.mjs registers them (registerAlphaProfile):
+ * S4's lane outputs the store lacks (px.tees.familyRefined, tk.s4.basketRecovery) and S4's Calculations (tk.s4.hallway),
+ * tk.s3assoc.association (the same association file), the course, the testimony-free straight segments. A path class
+ * the profile could not fit is recorded there (`not fitted`) and tk.s6.pathLoss falls back to the proxy, saying so.
  * Stores tk.s6.pathMask, tk.s6.hallway, tk.s6.pairs, tk.s6.pathLoss and writes under <out> (default
  * attempts/stages/<id>/fork/stage-output/s6pathLoss/run-<ISO time>/):
  *   tk.s6.pathLoss.json (the Part, typed arrays summarized), instrumentation.json (the store's profile: sidecar),
@@ -25,7 +28,9 @@ import { canonicalJson } from '../../fg/canon.mjs';
 import { encodePngRgb } from '../../fg/png.mjs';
 import { loadAttemptParts } from '../s4recover/run.mjs';
 import { loadTestimony } from '../judge/testimony.mjs';
-import { registerPathLoss, registerAlphaAbsent, PATH_LOSS_PART, TESTIMONY_PART } from './pathLoss.mjs';
+import { registerAlphaProfile, s4LaneOutputsFor, loadAssociation } from '../../fg/alpha/run.mjs';
+import { ALPHA_PROFILE_PART } from '../../contracts/alpha.profile@1.mjs';
+import { registerPathLoss, PATH_LOSS_PART, TESTIMONY_PART } from './pathLoss.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 
@@ -44,6 +49,8 @@ function recompressPng(bytes) {
   return encodePngRgb({ width, height, rgb, deflate: (b) => new Uint8Array(deflateSync(b, { level: 9 })) });
 }
 /** The Part for the JSON file: typed arrays (the corridor pixels) summarized, never dumped. */
+/** What the run's profile is: its producer and the path class (fitted or its recorded condition), for the JSON file. */
+const alphaSummary = (store) => { const p = store.get(ALPHA_PROFILE_PART), o = p?.overlays?.path; return { producedBy: store.provenance(ALPHA_PROFILE_PART)?.producedBy ?? null, status: p?.status ?? null, path: o ? (o.alpha != null ? { alpha: o.alpha, sigmaAlpha: o.sigmaAlpha, rgb: o.rgb, fitOn: o.fitOn } : o) : null }; };
 const summarized = (v) => JSON.parse(JSON.stringify(v, (k, x) => (ArrayBuffer.isView(x) ? { typedArray: x.constructor.name, length: x.length } : x)));
 
 export function runPathLoss({ attempt, specimen, outDir = null, root = ROOT }) {
@@ -56,12 +63,12 @@ export function runPathLoss({ attempt, specimen, outDir = null, root = ROOT }) {
     : { path: null, rule: `no testimony for ${specimen}: nothing judged`, holes: [] };
   const { store, document: instrumentation } = instrumentedStore({ name: `s6pathLoss:${specimen}`, base: loaded.board });
   store.constant('fn.tk.s6pathLoss.laneOutputs', { 'px.tees.refined': loaded.values['px.tees.refined'], 'tk.s6.basketRecovery': loaded.values['tk.s4.basketRecovery'], 'px.tees.association': { rows: association.rows, template: association.template ?? null, condition: association.condition ?? null }, [TESTIMONY_PART]: testimony });
-  const alphaAbsent = registerAlphaAbsent(store, 'lane s7 not merged into lane/s6: no tk.s7.alphaProfile Calculation registered');
+  registerAlphaProfile(store, { s4LaneOutputs: s4LaneOutputsFor(loaded.values, { omit: ['px.tees.refined'] }), association: loadAssociation({ out: loaded.out, attempt, specimen }), course: specimen });   // px.tees.refined: already a root here
   registerPathLoss(store);
   const value = store.get(PATH_LOSS_PART);   // tk.s6.pathMask, tk.s6.hallway, tk.s6.pairs: produced on first need
 
   mkdirSync(out, { recursive: true });
-  writeFileSync(join(out, `${PATH_LOSS_PART}.json`), canonicalJson({ schema: 'nctk-s6-path-loss-run@1', specimen, attempt, alphaAbsent, hallway: summarized({ ...store.get('tk.s6.hallway'), segments: undefined }), part: summarized(value) }) + '\n');
+  writeFileSync(join(out, `${PATH_LOSS_PART}.json`), canonicalJson({ schema: 'nctk-s6-path-loss-run@1', specimen, attempt, alphaProfile: alphaSummary(store), hallway: summarized({ ...store.get('tk.s6.hallway'), segments: undefined }), part: summarized(value) }) + '\n');
   const doc = instrumentation(), profile = profileSummary(doc);
   writeFileSync(join(out, 'instrumentation.json'), JSON.stringify(doc) + '\n');   // sidecar: timings are never hashed evidence
   const partPages = store.manifest().parts.map((p) => p.address).filter((a) => a.startsWith('tk.s6.')).sort()

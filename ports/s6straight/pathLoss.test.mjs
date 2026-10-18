@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { createPartStore, RENDER_PART } from '../../fg/store.mjs';
 import { ALPHA_PROFILE_PART } from '../../contracts/alpha.profile@1.mjs';
 import { pathMaskPart, registerPathLoss, registerAlphaAbsent, PATH_LOSS_PART, PATH_PAIRS_PART, PATH_MASK_PART, HALLWAY_PART, PATH_CALLS, TESTIMONY_PART, localPathQueries, measurePairs } from './pathLoss.mjs';
-import { ribbonRaster, FIXTURE_PROFILE, FIXTURE_ALPHA } from './fixtures/ribbon.mjs';
+import { ribbonRaster, FIXTURE_PROFILE, FIXTURE_ALPHA, FIXTURE_RGB } from './fixtures/ribbon.mjs';
+import { registerAlphaProfile } from '../../fg/alpha/run.mjs';
 
 // A toy course: hole 1 straight (ribbon tee -> badge -> basket), hole 2 bent (the ribbon turns after its badge, away
 // from the tee -> basket segment). Ribbon 20 px wide (|lateral| <= 10 px).
@@ -22,7 +23,7 @@ function toyCourse() {
   const board = {
     'px.image.cropped': { rgba, widthPx: W, heightPx: H },
     'px.baskets': [{ bbox: bboxAt(straight.basket), px: [] }, { bbox: bboxAt(bent.basket), px: [] }],
-    'px.badges': [badge('1', straight.badge), badge('2', bent.badge)]
+    'px.badges': [badge('1', straight.badge), badge('2', bent.badge)], 'px.tees': []
   };
   const rows = [
     { candidate: 'Tee ca', center: straight.tee, thDeg: 0, best: { badge: '1', sense: 1 }, straight3: { basket: 0, verdict: 'STRAIGHT', tlsMaxPx: 0.4 } },
@@ -38,7 +39,10 @@ function toyStore({ profile = null, testimony = true, recoveredBoxes = [] } = {}
     'px.tees.association': { rows, template: { L: 10 } }, 'px.tees.refined': [], 'tk.s6.basketRecovery': { recoveredBoxes },
     [TESTIMONY_PART]: testimony ? { path: 'toy', holes: [{ hole: 1, teePx: straight.tee, basketPx: straight.basket, bent: false }, { hole: 2, teePx: bent.tee, basketPx: bent.basket, bent: true }] } : { path: null, holes: [] }
   });
-  if (profile) store.constant('fn.tk.s7test.alphaProfile', { [ALPHA_PROFILE_PART]: profile }); else registerAlphaAbsent(store, 'lane s7 not merged into lane/s6');
+  if (profile === 'calculation') {   // as the runner: fn.tk.s7.alphaProfile, produced on first need (tk.s4.hallway: the composited ribbon width)
+    store.constant('fn.tk.s4test.hallway', { 'tk.s4.hallway': { widthPx: 2 * HALF } });
+    registerAlphaProfile(store, { association: { rows }, course: 'toy' });
+  } else if (profile) store.constant('fn.tk.s7test.alphaProfile', { [ALPHA_PROFILE_PART]: profile }); else registerAlphaAbsent(store, 'lane s7 not merged into lane/s6');
   registerPathLoss(store);
   return store;
 }
@@ -99,6 +103,20 @@ test('fn.tk.s6.pathLoss with a fixture profile: both measures keep the straight 
   assert.ok(e.edgePassSamStraightFrac > e.edgePassSamBentFrac && e.overlayLossSamBentFrac > e.overlayLossSamStraightFrac);
   assert.ok(store.calls().some((x) => x.calculation === PATH_CALLS.loss && x.caller === 'fn.tk.s6.pathLoss'), 'the queries are profiled under the Calculation');
   for (const a of [PATH_LOSS_PART, PATH_MASK_PART, HALLWAY_PART, PATH_PAIRS_PART]) assert.notEqual(store.call(RENDER_PART, { a }).value.kind, 'unrenderable', a);
+});
+
+test('fn.tk.s6.pathLoss with the profile produced by fn.tk.s7.alphaProfile: the fitted path alpha sets the threshold', () => {
+  const store = toyStore({ profile: 'calculation' });
+  const v = store.get(PATH_LOSS_PART), prof = store.get(ALPHA_PROFILE_PART);
+  assert.equal(store.provenance(ALPHA_PROFILE_PART).producedBy, 'fn.tk.s7.alphaProfile');
+  assert.ok(Math.abs(prof.overlays.path.alpha - FIXTURE_ALPHA) <= 0.05, `fitted path alpha ${prof.overlays.path.alpha} vs the composited ${FIXTURE_ALPHA}`);
+  prof.overlays.path.rgb.forEach((c, k) => assert.ok(Math.abs(c - FIXTURE_RGB[k]) <= 12, `rgb[${k}] ${c} vs ${FIXTURE_RGB[k]}`));
+  assert.equal(v.alpha.condition, 'alpha profile'); assert.equal(v.alpha.pathAlphaFrac, prof.overlays.path.alpha);
+  assert.equal(v.threshold.frac, Math.round(prof.overlays.path.alpha / 2 * 1000) / 1000);
+  const [s, b] = v.pairs;
+  assert.ok(s.overlayLossFrac <= 0.05 && b.overlayLossFrac > 0.3, `straight loss ${s.overlayLossFrac}, bent loss ${b.overlayLossFrac}`);
+  assert.equal(store.calls().find((x) => x.calculation === 'fn.tk.s6.pathLoss').emits.alphaProfileCount, 1);
+  assert.ok(store.calls().some((x) => x.calculation === 'fn.tk.s7.alphaProfile'), 'the S7 Calculation is profiled by the store');
 });
 
 test('fn.tk.s6.pathLoss without a profile: no alpha profile recorded, the proxy level learned on the straight hole', () => {

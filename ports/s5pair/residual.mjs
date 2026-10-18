@@ -4,29 +4,33 @@
  *
  *   node ports/s5pair/residual.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR]
  *
- * Reads a completed attempt (never re-runs the provider). The S3 PxC (early/s3.pxc.bin) is the store's board: px.tees,
- * px.badges, px.baskets and px.image.cropped are read by address. Root inputs that are not on that board enter as one
- * named constant (fn.tk.s5residual.laneOutputs):
+ * Reads a completed attempt (never re-runs the provider). The S3 PxC (early/s3.pxc.bin) is the store's board, loaded as
+ * ports/s4recover/run.mjs loadAttemptParts loads it: px.tees, px.badges, px.baskets and px.image.cropped are read by
+ * address. Root inputs that are not on that board enter as one named constant (fn.tk.s5residual.laneOutputs):
  *   testimony.s5.straightHoles   Sam's holes (testimony/<specimen>/*.annotation.json, canonical frame), bent = any
  *                                corridor bend: the judge's S5straight truth; absent testimony is the recorded
  *                                condition 'no testimony'
  *   tk.s5.recordedAssociation    the frozen S3 association (baselines/s3assoc/<specimen>.json): the recorded per-hole z
  *                                the 76/76 line-up signal came from; absent is a recorded condition
- *   tk.s7.alphaProfile           the S7 lane's profile when its Calculation is merged; until then the recorded
- *                                noProfile condition (contracts/alpha.profile@1)
+ * tk.s7.alphaProfile (contracts/alpha.profile@1) is an inPart of the measurement, produced on first need by the S7
+ * Calculations registered exactly as fg/alpha/run.mjs registers them (registerAlphaProfile): S4's lane outputs and
+ * Calculations (tk.s4.hallway), tk.s3assoc.association (s3assoc/px.tees.association.json; absent = recorded), the
+ * course name, and the testimony-free straight segments (fn.tk.s7.straightSegments: every associated tee -> badge).
+ * A class the profile could not fit is its own recorded condition (`not fitted`); the pad un-composite then records
+ * noProfile (no fill class fitted) and the raw fit stands.
  * Stores tk.s5.residualProfile and tk.s5.residualStrips (ports/s5pair/residualProfile.mjs) and writes beside the attempt
  * (default attempts/stages/<id>/fork/stage-output/s5pair/run-<ISO time>/): tk.s5.residualProfile.json,
  * instrumentation.json (the store's profile), keyspace.json, s5pair.frames.json and s5pair.flipbook.html (the profile
  * page and one page per tk.s5.* Part, rendered by the store itself).
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
-import { deserialize } from 'node:v8';
 import { join, resolve } from 'node:path';
+import { loadAttemptParts } from '../s4recover/run.mjs';
+import { registerAlphaProfile, loadAssociation } from '../../fg/alpha/run.mjs';
 import { instrumentedStore, profileSummary, profileFrame } from '../../fg/profile.mjs';
 import { RENDER_PART } from '../../fg/store.mjs';
 import { framesJson, renderFlipbook } from '../../fg/flipbook.mjs';
 import { canonicalJson } from '../../fg/canon.mjs';
-import { ALPHA_PROFILE_PART, noProfile } from '../../contracts/alpha.profile@1.mjs';
 import { loadTestimony } from '../judge/testimony.mjs';
 import { MATCH_PX } from '../judge/judge.mjs';
 import { registerPairQueries } from './pairSpace.mjs';
@@ -36,9 +40,8 @@ const ROOT = resolve(import.meta.dirname, '..', '..');
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
 
 export function loadResidualInputs({ attempt, specimen, root = ROOT }) {
-  const fork = join(root, 'attempts', 'stages', attempt, 'fork'), out = join(fork, 'stage-output');
-  const pxc = new Map(deserialize(readFileSync(join(out, 'early', 's3.pxc.bin'))));
-  const board = Object.freeze({ has: (a) => pxc.has(a), get: (a) => pxc.get(a), addresses: [...pxc.keys()] });
+  const loaded = loadAttemptParts({ attempt, specimen, root });
+  const { out, board, background } = loaded;
   const T = loadTestimony(specimen, root);
   const truth = T ? {
     course: specimen, source: T.file, matchTeePx: MATCH_PX.tee,
@@ -48,32 +51,19 @@ export function loadResidualInputs({ attempt, specimen, root = ROOT }) {
   // optional upstream: the pinned late S5 rows, kept only as a referent (same tee index, same badge index)
   const pinnedFile = join(out, 'late', 's5-pairs.json');
   const pinned = existsSync(pinnedFile) ? readJson(pinnedFile).rows : null;
-  const record = readJson(join(root, 'attempts', 'stages', `${attempt}.json`));
-  const srcPath = join(fork, record.request.sourcePath);
-  const receipt = readJson(join(out, 'early', 'run.receipt.json'));
-  const upper = findKey(receipt, 'upperRowsRemoved'), originalPx = findKey(receipt, 'originalPx');
-  const bytes = existsSync(srcPath) ? readFileSync(srcPath) : null;
-  const background = bytes && originalPx ? { src: `data:image/${bytes[0] === 0x89 ? 'png' : 'jpeg'};base64,${bytes.toString('base64')}`, width: originalPx.width, height: originalPx.height, x: 0, y: -upper } : null;
   // the recorded signal (76/76): the frozen S3 association per hole, baselines/s3assoc/<specimen>.json
   const recFile = join(root, 'baselines', 's3assoc', `${specimen}.json`);
   const recorded = existsSync(recFile) ? { source: `baselines/s3assoc/${specimen}.json`, frozenFrom: readJson(recFile).frozenFrom ?? null, holes: readJson(recFile).holes } : { status: 'no recorded association', reason: `no baselines/s3assoc/${specimen}.json` };
-  return { out, board, truth, pinned, background, recorded };
-}
-
-function findKey(obj, key) {
-  if (!obj || typeof obj !== 'object') return undefined;
-  if (key in obj) return obj[key];
-  for (const v of Object.values(obj)) { const r = findKey(v, key); if (r !== undefined) return r; }
-  return undefined;
+  return { out, board, truth, pinned, background, recorded, s4LaneOutputs: loaded.values, association: loadAssociation({ out, attempt, specimen }) };
 }
 
 export function runResidualProfile({ attempt, specimen, outDir = null, root = ROOT }) {
   const L = loadResidualInputs({ attempt, specimen, root });
   const out = outDir ?? join(L.out, 's5pair', `run-${new Date().toISOString().replace(/[:.]/g, '-')}`);
   const { store, document: instrumentation } = instrumentedStore({ name: `s5pair:${specimen}`, base: L.board });
-  // the S7 profile is an inPart of the measurement; until the S7 lane's Calculation is merged, its recorded absence
-  const alpha = store.registered('fn.tk.s7.alphaProfile') ? null : noProfile('S7 lane not merged into lane/s5 (git log lane/s7 -- fg/alpha contracts: no profile commit)');
-  store.constant('fn.tk.s5residual.laneOutputs', { [STRAIGHT_TRUTH_PART]: L.truth, [RECORDED_ASSOC_PART]: L.recorded, ...(alpha ? { [ALPHA_PROFILE_PART]: alpha } : {}) });
+  store.constant('fn.tk.s5residual.laneOutputs', { [STRAIGHT_TRUTH_PART]: L.truth, [RECORDED_ASSOC_PART]: L.recorded });
+  // the S7 profile is an inPart of the measurement: its Calculations registered here, produced on first need
+  registerAlphaProfile(store, { s4LaneOutputs: L.s4LaneOutputs, association: L.association, course: specimen });
   registerPairQueries(store);
   for (const [fn, spec] of S5_RESIDUAL_CALCULATIONS) store.register(fn, spec);
   const P = store.get(RESIDUAL_PROFILE_PART);

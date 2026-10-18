@@ -6,7 +6,8 @@
  *   fn.tk.s5.residualProfile -> tk.s5.residualProfile
  *     inParts  px.tees, px.badges, px.baskets, px.image.cropped (the S3 board), testimony.s5.straightHoles (the
  *              straight-pair truth: Sam's holes with no corridor bend, the judge's S5straight set), tk.s7.alphaProfile
- *              (contracts/alpha.profile@1; the runner produces the recorded noProfile condition when S7 has not run)
+ *              (contracts/alpha.profile@1; produced on first need by fn.tk.s7.alphaProfile, registered by the runner; a profile
+ *              with no fill class fitted is recorded as noProfile and the raw fit stands)
  *     calls    fn.q.pair.axis, fn.q.pair.plate, fn.q.pair.residual (ports/s5pair/pairSpace.mjs)
  *     Every S3 tee is fitted twice through fn.q.pair.axis (the S3 association's two passes: free shape, then the course
  *     template = median shape of the clean free fits, pose only). A tee is paired for this measurement with the badge
@@ -17,7 +18,7 @@
  *   fn.tk.s5.residualStrips -> tk.s5.residualStrips (a derived view: per pair, the pad crop and the badge crop with the
  *     axis line, the ray and both centres; rendered by fg/render.mjs case 'strips')
  */
-import { r3 } from './pairSpace.mjs';
+import { r3, profileCondition } from './pairSpace.mjs';
 import { nameCandidates } from '../../fg/names.mjs';
 import { ALPHA_PROFILE_PART } from '../../contracts/alpha.profile@1.mjs';
 import { ASSOC_BOUNDS } from '../s3assoc/associate.mjs';
@@ -83,9 +84,10 @@ export const S5_RESIDUAL_CALCULATIONS = Object.freeze([
       const templateRule = clean.length ? `median shape of ${clean.length} clean free-shape fits of ${tees.length} S3 tees (px)` : 'no clean pad: free-shape fits only';
       // pass 2: pose only against the template; raw raster, and un-composited when the profile carries fill classes
       const raw = tees.map((_, i) => (template ? q('fn.q.pair.axis', { ...refs, teeIndex: i, template }) : free[i]));
-      const profiled = profile?.status !== 'no alpha profile';
+      // un-composited only when the profile fitted a fill class; else its own recorded condition (noProfile: why)
+      const profileCond = profileCondition(profile), profiled = profileCond.status === 'applied';
       const unmixed = profiled ? tees.map((_, i) => q('fn.q.pair.axis', { ...refs, teeIndex: i, template, alphaProfile: ALPHA_PROFILE_PART })) : null;
-      const alphaCondition = profiled ? (unmixed.find((u) => u.alpha?.status === 'applied')?.alpha ?? unmixed[0]?.alpha ?? profile) : profile;
+      const alphaCondition = profiled ? (unmixed.find((u) => u.alpha?.status === 'applied')?.alpha ?? unmixed[0]?.alpha ?? profileCond) : profileCond;
 
       const names = nameCandidates('Tee', tees, (t) => t.center);
       const plates = badges.map((_, j) => q('fn.q.pair.plate', { badges: 'px.badges', index: j }));

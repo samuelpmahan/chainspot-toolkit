@@ -16,6 +16,9 @@
  *   basket-bridge/basket-recovery.part.json              tk.s6.basketRecovery (S4 recovered basket boxes)
  *   late/s6-rows.json + late/geometry.json               tk.s6.lateS6 (pinned two-ray rows, source px -> canonical)
  *   testimony/<specimen>/*.annotation.json               testimony.source.holes (the judge guarantee only)
+ * tk.s7.alphaProfile (the pathLoss variant reads it) is produced on first need by the S7 Calculations, registered as
+ * fg/alpha/run.mjs registers them (registerAlphaProfile: S4's lane outputs this store lacks and S4's Calculations for
+ * tk.s4.hallway, tk.s3assoc.association = the same association file, the course, testimony-free straight segments).
  * It discovers impl/fn.Hole.straight/*.mjs, runs comparableForkJoin with ./guarantees.mjs and ./compare.mjs, points
  * px.holes.straight at the accepted variant by acceptRule, and writes under <out> (default
  * attempts/stages/<id>/fork/stage-output/s6straight/run-<ISO time>/):
@@ -40,6 +43,8 @@ import { compareStraight } from './compare.mjs';
 import { straightSvg } from './render.mjs';
 import { loadTestimony } from '../judge/testimony.mjs';
 import { registerPathLoss as registerPathMeasurement } from './pathLoss.mjs';
+import { loadAttemptParts } from '../s4recover/run.mjs';
+import { registerAlphaProfile, s4LaneOutputsFor, loadAssociation } from '../../fg/alpha/run.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
@@ -142,6 +147,9 @@ export async function runHoleStraightForkJoin({ attempt, specimen, outDir = null
   for (const [fn, spec] of S6_CALCULATIONS) store.register(fn, spec);
   registerQueries(store, holeQueries((a) => store.get(a)), { resolve: (ref) => ref, note: 'S6 hole questions (ports/s6straight/holeStraight.mjs)' });
   registerPathMeasurement(store);   // fn.q.path.* and tk.s6.pathMask / tk.s6.hallway (agent B's half): produced on first need
+  // the S7 profile the pathLoss variant reads: its Calculations registered here, produced on first need (never eagerly)
+  const s4 = loadAttemptParts({ attempt, specimen, root });
+  registerAlphaProfile(store, { s4LaneOutputs: s4LaneOutputsFor(s4.values, { omit: Object.keys(loaded.values) }), association: loadAssociation({ out: loaded.out, attempt, specimen }), course: specimen });
   // shared by every branch: produced once on the parent, so no variant's standalone time is charged for them (the S4 convention)
   for (const address of ['tk.s6.holePairs', 'tk.s6.baskets', 'tk.s6.badgeCenters', 'tk.s6.hallway']) store.get(address);
   const implementations = await discoverImplementations(join(root, 'impl'), HOLE_STRAIGHT_SLOT.slot);
