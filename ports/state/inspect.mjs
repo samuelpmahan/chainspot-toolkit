@@ -159,8 +159,8 @@ function s7Rows(course, judged) {
     const pts = [...t.path, ...(sam ? [sam.tee, sam.basket, ...(sam.bends ?? [])] : [])];
     const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
     const center = pts.length ? [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2] : null;
-    const verdict = !judged || !r?.judged ? 'unjudged' : r.ok && r.bendsMissed === 0 && r.extraBends === 0 ? 'TP' : 'FN';
-    rows.push({ hole: Number(t.hole), name: `Hole ${t.hole} trace`, verdict, center, marks, wide: true, near: Boolean(r?.ok && (r.bendsMissed || r.extraBends)),
+    const verdict = !judged || !r?.judged ? 'unjudged' : r.ok && r.bendsMissed === 0 && r.extra === 0 ? 'TP' : 'FN';
+    rows.push({ hole: Number(t.hole), name: `Hole ${t.hole} trace`, verdict, center, marks, wide: true, near: Boolean(r?.ok && (r.bendsMissed || r.extra)),
       cropSizePx: pts.length ? Math.ceil(Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) + 2 * (course.objects.s7widthPx ?? 40)) : null,
       reason: `${t.status}${t.end?.basket ? ` at ${t.end.basket}` : ''}${r?.why ? `; ${r.why}` : ''}${r?.judged ? `; bends ${r.bendsHit} hit / ${r.bendsMissed} missed / ${r.extra} extra` : ''}; ${t.how ?? ''}`,
       numbers: { status: t.status, endErrPx: r?.endErrPx ?? undefined, maxOffCentrelinePx: r?.maxOffCentrelinePx ?? undefined, bendsHit: r?.bendsHit ?? undefined, bendsMissed: r?.bendsMissed ?? undefined, extraBends: r?.extra ?? undefined, bends: t.bends.length, walkedPx: t.evidence?.walkedPx ?? undefined } });
@@ -169,7 +169,7 @@ function s7Rows(course, judged) {
 }
 
 /** A crop downsampled to at most maxPx on its side (an S7 crop spans a whole hole; full resolution would not fit the page). */
-function scaledCrop({ rgba, width, height }, { cx, cy, size, maxPx = 200 }) {
+function scaledCrop({ rgba, width, height }, { cx, cy, size, maxPx = 140 }) {
   const step = Math.max(1, Math.ceil(size / maxPx)), n = Math.ceil(size / step), x0 = Math.round(cx) - Math.floor(size / 2), y0 = Math.round(cy) - Math.floor(size / 2);
   const rgb = new Uint8Array(n * n * 3).fill(128);
   for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) { const sx = x0 + x * step, sy = y0 + y * step; if (sx < 0 || sy < 0 || sx >= width || sy >= height) continue; const k = (sy * width + sx) * 4, d = (y * n + x) * 3; rgb[d] = rgba[k]; rgb[d + 1] = rgba[k + 1]; rgb[d + 2] = rgba[k + 2]; }
