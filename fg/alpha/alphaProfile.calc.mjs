@@ -60,9 +60,9 @@ const r2 = (v) => Math.round(v * 100) / 100;
 const notFitted = (reason) => ({ status: 'not fitted', reason });
 const sd = (v) => { if (v.length < 2) return 0; const m = v.reduce((a, b) => a + b, 0) / v.length; return Math.sqrt(v.reduce((a, b) => a + (b - m) ** 2, 0) / (v.length - 1)); };
 
-/** The smallest alpha >= a that keeps rgb in 0..255 given the mean inside / outside colours (8-bit overlay colours). */
-function boundAlpha(fit, pairs) {
-  const n = pairs.length, mi = [0, 1, 2].map((c) => pairs.reduce((s, p) => s + p.in[c], 0) / n), mo = [0, 1, 2].map((c) => pairs.reduce((s, p) => s + p.out[c], 0) / n);
+/** The smallest alpha >= the fit's that keeps rgb in 0..255, given the kept pairs' mean inside / outside colours (8-bit overlay colours). */
+function boundAlpha(fit) {
+  const mi = fit.meansKept.in, mo = fit.meansKept.out;   // the means of the pairs the fit kept (outliers trimmed)
   let lo = 0, why = null;
   for (let c = 0; c < 3; c++) {
     const up = mo[c] < 255 ? (mi[c] - mo[c]) / (255 - mo[c]) : 0, dn = mo[c] > 0 ? (mo[c] - mi[c]) / mo[c] : 0;
@@ -81,7 +81,7 @@ function fitClass(call, { edge, control, fitOn }) {
   const runs = FIT_GEOMETRIES.map((g) => {
     const e = edge(g), c = control(g);
     const f = call('fn.q.alpha.fitOverlay', { pairs: e.pairs, options: { method: 'auto', control: c.pairs } }).value;
-    return { g, e, c, f: f.status ? f : boundAlpha(f, e.pairs) };
+    return { g, e, c, f: f.status ? f : boundAlpha(f) };
   });
   const main = runs[0];
   if (main.f.status) return { overlay: notFitted(main.f.reason), diag: { counts: main.e.counts, rule: main.e.rule } };

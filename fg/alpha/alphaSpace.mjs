@@ -176,7 +176,8 @@ function fitOverlayBy(pairs, { control = null, method = 'contrast', trimK = 3, m
     rgb: fit.rgb.map(r2), alpha: r3(fit.alpha), sigmaRgb: [0, 1, 2].map((c) => (sd((f) => f.rgb[c]) == null ? null : r2(sd((f) => f.rgb[c])))), sigmaAlpha: sd((f) => f.alpha) == null ? null : r3(sd((f) => f.alpha)),
     residualRms: r2(residualRms), n: kept.length, trimmedPairs: given - kept.length, controlPairs: ctl?.length ?? 0, trimmedControlPairs: ctl ? control.length - ctl.length : 0,
     reliability: fit.reliability == null ? null : r3(fit.reliability), groups: G, jackknife: J.rule,
-    alphaOls: r3(fit.alphaOls), method, residuals: res.map(r2)
+    alphaOls: r3(fit.alphaOls), method, residuals: res.map(r2),
+    meansKept: { in: [0, 1, 2].map((c) => r3(all.y[c] / all.n)), out: [0, 1, 2].map((c) => r3(all.x[c] / all.n)) }
   };
 }
 
