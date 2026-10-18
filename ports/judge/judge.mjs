@@ -15,6 +15,7 @@ import { loadTestimony } from './testimony.mjs';
 import { nameCandidates } from '../../fg/names.mjs';
 import { basketPoint } from '../../fg/s2/fg.s2.basketInvariants.observe.fg.mjs';
 import { ringsForBaskets, HolePath, occludersOf } from '../../fg/scene/parts.mjs';
+import { judgePairs } from '../s5pair/pairBadge.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 export const MATCH_PX = Object.freeze({ basket: 12, tee: 8 });
@@ -182,6 +183,29 @@ export function judgeAttempt({ specimen, attempt, root = ROOT }) {
         recoveredForHoleCorrectly: assoc.correct.length, recoveredForWrongHole: assoc.incorrect.length, association: assoc };
     }
   }
+  // S5 pairs (ports/s5pair, latest run): every tee after S4 (S3 observed + S4 recovered) with the badge it pairs with,
+  // per fn.Tee.pairBadge variant; hole n's tee pairs with badge n (tee matched to Sam's point within the tee rule).
+  const s5dir = join(out, 's5pair'), s5runs = existsSync(s5dir) ? readdirSync(s5dir).filter((d) => d.startsWith('run-')).sort() : [];
+  if (s5runs.length) {
+    const run = join(s5dir, s5runs.at(-1)), base = join(run, 'artifacts', 'fn.Tee.pairBadge');
+    const cmp = existsSync(join(run, 'cmp.fn.Tee.pairBadge.json')) ? JSON.parse(readFileSync(join(run, 'cmp.fn.Tee.pairBadge.json'), 'utf8')) : null;
+    const points = [...T.holes.values()].map((h) => ({ hole: h.hole, canonical: h.tee }));
+    report.stages.S5pairs = { run: s5runs.at(-1), accepted: cmp?.accepted ?? null, acceptRule: cmp?.acceptRule ?? null, acceptedBy: cmp?.acceptedBy ?? null, matchWithinPx: MATCH_PX.tee, variants: {} };
+    for (const variant of existsSync(base) ? readdirSync(base).sort() : []) {
+      const f = join(base, variant, 'pairs.json'); if (!existsSync(f)) continue;
+      const doc = JSON.parse(readFileSync(f, 'utf8'));
+      const j = judgePairs(doc.pairs ?? [], points, doc.badges ?? [], MATCH_PX.tee);
+      const named = (v) => j.rows.filter((x) => x.verdict === v);
+      report.stages.S5pairs.variants[variant] = {
+        tees: j.totals.tees, right: j.totals.right, wrong: j.totals.wrong, none: j.totals.none, unjudged: j.totals.unjudged,
+        unmatchedBadges: j.unmatchedBadges.map((b) => `Badge ${b}`), holesWithNoTee: j.missingTees.map((h) => `Tee ${h}`), laneNotRun: doc.laneNotRun ?? null,
+        correct: named('right').map((x) => `${x.name} -> Badge ${x.said} (${x.residualDeg} deg)`),
+        incorrect: named('wrong').map((x) => `${x.name} -> Badge ${x.said}, is Tee ${x.hole}`),
+        notPaired: named('none').map((x) => `${x.name} (is Tee ${x.hole})`),
+        rows: j.rows.map((x) => ({ hole: x.hole, name: x.name, origin: x.origin, point: x.point, said: x.said, saidCenter: x.saidCenter, truthCenter: x.truthCenter, verdict: x.verdict, teeErrorPx: x.teeErrorPx, residualDeg: x.residualDeg, signedPerpPx: x.signedPerpPx }))
+      };
+    }
+  }
   return report;
 }
 
@@ -208,6 +232,11 @@ export function formatReport(r) {
   if (t4) for (const [b, s] of Object.entries(t4.branches)) {
     L.push(`  S4 tees, ${b} (S3 + ${s.recovered} recovered): TP ${s.TP} / FN ${s.FN} / FP ${s.FP ?? 'unjudged'}; recovered for the right hole ${s.recoveredForHoleCorrectly}, wrong hole ${s.recoveredForWrongHole}; recovered FP [${s.recoveredFP.join(', ')}]`);
     if (s.fn.length) L.push(`      FN: ${s.fn.join(', ')}`); if (s.association.incorrect.length) L.push(`      wrong hole: ${s.association.incorrect.join('; ')}`);
+  }
+  const p5 = r.stages.S5pairs;
+  if (p5) for (const [v, s] of Object.entries(p5.variants)) {
+    L.push(`  S5 pairs, ${v}${p5.accepted === v ? ' (accepted)' : ''}: ${s.tees} tees; right ${s.right} / wrong ${s.wrong} / none ${s.none} / unjudged ${s.unjudged}; unmatched badges [${s.unmatchedBadges.join(', ')}]; holes with no tee [${s.holesWithNoTee.join(', ')}]${s.laneNotRun ? `; ${s.laneNotRun}` : ''}`);
+    if (s.incorrect.length) L.push(`      wrong: ${s.incorrect.join('; ')}`); if (s.notPaired.length) L.push(`      none: ${s.notPaired.join('; ')}`);
   }
   return L.join('\n');
 }

@@ -19,6 +19,7 @@
  *       ray tee -> plate), signedAngleResidualDeg, signedPerpPx (+ = right of the axis facing the plate, screen y down),
  *       alongPx, distancePx
  */
+import { residual } from './residualQuery.mjs';
 import { fitPadPose } from '../s3assoc/padPose.mjs';
 import { basketPoint } from '../s3assoc/associate.mjs';
 import { ownedPx, forEach } from '../../fg/pxset.mjs';
@@ -121,19 +122,7 @@ export function plateCenterOf(b) {
  * call one query. angleResidualDeg is unsigned (A's); signedAngleResidualDeg carries the sign of signedPerpPx (the
  * learning profiles its mean and sigma). A non-finite input is a recorded condition (unavailable), never a throw.
  */
-const finitePoint = (p) => Array.isArray(p) && p.length === 2 && p.every(Number.isFinite);
-export function residual({ center, axis, plate }) {
-  if (!finitePoint(center) || !finitePoint(plate) || !finitePoint(axis) || Math.hypot(axis[0], axis[1]) < 1e-9) return { unavailable: 'a tee centre, axis or plate centre is not finite' };
-  const n = Math.hypot(axis[0], axis[1]), dx = plate[0] - center[0], dy = plate[1] - center[1];
-  let ux = axis[0] / n, uy = axis[1] / n;
-  if (dx * ux + dy * uy < 0) { ux = -ux; uy = -uy; }
-  const alongPx = dx * ux + dy * uy, signedPerpPx = -uy * dx + ux * dy;
-  return {
-    angleResidualDeg: r3(Math.atan2(Math.abs(signedPerpPx), Math.abs(alongPx)) * DEG),
-    signedAngleResidualDeg: r3(Math.atan2(signedPerpPx, alongPx) * DEG),
-    signedPerpPx: r3(signedPerpPx), alongPx: r3(alongPx), distancePx: r3(Math.hypot(dx, dy))
-  };
-}
+export { residual };   // one definition: the stage's (ports/s5pair/residualQuery.mjs)
 
 export const PAIR_UNITS = Object.freeze({
   axis: 'px (canonical S0-cropped frame: centre, shape); unitless dirUnit (an axis mod pi); deg (angleDeg, sigma); RGB level (rmsRgb); px (unmixedPx)',
