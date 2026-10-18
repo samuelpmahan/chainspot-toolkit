@@ -136,3 +136,18 @@ test('closure sha: a change in an imported module changes the key; an unrelated 
   const d3 = fresh(); writeFileSync(join(d3, 'b.mjs'), 'export const b = 2;\n');
   assert.notEqual(closureSha(['a.mjs'], { root: d3 }), s1, 'b.mjs is imported by a.mjs');
 });
+
+test('a constant is keyed per Part by its content without its locators (attempt, run): a new attempt or an upstream re-run with the same content hits; one changed Part re-keys only its dependents', () => {
+  const dir = tmp();
+  const open = (lane, other) => {
+    const store = createPartStore({ cache: createCas({ root: dir }) });
+    store.constant('fn.tk.x.laneOutputs', { 'tk.x.rec': lane, 'tk.x.other': other });
+    store.register('fn.tk.x.a', { inParts: ['tk.x.rec'], outParts: ['tk.x.a'], calculate: (io) => ({ 'tk.x.a': io.in('tk.x.rec').rows.length }) });
+    store.register('fn.tk.x.b', { inParts: ['tk.x.other'], outParts: ['tk.x.b'], calculate: (io) => ({ 'tk.x.b': io.in('tk.x.other').v }) });
+    store.get('tk.x.a'); store.get('tk.x.b');
+    return Object.fromEntries(store.calls().filter((c) => c.key).map((c) => [c.calculation, c.cached]));
+  };
+  assert.deepEqual(open({ run: 'run-1', attempt: 'att-1', rows: [1, 2] }, { v: 1 }), { 'fn.tk.x.a': false, 'fn.tk.x.b': false });
+  assert.deepEqual(open({ run: 'run-2', attempt: 'att-2', rows: [1, 2] }, { v: 1 }), { 'fn.tk.x.a': true, 'fn.tk.x.b': true });
+  assert.deepEqual(open({ run: 'run-3', attempt: 'att-2', rows: [1, 2, 3] }, { v: 1 }), { 'fn.tk.x.a': false, 'fn.tk.x.b': true });
+});

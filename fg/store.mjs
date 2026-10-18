@@ -89,7 +89,8 @@
  *                          the accepted variant: get(address) follows the pointer (write-once, with its author)
  *   store.variants(address)  the variant addresses present or declared for an address
  *   store.keyOf(address)   the content key of a Part: for a produced Part, the cache key of the call that made it;
- *                          for a provider or constant Part, a digest of its value (typed arrays by their bytes)
+ *                          for a provider Part, a digest of its value (typed arrays by their bytes); for a constant Part, a digest
+ *                          of its own value without its locators (LOCATORS: attempt, run), per Part, never of the bundle
  *   cache key              sha256 of { fn, code, args, inputs: [[inPart, keyOf(inPart)]...] }; code is the
  *                          Calculation's declared `code` key, else the digest of calculate's source. A call whose key is
  *                          in the store's cache writes its outParts from the cache without computing (the call is
@@ -164,6 +165,12 @@ function withByteDigests(v, depth = 0) {
   return v;
 }
 export const contentKey = (value) => digest(withByteDigests(value));
+/** Top-level fields that say where a root input was read from, not what it is: ignored when a constant is keyed. */
+export const LOCATORS = Object.freeze(['attempt', 'run']);
+const withoutLocators = (value, locators) => {
+  if (!locators.length || !value || typeof value !== 'object' || Array.isArray(value) || isTyped(value) || value instanceof Map || value instanceof Set) return value;
+  return Object.fromEntries(Object.entries(value).filter(([k]) => !locators.includes(k)));
+};
 export const variantOf = (address, name) => `${address}@${name}`;
 
 /** The image size of a store's raster Part (px.image.cropped, else the canonical pixels). */
@@ -314,12 +321,13 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
 
     _produce: produceHere,
 
-    register(fn, { inParts = [], outParts = [], calls = [], calculate, lazy = true, note = null, code = null } = {}) {
+    register(fn, { inParts = [], outParts = [], calls = [], calculate, lazy = true, note = null, code = null, rootKey = null } = {}) {
       if (typeof fn !== 'string' || !FN.test(fn)) throw new PartStoreError(`register: ${JSON.stringify(fn)} is not a fn.* Calculation address`);
       if (findCalc(fn)) throw new PartStoreError(`register: Calculation '${fn}' is already registered`);
       if (typeof calculate !== 'function') throw new PartStoreError(`register ${fn}: calculate(io) is required`);
       const spec = Object.freeze({
         address: fn, store: name, note, lazy: lazy !== false,
+        rootKey,
         code: codeKey(code ?? sha256Hex(String(calculate))),   // the code key: pass the module graph's digest when a helper can change the result; the store's codeSalt (a runner's module closure, fg/closure.mjs) is mixed into every key
         inParts: addressList(inParts, `register ${fn}: inParts`).map(A),
         outParts: addressList(outParts, `register ${fn}: outParts`).map(A),
@@ -337,9 +345,13 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
       return spec;
     },
 
-    constant(fn, values) {
+    constant(fn, values, { locators = LOCATORS } = {}) {
       const outParts = Object.keys(values);
-      return self.register(fn, { outParts, code: contentKey(values), calculate: () => ({ ...values }) });   // keyed by its value: a root input
+      // a root input is keyed by its content, per Part: the Part's key digests its own value (typed arrays by their bytes) without
+      // its locators (where it was read from: the attempt id, the run directory). The same pixels on a new attempt, or an
+      // upstream re-run that produced the same recovered tees, key identically, and one changed Part does not re-key the others.
+      const rootKey = (address, value) => digest({ root: address, content: contentKey(withoutLocators(value, locators)) });
+      return self.register(fn, { outParts, rootKey, calculate: () => ({ ...values }) });
     },
 
     registered: (fn) => Boolean(findCalc(fn)),
@@ -387,7 +399,7 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
           }
         });
         // the cache key of this call: the Calculation, its code, its arguments and the content keys of its inputs
-        key = spec.outParts.length && cacheable(args) ? digest({ fn, code: spec.code, args: plain(args ?? null), inputs: spec.inParts.map((a) => [a, keyOf(a)]) }) : null;
+        key = spec.outParts.length && !spec.rootKey && cacheable(args) ? digest({ fn, code: spec.code, args: plain(args ?? null), inputs: spec.inParts.map((a) => [a, keyOf(a)]) }) : null;
         entry.key = key;
         const finish = (result, fromCache = false) => {
           if (spec.outParts.length) {
@@ -397,7 +409,7 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
             const missing = spec.outParts.filter((a) => !keys.includes(a));
             const extra = keys.filter((a) => !spec.outParts.includes(a));
             if (missing.length || extra.length) throw new PartStoreError(`${fn} returned outParts that differ from its declaration (missing: ${missing.join(', ') || '-'}; undeclared: ${extra.join(', ') || '-'})`);
-            for (const address of spec.outParts) write(address, out[address], fn, spec.inParts, key);
+            for (const address of spec.outParts) write(address, out[address], fn, spec.inParts, spec.rootKey ? spec.rootKey(address, out[address]) : key);
             if (key && !fromCache && shared.cache) toCache = out;
             entry.emits = emitsOf(spec.outParts.map((a) => out[a]));
           } else entry.emits = emitsOf([result]);
