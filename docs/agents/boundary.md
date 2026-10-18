@@ -9,6 +9,7 @@ answered once, by pattern matching on the union of Part kinds and backings.
 |---|---|---|
 | `fn.q.pxset.count / bbox / intersectCount / render` | PixelSets: `{ value, unit }` | `fg/pxset.mjs` |
 | `fn.q.pose.overview / searchBadge / occluderSearch / describe / evaluate` | rigid-template poses | `ports/s4recover/poseSpace.mjs` |
+| `fn.q.pair.residual` | a tee axis vs the ray to its badge plate: residual deg, signed perpendicular px (S5) | `ports/s5pair/residualQuery.mjs` (the S5 learning lane's `fn.q.pair.*` replaces it) |
 | `fn.q.part.render` | the default render of any Part | `fg/render.mjs` |
 | `fn.tk.instrumentation.calls` | the profile: calls under a caller | `fg/store.mjs` |
 
