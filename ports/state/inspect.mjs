@@ -7,7 +7,7 @@
  *       pad outline, the badge ray; its numbers (signed dx, dy); the judge's reason; the frozen state drawn dashed.
  *
  * What it is for, in order: every FN and FP as a picture; every recovered object (the inferred ones); every near miss
- * (error above NEAR_MISS_PX, where testimony is impeachable); weak recoveries (confidence below WEAK_CONFIDENCE);
+ * (error above NEAR_MISS_PX, where testimony is impeachable); recoveries resting on little visible frame (below SPARSE_VISIBLE), listed as a look, not a verdict;
  * courses without testimony, so judging is a read; rows that changed against frozen.json (before dashed, after solid,
  * on one crop); the count closure. Every number keeps its unit and its course.
  *
@@ -24,7 +24,7 @@ import { cropWindow } from '../../fg/png.mjs';
 import { CELLS, S4_BRANCH, recoveredHoles } from './matrix.mjs';
 
 export const NEAR_MISS_PX = 3;          // a presentation tag, not a rule: errors above it are worth a look (mark or result?)
-export const WEAK_CONFIDENCE = 0.5;     // recoveries below it are tagged weak
+export const SPARSE_VISIBLE = 0.25;     // a recovery with less of its frame visible than this is listed first for a look: it rests on less evidence, which is not a verdict
 export const MOVED_PX = 0.5;            // against frozen: a center that moved more than this is a change
 export const CROP = Object.freeze({ sizePx: 64, display: 4.5, wideSizePx: 112, wideDisplay: 2.6 });
 export const COLORS = Object.freeze({
@@ -40,7 +40,7 @@ export const LEGEND = [
   ['poly', COLORS.recovered, 'an S4 recovered pad (corners), with its ray to the badge it was recovered for'],
   ['line', COLORS.right, 'association: solid line to the badge chosen (green right, red wrong), dashed to the true badge'],
   ['dashed', COLORS.frozen, 'the frozen state (before), when a row changed against frozen.json'],
-  ['tag', '#f0883e', `near miss: error above ${NEAR_MISS_PX} px; weak: confidence below ${WEAK_CONFIDENCE}`]
+  ['tag', '#f0883e', `near miss: error above ${NEAR_MISS_PX} px; visible N%: how much of a recovered pad's frame is visible (its evidence), contradicting M%: visible frame px that do not look like frame (a translucent ring across the pad does this)`]
 ];
 
 const bboxCenter = (b) => [b[0] + (b[2] - 1) / 2, b[1] + (b[3] - 1) / 2];
@@ -96,8 +96,10 @@ export function cellRows(cell, course) {
     const col = recovered ? COLORS.recovered : COLORS.right;
     return c ? [line(from, c, col, 4), cross(c, col, `Badge ${badge}`, true)] : [];
   };
-  const weakOf = (d) => Boolean(d?.recovered || d?.name?.startsWith('S4 ')) && d.confidence != null && d.confidence < WEAK_CONFIDENCE;
-  const recoveredReason = (d, weak) => `${d.rule ?? d.tier ?? 'recovered'}${d.forHole ? `, for Badge ${d.forHole}` : ''}${weak ? `; weak (confidence ${r2(d.confidence)})` : ''}`;
+  // a recovered pad's evidence, as numbers: how much of its frame is visible, and how much of that contradicts the template
+  const evidenceOf = (d) => (d?.visibleFrameFrac != null ? { visible: d.visibleFrameFrac, contradicting: d.confidence != null && d.visibleFrameFrac > 0 ? r2(1 - d.confidence / d.visibleFrameFrac) : null } : null);
+  const weakOf = (d) => Boolean(d?.recovered || d?.name?.startsWith('S4 ')) && d?.visibleFrameFrac != null && d.visibleFrameFrac < SPARSE_VISIBLE;
+  const recoveredReason = (d) => { const e = evidenceOf(d); return `${d.rule ?? d.tier ?? 'recovered'}${d.forHole ? `, for Badge ${d.forHole}` : ''}${e ? `; visible ${Math.round(e.visible * 100)}%${e.contradicting ? `, contradicting ${Math.round(e.contradicting * 100)}%` : ''}` : ''}`; };
 
   if (!judged) {
     const dets = { S2: O.baskets.map((k) => ({ bbox: k.bbox })), S3: O.tees, S4baskets: [...O.baskets.map((k) => ({ bbox: k.bbox })), ...O.s4baskets.map((k) => ({ ...k, recovered: true }))], S4tees: [...O.tees, ...O.s4tees.map((t) => ({ ...t, recovered: true }))] }[cell.key] ?? [];
@@ -108,8 +110,8 @@ export function cellRows(cell, course) {
       if (wide) marks.push(...rayTo(center, d.recovered ? d.forHole : assocBadge[teeIndex(center)], d.recovered));
       const weak = weakOf(d);
       push({ name, verdict: d.recovered ? 'recovered' : 'unjudged', center, marks, wide, weak,
-        reason: d.recovered ? recoveredReason(d, weak) : null,
-        numbers: { confidence: d.confidence ?? undefined, visibleFrameFrac: d.visibleFrameFrac ?? undefined, forBadge: d.forHole ?? undefined } });
+        reason: d.recovered ? recoveredReason(d) : null,
+        numbers: { visibleFrameFrac: d.visibleFrameFrac ?? undefined, contradictingFrac: evidenceOf(d)?.contradicting ?? undefined, confidence: d.confidence ?? undefined, forBadge: d.forHole ?? undefined } });
     });
     if (cell.key === 'S4tees') for (const m of O.s4missed) push({ hole: Number(m.hole) || null, name: `Tee for Badge ${m.hole}`, verdict: 'FN', center: null, reason: m.reason });
     return rows;
@@ -131,10 +133,10 @@ export function cellRows(cell, course) {
     const weak = weakOf(d);
     const recoveredByS4 = r.verdict === 'FN' && s4Recovered.has(r.hole);
     const reason = r.verdict === 'FN' ? `${cell.key === 'S3' ? fnWhy.get(r.hole) ?? '' : cell.key === 'S4tees' ? missedWhy.get(r.hole) ?? 'not recovered' : ''}${recoveredByS4 ? '; recovered by S4' : cell.key === 'S2' || cell.key === 'S3' ? '; NOT recovered by S4' : ''}`.replace(/^; /, '')
-      : d?.rule ? recoveredReason(d, weak) : null;
+      : d?.rule ? recoveredReason(d) : null;
     push({ hole: r.hole, name: name ?? (r.hole != null ? `${kindName} ${r.hole}` : null), verdict: r.verdict, errorPx: r2(r.errorPx), dxPx: dx, dyPx: dy, recoveredByS4,
       near: r.errorPx != null && r.errorPx > NEAR_MISS_PX, weak, center: r.expected ?? d?.point ?? null, marks, wide, reason,
-      numbers: { errorPx: r2(r.errorPx) ?? undefined, dxPx: dx ?? undefined, dyPx: dy ?? undefined, matchWithinPx: radius, confidence: d?.confidence ?? undefined, visibleFrameFrac: d?.visibleFrameFrac ?? undefined, forBadge: d?.forHole ?? undefined, angleDeg: d?.angleRad != null ? r2(d.angleRad * 180 / Math.PI) : undefined } });
+      numbers: { errorPx: r2(r.errorPx) ?? undefined, dxPx: dx ?? undefined, dyPx: dy ?? undefined, matchWithinPx: radius, visibleFrameFrac: d?.visibleFrameFrac ?? undefined, contradictingFrac: evidenceOf(d)?.contradicting ?? undefined, confidence: d?.confidence ?? undefined, forBadge: d?.forHole ?? undefined, angleDeg: d?.angleRad != null ? r2(d.angleRad * 180 / Math.PI) : undefined } });
   }
   return rows;
 }
@@ -175,7 +177,8 @@ function compareWithFrozen(rows, frozenRows) {
 /**
  * Where to look first (Sam: "can that artifact maybe tell YOU where to look for stuff?"): ranked, each with a deep link.
  *   1 an S2/S3 FN that S4 did not recover, or an S4 FN; 2 an FP, a wrong or missing association, a missing or duplicate badge;
- *   3 a row that changed against frozen; 4 a weak recovery; 5 a recovered object on a course without testimony (needs eye);
+ *   3 a row that changed against frozen; 4 a recovery resting on little visible frame (below SPARSE_VISIBLE), least first;
+ *   5 a recovered object on a course without testimony (needs eye);
  *   6 a cell whose near misses share a constant offset (a convention, one item), else each near miss.
  */
 export function attention(courses) {
@@ -187,14 +190,14 @@ export function attention(courses) {
       if (r.verdict === 'FN' && !r.recoveredByS4) items.push({ rank: 1, why: `FN${r.reason ? `: ${r.reason}` : ''}`, ...at });
       else if (/FP|wrong|none/.test(r.verdict)) items.push({ rank: 2, why: `${r.verdict}${r.reason ? `: ${r.reason}` : ''}`, ...at });
       if (r.vsFrozen && r.vsFrozen !== 'same') items.push({ rank: 3, why: `changed vs frozen: ${r.vsFrozen}`, ...at });
-      if (r.weak) items.push({ rank: 4, why: `weak recovery (confidence ${r.numbers?.confidence ?? '?'})`, ...at });
+      if (r.weak) items.push({ rank: 4, visible: r.numbers?.visibleFrameFrac ?? 0, why: `recovered from ${Math.round((r.numbers?.visibleFrameFrac ?? 0) * 100)}% visible frame${r.numbers?.contradictingFrac ? `, ${Math.round(r.numbers.contradictingFrac * 100)}% of it contradicting` : ''}: a look, not a verdict`, ...at });
       if (c.testimony === 'none' && r.verdict === 'recovered') items.push({ rank: 5, why: `recovered without testimony: judge by eye (${r.reason ?? ''})`, ...at });
     });
     if (k.gone.length) items.push({ rank: 3, course: c.course, cell: k.key, name: null, hole: null, link: link(c, k), why: `gone since frozen: ${k.gone.join('; ')}` });
     if (k.residual?.constant) items.push({ rank: 6, course: c.course, cell: k.key, name: null, hole: null, link: link(c, k), why: `${k.residual.modeRows} of ${k.residual.rows} judged rows share one offset (dx ${k.residual.modeDxPx}, dy ${k.residual.modeDyPx} px, pipeline minus mark): a convention differs, the mark or the point definition` });
     else k.rows.forEach((r, ri) => { if (r.near && !/FN|FP/.test(r.verdict)) items.push({ rank: 6, why: `near miss ${r.errorPx} px (dx ${r.dxPx}, dy ${r.dyPx})`, course: c.course, cell: k.key, name: r.name, hole: r.hole, link: link(c, k, ri) }); });
   }
-  return items.sort((a, b) => a.rank - b.rank);
+  return items.sort((a, b) => a.rank - b.rank || (a.rank === 4 ? (a.visible ?? 0) - (b.visible ?? 0) : 0));
 }
 
 function openRaster(course) {
@@ -226,7 +229,7 @@ export function inspectorData(matrix, inputs, { root, frozen = null }) {
       flipbook: c.paths?.s4run ? join(c.paths.s4run, 's4recover.flipbook.html').replace(root + '/', '') : null, cells, imageSize: raster ? [raster.width, raster.height] : null });
   }
   return { at: new Date().toISOString(), emits: matrix.emits, cells: CELLS.map((c) => ({ key: c.key, what: c.what })), courses, legend: LEGEND, colors: COLORS,
-    nearMissPx: NEAR_MISS_PX, weakConfidence: WEAK_CONFIDENCE, frozenAt: frozen?.at ?? null, attention: attention(courses) };
+    nearMissPx: NEAR_MISS_PX, sparseVisible: SPARSE_VISIBLE, frozenAt: frozen?.at ?? null, attention: attention(courses) };
 }
 
 export function inspectorHtml(data) {
@@ -271,17 +274,17 @@ const D=JSON.parse(document.getElementById('data').textContent);const $=(s)=>doc
 const st=(s)=>'<span class="st" style="background:'+(D.colors.status[s]||'#444')+'">'+esc(s)+'</span>';
 $('#hdr').innerHTML='derived '+esc(D.at)+' &middot; '+D.emits.cells+' cells: '+D.emits.met+' met, '+D.emits.unmet+' unmet, '+D.emits.unjudged+' unjudged, '+D.emits.missing+' missing, '+D.emits.stale+' stale'+(D.frozenAt?' &middot; compared with frozen.json of '+esc(D.frozenAt):' &middot; nothing frozen yet');
 $('#legend').innerHTML=D.legend.map(([k,c,t])=>'<li><i style="background:'+c+'"></i>'+esc(k)+': '+esc(t)+'</li>').join('');
-const RANK={1:'miss',2:'wrong',3:'changed',4:'weak',5:'needs eye',6:'offset'};
+const RANK={1:'miss',2:'wrong',3:'changed',4:'sparse',5:'needs eye',6:'offset'};
 $('#lookn').textContent='('+D.attention.length+' items, ranked: misses, wrong, changed, weak, needs eye, offsets)';
 $('#looklist').innerHTML=D.attention.slice(0,40).map((a)=>'<li><a href="'+esc(a.link)+'">'+esc(a.course)+' &middot; '+esc(a.cell)+(a.name?' &middot; '+esc(a.name):'')+(a.hole!=null?' (hole '+a.hole+')':'')+'</a> <span class="chip">'+RANK[a.rank]+'</span> '+esc(a.why)+'</li>').join('')+(D.attention.length>40?'<li>... '+(D.attention.length-40)+' more</li>':'');
-const FILTERS={all:'all',miss:'FN / FP / wrong',rec:'recovered',near:'near misses',weak:'weak',changed:'changed vs frozen'};
+const FILTERS={all:'all',miss:'FN / FP / wrong',rec:'recovered',near:'near misses',weak:'sparse evidence',changed:'changed vs frozen'};
 let sel={ci:null,ki:null,ri:null,filter:'all'};
 // deep links are bare tokens: #course.cell[.filter][.rN]
 function readHash(){const t=location.hash.slice(1).split('.');const ci=D.courses.findIndex((c)=>c.course===t[0]);const ki=D.cells.findIndex((c)=>c.key===t[1]);if(ci<0||ki<0)return;sel={ci,ki,ri:null,filter:'all'};for(const x of t.slice(2)){if(FILTERS[x])sel.filter=x;else if(/^r\\d+$/.test(x))sel.ri=+x.slice(1);}}
 function writeHash(){if(sel.ci==null)return;const t=[D.courses[sel.ci].course,D.cells[sel.ki].key];if(sel.filter!=='all')t.push(sel.filter);if(sel.ri!=null)t.push('r'+sel.ri);history.replaceState(null,'','#'+t.join('.'));}
 function render(){writeHash();grid();cellpanel();detail();}
 function grid(){let h='<table><tr><th>course</th>'+D.cells.map((c)=>'<th>'+esc(c.key)+'<br><small>'+esc(c.what)+'</small></th>').join('')+'</tr>';
-D.courses.forEach((c,ci)=>{h+='<tr><th>'+esc(c.course)+'<br><small>N = '+c.N+' &middot; testimony: '+esc(c.testimony)+'</small></th>';c.cells.forEach((k,ki)=>{const s=k.summary;h+='<td class="cell'+(sel.ci===ci&&sel.ki===ki?' sel':'')+'" data-ci="'+ci+'" data-ki="'+ki+'">'+st(k.status)+' <small>'+esc(k.freshness)+'</small>'+(s.changed?' <span class="chip" style="color:#bb8009">'+s.changed+' changed</span>':(D.frozenAt&&k.vsFrozen?' <span class="chip">'+esc(k.vsFrozen==='same'?'same':'cell '+k.vsFrozen)+'</span>':''))+'<br>'+esc(k.result||'-')+'<br><small>'+s.rows+' objects'+(s.FN?', <b style="color:#f85149">'+s.FN+' FN</b>':'')+(s.FP?', <b style="color:#d29922">'+s.FP+' FP/wrong</b>':'')+(s.recovered?', <b style="color:#58a6ff">'+s.recovered+' recovered</b>':'')+(s.near?', <b class="near">'+s.near+' near</b>':'')+(s.weak?', <b class="near">'+s.weak+' weak</b>':'')+'</small></td>';});h+='</tr>';});
+D.courses.forEach((c,ci)=>{h+='<tr><th>'+esc(c.course)+'<br><small>N = '+c.N+' &middot; testimony: '+esc(c.testimony)+'</small></th>';c.cells.forEach((k,ki)=>{const s=k.summary;h+='<td class="cell'+(sel.ci===ci&&sel.ki===ki?' sel':'')+'" data-ci="'+ci+'" data-ki="'+ki+'">'+st(k.status)+' <small>'+esc(k.freshness)+'</small>'+(s.changed?' <span class="chip" style="color:#bb8009">'+s.changed+' changed</span>':(D.frozenAt&&k.vsFrozen?' <span class="chip">'+esc(k.vsFrozen==='same'?'same':'cell '+k.vsFrozen)+'</span>':''))+'<br>'+esc(k.result||'-')+'<br><small>'+s.rows+' objects'+(s.FN?', <b style="color:#f85149">'+s.FN+' FN</b>':'')+(s.FP?', <b style="color:#d29922">'+s.FP+' FP/wrong</b>':'')+(s.recovered?', <b style="color:#58a6ff">'+s.recovered+' recovered</b>':'')+(s.near?', <b class="near">'+s.near+' near</b>':'')+(s.weak?', <b class="near">'+s.weak+' sparse</b>':'')+'</small></td>';});h+='</tr>';});
 $('#grid').innerHTML=h+'</table>';document.querySelectorAll('td.cell').forEach((td)=>td.onclick=()=>{sel={ci:+td.dataset.ci,ki:+td.dataset.ki,ri:null,filter:sel.filter};render();});}
 const show=(r)=>sel.filter==='all'||(sel.filter==='miss'&&/FN|FP|wrong|none/.test(r.verdict))||(sel.filter==='rec'&&(/recovered/.test(r.verdict)||/^S4 /.test(r.name||'')))||(sel.filter==='near'&&r.near)||(sel.filter==='weak'&&r.weak)||(sel.filter==='changed'&&r.vsFrozen&&r.vsFrozen!=='same');
 function cellpanel(){if(sel.ci==null){$('#cellpanel').innerHTML='<small>Pick a cell above.</small>';return;}const c=D.courses[sel.ci],k=c.cells[sel.ki];
@@ -292,7 +295,7 @@ if(k.gone.length)h+='<br><b class="near">gone since frozen:</b> '+esc(k.gone.joi
 if(c.testimony==='none')h+='<br><small>no testimony: judge by eye; calibrate on an annotated course first (docs/evidence/crossval/)</small>';
 if(c.flipbook)h+='<br><small>S4 flipbook: <span class="num">'+esc(c.flipbook)+'</span></small>';
 h+='</div><div style="margin-top:6px">'+Object.entries(FILTERS).map(([f,label])=>'<button class="'+(sel.filter===f?'on':'')+'" data-f="'+f+'">'+label+'</button>').join('')+'</div><div class="thumbs">';
-k.rows.forEach((r,ri)=>{if(!show(r))return;const col=D.colors[r.verdict]||'#8b949e';h+='<div class="thumb'+(sel.ri===ri?' sel':'')+'" data-ri="'+ri+'">'+(r.crop?pic(r,144/r.crop.size,false):'<div style="height:144px;display:flex;align-items:center;justify-content:center;color:var(--muted)">no geometry</div>')+'<div class="cap"><span class="v" style="color:'+col+'">'+esc(r.verdict)+'</span> '+esc(r.name||'')+(r.hole!=null?' <small>hole '+r.hole+'</small>':'')+(r.errorPx!=null?' <span class="num'+(r.near?' near':'')+'">'+r.errorPx+' px</span>':'')+(r.weak?' <span class="near">weak</span>':'')+(r.vsFrozen&&r.vsFrozen!=='same'?' <span class="chip">'+esc(r.vsFrozen)+'</span>':'')+'</div></div>';});
+k.rows.forEach((r,ri)=>{if(!show(r))return;const col=D.colors[r.verdict]||'#8b949e';h+='<div class="thumb'+(sel.ri===ri?' sel':'')+'" data-ri="'+ri+'">'+(r.crop?pic(r,144/r.crop.size,false):'<div style="height:144px;display:flex;align-items:center;justify-content:center;color:var(--muted)">no geometry</div>')+'<div class="cap"><span class="v" style="color:'+col+'">'+esc(r.verdict)+'</span> '+esc(r.name||'')+(r.hole!=null?' <small>hole '+r.hole+'</small>':'')+(r.errorPx!=null?' <span class="num'+(r.near?' near':'')+'">'+r.errorPx+' px</span>':'')+(r.weak?' <span class="near">sparse</span>':'')+(r.vsFrozen&&r.vsFrozen!=='same'?' <span class="chip">'+esc(r.vsFrozen)+'</span>':'')+'</div></div>';});
 $('#cellpanel').innerHTML=h+'</div>';document.querySelectorAll('.thumb').forEach((t)=>t.onclick=()=>{sel.ri=+t.dataset.ri;render();});document.querySelectorAll('button[data-f]').forEach((b)=>b.onclick=()=>{sel.filter=b.dataset.f;sel.ri=null;render();});}
 function marksSvg(marks,P,scale,labels,dashAll){let s='';const T=(x,y,c,t)=>labels&&t?'<text x="'+x+'" y="'+y+'" fill="'+c+'" font-size="11" font-weight="700" stroke="#000" stroke-width="3" paint-order="stroke">'+esc(t)+'</text>':'';const da=dashAll?' stroke-dasharray="4 3" opacity=".9"':'';
 for(const m of marks){const col=dashAll?D.colors.frozen:m.color;
@@ -309,7 +312,7 @@ function detail(){if(sel.ri==null){$('#detail').innerHTML='<small>Pick a cell, t
 let h='<h3>'+esc(c.course)+' &middot; '+esc(k.key)+' &middot; <span style="color:'+col+'">'+esc(r.verdict)+'</span> '+esc(r.name||'')+(r.hole!=null?' (hole '+r.hole+')':'')+'</h3>';
 h+=r.crop?pic(r,r.crop.display,true):'<div><small>no geometry to show</small></div>';
 if(r.crop)h+='<div><small>crop origin ('+r.crop.x0+', '+r.crop.y0+') px, '+r.crop.size+' px at '+r.crop.display+'x, canonical frame of '+esc(c.course)+'</small></div>';
-h+='<p><b>expected:</b> '+esc(k.expected)+'<br><b>this object:</b> '+esc(r.verdict)+(r.errorPx!=null?', '+r.errorPx+' px from the mark (dx '+r.dxPx+', dy '+r.dyPx+' px, pipeline minus mark)'+(r.near?' <span class="near">near miss: above '+D.nearMissPx+' px; is the mark or the result off?</span>':''):'')+(r.weak?' <span class="near">weak recovery</span>':'')+(r.reason?'<br><b>reason:</b> '+esc(r.reason):'')+'</p>';
+h+='<p><b>expected:</b> '+esc(k.expected)+'<br><b>this object:</b> '+esc(r.verdict)+(r.errorPx!=null?', '+r.errorPx+' px from the mark (dx '+r.dxPx+', dy '+r.dyPx+' px, pipeline minus mark)'+(r.near?' <span class="near">near miss: above '+D.nearMissPx+' px; is the mark or the result off?</span>':''):'')+(r.weak?' <span class="near">rests on little visible frame</span>':'')+(r.reason?'<br><b>reason:</b> '+esc(r.reason):'')+'</p>';
 const nums=Object.entries(r.numbers||{}).filter(([,v])=>v!==undefined&&v!==null);if(nums.length)h+='<table class="num">'+nums.map(([k2,v])=>'<tr><td>'+esc(k2)+'</td><td>'+esc(typeof v==='number'?Math.round(v*1000)/1000:v)+'</td></tr>').join('')+'</table>';
 if(r.vsFrozen)h+='<p><b>vs frozen:</b> '+esc(r.vsFrozen)+(r.before?' (before drawn dashed)':'')+'</p>';
 if(r.hole!=null){const links=[];c.cells.forEach((k2,ki2)=>{if(ki2===sel.ki)return;const ri2=k2.rows.findIndex((x)=>x.hole===r.hole);if(ri2>=0)links.push('<a href="#'+c.course+'.'+k2.key+'.r'+ri2+'">'+esc(k2.key)+': '+esc(k2.rows[ri2].verdict)+'</a>');});if(links.length)h+='<p><b>hole '+r.hole+' elsewhere:</b> '+links.join(' &middot; ')+'</p>';}
