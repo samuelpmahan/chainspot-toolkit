@@ -133,26 +133,32 @@ export function associate({ tees, badges, baskets, padLengthPx, bounds = ASSOC_B
       const h = hits[0];
       if (h) straight = { ...h, nextLatPx: hits[1]?.latPx ?? null, verdict: h.latPx <= bounds.straightLateralPx ? 'STRAIGHT_CANDIDATE' : 'NOT_STRAIGHT_OR_BASKET_UNSEEN' };
     }
-    // Sam's 3-point straight test (0-bend holes): tee centre, badge centre and a BasketPoint are collinear.
-    // Uses no pad angle: the line is tee centre -> badge centre, the residual is the TLS max distance of the 3 points.
-    let straight3 = null;
-    if (best) {
-      const B = badges.find((b) => String(b.label) === best.badge).center, d = sub(B, t.center), L = Math.hypot(...d), u = [d[0] / L, d[1] / L], nrm = [-u[1], u[0]];
-      const tls = (P) => { // max perpendicular distance of points P from their total-least-squares line
-        const m = [P.reduce((a, q) => a + q[0], 0) / P.length, P.reduce((a, q) => a + q[1], 0) / P.length];
-        let sxx = 0, sxy = 0, syy = 0; for (const q of P) { const a = q[0] - m[0], b = q[1] - m[1]; sxx += a * a; sxy += a * b; syy += b * b; }
-        const th = 0.5 * Math.atan2(2 * sxy, sxx - syy), n2 = [-Math.sin(th), Math.cos(th)];
-        return Math.max(...P.map((q) => Math.abs((q[0] - m[0]) * n2[0] + (q[1] - m[1]) * n2[1])));
-      };
-      const hits = bps.map((k) => { const v = sub(k.point, t.center); return { basket: k.index, latPx: r2(Math.abs(dot(v, nrm))), alongPx: r2(dot(v, u)), tlsMaxPx: r2(tls([t.center, B, k.point])) }; })
-        .filter((h) => h.alongPx > L).sort((a, b) => a.tlsMaxPx - b.tlsMaxPx);
-      // A straight hole ends at the FIRST basket its line reaches (consecutive baskets can lie on one line, lenard).
-      const onLine = hits.filter((x) => x.tlsMaxPx <= bounds.straight3TlsPx).sort((a, b) => a.alongPx - b.alongPx);
-      const h = onLine[0] ?? hits[0];
-      if (h) straight3 = { ...h, nextTlsMaxPx: hits[1]?.tlsMaxPx ?? null, verdict: h.tlsMaxPx <= bounds.straight3TlsPx ? 'STRAIGHT' : 'BENT_OR_BASKET_UNSEEN' };
-    }
+    // Sam's 3-point straight test (0-bend holes), written once (straight3Test below; S6 asks it per tee-badge pair too).
+    const straight3 = best ? straight3Test(t.center, badges.find((b) => String(b.label) === best.badge).center, bps, bounds) : null;
     const inspect = verdict !== 'ASSOCIATED' || (straight && straight.verdict !== 'STRAIGHT_CANDIDATE' && straight.latPx < 10);
     return { tee: t.label, center: t.center.map(r2), thDeg: r2((t.thRad * 180) / Math.PI), best, candidates: consistent, nearest: all.slice(0, 3), resolvedBy,
       verdict, inspect, pathSide: side, badgeOnPathSide: best && side?.sense ? best.sense === side.sense : null, straight, straight3 };
   });
+}
+
+/**
+ * Sam's 3-point straight test (0-bend holes): tee centre, badge centre and a BasketPoint are collinear.
+ * Uses no pad angle: the line is tee centre -> badge centre, the residual is the TLS max distance of the 3 points.
+ * teeCenter, badgeCenter: [x, y] px; bps: [{ index, point: BasketPoint [x, y] }]. Returns null when no BasketPoint lies
+ * beyond the badge; else the best basket with its residuals (px) and verdict STRAIGHT | BENT_OR_BASKET_UNSEEN.
+ */
+export function straight3Test(teeCenter, badgeCenter, bps, bounds = ASSOC_BOUNDS) {
+  const B = badgeCenter, d = sub(B, teeCenter), L = Math.hypot(...d), u = [d[0] / L, d[1] / L], nrm = [-u[1], u[0]];
+  const tls = (P) => { // max perpendicular distance of points P from their total-least-squares line
+    const m = [P.reduce((a, q) => a + q[0], 0) / P.length, P.reduce((a, q) => a + q[1], 0) / P.length];
+    let sxx = 0, sxy = 0, syy = 0; for (const q of P) { const a = q[0] - m[0], b = q[1] - m[1]; sxx += a * a; sxy += a * b; syy += b * b; }
+    const th = 0.5 * Math.atan2(2 * sxy, sxx - syy), n2 = [-Math.sin(th), Math.cos(th)];
+    return Math.max(...P.map((q) => Math.abs((q[0] - m[0]) * n2[0] + (q[1] - m[1]) * n2[1])));
+  };
+  const hits = bps.map((k) => { const v = sub(k.point, teeCenter); return { basket: k.index, latPx: r2(Math.abs(dot(v, nrm))), alongPx: r2(dot(v, u)), tlsMaxPx: r2(tls([teeCenter, B, k.point])) }; })
+    .filter((h) => h.alongPx > L).sort((a, b) => a.tlsMaxPx - b.tlsMaxPx);
+  // A straight hole ends at the FIRST basket its line reaches (consecutive baskets can lie on one line, lenard).
+  const onLine = hits.filter((x) => x.tlsMaxPx <= bounds.straight3TlsPx).sort((a, b) => a.alongPx - b.alongPx);
+  const h = onLine[0] ?? hits[0];
+  return h ? { ...h, nextTlsMaxPx: hits[1]?.tlsMaxPx ?? null, verdict: h.tlsMaxPx <= bounds.straight3TlsPx ? 'STRAIGHT' : 'BENT_OR_BASKET_UNSEEN' } : null;
 }

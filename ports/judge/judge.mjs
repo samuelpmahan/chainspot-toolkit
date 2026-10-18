@@ -16,6 +16,7 @@ import { nameCandidates } from '../../fg/names.mjs';
 import { basketPoint } from '../../fg/s2/fg.s2.basketInvariants.observe.fg.mjs';
 import { ringsForBaskets, HolePath, occludersOf } from '../../fg/scene/parts.mjs';
 import { judgePairs } from '../s5pair/pairBadge.mjs';
+import { judgeStraight } from '../s6straight/guarantees.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 export const MATCH_PX = Object.freeze({ basket: 12, tee: 8 });
@@ -206,6 +207,26 @@ export function judgeAttempt({ specimen, attempt, root = ROOT }) {
       };
     }
   }
+  // S6 straight vs bent (ports/s6straight, latest run): every fn.Hole.straight variant's verdict per tee-badge pair, judged by
+  // the one rule the fork-join's testimony guarantee applies (judgeStraight: tee 8 px, basket 12 px; Sam's bent = corridorBends).
+  const s6dir = join(out, 's6straight'), s6runs = existsSync(s6dir) ? readdirSync(s6dir).filter((d) => d.startsWith('run-')).sort() : [];
+  if (s6runs.length) {
+    const run = join(s6dir, s6runs.at(-1)), base = join(run, 'artifacts', 'fn.Hole.straight');
+    const cmpFile = join(run, 'cmp.fn.Hole.straight.json'), cmp = existsSync(cmpFile) ? JSON.parse(readFileSync(cmpFile, 'utf8')) : null;
+    const holes = [...T.holes.values()].map((h) => ({ hole: String(h.hole), tee: h.tee, basket: h.basket, bends: h.bends ?? [], bent: h.bent }));
+    const samPathOf = (n) => { const h = holes.find((x) => x.hole === String(n)); return h ? [h.tee, ...h.bends, h.basket] : null; };   // Sam's tee -> bends -> basket (canonical px), for renders
+    report.stages.S6straight = { run: s6runs.at(-1), accepted: cmp?.accepted ?? null, acceptRule: cmp?.acceptRule ?? null, variants: {} };
+    for (const variant of existsSync(base) ? readdirSync(base).sort() : []) {
+      const f = join(base, variant, 'straight.json'); if (!existsSync(f)) continue;
+      const doc = JSON.parse(readFileSync(f, 'utf8')), j = judgeStraight(doc.verdicts ?? [], holes);
+      const named = (o) => j.rows.filter((r) => r.outcome === o).map((r) => `Hole ${r.hole} (${r.tee}${r.verdict === 'unknown' ? ', unknown' : ''})`);
+      report.stages.S6straight.variants[variant] = { laneNotRun: Boolean(doc.laneNotRun), ...j.totals,
+        tp: named('TP'), fp: named('FP'), fn: named('FN'), tn: named('TN'), wrongBasket: j.rows.filter((r) => r.outcome === 'TP' && !r.basketAgrees).map((r) => `Hole ${r.hole} -> ${r.basketSaid}`),
+        rows: j.rows.map((r) => ({ hole: r.hole === null ? null : Number(r.hole), pair: r.pair, tee: r.tee, source: r.source, verdict: r.verdict, truthBent: r.truthBent ?? null, truthBends: r.truthBends ?? null,
+          basketSaid: r.basketSaid, basketSaidPoint: r.basketSaidPoint, basketTruthPoint: r.basketTruthPoint ?? null, samPath: samPathOf(r.hole), basketErrorPx: r.basketErrorPx ?? null, outcome: r.outcome, pass: r.pass, why: r.why ?? r.condition ?? null })),
+        note: 'TP straight called straight; FP bent called straight; FN straight not called straight (bent or unknown); TN bent not called straight' };
+    }
+  }
   return report;
 }
 
@@ -237,6 +258,11 @@ export function formatReport(r) {
   if (p5) for (const [v, s] of Object.entries(p5.variants)) {
     L.push(`  S5 pairs, ${v}${p5.accepted === v ? ' (accepted)' : ''}: ${s.tees} tees; right ${s.right} / wrong ${s.wrong} / none ${s.none} / unjudged ${s.unjudged}; unmatched badges [${s.unmatchedBadges.join(', ')}]; holes with no tee [${s.holesWithNoTee.join(', ')}]${s.laneNotRun ? `; ${s.laneNotRun}` : ''}`);
     if (s.incorrect.length) L.push(`      wrong: ${s.incorrect.join('; ')}`); if (s.notPaired.length) L.push(`      none: ${s.notPaired.join('; ')}`);
+  }
+  const s6 = r.stages.S6straight;
+  if (s6) for (const [n, v] of Object.entries(s6.variants)) {
+    L.push(`  S6 straight vs bent, ${n}${s6.accepted === n ? ' (accepted)' : ''}${v.laneNotRun ? ' [lane not run]' : ''}: ${v.judgedPairs} judged pairs; TP ${v.TP} / FP ${v.FP} / FN ${v.FN} / TN ${v.TN}; straight with wrong basket ${v.straightWithWrongBasket}${v.unjudged ? `; ${v.unjudged} unjudged` : ''}`);
+    if (!v.laneNotRun) { if (v.fp.length) L.push(`      FP (bent called straight): ${v.fp.join(', ')}`); if (v.fn.length) L.push(`      FN (straight not called straight): ${v.fn.join(', ')}`); if (v.wrongBasket.length) L.push(`      wrong basket: ${v.wrongBasket.join(', ')}`); }
   }
   return L.join('\n');
 }

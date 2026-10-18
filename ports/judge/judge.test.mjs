@@ -55,3 +55,31 @@ test('judge: S5 pairs per variant, right / wrong / none / unjudged, unmatched ba
   assert.deepEqual(Object.keys(p.rows[2]), ['hole', 'name', 'origin', 'point', 'said', 'saidCenter', 'truthCenter', 'verdict', 'teeErrorPx', 'residualDeg', 'signedPerpPx']);
   assert.deepEqual(p.rows[2].truthCenter, badges[2].plateCenter);
 });
+
+// S6: the latest s6straight run, every variant judged by the one rule (judgeStraight), the pointer named.
+test('judge: S6straight per variant from the latest s6straight run, TP/FP/FN/TN and named rows', () => {
+  const root = mkdtempSync(join(tmpdir(), 'judge-s6-'));
+  const out = join(root, 'attempts', 'stages', 'att', 'fork', 'stage-output'), A = join(out, 'early', 'artifacts');
+  for (const d of ['s1', 's2']) mkdirSync(join(A, d), { recursive: true });
+  mkdirSync(join(root, 'testimony', 'golden'), { recursive: true });
+  const holes = Array.from({ length: 18 }, (_, i) => ({ number: i + 1, tee: { xPx: 100 + 50 * i, yPx: 104 }, basket: { xPx: 100 + 50 * i, yPx: 504 }, corridorBends: i % 2 ? [{ xPx: 1, yPx: 1 }] : [] }));
+  writeFileSync(join(root, 'testimony', 'golden', 'x.annotation.json'), JSON.stringify({ holes }));
+  writeFileSync(join(A, 's1', 'px.badges.json'), JSON.stringify({ image: { widthPx: 1290 }, badges: [] }));
+  writeFileSync(join(A, 's2', 'px.baskets.json'), JSON.stringify({ baskets: [] }));
+  const run = join(out, 's6straight', 'run-2026-10-18T00-00-00-000Z');
+  // hole 1 (straight) called straight at its basket, hole 2 (bent) called straight, hole 3 (straight) called bent, hole 4 (bent) bent
+  const v = (n, verdict) => ({ pair: `P${n}`, hole: String(n), source: 'S3 observed', tee: { name: `Tee c${n}`, center: [100 + 50 * (n - 1), 100] }, badge: { label: String(n), center: [0, 0] }, verdict,
+    basket: verdict === 'straight' ? { index: 0, name: 'Basket ca', source: 'S2', point: [100 + 50 * (n - 1), 500] } : null, condition: null });
+  for (const [name, verdicts] of [['straight3', [v(1, 'straight'), v(2, 'straight'), v(3, 'bent'), v(4, 'bent')]], ['pinned', [v(1, 'unknown')]]]) {
+    mkdirSync(join(run, 'artifacts', 'fn.Hole.straight', name), { recursive: true });
+    writeFileSync(join(run, 'artifacts', 'fn.Hole.straight', name, 'straight.json'), JSON.stringify({ verdicts, laneNotRun: name === 'pinned' }));
+  }
+  writeFileSync(join(run, 'cmp.fn.Hole.straight.json'), JSON.stringify({ accepted: 'straight3', acceptRule: 'r' }));
+  const r = judgeAttempt({ specimen: 'golden', attempt: 'att', root }).stages.S6straight;
+  assert.equal(r.accepted, 'straight3');
+  const s = r.variants.straight3;
+  assert.deepEqual([s.TP, s.FP, s.FN, s.TN, s.straightWithWrongBasket], [1, 1, 1, 1, 0]);
+  assert.deepEqual(s.fp, ['Hole 2 (Tee c2)']); assert.deepEqual(s.fn, ['Hole 3 (Tee c3)']);
+  assert.deepEqual(s.rows.map((x) => [x.hole, x.outcome, x.truthBent]), [[1, 'TP', false], [2, 'FP', true], [3, 'FN', false], [4, 'TN', true]]);
+  assert.equal(r.variants.pinned.laneNotRun, true); assert.deepEqual(r.variants.pinned.fn, ['Hole 1 (Tee c1, unknown)']);
+});
