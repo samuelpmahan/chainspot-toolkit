@@ -88,7 +88,9 @@ export const RULES = Object.freeze({
   hiddenMaxNegativeFrac: 0.02, // visible px contradicting the pad (wrong class, white just outside) / template px
   hallwayMinStepLum: 12,       // tee->badge edge step; dev: real segments median 27-44 lum, other-badge impostors max 9.7
   hallwaySubsamplePx: 3,       // feasible hidden centres are hallway-tested on this grid
-  peekMinFramePx: 3            // frame-white px of a hidden pad visible outside its occluder: direct evidence, pins the pose
+  peekMinFramePx: 3,           // frame-white px of a hidden pad visible outside its occluder: direct evidence, pins the pose
+  boundaryDirs: 16,            // occluder search: rays from the seed along which the feasible region's edge is bisected
+  boundaryTolPx: 0.5           // bisection stops within this (px)
 });
 
 import { nameCandidates } from '../../fg/names.mjs';
@@ -678,50 +680,70 @@ export function fragmentGeometry(ctx, poses) {
  * <= hiddenMaxNegativeFrac of its px. The feasible centres are the possible range of the hidden pad.
  */
 export function occluderSearch(ctx, bi, { hallwayTest = true, keepCenters = false } = {}) {
+  // Boundary search (Sam: "pose is a boundary search, not exhaustive enumeration"). Per opaque sprite: the hidden pad's
+  // feasible centres form a region; march from the sprite centre along BOUNDARY_DIRS directions and bisect where
+  // feasibility flips, so the region is its outline, not every centre in it. Peek fragments come from the adjacency
+  // query (tk.s4.adjacentBrightComponents): only sprites a fragment touches, only centres within a pad's reach of it.
   const badge = ctx.badges[bi], plate = badge.plateCenter, tpl = ctx.tpl;
   ctx.hallway ??= learnHallwayWidth(ctx);
   const Wh = hallwayTest ? ctx.hallway?.widthPx ?? null : null;
   const dists = ctx.assignment.map((a) => a.distancePx);
   const range = dists.length ? [Math.min(...dists) * (1 - RULES.hiddenDistMargin), Math.max(...dists) * (1 + RULES.hiddenDistMargin)] : [0, Infinity];
-  const m = Math.ceil(tpl.halfWidthOutPx), regions = [];
+  const regions = [];
   let evaluated = 0;
+  const feasible = (cx, cy) => {
+    cx = Math.round(cx); cy = Math.round(cy);
+    const d = Math.hypot(plate[0] - cx, plate[1] - cy);
+    if (d < range[0] || d > range[1]) return null;
+    const th = Math.atan2(plate[1] - cy, plate[0] - cx), e = evaluatePose(ctx, cx, cy, th); evaluated++;
+    const ev = e.evidence, total = ev.templateFramePx + ev.templateInteriorPx;
+    const hidden = Object.entries(ev.occludedBy).filter(([k]) => OPAQUE.has(k)).reduce((n, [, v]) => n + v, 0);
+    const neg = ev.negativeFramePx + ev.negativeInteriorPx + RULES.outsideWhiteWeight * ev.outsideWhitePx;
+    return total && hidden >= RULES.hiddenMinFrac * total && neg <= RULES.hiddenMaxNegativeFrac * total ? { cx, cy, th, ev } : null;
+  };
   for (const sp of ctx.sprites) {
     if (sp.kind === 'badge' && String(sp.label) === String(badge.label)) continue;
-    const [x, y, w, h] = sp.bbox, feas = [], peeks = [];
-    // Fragments come from the query, not a pixel scan: S1 bright components touching this occluder, owned by no Part.
-    const frags = ctx.adjacent ? ctx.adjacent.filter((c) => c.touches.includes(sp.part)) : null;
-    const fragPx = frags ? new Set(frags.flatMap((c) => c.px)) : null;
-    for (let cy = Math.floor(y - m); cy <= Math.ceil(y + h + m); cy++) for (let cx = Math.floor(x - m); cx <= Math.ceil(x + w + m); cx++) {
-      const d = Math.hypot(plate[0] - cx, plate[1] - cy);
-      if (d < range[0] || d > range[1]) continue;
-      const th = Math.atan2(plate[1] - cy, plate[0] - cx), e = evaluatePose(ctx, cx, cy, th); evaluated++;
-      const ev = e.evidence, total = ev.templateFramePx + ev.templateInteriorPx;
-      const hidden = Object.entries(ev.occludedBy).filter(([k]) => OPAQUE.has(k)).reduce((n, [, v]) => n + v, 0);
-      const neg = ev.negativeFramePx + ev.negativeInteriorPx + RULES.outsideWhiteWeight * ev.outsideWhitePx;
-      if (!(total && hidden >= RULES.hiddenMinFrac * total && neg <= RULES.hiddenMaxNegativeFrac * total)) continue;
-      if (ev.visibleFramePx >= RULES.peekMinFramePx && (!fragPx || fragPx.size)) {
-        // with the query: count only the visible frame px that belong to an adjacent component
-        const n = fragPx ? evaluatePose(ctx, cx, cy, th, { collect: true }).px.visibleFrame.filter((i) => fragPx.has(i)).length : ev.visibleFramePx;
-        if (n >= RULES.peekMinFramePx) peeks.push({ cx, cy, th, frame: n });
+    const [x, y, w, h] = sp.bbox, c0 = [x + w / 2, y + h / 2], reach = Math.hypot(w, h) / 2 + tpl.halfWidthOutPx;
+    // seed: the sprite centre, else the first feasible point on a coarse ring around it
+    let seed = feasible(...c0);
+    for (let r = 4; !seed && r < reach; r += 4) for (let k = 0; k < 8 && !seed; k++) seed = feasible(c0[0] + r * Math.cos(k * Math.PI / 4), c0[1] + r * Math.sin(k * Math.PI / 4));
+    // peek: fragments from the query that touch this sprite; centres within a pad's reach of a fragment px
+    const frags = ctx.adjacent ? ctx.adjacent.filter((cm) => cm.touches.includes(sp.part)) : [];
+    const fragPx = new Set(frags.flatMap((cm) => cm.px));
+    let peek = null;
+    if (fragPx.size) {
+      const xs = [...fragPx].map((i) => i % ctx.W), ys = [...fragPx].map((i) => (i / ctx.W) | 0), R = Math.ceil(tpl.halfLengthOutPx);
+      const peeks = [];
+      for (let cy = Math.min(...ys) - R; cy <= Math.max(...ys) + R; cy++) for (let cx = Math.min(...xs) - R; cx <= Math.max(...xs) + R; cx++) {
+        const f = feasible(cx, cy); if (!f || f.ev.visibleFramePx < RULES.peekMinFramePx) continue;
+        const n = evaluatePose(ctx, f.cx, f.cy, f.th, { collect: true }).px.visibleFrame.filter((i) => fragPx.has(i)).length;
+        if (n >= RULES.peekMinFramePx) peeks.push({ cx: f.cx, cy: f.cy, th: f.th, frame: n });
       }
-      // the tee->badge segment must be hallway (subsampled grid; unknown width = no hallway test, recorded)
-      let step = null;
-      if (Wh && (cx % RULES.hallwaySubsamplePx || cy % RULES.hallwaySubsamplePx)) continue;
-      if (Wh) { step = hallwayStep(ctx, [cx, cy], plate, Wh).stepLum; if (step == null || step < RULES.hallwayMinStepLum) continue; }
-      feas.push({ cx, cy, th, hiddenFrac: hidden / total, visible: ev.visibleFramePx + ev.visibleInteriorPx, step });
+      const peekMax = peeks.length ? Math.max(...peeks.map((p) => p.frame)) : 0, top = peeks.filter((p) => p.frame === peekMax);
+      if (top.length) peek = { visibleFramePx: peekMax, poses: top.length, center: [r3(top.reduce((n, p) => n + p.cx, 0) / top.length), r3(top.reduce((n, p) => n + p.cy, 0) / top.length)],
+        ...fragmentGeometry(ctx, top), components: frags.map((cm) => ({ label: cm.label, areaPx: cm.areaPx })) };
     }
-    // Peek: the pose(s) whose frame covers the most visible frame-white px; that projection is the pose.
-    const peekMax = peeks.length ? Math.max(...peeks.map((p) => p.frame)) : 0, top = peeks.filter((p) => p.frame === peekMax);
-    const peek = top.length ? { visibleFramePx: peekMax, poses: top.length, center: [r3(top.reduce((n, p) => n + p.cx, 0) / top.length), r3(top.reduce((n, p) => n + p.cy, 0) / top.length)] } : null;
-    if (peek) Object.assign(peek, fragmentGeometry(ctx, top), { components: (frags ?? []).map((c) => ({ label: c.label, areaPx: c.areaPx })) });
-    if (!feas.length && !peek) continue;
-    if (!feas.length) { regions.push({ occluder: sp.name, feasibleCenters: 0, centroid: peek.center, extentPx: null, distanceToBadgePx: r3(Math.hypot(plate[0] - peek.center[0], plate[1] - peek.center[1])), maxVisiblePadPx: null, hallwayStepLum: null, bbox: sp.bbox, peek, ...(keepCenters ? { centers: [] } : {}) }); continue; }
-    const cx = feas.reduce((n, f) => n + f.cx, 0) / feas.length, cy = feas.reduce((n, f) => n + f.cy, 0) / feas.length;
-    const xs = feas.map((f) => f.cx), ys = feas.map((f) => f.cy);
-    regions.push({ occluder: sp.name, feasibleCenters: feas.length, centroid: [r3(cx), r3(cy)], extentPx: [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)],
-      distanceToBadgePx: r3(Math.hypot(plate[0] - cx, plate[1] - cy)), maxVisiblePadPx: Math.max(...feas.map((f) => f.visible)),
-      hallwayStepLum: Wh ? r3(quantile(feas.map((f) => f.step), 0.5)) : null, bbox: sp.bbox, peek,
-      ...(keepCenters ? { centers: feas.map((f) => [f.cx, f.cy]) } : {}) });
+    if (!seed && !peek) continue;
+    // outline: bisect each ray from the seed to where feasibility flips
+    const outline = [];
+    if (seed) for (let k = 0; k < RULES.boundaryDirs; k++) {
+      const ux = Math.cos(2 * Math.PI * k / RULES.boundaryDirs), uy = Math.sin(2 * Math.PI * k / RULES.boundaryDirs);
+      let lo = 0, hi = reach;
+      if (feasible(seed.cx + ux * hi, seed.cy + uy * hi)) lo = hi;
+      while (hi - lo > RULES.boundaryTolPx) { const mid = (lo + hi) / 2; if (feasible(seed.cx + ux * mid, seed.cy + uy * mid)) lo = mid; else hi = mid; }
+      outline.push([r3(seed.cx + ux * lo), r3(seed.cy + uy * lo)]);
+    }
+    const cx = outline.length ? outline.reduce((n, p) => n + p[0], 0) / outline.length : peek.center[0], cy = outline.length ? outline.reduce((n, p) => n + p[1], 0) / outline.length : peek.center[1];
+    let area = 0; for (let k = 0; k < outline.length; k++) { const p = outline[k], q = outline[(k + 1) % outline.length]; area += p[0] * q[1] - q[0] * p[1]; }
+    // hallway between pad and badge, tested at the centroid and along the outline
+    const samples = outline.length ? [[cx, cy], ...outline] : [peek.center];
+    const steps = Wh ? samples.map((p) => ({ p, step: hallwayStep(ctx, p, plate, Wh).stepLum })) : [];
+    const pass = steps.filter((sm) => sm.step != null && sm.step >= RULES.hallwayMinStepLum);
+    regions.push({ occluder: sp.name, feasibleCenters: Wh ? pass.length : outline.length, regionAreaPx: r3(Math.abs(area) / 2), centroid: [r3(cx), r3(cy)],
+      extentPx: outline.length ? [Math.min(...outline.map((p) => p[0])), Math.min(...outline.map((p) => p[1])), Math.max(...outline.map((p) => p[0])), Math.max(...outline.map((p) => p[1]))] : null,
+      distanceToBadgePx: r3(Math.hypot(plate[0] - cx, plate[1] - cy)), hallwayStepLum: steps.length ? r3(quantile(steps.map((sm) => sm.step ?? -99), 0.5)) : null,
+      hallwayPassFrac: steps.length ? r3(pass.length / steps.length) : null, bbox: sp.bbox, peek,
+      ...(keepCenters ? { centers: outline, hallwayCenters: pass.map((sm) => sm.p) } : {}) });
   }
   return { regions, distanceRangePx: range.map(r3), hallway: ctx.hallway, evaluatedPoses: evaluated };
 }
