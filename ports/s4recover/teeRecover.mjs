@@ -96,6 +96,7 @@ export const RULES = Object.freeze({
 });
 
 import { nameCandidates } from '../../fg/names.mjs';
+import { pxList, componentStats, ownerPlane } from '../../fg/pxset.mjs';
 import { basketPoint } from '../../fg/s2/fg.s2.basketInvariants.observe.fg.mjs';
 
 const DEG = 180 / Math.PI;
@@ -977,27 +978,17 @@ export const S4_CALCULATIONS = Object.freeze([
  * frame is one component); its unowned px are still evidence, so nothing is dropped here.
  */
 export function unownedBrightComponents(bright, badges, baskets, tees, { touchPx = 2, minUnownedFrac = 0.5 } = {}) {
-  const W = bright.mask.width, H = bright.mask.height, labels = bright.labels, owner = new Int32Array(W * H).fill(-1), names = [];
-  const own = (name, px) => { const k = names.push(name) - 1; for (const p of px) owner[p] = k; };
+  // pixel-set math lives in fg/pxset.mjs; this only names the owners and composes the two operations
+  const W = bright.mask.width, H = bright.mask.height, names = [], sets = [];
+  const own = (name, px) => { names.push(name); sets.push(pxList(W, H, px)); };
   badges.forEach((b) => own(`Badge ${b.label}`, [...b.px, ...(b.has?.mute?.px ?? [])]));
   baskets.forEach((k, i) => own(`basket ${i}`, k.px));
   tees.forEach((t, i) => own(`tee ${i}`, t.px ?? []));
-  const opaque = (k) => k >= 0 && !names[k].startsWith('tee ');
-  const area = new Map(), unowned = new Map(), touches = new Map(), pxOf = new Map();
-  for (let i = 0; i < W * H; i++) {
-    const l = labels[i]; if (!l) continue;
-    area.set(l, (area.get(l) ?? 0) + 1);
-    if (owner[i] >= 0) continue;
-    unowned.set(l, (unowned.get(l) ?? 0) + 1); if (!pxOf.has(l)) pxOf.set(l, []); pxOf.get(l).push(i);
-    const x = i % W, y = (i / W) | 0;
-    for (let dy = -touchPx; dy <= touchPx; dy++) for (let dx = -touchPx; dx <= touchPx; dx++) {
-      const xx = x + dx, yy = y + dy; if (xx < 0 || yy < 0 || xx >= W || yy >= H) continue;
-      const o = owner[yy * W + xx];
-      if (opaque(o)) { if (!touches.has(l)) touches.set(l, new Set()); touches.get(l).add(names[o]); }
-    }
-  }
-  return [...pxOf.keys()].map((l) => ({ label: l, areaPx: area.get(l), unownedPx: unowned.get(l), mostlyUnowned: unowned.get(l) / area.get(l) >= minUnownedFrac,
-    touches: [...(touches.get(l) ?? [])].sort(), px: pxOf.get(l) }));
+  const { plane: owner } = ownerPlane(W, H, sets, { overlap: 'last' });   // later Parts keep contested px (S1, S2, S3 order)
+  const opaque = (k) => !names[k - 1].startsWith('tee ');
+  return componentStats(W, H, bright.labels, owner, { touchPx, touches: opaque }).map((c) => ({
+    label: c.label, areaPx: c.areaPx, unownedPx: c.unowned.px.length, mostlyUnowned: c.unowned.px.length / c.areaPx >= minUnownedFrac,
+    touches: c.touches.map((k) => names[k - 1]).sort(), px: c.unowned.px }));
 }
 /** Sam's query: components touching an opaque Part and mostly owned by no Part. */
 export const isAdjacentFragment = (c) => c.mostlyUnowned && c.touches.length > 0;

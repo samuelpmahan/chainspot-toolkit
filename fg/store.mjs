@@ -88,6 +88,8 @@
  *   fn.tk.*, fn.view.*, fn.testimony.*  toolkit Calculations
  */
 
+import { PXSET_QUERIES, resolvePxSet } from './pxset.mjs';
+
 const FN = /^fn\.[A-Za-z0-9_.\-/@]+$/;
 const STORE = Symbol.for('chainspot.fg.store');
 const now = () => globalThis.performance?.now?.() ?? Date.now();
@@ -139,6 +141,19 @@ export function callSubtree(entries, caller) {
 export function createPartStore({ base = null, name = 'root', onCall = null } = {}) {
   const log = [];
   const store = makeStore({ base, name, parent: null, shared: { seq: 0, stack: [], log, onCall: (entry) => { log.push(entry); onCall?.(entry); } } });
+  // The PxC is queryable: pixel-set math lives in fg/pxset.mjs and is invoked from outside by Part address. Answers
+  // are cached by their arguments (Parts are write-once, so a cached answer can never go stale).
+  const answers = new Map();
+  const dims = () => { for (const a of ['px.image.cropped', 'px.course.canonicalPixels']) if (store.has(a)) return store.get(a); throw new PartStoreError('pxset queries: no raster Part for the image size'); };
+  for (const [fn, q] of Object.entries(PXSET_QUERIES)) store.register(fn, { note: 'PxC query (fg/pxset.mjs), cached by its arguments',
+    calculate: (io) => {
+      const key = `${fn} ${JSON.stringify(io.args)}`;
+      if (answers.has(key)) return { ...answers.get(key), emits: { cached: 1 } };
+      const sets = Object.fromEntries(Object.entries(io.args).map(([k, ref]) => [k, resolvePxSet((a) => store.get(a), ref, dims)]));
+      const ans = q(sets, { address: io.args.a });
+      answers.set(key, ans);
+      return { ...ans, emits: { computed: 1 } };
+    } });
   store.register(INSTRUMENTATION_CALLS, { note: 'the calls made by args.caller and nested under them (timings: sidecar data, never hashed)',
     calculate: (io) => callSubtree(log, io.args?.caller ?? null).filter((e) => e.calculation !== INSTRUMENTATION_CALLS) });
   return store;

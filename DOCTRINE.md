@@ -99,6 +99,17 @@ right and the repo is behind. Every number carries a unit.
   files written beside it. Derived views are Calculations of their own with
   their own addresses (`tk.s4.*`), not reshaped copies at an existing
   address. `ports/s4recover` reads the S3 PxC this way.
+- **PxC is queryable; math is written once, inside it** (Sam, 2026-10-18).
+  PxC is a cache-semantic store whose backing per Part type can be refined
+  (a list today, a selector over a shared plane tomorrow) without anything
+  outside the store boundary changing. Code outside asks questions by Part
+  address (`fn.q.pxset.count / bbox / intersectCount / render`), answers
+  are `{ value, unit }` and cached by their arguments (Parts are
+  write-once). The math pattern-matches on the backing in ONE place
+  (`fg/pxset.mjs`); consumers compose operations (`ownerPlane`,
+  `componentStats`), never re-derive them. Tests are written once over the
+  union (`pxsetProperties`: every backing of the same px answers the same)
+  and run on any input (`fg/pxset.dev.test.mjs`: every dev course).
 - **Profiling is a property, not code in the work** (Sam, 2026-10-18).
   (1) Work worth measuring is a Calculation: the PartStore times every call
   and copies the measures its output declares in `emits` onto the call's
