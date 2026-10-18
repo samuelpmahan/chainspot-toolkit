@@ -11,7 +11,9 @@ import { createPartStore, registerQueries } from '../../fg/store.mjs';
 import { comparableForkJoin } from '../../fg/forkjoin.mjs';
 import { discoverImplementations } from '../../fg/discover.mjs';
 import { renderValue } from '../../fg/render.mjs';
-import { registerPathLoss } from './pathLoss.mjs';
+import { registerPathLoss, THRESHOLD_OF_LEVEL } from './pathLoss.mjs';
+import { registerAlphaProfile } from '../../fg/alpha/run.mjs';
+import { ALPHA_PROFILE_PART } from '../../contracts/alpha.profile@1.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 // a basket sprite bbox whose BasketPoint is (x, y)
@@ -89,13 +91,14 @@ test('acceptRule: lane-not-run variants excluded; fewest FP, then FN; ties faste
 
 test('the fork-join on a synthetic store: every impl, one verdict per pair, judged, compared, pointer by the rule, renderable', async () => {
   const W = 800, H = 800, rgba = new Uint8Array(W * H * 4).fill(120);
-  const board = new Map([['px.badges', badges], ['px.baskets', s2], ['px.image.cropped', { rgba, widthPx: W, heightPx: H }]]);
+  const board = new Map([['px.badges', badges.map((b) => ({ ...b, px: [] }))], ['px.baskets', s2.map((k) => ({ ...k, px: [] }))], ['px.tees', []], ['px.image.cropped', { rgba, widthPx: W, heightPx: H }]]);
   const store = createPartStore({ name: 's6-test', base: { has: (a) => board.has(a), get: (a) => board.get(a) } });
   store.constant('fn.tk.s6straight.laneOutputs', { 'px.tees.association': { ...association, template: { L: 30 } }, 'px.tees.refined': [], 'tk.s6.padLength': { lengthPx: 30 }, 'tk.s6.s4Recovered': s4, 'tk.s6.basketRecovery': { recoveredBoxes },
-    'tk.s6.lateS6': { absent: 'late S6 not run (test)', rows: [], templateTops: {} }, 'testimony.source.holes': { path: 'test', rule: 'synthetic', holes } });
+    'tk.s6.lateS6': { absent: 'late S6 not run (test)', rows: [], templateTops: {} }, 'testimony.source.holes': { path: 'test', rule: 'synthetic', holes }, 'tk.s4.hallway': null });
   for (const [fn, spec] of S6_CALCULATIONS) store.register(fn, spec);
   registerQueries(store, holeQueries((a) => store.get(a)), { resolve: (r) => r });
   registerPathLoss(store);   // agent B's fn.q.path.* and tk.s6.pathMask / tk.s6.hallway
+  registerAlphaProfile(store, { association, course: 's6-test' });   // as the runner: the S7 profile the pathLoss variant reads
   const implementations = await discoverImplementations(join(ROOT, 'impl'), HOLE_STRAIGHT_SLOT.slot);
   assert.deepEqual(Object.keys(implementations).sort(), ['assigned', 'pathLoss', 'pinned', 'segmentVerify', 'straight3']);
   const accept = acceptRule({ judged: true });
@@ -105,6 +108,8 @@ test('the fork-join on a synthetic store: every impl, one verdict per pair, judg
   const b = r.comparison.value.branches;
   assert.deepEqual([b.straight3.TP, b.straight3.FP, b.straight3.FN, b.straight3.TN], [2, 0, 0, 1]);
   assert.equal(b.pinned.laneNotRun, true); assert.equal(b.pathLoss.laneNotRun, true);
+  // a flat raster: no rings, no hallway; the S7 Calculation records its classes not fitted and pathLoss says why
+  assert.match(store.get(r.comparison.variants.pathLoss).verdicts[0].condition, /^lane not run: no alpha profile \(path not fitted: no hallway width/);
   // a flat raster has no ribbon: no hallway width, so the 3-point STRAIGHT pairs stay unknown and the bent one is bent
   assert.deepEqual(store.get(r.comparison.variants.segmentVerify).verdicts.map((v) => v.verdict), ['unknown', 'bent', 'unknown']);
   assert.equal(r.comparison.accepted, 'straight3'); assert.equal(store.get(HOLE_STRAIGHT_SLOT.part).implementation, 'straight3', 'the pointer resolves');
@@ -131,13 +136,15 @@ test('segmentVerify on a synthetic ribbon: a 3-point STRAIGHT pair whose ribbon 
   const bb = [{ label: '1', bbox: [240, 190, 21, 21], px: [] }, { label: '2', bbox: [240, 440, 21, 21], px: [] }];
   const kj = [{ bbox: bboxAt([500, 200]), px: [] }, { bbox: bboxAt([500, 450]), px: [] }];
   const rows = [1, 2].map((n) => ({ tee: `t${n}`, candidate: `Tee c${n}`, center: [100, n === 1 ? 200 : 450], thDeg: 0, pose: { cx: 100, cy: n === 1 ? 200 : 450, thDeg: 0 }, best: { badge: String(n), sense: 1 }, verdict: 'ASSOCIATED' }));
-  const board = new Map([['px.badges', bb], ['px.baskets', kj], ['px.image.cropped', { rgba, widthPx: W, heightPx: H }]]);
+  const board = new Map([['px.badges', bb], ['px.baskets', kj], ['px.tees', []], ['px.image.cropped', { rgba, widthPx: W, heightPx: H }]]);
   const store = createPartStore({ name: 's6-ribbon', base: { has: (a) => board.has(a), get: (a) => board.get(a) } });
   store.constant('fn.tk.s6straight.laneOutputs', { 'px.tees.association': { rows, template: { L: 20 } }, 'px.tees.refined': [], 'tk.s6.padLength': { lengthPx: 20 },
-    'tk.s6.s4Recovered': { accepted: null, recovered: [] }, 'tk.s6.basketRecovery': { recoveredBoxes: [] }, 'tk.s6.lateS6': { absent: 'test', rows: [], templateTops: {} }, 'testimony.source.holes': { path: null, rule: 'none', holes: [] } });
+    'tk.s6.s4Recovered': { accepted: null, recovered: [] }, 'tk.s6.basketRecovery': { recoveredBoxes: [] }, 'tk.s6.lateS6': { absent: 'test', rows: [], templateTops: {} }, 'testimony.source.holes': { path: null, rule: 'none', holes: [] },
+    'tk.s4.hallway': { widthPx: 2 * half } });   // S4's ribbon width (here the composited one); the runner produces it with S4's Calculations
   for (const [fn, spec] of S6_CALCULATIONS) store.register(fn, spec);
   registerQueries(store, holeQueries((a) => store.get(a)), { resolve: (r) => r });
   registerPathLoss(store);
+  registerAlphaProfile(store, { association: { rows }, course: 's6-ribbon' });
   const { default: segmentVerify, reads, calls } = await import('../../impl/fn.Hole.straight/segmentVerify.mjs');
   const scoped = store.scope({ who: 'test', reads, calls });
   const out = segmentVerify({ get: scoped.get, has: scoped.has, call: scoped.call });
@@ -149,6 +156,18 @@ test('segmentVerify on a synthetic ribbon: a 3-point STRAIGHT pair whose ribbon 
   const as = A.default({ get: sa.get, has: sa.has, call: sa.call });
   assert.deepEqual(as.verdicts.map((v) => [v.hole, v.verdict, v.basket?.name ?? null]), [['1', 'straight', 'Basket ca'], ['2', 'bent', null]]);
   assert.equal(as.assignment.length, 2);
+  // pathLoss: the profile produced on first need by fn.tk.s7.alphaProfile (the runner's registration) on the same board;
+  // the ribbon's path class fitted on the tee -> badge segments, the station threshold half its alpha
+  const P = await import('../../impl/fn.Hole.straight/pathLoss.mjs'), sp = store.scope({ who: 'test-pathLoss', reads: P.reads, calls: P.calls });
+  const pl = P.default({ get: sp.get, has: sp.has, call: sp.call });
+  const prof = store.get(ALPHA_PROFILE_PART);
+  assert.equal(store.provenance(ALPHA_PROFILE_PART).producedBy, 'fn.tk.s7.alphaProfile');
+  assert.ok(Math.abs(prof.overlays.path.alpha - 0.4) <= 0.03, `fitted path alpha ${prof.overlays.path.alpha} vs the composited 0.4`);
+  assert.equal(pl.laneNotRun, false);
+  assert.equal(pl.threshold.frac, Math.round(THRESHOLD_OF_LEVEL * prof.overlays.path.alpha * 1000) / 1000);
+  assert.deepEqual(pl.verdicts.map((v) => [v.hole, v.verdict]), [['1', 'straight'], ['2', 'bent']]);
+  assert.ok(pl.verdicts[0].evidence.overlayPassFrac >= 0.9 && pl.verdicts[1].evidence.overlayPassFrac < P.MIN_PASS_FRAC, JSON.stringify(pl.verdicts.map((v) => v.evidence.overlayPassFrac)));
+  assert.match(pl.verdicts[1].evidence.step, /path lost/);
 });
 
 test('assignHolesToBaskets: the provider matcher, cardinality first, then score; two holes on one basket: the stronger ribbon keeps it', async () => {
