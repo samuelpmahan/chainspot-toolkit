@@ -172,7 +172,7 @@ export async function runPairBadgeForkJoin({ attempt, specimen, outDir = null, r
     const j = result.branches[n].records?.[PAIR_SLOT.testimony];
     if (result.branches[n].error || !j?.rows) continue;
     const file = `s5pair.${n}.svg`;
-    writeFileSync(join(out, file), pairsSvg({ title: `S5 tee -> badge pairs, ${specimen} (${attempt}), variant ${n}${cmp.accepted === n ? ' (accepted: ' + accept.decided + ')' : ''}${judged ? '' : '; no testimony: unjudged'}`,
+    writeFileSync(join(out, file), pairsSvg({ title: `S5 tee -> badge pairs, ${specimen} (${attempt}), variant ${n}${cmp.accepted === n ? ' (the pointer)' : ''}${judged ? '' : '; no testimony: unjudged'}`,
       rows: j.rows, unmatched: j.unmatchedBadges, plates: plateOf, widthPx: img.widthPx, heightPx: img.heightPx, image: loaded.background, totals: j.totals }) + '\n');
     renders[n] = file;
   }
