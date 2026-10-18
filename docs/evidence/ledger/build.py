@@ -49,7 +49,8 @@ add('C1S stroke', 'px (FWHM of the mean radial profile, 0.25 px steps)', 'GLOBAL
 # --- rings ---
 q = {n: r(M[n]['rings']['R2'] / M[n]['rings']['R1']) for n in NAMES}
 add('C2D radius / C1S radius', 'ratio', 'GLOBAL', 2, q, f'{min(q.values()):.3f}-{max(q.values()):.3f} (radius resolution 0.25 px)', 'C2D Part = 2 x R1 around the BasketPoint')
-add('C1S radius R1 (10 m)', 'px', 'LOCAL', spread(R1.values()), R1, 'one radius per image (pair fit (R, 2R) over every basket); zoomed Lenard 55.5-56.25 px vs full Lenard 24 px', 'the image scale: everything map-scaled is a multiple of it')
+add('C1S radius R1 (10 m)', 'px', 'LOCAL', spread(R1.values()), R1, 'one radius per image (pair fit (R, 2R) over every basket); zoomed Lenard 55.5-56.25 px vs full Lenard 24 px. On the ground the rings are the app\'s definition (10 m, 20 m) and never vary',
+    'THE scale anchor, and the only one: everything course-made (pads, hallways) is predicted from it and checked, never used to set it')
 
 # --- pad (map-scaled body + screen-px stroke) ---
 x = np.array([R1[n] for n in NAMES])
@@ -59,9 +60,9 @@ def fit(vals):
 L = {n: T[n]['L'] for n in NAMES}; Wd = {n: T[n]['W'] for n in NAMES}; FP = {n: float(np.median(M[n]['padFramePx'])) for n in NAMES}
 aL, bL, resL, mL = fit(L); aW, bW, resW, mW = fit(Wd); aF, bF, resF, mF = fit(FP)
 add('pad length', 'px (AA render fit, template median per image)', 'LOCAL', spread(L.values()), L,
-    f'GLOBAL model: L = {aL} px + {bL} x R1 (max residual {mL} px on {len(NAMES)} images): a {bL*10:.2f} m body plus a screen-px stroke ({aL} px ~ the end stroke)', 'pad template predicted from R1 before any pad is fitted')
+    f'OBSERVED prior (course data, could vary on another course): L = {aL} px + {bL} x R1 (max residual {mL} px on {len(NAMES)} images): a {bL*10:.2f} m body plus a screen-px stroke ({aL} px ~ the end stroke)', 'where S3 looks first; a course whose pads miss it is a finding, never a rescale')
 add('pad width', 'px (AA render fit, template median per image)', 'LOCAL', spread(Wd.values()), Wd,
-    f'GLOBAL model: W = {aW} px + {bW} x R1 (max residual {mW} px): a {bW*10:.2f} m body plus the side stroke', 'pad template predicted from R1')
+    f'OBSERVED prior (course data): W = {aW} px + {bW} x R1 (max residual {mW} px): a {bW*10:.2f} m body plus the side stroke', 'pad prior; checked, never a scale source')
 add('pad frame pixel count', 'px (count, S3 frame part, median per image)', 'LOCAL', spread(FP.values()), FP,
     f'~linear in R1: {aF} px + {bF} x R1 (max residual {mF} px): a screen-px stroke around a map-scaled perimeter', 'S3 size bounds relative to R1, never absolute')
 exec('IMAGES_LIST=' + open(f'{HERE}/measure.py').read().split('IMAGES=')[1].split('\nsamp=')[0])
@@ -107,7 +108,7 @@ f12, f14, f16, f22 = (ImageFont.truetype(F, s) for s in (12, 14, 16, 22)); b16 =
 PW, PH, PAD = 440, 330, 52; COLS, ROWS = 4, 2; HEAD = 70
 img = Image.new('RGB', (PW * COLS, HEAD + PH * ROWS + 40), 'white'); dr = ImageDraw.Draw(img)
 dr.text((12, 10), 'Invariant ledger: what is constant across courses AND zoom (6 full courses, filled circles; 5 zoomed Lenard views, hollow squares)', font=f22, fill='black')
-dr.text((12, 40), 'x axis of every panel: R1 = the C1S radius in px = the image\'s map scale (10 m). GLOBAL = flat in px (screen) or exact in R1;  LOCAL = one value per image, measure per run.', font=f14, fill=(60, 60, 60))
+dr.text((12, 40), 'x axis: R1 = the C1S radius in px, the ONLY scale anchor (the rings are 10 m / 20 m by definition). GLOBAL = flat in screen px or exact in R1;  LOCAL = one value per image.', font=f14, fill=(60, 60, 60))
 SCOPE_COL = {'GLOBAL': (20, 120, 50), 'LOCAL': (30, 80, 190), 'VARIABLE': (180, 60, 30)}
 def panel(i, title, scope, ylo, yhi, series, lines=(), note='', ylab=''):
     ox, oy = (i % COLS) * PW, HEAD + (i // COLS) * PH
@@ -142,10 +143,10 @@ panel(2, 'Strokes (px)', 'GLOBAL px', 2, 4.5, [(se, (200, 0, 0)), (ss, (0, 120, 
       note=f'pad end stroke {min(se.values()):.2f}-{max(se.values()):.2f} (red), side {min(ss.values()):.2f}-{max(ss.values()):.2f} (blue),\nC1S {min(w1.values())}-{max(w1.values())} px (green): flat while R1 grows x2.6', ylab='px')
 panel(3, 'C2D radius / C1S radius', 'GLOBAL ratio', 1.8, 2.2, [(q, (90, 0, 140))], lines=[(lambda v: 2.0, (150, 150, 150), '2')],
       note=f'{min(q.values()):.3f}-{max(q.values()):.3f}: R2 = 2 x R1 exactly,\nradius resolution 0.25 px', ylab='ratio')
-panel(4, 'Pad template (px)', 'LOCAL, GLOBAL model', 0, 40, [(L, (200, 0, 0)), (Wd, (0, 120, 200))],
+panel(4, 'Pad template (px)', 'LOCAL, observed prior', 0, 40, [(L, (200, 0, 0)), (Wd, (0, 120, 200))],
       lines=[(lambda v: aL + bL * v, (200, 0, 0), f'L = {aL} px + {bL} R1', 34), (lambda v: aW + bW * v, (0, 120, 200), f'W = {aW} px + {bW} R1', 34)],
-      note=f'a {bL*10:.1f} m x {bW*10:.1f} m pad body + screen-px stroke;\nmax residual {mL} px (L), {mW} px (W) on 11 images', ylab='px')
-panel(5, 'Pad frame pixel count', 'LOCAL, GLOBAL model', 0, 400, [(FP, (0, 0, 0))], lines=[(lambda v: aF + bF * v, (120, 120, 120), f'{aF:.1f} px + {bF:.2f} R1', 30)],
+      note=f'{bL*10:.1f} m x {bW*10:.1f} m body + screen-px stroke on these 11 images;\ncourse data: a prior to check, never a scale source', ylab='px')
+panel(5, 'Pad frame pixel count', 'LOCAL', 0, 400, [(FP, (0, 0, 0))], lines=[(lambda v: aF + bF * v, (120, 120, 120), f'{aF:.1f} px + {bF:.2f} R1', 30)],
       note=f'median frame px per image; max residual {mF:.0f} px.\nS3 absolute size/fill bounds broke at zoom', ylab='px (count)')
 X6, Y6 = panel(6, 'Hallway width (px)', 'LOCAL (2 regimes)', 25, 60, [(hw, (0, 0, 0))],
       lines=[(lambda v: 0.935 * v, (0, 120, 200), '0.935 R1'), (lambda v: 1.48 * v, (200, 0, 0), '1.48 R1')],

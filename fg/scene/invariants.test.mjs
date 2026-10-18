@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { SCOPE, SCREEN_PX, RING_RATIO, PAD_MODEL, padFromScale, scaleFromPad, regimeOf, orient } from './invariants.mjs';
+import { SCOPE, SCREEN_PX, RING_RATIO, PAD_MODEL, padFromScale, padAgainstPrior, regimeOf, orient } from './invariants.mjs';
 
 const LEDGER = JSON.parse(readFileSync(join(import.meta.dirname, '..', '..', 'docs', 'evidence', 'ledger', 'ledger.json'), 'utf8'));
 const entry = (q) => LEDGER.entries.find((e) => e.quantity === q);
@@ -21,15 +21,14 @@ test('screen-px sprites and the ring ratio match the ledger on every image', () 
   for (const v of Object.values(entry('C2D radius / C1S radius').perImage)) assert.ok(Math.abs(v - RING_RATIO) <= 0.05, `R2/R1 ${v}`);
 });
 
-test('pad model: predicted from R1 within its residual on all 11 images; R1 recovered from the pad within 0.75 px', () => {
+test('pad prior: predicted from the ring R1 within its residual on all 11 dev images', () => {
   const L = entry('pad length').perImage, W = entry('pad width').perImage, ROUND = 0.01;   // px: coefficients carry 3-4 decimals
   assert.deepEqual([PAD_MODEL.lengthPx, PAD_MODEL.widthPx, PAD_MODEL.maxResidualPx], [LEDGER.padModel.lengthPx, LEDGER.padModel.widthPx, LEDGER.padModel.maxResidualPx], 'PAD_MODEL is the ledger fit');
   for (const n of IMAGES) {
     const p = padFromScale(R1[n]);
     assert.ok(Math.abs(p.lengthPx - L[n]) <= PAD_MODEL.maxResidualPx[0] + ROUND, `${n} length ${p.lengthPx} vs ${L[n]}`);
     assert.ok(Math.abs(p.widthPx - W[n]) <= PAD_MODEL.maxResidualPx[1] + ROUND, `${n} width ${p.widthPx} vs ${W[n]}`);
-    const s = scaleFromPad({ lengthPx: L[n], widthPx: W[n] });
-    assert.ok(Math.abs(s.r1Px - R1[n]) <= 0.75, `${n}: R1 from pads ${s.r1Px} vs rings ${R1[n]}`);
+    assert.equal(padAgainstPrior({ lengthPx: L[n], widthPx: W[n] }, R1[n]).matches, true, n);
   }
 });
 
@@ -50,8 +49,19 @@ test('orient: blind prediction of the hallway width brackets the measured width'
   const hw = entry('hallway width').perImage, L = entry('pad length').perImage, W = entry('pad width').perImage;
   for (const n of IMAGES) {
     const o = orient({ ringR1Px: R1[n], padTemplate: { lengthPx: L[n], widthPx: W[n] } });
-    assert.equal(o.scaleAgrees, true, n);
+    assert.equal(o.padMatchesPrior, true, n); assert.deepEqual(o.findings, []);
     const [lo, hi] = o.predicted.hallwayPx;
     assert.ok(hw[n] >= lo - 0.5 && hw[n] <= hi + 0.5, `${n}: hallway ${hw[n]} px outside predicted [${lo}, ${hi}]`);
   }
+});
+
+test('a course with different pads: the scale stays the rings\', the pad is the finding', () => {
+  // golden's rings (R1 44.25 px) with pads 20% longer and wider than the 6 m x 4 m prior
+  const r1 = 44.25, p = padFromScale(r1), big = { lengthPx: PAD_MODEL.lengthPx[0] + (p.lengthPx - PAD_MODEL.lengthPx[0]) * 1.2, widthPx: PAD_MODEL.widthPx[0] + (p.widthPx - PAD_MODEL.widthPx[0]) * 1.2 };
+  const o = orient({ ringR1Px: r1, padTemplate: big });
+  assert.equal(o.scale.r1Px, r1); assert.equal(o.scale.source, 'C1S/C2D rings');
+  assert.equal(o.predicted.c2dRadiusPx, 88.5);
+  assert.equal(o.padMatchesPrior, false);
+  assert.ok(Math.abs(o.pad.bodyM[0] - 7.17) < 0.05 && Math.abs(o.pad.bodyM[1] - 4.79) < 0.05, JSON.stringify(o.pad.bodyM));
+  assert.equal(o.findings.length, 1);
 });

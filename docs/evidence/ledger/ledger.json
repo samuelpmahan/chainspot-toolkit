@@ -426,8 +426,8 @@
     "lenard4",
     "lenard5"
    ],
-   "evidence": "one radius per image (pair fit (R, 2R) over every basket); zoomed Lenard 55.5-56.25 px vs full Lenard 24 px",
-   "use": "the image scale: everything map-scaled is a multiple of it"
+   "evidence": "one radius per image (pair fit (R, 2R) over every basket); zoomed Lenard 55.5-56.25 px vs full Lenard 24 px. On the ground the rings are the app's definition (10 m, 20 m) and never vary",
+   "use": "THE scale anchor, and the only one: everything course-made (pads, hallways) is predicted from it and checked, never used to set it"
   },
   {
    "quantity": "pad length",
@@ -465,8 +465,8 @@
     "lenard4",
     "lenard5"
    ],
-   "evidence": "GLOBAL model: L = 3.532 px + 0.5971 x R1 (max residual 0.27 px on 11 images): a 5.97 m body plus a screen-px stroke (3.532 px ~ the end stroke)",
-   "use": "pad template predicted from R1 before any pad is fitted"
+   "evidence": "OBSERVED prior (course data, could vary on another course): L = 3.532 px + 0.5971 x R1 (max residual 0.27 px on 11 images): a 5.97 m body plus a screen-px stroke (3.532 px ~ the end stroke)",
+   "use": "where S3 looks first; a course whose pads miss it is a finding, never a rescale"
   },
   {
    "quantity": "pad width",
@@ -504,8 +504,8 @@
     "lenard4",
     "lenard5"
    ],
-   "evidence": "GLOBAL model: W = 2.985 px + 0.3994 x R1 (max residual 0.16 px): a 3.99 m body plus the side stroke",
-   "use": "pad template predicted from R1"
+   "evidence": "OBSERVED prior (course data): W = 2.985 px + 0.3994 x R1 (max residual 0.16 px): a 3.99 m body plus the side stroke",
+   "use": "pad prior; checked, never a scale source"
   },
   {
    "quantity": "pad frame pixel count",

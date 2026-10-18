@@ -9,6 +9,11 @@
  *
  * R1 = the C1S radius in px (10 m on the ground) = the image's map scale. Evidence: docs/evidence/ledger/ (ledger.json,
  * ledger.png), 6 full courses + 5 zoomed Lenard views.
+ *
+ * Scale comes from the rings ONLY (Sam, 2026-10-18: "pad size COULD vary. Circle1Radius and Circle2Radius WILL NEVER
+ * VARY"). The rings are the app's definition (10 m, 20 m); everything else on the course is course data, however
+ * constant it looked on the dev set. Nothing course-made (pads, hallways) ever sets or corrects the scale: it is
+ * predicted from the scale and checked, and a miss is a finding about that thing.
  */
 export const SCOPE = Object.freeze({ GLOBAL: 'GLOBAL', LOCAL: 'LOCAL', VARIABLE: 'VARIABLE' });
 
@@ -23,9 +28,14 @@ export const SCREEN_PX = Object.freeze({
 /** GLOBAL ratio: C2D radius = 2 x C1S radius (1.953-2.014 measured). */
 export const RING_RATIO = 2;
 
+/** The only scale anchor: the C1S and C2D radii are fixed on the ground by the app. */
+export const SCALE_ANCHOR = Object.freeze({ c1sRadiusM: 10, c2dRadiusM: 20 });
+
 /**
- * GLOBAL model, LOCAL value: the pad is a 6.0 m x 4.0 m body (0.597 / 0.399 x R1) outlined by a screen-px stroke (the
- * intercepts equal the end and side strokes). px = a px + b x R1; max residual 0.27 px (length), 0.16 px (width).
+ * OBSERVED prior, not a constant: on all 11 dev images the pad is a 6.0 m x 4.0 m body (0.597 / 0.399 x R1) outlined by
+ * the screen-px stroke (the intercepts equal the end and side strokes); px = a px + b x R1, max residual 0.27 px (length),
+ * 0.16 px (width). Pad size is course data and could differ on another course: the prior says where to look, the image's
+ * own pad fit says what is there, and a pad off the prior is reported (padMatchesPrior false), never used to rescale.
  */
 export const PAD_MODEL = Object.freeze({ lengthPx: [3.532, 0.5971], widthPx: [2.985, 0.3994], maxResidualPx: [0.27, 0.16] });
 
@@ -44,11 +54,15 @@ const r3 = (v) => Math.round(v * 1000) / 1000;
 /** Pad template (px) predicted from the map scale R1 (px). */
 export const padFromScale = (r1Px) => ({ lengthPx: r3(PAD_MODEL.lengthPx[0] + PAD_MODEL.lengthPx[1] * r1Px), widthPx: r3(PAD_MODEL.widthPx[0] + PAD_MODEL.widthPx[1] * r1Px) });
 
-/** Map scale R1 (px) recovered from a fitted pad template (px): an estimate independent of the rings. */
-export const scaleFromPad = ({ lengthPx, widthPx }) => {
-  const fromLengthPx = r3((lengthPx - PAD_MODEL.lengthPx[0]) / PAD_MODEL.lengthPx[1]), fromWidthPx = r3((widthPx - PAD_MODEL.widthPx[0]) / PAD_MODEL.widthPx[1]);
-  return { fromLengthPx, fromWidthPx, r1Px: r3((fromLengthPx + fromWidthPx) / 2) };
-};
+/** A fitted pad template (px) against the prior at the ring scale: residuals in px and the pad's own size in m. */
+export function padAgainstPrior({ lengthPx, widthPx }, r1Px, { tolPx = [0.75, 0.5] } = {}) {
+  const want = padFromScale(r1Px), mPerPx = SCALE_ANCHOR.c1sRadiusM / r1Px;
+  const residualPx = [r3(lengthPx - want.lengthPx), r3(widthPx - want.widthPx)];
+  return {
+    predicted: want, residualPx, matches: Math.abs(residualPx[0]) <= tolPx[0] && Math.abs(residualPx[1]) <= tolPx[1],
+    bodyM: [r3((lengthPx - PAD_MODEL.lengthPx[0]) * mPerPx), r3((widthPx - PAD_MODEL.widthPx[0]) * mPerPx)]   // stroke removed
+  };
+}
 
 const inside = (v, [lo, hi]) => v >= lo && v <= hi;
 /** Which regime each available signal points at; 'unobserved' between the two R1 ranges. */
@@ -62,20 +76,21 @@ export function regimeOf({ r1Px, hallwayPx = null, dashesPerC2 = null }) {
 }
 
 /**
- * Orientation for one image from what is constant locally: the scale from the rings and from the pads must agree (two
- * independent signals), the regime from scale / hallway / dashes must agree, and the hallway width is predicted before
- * any tee->badge segment is fitted.
+ * Orientation for one image from what is constant locally. The scale is the ring radius and nothing else; from it the
+ * pad prior, the C2D radius and (given the regime) the hallway width are predicted before they are fitted. A fitted pad
+ * template is checked against the prior: a miss is a finding about this course's pads, the scale is untouched.
  */
-export function orient({ ringR1Px, padTemplate = null, hallwayPx = null, dashesPerC2 = null, scaleAgreePx = 0.75 }) {
-  const fromPad = padTemplate ? scaleFromPad(padTemplate) : null;
-  const scale = { ringsPx: ringR1Px, padsPx: fromPad?.r1Px ?? null, disagreePx: fromPad ? r3(Math.abs(fromPad.r1Px - ringR1Px)) : null };
+export function orient({ ringR1Px, padTemplate = null, hallwayPx = null, dashesPerC2 = null }) {
   const reg = regimeOf({ r1Px: ringR1Px, hallwayPx, dashesPerC2 });
   const g = REGIMES[reg.regime];
+  const pad = padTemplate ? padAgainstPrior(padTemplate, ringR1Px) : null;
   return {
-    scale, scaleAgrees: scale.disagreePx == null ? null : scale.disagreePx <= scaleAgreePx,
+    scale: { r1Px: ringR1Px, source: 'C1S/C2D rings', mPerPx: r3(SCALE_ANCHOR.c1sRadiusM / ringR1Px) },
     regime: reg.regime, votes: reg.votes,
-    predicted: { pad: padFromScale(ringR1Px), hallwayPx: g ? g.hallwayOverR1.map((k) => r3(k * ringR1Px)) : null, c2dRadiusPx: r3(RING_RATIO * ringR1Px) }
+    predicted: { pad: padFromScale(ringR1Px), hallwayPx: g ? g.hallwayOverR1.map((k) => r3(k * ringR1Px)) : null, c2dRadiusPx: r3(RING_RATIO * ringR1Px) },
+    pad, padMatchesPrior: pad ? pad.matches : null,
+    findings: pad && !pad.matches ? [`pads measure ${pad.bodyM[0]} m x ${pad.bodyM[1]} m, off the 6.0 m x 4.0 m prior by ${pad.residualPx.join(' / ')} px: this course's pads differ; scale stays the rings'`] : []
   };
 }
 
-export const ORIENT_UNITS = Object.freeze({ ringsPx: 'px (R1 from the rings)', padsPx: 'px (R1 from the pad template)', disagreePx: 'px (R1)', lengthPx: 'px', widthPx: 'px', hallwayPx: 'px [min, max]', c2dRadiusPx: 'px', scaleAgreePx: 'px (R1)' });
+export const ORIENT_UNITS = Object.freeze({ r1Px: 'px (C1S radius, from the rings)', mPerPx: 'm per px', lengthPx: 'px', widthPx: 'px', residualPx: 'px [length, width] (fitted - prior)', bodyM: 'm [length, width] (stroke removed)', tolPx: 'px [length, width]', hallwayPx: 'px [min, max]', c2dRadiusPx: 'px', c1sRadiusM: 'm', c2dRadiusM: 'm' });

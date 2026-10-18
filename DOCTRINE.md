@@ -14,11 +14,16 @@ right and the repo is behind. Every number carries a unit.
 - **C2 = 2 x C1 exactly**, both centred on the basket. Measured ratio
   1.96-2.06 across four courses; the spread is our fit error. Their radius
   gives the course scale in px per m.
-- **Tee pads are one rigid template per image.** A pad is a 6.0 m x 4.0 m
-  ground rectangle (0.597 x R1 by 0.399 x R1) outlined by a screen-px
-  frame stroke (3.53-3.62 px ends, 3.01-3.05 px sides): length = 3.53 px +
-  0.597 x R1, width = 2.99 px + 0.399 x R1, max residual 0.27 px on 6 full
-  courses and 5 zoomed views. The pad interior is an image-constant grey
+- **Scale comes from the rings only** (Sam, 2026-10-18: "pad size COULD
+  vary. Circle1Radius and Circle2Radius WILL NEVER VARY"). C1 = 10 m and
+  C2 = 20 m are the app's definition; R1 in px is the image's scale. Nothing
+  course-made (pads, hallways) ever sets or corrects it.
+- **Tee pads are one rigid template per image.** On all 11 dev images a pad
+  is a 6.0 m x 4.0 m ground rectangle outlined by a screen-px frame stroke
+  (3.53-3.62 px ends, 3.01-3.05 px sides): length = 3.53 px + 0.597 x R1,
+  width = 2.99 px + 0.399 x R1, max residual 0.27 px. That is an observed
+  prior, not a constant: pad size is course data. Predict from it, fit the
+  image's own pads, and report a miss as a finding about the pads. The pad interior is an image-constant grey
   (golden RGB 158/157/159). The C2 dash period is NOT screen-constant (an
   earlier reading said 25.5 px): it is 21.5-33.5 px, see the ledger below.
 - **Constant means constant across courses AND zoom scales** (Sam,
@@ -26,9 +31,9 @@ right and the repo is behind. Every number carries a unit.
   `docs/evidence/ledger/`):
   GLOBAL (holds on full courses and zoomed views): basket sprite 46 x 72
   px; badge sprite size by label; frame and ring strokes in screen px;
-  C2 = 2 x C1; the pad model in R1.
+  C2 = 2 x C1 (10 m and 20 m by definition: the scale anchor).
   LOCAL (one value per image, measured on every run, free orientation in a
-  blind run): R1 (21-56 px), pad template, pad frame px, S3 band fill,
+  blind run): R1 (21-56 px), pad template (prior 6 m x 4 m, checked), pad frame px, S3 band fill,
   hallway width (31-52 px), C2 dash period. Hallway width / R1 and dashes
   per C2 circle fall in two scale regimes (1.46-1.49 and ~10 dashes when
   R1 <= 27 px; 0.93-0.94 and ~21 dashes when R1 >= 36 px; full Lenard and

@@ -10,6 +10,12 @@ northpark) and 5 zoomed Lenard views (Lenard-1..5, each one screenshot, no
 assembly). The x axis of every panel is R1 = the C1S radius in px, i.e. the
 image's map scale (10 m on the ground).
 
+**Scale comes from the rings only** (Sam, 2026-10-18: "pad size COULD vary.
+Circle1Radius and Circle2Radius WILL NEVER VARY"). The rings are the app's
+definition (10 m, 20 m). Pads and hallways are course data: however constant
+they looked here, they are predicted from the ring scale and checked, never
+used to set it.
+
 ![ledger](ledger.png)
 
 | scope | quantity | value | evidence |
@@ -19,8 +25,8 @@ image's map scale (10 m on the ground).
 | GLOBAL | pad frame stroke | ends 3.53-3.62 px, sides 3.01-3.05 px | AA render fit; flat while R1 grows x2.6 |
 | GLOBAL | C1S stroke | 2.75-3.5 px FWHM | 0.25 px radial steps |
 | GLOBAL | C2D radius / C1S radius | 2 (1.953-2.014) | radius resolution 0.25 px |
-| GLOBAL model | pad template | length = 3.53 px + 0.597 x R1, width = 2.99 px + 0.399 x R1 | max residual 0.27 px / 0.16 px; a 6.0 m x 4.0 m body plus the screen-px stroke (intercepts = the strokes) |
-| LOCAL | R1 | 21.25-56.25 px | one radius per image |
+| OBSERVED prior | pad template | length = 3.53 px + 0.597 x R1, width = 2.99 px + 0.399 x R1 | max residual 0.27 px / 0.16 px on these 11 images: a 6.0 m x 4.0 m body plus the screen-px stroke (intercepts = the strokes). Course data: another course's pads could differ |
+| LOCAL (px), fixed on the ground | R1 | 21.25-56.25 px = 10 m | one radius per image; the only scale anchor |
 | LOCAL | pad frame px | 129-344 px (count) | ~0.5 px + 6.0 x R1 |
 | LOCAL | S3 band fill | median 0.80-0.82 full, 0.61-0.64 zoom (fraction) | an absolute bound found no anchors at zoom |
 | LOCAL | hallway width | 31.03-52.38 px | IQR within an image <= 0.48 px |
@@ -33,10 +39,12 @@ image's map scale (10 m on the ground).
 What is constant within an image is measured once and then predicts the
 rest:
 
-- **Scale from two independent signals.** R1 from the rings and R1 from the
-  fitted pad template (inverting the pad model) agree within 0.40 px on all
-  11 images (golden 0.29, alex 0.01, lenard 0.18, townelake 0.11, heritage
-  0.25, northpark 0.08, Lenard-1..5 0.01-0.40 px).
+- **Scale from the rings, and nothing else.** From R1, the pad prior, the C2D
+  radius and the hallway width are predicted before they are fitted.
+- **Pad check.** The fitted pad template is compared with the prior at the
+  ring scale. On all 11 images it matches within 0.27 px (length) and
+  0.16 px (width). A course whose pads miss it gets a finding giving the
+  pads' size in metres. The scale is untouched.
 - **Regime.** Scale, hallway width / R1 and dash count vote; they agree on all 11
   images. Between R1 27 and 36 px nothing is assumed (`unresolved`).
 - **Hallway prediction.** The regime ratio x R1 brackets the measured hallway
