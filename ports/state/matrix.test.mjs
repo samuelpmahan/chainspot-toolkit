@@ -22,11 +22,15 @@ const golden = course('golden', complete, {
 });
 
 test('the status rule as written: stale > missing > unjudged > met / unmet', () => {
-  assert.equal(statusOf(cell('S2'), golden, golden.judgement.S2, fresh), 'unmet', 'FN = 1 is unmet');
+  assert.equal(statusOf(cell('S2'), golden, golden.judgement.S2, fresh), 'unmet', 'FN = 1 with no S4 rows is unmet');
   assert.equal(statusOf(cell('S4baskets'), golden, golden.judgement.S4baskets, fresh), 'met');
   assert.equal(statusOf(cell('S1'), golden, golden.judgement.S1, fresh), 'met');
   assert.equal(statusOf(cell('S1'), golden, { found: 18, labelsMissing: ['Badge 7'], duplicates: [] }, fresh), 'unmet');
   assert.equal(statusOf(cell('S3association'), golden, { associatedCorrectly: 14, associatedIncorrectly: 0, notAssociated: 1 }, fresh), 'unmet');
+  // S2 and S3 expect occlusion: an FN that S4 recovers does not count (Sam: "they should pass as long as S4 recovers for them")
+  const withS4 = (s4rows) => ({ ...golden, judgement: { ...golden.judgement, S2: { ...golden.judgement.S2, rows: [{ hole: 6, verdict: 'FN' }] }, S4baskets: { ...golden.judgement.S4baskets, rows: s4rows } } });
+  assert.equal(statusOf(cell('S2'), withS4([{ hole: 6, verdict: 'recoveredTP' }]), withS4([]).judgement.S2, fresh), 'met', 'the FN basket was recovered by S4');
+  assert.equal(statusOf(cell('S2'), withS4([{ hole: 7, verdict: 'TP' }]), withS4([]).judgement.S2, fresh), 'unmet', 'S4 recovered a different hole');
   // FP counts only where testimony is complete
   const alex = course('alex', partial, {});
   assert.equal(statusOf(cell('S2'), alex, judged(3, 0, 5), fresh), 'met', 'FP is not judged on partial testimony');
@@ -47,13 +51,13 @@ test('the matrix: one row per stage x course, emits, units, markdown, frozen com
   const inputs = { declarations: { S1: { responsibility: 'badges' }, S2: { responsibility: 'baskets' }, S3: { responsibility: 'tees' }, S4: { responsibility: 'recover' } }, courses: [golden, northpark] };
   const m = matrixRows(inputs);
   assert.equal(m.rows.length, 2 * CELLS.length);
-  assert.deepEqual(m.emits, { cells: 12, met: 4, unmet: 2, unjudged: 6, missing: 0, stale: 0 });
+  assert.deepEqual(m.emits, { cells: 12, met: 4, unmet: 2, unjudged: 6, missing: 0, stale: 0 }, 'no S4 rows in this fixture, so the S2 and S3 FNs stay unmet');
   assert.ok(Object.keys(m.units).includes('stale'));
   const np = m.rows.find((r) => r.course === 'northpark' && r.key === 'S4tees');
   assert.equal(np.status, 'unjudged'); assert.equal(np.freshness, 'UNVERIFIED'); assert.equal(np.result, '18 of N = 18');
   assert.match(m.rows.find((r) => r.course === 'golden' && r.key === 'S4tees').result, /18\/0\/0 TP\/FN\/FP \(\+3 recovered, 3 right hole\)/);
   const md = matrixMarkdown(m);
-  assert.match(md, /\| golden \| S2 baskets \| baskets within 12 px of all 18 holes \|/); assert.match(md, /12 cells: 4 met, 2 unmet, 6 unjudged/);
+  assert.match(md, /\| golden \| S2 baskets \| baskets within 12 px of all 18 holes, or recovered by S4 \(occlusion is expected\) \|/); assert.match(md, /12 cells: 4 met, 2 unmet, 6 unjudged/);
   // against a frozen record: same, changed, new
   const frozen = { rows: m.rows.filter((r) => r.course === 'golden').map((r) => ({ ...r, result: r.key === 'S2' ? '16/2/0 TP/FN/FP' : r.result })) };
   const again = matrixRows(inputs, frozen);

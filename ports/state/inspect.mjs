@@ -21,7 +21,7 @@ import { join } from 'node:path';
 import { deserialize } from 'node:v8';
 import { deflateSync } from 'node:zlib';
 import { cropWindow } from '../../fg/png.mjs';
-import { CELLS, S4_BRANCH } from './matrix.mjs';
+import { CELLS, S4_BRANCH, recoveredHoles } from './matrix.mjs';
 
 export const NEAR_MISS_PX = 3;          // a presentation tag, not a rule: errors above it are worth a look (mark or result?)
 export const WEAK_CONFIDENCE = 0.5;     // recoveries below it are tagged weak
@@ -52,7 +52,7 @@ const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 export function cellRows(cell, course) {
   const J = course.judgement, O = course.objects, judged = Boolean(course.testimony);
   const rows = [];
-  const push = (r) => rows.push({ hole: null, name: null, errorPx: null, dxPx: null, dyPx: null, near: false, weak: false, reason: null, numbers: {}, marks: [], wide: false, ...r });
+  const push = (r) => rows.push({ hole: null, name: null, errorPx: null, dxPx: null, dyPx: null, near: false, weak: false, recoveredByS4: false, reason: null, numbers: {}, marks: [], wide: false, ...r });
   const rect = (bbox, color, label) => ({ kind: 'rect', x: bbox[0], y: bbox[1], w: bbox[2], h: bbox[3], color, label });
   const cross = (p, color, label, small = false) => ({ kind: 'cross', x: p[0], y: p[1], color, label, small });
   const ring = (p, r, color) => ({ kind: 'ring', x: p[0], y: p[1], r, color });
@@ -116,6 +116,7 @@ export function cellRows(cell, course) {
   }
 
   const stage = cell.key === 'S4tees' ? J?.S4tees?.branches?.[S4_BRANCH] : J?.[cell.key];
+  const s4Recovered = cell.key === 'S2' || cell.key === 'S3' ? recoveredHoles(course, cell.key) : new Set();   // occlusion is expected: S4 recovers
   const fnWhy = new Map((J?.S3?.fn ?? []).map((s) => [Number(s.split(' ')[1]), paren(s)]));
   const missedWhy = new Map(O.s4missed.map((m) => [Number(m.hole), m.reason]));
   for (const r of stage?.rows ?? []) {
@@ -128,9 +129,10 @@ export function cellRows(cell, course) {
     if (wide) marks.push(...rayTo(d.point, recovered ? d.forHole : assocBadge[teeIndex(d.point)], recovered));
     const dx = d && r.expected ? r2(d.point[0] - r.expected[0]) : null, dy = d && r.expected ? r2(d.point[1] - r.expected[1]) : null;
     const weak = weakOf(d);
-    const reason = r.verdict === 'FN' ? (cell.key === 'S3' ? fnWhy.get(r.hole) : cell.key === 'S4tees' ? missedWhy.get(r.hole) ?? 'not recovered' : null)
+    const recoveredByS4 = r.verdict === 'FN' && s4Recovered.has(r.hole);
+    const reason = r.verdict === 'FN' ? `${cell.key === 'S3' ? fnWhy.get(r.hole) ?? '' : cell.key === 'S4tees' ? missedWhy.get(r.hole) ?? 'not recovered' : ''}${recoveredByS4 ? '; recovered by S4' : cell.key === 'S2' || cell.key === 'S3' ? '; NOT recovered by S4' : ''}`.replace(/^; /, '')
       : d?.rule ? recoveredReason(d, weak) : null;
-    push({ hole: r.hole, name: name ?? (r.hole != null ? `${kindName} ${r.hole}` : null), verdict: r.verdict, errorPx: r2(r.errorPx), dxPx: dx, dyPx: dy,
+    push({ hole: r.hole, name: name ?? (r.hole != null ? `${kindName} ${r.hole}` : null), verdict: r.verdict, errorPx: r2(r.errorPx), dxPx: dx, dyPx: dy, recoveredByS4,
       near: r.errorPx != null && r.errorPx > NEAR_MISS_PX, weak, center: r.expected ?? d?.point ?? null, marks, wide, reason,
       numbers: { errorPx: r2(r.errorPx) ?? undefined, dxPx: dx ?? undefined, dyPx: dy ?? undefined, matchWithinPx: radius, confidence: d?.confidence ?? undefined, visibleFrameFrac: d?.visibleFrameFrac ?? undefined, forBadge: d?.forHole ?? undefined, angleDeg: d?.angleRad != null ? r2(d.angleRad * 180 / Math.PI) : undefined } });
   }
@@ -143,7 +145,11 @@ export function residualSummary(rows) {
   if (xs.length < 3) return null;
   const mean = (a) => a.reduce((n, v) => n + v, 0) / a.length, sd = (a) => { const m = mean(a); return Math.sqrt(mean(a.map((v) => (v - m) ** 2))); };
   const dx = xs.map((r) => r.dxPx), dy = xs.map((r) => r.dyPx);
-  return { rows: xs.length, meanDxPx: r2(mean(dx)), meanDyPx: r2(mean(dy)), sdDxPx: r2(sd(dx)), sdDyPx: r2(sd(dy)), constant: sd(dx) < 0.3 && sd(dy) < 0.3 && Math.hypot(mean(dx), mean(dy)) > 1 };
+  // the dominant offset: the most common (dx, dy) at 0.25 px; a convention when most rows share it and it is over 1 px
+  const bins = new Map(); for (const r of xs) { const k = `${Math.round(r.dxPx * 4) / 4},${Math.round(r.dyPx * 4) / 4}`; bins.set(k, (bins.get(k) ?? 0) + 1); }
+  const [modeKey, modeN] = [...bins].sort((a, b) => b[1] - a[1])[0], [modeDx, modeDy] = modeKey.split(',').map(Number);
+  const constant = modeN / xs.length >= 0.6 && Math.hypot(modeDx, modeDy) > 1;
+  return { rows: xs.length, meanDxPx: r2(mean(dx)), meanDyPx: r2(mean(dy)), sdDxPx: r2(sd(dx)), sdDyPx: r2(sd(dy)), modeDxPx: modeDx, modeDyPx: modeDy, modeRows: modeN, constant };
 }
 
 /** The geometry of a row, for freezing and comparing (labels and colours dropped). */
@@ -164,6 +170,31 @@ function compareWithFrozen(rows, frozenRows) {
     return { ...r, vsFrozen: changes.length ? changes.join(', ') : 'same', before: changes.length ? f.marks : null };
   });
   return { rows: out, gone: frozenRows.filter((f) => !used.has(key(f))).map((f) => `${f.name ?? ''}${f.hole != null ? ` (hole ${f.hole})` : ''} ${f.verdict}`) };
+}
+
+/**
+ * Where to look first (Sam: "can that artifact maybe tell YOU where to look for stuff?"): ranked, each with a deep link.
+ *   1 an S2/S3 FN that S4 did not recover, or an S4 FN; 2 an FP, a wrong or missing association, a missing or duplicate badge;
+ *   3 a row that changed against frozen; 4 a weak recovery; 5 a recovered object on a course without testimony (needs eye);
+ *   6 a cell whose near misses share a constant offset (a convention, one item), else each near miss.
+ */
+export function attention(courses) {
+  const items = [];
+  const link = (c, k, ri) => `#${c.course}.${k.key}${ri != null ? `.r${ri}` : ''}`;
+  for (const c of courses) for (const k of c.cells) {
+    k.rows.forEach((r, ri) => {
+      const at = { course: c.course, cell: k.key, name: r.name, hole: r.hole, link: link(c, k, ri) };
+      if (r.verdict === 'FN' && !r.recoveredByS4) items.push({ rank: 1, why: `FN${r.reason ? `: ${r.reason}` : ''}`, ...at });
+      else if (/FP|wrong|none/.test(r.verdict)) items.push({ rank: 2, why: `${r.verdict}${r.reason ? `: ${r.reason}` : ''}`, ...at });
+      if (r.vsFrozen && r.vsFrozen !== 'same') items.push({ rank: 3, why: `changed vs frozen: ${r.vsFrozen}`, ...at });
+      if (r.weak) items.push({ rank: 4, why: `weak recovery (confidence ${r.numbers?.confidence ?? '?'})`, ...at });
+      if (c.testimony === 'none' && r.verdict === 'recovered') items.push({ rank: 5, why: `recovered without testimony: judge by eye (${r.reason ?? ''})`, ...at });
+    });
+    if (k.gone.length) items.push({ rank: 3, course: c.course, cell: k.key, name: null, hole: null, link: link(c, k), why: `gone since frozen: ${k.gone.join('; ')}` });
+    if (k.residual?.constant) items.push({ rank: 6, course: c.course, cell: k.key, name: null, hole: null, link: link(c, k), why: `${k.residual.modeRows} of ${k.residual.rows} judged rows share one offset (dx ${k.residual.modeDxPx}, dy ${k.residual.modeDyPx} px, pipeline minus mark): a convention differs, the mark or the point definition` });
+    else k.rows.forEach((r, ri) => { if (r.near && !/FN|FP/.test(r.verdict)) items.push({ rank: 6, why: `near miss ${r.errorPx} px (dx ${r.dxPx}, dy ${r.dyPx})`, course: c.course, cell: k.key, name: r.name, hole: r.hole, link: link(c, k, ri) }); });
+  }
+  return items.sort((a, b) => a.rank - b.rank);
 }
 
 function openRaster(course) {
@@ -195,7 +226,7 @@ export function inspectorData(matrix, inputs, { root, frozen = null }) {
       flipbook: c.paths?.s4run ? join(c.paths.s4run, 's4recover.flipbook.html').replace(root + '/', '') : null, cells, imageSize: raster ? [raster.width, raster.height] : null });
   }
   return { at: new Date().toISOString(), emits: matrix.emits, cells: CELLS.map((c) => ({ key: c.key, what: c.what })), courses, legend: LEGEND, colors: COLORS,
-    nearMissPx: NEAR_MISS_PX, weakConfidence: WEAK_CONFIDENCE, frozenAt: frozen?.at ?? null };
+    nearMissPx: NEAR_MISS_PX, weakConfidence: WEAK_CONFIDENCE, frozenAt: frozen?.at ?? null, attention: attention(courses) };
 }
 
 export function inspectorHtml(data) {
@@ -227,8 +258,10 @@ img{image-rendering:pixelated;display:block;max-width:100%}
 .legend li{margin:2px 0}.legend i{display:inline-block;width:12px;height:12px;margin-right:6px;vertical-align:middle;border-radius:2px}
 button{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:4px;padding:2px 8px;cursor:pointer;margin:0 4px 4px 0;font:inherit}button.on{border-color:var(--accent);color:var(--accent)}button:focus-visible{outline:2px solid var(--accent)}
 a{color:var(--accent)}small{color:var(--muted)}p{max-width:70ch}
+details{padding-block:8px;border-bottom:1px solid var(--line)}details ol{margin:6px 0 0;padding-left:22px}details li{margin:2px 0}
 </style>
 <header><h1>ChainSpot State Inspector</h1><div id="hdr"></div></header>
+<details id="look" open><summary><b>Look here first</b> <span id="lookn"></span></summary><ol id="looklist"></ol></details>
 <div id="grid"></div>
 <main><section id="left"><div id="cellpanel"><small>Pick a cell above.</small></div></section><section id="right"><div id="detail"><small>Pick a cell, then an object.</small></div>
 <div class="legend" style="margin-top:24px"><b>Legend</b><ul id="legend"></ul></div></section></main>
@@ -238,6 +271,9 @@ const D=JSON.parse(document.getElementById('data').textContent);const $=(s)=>doc
 const st=(s)=>'<span class="st" style="background:'+(D.colors.status[s]||'#444')+'">'+esc(s)+'</span>';
 $('#hdr').innerHTML='derived '+esc(D.at)+' &middot; '+D.emits.cells+' cells: '+D.emits.met+' met, '+D.emits.unmet+' unmet, '+D.emits.unjudged+' unjudged, '+D.emits.missing+' missing, '+D.emits.stale+' stale'+(D.frozenAt?' &middot; compared with frozen.json of '+esc(D.frozenAt):' &middot; nothing frozen yet');
 $('#legend').innerHTML=D.legend.map(([k,c,t])=>'<li><i style="background:'+c+'"></i>'+esc(k)+': '+esc(t)+'</li>').join('');
+const RANK={1:'miss',2:'wrong',3:'changed',4:'weak',5:'needs eye',6:'offset'};
+$('#lookn').textContent='('+D.attention.length+' items, ranked: misses, wrong, changed, weak, needs eye, offsets)';
+$('#looklist').innerHTML=D.attention.slice(0,40).map((a)=>'<li><a href="'+esc(a.link)+'">'+esc(a.course)+' &middot; '+esc(a.cell)+(a.name?' &middot; '+esc(a.name):'')+(a.hole!=null?' (hole '+a.hole+')':'')+'</a> <span class="chip">'+RANK[a.rank]+'</span> '+esc(a.why)+'</li>').join('')+(D.attention.length>40?'<li>... '+(D.attention.length-40)+' more</li>':'');
 const FILTERS={all:'all',miss:'FN / FP / wrong',rec:'recovered',near:'near misses',weak:'weak',changed:'changed vs frozen'};
 let sel={ci:null,ki:null,ri:null,filter:'all'};
 // deep links are bare tokens: #course.cell[.filter][.rN]
@@ -251,7 +287,7 @@ const show=(r)=>sel.filter==='all'||(sel.filter==='miss'&&/FN|FP|wrong|none/.tes
 function cellpanel(){if(sel.ci==null){$('#cellpanel').innerHTML='<small>Pick a cell above.</small>';return;}const c=D.courses[sel.ci],k=c.cells[sel.ki];
 let h='<h3>'+esc(c.course)+' &middot; '+esc(k.key)+' '+esc(k.what)+' '+st(k.status)+'</h3><div><b>expected:</b> '+esc(k.expected)+'<br><b>result:</b> '+esc(k.result||'-')+'<br><small>goal: '+esc(k.goal)+'</small>';
 if(k.freshness==='STALE')h+='<br><b class="near">stale:</b> <span class="num">'+esc(k.changedPaths.slice(0,8).join(', '))+(k.changedPaths.length>8?' ... ('+k.changedPaths.length+' paths)':'')+'</span>';
-if(k.residual)h+='<br><b>residual over '+k.residual.rows+' judged rows:</b> <span class="num">dx '+k.residual.meanDxPx+' px (sd '+k.residual.sdDxPx+'), dy '+k.residual.meanDyPx+' px (sd '+k.residual.sdDyPx+')</span>'+(k.residual.constant?' <b class="near">a constant offset: a convention differs (the mark or the point definition), not noise</b>':'');
+if(k.residual)h+='<br><b>residual over '+k.residual.rows+' judged rows:</b> <span class="num">mean dx '+k.residual.meanDxPx+', dy '+k.residual.meanDyPx+' px; most common dx '+k.residual.modeDxPx+', dy '+k.residual.modeDyPx+' px on '+k.residual.modeRows+' rows</span>'+(k.residual.constant?' <b class="near">a constant offset: a convention differs (the mark or the point definition), not noise</b>':'');
 if(k.gone.length)h+='<br><b class="near">gone since frozen:</b> '+esc(k.gone.join('; '));
 if(c.testimony==='none')h+='<br><small>no testimony: judge by eye; calibrate on an annotated course first (docs/evidence/crossval/)</small>';
 if(c.flipbook)h+='<br><small>S4 flipbook: <span class="num">'+esc(c.flipbook)+'</span></small>';
@@ -286,7 +322,7 @@ export function writeInspector(root, matrix, inputs, frozen = null) {
   const data = inspectorData(matrix, inputs, { root, frozen });
   const dir = join(root, 'attempts', 'state'); mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, 'inspector.html'), inspectorHtml(data));
-  return 'attempts/state/inspector.html';
+  return { path: 'attempts/state/inspector.html', attention: data.attention };
 }
 
 /** What freeze records per object (ports/state/matrix.mjs freeze): the rows' geometry per course and cell. */

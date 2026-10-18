@@ -10,7 +10,9 @@
  *   missing    the attempt has no output for the stage
  *   unjudged   no testimony for the course: count closure is shown, never 'met'
  *   met        judged with FN = 0 and FP = 0 (FP counted only where testimony is complete); S1: no missing labels and no
- *              duplicates; association: nothing wrong and nothing unassociated
+ *              duplicates; association: nothing wrong and nothing unassociated. S2 and S3 expect occlusion and recovery
+ *              (Sam, 2026-10-18: "they should pass as long as S4 recovers for them"): an S2 or S3 FN whose hole S4
+ *              recovers (a TP in S4baskets / S4tees) does not make the cell unmet
  *   unmet      otherwise
  *
  * Freshness is reported beside the status: VERIFIED, STALE (with the changed paths), UNVERIFIED (a post-recipe step ran
@@ -65,14 +67,23 @@ export const UNITS = Object.freeze({
 
 // ------------------------------------------------------------------------------------------------ the pure part
 
-/** The status rule (Sam, 2026-10-18, "status rule as written"). */
+/** The holes S4 recovered for an S2 or S3 cell: a TP (observed or recovered) in the S4 cell of the same kind. */
+export function recoveredHoles(course, key) {
+  const rows = key === 'S2' ? course.judgement?.S4baskets?.rows : key === 'S3' ? course.judgement?.S4tees?.branches?.[S4_BRANCH]?.rows : null;
+  return new Set((rows ?? []).filter((r) => r.verdict === 'TP' || r.verdict === 'recoveredTP').map((r) => r.hole));
+}
+/** The FN holes of an S2 / S3 result that S4 did not recover (the only FNs that count against them). */
+export const unrecoveredFn = (cell, course, result) => (result?.rows ?? []).filter((r) => r.verdict === 'FN' && !recoveredHoles(course, cell.key).has(r.hole)).map((r) => r.hole);
+
+/** The status rule (Sam, 2026-10-18, "status rule as written"; S2/S3 pass when S4 recovers their misses). */
 export function statusOf(cell, course, result, freshness) {
   if (cell.closures.some((k) => freshness[k]?.state === 'STALE')) return 'stale';
   if (!result) return 'missing';
   if (!course.testimony) return 'unjudged';
   if (cell.key === 'S1') return result.labelsMissing.length === 0 && result.duplicates.length === 0 ? 'met' : 'unmet';
   if (cell.key === 'S3association') return result.associatedIncorrectly === 0 && result.notAssociated === 0 ? 'met' : 'unmet';
-  return result.FN === 0 && (!course.testimony.complete || result.FP === 0) ? 'met' : 'unmet';
+  const fn = cell.key === 'S2' || cell.key === 'S3' ? (result.rows ? unrecoveredFn(cell, course, result).length : result.FN) : result.FN;
+  return fn === 0 && (!course.testimony.complete || result.FP === 0) ? 'met' : 'unmet';
 }
 
 const judgedOf = (course, key) => {
@@ -88,7 +99,8 @@ function expectedOf(cell, course) {
   if (!t) return `N = ${course.N} badges (no testimony: count closure only)`;
   if (cell.key === 'S1') return `badge labels for ${holes(t)}`;
   if (cell.key === 'S3association') return `every judged tee associated to its own badge (${holes(t)})`;
-  return `${cell.what} within ${cell.what.startsWith('baskets') ? 12 : 8} px of ${holes(t)}`;
+  const orS4 = cell.key === 'S2' || cell.key === 'S3' ? ', or recovered by S4 (occlusion is expected)' : '';
+  return `${cell.what} within ${cell.what.startsWith('baskets') ? 12 : 8} px of ${holes(t)}${orS4}`;
 }
 
 function resultOf(cell, course, r) {
@@ -101,7 +113,8 @@ function resultOf(cell, course, r) {
   if (cell.key === 'S1') return `${r.found} found; missing ${r.labelsMissing.length}, duplicates ${r.duplicates.length}`;
   if (cell.key === 'S3association') return `${r.associatedCorrectly} right / ${r.associatedIncorrectly} wrong / ${r.notAssociated} none`;
   const rec = r.recovered != null ? ` (+${r.recovered} recovered${r.recoveredForHoleCorrectly != null ? `, ${r.recoveredForHoleCorrectly} right hole` : ''})` : '';
-  return `${r.TP}/${r.FN}/${fpOf(course, r)} TP/FN/FP${rec}`;
+  const left = (cell.key === 'S2' || cell.key === 'S3') && r.rows && r.FN ? (() => { const u = unrecoveredFn(cell, course, r); return u.length ? ` (${u.length} FN not recovered by S4: ${u.map((h) => `${cell.key === 'S2' ? 'Basket' : 'Tee'} ${h}`).join(', ')})` : ` (${r.FN} FN recovered by S4)`; })() : '';
+  return `${r.TP}/${r.FN}/${fpOf(course, r)} TP/FN/FP${rec}${left}`;
 }
 
 function presentOf(cell, course) {
@@ -279,7 +292,7 @@ export async function stateMatrix(root = ROOT, { attempts = readAttempts(root) }
   writeFileSync(join(dir, 'matrix.flipbook.html'), renderFlipbook([partFrame(MATRIX_PART, { rows: matrix.rows.map(({ changedPaths, goal, ...r }) => r), ...matrix.emits })], { title: 'State matrix: every stage on every dev course' }));
   const { writeInspector } = await import('./inspect.mjs');
   const inspector = writeInspector(root, matrix, store.get('tk.state.inputs'), frozen);
-  return { matrix, store, frozen, written: ['attempts/state/matrix.json', 'attempts/state/matrix.flipbook.html', inspector] };
+  return { matrix, store, frozen, attention: inspector.attention, written: ['attempts/state/matrix.json', 'attempts/state/matrix.flipbook.html', inspector.path] };
 }
 
 /** Freeze: the rows and the closures they were computed with become the record a later matrix is compared against. */
@@ -367,9 +380,10 @@ export async function stateCommand(args, { root = ROOT, say = (s = '') => proces
     say(`${args.includes('--dry-run') ? 'would remove' : 'removed'} ${p.removed.length} unreferenced attempts (${(p.bytes / 1e9).toFixed(2)} GB); kept ${p.kept.length}: ${p.kept.join(', ')}`);
     if (args.includes('--dry-run')) return { removed: p.removed, kept: p.kept };
   }
-  const { matrix, written, store } = await stateMatrix(root);
+  const { matrix, written, store, attention } = await stateMatrix(root);
   if (args.includes('--freeze')) { const inputs = store.get('tk.state.inputs'); const doc = await freeze(root, matrix, inputs); written.push(FROZEN_FILE); say(`frozen ${doc.rows.length} rows at ${doc.at}`); }
   say(args.includes('--json') ? JSON.stringify(matrix, null, 1) : matrixMarkdown(matrix));
+  if (!args.includes('--json') && attention?.length) { say(`\nLook here first (${attention.length} items; the inspector links each):`); for (const a of attention.slice(0, 25)) say(`  ${a.course} ${a.cell}${a.name ? ` ${a.name}` : ''}${a.hole != null ? ` (hole ${a.hole})` : ''}: ${a.why}  ${a.link}`); if (attention.length > 25) say(`  ... ${attention.length - 25} more in attempts/state/inspector.html`); }
   say(`\nwritten: ${written.join(', ')}`);
   return matrix;
 }
