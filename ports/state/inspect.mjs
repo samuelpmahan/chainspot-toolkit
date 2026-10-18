@@ -20,8 +20,8 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { deserialize } from 'node:v8';
 import { deflateSync } from 'node:zlib';
-import { cropWindow } from '../../fg/png.mjs';
-import { CELLS, s4Accepted, recoveredHoles } from './matrix.mjs';
+import { cropWindow, encodePngRgb } from '../../fg/png.mjs';
+import { CELLS, s4Accepted, s7Accepted, recoveredHoles } from './matrix.mjs';
 
 export const NEAR_MISS_PX = 3;          // a presentation tag, not a rule: errors above it are worth a look (mark or result?)
 export const SPARSE_VISIBLE = 0.25;     // a recovery with less of its frame visible than this is listed first for a look: it rests on less evidence, which is not a verdict
@@ -40,6 +40,8 @@ export const LEGEND = [
   ['poly', COLORS.recovered, 'an S4 recovered pad (corners), with its ray to the badge it was recovered for'],
   ['line', COLORS.right, 'association: solid line to the badge chosen (green right, red wrong), dashed to the true badge'],
   ['dashed', COLORS.frozen, 'the frozen state (before), when a row changed against frozen.json'],
+  ['path', '#3fb950', 'S7 trace (accepted variant): green agrees with Sam (ends at his basket, within W / 2 of his corridor), orange reaches a basket but disagrees, red reaches none, grey unjudged; small squares: its vertices (tee cap, bends, end)'],
+  ['dashed', '#ffe11a', "S7: Sam's corridor tee -> bends -> basket (dashed yellow); red cross: Sam's bend"],
   ['tag', '#f0883e', `near miss: error above ${NEAR_MISS_PX} px; visible N%: how much of a recovered pad's frame is visible (its evidence), contradicting M%: visible frame px that do not look like frame (a translucent ring across the pad does this)`]
 ];
 
@@ -73,6 +75,8 @@ export function cellRows(cell, course) {
     for (const m of J?.S1?.labelsMissing ?? []) push({ hole: Number(m.split(' ')[1]), name: m, verdict: 'FN', center: null, reason: 'no badge read with this label' });
     return rows.sort((a, b) => (a.hole ?? 99) - (b.hole ?? 99));
   }
+
+  if (cell.key === 'S7trace') return s7Rows(course, judged);
 
   if (cell.key === 'S3association') {
     const src = judged ? (J?.S3association?.rows ?? []) : O.association.map((a) => ({ hole: null, name: null, point: a.center, said: a.said, saidCenter: a.said != null ? badgeCenter.get(a.said) ?? null : null, truthCenter: null, verdict: 'unjudged', best: null }));
@@ -139,6 +143,37 @@ export function cellRows(cell, course) {
       numbers: { errorPx: r2(r.errorPx) ?? undefined, dxPx: dx ?? undefined, dyPx: dy ?? undefined, matchWithinPx: radius, visibleFrameFrac: d?.visibleFrameFrac ?? undefined, contradictingFrac: evidenceOf(d)?.contradicting ?? undefined, confidence: d?.confidence ?? undefined, forBadge: d?.forHole ?? undefined, angleDeg: d?.angleRad != null ? r2(d.angleRad * 180 / Math.PI) : undefined } });
   }
   return rows;
+}
+
+export const S7_COLORS = Object.freeze({ agrees: '#3fb950', reachedDisagrees: '#f0883e', notReached: '#f85149', unjudged: '#8b949e', sam: '#ffe11a', samBend: '#ff2020' });
+/** The S7 cell (S7 trace lane): one row per hole, the accepted variant's polyline coloured by the judge, Sam's corridor and bends. */
+function s7Rows(course, judged) {
+  const J = course.judgement?.S7bends?.branches?.[s7Accepted(course)] ?? null, rows = [];
+  for (const t of course.objects.s7traces ?? []) {
+    const r = J?.rows?.find((x) => String(x.hole) === String(t.hole)) ?? null, sam = course.objects.s7corridors?.[t.hole] ?? null;
+    const reached = t.status === 'reached', color = !judged || !r?.judged ? S7_COLORS.unjudged : r.ok ? S7_COLORS.agrees : reached ? S7_COLORS.reachedDisagrees : S7_COLORS.notReached;
+    const marks = [];
+    if (sam) { const c = [sam.tee, ...(sam.bends ?? []), sam.basket]; for (let i = 1; i < c.length; i++) marks.push({ kind: 'line', a: c[i - 1], b: c[i], color: S7_COLORS.sam, dash: 5 }); for (const b of sam.bends ?? []) marks.push({ kind: 'cross', x: b[0], y: b[1], color: S7_COLORS.samBend, label: null }); }
+    if (t.path.length > 1) marks.push({ kind: 'path', pts: t.path, color, label: `hole ${t.hole}` });
+    for (const v of t.path) marks.push({ kind: 'cross', x: v[0], y: v[1], color, label: null, small: true });
+    const pts = [...t.path, ...(sam ? [sam.tee, sam.basket, ...(sam.bends ?? [])] : [])];
+    const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+    const center = pts.length ? [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2] : null;
+    const verdict = !judged || !r?.judged ? 'unjudged' : r.ok && r.bendsMissed === 0 && r.extraBends === 0 ? 'TP' : 'FN';
+    rows.push({ hole: Number(t.hole), name: `Hole ${t.hole} trace`, verdict, center, marks, wide: true, near: Boolean(r?.ok && (r.bendsMissed || r.extraBends)),
+      cropSizePx: pts.length ? Math.ceil(Math.max(Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)) + 2 * (course.objects.s7widthPx ?? 40)) : null,
+      reason: `${t.status}${t.end?.basket ? ` at ${t.end.basket}` : ''}${r?.why ? `; ${r.why}` : ''}${r?.judged ? `; bends ${r.bendsHit} hit / ${r.bendsMissed} missed / ${r.extra} extra` : ''}; ${t.how ?? ''}`,
+      numbers: { status: t.status, endErrPx: r?.endErrPx ?? undefined, maxOffCentrelinePx: r?.maxOffCentrelinePx ?? undefined, bendsHit: r?.bendsHit ?? undefined, bendsMissed: r?.bendsMissed ?? undefined, extraBends: r?.extra ?? undefined, bends: t.bends.length, walkedPx: t.evidence?.walkedPx ?? undefined } });
+  }
+  return rows.sort((a, b) => a.hole - b.hole);
+}
+
+/** A crop downsampled to at most maxPx on its side (an S7 crop spans a whole hole; full resolution would not fit the page). */
+function scaledCrop({ rgba, width, height }, { cx, cy, size, maxPx = 200 }) {
+  const step = Math.max(1, Math.ceil(size / maxPx)), n = Math.ceil(size / step), x0 = Math.round(cx) - Math.floor(size / 2), y0 = Math.round(cy) - Math.floor(size / 2);
+  const rgb = new Uint8Array(n * n * 3).fill(128);
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) { const sx = x0 + x * step, sy = y0 + y * step; if (sx < 0 || sy < 0 || sx >= width || sy >= height) continue; const k = (sy * width + sx) * 4, d = (y * n + x) * 3; rgb[d] = rgba[k]; rgb[d + 1] = rgba[k + 1]; rgb[d + 2] = rgba[k + 2]; }
+  return { png: Buffer.from(encodePngRgb({ width: n, height: n, rgb, deflate: (raw) => deflateSync(raw) })).toString('base64'), x0, y0 };
 }
 
 /** The residual a cell's judged rows share: mean and spread of signed dx, dy (a constant residual is a convention, not noise). */
@@ -215,6 +250,10 @@ export function inspectorData(matrix, inputs, { root, frozen = null }) {
       const m = matrix.rows.find((r) => r.course === c.course && r.key === cell.key);
       const { rows: compared, gone } = compareWithFrozen(cellRows(cell, c), frozen?.objects?.[c.course]?.[cell.key] ?? null);
       const rows = compared.map((r) => {
+        if (r.cropSizePx) {   // S7 trace lane: a whole hole, downsampled
+          const c = raster && r.center ? scaledCrop(raster, { cx: r.center[0], cy: r.center[1], size: r.cropSizePx }) : null;
+          return { ...r, crop: c ? { png: c.png, x0: c.x0, y0: c.y0, size: r.cropSizePx, display: Math.min(2, 560 / r.cropSizePx) } : null };
+        }
         const size = r.wide ? CROP.wideSizePx : CROP.sizePx, display = r.wide ? CROP.wideDisplay : CROP.display;
         const crop = raster && r.center ? cropWindow(raster, { cx: r.center[0], cy: r.center[1], size, deflate: (raw) => deflateSync(raw) }) : null;
         return { ...r, crop: crop ? { png: crop.png, x0: crop.origin[0], y0: crop.origin[1], size, display } : null };
@@ -303,6 +342,7 @@ if(m.kind==='cross'){const[x,y]=P(m.x,m.y),a=m.small?4:6;s+='<path d="M'+(x-a)+'
 else if(m.kind==='ring'){const[x,y]=P(m.x,m.y);s+='<circle cx="'+x+'" cy="'+y+'" r="'+(m.r*scale)+'" fill="none" stroke="'+col+'" stroke-width="1" stroke-dasharray="3 3" opacity=".8"/>';}
 else if(m.kind==='rect'){const[x,y]=P(m.x-0.5,m.y-0.5);s+='<rect x="'+x+'" y="'+y+'" width="'+(m.w*scale)+'" height="'+(m.h*scale)+'" fill="none" stroke="'+col+'" stroke-width="2"'+da+'/>'+T(x+2,y-4,col,m.label);}
 else if(m.kind==='poly'){const pts=m.pts.map(([x,y])=>P(x,y).join(',')).join(' ');s+='<polygon points="'+pts+'" fill="none" stroke="'+col+'" stroke-width="2"'+da+'/>';const[x,y]=P(m.pts[0][0],m.pts[0][1]);s+=T(x,y-6,col,m.label);}
+else if(m.kind==='path'){const pts=m.pts.map(([x,y])=>P(x,y).join(',')).join(' ');s+='<polyline points="'+pts+'" fill="none" stroke="'+col+'" stroke-width="3" stroke-linejoin="round"'+da+'/>';const[x,y]=P(m.pts[0][0],m.pts[0][1]);s+=T(x+6,y-6,col,m.label);}
 else if(m.kind==='line'){const[ax,ay]=P(m.a[0],m.a[1]),[bx,by]=P(m.b[0],m.b[1]);s+='<line x1="'+ax+'" y1="'+ay+'" x2="'+bx+'" y2="'+by+'" stroke="'+col+'" stroke-width="2"'+(m.dash||dashAll?' stroke-dasharray="'+(m.dash||4)+' '+(m.dash||4)+'"':'')+'/>';}}
 return s;}
 function pic(r,scale,labels){const c=r.crop,S=Math.round(c.size*scale),P=(x,y)=>[(x-c.x0+0.5)*scale,(y-c.y0+0.5)*scale];

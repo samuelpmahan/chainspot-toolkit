@@ -52,7 +52,7 @@ test('the matrix: one row per stage x course, emits, units, markdown, frozen com
   const inputs = { declarations: { S1: { responsibility: 'badges' }, S2: { responsibility: 'baskets' }, S3: { responsibility: 'tees' }, S4: { responsibility: 'recover' } }, courses: [golden, northpark] };
   const m = matrixRows(inputs);
   assert.equal(m.rows.length, 2 * CELLS.length);
-  assert.deepEqual(m.emits, { cells: 12, met: 4, unmet: 2, unjudged: 6, missing: 0, stale: 0 }, 'no S4 rows in this fixture, so the S2 and S3 FNs stay unmet');
+  assert.deepEqual(m.emits, { cells: 14, met: 4, unmet: 2, unjudged: 6, missing: 2, stale: 0 }, 'no S4 rows in this fixture, so the S2 and S3 FNs stay unmet; no S7 run, so S7trace is missing');
   assert.ok(Object.keys(m.units).includes('stale'));
   const np = m.rows.find((r) => r.course === 'northpark' && r.key === 'S4tees');
   assert.equal(np.status, 'unjudged'); assert.equal(np.freshness, 'UNVERIFIED'); assert.equal(np.result, '18 of N = 18');
@@ -66,7 +66,7 @@ test('the matrix: one row per stage x course, emits, units, markdown, frozen com
   // no pointer (an unjudged course with nothing accepted elsewhere): the S4 cell is missing, not guessed
   assert.equal(matrixRows({ ...inputs, courses: [{ ...northpark, s4: { ...northpark.s4, accepted: null } }] }).rows.find((r) => r.key === 'S4tees').status, 'unjudged');
   const md = matrixMarkdown(m);
-  assert.match(md, /\| golden \| S2 baskets \| baskets within 12 px of all 18 holes, or recovered by S4 \(occlusion is expected\) \|/); assert.match(md, /12 cells: 4 met, 2 unmet, 6 unjudged/);
+  assert.match(md, /\| golden \| S2 baskets \| baskets within 12 px of all 18 holes, or recovered by S4 \(occlusion is expected\) \|/); assert.match(md, /14 cells: 4 met, 2 unmet, 6 unjudged, 2 missing/);
   // against a frozen record: same, changed, new
   const frozen = { rows: m.rows.filter((r) => r.course === 'golden').map((r) => ({ ...r, result: r.key === 'S2' ? '16/2/0 TP/FN/FP' : r.result })) };
   const again = matrixRows(inputs, frozen);
@@ -85,4 +85,19 @@ test('tk.state.matrix is a Part: derived on a store, profiled with emits, render
   assert.deepEqual(store.provenance(MATRIX_PART).inParts, ['tk.state.inputs', 'tk.state.frozen']);
   const r = renderValue(MATRIX_PART, { rows: m.rows.map(({ changedPaths, goal, ...row }) => row), ...m.emits });
   assert.notEqual(r.kind, 'unrenderable'); assert.ok(r.parts.some((p) => p.kind === 'ledger'));
+});
+
+test('the S7trace cell (S7 trace lane): met only when every judged hole agrees with all bends hit and none extra; variants ride along', () => {
+  const t = (agree, judged, missed, extra) => ({ judged, agree, bendsSam: 10, bendsHit: 10 - missed, bendsMissed: missed, extraBends: extra, reachedBasket: agree, rows: [], notAgreeing: [] });
+  const s7 = { accepted: 'endpoints', timingsMs: { endpoints: { ms: 900 }, s3first: { ms: 1200 } }, reached: { endpoints: 18, s3first: 17 } };
+  const g = { ...golden, outputs: { ...outputs, s7trace: true }, freshness: { ...fresh, s7trace: { state: 'VERIFIED', changed: [] } }, s7,
+    judgement: { ...golden.judgement, S7bends: { branches: { endpoints: t(18, 18, 0, 0), s3first: t(16, 18, 1, 2) } } } };
+  assert.equal(statusOf(cell('S7trace'), g, g.judgement.S7bends.branches.endpoints, g.freshness), 'met');
+  assert.equal(statusOf(cell('S7trace'), g, t(18, 18, 0, 1), g.freshness), 'unmet', 'an extra bend is unmet');
+  assert.equal(statusOf(cell('S7trace'), g, g.judgement.S7bends.branches.endpoints, { ...g.freshness, s7trace: { state: 'STALE', changed: ['ports/s7trace/hallway.mjs'] } }), 'stale');
+  const row = matrixRows({ declarations: {}, courses: [g] }).rows.find((r) => r.key === 'S7trace');
+  assert.equal(row.status, 'met'); assert.match(row.result, /^18\/18 holes agree; bends 10\/0\/0 hit\/missed\/extra of 10/);
+  assert.deepEqual(row.variants.map((v) => [v.name, v.accepted]), [['endpoints', true], ['s3first', false]]);
+  const np = matrixRows({ declarations: {}, courses: [{ ...g, course: 'northpark', testimony: null, counts: { ...g.counts, s7reached: 17 } }] }).rows.find((r) => r.key === 'S7trace');
+  assert.equal(np.status, 'unjudged'); assert.equal(np.result, '17 of N = 18 holes reach a basket');
 });

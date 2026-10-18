@@ -19,6 +19,7 @@
  */
 import { isPxSet, renderPart as renderPxSet } from './pxset.mjs';
 import { renderAlphaProfile } from './alpha/alphaRender.mjs';   // S7 lane: tk.s7.alphaProfile (contracts/alpha.profile@1)
+import { isHallwayScene, renderHallwayScene } from './s7trace/sceneRender.mjs';   // S7 trace lane block: tk.s7.scene
 
 const isTyped = (v) => ArrayBuffer.isView(v) && !(v instanceof DataView);
 const isScalar = (v) => v === null || ['number', 'string', 'boolean'].includes(typeof v);
@@ -26,12 +27,13 @@ const labelOf = (it, i) => it.label ?? it.name ?? it.candidate ?? it.hole ?? Str
 const scalarFields = (o) => Object.fromEntries(Object.entries(o).filter(([, v]) => isScalar(v) || (Array.isArray(v) && v.length <= 6 && v.every(isScalar))).map(([k, v]) => [k, Array.isArray(v) ? v.join(', ') : v]));
 const bboxOf = (it) => (Array.isArray(it.bbox) && it.bbox.length === 4 ? it.bbox : null);
 
-export const PART_KINDS = Object.freeze(['pxset', 'raster', 'alphaProfile', 'plane', 'pxsets', 'boxes', 'points', 'rows', 'scalar', 'object']);
+export const PART_KINDS = Object.freeze(['pxset', 'raster', 'alphaProfile', 'hallwayScene', 'plane', 'pxsets', 'boxes', 'points', 'rows', 'scalar', 'object']);
 
 /** Which case of the union a value is (the dispatch every default property can share). */
 export function partKind(v) {
   if (isPxSet(v)) return 'pxset';
   if (v && typeof v === 'object' && v.schema === 'nctk-alpha-profile@1') return 'alphaProfile';   // S7 lane block
+  if (isHallwayScene(v)) return 'hallwayScene';   // S7 trace lane block
   if (v && typeof v === 'object' && v.rgba && Number.isInteger(v.widthPx) && Number.isInteger(v.heightPx)) return 'raster';
   if (Array.isArray(v)) {
     const it = v.find((x) => x && typeof x === 'object');
@@ -55,6 +57,7 @@ export function renderValue(address, v, dims = null, depth = 0) {
     case 'pxset': return { kind, parts: [renderPxSet(v, { address })] };
     case 'raster': return { kind, parts: [{ address, kind: 'raster', data: { width: v.widthPx, height: v.heightPx } }] };
     case 'alphaProfile': return renderAlphaProfile(address, v, dims);   // S7 lane block: swatches, unmixed crops, residual histogram
+    case 'hallwayScene': return renderHallwayScene(address, v);   // S7 trace lane block: luminance, mask, BasketPoints
     case 'pxsets': {
       const px = []; for (const it of v) for (const i of it.px) px.push(i);
       const boxes = v.map((it, i) => (bboxOf(it) ? [...bboxOf(it), labelOf(it, i)] : null)).filter(Boolean);

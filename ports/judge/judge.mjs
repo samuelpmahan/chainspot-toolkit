@@ -15,6 +15,8 @@ import { loadTestimony } from './testimony.mjs';
 import { nameCandidates } from '../../fg/names.mjs';
 import { basketPoint } from '../../fg/s2/fg.s2.basketInvariants.observe.fg.mjs';
 import { ringsForBaskets, HolePath, occludersOf } from '../../fg/scene/parts.mjs';
+import { judgeHoleTraces } from '../s7trace/judgeBends.mjs';   // S7bends (S7 trace lane)
+import { loadHolePaths } from '../s7trace/holePaths.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 export const MATCH_PX = Object.freeze({ basket: 12, tee: 8 });
@@ -182,6 +184,22 @@ export function judgeAttempt({ specimen, attempt, root = ROOT }) {
         recoveredForHoleCorrectly: assoc.correct.length, recoveredForWrongHole: assoc.incorrect.length, association: assoc };
     }
   }
+  // ---- S7bends (S7 trace lane): every fn.Hole.trace variant of the latest ports/s7trace run, by Sam's S7 judge: the trace
+  // ends within 12 px of his basket and stays within W / 2 of his corridor (tee -> bends -> basket); bends hit (within half
+  // his corridor width) / missed / extra are reported, never gated.
+  const s7dir = join(out, 's7trace'), s7runs = existsSync(s7dir) ? readdirSync(s7dir).filter((d) => d.startsWith('run-')).sort() : [];
+  const s7cmp = s7runs.length ? join(s7dir, s7runs.at(-1), 'cmp.fn.Hole.trace.json') : null;
+  if (s7cmp && existsSync(s7cmp)) {
+    const cmp = JSON.parse(readFileSync(s7cmp, 'utf8')), paths = loadHolePaths(specimen, root), base7 = join(s7dir, s7runs.at(-1), 'artifacts', 'fn.Hole.trace');
+    report.stages.S7bends = { run: s7runs.at(-1), accepted: cmp.accepted ?? null, acceptRule: cmp.acceptRule ?? null, widthPx: cmp.widthPx, timingsMs: Object.fromEntries(Object.entries(cmp.timingsMs ?? {}).map(([n, t]) => [n, t.ms])), branches: {} };
+    for (const branch of existsSync(base7) ? readdirSync(base7).sort() : []) {
+      const f = join(base7, branch, 'traces.json'); if (!existsSync(f)) continue;
+      const j = judgeHoleTraces(JSON.parse(readFileSync(f, 'utf8')).traces, paths, { widthPx: cmp.widthPx, basketMatchPx: MATCH_PX.basket });
+      report.stages.S7bends.branches[branch] = { ...j.totals, rule: j.rule,
+        rows: j.rows.map((x) => ({ hole: Number(x.hole), judged: x.judged, ok: x.ok ?? null, status: x.status ?? null, why: x.why ?? null, bendsHit: x.bendsHit ?? null, bendsMissed: x.bendsMissed ?? null, extra: x.extraBends ?? null,
+          reachedBasket: x.reachedBasket ?? null, maxOffCentrelinePx: x.maxOffCentrelinePx ?? null, endErrPx: x.endErrPx ?? null, bendOffPx: x.bendOffPx ?? [] })) };
+    }
+  }
   return report;
 }
 
@@ -208,6 +226,11 @@ export function formatReport(r) {
   if (t4) for (const [b, s] of Object.entries(t4.branches)) {
     L.push(`  S4 tees, ${b} (S3 + ${s.recovered} recovered): TP ${s.TP} / FN ${s.FN} / FP ${s.FP ?? 'unjudged'}; recovered for the right hole ${s.recoveredForHoleCorrectly}, wrong hole ${s.recoveredForWrongHole}; recovered FP [${s.recoveredFP.join(', ')}]`);
     if (s.fn.length) L.push(`      FN: ${s.fn.join(', ')}`); if (s.association.incorrect.length) L.push(`      wrong hole: ${s.association.incorrect.join('; ')}`);
+  }
+  const s7 = r.stages.S7bends;
+  if (s7) for (const [b, s] of Object.entries(s7.branches)) {
+    L.push(`  S7 traces, ${b}${s7.accepted === b ? ' (the pointer)' : ''}: ${s.agree}/${s.judged} judged holes agree with Sam (end within 12 px of his basket, within W / 2 = ${Math.round(s7.widthPx * 5) / 10} px of his corridor); reach his basket ${s.reachedBasket}; bends ${s.bendsHit} hit / ${s.bendsMissed} missed / ${s.extraBends} extra of ${s.bendsSam}${s7.timingsMs?.[b] != null ? `; ${Math.round(s7.timingsMs[b])} ms standalone` : ''}`);
+    if (s.notAgreeing.length) L.push(`      not agreeing: ${s.rows.filter((x) => x.judged && !x.ok).map((x) => `Hole ${x.hole} (${x.why})`).join('; ')}`);
   }
   return L.join('\n');
 }
