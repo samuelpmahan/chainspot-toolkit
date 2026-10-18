@@ -96,6 +96,8 @@
  *                          logged with cached: 1). createPartStore({ cache }) takes any { has, get, set }; the default
  *                          is a Map shared by the store and its branches, so a variant computed once in a run is never
  *                          computed twice; a runner passes a persistent cache to make the next run warm.
+ *   codeSalt               createPartStore({ codeSalt }): a runner's module-closure sha (fg/closure.mjs closureSha), mixed into every
+ *                          Calculation's code key, so code a calculate calls but does not contain still changes the key
  *   store.keyspace()       every Part of this store with its key and producer: the snapshot as a key dump
  *
  * Address namespaces (the early runner's table of Parts, producers and
@@ -205,9 +207,9 @@ export function callSubtree(entries, caller) {
  * each entry timed with the emits its output declared, and offers it back as the capability INSTRUMENTATION_CALLS.
  * onCall stays a hook for runners that also stream entries elsewhere.
  */
-export function createPartStore({ base = null, name = 'root', onCall = null, cache = new Map() } = {}) {
+export function createPartStore({ base = null, name = 'root', onCall = null, cache = new Map(), codeSalt = null } = {}) {
   const log = [];
-  const store = makeStore({ base, name, parent: null, shared: { seq: 0, stack: [], log, cache, baseKeys: new WeakMap(), onCall: (entry) => { log.push(entry); onCall?.(entry); } } });
+  const store = makeStore({ base, name, parent: null, shared: { seq: 0, stack: [], log, cache, codeSalt, baseKeys: new WeakMap(), onCall: (entry) => { log.push(entry); onCall?.(entry); } } });
   // The PxC is queryable: pixel-set math lives in fg/pxset.mjs and is invoked from outside by Part address.
   registerQueries(store, PXSET_QUERIES, { resolve: (ref) => resolvePxSet((a) => store.get(a), ref, () => imageDims(store)) });
   // renderable is a default property of every Part: any address renders by the shape of its value (fg/render.mjs)
@@ -257,6 +259,7 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
     if (owner) { owner._produce(address); return keyOf(address); }
     throw new PartStoreError(`keyOf: no Part at '${address}' on store ${name}`);
   };
+  const codeKey = (code) => (shared.codeSalt ? digest({ code, salt: shared.codeSalt }) : code);   // no salt: the key means what it always meant
   const cacheable = (args) => { try { plain(args ?? null); return true; } catch { return false; } };
 
   // Lazy production of a Part whose producer is registered on THIS store.
@@ -317,7 +320,7 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
       if (typeof calculate !== 'function') throw new PartStoreError(`register ${fn}: calculate(io) is required`);
       const spec = Object.freeze({
         address: fn, store: name, note, lazy: lazy !== false,
-        code: code ?? sha256Hex(String(calculate)),   // the code key: pass the module graph's digest when a helper can change the result
+        code: codeKey(code ?? sha256Hex(String(calculate))),   // the code key: pass the module graph's digest when a helper can change the result; the store's codeSalt (a runner's module closure, fg/closure.mjs) is mixed into every key
         inParts: addressList(inParts, `register ${fn}: inParts`).map(A),
         outParts: addressList(outParts, `register ${fn}: outParts`).map(A),
         calls: addressList(calls, `register ${fn}: calls`),

@@ -12,6 +12,8 @@
  *   node scripts/pxc.mjs shot <file.html> <outdir> "<hash>"...   full-page screenshots of a render at deep links (inspector)
  *   node scripts/pxc.mjs state [--retest [all]] [--freeze] [--json]   every stage on every dev course: goal, expected,
  *                                                         result, status (derived), freshness; retest re-runs only stale cells
+ *   node scripts/pxc.mjs cas --stats                     the persistent cache (attempts/cas): entries, size, age, largest
+ *   node scripts/pxc.mjs cas --prune-older-than DAYS      remove entries nothing has used for DAYS days
  * Scaffolds never overwrite a file.
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
@@ -175,6 +177,12 @@ test('${name} composes onto any FG and keeps the defaults', () => {
 }
 
 if (cmd === 'explain') explain(rest[0]);
+else if (cmd === 'cas') {
+  const cas = await import('../fg/cas.mjs'), i = rest.indexOf('--prune-older-than');
+  if (i >= 0) { const days = Number(rest[i + 1]); if (!(days >= 0)) say('usage: cas --prune-older-than DAYS'); else say(JSON.stringify(cas.casPrune({ days }), null, 1)); }
+  else if (rest.includes('--stats')) say(JSON.stringify(cas.casStats(), null, 1));
+  else say('usage: cas --stats | --prune-older-than DAYS');
+}
 else if (cmd === 'state') await (await import('../ports/state/matrix.mjs')).stateCommand(rest, { say });
 else if (cmd === 'shot') { const [file, outDir, ...hashes] = rest; if (!file || !outDir || !hashes.length) say('usage: shot <file.html> <outdir> "<hash>" ...'); else for (const f of await (await import('./pxc/shot.mjs')).shot(file, outDir, hashes)) say(`  wrote ${f}`); }
 else if (cmd === 'doctor') await doctor(rest);

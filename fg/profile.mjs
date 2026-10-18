@@ -20,9 +20,9 @@ export function registerInstrumentation() {}
 const now = () => (globalThis.performance?.now ? globalThis.performance.now() : Date.now());
 
 /** A PartStore whose every Calculation call lands in an instrumentation document (schema nctk-instrumentation@1). */
-export function instrumentedStore({ name, base = null } = {}) {
+export function instrumentedStore({ name, base = null, cache, codeSalt = null } = {}) {
   const startedMs = now();
-  const store = createPartStore({ name, base });
+  const store = createPartStore({ name, base, ...(cache ? { cache } : {}), codeSalt });
   return {
     store,
     document: () => ({ schema: 'nctk-instrumentation@1', wallMs: Math.round((now() - startedMs) * 1000) / 1000, ops: [], calculations: store.calls().sort((a, b) => a.seq - b.seq), store: store.manifest() })

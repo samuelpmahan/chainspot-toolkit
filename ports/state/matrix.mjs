@@ -39,6 +39,7 @@ import { judgeAttempt } from '../judge/judge.mjs';
 import { createPartStore } from '../../fg/store.mjs';
 import { partFrame } from '../../fg/render.mjs';
 import { renderFlipbook } from '../../fg/flipbook.mjs';
+import { reachableModules } from '../../fg/closure.mjs';
 
 export const ROOT = resolve(import.meta.dirname, '..', '..');
 export const ATTEMPTS_FILE = 'docs/evidence/dev-s1s4/ATTEMPTS';
@@ -243,22 +244,7 @@ export const readAttempts = (root = ROOT) => (existsSync(join(root, ATTEMPTS_FIL
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
 const closureSnapshot = async (root, paths) => { const files = await snapshotPaths(root, paths.filter((p) => existsSync(join(root, p)))); return { files: files.map((f) => [f.path, f.sha256]), sha: sha(canonical(files.map((f) => [f.path, f.sha256]))) }; };
 
-/**
- * The modules a run can reach from its entries, by following relative static and dynamic imports (the recipe closure
- * copies whole directories, so a test file or a renderer nobody imports would otherwise make every cell stale).
- */
-export function reachableModules(root, entries) {
-  const seen = new Set(), todo = [...entries];
-  while (todo.length) {
-    const rel = todo.pop(); if (seen.has(rel) || !existsSync(join(root, rel))) continue; seen.add(rel);
-    const src = readFileSync(join(root, rel), 'utf8');
-    for (const m of src.matchAll(/(?:from|import)\s*\(?\s*['"](\.{1,2}\/[^'"]+)['"]/g)) {
-      const target = join(rel, '..', m[1]).replace(/^\.\//, '');
-      todo.push(target.replace(/\\/g, '/'));
-    }
-  }
-  return seen;
-}
+export { reachableModules };   // moved to fg/closure.mjs (the persistent cache's code keys use it too)
 export const RUN_ENTRIES = Object.freeze(['toolkit.mjs', 'ports/run-stages.mjs']);
 /** The run's entries plus what it discovers by directory listing: every FG (fg/**\/*.fg.mjs) and every implementation (impl/**). */
 export function runEntries(root) {
