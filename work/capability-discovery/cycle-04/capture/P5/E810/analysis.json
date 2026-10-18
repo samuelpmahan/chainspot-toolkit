@@ -1,0 +1,669 @@
+{
+  "job_id": "E810",
+  "worker": "P5",
+  "protocolSha256": "115fc4fb788a3c6b75733b075666a41c999894866706bb09e888e477531526a0",
+  "receipt": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/receipt.json",
+    "sha256": "a61a487dae244cbd9bc62ada6bffb8fc7cf651616db7b37806628ee0399739e4",
+    "bytes": 825092
+  },
+  "adapterInvocations": 1,
+  "execution": {
+    "compositionCalls": 2,
+    "order": [
+      "crop",
+      "original-source-frame"
+    ],
+    "cropOperationCount": 183,
+    "sourceOperationCount": 183
+  },
+  "operationsExecutedCount": 366,
+  "rawTopStatus": "OBSERVED_CHANNELS",
+  "support": "SUPPORTED_CONSERVATIVE_ENVELOPE",
+  "equivalence": {
+    "status": "MATCHED_DECLARED_CONTROL",
+    "absoluteTolerance": 1e-9,
+    "differences": [],
+    "reason": "declared raw channels match within fixed numerical tolerance; no semantic or scientific equivalence follows",
+    "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+  },
+  "counts": {
+    "crop": {
+      "FINITE_POSITIVE_PAIR": 41,
+      "NULL_FIT": 13,
+      "NONPOSITIVE_OR_NONFINITE_FIT": 0,
+      "NOT_EXECUTED": 0,
+      "MISSING_CANDIDATE": 0
+    },
+    "source": {
+      "FINITE_POSITIVE_PAIR": 41,
+      "NULL_FIT": 13,
+      "NONPOSITIVE_OR_NONFINITE_FIT": 0,
+      "NOT_EXECUTED": 0,
+      "MISSING_CANDIDATE": 0
+    }
+  },
+  "assessments": [
+    {
+      "branch": "crop",
+      "widthArgPx": 40,
+      "groups": [
+        {
+          "group": "primary",
+          "shortStatuses": [
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR"
+          ],
+          "longStatus": "FINITE_POSITIVE_PAIR",
+          "interpretation": "ALL_WINDOWS_FINITE_AVERAGED_OBSERVATIONS_ONLY",
+          "finiteShortCount": 5
+        },
+        {
+          "group": "lateral-plus6",
+          "shortStatuses": [
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR"
+          ],
+          "longStatus": "NULL_FIT",
+          "interpretation": "NO_DECLARED_LONG_ONLY_COUNTEREXAMPLE",
+          "finiteShortCount": 5
+        },
+        {
+          "group": "bright-organic",
+          "shortStatuses": [
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "NULL_FIT",
+            "FINITE_POSITIVE_PAIR"
+          ],
+          "longStatus": "FINITE_POSITIVE_PAIR",
+          "interpretation": "LONG_AVERAGE_AS_SUSTAINED_PAIR_FALSIFIED",
+          "finiteShortCount": 4
+        }
+      ],
+      "offsetResiduals": [
+        {
+          "window": "short1",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": 5.999999999999818,
+          "idealPx": 6,
+          "residualPx": -1.8207657603852567e-13,
+          "sameEdgeDiagnostic": "WITHIN_FIXED_DIAGNOSTIC_NOT_IDENTITY_PROOF"
+        },
+        {
+          "window": "short2",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": 5.999999999999866,
+          "idealPx": 6,
+          "residualPx": -1.341149413747189e-13,
+          "sameEdgeDiagnostic": "WITHIN_FIXED_DIAGNOSTIC_NOT_IDENTITY_PROOF"
+        },
+        {
+          "window": "short3",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": -13.900690543820842,
+          "idealPx": 6,
+          "residualPx": -19.900690543820843,
+          "sameEdgeDiagnostic": "IDEAL_SAME_EDGE_REJECTED_IDENTITY_UNKNOWN"
+        },
+        {
+          "window": "short4",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": 6.000000000000115,
+          "idealPx": 6,
+          "residualPx": 1.1457501614131615e-13,
+          "sameEdgeDiagnostic": "WITHIN_FIXED_DIAGNOSTIC_NOT_IDENTITY_PROOF"
+        },
+        {
+          "window": "short5",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": 1.1604406236776619,
+          "idealPx": 6,
+          "residualPx": -4.839559376322338,
+          "sameEdgeDiagnostic": "IDEAL_SAME_EDGE_REJECTED_IDENTITY_UNKNOWN"
+        },
+        {
+          "window": "long",
+          "status": "UNKNOWN",
+          "offsetMinusPrimaryPx": null,
+          "idealPx": 6,
+          "residualPx": null,
+          "sameEdgeDiagnostic": "UNOBSERVED_NOT_FALSIFICATION"
+        }
+      ]
+    },
+    {
+      "branch": "crop",
+      "widthArgPx": 48,
+      "groups": [
+        {
+          "group": "primary",
+          "shortStatuses": [
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "NULL_FIT"
+          ],
+          "longStatus": "FINITE_POSITIVE_PAIR",
+          "interpretation": "LONG_AVERAGE_AS_SUSTAINED_PAIR_FALSIFIED",
+          "finiteShortCount": 4
+        },
+        {
+          "group": "lateral-plus6",
+          "shortStatuses": [
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR"
+          ],
+          "longStatus": "FINITE_POSITIVE_PAIR",
+          "interpretation": "ALL_WINDOWS_FINITE_AVERAGED_OBSERVATIONS_ONLY",
+          "finiteShortCount": 5
+        },
+        {
+          "group": "bright-organic",
+          "shortStatuses": [
+            "NULL_FIT",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "NULL_FIT"
+          ],
+          "longStatus": "NULL_FIT",
+          "interpretation": "NO_DECLARED_LONG_ONLY_COUNTEREXAMPLE",
+          "finiteShortCount": 3
+        }
+      ],
+      "offsetResiduals": [
+        {
+          "window": "short1",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": -0.712873824589499,
+          "idealPx": 6,
+          "residualPx": -6.712873824589499,
+          "sameEdgeDiagnostic": "IDEAL_SAME_EDGE_REJECTED_IDENTITY_UNKNOWN"
+        },
+        {
+          "window": "short2",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": 5.999999999999851,
+          "idealPx": 6,
+          "residualPx": -1.4921397450962104e-13,
+          "sameEdgeDiagnostic": "WITHIN_FIXED_DIAGNOSTIC_NOT_IDENTITY_PROOF"
+        },
+        {
+          "window": "short3",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": -7.964930677000426,
+          "idealPx": 6,
+          "residualPx": -13.964930677000426,
+          "sameEdgeDiagnostic": "IDEAL_SAME_EDGE_REJECTED_IDENTITY_UNKNOWN"
+        },
+        {
+          "window": "short4",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": -3.085452514969008,
+          "idealPx": 6,
+          "residualPx": -9.085452514969008,
+          "sameEdgeDiagnostic": "IDEAL_SAME_EDGE_REJECTED_IDENTITY_UNKNOWN"
+        },
+        {
+          "window": "short5",
+          "status": "UNKNOWN",
+          "offsetMinusPrimaryPx": null,
+          "idealPx": 6,
+          "residualPx": null,
+          "sameEdgeDiagnostic": "UNOBSERVED_NOT_FALSIFICATION"
+        },
+        {
+          "window": "long",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": -7.328280339318981,
+          "idealPx": 6,
+          "residualPx": -13.328280339318981,
+          "sameEdgeDiagnostic": "IDEAL_SAME_EDGE_REJECTED_IDENTITY_UNKNOWN"
+        }
+      ]
+    },
+    {
+      "branch": "crop",
+      "widthArgPx": 56,
+      "groups": [
+        {
+          "group": "primary",
+          "shortStatuses": [
+            "NULL_FIT",
+            "FINITE_POSITIVE_PAIR",
+            "NULL_FIT",
+            "FINITE_POSITIVE_PAIR",
+            "NULL_FIT"
+          ],
+          "longStatus": "FINITE_POSITIVE_PAIR",
+          "interpretation": "LONG_AVERAGE_AS_SUSTAINED_PAIR_FALSIFIED",
+          "finiteShortCount": 2
+        },
+        {
+          "group": "lateral-plus6",
+          "shortStatuses": [
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "NULL_FIT",
+            "NULL_FIT",
+            "NULL_FIT"
+          ],
+          "longStatus": "NULL_FIT",
+          "interpretation": "NO_DECLARED_LONG_ONLY_COUNTEREXAMPLE",
+          "finiteShortCount": 2
+        },
+        {
+          "group": "bright-organic",
+          "shortStatuses": [
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR"
+          ],
+          "longStatus": "FINITE_POSITIVE_PAIR",
+          "interpretation": "ALL_WINDOWS_FINITE_AVERAGED_OBSERVATIONS_ONLY",
+          "finiteShortCount": 5
+        }
+      ],
+      "offsetResiduals": [
+        {
+          "window": "short1",
+          "status": "UNKNOWN",
+          "offsetMinusPrimaryPx": null,
+          "idealPx": 6,
+          "residualPx": null,
+          "sameEdgeDiagnostic": "UNOBSERVED_NOT_FALSIFICATION"
+        },
+        {
+          "window": "short2",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": -2.452769445305247,
+          "idealPx": 6,
+          "residualPx": -8.452769445305247,
+          "sameEdgeDiagnostic": "IDEAL_SAME_EDGE_REJECTED_IDENTITY_UNKNOWN"
+        },
+        {
+          "window": "short3",
+          "status": "UNKNOWN",
+          "offsetMinusPrimaryPx": null,
+          "idealPx": 6,
+          "residualPx": null,
+          "sameEdgeDiagnostic": "UNOBSERVED_NOT_FALSIFICATION"
+        },
+        {
+          "window": "short4",
+          "status": "UNKNOWN",
+          "offsetMinusPrimaryPx": null,
+          "idealPx": 6,
+          "residualPx": null,
+          "sameEdgeDiagnostic": "UNOBSERVED_NOT_FALSIFICATION"
+        },
+        {
+          "window": "short5",
+          "status": "UNKNOWN",
+          "offsetMinusPrimaryPx": null,
+          "idealPx": 6,
+          "residualPx": null,
+          "sameEdgeDiagnostic": "UNOBSERVED_NOT_FALSIFICATION"
+        },
+        {
+          "window": "long",
+          "status": "UNKNOWN",
+          "offsetMinusPrimaryPx": null,
+          "idealPx": 6,
+          "residualPx": null,
+          "sameEdgeDiagnostic": "UNOBSERVED_NOT_FALSIFICATION"
+        }
+      ]
+    },
+    {
+      "branch": "source",
+      "widthArgPx": 40,
+      "groups": [
+        {
+          "group": "primary",
+          "shortStatuses": [
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR"
+          ],
+          "longStatus": "FINITE_POSITIVE_PAIR",
+          "interpretation": "ALL_WINDOWS_FINITE_AVERAGED_OBSERVATIONS_ONLY",
+          "finiteShortCount": 5
+        },
+        {
+          "group": "lateral-plus6",
+          "shortStatuses": [
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR"
+          ],
+          "longStatus": "NULL_FIT",
+          "interpretation": "NO_DECLARED_LONG_ONLY_COUNTEREXAMPLE",
+          "finiteShortCount": 5
+        },
+        {
+          "group": "bright-organic",
+          "shortStatuses": [
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "NULL_FIT",
+            "FINITE_POSITIVE_PAIR"
+          ],
+          "longStatus": "FINITE_POSITIVE_PAIR",
+          "interpretation": "LONG_AVERAGE_AS_SUSTAINED_PAIR_FALSIFIED",
+          "finiteShortCount": 4
+        }
+      ],
+      "offsetResiduals": [
+        {
+          "window": "short1",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": 6.000000000000237,
+          "idealPx": 6,
+          "residualPx": 2.3714363805993344e-13,
+          "sameEdgeDiagnostic": "WITHIN_FIXED_DIAGNOSTIC_NOT_IDENTITY_PROOF"
+        },
+        {
+          "window": "short2",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": 6.000000000000075,
+          "idealPx": 6,
+          "residualPx": 7.460698725481052e-14,
+          "sameEdgeDiagnostic": "WITHIN_FIXED_DIAGNOSTIC_NOT_IDENTITY_PROOF"
+        },
+        {
+          "window": "short3",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": -13.900690543821664,
+          "idealPx": 6,
+          "residualPx": -19.900690543821664,
+          "sameEdgeDiagnostic": "IDEAL_SAME_EDGE_REJECTED_IDENTITY_UNKNOWN"
+        },
+        {
+          "window": "short4",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": 5.9999999999997495,
+          "idealPx": 6,
+          "residualPx": -2.504663143554353e-13,
+          "sameEdgeDiagnostic": "WITHIN_FIXED_DIAGNOSTIC_NOT_IDENTITY_PROOF"
+        },
+        {
+          "window": "short5",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": 1.1604406236772213,
+          "idealPx": 6,
+          "residualPx": -4.839559376322779,
+          "sameEdgeDiagnostic": "IDEAL_SAME_EDGE_REJECTED_IDENTITY_UNKNOWN"
+        },
+        {
+          "window": "long",
+          "status": "UNKNOWN",
+          "offsetMinusPrimaryPx": null,
+          "idealPx": 6,
+          "residualPx": null,
+          "sameEdgeDiagnostic": "UNOBSERVED_NOT_FALSIFICATION"
+        }
+      ]
+    },
+    {
+      "branch": "source",
+      "widthArgPx": 48,
+      "groups": [
+        {
+          "group": "primary",
+          "shortStatuses": [
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "NULL_FIT"
+          ],
+          "longStatus": "FINITE_POSITIVE_PAIR",
+          "interpretation": "LONG_AVERAGE_AS_SUSTAINED_PAIR_FALSIFIED",
+          "finiteShortCount": 4
+        },
+        {
+          "group": "lateral-plus6",
+          "shortStatuses": [
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR"
+          ],
+          "longStatus": "FINITE_POSITIVE_PAIR",
+          "interpretation": "ALL_WINDOWS_FINITE_AVERAGED_OBSERVATIONS_ONLY",
+          "finiteShortCount": 5
+        },
+        {
+          "group": "bright-organic",
+          "shortStatuses": [
+            "NULL_FIT",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "NULL_FIT"
+          ],
+          "longStatus": "NULL_FIT",
+          "interpretation": "NO_DECLARED_LONG_ONLY_COUNTEREXAMPLE",
+          "finiteShortCount": 3
+        }
+      ],
+      "offsetResiduals": [
+        {
+          "window": "short1",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": -0.712873824589634,
+          "idealPx": 6,
+          "residualPx": -6.712873824589634,
+          "sameEdgeDiagnostic": "IDEAL_SAME_EDGE_REJECTED_IDENTITY_UNKNOWN"
+        },
+        {
+          "window": "short2",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": 6.0000000000000036,
+          "idealPx": 6,
+          "residualPx": 3.552713678800501e-15,
+          "sameEdgeDiagnostic": "WITHIN_FIXED_DIAGNOSTIC_NOT_IDENTITY_PROOF"
+        },
+        {
+          "window": "short3",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": -7.964930677000316,
+          "idealPx": 6,
+          "residualPx": -13.964930677000316,
+          "sameEdgeDiagnostic": "IDEAL_SAME_EDGE_REJECTED_IDENTITY_UNKNOWN"
+        },
+        {
+          "window": "short4",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": -3.085452514969086,
+          "idealPx": 6,
+          "residualPx": -9.085452514969086,
+          "sameEdgeDiagnostic": "IDEAL_SAME_EDGE_REJECTED_IDENTITY_UNKNOWN"
+        },
+        {
+          "window": "short5",
+          "status": "UNKNOWN",
+          "offsetMinusPrimaryPx": null,
+          "idealPx": 6,
+          "residualPx": null,
+          "sameEdgeDiagnostic": "UNOBSERVED_NOT_FALSIFICATION"
+        },
+        {
+          "window": "long",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": -7.328280339319086,
+          "idealPx": 6,
+          "residualPx": -13.328280339319086,
+          "sameEdgeDiagnostic": "IDEAL_SAME_EDGE_REJECTED_IDENTITY_UNKNOWN"
+        }
+      ]
+    },
+    {
+      "branch": "source",
+      "widthArgPx": 56,
+      "groups": [
+        {
+          "group": "primary",
+          "shortStatuses": [
+            "NULL_FIT",
+            "FINITE_POSITIVE_PAIR",
+            "NULL_FIT",
+            "FINITE_POSITIVE_PAIR",
+            "NULL_FIT"
+          ],
+          "longStatus": "FINITE_POSITIVE_PAIR",
+          "interpretation": "LONG_AVERAGE_AS_SUSTAINED_PAIR_FALSIFIED",
+          "finiteShortCount": 2
+        },
+        {
+          "group": "lateral-plus6",
+          "shortStatuses": [
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "NULL_FIT",
+            "NULL_FIT",
+            "NULL_FIT"
+          ],
+          "longStatus": "NULL_FIT",
+          "interpretation": "NO_DECLARED_LONG_ONLY_COUNTEREXAMPLE",
+          "finiteShortCount": 2
+        },
+        {
+          "group": "bright-organic",
+          "shortStatuses": [
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR",
+            "FINITE_POSITIVE_PAIR"
+          ],
+          "longStatus": "FINITE_POSITIVE_PAIR",
+          "interpretation": "ALL_WINDOWS_FINITE_AVERAGED_OBSERVATIONS_ONLY",
+          "finiteShortCount": 5
+        }
+      ],
+      "offsetResiduals": [
+        {
+          "window": "short1",
+          "status": "UNKNOWN",
+          "offsetMinusPrimaryPx": null,
+          "idealPx": 6,
+          "residualPx": null,
+          "sameEdgeDiagnostic": "UNOBSERVED_NOT_FALSIFICATION"
+        },
+        {
+          "window": "short2",
+          "status": "OBSERVED_CHANNELS",
+          "offsetMinusPrimaryPx": -2.4527694453051385,
+          "idealPx": 6,
+          "residualPx": -8.452769445305139,
+          "sameEdgeDiagnostic": "IDEAL_SAME_EDGE_REJECTED_IDENTITY_UNKNOWN"
+        },
+        {
+          "window": "short3",
+          "status": "UNKNOWN",
+          "offsetMinusPrimaryPx": null,
+          "idealPx": 6,
+          "residualPx": null,
+          "sameEdgeDiagnostic": "UNOBSERVED_NOT_FALSIFICATION"
+        },
+        {
+          "window": "short4",
+          "status": "UNKNOWN",
+          "offsetMinusPrimaryPx": null,
+          "idealPx": 6,
+          "residualPx": null,
+          "sameEdgeDiagnostic": "UNOBSERVED_NOT_FALSIFICATION"
+        },
+        {
+          "window": "short5",
+          "status": "UNKNOWN",
+          "offsetMinusPrimaryPx": null,
+          "idealPx": 6,
+          "residualPx": null,
+          "sameEdgeDiagnostic": "UNOBSERVED_NOT_FALSIFICATION"
+        },
+        {
+          "window": "long",
+          "status": "UNKNOWN",
+          "offsetMinusPrimaryPx": null,
+          "idealPx": 6,
+          "residualPx": null,
+          "sameEdgeDiagnostic": "UNOBSERVED_NOT_FALSIFICATION"
+        }
+      ]
+    }
+  ],
+  "rawWidthEstimates": {
+    "crop": {
+      "widthPx": 48,
+      "scores": [
+        {
+          "widthPx": 40,
+          "meanScore": 0.04444444444444438,
+          "visibleSamples": 5
+        },
+        {
+          "widthPx": 48,
+          "meanScore": 0.3830123456790121,
+          "visibleSamples": 5
+        },
+        {
+          "widthPx": 56,
+          "meanScore": 0.3288888888888889,
+          "visibleSamples": 5
+        }
+      ]
+    },
+    "source": {
+      "widthPx": 48,
+      "scores": [
+        {
+          "widthPx": 40,
+          "meanScore": 0.04444444444444438,
+          "visibleSamples": 5
+        },
+        {
+          "widthPx": 48,
+          "meanScore": 0.3830123456790121,
+          "visibleSamples": 5
+        },
+        {
+          "widthPx": 56,
+          "meanScore": 0.3288888888888889,
+          "visibleSamples": 5
+        }
+      ]
+    }
+  },
+  "limits": [
+    "Top-level UNKNOWN does not erase executed raw branch evidence. Missing/zero-call rows are abstention, not falsifiers.",
+    "All108 candidate records retained; each16-sample short remains averaged, not per-point continuity.",
+    "Bright-control comparable raw observations are ambiguity, never semantic acceptance; no post-hoc comparable cutoff.",
+    "No calibrated width, scale, AA/renderer identity, recentering, tuning, classifier or promotion."
+  ],
+  "semanticIdentity": "UNKNOWN",
+  "calibratedWidth": "UNKNOWN",
+  "promoted": false
+}

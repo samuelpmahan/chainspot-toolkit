@@ -1,0 +1,88 @@
+import {readFileSync,writeFileSync,statSync,existsSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+import {performance} from 'node:perf_hooks';
+const base='/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809';
+const repo='/workspace/scratch/8528bb251845/chainspot-discovery-lab';
+const protocolPath='/workspace/scratch/8528bb251845/discovery-cycle04/P2/protocol.json';
+const reviewerPath='/workspace/scratch/8528bb251845/discovery-cycle04/P5/R802/result.json';
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const protocolSha='ea85f4520b20996bd5aff3da699663a40fc8613081f4738457ece2e8926d8537';
+const entry=p=>({path:p,sha256:sha(readFileSync(p)),bytes:statSync(p).size});
+const json=(name,v,replacer)=>writeFileSync(`${base}/${name}`,JSON.stringify(v,replacer,2)+'\n',{flag:'wx'});
+const identity=()=>{
+ const freezePath='work/capability-discovery/cycle-03/evidence/E506/candidate-freeze.json';
+ const manifestPath='work/capability-discovery/cycle-02/feature-manifest-E308.json';
+ const f=JSON.parse(readFileSync(`${repo}/${freezePath}`)),m=JSON.parse(readFileSync(`${repo}/${manifestPath}`));
+ const declarations=[{path:freezePath,sha256:'d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626'},...f.files,...f.retainedContractHistoryAndEvidence,
+ {path:manifestPath,sha256:'5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52'},...m.files,m.existingGuard,...m.immutableSources.map(s=>({path:`experiments/capability-discovery/probes/width/${s.file}`,sha256:s.sha256}))];
+ const files=declarations.map(d=>({...entry(`${repo}/${d.path}`),expectedSha256:d.sha256}));
+ if(files.some(f=>f.sha256!==f.expectedSha256))throw Error('Frozen closure integrity mismatch');
+ if(sha(readFileSync(protocolPath))!==protocolSha)throw Error('Protocol identity mismatch');
+ const protocol=JSON.parse(readFileSync(protocolPath)),review=JSON.parse(readFileSync(reviewerPath));
+ if(review.decision!=='accepted'||review.bindings.protocolSha256!==protocolSha)throw Error('R802 acceptance binding mismatch');
+ const png=entry(protocol.requestDescriptor.sourceBinding.pngPath);
+ if(png.sha256!==protocol.source.pngSha256)throw Error('Encoded PNG mismatch');
+ const blob=execFileSync('git',['hash-object',png.path],{cwd:repo,encoding:'utf8'}).trim();
+ if(blob!==protocol.source.gitBlob)throw Error('Exact source blob mismatch');
+ return {protocol:entry(protocolPath),review:entry(reviewerPath),png,blob,files,caller:entry(`${base}/run-trial.mjs`),renderer:entry(`${base}/render-receipt.py`)};
+};
+const start=performance.now(),usageBefore=process.resourceUsage(),memoryBefore=process.memoryUsage();
+try {
+ if(existsSync(`${base}/receipt.json`)||existsSync(`${base}/source.json`)||existsSync(`${base}/identity-before.json`))throw Error('One-shot output already exists; no adaptive retry allowed');
+ const before=identity();json('identity-before.json',before);
+ const p=JSON.parse(readFileSync(protocolPath)),d=p.requestDescriptor,sb=d.sourceBinding;
+ json('request-descriptor.json',d);
+ execFileSync('python',[`${repo}/${sb.stager}`,'--source',sb.pngPath,'--expected-sha256',sb.expectedPngSha256,'--image-id',sb.imageId,'--frame',sb.frame,'--out',`${base}/source.json`],{cwd:repo,stdio:'inherit'});
+ const source=JSON.parse(readFileSync(`${base}/source.json`));
+ if(source.provenance.sourcePngSha256!==sb.expectedPngSha256||source.provenance.rgbaSha256!==sb.expectedFullRgbaSha256||sha(Uint8Array.from(source.image.data))!==sb.expectedFullRgbaSha256)throw Error('Staged source identity mismatch');
+ const request={enabled:d.enabled,source,roi:d.roi,geometry:d.geometry};
+ if(JSON.stringify(request.roi)!==JSON.stringify(d.roi)||JSON.stringify(request.geometry)!==JSON.stringify(d.geometry))throw Error('Frozen geometry projection changed');
+ const rawRequest=JSON.stringify(request);writeFileSync(`${base}/request.json`,rawRequest+'\n',{flag:'wx'});
+ json('run-binding.json',{job_id:'E809',worker:'P3',protocol:before.protocol,review:before.review,source:before.png,blob:before.blob,stagedSource:entry(`${base}/source.json`),requestFile:entry(`${base}/request.json`),requestJsonValueSha256:sha(rawRequest),descriptor:entry(`${base}/request-descriptor.json`),geometrySha256:sha(JSON.stringify(request.geometry)),roiSha256:sha(JSON.stringify(request.roi)),projection:'Only sourceBinding -> exact staged source; all numeric geometry/ROI/settings unchanged',caller:before.caller,renderer:before.renderer});
+ const {runSourcePixelRoi,preserveNonFinite}=await import(`${repo}/experiments/capability-discovery/source-pixels/adapter.mjs`);
+ const t=performance.now();
+ const receipt=runSourcePixelRoi(request); // Exactly one invocation; adapter owns its mandatory two recipe calls.
+ const elapsed=performance.now()-t;
+ json('receipt.json',receipt,preserveNonFinite);
+ const rows=[];
+ for(const [branch,composition] of [['crop',receipt.composition],['source',receipt.sourceComposition]]){
+  for(const station of d.geometry.stations){
+   const actual=composition?.stations?.find(s=>s.id===station.id);
+   for(const width of d.geometry.localWidthBank.valuesPx){
+    const c=actual?.candidates?.find(c=>c.widthArgPx===width),fit=c?.edgeFit;
+    const finitePair=!!(fit&&['lPx','rPx','cPx','wPx','score','gl','gr'].every(k=>Number.isFinite(fit[k]))&&fit.wPx>0&&fit.gl>0&&fit.gr>0);
+    const n=[-Math.sin(station.headingRad),Math.cos(station.headingRad)];
+    const projection=finitePair?{leftAtStationOriginalPx:[station.xPx+fit.lPx*n[0],station.yPx+fit.lPx*n[1]],rightAtStationOriginalPx:[station.xPx+fit.rPx*n[0],station.yPx+fit.rPx*n[1]],midpointAtStationOriginalPx:[station.xPx+fit.cPx*n[0],station.yPx+fit.cPx*n[1]],meaning:'Lateral offsets of longitudinally averaged profile projected at supplied original station, not measured physical edge location at every point.'}:null;
+    rows.push({branch,stationId:station.id,widthArgPx:width,status:!actual?'NOT_EXECUTED':!c?'MISSING_CANDIDATE':finitePair?'FINITE_POSITIVE_PAIR':fit===null?'NULL_FIT':'NONPOSITIVE_OR_NONFINITE_FIT',stationOriginal:station,actualPose:actual?.pose??null,actualFrame:actual?.frame??null,window:actual?.window??null,profileStationCount:actual?.profile?.stationCount??null,visibleCounts:actual?.profile?.visibleStationCounts??null,edgeFit:fit??null,midpoint:c?.midpoint??null,observation:c?.observation??null,pairedRails:c?.pairedRails??null,originalProjection:projection});
+   }
+  }
+ }
+ json('all-candidate-rows.json',rows,preserveNonFinite);
+ const get=(id,w=42)=>rows.find(r=>r.branch==='source'&&r.stationId===id&&r.widthArgPx===w);
+ const available=row=>!!row&&!['NOT_EXECUTED','MISSING_CANDIDATE'].includes(row.status);
+ const finite=id=>available(get(id))?get(id).status==='FINITE_POSITIVE_PAIR':null;
+ const anchorRows=d.geometry.stations.map(s=>get(s.id));
+ const anchorObserved=!!receipt.sourceComposition&&anchorRows.every(available);
+ const primaryShortRows=Array.from({length:5},(_,i)=>get(`proposed-ribbon.short${i+1}`));
+ const primaryShort=primaryShortRows.map(r=>available(r)?r.status==='FINITE_POSITIVE_PAIR':null);
+ const brightShort=Array.from({length:5},(_,i)=>finite(`bright-organic.short${i+1}`));
+ const primaryLong=finite('proposed-ribbon.long');
+ const anchorOutcome={observationStatus:anchorObserved?'ALL_DECLARED_ANCHOR_ROWS_OBSERVED':'UNKNOWN_UNOBSERVED_OR_MISSING',requiredRows:18,observedRows:anchorRows.filter(available).length,
+  primaryShortFinite:primaryShort,primaryShortStatuses:primaryShortRows.map(r=>r?.status??'MISSING_CANDIDATE'),primaryLongFinite:primaryLong,
+  primaryAll5AndLongPrediction:!anchorObserved?'UNKNOWN_UNOBSERVED_OR_MISSING':primaryShort.every(v=>v===true)&&primaryLong===true?'NOT_FALSIFIED_AT_WINDOW_LEVEL':'FALSIFIED_BY_NULL_OR_NONPOSITIVE_FIT',
+  longAverageAsThroughout:!anchorObserved?'UNKNOWN_UNOBSERVED_OR_MISSING':primaryLong===true&&primaryShortRows.some(r=>r.status==='NULL_FIT')?'FALSIFIED_BY_ACTUAL_SHORT_NULL':'NO_LONG_WITH_ACTUAL_SHORT_NULL_COUNTEREXAMPLE_OBSERVED',
+  brightShortFinite:brightShort,brightNotAll5Prediction:!anchorObserved?'UNKNOWN_UNOBSERVED_OR_MISSING':brightShort.every(v=>v===true)?'FALSIFIED':'NOT_FALSIFIED_AT_WINDOW_LEVEL'};
+ const shiftedResiduals=[...Array.from({length:5},(_,i)=>`short${i+1}`),'long'].map(s=>{
+  const a=get(`proposed-ribbon.${s}`),b=get(`lateral-plus6.${s}`),available=a?.status==='FINITE_POSITIVE_PAIR'&&b?.status==='FINITE_POSITIVE_PAIR';
+  const delta=available?b.midpoint.candidateCenterMinusFitMidpointPx-a.midpoint.candidateCenterMinusFitMidpointPx:null;
+  return {window:s,status:available?'OBSERVED_CHANNELS':'UNKNOWN',primaryMidpoint:a?.midpoint??null,shiftedMidpoint:b?.midpoint??null,offsetMinusPrimaryPx:delta,predictedPx:6,residualPx:available?delta-6:null};
+ });
+ const counts={};for(const branch of ['crop','source'])counts[branch]={rows:rows.filter(r=>r.branch===branch).length,finite:rows.filter(r=>r.branch===branch&&r.status==='FINITE_POSITIVE_PAIR').length,null:rows.filter(r=>r.branch===branch&&r.status==='NULL_FIT').length,notExecutedOrMissing:rows.filter(r=>r.branch===branch&&['NOT_EXECUTED','MISSING_CANDIDATE'].includes(r.status)).length};
+ json('analysis.json',{job_id:'E809',worker:'P3',protocolSha256:protocolSha,receipt:entry(`${base}/receipt.json`),counts,execution:receipt.execution??null,operations:receipt.operationsExecuted?.length??0,supportStatus:receipt.support?.status??null,equivalence:receipt.equivalence??null,rawWidthEstimates:{crop:receipt.composition?.rawWidthEstimate??null,source:receipt.sourceComposition?.rawWidthEstimate??null},anchor42:{...anchorOutcome,shiftedResiduals},boundaries:['Only ordered window-level observations; each16-sample short is itself an average, not pointwise continuity.','42 is preregistered anchor, not calibrated width; all34/42/50 rows retained.','Shared screenshot/training and crop-source controls are not independent scientific cases.','No threshold, recentering, widening, tuning or accepted path/endpoint identity.','Crop/source differences retain UNKNOWN at unchanged1e-9 tolerance.'],semanticIdentity:'UNKNOWN',calibratedWidth:'UNKNOWN',promoted:false},preserveNonFinite);
+ const csv=['branch,stationId,widthArgPx,status,nT,lPx,rPx,cPx,wPx,score,gl,gr,candidateCenterMinusFitMidpointPx',...rows.map(r=>[r.branch,r.stationId,r.widthArgPx,r.status,r.profileStationCount,...['lPx','rPx','cPx','wPx','score','gl','gr'].map(k=>r.edgeFit?.[k]??''),r.midpoint?.candidateCenterMinusFitMidpointPx??''].join(','))].join('\n')+'\n';writeFileSync(`${base}/ordered-fit-table.csv`,csv,{flag:'wx'});
+ json('resources.json',{job_id:'E809',adapterElapsedMs:elapsed,callerElapsedMs:performance.now()-start,usageBefore,usageAfter:process.resourceUsage(),memoryBefore,memoryAfter:process.memoryUsage(),scope:'Actual caller process; separate /usr/bin/time output covers process elapsed/maxRSS. Not a speed/allocator comparison.'});
+ const after=identity();json('identity-after.json',after);
+ if(JSON.stringify(before.files)!==JSON.stringify(after.files)||JSON.stringify(before.protocol)!==JSON.stringify(after.protocol)||JSON.stringify(before.png)!==JSON.stringify(after.png)||JSON.stringify(before.caller)!==JSON.stringify(after.caller)||JSON.stringify(before.renderer)!==JSON.stringify(after.renderer))throw Error('Source/helper identity changed during execution');
+ console.log(JSON.stringify({status:'EXECUTED_ONCE',adapterElapsedMs:elapsed,compositionCalls:receipt.execution?.compositionCalls??0,operations:receipt.operationsExecuted?.length??0,counts,equivalenceStatus:receipt.equivalence?.status??'UNKNOWN'}));
+}catch(e){json('failure.json',{job_id:'E809',message:e.message,stack:e.stack,retryAllowed:false,elapsedMs:performance.now()-start});console.error(e.stack);process.exitCode=1;}

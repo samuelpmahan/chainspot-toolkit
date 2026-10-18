@@ -1,0 +1,331 @@
+✔ default OFF does not inspect bad receipt input (0.916169ms)
+✖ executed UNKNOWN preserves complete raw branches and explicit short order (2.470188ms)
+✖ executed empty-bank UNKNOWN retains profiles and zero candidates (0.673514ms)
+✖ branchless UNKNOWN and DISABLED refusals do not invent measurement rows (0.406092ms)
+✖ digest mismatch is integrity evidence not scientific negative or refusal (0.808597ms)
+✖ exact bytes rather than reconstructed JSON define the digest (1.391274ms)
+✖ invalid UTF-8 and invalid JSON are explicit invalid-input evidence (0.653193ms)
+✖ unsupported helper fields including descriptor follow one invalid-input policy (0.728386ms)
+✖ contradictory execution branches counts statuses and operations are rejected (1.267818ms)
+✖ missing and duplicate IDs never produce partial validated projections (4.137988ms)
+✖ valid cross-group reuse remains explicit and does not drop ungrouped stations (0.835658ms)
+✖ finite different headings remain raw while malformed linkage geometry is invalid (1.482671ms)
+✖ raw null finite-fit and nonfinite diagnostics remain untouched on serialization (0.578932ms)
+✖ unsupported schemas or malformed raw station linkage are rejected consistently (1.50157ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 1
+ℹ fail 13
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 111.83641
+
+✖ failing tests:
+
+test at experiments/capability-discovery/window-evidence/group.test.mjs:38:1
+✖ executed UNKNOWN preserves complete raw branches and explicit short order (2.470188ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'DISABLED'
+  - 'PROJECTED_EVIDENCE_ONLY'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:40:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'DISABLED',
+    expected: 'PROJECTED_EVIDENCE_ONLY',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/window-evidence/group.test.mjs:51:1
+✖ executed empty-bank UNKNOWN retains profiles and zero candidates (0.673514ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'NOT_INSPECTED'
+  - 'EXECUTED'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:53:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'NOT_INSPECTED',
+    expected: 'EXECUTED',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/window-evidence/group.test.mjs:55:1
+✖ branchless UNKNOWN and DISABLED refusals do not invent measurement rows (0.406092ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'DISABLED'
+  - 'PROJECTED_EVIDENCE_ONLY'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:58:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'DISABLED',
+    expected: 'PROJECTED_EVIDENCE_ONLY',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/window-evidence/group.test.mjs:62:1
+✖ digest mismatch is integrity evidence not scientific negative or refusal (0.808597ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'DISABLED'
+  - 'UNKNOWN'
+  
+      at invalid (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:30:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:63:50)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'DISABLED',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/window-evidence/group.test.mjs:65:1
+✖ exact bytes rather than reconstructed JSON define the digest (1.391274ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'DISABLED'
+  - 'UNKNOWN'
+  
+      at invalid (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:30:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:66:81)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'DISABLED',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/window-evidence/group.test.mjs:69:1
+✖ invalid UTF-8 and invalid JSON are explicit invalid-input evidence (0.653193ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'DISABLED'
+  - 'UNKNOWN'
+  
+      at invalid (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:30:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:70:67)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'DISABLED',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/window-evidence/group.test.mjs:72:1
+✖ unsupported helper fields including descriptor follow one invalid-input policy (0.728386ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'DISABLED'
+  - 'UNKNOWN'
+  
+      at invalid (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:30:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:73:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'DISABLED',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/window-evidence/group.test.mjs:76:1
+✖ contradictory execution branches counts statuses and operations are rejected (1.267818ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'DISABLED'
+  - 'UNKNOWN'
+  
+      at invalid (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:30:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:82:63)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'DISABLED',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/window-evidence/group.test.mjs:86:1
+✖ missing and duplicate IDs never produce partial validated projections (4.137988ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'DISABLED'
+  - 'UNKNOWN'
+  
+      at invalid (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:30:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:88:60)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'DISABLED',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/window-evidence/group.test.mjs:91:1
+✖ valid cross-group reuse remains explicit and does not drop ungrouped stations (0.835658ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'NOT_INSPECTED'
+  - 'EXECUTED'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:93:43)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'NOT_INSPECTED',
+    expected: 'EXECUTED',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/window-evidence/group.test.mjs:95:1
+✖ finite different headings remain raw while malformed linkage geometry is invalid (1.482671ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'DISABLED'
+  - 'UNKNOWN'
+  
+      at invalid (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:30:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:96:210)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'DISABLED',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/window-evidence/group.test.mjs:99:1
+✖ raw null finite-fit and nonfinite diagnostics remain untouched on serialization (0.578932ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'NOT_INSPECTED'
+  - 'EXECUTED'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:102:54)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'NOT_INSPECTED',
+    expected: 'EXECUTED',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/window-evidence/group.test.mjs:104:1
+✖ unsupported schemas or malformed raw station linkage are rejected consistently (1.50157ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'DISABLED'
+  - 'UNKNOWN'
+  
+      at invalid (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:30:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs:106:63)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'DISABLED',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

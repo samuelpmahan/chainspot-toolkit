@@ -1,0 +1,117 @@
+{
+  "schema": "cycle04-E899-verification@1",
+  "job_id": "E899",
+  "worker": "P6",
+  "capture": {
+    "originals": 388,
+    "storedUnique": 279,
+    "omitted": 29,
+    "capturedOriginalsRestoredExact": true,
+    "omittedBulkAndPngRestored": 27,
+    "allRestoredBulkExact": true,
+    "pathOnlyCompanions": 17
+  },
+  "priorTracked": {
+    "entries": 1646,
+    "mismatches": []
+  },
+  "repository": {
+    "tests": 187,
+    "pass": 170,
+    "fail": 17,
+    "exitCode": 1,
+    "baselineTests": 170,
+    "baselinePass": 153,
+    "baselineFail": 17,
+    "same17Names": true,
+    "failedNames": [
+      "the selected checkpoint inventories docs/replay unchanged and a missing file changes state",
+      "the 17 accepted S2 basket Parts re-assemble exactly through the shape",
+      "the accepted specimen evidence decomposes plate-first for all 18 badges",
+      "the accepted specimen evidence decomposes body-first for all 17 baskets",
+      "the accepted specimen evidence supports interior-first assembly for all 18 tees",
+      "strict reuse verifies native bytes; changed source and lane give different identities",
+      "CLI reads explicit RGBA JSON, preserves nonfinite diagnostics and writes inspectable evidence",
+      "default OFF executes no operations",
+      "real positive exposes raw channels and fitted two-edge midpoint without calibration",
+      "shifted station retains fixed-center zero plus real signed midpoint",
+      "interior-only score1 remains UNKNOWN bilateral evidence",
+      "all-hidden numeric learner return is raw only and no fitted midpoint",
+      "empty training bank preserves legacy fallback40 as UNKNOWN",
+      "frame, provenance and finite violations fail closed before source operations",
+      "organic shape identical across exposed samples cannot acquire semantic path identity",
+      "work/capability-discovery/cycle-03/evidence/E506/initial-adapter.test.mjs",
+      "work/capability-discovery/cycle-03/history/E506-first-source/adapter.test.mjs"
+    ]
+  },
+  "helper": {
+    "sourceSha256": "c8abdc46721e01df64f8ae81318582ee3d639104389c9f5a43b539ef3fbf5e83",
+    "testSha256": "de01b97f461e648dac502d5070da87a7126d620b9df82632938bc0d988c79ecf"
+  },
+  "tools": {
+    "node": "v24.19.0",
+    "python": "Python 3.12.14",
+    "Pillow": "12.3.0",
+    "zstd": "*** Zstandard CLI (64-bit) v1.5.5, by Yann Collet ***"
+  },
+  "stage": {
+    "defaultCommand": "PYTHONDONTWRITEBYTECODE=1 python3 work/capability-discovery/cycle-04/stage-replay.py --out /workspace/scratch/8528bb251845/cycle04-stage",
+    "bulkCommand": "PYTHONDONTWRITEBYTECODE=1 python3 work/capability-discovery/cycle-04/stage-replay.py --out /workspace/scratch/8528bb251845/cycle04-full-stage --with-bulk",
+    "defaultExit": 0,
+    "bulkExit": 0,
+    "overwriteRefusalExit": 1,
+    "pixelDecoderAndFixtureGeneratorExecuted": true,
+    "CVProducerOrRecipeCalls": 0
+  },
+  "figures": {
+    "directlyInspected": [
+      "P4/E807/E807-synthetic-window-evidence.png",
+      "P3/E809/E809-actual-receipt-display-v2.png",
+      "P5/E810/E810-actual-receipt.png",
+      "P5/E810/E810-raw-profiles.png"
+    ],
+    "finding": "Source/receipt legends, branch tables and NULL caveats visible. E807 historical pending footer explicitly qualified in current README. No rerender/CV executed."
+  },
+  "publication": "none; no commit/export/PR",
+  "packageAudit": "fresh V1 registration-only; root native start pending",
+  "commands": [
+    {
+      "command": "node --test --test-reporter=tap experiments/capability-discovery/window-evidence/group.test.mjs",
+      "exitCode": 0,
+      "tests": 17,
+      "pass": 17,
+      "fail": 0,
+      "log": "administration/E899-focused.log"
+    },
+    {
+      "command": "node --test --test-reporter=tap experiments/capability-discovery/*.test.mjs experiments/capability-discovery/catalog/*.test.mjs experiments/capability-discovery/probes/*/*.test.mjs experiments/capability-discovery/composition/*.test.mjs experiments/capability-discovery/source-pixels/*.test.mjs experiments/capability-discovery/window-evidence/*.test.mjs",
+      "exitCode": 0,
+      "tests": 130,
+      "pass": 130,
+      "fail": 0,
+      "log": "administration/E899-lab.log"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 experiments/capability-discovery/source-pixels/stage-png.test.py",
+      "exitCode": 0,
+      "tests": 2,
+      "pass": 2,
+      "fail": 0,
+      "log": "administration/E899-stager.log"
+    },
+    {
+      "command": "node --test --test-reporter=tap",
+      "exitCode": 1,
+      "tests": 187,
+      "pass": 170,
+      "fail": 17,
+      "log": "administration/E899-repository.log"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 work/capability-discovery/cycle-04/stage-replay.py --out /workspace/scratch/8528bb251845/cycle04-stage",
+      "exitCode": 1,
+      "expected": true,
+      "log": "administration/E899-overwrite-refusal.log"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const base='/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809';
+const caller=readFileSync(`${base}/run-trial.mjs`,'utf8');
+const snippet=caller.slice(caller.indexOf(' const get=(id,w=42)'),caller.indexOf(' const shiftedResiduals='));
+const d=JSON.parse(readFileSync('/workspace/scratch/8528bb251845/discovery-cycle04/P2/protocol.json')).requestDescriptor;
+const all=(status='FINITE_POSITIVE_PAIR')=>d.geometry.stations.map(s=>({branch:'source',stationId:s.id,widthArgPx:42,status}));
+const run=(rows,receipt={sourceComposition:{}})=>vm.runInNewContext(`${snippet}\nanchorOutcome`,{d,rows,receipt});
+const checks=[];
+for(const [name,rows,receipt] of [['zero-call',all('NOT_EXECUTED'),{}],['missing-one',all().map((r,i)=>i===0?{...r,status:'MISSING_CANDIDATE'}:r),{sourceComposition:{}}]]){
+ const a=run(rows,receipt);
+ for(const key of ['primaryAll5AndLongPrediction','longAverageAsThroughout','brightNotAll5Prediction'])assert.equal(a[key],'UNKNOWN_UNOBSERVED_OR_MISSING');
+ checks.push({name,status:'PASS',anchor:a});
+}
+const nullRows=all();nullRows[0].status='NULL_FIT';const actualNull=run(nullRows);
+assert.equal(actualNull.longAverageAsThroughout,'FALSIFIED_BY_ACTUAL_SHORT_NULL');
+assert.equal(actualNull.primaryAll5AndLongPrediction,'FALSIFIED_BY_NULL_OR_NONPOSITIVE_FIT');
+assert.equal(actualNull.brightNotAll5Prediction,'FALSIFIED');
+checks.push({name:'actual-null-with-long-fit',status:'PASS',anchor:actualNull});
+const allFinite=run(all());assert.equal(allFinite.primaryAll5AndLongPrediction,'NOT_FALSIFIED_AT_WINDOW_LEVEL');checks.push({name:'all-observed-finite',status:'PASS',anchor:allFinite});
+const result={job_id:'E809',scope:'Pure reporting-guard snippet extracted from frozen caller; no adapter/recipe/CV imports or execution',checks,cvCalls:0};
+writeFileSync(`${base}/reporting-guard-test.json`,JSON.stringify(result,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({checks:checks.length,status:'PASS',cvCalls:0}));

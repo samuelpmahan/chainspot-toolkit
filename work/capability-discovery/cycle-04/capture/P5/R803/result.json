@@ -1,0 +1,68 @@
+{
+  "schema":"cycle04-native-independent-review@1",
+  "job_id":"R803",
+  "worker":"P5",
+  "reviewedJob":"E803",
+  "decision":"accepted",
+  "summary":"Accepted the exact frozen zoom2 source-bound exploratory premeasurement protocol. Independently verified source Git object, encoded PNG, decoded/staged RGBA, original/ROI frames, request assembly/schema, fixed window groups, conservative support, source closures and declared centerline sample-phase audit. Additional geometry-only audit confirms further normal-grid rounding, already allowed by the protocol. No CV measurements, preparation calls, source edits or P6 geometry disclosure.",
+  "bindings":{
+    "reviewRoot":"/workspace/scratch/8528bb251845/discovery-cycle04/P3",
+    "protocolSha256":"115fc4fb788a3c6b75733b075666a41c999894866706bb09e888e477531526a0",
+    "frozenhashRecordSha256":"b416f9df3f6055024682045c98678dc7110dbd456eee573fde0bcc2d7a8207ed",
+    "sourceIntegritySha256":"4e81a4d395e48ba8e052d174c46ac1faa1ae4bd9f7e02c67e9309ef9439409f4",
+    "imageInspectionSha256":"9a211d2bb26c33a37526819a0233d4e154d736cef7f5c26f73661cddd880e964",
+    "supportCheckSha256":"bef88193ede25eb0df86ada418d46810281b7b43a41a2b67ec930299c3f57066",
+    "sampleLatticeCheckSha256":"ad4de3b3c34ac36cfe6b925f1306291e49e0a6c6d2eee9915b8de10f78785588",
+    "worldSampleCoordinatesSha256":"5c190b310cdb7fe998596a361eb19ecdc6345170e68db17f802bd47f561a5e3c",
+    "producerResultSha256":"cc726dae0a5998e7744134b064d8fb75e7ab4e1371af5c63b902d255f22deead",
+    "sourceRef":"49255331791b1245cf0f9cd699816175f94e70f2",
+    "sourcePath":"specimens/dev/Lenard-2.png",
+    "sourceGitBlob":"02431ee3f091973a87cc2e7e254bc8bc0b028a7c",
+    "sourcePngSha256":"cf5a033747c32f3e7f8774e7f712394b6af8a5d28228291f0d29a395998d55f4",
+    "fullRgbaSha256":"3659157b9501899ff62dcc5216dcb058a6a50d31578e751dcb665c49b97da4ee",
+    "stagedSourceSha256":"6dd63d816e702e899cf1ab696ebc59a2241d6244cffbd0569c7a703d03e8252b",
+    "inspectionCropSha256":"389a2a865adf30bc300b282c6ce5f8726497ed95c01199d732e18c72220f41af",
+    "adapterFreezeSha256":"d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "recipeManifestSha256":"5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52"
+  },
+  "checks":[
+    {"id":"exact-platform-object","status":"PASS","evidence":"Read-only git rev-parse ref:path resolves the declared blob; git cat-file blob SHA256 matches the extracted PNG; git hash-object of source PNG independently returns the same Git blob. Source worktree clean on read-only git status inspection."},
+    {"id":"decode-and-staging","status":"PASS","evidence":"Independent Pillow12.3.0 inspection confirms native8-bit colorType2 RGB1290x2796, one frame, no RGB transparency metadata. Decoded RGBA14427360 bytes match declared hash and staged source data byte-for-byte. Staged image/provenance keys, dimensions, frame, PNG/RGBA hashes and decoder metadata match accepted schema and protocol."},
+    {"id":"image-and-crop-inspection","status":"PASS_WITH_TESTIMONY_LIMIT","evidence":"Viewed exact full PNG and exact730x600 source inspection crop. Crop RGB pixels exactly equal source[480,1210)x[1240,1840). Proposed lower pale strip and eastern irregular bright terrain are visually plausible caller selections. White-square/black-plaque training endpoints remain API labels only; all visual identities/location uncertainty remain unverified testimony. No image regeneration, resizing or CV."},
+    {"id":"premeasurement-bindings","status":"PASS","evidence":"Verified9 frozen artifacts plus2 source artifacts, all10 producer-result artifact hashes/lengths, sourceStaging hash and source-integrity frozen file hashes. Protocol matches assigned target. Frozen records/scripts support staging/geometry-only scope but are not independent historical proof that no earlier CV ever occurred; this reviewer ran none."},
+    {"id":"unchanged-closures","status":"PASS","evidence":"Rehashed23 adapter candidate-freeze/history/evidence entries and accepted14-entry recipe/guard/vendor closure. No source changes or tolerance relaxation."},
+    {"id":"request-frames-schema","status":"PASS","evidence":"Explicit requestAssembly constructs only{enabled:true,source:stagedSource,roi,geometry}. All original geometry/training/station/bank/occluder frames match source frame; ROI frame differs. Integer610x760 ROI at600,1100 is wholly in1290x2796 source. Exact geometry/ROI/station key sets match accepted adapter. No caller metadata is passed as unsupported geometry."},
+    {"id":"window-groups-and-counts","status":"PASS","evidence":"Three groups,18 unique stations; each group five16-sample[-8,8) moving-pose shorts and80-sample[-40,40) long, source arange step1/t1 excluded.54 candidate rows per composition,108 total across mandatory source/crop. LOCAL[40,48,56], headingatan2(12,1), latLim8/tolWidth3 and empty occluders remain explicit.16 samples satisfy min8 when visible, not guaranteed pair support. Long and short3 share point-sensor pose; changing window alone does not create independent Dev72 evidence."},
+    {"id":"support","status":"PASS_GEOMETRY_ONLY","evidence":"Independently recomputed all56 support envelopes exactly, sensor radius41.333333333333336px and normal extent30px. Every bound satisfies strict accepted ROI safety border; minimum safety margin34.00921131134703px. Training endpoints cover the full segment by convex conservative bounds. No adapter preparation was invoked. Complete crop support does not establish fit-boundary safety; bank56 and shifted controls remain declared field-of-view risks."},
+    {"id":"centerline-lattice","status":"PASS_NO_INVARIANCE","evidence":"Recomputed all240 saved short/long centerline comparison records and all declared summaries. Byte-exact coordinate pairs53/80 primary,53/80 offset,58/80 bright; each group's maximum centerline difference2.2737367544323206e-13px. Moving-pose/window comparison is not bitwise sample identity or pure window-only ablation."},
+    {"id":"limits-falsifiers","status":"PASS_BOUNDED","evidence":"Long finite/short null rejects sustained-local-pair interpretation for that width; all null is absence of observed pair support, not classifier success. Same-edge+6 test is strict diagnostic with UNKNOWN/nulls and no accuracy model. Comparable control evidence retains ambiguity. All54 rows per composition, both receipts and raw trajectories retained, no tuning/recentering/width selection. Calibration/semantic identity UNKNOWN; exposed exploratory screenshot selections are not blind cases."}
+  ],
+  "additionalGeometryOnlyAudit":{
+    "method":"Native Node exact profile coordinate order, all80x241 positions per group, no image sampling or CV imports",
+    "groups":[
+      {"group":"primary","maxNormalGridShortVsLongSourcePx":4.547473508864641e-13,"maxNormalGridShortVsLongCropPx":1.1368683772161603e-13,"maxSourceVsTranslatedCropPx":2.2737367544323206e-13},
+      {"group":"lateral-plus6","maxNormalGridShortVsLongSourcePx":4.547473508864641e-13,"maxNormalGridShortVsLongCropPx":1.1368683772161603e-13,"maxSourceVsTranslatedCropPx":2.2737367544323206e-13},
+      {"group":"bright-organic","maxNormalGridShortVsLongSourcePx":4.547473508864641e-13,"maxNormalGridShortVsLongCropPx":2.2737367544323206e-13,"maxSourceVsTranslatedCropPx":2.2737367544323206e-13}
+    ],
+    "interpretation":"Normal-coordinate arithmetic doubles the audited source-grid maximum relative to centerline-only audit. This is new reviewer geometry evidence, not a pixel measurement; protocol already warns of further rounding. No interpolation/fit output invariance follows, and unchanged1e-9 crop/source comparison remains mandatory."
+  },
+  "actionableNonblockingGuards":[
+    "Preserve existing preserveNonFinite serialization and literalnull/UNKNOWN rather than silently changing nonfinite learner diagnostics or missing midpoint to0.",
+    "All five finite16-sample fits would still be window-averaged observations, not proof of edges at every point inside each16px interval. A shorter local rail interruption can still be diluted; no unbroken-continuity/classification claim.",
+    "Report zoom2 as another view of the same visually related map/course context, not an independent course population or source-renderer proof. No exact mapping from other screenshots is established.",
+    "Any crop/source mismatch or strict same-edge residual remains raw evidence/UNKNOWN. Do not interpret tiny coordinate differences as negligible to discrete peak selection or repair them through geometry/source changes."
+  ],
+  "blockingIssues":[],
+  "reviewerExecution":{
+    "cvImports":0,
+    "cvMeasurements":0,
+    "adapterPreparationCalls":0,
+    "compositionCalls":0,
+    "actualImageInspected":true,
+    "producerFilesModified":false,
+    "repositoryModified":false,
+    "P6GeometryDisclosure":false,
+    "writesConfinedTo":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/R803/"
+  },
+  "nextAction":"Root may admit this exact source/protocol for separately authorized frozen producer execution. Acceptance neither executes it nor authorizes geometry disclosure before helper/source admission."
+}

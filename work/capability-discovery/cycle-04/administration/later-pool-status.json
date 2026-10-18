@@ -1,0 +1,10 @@
+{
+  "schema": "cycle04-live-pool-status@1",
+  "observedUtc": "2026-10-18T12:50:53Z",
+  "actualAgentList": "root running; P6 E899 running; P1/P4/P5 and both HH workers completed",
+  "nativeLabRegistry": ["P1", "P4", "P5", "P6"],
+  "concurrencyLimit": "six active workers beneath one coordinator",
+  "readyWork": "P6 sole package ADMIN; R899 independent audit blocked until frozen package. No new scientific producer or source repair is ready.",
+  "decision": "Keep existing real Sol/high pool, do not spawn filler workers just to occupy released HH concurrency. Initial width6 and interim Lab4+HH2 were actual earlier phases; HH is no longer a current capacity blocker.",
+  "historicalCapture": "Original spec/pool-change and earlier captured native state retain their capture-time facts. This later status does not rewrite them or claim workers persist between invocations."
+}

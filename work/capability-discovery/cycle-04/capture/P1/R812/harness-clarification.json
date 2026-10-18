@@ -1,0 +1,14 @@
+{
+  "schema": "R812-reviewer-harness-history@1",
+  "job_id": "R812",
+  "worker": "P1",
+  "initialCommand": "node /workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/review.mjs",
+  "initialExitCode": 1,
+  "toolOutputChunkId": "3a2b56",
+  "failure": "Error: focused14 actual pass at review.mjs:13:77 / review.mjs:23:1",
+  "cause": "The helper tests passed14/14 under Node's spec reporter, whose summary is 'ℹ pass14' rather than the harness regex '# pass14'. Reviewer assertion rejected reporting format after test success; this was not a product/test assertion failure.",
+  "retained": ["review-initial.mjs", "focused.stdout.log", "focused.stderr.log", "focused-coverage/"],
+  "repair": "Reviewer harness only: explicit --test-reporter=tap, separate v2 log/coverage paths, and record both focused executions. Frozen helper/test/README were not edited.",
+  "CVExecutions": 0,
+  "rawTraceBoundary": "Initial harness stack is retained in the actual tool transcript; this file records its exact identifying lines, not a fabricated full raw stderr file."
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "E812-tdd-red-evidence@1",
+  "job_id": "E812",
+  "worker": "P6",
+  "command": "node --test experiments/capability-discovery/window-evidence/group.test.mjs",
+  "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+  "node": "v24.19.0",
+  "baseline": "Intentionally default-OFF-only API implementation; import succeeds and behavior assertions fail because grouping/validation is absent, not because an import is missing.",
+  "runs": [
+    {"ordinal":1,"pass":1,"fail":13,"exitCode":1,"capture":"full original stdout in tool transcript; not copied to a local log before the second run"},
+    {"ordinal":2,"pass":1,"fail":13,"exitCode":1,"capture":"exact raw stdout retained as red-stdout.log; no baseline/test changes between runs"}
+  ],
+  "artifacts": [
+    {"path":"red-group.mjs","sha256":"8feebeac9b763c5e309473cf257838fb1db31d1b5ed0b83a80a4dc1cdbd11d2c"},
+    {"path":"red-group.test.mjs","sha256":"3d1726fdd84724360395acd67aa8de5f86a7643ab41f08af1cc7aa677934e312"},
+    {"path":"red-stdout.log","sha256":"030cb9484bd47dd47fdbc4e0ee04f7321f1b855958ad7c739e97d4672f36da69"}
+  ],
+  "testSource": "Hand-authored receipt-shaped API fixtures only. Expectations use independent literal IDs, statuses, rows and ordering, not the grouping implementation. No CV/adapter import or source image use.",
+  "greenValidation": "not yet run; written implementation now paused at root actual-flow checkpoint"
+}

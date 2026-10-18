@@ -1,0 +1,472 @@
+{
+  "schema": "E811-recorded-evidence-analysis@1",
+  "job_id": "E811",
+  "worker": "P2",
+  "outcome": "confirmed_reuse",
+  "scope": "Confirmed bounded source-predicted engineering characterization of R806M1 using unchanged adapter; not scientific path/width acceptance or a helper implementation.",
+  "actualInvocations": {
+    "staging": 1,
+    "adapter": 2,
+    "composition": 2,
+    "profileAt": 2,
+    "edgePairOf": 0,
+    "observeFourLaneCrossSection": 0,
+    "requestsInOrder": [
+      "A",
+      "B"
+    ],
+    "perRequest": [
+      {
+        "id": "A",
+        "status": "UNKNOWN",
+        "operationsExecuted": [
+          "lumOf",
+          "estimateFourLaneCorridorWidth",
+          "assessLocalWidth",
+          "profileAt",
+          "lumOf",
+          "estimateFourLaneCorridorWidth",
+          "assessLocalWidth",
+          "profileAt"
+        ],
+        "receiptExecution": {
+          "compositionCalls": 2,
+          "order": [
+            "crop",
+            "original-source-frame"
+          ],
+          "cropOperationCount": 4,
+          "sourceOperationCount": 4
+        },
+        "hasCropBranch": true,
+        "hasSourceBranch": true,
+        "runtimeFunctionCounts": {
+          "runSourcePixelRoi": 1,
+          "prepare": 1,
+          "runComposition": 2,
+          "lumOf": 2,
+          "profileAt": 2,
+          "edgePairOf": 0,
+          "estimateFourLaneCorridorWidth": 2,
+          "observeFourLaneCrossSection": 0
+        },
+        "missingness": {
+          "execution": "EXECUTED",
+          "candidatesPerBranch": [
+            0
+          ],
+          "fitState": "NO_REQUESTED_WIDTH_CANDIDATES; not null fits and not NOT_EXECUTED"
+        },
+        "cvBranchShape": "Expected executed profiles with zero candidate rows; absent candidate fits are NOT an unexecuted request"
+      },
+      {
+        "id": "B",
+        "status": "UNKNOWN",
+        "operationsExecuted": [],
+        "receiptExecution": null,
+        "hasCropBranch": false,
+        "hasSourceBranch": false,
+        "runtimeFunctionCounts": {
+          "runSourcePixelRoi": 1,
+          "prepare": 1,
+          "runComposition": 0,
+          "lumOf": 0,
+          "profileAt": 0,
+          "edgePairOf": 0,
+          "estimateFourLaneCorridorWidth": 0,
+          "observeFourLaneCrossSection": 0
+        },
+        "missingness": {
+          "execution": "NOT_EXECUTED",
+          "fitState": "PREPARATION_REFUSAL; no profile or candidate evidence"
+        },
+        "cvBranchShape": "Expected whole preparation refusal; no recipe branches or measured profiles"
+      }
+    ]
+  },
+  "A": {
+    "status": "UNKNOWN",
+    "branches": [
+      {
+        "name": "composition",
+        "status": "UNKNOWN",
+        "operationLabels": [
+          "lumOf",
+          "estimateFourLaneCorridorWidth",
+          "assessLocalWidth",
+          "profileAt"
+        ],
+        "stationCount": 1,
+        "profileNormalCount": 241,
+        "profileLongitudinalCount": 16,
+        "allProfileValues": 100,
+        "allVisibleCounts": 16,
+        "candidateCount": 0,
+        "rawLearner": {
+          "widthPx": 40,
+          "scores": []
+        },
+        "fitMissingness": "NO_REQUESTED_WIDTH_CANDIDATES; no edgeFit/null rows were requested or produced"
+      },
+      {
+        "name": "sourceComposition",
+        "status": "UNKNOWN",
+        "operationLabels": [
+          "lumOf",
+          "estimateFourLaneCorridorWidth",
+          "assessLocalWidth",
+          "profileAt"
+        ],
+        "stationCount": 1,
+        "profileNormalCount": 241,
+        "profileLongitudinalCount": 16,
+        "allProfileValues": 100,
+        "allVisibleCounts": 16,
+        "candidateCount": 0,
+        "rawLearner": {
+          "widthPx": 40,
+          "scores": []
+        },
+        "fitMissingness": "NO_REQUESTED_WIDTH_CANDIDATES; no edgeFit/null rows were requested or produced"
+      }
+    ],
+    "support": {
+      "status": "SUPPORTED_CONSERVATIVE_ENVELOPE",
+      "method": "full training segments; station window endpoints; isotropic bounds for existing nearest/bilinear footprints; strict JS interior border",
+      "profileNormalExtentPx": 30,
+      "sensorRadiusPx": 0,
+      "envelopes": [
+        {
+          "label": "station:fixed-center:profile-window-end",
+          "minX": 10,
+          "minY": 18,
+          "maxX": 70,
+          "maxY": 78
+        },
+        {
+          "label": "station:fixed-center:profile-window-end",
+          "minX": 26,
+          "minY": 18,
+          "maxX": 86,
+          "maxY": 78
+        }
+      ],
+      "failures": []
+    },
+    "equivalence": {
+      "status": "MATCHED_DECLARED_CONTROL",
+      "absoluteTolerance": 1e-9,
+      "differences": [],
+      "reason": "declared raw channels match within fixed numerical tolerance; no semantic or scientific equivalence follows",
+      "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+    }
+  },
+  "B": {
+    "status": "UNKNOWN",
+    "reason": "complete required sampling support absent in declared ROI",
+    "support": {
+      "status": "UNKNOWN",
+      "method": "full training segments; station window endpoints; isotropic bounds for existing nearest/bilinear footprints; strict JS interior border",
+      "profileNormalExtentPx": 30,
+      "sensorRadiusPx": 0,
+      "envelopes": [
+        {
+          "label": "station:fixed-center:profile-window-end",
+          "minX": -34,
+          "minY": -26,
+          "maxX": 26,
+          "maxY": 34
+        },
+        {
+          "label": "station:fixed-center:profile-window-end",
+          "minX": -18,
+          "minY": -26,
+          "maxX": 42,
+          "maxY": 34
+        }
+      ],
+      "failures": [
+        {
+          "label": "station:fixed-center:profile-window-end",
+          "minX": -34,
+          "minY": -26,
+          "maxX": 26,
+          "maxY": 34
+        },
+        {
+          "label": "station:fixed-center:profile-window-end",
+          "minX": -18,
+          "minY": -26,
+          "maxX": 42,
+          "maxY": 34
+        }
+      ]
+    },
+    "branchPresence": false,
+    "operationsExecuted": [],
+    "missingness": "NOT_EXECUTED sampling-support refusal; no measured profile, candidate, edgeFit or physical absence finding"
+  },
+  "source": {
+    "pngSha256": "78b9bd5c98c577b96089fc9f54a77ae538c8587738d48732d064661f0e37181b",
+    "fullRgbaSha256": "b82ebef90ff857113c3fddf4cfe9d821ac975cb03e749927dd993d5ac865feac",
+    "decoder": {
+      "name": "Pillow",
+      "version": "12.3.0",
+      "outputMode": "RGBA",
+      "sourceMode": "RGBA",
+      "orientation": "stored PNG pixel order; no EXIF transform",
+      "colorTransform": "none; stored RGB channels, no ICC/gamma transform",
+      "alpha": "preserved RGBA; RGB appends 255"
+    },
+    "sameStagedSource": true,
+    "requestOnlyRoiChanged": true
+  },
+  "coverageEntryRecords": [
+    {
+      "id": "A",
+      "coverageFile": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/v8-coverage-A/coverage-13-1792325357623-0.json",
+      "counts": {
+        "runSourcePixelRoi": 1,
+        "prepare": 1,
+        "runComposition": 2,
+        "lumOf": 2,
+        "profileAt": 2,
+        "edgePairOf": 0,
+        "estimateFourLaneCorridorWidth": 2,
+        "observeFourLaneCrossSection": 0
+      },
+      "records": [
+        {
+          "scriptUrl": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/adapter.mjs",
+          "functionName": "runSourcePixelRoi",
+          "isBlockCoverage": true,
+          "entryRange": {
+            "startOffset": 11329,
+            "endOffset": 12373,
+            "count": 1
+          }
+        },
+        {
+          "scriptUrl": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/adapter.mjs",
+          "functionName": "prepare",
+          "isBlockCoverage": true,
+          "entryRange": {
+            "startOffset": 7008,
+            "endOffset": 9685,
+            "count": 1
+          }
+        },
+        {
+          "scriptUrl": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/recipe.mjs",
+          "functionName": "runComposition",
+          "isBlockCoverage": true,
+          "entryRange": {
+            "startOffset": 4330,
+            "endOffset": 8462,
+            "count": 2
+          }
+        },
+        {
+          "scriptUrl": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+          "functionName": "lumOf",
+          "isBlockCoverage": true,
+          "entryRange": {
+            "startOffset": 5989,
+            "endOffset": 6275,
+            "count": 2
+          }
+        },
+        {
+          "scriptUrl": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+          "functionName": "profileAt",
+          "isBlockCoverage": true,
+          "entryRange": {
+            "startOffset": 7406,
+            "endOffset": 8056,
+            "count": 2
+          }
+        },
+        {
+          "scriptUrl": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+          "functionName": "edgePairOf",
+          "isBlockCoverage": false,
+          "entryRange": {
+            "startOffset": 8155,
+            "endOffset": 10410,
+            "count": 0
+          }
+        },
+        {
+          "scriptUrl": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+          "functionName": "estimateFourLaneCorridorWidth",
+          "isBlockCoverage": true,
+          "entryRange": {
+            "startOffset": 18044,
+            "endOffset": 19521,
+            "count": 2
+          }
+        },
+        {
+          "scriptUrl": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+          "functionName": "observeFourLaneCrossSection",
+          "isBlockCoverage": false,
+          "entryRange": {
+            "startOffset": 8128,
+            "endOffset": 12200,
+            "count": 0
+          }
+        }
+      ],
+      "zeroVsUnavailable": "All8 named function entry-range records are present.0 means explicit native count0; no missing record was normalized to0. A missing record would remain null/unavailable."
+    },
+    {
+      "id": "B",
+      "coverageFile": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/v8-coverage-B/coverage-21-1792325357756-0.json",
+      "counts": {
+        "runSourcePixelRoi": 1,
+        "prepare": 1,
+        "runComposition": 0,
+        "lumOf": 0,
+        "profileAt": 0,
+        "edgePairOf": 0,
+        "estimateFourLaneCorridorWidth": 0,
+        "observeFourLaneCrossSection": 0
+      },
+      "records": [
+        {
+          "scriptUrl": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/adapter.mjs",
+          "functionName": "runSourcePixelRoi",
+          "isBlockCoverage": true,
+          "entryRange": {
+            "startOffset": 11329,
+            "endOffset": 12373,
+            "count": 1
+          }
+        },
+        {
+          "scriptUrl": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/adapter.mjs",
+          "functionName": "prepare",
+          "isBlockCoverage": true,
+          "entryRange": {
+            "startOffset": 7008,
+            "endOffset": 9685,
+            "count": 1
+          }
+        },
+        {
+          "scriptUrl": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/recipe.mjs",
+          "functionName": "runComposition",
+          "isBlockCoverage": false,
+          "entryRange": {
+            "startOffset": 4330,
+            "endOffset": 8462,
+            "count": 0
+          }
+        },
+        {
+          "scriptUrl": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+          "functionName": "lumOf",
+          "isBlockCoverage": false,
+          "entryRange": {
+            "startOffset": 5989,
+            "endOffset": 6275,
+            "count": 0
+          }
+        },
+        {
+          "scriptUrl": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+          "functionName": "profileAt",
+          "isBlockCoverage": false,
+          "entryRange": {
+            "startOffset": 7406,
+            "endOffset": 8056,
+            "count": 0
+          }
+        },
+        {
+          "scriptUrl": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+          "functionName": "edgePairOf",
+          "isBlockCoverage": false,
+          "entryRange": {
+            "startOffset": 8155,
+            "endOffset": 10410,
+            "count": 0
+          }
+        },
+        {
+          "scriptUrl": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+          "functionName": "estimateFourLaneCorridorWidth",
+          "isBlockCoverage": false,
+          "entryRange": {
+            "startOffset": 18044,
+            "endOffset": 19521,
+            "count": 0
+          }
+        },
+        {
+          "scriptUrl": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+          "functionName": "observeFourLaneCrossSection",
+          "isBlockCoverage": false,
+          "entryRange": {
+            "startOffset": 8128,
+            "endOffset": 12200,
+            "count": 0
+          }
+        }
+      ],
+      "zeroVsUnavailable": "All8 named function entry-range records are present.0 means explicit native count0; no missing record was normalized to0. A missing record would remain null/unavailable."
+    }
+  ],
+  "premeasurementBindings": {
+    "schema": "E811-before-first-CV-binding@1",
+    "createdAtUtc": "2026-10-18T12:09:17.464Z",
+    "cvCallsSoFar": 0,
+    "protocolSha256": "3d0b54fc2bb037131511a16f4679365fa9fec70be60f0ab888213bea8d0c6dd7",
+    "callerSha256": "05e7374e40e0f5e0f8b449c252ae58d6e249be780b2fbcb72b715a3b5a8fde94",
+    "sourcePngSha256": "78b9bd5c98c577b96089fc9f54a77ae538c8587738d48732d064661f0e37181b",
+    "stagedSourceFileSha256": "4d71fb83b90d3d139b26d9b2502da18c3e2976ba77e5bbc65ca47915094b4433",
+    "sourceFullRgbaSha256": "b82ebef90ff857113c3fddf4cfe9d821ac975cb03e749927dd993d5ac865feac",
+    "requestSha256": {
+      "A": "1e8b087653fe8fa51aea8d18a937087d336d24f9aa171d19744d621c841d51e1",
+      "B": "b8d6b7c88255b242c4bc4cab4d973652e014d9e2d1679384aabe91d4dd750755"
+    },
+    "sourceCodeHashes": {
+      "experiments/capability-discovery/source-pixels/adapter.mjs": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6",
+      "experiments/capability-discovery/source-pixels/stage-png.py": "e194f56e2899f516bb79dd8d6c5e4b876440d6f0932bf9d74e0a56c117f06a44",
+      "experiments/capability-discovery/composition/recipe.mjs": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6",
+      "work/capability-discovery/cycle-03/evidence/E506/candidate-freeze.json": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+      "work/capability-discovery/cycle-02/feature-manifest-E308.json": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52"
+    }
+  },
+  "verifiedArtifactCount": 25,
+  "sourceCodeHashesUnchanged": {
+    "experiments/capability-discovery/source-pixels/adapter.mjs": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6",
+    "experiments/capability-discovery/source-pixels/stage-png.py": "e194f56e2899f516bb79dd8d6c5e4b876440d6f0932bf9d74e0a56c117f06a44",
+    "experiments/capability-discovery/composition/recipe.mjs": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6",
+    "work/capability-discovery/cycle-03/evidence/E506/candidate-freeze.json": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "work/capability-discovery/cycle-02/feature-manifest-E308.json": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52"
+  },
+  "allDeclaredPredictionsRetainedAndMatched": true,
+  "resources": {
+    "A": {
+      "requestId": "A",
+      "node": "v24.19.0",
+      "elapsedMs": 38.72561300000001,
+      "maxRssKiB": 74968,
+      "adapterInvocations": 1,
+      "callerRequestsUnchanged": true,
+      "receiptStatus": "UNKNOWN"
+    },
+    "B": {
+      "requestId": "B",
+      "node": "v24.19.0",
+      "elapsedMs": 4.341587000000004,
+      "maxRssKiB": 67180,
+      "adapterInvocations": 1,
+      "callerRequestsUnchanged": true,
+      "receiptStatus": "UNKNOWN"
+    },
+    "scope": "Each elapsedMs covers only adapter invocation under native V8 coverage; maxRssKiB is child process-wide. Not speed comparisons or allocator-causality evidence."
+  },
+  "auditCvCalls": 0
+}

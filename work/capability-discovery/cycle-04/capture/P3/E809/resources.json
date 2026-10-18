@@ -1,0 +1,56 @@
+{
+  "job_id": "E809",
+  "adapterElapsedMs": 2983.1816850000005,
+  "callerElapsedMs": 8144.677624999999,
+  "usageBefore": {
+    "userCPUTime": 64983,
+    "systemCPUTime": 3969,
+    "maxRSS": 38264,
+    "sharedMemorySize": 0,
+    "unsharedDataSize": 0,
+    "unsharedStackSize": 0,
+    "minorPageFault": 9895,
+    "majorPageFault": 0,
+    "swappedOut": 0,
+    "fsRead": 0,
+    "fsWrite": 0,
+    "ipcSent": 0,
+    "ipcReceived": 0,
+    "signalsCount": 0,
+    "voluntaryContextSwitches": 82,
+    "involuntaryContextSwitches": 0
+  },
+  "usageAfter": {
+    "userCPUTime": 3018212,
+    "systemCPUTime": 1326016,
+    "maxRSS": 1088336,
+    "sharedMemorySize": 0,
+    "unsharedDataSize": 0,
+    "unsharedStackSize": 0,
+    "minorPageFault": 501000,
+    "majorPageFault": 0,
+    "swappedOut": 0,
+    "fsRead": 0,
+    "fsWrite": 102216,
+    "ipcSent": 0,
+    "ipcReceived": 0,
+    "signalsCount": 0,
+    "voluntaryContextSwitches": 409,
+    "involuntaryContextSwitches": 26
+  },
+  "memoryBefore": {
+    "rss": 39182336,
+    "heapTotal": 12054528,
+    "heapUsed": 8047464,
+    "external": 3959432,
+    "arrayBuffers": 146595
+  },
+  "memoryAfter": {
+    "rss": 622505984,
+    "heapTotal": 461701120,
+    "heapUsed": 334036760,
+    "external": 72332735,
+    "arrayBuffers": 61772076
+  },
+  "scope": "Actual caller process; separate /usr/bin/time output covers process elapsed/maxRSS. Not a speed/allocator comparison."
+}

@@ -1,0 +1,112 @@
+// E900 scratch-only transport. Never stages, commits, pushes, or runs source/CV.
+import {readFileSync,writeFileSync,mkdirSync,existsSync} from 'node:fs';
+import {resolve,join,dirname} from 'node:path';
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import assert from 'node:assert/strict';
+
+const BASE='532fd7406e5b939e6d4d83cf92d12e2267bab11c';
+const REMOTE_BASE='921974042771a73c4c40a30f2dd7c6ba438a3730';
+const BASE_TREE='c170f6d54e6a45dd3cf376af070d89ba579e3d5b';
+const MANIFEST='work/capability-discovery/cycle-04/package-manifest.json';
+const MANIFEST_SHA='2641472c9a6da112688901534ea4e9582a5e2197dce84d56ef3be9b06f97ca02';
+const HELPER='experiments/capability-discovery/window-evidence/';
+const CYCLE='work/capability-discovery/cycle-04/';
+const HELPER_FILES=new Set(['README.md','group.mjs','group.test.mjs','fixtures/E811-B.json']);
+const sha=b=>createHash('sha256').update(b).digest('hex');
+export const blobSha=b=>createHash('sha1').update(Buffer.from(`blob ${b.length}\0`)).update(b).digest('hex');
+export const asciiJson=v=>JSON.stringify(v).replace(/[\u007f-\uffff]/g,c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0'))+'\n';
+export function textChunks(value,budget=60000){
+  if(budget<12)throw Error('Chunk budget too small');
+  const chunks=[];let s='',cost=0;
+  for(const cp of value){const n=asciiJson(cp).length-3;if(cost+n>budget){chunks.push(s);s='';cost=0;}s+=cp;cost+=n;}
+  if(s||!chunks.length)chunks.push(s);
+  return chunks;
+}
+export function pages(entries,budget=90000){
+  const result=[];let p=[];
+  for(const entry of entries){if(asciiJson([entry]).length>budget)throw Error('Oversized index entry');if(asciiJson([...p,entry]).length>budget){result.push(p);p=[];}p.push(entry);}
+  if(p.length)result.push(p);return result;
+}
+const allowed=p=>p.startsWith(CYCLE)||(p.startsWith(HELPER)&&HELPER_FILES.has(p.slice(HELPER.length)));
+
+function selfTest(){
+  assert.equal(blobSha(Buffer.alloc(0)),'e69de29bb2d1d6434b8b29ae775ad8c2e48c5391');
+  assert.equal(blobSha(Buffer.from('hello\n')),'ce013625030ba8dba906f756967f9e9ca394464a');
+  for(const original of ['', 'ascii\n"\\', 'a😀é\u007f'.repeat(22000)]){
+    const parts=textChunks(original);assert.equal(parts.join(''),original);
+    for(const p of parts){assert.ok(asciiJson({content:p}).length<90000);assert.match(asciiJson(p),/^[\x00-\x7f]*$/);assert.equal(JSON.parse(asciiJson(p)),p);assert.ok(!/[\ud800-\udbff]$/.test(p));assert.ok(!/^[\udc00-\udfff]/.test(p));}
+  }
+  const entries=Array.from({length:50},(_,i)=>({path:'file'+i,content:'x'.repeat(3000)}));
+  const grouped=pages(entries,10000);assert.deepEqual(grouped.flat(),entries);assert.ok(grouped.every(p=>asciiJson(p).length<=10000));
+  assert.throws(()=>pages([{x:'a'.repeat(100)}],20));
+  assert.ok(allowed(CYCLE+'POST-REVIEW.md'));assert.ok(allowed(HELPER+'group.mjs'));assert.ok(!allowed(HELPER+'surprise.mjs'));assert.ok(!allowed('README.md'));
+  console.log('transport self-test: 2 Git fixtures, Unicode/ASCII/budget/ordering/scope checks PASS; no repository writes');
+}
+
+function main(){
+  if(process.argv[2]==='--self-test'){selfTest();return;}
+  const [mode,repoArg,commitArg,outputArg,approvalArg]=process.argv.slice(2);
+  if(!['--preflight','--export'].includes(mode)||!repoArg)throw Error('Usage: --preflight REPO | --export REPO COMMIT NEW_OUTPUT APPROVAL_JSON');
+  const repo=resolve(repoArg),git=(...args)=>execFileSync('git',['-C',repo,...args],{maxBuffer:64*1024*1024});
+  const string=(...args)=>git(...args).toString('utf8').trim();
+  assert.equal(string('rev-parse',BASE+'^{tree}'),BASE_TREE);
+  const manifestBytes=readFileSync(join(repo,MANIFEST));assert.equal(sha(manifestBytes),MANIFEST_SHA);
+  const manifest=JSON.parse(manifestBytes);
+  assert.equal(manifest.files.length,321);
+  const payload=sha(Buffer.from(manifest.files.map(r=>`${r.path}\0${r.sha256}\0${r.bytes}\n`).join('')));
+  assert.equal(payload,manifest.payloadSha256);
+  for(const r of manifest.files){const bytes=readFileSync(join(repo,r.path));assert.equal(bytes.length,r.bytes,r.path);assert.equal(sha(bytes),r.sha256,r.path);}
+  if(mode==='--preflight'){
+    console.log(asciiJson({phase:'HOLD/preflight-only',head:string('rev-parse','HEAD'),base:BASE,baseTree:BASE_TREE,frozenManifestSha256:MANIFEST_SHA,manifestFiles:321,payloadSha256:payload,status:string('status','--short'),writes:0,sourceTests:0}));return;
+  }
+  if(!commitArg||!outputArg||!approvalArg)throw Error('Explicit actual commit/output/root approval required');
+  const approval=JSON.parse(readFileSync(approvalArg));
+  assert.equal(approval.job_id,'E900');assert.equal(approval.root_go,true);assert.equal(approval.reviewDecision,'accepted');assert.match(approval.acceptedReviewSha256,/^[a-f0-9]{64}$/);
+  const review=readFileSync(approval.reviewPath);assert.equal(sha(review),approval.acceptedReviewSha256);assert.equal(JSON.parse(review).decision,'accepted');
+  const commit=string('rev-parse',commitArg+'^{commit}');assert.notEqual(commit,BASE);assert.equal(commit,approval.localCommit);
+  assert.equal(string('rev-parse',commit+'^'),BASE);assert.equal(string('rev-list','--parents','-n','1',commit).split(' ').length,2);
+  assert.equal(string('rev-parse','HEAD'),commit);assert.equal(string('status','--porcelain'),'');
+  const tree=string('rev-parse',commit+'^{tree}');
+  const changes=git('diff-tree','--no-commit-id','--name-status','-r','-z',BASE,commit).toString('utf8').split('\0');changes.pop();
+  const paths=[];
+  for(let i=0;i<changes.length;i+=2){assert.equal(changes[i],'A');assert.ok(allowed(changes[i+1]),changes[i+1]);paths.push(changes[i+1]);}
+  assert.ok(paths.length>0);
+  const priorPath=join(repo,CYCLE,'administration/prior-tracked.json');
+  // The retained ledger is resolved explicitly in approval because archival mapping may relocate it.
+  const prior=JSON.parse(readFileSync(approval.priorLedgerPath??priorPath));
+  const priorFiles=Array.isArray(prior)?prior:prior.files;assert.equal(priorFiles.length,1646);
+  for(const r of priorFiles){const b=git('show',`${commit}:${r.path}`);assert.equal(sha(b),r.sha256,r.path);assert.equal(b.length,r.bytes,r.path);}
+  assert.equal(sha(git('show',`${commit}:${MANIFEST}`)),MANIFEST_SHA);
+  for(const r of manifest.files){const b=git('show',`${commit}:${r.path}`);assert.equal(sha(b),r.sha256,r.path);assert.equal(b.length,r.bytes,r.path);}
+  const out=resolve(outputArg);assert.ok(!out.startsWith(repo+'/')&&out!==repo,'Output must be outside repository');assert.ok(!existsSync(out),'Refuse overwrite');
+  mkdirSync(out,{recursive:true});
+  const put=(p,b)=>{const dest=join(out,p);mkdirSync(dirname(dest),{recursive:true});writeFileSync(dest,b,{flag:'wx'});};
+  const entries=[];
+  for(const [i,path] of paths.entries()){
+    const fields=string('ls-tree',commit,'--',path).split(/\s+/);const [fileMode,type,oid]=fields;assert.equal(type,'blob');assert.equal(fileMode,'100644');
+    const b=git('cat-file','blob',oid);assert.equal(blobSha(b),oid);
+    const entry={path,mode:fileMode,gitBlobSha:oid,bytes:b.length,sha256:sha(b)};
+    let content;try{content=new TextDecoder('utf-8',{fatal:true}).decode(b);if(content.includes('\0')||!Buffer.from(content).equals(b))content=undefined;}catch{}
+    if(content!==undefined){
+      const chunks=textChunks(content);entry.encoding='utf8';entry.fragments=[];
+      for(const [j,c]of chunks.entries()){
+        const file=`text/${String(i).padStart(4,'0')}-${String(j).padStart(4,'0')}.json`;
+        const raw=asciiJson({path,mode:fileMode,gitBlobSha:oid,chunkIndex:j,chunkCount:chunks.length,content:c});assert.ok(raw.length<=90000);put(file,raw);entry.fragments.push(file);
+      }
+      const rebuilt=Buffer.from(entry.fragments.map(f=>JSON.parse(readFileSync(join(out,f))).content).join(''));assert.ok(rebuilt.equals(b));assert.equal(blobSha(rebuilt),oid);
+    }else{
+      const file=`binary/${oid}.bin`;if(!existsSync(join(out,file)))put(file,b);
+      entry.encoding='binary';entry.localPath=join(out,file);entry.base64Transport={rawChunkBytes:45000,maxBase64Characters:60000,chunks:Math.ceil(b.length/45000),recipe:'Read raw byte ranges at index*45000; base64 each range independently. Concatenate decoded bytes, not base64 strings.'};
+      const rebuilt=readFileSync(entry.localPath);assert.ok(rebuilt.equals(b));assert.equal(blobSha(rebuilt),oid);
+    }
+    entries.push(entry);
+  }
+  const indexPages=[];
+  for(const [i,items]of pages(entries).entries()){const p=`index-${String(i).padStart(3,'0')}.json`;const raw=asciiJson(items);put(p,raw);indexPages.push({path:p,sha256:sha(raw),bytes:Buffer.byteLength(raw),entries:items.length});}
+  let remoteBaseAvailable=true;try{assert.equal(string('rev-parse',REMOTE_BASE+'^{tree}'),BASE_TREE);}catch{remoteBaseAvailable=false;}
+  const index={schema:'cycle04-git-transport@1',job_id:'E900',localCommit:commit,localParent:BASE,localTree:tree,expectedRemoteParent:REMOTE_BASE,expectedRemoteBaseTree:BASE_TREE,expectedRemoteFinalTree:tree,remoteBaseObjectAvailable:remoteBaseAvailable,baseCorrespondence:'Root verified identical base tree; no commit-metadata reconstruction/fetch/reset/force.',frozenManifest:{path:MANIFEST,sha256:MANIFEST_SHA,files:321,payloadSha256:payload},review:{sha256:approval.acceptedReviewSha256,decision:'accepted'},changedPaths:paths,indexPages,blobCount:entries.length,allReassembledGitBlobsVerified:true,publicationOwner:'root connected GitHub only; no PR/main/deploy/default-ON',noCVExecuted:true};
+  const encoded=asciiJson(index);assert.ok(encoded.length<=100000,'Top index oversized; stop rather than truncate');put('payload-index.json',encoded);
+  console.log(asciiJson({index:join(out,'payload-index.json'),sha256:sha(encoded),localCommit:commit,tree,changedPaths:paths.length,indexPages:indexPages.length,verifiedBlobs:entries.length}));
+}
+if(process.argv[1]&&resolve(process.argv[1])===resolve(new URL(import.meta.url).pathname))main();

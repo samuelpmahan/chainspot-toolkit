@@ -1,0 +1,121 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { groupWindowEvidence } from './group.mjs';
+
+// Hand-authored receipt-shaped API fixtures only: no fitter, adapter or image use.
+const sha = bytes => createHash('sha256').update(bytes).digest('hex');
+const nonfinite = {numberKind:'nonfinite',value:'-Infinity'};
+const groups = () => [{id:'declared',longStationId:'long',orderedShortStationIds:['short-b','short-a']}];
+function station(id) {
+  return {id,frame:'crop',pose:{xPx:100,yPx:100,headingRad:id==='short-b'?.31:0},window:{t0Px:0,t1Px:8},
+    profile:{offsetsPx:Array.from({length:241},(_,i)=>-30+i*.25),meanLum:Array(241).fill(100),visibleStationCounts:Array(241).fill(8),stationCount:8},
+    candidates:[30,24].map(widthArgPx=>({widthArgPx,observation:{score:null,leftRail:null,rightRail:null},pairedRails:{status:'UNKNOWN'},edgeFit:null,midpoint:{status:'UNKNOWN'}}))};
+}
+function executed({emptyBank=false}={}) {
+  const stations=['long','short-a','short-b','ungrouped'].map(station);
+  if(emptyBank) for(const s of stations)s.candidates=[];
+  const operations=['lumOf','estimateFourLaneCorridorWidth','assessLocalWidth',...stations.flatMap(s=>['profileAt',...s.candidates.flatMap(()=>['observeFourLaneCrossSection','assessPairedRails','edgePairOf (shared profile; exact requested width)'])])];
+  const branch={schema:'local-ribbon-composition@1',status:'UNKNOWN',promoted:false,operationsExecuted:operations,rawWidthEstimate:{widthPx:emptyBank?40:30,scores:[{meanScore:nonfinite}]},localWidth:{status:'UNKNOWN',widthPx:null},semanticIdentity:{status:'UNKNOWN'},stations};
+  const source=structuredClone(branch);for(const s of source.stations){s.frame='original';s.pose.xPx+=60;s.pose.yPx+=60;}
+  return {schema:'source-pixel-roi@1',status:'UNKNOWN',promoted:false,operationsExecuted:[...operations,...operations],execution:{compositionCalls:2,order:['crop','original-source-frame'],cropOperationCount:operations.length,sourceOperationCount:operations.length},composition:branch,sourceComposition:source,equivalence:{status:'UNKNOWN',absoluteTolerance:1e-9,differences:[{path:'retained-seam',crop:0,source:.8,absoluteDifference:.8}]},localWidth:{status:'UNKNOWN',widthPx:null},semanticIdentity:{status:'UNKNOWN'}};
+}
+function refusal(status='UNKNOWN') {return {schema:'source-pixel-roi@1',status,promoted:false,reason:status==='DISABLED'?'explicit enabled:true required':'complete required sampling support absent in declared ROI',operationsExecuted:[],support:{failures:[{label:'training'}]}};}
+function input(receipt=executed(),override={}) {
+  const receiptBytes=Buffer.from(JSON.stringify(receipt));
+  return {enabled:true,expectedReceiptSha256:sha(receiptBytes),receiptBytes,groups:groups(),...override};
+}
+function invalid(i,reason) {
+  const out=groupWindowEvidence(i);
+  assert.equal(out.status,'UNKNOWN');assert.equal(out.executionState,'UNCLASSIFIED_INVALID_INPUT');assert.equal(out.projection,null);assert.match(out.reason,reason);return out;
+}
+
+test('default OFF does not inspect bad receipt input',()=>{
+  for(const i of [undefined,null,{}, {enabled:false,receiptBytes:null}]) {
+    const out=groupWindowEvidence(i);assert.equal(out.status,'DISABLED');assert.equal(out.executionState,'NOT_INSPECTED');assert.equal(out.projection,null);
+  }
+});
+test('executed UNKNOWN preserves complete raw branches and explicit short order',()=>{
+  const i=input(),before=Buffer.from(i.receiptBytes),out=groupWindowEvidence(i);
+  assert.equal(out.status,'PROJECTED_EVIDENCE_ONLY');assert.equal(out.executionState,'EXECUTED');assert.equal(out.CVCalls,0);assert.equal(out.promoted,false);
+  assert.deepEqual(out.receipt,JSON.parse(i.receiptBytes));assert.deepEqual(out.receiptBytes,before);assert.deepEqual(i.receiptBytes,before);
+  assert.equal(out.binding.computedReceiptSha256,i.expectedReceiptSha256);
+  const g=out.projection[0];assert.equal(g.id,'declared');
+  assert.strictEqual(g.crop.long,out.receipt.composition.stations[0]);assert.strictEqual(g.originalSource.long,out.receipt.sourceComposition.stations[0]);
+  assert.deepEqual(g.crop.orderedShort.map(s=>s.id),['short-b','short-a']);assert.deepEqual(g.originalSource.orderedShort.map(s=>s.id),['short-b','short-a']);
+  assert.deepEqual(g.crop.long.candidates.map(c=>c.widthArgPx),[30,24]);assert.equal(g.crop.long.candidates[0].edgeFit,null);
+  assert.deepEqual(out.receipt.composition.rawWidthEstimate.scores[0].meanScore,nonfinite);
+  assert.equal(out.receipt.composition.stations[3].id,'ungrouped');assert.deepEqual(out.receipt.equivalence,JSON.parse(i.receiptBytes).equivalence);
+  assert.equal(g.crop.orderedShort[0].pose.headingRad,.31);assert.equal('metrics' in g,false);
+});
+test('executed empty-bank UNKNOWN retains profiles and zero candidates',()=>{
+  const out=groupWindowEvidence(input(executed({emptyBank:true})));
+  assert.equal(out.executionState,'EXECUTED');assert.equal(out.projection[0].crop.long.profile.stationCount,8);assert.deepEqual(out.projection[0].crop.long.candidates,[]);
+});
+test('branchless UNKNOWN and DISABLED refusals do not invent measurement rows',()=>{
+  for(const status of ['UNKNOWN','DISABLED']) {
+    const i=input(refusal(status)),out=groupWindowEvidence(i);
+    assert.equal(out.status,'PROJECTED_EVIDENCE_ONLY');assert.equal(out.executionState,'NOT_EXECUTED');assert.deepEqual(out.receipt,JSON.parse(i.receiptBytes));
+    assert.equal(out.projection[0].measurementRows,null);assert.equal(out.projection[0].stationIdsVerified,false);assert.deepEqual(out.projection[0].declaration,i.groups[0]);
+  }
+});
+test('digest mismatch is integrity evidence not scientific negative or refusal',()=>{
+  const i=input();i.receiptBytes[0]=32;const out=invalid(i,/hash mismatch/);assert.equal(out.errorClass,'INTEGRITY_MISMATCH');assert.deepEqual(out.receiptBytes,i.receiptBytes);
+});
+test('exact bytes rather than reconstructed JSON define the digest',()=>{
+  const i=input();i.receiptBytes=Buffer.from(` ${i.receiptBytes.toString()}\n`);invalid(i,/hash mismatch/);
+  i.expectedReceiptSha256=sha(i.receiptBytes);assert.equal(groupWindowEvidence(i).executionState,'EXECUTED');
+});
+test('invalid UTF-8 and invalid JSON are explicit invalid-input evidence',()=>{
+  for(const receiptBytes of [Uint8Array.of(255),Buffer.from('{')])invalid(input(undefined,{receiptBytes,expectedReceiptSha256:sha(receiptBytes)}),/UTF-8|JSON/);
+});
+test('unsupported helper fields including descriptor follow one invalid-input policy',()=>{
+  invalid(input(undefined,{descriptor:{headingRad:Infinity}}),/unsupported/);
+  invalid({enabled:true},/hash|receiptBytes/);invalid(input(undefined,{expectedReceiptSha256:'BAD'}),/hash/);invalid(input(undefined,{receiptBytes:[1,2]}),/receiptBytes/);
+});
+test('contradictory execution branches counts statuses and operations are rejected',()=>{
+  const mutations=[
+    r=>delete r.sourceComposition,r=>delete r.execution,r=>r.execution.compositionCalls=0,r=>r.execution.order.reverse(),
+    r=>r.execution.cropOperationCount++,r=>r.operationsExecuted.pop(),r=>r.status='DISABLED',r=>r.sourceComposition.status='DISABLED',
+    r=>r.sourceComposition.stations.reverse(),r=>r.sourceComposition.stations[0].candidates.reverse(),r=>delete r.equivalence
+  ];
+  for(const mutate of mutations){const r=executed();mutate(r);invalid(input(r),/execution|branch|status|operation|station|width|equivalence/);}
+  const r=refusal();r.execution={compositionCalls:0};invalid(input(r),/execution/);
+  const s=refusal();s.operationsExecuted=['profileAt'];invalid(input(s),/operation|execution/);
+});
+test('missing and duplicate IDs never produce partial validated projections',()=>{
+  const mutations=[i=>i.groups[0].orderedShortStationIds.push('absent'),i=>i.groups[0].orderedShortStationIds.push('short-a'),i=>i.groups[0].orderedShortStationIds.push('long'),i=>i.groups.push(structuredClone(i.groups[0])),i=>i.groups[0].extra=true,i=>i.groups[0].orderedShortStationIds=[]];
+  for(const mutate of mutations){const i=input();mutate(i);invalid(i,/group|station/);}
+  const r=executed();r.composition.stations[1].id='long';invalid(input(r),/station/);
+});
+test('valid cross-group reuse remains explicit and does not drop ungrouped stations',()=>{
+  const i=input();i.groups.push({id:'reuse',longStationId:'long',orderedShortStationIds:['short-a']});
+  const out=groupWindowEvidence(i);assert.equal(out.executionState,'EXECUTED');assert.strictEqual(out.projection[0].crop.long,out.projection[1].crop.long);assert.equal(out.receipt.composition.stations.length,4);
+});
+test('finite different headings remain raw while malformed linkage geometry is invalid',()=>{
+  for(const change of [r=>r.composition.stations[0].pose.headingRad=nonfinite,r=>r.composition.stations[0].window.t1Px=0,r=>r.composition.stations[0].candidates[0].widthArgPx=0]) {const r=executed();change(r);invalid(input(r),/geometry|window|width/);}
+  assert.equal(groupWindowEvidence(input()).projection[0].crop.orderedShort[0].pose.headingRad,.31);
+});
+test('raw null finite-fit and nonfinite diagnostics remain untouched on serialization',()=>{
+  const r=executed();r.status=r.composition.status='OBSERVED_CHANNELS';r.composition.stations[0].candidates[0].edgeFit={lPx:-15,rPx:15,cPx:0,wPx:30,score:7,gl:8,gr:7};
+  r.sourceComposition.stations[1].profile.meanLum[2]={numberKind:'nonfinite',value:'NaN'};
+  const i=input(r),out=groupWindowEvidence(i);assert.equal(out.executionState,'EXECUTED');assert.deepEqual(out.receipt,r);assert.deepEqual(JSON.parse(JSON.stringify(out)).receipt,r);
+});
+test('unsupported schemas or malformed raw station linkage are rejected consistently',()=>{
+  const mutations=[r=>r.schema='other',r=>r.composition.schema='other',r=>r.composition.stations[0].frame='',r=>r.composition.stations[0].profile=null,r=>r.composition.stations[0].candidates=null,r=>r.composition.operationsExecuted=null];
+  for(const change of mutations){const r=executed();change(r);invalid(input(r),/schema|station|profile|candidate|operation|branch/);}
+});
+
+for(const partial of [false,true]) test(`sparse ${partial?'partial-hole':'one-hole'} short ID list is invalid on actual E811 B refusal`,()=>{
+  const receiptBytes=readFileSync(new URL('./fixtures/E811-B.json',import.meta.url));
+  assert.equal(sha(receiptBytes),'daa7e63665a4c658489483e712b3133547b1ba23a13c1529084d221766d91974');
+  const orderedShortStationIds=partial?['unverified-short']:[];orderedShortStationIds.length=partial?2:1;
+  invalid({enabled:true,receiptBytes,expectedReceiptSha256:sha(receiptBytes),groups:[{id:'sparse',longStationId:'long',orderedShortStationIds}]},/group/);
+});
+test('sparse short ID lists are invalid on disabled refusals and executed receipts',()=>{
+  for(const receipt of [refusal('DISABLED'),executed()]) for(const partial of [false,true]) {
+    const orderedShortStationIds=partial?['short-a']:[];orderedShortStationIds.length=partial?2:1;
+    invalid(input(receipt,{groups:[{id:'sparse',longStationId:'long',orderedShortStationIds}]}),/group/);
+  }
+});

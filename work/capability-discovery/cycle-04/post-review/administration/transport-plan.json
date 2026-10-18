@@ -1,0 +1,27 @@
+{
+  "job_id": "E900",
+  "worker": "P6",
+  "phase": "HOLD; scratch-only preparation",
+  "release": "Exact independently accepted V1/R899 review and explicit root GO required before package/source/index/refs mutations, staging, commit or final export.",
+  "frozenManifestSha256": "2641472c9a6da112688901534ea4e9582a5e2197dce84d56ef3be9b06f97ca02",
+  "postReleaseAdditions": [
+    "Separately labelled POST-REVIEW entrypoint and append-only additions manifest, preserving all 321 original payload entries and frozen package-manifest/checksums.",
+    "Exact R899 review, E899 result, native epochs 14/15 and current ADMIN state, each with identity and historical/current interpretation.",
+    "Explicit payloadSha256 declaration: SHA256 UTF8 concatenation in stored manifest.files order of path + NUL + sha256 + NUL + decimal bytes + LF. Not JSON.stringify and not localeCompare sorting."
+  ],
+  "preCommitGuards": [
+    "All 1646 prior tracked bytes unchanged; d31b/5b59 and accepted four-file helper unchanged.",
+    "Changes are additions only inside four-file helper and cycle-04 package scope.",
+    "Verify frozen 321-entry manifest plus separate post-review additions without rerunning CV/source tests solely for export."
+  ],
+  "localParent": "532fd7406e5b939e6d4d83cf92d12e2267bab11c",
+  "canonicalRemoteParent": "921974042771a73c4c40a30f2dd7c6ba438a3730",
+  "verifiedCommonBaseTree": "c170f6d54e6a45dd3cf376af070d89ba579e3d5b",
+  "transport": {
+    "text": "Unicode-codepoint chunks, valid ASCII JSON, each <=90000 characters; paged index with path/mode/bytecount/SHA256/expected Git blob SHA1.",
+    "binary": "Stable scratch snapshot paths with exact bytecount/SHA256/Git blob SHA1 and 45000-byte raw ranges yielding <=60000-character independent base64 chunks.",
+    "verification": "Reassemble every actual committed Git blob; top index binds actual local commit/parent/tree and expected canonical remote parent/final tree.",
+    "publication": "Root alone creates connected API commit on canonical remote parent with exact same final tree; report local/remote commit identities separately. No reset/force/normalized commit reconstruction/PR/main/deploy."
+  },
+  "resultPolicy": "No E900 result until actual approved local commit and verified final export exist. Preparation does not release the reserved native job."
+}

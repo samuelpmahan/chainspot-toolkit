@@ -1,0 +1,26 @@
+{
+  "schema":"cycle04-E813-written-repair-checkpoint@1",
+  "job_id":"E813",
+  "worker":"P6",
+  "state":"HOLD_BEFORE_GREEN",
+  "reviewedFailureSha256":"4347c99925ff40c4c7250c306764efdec538085e77facacc1fd37df4c07ac3ae",
+  "cause":"Array.every skips sparse absent indices. A branchless refusal does not resolve station IDs, so one-hole/partial-hole short-ID declarations could be projected instead of rejected.",
+  "actualDiff":"Only production change is labels(a): require Array, then iterate every integer index and reject unless Object.hasOwn(a,i) and named(a[i]); return true after all slots pass. Existing call sites, byte hashing, receipt parsing/classification, raw branch/order/reference retention and invalid-input envelope are unchanged.",
+  "entryPoint":"groupWindowEvidence with the same four admitted fields",
+  "flow":[
+    "Default-OFF, exact byte-hash validation and fatal UTF8/JSON parsing unchanged.",
+    "Group validation now reaches every declared short-ID index, including missing slots; a hole immediately returns existing UNKNOWN/UNCLASSIFIED_INVALID_INPUT/projection:null envelope.",
+    "All dense valid declarations continue through identical execution/branch checks and raw grouping paths. The same dense-label predicate also checks parsed operation labels, without changing any genuine dense receipt.",
+    "No CV, I/O, coordinate/scoring machinery, metrics, runner, parameter changes or physical claims added."
+  ],
+  "testsWritten":"Original14 tests plus separate one-hole and partial-hole regressions on exact E811 B bytes, and a regression covering disabled-refusal/executed shapes. The exact E811 B receipt is retained as a1317-byte fixture, not a new CV call. README now labels the exposed actual fixture and own-index requirement.",
+  "actuallyExecuted":"One original pre-repair TAP run:17 tests,14pass/3assertionfail,exit1. Both actual E811 B constructions separately failed the expected UNKNOWN assertion. Raw stdout and original regression source retained before correction. No post-repair invocation/green run yet.",
+  "history":"Original E812 group/tests/README/source-freeze and exact R812 AMEND copied to history scratch before edit; original reviewer counterexample remains untouched at its exact reference. E812 artifacts are not rewritten.",
+  "invocationTable":[
+    {"function":"labels","actualArguments":"explicit orderedShortStationIds or parsed operation-label array","output":"true only for dense own named slots; otherwise false"},
+    {"function":"groupProblem","actualArguments":"same caller groups","output":"existing malformed-group reason on false labels"},
+    {"function":"invalid","actualArguments":"same explicit reason","output":"unchanged UNKNOWN envelope with projection:null and raw-byte binding reference"}
+  ],
+  "inspection":"Pure returned raw objects only; no renderer or automatic storage. Root may inspect source diff and retained red log.",
+  "reviewRequested":"Root review exact diff/flow/source hashes and send GO before post-repair focused/Lab/stager validation. No commit, publication or packaging."
+}

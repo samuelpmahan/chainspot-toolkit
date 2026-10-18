@@ -1,0 +1,143 @@
+{
+  "job_id": "E809",
+  "scope": "Pure reporting-guard snippet extracted from frozen caller; no adapter/recipe/CV imports or execution",
+  "checks": [
+    {
+      "name": "zero-call",
+      "status": "PASS",
+      "anchor": {
+        "observationStatus": "UNKNOWN_UNOBSERVED_OR_MISSING",
+        "requiredRows": 18,
+        "observedRows": 0,
+        "primaryShortFinite": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "primaryShortStatuses": [
+          "NOT_EXECUTED",
+          "NOT_EXECUTED",
+          "NOT_EXECUTED",
+          "NOT_EXECUTED",
+          "NOT_EXECUTED"
+        ],
+        "primaryLongFinite": null,
+        "primaryAll5AndLongPrediction": "UNKNOWN_UNOBSERVED_OR_MISSING",
+        "longAverageAsThroughout": "UNKNOWN_UNOBSERVED_OR_MISSING",
+        "brightShortFinite": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "brightNotAll5Prediction": "UNKNOWN_UNOBSERVED_OR_MISSING"
+      }
+    },
+    {
+      "name": "missing-one",
+      "status": "PASS",
+      "anchor": {
+        "observationStatus": "UNKNOWN_UNOBSERVED_OR_MISSING",
+        "requiredRows": 18,
+        "observedRows": 17,
+        "primaryShortFinite": [
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        "primaryShortStatuses": [
+          "MISSING_CANDIDATE",
+          "FINITE_POSITIVE_PAIR",
+          "FINITE_POSITIVE_PAIR",
+          "FINITE_POSITIVE_PAIR",
+          "FINITE_POSITIVE_PAIR"
+        ],
+        "primaryLongFinite": true,
+        "primaryAll5AndLongPrediction": "UNKNOWN_UNOBSERVED_OR_MISSING",
+        "longAverageAsThroughout": "UNKNOWN_UNOBSERVED_OR_MISSING",
+        "brightShortFinite": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "brightNotAll5Prediction": "UNKNOWN_UNOBSERVED_OR_MISSING"
+      }
+    },
+    {
+      "name": "actual-null-with-long-fit",
+      "status": "PASS",
+      "anchor": {
+        "observationStatus": "ALL_DECLARED_ANCHOR_ROWS_OBSERVED",
+        "requiredRows": 18,
+        "observedRows": 18,
+        "primaryShortFinite": [
+          false,
+          true,
+          true,
+          true,
+          true
+        ],
+        "primaryShortStatuses": [
+          "NULL_FIT",
+          "FINITE_POSITIVE_PAIR",
+          "FINITE_POSITIVE_PAIR",
+          "FINITE_POSITIVE_PAIR",
+          "FINITE_POSITIVE_PAIR"
+        ],
+        "primaryLongFinite": true,
+        "primaryAll5AndLongPrediction": "FALSIFIED_BY_NULL_OR_NONPOSITIVE_FIT",
+        "longAverageAsThroughout": "FALSIFIED_BY_ACTUAL_SHORT_NULL",
+        "brightShortFinite": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "brightNotAll5Prediction": "FALSIFIED"
+      }
+    },
+    {
+      "name": "all-observed-finite",
+      "status": "PASS",
+      "anchor": {
+        "observationStatus": "ALL_DECLARED_ANCHOR_ROWS_OBSERVED",
+        "requiredRows": 18,
+        "observedRows": 18,
+        "primaryShortFinite": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "primaryShortStatuses": [
+          "FINITE_POSITIVE_PAIR",
+          "FINITE_POSITIVE_PAIR",
+          "FINITE_POSITIVE_PAIR",
+          "FINITE_POSITIVE_PAIR",
+          "FINITE_POSITIVE_PAIR"
+        ],
+        "primaryLongFinite": true,
+        "primaryAll5AndLongPrediction": "NOT_FALSIFIED_AT_WINDOW_LEVEL",
+        "longAverageAsThroughout": "NO_LONG_WITH_ACTUAL_SHORT_NULL_COUNTEREXAMPLE_OBSERVED",
+        "brightShortFinite": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "brightNotAll5Prediction": "FALSIFIED"
+      }
+    }
+  ],
+  "cvCalls": 0
+}

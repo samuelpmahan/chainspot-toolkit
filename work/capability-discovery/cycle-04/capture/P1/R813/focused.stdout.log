@@ -1,0 +1,112 @@
+TAP version 13
+# Subtest: default OFF does not inspect bad receipt input
+ok 1 - default OFF does not inspect bad receipt input
+  ---
+  duration_ms: 2.070218
+  type: 'test'
+  ...
+# Subtest: executed UNKNOWN preserves complete raw branches and explicit short order
+ok 2 - executed UNKNOWN preserves complete raw branches and explicit short order
+  ---
+  duration_ms: 5.92921
+  type: 'test'
+  ...
+# Subtest: executed empty-bank UNKNOWN retains profiles and zero candidates
+ok 3 - executed empty-bank UNKNOWN retains profiles and zero candidates
+  ---
+  duration_ms: 1.09246
+  type: 'test'
+  ...
+# Subtest: branchless UNKNOWN and DISABLED refusals do not invent measurement rows
+ok 4 - branchless UNKNOWN and DISABLED refusals do not invent measurement rows
+  ---
+  duration_ms: 0.415564
+  type: 'test'
+  ...
+# Subtest: digest mismatch is integrity evidence not scientific negative or refusal
+ok 5 - digest mismatch is integrity evidence not scientific negative or refusal
+  ---
+  duration_ms: 0.963266
+  type: 'test'
+  ...
+# Subtest: exact bytes rather than reconstructed JSON define the digest
+ok 6 - exact bytes rather than reconstructed JSON define the digest
+  ---
+  duration_ms: 1.775987
+  type: 'test'
+  ...
+# Subtest: invalid UTF-8 and invalid JSON are explicit invalid-input evidence
+ok 7 - invalid UTF-8 and invalid JSON are explicit invalid-input evidence
+  ---
+  duration_ms: 1.057277
+  type: 'test'
+  ...
+# Subtest: unsupported helper fields including descriptor follow one invalid-input policy
+ok 8 - unsupported helper fields including descriptor follow one invalid-input policy
+  ---
+  duration_ms: 1.352971
+  type: 'test'
+  ...
+# Subtest: contradictory execution branches counts statuses and operations are rejected
+ok 9 - contradictory execution branches counts statuses and operations are rejected
+  ---
+  duration_ms: 8.955014
+  type: 'test'
+  ...
+# Subtest: missing and duplicate IDs never produce partial validated projections
+ok 10 - missing and duplicate IDs never produce partial validated projections
+  ---
+  duration_ms: 6.233112
+  type: 'test'
+  ...
+# Subtest: valid cross-group reuse remains explicit and does not drop ungrouped stations
+ok 11 - valid cross-group reuse remains explicit and does not drop ungrouped stations
+  ---
+  duration_ms: 1.102558
+  type: 'test'
+  ...
+# Subtest: finite different headings remain raw while malformed linkage geometry is invalid
+ok 12 - finite different headings remain raw while malformed linkage geometry is invalid
+  ---
+  duration_ms: 3.47856
+  type: 'test'
+  ...
+# Subtest: raw null finite-fit and nonfinite diagnostics remain untouched on serialization
+ok 13 - raw null finite-fit and nonfinite diagnostics remain untouched on serialization
+  ---
+  duration_ms: 4.584573
+  type: 'test'
+  ...
+# Subtest: unsupported schemas or malformed raw station linkage are rejected consistently
+ok 14 - unsupported schemas or malformed raw station linkage are rejected consistently
+  ---
+  duration_ms: 4.472094
+  type: 'test'
+  ...
+# Subtest: sparse one-hole short ID list is invalid on actual E811 B refusal
+ok 15 - sparse one-hole short ID list is invalid on actual E811 B refusal
+  ---
+  duration_ms: 1.58928
+  type: 'test'
+  ...
+# Subtest: sparse partial-hole short ID list is invalid on actual E811 B refusal
+ok 16 - sparse partial-hole short ID list is invalid on actual E811 B refusal
+  ---
+  duration_ms: 0.27213
+  type: 'test'
+  ...
+# Subtest: sparse short ID lists are invalid on disabled refusals and executed receipts
+ok 17 - sparse short ID lists are invalid on disabled refusals and executed receipts
+  ---
+  duration_ms: 2.309923
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 180.040905

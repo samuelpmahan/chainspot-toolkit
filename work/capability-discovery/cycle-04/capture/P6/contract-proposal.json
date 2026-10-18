@@ -1,0 +1,88 @@
+{
+  "schema": "receipt-window-evidence-contract-proposal@1",
+  "job_id": "E806",
+  "worker": "P6",
+  "state": "PROPOSED_NOT_IMPLEMENTED",
+  "recommendedAction": "Use accepted existing operation directly; implement this optional projection only if root admits a concrete reusable bookkeeping gap.",
+  "proposedOperation": "projectWindowEvidence",
+  "classification": "receipt algebra / evidence presentation; not a CV detector, new stage, calibrated classifier or scientific acceptance rule",
+  "dependencies": {
+    "measurementReceiptSchema": "source-pixel-roi@1",
+    "acceptedSourcePixelManifestSha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "acceptedCompositionManifestSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+    "newRuntimeDependencies": [],
+    "CVImportsOrCalls": [],
+    "externalReads": [],
+    "externalWrites": []
+  },
+  "input": {
+    "enabled": "exact true required; otherwise DISABLED, no projection and no CV",
+    "binding": {
+      "requestSha256": "64 lowercase hex; exact serialized full caller request bytes retained externally, including exact source object; not a canonical-JSON substitute",
+      "requestDescriptorSha256": "64 lowercase hex; exact descriptor bytes supplied to projection, excluding bulk pixels but including original-frame geometry, ROI, settings and source identities",
+      "receiptSha256": "64 lowercase hex; hash of exact serialized receipt bytes supplied to projection",
+      "sourcePngSha256": "original encoded PNG SHA256; stager testimony at JS adapter boundary",
+      "fullRgbaSha256": "exact decoded original RGBA hash",
+      "cropRgbaSha256": "exact adapter crop hash when PREPARED/supported; absent on whole-request abstention",
+      "protocolSha256": "exact pre-run caller protocol digest retained externally; a digest is identity evidence, not proof of freeze time or human geometry truth"
+    },
+    "requestDescriptor": "exact accepted adapter ROI/geometry/provenance/dimensions with source image.data omitted and omission explicit; preserve all original station IDs, frames, poses, t0/t1, training, boxes, local width bank, edge settings",
+    "receiptBytes": "UTF-8 JSON serialized with accepted preserveNonFinite; parse after byte hash matches; preserve complete original bytes separately; do not regenerate a receipt from a table",
+    "descriptorBytes": "exact UTF-8 descriptor JSON; parse after byte hash matches",
+    "groups": [
+      {
+        "id": "unique nonempty caller-declared comparison ID",
+        "longStationId": "exact one station ID in request/each executed branch",
+        "orderedShortStationIds": "nonempty unique ordered array of existing IDs; no automatic generation, sorting or selection",
+        "role": "caller testimony, e.g. primary/offset/bright; role is not semantic truth"
+      }
+    ]
+  },
+  "validation": [
+    "Strict allowlisted plain-object schema for proposal fields; reject missing, unknown or nonfinite required descriptor geometry before projection. Null top level returns UNKNOWN rather than throwing accidentally.",
+    "Verify receiptBytes and descriptorBytes against declared exact-byte hashes; disagreement is explicit integrity error. Retain binding/provenance disagreement instead of relabeling a branch.",
+    "Verify accepted manifest IDs and adapter recipe closure receipt, declared source/ROI/frame bindings and row ID/width correspondence. This does not independently verify source bytes unavailable to the helper; label external request/source binding testimony accordingly.",
+    "No synthetic successful row for a whole-request UNKNOWN/DISABLED receipt. Preserve support failures and exact zero execution; output row statuses NOT_EXECUTED with null raw references and no deltas.",
+    "For executed branches, every declared row must exist exactly once at each explicit width and all receipt stations must be accounted for, including any not in a comparison group in an ungrouped list.",
+    "Geometry associated by exact station IDs and original descriptor, not translated crop coordinates. Crop/source branch remains explicit. Unknown group IDs, duplicate IDs, cross-group reuse or unsupported receipt schemas return UNKNOWN with reasons; do not silently drop them.",
+    "No automatic parameter changes, ROI enlargement, width search, score ranking, fit-based association, crop/source reconciliation or fitting to expected control behavior."
+  ],
+  "output": {
+    "schema": "receipt-window-evidence@1 (proposed)",
+    "status": "DISABLED | UNKNOWN | PROJECTED_EVIDENCE_ONLY; no success/path/continuity/acceptance status",
+    "promoted": false,
+    "operationsExecuted": [],
+    "CVCalls": 0,
+    "bindings": "all verified exact-byte IDs and explicit unverified testimony retained",
+    "measurementReceipt": "exact external receipt reference/digest plus unmodified parsed receipt retained or returned by reference; no raw evidence replacement",
+    "rows": "complete station x exact width x branch rows in caller declaration order, including original and crop pose/frame/window, raw learner reference, profile offsets/means/counts/nT, all observation/pairedRails fields, edgeFit object or null, midpoint object/UNKNOWN, source/crop equivalence reference",
+    "samplingDiagnostics": {
+      "need": "max(8,0.2*nT), copied source rule",
+      "offsetCount": "profile.offsetsPx.length (normally 241)",
+      "goodOffsetCount": "count of visibleStationCounts[j] >= need",
+      "goodOffsetFraction": "goodOffsetCount / offsetCount where available",
+      "legacyPreSearchGuard": "UNAVAILABLE if profile/counts missing; FAILS_SOURCE_GUARD if goodOffsetFraction < 0.6; PASSES_SOURCE_GUARD otherwise. This exposes an existing source condition, not a new score threshold.",
+      "nullInterpretation": "If fit is null and guard fails: insufficient visible profile evidence under legacy guard. If fit is null and guard passes: source search returned null, cause not further inferred. Never missing physical edge. Nonfinite profiles remain explicitly encoded."
+    },
+    "fixedAssociations": "For each branch/width/group, declare exactly consecutive short pairs (i,i+1), and every short versus its declared long. Pair membership never depends on receipt values; missing/nonpositive/nonfinite fits leave delta fields null with reasons, retaining both raw rows.",
+    "rawMetrics": {
+      "localWidths": "Both fit wPx plus rightMinusLeftFitWidthPx where both finite; do not compare to meters or call calibrated width.",
+      "commonNormalCoordinates": "Only for exactly equal original-frame headingRad and named frame: u=(cos(phi),sin(phi)), n=(-sin(phi),cos(phi)); originNormal=dot(stationOrigin-longOrigin,n); l/r/cCommon=originNormal + raw lPx/rPx/cPx. Use original descriptor geometry in both crop/source branches, because receipt fit offsets are translation-relative.",
+      "normalDeltas": "right minus left of lCommon, rCommon, cCommon for predeclared associations; raw wPx delta as above. Record scalar arithmetic, no equality/continuity score or tolerance verdict. Null/nonfinite input yields UNKNOWN/null delta, never zero.",
+      "windowCoordinates": "For equal heading, report declared start/end/midpoint projections along u relative to long origin and gap/overlap between consecutive intervals. Also report raw cross-normal origin offsets; never repair or recenter them.",
+      "differentHeadings": "retain all raw local fits but common-normal delta fields are UNKNOWN with exact reason; do not infer physical edge correspondence across heading changes.",
+      "sensorScope": "retain station-pose observations separately from window profile. Identical pose/width implies repeated Dev72 sample, not independent short-window sensor evidence.",
+      "cropSource": "retain original equivalence status, absoluteTolerance=1e-9 and every difference as emitted by accepted adapter; do not make a second equivalence rule."
+    },
+    "scientificState": {
+      "semanticIdentity": "UNKNOWN",
+      "samePhysicalEdges": "UNKNOWN",
+      "calibratedWidth": "UNKNOWN",
+      "courseAcceptance": "UNKNOWN",
+      "localWidth": "UNKNOWN",
+      "AAClaim": "none"
+    }
+  },
+  "nonGoals": ["No new CV mathematics", "No fitted weights", "No score or continuity cutoff", "No tracker, adaptive path or fitted reassociation", "No alpha/AA muting", "No production wiring/default-ON behavior", "No source overwrite or legacy guard change", "No invented native stage/address", "No scientific acceptance from engineering reproducibility"],
+  "nextGate": "Root may choose existing-operation-only immediately within already authorized ordinary reversible Lab scope, but P6 itself makes no measurements or repository edits until a separate implementation/execution packet. Any helper source must freeze before release of independently declared P2/P3 course protocols."
+}

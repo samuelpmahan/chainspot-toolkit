@@ -1,0 +1,180 @@
+{
+  "schema": "E807-four-case-execution@1",
+  "job_id": "E807",
+  "worker": "P4",
+  "startedAt": "2026-10-18T12:12:44.264Z",
+  "finishedAt": "2026-10-18T12:12:44.856Z",
+  "elapsedMs": 592.037391,
+  "nodeVersion": "v24.19.0",
+  "compositionCalls": 4,
+  "caseOrder": [
+    "intact",
+    "localized-upper-rail-loss",
+    "organic-capsule",
+    "crossing"
+  ],
+  "sourceFreeze": {
+    "/workspace/scratch/8528bb251845/discovery-cycle04/P5/fixtures.mjs": "506029a09fae4593b813ac89c75e9b0fb67c8949aaa16f448e73926b57e7d13b",
+    "/workspace/scratch/8528bb251845/discovery-cycle04/P5/synthetic-protocol.json": "e4f95e27e3de9e46aab3c642e9a732db28fdf572208f3c777f5cdbae8423cc6d",
+    "/workspace/scratch/8528bb251845/discovery-cycle04/P5/contract-freeze.json": "14927263b2d5c46b983bb4075566d8702d718614c78548a966d5a0dee2d07fc5",
+    "/workspace/scratch/8528bb251845/discovery-cycle04/P2/R804/result.json": "bbe0944f2a3cb37158474c54f25c568e34de36bf8bddc01d5df9095c422286c8"
+  },
+  "verifiedSourceHashes": {
+    "experiments/capability-discovery/composition/README.md": "be861f6e15fbaaf237d817ebda82dcab821e22dc13f3a0883e32b6785eda87bd",
+    "experiments/capability-discovery/composition/recipe.mjs": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6",
+    "experiments/capability-discovery/composition/training-fixtures.mjs": "e93de4087bf9c9f1e72d0655233b93591ed989e8e2a0b4682f5111d659592789",
+    "experiments/capability-discovery/source-pixels/README.md": "9018198980379c2dcaea71adf8685d3232df1d6d3e557ea50b311a71a851c93c",
+    "experiments/capability-discovery/source-pixels/adapter.mjs": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6",
+    "experiments/capability-discovery/source-pixels/test-fixtures.mjs": "79c98f283767acb1fd918d350bbfd25afde957146788eae6aa920f3f1b979893",
+    "experiments/capability-discovery/probes/width/recipe.mjs": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0",
+    "experiments/capability-discovery/probes/width/provenance.json": "0f3de094060d64f7614be6a8fa5023180e75070d33153976bdf318a734fdffaf",
+    "experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+    "experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+    "work/capability-discovery/cycle-02/feature-manifest-E308.json": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+    "work/capability-discovery/cycle-02/evidence/E302/probe.mjs": "3c34922ee6d35c85be035fc3ce9d484d9d0a9fc578062d07fcc376d091c2e14d",
+    "work/capability-discovery/cycle-02/evidence/E302/result.json": "d817712fe8447f052c8a04488b33134a90a5f426f5eec48f6f507a65775d5bee",
+    "work/capability-discovery/cycle-02/evidence/E303/result.json": "d605a71a31fb6d0bbd72a7b9c7f1738ab815a14f6695c186102af26289a0cc87",
+    "work/capability-discovery/cycle-02/evidence/E304/result.json": "f4a4ce6e3b424aed178e8bc9cf3563b9d05bbef4471846c725dce5a4e6f69bbd",
+    "work/capability-discovery/cycle-03/evidence/E506/contract.json": "87619e8b4b47bfc661a20454d44d729ff5521a9ab4dca5bb1074c2c234820fb7",
+    "work/capability-discovery/cycle-03/evidence/E506/contract-amendment.json": "5e524e276f5113b161e51f2c9b7af88aa66bd1dce988a0af84c89512299ae2be",
+    "work/capability-discovery/cycle-03/evidence/E510/result.json": "72d62cd54274aee4cb119b70af1458d6fa898b1293ac64f40f3d2a066b72839d",
+    "work/capability-discovery/cycle-03/evidence/E511/protocol.json": "c98d0965930d6d3af0af72f3037227e27bf86033d3fdec28fc815a7a33f0e2ab"
+  },
+  "cases": [
+    {
+      "id": "intact",
+      "request": {
+        "path": "intact/request.json",
+        "sha256": "2ca2455be8f18d88de8510924e18660245af471ffa780633f732ce65f36a079e",
+        "bytes": 5410135
+      },
+      "receipt": {
+        "path": "intact/raw-receipt.json",
+        "sha256": "7a059449f3d46e5b9b8cecc89f2095283284cde218c0e942f5763e59fed9df99",
+        "bytes": 202229
+      },
+      "binding": {
+        "path": "intact/binding.json",
+        "sha256": "40ea355edf0a05d22cd0fde69e1760f7a1bd8967030d97c9f3f27fdc5d5664e7",
+        "bytes": 128607
+      },
+      "retainedRows": 39,
+      "elapsedMs": 36.084743
+    },
+    {
+      "id": "localized-upper-rail-loss",
+      "request": {
+        "path": "localized-upper-rail-loss/request.json",
+        "sha256": "ed08e86706c7901ed7d8d33fab36a1869b5ae18a17117d1dde58bf7db696b1e5",
+        "bytes": 5410496
+      },
+      "receipt": {
+        "path": "localized-upper-rail-loss/raw-receipt.json",
+        "sha256": "ba6830a1d1f7ced96b3e52f867d6446b0c9332a3eeb426de34032da835aac3fc",
+        "bytes": 201727
+      },
+      "binding": {
+        "path": "localized-upper-rail-loss/binding.json",
+        "sha256": "248cd0fb12b040752a649b2112ddd8973835b249ee3bdafa3bb8f4914eee218b",
+        "bytes": 128987
+      },
+      "retainedRows": 39,
+      "elapsedMs": 35.46058
+    },
+    {
+      "id": "organic-capsule",
+      "request": {
+        "path": "organic-capsule/request.json",
+        "sha256": "a9aa95caced1788e2b2d5918f41fa810ac9ab5eb8b4519885bb6d3f067a6cb04",
+        "bytes": 5410306
+      },
+      "receipt": {
+        "path": "organic-capsule/raw-receipt.json",
+        "sha256": "61af0652af469fd91ce5879097de15cf94800ebca8ff725ffa755f8678a0451a",
+        "bytes": 202364
+      },
+      "binding": {
+        "path": "organic-capsule/binding.json",
+        "sha256": "cd2f7d2cc7d11c68d9b1a0c5eb3578a3a29686fc864c00004db7a865e7f0e9bd",
+        "bytes": 128789
+      },
+      "retainedRows": 39,
+      "elapsedMs": 25.208104
+    },
+    {
+      "id": "crossing",
+      "request": {
+        "path": "crossing/request.json",
+        "sha256": "e628efcb3220668b34206f6f951987a1cccff28718fe277e683ddab9808b8f10",
+        "bytes": 5410173
+      },
+      "receipt": {
+        "path": "crossing/raw-receipt.json",
+        "sha256": "e547236c8f847e5369006323bb76ee2c3b9a2d5366edadf53bbfdd93b76908db",
+        "bytes": 201519
+      },
+      "binding": {
+        "path": "crossing/binding.json",
+        "sha256": "4576f056a0c4c8c454fd7dad5b94c93e0de75ce80cacb550215b2bd50e556388",
+        "bytes": 128651
+      },
+      "retainedRows": 39,
+      "elapsedMs": 26.582824
+    }
+  ],
+  "comparison": {
+    "path": "prediction-comparison.json",
+    "sha256": "6077c7ab9252b955971860e5619a42399034bf2030efb7afdfbb1dc079b1eacf",
+    "bytes": 1427739
+  },
+  "tsv": {
+    "path": "all156-candidate-rows.tsv",
+    "sha256": "ca1956bcccc4464c29f90b79e1b3feeb1dea3158061ca9e1ad72512cd5fa2aa9",
+    "bytes": 60646
+  },
+  "producer": {
+    "path": "producer.mjs",
+    "sha256": "85a838f0817060a99767a33ad34a51c1b6e56edeeadd63dafbd0dd70f3b58834"
+  },
+  "resources": {
+    "memoryBytes": {
+      "rss": 218972160,
+      "heapTotal": 135237632,
+      "heapUsed": 78537288,
+      "external": 18297795,
+      "arrayBuffers": 7787113
+    },
+    "processResourceUsage": {
+      "userCPUTime": 659796,
+      "systemCPUTime": 106105,
+      "maxRSS": 224664,
+      "sharedMemorySize": 0,
+      "unsharedDataSize": 0,
+      "unsharedStackSize": 0,
+      "minorPageFault": 92832,
+      "majorPageFault": 0,
+      "swappedOut": 0,
+      "fsRead": 0,
+      "fsWrite": 47848,
+      "ipcSent": 0,
+      "ipcReceived": 0,
+      "signalsCount": 0,
+      "voluntaryContextSwitches": 460,
+      "involuntaryContextSwitches": 80
+    },
+    "resourceUnits": {
+      "maxRSS": "KiB; process-lifetime peak, not per-case allocation",
+      "userCPUTime": "microseconds",
+      "systemCPUTime": "microseconds"
+    }
+  },
+  "allLiteralPredictionsMatched": true,
+  "failedChecks": [],
+  "acceptance": "NOT SELF-ACCEPTED; independent review pending",
+  "boundaries": [
+    "No crop/source adapter invoked; exact synthetic original frames only",
+    "No pixel math, algorithm, source, default or route changes",
+    "No adaptive retry, score tuning, successful-subset replacement or null deletion",
+    "All calibrated widths, physical rail association, semantic identity and endpoints UNKNOWN"
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "schema":"cycle04-native-independent-review@1",
+  "job_id":"R802",
+  "worker":"P5",
+  "reviewedJob":"E802",
+  "decision":"accepted",
+  "reviewedAtUtc":"2026-10-18T11:58:01Z",
+  "summary":"Accepted as a frozen, source-bound premeasurement protocol for bounded ordered-window observations. Independently verified the exact Git PNG object, encoded/decoded hashes, original/crop frames, staged-request projection, fixed windows, conservative support, unchanged accepted source closures and moving-origin floating-coordinate differences. No CV operations, adapter preparation or source edits performed. Acceptance does not establish paired-edge continuity at every longitudinal position, path identity, width calibration, sample/output invariance or successful future measurement.",
+  "bindings":{
+    "reviewRoot":"/workspace/scratch/8528bb251845/discovery-cycle04/P2",
+    "protocolSha256":"ea85f4520b20996bd5aff3da699663a40fc8613081f4738457ece2e8926d8537",
+    "sourceIntegritySha256":"d31f1ce40b96c8c90705f81265b586862d42d2d558d9d24c42cd9629b571620c",
+    "premeasurementHashRecordSha256":"fe53fa5e729ed406e588f5ad6940db05404d6d0b3183fc6c800e9712a9e70a13",
+    "sampleLatticeSha256":"902abc550148744ca21343a269c27b83dad5b3ab38afc2ede09006d227fb42cc",
+    "geometricSupportSha256":"719a605d29fb642f07614c62a3978c6194528c90c1dc2ae0a0136dd888136de8",
+    "producerResultSha256":"2d545956c0df1d72472d7c36a1c597f290919941180facd91ec28a3655826c2d",
+    "sourceRef":"49255331791b1245cf0f9cd699816175f94e70f2",
+    "sourcePath":"specimens/dev/Lenard-1.png",
+    "sourceGitBlob":"28bb53c3f669f82fe3bd8ed57460fc5fcd875146",
+    "sourcePngSha256":"cb5403d21c32f451c02402aca4e2795d4ecfb9ddd7490fe714ca0c85c598dcba",
+    "fullRgbaSha256":"4fed88f3d298b544739a3bf532756d44413d292af0b4f34c627f04d152cbf45c",
+    "adapterFreezeSha256":"d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "recipeManifestSha256":"5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52"
+  },
+  "checks":[
+    {"id":"exact-source-object","status":"PASS","evidence":"Read-only git rev-parse exact ref:path resolves28bb53c3f669f82fe3bd8ed57460fc5fcd875146; git cat-file SHA256 matches supplied PNG; git hash-object of PNG returns that exact blob."},
+    {"id":"native-decode-and-crop","status":"PASS","evidence":"Independent Pillow12.3.0 decode: native8-bit colorType2 RGB,1290x2796, single frame, no RGB transparency metadata; appended alpha255 yields14427360 bytes and declared RGBA hash. Inspection800x800 RGB crop equals exact source pixels[300,1100)x[950,1750). No decode/resize/transform source rewrite."},
+    {"id":"direct-image-inspection","status":"PASS_WITH_TESTIMONY_LIMIT","evidence":"Viewed exact original PNG and exact inspection crop. Visually consistent with a proposed downward-left translucent strip and an irregular bright texture control. Training tee/badge labels are explicitly arbitrary API endpoints; strip/organic/endpoint identity remains impeachable visual testimony, not authenticated annotation or semantic truth."},
+    {"id":"freeze-binding","status":"PASS","evidence":"All11 producer artifact hashes and byte counts match. All premeasurement and protocol support/inspection/lattice references match. Protocol hash matches the assigned review target. Files alone do not authenticate historical non-execution; reviewed scripts contain staging/geometry only and this reviewer executed no CV."},
+    {"id":"unchanged-source-closure","status":"PASS","evidence":"Rehashed all23 entries across adapter candidate-freeze files and retained contract/history/evidence; rehashed accepted14-entry recipe/guard/vendor closure. No source mutation, relaxed tolerance or hidden new operation."},
+    {"id":"frames-and-request-schema","status":"PASS_AS_STAGING_DESCRIPTOR","evidence":"Original source, training, all18 stations, LOCAL bank and occluders share the named original frame. Integer640x490 ROI at400,1010 is in bounds and has a distinct crop frame. Geometry/ROI/station keys match accepted schemas. requestDescriptor uses sourceBinding rather than adapter source intentionally as staging metadata; future caller must construct exactly{enabled,source:stagedSource,roi,geometry}, check staged PNG and fullRGBA hashes, and must not pass descriptor verbatim."},
+    {"id":"fixed-bank-windows-and-sampler","status":"PASS","evidence":"18 unique stations,3 groups,5 consecutive16-sample shorts and one80-sample long per group; unchanged arange excludes t1. LOCAL[34,42,50], heading fromatan2(160,-20), explicit empty boxes, latLim12/tolWidth2. Short nT16 satisfies existing floor8 when visible; no guaranteed finite fit follows.54 candidate rows per composition,108 across mandatory source+crop compositions, not54 total observations."},
+    {"id":"conservative-support","status":"PASS_GEOMETRY_ONLY","evidence":"Independently recomputed all56 accepted-envelope bounds exactly. Sensor radius37.333333333333336px; profile extent30px. All strictly interior; minimum margin to strict crop safety boundary46.666666666666664px. No adapter preparation, sampling or CV invoked. Geometric support is not profile-boundary safety or a fit prediction."},
+    {"id":"moving-origin-lattice","status":"PASS_NO_INVARIANCE","evidence":"Recomputed all18 tangent-center arrays and all241 normals across80 positions per group using native Node coordinate order. All saved lattice records match. Each group's source short-vs-long maximum per-axis difference is2.2737367544323206e-13px; crop maxima are1.1368683772161603e-13px for primary/shift and2.2737367544323206e-13px for bright control. Source-vs-translated-crop maximum is2.2737367544323206e-13px. These nonzero differences cannot guarantee unchanged interpolation/strict peak selection. Five shorts mathematically partition the long interval, not a bitwise identical world lattice."},
+    {"id":"limits-and-falsifiers","status":"PASS_BOUNDED","evidence":"42 is preregistered comparison anchor, not learned truth. All3 width rows and nulls retained. Primary short null defeats all5 finite-pair expectation; all5 bright pairs defeat stated bounded specificity expectation. +6 signed midpoint residuals are reported without inventing cutoff or assuming edge association. Known50px/shift boundary risk retained. No tuning, widening, recentering, selecting successful rows, acceptance or independent-case claims."}
+  ],
+  "newCounterexamplesAndActionableIssues":[
+    {
+      "id":"within-short-window-information-loss",
+      "severity":"interpretation_guard_not_blocking",
+      "finding":"Even all5 finite short fits do not establish an uninterrupted rail pair at every longitudinal location: each16-sample short remains an average, so a still-shorter localized interruption can be diluted within it. This is a logical counterexample, not a CV measurement from E802.",
+      "action":"Report ordered window-level paired-edge observations only. Do not upgrade the protocol's shorthand continuity wording into per-position continuity, path classification or endpoint ownership."
+    },
+    {
+      "id":"descriptor-projection",
+      "severity":"producer_execution_guard_not_blocking",
+      "finding":"The frozen requestDescriptor is not directly the adapter input because sourceBinding is unsupported at the adapter top level.",
+      "action":"Stage the exact PNG and use stagedSource as source in a four-key accepted request; preserve frozen roi and geometry byte-for-value. Passing descriptor verbatim must remain UNKNOWN, not be repaired by CV/source changes."
+    },
+    {
+      "id":"raw-receipt-preservation",
+      "severity":"producer_reporting_guard_not_blocking",
+      "finding":"The paired execution has108 candidate records across source/crop, and hidden/failed diagnostics may include nonfinite raw learner scores.",
+      "action":"Retain both compositions and all108 candidate records, all profiles/counts/nulls; serialize with existing preserveNonFinite. Existing equivalence tolerance remains1e-9 and disagreements remain UNKNOWN. Tiny coordinate differences are never a reason to suppress raw disagreement."
+    }
+  ],
+  "blockingIssues":[],
+  "reviewerExecution":{
+    "cvImports":0,
+    "cvMeasurements":0,
+    "adapterPreparationCalls":0,
+    "compositionCalls":0,
+    "imageInspection":true,
+    "geometryAndHashChecks":true,
+    "P2FilesModified":false,
+    "repositoryModified":false,
+    "P6GeometryDisclosure":false,
+    "writesConfinedTo":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/R802/"
+  },
+  "nextAction":"Root may admit this exact protocol/source freeze for a separately authorized producer invocation. Review acceptance is not producer execution permission and does not alter source-owner disclosure boundaries."
+}

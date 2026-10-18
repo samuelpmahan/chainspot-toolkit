@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/freeze-result.py", line 23, in <module>
+    for name,expected in [('tests',14),('pass',1),('fail',13)]:assert re.findall(r'^# '+name+r' (\d+)$',red,re.M)[-1]==str(expected)
+                                                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^
+IndexError: list index out of range

@@ -1,0 +1,46 @@
+import {readFileSync,writeFileSync,readdirSync,statSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import assert from 'node:assert/strict';
+const base='/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809';
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const entry=path=>({path,sha256:sha(readFileSync(path)),bytes:statSync(path).size});
+const load=name=>JSON.parse(readFileSync(`${base}/${name}`));
+const write=(name,value)=>writeFileSync(`${base}/${name}`,JSON.stringify(value,null,2)+'\n',{flag:'wx'});
+const p=JSON.parse(readFileSync('/workspace/scratch/8528bb251845/discovery-cycle04/P2/protocol.json'));
+const request=load('request.json'),receipt=load('receipt.json'),rows=load('all-candidate-rows.json'),a=load('analysis.json'),before=load('identity-before.json'),after=load('identity-after.json'),binding=load('run-binding.json'),resources=load('resources.json');
+const checks=[];
+const check=(name,fn)=>{fn();checks.push({name,status:'PASS'});};
+check('frozen-protocol',()=>assert.equal(sha(readFileSync('/workspace/scratch/8528bb251845/discovery-cycle04/P2/protocol.json')),'ea85f4520b20996bd5aff3da699663a40fc8613081f4738457ece2e8926d8537'));
+check('exact-request-projection',()=>{assert.deepEqual(Object.keys(request),['enabled','source','roi','geometry']);assert.deepEqual(request.roi,p.requestDescriptor.roi);assert.deepEqual(request.geometry,p.requestDescriptor.geometry);assert.equal(request.enabled,true);});
+check('exact-source-png-fullrgba',()=>{assert.equal(sha(readFileSync(p.source.sourcePngPath)),p.source.pngSha256);assert.equal(sha(Uint8Array.from(request.source.image.data)),p.source.fullRgbaSha256);assert.equal(request.source.image.frame,p.source.originalFrame);});
+check('single-request-two-recipes',()=>{assert.equal(receipt.execution.compositionCalls,2);assert.deepEqual(receipt.execution.order,['crop','original-source-frame']);assert.equal(receipt.operationsExecuted.length,366);assert.equal(receipt.execution.cropOperationCount,183);assert.equal(receipt.execution.sourceOperationCount,183);});
+check('source-crop54rows-each-all-retained',()=>{
+ assert.equal(rows.length,108);
+ for(const [branch,key] of [['crop','composition'],['source','sourceComposition']]){
+  assert.equal(receipt[key].stations.length,18);
+  const branchRows=rows.filter(r=>r.branch===branch);assert.equal(branchRows.length,54);
+  assert.equal(branchRows.filter(r=>r.status==='FINITE_POSITIVE_PAIR').length,43);assert.equal(branchRows.filter(r=>r.status==='NULL_FIT').length,11);
+  assert.equal(branchRows.filter(r=>r.status==='NOT_EXECUTED'||r.status==='MISSING_CANDIDATE').length,0);
+  for(const station of receipt[key].stations){
+   assert.equal(station.profile.offsetsPx.length,241);assert.equal(station.profile.meanLum.length,241);assert.equal(station.profile.visibleStationCounts.length,241);
+   const n=station.id.endsWith('.long')?80:16;assert.equal(station.profile.stationCount,n);assert(station.profile.visibleStationCounts.every(x=>x===n));
+   for(const c of station.candidates){const saved=branchRows.find(r=>r.stationId===station.id&&r.widthArgPx===c.widthArgPx);assert.deepEqual(saved.edgeFit,c.edgeFit);assert.deepEqual(saved.observation,c.observation);assert.deepEqual(saved.pairedRails,c.pairedRails);assert.deepEqual(saved.midpoint,c.midpoint);}
+  }
+ }
+});
+check('raw-receipt-bounded-equivalence',()=>{assert.equal(receipt.equivalence.status,'MATCHED_DECLARED_CONTROL');assert.equal(receipt.equivalence.absoluteTolerance,1e-9);assert.deepEqual(receipt.equivalence.differences,[]);});
+check('guarded-anchor-observations',()=>{assert.equal(a.anchor42.observationStatus,'ALL_DECLARED_ANCHOR_ROWS_OBSERVED');assert.equal(a.anchor42.observedRows,18);assert(a.anchor42.primaryShortFinite.every(x=>x===true));assert.equal(a.anchor42.primaryLongFinite,true);assert(a.anchor42.brightShortFinite.every(x=>x===true));assert.equal(a.anchor42.brightNotAll5Prediction,'FALSIFIED');assert.equal(a.anchor42.shiftedResiduals[0].status,'UNKNOWN');assert.equal(a.anchor42.shiftedResiduals[3].residualPx,-8.282100436166711);});
+check('measurement-identities-before-after-unchanged',()=>{for(const key of ['protocol','review','png','blob','files','caller','renderer'])assert.deepEqual(before[key],after[key]);assert.equal(entry(`${base}/run-trial.mjs`).sha256,before.caller.sha256);assert.equal(entry(`${base}/render-receipt.py`).sha256,before.renderer.sha256);});
+check('preserved-own-E803-protocol',()=>{assert.equal(sha(readFileSync('/workspace/scratch/8528bb251845/discovery-cycle04/P3/protocol.json')),'115fc4fb788a3c6b75733b075666a41c999894866706bb09e888e477531526a0');assert.equal(sha(readFileSync('/workspace/scratch/8528bb251845/discovery-cycle04/P3/frozenhash-record.json')),'b416f9df3f6055024682045c98678dc7110dbd456eee573fde0bcc2d7a8207ed');});
+check('receipt-binding-and-display-hashes',()=>{assert.equal(a.receipt.sha256,entry(`${base}/receipt.json`).sha256);assert.equal(binding.requestFile.sha256,entry(`${base}/request.json`).sha256);assert.equal(load('renderer-summary-display-v2.json').figureSha256,entry(`${base}/E809-actual-receipt-display-v2.png`).sha256);assert.equal(load('figure-inspection.json').figureSha256,entry(`${base}/E809-actual-receipt-display-v2.png`).sha256);});
+write('verification.json',{job_id:'E809',worker:'P3',checks,cvCalls:0,scope:'Fresh retention/provenance/report checks against actual receipt; no CV import, adapter, sampling or fitting.',result:'PASS'});
+const walk=dir=>readdirSync(dir).flatMap(name=>{const path=`${dir}/${name}`;return statSync(path).isDirectory()?walk(path):[path];});
+const files=walk(base).filter(path=>!path.endsWith('/result.json')&&!path.endsWith('/artifact-manifest.json')).sort().map(entry);
+write('artifact-manifest.json',{job_id:'E809',worker:'P3',files,selfHashPolicy:'Manifest excludes itself and later result; result binds manifest, root records result exact hash.'});
+const metrics={adapterInvocations:1,compositionCalls:2,operationCount:366,candidateRows:108,branches:a.counts,equivalence:receipt.equivalence.status,equivalenceDifferenceCount:0,absoluteTolerance:1e-9,anchor42:a.anchor42,rawLearnerWidthPx:50,adapterElapsedMs:resources.adapterElapsedMs,callerRecordedElapsedMs:resources.callerElapsedMs,callerMaxRssKiB:resources.usageAfter.maxRSS};
+write('result.json',{schema:'cycle04-native-producer-result@1',job_id:'E809',worker:'P3',outcome:'mixed_change',summary:'Exact P2 frozen zoom1 request executed once through unchanged d31b adapter/5b59 recipe:2recipes,366operations,108candidate records. Each source/crop branch43finite+11null,0missing; bounded equivalence matches1e-9. At preregistered42 primary5/5short+longfinite, but bright5/5short+longfinite falsifies bounded finite-pair specificity; shiftedshort1null andshort4residual-8.282100436166711px reject universal same-pair+6 interpretation. Technical reuse succeeds; scientific specificity/edge identity does not. No calibrated width/semantic acceptance.',metrics,
+ limitations:['One exposed screenshot with overlapping moving-pose profiles/shared training; no independent scientific-case or pointwise-continuity claim.','All short windows are16-sample averages; all5finite does not imply edges at every longitudinal point.','42anchor is not calibrated width; raw learner50 is diagnostic only; every34/42/50 candidate retained.','Fixed -30..30profile boundary risk remains, especially50/+6; no widening, recentering, mask or parameter tuning.','Source/crop match is only this bounded numeric control; historical crop-invariance counterexamples remain.','Bright visual control and caller endpoint/ribbon labels are impeachable testimony, not semantic ground truth.','Initial external-time wrapper failed before Node/CV; retained raw log and path-only fallback. Resource-scope clarification retained.','First presentation had title/header overlap; raw figure retained. One overwrite refusal retained, then separate display-v2 rendered from same receipt without measurement rerun.'],
+ sourceProtocol:{path:'/workspace/scratch/8528bb251845/discovery-cycle04/P2/protocol.json',sha256:a.protocolSha256},source:before.png,sourceGitBlob:before.blob,fullRgbaSha256:p.source.fullRgbaSha256,
+ artifacthashes:[entry(`${base}/receipt.json`),entry(`${base}/run-binding.json`),entry(`${base}/request-descriptor.json`),entry(`${base}/analysis.json`),entry(`${base}/all-candidate-rows.json`),entry(`${base}/ordered-fit-table.csv`),entry(`${base}/E809-actual-receipt-display-v2.png`),entry(`${base}/verification.json`),entry(`${base}/artifact-manifest.json`)],
+ semanticIdentity:'UNKNOWN',calibratedWidth:'UNKNOWN',promoted:false,sourceChanges:false,protocolOrParameterChanges:false,measurementReruns:0,repoWrites:false,P6Disclosure:false,readiness:'READY_FOR_INDEPENDENT_REVIEW'});
+console.log(JSON.stringify({verificationChecks:checks.length,result:entry(`${base}/result.json`),manifest:entry(`${base}/artifact-manifest.json`),receipt:entry(`${base}/receipt.json`),figure:entry(`${base}/E809-actual-receipt-display-v2.png`),outcome:'mixed_change'},null,2));

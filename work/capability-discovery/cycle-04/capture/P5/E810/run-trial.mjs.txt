@@ -1,0 +1,94 @@
+/** E810 exact one-shot caller. No detector, fitter, source repair or adaptive retry. */
+import {readFileSync,writeFileSync,existsSync,statSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+import {performance} from 'node:perf_hooks';
+const base='/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810';
+const repo='/workspace/scratch/8528bb251845/chainspot-discovery-lab';
+const protocolPath='/workspace/scratch/8528bb251845/discovery-cycle04/P3/protocol.json';
+const reviewPath='/workspace/scratch/8528bb251845/discovery-cycle04/P5/R803/result.json';
+const protocolSha='115fc4fb788a3c6b75733b075666a41c999894866706bb09e888e477531526a0';
+const reviewSha='6dbf2497b778853f3a4756a53da303d0907c3a9382dbedbef727a500ce1abf5f';
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const entry=p=>({path:p,sha256:sha(readFileSync(p)),bytes:statSync(p).size});
+const json=(n,v,replacer)=>writeFileSync(`${base}/${n}`,JSON.stringify(v,replacer,2)+'\n',{flag:'wx'});
+function identity(){
+ if(sha(readFileSync(protocolPath))!==protocolSha||sha(readFileSync(reviewPath))!==reviewSha)throw Error('Protocol/review integrity mismatch');
+ const p=JSON.parse(readFileSync(protocolPath)),review=JSON.parse(readFileSync(reviewPath));
+ if(review.job_id!=='R803'||review.decision!=='accepted'||review.bindings.protocolSha256!==protocolSha)throw Error('Accepted R803 binding required');
+ const fpath='work/capability-discovery/cycle-03/evidence/E506/candidate-freeze.json',mpath='work/capability-discovery/cycle-02/feature-manifest-E308.json';
+ const f=JSON.parse(readFileSync(`${repo}/${fpath}`)),m=JSON.parse(readFileSync(`${repo}/${mpath}`));
+ const declarations=[{path:fpath,sha256:p.design.frozenAdapterManifestSha256},...f.files,...f.retainedContractHistoryAndEvidence,
+ {path:mpath,sha256:p.design.frozenRecipeManifestSha256},...m.files,m.existingGuard,...m.immutableSources.map(s=>({path:`experiments/capability-discovery/probes/width/${s.file}`,sha256:s.sha256}))];
+ const closure=declarations.map(e=>({...entry(`${repo}/${e.path}`),expectedSha256:e.sha256}));
+ if(closure.some(e=>e.sha256!==e.expectedSha256))throw Error('Accepted source closure mismatch');
+ const helper=JSON.parse(readFileSync(`${base}/helper-freeze.json`));
+ for(const e of helper.files)if(entry(e.path).sha256!==e.sha256)throw Error('Helper freeze mismatch');
+ const pngPath='/workspace/scratch/8528bb251845/discovery-cycle04/P3/source/Lenard-2.png',png=entry(pngPath);
+ if(png.sha256!==p.source.pngSha256)throw Error('PNG hash mismatch');
+ const blob=execFileSync('git',['rev-parse',`${p.source.ref}:${p.source.path}`],{cwd:repo,encoding:'utf8'}).trim();
+ const extractedBlob=execFileSync('git',['hash-object',pngPath],{cwd:repo,encoding:'utf8'}).trim();
+ if(blob!==p.source.gitBlob||extractedBlob!==blob)throw Error('Source Git object mismatch');
+ if(entry(p.sourceStaging.path).sha256!==p.sourceStaging.sha256)throw Error('Frozen original staging mismatch');
+ return{protocol:entry(protocolPath),review:entry(reviewPath),png,blob,helperFreeze:entry(`${base}/helper-freeze.json`),helpers:helper.files.map(e=>entry(e.path)),closure,originalStaging:entry(p.sourceStaging.path)};
+}
+const runStart=performance.now(),memoryBefore=process.memoryUsage(),usageBefore=process.resourceUsage();
+let adapterInvocations=0;
+try{
+ for(const name of ['identity-before.json','source.json','request.json','receipt.json','failure.json'])if(existsSync(`${base}/${name}`))throw Error('One-shot output exists; no retry allowed');
+ const before=identity();json('identity-before.json',before);
+ const p=JSON.parse(readFileSync(protocolPath)),originalSource=JSON.parse(readFileSync(p.sourceStaging.path));
+ const descriptor={enabled:true,roi:p.roi,geometry:p.geometry};json('request-descriptor.json',descriptor);
+ const stageArgs=[`${repo}/experiments/capability-discovery/source-pixels/stage-png.py`,'--source',before.png.path,'--expected-sha256',p.source.pngSha256,'--image-id',originalSource.provenance.imageId,'--frame',p.source.frame,'--out',`${base}/source.json`];
+ execFileSync('python',stageArgs,{cwd:repo,stdio:'inherit'});
+ const source=JSON.parse(readFileSync(`${base}/source.json`));
+ if(source.provenance.sourcePngSha256!==p.source.pngSha256||source.provenance.rgbaSha256!==p.source.rgbaSha256||sha(Uint8Array.from(source.image.data))!==p.source.rgbaSha256)throw Error('Restaged fullRGBA identity mismatch');
+ if(JSON.stringify(source)!==JSON.stringify(originalSource))throw Error('Restaged source value differs from exact frozen staging');
+ const request={enabled:true,source,roi:p.roi,geometry:p.geometry};
+ const requestText=JSON.stringify(request);writeFileSync(`${base}/request.json`,requestText+'\n',{flag:'wx'});
+ json('run-binding.json',{job_id:'E810',worker:'P5',protocol:before.protocol,review:before.review,source:before.png,sourceGitBlob:before.blob,helperFreeze:before.helperFreeze,helpers:before.helpers,originalStaging:before.originalStaging,restagedSource:entry(`${base}/source.json`),requestFile:entry(`${base}/request.json`),requestValueSha256:sha(requestText),geometrySha256:sha(JSON.stringify(request.geometry)),roiSha256:sha(JSON.stringify(request.roi)),stageCommand:['python',...stageArgs],projection:'Exact supported four-key adapter input; roi/geometry/numerics unchanged from frozen P3 protocol'});
+ const{runSourcePixelRoi,preserveNonFinite}=await import(`${repo}/experiments/capability-discovery/source-pixels/adapter.mjs`);
+ const measurementStart=performance.now();adapterInvocations++;
+ const receipt=runSourcePixelRoi(request);
+ const adapterElapsedMs=performance.now()-measurementStart;json('receipt.json',receipt,preserveNonFinite);
+ const rows=[];
+ for(const[branch,comp]of[['crop',receipt.composition],['source',receipt.sourceComposition]])for(const declared of p.geometry.stations){
+  const station=comp?.stations?.find(s=>s.id===declared.id);
+  for(const width of p.geometry.localWidthBank.valuesPx){
+   const candidate=station?.candidates?.find(c=>c.widthArgPx===width),fit=candidate?.edgeFit;
+   const finitePair=!!(fit&&['lPx','rPx','cPx','wPx','score','gl','gr'].every(k=>Number.isFinite(fit[k]))&&fit.wPx>0&&fit.gl>0&&fit.gr>0);
+   const normal=[-Math.sin(declared.headingRad),Math.cos(declared.headingRad)];
+   const project=o=>[declared.xPx+o*normal[0],declared.yPx+o*normal[1]];
+   rows.push({branch,stationId:declared.id,widthArgPx:width,status:!station?'NOT_EXECUTED':!candidate?'MISSING_CANDIDATE':finitePair?'FINITE_POSITIVE_PAIR':fit===null?'NULL_FIT':'NONPOSITIVE_OR_NONFINITE_FIT',stationOriginal:declared,actualFrame:station?.frame??null,actualPose:station?.pose??null,window:station?.window??null,profileStationCount:station?.profile?.stationCount??null,visibleStationCounts:station?.profile?.visibleStationCounts??null,edgeFit:fit??null,midpoint:candidate?.midpoint??null,observation:candidate?.observation??null,pairedRails:candidate?.pairedRails??null,originalProjection:finitePair?{leftAtStationPx:project(fit.lPx),rightAtStationPx:project(fit.rPx),midpointAtStationPx:project(fit.cPx),meaning:'Projection of averaged-profile fit at supplied station, not per-point physical edge proof'}:null});
+  }
+ }
+ json('all-candidate-rows.json',rows,preserveNonFinite);
+ const get=(branch,id,w)=>rows.find(r=>r.branch===branch&&r.stationId===id&&r.widthArgPx===w);
+ const missing=r=>!r||['NOT_EXECUTED','MISSING_CANDIDATE'].includes(r.status);
+ const finite=r=>r?.status==='FINITE_POSITIVE_PAIR';
+ const assessments=[];
+ for(const branch of['crop','source'])for(const w of p.geometry.localWidthBank.valuesPx){
+  const groups=p.design.groups.map(group=>{
+   const shorts=Array.from({length:5},(_,i)=>get(branch,`${group.id}.short${i+1}`,w)),long=get(branch,`${group.id}.long`,w);
+   const abstention=[...shorts,long].some(missing)||!(receipt.execution?.compositionCalls===2);
+   return{group:group.id,shortStatuses:shorts.map(r=>r?.status??'MISSING'),longStatus:long?.status??'MISSING',interpretation:abstention?'ABSTENTION_NOT_FALSIFICATION':finite(long)&&shorts.some(r=>r.status==='NULL_FIT')?'LONG_AVERAGE_AS_SUSTAINED_PAIR_FALSIFIED':shorts.every(finite)&&finite(long)?'ALL_WINDOWS_FINITE_AVERAGED_OBSERVATIONS_ONLY':shorts.every(r=>r.status==='NULL_FIT')&&long.status==='NULL_FIT'?'NO_PAIRED_SUPPORT_NOT_CLASSIFIER':'NO_DECLARED_LONG_ONLY_COUNTEREXAMPLE',finiteShortCount:shorts.filter(finite).length};
+  });
+  const residuals=[...Array.from({length:5},(_,i)=>`short${i+1}`),'long'].map(window=>{
+   const a=get(branch,`primary.${window}`,w),b=get(branch,`lateral-plus6.${window}`,w);
+   const observed=finite(a)&&finite(b)&&Number.isFinite(a.midpoint?.candidateCenterMinusFitMidpointPx)&&Number.isFinite(b.midpoint?.candidateCenterMinusFitMidpointPx);
+   const delta=observed?b.midpoint.candidateCenterMinusFitMidpointPx-a.midpoint.candidateCenterMinusFitMidpointPx:null,residual=observed?delta-6:null;
+   return{window,status:observed?'OBSERVED_CHANNELS':'UNKNOWN',offsetMinusPrimaryPx:delta,idealPx:6,residualPx:residual,sameEdgeDiagnostic:observed?(Math.abs(residual)>1e-9?'IDEAL_SAME_EDGE_REJECTED_IDENTITY_UNKNOWN':'WITHIN_FIXED_DIAGNOSTIC_NOT_IDENTITY_PROOF'):'UNOBSERVED_NOT_FALSIFICATION'};
+  });
+  assessments.push({branch,widthArgPx:w,groups,offsetResiduals:residuals});
+ }
+ const counts=Object.fromEntries(['crop','source'].map(branch=>[branch,Object.fromEntries(['FINITE_POSITIVE_PAIR','NULL_FIT','NONPOSITIVE_OR_NONFINITE_FIT','NOT_EXECUTED','MISSING_CANDIDATE'].map(status=>[status,rows.filter(r=>r.branch===branch&&r.status===status).length]))]));
+ json('analysis.json',{job_id:'E810',worker:'P5',protocolSha256:protocolSha,receipt:entry(`${base}/receipt.json`),adapterInvocations,execution:receipt.execution??null,operationsExecutedCount:receipt.operationsExecuted?.length??0,rawTopStatus:receipt.status,support:receipt.support?.status??null,equivalence:receipt.equivalence??null,counts,assessments,rawWidthEstimates:{crop:receipt.composition?.rawWidthEstimate??null,source:receipt.sourceComposition?.rawWidthEstimate??null},limits:['Top-level UNKNOWN does not erase executed raw branch evidence. Missing/zero-call rows are abstention, not falsifiers.','All108 candidate records retained; each16-sample short remains averaged, not per-point continuity.','Bright-control comparable raw observations are ambiguity, never semantic acceptance; no post-hoc comparable cutoff.','No calibrated width, scale, AA/renderer identity, recentering, tuning, classifier or promotion.'],semanticIdentity:'UNKNOWN',calibratedWidth:'UNKNOWN',promoted:false},preserveNonFinite);
+ const cols=['branch','stationId','widthArgPx','status','profileStationCount'];const nums=['lPx','rPx','cPx','wPx','score','gl','gr'];
+ const csv=[cols.concat(nums,'candidateCenterMinusFitMidpointPx').join(','),...rows.map(r=>[...cols.map(k=>r[k]??''),...nums.map(k=>r.edgeFit?.[k]??''),r.midpoint?.candidateCenterMinusFitMidpointPx??''].join(','))].join('\n')+'\n';writeFileSync(`${base}/ordered-fit-table.csv`,csv,{flag:'wx'});
+ const after=identity();json('identity-after.json',after);
+ if(JSON.stringify(before)!==JSON.stringify(after))throw Error('Source, helpers, protocol or bindings changed during invocation');
+ json('resources.json',{job_id:'E810',worker:'P5',runtime:{node:process.version,platform:process.platform,arch:process.arch},adapterInvocations,adapterElapsedMs,callerElapsedMs:performance.now()-runStart,usageBefore,usageAfter:process.resourceUsage(),memoryBefore,memoryAfter:process.memoryUsage(),scope:'This actual process only; separate time log includes process elapsed/maxRSS, not allocator/speed comparison'});
+ console.log(JSON.stringify({status:'EXECUTED_ONCE',rawStatus:receipt.status,adapterInvocations,execution:receipt.execution??null,counts,equivalence:receipt.equivalence?.status??null,adapterElapsedMs}));
+}catch(error){
+ json('failure.json',{job_id:'E810',worker:'P5',message:error.message,stack:error.stack,adapterInvocations,retryAllowed:false,elapsedMs:performance.now()-runStart});console.error(error.stack);process.exitCode=1;
+}

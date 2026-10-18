@@ -1,0 +1,114 @@
+{
+  "schema": "cycle04-independent-helper-source-review@1",
+  "job_id": "R812",
+  "worker": "P1",
+  "producer_job_id": "E812",
+  "producer": "P6",
+  "decision": "amend",
+  "summary": "The frozen helper passes its14 focused tests and all ordinary recorded-receipt compatibility checks, including actual E811 executed UNKNOWN/empty bank versus zero-call refusal and full E809/E810 ordering/raw preservation without CV recomputation. However, two independent sparse-array probes violate the exact E808 malformed-input contract: branchless refusals accept a missing short-ID slot and project an undefined declaration rather than UNKNOWN with projection:null. Require a minimal dense-label validation repair and pure regression tests; no helper source was changed by this reviewer. The reported bare-suite17 failures remain unclassified pending root's untouched-base control. No scientific acceptance follows.",
+  "exactSourceBindings": {
+    "sourceFreeze": {"path": "/workspace/scratch/8528bb251845/discovery-cycle04/P6/E812/source-freeze.json", "sha256": "2c4fec447c00789c93023ce869bd5a03f4d6c9d1c2a78de1d2217b09071be05d"},
+    "producerResult": {"path": "/workspace/scratch/8528bb251845/discovery-cycle04/P6/E812/result.json", "sha256": "964495d171bf908d05fe6660395cdb877f4e9c677711eef8926a55417b5d9d0f"},
+    "group.mjs": {"path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.mjs", "sha256": "9669e26d3b2305f8ebcf514e1883d20ad916e759f9e458b244ebc83a87dfd62c", "bytes": 7614},
+    "group.test.mjs": {"path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs", "sha256": "3d1726fdd84724360395acd67aa8de5f86a7643ab41f08af1cc7aa677934e312", "bytes": 9987},
+    "README.md": {"path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/README.md", "sha256": "39d75b1514970ceb63a2be9a4c2218e5893260e96270ee636302461d40f2e958", "bytes": 3736},
+    "E808ContractSha256": "d1c6e5e0fa7385b6476d8d8137cba17716e58d571918e27eee5bccf10095b426",
+    "R808ContractAcceptanceSha256": "7001dff06ec5951b33a77829432216ba934e69a60522a68de2ea01a54e83962d",
+    "originalR806AmendSha256": "759f979d22d3eaff5c292797abb3284981f1ce1165ffdf37c935d2067462ba08",
+    "sourcePixelCandidateFreezeSha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "acceptedCompositionManifestSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52"
+  },
+  "requiredAmendments": [
+    {
+      "id": "M1-dense-declared-short-IDs",
+      "severity": "medium",
+      "source": "group.mjs labels / groupProblem / NOT_EXECUTED declaration path",
+      "finding": "labels uses Array.every(named), which skips sparse holes. For orderedShortStationIds=new Array(1), labels returns true, length is nonzero and Set size equals length. On a valid branchless refusal the helper does not resolve station IDs, so it returns PROJECTED_EVIDENCE_ONLY/NOT_EXECUTED with an undefined short ID. A partially sparse ['unverified-short', <hole>] list behaves the same. This violates nonempty named IDs and the one malformed-input/no-validated-projection policy even though refusal IDs are correctly unverified semantically.",
+      "exactInputReceipt": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/receipt-B.json",
+        "sha256": "daa7e63665a4c658489483e712b3133547b1ba23a13c1529084d221766d91974"
+      },
+      "inputConstructions": [
+        "groups:[{id:'one-hole',longStationId:'long',orderedShortStationIds:new Array(1)}]",
+        "const orderedShortStationIds=['unverified-short']; orderedShortStationIds.length=2; groups:[{id:'partial-hole',longStationId:'long',orderedShortStationIds}]"
+      ],
+      "expected": {"status":"UNKNOWN","executionState":"UNCLASSIFIED_INVALID_INPUT","projection":null},
+      "actual": "PROJECTED_EVIDENCE_ONLY/NOT_EXECUTED, with a projected declaration containing undefined; JSON encodes that slot as null. Full raw outputs and sparse own-property metadata are retained in counterexample.json.",
+      "requestedRepair": "Validate every declared label index densely before projection, so absent slots cannot pass the named-ID predicate. Keep scope to label validation and pure tests; no CV, numeric criterion, association or source/recipe behavior change.",
+      "requiredRegressionChecks": [
+        "A one-hole short list and a valid-plus-hole list on a branchless UNKNOWN refusal return the common invalid-input envelope and projection:null.",
+        "The same malformed declarations are invalid on branchless DISABLED and executed shapes as well.",
+        "Ordinary dense explicit ID lists, valid unverified refusal declarations, empty-bank executed UNKNOWN and real E809/E810 order/raw fields remain unchanged."
+      ],
+      "boundary": "The counterexample corrupts validation of caller declaration metadata; it does not invent measured rows, change receipt bytes, or execute CV. That narrower impact does not waive the admitted contract."
+    }
+  ],
+  "actualChecks": {
+    "focusedTests": {
+      "testCasesPerRun": 14,
+      "runs": 2,
+      "passPerRun": 14,
+      "failPerRun": 0,
+      "secondRunExitCode": 0,
+      "nativeHelperEntryCounts": [49,49],
+      "reasonForSecondRun": "Reviewer harness expected TAP but Node initially selected spec output. Initial14/14 success and logs/coverage/source are retained; harness stopped on its summary regex, not a helper test failure. A second unchanged pure focused run used explicit TAP to retain unambiguous process evidence."
+    },
+    "adversarialAndCompatibilityProbes": 54,
+    "passedProbes": 52,
+    "failedProbes": 2,
+    "failedProbeNames": ["sparse short IDs on REAL branchless refusal", "partially sparse short IDs on REAL branchless refusal"],
+    "additionalExplicitSparseReproductions": 2,
+    "initialStandaloneSparseProbe": 1,
+    "totalPureHelperCalls": 155,
+    "callAccounting": "49+49 focused native entry counts,54 review harness calls,1 initial standalone probe,2 full-output sparse reproductions. No CV calls.",
+    "readOnlySourceBindingAndPreservationChecks": 31,
+    "preservedSourceOrEvidencePathsInHarness": 15,
+    "runtimeOracle": "Actual retained native V8 runComposition entry ranges for E811 A/B independently read as2/0 and agree with the helper's EXECUTED/NOT_EXECUTED classifications. Neither adapter nor recipe was rerun.",
+    "ordinaryCasesCovered": [
+      "Default OFF does not parse input.",
+      "Exact receipt-byte hash, changed whitespace/hash identity, digest mismatch integrity class, malformed/truncated UTF-8 and invalid JSON.",
+      "Unsupported helper/descriptor keys, malformed group schema, duplicate/missing/overlapping IDs, valid explicit cross-group reuse and reversed declared short order.",
+      "Branch presence, operation counts/order/concatenation, status linkage, station sequences, candidate width sequences and fixed equivalence object.",
+      "Malformed/nonfinite required linkage geometry versus valid finite unequal headings; raw null and tagged nonfinite diagnostic preservation without metrics.",
+      "Full parsed raw receipt equality, unchanged original byte reference, every raw candidate and both branches on real E809/E810."
+    ],
+    "staticScopeReview": "Exact module imports only node:crypto. Source body has no CV/runner/filesystem/network import/call, source verification, score or coordinate algebra. Existing receipt claims are retained, not authenticated scientific identity."
+  },
+  "realReceiptBindings": [
+    {"case":"E811-A", "path":"/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/receipt-A.json", "sha256":"f89e5c5926efb400ec1cdec3413ce1fbfeabc1c0548bf86cd8311d0a314a41f6", "bytes":36954, "helperExecutionState":"EXECUTED", "meaning":"Actual top UNKNOWN with2 recipes, retained profile and empty candidates; tested with empty groups because the actual receipt contains only one station, not a long/short pair."},
+    {"case":"E811-B", "path":"/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/receipt-B.json", "sha256":"daa7e63665a4c658489483e712b3133547b1ba23a13c1529084d221766d91974", "bytes":1317, "helperExecutionState":"NOT_EXECUTED", "meaning":"Actual top UNKNOWN with no recipe branches and zero runtime recipe calls; dense unverified declaration correctly retained without measurement rows."},
+    {"case":"E809", "path":"/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/receipt.json", "sha256":"302e50cb5b60f752eb6f3139a4e6a98c015005203359e0ade5aebb378e1897ba", "bytes":828263, "helperExecutionState":"EXECUTED", "stationsPerBranch":18,"candidateRowsPerBranch":54,"groups":3,"shortsPerGroup":5,"rawAndOrderPreserved":true},
+    {"case":"E810", "path":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/receipt.json", "sha256":"a61a487dae244cbd9bc62ada6bffb8fc7cf651616db7b37806628ee0399739e4", "bytes":825092, "helperExecutionState":"EXECUTED", "stationsPerBranch":18,"candidateRowsPerBranch":54,"groups":3,"shortsPerGroup":5,"rawAndOrderPreserved":true}
+  ],
+  "commandsActuallyRun": [
+    {"command":"node --check /workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/review.mjs","exitCode":0,"scope":"Reviewer harness syntax before initial attempt"},
+    {"command":"node --test /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs","environment":"NODE_V8_COVERAGE=P1/R812/focused-coverage","result":"14/14 pass; original spec logs retained; parent harness TAP parser assertion failed afterward"},
+    {"command":"node --test --test-reporter=tap /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs","environment":"NODE_V8_COVERAGE=P1/R812/focused-coverage-v2","exitCode":0,"pass":14,"fail":0},
+    {"command":"node /workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/review.mjs","secondAttemptExitCode":0,"result":"54 probes,52 expected outcomes,2 retained contract violations;31 binding/preservation checks"},
+    {"command":"node /workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/counterexample.mjs","exitCode":0,"result":"Two exact sparse constructions and full helper output envelopes retained"}
+  ],
+  "artifacts": [
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/evidence.json","sha256":"53fe8fc296c997383b5bf41b00d41bf92e4494e4e90f9c447e96f3b9c3b65c9b"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/counterexample.json","sha256":"23eb330d6395693594e0c5bfec68151a932349d2a0dc418e242fd8657c8e666e"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/counterexample.mjs","sha256":"743bfe55592e3035c352856b72aebb8cec1ee2da7d5cb901eda9d484c2d79b02"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/review.mjs","sha256":"2f6b70ab0e8cf1942f235ce38390a1199c4660b09461492042aaba2c912c2c25"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/review-initial.mjs","sha256":"f6d537be872e8ef7b8a20c37dd9cad08309e91ea9a14a41389b0cbcc81a43b8e"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/harness-clarification.json","sha256":"ad4e5c252741c71e0b27d5451d155606972b6f625bc7e91eff1ca643add057c3"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/groups-sidecar.json","sha256":"82476bc7a3c22d0399ce74607b98dae49418ed7a48d5dd7a37ed67c84228582f"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/focused.stdout.log","sha256":"fbb30222a41d9a75ce4b883e9021f01debd31931c6fcd15901a22086713db182"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/focused-v2.stdout.log","sha256":"b6adb1801bd643eaee3ac0cbbfdd03ecf80d730ae786d95edd00f29bd66f2eed"}
+  ],
+  "scopeAndLimitations": {
+    "helperSourceChangedByReviewer": false,
+    "repositoryOrGitWrites": 0,
+    "nativeOrPublicationOperations": 0,
+    "CVCalls": 0,
+    "newCourseMeasurements": 0,
+    "actualCourseReceiptAccess": "Explicit post-freeze authorization only; existing E809/E810 bytes and grouping sidecars used for compatibility, no CV recomputation or course retuning.",
+    "fullSuite": "Producer reports167/184 with17 failures (six fixture-related and11 archived import-related). Reviewer did not rerun bare discovery or classify those failures as preexisting; root's untouched-base control remains required. Focused/helper review success does not imply full-repository green.",
+    "originalHistory": "Original R806 AMEND, E808 contract and R808 acceptance remain exact. This new AMEND is implementation evidence, not a rewrite of prior acceptance/history.",
+    "preservation": "All reviewed helper source and recorded receipt/runtime bytes rehashed unchanged. This bounded15-path harness check does not replace sole owner's1646-file audit.",
+    "acceptedIdentity": "Only exact byte identity and declared structural linkage are checked. No actual-execution authentication, source provenance authentication, physical-edge association, continuity, path identity, calibrated width or scientific acceptance follows."
+  },
+  "next": "Root routes only the dense-label validation repair to source owner P6, then independently reviews a new exact source freeze. Preserve this source freeze, two counterexamples, raw focused evidence and AMEND unchanged. No reviewer implementation or publication is authorized."
+}

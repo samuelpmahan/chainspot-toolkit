@@ -1,0 +1,379 @@
+{
+  "schema": "cycle04-longitudinal-source-pixel-predeclaration@1",
+  "job_id": "E803",
+  "worker": "P3",
+  "status": "READY_FOR_ROOT_FREEZE_BEFORE_CV_PRODUCERS",
+  "source": {
+    "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "path": "specimens/dev/Lenard-2.png",
+    "gitBlob": "02431ee3f091973a87cc2e7e254bc8bc0b028a7c",
+    "pngSha256": "cf5a033747c32f3e7f8774e7f712394b6af8a5d28228291f0d29a395998d55f4",
+    "rgbaSha256": "3659157b9501899ff62dcc5216dcb058a6a50d31578e751dcb665c49b97da4ee",
+    "widthPx": 1290,
+    "heightPx": 2796,
+    "frame": "Lenard-2.original-source-pixel-centers",
+    "decoder": {
+      "name": "Pillow",
+      "version": "12.3.0",
+      "outputMode": "RGBA",
+      "sourceMode": "RGB",
+      "orientation": "stored PNG pixel order; no EXIF transform",
+      "colorTransform": "none; stored RGB channels, no ICC/gamma transform",
+      "alpha": "preserved RGBA; RGB appends 255"
+    }
+  },
+  "sourceStaging": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P3/source/Lenard-2-source.json",
+    "sha256": "6dd63d816e702e899cf1ab696ebc59a2241d6244cffbd0569c7a703d03e8252b"
+  },
+  "roi": {
+    "xPx": 600,
+    "yPx": 1100,
+    "widthPx": 610,
+    "heightPx": 760,
+    "frame": "Lenard-2.E803.integer-roi"
+  },
+  "geometry": {
+    "frame": "Lenard-2.original-source-pixel-centers",
+    "geometrySource": "P3 caller visual testimony on exact platform Lenard-2 original screenshot and exact integer row/column inspection crop; no CV output consulted; endpoint names are API labels only.",
+    "training": {
+      "frame": "Lenard-2.original-source-pixel-centers",
+      "segments": [
+        {
+          "tee": {
+            "xPx": 681,
+            "yPx": 1195
+          },
+          "badge": {
+            "xPx": 719,
+            "yPx": 1558
+          }
+        }
+      ]
+    },
+    "stations": [
+      {
+        "id": "primary.short1",
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "xPx": 726.3425446446803,
+        "yPx": 1668.110535736164,
+        "headingRad": 1.4876550949064553,
+        "t0Px": -8,
+        "t1Px": 8
+      },
+      {
+        "id": "primary.short2",
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "xPx": 727.6712723223402,
+        "yPx": 1684.055267868082,
+        "headingRad": 1.4876550949064553,
+        "t0Px": -8,
+        "t1Px": 8
+      },
+      {
+        "id": "primary.short3",
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "xPx": 729,
+        "yPx": 1700,
+        "headingRad": 1.4876550949064553,
+        "t0Px": -8,
+        "t1Px": 8
+      },
+      {
+        "id": "primary.short4",
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "xPx": 730.3287276776598,
+        "yPx": 1715.944732131918,
+        "headingRad": 1.4876550949064553,
+        "t0Px": -8,
+        "t1Px": 8
+      },
+      {
+        "id": "primary.short5",
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "xPx": 731.6574553553197,
+        "yPx": 1731.889464263836,
+        "headingRad": 1.4876550949064553,
+        "t0Px": -8,
+        "t1Px": 8
+      },
+      {
+        "id": "primary.long",
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "xPx": 729,
+        "yPx": 1700,
+        "headingRad": 1.4876550949064553,
+        "t0Px": -40,
+        "t1Px": 40
+      },
+      {
+        "id": "lateral-plus6.short1",
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "xPx": 720.363270095211,
+        "yPx": 1668.6088086152863,
+        "headingRad": 1.4876550949064553,
+        "t0Px": -8,
+        "t1Px": 8
+      },
+      {
+        "id": "lateral-plus6.short2",
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "xPx": 721.6919977728709,
+        "yPx": 1684.5535407472044,
+        "headingRad": 1.4876550949064553,
+        "t0Px": -8,
+        "t1Px": 8
+      },
+      {
+        "id": "lateral-plus6.short3",
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "xPx": 723.0207254505307,
+        "yPx": 1700.4982728791224,
+        "headingRad": 1.4876550949064553,
+        "t0Px": -8,
+        "t1Px": 8
+      },
+      {
+        "id": "lateral-plus6.short4",
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "xPx": 724.3494531281905,
+        "yPx": 1716.4430050110404,
+        "headingRad": 1.4876550949064553,
+        "t0Px": -8,
+        "t1Px": 8
+      },
+      {
+        "id": "lateral-plus6.short5",
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "xPx": 725.6781808058504,
+        "yPx": 1732.3877371429585,
+        "headingRad": 1.4876550949064553,
+        "t0Px": -8,
+        "t1Px": 8
+      },
+      {
+        "id": "lateral-plus6.long",
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "xPx": 723.0207254505307,
+        "yPx": 1700.4982728791224,
+        "headingRad": 1.4876550949064553,
+        "t0Px": -40,
+        "t1Px": 40
+      },
+      {
+        "id": "bright-organic.short1",
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "xPx": 1127.3425446446804,
+        "yPx": 1668.110535736164,
+        "headingRad": 1.4876550949064553,
+        "t0Px": -8,
+        "t1Px": 8
+      },
+      {
+        "id": "bright-organic.short2",
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "xPx": 1128.6712723223402,
+        "yPx": 1684.055267868082,
+        "headingRad": 1.4876550949064553,
+        "t0Px": -8,
+        "t1Px": 8
+      },
+      {
+        "id": "bright-organic.short3",
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "xPx": 1130,
+        "yPx": 1700,
+        "headingRad": 1.4876550949064553,
+        "t0Px": -8,
+        "t1Px": 8
+      },
+      {
+        "id": "bright-organic.short4",
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "xPx": 1131.3287276776598,
+        "yPx": 1715.944732131918,
+        "headingRad": 1.4876550949064553,
+        "t0Px": -8,
+        "t1Px": 8
+      },
+      {
+        "id": "bright-organic.short5",
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "xPx": 1132.6574553553196,
+        "yPx": 1731.889464263836,
+        "headingRad": 1.4876550949064553,
+        "t0Px": -8,
+        "t1Px": 8
+      },
+      {
+        "id": "bright-organic.long",
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "xPx": 1130,
+        "yPx": 1700,
+        "headingRad": 1.4876550949064553,
+        "t0Px": -40,
+        "t1Px": 40
+      }
+    ],
+    "localWidthBank": {
+      "frame": "Lenard-2.original-source-pixel-centers",
+      "scope": "LOCAL",
+      "valuesPx": [
+        40,
+        48,
+        56
+      ]
+    },
+    "occluders": {
+      "frame": "Lenard-2.original-source-pixel-centers",
+      "boxes": []
+    },
+    "edgeSearch": {
+      "latLimPx": 8,
+      "tolWidthPx": 3
+    }
+  },
+  "requestAssembly": "{enabled:true,source:JSON.parse(readFileSync(protocol.sourceStaging.path)),roi:protocol.roi,geometry:protocol.geometry}; geometry and roi pass unchanged. No extra metadata goes into adapter geometry.",
+  "question": "Does one visually proposed source-pixel ribbon support finite paired-edge fits throughout five consecutive short windows, rather than only in one long averaged window, and do matched offset and bright-organic controls preserve ambiguity?",
+  "design": {
+    "groups": [
+      {
+        "id": "primary",
+        "role": "visually proposed pale ribbon",
+        "x": 729,
+        "y": 1700
+      },
+      {
+        "id": "lateral-plus6",
+        "role": "same heading and longitudinal support, +6 normal px from primary",
+        "x": 723.0207254505307,
+        "y": 1700.4982728791224
+      },
+      {
+        "id": "bright-organic",
+        "role": "matched nearby broad irregular bright ground patch; semantic non-path status unverified",
+        "x": 1130,
+        "y": 1700
+      }
+    ],
+    "shortWindowCount": 5,
+    "shortWindowLengthPx": 16,
+    "shortSampleCounts": [
+      16,
+      16,
+      16,
+      16,
+      16
+    ],
+    "longWindowLengthPx": 80,
+    "longSampleCount": 80,
+    "widthCandidateCount": 3,
+    "totalStations": 18,
+    "totalCandidateRowsPerComposition": 54,
+    "pairedSourceCropCompositionCount": 2,
+    "designType": "Moving-pose plus window-length exploratory comparison, not pure window-only or independent validation.",
+    "lattice": [
+      {
+        "group": "primary",
+        "samples": 80,
+        "byteExactCoordinatePairs": 53,
+        "maxAbsoluteCoordinateDifferencePx": 2.2737367544323206e-13,
+        "claim": "Analytically consecutive moving-pose windows, not a bit-exact sample partition. Centerline coordinates audited with JavaScript Math; adding normal offsets and bilinear arithmetic can retain further rounding."
+      },
+      {
+        "group": "lateral-plus6",
+        "samples": 80,
+        "byteExactCoordinatePairs": 53,
+        "maxAbsoluteCoordinateDifferencePx": 2.2737367544323206e-13,
+        "claim": "Analytically consecutive moving-pose windows, not a bit-exact sample partition. Centerline coordinates audited with JavaScript Math; adding normal offsets and bilinear arithmetic can retain further rounding."
+      },
+      {
+        "group": "bright-organic",
+        "samples": 80,
+        "byteExactCoordinatePairs": 58,
+        "maxAbsoluteCoordinateDifferencePx": 2.2737367544323206e-13,
+        "claim": "Analytically consecutive moving-pose windows, not a bit-exact sample partition. Centerline coordinates audited with JavaScript Math; adding normal offsets and bilinear arithmetic can retain further rounding."
+      }
+    ],
+    "matched": "All3 groups have identical heading, short/long window lengths, explicit bank, edge settings, source, ROI and empty masks. Primary/lateral origins differ by exactly+6 source normal pixels; bright group is translated to irregular bright terrain.",
+    "sourceProfileConstraint": "Profiles remain frozen -30..30px at0.25px. Largest56px candidate and offset profiles may put edges near or beyond usable boundary; finite fits are not boundary-safety evidence. No later widening.",
+    "sensorSemantics": "Dev72 observation is a point-pose sensor ignoring t0/t1. Five short origins move; long origin equals short3 so those two Dev72 values duplicate by design. JS profile windows differ. Never count window-length repetition as independent sensor evidence.",
+    "widthBasis": "Visual approximate multi-dozen-pixel band only; widthbank40/48/56 is LOCAL, not carried over as calibrated37px from exposed full-source trials.",
+    "trainingAuthority": "Fresh P3 screenshot visual testimony; no Lenard zoom2 hand annotation exists in E501. Full annotation-to-zoom2 mapping UNKNOWN and not inferred.",
+    "frozenAdapterManifestSha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "frozenRecipeManifestSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52"
+  },
+  "predictedObservations": [
+    {
+      "id": "primary-short-versus-long",
+      "prediction": "If paired-edge evidence is locally sustained at a candidate width, each of the five short profiles and the matching long profile can retain a finite pair with compatible original-frame edges. Long-only finite pairing is expected to be possible through averaging and does not establish local continuity."
+    },
+    {
+      "id": "offset",
+      "prediction": "The+6 normal shift may change fixed Dev72 rail/interior channels. If exactly the same physical edge pair remains in both profiles and is selected, offset-minus-primary candidateCenterMinusFitMidpointPx should be+6px. Nulls, alternate pairs and field-of-view losses remain unaltered evidence, not zero offsets."
+    },
+    {
+      "id": "bright-organic",
+      "prediction": "Broad irregular bright terrain can show finite pairs, long-only pairs, or stronger raw channels than primary. Comparable evidence demonstrates ambiguity; a weak control still cannot prove path identity."
+    },
+    {
+      "id": "learner",
+      "prediction": "The single visually proposed square/plaque segment may yield arbitrary diagnostic width; no width promotion/calibration or verified endpoint identity follows."
+    }
+  ],
+  "falsifiers": [
+    {
+      "id": "source-and-support",
+      "rejectIf": "Any PNG/blob/fullRGBA mismatch; missing conservative support; changed ROI/frame/geometry/bank/settings/source; no measurements may be interpreted. Do not enlarge ROI or drop training."
+    },
+    {
+      "id": "sustained-paired-edge",
+      "rejectIf": "For any candidate width, one or more short windows lack a finite positive two-edge fit while the long window has one: reject that candidate's long-average-as-sustained-local-pair assertion. If all short and long are null, paired-edge support is absent, not an accepted negative classifier."
+    },
+    {
+      "id": "common-edge-location",
+      "rejectIf": "Finite pairs transformed back to original source show inconsistent left/right/midpoint trajectories across windows. Report exact raw deltas; no newly selected tolerance, recentering, tracking or post-hoc accepted subset."
+    },
+    {
+      "id": "same-edge-offset",
+      "rejectIf": "Any jointly finite primary/offset fit violates the ideal+6 midpoint contrast outside the existing fixed1e-9 numerical comparison; record raw discrepancy and UNKNOWN same-edge identity. If unavailable in either fit, comparison is UNKNOWN. This is a strict diagnostic, not an accuracy model."
+    },
+    {
+      "id": "brightness-specificity",
+      "rejectIf": "Bright-organic matched controls yield comparable/stronger finite paired-edge evidence or channels. This supplies local photometric ambiguity; no channel cutoff, vote, classifier or semantic acceptance is allowed even if primary ranks highest."
+    },
+    {
+      "id": "crop-source-equivalence",
+      "rejectIf": "Any crop/source raw field difference exceeds unchanged1e-9 absolute tolerance. Retain both receipts and UNKNOWN; never relax tolerance or change fitter."
+    }
+  ],
+  "reporting": {
+    "retain": "Both complete source/crop receipts; all54 candidate rows per composition; every short/long profile and visible count; all Dev72 lanes; all finite/null fits and original-frame edge/midpoint projections. Fit/null matrices are descriptive, not threshold/classifier.",
+    "prohibited": [
+      "No later widening, recentering, masks, setting/width tuning or same-experiment reruns.",
+      "No semantic identity, calibrated width, scale, source-renderer identity, production promotion, AA benefit, acceptance or global classifier inference.",
+      "No source/Git/HH/protected-stream writes."
+    ],
+    "calibratedWidth": "UNKNOWN",
+    "semanticIdentity": "UNKNOWN",
+    "promoted": false
+  },
+  "exposure": {
+    "oldCases": "All historical cases and prior E508/E511 results are exposed. The present zoom2 source/coordinates are exploratory caller choices, not blind heldout evaluation.",
+    "freshness": "This numeric window selection/protocol is freshly predeclared, unexecuted, and not a duplicate of completed full-source grid. No CV producer output consulted.",
+    "handoff": "Geometry is not disclosed to P6 until root records freeze and releases it."
+  },
+  "producerExecution": {
+    "adapterRunCalls": 0,
+    "recipeCalls": 0,
+    "learnerCalls": 0,
+    "sensorCalls": 0,
+    "edgeCalls": 0
+  },
+  "inferenceLimits": [
+    "Long-window averaging does not prove per-point edges or5 statistically independent observations.",
+    "Moving-pose windows are analytically consecutive but floating sample coordinates are not all byte-exact to long-window evaluation.",
+    "Candidate56 profiles can be near fixed normal boundary; controls can lose the same pair through finite field of view.",
+    "Visual testimony is impeachable; no independently verified ribbon or tee/badge labels."
+  ]
+}

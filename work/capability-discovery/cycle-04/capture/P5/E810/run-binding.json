@@ -1,0 +1,70 @@
+{
+  "job_id": "E810",
+  "worker": "P5",
+  "protocol": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P3/protocol.json",
+    "sha256": "115fc4fb788a3c6b75733b075666a41c999894866706bb09e888e477531526a0",
+    "bytes": 15760
+  },
+  "review": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P5/R803/result.json",
+    "sha256": "6dbf2497b778853f3a4756a53da303d0907c3a9382dbedbef727a500ce1abf5f",
+    "bytes": 9104
+  },
+  "source": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P3/source/Lenard-2.png",
+    "sha256": "cf5a033747c32f3e7f8774e7f712394b6af8a5d28228291f0d29a395998d55f4",
+    "bytes": 3806652
+  },
+  "sourceGitBlob": "02431ee3f091973a87cc2e7e254bc8bc0b028a7c",
+  "helperFreeze": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/helper-freeze.json",
+    "sha256": "ada3ac0c68d9f6c0ddb7777245bc11020de3c4adbd9c9ea648b77f4aa4d50b41",
+    "bytes": 1804
+  },
+  "helpers": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/run-trial.mjs",
+      "sha256": "5e99401607300027c244b56afabf526947e4c30bcdd4b9976d4f7170ff3b7aba",
+      "bytes": 12017
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/render-receipt.py",
+      "sha256": "f7c0967b40cf899c24d78b4885a387bec6f49f7f7d7f57eb661ed618dcaf3f3e",
+      "bytes": 7752
+    }
+  ],
+  "originalStaging": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P3/source/Lenard-2-source.json",
+    "sha256": "6dd63d816e702e899cf1ab696ebc59a2241d6244cffbd0569c7a703d03e8252b",
+    "bytes": 50851315
+  },
+  "restagedSource": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/source.json",
+    "sha256": "6dd63d816e702e899cf1ab696ebc59a2241d6244cffbd0569c7a703d03e8252b",
+    "bytes": 50851315
+  },
+  "requestFile": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/request.json",
+    "sha256": "57a7d0002ba3e5c49225ce7c67984bdddf17db88e075dcabf58e6b15f62de3ae",
+    "bytes": 50855146
+  },
+  "requestValueSha256": "a462d4cf9392a067b6b1d59a48774679e93a227acfc13cb25087ab133444f9fb",
+  "geometrySha256": "b1177de6c4c561294aef8a4f0dc3256670b0435ec53a9ad037356b2b0ae2ba01",
+  "roiSha256": "2e98a353516a4f49145b4ef80d4e3bf525504b368f37a13e82725bb3ec755de3",
+  "stageCommand": [
+    "python",
+    "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/stage-png.py",
+    "--source",
+    "/workspace/scratch/8528bb251845/discovery-cycle04/P3/source/Lenard-2.png",
+    "--expected-sha256",
+    "cf5a033747c32f3e7f8774e7f712394b6af8a5d28228291f0d29a395998d55f4",
+    "--image-id",
+    "Lenard-2",
+    "--frame",
+    "Lenard-2.original-source-pixel-centers",
+    "--out",
+    "/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/source.json"
+  ],
+  "projection": "Exact supported four-key adapter input; roi/geometry/numerics unchanged from frozen P3 protocol"
+}

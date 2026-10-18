@@ -1,0 +1,502 @@
+{
+  "schema": "cycle04-independent-package-audit@1",
+  "job_id": "R899",
+  "worker": "V1",
+  "producer_job_id": "E899",
+  "producer": "P6",
+  "decision": "accepted",
+  "summary": "Accepted only the exact frozen cycle04 engineering package:321payloadfiles/322checksums,388originalbindings/279storedcaptures,27zstdoriginals,1646priortrackedbytes,accepted23/14closures and exact4helperfiles. Fresh verifier/17puretests/default388+17companions/bulk27byteexact staging pass. Actual prior receipts, native V8 entry records, scientific figures, errata, native rejection, and full-suite same17failure logs were independently checked. No new CV/scientific work or scientific acceptance; production/release/publication remain separate.",
+  "frozenUtc": "2026-10-18T13:12:38.724198+00:00",
+  "independence": {
+    "freshReviewer": "/root/lab4_v1",
+    "producedPriorDataHelperRepairOrPackage": false,
+    "nativeAdmission": "Root assigned/started/persisted R899 before task release; readback observed V1/R899 running. Root alone finishes native state.",
+    "auditWrites": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899",
+    "repositorySourcePackageGitNativeOrRemoteWrites": 0,
+    "subagents": 0
+  },
+  "exactBindings": {
+    "packageManifest": {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-04/package-manifest.json",
+      "bytes": 67232,
+      "sha256": "2641472c9a6da112688901534ea4e9582a5e2197dce84d56ef3be9b06f97ca02"
+    },
+    "checksumFile": {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-04/SHA256SUMS",
+      "bytes": 44436,
+      "sha256": "afdc93282ff8c5dc55d2fa98f9fd5520774f6b66b8a6e19323a568a444387b80"
+    },
+    "captureIndex": {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-04/administration/capture-index.json",
+      "bytes": 124600,
+      "sha256": "96257b5475701a11b9ef9e6d1828ed04bde1df3127c884eb7ecfa280f1d38c62"
+    },
+    "sourceManifest": {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-04/source-manifest.json",
+      "bytes": 1402,
+      "sha256": "2e058d62245335d025d52e6dd45030d1424917a887a5ad36548d4665161ef56f"
+    },
+    "E899ProducerResult": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P6/E899/result.json",
+      "bytes": 6005,
+      "sha256": "8a464d053733efb5ce91c84ea84bbd98711dc5cf5e7fa188cffa534225c499f5"
+    },
+    "payloadSha256": "f8e73cf61836f9b2197c6508a2700582efd9231668424f705b933fb87a92248e",
+    "payloadSha256Encoding": "SHA256 UTF-8 concatenated existing manifest.files rows: path + U+0000 + sha256 + U+0000 + decimal bytes + LF. No resort.",
+    "localBase": "532fd7406e5b939e6d4d83cf92d12e2267bab11c",
+    "equivalentRecordedRemoteBase": "921974042771a73c4c40a30f2dd7c6ba438a3730",
+    "baseTree": "c170f6d54e6a45dd3cf376af070d89ba579e3d5b",
+    "recordedMain": "37a2dba87d61262f661af70f1a22440736e61efc",
+    "helperSourceFreeze": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/stage-default/discovery-cycle04/P6/E813/source-freeze.json",
+      "bytes": 6886,
+      "sha256": "5a135273510f8966af9bd69119a27f284405bc47397d42a13c93554b005b0eb9"
+    },
+    "acceptedR813": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/stage-default/discovery-cycle04/P1/R813/result.json",
+      "bytes": 8617,
+      "sha256": "bf5a2be3c91748ba1f299fec7b5a4325c7ffed9b2ff54006e430b7cc4fb6c054"
+    },
+    "helperFiles": [
+      {
+        "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.mjs",
+        "bytes": 7708,
+        "sha256": "c8abdc46721e01df64f8ae81318582ee3d639104389c9f5a43b539ef3fbf5e83"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs",
+        "bytes": 11020,
+        "sha256": "de01b97f461e648dac502d5070da87a7126d620b9df82632938bc0d988c79ecf"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/README.md",
+        "bytes": 4106,
+        "sha256": "f74301a060c7dbc3208f4e7c505ad42d340c9fdb6d37a3cea9d82f4ad16ece4b"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/fixtures/E811-B.json",
+        "bytes": 1317,
+        "sha256": "daa7e63665a4c658489483e712b3133547b1ba23a13c1529084d221766d91974"
+      }
+    ],
+    "acceptedD31bFreeze": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "accepted5b59Freeze": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52"
+  },
+  "integrity": {
+    "payloadFiles": 321,
+    "checksumEntries": 322,
+    "originalBindings": 388,
+    "uniqueCapturedStorage": 279,
+    "uniqueZstdFilesDecoded": 27,
+    "priorTrackedExact": 1646,
+    "helperFreezeEntries": 4,
+    "acceptedClosures": {
+      "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52": {
+        "path": "work/capability-discovery/cycle-02/feature-manifest-E308.json"
+      },
+      "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626": {
+        "path": "work/capability-discovery/cycle-03/evidence/E506/candidate-freeze.json"
+      }
+    },
+    "sourceRepairOnly": true,
+    "R812Authoritative": {
+      "bytes": 50209,
+      "sha256": "23eb330d6395693594e0c5bfec68151a932349d2a0dc418e242fd8657c8e666e"
+    },
+    "quarantinedPartial": {
+      "bytes": 35295,
+      "sha256": "cc28eeac036781b16e4cb367067d576eb63bf8e002968ed05683102657832528"
+    },
+    "capturedIndexSha256": "96257b5475701a11b9ef9e6d1828ed04bde1df3127c884eb7ecfa280f1d38c62"
+  },
+  "reproducibility": {
+    "freshPackagedVerifierExit": 0,
+    "defaultStage": {
+      "mode": "stage-default",
+      "originalsExact": 388,
+      "pathOnlyCompanions": 17,
+      "omittedExact": 0,
+      "reconstructedPaths": [],
+      "receiptSha256": "89bb9c6e023926db00638af4e4173481c1fa7dd88441cbe23d62dfedc7c9b48e"
+    },
+    "bulkStage": {
+      "mode": "stage-bulk",
+      "originalsExact": 388,
+      "pathOnlyCompanions": 17,
+      "omittedExact": 27,
+      "reconstructedPaths": [
+        "P2/E811/request-A.json",
+        "P2/E811/request-B.json",
+        "P2/E811/staged-source.json",
+        "P3/E809/request.json",
+        "P3/E809/source.json",
+        "P4/E807/crossing/request.json",
+        "P4/E807/intact/request.json",
+        "P4/E807/localized-upper-rail-loss/request.json",
+        "P4/E807/organic-capsule/request.json",
+        "P5/E810/request.json",
+        "P5/E810/source.json",
+        "P1/R807/replay/crossing/request.json",
+        "P1/R807/replay/intact/request.json",
+        "P1/R807/replay/localized-upper-rail-loss/request.json",
+        "P1/R807/replay/organic-capsule/request.json",
+        "P2/Lenard-1.original.png",
+        "P3/source/Lenard-2-source.json",
+        "P3/source/Lenard-2.png",
+        "P4/R809/Lenard-1.original.png",
+        "P4/R809/request.json",
+        "P4/R809/source.json",
+        "P4/R810/Lenard-2.original.png",
+        "P4/R810/request.json",
+        "P4/R810/source.json",
+        "P5/R811/request-A.json",
+        "P5/R811/request-B.json",
+        "P5/R811/staged-source.json"
+      ],
+      "receiptSha256": "84f3a5dad68bdfe56632c960a1830f011bd981a5215b185912ccd810a0a94dc5"
+    },
+    "overwriteRefusalExit": 1,
+    "independentPngAndRgbaChecks": [
+      {
+        "imageId": "Lenard-1",
+        "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+        "sourcePath": "specimens/dev/Lenard-1.png",
+        "gitBlob": "28bb53c3f669f82fe3bd8ed57460fc5fcd875146",
+        "pngSha256": "cb5403d21c32f451c02402aca4e2795d4ecfb9ddd7490fe714ca0c85c598dcba",
+        "rgbaSha256": "4fed88f3d298b544739a3bf532756d44413d292af0b4f34c627f04d152cbf45c",
+        "width": 1290,
+        "height": 2796,
+        "frame": "Lenard-1.original-source-pixel-centers",
+        "independentPngAndRgbaVerification": true
+      },
+      {
+        "imageId": "Lenard-2",
+        "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+        "sourcePath": "specimens/dev/Lenard-2.png",
+        "gitBlob": "02431ee3f091973a87cc2e7e254bc8bc0b028a7c",
+        "pngSha256": "cf5a033747c32f3e7f8774e7f712394b6af8a5d28228291f0d29a395998d55f4",
+        "rgbaSha256": "3659157b9501899ff62dcc5216dcb058a6a50d31578e751dcb665c49b97da4ee",
+        "width": 1290,
+        "height": 2796,
+        "frame": "Lenard-2.original-source-pixel-centers",
+        "independentPngAndRgbaVerification": true
+      }
+    ],
+    "pixelRecoveryActuallyExecuted": true,
+    "CVProducerRecipeRendererSolverOrScientificGridCalls": 0,
+    "commands": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/commands.json",
+      "bytes": 5222,
+      "sha256": "271c2cfb424f5ebf672e8ac79ec64ab2be8f7de7f2beb55761ddf67368338439"
+    },
+    "oneShot": "Staging requires a nonexistent outside-checkout directory. Originals are exact; path-only companions have separate hashes and do not inherit original execution provenance."
+  },
+  "helperReview": {
+    "freshPureTests": {
+      "tests": 17,
+      "pass": 17,
+      "fail": 0,
+      "exitCode": 0,
+      "stdout": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/focused-tests.stdout.log",
+        "bytes": 3734,
+        "sha256": "5c98347c7dfe675135b450b8b5e6f79f2de27e4b2aeec6c4bf8a703747b3a138"
+      }
+    },
+    "onlyProductionRepair": "Own-index dense nonempty-label validation; replacing it with old predicate exactly reproduces archived E812 source.",
+    "defaultOFF": true,
+    "runtimeImports": [
+      "node:crypto"
+    ],
+    "CVMathGeometryScoringRunnerOrFilesystemNetworkIO": false,
+    "receiptAliases": "Complete parsed raw receipt/stations and caller-supplied exact bytes are references, not immutable copies. Hash/shape is not execution authentication.",
+    "priorAcceptedClosures": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/accepted-closure-verification.json",
+      "bytes": 7426,
+      "sha256": "e1c4ad7a3e07fee9a11147c08df8f9d29799cda66479ec37b53ef197285edf98"
+    }
+  },
+  "historicalTests": {
+    "freshFullSuiteRerun": false,
+    "baseline": {
+      "path": "baseline-bare-node-tap.stdout.log",
+      "sha256": "39caf5534afb280c0e464246fa925f6052b0720ea84baa22be3954b877847356",
+      "totals": {
+        "tests": 170,
+        "pass": 153,
+        "fail": 17
+      },
+      "failedNames": [
+        "the selected checkpoint inventories docs/replay unchanged and a missing file changes state",
+        "the 17 accepted S2 basket Parts re-assemble exactly through the shape",
+        "the accepted specimen evidence decomposes plate-first for all 18 badges",
+        "the accepted specimen evidence decomposes body-first for all 17 baskets",
+        "the accepted specimen evidence supports interior-first assembly for all 18 tees",
+        "strict reuse verifies native bytes; changed source and lane give different identities",
+        "CLI reads explicit RGBA JSON, preserves nonfinite diagnostics and writes inspectable evidence",
+        "default OFF executes no operations",
+        "real positive exposes raw channels and fitted two-edge midpoint without calibration",
+        "shifted station retains fixed-center zero plus real signed midpoint",
+        "interior-only score1 remains UNKNOWN bilateral evidence",
+        "all-hidden numeric learner return is raw only and no fitted midpoint",
+        "empty training bank preserves legacy fallback40 as UNKNOWN",
+        "frame, provenance and finite violations fail closed before source operations",
+        "organic shape identical across exposed samples cannot acquire semantic path identity",
+        "work/capability-discovery/cycle-03/evidence/E506/initial-adapter.test.mjs",
+        "work/capability-discovery/cycle-03/history/E506-first-source/adapter.test.mjs"
+      ]
+    },
+    "repaired": {
+      "path": "P6/E813/repository-tests.log",
+      "sha256": "443c460352e11d53fa5db7262d4857a271bfccb1b9cc0fe446527d3e4f1c0367",
+      "totals": {
+        "tests": 187,
+        "pass": 170,
+        "fail": 17
+      },
+      "failedNames": [
+        "the selected checkpoint inventories docs/replay unchanged and a missing file changes state",
+        "the 17 accepted S2 basket Parts re-assemble exactly through the shape",
+        "the accepted specimen evidence decomposes plate-first for all 18 badges",
+        "the accepted specimen evidence decomposes body-first for all 17 baskets",
+        "the accepted specimen evidence supports interior-first assembly for all 18 tees",
+        "strict reuse verifies native bytes; changed source and lane give different identities",
+        "CLI reads explicit RGBA JSON, preserves nonfinite diagnostics and writes inspectable evidence",
+        "default OFF executes no operations",
+        "real positive exposes raw channels and fitted two-edge midpoint without calibration",
+        "shifted station retains fixed-center zero plus real signed midpoint",
+        "interior-only score1 remains UNKNOWN bilateral evidence",
+        "all-hidden numeric learner return is raw only and no fitted midpoint",
+        "empty training bank preserves legacy fallback40 as UNKNOWN",
+        "frame, provenance and finite violations fail closed before source operations",
+        "organic shape identical across exposed samples cannot acquire semantic path identity",
+        "work/capability-discovery/cycle-03/evidence/E506/initial-adapter.test.mjs",
+        "work/capability-discovery/cycle-03/history/E506-first-source/adapter.test.mjs"
+      ]
+    },
+    "same17NormalizedFailureNames": true,
+    "historicalLab": {
+      "tests": 130,
+      "pass": 130,
+      "fail": 0
+    },
+    "historicalStager": {
+      "tests": 2,
+      "pass": 2,
+      "fail": 0,
+      "raw": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.011s\n\nOK\n"
+    },
+    "E813Red": {
+      "path": "P6/E813/red-stdout.log",
+      "sha256": "6521ddcef37573f6246681e4d0093d640b4c8391a071cb1391ce3084634d810d",
+      "totals": {
+        "tests": 17,
+        "pass": 14,
+        "fail": 3
+      },
+      "failedNames": [
+        "sparse one-hole short ID list is invalid on actual E811 B refusal",
+        "sparse partial-hole short ID list is invalid on actual E811 B refusal",
+        "sparse short ID lists are invalid on disabled refusals and executed receipts"
+      ]
+    },
+    "E812Red2": {
+      "tests": 14,
+      "pass": 1,
+      "fail": 13,
+      "raw": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/stage-default/discovery-cycle04/P6/E812/red-stdout.log",
+        "bytes": 15950,
+        "sha256": "030cb9484bd47dd47fdbc4e0ee04f7321f1b855958ad7c739e97d4672f36da69"
+      }
+    },
+    "E812Red1": "Tool-transcript testimony only; no invented local raw stdout.",
+    "fullRepositoryGreen": false
+  },
+  "scientificReportingChecks": {
+    "scope": "Integrity/provenance/reporting only; not scientific acceptance.",
+    "E807": {
+      "rawCompositionCalls": 4,
+      "candidateRows": 156,
+      "predeclaredComparisons": 94,
+      "twoNullShortsAlongsideFiniteLong": true,
+      "capsuleChannelsEqualIntact": true,
+      "R807LaterAcceptedRecordDistinct": true,
+      "historicalPendingFooterQualifiedInCurrentREADME": true
+    },
+    "E809": {
+      "rows": 108,
+      "perBranchFinite": 43,
+      "perBranchNull": 11,
+      "primary42AndBrightControlsFinite": true,
+      "shiftedShort1Null": true,
+      "short4UniversalPlus6Fails": true
+    },
+    "E810": {
+      "rows": 108,
+      "perBranchFinite": 41,
+      "perBranchNull": 13,
+      "primaryLong48And56FiniteWithShortNulls": true,
+      "bright56AllFiveShortAndLongFinite": true
+    },
+    "E811": {
+      "topStatuses": [
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "A": "Executed2recipes,2branches,profiles,candidates[]",
+      "B": "Preparation refusal;0recipes,no branches",
+      "actualProducerAndReviewerV8EntryRanges": "All8records present, explicit zeros retained; raw counters independently parsed, not inferred from shapes."
+    },
+    "rawDifferences": {
+      "unchangedAbsoluteTolerance": 1e-09,
+      "E809MaximumRawNonzeroDifference": 1.0800249583553523e-12,
+      "E810MaximumRawNonzeroDifference": 1.4921397450962104e-12,
+      "meaning": "Within-tolerance agreement, not exact cross-branch byte/numeric equality; raw nonzero differences saved separately."
+    },
+    "fourPngFigures": "Directly inspected and tied to actual raw fits/profiles/CLI logs and receipt digests; not browser QA, not another renderer/CV execution.",
+    "exposure": "Both caller-selected Lenard zooms from same course; allcases exposed, not heldout or independentcourse.",
+    "semanticIdentity": "UNKNOWN",
+    "calibratedWidth": "UNKNOWN",
+    "promoted": false
+  },
+  "provenance": {
+    "authoritativeR812Counterexample": {
+      "bytes": 50209,
+      "sha256": "23eb330d6395693594e0c5bfec68151a932349d2a0dc418e242fd8657c8e666e"
+    },
+    "invalidPartial": {
+      "bytes": 35295,
+      "sha256": "cc28eeac036781b16e4cb367067d576eb63bf8e002968ed05683102657832528",
+      "parsesAsJSON": false
+    },
+    "currentErratum": {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-04/administration/history-copy-erratum.json",
+      "bytes": 2070,
+      "sha256": "3f37cd4207939f653060982733b9590fe009f2fff889d7efb327e251897fca58"
+    },
+    "frozenE813R813Rewritten": false,
+    "originalR806R812AMENDPreserved": true,
+    "nativeEpoch11": "Raw nonoptimal_native_score rejection preserved. Later solve used explicit coordinator eligibility narrowing, not solver learning. Premature rejected start remains tool-transcript testimony only.",
+    "E809Failures": "Raw pre-CV launch failure, original bad-layout figure, RuntimeError overwrite refusal, and separate display-v2 retained without CV rerun.",
+    "E810Timing": "Original boilerplate retained with correction: no external time utility or separate time log.",
+    "nativeObservations": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/native-state-observation.json",
+      "bytes": 2550,
+      "sha256": "617ae884f45f4f38ae2c0c9a5f16be1ae045f05f888e4f28a1d61347d783d8a8"
+    },
+    "captureTimeBoundary": "Package state/status/registration are historical, never current dispatch authority. Initial live P6free and later P6/E900scratchADMIN are distinct legitimate phases; V1/R899 pinned.",
+    "backgroundCASOrDispatcher": "Not implemented or claimed.",
+    "stationContrast": "Guarded unexecuted proposal, not existing composition behavior; later exact closure/protocol critique/rootadmission/producerreviewerseparation still required."
+  },
+  "auditDiagnostics": {
+    "firstSupplementFailure": "Reviewer harness incorrectly demanded exact numeric crop/source equality; actual raw subtolerance differences retained. Corrected only reviewer assertion to predeclared1e-9 contract.",
+    "secondSupplementFailure": "Reviewer assumed FileExistsError; actual raw overwrite refusal is RuntimeError. Corrected only reviewer log assertion.",
+    "firstFreezeFailure": "Reviewer tried TAP totals on the earlier E812 red2 default reporter. Raw log uses \u2139 totals (14tests/1pass/13fail); corrected only parser prefix. Original traceback copied verbatim from tool transcript.",
+    "retainedFailedAttempts": [
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/supplement-attempt1.py",
+        "bytes": 10983,
+        "sha256": "adfbeab0c334e02e459f988f1dcfb43721b76f8f3a3b29807ee0514c70e0d381"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/supplement-attempt1.stderr.log",
+        "bytes": 456,
+        "sha256": "de377feb40d39a71659f9088aa255606f0bd2e8316733d272331bb235f46c29c"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/supplement-attempt1-process.json",
+        "bytes": 606,
+        "sha256": "f91a814ff44408b61429c6d5a8a07d25260f309e87769242da9210cfaad3947c"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/supplement-attempt2.py",
+        "bytes": 12074,
+        "sha256": "ae4dce6346121198b1257997734009d9b0155308134c293df5ac23a5c60bb235"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/supplement-attempt2.stderr.log",
+        "bytes": 435,
+        "sha256": "ee5167e8a47bd96f6168380ff73c2de7d11876d4f2cbcd2b58d341dc23518030"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/supplement-attempt2-process.json",
+        "bytes": 606,
+        "sha256": "a70aa3d9c4037f36019da054eb01ea5c96f025e6e9f26568f937253776239199"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/freeze-result-attempt1.py",
+        "bytes": 13248,
+        "sha256": "143592bdaf4b0e0dba16cafe670fea8e225b81cb61dadf53746aebe669843b4f"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/freeze-result-attempt1.stderr.log",
+        "bytes": 428,
+        "sha256": "38286c5d2035abf3dacc0c11e25ec707cb24ed7b3722505b11437063280cf4bd"
+      }
+    ],
+    "initialReadOnlyDiagnostics": "Tool transcript retains missing direct compressed-original/archive/manifest-path reads, absent auditor directory listing, and piped display broken-pipe diagnostic. No scientific/test result was inferred from them.",
+    "aggregateEncodingDiscovery": "Initial candidate encodings differed; exact NUL-separated stored-row encoding independently reproduced aggregate. Root/P6 separately confirmed. Generator was a one-off command not in frozen package; future explanatory addition must not rewrite this reviewed manifest."
+  },
+  "requiredAmendments": [],
+  "limitations": [
+    "Bounded engineering package acceptance only; no scientific/human acceptance, physicalcontinuity/sameedge/pathidentity, endpointownership, calibratedwidth/scale, AA/rendereridentity, or semanticpromotion.",
+    "No CVproducer/adapter/recipe/renderer/native solver/scientificgrid rerun; historical execution evidence was inspected rather than newly authenticated. Optional exactpixel decoding/generation really ran.",
+    "Fresh17purehelpertests passed;130Lab/2stager/full187and170 are verified preserved rawlog evidence, not fresh broad-suite runs or proof of every possible regression.",
+    "No source/package/Git/native/remote changes by V1; rootowns nativefinish/publication and P6integration. No PR/mainmerge/release/defaultON approval.",
+    "Later actualcommit/tree and connectedpublication require separate rootauthorized gates and exactpayload verification."
+  ],
+  "artifacts": {
+    "review": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/review.md",
+      "bytes": 9707,
+      "sha256": "c51f04bcff37038d595b0a68de41cc8b6b9318836f7af5f2a972f2871a0558b1"
+    },
+    "index": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/audit-artifact-index.json",
+      "bytes": 12697,
+      "sha256": "31db5127ca353b439664858ea9d5f7e196bdf46c2d7f8991950eccccb963b0c4"
+    },
+    "finalRecheck": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/final-package-recheck.json",
+      "bytes": 1975,
+      "sha256": "c1bcce409b99bede167f2cb223bb24cff04875f34ee41bf60995784e1beda65b"
+    },
+    "auditScript": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/audit.py",
+      "bytes": 14073,
+      "sha256": "8f6bbc512c48d23d4dc7dfee4245f7bc30c985e3e35e2c96c29cafdbb4df6135"
+    },
+    "auditProcess": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/audit-process.json",
+      "bytes": 352,
+      "sha256": "9e973d2f071375627576e4dedcfa6df2897f090bb40fedee5b24714f20a71607"
+    },
+    "supplementScript": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/supplement.py",
+      "bytes": 12109,
+      "sha256": "fb0d2f8f009b7cd371b1d89f1154c0ec5121f734c2c3c0eded56f711b7502fa6"
+    },
+    "supplementProcess": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/supplement-process.json",
+      "bytes": 606,
+      "sha256": "2e2378529ed00aebb4937487b16c40e91d552c8ffd2f00af39c02e01205794f3"
+    },
+    "reportingCrosscheck": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/reporting-crosscheck.json",
+      "bytes": 18351,
+      "sha256": "2c1510612268411dc7e4b037d8b20a9e73079590eb63a99476b53964500c4e9b"
+    },
+    "nativeRuntime": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/native-runtime-inspection.json",
+      "bytes": 13997,
+      "sha256": "854ffea783de45e738770db7852d480c1075b71c1f93d96a953b9441124a267f"
+    },
+    "figureBindings": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/figure-bindings.json",
+      "bytes": 1017,
+      "sha256": "ac1c55b1ed1e8d93f14290eb9a84019989ac0579f8a0fbc6ddf50f8093036ae5"
+    }
+  },
+  "next": "Root may ingest this exact R899 result and decide the separate integration gate. P6 cannot self-accept it. No publication or new science by this reviewer."
+}

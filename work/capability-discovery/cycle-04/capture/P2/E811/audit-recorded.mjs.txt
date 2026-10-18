@@ -1,0 +1,120 @@
+/** Receipt/byte/coverage audit only; no CV imports, calls or regenerated measurements. */
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import assert from 'node:assert/strict';
+const root='/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811';
+const repo='/workspace/scratch/8528bb251845/chainspot-discovery-lab';
+const hash=file=>crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+const read=name=>JSON.parse(fs.readFileSync(path.join(root,name),'utf8'));
+const write=(name,value)=>fs.writeFileSync(path.join(root,name),JSON.stringify(value,null,2)+'\n',{flag:'wx'});
+const protocol=read('protocol.json'),manifest=read('actual-artifact-hashes.json');
+assert.equal(hash(path.join(root,'protocol.json')),'3d0b54fc2bb037131511a16f4679365fa9fec70be60f0ab888213bea8d0c6dd7');
+assert.equal(hash(path.join(root,'caller.mjs')),protocol.callerSha256);
+for(const a of manifest.artifacts)assert.equal(hash(a.path),a.sha256);
+for(const [name,expected] of Object.entries(protocol.sourceCodeHashes)){
+  assert.equal(hash(path.join(repo,name)),expected);assert.equal(manifest.sourceCodeHashesAfter[name],expected);
+}
+const binding=read('premeasurement-bindings.actual.json'),staged=read('staged-source.json');
+assert.equal(hash(path.join(root,'uniform-gray100.png')),protocol.source.pngSha256);
+assert.equal(staged.provenance.sourcePngSha256,protocol.source.pngSha256);
+assert.equal(staged.provenance.rgbaSha256,protocol.source.fullRgbaSha256);
+assert.equal(crypto.createHash('sha256').update(Uint8Array.from(staged.image.data)).digest('hex'),protocol.source.fullRgbaSha256);
+assert.equal(staged.image.data.length,65536);
+assert(staged.image.data.every((value,i)=>value===(i%4===3?255:100)));
+const Areq=read('request-A.json'),Breq=read('request-B.json');
+assert.deepEqual(Areq.source,Breq.source);assert.deepEqual(Areq.geometry,Breq.geometry);
+assert.deepEqual(Areq.source,staged);assert.deepEqual(Areq.geometry,protocol.geometry);
+assert.deepEqual(Areq.roi,protocol.requests[0].roi);assert.deepEqual(Breq.roi,protocol.requests[1].roi);
+for(const id of ['A','B'])assert.equal(hash(path.join(root,`request-${id}.json`)),binding.requestSha256[id]);
+assert.equal(binding.cvCallsSoFar,0);
+const A=read('receipt-A.json'),B=read('receipt-B.json'),runtime=read('runtime-execution-evidence.json');
+assert.equal(A.status,'UNKNOWN');assert.equal(B.status,'UNKNOWN');
+assert.equal(A.support.status,'SUPPORTED_CONSERVATIVE_ENVELOPE');assert.equal(A.support.failures.length,0);
+assert.equal(A.execution.compositionCalls,2);assert.equal(A.recipe.verifiedFiles,14);
+assert.equal(A.operationsExecuted.length,8);
+assert.equal(B.operationsExecuted.length,0);assert.equal(B.support.failures.length,2);
+assert.equal(B.reason,'complete required sampling support absent in declared ROI');
+assert(!Object.hasOwn(B,'composition'));assert(!Object.hasOwn(B,'sourceComposition'));assert(!Object.hasOwn(B,'execution'));
+const branches=[];
+for(const name of ['composition','sourceComposition']){
+  const branch=A[name];assert.equal(branch.status,'UNKNOWN');assert.equal(branch.operationsExecuted.length,4);
+  assert.equal(branch.stations.length,1);assert.equal(branch.rawWidthEstimate.widthPx,40);
+  assert.deepEqual(branch.rawWidthEstimate.scores,[]);
+  const station=branch.stations[0];assert.equal(station.profile.stationCount,16);
+  assert.equal(station.profile.offsetsPx.length,241);assert.equal(station.profile.meanLum.length,241);
+  assert(station.profile.meanLum.every(v=>v===100));assert(station.profile.visibleStationCounts.every(v=>v===16));
+  assert.deepEqual(station.candidates,[]);
+  branches.push({name,status:branch.status,operationLabels:branch.operationsExecuted,stationCount:1,
+    profileNormalCount:241,profileLongitudinalCount:16,allProfileValues:100,allVisibleCounts:16,candidateCount:0,
+    rawLearner:branch.rawWidthEstimate,fitMissingness:'NO_REQUESTED_WIDTH_CANDIDATES; no edgeFit/null rows were requested or produced'});
+}
+assert.equal(A.equivalence.status,'MATCHED_DECLARED_CONTROL');assert.equal(A.equivalence.absoluteTolerance,1e-9);assert.deepEqual(A.equivalence.differences,[]);
+const coverageEntryRecords=[];
+for(const id of ['A','B']){
+  const files=fs.readdirSync(path.join(root,`v8-coverage-${id}`)).filter(n=>n.endsWith('.json'));assert.equal(files.length,1);
+  const coverage=JSON.parse(fs.readFileSync(path.join(root,`v8-coverage-${id}`,files[0]),'utf8')).result;
+  const expected=id==='A'?{runSourcePixelRoi:1,prepare:1,runComposition:2,lumOf:2,profileAt:2,edgePairOf:0,
+    estimateFourLaneCorridorWidth:2,observeFourLaneCrossSection:0}
+    :{runSourcePixelRoi:1,prepare:1,runComposition:0,lumOf:0,profileAt:0,edgePairOf:0,
+      estimateFourLaneCorridorWidth:0,observeFourLaneCrossSection:0};
+  const records=[];
+  for(const [name,count] of Object.entries(expected)){
+    const matches=coverage.filter(s=>s.url.startsWith('file://'+repo+'/experiments/capability-discovery/'))
+      .flatMap(s=>s.functions.filter(f=>f.functionName===name).map(f=>({scriptUrl:s.url,functionName:name,
+        isBlockCoverage:f.isBlockCoverage,entryRange:f.ranges[0]})));
+    assert.equal(matches.length,1);assert.equal(matches[0].entryRange.count,count);records.push(matches[0]);
+  }
+  assert.deepEqual(runtime.executions.find(e=>e.id===id).runtimeFunctionCounts,expected);
+  coverageEntryRecords.push({id,coverageFile:path.join(root,`v8-coverage-${id}`,files[0]),counts:expected,records,
+    zeroVsUnavailable:'All8 named function entry-range records are present.0 means explicit native count0; no missing record was normalized to0. A missing record would remain null/unavailable.'});
+  assert.equal(read(`run-${id}.process.json`).exitCode,0);
+  assert.equal(fs.statSync(path.join(root,`run-${id}.stderr.log`)).size,0);
+}
+assert.equal(read('stage-process.json').exitCode,0);assert.equal(fs.statSync(path.join(root,'stage.stderr.log')).size,0);
+const analysis={schema:'E811-recorded-evidence-analysis@1',job_id:'E811',worker:'P2',outcome:'confirmed_reuse',
+  scope:'Confirmed bounded source-predicted engineering characterization of R806M1 using unchanged adapter; not scientific path/width acceptance or a helper implementation.',
+  actualInvocations:{staging:1,adapter:2,composition:2,profileAt:2,edgePairOf:0,observeFourLaneCrossSection:0,
+    requestsInOrder:['A','B'],perRequest:runtime.executions},
+  A:{status:A.status,branches,support:A.support,equivalence:A.equivalence},
+  B:{status:B.status,reason:B.reason,support:B.support,branchPresence:false,operationsExecuted:[],
+    missingness:'NOT_EXECUTED sampling-support refusal; no measured profile, candidate, edgeFit or physical absence finding'},
+  source:{pngSha256:protocol.source.pngSha256,fullRgbaSha256:protocol.source.fullRgbaSha256,
+    decoder:staged.provenance.decoder,sameStagedSource:true,requestOnlyRoiChanged:true},
+  coverageEntryRecords,premeasurementBindings:binding,
+  verifiedArtifactCount:manifest.artifacts.length,sourceCodeHashesUnchanged:protocol.sourceCodeHashes,
+  allDeclaredPredictionsRetainedAndMatched:true,
+  resources:{A:read('process-A.json'),B:read('process-B.json'),
+    scope:'Each elapsedMs covers only adapter invocation under native V8 coverage; maxRssKiB is child process-wide. Not speed comparisons or allocator-causality evidence.'},
+  auditCvCalls:0};
+write('analysis.json',analysis);
+const artifacts=[];
+const collect=dir=>{for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
+  const full=path.join(dir,entry.name);if(entry.isDirectory())collect(full);else if(entry.name!=='result.json')artifacts.push({path:full,sha256:hash(full),bytes:fs.statSync(full).size});
+}};collect(root);
+write('result.json',{schema:'cycle04-worker-result@1',job_id:'E811',worker:'P2',outcome:'confirmed_reuse',
+  summary:'Fixed R806M1 engineering characterization confirmed exact prediction: both requests return top-level UNKNOWN, but supported empty-bank A executes2 unchanged recipes and2 raw profiles with both branches retained and zero candidate rows; unsupported B refuses preparation with0 recipe/profile calls and no branches. Native V8 entry ranges prove2versus0, with all zero-count records actually present. One PNG staged once; AthenB each invoked once. No repeat, tuning, rendering, helper/product/repository edit or scientific acceptance.',
+  nativeAssignment:{job_id:'E811',worker:'P2',authority:'Root reported persisted native assignment/start ACK and explicitly released exact frozen flow; root alone owns live native state'},
+  exactFrozenProtocol:{path:path.join(root,'protocol.json'),sha256:hash(path.join(root,'protocol.json')),
+    callerPath:path.join(root,'caller.mjs'),callerSha256:hash(path.join(root,'caller.mjs'))},
+  actualCalls:analysis.actualInvocations,analysis:{path:path.join(root,'analysis.json'),sha256:hash(path.join(root,'analysis.json'))},
+  source:analysis.source,sourceCodeHashesUnchanged:protocol.sourceCodeHashes,
+  sourcePixelFreezeSha256:'d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626',
+  acceptedRecipeManifestSha256:'5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52',
+  commandsActuallyRun:[
+    {command:'node /workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/caller.mjs --execute-frozen',exitCode:0,
+      attempts:1,toolOutputChunkId:'352d80',note:'Main orchestrator stdout retained in tool transcript; per-stage/per-request raw stdout/stderr logs and all child process command/exit records are filesystem artifacts.'},
+    {command:'node /workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/audit-recorded.mjs',scope:'Recorded receipts/bytes/native coverage audit only; no CV imports or calls'}],
+  artifacts,
+  limitations:[
+    'Engineering characterization on exposed synthetic uniform pixels, not two fresh scientific cases, independent course evidence or scientific acceptance.',
+    'A candidates[] means no requested width rows, not edgeFit:null and not NOT_EXECUTED. B is whole-request NOT_EXECUTED preparation refusal. UNKNOWN alone is not an execution discriminator.',
+    'Raw learner fallback40 with scores[] is a diagnostic default, not a requested/calibrated width, fitted pair or semantic observation.',
+    'Coverage zeros are explicit present native entry counts in these processes; unavailable/missing records would be null, not0. Coverage overhead precludes treating elapsed values as an uninstrumented performance benchmark.',
+    'Only the frozen5 source hashes and A runtime14-entry guard are evidenced here; no broad repository-preservation audit, universal crop invariance or actual primitive-operation count is inferred.',
+    'No P6 helper admission/implementation, production behavior, threshold/math change, AA claim, calibrated width, physical edge absence, continuity or semantic identity follows. Independent R811 review remains separate.',
+    'Caller and protocol are unchanged from root-approved checkpoint. All output creation was under P2/E811; no direct dispatch to P6.'
+  ],semanticIdentity:'UNKNOWN',calibratedWidth:'UNKNOWN',promoted:false});
+console.log(JSON.stringify({job_id:'E811',worker:'P2',outcome:'confirmed_reuse',verifiedExistingArtifactHashes:manifest.artifacts.length,
+  resultSha256:hash(path.join(root,'result.json')),analysisSha256:hash(path.join(root,'analysis.json')),
+  actualRecipeCalls:{A:2,B:0},allCoverageEntryRecordsAvailable:true,auditCvCalls:0},null,2));

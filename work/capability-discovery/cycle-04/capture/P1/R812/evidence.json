@@ -1,0 +1,1307 @@
+{
+  "schema": "R812-independent-pure-helper-probes@1",
+  "job_id": "R812",
+  "worker": "P1",
+  "focusedTests": {
+    "pass": 14,
+    "fail": 0,
+    "exitCode": 0,
+    "actualHelperEntryCount": 49,
+    "initialFocusedHelperEntryCount": 49,
+    "executions": 2,
+    "initialReporter": "Initial14/14 spec-reporter success was followed by reviewer TAP-parser assertion failure; raw logs and review-initial.mjs preserved. Second unchanged focused execution uses explicit TAP. No helper/source edit.",
+    "coverage": "Both focused test runs executed under native NODE_V8_COVERAGE; no CV module imports in those tests."
+  },
+  "reviewerHelperCalls": 54,
+  "extraInitialStandaloneHelperCalls": 1,
+  "cvCalls": 0,
+  "checks": [
+    {
+      "id": "frozen source experiments/capability-discovery/window-evidence/group.mjs",
+      "pass": true,
+      "detail": "9669e26d3b2305f8ebcf514e1883d20ad916e759f9e458b244ebc83a87dfd62c"
+    },
+    {
+      "id": "frozen source experiments/capability-discovery/window-evidence/group.test.mjs",
+      "pass": true,
+      "detail": "3d1726fdd84724360395acd67aa8de5f86a7643ab41f08af1cc7aa677934e312"
+    },
+    {
+      "id": "frozen source experiments/capability-discovery/window-evidence/README.md",
+      "pass": true,
+      "detail": "39d75b1514970ceb63a2be9a4c2218e5893260e96270ee636302461d40f2e958"
+    },
+    {
+      "id": "exact upstream /workspace/scratch/8528bb251845/discovery-cycle04/P6/E812/source-freeze.json",
+      "pass": true,
+      "detail": "2c4fec447c00789c93023ce869bd5a03f4d6c9d1c2a78de1d2217b09071be05d"
+    },
+    {
+      "id": "exact upstream /workspace/scratch/8528bb251845/discovery-cycle04/P6/E812/result.json",
+      "pass": true,
+      "detail": "964495d171bf908d05fe6660395cdb877f4e9c677711eef8926a55417b5d9d0f"
+    },
+    {
+      "id": "exact upstream /workspace/scratch/8528bb251845/discovery-cycle04/P6/E808/narrow-contract.json",
+      "pass": true,
+      "detail": "d1c6e5e0fa7385b6476d8d8137cba17716e58d571918e27eee5bccf10095b426"
+    },
+    {
+      "id": "exact upstream /workspace/scratch/8528bb251845/discovery-cycle04/P1/R806/result.json",
+      "pass": true,
+      "detail": "759f979d22d3eaff5c292797abb3284981f1ce1165ffdf37c935d2067462ba08"
+    },
+    {
+      "id": "exact upstream /workspace/scratch/8528bb251845/discovery-cycle04/P1/R808/result.json",
+      "pass": true,
+      "detail": "7001dff06ec5951b33a77829432216ba934e69a60522a68de2ea01a54e83962d"
+    },
+    {
+      "id": "only crypto import",
+      "pass": true,
+      "detail": "Source inspected; only built-in crypto dependency"
+    },
+    {
+      "id": "no CV IO or scoring code",
+      "pass": true,
+      "detail": "Static dependency/body check plus direct source review"
+    },
+    {
+      "id": "focused14 actual pass",
+      "pass": true,
+      "detail": {
+        "exitCode": 0
+      }
+    },
+    {
+      "id": "exact real E811 receipts",
+      "pass": true,
+      "detail": {
+        "A": {
+          "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/receipt-A.json",
+          "sha256": "f89e5c5926efb400ec1cdec3413ce1fbfeabc1c0548bf86cd8311d0a314a41f6",
+          "bytes": 36954
+        },
+        "B": {
+          "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/receipt-B.json",
+          "sha256": "daa7e63665a4c658489483e712b3133547b1ba23a13c1529084d221766d91974",
+          "bytes": 1317
+        },
+        "E809": {
+          "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/receipt.json",
+          "sha256": "302e50cb5b60f752eb6f3139a4e6a98c015005203359e0ade5aebb378e1897ba",
+          "bytes": 828263
+        },
+        "E810": {
+          "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/receipt.json",
+          "sha256": "a61a487dae244cbd9bc62ada6bffb8fc7cf651616db7b37806628ee0399739e4",
+          "bytes": 825092
+        }
+      }
+    },
+    {
+      "id": "exact E811 runtime oracle",
+      "pass": true,
+      "detail": "19a7fd1931570f3f0c1c8c9909682263d2aeb4083d12ba4d8ed1ffa6bb7542bb"
+    },
+    {
+      "id": "native V8 two versus zero entries",
+      "pass": true,
+      "detail": [
+        {
+          "id": "A",
+          "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/v8-coverage-A/coverage-13-1792325357623-0.json",
+          "sha256": "93312947d9a948e3548dc3eb4bd56b0f2621a625b9042209424bba37bd5782f3",
+          "entryCount": 2
+        },
+        {
+          "id": "B",
+          "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/v8-coverage-B/coverage-21-1792325357756-0.json",
+          "sha256": "15abc80feb22c3f634237e6669bf56508414d8d03ada093e302eb23f87fc2347",
+          "entryCount": 0
+        }
+      ]
+    },
+    {
+      "id": "E809 real retained raw rows",
+      "pass": true,
+      "detail": {
+        "stations": 18,
+        "rowsPerBranch": 54,
+        "equivalence": "MATCHED_DECLARED_CONTROL"
+      }
+    },
+    {
+      "id": "E810 real retained raw rows",
+      "pass": true,
+      "detail": {
+        "stations": 18,
+        "rowsPerBranch": 54,
+        "equivalence": "MATCHED_DECLARED_CONTROL"
+      }
+    },
+    {
+      "id": "preserved /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.mjs",
+      "pass": true,
+      "detail": "9669e26d3b2305f8ebcf514e1883d20ad916e759f9e458b244ebc83a87dfd62c"
+    },
+    {
+      "id": "preserved /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs",
+      "pass": true,
+      "detail": "3d1726fdd84724360395acd67aa8de5f86a7643ab41f08af1cc7aa677934e312"
+    },
+    {
+      "id": "preserved /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/README.md",
+      "pass": true,
+      "detail": "39d75b1514970ceb63a2be9a4c2218e5893260e96270ee636302461d40f2e958"
+    },
+    {
+      "id": "preserved /workspace/scratch/8528bb251845/discovery-cycle04/P6/E812/source-freeze.json",
+      "pass": true,
+      "detail": "2c4fec447c00789c93023ce869bd5a03f4d6c9d1c2a78de1d2217b09071be05d"
+    },
+    {
+      "id": "preserved /workspace/scratch/8528bb251845/discovery-cycle04/P6/E812/result.json",
+      "pass": true,
+      "detail": "964495d171bf908d05fe6660395cdb877f4e9c677711eef8926a55417b5d9d0f"
+    },
+    {
+      "id": "preserved /workspace/scratch/8528bb251845/discovery-cycle04/P6/E808/narrow-contract.json",
+      "pass": true,
+      "detail": "d1c6e5e0fa7385b6476d8d8137cba17716e58d571918e27eee5bccf10095b426"
+    },
+    {
+      "id": "preserved /workspace/scratch/8528bb251845/discovery-cycle04/P1/R806/result.json",
+      "pass": true,
+      "detail": "759f979d22d3eaff5c292797abb3284981f1ce1165ffdf37c935d2067462ba08"
+    },
+    {
+      "id": "preserved /workspace/scratch/8528bb251845/discovery-cycle04/P1/R808/result.json",
+      "pass": true,
+      "detail": "7001dff06ec5951b33a77829432216ba934e69a60522a68de2ea01a54e83962d"
+    },
+    {
+      "id": "preserved /workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/receipt-A.json",
+      "pass": true,
+      "detail": "f89e5c5926efb400ec1cdec3413ce1fbfeabc1c0548bf86cd8311d0a314a41f6"
+    },
+    {
+      "id": "preserved /workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/receipt-B.json",
+      "pass": true,
+      "detail": "daa7e63665a4c658489483e712b3133547b1ba23a13c1529084d221766d91974"
+    },
+    {
+      "id": "preserved /workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/receipt.json",
+      "pass": true,
+      "detail": "302e50cb5b60f752eb6f3139a4e6a98c015005203359e0ade5aebb378e1897ba"
+    },
+    {
+      "id": "preserved /workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/receipt.json",
+      "pass": true,
+      "detail": "a61a487dae244cbd9bc62ada6bffb8fc7cf651616db7b37806628ee0399739e4"
+    },
+    {
+      "id": "preserved /workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/runtime-execution-evidence.json",
+      "pass": true,
+      "detail": "19a7fd1931570f3f0c1c8c9909682263d2aeb4083d12ba4d8ed1ffa6bb7542bb"
+    },
+    {
+      "id": "preserved /workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/v8-coverage-A/coverage-13-1792325357623-0.json",
+      "pass": true,
+      "detail": "93312947d9a948e3548dc3eb4bd56b0f2621a625b9042209424bba37bd5782f3"
+    },
+    {
+      "id": "preserved /workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/v8-coverage-B/coverage-21-1792325357756-0.json",
+      "pass": true,
+      "detail": "15abc80feb22c3f634237e6669bf56508414d8d03ada093e302eb23f87fc2347"
+    }
+  ],
+  "checkCount": 31,
+  "probes": [
+    {
+      "id": "real E811 A executed UNKNOWN empty bank",
+      "pass": true,
+      "expectedExecutionState": "EXECUTED",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "EXECUTED",
+        "projection": []
+      }
+    },
+    {
+      "id": "real E811 B zero-call UNKNOWN",
+      "pass": true,
+      "expectedExecutionState": "NOT_EXECUTED",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "NOT_EXECUTED",
+        "projection": [
+          {
+            "id": "refusal",
+            "declaration": {
+              "id": "refusal",
+              "longStationId": "unverified-long",
+              "orderedShortStationIds": [
+                "unverified-short"
+              ]
+            },
+            "measurementRows": null,
+            "stationIdsVerified": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "real E809 full raw compatibility/order",
+      "pass": true,
+      "expectedExecutionState": "EXECUTED",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "EXECUTED",
+        "projection": [
+          {
+            "id": "proposed-ribbon",
+            "declaration": {
+              "id": "proposed-ribbon",
+              "longStationId": "proposed-ribbon.long",
+              "orderedShortStationIds": [
+                "proposed-ribbon.short1",
+                "proposed-ribbon.short2",
+                "proposed-ribbon.short3",
+                "proposed-ribbon.short4",
+                "proposed-ribbon.short5"
+              ]
+            }
+          },
+          {
+            "id": "lateral-plus6",
+            "declaration": {
+              "id": "lateral-plus6",
+              "longStationId": "lateral-plus6.long",
+              "orderedShortStationIds": [
+                "lateral-plus6.short1",
+                "lateral-plus6.short2",
+                "lateral-plus6.short3",
+                "lateral-plus6.short4",
+                "lateral-plus6.short5"
+              ]
+            }
+          },
+          {
+            "id": "bright-organic",
+            "declaration": {
+              "id": "bright-organic",
+              "longStationId": "bright-organic.long",
+              "orderedShortStationIds": [
+                "bright-organic.short1",
+                "bright-organic.short2",
+                "bright-organic.short3",
+                "bright-organic.short4",
+                "bright-organic.short5"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "real E809 explicit reverse order",
+      "pass": true,
+      "expectedExecutionState": "EXECUTED",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "EXECUTED",
+        "projection": [
+          {
+            "id": "proposed-ribbon",
+            "declaration": {
+              "id": "proposed-ribbon",
+              "longStationId": "proposed-ribbon.long",
+              "orderedShortStationIds": [
+                "proposed-ribbon.short5",
+                "proposed-ribbon.short4",
+                "proposed-ribbon.short3",
+                "proposed-ribbon.short2",
+                "proposed-ribbon.short1"
+              ]
+            }
+          },
+          {
+            "id": "lateral-plus6",
+            "declaration": {
+              "id": "lateral-plus6",
+              "longStationId": "lateral-plus6.long",
+              "orderedShortStationIds": [
+                "lateral-plus6.short5",
+                "lateral-plus6.short4",
+                "lateral-plus6.short3",
+                "lateral-plus6.short2",
+                "lateral-plus6.short1"
+              ]
+            }
+          },
+          {
+            "id": "bright-organic",
+            "declaration": {
+              "id": "bright-organic",
+              "longStationId": "bright-organic.long",
+              "orderedShortStationIds": [
+                "bright-organic.short5",
+                "bright-organic.short4",
+                "bright-organic.short3",
+                "bright-organic.short2",
+                "bright-organic.short1"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "real E810 full raw compatibility/order",
+      "pass": true,
+      "expectedExecutionState": "EXECUTED",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "EXECUTED",
+        "projection": [
+          {
+            "id": "primary",
+            "declaration": {
+              "id": "primary",
+              "longStationId": "primary.long",
+              "orderedShortStationIds": [
+                "primary.short1",
+                "primary.short2",
+                "primary.short3",
+                "primary.short4",
+                "primary.short5"
+              ]
+            }
+          },
+          {
+            "id": "lateral-plus6",
+            "declaration": {
+              "id": "lateral-plus6",
+              "longStationId": "lateral-plus6.long",
+              "orderedShortStationIds": [
+                "lateral-plus6.short1",
+                "lateral-plus6.short2",
+                "lateral-plus6.short3",
+                "lateral-plus6.short4",
+                "lateral-plus6.short5"
+              ]
+            }
+          },
+          {
+            "id": "bright-organic",
+            "declaration": {
+              "id": "bright-organic",
+              "longStationId": "bright-organic.long",
+              "orderedShortStationIds": [
+                "bright-organic.short1",
+                "bright-organic.short2",
+                "bright-organic.short3",
+                "bright-organic.short4",
+                "bright-organic.short5"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "real E810 explicit reverse order",
+      "pass": true,
+      "expectedExecutionState": "EXECUTED",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "EXECUTED",
+        "projection": [
+          {
+            "id": "primary",
+            "declaration": {
+              "id": "primary",
+              "longStationId": "primary.long",
+              "orderedShortStationIds": [
+                "primary.short5",
+                "primary.short4",
+                "primary.short3",
+                "primary.short2",
+                "primary.short1"
+              ]
+            }
+          },
+          {
+            "id": "lateral-plus6",
+            "declaration": {
+              "id": "lateral-plus6",
+              "longStationId": "lateral-plus6.long",
+              "orderedShortStationIds": [
+                "lateral-plus6.short5",
+                "lateral-plus6.short4",
+                "lateral-plus6.short3",
+                "lateral-plus6.short2",
+                "lateral-plus6.short1"
+              ]
+            }
+          },
+          {
+            "id": "bright-organic",
+            "declaration": {
+              "id": "bright-organic",
+              "longStationId": "bright-organic.long",
+              "orderedShortStationIds": [
+                "bright-organic.short5",
+                "bright-organic.short4",
+                "bright-organic.short3",
+                "bright-organic.short2",
+                "bright-organic.short1"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "OFF undefined",
+      "pass": true,
+      "expectedExecutionState": "NOT_INSPECTED",
+      "actual": {
+        "status": "DISABLED",
+        "executionState": "NOT_INSPECTED",
+        "projection": null
+      }
+    },
+    {
+      "id": "OFF null",
+      "pass": true,
+      "expectedExecutionState": "NOT_INSPECTED",
+      "actual": {
+        "status": "DISABLED",
+        "executionState": "NOT_INSPECTED",
+        "projection": null
+      }
+    },
+    {
+      "id": "OFF empty",
+      "pass": true,
+      "expectedExecutionState": "NOT_INSPECTED",
+      "actual": {
+        "status": "DISABLED",
+        "executionState": "NOT_INSPECTED",
+        "projection": null
+      }
+    },
+    {
+      "id": "OFF false",
+      "pass": true,
+      "expectedExecutionState": "NOT_INSPECTED",
+      "actual": {
+        "status": "DISABLED",
+        "executionState": "NOT_INSPECTED",
+        "projection": null
+      }
+    },
+    {
+      "id": "descriptor",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "unsupported helper fields",
+        "projection": null
+      }
+    },
+    {
+      "id": "extra",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "unsupported helper fields",
+        "projection": null
+      }
+    },
+    {
+      "id": "badHash",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "exact expected receipt hash required",
+        "projection": null
+      }
+    },
+    {
+      "id": "hashUpper",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "exact expected receipt hash required",
+        "projection": null
+      }
+    },
+    {
+      "id": "byteArray",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "receiptBytes Uint8Array required",
+        "projection": null
+      }
+    },
+    {
+      "id": "groupsNull",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "groups array required",
+        "projection": null
+      }
+    },
+    {
+      "id": "groupsObject",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "groups array required",
+        "projection": null
+      }
+    },
+    {
+      "id": "missingGroups",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "groups array required",
+        "projection": null
+      }
+    },
+    {
+      "id": "hash tamper integrity",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INTEGRITY_MISMATCH",
+        "reason": "receipt hash mismatch",
+        "projection": null
+      }
+    },
+    {
+      "id": "invalidUTF8",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "invalid UTF-8 or JSON receipt",
+        "projection": null
+      }
+    },
+    {
+      "id": "truncatedUTF8",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "invalid UTF-8 or JSON receipt",
+        "projection": null
+      }
+    },
+    {
+      "id": "invalidJSON",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "invalid UTF-8 or JSON receipt",
+        "projection": null
+      }
+    },
+    {
+      "id": "JSONnull",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "unsupported receipt schema",
+        "projection": null
+      }
+    },
+    {
+      "id": "JSONarray",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "unsupported receipt schema",
+        "projection": null
+      }
+    },
+    {
+      "id": "same parsed JSON wrong exact hash",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INTEGRITY_MISMATCH",
+        "reason": "receipt hash mismatch",
+        "projection": null
+      }
+    },
+    {
+      "id": "same parsed JSON matching new hash",
+      "pass": true,
+      "expectedExecutionState": "EXECUTED",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "EXECUTED",
+        "projection": [
+          {
+            "id": "proposed-ribbon",
+            "declaration": {
+              "id": "proposed-ribbon",
+              "longStationId": "proposed-ribbon.long",
+              "orderedShortStationIds": [
+                "proposed-ribbon.short1",
+                "proposed-ribbon.short2",
+                "proposed-ribbon.short3",
+                "proposed-ribbon.short4",
+                "proposed-ribbon.short5"
+              ]
+            }
+          },
+          {
+            "id": "lateral-plus6",
+            "declaration": {
+              "id": "lateral-plus6",
+              "longStationId": "lateral-plus6.long",
+              "orderedShortStationIds": [
+                "lateral-plus6.short1",
+                "lateral-plus6.short2",
+                "lateral-plus6.short3",
+                "lateral-plus6.short4",
+                "lateral-plus6.short5"
+              ]
+            }
+          },
+          {
+            "id": "bright-organic",
+            "declaration": {
+              "id": "bright-organic",
+              "longStationId": "bright-organic.long",
+              "orderedShortStationIds": [
+                "bright-organic.short1",
+                "bright-organic.short2",
+                "bright-organic.short3",
+                "bright-organic.short4",
+                "bright-organic.short5"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "oneBranch",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "both execution branches required",
+        "projection": null
+      }
+    },
+    {
+      "id": "noExecution",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "contradictory execution count/order/operations",
+        "projection": null
+      }
+    },
+    {
+      "id": "calls0",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "contradictory execution count/order/operations",
+        "projection": null
+      }
+    },
+    {
+      "id": "wrongOrder",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "contradictory execution count/order/operations",
+        "projection": null
+      }
+    },
+    {
+      "id": "wrongCount",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "contradictory execution count/order/operations",
+        "projection": null
+      }
+    },
+    {
+      "id": "concatMismatch",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "contradictory execution count/order/operations",
+        "projection": null
+      }
+    },
+    {
+      "id": "statusMismatch",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "receipt status differs from crop branch status",
+        "projection": null
+      }
+    },
+    {
+      "id": "sourceIdsReordered",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "branch station ID sequences differ",
+        "projection": null
+      }
+    },
+    {
+      "id": "widthOrder",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "branch width row sequences differ",
+        "projection": null
+      }
+    },
+    {
+      "id": "duplicateWidth",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "malformed or duplicate candidate width",
+        "projection": null
+      }
+    },
+    {
+      "id": "unknownSchema",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "unsupported receipt schema",
+        "projection": null
+      }
+    },
+    {
+      "id": "nonfiniteGeometry",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "nonfinite or missing station linkage geometry",
+        "projection": null
+      }
+    },
+    {
+      "id": "badWindow",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "malformed station window",
+        "projection": null
+      }
+    },
+    {
+      "id": "missingEquivalence",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "accepted equivalence object required",
+        "projection": null
+      }
+    },
+    {
+      "id": "wrongTolerance",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "accepted equivalence object required",
+        "projection": null
+      }
+    },
+    {
+      "id": "missingID",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "group station ID not found: absent",
+        "projection": null
+      }
+    },
+    {
+      "id": "duplicateShort",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "duplicate group or station IDs",
+        "projection": null
+      }
+    },
+    {
+      "id": "longAmongShort",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "duplicate group or station IDs",
+        "projection": null
+      }
+    },
+    {
+      "id": "emptyShort",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "malformed or unsupported group fields",
+        "projection": null
+      }
+    },
+    {
+      "id": "duplicateGroup",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "duplicate group or station IDs",
+        "projection": null
+      }
+    },
+    {
+      "id": "unsupportedGroupKey",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "malformed or unsupported group fields",
+        "projection": null
+      }
+    },
+    {
+      "id": "nullGroup",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "malformed or unsupported group fields",
+        "projection": null
+      }
+    },
+    {
+      "id": "finite different heading raw-only",
+      "pass": true,
+      "expectedExecutionState": "EXECUTED",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "EXECUTED",
+        "projection": [
+          {
+            "id": "proposed-ribbon",
+            "declaration": {
+              "id": "proposed-ribbon",
+              "longStationId": "proposed-ribbon.long",
+              "orderedShortStationIds": [
+                "proposed-ribbon.short1",
+                "proposed-ribbon.short2",
+                "proposed-ribbon.short3",
+                "proposed-ribbon.short4",
+                "proposed-ribbon.short5"
+              ]
+            }
+          },
+          {
+            "id": "lateral-plus6",
+            "declaration": {
+              "id": "lateral-plus6",
+              "longStationId": "lateral-plus6.long",
+              "orderedShortStationIds": [
+                "lateral-plus6.short1",
+                "lateral-plus6.short2",
+                "lateral-plus6.short3",
+                "lateral-plus6.short4",
+                "lateral-plus6.short5"
+              ]
+            }
+          },
+          {
+            "id": "bright-organic",
+            "declaration": {
+              "id": "bright-organic",
+              "longStationId": "bright-organic.long",
+              "orderedShortStationIds": [
+                "bright-organic.short1",
+                "bright-organic.short2",
+                "bright-organic.short3",
+                "bright-organic.short4",
+                "bright-organic.short5"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "raw literal null and nonfinite preserved",
+      "pass": true,
+      "expectedExecutionState": "EXECUTED",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "EXECUTED",
+        "projection": [
+          {
+            "id": "proposed-ribbon",
+            "declaration": {
+              "id": "proposed-ribbon",
+              "longStationId": "proposed-ribbon.long",
+              "orderedShortStationIds": [
+                "proposed-ribbon.short1",
+                "proposed-ribbon.short2",
+                "proposed-ribbon.short3",
+                "proposed-ribbon.short4",
+                "proposed-ribbon.short5"
+              ]
+            }
+          },
+          {
+            "id": "lateral-plus6",
+            "declaration": {
+              "id": "lateral-plus6",
+              "longStationId": "lateral-plus6.long",
+              "orderedShortStationIds": [
+                "lateral-plus6.short1",
+                "lateral-plus6.short2",
+                "lateral-plus6.short3",
+                "lateral-plus6.short4",
+                "lateral-plus6.short5"
+              ]
+            }
+          },
+          {
+            "id": "bright-organic",
+            "declaration": {
+              "id": "bright-organic",
+              "longStationId": "bright-organic.long",
+              "orderedShortStationIds": [
+                "bright-organic.short1",
+                "bright-organic.short2",
+                "bright-organic.short3",
+                "bright-organic.short4",
+                "bright-organic.short5"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "explicit cross-group reuse",
+      "pass": true,
+      "expectedExecutionState": "EXECUTED",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "EXECUTED",
+        "projection": [
+          {
+            "id": "proposed-ribbon",
+            "declaration": {
+              "id": "proposed-ribbon",
+              "longStationId": "proposed-ribbon.long",
+              "orderedShortStationIds": [
+                "proposed-ribbon.short1",
+                "proposed-ribbon.short2",
+                "proposed-ribbon.short3",
+                "proposed-ribbon.short4",
+                "proposed-ribbon.short5"
+              ]
+            }
+          },
+          {
+            "id": "explicit-reuse",
+            "declaration": {
+              "id": "explicit-reuse",
+              "longStationId": "proposed-ribbon.long",
+              "orderedShortStationIds": [
+                "proposed-ribbon.short1",
+                "proposed-ribbon.short2",
+                "proposed-ribbon.short3",
+                "proposed-ribbon.short4",
+                "proposed-ribbon.short5"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "sparse short IDs on REAL branchless refusal",
+      "pass": false,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "NOT_EXECUTED",
+        "projection": [
+          {
+            "id": "sparse",
+            "declaration": {
+              "id": "sparse",
+              "longStationId": "long",
+              "orderedShortStationIds": [
+                null
+              ]
+            },
+            "measurementRows": null,
+            "stationIdsVerified": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "partially sparse short IDs on REAL branchless refusal",
+      "pass": false,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "NOT_EXECUTED",
+        "projection": [
+          {
+            "id": "partial",
+            "declaration": {
+              "id": "partial",
+              "longStationId": "long",
+              "orderedShortStationIds": [
+                "unverified-short",
+                null
+              ]
+            },
+            "measurementRows": null,
+            "stationIdsVerified": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "explicit undefined short ID rejected",
+      "pass": true,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "errorClass": "INVALID_INPUT",
+        "reason": "malformed or unsupported group fields",
+        "projection": null
+      }
+    }
+  ],
+  "probeCount": 54,
+  "passedProbes": 52,
+  "failedProbes": [
+    {
+      "id": "sparse short IDs on REAL branchless refusal",
+      "pass": false,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "NOT_EXECUTED",
+        "projection": [
+          {
+            "id": "sparse",
+            "declaration": {
+              "id": "sparse",
+              "longStationId": "long",
+              "orderedShortStationIds": [
+                null
+              ]
+            },
+            "measurementRows": null,
+            "stationIdsVerified": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "partially sparse short IDs on REAL branchless refusal",
+      "pass": false,
+      "expectedExecutionState": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "NOT_EXECUTED",
+        "projection": [
+          {
+            "id": "partial",
+            "declaration": {
+              "id": "partial",
+              "longStationId": "long",
+              "orderedShortStationIds": [
+                "unverified-short",
+                null
+              ]
+            },
+            "measurementRows": null,
+            "stationIdsVerified": false
+          }
+        ]
+      }
+    }
+  ],
+  "receiptBindings": {
+    "A": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/receipt-A.json",
+      "sha256": "f89e5c5926efb400ec1cdec3413ce1fbfeabc1c0548bf86cd8311d0a314a41f6",
+      "bytes": 36954
+    },
+    "B": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/receipt-B.json",
+      "sha256": "daa7e63665a4c658489483e712b3133547b1ba23a13c1529084d221766d91974",
+      "bytes": 1317
+    },
+    "E809": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/receipt.json",
+      "sha256": "302e50cb5b60f752eb6f3139a4e6a98c015005203359e0ade5aebb378e1897ba",
+      "bytes": 828263
+    },
+    "E810": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/receipt.json",
+      "sha256": "a61a487dae244cbd9bc62ada6bffb8fc7cf651616db7b37806628ee0399739e4",
+      "bytes": 825092
+    }
+  },
+  "runtimeOracle": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/runtime-execution-evidence.json",
+    "sha256": "19a7fd1931570f3f0c1c8c9909682263d2aeb4083d12ba4d8ed1ffa6bb7542bb",
+    "nativeCoverageEntries": [
+      {
+        "id": "A",
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/v8-coverage-A/coverage-13-1792325357623-0.json",
+        "sha256": "93312947d9a948e3548dc3eb4bd56b0f2621a625b9042209424bba37bd5782f3",
+        "entryCount": 2
+      },
+      {
+        "id": "B",
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/v8-coverage-B/coverage-21-1792325357756-0.json",
+        "sha256": "15abc80feb22c3f634237e6669bf56508414d8d03ada093e302eb23f87fc2347",
+        "entryCount": 0
+      }
+    ]
+  },
+  "groupsSidecar": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/groups-sidecar.json",
+    "sha256": "82476bc7a3c22d0399ce74607b98dae49418ed7a48d5dd7a37ed67c84228582f",
+    "bytes": 2360
+  },
+  "preservedPaths": 15,
+  "fullRepositorySuite": "Not rerun;17 producer failures remain reported/unclassified pending root untouched-base control.",
+  "scope": "Scratch-only pure API review. No CV computation, source/helper changes, Git/native writes, or scientific acceptance."
+}

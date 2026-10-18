@@ -1,0 +1,115 @@
+{
+  "epoch": 0,
+  "at": "2026-10-18T11:50:38.458662+00:00",
+  "ready_jobs": [
+    "E801",
+    "E802",
+    "E803",
+    "E804",
+    "E805",
+    "E806"
+  ],
+  "pinned_workers": [],
+  "assignments": {
+    "P3": "E803",
+    "P2": "E802",
+    "P5": "E804",
+    "P6": "E806",
+    "P1": "E805",
+    "P4": "E801"
+  },
+  "dispatch": {
+    "P3": "E803",
+    "P2": "E802",
+    "P5": "E804",
+    "P6": "E806",
+    "P1": "E805",
+    "P4": "E801"
+  },
+  "native_seconds": 0.012139515005401336,
+  "native_constraints": {
+    "solved": true,
+    "brokenVal": 0,
+    "brokenCount": 0,
+    "constraints": [
+      {
+        "name": "independent_review",
+        "desc": "avoidAssignmentsSpec: Avoid 6 assignments on scope packets",
+        "value": 0
+      },
+      {
+        "name": "pin_in_flight",
+        "desc": "avoidMovingSpec: Avoid moving 0 objects",
+        "value": 0
+      },
+      {
+        "name": "ready_packet_capacity",
+        "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+        "value": 0
+      }
+    ]
+  },
+  "independent_capacity_check": true,
+  "independent_eligibility_check": true,
+  "exact_score": 600,
+  "native_score": 600,
+  "caps": {
+    "E801": 1,
+    "E802": 1,
+    "E803": 1,
+    "E804": 1,
+    "E805": 1,
+    "E806": 1,
+    "R801": 0,
+    "R802": 0,
+    "R803": 0,
+    "R804": 0,
+    "R805": 0,
+    "R806": 0,
+    "BENCH": 6
+  },
+  "eligible": {
+    "E801": [
+      "P1",
+      "P4",
+      "P5"
+    ],
+    "E802": [
+      "P2",
+      "P3"
+    ],
+    "E803": [
+      "P2",
+      "P3"
+    ],
+    "E804": [
+      "P1",
+      "P4",
+      "P5"
+    ],
+    "E805": [
+      "P1",
+      "P4",
+      "P5"
+    ],
+    "E806": [
+      "P6"
+    ]
+  },
+  "weights": {
+    "E801": 100,
+    "E802": 100,
+    "E803": 100,
+    "E804": 100,
+    "E805": 100,
+    "E806": 100
+  },
+  "agent_by_worker": {
+    "P1": null,
+    "P2": null,
+    "P3": null,
+    "P4": null,
+    "P5": null,
+    "P6": null
+  }
+}

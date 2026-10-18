@@ -1,0 +1,131 @@
+{
+  "schema": "cycle04-independent-design-review@1",
+  "job_id": "R806",
+  "worker": "P1",
+  "producer_job_id": "E806",
+  "producer": "P6",
+  "decision": "amend",
+  "summary": "The existing-operation-only reuse recommendation is supported by the unchanged source: one accepted adapter request can contain the long, ordered short, and control stations and retain both recipe branches. No new CV runner or measurement stage is justified. The optional projection remains unimplemented and unadmitted. Before its contract can be accepted for implementation, distinguish executed UNKNOWN receipts from zero-call abstentions and reconcile contradictory handling of malformed descriptor geometry. This is engineering design review, not implemented-helper or scientific acceptance.",
+  "producerArtifactHashes": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P6/design.json",
+      "sha256": "831df032c3f1ecdc151bf9df5889e0c16b22d8c5ed5667611bfd99dc2250a3ba",
+      "bytes": 10244
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P6/contract-proposal.json",
+      "sha256": "bcdb7ee7a88010c474909062f047315cefe2a02cc80a8eef089bc3db34860270",
+      "bytes": 8854
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P6/result.json",
+      "sha256": "d45ac419b0528f1ce42b11880aec13a78912d3f230271b23b5f9268f8e3043d6",
+      "bytes": 2640
+    }
+  ],
+  "sourceIds": {
+    "sourcePixelFreezeSha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "acceptedCompositionManifestSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+    "sourcePixelAdapterSha256": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6",
+    "compositionRecipeSha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6",
+    "pathSpaceSha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"
+  },
+  "requiredAmendments": [
+    {
+      "id": "M1-executed-unknown",
+      "severity": "high",
+      "target": "contract-proposal.json validation item beginning 'No synthetic successful row for a whole-request UNKNOWN/DISABLED receipt'",
+      "finding": "The proposal associates whole-request UNKNOWN/DISABLED with exact zero execution and NOT_EXECUTED rows without defining a branch/execution discriminator. Top-level UNKNOWN alone cannot establish abstention. The adapter copies crop result.status after two recipe calls, and composition returns UNKNOWN when no observed candidate exists even though profiles and raw rows were executed.",
+      "sourceEvidence": [
+        "source-pixels/adapter.mjs#runSourcePixelRoi: successful preparation runs both recipes and returns status:result.status plus execution.compositionCalls:2 and both composition branches.",
+        "composition/recipe.mjs#runComposition: bank valuesPx may be empty; profiles still execute, candidates are empty, observed=false and returned status=UNKNOWN.",
+        "A valid fully masked supported request can likewise retain executed UNKNOWN channels; this is a source-level possibility, not a new measurement."
+      ],
+      "requestedChange": "Explicitly classify zero-call abstention by absence of composition/sourceComposition and empty operations plus the corresponding preparation/disabled reason; classify an executed UNKNOWN by its actual execution fields and retained branches. Preserve all available raw rows/profiles/counts in executed UNKNOWN. Treat contradictory status/execution/branch shapes as malformed/integrity evidence, never silently normalize them.",
+      "requiredFuturePureTests": [
+        "Top-level UNKNOWN with no branches and zero operations remains NOT_EXECUTED.",
+        "Top-level UNKNOWN with two branches, execution.compositionCalls=2 and populated profiles remains executed evidence.",
+        "Executed empty-bank UNKNOWN preserves station profiles and zero candidate rows without inventing widths.",
+        "An inconsistent receipt claiming zero calls while carrying executed branches is rejected/UNKNOWN with exact reason and retained bytes."
+      ],
+      "cvExecutionNeededForReviewFinding": false
+    },
+    {
+      "id": "M2-malformed-geometry-policy",
+      "severity": "medium",
+      "target": "design.json testPlan different-heading/nonfinite-geometry item versus contract-proposal.json validation first item",
+      "finding": "The design says nonfinite geometry must keep raw rows and merely make common-normal deltas unavailable. The proposal says nonfinite required descriptor geometry is rejected before projection. These describe different behavior for the same malformed helper input.",
+      "requestedChange": "Separate valid finite different-heading comparisons from malformed descriptor geometry. Keep valid different-heading rows with unavailable common-normal deltas. For malformed descriptor geometry return explicit UNKNOWN/rejection with no asserted validated row projection; retaining exact receipt/descriptor bytes or untrusted raw evidence references is allowed and is not validated projection. Specify this same policy in design and contract.",
+      "requiredFuturePureTests": [
+        "Finite unequal headings preserve raw rows and mark only common-normal metrics unavailable.",
+        "Nonfinite required descriptor geometry follows the single declared invalid-input policy without producing a validated comparison."
+      ],
+      "cvExecutionNeededForReviewFinding": false
+    }
+  ],
+  "supportedClaimsAndChecks": [
+    {
+      "id": "C1-existing-stations-reuse",
+      "result": "supported_by_source_inspection",
+      "check": "Adapter permits a unique finite geometry.stations array; composition maps every station, calls profileAt on its explicit t0/t1 and fits each exact requested width. A separate caller group map provides order without unsupported adapter keys."
+    },
+    {
+      "id": "C2-paired-controls",
+      "result": "supported_by_source_inspection",
+      "check": "Every supported adapter call runs crop then original source composition. compareControls retains raw learner/profile/count/candidate differences with the existing absolute1e-9 tolerance. Optional reporting may not disable or replace either branch."
+    },
+    {
+      "id": "C3-short-window-guard",
+      "result": "supported_by_source_inspection",
+      "check": "edgePairOf uses max(8,0.2*nT) counts and nGood/M>=0.6 before search. Thus nT<8 guarantees structural null. Passing this guard says only that search was reachable; it does not explain a null as missing physical edges."
+    },
+    {
+      "id": "C4-dev72-window-scope",
+      "result": "supported_by_source_inspection",
+      "check": "Composition supplies origin/heading/width but no t0/t1 to observeFourLaneCrossSection. Identical-pose repeated-window sensor rows are repeated evidence, not independent longitudinal observations."
+    },
+    {
+      "id": "C5-operation-count",
+      "result": "supported_as_receipt_operation_label_count_only",
+      "check": "The proposed 3+S*(1+3*B) per-branch formula matches operationsExecuted labels for validated executed composition. It is not the actual primitive-operation count or resource estimate; whole-request abstentions do not use it."
+    },
+    {
+      "id": "C6-coordinate-algebra",
+      "result": "mathematically_consistent_but_not_admitted_scope",
+      "check": "For exactly equal heading/frame, dot(origin difference,n)+fit offset is a common-normal coordinate. It does not establish physical edge association, matched sample lattices or continuity. This review does not admit common-normal/window-projection algebra merely because it is possible."
+    },
+    {
+      "id": "C7-hash-closures",
+      "result": "fresh_read_only_hash_verification_passed",
+      "sourceHistoryEntries": 23,
+      "sourceHistoryMismatches": [],
+      "acceptedRecipeClosureEntries": 14,
+      "acceptedRecipeClosureMismatches": []
+    },
+    {
+      "id": "C8-producer-artifacts",
+      "result": "fresh_read_only_verification_passed",
+      "check": "All three producer artifacts parse as JSON. Both artifact digests and byte lengths claimed inside P6/result.json match actual bytes. The result.json digest above binds the reviewed producer envelope separately."
+    }
+  ],
+  "scopeAndAdmission": {
+    "existingOperationDesign": "accepted in principle as reuse; no source implementation or new CV runner needed",
+    "optionalProjection": "not implemented, not accepted as implemented, not yet admitted",
+    "rootGate": "Only root may admit a minimal receipt projection after an actual synthetic gap is demonstrated. Neither generic bookkeeping convenience nor this design review proves that gap. Any later packet must bind the concrete observed gap and include only necessary row projection/diagnostics; no CV runner.",
+    "unjustifiedUntilGap": [
+      "Generalized common-normal coordinate transforms for relocated stations.",
+      "Generalized window gap/overlap/midpoint projection algebra.",
+      "Automatic diagnostic/association surface beyond the demonstrated minimal reporting need."
+    ],
+    "noCoverageInference": "Reported continuous interval endpoints are not proof that short windows partition the exact parent arange lattice. Fractional endpoints or reanchoring need explicit sample-grid accounting in the caller protocol; no implicit coverage/continuity verdict follows.",
+    "bindingLimit": "A pure helper supplied receipt/descriptor bytes can verify their exact-byte digests and internal bindings. Full request/PNG/RGBA bytes, actual closure execution and protocol freeze time remain external evidence/testimony unless independently supplied or verified; digest self-consistency is not authenticated provenance.",
+    "newImplementationReview": "Any subsequently admitted helper needs its own frozen source, pure tests, independent review and scope-specific acceptance. This R806 review cannot substitute for those."
+  },
+  "limitations": [
+    "No CV function imported or executed, no synthetic or course measurements run, and no tests run. Source-level counterexamples are logical derivations, not retained runtime results.",
+    "No cycle04 P2/P3 course geometry or protocols, course images, or fresh producer measurement receipts were opened during R806.",
+    "No repository/source/Git/native/publication changes. Only P1/R806/result.json was written for this review; earlier P1/E805 artifacts stay unchanged.",
+    "All 1646 prior tracked files must remain unchanged; this reviewer made no repository writes but did not perform the sole owner's full prior-file preservation audit.",
+    "Scientific continuity, same physical edges, width calibration, semantic identity, course acceptance and AA benefit remain unestablished."
+  ]
+}

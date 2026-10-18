@@ -1,0 +1,1484 @@
+TAP version 13
+# Subtest: all exact bytes, operation dependencies and guarded branches validate
+ok 1 - all exact bytes, operation dependencies and guarded branches validate
+  ---
+  duration_ms: 8.668605
+  type: 'test'
+  ...
+# Subtest: missing operation/source dependencies and accepted claims fail closed
+ok 2 - missing operation/source dependencies and accepted claims fail closed
+  ---
+  duration_ms: 5.552982
+  type: 'test'
+  ...
+# Subtest: missing fallback target is rejected
+ok 3 - missing fallback target is rejected
+  ---
+  duration_ms: 4.657446
+  type: 'test'
+  ...
+# Subtest: numeric width defaults, JSON null, tied evidence and missing candidates are UNKNOWN
+ok 4 - numeric width defaults, JSON null, tied evidence and missing candidates are UNKNOWN
+  ---
+  duration_ms: 0.658064
+  type: 'test'
+  ...
+# Subtest: separated visible width evidence remains bounded evidence
+ok 5 - separated visible width evidence remains bounded evidence
+  ---
+  duration_ms: 0.166154
+  type: 'test'
+  ...
+# Subtest: unknown rails with observed interior do not imply combined UNKNOWN
+ok 6 - unknown rails with observed interior do not imply combined UNKNOWN
+  ---
+  duration_ms: 0.159473
+  type: 'test'
+  ...
+# Subtest: catalog width -40 must be a positive finite hypothesis
+ok 7 - catalog width -40 must be a positive finite hypothesis
+  ---
+  duration_ms: 2.036397
+  type: 'test'
+  ...
+# Subtest: catalog width 0 must be a positive finite hypothesis
+ok 8 - catalog width 0 must be a positive finite hypothesis
+  ---
+  duration_ms: 0.180656
+  type: 'test'
+  ...
+# Subtest: catalog width NaN must be a positive finite hypothesis
+ok 9 - catalog width NaN must be a positive finite hypothesis
+  ---
+  duration_ms: 0.107024
+  type: 'test'
+  ...
+# Subtest: catalog width Infinity must be a positive finite hypothesis
+ok 10 - catalog width Infinity must be a positive finite hypothesis
+  ---
+  duration_ms: 0.167966
+  type: 'test'
+  ...
+# Subtest: catalog repeated width cannot create distinct candidate separation (1)
+ok 11 - catalog repeated width cannot create distinct candidate separation (1)
+  ---
+  duration_ms: 0.203991
+  type: 'test'
+  ...
+# Subtest: catalog repeated width cannot create distinct candidate separation (0.2)
+ok 12 - catalog repeated width cannot create distinct candidate separation (0.2)
+  ---
+  duration_ms: 0.096907
+  type: 'test'
+  ...
+# Subtest: catalog sample/bank counts are finite integers and match rows {"segmentCount":0.5,"candidateCount":2}
+ok 13 - catalog sample/bank counts are finite integers and match rows {"segmentCount":0.5,"candidateCount":2}
+  ---
+  duration_ms: 0.083898
+  type: 'test'
+  ...
+# Subtest: catalog sample/bank counts are finite integers and match rows {"segmentCount":1,"candidateCount":2.5}
+ok 14 - catalog sample/bank counts are finite integers and match rows {"segmentCount":1,"candidateCount":2.5}
+  ---
+  duration_ms: 0.043737
+  type: 'test'
+  ...
+# Subtest: catalog sample/bank counts are finite integers and match rows {"segmentCount":null,"candidateCount":2}
+ok 15 - catalog sample/bank counts are finite integers and match rows {"segmentCount":null,"candidateCount":2}
+  ---
+  duration_ms: 0.592774
+  type: 'test'
+  ...
+# Subtest: catalog sample/bank counts are finite integers and match rows {"segmentCount":1,"candidateCount":3}
+ok 16 - catalog sample/bank counts are finite integers and match rows {"segmentCount":1,"candidateCount":3}
+  ---
+  duration_ms: 0.112352
+  type: 'test'
+  ...
+# Subtest: guard contracts cannot be empty, unresolved, or depend on absent external adapters
+ok 17 - guard contracts cannot be empty, unresolved, or depend on absent external adapters
+  ---
+  duration_ms: 8.785173
+  type: 'test'
+  ...
+# Subtest: absolute and traversal source file paths cannot read same bytes outside package
+ok 18 - absolute and traversal source file paths cannot read same bytes outside package
+  ---
+  duration_ms: 5.76131
+  type: 'test'
+  ...
+# Subtest: escaping source symlinks are rejected before same-content reads
+ok 19 - escaping source symlinks are rejected before same-content reads
+  ---
+  duration_ms: 4.637545
+  type: 'test'
+  ...
+# Subtest: CLI reads explicit RGBA JSON, preserves nonfinite diagnostics and writes inspectable evidence
+ok 20 - CLI reads explicit RGBA JSON, preserves nonfinite diagnostics and writes inspectable evidence
+  ---
+  duration_ms: 148.54138
+  type: 'test'
+  ...
+# Subtest: default OFF executes no operations
+ok 21 - default OFF executes no operations
+  ---
+  duration_ms: 1.420106
+  type: 'test'
+  ...
+# Subtest: real positive exposes raw channels and fitted two-edge midpoint without calibration
+ok 22 - real positive exposes raw channels and fitted two-edge midpoint without calibration
+  ---
+  duration_ms: 19.182225
+  type: 'test'
+  ...
+# Subtest: shifted station retains fixed-center zero plus real signed midpoint
+ok 23 - shifted station retains fixed-center zero plus real signed midpoint
+  ---
+  duration_ms: 12.269339
+  type: 'test'
+  ...
+# Subtest: interior-only score1 remains UNKNOWN bilateral evidence
+ok 24 - interior-only score1 remains UNKNOWN bilateral evidence
+  ---
+  duration_ms: 14.879551
+  type: 'test'
+  ...
+# Subtest: all-hidden numeric learner return is raw only and no fitted midpoint
+ok 25 - all-hidden numeric learner return is raw only and no fitted midpoint
+  ---
+  duration_ms: 19.962246
+  type: 'test'
+  ...
+# Subtest: empty training bank preserves legacy fallback40 as UNKNOWN
+ok 26 - empty training bank preserves legacy fallback40 as UNKNOWN
+  ---
+  duration_ms: 8.858965
+  type: 'test'
+  ...
+# Subtest: frame, provenance and finite violations fail closed before source operations
+ok 27 - frame, provenance and finite violations fail closed before source operations
+  ---
+  duration_ms: 75.539456
+  type: 'test'
+  ...
+# Subtest: organic shape identical across exposed samples cannot acquire semantic path identity
+ok 28 - organic shape identical across exposed samples cannot acquire semantic path identity
+  ---
+  duration_ms: 14.091458
+  type: 'test'
+  ...
+# Subtest: decimal candidate bank fits only its exact requested width and source tolerance
+ok 29 - decimal candidate bank fits only its exact requested width and source tolerance
+  ---
+  duration_ms: 15.236586
+  type: 'test'
+  ...
+# Subtest: current unknown observation enables falsifier, blocks package, enables boundary repair
+ok 30 - current unknown observation enables falsifier, blocks package, enables boundary repair
+  ---
+  duration_ms: 114.933812
+  type: 'test'
+  ...
+# Subtest: changed receipt bytes fail closed
+ok 31 - changed receipt bytes fail closed
+  ---
+  duration_ms: 87.969018
+  type: 'test'
+  ...
+# Subtest: source mismatch invalidates whole recommendation
+ok 32 - source mismatch invalidates whole recommendation
+  ---
+  duration_ms: 91.529631
+  type: 'test'
+  ...
+# Subtest: live producer suppresses duplicate refresh
+ok 33 - live producer suppresses duplicate refresh
+  ---
+  duration_ms: 80.464745
+  type: 'test'
+  ...
+# Subtest: review excludes aliases of producing principal
+ok 34 - review excludes aliases of producing principal
+  ---
+  duration_ms: 129.810128
+  type: 'test'
+  ...
+# Subtest: expired lease still needs coordinator reconciliation
+ok 35 - expired lease still needs coordinator reconciliation
+  ---
+  duration_ms: 85.949653
+  type: 'test'
+  ...
+# Subtest: dispatch-boundary revision mismatch invalidates plan
+ok 36 - dispatch-boundary revision mismatch invalidates plan
+  ---
+  duration_ms: 82.376907
+  type: 'test'
+  ...
+# Subtest: native accepted review and claimed accepted state cannot mint human authority
+ok 37 - native accepted review and claimed accepted state cannot mint human authority
+  ---
+  duration_ms: 74.005906
+  type: 'test'
+  ...
+# Subtest: duplicate receipts and unknown guard ops invalidate policy/state
+ok 38 - duplicate receipts and unknown guard ops invalidate policy/state
+  ---
+  duration_ms: 86.404181
+  type: 'test'
+  ...
+# Subtest: completed task is terminal rather than redispatched
+ok 39 - completed task is terminal rather than redispatched
+  ---
+  duration_ms: 70.982463
+  type: 'test'
+  ...
+# Subtest: unsafe artifact path and symlink escape never authorize evidence
+ok 40 - unsafe artifact path and symlink escape never authorize evidence
+  ---
+  duration_ms: 66.553321
+  type: 'test'
+  ...
+# Subtest: stale coordinator snapshot cannot authorize dispatch
+ok 41 - stale coordinator snapshot cannot authorize dispatch
+  ---
+  duration_ms: 69.122461
+  type: 'test'
+  ...
+# Subtest: package requires independently verified review bytes and trusted scoped Sam decision
+ok 42 - package requires independently verified review bytes and trusted scoped Sam decision
+  ---
+  duration_ms: 77.320273
+  type: 'test'
+  ...
+# Subtest: independent accepted review alone never mints human acceptance
+ok 43 - independent accepted review alone never mints human acceptance
+  ---
+  duration_ms: 66.668722
+  type: 'test'
+  ...
+# Subtest: human acceptance rejects wrong issuer
+ok 44 - human acceptance rejects wrong issuer
+  ---
+  duration_ms: 70.737099
+  type: 'test'
+  ...
+# Subtest: human acceptance rejects wrong principal
+ok 45 - human acceptance rejects wrong principal
+  ---
+  duration_ms: 69.928586
+  type: 'test'
+  ...
+# Subtest: human acceptance rejects wrong scope
+ok 46 - human acceptance rejects wrong scope
+  ---
+  duration_ms: 60.870055
+  type: 'test'
+  ...
+# Subtest: human acceptance rejects wrong source
+ok 47 - human acceptance rejects wrong source
+  ---
+  duration_ms: 79.726513
+  type: 'test'
+  ...
+# Subtest: human acceptance rejects wrong claim
+ok 48 - human acceptance rejects wrong claim
+  ---
+  duration_ms: 65.696593
+  type: 'test'
+  ...
+# Subtest: human acceptance rejects wrong bundle
+ok 49 - human acceptance rejects wrong bundle
+  ---
+  duration_ms: 67.754859
+  type: 'test'
+  ...
+# Subtest: human acceptance rejects wrong bundleHash
+ok 50 - human acceptance rejects wrong bundleHash
+  ---
+  duration_ms: 71.695201
+  type: 'test'
+  ...
+# Subtest: changed independent review bytes cannot authorize package
+ok 51 - changed independent review bytes cannot authorize package
+  ---
+  duration_ms: 73.446528
+  type: 'test'
+  ...
+# Subtest: review source, bundle and protocol bindings fail closed
+ok 52 - review source, bundle and protocol bindings fail closed
+  ---
+  duration_ms: 80.609311
+  type: 'test'
+  ...
+# Subtest: dispatch recheck detects artifact changes despite unchanged state revision
+ok 53 - dispatch recheck detects artifact changes despite unchanged state revision
+  ---
+  duration_ms: 10.403207
+  type: 'test'
+  ...
+# Subtest: a supported bundle with missing producer identities cannot be independently reviewed
+ok 54 - a supported bundle with missing producer identities cannot be independently reviewed
+  ---
+  duration_ms: 79.238094
+  type: 'test'
+  ...
+# Subtest: actual artifact symlink outside allowed root cannot authorize evidence
+ok 55 - actual artifact symlink outside allowed root cannot authorize evidence
+  ---
+  duration_ms: 59.520757
+  type: 'test'
+  ...
+# Subtest: dependency cycle is rejected before native recommendation
+ok 56 - dependency cycle is rejected before native recommendation
+  ---
+  duration_ms: 70.789118
+  type: 'test'
+  ...
+# Subtest: unknown operation independently rejects eval even without duplicate records
+ok 57 - unknown operation independently rejects eval even without duplicate records
+  ---
+  duration_ms: 63.226781
+  type: 'test'
+  ...
+# Subtest: two available aliases for one principal cannot double native capacity
+ok 58 - two available aliases for one principal cannot double native capacity
+  ---
+  duration_ms: 62.634959
+  type: 'test'
+  ...
+# Subtest: unavailable historical aliases do not add capacity or invalidate independent principal exclusions
+ok 59 - unavailable historical aliases do not add capacity or invalidate independent principal exclusions
+  ---
+  duration_ms: 68.92898
+  type: 'test'
+  ...
+# Subtest: occupied principal cannot enter free capacity through alias (active)
+ok 60 - occupied principal cannot enter free capacity through alias (active)
+  ---
+  duration_ms: 70.805834
+  type: 'test'
+  ...
+# Subtest: occupied principal cannot enter free capacity through alias (expired-lease)
+ok 61 - occupied principal cannot enter free capacity through alias (expired-lease)
+  ---
+  duration_ms: 58.17253
+  type: 'test'
+  ...
+# Subtest: explicitly inactive historical alias does not block a genuinely free principal
+ok 62 - explicitly inactive historical alias does not block a genuinely free principal
+  ---
+  duration_ms: 59.70591
+  type: 'test'
+  ...
+# Subtest: straight versus six supplied turns remains descriptive, with explicit caller count
+ok 63 - straight versus six supplied turns remains descriptive, with explicit caller count
+  ---
+  duration_ms: 2.663784
+  type: 'test'
+  ...
+# Subtest: translation and rigid rotation preserve metric lengths, signed turn sequence and local-width ratios
+ok 64 - translation and rigid rotation preserve metric lengths, signed turn sequence and local-width ratios
+  ---
+  duration_ms: 0.777997
+  type: 'test'
+  ...
+# Subtest: uniform scale changes dimensional lengths but not ratios/turns; local width array retained
+ok 65 - uniform scale changes dimensional lengths but not ratios/turns; local width array retained
+  ---
+  duration_ms: 0.343554
+  type: 'test'
+  ...
+# Subtest: centerline offset requires paired edges, transforms invariantly, and preserves unknown samples
+ok 66 - centerline offset requires paired edges, transforms invariantly, and preserves unknown samples
+  ---
+  duration_ms: 0.477248
+  type: 'test'
+  ...
+# Subtest: sample support reports observed coverage without manufacturing calibrated confidence
+ok 67 - sample support reports observed coverage without manufacturing calibrated confidence
+  ---
+  duration_ms: 0.341742
+  type: 'test'
+  ...
+# Subtest: no implicit grid-turn merging or universal bend prior; U-turn/repeated nonadjacent point allowed
+ok 68 - no implicit grid-turn merging or universal bend prior; U-turn/repeated nonadjacent point allowed
+  ---
+  duration_ms: 0.198413
+  type: 'test'
+  ...
+# Subtest: degenerate, duplicate, nonfinite, absent provenance and inconsistent observations fail clearly
+ok 69 - degenerate, duplicate, nonfinite, absent provenance and inconsistent observations fail clearly
+  ---
+  duration_ms: 1.163936
+  type: 'test'
+  ...
+# Subtest: complete independently pinned fixture inventory passes only scoped coverage, never scientific acceptance
+ok 70 - complete independently pinned fixture inventory passes only scoped coverage, never scientific acceptance
+  ---
+  duration_ms: 3.227033
+  type: 'test'
+  ...
+# Subtest: caller complete boolean, observed subset, or no authoritative anchor never proves completeness
+ok 71 - caller complete boolean, observed subset, or no authoritative anchor never proves completeness
+  ---
+  duration_ms: 4.903311
+  type: 'test'
+  ...
+# Subtest: legacy receipt without root-key material is unsupported even if a completeness boolean is supplied
+ok 72 - legacy receipt without root-key material is unsupported even if a completeness boolean is supplied
+  ---
+  duration_ms: 0.277434
+  type: 'test'
+  ...
+# Subtest: missing and incomplete enumeration cannot cover authoritative query-readable roots
+ok 73 - missing and incomplete enumeration cannot cover authoritative query-readable roots
+  ---
+  duration_ms: 1.424053
+  type: 'test'
+  ...
+# Subtest: changed pixel key, extra roots, duplicates, and wrong issuer fail closed
+ok 74 - changed pixel key, extra roots, duplicates, and wrong issuer fail closed
+  ---
+  duration_ms: 1.804894
+  type: 'test'
+  ...
+# Subtest: source/request/code binding changes or artifact bytes changing after pin fail
+ok 75 - source/request/code binding changes or artifact bytes changing after pin fail
+  ---
+  duration_ms: 1.105327
+  type: 'test'
+  ...
+# Subtest: root material must actually hash full rows and cache key must bind that material
+ok 76 - root material must actually hash full rows and cache key must bind that material
+  ---
+  duration_ms: 0.513303
+  type: 'test'
+  ...
+# Subtest: actual adapter and incomplete keys reproduce stale6; complete enumeration and controls produce27
+ok 77 - actual adapter and incomplete keys reproduce stale6; complete enumeration and controls produce27
+  ---
+  duration_ms: 20.091542
+  type: 'test'
+  ...
+# Subtest: digest arrays cannot pass source binding even when consistently repinned
+ok 78 - digest arrays cannot pass source binding even when consistently repinned
+  ---
+  duration_ms: 0.510459
+  type: 'test'
+  ...
+# Subtest: shared aliased digest arrays cannot pass root key schemas
+ok 79 - shared aliased digest arrays cannot pass root key schemas
+  ---
+  duration_ms: 0.444107
+  type: 'test'
+  ...
+# Subtest: object issuer cannot become authority through reference equality
+ok 80 - object issuer cannot become authority through reference equality
+  ---
+  duration_ms: 0.306628
+  type: 'test'
+  ...
+# Subtest: object scope cannot become authority through reference equality
+ok 81 - object scope cannot become authority through reference equality
+  ---
+  duration_ms: 0.255741
+  type: 'test'
+  ...
+# Subtest: object authorityPolicyId cannot become authority through reference equality
+ok 82 - object authorityPolicyId cannot become authority through reference equality
+  ---
+  duration_ms: 0.243862
+  type: 'test'
+  ...
+# Subtest: malformed root material "roots" classifies fail without throwing
+ok 83 - malformed root material "roots" classifies fail without throwing
+  ---
+  duration_ms: 1.457864
+  type: 'test'
+  ...
+# Subtest: malformed root material [] classifies fail without throwing
+ok 84 - malformed root material [] classifies fail without throwing
+  ---
+  duration_ms: 0.195568
+  type: 'test'
+  ...
+# Subtest: malformed root material 42 classifies fail without throwing
+ok 85 - malformed root material 42 classifies fail without throwing
+  ---
+  duration_ms: 0.238383
+  type: 'test'
+  ...
+# Subtest: malformed root material true classifies fail without throwing
+ok 86 - malformed root material true classifies fail without throwing
+  ---
+  duration_ms: 0.159243
+  type: 'test'
+  ...
+# Subtest: malformed wrapper, rows and input pair shapes never authorize reuse or escape classification
+ok 87 - malformed wrapper, rows and input pair shapes never authorize reuse or escape classification
+  ---
+  duration_ms: 1.08194
+  type: 'test'
+  ...
+# Subtest: authority digest arrays and empty principals remain malformed even if other pins match
+ok 88 - authority digest arrays and empty principals remain malformed even if other pins match
+  ---
+  duration_ms: 0.854694
+  type: 'test'
+  ...
+# Subtest: width eligibility stays bounded comparison evidence
+ok 89 - width eligibility stays bounded comparison evidence
+  ---
+  duration_ms: 1.47503
+  type: 'test'
+  ...
+# Subtest: invalid spread -1 cannot authorize width comparison
+ok 90 - invalid spread -1 cannot authorize width comparison
+  ---
+  duration_ms: 0.180896
+  type: 'test'
+  ...
+# Subtest: invalid spread NaN cannot authorize width comparison
+ok 91 - invalid spread NaN cannot authorize width comparison
+  ---
+  duration_ms: 0.109688
+  type: 'test'
+  ...
+# Subtest: invalid spread Infinity cannot authorize width comparison
+ok 92 - invalid spread Infinity cannot authorize width comparison
+  ---
+  duration_ms: 0.083548
+  type: 'test'
+  ...
+# Subtest: invalid spread -Infinity cannot authorize width comparison
+ok 93 - invalid spread -Infinity cannot authorize width comparison
+  ---
+  duration_ms: 0.105751
+  type: 'test'
+  ...
+# Subtest: duplicate width identity with score 1 cannot manufacture a rival
+ok 94 - duplicate width identity with score 1 cannot manufacture a rival
+  ---
+  duration_ms: 0.136198
+  type: 'test'
+  ...
+# Subtest: duplicate width identity with score 0.2 cannot manufacture a rival
+ok 95 - duplicate width identity with score 0.2 cannot manufacture a rival
+  ---
+  duration_ms: 0.122236
+  type: 'test'
+  ...
+# Subtest: candidate width -40 must be finite positive
+ok 96 - candidate width -40 must be finite positive
+  ---
+  duration_ms: 3.341438
+  type: 'test'
+  ...
+# Subtest: candidate width 0 must be finite positive
+ok 97 - candidate width 0 must be finite positive
+  ---
+  duration_ms: 0.116017
+  type: 'test'
+  ...
+# Subtest: candidate width NaN must be finite positive
+ok 98 - candidate width NaN must be finite positive
+  ---
+  duration_ms: 0.146263
+  type: 'test'
+  ...
+# Subtest: candidate width Infinity must be finite positive
+ok 99 - candidate width Infinity must be finite positive
+  ---
+  duration_ms: 0.098801
+  type: 'test'
+  ...
+# Subtest: missing or nonfinite paired rail undefined stays UNKNOWN
+ok 100 - missing or nonfinite paired rail undefined stays UNKNOWN
+  ---
+  duration_ms: 0.186515
+  type: 'test'
+  ...
+# Subtest: missing or nonfinite paired rail null stays UNKNOWN
+ok 101 - missing or nonfinite paired rail null stays UNKNOWN
+  ---
+  duration_ms: 0.059732
+  type: 'test'
+  ...
+# Subtest: missing or nonfinite paired rail NaN stays UNKNOWN
+ok 102 - missing or nonfinite paired rail NaN stays UNKNOWN
+  ---
+  duration_ms: 0.05217
+  type: 'test'
+  ...
+# Subtest: missing or nonfinite paired rail Infinity stays UNKNOWN
+ok 103 - missing or nonfinite paired rail Infinity stays UNKNOWN
+  ---
+  duration_ms: 0.046731
+  type: 'test'
+  ...
+# Subtest: missing or nonfinite paired rail 1 stays UNKNOWN
+ok 104 - missing or nonfinite paired rail 1 stays UNKNOWN
+  ---
+  duration_ms: 0.120494
+  type: 'test'
+  ...
+# Subtest: both present finite rails remain observed channels without positive evidence claim
+ok 105 - both present finite rails remain observed channels without positive evidence claim
+  ---
+  duration_ms: 0.10469
+  type: 'test'
+  ...
+# Subtest: standalone default OFF performs no recipe calls
+ok 106 - standalone default OFF performs no recipe calls
+  ---
+  duration_ms: 1.56055
+  type: 'test'
+  ...
+# Subtest: crop is exact original RGBA row spans including nonopaque alpha, all supplied geometry translates
+ok 107 - crop is exact original RGBA row spans including nonopaque alpha, all supplied geometry translates
+  ---
+  duration_ms: 74.561173
+  type: 'test'
+  ...
+# Subtest: preparation snapshots are recursively immutable and isolate caller mutation
+ok 108 - preparation snapshots are recursively immutable and isolate caller mutation
+  ---
+  duration_ms: 38.549352
+  type: 'test'
+  ...
+# Subtest: missing, malformed, unsupported geometry and noninteger/out-of-bounds ROI are UNKNOWN before operations
+ok 109 - missing, malformed, unsupported geometry and noninteger/out-of-bounds ROI are UNKNOWN before operations
+  ---
+  duration_ms: 267.161531
+  type: 'test'
+  ...
+# Subtest: well-formed false full RGBA hash is hard integrity failure
+ok 110 - well-formed false full RGBA hash is hard integrity failure
+  ---
+  duration_ms: 28.514773
+  type: 'test'
+  ...
+# Subtest: finite partial-sample crops abstain before recipe, including training support
+ok 111 - finite partial-sample crops abstain before recipe, including training support
+  ---
+  duration_ms: 39.803671
+  type: 'test'
+  ...
+# Subtest: full and cropped same-operation raw controls agree; no acceptance is invented
+ok 112 - full and cropped same-operation raw controls agree; no acceptance is invented
+  ---
+  duration_ms: 220.768071
+  type: 'test'
+  ...
+# Subtest: rotated numeric falsifier persists: complete pixels/support do not promote unstable crop fits
+ok 113 - rotated numeric falsifier persists: complete pixels/support do not promote unstable crop fits
+  ---
+  duration_ms: 226.249199
+  type: 'test'
+  ...
+# Subtest: experiments/capability-discovery/source-pixels/test-fixtures.mjs
+ok 10 - experiments/capability-discovery/source-pixels/test-fixtures.mjs
+  ---
+  duration_ms: 54.116066
+  type: 'test'
+  ...
+# Subtest: default OFF does not inspect bad receipt input
+ok 115 - default OFF does not inspect bad receipt input
+  ---
+  duration_ms: 1.105918
+  type: 'test'
+  ...
+# Subtest: executed UNKNOWN preserves complete raw branches and explicit short order
+ok 116 - executed UNKNOWN preserves complete raw branches and explicit short order
+  ---
+  duration_ms: 6.75756
+  type: 'test'
+  ...
+# Subtest: executed empty-bank UNKNOWN retains profiles and zero candidates
+ok 117 - executed empty-bank UNKNOWN retains profiles and zero candidates
+  ---
+  duration_ms: 0.94361
+  type: 'test'
+  ...
+# Subtest: branchless UNKNOWN and DISABLED refusals do not invent measurement rows
+ok 118 - branchless UNKNOWN and DISABLED refusals do not invent measurement rows
+  ---
+  duration_ms: 0.518891
+  type: 'test'
+  ...
+# Subtest: digest mismatch is integrity evidence not scientific negative or refusal
+ok 119 - digest mismatch is integrity evidence not scientific negative or refusal
+  ---
+  duration_ms: 0.792168
+  type: 'test'
+  ...
+# Subtest: exact bytes rather than reconstructed JSON define the digest
+ok 120 - exact bytes rather than reconstructed JSON define the digest
+  ---
+  duration_ms: 1.091776
+  type: 'test'
+  ...
+# Subtest: invalid UTF-8 and invalid JSON are explicit invalid-input evidence
+ok 121 - invalid UTF-8 and invalid JSON are explicit invalid-input evidence
+  ---
+  duration_ms: 1.824153
+  type: 'test'
+  ...
+# Subtest: unsupported helper fields including descriptor follow one invalid-input policy
+ok 122 - unsupported helper fields including descriptor follow one invalid-input policy
+  ---
+  duration_ms: 5.638963
+  type: 'test'
+  ...
+# Subtest: contradictory execution branches counts statuses and operations are rejected
+ok 123 - contradictory execution branches counts statuses and operations are rejected
+  ---
+  duration_ms: 10.710951
+  type: 'test'
+  ...
+# Subtest: missing and duplicate IDs never produce partial validated projections
+ok 124 - missing and duplicate IDs never produce partial validated projections
+  ---
+  duration_ms: 5.338104
+  type: 'test'
+  ...
+# Subtest: valid cross-group reuse remains explicit and does not drop ungrouped stations
+ok 125 - valid cross-group reuse remains explicit and does not drop ungrouped stations
+  ---
+  duration_ms: 1.041119
+  type: 'test'
+  ...
+# Subtest: finite different headings remain raw while malformed linkage geometry is invalid
+ok 126 - finite different headings remain raw while malformed linkage geometry is invalid
+  ---
+  duration_ms: 2.455126
+  type: 'test'
+  ...
+# Subtest: raw null finite-fit and nonfinite diagnostics remain untouched on serialization
+ok 127 - raw null finite-fit and nonfinite diagnostics remain untouched on serialization
+  ---
+  duration_ms: 6.022248
+  type: 'test'
+  ...
+# Subtest: unsupported schemas or malformed raw station linkage are rejected consistently
+ok 128 - unsupported schemas or malformed raw station linkage are rejected consistently
+  ---
+  duration_ms: 5.348019
+  type: 'test'
+  ...
+# Subtest: sparse one-hole short ID list is invalid on actual E811 B refusal
+ok 129 - sparse one-hole short ID list is invalid on actual E811 B refusal
+  ---
+  duration_ms: 0.498952
+  type: 'test'
+  ...
+# Subtest: sparse partial-hole short ID list is invalid on actual E811 B refusal
+ok 130 - sparse partial-hole short ID list is invalid on actual E811 B refusal
+  ---
+  duration_ms: 0.164761
+  type: 'test'
+  ...
+# Subtest: sparse short ID lists are invalid on disabled refusals and executed receipts
+ok 131 - sparse short ID lists are invalid on disabled refusals and executed receipts
+  ---
+  duration_ms: 1.072617
+  type: 'test'
+  ...
+# Subtest: the selected checkpoint inventories docs/replay unchanged and a missing file changes state
+not ok 132 - the selected checkpoint inventories docs/replay unchanged and a missing file changes state
+  ---
+  duration_ms: 3.554663
+  type: 'test'
+  location: '/workspace/scratch/8528bb251845/chainspot-discovery-lab/inventory.test.mjs:8:1'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, open '/workspace/scratch/8528bb251845/chainspot-discovery-lab/attempts/checkpoint.json'"
+  code: 'ENOENT'
+  stack: |-
+    async open (node:internal/fs/promises:697:25)
+    async readFile (node:internal/fs/promises:1348:14)
+    async TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/inventory.test.mjs:10:28)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: inventory identifies checkpoint-only files and preserves unknown change state
+ok 133 - inventory identifies checkpoint-only files and preserves unknown change state
+  ---
+  duration_ms: 0.9635
+  type: 'test'
+  ...
+# Subtest: graph expands recursive dependencies and reports undeclared dependency gaps
+ok 134 - graph expands recursive dependencies and reports undeclared dependency gaps
+  ---
+  duration_ms: 7.47245
+  type: 'test'
+  ...
+# Subtest: graph treats checkpoint file leaves and directories as known terminal dependencies
+ok 135 - graph treats checkpoint file leaves and directories as known terminal dependencies
+  ---
+  duration_ms: 0.342402
+  type: 'test'
+  ...
+# Subtest: lineage exposes freshness, request arguments, and acceptance separately
+ok 136 - lineage exposes freshness, request arguments, and acceptance separately
+  ---
+  duration_ms: 0.344526
+  type: 'test'
+  ...
+# Subtest: comparison covers exact executable queries without selecting arbitrary winners
+ok 137 - comparison covers exact executable queries without selecting arbitrary winners
+  ---
+  duration_ms: 0.685196
+  type: 'test'
+  ...
+# Subtest: an unrelated checkpoint edit does not stale target evidence, but an evidence edit does
+ok 138 - an unrelated checkpoint edit does not stale target evidence, but an evidence edit does
+  ---
+  duration_ms: 1.967211
+  type: 'test'
+  ...
+# Subtest: acceptance conflicts remain ambiguous and duplicate declarations do not silently choose
+ok 139 - acceptance conflicts remain ambiguous and duplicate declarations do not silently choose
+  ---
+  duration_ms: 0.397416
+  type: 'test'
+  ...
+# Subtest: a changed target fingerprint does not inherit older execution or human acceptance
+ok 140 - a changed target fingerprint does not inherit older execution or human acceptance
+  ---
+  duration_ms: 0.254218
+  type: 'test'
+  ...
+# Subtest: an explicit fingerprint resolves same-argument requests when only one request owns it
+ok 141 - an explicit fingerprint resolves same-argument requests when only one request owns it
+  ---
+  duration_ms: 0.363424
+  type: 'test'
+  ...
+# Subtest: assembly fuses components onto exactly one declared base
+ok 142 - assembly fuses components onto exactly one declared base
+  ---
+  duration_ms: 1.727686
+  type: 'test'
+  ...
+# Subtest: assembly refuses zero bases, two bases, and duplicate names
+ok 143 - assembly refuses zero bases, two bases, and duplicate names
+  ---
+  duration_ms: 0.607106
+  type: 'test'
+  ...
+# Subtest: assembly accounts window residue as the px not owned
+ok 144 - assembly accounts window residue as the px not owned
+  ---
+  duration_ms: 0.18957
+  type: 'test'
+  ...
+# Subtest: the 17 accepted S2 basket Parts re-assemble exactly through the shape
+not ok 145 - the 17 accepted S2 basket Parts re-assemble exactly through the shape
+  ---
+  duration_ms: 0.472261
+  type: 'test'
+  location: '/workspace/scratch/8528bb251845/chainspot-discovery-lab/ports/early/assembly.test.mjs:67:1'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, open '/workspace/scratch/8528bb251845/chainspot-discovery-lab/attempts/stages/attempt-1792188256180-f51916a6db5f/fork/stage-output/early/artifacts/s2/px.baskets.json'"
+  code: 'ENOENT'
+  stack: |-
+    readFileSync (node:fs:484:20)
+    TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/ports/early/assembly.test.mjs:70:31)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: a synthetic badge assembles plate-first and the witness agrees role for role
+ok 146 - a synthetic badge assembles plate-first and the witness agrees role for role
+  ---
+  duration_ms: 5.071007
+  type: 'test'
+  ...
+# Subtest: the assembly refuses opaque badges, ambiguous plates, and ambiguous glyph ownership
+ok 147 - the assembly refuses opaque badges, ambiguous plates, and ambiguous glyph ownership
+  ---
+  duration_ms: 0.630922
+  type: 'test'
+  ...
+# Subtest: the accepted specimen evidence decomposes plate-first for all 18 badges
+not ok 148 - the accepted specimen evidence decomposes plate-first for all 18 badges
+  ---
+  duration_ms: 0.499111
+  type: 'test'
+  location: '/workspace/scratch/8528bb251845/chainspot-discovery-lab/ports/early/s1BadgeAssembly.test.mjs:113:1'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, open '/workspace/scratch/8528bb251845/chainspot-discovery-lab/attempts/stages/attempt-1792188256180-f51916a6db5f/fork/stage-output/early/artifacts/s1/px.badges.json'"
+  code: 'ENOENT'
+  stack: |-
+    readFileSync (node:fs:484:20)
+    TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/ports/early/s1BadgeAssembly.test.mjs:115:37)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: a synthetic basket assembles body-first and the witness agrees set for set
+ok 149 - a synthetic basket assembles body-first and the witness agrees set for set
+  ---
+  duration_ms: 11.332559
+  type: 'test'
+  ...
+# Subtest: the assembly refuses opaque baskets, count drift, and misalignment
+ok 150 - the assembly refuses opaque baskets, count drift, and misalignment
+  ---
+  duration_ms: 3.044515
+  type: 'test'
+  ...
+# Subtest: the accepted specimen evidence decomposes body-first for all 17 baskets
+not ok 151 - the accepted specimen evidence decomposes body-first for all 17 baskets
+  ---
+  duration_ms: 0.60287
+  type: 'test'
+  location: '/workspace/scratch/8528bb251845/chainspot-discovery-lab/ports/early/s2BasketAssembly.test.mjs:101:1'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, open '/workspace/scratch/8528bb251845/chainspot-discovery-lab/attempts/stages/attempt-1792188256180-f51916a6db5f/fork/stage-output/early/artifacts/s2/px.baskets.json'"
+  code: 'ENOENT'
+  stack: |-
+    readFileSync (node:fs:484:20)
+    TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/ports/early/s2BasketAssembly.test.mjs:104:31)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: a synthetic tee assembles interior-first and the witness agrees set for set
+ok 152 - a synthetic tee assembles interior-first and the witness agrees set for set
+  ---
+  duration_ms: 7.17729
+  type: 'test'
+  ...
+# Subtest: the assembly refuses holeArea drift, opaque tees, frame drift, and unlisted rings
+ok 153 - the assembly refuses holeArea drift, opaque tees, frame drift, and unlisted rings
+  ---
+  duration_ms: 0.820442
+  type: 'test'
+  ...
+# Subtest: the accepted specimen evidence supports interior-first assembly for all 18 tees
+not ok 154 - the accepted specimen evidence supports interior-first assembly for all 18 tees
+  ---
+  duration_ms: 0.514585
+  type: 'test'
+  location: '/workspace/scratch/8528bb251845/chainspot-discovery-lab/ports/early/s3TeeAssembly.test.mjs:110:1'
+  failureType: 'testCodeFailure'
+  error: "ENOENT: no such file or directory, open '/workspace/scratch/8528bb251845/chainspot-discovery-lab/attempts/stages/attempt-1792220456308-58f6a9c973af/fork/stage-output/early/artifacts/s3/px.tees.json'"
+  code: 'ENOENT'
+  stack: |-
+    readFileSync (node:fs:484:20)
+    TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/ports/early/s3TeeAssembly.test.mjs:113:34)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: assignment render embeds verified source and keeps one addressable mark and row per candidate
+ok 155 - assignment render embeds verified source and keeps one addressable mark and row per candidate
+  ---
+  duration_ms: 3.662318
+  type: 'test'
+  ...
+# S5 global assignment contracts passed
+# Subtest: ports/late/behavior/assignment.test.mjs
+ok 19 - ports/late/behavior/assignment.test.mjs
+  ---
+  duration_ms: 66.833974
+  type: 'test'
+  ...
+# recovery behavior contracts passed
+# Subtest: ports/late/behavior/contract.test.mjs
+ok 20 - ports/late/behavior/contract.test.mjs
+  ---
+  duration_ms: 66.141808
+  type: 'test'
+  ...
+# singleton target-binding regression PASS
+# Subtest: ports/late/singletonGateway.test.mjs
+ok 21 - ports/late/singletonGateway.test.mjs
+  ---
+  duration_ms: 80.251254
+  type: 'test'
+  ...
+# Subtest: runs baseline probe and returns captured streams and fork-relative evidence paths
+ok 159 - runs baseline probe and returns captured streams and fork-relative evidence paths
+  ---
+  duration_ms: 101.240115
+  type: 'test'
+  ...
+# Subtest: passes the sealed row only for heading mode
+ok 160 - passes the sealed row only for heading mode
+  ---
+  duration_ms: 103.939894
+  type: 'test'
+  ...
+# Subtest: rejects missing inputs and paths escaping the fork before execution
+ok 161 - rejects missing inputs and paths escaping the fork before execution
+  ---
+  duration_ms: 7.500693
+  type: 'test'
+  ...
+# Subtest: rejects symlinked inputs that resolve outside the fork
+ok 162 - rejects symlinked inputs that resolve outside the fork
+  ---
+  duration_ms: 3.857385
+  type: 'test'
+  ...
+# Subtest: refuses a pre-existing output directory to prevent stale evidence attribution
+ok 163 - refuses a pre-existing output directory to prevent stale evidence attribution
+  ---
+  duration_ms: 3.685673
+  type: 'test'
+  ...
+# Subtest: literal recipe selects a prefix and leaves lanes OFF unless named
+ok 164 - literal recipe selects a prefix and leaves lanes OFF unless named
+  ---
+  duration_ms: 65.173922
+  type: 'test'
+  ...
+# Subtest: declared Stage graph rejects a missing producer before execution
+ok 165 - declared Stage graph rejects a missing producer before execution
+  ---
+  duration_ms: 38.774681
+  type: 'test'
+  ...
+# Subtest: strict reuse verifies native bytes; changed source and lane give different identities
+not ok 166 - strict reuse verifies native bytes; changed source and lane give different identities
+  ---
+  duration_ms: 287.458872
+  type: 'test'
+  location: '/workspace/scratch/8528bb251845/chainspot-discovery-lab/recipes/stages.test.mjs:36:1'
+  failureType: 'testCodeFailure'
+  error: 'Stage source missing from execution closure: source/provider/artifacts/replay/source/IMG_5641.jpg'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    stageState (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/recipes/closure.mjs:27:20)
+    async TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/recipes/stages.test.mjs:37:16)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: tidy reports never-run result missing despite unchanged source
+ok 167 - tidy reports never-run result missing despite unchanged source
+  ---
+  duration_ms: 3.295487
+  type: 'test'
+  ...
+# Subtest: the same facts yield distinct native answers and explicit joins
+ok 168 - the same facts yield distinct native answers and explicit joins
+  ---
+  duration_ms: 0.536428
+  type: 'test'
+  ...
+# Subtest: formatting-only serialization differs under crisp but equals under named semantic contract
+ok 169 - formatting-only serialization differs under crisp but equals under named semantic contract
+  ---
+  duration_ms: 2.023397
+  type: 'test'
+  ...
+# Subtest: changing the selected axis is a semantic inequality and changes byte identity
+ok 170 - changing the selected axis is a semantic inequality and changes byte identity
+  ---
+  duration_ms: 0.413341
+  type: 'test'
+  ...
+# Subtest: equality contract is explicitly named/versioned and selected row must be unambiguous
+ok 171 - equality contract is explicitly named/versioned and selected row must be unambiguous
+  ---
+  duration_ms: 0.58328
+  type: 'test'
+  ...
+# Subtest: whole Part equality detects row facts outside the selected geometry projection
+ok 172 - whole Part equality detects row facts outside the selected geometry projection
+  ---
+  duration_ms: 0.350334
+  type: 'test'
+  ...
+# Subtest: source, status, and finite-axis guards block semantic comparison
+ok 173 - source, status, and finite-axis guards block semantic comparison
+  ---
+  duration_ms: 0.41947
+  type: 'test'
+  ...
+# Subtest: writes a portable file with embedded source, receipts, crop canvas, and validated tee outlines
+ok 174 - writes a portable file with embedded source, receipts, crop canvas, and validated tee outlines
+  ---
+  duration_ms: 29.853376
+  type: 'test'
+  ...
+# Subtest: does not draw geometry when its evidence hash or source binding fails
+ok 175 - does not draw geometry when its evidence hash or source binding fails
+  ---
+  duration_ms: 14.307412
+  type: 'test'
+  ...
+# Subtest: prefix S3 board ends its stage slider at the highest executed stage
+ok 176 - prefix S3 board ends its stage slider at the highest executed stage
+  ---
+  duration_ms: 7.227031
+  type: 'test'
+  ...
+# Subtest: CLI reads explicit RGBA JSON, preserves nonfinite diagnostics and writes inspectable evidence
+not ok 177 - CLI reads explicit RGBA JSON, preserves nonfinite diagnostics and writes inspectable evidence
+  ---
+  duration_ms: 113.305843
+  type: 'test'
+  location: '/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/cli.test.mjs:10:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    node:internal/modules/esm/resolve:271
+        throw new ERR_MODULE_NOT_FOUND(
+              ^
+    
+    Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs' imported from /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/recipe.mjs
+        at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+        at moduleResolve (node:internal/modules/esm/resolve:865:10)
+        at defaultResolve (node:internal/modules/esm/resolve:992:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+        at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+        at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+        at #resolve (node:internal/modules/esm/loader:683:17)
+        at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+        at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33)
+        at ModuleJob.link (node:internal/modules/esm/module_job:253:17) {
+      code: 'ERR_MODULE_NOT_FOUND',
+      url: 'file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs'
+    }
+    
+    Node.js v24.19.0
+    
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    moduleResolve (node:internal/modules/esm/resolve:865:10)
+    defaultResolve (node:internal/modules/esm/resolve:992:11)
+    #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+    #resolve (node:internal/modules/esm/loader:683:17)
+    ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+    ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33)
+    ModuleJob.link (node:internal/modules/esm/module_job:253:17) {
+    TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/cli.test.mjs:16:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: default OFF executes no operations
+not ok 178 - default OFF executes no operations
+  ---
+  duration_ms: 1.496583
+  type: 'test'
+  location: '/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:8:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    composition entry point must exist
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'function'
+  actual: 'undefined'
+  operator: 'strictEqual'
+  stack: |-
+    call (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:6:31)
+    TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:8:57)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: real positive exposes raw channels and fitted two-edge midpoint without calibration
+not ok 179 - real positive exposes raw channels and fitted two-edge midpoint without calibration
+  ---
+  duration_ms: 8.064143
+  type: 'test'
+  location: '/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:9:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    composition entry point must exist
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'function'
+  actual: 'undefined'
+  operator: 'strictEqual'
+  stack: |-
+    call (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:6:31)
+    TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:10:74)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: shifted station retains fixed-center zero plus real signed midpoint
+not ok 180 - shifted station retains fixed-center zero plus real signed midpoint
+  ---
+  duration_ms: 5.142776
+  type: 'test'
+  location: '/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:16:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    composition entry point must exist
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'function'
+  actual: 'undefined'
+  operator: 'strictEqual'
+  stack: |-
+    call (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:6:31)
+    TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:17:72)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: interior-only score1 remains UNKNOWN bilateral evidence
+not ok 181 - interior-only score1 remains UNKNOWN bilateral evidence
+  ---
+  duration_ms: 3.611039
+  type: 'test'
+  location: '/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:20:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    composition entry point must exist
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'function'
+  actual: 'undefined'
+  operator: 'strictEqual'
+  stack: |-
+    call (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:6:31)
+    TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:22:11)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: all-hidden numeric learner return is raw only and no fitted midpoint
+not ok 182 - all-hidden numeric learner return is raw only and no fitted midpoint
+  ---
+  duration_ms: 2.592295
+  type: 'test'
+  location: '/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:25:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    composition entry point must exist
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'function'
+  actual: 'undefined'
+  operator: 'strictEqual'
+  stack: |-
+    call (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:6:31)
+    TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:26:101)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: empty training bank preserves legacy fallback40 as UNKNOWN
+not ok 183 - empty training bank preserves legacy fallback40 as UNKNOWN
+  ---
+  duration_ms: 2.932293
+  type: 'test'
+  location: '/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:30:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    composition entry point must exist
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'function'
+  actual: 'undefined'
+  operator: 'strictEqual'
+  stack: |-
+    call (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:6:31)
+    TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:31:99)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: frame, provenance and finite violations fail closed before source operations
+not ok 184 - frame, provenance and finite violations fail closed before source operations
+  ---
+  duration_ms: 3.766767
+  type: 'test'
+  location: '/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:34:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    composition entry point must exist
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'function'
+  actual: 'undefined'
+  operator: 'strictEqual'
+  stack: |-
+    call (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:6:31)
+    TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:36:84)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: organic shape identical across exposed samples cannot acquire semantic path identity
+not ok 185 - organic shape identical across exposed samples cannot acquire semantic path identity
+  ---
+  duration_ms: 4.27372
+  type: 'test'
+  location: '/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:38:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    composition entry point must exist
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'function'
+  actual: 'undefined'
+  operator: 'strictEqual'
+  stack: |-
+    call (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:6:31)
+    TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:39:11)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# node:internal/modules/esm/resolve:271
+#     throw new ERR_MODULE_NOT_FOUND(
+#           ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/adapter.mjs' imported from /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/initial-adapter.test.mjs
+#     at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+#     at moduleResolve (node:internal/modules/esm/resolve:865:10)
+#     at defaultResolve (node:internal/modules/esm/resolve:992:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+#     at \#resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+#     at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+#     at \#resolve (node:internal/modules/esm/loader:683:17)
+#     at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+#     at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33)
+#     at ModuleJob.link (node:internal/modules/esm/module_job:253:17) {
+#   code: 'ERR_MODULE_NOT_FOUND',
+#   url: 'file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/adapter.mjs'
+# }
+# Node.js v24.19.0
+# Subtest: work/capability-discovery/cycle-03/evidence/E506/initial-adapter.test.mjs
+not ok 28 - work/capability-discovery/cycle-03/evidence/E506/initial-adapter.test.mjs
+  ---
+  duration_ms: 78.694088
+  type: 'test'
+  location: '/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/initial-adapter.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# node:internal/modules/esm/resolve:271
+#     throw new ERR_MODULE_NOT_FOUND(
+#           ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/history/composition/recipe.mjs' imported from /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/history/E506-first-source/adapter.mjs
+#     at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+#     at moduleResolve (node:internal/modules/esm/resolve:865:10)
+#     at defaultResolve (node:internal/modules/esm/resolve:992:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+#     at \#resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+#     at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+#     at \#resolve (node:internal/modules/esm/loader:683:17)
+#     at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+#     at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33)
+#     at ModuleJob.link (node:internal/modules/esm/module_job:253:17) {
+#   code: 'ERR_MODULE_NOT_FOUND',
+#   url: 'file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/history/composition/recipe.mjs'
+# }
+# Node.js v24.19.0
+# Subtest: work/capability-discovery/cycle-03/history/E506-first-source/adapter.test.mjs
+not ok 29 - work/capability-discovery/cycle-03/history/E506-first-source/adapter.test.mjs
+  ---
+  duration_ms: 81.488973
+  type: 'test'
+  location: '/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/history/E506-first-source/adapter.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..187
+# tests 187
+# suites 0
+# pass 170
+# fail 17
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2697.972718

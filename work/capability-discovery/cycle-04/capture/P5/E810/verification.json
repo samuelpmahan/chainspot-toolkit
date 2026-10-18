@@ -1,0 +1,39 @@
+{
+  "schema":"E810-postrun-no-cv-verification@1",
+  "job_id":"E810",
+  "worker":"P5",
+  "callerExitCode":0,
+  "rendererExitCode":0,
+  "adapterInvocations":1,
+  "compositionCalls":2,
+  "operationsExecuted":366,
+  "candidateRows":108,
+  "derivedRowsMatchExactReceipt":108,
+  "requestSourceEqualsRestagedSource":true,
+  "requestGeometryAndRoiEqualFrozenProtocol":true,
+  "requestKeys":["enabled","source","roi","geometry"],
+  "identityBeforeAfterExact":true,
+  "rendererFigureHashesMatched":2,
+  "rendererCvCalls":0,
+  "additionalCvVerificationCalls":0,
+  "missingOrUnexecutedCandidateRows":0,
+  "sourceAndCropEach":{"finitePositivePair":41,"nullFit":13,"nonfiniteOrNonpositiveFit":0},
+  "equivalence":{"status":"MATCHED_DECLARED_CONTROL","absoluteTolerance":1e-9,"differencesAboveTolerance":0},
+  "figureInspection":{
+    "actualReceiptFigureViewed":true,
+    "rawProfileFigureViewed":true,
+    "findings":"Source-pixel ROI with numbered primary/bright short windows and offset trace is legible. Separate CROP/SOURCE tables retain18 station rows x3 widths each, visible counts, all41 finite/13 null fits per branch. Raw profile figure contains6 panels, distinct branches/groups, all5 shorts and long. No clipping or repair needed.",
+    "presentationOnlyRepair":false
+  },
+  "sourceOriginalGroupPatterns":[
+    {"widthArgPx":40,"primaryShortFinite":5,"primaryLong":"FINITE","offsetShortFinite":5,"offsetLong":"NULL","brightShortFinite":4,"brightLong":"FINITE"},
+    {"widthArgPx":48,"primaryShortFinite":4,"primaryLong":"FINITE","offsetShortFinite":5,"offsetLong":"FINITE","brightShortFinite":3,"brightLong":"NULL"},
+    {"widthArgPx":56,"primaryShortFinite":2,"primaryLong":"FINITE","offsetShortFinite":2,"offsetLong":"NULL","brightShortFinite":5,"brightLong":"FINITE"}
+  ],
+  "sourceOffsetDiagnostics":[
+    {"widthArgPx":40,"jointlyFinite":5,"idealSameEdgeRejectedAtFixed1e9":2,"unobserved":1},
+    {"widthArgPx":48,"jointlyFinite":5,"idealSameEdgeRejectedAtFixed1e9":4,"unobserved":1},
+    {"widthArgPx":56,"jointlyFinite":1,"idealSameEdgeRejectedAtFixed1e9":1,"unobserved":5}
+  ],
+  "limits":"These are verification of saved outputs, not independent replay. No path/endpoint identity, width calibration, per-position continuity, AA/renderer identity or semantic acceptance. Root must arrange independent replay excluding P3 protocol author and P5 producer."
+}

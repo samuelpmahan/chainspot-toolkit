@@ -1,0 +1,476 @@
+{
+  "schema": "cycle04-longitudinal-paired-edge-premeasurement-protocol@1",
+  "job_id": "E802",
+  "worker": "P2",
+  "frozenAtUtc": "2026-10-18T11:55:36.092404+00:00",
+  "status": "FROZEN_BEFORE_CV; root must explicitly release to producer",
+  "question": "Does one fresh source-selected zoom ribbon retain finite paired-edge evidence across five short consecutive windows, and does this constrain more than an 80px averaged profile or matched bright control?",
+  "source": {
+    "schema": "cycle04-source-integrity@1",
+    "job_id": "E802",
+    "worker": "P2",
+    "sourceRef": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "sourcePath": "specimens/dev/Lenard-1.png",
+    "gitBlob": "28bb53c3f669f82fe3bd8ed57460fc5fcd875146",
+    "pngSha256": "cb5403d21c32f451c02402aca4e2795d4ecfb9ddd7490fe714ca0c85c598dcba",
+    "pngBytes": 3845174,
+    "fullRgbaSha256": "4fed88f3d298b544739a3bf532756d44413d292af0b4f34c627f04d152cbf45c",
+    "fullRgbaBytes": 14427360,
+    "originalFrame": "Lenard-1.original-source-pixel-centers",
+    "imageSizePx": {
+      "width": 1290,
+      "height": 2796
+    },
+    "decoder": {
+      "name": "Pillow",
+      "version": "12.3.0",
+      "sourceMode": "RGB",
+      "outputMode": "RGBA",
+      "orientation": "stored PNG pixel order; no EXIF transform",
+      "colorTransform": "none; stored RGB channels, no ICC/gamma transform",
+      "alpha": "preserved RGBA; RGB appends 255"
+    },
+    "extraction": "git cat-file blob of resolved exact platform object; no checkout or repo mutation",
+    "cvMeasurementsExecuted": 0,
+    "sourcePngPath": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/Lenard-1.original.png",
+    "algorithmReferenceReadOnly": "e3e11fab5de1e4562487472585259435694d88bc"
+  },
+  "acceptedUnchangedExecution": {
+    "adapterFreezeSha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "compositionManifestSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+    "defaultEnabled": false,
+    "futureExecution": "One explicit enabled adapter request; supported run performs crop and full-original-frame composition; retain all disagreements over existing1e-9 tolerance as UNKNOWN",
+    "sourceChangesAllowed": false,
+    "tuningAllowed": false
+  },
+  "requestDescriptor": {
+    "enabled": true,
+    "sourceBinding": {
+      "pngPath": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/Lenard-1.original.png",
+      "stager": "experiments/capability-discovery/source-pixels/stage-png.py",
+      "imageId": "Lenard-1.E802",
+      "frame": "Lenard-1.original-source-pixel-centers",
+      "expectedPngSha256": "cb5403d21c32f451c02402aca4e2795d4ecfb9ddd7490fe714ca0c85c598dcba",
+      "expectedFullRgbaSha256": "4fed88f3d298b544739a3bf532756d44413d292af0b4f34c627f04d152cbf45c"
+    },
+    "roi": {
+      "xPx": 400,
+      "yPx": 1010,
+      "widthPx": 640,
+      "heightPx": 490,
+      "frame": "Lenard-1.E802.fixed-roi-source-pixel-centers"
+    },
+    "geometry": {
+      "frame": "Lenard-1.original-source-pixel-centers",
+      "geometrySource": "P2 E802 fresh caller visual testimony from exact Lenard-1 original PNG; no tracked zoom annotation; tee/badge API names are unverified arbitrary segment endpoints; no semantic acceptance",
+      "training": {
+        "frame": "Lenard-1.original-source-pixel-centers",
+        "segments": [
+          {
+            "tee": {
+              "xPx": 575,
+              "yPx": 1095
+            },
+            "badge": {
+              "xPx": 555,
+              "yPx": 1255
+            }
+          }
+        ]
+      },
+      "stations": [
+        {
+          "id": "proposed-ribbon.short1",
+          "frame": "Lenard-1.original-source-pixel-centers",
+          "xPx": 568.9691115068547,
+          "yPx": 1143.2471079451627,
+          "headingRad": 1.695151321341658,
+          "t0Px": -8,
+          "t1Px": 8
+        },
+        {
+          "id": "proposed-ribbon.short2",
+          "frame": "Lenard-1.original-source-pixel-centers",
+          "xPx": 566.9845557534273,
+          "yPx": 1159.1235539725812,
+          "headingRad": 1.695151321341658,
+          "t0Px": -8,
+          "t1Px": 8
+        },
+        {
+          "id": "proposed-ribbon.short3",
+          "frame": "Lenard-1.original-source-pixel-centers",
+          "xPx": 565.0,
+          "yPx": 1175.0,
+          "headingRad": 1.695151321341658,
+          "t0Px": -8,
+          "t1Px": 8
+        },
+        {
+          "id": "proposed-ribbon.short4",
+          "frame": "Lenard-1.original-source-pixel-centers",
+          "xPx": 563.0154442465727,
+          "yPx": 1190.8764460274188,
+          "headingRad": 1.695151321341658,
+          "t0Px": -8,
+          "t1Px": 8
+        },
+        {
+          "id": "proposed-ribbon.short5",
+          "frame": "Lenard-1.original-source-pixel-centers",
+          "xPx": 561.0308884931453,
+          "yPx": 1206.7528920548373,
+          "headingRad": 1.695151321341658,
+          "t0Px": -8,
+          "t1Px": 8
+        },
+        {
+          "id": "proposed-ribbon.long",
+          "frame": "Lenard-1.original-source-pixel-centers",
+          "xPx": 565.0,
+          "yPx": 1175.0,
+          "headingRad": 1.695151321341658,
+          "t0Px": -40,
+          "t1Px": 40
+        },
+        {
+          "id": "lateral-plus6.short1",
+          "frame": "Lenard-1.original-source-pixel-centers",
+          "xPx": 563.0154442465727,
+          "yPx": 1142.5028995376274,
+          "headingRad": 1.695151321341658,
+          "t0Px": -8,
+          "t1Px": 8
+        },
+        {
+          "id": "lateral-plus6.short2",
+          "frame": "Lenard-1.original-source-pixel-centers",
+          "xPx": 561.0308884931453,
+          "yPx": 1158.379345565046,
+          "headingRad": 1.695151321341658,
+          "t0Px": -8,
+          "t1Px": 8
+        },
+        {
+          "id": "lateral-plus6.short3",
+          "frame": "Lenard-1.original-source-pixel-centers",
+          "xPx": 559.046332739718,
+          "yPx": 1174.2557915924647,
+          "headingRad": 1.695151321341658,
+          "t0Px": -8,
+          "t1Px": 8
+        },
+        {
+          "id": "lateral-plus6.short4",
+          "frame": "Lenard-1.original-source-pixel-centers",
+          "xPx": 557.0617769862906,
+          "yPx": 1190.1322376198834,
+          "headingRad": 1.695151321341658,
+          "t0Px": -8,
+          "t1Px": 8
+        },
+        {
+          "id": "lateral-plus6.short5",
+          "frame": "Lenard-1.original-source-pixel-centers",
+          "xPx": 555.0772212328633,
+          "yPx": 1206.008683647302,
+          "headingRad": 1.695151321341658,
+          "t0Px": -8,
+          "t1Px": 8
+        },
+        {
+          "id": "lateral-plus6.long",
+          "frame": "Lenard-1.original-source-pixel-centers",
+          "xPx": 559.046332739718,
+          "yPx": 1174.2557915924647,
+          "headingRad": 1.695151321341658,
+          "t0Px": -40,
+          "t1Px": 40
+        },
+        {
+          "id": "bright-organic.short1",
+          "frame": "Lenard-1.original-source-pixel-centers",
+          "xPx": 933.9691115068547,
+          "yPx": 1328.2471079451627,
+          "headingRad": 1.695151321341658,
+          "t0Px": -8,
+          "t1Px": 8
+        },
+        {
+          "id": "bright-organic.short2",
+          "frame": "Lenard-1.original-source-pixel-centers",
+          "xPx": 931.9845557534273,
+          "yPx": 1344.1235539725812,
+          "headingRad": 1.695151321341658,
+          "t0Px": -8,
+          "t1Px": 8
+        },
+        {
+          "id": "bright-organic.short3",
+          "frame": "Lenard-1.original-source-pixel-centers",
+          "xPx": 930.0,
+          "yPx": 1360.0,
+          "headingRad": 1.695151321341658,
+          "t0Px": -8,
+          "t1Px": 8
+        },
+        {
+          "id": "bright-organic.short4",
+          "frame": "Lenard-1.original-source-pixel-centers",
+          "xPx": 928.0154442465727,
+          "yPx": 1375.8764460274188,
+          "headingRad": 1.695151321341658,
+          "t0Px": -8,
+          "t1Px": 8
+        },
+        {
+          "id": "bright-organic.short5",
+          "frame": "Lenard-1.original-source-pixel-centers",
+          "xPx": 926.0308884931453,
+          "yPx": 1391.7528920548373,
+          "headingRad": 1.695151321341658,
+          "t0Px": -8,
+          "t1Px": 8
+        },
+        {
+          "id": "bright-organic.long",
+          "frame": "Lenard-1.original-source-pixel-centers",
+          "xPx": 930.0,
+          "yPx": 1360.0,
+          "headingRad": 1.695151321341658,
+          "t0Px": -40,
+          "t1Px": 40
+        }
+      ],
+      "localWidthBank": {
+        "frame": "Lenard-1.original-source-pixel-centers",
+        "scope": "LOCAL",
+        "valuesPx": [
+          34,
+          42,
+          50
+        ]
+      },
+      "occluders": {
+        "frame": "Lenard-1.original-source-pixel-centers",
+        "boxes": []
+      },
+      "edgeSearch": {
+        "latLimPx": 12,
+        "tolWidthPx": 2
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "proposed-ribbon",
+      "role": "source-selected proposed straight translucent ribbon",
+      "origin": [
+        565.0,
+        1175.0
+      ],
+      "shortStationIds": [
+        "proposed-ribbon.short1",
+        "proposed-ribbon.short2",
+        "proposed-ribbon.short3",
+        "proposed-ribbon.short4",
+        "proposed-ribbon.short5"
+      ],
+      "longStationId": "proposed-ribbon.long",
+      "headingRad": 1.695151321341658,
+      "shortLongitudinalBoundsRelativeToGroupPx": [
+        [
+          -40,
+          -24
+        ],
+        [
+          -24,
+          -8
+        ],
+        [
+          -8,
+          8
+        ],
+        [
+          8,
+          24
+        ],
+        [
+          24,
+          40
+        ]
+      ],
+      "longLongitudinalBoundsRelativeToGroupPx": [
+        -40,
+        40
+      ]
+    },
+    {
+      "id": "lateral-plus6",
+      "role": "matched same-heading coordinate perturbation; not independent negative evidence",
+      "origin": [
+        559.046332739718,
+        1174.2557915924647
+      ],
+      "shortStationIds": [
+        "lateral-plus6.short1",
+        "lateral-plus6.short2",
+        "lateral-plus6.short3",
+        "lateral-plus6.short4",
+        "lateral-plus6.short5"
+      ],
+      "longStationId": "lateral-plus6.long",
+      "headingRad": 1.695151321341658,
+      "shortLongitudinalBoundsRelativeToGroupPx": [
+        [
+          -40,
+          -24
+        ],
+        [
+          -24,
+          -8
+        ],
+        [
+          -8,
+          8
+        ],
+        [
+          8,
+          24
+        ],
+        [
+          24,
+          40
+        ]
+      ],
+      "longLongitudinalBoundsRelativeToGroupPx": [
+        -40,
+        40
+      ]
+    },
+    {
+      "id": "bright-organic",
+      "role": "source-selected irregular bright foliage/ground texture control, visually no proposed overlay ribbon",
+      "origin": [
+        930.0,
+        1360.0
+      ],
+      "shortStationIds": [
+        "bright-organic.short1",
+        "bright-organic.short2",
+        "bright-organic.short3",
+        "bright-organic.short4",
+        "bright-organic.short5"
+      ],
+      "longStationId": "bright-organic.long",
+      "headingRad": 1.695151321341658,
+      "shortLongitudinalBoundsRelativeToGroupPx": [
+        [
+          -40,
+          -24
+        ],
+        [
+          -24,
+          -8
+        ],
+        [
+          -8,
+          8
+        ],
+        [
+          8,
+          24
+        ],
+        [
+          24,
+          40
+        ]
+      ],
+      "longLongitudinalBoundsRelativeToGroupPx": [
+        -40,
+        40
+      ]
+    }
+  ],
+  "geometryTestimony": {
+    "trainingMeaning": "Fresh visually selected centerline-like segment, supplied to the legacy tee/badge API only. Neither endpoint is claimed to be a verified tee, badge, basket or annotation-mapped point.",
+    "annotationBoundary": "E501 reports no Lenard1..5 testimony; Lenard-full annotation mapping to full-source is UNKNOWN. No full-source or E508/E511 coordinates were transferred.",
+    "widthBankMeaning": "Explicit arbitrary caller bank [34,42,50] source pixels, chosen as a bounded visual sampling range before measurements; not learned, calibrated or accepted truth.42 is a preregistered comparison anchor, not a width estimate.",
+    "heading": "atan2(160,-20), directly from the supplied training segment; identical for every group and window",
+    "lateralShift": {
+      "distancePx": 6.0,
+      "normal": [
+        -0.9922778767136676,
+        -0.12403473458920843
+      ],
+      "definition": "shifted origin = primary origin +6*[-sin(heading),cos(heading)]"
+    },
+    "occluders": "Explicit empty list: no mask, label removal or inferred occluder segmentation. Visible labels outside selected windows are not evidence of absence of all occlusion."
+  },
+  "windowSemantics": {
+    "shortWindowCountPerGroup": 5,
+    "shortNominalProfileSamples": 16,
+    "longNominalProfileSamples": 80,
+    "sampleConvention": "Unchanged arange(t0,t1,1); t1 excluded. Five short windows partition[-40,40) mathematically in group longitudinal coordinates; no intended gaps or double-counted longitudinal indices. Reanchored floating world coordinates are not claimed bitwise identical; see explicit geometry-only grid record.",
+    "movingOrigins": "Short origins move along heading by[-32,-16,0,16,32]px; each uses t[-8,8). Dev72 ignores t0/t1, so moving origins deliberately move its five tangent samples. Long origin is the group center; its Dev72 channels duplicate only short3, not all five.",
+    "longComparison": "Moving-pose+window comparison, not a pure window-only ablation. Long JS profile averages the matching union of longitudinal sampling locations mathematically; floating arithmetic and masks can differ. It is not five independent cases. Reconstruct any short-profile mean only from recorded raw profile/count arrays, retaining numerical/mask disagreement.",
+    "explicitSampleLatticeGeometryEvidence": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/sample-lattice-geometry-only.json",
+      "sha256": "902abc550148744ca21343a269c27b83dad5b3ab38afc2ede09006d227fb42cc",
+      "bytes": 41034
+    },
+    "knownMinimum": "16 short samples exceeds the fixed edgePairOf floor8 when unmasked; actual visibility/count rules remain unchanged and can still return null.",
+    "rowCount": 54,
+    "stationCount": 18,
+    "groupsShareSourceAndTraining": true
+  },
+  "predeclaredObservationsAndFalsifiers": [
+    {
+      "claim": "primary paired-edge continuity on this80px trace at comparison anchor42",
+      "prediction": "All5 primary short-window source-frame edgeFit values and its long-window edgeFit are finite positive pairs at42.",
+      "falsifier": "Any primary short-window null falsifies the all5 continuity expectation. A finite long fit with any short null specifically falsifies interpreting that long average as paired edges throughout the trace."
+    },
+    {
+      "claim": "same physical pair under fixed+6px lateral coordinate perturbation at42",
+      "prediction": "When both primary and shifted source-frame fits are finite, shifted candidateCenterMinusFitMidpointPx minus primary value is predicted+6px.",
+      "falsifier": "Nulls make the pair comparison unobserved; nonzero residual from the explicit+6 prediction is retained as evidence against exact same-edge interpretation. Report signed residuals without a new score cutoff or post-hoc tolerance. Finite fits alone do not establish edge identity."
+    },
+    {
+      "claim": "finite-pair short-window continuity distinguishes this proposed strip from this bright control",
+      "prediction": "The fixed bright-organic control will not exhibit finite positive pairs at42 in all5 short windows.",
+      "falsifier": "All5 finite bright-control short pairs at42 falsify this finite-pair-continuity specificity expectation on this control; any other pattern remains a bounded descriptive comparison, never semantic acceptance."
+    },
+    {
+      "claim": "bank and profile boundary diagnostics",
+      "prediction": "No guaranteed ranking, calibrated width, score threshold or fit-boundary safety is predicted.",
+      "falsifier": "Retain every34/42/50 row including nulls and weak/boundary fits.50 plus a lateral shift can approach/exceed the fixed normal extent; never widen profiles, recenter, drop a width or substitute a successful row."
+    }
+  ],
+  "reporting": {
+    "retain": "Both source/crop receipts, raw learner, all profiles/counts,4lanes, rails/interior/combined, every fit/null, midpoint values and differences; long-vs-short and all controls at every bank width",
+    "semanticIdentity": "UNKNOWN",
+    "calibratedWidth": "UNKNOWN",
+    "promoted": false,
+    "antiSelection": "No post-freeze geometry/ROI/training/bank/window/heading/mask/settings changes, widening, recentering, hidden rerun or parameter tuning. Support refusal remains NOT_EXECUTED; any amended experiment is separate new authorization/freeze.",
+    "exposure": "Historical Lenard zoom images may have been exposed. This selection and protocol are fresh/unexecuted, not authenticated heldout or blind evaluation.",
+    "independence": "One screenshot, overlapping profiles, shared training and crop/source controls do not provide independent scientific cases."
+  },
+  "supportEvidence": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/geometric-support-only.json",
+    "sha256": "719a605d29fb642f07614c62a3978c6194528c90c1dc2ae0a0136dd888136de8",
+    "bytes": 13459
+  },
+  "inspectionEvidence": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/original-screenshot-inspection.json",
+    "sha256": "17060ea13833e9c85679be8a92d1f69a47b7030394854e19060b19e3ee094758",
+    "bytes": 1668
+  },
+  "sampleLatticeEvidence": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/sample-lattice-geometry-only.json",
+    "sha256": "902abc550148744ca21343a269c27b83dad5b3ab38afc2ede09006d227fb42cc",
+    "bytes": 41034
+  },
+  "cvMeasurementsExecuted": 0,
+  "adapterPreparationCalls": 0,
+  "compositionCalls": 0
+}

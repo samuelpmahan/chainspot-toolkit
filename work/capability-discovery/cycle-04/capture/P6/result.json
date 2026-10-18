@@ -1,0 +1,45 @@
+{
+  "schema": "lab-job-result@1",
+  "job_id": "E806",
+  "worker": "P6",
+  "outcome": "confirmed_reuse",
+  "summary": "Read-only reconnaissance confirms the unchanged accepted d31b source-pixel adapter and 5b59 composition already accept one long station plus ordered short-window/control stations in one request, retaining all crop/source raw outputs. Recommend existing-operation-only, with no new measurement capability. An optional pure receipt projection is specified but not implemented. nT<8 necessarily fails the unchanged edge-fit sampling guard, so tiny-window nulls cannot mean missing physical edges. Every source/crop disagreement, fit/null and UNKNOWN remains evidence.",
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P6/design.json",
+      "sha256": "831df032c3f1ecdc151bf9df5889e0c16b22d8c5ed5667611bfd99dc2250a3ba",
+      "bytes": 10244
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P6/contract-proposal.json",
+      "sha256": "bcdb7ee7a88010c474909062f047315cefe2a02cc80a8eef089bc3db34860270",
+      "bytes": 8854
+    }
+  ],
+  "verification": {
+    "designAndContract": "both parsed as valid JSON after write",
+    "acceptedD31bClosure": {"verifiedEntries": 23, "mismatches": []},
+    "accepted5b59Closure": {"verifiedEntries": 14, "mismatches": []},
+    "head": "532fd7406e5b939e6d4d83cf92d12e2267bab11c",
+    "tree": "c170f6d54e6a45dd3cf376af070d89ba579e3d5b",
+    "branch": "codex/capability-discovery-lab",
+    "gitStatusShortBeforeAndAfter": "",
+    "measurementCalls": 0,
+    "testsRun": 0,
+    "note": "Source/contract reasoning and exact closure hash checks only; prior accepted tests are not claimed as fresh execution."
+  },
+  "independence": {
+    "P2P3ProtocolsRequestedReceivedOrOpened": false,
+    "courseImagesOpened": false,
+    "courseGeometryInspected": false,
+    "reconRead": "repository REVIEW; cycle03 README/RESUME/AUTHORIZATION-CLARIFICATION; source-pixels README/adapter/tests; composition README/recipe/all tests; accepted manifests; frozen pathSpace source; generic catalog metadata"
+  },
+  "changes": {
+    "repositoryFiles": [],
+    "scratchFilesOnly": ["design.json", "contract-proposal.json", "result.json"],
+    "commitSwitchResetMergePush": false,
+    "productionChanges": false,
+    "HHPageRouterChanges": false
+  },
+  "next": "Root combines current independent results and chooses existing capability or issues a separate explicit implementation/execution packet. P6 stops at this design freeze. Scientific acceptance, calibration, same-edge/path identity and default-ON release remain UNKNOWN or unauthorised."
+}

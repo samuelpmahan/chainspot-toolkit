@@ -1,0 +1,32 @@
+{
+  "schema": "cycle04-original-pixel-inspection@1",
+  "job_id": "E802",
+  "worker": "P2",
+  "method": "Direct view_image inspection of the exact original screenshot PNG and a source-pixel crop; no image generation, filtering, resizing, CV profiles or fits",
+  "originalPng": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/Lenard-1.original.png",
+    "sha256": "cb5403d21c32f451c02402aca4e2795d4ecfb9ddd7490fe714ca0c85c598dcba",
+    "width": 1290,
+    "height": 2796
+  },
+  "inspectionCrop": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/inspection-original-pixels-x300-y950.png",
+    "sha256": "1a6a3191832608b6004bbeea1bcf26286998899f79b4542d79ba0431effd3e60",
+    "originalHalfOpenBoundsPx": {
+      "left": 300,
+      "top": 950,
+      "right": 1100,
+      "bottom": 1750
+    },
+    "width": 800,
+    "height": 800,
+    "resampling": "none; exact Pillow crop of stored RGB bytes"
+  },
+  "observations": [
+    "Original is a mobile map screenshot with map chrome, translucent strips, number labels, ring/basket-like overlays and satellite imagery.",
+    "Selected proposed strip runs approximately downward-left through original (575,1095) to (555,1255), away from the nearby numbered-label and endpoint-marker overlays in the inspection crop.",
+    "The bright-organic control around original (930,1360) is an irregular light foliage/ground patch rather than the visually proposed straight translucent strip.",
+    "These statements are impeachable caller visual testimony, not verified course/path/tee/badge/organic identity; no feature segmentation or measured width was produced."
+  ],
+  "cvMeasurementsExecuted": 0
+}

@@ -1,0 +1,51 @@
+I1018 15:28:32.976555     5 CoreSolver.cpp:218] Problem run_uuid: 3e6a3402-24f2-4f69-9994-d477cc196052
+I1018 15:28:32.976654     5 CoreSolver.cpp:87] Objects: 4
+I1018 15:28:32.976658     5 CoreSolver.cpp:88] Containers: 27
+I1018 15:28:32.976660     5 CoreSolver.cpp:89] Scopes: 2
+I1018 15:28:32.976661     5 CoreSolver.cpp:90] Partitions: 0
+I1018 15:28:32.976663     5 CoreSolver.cpp:91] Goals: 2
+I1018 15:28:32.976664     5 CoreSolver.cpp:92] Constraints: 3
+I1018 15:28:32.976685     5 CoreSolver.cpp:298] Materializing problem...
+I1018 15:28:32.977269     5 CoreSolver.cpp:309] Using parallelized materializer = false; number of threads = 1
+I1018 15:28:32.977758     5 CoreSolver.cpp:324] Setting up the solver...
+I1018 15:28:32.977851     5 Orchestrator.cpp:52] Number of nodes in the expression graph = 179
+I1018 15:28:32.977887     5 Orchestrator.cpp:238] Number of object equivalence sets = 2
+I1018 15:28:32.977897     5 EquivalenceSetsStore.cpp:217] Equivalence sets built in 0.00 s
+I1018 15:28:32.977951     5 ChainSolver.cpp:27] Initial objective: (0, 0)
+I1018 15:28:32.978006     5 CoreLocalSearchSolve.cpp:502] Running local search until 1.000000 seconds or 500 moves
+I1018 15:28:32.978748     5 CoreLocalSearchSolve.cpp:340] 
+I1018 15:28:32.978748     5 CoreLocalSearchSolve.cpp:340] moves applied: 0 (zero moves performed), moves this cycle: 0, total: 0; containers explored: 0, cycles started: 1
+I1018 15:28:32.978748     5 CoreLocalSearchSolve.cpp:340] time: 0.001s, find worst: 0.000s, eval: 0.001s, apply: 0.000s, prune: 0.000s
+I1018 15:28:32.979676     5 CoreLocalSearchSolve.cpp:291] 
+I1018 15:28:32.979676     5 CoreLocalSearchSolve.cpp:291] Stopping solve because unable to find more moves
+I1018 15:28:32.979692     5 CoreLocalSearchSolve.cpp:300] 
+I1018 15:28:32.979692     5 CoreLocalSearchSolve.cpp:300] **** LocalSearch::solve summary ****
+I1018 15:28:32.979692     5 CoreLocalSearchSolve.cpp:300] moves applied: 1 (SINGLE applied 1 times => 1 moves), moves this cycle: 0, total: 1; containers explored: 27, cycles started: 2
+I1018 15:28:32.979692     5 CoreLocalSearchSolve.cpp:300] time: 0.002s, find worst: 0.000s, eval: 0.001s, apply: 0.000s, prune: 0.000s
+I1018 15:28:32.979692     5 CoreLocalSearchSolve.cpp:300] objective: (-300, 1) | estimated lower bound: (-300, -4)
+I1018 15:28:32.979692     5 CoreLocalSearchSolve.cpp:300] evals per second: 73404.772, total: 108, invalid: 98.148%, worse: 0.926%, neutral: 0.000%, better: 0.926%, search iterations: 55, avg evals/iteration: 2.0
+I1018 15:28:32.979692     5 CoreLocalSearchSolve.cpp:300] end reason: UNABLE_TO_FIND_MORE_MOVES (unable to find more moves)
+I1018 15:28:32.979717     5 ChainSolver.cpp:38] Final objective: (-300, 1)
+I1018 15:28:32.979996     5 ProblemSolver.cpp:182] ManifoldUploadPolicy = ON_FAILURE. Not uploading to Manifold.
+I1018 15:28:32.980003     5 CoreSolver.cpp:176] Visualizing Hierarchical profile with :
+I1018 15:28:32.980006     5 CoreSolver.cpp:177]  - Nodes with runtime >= 5% of total = 0.00s,  OR
+I1018 15:28:32.980008     5 CoreSolver.cpp:180]  - Nodes with nonzero memory >= 5% of total = 0.00 MBs
+I1018 15:28:32.980008     5 CoreSolver.cpp:180] 
+I1018 15:28:32.980039     5 CoreSolver.cpp:186] Rebalancer Hierarchical Time Profile: 
+I1018 15:28:32.980039     5 CoreSolver.cpp:186] ProblemSolver::Solve ··································│==================================================================================================== [0.00s total]
+I1018 15:28:32.980039     5 CoreSolver.cpp:186]    └─CoreSolver::Solve ································│============================================================================================= [0.00s total]
+I1018 15:28:32.980039     5 CoreSolver.cpp:186]        ├─Materialization ······························│===================================== [0.00s total]
+I1018 15:28:32.980039     5 CoreSolver.cpp:186]        │   └─Calling materializer ·····················│============================== [0.00s total]
+I1018 15:28:32.980039     5 CoreSolver.cpp:186]        │       └─Materialize Constraints & Goals ······│=========== [0.00s total]
+I1018 15:28:32.980039     5 CoreSolver.cpp:186]        └─LocalSearch::solve ···························│================================================ [0.00s total]
+I1018 15:28:32.980039     5 CoreSolver.cpp:186] 
+I1018 15:28:32.980039     5 CoreSolver.cpp:186] 
+I1018 15:28:32.980077     5 CoreSolver.cpp:189] Rebalancer Peak Memory Contribution Profile: 
+I1018 15:28:32.980077     5 CoreSolver.cpp:189] ProblemSolver::Solve ··································│ [0 B  total, 0 B  delta]
+I1018 15:28:32.980077     5 CoreSolver.cpp:189]    └─CoreSolver::Solve ································│ [0 B  total, 0 B  delta]
+I1018 15:28:32.980077     5 CoreSolver.cpp:189]        ├─Materialization ······························│ [0 B  total, 0 B  delta]
+I1018 15:28:32.980077     5 CoreSolver.cpp:189]        │   └─Calling materializer ·····················│ [0 B  total, 0 B  delta]
+I1018 15:28:32.980077     5 CoreSolver.cpp:189]        │       └─Materialize Constraints & Goals ······│ [0 B  total, 0 B  delta]
+I1018 15:28:32.980077     5 CoreSolver.cpp:189]        └─LocalSearch::solve ···························│ [0 B  total, 0 B  delta]
+I1018 15:28:32.980077     5 CoreSolver.cpp:189] 
+I1018 15:28:32.980077     5 CoreSolver.cpp:189] 

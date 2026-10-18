@@ -1,0 +1,13 @@
+{
+  "job_id":"E809",
+  "measurementRuns":1,
+  "compositionCalls":2,
+  "rendererInvocations":3,
+  "successfulFigures":2,
+  "firstFigure":{"path":"E809-actual-receipt.png","sha256":"4eac4ecdf7b88500d7c047c617e292c8b577ad5b3d9cfa6e6d0b1ab96f21fb63","defect":"Branch titles overlap table headers; raw figure and summary/log/source preserved including history-render-v1."},
+  "secondInvocation":{"rawLog":"render.log","outcome":"Refused overwrite because original figure still existed; no figure or CV output altered. Original traceback retained."},
+  "displayV2":{"path":"E809-actual-receipt-display-v2.png","sha256":"fdc4e82f4bd5892540d3dc32d5d605ae2e9ae83b8eed91d09c16753d14d642a0","renderer":"render-receipt-display-v2.py","rendererSha256":"70980389cf3d363a1662f6eb57fe164c922a9ceb17a1ffa731a0b4fe4b3f6b69","rawLog":"render-display-v2.log","change":"Explicit fixed table bounding boxes/spacing only, plus distinct output filenames. Receipt/source pixels/data/rounding/labels untouched."},
+  "helperProvenance":"The exact display-v2 renderer bytes were executed at render-receipt.py then retained byte-exact as render-receipt-display-v2.py. Original frozen render-receipt.py was restored byte-for-byte after display work, with its original copy also retained under history-render-v1. Caller/receipt/source/protocol remain unchanged.",
+  "inspection":"Viewed display-v2 actual figure at original resolution. Source-pixel ROI and frozen pose labels visible; both branch titles separate from readable headers; all18 ordered rows and3width columns per branch present with finite/null counts. No remaining overlap observed.",
+  "limits":"Display-only correction from retained receipt, not a measurement rerun or another scientific case."
+}

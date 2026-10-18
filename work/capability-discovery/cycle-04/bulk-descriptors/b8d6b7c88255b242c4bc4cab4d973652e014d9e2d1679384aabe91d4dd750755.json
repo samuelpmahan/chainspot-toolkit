@@ -1,0 +1,31 @@
+{
+  "schema": "cycle04-omitted-pixel-array@1",
+  "originalSha256": "b8d6b7c88255b242c4bc4cab4d973652e014d9e2d1679384aabe91d4dd750755",
+  "originalBytes": 853790,
+  "prefix": "{\n  \"enabled\": true,\n  \"source\": {\n    \"image\": {\n      \"width\": 128,\n      \"height\": 128,\n      \"frame\": \"E811.uniform-gray100.original-pixel-centers\",\n      \"data\": ",
+  "suffix": "\n    },\n    \"provenance\": {\n      \"imageId\": \"E811.uniform-gray100.128\",\n      \"sourcePngSha256\": \"78b9bd5c98c577b96089fc9f54a77ae538c8587738d48732d064661f0e37181b\",\n      \"rgbaSha256\": \"b82ebef90ff857113c3fddf4cfe9d821ac975cb03e749927dd993d5ac865feac\",\n      \"decoder\": {\n        \"name\": \"Pillow\",\n        \"version\": \"12.3.0\",\n        \"outputMode\": \"RGBA\",\n        \"sourceMode\": \"RGBA\",\n        \"orientation\": \"stored PNG pixel order; no EXIF transform\",\n        \"colorTransform\": \"none; stored RGB channels, no ICC/gamma transform\",\n        \"alpha\": \"preserved RGBA; RGB appends 255\"\n      }\n    }\n  },\n  \"roi\": {\n    \"xPx\": 60,\n    \"yPx\": 60,\n    \"widthPx\": 8,\n    \"heightPx\": 8,\n    \"frame\": \"E811.request-B.crop\"\n  },\n  \"geometry\": {\n    \"frame\": \"E811.uniform-gray100.original-pixel-centers\",\n    \"geometrySource\": \"E811 explicit exposed synthetic caller geometry for executed-UNKNOWN versus preparation-refusal characterization; no semantic, calibrated width or course claim\",\n    \"training\": {\n      \"frame\": \"E811.uniform-gray100.original-pixel-centers\",\n      \"segments\": []\n    },\n    \"stations\": [\n      {\n        \"id\": \"fixed-center\",\n        \"frame\": \"E811.uniform-gray100.original-pixel-centers\",\n        \"xPx\": 64,\n        \"yPx\": 64,\n        \"headingRad\": 0,\n        \"t0Px\": -8,\n        \"t1Px\": 8\n      }\n    ],\n    \"localWidthBank\": {\n      \"frame\": \"E811.uniform-gray100.original-pixel-centers\",\n      \"scope\": \"LOCAL\",\n      \"valuesPx\": []\n    },\n    \"occluders\": {\n      \"frame\": \"E811.uniform-gray100.original-pixel-centers\",\n      \"boxes\": []\n    },\n    \"edgeSearch\": {\n      \"latLimPx\": 4,\n      \"tolWidthPx\": 3\n    }\n  }\n}\n",
+  "arrayPrefix": "[\n        ",
+  "separator": ",\n        ",
+  "arraySuffix": "\n      ]",
+  "length": 65536,
+  "rgbaSha256": "b82ebef90ff857113c3fddf4cfe9d821ac975cb03e749927dd993d5ac865feac",
+  "image": {
+    "width": 128,
+    "height": 128,
+    "frame": "E811.uniform-gray100.original-pixel-centers"
+  },
+  "provenance": {
+    "imageId": "E811.uniform-gray100.128",
+    "sourcePngSha256": "78b9bd5c98c577b96089fc9f54a77ae538c8587738d48732d064661f0e37181b",
+    "rgbaSha256": "b82ebef90ff857113c3fddf4cfe9d821ac975cb03e749927dd993d5ac865feac",
+    "decoder": {
+      "name": "Pillow",
+      "version": "12.3.0",
+      "outputMode": "RGBA",
+      "sourceMode": "RGBA",
+      "orientation": "stored PNG pixel order; no EXIF transform",
+      "colorTransform": "none; stored RGB channels, no ICC/gamma transform",
+      "alpha": "preserved RGBA; RGB appends 255"
+    }
+  }
+}

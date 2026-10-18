@@ -1,0 +1,73 @@
+{
+  "schema":"cycle04-native-independent-review@1",
+  "job_id":"R811",
+  "worker":"P5",
+  "reviewedJob":"E811",
+  "decision":"accepted",
+  "summary":"Independently accepted and replayed the small fixed E811 engineering contrast. Both complete replay receipts are byte-identical to producer receipts: supported A returns UNKNOWN but executes2 unchanged recipes/2 profiles and retains both branches with candidates[]; B returns UNKNOWN through support refusal with0 recipes/profiles and no branches. All8 named raw V8 entry-range records are actually present in each producer and reviewer process, including explicit zero counts. Exact PNG/staged/request bytes, protocol/caller/source hashes and support arithmetic match. This is execution/missingness characterization only, not path science.",
+  "bindings":{
+    "producerDirectory":"/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811",
+    "producerResultSha256":"59825f94cf8116e6b8564ed64fe00ced7aea2494e525a322289e3fb6f6109825",
+    "protocolSha256":"3d0b54fc2bb037131511a16f4679365fa9fec70be60f0ab888213bea8d0c6dd7",
+    "producerCallerSha256":"05e7374e40e0f5e0f8b449c252ae58d6e249be780b2fbcb72b715a3b5a8fde94",
+    "reviewerCallerSha256":"11dba4cc7e1a3b79a6de2104f2db10f966e5655a6ce196de391147f554e3481f",
+    "sourcePngSha256":"78b9bd5c98c577b96089fc9f54a77ae538c8587738d48732d064661f0e37181b",
+    "sourceFullRgbaSha256":"b82ebef90ff857113c3fddf4cfe9d821ac975cb03e749927dd993d5ac865feac",
+    "stagedSourceSha256":"4d71fb83b90d3d139b26d9b2502da18c3e2976ba77e5bbc65ca47915094b4433",
+    "requestASha256":"1e8b087653fe8fa51aea8d18a937087d336d24f9aa171d19744d621c841d51e1",
+    "requestBSha256":"b8d6b7c88255b242c4bc4cab4d973652e014d9e2d1679384aabe91d4dd750755",
+    "receiptASha256":"f89e5c5926efb400ec1cdec3413ce1fbfeabc1c0548bf86cd8311d0a314a41f6",
+    "receiptBSha256":"daa7e63665a4c658489483e712b3133547b1ba23a13c1529084d221766d91974",
+    "recordedAuditSha256":"345d31e7b3a4c84c41a40bdc3562e5277dce12017336c6e87ed800ca7136b3b3",
+    "replayVerificationSha256":"83e2f0c27d41739fbda8b314ed661ec10f35e49ce63751f70bbee384eef7c645",
+    "readOnlyChecksSha256":"9e199c163e4f557ad00968d0d789c8fae110a284965d0720dd48977765ea72a9",
+    "reviewArtifactManifestSha256":"265b353ec8f641d549dd910e79ce077af28599877f0ce54a837a0979a20c603e"
+  },
+  "checks":[
+    {"id":"assigned-exact-inputs","status":"PASS","evidence":"Assigned producer result, protocol and caller SHA256 matched. Rehashed all28 producer result artifacts and25 artifacts in producer initial manifest. Verified5 frozen source hashes before/after reviewer replay. No producer/source mutation."},
+    {"id":"png-and-stager","status":"PASS","evidence":"Independent read-only PNG inspection confirms128x128 native8-bitRGBA, only IHDR/IDAT/IEND, valid CRCs, one IDAT and filter0 each row. Inflated rows and Pillow decoded RGBA exactly100,100,100,255. Reviewer called unchanged accepted stage-png.py once on the exact bound PNG; entire staged JSON is byte-identical to producer staged JSON."},
+    {"id":"protocol-request-projection","status":"PASS","evidence":"Both reviewer requests are byte-identical to producer full requests and frozen premeasurement hashes. Identical source/geometry/training[]/station/bank[]/mask/settings, only ROI origin/size/frame differs. Four-key supported adapter schema preserved; no width introduced or origin recentered."},
+    {"id":"support-arithmetic","status":"PASS","evidence":"Independently recomputed exact A profile envelopes[10,18,70,78] and[26,18,86,78], both strict inside96px ROI. B envelopes[-34,-26,26,34] and[-18,-26,42,34] violate8px ROI support and both remain failures. Empty bank sensor radius0 does not remove profile support prerequisite."},
+    {"id":"producer-native-coverage","status":"PASS","evidence":"For each A/B producer raw coverage file, selected exact script URL and exactly one named function record for all8 functions. Verified entry ranges/source declaration offsets and source file hashes. A has explicit edgePairOf0 and observeFourLaneCrossSection0; B has6 explicit zero records. None is missing/unavailable or normalized to0."},
+    {"id":"fresh-replay","status":"PASS_BYTE_EXACT","evidence":"Fresh reviewer A then B processes each invoke unchanged adapter once under native NODE_V8_COVERAGE. Complete serialized receipts, not only projections or selected fields, are byte-identical to producer originals. Request and staged JSON bytes also match. Reviewer native coverage confirms same all8 entry counts with explicit zeros; raw coverage and logs retained."},
+    {"id":"A-executed-empty-bank","status":"PASS","evidence":"Top UNKNOWN, supported envelope, execution.compositionCalls2, operation labels8, both raw branches retained. Each branch has one16-sample profile with241 mean values100 and visible counts16, candidates[], raw learner{widthPx:40,scores:[]}. Empty candidate list means NO_REQUESTED_WIDTH_CANDIDATES, neither edgeFit:null nor NOT_EXECUTED. Equivalence MATCHED_DECLARED_CONTROL at1e-9 with no differences."},
+    {"id":"B-preparation-abstention","status":"PASS","evidence":"Top UNKNOWN, explicit complete-sampling-support refusal,2 support failures, operations[], no composition/sourceComposition/execution fields. Raw coverage runComposition/profileAt/lumOf/learner/edge/sensor entries are0. No measured profile/candidate/physical absence finding exists."},
+    {"id":"scope-and-interpretation","status":"PASS","evidence":"Same top-level status does not identify execution. Native function entry counts are process-specific engineering evidence, not primitive work counts or performance/scientific quality. Raw fallback40 with scores[] is not a requested/calibrated width or fitted pair. No path/width/AA/semantic inference, renderer or production/helper change."}
+  ],
+  "functionEntryCounts":{
+    "A":{"runSourcePixelRoi":1,"prepare":1,"runComposition":2,"lumOf":2,"profileAt":2,"edgePairOf":0,"estimateFourLaneCorridorWidth":2,"observeFourLaneCrossSection":0},
+    "B":{"runSourcePixelRoi":1,"prepare":1,"runComposition":0,"lumOf":0,"profileAt":0,"edgePairOf":0,"estimateFourLaneCorridorWidth":0,"observeFourLaneCrossSection":0},
+    "scope":"Counts independently agree in producer and fresh reviewer runs;8 named records present per process. Raw source URLs, start/end offsets, isBlockCoverage and entry counts are retained in recorded-audit.json and replay-verification.json."
+  },
+  "actualReviewerCalls":{
+    "staging":1,
+    "adapter":2,
+    "composition":2,
+    "profileAt":2,
+    "edgePairOf":0,
+    "observeFourLaneCrossSection":0,
+    "order":["A","B"],
+    "receiptByteExactCount":2,
+    "requestByteExactCount":2,
+    "rendering":0,
+    "adaptiveReruns":0
+  },
+  "actionableFinding":"Any consumer using top-level UNKNOWN or zero candidate-row count alone as a NOT_EXECUTED test is contradicted by A. It must preserve execution/branch/profile evidence and distinguish an empty requested bank from missing execution. This review owns no source change.",
+  "blockingIssues":[],
+  "artifacts":{
+    "directory":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/R811",
+    "manifest":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/R811/artifact-manifest.json",
+    "recordedAudit":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/R811/recorded-audit.json",
+    "replayVerification":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/R811/replay-verification.json"
+  },
+  "boundaries":{
+    "producerFilesChanged":false,
+    "repositoryChanged":false,
+    "newSourceCreated":false,
+    "P6DirectDisclosure":false,
+    "writesConfinedTo":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/R811/",
+    "semanticIdentity":"UNKNOWN",
+    "calibratedWidth":"UNKNOWN",
+    "promoted":false
+  }
+}

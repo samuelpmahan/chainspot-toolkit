@@ -1,0 +1,66 @@
+{
+  "observedUtc": "2026-10-18T13:09:25.222338+00:00",
+  "epoch": 16,
+  "workers": {
+    "V1": {
+      "job": "R899",
+      "agent": "/root/lab4_v1"
+    },
+    "P1": {
+      "job": null,
+      "agent": null
+    },
+    "P4": {
+      "job": null,
+      "agent": null
+    },
+    "P5": {
+      "job": null,
+      "agent": null
+    },
+    "P6": {
+      "job": "E900",
+      "agent": "/root/lab4_p6"
+    }
+  },
+  "R899": {
+    "id": "R899",
+    "kind": "review",
+    "depends_on": "E899",
+    "allow_workers": [
+      "V1"
+    ],
+    "status": "running",
+    "worker": "V1",
+    "subject": "Independent frozen package audit/source preservation/provenance/native/replay/continuation; exact helper review required, no scientific identity acceptance or source producer self-review",
+    "started_at": "2026-10-18T13:02:37.227637+00:00"
+  },
+  "E899": {
+    "id": "E899",
+    "kind": "extract",
+    "allow_workers": [
+      "P6"
+    ],
+    "status": "done",
+    "worker": "P6",
+    "guard": "E813 exact source frozen and all tests complete; prepare only while R813 independently reviews. Final package freeze requires root release after accepted R813, no product changes",
+    "subject": "Sole integration ADMIN: preserve raw cycle04 evidence, original/repair history, portable replay companions, conditional next policy and exact package manifest in existing branch; no commit yet",
+    "started_at": "2026-10-18T12:34:28.968673+00:00",
+    "finished_at": "2026-10-18T13:02:35.930470+00:00",
+    "receipt": "/workspace/scratch/8528bb251845/discovery-cycle04/receipts/E899.json"
+  },
+  "E900": {
+    "id": "E900",
+    "kind": "extract",
+    "allow_workers": [
+      "P6"
+    ],
+    "status": "running",
+    "worker": "P6",
+    "guard": "E899 frozen package/source verified; R899 audit is running. Eligible now ONLY for scratch publication-export preflight, no package/source/Git mutation or commit before accepted R899 and explicit root release",
+    "commitGuard": "Exact R899 accepted and original package/source still hash-match; then separately labelled post-review administrative additions, scoped local commit/export only; root connected publication remains separate",
+    "subject": "Sole integration/Git ADMIN: prepare export tooling while independent audit runs; conditional accepted-review release enables exact bounded branch checkpoint/payload, no main/PR/defaultON/deployment",
+    "started_at": "2026-10-18T13:04:18.125164+00:00"
+  },
+  "authority": "Root alone; captured package states are earlier observations, not current dispatcher state."
+}

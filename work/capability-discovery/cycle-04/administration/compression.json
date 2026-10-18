@@ -1,0 +1,11 @@
+{
+  "schema": "cycle04-lossless-storage@1",
+  "command": "zstd -q -3 -o NEW.zst ORIGINAL; zstd -q -d -c NEW.zst",
+  "tool": "*** Zstandard CLI (64-bit) v1.5.5, by Yann Collet ***",
+  "uniqueCompressedFiles": 27,
+  "originalBytes": 12869280,
+  "storedBytes": 833965,
+  "roundtrip": "All decompressed byte lengths/SHA256 equal exact originals",
+  "recovery": "Original storage copies moved recoverably outside package; original discovery scratch never modified",
+  "CVCalls": 0
+}

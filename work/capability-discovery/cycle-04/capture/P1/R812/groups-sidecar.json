@@ -1,0 +1,82 @@
+{
+  "schema": "R812-recorded-protocol-group-projection@1",
+  "job_id": "R812",
+  "worker": "P1",
+  "E809": {
+    "protocolSha256": "ea85f4520b20996bd5aff3da699663a40fc8613081f4738457ece2e8926d8537",
+    "groups": [
+      {
+        "id": "proposed-ribbon",
+        "longStationId": "proposed-ribbon.long",
+        "orderedShortStationIds": [
+          "proposed-ribbon.short1",
+          "proposed-ribbon.short2",
+          "proposed-ribbon.short3",
+          "proposed-ribbon.short4",
+          "proposed-ribbon.short5"
+        ]
+      },
+      {
+        "id": "lateral-plus6",
+        "longStationId": "lateral-plus6.long",
+        "orderedShortStationIds": [
+          "lateral-plus6.short1",
+          "lateral-plus6.short2",
+          "lateral-plus6.short3",
+          "lateral-plus6.short4",
+          "lateral-plus6.short5"
+        ]
+      },
+      {
+        "id": "bright-organic",
+        "longStationId": "bright-organic.long",
+        "orderedShortStationIds": [
+          "bright-organic.short1",
+          "bright-organic.short2",
+          "bright-organic.short3",
+          "bright-organic.short4",
+          "bright-organic.short5"
+        ]
+      }
+    ]
+  },
+  "E810": {
+    "protocolSha256": "115fc4fb788a3c6b75733b075666a41c999894866706bb09e888e477531526a0",
+    "groups": [
+      {
+        "id": "primary",
+        "longStationId": "primary.long",
+        "orderedShortStationIds": [
+          "primary.short1",
+          "primary.short2",
+          "primary.short3",
+          "primary.short4",
+          "primary.short5"
+        ]
+      },
+      {
+        "id": "lateral-plus6",
+        "longStationId": "lateral-plus6.long",
+        "orderedShortStationIds": [
+          "lateral-plus6.short1",
+          "lateral-plus6.short2",
+          "lateral-plus6.short3",
+          "lateral-plus6.short4",
+          "lateral-plus6.short5"
+        ]
+      },
+      {
+        "id": "bright-organic",
+        "longStationId": "bright-organic.long",
+        "orderedShortStationIds": [
+          "bright-organic.short1",
+          "bright-organic.short2",
+          "bright-organic.short3",
+          "bright-organic.short4",
+          "bright-organic.short5"
+        ]
+      }
+    ],
+    "derivation": "Exact declared group IDs and existing fixed short1..5/long ID convention, checked against raw receipt station IDs; no fit-based selection."
+  }
+}

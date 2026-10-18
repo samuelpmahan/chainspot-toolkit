@@ -1,0 +1,122 @@
+{
+  "schema": "cycle04-independent-operation-recon-review@1",
+  "job_id": "R801",
+  "worker": "P1",
+  "producer_job_id": "E801",
+  "producer": "P4",
+  "decision": "accepted",
+  "summary": "P4's bounded read-only reconnaissance is technically supported: the exact accepted composition/source-pixel adapter already represent long and ordered short windows and retain all paired raw outputs, while existing trackers/followers and the active native ridge router are broader search/routing mechanisms that should not be duplicated or invoked for this falsifier. The proposed new seam is caller declaration and receipt presentation, not new CV. Acceptance is limited to reconnaissance/design accuracy; no reusable helper, runner, measurement, physical edge association or scientific acceptance is admitted.",
+  "producerArtifactHashes": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P4/reconnaissance.json",
+      "sha256": "0d2074247d7aa32fe1cd1d72d467f1fa038acb8494c70dbad5c45cd6a544fcfd",
+      "bytes": 22141
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P4/result.json",
+      "sha256": "677f686e011f0678cc8676d361c013188cd86702de47c597ab6b6b72a007df76"
+    }
+  ],
+  "exactSourceIds": {
+    "algorithmRef": "e3e11fab5de1e4562487472585259435694d88bc",
+    "platformRef": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "labReadOnlyLocalRef": "532fd7406e5b939e6d4d83cf92d12e2267bab11c",
+    "sourcePixelCandidateFreezeSha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "acceptedCompositionManifestSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+    "sourcePixelAdapterSha256": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6",
+    "compositionRecipeSha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6",
+    "pathSpaceSha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"
+  },
+  "checks": [
+    {
+      "id": "producer-freeze",
+      "result": "pass",
+      "detail": "Both producer files parse as JSON and their actual SHA256 digests match the exact hashes assigned by root. The reconnaissance byte length and digest claimed by P4/result.json match actual bytes."
+    },
+    {
+      "id": "source-object-identities",
+      "result": "pass",
+      "sourceEntries": 20,
+      "referenceObjectChecks": 26,
+      "mismatches": [],
+      "detail": "For every P4 sources entry, read the exact Git object at every declared ref and independently compare both SHA256 and gitBlob. Also verified the vendored local pathSpace bytes. No fetch, checkout, mutation, execution or historical run mining was used."
+    },
+    {
+      "id": "branch-specific-port",
+      "result": "pass",
+      "detail": "Exact algorithm ref lacks ports/s6straight/pathSpace.mjs and contracts/alpha.profile@1.mjs; exact platform ref supplies them. P4 correctly avoids claiming both protected heads supply the same port."
+    },
+    {
+      "id": "accepted-closures",
+      "result": "pass",
+      "sourceHistoryEntries": 23,
+      "sourceHistoryMismatches": [],
+      "acceptedRecipeClosureEntries": 14,
+      "acceptedRecipeClosureMismatches": [],
+      "detail": "Fresh read-only hashes match the exact d31b source/history freeze and accepted5b59 recipe closure."
+    },
+    {
+      "id": "profile-fit-contract",
+      "result": "pass",
+      "detail": "Actual profileAt/edgePairOf bodies confirm 241 fixed offsets, bilinear means, per-offset visibility counts, explicit windows/widths, max(8,0.2*nT) and 60% guards, strict best-score selection, subpixel refinement, fit/null output and absence of persistent pair identity. P4 correctly states that gates apply before refinement and that aggregate counts do not prove bilateral per-t support."
+    },
+    {
+      "id": "accepted-composition-and-adapter",
+      "result": "pass",
+      "detail": "Current recipe maps all stations and widths, computes each profile once, and retains raw candidate/null rows. Sensor call receives pose/width but not t0/t1. Adapter validates conservative support and exact closure, translates declared geometry, runs crop and original-source recipes and preserves equivalence differences. P4 correctly treats the original frame of a zoom PNG as that zoom image, not Lenard-full."
+    },
+    {
+      "id": "optional-finer-diagnostics",
+      "result": "pass_with_scope_boundary",
+      "detail": "Actual stationContrastAt, lossAt and gapsOf support P4's visibility/gap description. Masked stations end a visible-failure run. They are not called by accepted composition; adding them would require an explicitly separate orchestration closure. Existing historical tauLum must not become fresh acceptance. They are not needed or admitted for the current minimal packet."
+    },
+    {
+      "id": "tracker-follower-overlap",
+      "result": "pass",
+      "detail": "Read exact Tracker.run/find_bend and follow.run_end/trace/refine/residuals bodies. They already perform sliding windows, bend/heading or target search and refitting. residuals appends only successful e['c']/e['w'] and returns no null/profile/count records, making it unsuitable as a lossless falsifier receipt. P4's no-duplication exclusions are justified."
+    },
+    {
+      "id": "active-native-routing-overlap",
+      "result": "pass",
+      "detail": "Read the actual exact-ref traceBadgeToBasket body and ports/s7.mjs routing/binding sections. The native mechanism follows support/bestTheta with corridor-derived steps, heading disambiguation/blending, fork checks, known-member tunneling and basket-footprint stops/partial UNKNOWN. S7 uses pinned capture/S6/S0/provider routing dependencies. Neither is required for fixed declared profile windows, and neither supplies authenticated bilateral edge identity."
+    },
+    {
+      "id": "identity-contract-exclusions",
+      "result": "pass",
+      "detail": "Read exact s6.row@1 and s7.trace@1 bodies. Their two-ray row and badge/polyline geometry identity rules and tolerances match P4's description but are not physical edge-pair association rules. No fresh profile threshold follows from their tolerances."
+    },
+    {
+      "id": "path-geometry-testimony",
+      "result": "pass",
+      "detail": "Actual describePath pairedEdges logic consumes caller-supplied associated pairs and reports midpoint/width/offset. It explicitly labels association/orientation as testimony and does not discover cross-window physical correspondence."
+    },
+    {
+      "id": "zoom-encoded-source-identity",
+      "result": "pass",
+      "pngDecodes": 0,
+      "detail": "Independently hashed the two named local PNG files and their exact platform Git objects, checked byte lengths and PNG IHDR dimensions only. Both match P4's declaration: Lenard-1 cb5403d21c32f451c02402aca4e2795d4ecfb9ddd7490fe714ca0c85c598dcba, 3845174 bytes; Lenard-2 cf5a033747c32f3e7f8774e7f712394b6af8a5d28228291f0d29a395998d55f4, 3806652 bytes; both1290x2796. No pixels decoded/viewed or course geometry inspected."
+    }
+  ],
+  "requiredAmendments": [],
+  "scopeClarifications": [
+    "mixed_change means a new frozen caller declaration and descriptive evidence presentation, not a changed algorithm, new detector, automatically justified reusable helper or measurement runner.",
+    "Root's current gate remains: only a minimal receipt projection after an actual synthetic gap is demonstrated. This reconnaissance does not prove that gap or admit generalized coordinate/report abstractions.",
+    "Any eventual projection must distinguish executed UNKNOWN from zero-call abstention using actual execution/branch evidence; top-level UNKNOWN alone is not NOT_EXECUTED. This preserves current operation semantics and does not require P4's reconnaissance to become a helper specification.",
+    "Long/short window partition claims must account for actual arange samples, final remainder, fractional phase and any reanchoring. Continuous endpoint intervals alone do not establish identical sampled lattices.",
+    "Fresh request declarations and unexecuted local trials are not blind/never-observed scientific specimens. Caller roles, API endpoint names and brightness remain testimony, not semantic acceptance."
+  ],
+  "reviewLimitations": {
+    "cvExecutions": 0,
+    "testExecutions": 0,
+    "historicalRunMiningOrReruns": 0,
+    "courseGeometryOrProtocolReads": 0,
+    "P6E808RepairReads": 0,
+    "repositoryOrProtectedSourceWrites": 0,
+    "gitMutationOperations": 0,
+    "nativeOrPublicationOperations": 0,
+    "writtenPath": "/workspace/scratch/8528bb251845/discovery-cycle04/P1/R801/result.json",
+    "remoteState": "P4's historical fresh ls-remote observation is not repeated or represented as this reviewer's current connected publication verification; root owns publication/readback.",
+    "priorFiles": "No repository files were written; this review is not the sole integration owner's full1646-file preservation audit.",
+    "acceptanceBoundary": "Technical reconnaissance acceptance only; no implemented helper, CV trial, width calibration, same physical edges, path identity, AA benefit or course acceptance."
+  }
+}

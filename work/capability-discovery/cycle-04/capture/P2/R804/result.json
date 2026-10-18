@@ -1,0 +1,83 @@
+{
+  "schema": "cycle04-independent-premeasurement-review@1",
+  "job_id": "R804",
+  "worker": "P2",
+  "decision": "accepted",
+  "summary": "Accepted the exact P5 E804 frozen synthetic protocol and pure fixture generator for root-coordinated future execution, with no amendment. Independently checked every byte of all4 generated fixtures against separate predicates, all4 RGBA hashes,19 source hashes, exact192-sample/241-normal long-short world-grid partition,16-sample minimum, matched same-pose long/short05 semantics, and the capsule's complete sampled-footprint equality to intact despite3622 globally different pixels. No recipe, profile, fitter, sensor or CV producer was run. Predicted finite fits and the information-loss demonstration remain unmeasured.",
+  "producerHashes": {
+    "synthetic-protocol.json": "e4f95e27e3de9e46aab3c642e9a732db28fdf572208f3c777f5cdbae8423cc6d",
+    "fixtures.mjs": "506029a09fae4593b813ac89c75e9b0fb67c8949aaa16f448e73926b57e7d13b",
+    "contract-freeze.json": "14927263b2d5c46b983bb4075566d8702d718614c78548a966d5a0dee2d07fc5",
+    "result.json": "38741ab995bcfd06ec531bef0b460bd99f41f7a985378ca802176ef2986ac820"
+  },
+  "commandsActuallyRun": [
+    {
+      "command": "node --check /workspace/scratch/8528bb251845/discovery-cycle04/P5/fixtures.mjs",
+      "exitCode": 0,
+      "scope": "Syntax only"
+    },
+    {
+      "command": "node /workspace/scratch/8528bb251845/discovery-cycle04/P2/R804/review.mjs",
+      "exitCode": 0,
+      "scope": "Pure fixture construction, independent predicate byte validation, SHA256 and geometry-only/source-text checks; imports only P5's pure generator and Node builtins"
+    },
+    {
+      "command": "node --check /workspace/scratch/8528bb251845/discovery-cycle04/P2/R804/review.mjs",
+      "exitCode": 0,
+      "scope": "Review script syntax"
+    },
+    {
+      "command": "sha256sum /workspace/scratch/8528bb251845/discovery-cycle04/P2/R804/review.mjs /workspace/scratch/8528bb251845/discovery-cycle04/P2/R804/evidence.json",
+      "exitCode": 0,
+      "scope": "Bind actual reviewer artifacts"
+    },
+    {
+      "command": "git status --short",
+      "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+      "exitCode": 0,
+      "output": "",
+      "scope": "Read-only clean worktree check; all19 referenced source and all4 P5 artifact hashes also unchanged before/after review"
+    }
+  ],
+  "verifiedFacts": {
+    "fixtureCases": 4,
+    "independentlyValidatedPixelBytes": 1966080,
+    "sourceHashMatches": 19,
+    "requestedCandidateRowsForFutureRun": 156,
+    "shortWindowsPerCase": 12,
+    "shortSamplesPerWindow": 16,
+    "longSamplesPerCase": 192,
+    "normalOffsetsPerProfile": 241,
+    "exactWorldGridComparisonsPerCase": 46272,
+    "matchedAnchor": "long-at-short-05 and short-05 have identical origin184,160 and heading0; only window differs. Dev72 receives no t0/t1 and its local observations must duplicate at this anchor.",
+    "countGuard": "Unchanged need=max(8,0.2*nT): short need8; long need38.4, with >=60% qualifying normal offsets. All fixture profile coordinates are in bounds and unmasked; no guard is modified.",
+    "localizedSupport": "Exactly32 columns176..207 extend the bright upper side; these coincide exactly with short05/06, while other short profile grids and sensor footprints are outside the change.",
+    "closedFormPrediction": "100+(145-100)*32/192=107.5 for positive-normal offsets16..30 is predicate arithmetic, not a sampled profile measurement.",
+    "capsuleSupport": "Entire source-byte core x72..312,y0..319 is identical to intact. JS required bilinear neighbors lie within x96..288,y130..191; conservative Dev72 nearest footprint lies within x100..284,y136..184, including all training fractions. Full image differs at3622 pixels.",
+    "falsifier": "Primary bank30 long absent/nonpositive/nonfinite, either defect-short finite positive, or any changed nondefect short defeats the proposed mechanism. Endpoint artifacts remain falsifiers; no retuning or selected-success substitution.",
+    "cvMeasurementsExecuted": 0,
+    "cvImports": 0,
+    "compositionCalls": 0,
+    "profileCalls": 0,
+    "fitterCalls": 0,
+    "producerOrRepositoryWrites": 0
+  },
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/R804/review.mjs",
+      "sha256": "fd95044c7c04f57abd55c89e233800233b53d2fcb7dd6468cb00d39776a6a69f"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/R804/evidence.json",
+      "sha256": "c5bc2041ebb49079e7ce4486e88a87d255489c767ae66986938b6e99e62f1bed"
+    }
+  ],
+  "limitations": [
+    "Premeasurement acceptance is not acceptance of predicted CV outputs or scientific/classification conclusions. Root must release the exact frozen cases before any producer execution.",
+    "Capsule/organic is a caller semantic label on a deterministic counterexample, not a validated real-organic distribution. Equivalent observed channels prove a possible ambiguity only.",
+    "Full lumOf planes are not claimed identical; only the declared retained-channel sampling support is pixel-equivalent. No CV plane or output was computed in this review.",
+    "All future raw learner rows, profiles/counts, lane fields, fit/nulls and midpoint/UNKNOWN values must be retained at every bank width. Long/short observations share inputs and operations, not independent confidence sources.",
+    "No physical width, pixelwise rail continuity, semantic identity, endpoint ownership, confidence calibration, AA, crop invariance, default-ON behavior or production change follows.",
+    "Current script/import/source checks establish what this review executed; they do not authenticate every historical producer action. Runtime frozen-source guards remain mandatory and are not replaced by this review."
+  ]
+}

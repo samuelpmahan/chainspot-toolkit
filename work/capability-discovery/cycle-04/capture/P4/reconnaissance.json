@@ -1,0 +1,132 @@
+{
+  "schema": "cycle04-operation-reconnaissance@1",
+  "job_id": "E801",
+  "worker": "P4",
+  "outcome": "mixed_change",
+  "summary": "Existing exact operations support one long longitudinal profile and a fixed sequence of short profiles without new CV mathematics or routing. Reuse the accepted composition/source-pixel adapter unchanged. A new predeclared request and receipt-only comparison/report seam are needed; no existing inspected API establishes same physical edge-pair identity across windows. All width calibration and semantic identity remain UNKNOWN.",
+  "execution": {"kind": "read-only source/object reconnaissance", "cvProducerCalls": 0, "testsExecuted": 0, "historicalMiningReruns": 0, "aaGridRuns": 0, "fullFrameReruns": 0, "sourceEdits": 0, "gitWrites": 0, "subagents": 0},
+  "referenceState": {
+    "labLocalHead": "532fd7406e5b939e6d4d83cf92d12e2267bab11c",
+    "labRemoteHead": "921974042771a73c4c40a30f2dd7c6ba438a3730",
+    "remoteReadback": "git ls-remote --heads origin; observed during E801; no fetch, checkout or update",
+    "algorithm": {"branch": "codex/alg-lane-20261018", "head": "e3e11fab5de1e4562487472585259435694d88bc", "freshReadbackMatched": true},
+    "platform": {"branch": "claude/lucid-mendel-dvco6c", "head": "49255331791b1245cf0f9cd699816175f94e70f2", "freshReadbackMatched": true},
+    "mainReadback": "37a2dba87d61262f661af70f1a22440736e61efc",
+    "workingTreeStatusBeforeAndAfterInspection": "git status --short emitted no entries; P4 outputs are outside repository",
+    "ownership": "protected branches read-only; P6 sole integration/Git owner; root native/publisher; no HH or PageRouter changes"
+  },
+  "readContext": [
+    "REVIEW.md",
+    "work/capability-discovery/cycle-03/README.md",
+    "work/capability-discovery/cycle-03/RESUME.md",
+    "work/capability-discovery/cycle-03/evidence/E501/source-inventory.json",
+    "work/capability-discovery/cycle-03/evidence/E501/testimony-coordinate-inventory.json",
+    "AGENTS.md and DOCTRINE.md at both exact protected heads",
+    "docs/agents/lanes.md at algorithm head; relevant actual operation bodies and routing code below"
+  ],
+  "sources": [
+    {"path":"AGENTS.md","ref":"e3e11fab5de1e4562487472585259435694d88bc","gitBlob":"39d75fbc6c68c7d3ff1066ea3687458addc7468d","sha256":"b37bfd99f17067620ea70d529c4daa601bbd0895dd2fd53f3af72b403f97fc32"},
+    {"path":"DOCTRINE.md","ref":"e3e11fab5de1e4562487472585259435694d88bc","gitBlob":"9ec7daecdb4aee607838daa777cc83ad1478826e","sha256":"2482e9ff65d1887b5d45f4c5d63f8ee518ab0e65afcf943005ccd52e239ad0b8"},
+    {"path":"AGENTS.md","ref":"49255331791b1245cf0f9cd699816175f94e70f2","gitBlob":"08b81e317ebc7d4c806fe06e7aa2c83be233c334","sha256":"aa90d43cceed1e579a71ef998ac15e6e6972be8c71ee8d82e1285fc60203f456"},
+    {"path":"DOCTRINE.md","ref":"49255331791b1245cf0f9cd699816175f94e70f2","gitBlob":"1256925a36e067b802617c50ea265f1051daf888","sha256":"2f9a40040aecbe0aecb3bcb5685a2212cd197ccc20be92e55b07938d9987fe08"},
+    {"path":"ports/s6straight/pathSpace.mjs","ref":"49255331791b1245cf0f9cd699816175f94e70f2","gitBlob":"38963d20f7a8b7c7851b3a2abea2e472da8f7716","sha256":"d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e","algorithmHead":"absent","localReusePath":"experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs","localByteIdentityVerified":true},
+    {"path":"ports/s6straight/pathSpace.test.mjs","ref":"49255331791b1245cf0f9cd699816175f94e70f2","gitBlob":"3bdd617790cd8df77a3e5b98b3e04bf1e2baa5fe","sha256":"2ed51ce079157511734dff11ccf1920e635395f02b9c2bcce0ed571510caab9f","role":"source-inspected tests, not executed"},
+    {"path":"ports/s6straight/NOTES.md","ref":"49255331791b1245cf0f9cd699816175f94e70f2","gitBlob":"c463febe2a6d23671f7528df644a3b7eb55f25ba","sha256":"00f4e116a40699bad8f3e0a41b826f95e2152335903bee1ecacd9b05042438a4","role":"historical port proof testimony; not a fresh proof or fresh scientific trial"},
+    {"path":"docs/evidence/s7main/track.py","refs":["e3e11fab5de1e4562487472585259435694d88bc","49255331791b1245cf0f9cd699816175f94e70f2"],"gitBlob":"919bb6370228b1bd2e899b0565bfda41998eca4b","sha256":"83a1e85c032669c383845d9c3dd98ae9559f2d67457ffa63d3354d0707622bc6"},
+    {"path":"docs/evidence/s7main/follow.py","refs":["e3e11fab5de1e4562487472585259435694d88bc","49255331791b1245cf0f9cd699816175f94e70f2"],"gitBlob":"35fbccce531550cd5b2574ae3db78529ecc71ca5","sha256":"7c8cde7b7a7858ab37a6daec0ad49be645711928f027915f86fd822db1a2c3d8"},
+    {"path":"ports/s7.mjs","refs":["e3e11fab5de1e4562487472585259435694d88bc","49255331791b1245cf0f9cd699816175f94e70f2"],"gitBlob":"d23253abe2b84840ccd152c8b707dceeba40b4c7","sha256":"54d849be9cbf4f7a997513817323f6b63a742546cc0d68da5567eabf7301f5c4"},
+    {"path":"source/provider/packages/alg/src/detectors/threeFactor/features/g4.teeBadgeLockMath.ts","refs":["e3e11fab5de1e4562487472585259435694d88bc","49255331791b1245cf0f9cd699816175f94e70f2"],"gitBlob":"65e5c500d9a22141560c4741c017df091d2fa442","sha256":"b9532fa20d351a85b3f264cc8054b2bdd1eb4a91a4a019c7759c4730b2d41141"},
+    {"path":"contracts/s6.row@1.mjs","refs":["e3e11fab5de1e4562487472585259435694d88bc","49255331791b1245cf0f9cd699816175f94e70f2"],"gitBlob":"885401deabb538d06af659d497105a5b6e7f6d66","sha256":"83c7a0d2cf76193d851f9566e56b2870ea5596eaa12ded0a45ba5542e62d1cb2"},
+    {"path":"contracts/s7.trace@1.mjs","refs":["e3e11fab5de1e4562487472585259435694d88bc","49255331791b1245cf0f9cd699816175f94e70f2"],"gitBlob":"d742b3df4cfaea9e722e24caa59eae3bfd3f0690","sha256":"8cb832bae9e3be83c7839a164b5b0fcf0f2e517fea31fe38b2fd0034dcd2d61c"},
+    {"path":"contracts/alpha.profile@1.mjs","ref":"49255331791b1245cf0f9cd699816175f94e70f2","gitBlob":"6f50530ff8f7d5c613ee739224d475657fcbf647","sha256":"9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f","algorithmHead":"absent"},
+    {"path":"experiments/capability-discovery/composition/recipe.mjs","ref":"lab local head","gitBlob":"72d5961491da0b9716a41e4a39afefa7ade405d3","sha256":"17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6"},
+    {"path":"experiments/capability-discovery/source-pixels/adapter.mjs","ref":"lab local head","gitBlob":"57d79785eb92cd37dba441ab5f7c515de59d7ea4","sha256":"df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6"},
+    {"path":"experiments/capability-discovery/probes/width/recipe.mjs","ref":"lab local head","gitBlob":"ffa55c4bd348045e3d5015fabafdc33ea113aaf8","sha256":"47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0"},
+    {"path":"experiments/capability-discovery/probes/path-geometry/path-geometry.mjs","ref":"lab local head","gitBlob":"faa18fb1b95fbb2e0db0da37df3eb09fc359b33d","sha256":"ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34"},
+    {"path":"work/capability-discovery/cycle-03/evidence/E501/source-inventory.json","gitBlob":"fdb4e40f5f33538afa14c878f8a4a93aeed61641","sha256":"47046f0aeace11ad4c02c536596749df610915707eb8c8f40958e86d8807d330"},
+    {"path":"work/capability-discovery/cycle-03/evidence/E501/testimony-coordinate-inventory.json","gitBlob":"81df5556141ca6e30052984add7f085787906442","sha256":"5edaa7200b7c5e52a90711217e52ec9a8203b9e739eaa77136e8866d7812c3f8"}
+  ],
+  "operations": [
+    {
+      "id":"profileAt / fn.q.path.profile",
+      "source":"ports/s6straight/pathSpace.mjs:94-108,339",
+      "input":"context {lum,W,H,mask}; origin O [x,y], phi radians, half-open t0..t1; optional lat0=0 and step=1",
+      "actualMath":"241 lateral offsets -30..30 px in .25px increments; bilinear RGB-mean luminance sampled along arange(t0,t1,step), excluding samples outside strict interior 1<x<W-2,1<y<H-2 or bilinear mask>.01. Returns per-offset mean, count, total station count.",
+      "output":"pure {prof:Float64Array|null,ok:Int32Array|null,nT}; query {profLum[241],okCount[241],stationsCount,offsetsPx:[-30,30,.25]} or no-stations condition",
+      "reuse":"One long interval and predeclared consecutive short intervals are already representable. Keep common source pose, heading, mask, width arguments and exact windows; no heading or lateral optimization needed.",
+      "limitations":"Longitudinal average alone can conceal where either edge was visible; per-offset counts are not per-station bilateral visibility. A long-profile pair does not prove the same pair at every short window. Same source plane and station partition do not guarantee exact floating fit invariance. Do not change math/tie behavior."
+    },
+    {
+      "id":"edgePairOf / fn.q.path.edgePair",
+      "source":"ports/s6straight/pathSpace.mjs:110-140,340",
+      "input":"one profile plus explicit nominal Wexp; tolW=3,latLim=12,minOk={count:8,ofStations:.2} unless explicitly supplied at query layer",
+      "actualMath":"good offsets require ok>=max(8,.2*nT); at least .6 of 241 offsets good; interpolate bad offsets, five-tap box smooth, gradient/.25, zero six offsets at either end and all bad offsets. Enumerate rising/falling extrema, filter abs(discrete width-Wexp)<=tolW and abs(discrete midpoint)<=latLim, choose strictly greater min(leftGradient,-rightGradient); parabola-refine each edge.",
+      "output":"{lPx,rPx,cPx,wPx,score,gl,gr} or null; query exposes condition no edge pair instead of null",
+      "reuse":"Use exact requested width and shared profile exactly as accepted composition already does; preserve all raw fit fields and null rows.",
+      "limitations":"Below eight sampled stations default minOk cannot be met even if unmasked. Masks may also null short windows. Fit selection is strict and tie-sensitive; pre-refinement width/center filtering does not prove post-refinement values remain within the same gates. It returns only one best pair, no alternative-candidate list or persistent edge identity. l/r are oriented normal offsets, not semantic path boundaries."
+    },
+    {
+      "id":"stationContrastAt / fn.q.path.stationContrast / lossAt",
+      "source":"ports/s6straight/pathSpace.mjs:143-158,285-326,341,345",
+      "actualMath":"Per station and each side of +/-W/2, compare inside and outside bands at 1..3px in .5px steps, averaged along +/-2px integer tangent positions; valid when minimum band visible fraction>.5. lossAt jointly visible edges require min-side contrast>tauLum(default8), reports pass/loss, visible counts, gaps and per-station min contrast.",
+      "reuse":"Existing optional finer visibility/continuity diagnostic; use exact exported query if a separately approved packet explicitly needs per-station bilateral visibility. No need to recreate a gap detector.",
+      "limitations":"Not called by accepted composition. Adding it is a new orchestration/output closure and should not be silently represented as existing composition output. tau8 is historical diagnostic, not validated fresh-zoom acceptance. gapsOf breaks gaps on masked/unknown stations, so longestGapPx is a visible-failure run, not guaranteed physical gap or universal continuity. Overlay without fitted alpha is explicitly a brightness proxy, not measured path alpha."
+    },
+    {
+      "id":"runComposition",
+      "source":"experiments/capability-discovery/composition/recipe.mjs:12-77",
+      "contract":"local-ribbon-composition@1; enabled:true required, exact complete same-frame RGBA/provenance, unique caller station IDs with finite nonempty windows, LOCAL candidate-width bank, explicit boxes and edge-search limits; empty training permitted",
+      "reuse":"Existing stations array supports long+short windows in one unchanged request. Every station retains raw meanLum,visibleStationCounts,stationCount, all candidate fit/null rows and midpoint. Edge profile computed once per station, not per width. No code changes required for measurement.",
+      "limitations":"Four-lane observations use station x/y/heading, not the profile t0/t1 window. If only t0/t1 changes with common origin, those four-lane channels repeat and must not be misreported as new longitudinal observations. Its estimateFourLaneCorridorWidth is a raw diagnostic and assessLocalWidth receives no confidence policy/evidence, so UNKNOWN. Midpoint is fitted average-window pair midpoint only; not associated per-pixel or cross-window edges. No alpha learning, recentering, route, classifier, identity or calibration."
+    },
+    {
+      "id":"runSourcePixelRoi",
+      "source":"experiments/capability-discovery/source-pixels/adapter.mjs",
+      "contract":"source-pixel-roi@1; enabled:true; exact original PNG/RGBA provenance and decoder declaration; integer in-bounds ROI, distinct crop frame; strict allowed geometry fields; full sampling support required before execution",
+      "reuse":"Unchanged accepted adapter handles each fresh zoom PNG as its own original frame, translates fixed geometry, verifies accepted5b59 closure14 entries, then runs unchanged crop and original-source compositions with raw equivalence comparison.",
+      "limitations":"Supported call deliberately makes two recipe executions; original-source comparison on a zoom image is not a rerun on Lenard-full. Must freeze source and request/support first. All training endpoints and station windows participate in conservative support check; cannot silently enlarge crop, drop training or fix geometry after seeing refusal. Numeric agreement tolerance1e-9, any disagreement remains UNKNOWN; fixed tests already have real rounding/tie counterexamples. PNG hash is caller/stager testimony to JS; exact encoded PNG must be verified by staging separately."
+    },
+    {
+      "id":"assessPairedRails / assessLocalWidth",
+      "source":"experiments/capability-discovery/probes/width/recipe.mjs",
+      "contract":"assessPairedRails accepts finite paired-mode rails as OBSERVED_CHANNELS with positiveEvidenceClaimed:false; it is not edge association. assessLocalWidth requires explicit confidence policy, qualified LOCAL straight-segment evidence, supported separated candidate scores, spread and held-out agreement; missing evidence stays UNKNOWN.",
+      "reuse":"Reuse existing conservative guards; do not turn a raw winner, long-window average or repeated channels into measured width.",
+      "limitations":"No cross-window left/right continuation or semantic endpoint identity. Fresh exploratory caller-selected regions are exposed evidence, not held-out calibration."
+    },
+    {
+      "id":"describePath pairedEdges",
+      "source":"experiments/capability-discovery/probes/path-geometry/path-geometry.mjs:67-84",
+      "contract":"Caller supplies one left/right pair or null per supplied vertex, provenance and shared frame. Reports pair midpoint, Euclidean width and normalized offsets.",
+      "reuse":"Only optional receipt-only geometry of already supplied associated pairs; existing math need not be reimplemented.",
+      "limitations":"Explicitly states pair association/orientation is caller testimony. Averaged-profile edge pair cannot automatically be relabelled as an observed pair at one physical vertex. It does not discover or authenticate same physical edges across windows."
+    }
+  ],
+  "existingContinuityAndRoutingDoNotDuplicate": [
+    {"source":"docs/evidence/s7main/track.py","actualOperation":"Tracker.run already uses sliding profile/edge_pair windows: defaults win30,step6,drift2; accepts near-center pair, tolerates up to six weak windows then bend-searches. find_bend searches vertex positions/headings and refines by fit_free.","decision":"Do not port, rerun or duplicate tracker/bend search for this bounded fixed-window falsifier. Windowed profile sampling is already real code, not inferred from title."},
+    {"source":"docs/evidence/s7main/follow.py","actualOperation":"run_end measures per-station bilateral edge contrast, ignores masked stations, stops after >G visible failures; trace tries known BasketPoints, close_on_bp backward target search and bend search; refine re-fits legs; residuals defaults win24 and stride12 and only appends successful pairs.","decision":"No new follower/target/backward-association implementation. residuals proves consecutive-window use exists but is unsuitable raw-evidence seam because it omits null windows, profile/count arrays and exact per-window binding."},
+    {"source":"source/provider/packages/alg/src/detectors/threeFactor/features/g4.teeBadgeLockMath.ts:347-631","actualOperation":"traceBadgeToBasket steps max(1,corridorWidth/4) through support/bestTheta field, resolves undirected headings, blends heading .5, detects opposing support forks, tunnels only known member footprints, stops on basket bbox or loud UNKNOWN reasons. This is actual active ridge continuity routing, not bilateral profile-pair association.","decision":"Do not modify or duplicate it. Fixed-window experiment should not invoke support-field producer/route just to obtain profiles."},
+    {"source":"ports/s7.mjs","actualOperation":"Validates digest-pinned fresh S6 rows/receipts/source/frame, resolves S0 crop transform and tee/badge heading hints, invokes runThreeFactor plus traceBadgeToBasket, records partial traces/outcomes.","decision":"Not minimal source reuse for a fresh zoom measurement. It has narrow native capture image mapping and full routing dependencies; do not create a parallel S7 path."},
+    {"source":"contracts/s6.row@1.mjs","actualOperation":"Matches same badge + tee center/axis using s5 pairing tolerances2px/2deg plus template-top distance2px.","decision":"This is two-ray row identity, not physical ribbon-edge-pair continuity; do not reuse its tolerances as fresh profile association thresholds."},
+    {"source":"contracts/s7.trace@1.mjs","actualOperation":"Same badge plus symmetric vertex-to-polyline Hausdorff4px and endpoint4px; outcome differences are verdict flips, not trace identity.","decision":"This is trace-geometry comparison, not proof of same underlying path/edges or route scientific acceptance. No fresh-zoom edge-association cutoff follows."}
+  ],
+  "zoomImages": [
+    {"specimen":"lenard1","ref":"49255331791b1245cf0f9cd699816175f94e70f2","path":"specimens/dev/Lenard-1.png","gitBlob":"28bb53c3f669f82fe3bd8ed57460fc5fcd875146","sha256":"cb5403d21c32f451c02402aca4e2795d4ecfb9ddd7490fe714ca0c85c598dcba","bytes":3845174,"widthPx":1290,"heightPx":2796,"availableLocalPath":"/workspace/scratch/8528bb251845/discovery-cycle04/P2/Lenard-1.original.png","localSha256Matched":true,"dimensionsMethod":"encoded PNG IHDR read only; no CV or decoding by P4"},
+    {"specimen":"lenard2","ref":"49255331791b1245cf0f9cd699816175f94e70f2","path":"specimens/dev/Lenard-2.png","gitBlob":"02431ee3f091973a87cc2e7e254bc8bc0b028a7c","sha256":"cf5a033747c32f3e7f8774e7f712394b6af8a5d28228291f0d29a395998d55f4","bytes":3806652,"widthPx":1290,"heightPx":2796,"availableLocalPath":"/workspace/scratch/8528bb251845/discovery-cycle04/P3/source/Lenard-2.png","localSha256Matched":true,"dimensionsMethod":"encoded PNG IHDR read only; no CV or decoding by P4"}
+  ],
+  "testimonyAndFreshness": {
+    "E501":"Contains four full-course annotation records (including Heritage correction) and already-executed historical full-course widthscan/s3first outputs; not fresh zoom measurements. E501 explicitly records no Lenard1..5 testimony, no badge centers or occluder boxes in annotation holes, and UNKNOWN annotation-to-full-source mapping without exact S0 receipt.",
+    "zoomGeometry":"Fresh caller-selected original-zoom coordinates, window roles, controls and boxes must be declared separately. Do not transfer full-course annotation geometry, widths35.1/35.73, API hole labels or full-frame mapping into these distinct zoom frames.",
+    "freshness":"P4 did not execute any zoom CV. Pixel files have historical upstream existence; freshness claim must concern new frozen region/request and unexecuted local trial, not claim never observed anywhere. P2/P3 declarations and root audit own new request freshness.",
+    "heldout":"All inspected historical reports are exposed; no authenticated blindness or global/held-out calibration inferred."
+  },
+  "minimalNextSeam": {
+    "reuseWithoutSourceChange":["Exact existing stage-png decoder/provenance workflow (separate staging owner)","Accepted source-pixel adapter and composition closure", "profileAt and edgePairOf unchanged through existing stations array", "Existing raw serializer for nonfinite values and existing guard behavior"],
+    "newOrchestrationOnly":["Freeze per-image source hash, caller geometry provenance, one long interval and all short intervals before any producer. Freeze matched lateral-offset and bright controls and a falsifier definition; no score-selected window substitution.","Use common original pose/heading where possible and explicit half-open windows/sample counts; document whether short windows partition or overlap the long interval. Preserve final remainder; no missing/null row deletion.","Bind long/short row IDs, control role, nominal width argument, source/crop frame and all raw profiles/counts/fits/nulls to the exact request and receipts. Report per-window left/right/midpoint/width changes descriptively; cross-window same-edge association stays UNKNOWN absent a separately approved association contract.","Receipt-only table/figure compares long finite pair against all short outcomes, visibility and control contrasts. Report any fit-selection disagreement, visibility refusal, failed prediction and numeric crop/source seam. No new detector, optimum heading, recentering, continuation search, width promotion or acceptance rule."],
+    "ifPerStationVisibilityRequired":"Call existing fn.q.path.stationContrast rather than implement new pixel math, but only in separately frozen/approved additional orchestration; not silently in the accepted composition experiment.",
+    "missingScientificContract":"No inspected operation proves matching physical edge identity across windows. A deterministic descriptive report can proceed with UNKNOWN association; a new inference or threshold-based association would be an additional capability and authority decision, not mere reuse.",
+    "localWidth":{"status":"UNKNOWN","widthPx":null},
+    "semanticIdentity":{"status":"UNKNOWN"},
+    "promoted":false
+  },
+  "artifacts":["reconnaissance.json","result.json"]
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "cycle04-worker-result@1",
+  "job_id": "E812",
+  "worker": "P6",
+  "outcome": "mixed_change",
+  "summary": "Implemented and froze only the admitted default-OFF receipt grouper in the new window-evidence subtree. It validates the exact supplied byte hash, preserves complete parsed receipt and both raw branches, joins explicit long/ordered-short station IDs without metrics/selection, retains executed UNKNOWN and empty banks, and distinguishes branchless zero-call refusals without invented rows. TDD behavioral red retained; root reviewed actual flow before green. Focused14/14, Lab127/127, staging2/2 and syntax check pass. Bare repository discovery is167/184 with17 retained missing-fixture/archive-import failures; no full-green or scientific acceptance claim. All1646 prior tracked bytes and accepted23+14 closures remain exact. No commit or publication.",
+  "artifacts": [
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P6/E812/source-freeze.json","sha256":"2c4fec447c00789c93023ce869bd5a03f4d6c9d1c2a78de1d2217b09071be05d","bytes":4080},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P6/E812/test-metadata.json","sha256":"48dffc0b883f6eabeafc45129c357dea5c583ee44f67c90843e3a064df34ea25","bytes":5088},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P6/E812/checkpoint.json","sha256":"5499a8e20cc04f962efdfbd2037d4c007297a8a77893d508c1518873598e1a21","bytes":4326},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P6/E812/red-metadata.json","sha256":"e67e0fbd338d42cc07024be238d6718c7d9899354aa8699aa4f99e5482049459","bytes":1422},
+    {"path":"/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.mjs","sha256":"9669e26d3b2305f8ebcf514e1883d20ad916e759f9e458b244ebc83a87dfd62c","bytes":7614},
+    {"path":"/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs","sha256":"3d1726fdd84724360395acd67aa8de5f86a7643ab41f08af1cc7aa677934e312","bytes":9987},
+    {"path":"/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/README.md","sha256":"39d75b1514970ceb63a2be9a4c2218e5893260e96270ee636302461d40f2e958","bytes":3736}
+  ],
+  "commandsAndResults": {
+    "red": "node --test experiments/capability-discovery/window-evidence/group.test.mjs against OFF-only baseline twice:1 pass/13 assertion fails/exit1 each; red1 transcript testimony, red2 exact captured raw log with original test/baseline",
+    "focused": "same command against written implementation:14 pass/0 fail/exit0",
+    "lab": "existing cycle03 aggregate plus window-evidence tests:127 pass/0 fail/exit0; exact command/log bound in source-freeze",
+    "staging": "python3 experiments/capability-discovery/source-pixels/stage-png.test.py:2 pass/exit0",
+    "repository": "node --test:184 total,167 pass/17 fail/exit1; all17 named with causes in test-metadata and raw38119-character stdout retained",
+    "syntax": "node --check experiments/capability-discovery/window-evidence/group.mjs:exit0",
+    "build": "NOT_APPLICABLE_BUILDLESS: direct Node ESM with built-in crypto; no root package/build target; unrelated pinned provider build not invoked"
+  },
+  "scope": {
+    "newRepositorySubtreeOnly": "experiments/capability-discovery/window-evidence/",
+    "productionCVImportsOrCalls": 0,
+    "productionFilesystemOrNetworkCalls": 0,
+    "runnerMetricsScoringCoordinateAlgebra": false,
+    "priorTrackedByteLengthOrHashMismatches": [],
+    "freshP2P3CourseProtocolsReadBeforeFreeze": false,
+    "E809E810OutputsReadBeforeFreeze": false,
+    "E811RuntimeOracleReadBeforeFreeze": false,
+    "newScientificCVTrialAuthoredOrExecuted": false,
+    "existingTestCVControls": "existing Lab/repository tests actually execute their own prior engineering fixtures; no course scientific result inferred",
+    "nativeStateOperations": 0,
+    "commitOrPublication": false,
+    "scientificAcceptance": false
+  },
+  "next": "Root dispatches independent R812 against exact source-freeze and may supply independent E811 actual runtime oracle receipts after this freeze. Any source repair requires separately retained review/amendment evidence; no source tuning to fresh course outputs. Packaging/Git/publication remains a separate packet."
+}

@@ -1,0 +1,790 @@
+TAP version 13
+# Subtest: all exact bytes, operation dependencies and guarded branches validate
+ok 1 - all exact bytes, operation dependencies and guarded branches validate
+  ---
+  duration_ms: 8.826977
+  type: 'test'
+  ...
+# Subtest: missing operation/source dependencies and accepted claims fail closed
+ok 2 - missing operation/source dependencies and accepted claims fail closed
+  ---
+  duration_ms: 16.474216
+  type: 'test'
+  ...
+# Subtest: missing fallback target is rejected
+ok 3 - missing fallback target is rejected
+  ---
+  duration_ms: 6.907979
+  type: 'test'
+  ...
+# Subtest: numeric width defaults, JSON null, tied evidence and missing candidates are UNKNOWN
+ok 4 - numeric width defaults, JSON null, tied evidence and missing candidates are UNKNOWN
+  ---
+  duration_ms: 0.541589
+  type: 'test'
+  ...
+# Subtest: separated visible width evidence remains bounded evidence
+ok 5 - separated visible width evidence remains bounded evidence
+  ---
+  duration_ms: 0.641028
+  type: 'test'
+  ...
+# Subtest: unknown rails with observed interior do not imply combined UNKNOWN
+ok 6 - unknown rails with observed interior do not imply combined UNKNOWN
+  ---
+  duration_ms: 0.322101
+  type: 'test'
+  ...
+# Subtest: catalog width -40 must be a positive finite hypothesis
+ok 7 - catalog width -40 must be a positive finite hypothesis
+  ---
+  duration_ms: 0.165688
+  type: 'test'
+  ...
+# Subtest: catalog width 0 must be a positive finite hypothesis
+ok 8 - catalog width 0 must be a positive finite hypothesis
+  ---
+  duration_ms: 0.231606
+  type: 'test'
+  ...
+# Subtest: catalog width NaN must be a positive finite hypothesis
+ok 9 - catalog width NaN must be a positive finite hypothesis
+  ---
+  duration_ms: 0.633717
+  type: 'test'
+  ...
+# Subtest: catalog width Infinity must be a positive finite hypothesis
+ok 10 - catalog width Infinity must be a positive finite hypothesis
+  ---
+  duration_ms: 0.358757
+  type: 'test'
+  ...
+# Subtest: catalog repeated width cannot create distinct candidate separation (1)
+ok 11 - catalog repeated width cannot create distinct candidate separation (1)
+  ---
+  duration_ms: 0.166509
+  type: 'test'
+  ...
+# Subtest: catalog repeated width cannot create distinct candidate separation (0.2)
+ok 12 - catalog repeated width cannot create distinct candidate separation (0.2)
+  ---
+  duration_ms: 0.196584
+  type: 'test'
+  ...
+# Subtest: catalog sample/bank counts are finite integers and match rows {"segmentCount":0.5,"candidateCount":2}
+ok 13 - catalog sample/bank counts are finite integers and match rows {"segmentCount":0.5,"candidateCount":2}
+  ---
+  duration_ms: 0.119309
+  type: 'test'
+  ...
+# Subtest: catalog sample/bank counts are finite integers and match rows {"segmentCount":1,"candidateCount":2.5}
+ok 14 - catalog sample/bank counts are finite integers and match rows {"segmentCount":1,"candidateCount":2.5}
+  ---
+  duration_ms: 0.047551
+  type: 'test'
+  ...
+# Subtest: catalog sample/bank counts are finite integers and match rows {"segmentCount":null,"candidateCount":2}
+ok 15 - catalog sample/bank counts are finite integers and match rows {"segmentCount":null,"candidateCount":2}
+  ---
+  duration_ms: 0.244836
+  type: 'test'
+  ...
+# Subtest: catalog sample/bank counts are finite integers and match rows {"segmentCount":1,"candidateCount":3}
+ok 16 - catalog sample/bank counts are finite integers and match rows {"segmentCount":1,"candidateCount":3}
+  ---
+  duration_ms: 3.365557
+  type: 'test'
+  ...
+# Subtest: guard contracts cannot be empty, unresolved, or depend on absent external adapters
+ok 17 - guard contracts cannot be empty, unresolved, or depend on absent external adapters
+  ---
+  duration_ms: 15.763744
+  type: 'test'
+  ...
+# Subtest: absolute and traversal source file paths cannot read same bytes outside package
+ok 18 - absolute and traversal source file paths cannot read same bytes outside package
+  ---
+  duration_ms: 6.626267
+  type: 'test'
+  ...
+# Subtest: escaping source symlinks are rejected before same-content reads
+ok 19 - escaping source symlinks are rejected before same-content reads
+  ---
+  duration_ms: 3.927212
+  type: 'test'
+  ...
+# Subtest: CLI reads explicit RGBA JSON, preserves nonfinite diagnostics and writes inspectable evidence
+ok 20 - CLI reads explicit RGBA JSON, preserves nonfinite diagnostics and writes inspectable evidence
+  ---
+  duration_ms: 214.30334
+  type: 'test'
+  ...
+# Subtest: default OFF executes no operations
+ok 21 - default OFF executes no operations
+  ---
+  duration_ms: 2.518055
+  type: 'test'
+  ...
+# Subtest: real positive exposes raw channels and fitted two-edge midpoint without calibration
+ok 22 - real positive exposes raw channels and fitted two-edge midpoint without calibration
+  ---
+  duration_ms: 27.153408
+  type: 'test'
+  ...
+# Subtest: shifted station retains fixed-center zero plus real signed midpoint
+ok 23 - shifted station retains fixed-center zero plus real signed midpoint
+  ---
+  duration_ms: 17.733034
+  type: 'test'
+  ...
+# Subtest: interior-only score1 remains UNKNOWN bilateral evidence
+ok 24 - interior-only score1 remains UNKNOWN bilateral evidence
+  ---
+  duration_ms: 39.212919
+  type: 'test'
+  ...
+# Subtest: all-hidden numeric learner return is raw only and no fitted midpoint
+ok 25 - all-hidden numeric learner return is raw only and no fitted midpoint
+  ---
+  duration_ms: 13.534556
+  type: 'test'
+  ...
+# Subtest: empty training bank preserves legacy fallback40 as UNKNOWN
+ok 26 - empty training bank preserves legacy fallback40 as UNKNOWN
+  ---
+  duration_ms: 9.820644
+  type: 'test'
+  ...
+# Subtest: frame, provenance and finite violations fail closed before source operations
+ok 27 - frame, provenance and finite violations fail closed before source operations
+  ---
+  duration_ms: 105.975987
+  type: 'test'
+  ...
+# Subtest: organic shape identical across exposed samples cannot acquire semantic path identity
+ok 28 - organic shape identical across exposed samples cannot acquire semantic path identity
+  ---
+  duration_ms: 18.648372
+  type: 'test'
+  ...
+# Subtest: decimal candidate bank fits only its exact requested width and source tolerance
+ok 29 - decimal candidate bank fits only its exact requested width and source tolerance
+  ---
+  duration_ms: 25.437932
+  type: 'test'
+  ...
+# Subtest: current unknown observation enables falsifier, blocks package, enables boundary repair
+ok 30 - current unknown observation enables falsifier, blocks package, enables boundary repair
+  ---
+  duration_ms: 158.791317
+  type: 'test'
+  ...
+# Subtest: changed receipt bytes fail closed
+ok 31 - changed receipt bytes fail closed
+  ---
+  duration_ms: 91.485783
+  type: 'test'
+  ...
+# Subtest: source mismatch invalidates whole recommendation
+ok 32 - source mismatch invalidates whole recommendation
+  ---
+  duration_ms: 86.598376
+  type: 'test'
+  ...
+# Subtest: live producer suppresses duplicate refresh
+ok 33 - live producer suppresses duplicate refresh
+  ---
+  duration_ms: 68.490822
+  type: 'test'
+  ...
+# Subtest: review excludes aliases of producing principal
+ok 34 - review excludes aliases of producing principal
+  ---
+  duration_ms: 63.886058
+  type: 'test'
+  ...
+# Subtest: expired lease still needs coordinator reconciliation
+ok 35 - expired lease still needs coordinator reconciliation
+  ---
+  duration_ms: 70.070905
+  type: 'test'
+  ...
+# Subtest: dispatch-boundary revision mismatch invalidates plan
+ok 36 - dispatch-boundary revision mismatch invalidates plan
+  ---
+  duration_ms: 60.993858
+  type: 'test'
+  ...
+# Subtest: native accepted review and claimed accepted state cannot mint human authority
+ok 37 - native accepted review and claimed accepted state cannot mint human authority
+  ---
+  duration_ms: 74.770522
+  type: 'test'
+  ...
+# Subtest: duplicate receipts and unknown guard ops invalidate policy/state
+ok 38 - duplicate receipts and unknown guard ops invalidate policy/state
+  ---
+  duration_ms: 68.409337
+  type: 'test'
+  ...
+# Subtest: completed task is terminal rather than redispatched
+ok 39 - completed task is terminal rather than redispatched
+  ---
+  duration_ms: 66.926903
+  type: 'test'
+  ...
+# Subtest: unsafe artifact path and symlink escape never authorize evidence
+ok 40 - unsafe artifact path and symlink escape never authorize evidence
+  ---
+  duration_ms: 73.462069
+  type: 'test'
+  ...
+# Subtest: stale coordinator snapshot cannot authorize dispatch
+ok 41 - stale coordinator snapshot cannot authorize dispatch
+  ---
+  duration_ms: 78.754608
+  type: 'test'
+  ...
+# Subtest: package requires independently verified review bytes and trusted scoped Sam decision
+ok 42 - package requires independently verified review bytes and trusted scoped Sam decision
+  ---
+  duration_ms: 82.249849
+  type: 'test'
+  ...
+# Subtest: independent accepted review alone never mints human acceptance
+ok 43 - independent accepted review alone never mints human acceptance
+  ---
+  duration_ms: 68.295276
+  type: 'test'
+  ...
+# Subtest: human acceptance rejects wrong issuer
+ok 44 - human acceptance rejects wrong issuer
+  ---
+  duration_ms: 74.886635
+  type: 'test'
+  ...
+# Subtest: human acceptance rejects wrong principal
+ok 45 - human acceptance rejects wrong principal
+  ---
+  duration_ms: 64.704501
+  type: 'test'
+  ...
+# Subtest: human acceptance rejects wrong scope
+ok 46 - human acceptance rejects wrong scope
+  ---
+  duration_ms: 61.579619
+  type: 'test'
+  ...
+# Subtest: human acceptance rejects wrong source
+ok 47 - human acceptance rejects wrong source
+  ---
+  duration_ms: 64.831125
+  type: 'test'
+  ...
+# Subtest: human acceptance rejects wrong claim
+ok 48 - human acceptance rejects wrong claim
+  ---
+  duration_ms: 60.685509
+  type: 'test'
+  ...
+# Subtest: human acceptance rejects wrong bundle
+ok 49 - human acceptance rejects wrong bundle
+  ---
+  duration_ms: 72.181043
+  type: 'test'
+  ...
+# Subtest: human acceptance rejects wrong bundleHash
+ok 50 - human acceptance rejects wrong bundleHash
+  ---
+  duration_ms: 67.653831
+  type: 'test'
+  ...
+# Subtest: changed independent review bytes cannot authorize package
+ok 51 - changed independent review bytes cannot authorize package
+  ---
+  duration_ms: 73.304765
+  type: 'test'
+  ...
+# Subtest: review source, bundle and protocol bindings fail closed
+ok 52 - review source, bundle and protocol bindings fail closed
+  ---
+  duration_ms: 73.132968
+  type: 'test'
+  ...
+# Subtest: dispatch recheck detects artifact changes despite unchanged state revision
+ok 53 - dispatch recheck detects artifact changes despite unchanged state revision
+  ---
+  duration_ms: 6.836622
+  type: 'test'
+  ...
+# Subtest: a supported bundle with missing producer identities cannot be independently reviewed
+ok 54 - a supported bundle with missing producer identities cannot be independently reviewed
+  ---
+  duration_ms: 70.590932
+  type: 'test'
+  ...
+# Subtest: actual artifact symlink outside allowed root cannot authorize evidence
+ok 55 - actual artifact symlink outside allowed root cannot authorize evidence
+  ---
+  duration_ms: 83.101512
+  type: 'test'
+  ...
+# Subtest: dependency cycle is rejected before native recommendation
+ok 56 - dependency cycle is rejected before native recommendation
+  ---
+  duration_ms: 80.039605
+  type: 'test'
+  ...
+# Subtest: unknown operation independently rejects eval even without duplicate records
+ok 57 - unknown operation independently rejects eval even without duplicate records
+  ---
+  duration_ms: 77.335622
+  type: 'test'
+  ...
+# Subtest: two available aliases for one principal cannot double native capacity
+ok 58 - two available aliases for one principal cannot double native capacity
+  ---
+  duration_ms: 85.578596
+  type: 'test'
+  ...
+# Subtest: unavailable historical aliases do not add capacity or invalidate independent principal exclusions
+ok 59 - unavailable historical aliases do not add capacity or invalidate independent principal exclusions
+  ---
+  duration_ms: 80.318116
+  type: 'test'
+  ...
+# Subtest: occupied principal cannot enter free capacity through alias (active)
+ok 60 - occupied principal cannot enter free capacity through alias (active)
+  ---
+  duration_ms: 87.292655
+  type: 'test'
+  ...
+# Subtest: occupied principal cannot enter free capacity through alias (expired-lease)
+ok 61 - occupied principal cannot enter free capacity through alias (expired-lease)
+  ---
+  duration_ms: 72.453646
+  type: 'test'
+  ...
+# Subtest: explicitly inactive historical alias does not block a genuinely free principal
+ok 62 - explicitly inactive historical alias does not block a genuinely free principal
+  ---
+  duration_ms: 81.641751
+  type: 'test'
+  ...
+# Subtest: straight versus six supplied turns remains descriptive, with explicit caller count
+ok 63 - straight versus six supplied turns remains descriptive, with explicit caller count
+  ---
+  duration_ms: 2.40088
+  type: 'test'
+  ...
+# Subtest: translation and rigid rotation preserve metric lengths, signed turn sequence and local-width ratios
+ok 64 - translation and rigid rotation preserve metric lengths, signed turn sequence and local-width ratios
+  ---
+  duration_ms: 0.684003
+  type: 'test'
+  ...
+# Subtest: uniform scale changes dimensional lengths but not ratios/turns; local width array retained
+ok 65 - uniform scale changes dimensional lengths but not ratios/turns; local width array retained
+  ---
+  duration_ms: 0.391555
+  type: 'test'
+  ...
+# Subtest: centerline offset requires paired edges, transforms invariantly, and preserves unknown samples
+ok 66 - centerline offset requires paired edges, transforms invariantly, and preserves unknown samples
+  ---
+  duration_ms: 0.333589
+  type: 'test'
+  ...
+# Subtest: sample support reports observed coverage without manufacturing calibrated confidence
+ok 67 - sample support reports observed coverage without manufacturing calibrated confidence
+  ---
+  duration_ms: 0.292417
+  type: 'test'
+  ...
+# Subtest: no implicit grid-turn merging or universal bend prior; U-turn/repeated nonadjacent point allowed
+ok 68 - no implicit grid-turn merging or universal bend prior; U-turn/repeated nonadjacent point allowed
+  ---
+  duration_ms: 0.176514
+  type: 'test'
+  ...
+# Subtest: degenerate, duplicate, nonfinite, absent provenance and inconsistent observations fail clearly
+ok 69 - degenerate, duplicate, nonfinite, absent provenance and inconsistent observations fail clearly
+  ---
+  duration_ms: 0.830512
+  type: 'test'
+  ...
+# Subtest: complete independently pinned fixture inventory passes only scoped coverage, never scientific acceptance
+ok 70 - complete independently pinned fixture inventory passes only scoped coverage, never scientific acceptance
+  ---
+  duration_ms: 2.959515
+  type: 'test'
+  ...
+# Subtest: caller complete boolean, observed subset, or no authoritative anchor never proves completeness
+ok 71 - caller complete boolean, observed subset, or no authoritative anchor never proves completeness
+  ---
+  duration_ms: 4.721148
+  type: 'test'
+  ...
+# Subtest: legacy receipt without root-key material is unsupported even if a completeness boolean is supplied
+ok 72 - legacy receipt without root-key material is unsupported even if a completeness boolean is supplied
+  ---
+  duration_ms: 0.393068
+  type: 'test'
+  ...
+# Subtest: missing and incomplete enumeration cannot cover authoritative query-readable roots
+ok 73 - missing and incomplete enumeration cannot cover authoritative query-readable roots
+  ---
+  duration_ms: 1.096775
+  type: 'test'
+  ...
+# Subtest: changed pixel key, extra roots, duplicates, and wrong issuer fail closed
+ok 74 - changed pixel key, extra roots, duplicates, and wrong issuer fail closed
+  ---
+  duration_ms: 4.04986
+  type: 'test'
+  ...
+# Subtest: source/request/code binding changes or artifact bytes changing after pin fail
+ok 75 - source/request/code binding changes or artifact bytes changing after pin fail
+  ---
+  duration_ms: 2.201983
+  type: 'test'
+  ...
+# Subtest: root material must actually hash full rows and cache key must bind that material
+ok 76 - root material must actually hash full rows and cache key must bind that material
+  ---
+  duration_ms: 0.784744
+  type: 'test'
+  ...
+# Subtest: actual adapter and incomplete keys reproduce stale6; complete enumeration and controls produce27
+ok 77 - actual adapter and incomplete keys reproduce stale6; complete enumeration and controls produce27
+  ---
+  duration_ms: 24.124409
+  type: 'test'
+  ...
+# Subtest: digest arrays cannot pass source binding even when consistently repinned
+ok 78 - digest arrays cannot pass source binding even when consistently repinned
+  ---
+  duration_ms: 0.476142
+  type: 'test'
+  ...
+# Subtest: shared aliased digest arrays cannot pass root key schemas
+ok 79 - shared aliased digest arrays cannot pass root key schemas
+  ---
+  duration_ms: 0.425927
+  type: 'test'
+  ...
+# Subtest: object issuer cannot become authority through reference equality
+ok 80 - object issuer cannot become authority through reference equality
+  ---
+  duration_ms: 0.298296
+  type: 'test'
+  ...
+# Subtest: object scope cannot become authority through reference equality
+ok 81 - object scope cannot become authority through reference equality
+  ---
+  duration_ms: 0.248452
+  type: 'test'
+  ...
+# Subtest: object authorityPolicyId cannot become authority through reference equality
+ok 82 - object authorityPolicyId cannot become authority through reference equality
+  ---
+  duration_ms: 0.235472
+  type: 'test'
+  ...
+# Subtest: malformed root material "roots" classifies fail without throwing
+ok 83 - malformed root material "roots" classifies fail without throwing
+  ---
+  duration_ms: 0.245227
+  type: 'test'
+  ...
+# Subtest: malformed root material [] classifies fail without throwing
+ok 84 - malformed root material [] classifies fail without throwing
+  ---
+  duration_ms: 0.558725
+  type: 'test'
+  ...
+# Subtest: malformed root material 42 classifies fail without throwing
+ok 85 - malformed root material 42 classifies fail without throwing
+  ---
+  duration_ms: 0.209984
+  type: 'test'
+  ...
+# Subtest: malformed root material true classifies fail without throwing
+ok 86 - malformed root material true classifies fail without throwing
+  ---
+  duration_ms: 0.159428
+  type: 'test'
+  ...
+# Subtest: malformed wrapper, rows and input pair shapes never authorize reuse or escape classification
+ok 87 - malformed wrapper, rows and input pair shapes never authorize reuse or escape classification
+  ---
+  duration_ms: 1.223359
+  type: 'test'
+  ...
+# Subtest: authority digest arrays and empty principals remain malformed even if other pins match
+ok 88 - authority digest arrays and empty principals remain malformed even if other pins match
+  ---
+  duration_ms: 5.225743
+  type: 'test'
+  ...
+# Subtest: width eligibility stays bounded comparison evidence
+ok 89 - width eligibility stays bounded comparison evidence
+  ---
+  duration_ms: 2.090315
+  type: 'test'
+  ...
+# Subtest: invalid spread -1 cannot authorize width comparison
+ok 90 - invalid spread -1 cannot authorize width comparison
+  ---
+  duration_ms: 0.312107
+  type: 'test'
+  ...
+# Subtest: invalid spread NaN cannot authorize width comparison
+ok 91 - invalid spread NaN cannot authorize width comparison
+  ---
+  duration_ms: 0.158487
+  type: 'test'
+  ...
+# Subtest: invalid spread Infinity cannot authorize width comparison
+ok 92 - invalid spread Infinity cannot authorize width comparison
+  ---
+  duration_ms: 0.085858
+  type: 'test'
+  ...
+# Subtest: invalid spread -Infinity cannot authorize width comparison
+ok 93 - invalid spread -Infinity cannot authorize width comparison
+  ---
+  duration_ms: 0.211626
+  type: 'test'
+  ...
+# Subtest: duplicate width identity with score 1 cannot manufacture a rival
+ok 94 - duplicate width identity with score 1 cannot manufacture a rival
+  ---
+  duration_ms: 0.124125
+  type: 'test'
+  ...
+# Subtest: duplicate width identity with score 0.2 cannot manufacture a rival
+ok 95 - duplicate width identity with score 0.2 cannot manufacture a rival
+  ---
+  duration_ms: 0.418927
+  type: 'test'
+  ...
+# Subtest: candidate width -40 must be finite positive
+ok 96 - candidate width -40 must be finite positive
+  ---
+  duration_ms: 0.144036
+  type: 'test'
+  ...
+# Subtest: candidate width 0 must be finite positive
+ok 97 - candidate width 0 must be finite positive
+  ---
+  duration_ms: 0.103845
+  type: 'test'
+  ...
+# Subtest: candidate width NaN must be finite positive
+ok 98 - candidate width NaN must be finite positive
+  ---
+  duration_ms: 0.249483
+  type: 'test'
+  ...
+# Subtest: candidate width Infinity must be finite positive
+ok 99 - candidate width Infinity must be finite positive
+  ---
+  duration_ms: 0.087581
+  type: 'test'
+  ...
+# Subtest: missing or nonfinite paired rail undefined stays UNKNOWN
+ok 100 - missing or nonfinite paired rail undefined stays UNKNOWN
+  ---
+  duration_ms: 1.496918
+  type: 'test'
+  ...
+# Subtest: missing or nonfinite paired rail null stays UNKNOWN
+ok 101 - missing or nonfinite paired rail null stays UNKNOWN
+  ---
+  duration_ms: 0.07356
+  type: 'test'
+  ...
+# Subtest: missing or nonfinite paired rail NaN stays UNKNOWN
+ok 102 - missing or nonfinite paired rail NaN stays UNKNOWN
+  ---
+  duration_ms: 0.084557
+  type: 'test'
+  ...
+# Subtest: missing or nonfinite paired rail Infinity stays UNKNOWN
+ok 103 - missing or nonfinite paired rail Infinity stays UNKNOWN
+  ---
+  duration_ms: 0.054992
+  type: 'test'
+  ...
+# Subtest: missing or nonfinite paired rail 1 stays UNKNOWN
+ok 104 - missing or nonfinite paired rail 1 stays UNKNOWN
+  ---
+  duration_ms: 0.097526
+  type: 'test'
+  ...
+# Subtest: both present finite rails remain observed channels without positive evidence claim
+ok 105 - both present finite rails remain observed channels without positive evidence claim
+  ---
+  duration_ms: 0.540959
+  type: 'test'
+  ...
+# Subtest: standalone default OFF performs no recipe calls
+ok 106 - standalone default OFF performs no recipe calls
+  ---
+  duration_ms: 2.519267
+  type: 'test'
+  ...
+# Subtest: crop is exact original RGBA row spans including nonopaque alpha, all supplied geometry translates
+ok 107 - crop is exact original RGBA row spans including nonopaque alpha, all supplied geometry translates
+  ---
+  duration_ms: 84.297556
+  type: 'test'
+  ...
+# Subtest: preparation snapshots are recursively immutable and isolate caller mutation
+ok 108 - preparation snapshots are recursively immutable and isolate caller mutation
+  ---
+  duration_ms: 28.737457
+  type: 'test'
+  ...
+# Subtest: missing, malformed, unsupported geometry and noninteger/out-of-bounds ROI are UNKNOWN before operations
+ok 109 - missing, malformed, unsupported geometry and noninteger/out-of-bounds ROI are UNKNOWN before operations
+  ---
+  duration_ms: 206.212127
+  type: 'test'
+  ...
+# Subtest: well-formed false full RGBA hash is hard integrity failure
+ok 110 - well-formed false full RGBA hash is hard integrity failure
+  ---
+  duration_ms: 20.981771
+  type: 'test'
+  ...
+# Subtest: finite partial-sample crops abstain before recipe, including training support
+ok 111 - finite partial-sample crops abstain before recipe, including training support
+  ---
+  duration_ms: 32.957265
+  type: 'test'
+  ...
+# Subtest: full and cropped same-operation raw controls agree; no acceptance is invented
+ok 112 - full and cropped same-operation raw controls agree; no acceptance is invented
+  ---
+  duration_ms: 234.992453
+  type: 'test'
+  ...
+# Subtest: rotated numeric falsifier persists: complete pixels/support do not promote unstable crop fits
+ok 113 - rotated numeric falsifier persists: complete pixels/support do not promote unstable crop fits
+  ---
+  duration_ms: 255.519038
+  type: 'test'
+  ...
+# Subtest: default OFF does not inspect bad receipt input
+ok 114 - default OFF does not inspect bad receipt input
+  ---
+  duration_ms: 1.557368
+  type: 'test'
+  ...
+# Subtest: executed UNKNOWN preserves complete raw branches and explicit short order
+ok 115 - executed UNKNOWN preserves complete raw branches and explicit short order
+  ---
+  duration_ms: 6.577445
+  type: 'test'
+  ...
+# Subtest: executed empty-bank UNKNOWN retains profiles and zero candidates
+ok 116 - executed empty-bank UNKNOWN retains profiles and zero candidates
+  ---
+  duration_ms: 1.212533
+  type: 'test'
+  ...
+# Subtest: branchless UNKNOWN and DISABLED refusals do not invent measurement rows
+ok 117 - branchless UNKNOWN and DISABLED refusals do not invent measurement rows
+  ---
+  duration_ms: 0.494128
+  type: 'test'
+  ...
+# Subtest: digest mismatch is integrity evidence not scientific negative or refusal
+ok 118 - digest mismatch is integrity evidence not scientific negative or refusal
+  ---
+  duration_ms: 1.145683
+  type: 'test'
+  ...
+# Subtest: exact bytes rather than reconstructed JSON define the digest
+ok 119 - exact bytes rather than reconstructed JSON define the digest
+  ---
+  duration_ms: 1.37815
+  type: 'test'
+  ...
+# Subtest: invalid UTF-8 and invalid JSON are explicit invalid-input evidence
+ok 120 - invalid UTF-8 and invalid JSON are explicit invalid-input evidence
+  ---
+  duration_ms: 2.740848
+  type: 'test'
+  ...
+# Subtest: unsupported helper fields including descriptor follow one invalid-input policy
+ok 121 - unsupported helper fields including descriptor follow one invalid-input policy
+  ---
+  duration_ms: 2.000882
+  type: 'test'
+  ...
+# Subtest: contradictory execution branches counts statuses and operations are rejected
+ok 122 - contradictory execution branches counts statuses and operations are rejected
+  ---
+  duration_ms: 11.394465
+  type: 'test'
+  ...
+# Subtest: missing and duplicate IDs never produce partial validated projections
+ok 123 - missing and duplicate IDs never produce partial validated projections
+  ---
+  duration_ms: 6.034913
+  type: 'test'
+  ...
+# Subtest: valid cross-group reuse remains explicit and does not drop ungrouped stations
+ok 124 - valid cross-group reuse remains explicit and does not drop ungrouped stations
+  ---
+  duration_ms: 2.991713
+  type: 'test'
+  ...
+# Subtest: finite different headings remain raw while malformed linkage geometry is invalid
+ok 125 - finite different headings remain raw while malformed linkage geometry is invalid
+  ---
+  duration_ms: 3.979709
+  type: 'test'
+  ...
+# Subtest: raw null finite-fit and nonfinite diagnostics remain untouched on serialization
+ok 126 - raw null finite-fit and nonfinite diagnostics remain untouched on serialization
+  ---
+  duration_ms: 4.834197
+  type: 'test'
+  ...
+# Subtest: unsupported schemas or malformed raw station linkage are rejected consistently
+ok 127 - unsupported schemas or malformed raw station linkage are rejected consistently
+  ---
+  duration_ms: 5.68491
+  type: 'test'
+  ...
+# Subtest: sparse one-hole short ID list is invalid on actual E811 B refusal
+ok 128 - sparse one-hole short ID list is invalid on actual E811 B refusal
+  ---
+  duration_ms: 0.50827
+  type: 'test'
+  ...
+# Subtest: sparse partial-hole short ID list is invalid on actual E811 B refusal
+ok 129 - sparse partial-hole short ID list is invalid on actual E811 B refusal
+  ---
+  duration_ms: 0.189193
+  type: 'test'
+  ...
+# Subtest: sparse short ID lists are invalid on disabled refusals and executed receipts
+ok 130 - sparse short ID lists are invalid on disabled refusals and executed receipts
+  ---
+  duration_ms: 1.440705
+  type: 'test'
+  ...
+1..130
+# tests 130
+# suites 0
+# pass 130
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2619.964705

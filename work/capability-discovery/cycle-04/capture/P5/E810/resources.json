@@ -1,0 +1,63 @@
+{
+  "job_id": "E810",
+  "worker": "P5",
+  "runtime": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "adapterInvocations": 1,
+  "adapterElapsedMs": 2306.9961780000003,
+  "callerElapsedMs": 7849.380995,
+  "usageBefore": {
+    "userCPUTime": 43335,
+    "systemCPUTime": 19942,
+    "maxRSS": 38144,
+    "sharedMemorySize": 0,
+    "unsharedDataSize": 0,
+    "unsharedStackSize": 0,
+    "minorPageFault": 9948,
+    "majorPageFault": 0,
+    "swappedOut": 0,
+    "fsRead": 0,
+    "fsWrite": 8,
+    "ipcSent": 0,
+    "ipcReceived": 0,
+    "signalsCount": 0,
+    "voluntaryContextSwitches": 63,
+    "involuntaryContextSwitches": 0
+  },
+  "usageAfter": {
+    "userCPUTime": 3622881,
+    "systemCPUTime": 931428,
+    "maxRSS": 1210104,
+    "sharedMemorySize": 0,
+    "unsharedDataSize": 0,
+    "unsharedStackSize": 0,
+    "minorPageFault": 700763,
+    "majorPageFault": 0,
+    "swappedOut": 0,
+    "fsRead": 0,
+    "fsWrite": 102128,
+    "ipcSent": 0,
+    "ipcReceived": 0,
+    "signalsCount": 0,
+    "voluntaryContextSwitches": 493,
+    "involuntaryContextSwitches": 67
+  },
+  "memoryBefore": {
+    "rss": 39059456,
+    "heapTotal": 12054528,
+    "heapUsed": 8020696,
+    "external": 3959432,
+    "arrayBuffers": 146595
+  },
+  "memoryAfter": {
+    "rss": 643350528,
+    "heapTotal": 430174208,
+    "heapUsed": 294520040,
+    "external": 112542852,
+    "arrayBuffers": 101982193
+  },
+  "scope": "This actual process only; separate time log includes process elapsed/maxRSS, not allocator/speed comparison"
+}

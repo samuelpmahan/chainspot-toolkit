@@ -1,0 +1,22 @@
+{
+  "schema":"cycle04-producer-helper-freeze@1",
+  "job_id":"E810",
+  "worker":"P5",
+  "status":"AWAITING_ROOT_GO_BEFORE_CV_OR_RENDER",
+  "files":[
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/run-trial.mjs","sha256":"5e99401607300027c244b56afabf526947e4c30bcdd4b9976d4f7170ff3b7aba"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/render-receipt.py","sha256":"f7c0967b40cf899c24d78b4885a387bec6f49f7f7d7f57eb661ed618dcaf3f3e"}
+  ],
+  "inputs":[
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P3/protocol.json","sha256":"115fc4fb788a3c6b75733b075666a41c999894866706bb09e888e477531526a0"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P3/source/Lenard-2.png","sha256":"cf5a033747c32f3e7f8774e7f712394b6af8a5d28228291f0d29a395998d55f4"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P3/source/Lenard-2-source.json","sha256":"6dd63d816e702e899cf1ab696ebc59a2241d6244cffbd0569c7a703d03e8252b"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/R803/result.json","sha256":"6dbf2497b778853f3a4756a53da303d0907c3a9382dbedbef727a500ce1abf5f"}
+  ],
+  "verificationActuallyRun":["node --check caller: PASS","Python ast.parse renderer: PASS; no module execution","SHA256 helper files"],
+  "adapterInvocations":0,
+  "compositionCalls":0,
+  "renderCalls":0,
+  "proposedExecution":"One explicit accepted adapter request, mandatory two unchanged composition branches if supported; then one receipt-only renderer producing table/source-pixel figure and raw-profile figure.",
+  "boundaries":"All writes P5/E810 only. No P3 protocol/source changes, repository writes, adaptive CV retry, geometry/setting change, P6 geometry/output disclosure, calibration/AA/path acceptance or external publication."
+}

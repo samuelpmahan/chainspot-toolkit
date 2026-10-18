@@ -1,0 +1,100 @@
+{
+  "schema": "cycle04-narrow-receipt-projection-proposal@1",
+  "job_id": "E808",
+  "worker": "P6",
+  "state": "PROPOSAL_ONLY_NOT_IMPLEMENTED_OR_ADMITTED",
+  "summary": "Optional exact-receipt-byte-bound grouping of one declared long station and ordered short stations, separately in both existing branches. No descriptor, runner, coordinate conversion, metric, scoring or CV call. Executed UNKNOWN keeps every raw station/profile/candidate; zero-call refusal is distinguished from execution by actual branch/execution shape, not top-level status alone.",
+  "basis": {
+    "rawReviewPath": "/workspace/scratch/8528bb251845/discovery-cycle04/P1/R806/result.json",
+    "rawReviewSha256": "759f979d22d3eaff5c292797abb3284981f1ce1165ffdf37c935d2067462ba08",
+    "supersedesForFutureAdmissionOnly": "E806 optional projection proposal; E806 original bytes and review history remain unchanged",
+    "acceptedSourcePixelManifestSha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "acceptedCompositionManifestSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52"
+  },
+  "input": {
+    "allowedKeys": ["enabled", "expectedReceiptSha256", "receiptBytes", "groups"],
+    "enabled": "exact true required; otherwise DISABLED and no parsing/projection",
+    "expectedReceiptSha256": "64 lowercase hex, supplied external expected digest of exact retained UTF-8 receipt bytes",
+    "receiptBytes": "Uint8Array of exact retained UTF-8 JSON bytes serialized using accepted preserveNonFinite; hash these bytes before parsing, never hash a reconstructed JSON object",
+    "groups": [
+      {
+        "id": "unique nonempty group name, caller testimony only",
+        "longStationId": "exact existing station ID",
+        "orderedShortStationIds": "nonempty unique IDs in explicit order; longStationId must not occur in this array"
+      }
+    ],
+    "groupKeys": ["id", "longStationId", "orderedShortStationIds"],
+    "metadataBoundary": "No descriptor, source pixels, source paths, geometry transform, protocol, threshold, width selector, or display settings accepted. Grouping names/order are explicit caller declaration, not inferred physical association. Cross-group station reuse is permitted as explicit references; no raw station is removed from the retained receipt."
+  },
+  "singleInvalidInputPolicy": {
+    "status": "UNKNOWN",
+    "executionState": "UNCLASSIFIED_INVALID_INPUT",
+    "projection": null,
+    "behavior": "For unsupported/malformed helper fields, bad UTF-8/JSON, digest mismatch, unsupported receipt schema, malformed required receipt linkage geometry, unresolved group IDs or contradictory execution shape: return an explicit reason/errorClass, no validated rows and no asserted measurement execution state. Retain exact bytes by caller reference/digest where available as untrusted evidence; never normalize, repair or silently discard contradictory data.",
+    "integrity": "Digest mismatch is errorClass INTEGRITY_MISMATCH, not a scientific negative or a zero-call receipt. This proposal uses an explicit UNKNOWN error envelope consistently, not a thrown-error branch.",
+    "M2": "There is no descriptor input. A descriptor key, including any malformed/nonfinite descriptor, is unsupported and follows this one invalid-input policy. Required receipt pose/window linkage must be finite and well formed to project; malformed geometry yields no validated projection. Finite unequal headings remain valid raw rows because no cross-heading coordinate metric exists."
+  },
+  "receiptShape": {
+    "schema": "source-pixel-roi@1 only",
+    "originalBytes": "Always remain the authoritative evidence. A matching digest proves byte identity only, not authenticated source provenance, actual execution, protocol freeze time or physical truth.",
+    "executed": {
+      "executionState": "EXECUTED",
+      "requires": [
+        "Both composition and sourceComposition present as local-ribbon-composition@1 objects, each with complete stations and operationsExecuted arrays.",
+        "execution.compositionCalls exactly2, order exactly ['crop','original-source-frame'], cropOperationCount and sourceOperationCount equal the respective branch label-array lengths.",
+        "Top-level operationsExecuted exactly the ordered concatenation of both branch arrays; top-level status equals crop branch status, which is UNKNOWN or OBSERVED_CHANNELS. Source branch may independently be UNKNOWN or OBSERVED_CHANNELS.",
+        "Each branch has unique named station IDs with named frame, finite pose xPx/yPx/headingRad, finite ordered t0Px/t1Px, profile object and candidates array. The two branch station-ID sequences and each station exact widthArgPx sequence correspond. Preserve all profile values/counts and candidate diagnostics verbatim rather than substitute derived values.",
+        "equivalence retained exactly as emitted, including UNKNOWN, fixed tolerance and every difference; never use it to replace or select a branch."
+      ],
+      "UNKNOWN": "Top-level or branch UNKNOWN does not suppress anything. Keep executed station profiles even with candidates=[], all-hidden/null rows, nonfinite tagged diagnostic values, rawWidthEstimate and both branches. Do not invent missing widths or synthesize a candidate row for an empty bank."
+    },
+    "notExecuted": {
+      "executionState": "NOT_EXECUTED",
+      "requires": [
+        "Neither composition nor sourceComposition exists.",
+        "execution field is absent, as in the current accepted adapter preparation/disabled return; top-level operationsExecuted is an empty array.",
+        "Top-level status is UNKNOWN or DISABLED with its nonempty preparation/disabled reason. Preserve any support failures and all raw refusal fields."
+      ],
+      "projection": "Return declared groups with measurementRows:null and NOT_EXECUTED; do not invent station/profile/candidate rows, candidate widths, null fit grids or unavailable measurements. Group IDs cannot be verified against absent measurement branches and are labelled unverified caller declaration."
+    },
+    "contradictory": "Any other branch/execution shape follows singleInvalidInputPolicy. Examples: only one branch; two branches with compositionCalls0; branches with no execution field; a claimed execution object on a branchless current-schema refusal; nonempty operations with no branches; source/crop station-ID or width-row mismatch. No top-level UNKNOWN shortcut is allowed."
+  },
+  "output": {
+    "schema": "receipt-window-groups@1 (proposed)",
+    "status": "DISABLED | UNKNOWN | PROJECTED_EVIDENCE_ONLY",
+    "executionState": "NOT_INSPECTED | UNCLASSIFIED_INVALID_INPUT | NOT_EXECUTED | EXECUTED",
+    "binding": "expected and computed exact receipt SHA256 plus retained original byte reference; no external-source verification claim",
+    "receipt": "Unmodified parsed complete receipt retained alongside the exact original bytes/reference; includes both raw branches, learner rows, provenance, execution, all stations whether grouped or not, and every equivalence difference.",
+    "groups": "For each declared group, preserve its ID and exact short ID order. Under EXECUTED return separate crop and original-source views, each with the full raw long station object and ordered full raw short station objects. Candidate arrays remain in original width order with every fit/null/nonfinite value. Views may reference the retained parsed objects; no raw fields are replaced or filtered.",
+    "comparison": "Side-by-side ordered raw objects only. No numeric delta, common-normal transform, station generation, sample-lattice reconstruction, nT-derived verdict, coverage/gap score, threshold, fit association, learned width, preferred candidate or preferred branch.",
+    "promoted": false,
+    "scientificState": "No new conclusion. Existing UNKNOWN localWidth/semanticIdentity and raw equivalence remain unchanged; grouping is not continuity, same-edge, calibrated-width, path or scientific acceptance.",
+    "CVCalls": 0,
+    "filesystemOrNetworkCalls": 0
+  },
+  "retainedScientificCaveats": [
+    "Existing edge fitter requires visible counts >=max(8,0.2*nT) across at least60% of offsets. nT<8 necessarily gives null; no helper-derived physical absence claim.",
+    "A profile averages separate unmasked t subsets at each normal offset. Ordered short fits cannot establish simultaneous paired physical edges or their identity.",
+    "Identical-pose Dev72 observations repeat regardless of t0/t1. Group order does not make them independent longitudinal evidence.",
+    "Exact integer pixel crops do not guarantee equal fitted outputs. Preserve both branches and every historical/current source-crop disagreement without tolerance changes.",
+    "Exact original-world sample phases, parent/short coverage, source/request/protocol binding and reanchoring controls belong to the external frozen caller protocol, not this helper."
+  ],
+  "futurePureTestPlanIfAdmitted": [
+    "DISABLED default performs no parsing or CV; malformed enabled input consistently returns UNKNOWN with projection:null.",
+    "Exact receipt-byte digest verified before parsing; byte tampering/parse errors fail explicitly, retaining raw reference and never claiming scientific negative or NOT_EXECUTED.",
+    "Branchless UNKNOWN preparation refusal and branchless DISABLED with empty operations/absent execution preserve reason/support and yield NOT_EXECUTED without row synthesis.",
+    "UNKNOWN with two consistent branches/call count2 retains all raw profiles and rows as EXECUTED, including all-hidden null fits and empty-bank candidates[].",
+    "Contradictory branch/count/status/operation shapes fail with no validated projection, including call count0 carrying branches.",
+    "Explicit ID joins preserve short order, all raw stations/candidate widths/null/nonfinite objects and both branches; unknown/duplicate-within-group IDs fail. Never sort by score, lexical ID or midpoint.",
+    "Finite unequal receipt headings preserve raw rows unchanged. Nonfinite required receipt linkage geometry, or any descriptor input key, follows the same invalid-input policy with no validated projection.",
+    "Serialized evidence projection keeps existing nonfinite tagged objects and literal nulls; original receipt bytes/digest and all equivalence differences remain identical. Input objects/bytes are not mutated.",
+    "Dependency inspection proves zero CV imports/calls, zero source/recipe edits, no runner, no filesystem/network calls and no general coordinate/scoring machinery."
+  ],
+  "admissionGate": {
+    "requiredBoth": [
+      "Root verifies E807 actually demonstrated a localized synthetic reporting gap; P6 has not accessed its fresh outputs and does not assert the gap here.",
+      "Independent review accepts this exact narrowed contract, then root issues a separate bounded implementation packet."
+    ],
+    "notAuthorizedNow": "No helper source/tests, CV run, course access, repository edit, Git mutation, production wiring or scientific acceptance. Existing-operation-only remains the default recommendation if the gap does not justify this helper."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "job_id":"E900",
+  "phase":"mechanical post-review append attempt1",
+  "failure":"ENOENT: open discovery-cycle04/solves/epoch-16.stdout.log",
+  "process":"node append-post-review.mjs",
+  "nodeVersion":"v24.19.0",
+  "evidence":"Original raw stack retained in tool result chunk92be5d, not a successful append. Subsequent additions verifier could not open nonexistent verify-additions.py because append had stopped. Original321-entry package verifier still passed.",
+  "repair":"Recoverably move partial post-review subtree to scratch append-attempt1-partial; enumerate missing optional stdout/stderr log explicitly without fabricating content. Epoch JSON/bundle remain required.",
+  "sourceOrCVChanges":false
+}

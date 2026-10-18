@@ -1,0 +1,102 @@
+/** E807 exact four-case producer. No adaptive retries; no source writes. */
+import {readFileSync,writeFileSync,mkdirSync,existsSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {fileURLToPath} from 'node:url';
+import {join} from 'node:path';
+import {isDeepStrictEqual as eq} from 'node:util';
+const out=fileURLToPath(new URL('./',import.meta.url));
+const repo='/workspace/scratch/8528bb251845/chainspot-discovery-lab';
+const p5='/workspace/scratch/8528bb251845/discovery-cycle04/P5';
+const review='/workspace/scratch/8528bb251845/discovery-cycle04/P2/R804/result.json';
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const pinned={
+  [join(p5,'fixtures.mjs')]:'506029a09fae4593b813ac89c75e9b0fb67c8949aaa16f448e73926b57e7d13b',
+  [join(p5,'synthetic-protocol.json')]:'e4f95e27e3de9e46aab3c642e9a732db28fdf572208f3c777f5cdbae8423cc6d',
+  [join(p5,'contract-freeze.json')]:'14927263b2d5c46b983bb4075566d8702d718614c78548a966d5a0dee2d07fc5',
+  [review]:'bbe0944f2a3cb37158474c54f25c568e34de36bf8bddc01d5df9095c422286c8'
+};
+let calls=0;
+const startedAt=new Date().toISOString(),start=process.hrtime.bigint();
+const checks=[];
+const check=(id,actual,expected,pass=eq(actual,expected))=>checks.push({id,pass,expected,actual});
+const resource=()=>({memoryBytes:process.memoryUsage(),processResourceUsage:process.resourceUsage(),resourceUnits:{maxRSS:'KiB; process-lifetime peak, not per-case allocation',userCPUTime:'microseconds',systemCPUTime:'microseconds'}});
+try {
+  if(existsSync(join(out,'run.json'))||existsSync(join(out,'failure.json')))throw Error('E807 already has a retained execution; no retry permitted');
+  for(const [p,h] of Object.entries(pinned))if(sha(readFileSync(p))!==h)throw Error(`pinned input mismatch: ${p}`);
+  const freeze=JSON.parse(readFileSync(join(p5,'contract-freeze.json'))),protocol=JSON.parse(readFileSync(join(p5,'synthetic-protocol.json'))),reviewDoc=JSON.parse(readFileSync(review));
+  if(reviewDoc.decision!=='accepted')throw Error('exact R804 not accepted');
+  for(const [p,h] of Object.entries(freeze.sourceHashes))if(sha(readFileSync(join(repo,p)))!==h)throw Error(`source changed: ${p}`);
+  const {makeFixture,CASE_IDS}=await import(new URL('../../P5/fixtures.mjs',import.meta.url));
+  const {runComposition,preserveNonFinite}=await import(new URL('../../../chainspot-discovery-lab/experiments/capability-discovery/composition/recipe.mjs',import.meta.url));
+  const encode=x=>JSON.stringify(x,preserveNonFinite,2)+'\n';
+  const put=(p,x)=>{const bytes=Buffer.from(encode(x));writeFileSync(join(out,p),bytes,{flag:'wx'});return {path:p,sha256:sha(bytes),bytes:bytes.length};};
+  if(!eq([...CASE_IDS],protocol.execution.caseOrder))throw Error('case order mismatch');
+  const cases=[],results={};
+  console.log(JSON.stringify({event:'E807-start',startedAt,pinned,expectedCompositionCalls:4}));
+  for(const id of CASE_IDS){
+    const dir=join(out,id);mkdirSync(dir,{recursive:true});
+    const input=makeFixture(id),before=sha(input.image.data);
+    if(before!==freeze.fixtureHashes[id])throw Error(`fixture hash mismatch: ${id}`);
+    const request={...input,image:{...input.image,data:Array.from(input.image.data)}};
+    const requestBinding=put(`${id}/request.json`,request);
+    const t0=process.hrtime.bigint(),r0=process.resourceUsage(),m0=process.memoryUsage();
+    console.log(JSON.stringify({event:'composition-start',case:id,call:calls+1,rgbaSha256:before,request:requestBinding}));
+    calls++;const receipt=runComposition(input);
+    const elapsedMs=Number(process.hrtime.bigint()-t0)/1e6;
+    const r1=process.resourceUsage(),m1=process.memoryUsage();
+    if(sha(input.image.data)!==before)throw Error(`fixture mutated: ${id}`);
+    const rawBinding=put(`${id}/raw-receipt.json`,receipt);
+    // Display copies exact fixture bytes, never computes a CV signal.
+    const region={xPx:48,yPx:128,widthPx:288,heightPx:80},pixels=Buffer.alloc(region.widthPx*region.heightPx*4);
+    for(let y=0;y<region.heightPx;y++){const from=((region.yPx+y)*input.image.width+region.xPx)*4;pixels.set(input.image.data.subarray(from,from+region.widthPx*4),y*region.widthPx*4);}
+    const binding=put(`${id}/binding.json`,{case:id,request:requestBinding,rawReceipt:rawBinding,rgbaSha256:before,sourceSizePx:{width:384,height:320},geometry:{frame:input.frame,training:input.training,stations:input.stations,localWidthBank:input.localWidthBank,occluders:input.occluders,edgeSearch:input.edgeSearch},sourceRegion:{...region,format:'RGBA bytes copied without resampling',rgbaBase64:pixels.toString('base64'),sha256:sha(pixels)},processObservation:{elapsedMs,before:{resourceUsage:r0,memoryBytes:m0},after:{resourceUsage:r1,memoryBytes:m1},note:'One in-process call. maxRSS is process cumulative high-water, not case causal allocation; times are observations, not deterministic receipt fields.'}});
+    const retainedRows=receipt.stations?.reduce((n,s)=>n+s.candidates.length,0)??0;
+    cases.push({id,request:requestBinding,receipt:rawBinding,binding,retainedRows,elapsedMs});results[id]=receipt;
+    console.log(JSON.stringify({event:'composition-finished',case:id,call:calls,retainedRows,elapsedMs,receipt:rawBinding}));
+  }
+  const row=(r,id)=>r.stations.find(s=>s.id===id),candidate=(s,w=30)=>s.candidates.find(c=>c.widthArgPx===w),fit=(r,id)=>candidate(row(r,id)).edgeFit;
+  const positive=e=>Boolean(e&&['lPx','rPx','cPx','wPx','score','gl','gr'].every(k=>Number.isFinite(e[k]))&&e.wPx>0&&e.score>0&&e.gl>0&&e.gr>0);
+  const shorts=Array.from({length:12},(_,i)=>`short-${String(i).padStart(2,'0')}`),defects=['short-05','short-06'],others=shorts.filter(id=>!defects.includes(id));
+  const intact=results.intact,longId='long-at-short-05',iLong=row(intact,longId);
+  check('retained candidate rows',cases.reduce((n,c)=>n+c.retainedRows,0),156);
+  check('actual composition call count',calls,4);
+  for(const [id,r] of Object.entries(results)){
+    check(`${id}:13 stations`,r.stations?.length,13);
+    check(`${id}:width and identity UNKNOWN`,[r.localWidth.status,r.localWidth.widthPx,r.semanticIdentity.status,r.promoted],['UNKNOWN',null,'UNKNOWN',false]);
+    check(`${id}:all raw profiles retained`,r.stations.every(s=>s.profile.meanLum?.length===241&&s.profile.visibleStationCounts?.length===241&&s.profile.offsetsPx?.length===241),true);
+    check(`${id}:declared counts`,r.stations.map(s=>s.profile.stationCount),[192,...Array(12).fill(16)]);
+    check(`${id}:same-origin four-lane observation duplicate`,row(r,longId).candidates.map(c=>c.observation),row(r,'short-05').candidates.map(c=>c.observation));
+  }
+  check('intact:all13 bank30 finite positive pairs',[longId,...shorts].every(id=>positive(fit(intact,id))),true);
+  for(const id of shorts){const s=row(intact,id);
+    check(`intact:${id}:raw mean profile`,s.profile.meanLum,iLong.profile.meanLum);
+    check(`intact:${id}:visibility fractions`,s.profile.visibleStationCounts.map(v=>v/s.profile.stationCount),iLong.profile.visibleStationCounts.map(v=>v/iLong.profile.stationCount));
+    check(`intact:${id}:bank30 raw fit`,fit(intact,id),fit(intact,longId));
+  }
+  for(const name of ['localized-upper-rail-loss','crossing']){const r=results[name];
+    check(`${name}:long bank30 positive`,positive(fit(r,longId)),true);
+    for(const id of defects)check(`${name}:${id}:literal null bank30 fit`,fit(r,id),null);
+    for(const id of others)check(`${name}:${id}:complete station same as intact except frame`,(({frame,...s})=>s)(row(r,id)),(({frame,...s})=>s)(row(intact,id)));
+  }
+  const gap=results['localized-upper-rail-loss'],gLong=row(gap,longId),selected=(s,predicate)=>s.profile.meanLum.filter((_,i)=>predicate(s.profile.offsetsPx[i]));
+  check('gap:long raw means normal+16..+30',selected(gLong,x=>x>=16&&x<=30),Array(57).fill(107.5));
+  check('gap:intact raw means normal+16..+30',selected(iLong,x=>x>=16&&x<=30),Array(57).fill(100));
+  for(const id of defects)check(`gap:${id}:raw means normal+16..+30`,selected(row(gap,id),x=>x>=16&&x<=30),Array(57).fill(145));
+  check('gap:lower normal half unchanged',selected(gLong,x=>x<=0),selected(iLong,x=>x<=0));
+  for(const id of defects)check(`crossing:${id}:flat145 profile`,row(results.crossing,id).profile.meanLum,Array(241).fill(145));
+  const science=r=>({status:r.status,localWidth:r.localWidth,semanticIdentity:r.semanticIdentity,rawWidthEstimate:r.rawWidthEstimate,operationsExecuted:r.operationsExecuted,sourceProvenance:r.sourceProvenance,stations:r.stations.map(({frame,...s})=>s)});
+  check('capsule:complete retained raw CV projection identical to intact',science(results['organic-capsule']),science(intact));
+  check('capsule:full RGBA hash differs',freeze.fixtureHashes['organic-capsule']!==freeze.fixtureHashes.intact,true);
+  const measurement={schema:'E807-predeclared-prediction-comparison@1',job_id:'E807',worker:'P4',kind:'literal frozen predictions compared after four unchanged calls; not acceptance',checks,failedChecks:checks.filter(c=>!c.pass).map(c=>c.id),allLiteralPredictionsMatched:checks.every(c=>c.pass),bank30:CASE_IDS.map(id=>({case:id,rows:results[id].stations.map(s=>({id:s.id,nT:s.profile.stationCount,fit:candidate(s).edgeFit,midpoint:candidate(s).midpoint}))})),localWidth:{status:'UNKNOWN',widthPx:null},semanticIdentity:{status:'UNKNOWN'},promoted:false};
+  const comparisons=put('prediction-comparison.json',measurement);
+  const header=['case','station','xPx','yPx','t0Px','t1Px','nT','widthArgPx','edgeFit','lPx','rPx','cPx','wPx','score','gl','gr','railMode','leftRail','innerLeft','innerRight','rightRail','combined','pairedRails','midpoint'];
+  const val=v=>v===undefined?'UNKNOWN':v===null?'null':typeof v==='object'?JSON.stringify(v,preserveNonFinite):String(v);
+  const rows=[header.join('\t')];for(const id of CASE_IDS)for(const s of results[id].stations)for(const c of s.candidates)rows.push([id,s.id,s.pose.xPx,s.pose.yPx,s.window.t0Px,s.window.t1Px,s.profile.stationCount,c.widthArgPx,c.edgeFit===null?'null':'object',...['lPx','rPx','cPx','wPx','score','gl','gr'].map(k=>c.edgeFit?.[k]),c.observation.railMode,c.observation.leftRail,c.observation.innerLeft,c.observation.innerRight,c.observation.rightRail,c.observation.score,c.pairedRails,c.midpoint].map(val).join('\t'));
+  const tsv=Buffer.from(rows.join('\n')+'\n');writeFileSync(join(out,'all156-candidate-rows.tsv'),tsv,{flag:'wx'});
+  const run={schema:'E807-four-case-execution@1',job_id:'E807',worker:'P4',startedAt,finishedAt:new Date().toISOString(),elapsedMs:Number(process.hrtime.bigint()-start)/1e6,nodeVersion:process.version,compositionCalls:calls,caseOrder:[...CASE_IDS],sourceFreeze:pinned,verifiedSourceHashes:freeze.sourceHashes,cases,comparison:comparisons,tsv:{path:'all156-candidate-rows.tsv',sha256:sha(tsv),bytes:tsv.length},producer:{path:'producer.mjs',sha256:sha(readFileSync(fileURLToPath(import.meta.url)))},resources:resource(),allLiteralPredictionsMatched:measurement.allLiteralPredictionsMatched,failedChecks:measurement.failedChecks,acceptance:'NOT SELF-ACCEPTED; independent review pending',boundaries:['No crop/source adapter invoked; exact synthetic original frames only','No pixel math, algorithm, source, default or route changes','No adaptive retry, score tuning, successful-subset replacement or null deletion','All calibrated widths, physical rail association, semantic identity and endpoints UNKNOWN']};
+  const runBinding=put('run.json',run);console.log(JSON.stringify({event:'E807-finished',compositionCalls:calls,allLiteralPredictionsMatched:run.allLiteralPredictionsMatched,failedChecks:run.failedChecks,run:runBinding}));
+} catch(error){
+  const failure={schema:'E807-failed-execution@1',job_id:'E807',worker:'P4',startedAt,failedAt:new Date().toISOString(),compositionCalls:calls,error:{name:error.name,message:error.message,stack:error.stack},resources:resource(),noRetry:true};
+  if(!existsSync(join(out,'failure.json')))writeFileSync(join(out,'failure.json'),JSON.stringify(failure,null,2)+'\n',{flag:'wx'});
+  console.error(error.stack);process.exitCode=1;
+}

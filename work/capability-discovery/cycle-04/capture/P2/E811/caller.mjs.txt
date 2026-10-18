@@ -1,0 +1,124 @@
+/** Fixed E811 engineering characterization only. No CV imports before explicit execution gate. */
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {deflateSync} from 'node:zlib';
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath,pathToFileURL} from 'node:url';
+const HERE=path.dirname(fileURLToPath(import.meta.url));
+const REPO='/workspace/scratch/8528bb251845/chainspot-discovery-lab';
+const hash=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
+const json=file=>JSON.parse(fs.readFileSync(file,'utf8'));
+const write=(name,bytes)=>fs.writeFileSync(path.join(HERE,name),bytes,{flag:'wx'});
+const writeJson=(name,obj)=>write(name,JSON.stringify(obj,null,2)+'\n');
+function crc32(bytes){
+  let c=0xffffffff;
+  for(const byte of bytes){c^=byte;for(let k=0;k<8;k++)c=(c>>>1)^((c&1)?0xedb88320:0);}
+  return (c^0xffffffff)>>>0;
+}
+function chunk(type,data){
+  const tag=Buffer.from(type),length=Buffer.alloc(4),crc=Buffer.alloc(4);
+  length.writeUInt32BE(data.length);crc.writeUInt32BE(crc32(Buffer.concat([tag,data])));
+  return Buffer.concat([length,tag,data,crc]);
+}
+function sourceBytes(){
+  const rgba=Buffer.alloc(128*128*4);
+  for(let i=0;i<rgba.length;i+=4)rgba.set([100,100,100,255],i);
+  const rows=Buffer.alloc(128*(1+128*4));
+  for(let y=0;y<128;y++){rows[y*513]=0;rgba.copy(rows,y*513+1,y*512,(y+1)*512);}
+  const ihdr=Buffer.alloc(13);ihdr.writeUInt32BE(128,0);ihdr.writeUInt32BE(128,4);ihdr[8]=8;ihdr[9]=6;
+  const png=Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),chunk('IHDR',ihdr),
+    chunk('IDAT',deflateSync(rows,{level:0})),chunk('IEND',Buffer.alloc(0))]);
+  return {png,rgba};
+}
+function sourceDescriptor(){
+  const {png,rgba}=sourceBytes();
+  return {width:128,height:128,pixelRgba:[100,100,100,255],pngSha256:hash(png),
+    pngBytes:png.length,fullRgbaSha256:hash(rgba),fullRgbaBytes:rgba.length,
+    imageId:'E811.uniform-gray100.128',frame:'E811.uniform-gray100.original-pixel-centers',
+    encoding:'PNG8 RGBA, filter0 per row, single IDAT with Node zlib deflate level0, no ancillary chunks',
+    node:process.version,zlib:process.versions.zlib};
+}
+const mode=process.argv[2];
+if(mode==='--describe-source'){
+  // Hash-only preflight: no files, decoding, staging, measurement or CV module import.
+  process.stdout.write(JSON.stringify(sourceDescriptor(),null,2)+'\n');
+}else if(mode==='--internal-run'){
+  if(process.env.E811_EXPLICIT_ROOT_GO!=='YES')throw Error('Internal run requires root-released caller');
+  const id=process.argv[3];if(!['A','B'].includes(id))throw Error('Fixed A/B only');
+  const request=json(path.join(HERE,`request-${id}.json`));
+  const {runSourcePixelRoi,preserveNonFinite}=await import(pathToFileURL(path.join(REPO,'experiments/capability-discovery/source-pixels/adapter.mjs')));
+  const started=performance.now(),receipt=runSourcePixelRoi(request),elapsedMs=performance.now()-started;
+  write(`receipt-${id}.json`,JSON.stringify(receipt,preserveNonFinite,2)+'\n');
+  writeJson(`process-${id}.json`,{requestId:id,node:process.version,elapsedMs,maxRssKiB:process.resourceUsage().maxRSS,
+    adapterInvocations:1,callerRequestsUnchanged:true,receiptStatus:receipt.status});
+  process.stdout.write(JSON.stringify({requestId:id,status:receipt.status,receiptPath:path.join(HERE,`receipt-${id}.json`)})+'\n');
+}else if(mode==='--execute-frozen'){
+  const protocol=json(path.join(HERE,'protocol.json'));
+  if(protocol.callerSha256!==hash(fs.readFileSync(fileURLToPath(import.meta.url))))throw Error('Frozen caller mismatch');
+  for(const [file,expected] of Object.entries(protocol.sourceCodeHashes)){
+    if(hash(fs.readFileSync(path.join(REPO,file)))!==expected)throw Error(`Frozen source mismatch:${file}`);
+  }
+  const descriptor=sourceDescriptor();
+  if(descriptor.pngSha256!==protocol.source.pngSha256||descriptor.fullRgbaSha256!==protocol.source.fullRgbaSha256)throw Error('Synthetic source mismatch');
+  writeJson('source-descriptor.actual.json',descriptor);
+  write('uniform-gray100.png',sourceBytes().png);
+  const stagingArgs=[path.join(REPO,'experiments/capability-discovery/source-pixels/stage-png.py'),
+    '--source',path.join(HERE,'uniform-gray100.png'),'--expected-sha256',descriptor.pngSha256,
+    '--image-id',descriptor.imageId,'--frame',descriptor.frame,'--out',path.join(HERE,'staged-source.json')];
+  const stage=spawnSync('python',stagingArgs,{encoding:null});
+  write('stage.stdout.log',stage.stdout??Buffer.alloc(0));write('stage.stderr.log',stage.stderr??Buffer.alloc(0));
+  writeJson('stage-process.json',{command:'python',args:stagingArgs,exitCode:stage.status,error:stage.error?.message??null});
+  if(stage.status!==0)throw Error('Staging failed; raw logs retained; do not retry adaptively');
+  const source=json(path.join(HERE,'staged-source.json'));
+  if(source.provenance.rgbaSha256!==descriptor.fullRgbaSha256)throw Error('Decoded full RGBA mismatch');
+  const requests=Object.fromEntries(protocol.requests.map(r=>[r.id,{enabled:true,source,roi:r.roi,geometry:protocol.geometry}]));
+  for(const id of ['A','B'])writeJson(`request-${id}.json`,requests[id]);
+  writeJson('premeasurement-bindings.actual.json',{schema:'E811-before-first-CV-binding@1',
+    createdAtUtc:new Date().toISOString(),cvCallsSoFar:0,
+    protocolSha256:hash(fs.readFileSync(path.join(HERE,'protocol.json'))),callerSha256:hash(fs.readFileSync(fileURLToPath(import.meta.url))),
+    sourcePngSha256:hash(fs.readFileSync(path.join(HERE,'uniform-gray100.png'))),
+    stagedSourceFileSha256:hash(fs.readFileSync(path.join(HERE,'staged-source.json'))),
+    sourceFullRgbaSha256:source.provenance.rgbaSha256,
+    requestSha256:Object.fromEntries(['A','B'].map(id=>[id,hash(fs.readFileSync(path.join(HERE,`request-${id}.json`)))])),
+    sourceCodeHashes:protocol.sourceCodeHashes});
+  const executions=[];
+  for(const id of ['A','B']){
+    const coverageDir=path.join(HERE,`v8-coverage-${id}`);fs.mkdirSync(coverageDir);
+    const args=[fileURLToPath(import.meta.url),'--internal-run',id];
+    const child=spawnSync(process.execPath,args,{env:{...process.env,E811_EXPLICIT_ROOT_GO:'YES',NODE_V8_COVERAGE:coverageDir},encoding:null});
+    write(`run-${id}.stdout.log`,child.stdout??Buffer.alloc(0));write(`run-${id}.stderr.log`,child.stderr??Buffer.alloc(0));
+    writeJson(`run-${id}.process.json`,{command:process.execPath,args,exitCode:child.status,error:child.error?.message??null});
+    if(child.status!==0)throw Error(`Fixed request${id} failed; raw logs retained; do not retry adaptively`);
+    const coverage=fs.readdirSync(coverageDir).filter(n=>n.endsWith('.json')).flatMap(n=>json(path.join(coverageDir,n)).result);
+    const functionCounts={};
+    for(const [name,suffix] of Object.entries({runSourcePixelRoi:'/source-pixels/adapter.mjs',prepare:'/source-pixels/adapter.mjs',
+      runComposition:'/composition/recipe.mjs',lumOf:'/ports/s6straight/pathSpace.mjs',profileAt:'/ports/s6straight/pathSpace.mjs',
+      edgePairOf:'/ports/s6straight/pathSpace.mjs',estimateFourLaneCorridorWidth:'/vendor/dev72/fourLaneRibbon.ts',
+      observeFourLaneCrossSection:'/vendor/dev72/fourLaneRibbon.ts'})){
+      const records=coverage.filter(s=>s.url.endsWith(suffix)).flatMap(s=>s.functions).filter(f=>f.functionName===name);
+      functionCounts[name]=records.length?records.reduce((n,f)=>n+f.ranges[0].count,0):null;
+    }
+    const receipt=json(path.join(HERE,`receipt-${id}.json`));
+    executions.push({id,status:receipt.status,operationsExecuted:receipt.operationsExecuted,
+      receiptExecution:receipt.execution??null,hasCropBranch:Object.hasOwn(receipt,'composition'),
+      hasSourceBranch:Object.hasOwn(receipt,'sourceComposition'),runtimeFunctionCounts:functionCounts,
+      missingness:receipt.execution?.compositionCalls===2&&receipt.composition&&receipt.sourceComposition
+        ?{execution:'EXECUTED',candidatesPerBranch:receipt.composition.stations.map(s=>s.candidates.length),fitState:'NO_REQUESTED_WIDTH_CANDIDATES; not null fits and not NOT_EXECUTED'}
+        :!receipt.composition&&!receipt.sourceComposition&&receipt.operationsExecuted.length===0
+          ?{execution:'NOT_EXECUTED',fitState:'PREPARATION_REFUSAL; no profile or candidate evidence'}
+          :{execution:'UNKNOWN_INCONSISTENT_SHAPE',fitState:'retain raw receipt; do not normalize'},
+      cvBranchShape:id==='A'?'Expected executed profiles with zero candidate rows; absent candidate fits are NOT an unexecuted request':'Expected whole preparation refusal; no recipe branches or measured profiles'});
+  }
+  writeJson('runtime-execution-evidence.json',{schema:'E811-runtime-function-coverage@1',executions,
+    evidence:'Separate fresh child processes under native NODE_V8_COVERAGE; raw V8 JSON retained. Counts refer to exact function entry ranges, not merely top-level status labels.',
+    limits:'V8 coverage instrumentation is execution evidence, not scientific independence or timing benchmark. No parameter tuning, source edit, profile recentering or rerun.'});
+  const artifacts=[];
+  const collect=dir=>{for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
+    const full=path.join(dir,entry.name);if(entry.isDirectory())collect(full);else if(entry.name!=='actual-artifact-hashes.json')artifacts.push({path:full,sha256:hash(fs.readFileSync(full)),bytes:fs.statSync(full).size});
+  }};collect(HERE);
+  writeJson('actual-artifact-hashes.json',{artifacts,sourceCodeHashesAfter:Object.fromEntries(Object.keys(protocol.sourceCodeHashes).map(f=>[f,hash(fs.readFileSync(path.join(REPO,f)))]))});
+  process.stdout.write(JSON.stringify({status:'FIXED_CALLS_RETAINED',executions},null,2)+'\n');
+}else{
+  throw Error('No default execution. Use --describe-source for hash-only preflight, or --execute-frozen only after root checkpoint GO.');
+}

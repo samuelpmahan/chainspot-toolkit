@@ -1,0 +1,32 @@
+{
+  "schema": "cycle04-E812-verification-ledger@1",
+  "job_id": "E812",
+  "worker": "P6",
+  "focused": "14/14 pass",
+  "labAggregate": "127/127 pass",
+  "stager": "2/2 pass",
+  "bareRepository": "167/184 pass;17 fail; exit1",
+  "repositoryFailedTests": [
+    {"path":"inventory.test.mjs:8","test":"the selected checkpoint inventories docs/replay unchanged and a missing file changes state","cause":"missing attempts/checkpoint.json"},
+    {"path":"ports/early/assembly.test.mjs:67","test":"the 17 accepted S2 basket Parts re-assemble exactly through the shape","cause":"missing saved S2 px.baskets.json"},
+    {"path":"ports/early/s1BadgeAssembly.test.mjs:113","test":"the accepted specimen evidence decomposes plate-first for all18 badges","cause":"missing saved S1 px.badges.json"},
+    {"path":"ports/early/s2BasketAssembly.test.mjs:101","test":"the accepted specimen evidence decomposes body-first for all17 baskets","cause":"missing saved S2 px.baskets.json"},
+    {"path":"ports/early/s3TeeAssembly.test.mjs:110","test":"the accepted specimen evidence supports interior-first assembly for all18 tees","cause":"missing saved S3 px.tees.json"},
+    {"path":"recipes/stages.test.mjs:36","test":"strict reuse verifies native bytes; changed source and lane give different identities","cause":"missing source/provider/artifacts/replay/source/IMG_5641.jpg from execution closure"},
+    {"path":"work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/cli.test.mjs:10","test":"CLI reads explicit RGBA JSON, preserves nonfinite diagnostics and writes inspectable evidence","cause":"immutable history has no relative probes/width/vendor/active/ports/s6straight/pathSpace.mjs"},
+    {"path":"work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:8","test":"default OFF executes no operations","cause":"immutable history recipe import unavailable; composition entry point undefined"},
+    {"path":"work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:9","test":"real positive exposes raw channels and fitted two-edge midpoint without calibration","cause":"same immutable history import failure"},
+    {"path":"work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:16","test":"shifted station retains fixed-center zero plus real signed midpoint","cause":"same immutable history import failure"},
+    {"path":"work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:20","test":"interior-only score1 remains UNKNOWN bilateral evidence","cause":"same immutable history import failure"},
+    {"path":"work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:25","test":"all-hidden numeric learner return is raw only and no fitted midpoint","cause":"same immutable history import failure"},
+    {"path":"work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:30","test":"empty training bank preserves legacy fallback40 as UNKNOWN","cause":"same immutable history import failure"},
+    {"path":"work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:34","test":"frame, provenance and finite violations fail closed before source operations","cause":"same immutable history import failure"},
+    {"path":"work/capability-discovery/cycle-02/history/E306-first-freeze/experiments/capability-discovery/composition/composition.test.mjs:38","test":"organic shape identical across exposed samples cannot acquire semantic path identity","cause":"same immutable history import failure"},
+    {"path":"work/capability-discovery/cycle-03/evidence/E506/initial-adapter.test.mjs","test":"historical initial adapter test file","cause":"missing archived evidence/E506/adapter.mjs relative import"},
+    {"path":"work/capability-discovery/cycle-03/history/E506-first-source/adapter.test.mjs","test":"historical first-source adapter test file","cause":"missing archived history/composition/recipe.mjs relative import"}
+  ],
+  "failureAttribution": "All failed source/test files and their missing-input paths predate the helper; all1646 prior tracked bytes verified exact after runs. This records the observed failures and source causes, not a newly executed before/after baseline comparison. Nothing is edited to hide these failures.",
+  "rawCapture": "Full38119-character repository output retained; no output truncation. Every actual command and exit count is in source-freeze.json and raw logs.",
+  "incidentalGeneratedFile": "Python stager test created source-pixels/__pycache__/stage-png.cpython-312.pyc. Its generated directory was moved recoverably to P6/E812/stager-generated-pycache outside repository; no old file deleted.",
+  "noFullGreenClaim": true
+}

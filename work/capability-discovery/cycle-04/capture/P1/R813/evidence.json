@@ -1,0 +1,649 @@
+{
+  "schema": "R813-independent-repair-verification@1",
+  "job_id": "R813",
+  "worker": "P1",
+  "checks": [
+    {
+      "id": "exact /workspace/scratch/8528bb251845/discovery-cycle04/P6/E813/source-freeze.json",
+      "pass": true,
+      "detail": "5a135273510f8966af9bd69119a27f284405bc47397d42a13c93554b005b0eb9"
+    },
+    {
+      "id": "exact /workspace/scratch/8528bb251845/discovery-cycle04/P6/E813/result.json",
+      "pass": true,
+      "detail": "a8ee08364cdfe0ca7007c4460bf5934454ab1f22255cf9d9de78b7f6e4e796a9"
+    },
+    {
+      "id": "exact /workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/result.json",
+      "pass": true,
+      "detail": "4347c99925ff40c4c7250c306764efdec538085e77facacc1fd37df4c07ac3ae"
+    },
+    {
+      "id": "exact /workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/counterexample.json",
+      "pass": true,
+      "detail": "23eb330d6395693594e0c5bfec68151a932349d2a0dc418e242fd8657c8e666e"
+    },
+    {
+      "id": "exact /workspace/scratch/8528bb251845/discovery-cycle04/P6/E808/narrow-contract.json",
+      "pass": true,
+      "detail": "d1c6e5e0fa7385b6476d8d8137cba17716e58d571918e27eee5bccf10095b426"
+    },
+    {
+      "id": "source experiments/capability-discovery/window-evidence/group.mjs",
+      "pass": true,
+      "detail": {
+        "path": "experiments/capability-discovery/window-evidence/group.mjs",
+        "sha256": "c8abdc46721e01df64f8ae81318582ee3d639104389c9f5a43b539ef3fbf5e83",
+        "bytes": 7708
+      }
+    },
+    {
+      "id": "source experiments/capability-discovery/window-evidence/group.test.mjs",
+      "pass": true,
+      "detail": {
+        "path": "experiments/capability-discovery/window-evidence/group.test.mjs",
+        "sha256": "de01b97f461e648dac502d5070da87a7126d620b9df82632938bc0d988c79ecf",
+        "bytes": 11020
+      }
+    },
+    {
+      "id": "source experiments/capability-discovery/window-evidence/README.md",
+      "pass": true,
+      "detail": {
+        "path": "experiments/capability-discovery/window-evidence/README.md",
+        "sha256": "f74301a060c7dbc3208f4e7c505ad42d340c9fdb6d37a3cea9d82f4ad16ece4b",
+        "bytes": 4106
+      }
+    },
+    {
+      "id": "source experiments/capability-discovery/window-evidence/fixtures/E811-B.json",
+      "pass": true,
+      "detail": {
+        "path": "experiments/capability-discovery/window-evidence/fixtures/E811-B.json",
+        "sha256": "daa7e63665a4c658489483e712b3133547b1ba23a13c1529084d221766d91974",
+        "bytes": 1317
+      }
+    },
+    {
+      "id": "production only dense predicate changed",
+      "pass": true,
+      "detail": "All production bytes outside labels identical"
+    },
+    {
+      "id": "original14 test bytes preserved",
+      "pass": true,
+      "detail": "3d1726fdd84724360395acd67aa8de5f86a7643ab41f08af1cc7aa677934e312"
+    },
+    {
+      "id": "exact retained B fixture",
+      "pass": true,
+      "detail": "Both1317bytes sha daa7e636..."
+    },
+    {
+      "id": "no new dependency math CV IO",
+      "pass": true,
+      "detail": "Only dense own-slot/name check changed; no CV/IO/scoring/coordinate mechanism"
+    },
+    {
+      "id": "actual focused17 pass",
+      "pass": true,
+      "detail": {
+        "exitCode": 0,
+        "pass": 17,
+        "fail": 0
+      }
+    },
+    {
+      "id": "exact recorded A",
+      "pass": true,
+      "detail": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/receipt-A.json",
+        "sha256": "f89e5c5926efb400ec1cdec3413ce1fbfeabc1c0548bf86cd8311d0a314a41f6",
+        "bytes": 36954
+      }
+    },
+    {
+      "id": "exact recorded B",
+      "pass": true,
+      "detail": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/receipt-B.json",
+        "sha256": "daa7e63665a4c658489483e712b3133547b1ba23a13c1529084d221766d91974",
+        "bytes": 1317
+      }
+    },
+    {
+      "id": "exact recorded E809",
+      "pass": true,
+      "detail": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/receipt.json",
+        "sha256": "302e50cb5b60f752eb6f3139a4e6a98c015005203359e0ade5aebb378e1897ba",
+        "bytes": 828263
+      }
+    },
+    {
+      "id": "exact recorded E810",
+      "pass": true,
+      "detail": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/receipt.json",
+        "sha256": "a61a487dae244cbd9bc62ada6bffb8fc7cf651616db7b37806628ee0399739e4",
+        "bytes": 825092
+      }
+    },
+    {
+      "id": "sparse actual-B one-hole",
+      "pass": true,
+      "detail": {
+        "id": "sparse actual-B one-hole",
+        "pass": true,
+        "expected": "UNCLASSIFIED_INVALID_INPUT",
+        "actual": {
+          "status": "UNKNOWN",
+          "executionState": "UNCLASSIFIED_INVALID_INPUT",
+          "reason": "malformed or unsupported group fields",
+          "projection": null
+        }
+      }
+    },
+    {
+      "id": "sparse actual-B partial",
+      "pass": true,
+      "detail": {
+        "id": "sparse actual-B partial",
+        "pass": true,
+        "expected": "UNCLASSIFIED_INVALID_INPUT",
+        "actual": {
+          "status": "UNKNOWN",
+          "executionState": "UNCLASSIFIED_INVALID_INPUT",
+          "reason": "malformed or unsupported group fields",
+          "projection": null
+        }
+      }
+    },
+    {
+      "id": "sparse disabled-refusal one-hole",
+      "pass": true,
+      "detail": {
+        "id": "sparse disabled-refusal one-hole",
+        "pass": true,
+        "expected": "UNCLASSIFIED_INVALID_INPUT",
+        "actual": {
+          "status": "UNKNOWN",
+          "executionState": "UNCLASSIFIED_INVALID_INPUT",
+          "reason": "malformed or unsupported group fields",
+          "projection": null
+        }
+      }
+    },
+    {
+      "id": "sparse disabled-refusal partial",
+      "pass": true,
+      "detail": {
+        "id": "sparse disabled-refusal partial",
+        "pass": true,
+        "expected": "UNCLASSIFIED_INVALID_INPUT",
+        "actual": {
+          "status": "UNKNOWN",
+          "executionState": "UNCLASSIFIED_INVALID_INPUT",
+          "reason": "malformed or unsupported group fields",
+          "projection": null
+        }
+      }
+    },
+    {
+      "id": "sparse actual-executed-E809 one-hole",
+      "pass": true,
+      "detail": {
+        "id": "sparse actual-executed-E809 one-hole",
+        "pass": true,
+        "expected": "UNCLASSIFIED_INVALID_INPUT",
+        "actual": {
+          "status": "UNKNOWN",
+          "executionState": "UNCLASSIFIED_INVALID_INPUT",
+          "reason": "malformed or unsupported group fields",
+          "projection": null
+        }
+      }
+    },
+    {
+      "id": "sparse actual-executed-E809 partial",
+      "pass": true,
+      "detail": {
+        "id": "sparse actual-executed-E809 partial",
+        "pass": true,
+        "expected": "UNCLASSIFIED_INVALID_INPUT",
+        "actual": {
+          "status": "UNKNOWN",
+          "executionState": "UNCLASSIFIED_INVALID_INPUT",
+          "reason": "malformed or unsupported group fields",
+          "projection": null
+        }
+      }
+    },
+    {
+      "id": "real A executed UNKNOWN/empty bank",
+      "pass": true,
+      "detail": {
+        "id": "real A executed UNKNOWN/empty bank",
+        "pass": true,
+        "expected": "EXECUTED",
+        "actual": {
+          "status": "PROJECTED_EVIDENCE_ONLY",
+          "executionState": "EXECUTED",
+          "projection": "retained raw views"
+        }
+      }
+    },
+    {
+      "id": "real B dense unverified refusal",
+      "pass": true,
+      "detail": {
+        "id": "real B dense unverified refusal",
+        "pass": true,
+        "expected": "NOT_EXECUTED",
+        "actual": {
+          "status": "PROJECTED_EVIDENCE_ONLY",
+          "executionState": "NOT_EXECUTED",
+          "projection": "retained raw views"
+        }
+      }
+    },
+    {
+      "id": "real E809 declared raw/order",
+      "pass": true,
+      "detail": {
+        "id": "real E809 declared raw/order",
+        "pass": true,
+        "expected": "EXECUTED",
+        "actual": {
+          "status": "PROJECTED_EVIDENCE_ONLY",
+          "executionState": "EXECUTED",
+          "projection": "retained raw views"
+        }
+      }
+    },
+    {
+      "id": "real E809 reversed raw/order",
+      "pass": true,
+      "detail": {
+        "id": "real E809 reversed raw/order",
+        "pass": true,
+        "expected": "EXECUTED",
+        "actual": {
+          "status": "PROJECTED_EVIDENCE_ONLY",
+          "executionState": "EXECUTED",
+          "projection": "retained raw views"
+        }
+      }
+    },
+    {
+      "id": "real E810 declared raw/order",
+      "pass": true,
+      "detail": {
+        "id": "real E810 declared raw/order",
+        "pass": true,
+        "expected": "EXECUTED",
+        "actual": {
+          "status": "PROJECTED_EVIDENCE_ONLY",
+          "executionState": "EXECUTED",
+          "projection": "retained raw views"
+        }
+      }
+    },
+    {
+      "id": "real E810 reversed raw/order",
+      "pass": true,
+      "detail": {
+        "id": "real E810 reversed raw/order",
+        "pass": true,
+        "expected": "EXECUTED",
+        "actual": {
+          "status": "PROJECTED_EVIDENCE_ONLY",
+          "executionState": "EXECUTED",
+          "projection": "retained raw views"
+        }
+      }
+    },
+    {
+      "id": "exact new baseline metadata",
+      "pass": true,
+      "detail": "2d8e767d277dd972a554c280a34fb42b242ddca47e9ab9670f665904a990d15d"
+    },
+    {
+      "id": "baseline raw stdout hash",
+      "pass": true,
+      "detail": "39caf5534afb280c0e464246fa925f6052b0720ea84baa22be3954b877847356"
+    },
+    {
+      "id": "producer repository raw stdout hash",
+      "pass": true,
+      "detail": "443c460352e11d53fa5db7262d4857a271bfccb1b9cc0fe446527d3e4f1c0367"
+    },
+    {
+      "id": "new baseline counts",
+      "pass": true,
+      "detail": {
+        "tests": 170,
+        "pass": 153,
+        "fail": 17
+      }
+    },
+    {
+      "id": "producer current counts",
+      "pass": true,
+      "detail": {
+        "tests": 187,
+        "pass": 170,
+        "fail": 17
+      }
+    },
+    {
+      "id": "exact same17 normalized failure names",
+      "pass": true,
+      "detail": {
+        "baseline": [
+          "CLI reads explicit RGBA JSON, preserves nonfinite diagnostics and writes inspectable evidence",
+          "all-hidden numeric learner return is raw only and no fitted midpoint",
+          "default OFF executes no operations",
+          "empty training bank preserves legacy fallback40 as UNKNOWN",
+          "frame, provenance and finite violations fail closed before source operations",
+          "interior-only score1 remains UNKNOWN bilateral evidence",
+          "organic shape identical across exposed samples cannot acquire semantic path identity",
+          "real positive exposes raw channels and fitted two-edge midpoint without calibration",
+          "shifted station retains fixed-center zero plus real signed midpoint",
+          "strict reuse verifies native bytes; changed source and lane give different identities",
+          "the 17 accepted S2 basket Parts re-assemble exactly through the shape",
+          "the accepted specimen evidence decomposes body-first for all 17 baskets",
+          "the accepted specimen evidence decomposes plate-first for all 18 badges",
+          "the accepted specimen evidence supports interior-first assembly for all 18 tees",
+          "the selected checkpoint inventories docs/replay unchanged and a missing file changes state",
+          "work/capability-discovery/cycle-03/evidence/E506/initial-adapter.test.mjs",
+          "work/capability-discovery/cycle-03/history/E506-first-source/adapter.test.mjs"
+        ],
+        "producer": [
+          "CLI reads explicit RGBA JSON, preserves nonfinite diagnostics and writes inspectable evidence",
+          "all-hidden numeric learner return is raw only and no fitted midpoint",
+          "default OFF executes no operations",
+          "empty training bank preserves legacy fallback40 as UNKNOWN",
+          "frame, provenance and finite violations fail closed before source operations",
+          "interior-only score1 remains UNKNOWN bilateral evidence",
+          "organic shape identical across exposed samples cannot acquire semantic path identity",
+          "real positive exposes raw channels and fitted two-edge midpoint without calibration",
+          "shifted station retains fixed-center zero plus real signed midpoint",
+          "strict reuse verifies native bytes; changed source and lane give different identities",
+          "the 17 accepted S2 basket Parts re-assemble exactly through the shape",
+          "the accepted specimen evidence decomposes body-first for all 17 baskets",
+          "the accepted specimen evidence decomposes plate-first for all 18 badges",
+          "the accepted specimen evidence supports interior-first assembly for all 18 tees",
+          "the selected checkpoint inventories docs/replay unchanged and a missing file changes state",
+          "work/capability-discovery/cycle-03/evidence/E506/initial-adapter.test.mjs",
+          "work/capability-discovery/cycle-03/history/E506-first-source/adapter.test.mjs"
+        ]
+      }
+    },
+    {
+      "id": "unchanged /workspace/scratch/8528bb251845/discovery-cycle04/P6/E813/source-freeze.json",
+      "pass": true,
+      "detail": "5a135273510f8966af9bd69119a27f284405bc47397d42a13c93554b005b0eb9"
+    },
+    {
+      "id": "unchanged /workspace/scratch/8528bb251845/discovery-cycle04/P6/E813/result.json",
+      "pass": true,
+      "detail": "a8ee08364cdfe0ca7007c4460bf5934454ab1f22255cf9d9de78b7f6e4e796a9"
+    },
+    {
+      "id": "unchanged /workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/result.json",
+      "pass": true,
+      "detail": "4347c99925ff40c4c7250c306764efdec538085e77facacc1fd37df4c07ac3ae"
+    },
+    {
+      "id": "unchanged /workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/counterexample.json",
+      "pass": true,
+      "detail": "23eb330d6395693594e0c5bfec68151a932349d2a0dc418e242fd8657c8e666e"
+    },
+    {
+      "id": "unchanged /workspace/scratch/8528bb251845/discovery-cycle04/P6/E808/narrow-contract.json",
+      "pass": true,
+      "detail": "d1c6e5e0fa7385b6476d8d8137cba17716e58d571918e27eee5bccf10095b426"
+    },
+    {
+      "id": "unchanged /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.mjs",
+      "pass": true,
+      "detail": "c8abdc46721e01df64f8ae81318582ee3d639104389c9f5a43b539ef3fbf5e83"
+    },
+    {
+      "id": "unchanged /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs",
+      "pass": true,
+      "detail": "de01b97f461e648dac502d5070da87a7126d620b9df82632938bc0d988c79ecf"
+    },
+    {
+      "id": "unchanged /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/README.md",
+      "pass": true,
+      "detail": "f74301a060c7dbc3208f4e7c505ad42d340c9fdb6d37a3cea9d82f4ad16ece4b"
+    },
+    {
+      "id": "unchanged /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/fixtures/E811-B.json",
+      "pass": true,
+      "detail": "daa7e63665a4c658489483e712b3133547b1ba23a13c1529084d221766d91974"
+    },
+    {
+      "id": "unchanged /workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/receipt-A.json",
+      "pass": true,
+      "detail": "f89e5c5926efb400ec1cdec3413ce1fbfeabc1c0548bf86cd8311d0a314a41f6"
+    },
+    {
+      "id": "unchanged /workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/receipt-B.json",
+      "pass": true,
+      "detail": "daa7e63665a4c658489483e712b3133547b1ba23a13c1529084d221766d91974"
+    },
+    {
+      "id": "unchanged /workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/receipt.json",
+      "pass": true,
+      "detail": "302e50cb5b60f752eb6f3139a4e6a98c015005203359e0ade5aebb378e1897ba"
+    },
+    {
+      "id": "unchanged /workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/receipt.json",
+      "pass": true,
+      "detail": "a61a487dae244cbd9bc62ada6bffb8fc7cf651616db7b37806628ee0399739e4"
+    },
+    {
+      "id": "unchanged /workspace/scratch/8528bb251845/discovery-cycle04/baseline-control.json",
+      "pass": true,
+      "detail": "2d8e767d277dd972a554c280a34fb42b242ddca47e9ab9670f665904a990d15d"
+    }
+  ],
+  "checkCount": 50,
+  "probes": [
+    {
+      "id": "sparse actual-B one-hole",
+      "pass": true,
+      "expected": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "reason": "malformed or unsupported group fields",
+        "projection": null
+      }
+    },
+    {
+      "id": "sparse actual-B partial",
+      "pass": true,
+      "expected": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "reason": "malformed or unsupported group fields",
+        "projection": null
+      }
+    },
+    {
+      "id": "sparse disabled-refusal one-hole",
+      "pass": true,
+      "expected": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "reason": "malformed or unsupported group fields",
+        "projection": null
+      }
+    },
+    {
+      "id": "sparse disabled-refusal partial",
+      "pass": true,
+      "expected": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "reason": "malformed or unsupported group fields",
+        "projection": null
+      }
+    },
+    {
+      "id": "sparse actual-executed-E809 one-hole",
+      "pass": true,
+      "expected": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "reason": "malformed or unsupported group fields",
+        "projection": null
+      }
+    },
+    {
+      "id": "sparse actual-executed-E809 partial",
+      "pass": true,
+      "expected": "UNCLASSIFIED_INVALID_INPUT",
+      "actual": {
+        "status": "UNKNOWN",
+        "executionState": "UNCLASSIFIED_INVALID_INPUT",
+        "reason": "malformed or unsupported group fields",
+        "projection": null
+      }
+    },
+    {
+      "id": "real A executed UNKNOWN/empty bank",
+      "pass": true,
+      "expected": "EXECUTED",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "EXECUTED",
+        "projection": "retained raw views"
+      }
+    },
+    {
+      "id": "real B dense unverified refusal",
+      "pass": true,
+      "expected": "NOT_EXECUTED",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "NOT_EXECUTED",
+        "projection": "retained raw views"
+      }
+    },
+    {
+      "id": "real E809 declared raw/order",
+      "pass": true,
+      "expected": "EXECUTED",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "EXECUTED",
+        "projection": "retained raw views"
+      }
+    },
+    {
+      "id": "real E809 reversed raw/order",
+      "pass": true,
+      "expected": "EXECUTED",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "EXECUTED",
+        "projection": "retained raw views"
+      }
+    },
+    {
+      "id": "real E810 declared raw/order",
+      "pass": true,
+      "expected": "EXECUTED",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "EXECUTED",
+        "projection": "retained raw views"
+      }
+    },
+    {
+      "id": "real E810 reversed raw/order",
+      "pass": true,
+      "expected": "EXECUTED",
+      "actual": {
+        "status": "PROJECTED_EVIDENCE_ONLY",
+        "executionState": "EXECUTED",
+        "projection": "retained raw views"
+      }
+    }
+  ],
+  "probeCount": 12,
+  "failedProbes": [],
+  "focused": {
+    "tests": 17,
+    "pass": 17,
+    "fail": 0,
+    "exitCode": 0,
+    "helperEntries": 55
+  },
+  "reviewerHelperCalls": 12,
+  "totalHelperCalls": 67,
+  "CVCalls": 0,
+  "bindings": {
+    "/workspace/scratch/8528bb251845/discovery-cycle04/P6/E813/source-freeze.json": "5a135273510f8966af9bd69119a27f284405bc47397d42a13c93554b005b0eb9",
+    "/workspace/scratch/8528bb251845/discovery-cycle04/P6/E813/result.json": "a8ee08364cdfe0ca7007c4460bf5934454ab1f22255cf9d9de78b7f6e4e796a9",
+    "/workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/result.json": "4347c99925ff40c4c7250c306764efdec538085e77facacc1fd37df4c07ac3ae",
+    "/workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/counterexample.json": "23eb330d6395693594e0c5bfec68151a932349d2a0dc418e242fd8657c8e666e",
+    "/workspace/scratch/8528bb251845/discovery-cycle04/P6/E808/narrow-contract.json": "d1c6e5e0fa7385b6476d8d8137cba17716e58d571918e27eee5bccf10095b426",
+    "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.mjs": "c8abdc46721e01df64f8ae81318582ee3d639104389c9f5a43b539ef3fbf5e83",
+    "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs": "de01b97f461e648dac502d5070da87a7126d620b9df82632938bc0d988c79ecf",
+    "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/README.md": "f74301a060c7dbc3208f4e7c505ad42d340c9fdb6d37a3cea9d82f4ad16ece4b",
+    "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/fixtures/E811-B.json": "daa7e63665a4c658489483e712b3133547b1ba23a13c1529084d221766d91974",
+    "/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/receipt-A.json": "f89e5c5926efb400ec1cdec3413ce1fbfeabc1c0548bf86cd8311d0a314a41f6",
+    "/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/receipt-B.json": "daa7e63665a4c658489483e712b3133547b1ba23a13c1529084d221766d91974",
+    "/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/receipt.json": "302e50cb5b60f752eb6f3139a4e6a98c015005203359e0ade5aebb378e1897ba",
+    "/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/receipt.json": "a61a487dae244cbd9bc62ada6bffb8fc7cf651616db7b37806628ee0399739e4",
+    "/workspace/scratch/8528bb251845/discovery-cycle04/baseline-control.json": "2d8e767d277dd972a554c280a34fb42b242ddca47e9ab9670f665904a990d15d"
+  },
+  "productionDiff": "Exact old source reproduced by replacing only new dense labels function with old labels predicate.",
+  "original14TestsPreserved": true,
+  "baseline": {
+    "metadataSha256": "2d8e767d277dd972a554c280a34fb42b242ddca47e9ab9670f665904a990d15d",
+    "baselineTotals": {
+      "tests": 170,
+      "pass": 153,
+      "fail": 17
+    },
+    "producerTotals": {
+      "tests": 187,
+      "pass": 170,
+      "fail": 17
+    },
+    "same17NormalizedFailures": true,
+    "failures": [
+      "CLI reads explicit RGBA JSON, preserves nonfinite diagnostics and writes inspectable evidence",
+      "all-hidden numeric learner return is raw only and no fitted midpoint",
+      "default OFF executes no operations",
+      "empty training bank preserves legacy fallback40 as UNKNOWN",
+      "frame, provenance and finite violations fail closed before source operations",
+      "interior-only score1 remains UNKNOWN bilateral evidence",
+      "organic shape identical across exposed samples cannot acquire semantic path identity",
+      "real positive exposes raw channels and fitted two-edge midpoint without calibration",
+      "shifted station retains fixed-center zero plus real signed midpoint",
+      "strict reuse verifies native bytes; changed source and lane give different identities",
+      "the 17 accepted S2 basket Parts re-assemble exactly through the shape",
+      "the accepted specimen evidence decomposes body-first for all 17 baskets",
+      "the accepted specimen evidence decomposes plate-first for all 18 badges",
+      "the accepted specimen evidence supports interior-first assembly for all 18 tees",
+      "the selected checkpoint inventories docs/replay unchanged and a missing file changes state",
+      "work/capability-discovery/cycle-03/evidence/E506/initial-adapter.test.mjs",
+      "work/capability-discovery/cycle-03/history/E506-first-source/adapter.test.mjs"
+    ],
+    "authority": "Fresh root-executed control verified from retained bytes; not a new full-suite execution by reviewer."
+  },
+  "history": "R812 AMEND and its historical unclassified-at-capture wording remain byte-exact; new baseline conclusion belongs only here.",
+  "scientificAcceptance": false
+}

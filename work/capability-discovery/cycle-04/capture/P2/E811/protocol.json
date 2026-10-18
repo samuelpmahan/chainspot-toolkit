@@ -1,0 +1,114 @@
+{
+  "schema": "E811-R806-M1-fixed-engineering-characterization@1",
+  "job_id": "E811",
+  "worker": "P2",
+  "status": "PREDECLARED_AWAITING_ROOT_CHECKPOINT_GO",
+  "question": "Can identical top-level UNKNOWN statuses distinguish an executed empty-bank request from a zero-call sampling-support refusal?",
+  "scope": "Bounded exposed synthetic engineering characterization of R806M1 only, not a new scientific case, classifier, detector or CV capability. Existing adapter/recipe mathematics and thresholds remain unchanged.",
+  "callerSha256": "05e7374e40e0f5e0f8b449c252ae58d6e249be780b2fbcb72b715a3b5a8fde94",
+  "source": {
+    "width": 128,
+    "height": 128,
+    "pixelRgba": [100, 100, 100, 255],
+    "pngSha256": "78b9bd5c98c577b96089fc9f54a77ae538c8587738d48732d064661f0e37181b",
+    "pngBytes": 65737,
+    "fullRgbaSha256": "b82ebef90ff857113c3fddf4cfe9d821ac975cb03e749927dd993d5ac865feac",
+    "fullRgbaBytes": 65536,
+    "imageId": "E811.uniform-gray100.128",
+    "frame": "E811.uniform-gray100.original-pixel-centers",
+    "encoding": "PNG8 RGBA, filter0 per row, single IDAT with Node zlib deflate level0, no ancillary chunks",
+    "hashPreflightNode": "v24.19.0",
+    "hashPreflightZlib": "1.3.2.1-motley-3246f1b",
+    "sourceByteStatus": "Encoded bytes and fullRGBA constructed only in memory for hash-only predeclaration; no PNG file written or staged yet. Future caller writes these exact hashed bytes once after root GO.",
+    "futureStaging": "Unchanged experiments/capability-discovery/source-pixels/stage-png.py verifies exact PNG hash before Pillow decoding, with this identical imageId/frame for both requests. No resize, orientation/color transform, compositing or alpha change."
+  },
+  "sourceCodeHashes": {
+    "experiments/capability-discovery/source-pixels/adapter.mjs": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6",
+    "experiments/capability-discovery/source-pixels/stage-png.py": "e194f56e2899f516bb79dd8d6c5e4b876440d6f0932bf9d74e0a56c117f06a44",
+    "experiments/capability-discovery/composition/recipe.mjs": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6",
+    "work/capability-discovery/cycle-03/evidence/E506/candidate-freeze.json": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "work/capability-discovery/cycle-02/feature-manifest-E308.json": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52"
+  },
+  "geometry": {
+    "frame": "E811.uniform-gray100.original-pixel-centers",
+    "geometrySource": "E811 explicit exposed synthetic caller geometry for executed-UNKNOWN versus preparation-refusal characterization; no semantic, calibrated width or course claim",
+    "training": {"frame": "E811.uniform-gray100.original-pixel-centers", "segments": []},
+    "stations": [
+      {"id": "fixed-center", "frame": "E811.uniform-gray100.original-pixel-centers", "xPx": 64, "yPx": 64, "headingRad": 0, "t0Px": -8, "t1Px": 8}
+    ],
+    "localWidthBank": {"frame": "E811.uniform-gray100.original-pixel-centers", "scope": "LOCAL", "valuesPx": []},
+    "occluders": {"frame": "E811.uniform-gray100.original-pixel-centers", "boxes": []},
+    "edgeSearch": {"latLimPx": 4, "tolWidthPx": 3}
+  },
+  "requests": [
+    {
+      "id": "A",
+      "roi": {"xPx": 16, "yPx": 16, "widthPx": 96, "heightPx": 96, "frame": "E811.request-A.crop"},
+      "predictedSupport": "SUPPORTED_CONSERVATIVE_ENVELOPE",
+      "geometricArithmetic": "Empty bank gives no sensor envelope. Profile endpoints in crop coordinates (40,48),(56,48), expanded isotropically30, yield envelopes[10,18,70,78] and[26,18,86,78], strictly within x/y>1 and<94.",
+      "predictedReceipt": {
+        "topStatus": "UNKNOWN",
+        "adapterInvocations": 1,
+        "compositionCalls": 2,
+        "retainedBranches": ["composition", "sourceComposition"],
+        "profilesExecuted": 2,
+        "stationsPerBranch": 1,
+        "normalOffsetsPerProfile": 241,
+        "longitudinalSamplesPerProfile": 16,
+        "candidatesPerStation": 0,
+        "edgePairOfCalls": 0,
+        "observeFourLaneCrossSectionCalls": 0,
+        "receiptOperationLabelsPerBranch": 4,
+        "receiptOperationLabelsTotal": 8,
+        "missingFitsMeaning": "No requested width candidate rows. An absent fit is neither a measured null pair nor NOT_EXECUTED. Preserve both raw profiles/counts and raw learner fallback diagnostics without inventing widths.",
+        "equivalence": "Existing paired original/crop raw-channel comparison retained with unchanged absolute1e-9 rule; a match is bounded numeric control only."
+      }
+    },
+    {
+      "id": "B",
+      "roi": {"xPx": 60, "yPx": 60, "widthPx": 8, "heightPx": 8, "frame": "E811.request-B.crop"},
+      "predictedSupport": "UNKNOWN",
+      "geometricArithmetic": "Same original geometry maps profile endpoints to(-4,4),(12,4); expanded30 envelopes[-34,-26,26,34] and[-18,-26,42,34] violate strict interior1..6.",
+      "predictedReceipt": {
+        "topStatus": "UNKNOWN",
+        "adapterInvocations": 1,
+        "compositionCalls": 0,
+        "retainedBranches": [],
+        "profilesExecuted": 0,
+        "receiptOperationLabelsTotal": 0,
+        "missingFitsMeaning": "Whole preparation sampling-support refusal: profiles, candidates and fits NOT_EXECUTED, not evidence that any physical edge is absent."
+      }
+    }
+  ],
+  "contrastControls": "A and B share the exact same staged source object, imageId/frame, enabled:true, training, station, LOCAL empty bank, boxes and edge settings. Only ROI origin/size/frame changes. No width is added and no geometry is recentered after either result.",
+  "predeclaredCharacterizationCriterion": "Both top-level statuses are predicted UNKNOWN. A is executed only if both raw branches and execution.compositionCalls=2 persist, with runtime runComposition/profileAt counts2. B is zero-call only if branches are absent, operations empty and runtime runComposition/profileAt counts0. Contradictory shape/count evidence must remain an explicit mismatch, never normalized from status alone.",
+  "falsifierAndFailurePolicy": "Any predicted call-count, support, branch or missingness-shape disagreement falsifies the proposed exact characterization. Preserve raw receipts/logs/coverage and report mixed_change or insufficient_evidence as appropriate; no tuning, widening, recentering, dropped request or adaptive rerun. Integrity/staging failure stops before further CV and remains a retained failure.",
+  "executionOrderAfterRootGo": [
+    "Verify frozen caller and5 exact source-code/freeze hashes before image writing or staging.",
+    "Reconstruct exact prehashed PNG/RGBA bytes, verify hashes, then write one source PNG.",
+    "Invoke unchanged stage-png.py once and retain raw stdout/stderr/exit record; verify decoded fullRGBA hash.",
+    "Write complete immutable request-A.json and request-B.json from the same staged source plus frozen geometry/ROI descriptors; bind exact file SHA256 values before first CV in premeasurement-bindings.actual.json.",
+    "Run A then B exactly once each in separate fresh Node child processes with native V8 function coverage and no source instrumentation; retain complete receipts/nonfinite encoding, raw process stdout/stderr and resource sidecars.",
+    "Project actual branch/operation/candidate missingness and native function entry counts without changing receipts; preserve raw V8 coverage; bind every artifact and record source hashes again."
+  ],
+  "entryPointAfterRootGoOnly": "node /workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/caller.mjs --execute-frozen",
+  "preflightActuallyExecuted": {
+    "hashOnlySourceDescriptor": true,
+    "syntaxOnlyCallerCheck": true,
+    "sourceHashReads": true,
+    "pngFilesWritten": 0,
+    "stagingCalls": 0,
+    "adapterCalls": 0,
+    "recipeCalls": 0,
+    "profileCalls": 0,
+    "fitterCalls": 0,
+    "renderingOrPublishing": false
+  },
+  "boundaries": [
+    "No new detector, product/repository edit, new CV runner or measurement mathematics. The caller only orchestrates the exact unchanged adapter and staging entry points.",
+    "Native V8 coverage establishes execution counts in these two processes, not primitive-work counts, scientific independence, speed advantage or allocator quality.",
+    "Operation labels are not primitive-operation/resource counts. Raw learner fallback40, if returned, is not a requested width, fit, calibration or semantic observation.",
+    "No source/crop numerical universality, physical rail absence, continuity, endpoint identity, calibrated width, AA or production/default-ON claim follows.",
+    "No direct dispatch or result delivery to P6. Root coordinates subsequent helper information and independent R811 review."
+  ]
+}

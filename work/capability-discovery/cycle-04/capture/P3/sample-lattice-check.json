@@ -1,0 +1,28 @@
+{
+  "schema": "premeasurement-lattice-audit@1",
+  "job_id": "E803",
+  "lattice": [
+    {
+      "group": "primary",
+      "samples": 80,
+      "byteExactCoordinatePairs": 53,
+      "maxAbsoluteCoordinateDifferencePx": 2.2737367544323206e-13,
+      "claim": "Analytically consecutive moving-pose windows, not a bit-exact sample partition. Centerline coordinates audited with JavaScript Math; adding normal offsets and bilinear arithmetic can retain further rounding."
+    },
+    {
+      "group": "lateral-plus6",
+      "samples": 80,
+      "byteExactCoordinatePairs": 53,
+      "maxAbsoluteCoordinateDifferencePx": 2.2737367544323206e-13,
+      "claim": "Analytically consecutive moving-pose windows, not a bit-exact sample partition. Centerline coordinates audited with JavaScript Math; adding normal offsets and bilinear arithmetic can retain further rounding."
+    },
+    {
+      "group": "bright-organic",
+      "samples": 80,
+      "byteExactCoordinatePairs": 58,
+      "maxAbsoluteCoordinateDifferencePx": 2.2737367544323206e-13,
+      "claim": "Analytically consecutive moving-pose windows, not a bit-exact sample partition. Centerline coordinates audited with JavaScript Math; adding normal offsets and bilinear arithmetic can retain further rounding."
+    }
+  ],
+  "consequence": "Not a pure window-only ablation. Moving origin changes Dev72 sensor pose and can perturb floating sample positions. Long profile is independently evaluated; no arithmetic identity of computed profiles or fits is promised."
+}

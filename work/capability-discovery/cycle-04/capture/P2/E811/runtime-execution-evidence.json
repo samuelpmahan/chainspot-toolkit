@@ -1,0 +1,73 @@
+{
+  "schema": "E811-runtime-function-coverage@1",
+  "executions": [
+    {
+      "id": "A",
+      "status": "UNKNOWN",
+      "operationsExecuted": [
+        "lumOf",
+        "estimateFourLaneCorridorWidth",
+        "assessLocalWidth",
+        "profileAt",
+        "lumOf",
+        "estimateFourLaneCorridorWidth",
+        "assessLocalWidth",
+        "profileAt"
+      ],
+      "receiptExecution": {
+        "compositionCalls": 2,
+        "order": [
+          "crop",
+          "original-source-frame"
+        ],
+        "cropOperationCount": 4,
+        "sourceOperationCount": 4
+      },
+      "hasCropBranch": true,
+      "hasSourceBranch": true,
+      "runtimeFunctionCounts": {
+        "runSourcePixelRoi": 1,
+        "prepare": 1,
+        "runComposition": 2,
+        "lumOf": 2,
+        "profileAt": 2,
+        "edgePairOf": 0,
+        "estimateFourLaneCorridorWidth": 2,
+        "observeFourLaneCrossSection": 0
+      },
+      "missingness": {
+        "execution": "EXECUTED",
+        "candidatesPerBranch": [
+          0
+        ],
+        "fitState": "NO_REQUESTED_WIDTH_CANDIDATES; not null fits and not NOT_EXECUTED"
+      },
+      "cvBranchShape": "Expected executed profiles with zero candidate rows; absent candidate fits are NOT an unexecuted request"
+    },
+    {
+      "id": "B",
+      "status": "UNKNOWN",
+      "operationsExecuted": [],
+      "receiptExecution": null,
+      "hasCropBranch": false,
+      "hasSourceBranch": false,
+      "runtimeFunctionCounts": {
+        "runSourcePixelRoi": 1,
+        "prepare": 1,
+        "runComposition": 0,
+        "lumOf": 0,
+        "profileAt": 0,
+        "edgePairOf": 0,
+        "estimateFourLaneCorridorWidth": 0,
+        "observeFourLaneCrossSection": 0
+      },
+      "missingness": {
+        "execution": "NOT_EXECUTED",
+        "fitState": "PREPARATION_REFUSAL; no profile or candidate evidence"
+      },
+      "cvBranchShape": "Expected whole preparation refusal; no recipe branches or measured profiles"
+    }
+  ],
+  "evidence": "Separate fresh child processes under native NODE_V8_COVERAGE; raw V8 JSON retained. Counts refer to exact function entry ranges, not merely top-level status labels.",
+  "limits": "V8 coverage instrumentation is execution evidence, not scientific independence or timing benchmark. No parameter tuning, source edit, profile recentering or rerun."
+}

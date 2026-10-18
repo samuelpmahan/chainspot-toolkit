@@ -1,0 +1,89 @@
+{
+  "schema": "cycle04-predeclared-synthetic-window-ablation@1",
+  "job_id": "E804",
+  "worker": "P5",
+  "state": "FROZEN_BEFORE_CV_PRODUCER_EXECUTION",
+  "frozenAtUtc": "2026-10-18T11:53:20Z",
+  "question": "Does the unchanged longitudinally averaged JS profile retain a bilateral fit across a specifically localized missing rail while an ordered exact partition of its samples exposes the affected locations?",
+  "claimBoundary": "Information loss by averaging only. Neither long nor short fits classify a path, establish per-pixel rail continuity, endpoint ownership, physical width, confidence or renderer/AA identity.",
+  "sourceRepoHeadAtDeclaration": "532fd7406e5b939e6d4d83cf92d12e2267bab11c",
+  "execution": {
+    "cvProducerExecuted": false,
+    "permittedNow": "Declare protocol, inspect source/contracts, hash sources and fixture bytes; no call to composition, source-pixel runner, profileAt, edgePairOf or Dev72 operations.",
+    "futureEntryPoint": "Existing experiments/capability-discovery/composition/recipe.mjs#runComposition on each generator-returned composition input, exactly once per case after root release; use existing preserveNonFinite for JSON.",
+    "caseOrder": ["intact", "localized-upper-rail-loss", "organic-capsule", "crossing"],
+    "noAdaptiveRetry": true,
+    "productChanges": false
+  },
+  "pixelSpec": {
+    "width": 384,
+    "height": 320,
+    "layout": "row-major integer pixel centers; RGBA unsigned bytes",
+    "backgroundRgba": [100,100,100,255],
+    "brightRgba": [145,145,145,255],
+    "alpha": "Copied opaque255 as bytes, not transparency inference. No compositing, AA, resizing, filtering, normalization or PNG decoding.",
+    "nominalCenterline": {"yPx":160,"headingRad":0},
+    "nominalCandidateWidthPx":30,
+    "baseOccupiedRows": "145 <= y <= 174 inclusive:30 raster rows, not asserted analytic subpixel width",
+    "geometrySource": "New deterministic synthetic caller testimony; constructed geometry is not semantic course truth."
+  },
+  "fixedGeometry": {
+    "trainingSegment": {"tee":{"xPx":104,"yPx":160},"badge":{"xPx":280,"yPx":160}},
+    "localWidthBank": {"scope":"LOCAL","valuesPx":[24,30,36]},
+    "edgeSearch": {"latLimPx":4,"tolWidthPx":3},
+    "occluderBoxes": [],
+    "longStation": {"id":"long-at-short-05","xPx":184,"yPx":160,"headingRad":0,"t0Px":-88,"t1Px":104},
+    "orderedShortStationCentersXPx": [104,120,136,152,168,184,200,216,232,248,264,280],
+    "shortWindow": {"t0Px":-8,"t1Px":8},
+    "exactSampleSupport": "Source default profile step1 and arange excludes t1. Long has192 x samples96..287. Each short has16 samples; short00..11 partition long support exactly. short05 covers176..191 and short06 covers192..207. Every profile has241 normals -30..30 at0.25.",
+    "guard": "Short nT16 exceeds existing edgePairOf minimum8; all declared samples are in bounds and unmasked. Do not alter count guard, smoothing, endpoints, peak selection or tolerances.",
+    "matchedAblation": "long-at-short-05 and short-05 have identical origin184,160, heading, pixels, bank, masks and edge settings; only t0/t1 differ. Dev72 fixed-origin observations are therefore duplicated controls, not evidence corroborating a change in profile window.",
+    "support": "All complete sampler footprints fit in384x320. No crop adapter required. If later a source/crop control is added, it is a separate protocol amendment and must preserve unchanged paired full/crop execution and existing1e-9 UNKNOWN rule."
+  },
+  "cases": [
+    {
+      "id":"intact",
+      "predicate":"145 <= y && y <= 174, for all integer x",
+      "role":"Positive mechanism control; exposed, not heldout",
+      "predictedObservation":"At bank30, long and all12 short windows retain finite positive bilateral fits with identical raw profiles and fits. Raw midpoint need not be0 because pixel occupancy is asymmetric about y160. Off-bank24/36 rows remain unselected and fully retained.",
+      "hardFalsifier":"Any long/short bank30 null/nonfinite fit, or unequal long/short profiles/visible fractions after accounting for counts192 versus16, falsifies this proposed intact baseline. Do not tune raster/window/settings."
+    },
+    {
+      "id":"localized-upper-rail-loss",
+      "predicate":"(145 <= y && y <= 174) || (176 <= x && x <= 207 && 175 <= y && y <= 207)",
+      "role":"Primary new localized one-sided rail-loss ablation;32 columns affected, exactly two short windows",
+      "predictedObservation":"At bank30 the long profile retains a positive bilateral fit, while short05 and06 lose the falling upper-normal rail within +/-30 and return null fits; the other10 short windows match intact. Within the matched anchor184 sensor observation cannot depend on long versus short window. Raw long means for offsets +16..+30 are107.5, versus100 intact; short05/06 are145 there. Lower rail stays unchanged. These exact pixel-average predictions are not fitted-edge numeric predictions.",
+      "hardFalsifier":"The proposed demonstration fails if bank30 long fit is absent/nonpositive/nonfinite, if either predeclared defect short has a finite positive bilateral fit, or if any nondefect short differs from intact. If raw mean predictions fail, suspect input/generator/source support and mark experiment invalid before interpretation; preserve all outputs. A fit from an endpoint artifact is a falsifier, never silently relabelled a physical rail.",
+      "newRelativeToE302":"E302 used sinusoidally varying full width at5 spaced stations and a full vertical crossing, not this32-column one-sided bright extension with12 exactly partitioning windows and a same-origin long/short pair. No old receipt is relabelled as a new measurement."
+    },
+    {
+      "id":"organic-capsule",
+      "predicate":"(x-clamp(x,72,312))^2 + (y-159.5)^2 <=225",
+      "role":"Reused semantic non-identifiability guard, not primary novelty",
+      "predictedObservation":"All declared CV sampling footprints lie in the straight capsule core. Complete raw learner rows, all profiles, observations, fits, paired-rail/midpoint fields equal intact, while full RGBA differs outside support. Even all12 short fits cannot identify path semantics.",
+      "hardFalsifier":"Any raw CV field difference versus intact (excluding image/frame/provenance metadata) falsifies the declared footprint-equivalence guard; inspect and preserve it, with no added semantic inference. Equality itself falsifies any claim this experiment universally rejects organic components."
+    },
+    {
+      "id":"crossing",
+      "predicate":"(145 <= y && y <= 174) || (176 <= x && x <= 207)",
+      "role":"Reused crossing-ambiguity guard, not primary novelty",
+      "predictedObservation":"Bank30 long profile may retain bilateral edges from the160 noncrossing columns, while short05/06 are flat145 across all241 normals and lack bilateral fits. Ordered shorts locate an unsupported crossing interval but do not resolve continuation or endpoint ownership.",
+      "hardFalsifier":"No positive bank30 long fit, a positive bank30 fit in either flat central short, or a changed noncrossing short falsifies this proposed mechanism control. None of these outcomes can promote path identity."
+    }
+  ],
+  "retention": {
+    "allRows":"4 cases x13 stations x3 requested widths =156 candidate rows, plus all learner rows; no best-width filtering.",
+    "rawFields":["RGBA hash and complete geometry","all241 offsets/meanLum/visibleStationCounts and nT","all observation lanes/interior/rail/combined fields and raw railMode","pairedRails statuses/reasons","edgeFit object or literalnull","midpoint object or UNKNOWN","localWidth and semanticIdentity UNKNOWN","operationsExecuted and frozen source provenance"],
+    "numericPolicy":"Use existing preserveNonFinite JSON replacer. Null fit staysnull; missing/nonfinite midpoint never becomes0. Nonfinite diagnostics stay numberKind/value objects. Unsupported or input-invalid rows stay UNKNOWN/NOT_EXECUTED, not failed physical paths.",
+    "orderedEvidence":"Keep short rows in declared x order including gaps. A mean of short fits, support fraction or selected successful subset cannot replace the ordered sequence. No added detector, threshold, calibration, score weighting, arange width expansion, forced recentering or acceptance policy."
+  },
+  "priorCounterexamples": [
+    {"path":"work/capability-discovery/cycle-02/evidence/E302/result.json","lesson":"Ragged averaging hides variation; crossing hides local failure; capsule duplicates ribbon. Existing results motivate but do not measure the new localized control."},
+    {"path":"work/capability-discovery/cycle-02/evidence/E303/result.json","lesson":"Ellipse can uniquely win an uncalibrated width and transfer fails; ties/all-hidden learner returns are diagnostic only."},
+    {"path":"work/capability-discovery/cycle-02/evidence/E304/result.json","lesson":"Few bends, equal length and zero conditional midpoint do not choose crossing ownership; failed pairs remain UNKNOWN."},
+    {"path":"work/capability-discovery/cycle-03/evidence/E506/contract-amendment.json","lesson":"Tiny profile roundoff can jump strict edge selections; no tolerance relaxation or universal translation invariance."},
+    {"path":"work/capability-discovery/cycle-03/evidence/E510/result.json","lesson":"Rendering recorded seam evidence is not a fresh CV replay."},
+    {"path":"work/capability-discovery/cycle-03/evidence/E511/protocol.json","lesson":"Support abstention is UNKNOWN; any future ROI change must be separately declared, with no adaptive rerun."}
+  ],
+  "readiness":"Protocol and pure fixture generator ready for independent review. CV execution explicitly not performed; mechanistic reuse outcome insufficient_evidence until frozen producer runs."
+}

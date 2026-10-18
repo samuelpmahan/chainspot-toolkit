@@ -1,0 +1,255 @@
+{
+  "schema": "cycle04-independent-engineering-review@1",
+  "job_id": "R810",
+  "worker": "P4",
+  "decision": "accepted",
+  "summary": "Accepted exact E810 technical reproducibility after352 independent checks, one fresh pinned-PNG extraction/restaging and one unchanged adapter replay/two recipes. The complete825092-byte raw receipt,108-row CSV and both receipt-only PNGs reproduce byte for byte. All108 table identities/status/raw fields/projections,36 profiles and6 branch-width verdict/offset sets match. This retains primary48/56 long-average counterexamples, bright56 finite-window ambiguity and failed+6 offset diagnostics; it is engineering replay, not another independent course or path acceptance.",
+  "reviewedExact": {
+    "producerResultSha256": "4f5ae75c35df77a555f4a54ae7d9d963dcbf21ea0b6035a065752578e68a9bf8",
+    "producerManifestSha256": "083b6ce875a46da58cbb1e7725b0b68aa9bfae0a38eb913501e33aa9ce5a4d9f",
+    "rawReceiptSha256": "a61a487dae244cbd9bc62ada6bffb8fc7cf651616db7b37806628ee0399739e4",
+    "protocolSha256": "115fc4fb788a3c6b75733b075666a41c999894866706bb09e888e477531526a0",
+    "reviewerSha256": "1753458c400fba058ae73a270371b7b60a998f8cc4d8fa83bc5609172bca8abe"
+  },
+  "commandsActuallyRun": [
+    {
+      "command": "Read exact E810 caller/renderer/result/manifest/helper freeze/run-binding/verification/reporting clarification and P3 protocol/support arithmetic",
+      "scope": "Read only; source/contracts inspected before replay"
+    },
+    {
+      "command": "node --check review.mjs > syntax.stdout.log 2> syntax.stderr.log",
+      "cwd": "P4/R810",
+      "scope": "Syntax only; captured streams empty"
+    },
+    {
+      "command": "node review.mjs > replay.stdout.log 2> replay.stderr.log",
+      "cwd": "P4/R810",
+      "exitCode": 0,
+      "scope": "Independent352-check harness. Internally extracts git show pinned source, runs stage-png.py into own source.json, invokes unchanged runSourcePixelRoi once, runs exact copied receipt-only renderer once."
+    },
+    {
+      "command": "Read-only Node inspection of evidence.json plus wc -c syntax.stderr.log replay.stderr.log",
+      "scope": "Confirmed352 checks/0 failures, one adapter/two recipes,108 rows/36 profiles, empty stderr"
+    },
+    {
+      "command": "view_image E810-actual-receipt.png; view_image E810-raw-profiles.png",
+      "scope": "Direct visual inspection of actual independently rerendered PNGs"
+    },
+    {
+      "command": "git -C chainspot-discovery-lab status --short",
+      "scope": "Read only. Observed ?? experiments/capability-discovery/window-evidence/ from another active owner; reviewer did not read/edit that implementation or write repository files."
+    },
+    {
+      "command": "Read-only postrun Node hash checks of37 source closure entries and6 helper/input declarations; SHA256/size reviewer artifacts",
+      "scope": "All matched after replay, no CV calls; postrun-integrity.json retains result"
+    }
+  ],
+  "verifiedFacts": {
+    "independentChecks": 352,
+    "failedChecks": 0,
+    "producerManifestFilesMatched": 24,
+    "acceptedClosureEntriesMatched": 37,
+    "postrunHelperInputMatches": 6,
+    "freshSource": {
+      "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "path": "specimens/dev/Lenard-2.png",
+      "gitBlob": "02431ee3f091973a87cc2e7e254bc8bc0b028a7c",
+      "pngSha256": "cf5a033747c32f3e7f8774e7f712394b6af8a5d28228291f0d29a395998d55f4",
+      "rgbaSha256": "3659157b9501899ff62dcc5216dcb058a6a50d31578e751dcb665c49b97da4ee",
+      "sourceStagingSha256": "6dd63d816e702e899cf1ab696ebc59a2241d6244cffbd0569c7a703d03e8252b",
+      "completeRequestSha256": "57a7d0002ba3e5c49225ce7c67984bdddf17db88e075dcabf58e6b15f62de3ae",
+      "freshStageAndRequestByteIdentical": true
+    },
+    "adapterInvocations": 1,
+    "compositionCalls": 2,
+    "operations": 366,
+    "rowsIndependentlyVerified": 108,
+    "profilesIndependentlyVerified": 36,
+    "branches": {
+      "crop": {
+        "finitePositivePair": 41,
+        "nullFit": 13,
+        "missing": 0
+      },
+      "source": {
+        "finitePositivePair": 41,
+        "nullFit": 13,
+        "missing": 0
+      }
+    },
+    "receiptBytes": 825092,
+    "completeReceiptByteIdentity": true,
+    "csvByteIdentity": true,
+    "figureReplayByteMatches": 2,
+    "rendererCvCalls": 0,
+    "producerArtifactsPreservedExactly": true,
+    "sourceCropComparison": {
+      "numericFieldsIndependentlyCompared": 14316,
+      "maxAbsoluteDifference": 1.4921397450962104e-12,
+      "unchangedTolerance": 1e-9,
+      "differencesAboveTolerance": 0,
+      "status": "MATCHED_DECLARED_CONTROL"
+    },
+    "confirmedPatterns": [
+      {
+        "widthArgPx": 40,
+        "primaryShortFinite": 5,
+        "primaryLong": "FINITE",
+        "offsetShortFinite": 5,
+        "offsetLong": "NULL",
+        "brightShortFinite": 4,
+        "brightLong": "FINITE"
+      },
+      {
+        "widthArgPx": 48,
+        "primaryShortFinite": 4,
+        "primaryLong": "FINITE",
+        "offsetShortFinite": 5,
+        "offsetLong": "FINITE",
+        "brightShortFinite": 3,
+        "brightLong": "NULL"
+      },
+      {
+        "widthArgPx": 56,
+        "primaryShortFinite": 2,
+        "primaryLong": "FINITE",
+        "offsetShortFinite": 2,
+        "offsetLong": "NULL",
+        "brightShortFinite": 5,
+        "brightLong": "FINITE"
+      }
+    ],
+    "offsetNegatives": [
+      {
+        "widthArgPx": 40,
+        "jointlyFinite": 5,
+        "strictIdealRejected": 2,
+        "unknown": 1
+      },
+      {
+        "widthArgPx": 48,
+        "jointlyFinite": 5,
+        "strictIdealRejected": 4,
+        "unknown": 1
+      },
+      {
+        "widthArgPx": 56,
+        "jointlyFinite": 1,
+        "strictIdealRejected": 1,
+        "unknown": 5
+      }
+    ],
+    "rawLearner": {
+      "selectedWidthPx": 48,
+      "calibratedWidth": "UNKNOWN"
+    },
+    "semanticIdentity": "UNKNOWN",
+    "promoted": false
+  },
+  "figureInspection": {
+    "actualSourceAndTableViewed": true,
+    "rawProfilesViewed": true,
+    "findings": "Original source ROI retains labelled numbered primary/bright moving short poses and offset line. Separate CROP/SOURCE18-by3 tables show all finite/null channels, sample/visibility counts and caveats. Raw-profile figure has six panels with all five shorts and long, labelled branch/group/normal offsets. Both actual PNGs are legible at original resolution; no clipping, replacement or repair needed.",
+    "displayRepairs": 0,
+    "actualFigureSha256": "03d90c754a3ec650801e568ad42b6d9e66b7b97726106c3684a51bcd2c970786",
+    "rawProfilesSha256": "17e0f066d40e33d98eaac4a3ced5b5b867df1debb07520201e6a423310af4a3b"
+  },
+  "resources": {
+    "reviewerAdapterElapsedMs": 2297.638528,
+    "reviewerWholeElapsedMs": 9047.703252,
+    "reviewerNodeMaxRssKiB": 1111500,
+    "node": "v24.19.0",
+    "scope": "Reviewer Node process memory/resourceUsage and wall duration are separate observations. Whole elapsed includes fresh staging, replay, checks and receipt renderer subprocess; Node maxRSS is not the renderer subprocess peak. Producer had adapter2306.996178ms/caller7849.380995ms/maxRSS1210104KiB; differing timings/resource observations do not contradict deterministic receipt equality. No external time utility ran; producer reporting-clarification correctly narrows its retained resources.json boilerplate."
+  },
+  "limitations": [
+    "Engineering reproducibility only. Replay is not an additional independent scientific source, independent course case, authenticated blind trial, route acceptance or human acceptance.",
+    "Exposed single screenshot and caller visual testimony; bright-organic label has no independently verified non-path semantic truth. Comparable finite channels preserve ambiguity only.",
+    "Moving short origins are analytically consecutive but are not a bit-exact partition of the long bilinear sample lattice. Existing strict peak selection and numerical seams remain.",
+    "Each short itself averages16 samples; all five finite fits cannot establish per-position or same-physical-edge continuity.",
+    "Widths40/48/56 are explicit diagnostic arguments, not measured/calibrated widths; raw learner48 does not override its short5 null.",
+    "Source/crop match is bounded to this unchanged request/tolerance. It does not establish universal crop or geometric identity.",
+    "Null or missing pairing is not proof of physical ribbon absence. Failed strict+6 residuals do not resolve which edge was selected; unavailable comparisons remain UNKNOWN.",
+    "No AA benefit, alpha/renderer identity, endpoint ownership, physical scale, general classifier, production default, P6 fresh-geometry disclosure or protected-branch changes."
+  ],
+  "scope": {
+    "writes": "P4/R810 only",
+    "producerOrP3Edits": 0,
+    "repositoryEdits": 0,
+    "gitWrites": 0,
+    "adaptiveRetries": 0,
+    "subagents": 0,
+    "P6GeometryOrRawDisclosure": false
+  },
+  "artifacts": [
+    {
+      "path": "review.mjs",
+      "sha256": "1753458c400fba058ae73a270371b7b60a998f8cc4d8fa83bc5609172bca8abe",
+      "bytes": 14052
+    },
+    {
+      "path": "evidence.json",
+      "sha256": "73c3c9fd42f78b5093c82ba886398dc7e5c89fc1237a536da76af99c4730c4c2",
+      "bytes": 62732
+    },
+    {
+      "path": "replay.stdout.log",
+      "sha256": "2d19c86c99cb3b454e2f1e434dd21976e0563e43dee99ae73692f7cf704ea0ff",
+      "bytes": 1574
+    },
+    {
+      "path": "replay.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "syntax.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "syntax.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "receipt.json",
+      "sha256": "a61a487dae244cbd9bc62ada6bffb8fc7cf651616db7b37806628ee0399739e4",
+      "bytes": 825092
+    },
+    {
+      "path": "ordered-fit-table.csv",
+      "sha256": "92a78a3548f839daab9e92d1efaecb78ab980ecbd6f6347781a6cbc3448dce6c",
+      "bytes": 18036
+    },
+    {
+      "path": "source.json",
+      "sha256": "6dd63d816e702e899cf1ab696ebc59a2241d6244cffbd0569c7a703d03e8252b",
+      "bytes": 50851315
+    },
+    {
+      "path": "request.json",
+      "sha256": "57a7d0002ba3e5c49225ce7c67984bdddf17db88e075dcabf58e6b15f62de3ae",
+      "bytes": 50855146
+    },
+    {
+      "path": "Lenard-2.original.png",
+      "sha256": "cf5a033747c32f3e7f8774e7f712394b6af8a5d28228291f0d29a395998d55f4",
+      "bytes": 3806652
+    },
+    {
+      "path": "E810-actual-receipt.png",
+      "sha256": "03d90c754a3ec650801e568ad42b6d9e66b7b97726106c3684a51bcd2c970786",
+      "bytes": 1415841
+    },
+    {
+      "path": "E810-raw-profiles.png",
+      "sha256": "17e0f066d40e33d98eaac4a3ced5b5b867df1debb07520201e6a423310af4a3b",
+      "bytes": 376732
+    },
+    {
+      "path": "renderer-summary.json",
+      "sha256": "4f2e68b42771198afeb8ecaec172ae8f642c5452a922efbf01407d4ea311722e",
+      "bytes": 953
+    }
+  ]
+}

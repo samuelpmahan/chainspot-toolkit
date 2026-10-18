@@ -1,0 +1,95 @@
+{
+  "schema": "cycle04-independent-contract-review@1",
+  "job_id": "R805",
+  "worker": "P6",
+  "decision": "accepted",
+  "summary": "Accepted the exact P1 contract as a source-grounded engineering reuse critique, not a scientific result. Independent read-only checks found no contradiction in the minimum sample guard, fixed-origin sample phases, Dev72 window independence, aggregate visibility/null meaning, or mandatory source/crop disagreement retention. The immutable 23-entry d31b and 14-entry 5b59 closures match. No CV, source image, course protocol, implementation, or scientific acceptance was involved.",
+  "producer": {
+    "worker": "P1",
+    "job_id": "E805",
+    "contractPath": "/workspace/scratch/8528bb251845/discovery-cycle04/P1/contract-critique.json",
+    "producerhash": "672e370eb20aa03aa632a7648825ff870f734ac9f832979754f4a41a57645d8d",
+    "fixedHashMatched": true,
+    "resultPath": "/workspace/scratch/8528bb251845/discovery-cycle04/P1/result.json",
+    "resultSha256": "1e93bb3387081f3ca4284fff8f4f8a9f53e1c8a49acf7def52c2d1543c95b9ce"
+  },
+  "checks": [
+    {
+      "id": "immutable-closure",
+      "method": "SHA256 of exact manifest bytes and every named closure entry; source reads only",
+      "result": "PASS",
+      "sourcePixelManifestSha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+      "sourcePixelEntries": 23,
+      "compositionManifestSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+      "compositionEntries": 14,
+      "producerReadEvidenceEntries": 5,
+      "mismatches": []
+    },
+    {
+      "id": "minimum-visible-sample-guard",
+      "result": "PASS",
+      "source": "pathSpace.mjs#EVIDENCE and #edgePairOf",
+      "falsificationAttempt": "Could a perfect unmasked nT=7 profile fit, or could nT=8 itself guarantee a fit?",
+      "finding": "No. ok[j] <= nT, need=max(8,0.2*nT), and nGood/M must be at least0.6. nT<8 guarantees no good offset and null. nT>=8 alone is not sufficient: masking can fail the guard, and passing the guard still requires rising/falling peaks within requested width and lateral search. P1 states both limits and does not invent a new threshold."
+    },
+    {
+      "id": "original-world-sample-phase",
+      "result": "PASS",
+      "source": "pathSpace.mjs#arange and #profileAt; adapter.mjs#prepare",
+      "falsificationAttempt": "Could adjacent endpoint labels or reanchored local t values guarantee that short profiles partition the same original-world samples as the long profile?",
+      "finding": "No. arange forms n=ceil((t1-t0)/step) and t=t0+k*step; profileAt evaluates O + t*u + offset*n in floating-point. Short t0 phases, upper bounds, reanchored origins and integer crop translation can change generated positions or arithmetic even for nominally equivalent geometry. P1 requires fixed O/heading for primary contrast, exact generated lattices/coverage/phase sidecars and separately declared reanchoring. This is adequate as a contract, not evidence that any not-yet-seen protocol satisfies it.",
+      "executionNote": "No sample generator or CV function was executed. Source inspection only. An admitted actual protocol must bind the generated original-frame coordinates/phases, not merely interval lengths or visual adjacency."
+    },
+    {
+      "id": "dev72-window-independence",
+      "result": "PASS",
+      "source": "composition/recipe.mjs station candidate call; fourLaneRibbon.ts#observeFourLaneCrossSection and #sampleBand",
+      "falsificationAttempt": "Do changed t0/t1 at identical pose make independent Dev72 longitudinal observations?",
+      "finding": "No. Composition passes only xPx/yPx/headingRad/corridorWidthPx, boxes and raster into the sensor. Its tangent band is the unchanged local pose sample. P1 explicitly calls repeated same-pose sensor rows duplicates and requires reanchoring as a declared ablation. No hidden per-window sensor corroboration is claimed."
+    },
+    {
+      "id": "aggregate-visibility-and-null",
+      "result": "PASS",
+      "source": "pathSpace.mjs#profileAt and #edgePairOf; composition/recipe.mjs midpoint and receipt construction",
+      "falsificationAttempt": "Can equal aggregate visible counts prove simultaneous bilateral support, or can literal null be treated as zero displacement or physical edge absence?",
+      "finding": "No. Each normal offset accumulates its own unmasked t subset and receipt contains counts, not per-t identities. edgePairOf has several null routes and no reason enum; source can interpolate between good offsets before fitting. A pair on averaged/interpolated profiles does not establish per-t bilateral edges. P1 retains all counts/raw fits/nulls/UNKNOWN and forbids those interpretations. Its observationalCounterexample is a record of contrast, not a physical absence finding."
+    },
+    {
+      "id": "source-crop-seams",
+      "result": "PASS",
+      "source": "adapter.mjs#compareControls/#runSourcePixelRoi; immutable adapter tests for rotated fit selection and preserved source/crop controls; Dev72 #grayAt",
+      "falsificationAttempt": "Could copied RGBA rows and integer translation authorize replacing the source receipt with crop output, or relax tolerance after disagreement?",
+      "finding": "No. Adapter runs crop then original-source recipes, preserves both receipts, compares learner/profiles/counts/candidates with fixed1e-9 tolerance and returns equivalence UNKNOWN on retained discrepancies. Dev72 nearest Math.round and JS bilinear/smoothing/strict peak selection have different arithmetic seams. P1 mandates both branches and every discrepancy, explicitly denying generic crop invariance and success-row substitution."
+    },
+    {
+      "id": "schema-and-failure-boundaries",
+      "result": "PASS",
+      "source": "adapter.mjs#condition/#prepare/#verifyRecipe; composition/recipe.mjs",
+      "falsificationAttempt": "Could parent/control metadata be inserted into station objects, training be silently dropped, or ROI refusal be converted into an executed null grid?",
+      "finding": "No. Accepted adapter station/top-level keys are allowlisted and complete training support is mandatory. P1 places semantic grouping in sidecars by exact IDs, preserves zero-call whole-request UNKNOWN/NOT_EXECUTED and distinguishes integrity failures from photometric observations."
+    },
+    {
+      "id": "no-new-capability-or-acceptance",
+      "result": "PASS",
+      "finding": "Existing stations/window fields express the contrast. P1 does not require a new runner, CV operation, threshold, calibration, tracker or production wiring. Declared ablations and checklist are future protocol requirements, not performed experiments. Same-edge continuity, semantic identity and calibrated width remain UNKNOWN."
+    }
+  ],
+  "nonblockingReviewNotes": [
+    "The word missing in the initial question must continue to mean an unavailable local fitted pair, not absent physical edges; the latentClaim and explicit exclusions already resolve this.",
+    "No actual course protocol or localized-gap falsifier has been inspected or executed. Contract acceptance does not establish sample-phase matching, adequacy, scientific discriminability, or a new helper gap for such a protocol.",
+    "No new helper is justified by this contract review alone. A narrow receipt-only helper remains gated on root demonstrating the localized bookkeeping failure and issuing its separate implementation packet."
+  ],
+  "preservation": {
+    "priorTrackedManifest": "/workspace/scratch/8528bb251845/discovery-cycle04/prior-tracked.json",
+    "entriesChecked": 1646,
+    "byteLengthAndSha256Mismatches": [],
+    "gitStatusShort": "",
+    "repositoryWrites": 0,
+    "gitMutations": 0,
+    "CVExecutions": 0,
+    "testsExecuted": 0,
+    "courseProtocolsOrImagesAccessed": false,
+    "nativeStateOperations": 0
+  },
+  "scope": "Exact fixed producer contract only; accepted is technical engineering review, not new scientific acceptance or execution authority."
+}

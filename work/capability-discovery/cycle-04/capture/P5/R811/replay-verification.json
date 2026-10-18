@@ -1,0 +1,256 @@
+{
+  "job_id": "R811",
+  "worker": "P5",
+  "decision": "accepted",
+  "stagingCalls": 1,
+  "adapterCalls": 2,
+  "compositionCalls": 2,
+  "profileAtCalls": 2,
+  "edgePairOfCalls": 0,
+  "sensorCalls": 0,
+  "receiptByteExactCount": 2,
+  "requestByteExactCount": 2,
+  "stagedSourceByteExact": true,
+  "sourceHashesUnchanged": true,
+  "replay": [
+    {
+      "id": "A",
+      "receiptByteExact": true,
+      "receiptSha256": "f89e5c5926efb400ec1cdec3413ce1fbfeabc1c0548bf86cd8311d0a314a41f6",
+      "coverage": {
+        "requestId": "A",
+        "coveragePath": "/workspace/scratch/8528bb251845/discovery-cycle04/P5/R811/v8-coverage-A/coverage-14-1792325744725-0.json",
+        "coverageSha256": "82941e59f78dac29b20c231b4b4c3eca0296d4d00be570ba99adcccfaa89c14c",
+        "allEightRecordsPresent": true,
+        "counts": {
+          "runSourcePixelRoi": 1,
+          "prepare": 1,
+          "runComposition": 2,
+          "lumOf": 2,
+          "profileAt": 2,
+          "edgePairOf": 0,
+          "estimateFourLaneCorridorWidth": 2,
+          "observeFourLaneCrossSection": 0
+        },
+        "entries": [
+          {
+            "name": "runSourcePixelRoi",
+            "url": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/adapter.mjs",
+            "isBlockCoverage": true,
+            "entryRange": {
+              "startOffset": 11329,
+              "endOffset": 12373,
+              "count": 1
+            },
+            "sourceSha256": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6",
+            "observedZero": false
+          },
+          {
+            "name": "prepare",
+            "url": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/adapter.mjs",
+            "isBlockCoverage": true,
+            "entryRange": {
+              "startOffset": 7008,
+              "endOffset": 9685,
+              "count": 1
+            },
+            "sourceSha256": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6",
+            "observedZero": false
+          },
+          {
+            "name": "runComposition",
+            "url": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/recipe.mjs",
+            "isBlockCoverage": true,
+            "entryRange": {
+              "startOffset": 4330,
+              "endOffset": 8462,
+              "count": 2
+            },
+            "sourceSha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6",
+            "observedZero": false
+          },
+          {
+            "name": "lumOf",
+            "url": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+            "isBlockCoverage": true,
+            "entryRange": {
+              "startOffset": 5989,
+              "endOffset": 6275,
+              "count": 2
+            },
+            "sourceSha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+            "observedZero": false
+          },
+          {
+            "name": "profileAt",
+            "url": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+            "isBlockCoverage": true,
+            "entryRange": {
+              "startOffset": 7406,
+              "endOffset": 8056,
+              "count": 2
+            },
+            "sourceSha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+            "observedZero": false
+          },
+          {
+            "name": "edgePairOf",
+            "url": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+            "isBlockCoverage": false,
+            "entryRange": {
+              "startOffset": 8155,
+              "endOffset": 10410,
+              "count": 0
+            },
+            "sourceSha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+            "observedZero": true
+          },
+          {
+            "name": "estimateFourLaneCorridorWidth",
+            "url": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+            "isBlockCoverage": true,
+            "entryRange": {
+              "startOffset": 18044,
+              "endOffset": 19521,
+              "count": 2
+            },
+            "sourceSha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+            "observedZero": false
+          },
+          {
+            "name": "observeFourLaneCrossSection",
+            "url": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+            "isBlockCoverage": false,
+            "entryRange": {
+              "startOffset": 8128,
+              "endOffset": 12200,
+              "count": 0
+            },
+            "sourceSha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+            "observedZero": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "B",
+      "receiptByteExact": true,
+      "receiptSha256": "daa7e63665a4c658489483e712b3133547b1ba23a13c1529084d221766d91974",
+      "coverage": {
+        "requestId": "B",
+        "coveragePath": "/workspace/scratch/8528bb251845/discovery-cycle04/P5/R811/v8-coverage-B/coverage-22-1792325744849-0.json",
+        "coverageSha256": "4c08c86cdf78b974be8ffc41afdf5e3c8952ae6958139edf6c38c48d650e2532",
+        "allEightRecordsPresent": true,
+        "counts": {
+          "runSourcePixelRoi": 1,
+          "prepare": 1,
+          "runComposition": 0,
+          "lumOf": 0,
+          "profileAt": 0,
+          "edgePairOf": 0,
+          "estimateFourLaneCorridorWidth": 0,
+          "observeFourLaneCrossSection": 0
+        },
+        "entries": [
+          {
+            "name": "runSourcePixelRoi",
+            "url": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/adapter.mjs",
+            "isBlockCoverage": true,
+            "entryRange": {
+              "startOffset": 11329,
+              "endOffset": 12373,
+              "count": 1
+            },
+            "sourceSha256": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6",
+            "observedZero": false
+          },
+          {
+            "name": "prepare",
+            "url": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/adapter.mjs",
+            "isBlockCoverage": true,
+            "entryRange": {
+              "startOffset": 7008,
+              "endOffset": 9685,
+              "count": 1
+            },
+            "sourceSha256": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6",
+            "observedZero": false
+          },
+          {
+            "name": "runComposition",
+            "url": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/recipe.mjs",
+            "isBlockCoverage": false,
+            "entryRange": {
+              "startOffset": 4330,
+              "endOffset": 8462,
+              "count": 0
+            },
+            "sourceSha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6",
+            "observedZero": true
+          },
+          {
+            "name": "lumOf",
+            "url": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+            "isBlockCoverage": false,
+            "entryRange": {
+              "startOffset": 5989,
+              "endOffset": 6275,
+              "count": 0
+            },
+            "sourceSha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+            "observedZero": true
+          },
+          {
+            "name": "profileAt",
+            "url": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+            "isBlockCoverage": false,
+            "entryRange": {
+              "startOffset": 7406,
+              "endOffset": 8056,
+              "count": 0
+            },
+            "sourceSha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+            "observedZero": true
+          },
+          {
+            "name": "edgePairOf",
+            "url": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+            "isBlockCoverage": false,
+            "entryRange": {
+              "startOffset": 8155,
+              "endOffset": 10410,
+              "count": 0
+            },
+            "sourceSha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+            "observedZero": true
+          },
+          {
+            "name": "estimateFourLaneCorridorWidth",
+            "url": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+            "isBlockCoverage": false,
+            "entryRange": {
+              "startOffset": 18044,
+              "endOffset": 19521,
+              "count": 0
+            },
+            "sourceSha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+            "observedZero": true
+          },
+          {
+            "name": "observeFourLaneCrossSection",
+            "url": "file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+            "isBlockCoverage": false,
+            "entryRange": {
+              "startOffset": 8128,
+              "endOffset": 12200,
+              "count": 0
+            },
+            "sourceSha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+            "observedZero": true
+          }
+        ]
+      }
+    }
+  ],
+  "meaning": "Executed UNKNOWN with no requested candidate rows differs from zero-recipe support abstention; no physical/scientific inference."
+}

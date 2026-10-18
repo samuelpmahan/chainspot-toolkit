@@ -1,0 +1,120 @@
+/** R807 independent replay/audit. Only writes below this review's own directory. */
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { isDeepStrictEqual as eq } from 'node:util';
+
+const out=fileURLToPath(new URL('./',import.meta.url));
+const replay=join(out,'replay');
+const original='/workspace/scratch/8528bb251845/discovery-cycle04/P4/E807';
+const p5='/workspace/scratch/8528bb251845/discovery-cycle04/P5';
+const repo='/workspace/scratch/8528bb251845/chainspot-discovery-lab';
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const read=p=>readFileSync(p);
+const json=p=>JSON.parse(read(p));
+const checks=[];
+const check=(id,pass,detail)=>{checks.push({id,pass,detail});if(!pass)throw Error(id+': '+JSON.stringify(detail));};
+const put=(name,value)=>{const b=Buffer.from(JSON.stringify(value,null,2)+'\n');writeFileSync(join(out,name),b,{flag:'wx'});return {path:join(out,name),sha256:sha(b),bytes:b.length};};
+const checked=(base,binding)=>{const b=read(join(base,binding.path));check('hash '+join(base,binding.path),sha(b)===binding.sha256&&(!binding.bytes||b.length===binding.bytes),{sha256:sha(b),bytes:b.length});return b;};
+const baselineFiles={};
+let compositionCalls=0,renderCalls=0;
+const startedAt=new Date().toISOString();
+try {
+  if(existsSync(join(out,'verification.json'))||existsSync(join(out,'failure.json'))||existsSync(replay))throw Error('Review replay already exists; no retry');
+  const resultBytes=read(join(original,'result.json')),runBytes=read(join(original,'run.json'));
+  check('exact assigned producer result',sha(resultBytes)==='63955be1fd02b4a2e2bc1ec1bd1ed8ec1803e476b85e3e3d77179a71ae91c84a',sha(resultBytes));
+  check('exact assigned producer run',sha(runBytes)==='63c5e408df83fe53e0ac993c297aad5a1a41410af0dc4ca5e609779f36c249db',sha(runBytes));
+  const result=JSON.parse(resultBytes),run=JSON.parse(runBytes),freeze=json(join(p5,'contract-freeze.json'));
+  const checkpointBytes=read(join(original,'checkpoint-freeze.json')),checkpoint=JSON.parse(checkpointBytes);
+  check('checkpoint identity',sha(checkpointBytes)==='1b657518f6be6c998fb01643044b39b8cfe367886f56788172d70bc31a3f46bc',sha(checkpointBytes));
+  const producerBytes=read(join(original,'producer.mjs')),rendererBytes=read(join(original,'render-receipt.py'));
+  check('reviewed producer source',sha(producerBytes)===checkpoint['producer.mjs'],sha(producerBytes));
+  check('reviewed renderer source',sha(rendererBytes)===checkpoint['render-receipt.py'],sha(rendererBytes));
+  for(const a of result.artifacts){checked(original,a);baselineFiles[join(original,a.path)]=a.sha256;}
+  baselineFiles[join(original,'result.json')]=sha(resultBytes);
+  for(const [p,h] of Object.entries(run.sourceFreeze)){check('upstream source freeze '+p,sha(read(p))===h,h);baselineFiles[p]=h;}
+  for(const [p,h] of Object.entries(freeze.sourceHashes)){check('frozen source '+p,sha(read(join(repo,p)))===h,h);baselineFiles[join(repo,p)]=h;}
+  const d31path='work/capability-discovery/cycle-03/evidence/E506/candidate-freeze.json';
+  const acceptedPath='work/capability-discovery/cycle-02/feature-manifest-E308.json';
+  const d31=json(join(repo,d31path)),accepted=json(join(repo,acceptedPath));
+  check('accepted source-pixel freeze',sha(read(join(repo,d31path)))==='d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626',d31path);
+  check('accepted composition freeze',sha(read(join(repo,acceptedPath)))==='5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52',acceptedPath);
+  const closure=[...d31.files,...d31.retainedContractHistoryAndEvidence,...accepted.files,accepted.existingGuard,...accepted.immutableSources.map(s=>({path:'experiments/capability-discovery/probes/width/'+s.file,sha256:s.sha256}))];
+  for(const a of closure){check('accepted closure '+a.path,sha(read(join(repo,a.path)))===a.sha256,a.sha256);baselineFiles[join(repo,a.path)]=a.sha256;}
+  for(const c of run.cases)for(const a of[c.request,c.receipt,c.binding]){checked(original,a);baselineFiles[join(original,a.path)]=a.sha256;}
+  const originalComparison=JSON.parse(checked(original,run.comparison));
+  check('94 original literal checks',originalComparison.checks.length===94&&originalComparison.checks.every(c=>c.pass&&eq(c.actual,c.expected)),{checks:originalComparison.checks.length,failed:originalComparison.failedChecks});
+  mkdirSync(replay);
+  let portable=producerBytes.toString('utf8');
+  const changes=[
+    ["new URL('../../P5/fixtures.mjs',import.meta.url)","new URL('file:///workspace/scratch/8528bb251845/discovery-cycle04/P5/fixtures.mjs')"],
+    ["new URL('../../../chainspot-discovery-lab/experiments/capability-discovery/composition/recipe.mjs',import.meta.url)","new URL('file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/recipe.mjs')"]
+  ];
+  for(const [before,after]of changes){check('unique path-only substitution',portable.split(before).length===2,before);portable=portable.replace(before,after);}
+  writeFileSync(join(replay,'producer.mjs'),portable,{flag:'wx'});
+  writeFileSync(join(replay,'render-receipt.py'),rendererBytes,{flag:'wx'});
+  const portability=put('portability.json',{schema:'R807-path-only-replay@1',job_id:'R807',worker:'P1',originalProducerSha256:sha(producerBytes),portableProducerSha256:sha(Buffer.from(portable)),rendererSha256:sha(rendererBytes),changes:changes.map(([from,to])=>({from,to})),reason:'Only two relative imports become exact original absolute file URLs. Output remains script-local under reviewer replay. Scientific code, fixture bytes, source settings, comparisons and renderer remain unchanged.',metadata:'Replay files intentionally retain original E807/P4 schema fields for byte-equivalent reproduction; this record binds their separate R807 reviewer provenance.'});
+  const proc=spawnSync(process.execPath,[join(replay,'producer.mjs')],{cwd:replay,encoding:'utf8',maxBuffer:10000000});
+  writeFileSync(join(out,'run.stdout.log'),proc.stdout??'',{flag:'wx'});writeFileSync(join(out,'run.stderr.log'),proc.stderr??'',{flag:'wx'});
+  const replayRun=json(join(replay,'run.json'));compositionCalls=replayRun.compositionCalls;
+  check('replay producer exits zero',proc.status===0,{exitCode:proc.status,error:proc.error?.message});
+  check('exactly four fresh calls',compositionCalls===4&&eq(replayRun.caseOrder,run.caseOrder),{compositionCalls,caseOrder:replayRun.caseOrder});
+  const receipts={},requests={},caseBindings=[],scienceStats={profiles:0,rows:0,finiteFits:0,nullFits:0,offBankNulls:0,operations:0};
+  for(let i=0;i<run.cases.length;i++){
+    const expected=run.cases[i],actual=replayRun.cases[i],id=expected.id;
+    check('same case '+id,actual.id===id,actual.id);
+    for(const kind of['request','receipt']){const a=checked(replay,actual[kind]),b=read(join(original,expected[kind].path));check('byte-identical '+id+' '+kind,a.equals(b),{producer:sha(b),replay:sha(a)});}
+    const request=json(join(replay,actual.request.path)),receipt=json(join(replay,actual.receipt.path)),binding=json(join(replay,actual.binding.path));requests[id]=request;receipts[id]=receipt;
+    const priorBinding=json(join(original,expected.binding.path));
+    const{processObservation:rp,...rest}=binding,{processObservation:op,...oldRest}=priorBinding;
+    check('case binding scientific projection '+id,eq(rest,oldRest),'Only processObservation may differ');
+    check('RGBA request hash '+id,sha(Uint8Array.from(request.image.data))===freeze.fixtureHashes[id],freeze.fixtureHashes[id]);
+    // Independent per-byte fixture specification, no CV or producer generator used.
+    let byteMismatches=0;
+    for(let y=0;y<320;y++)for(let x=0;x<384;x++){
+      const base=y>=145&&y<175;
+      const lit=id==='intact'?base:id==='localized-upper-rail-loss'?base||(x>=176&&x<208&&y>=175&&y<208):id==='crossing'?base||(x>=176&&x<208):((x-Math.min(312,Math.max(72,x)))**2+(y-159.5)**2<=225);
+      const v=lit?145:100,p=(y*384+x)*4;
+      if(request.image.data[p]!==v||request.image.data[p+1]!==v||request.image.data[p+2]!==v||request.image.data[p+3]!==255)byteMismatches++;
+    }
+    check('independent fixture predicate '+id,byteMismatches===0,{pixels:384*320,mismatches:byteMismatches});
+    const long=request.stations[0],shorts=request.stations.slice(1),longX=Array.from({length:192},(_,k)=>long.xPx+long.t0Px+k),shortX=shorts.flatMap(s=>Array.from({length:16},(_,k)=>s.xPx+s.t0Px+k));
+    check('independent exact world partition '+id,eq(longX,shortX)&&longX[0]===96&&longX.at(-1)===287,{longSamples:longX.length,shortSamples:shortX.length});
+    const region=binding.sourceRegion,pixels=Buffer.from(region.rgbaBase64,'base64');let regionMatches=true;
+    for(let y=0;y<region.heightPx;y++)for(let x=0;x<region.widthPx*4;x++)if(pixels[y*region.widthPx*4+x]!==request.image.data[((region.yPx+y)*384+region.xPx)*4+x])regionMatches=false;
+    check('source figure region exact '+id,regionMatches&&sha(pixels)===region.sha256,{sha256:sha(pixels),region:384*320});
+    check('all stations widths '+id,receipt.stations.length===13&&receipt.stations.every(s=>eq(s.candidates.map(c=>c.widthArgPx),[24,30,36])),receipt.stations.length);
+    scienceStats.operations+=receipt.operationsExecuted.length;
+    for(const s of receipt.stations){scienceStats.profiles++;for(const c of s.candidates){scienceStats.rows++;if(c.edgeFit===null)scienceStats.nullFits++;else scienceStats.finiteFits++;if(c.widthArgPx!==30&&c.edgeFit===null)scienceStats.offBankNulls++;}}
+    caseBindings.push({id,request:actual.request,receipt:actual.receipt,rgbaSha256:binding.rgbaSha256,scientificBindingMatched:true,replayProcessObservation:rp,originalProcessObservation:op});
+  }
+  const replayComparison=json(join(replay,'prediction-comparison.json'));
+  check('prediction comparison byte-for-byte',read(join(replay,'prediction-comparison.json')).equals(read(join(original,'prediction-comparison.json'))),{producer:run.comparison.sha256,replay:sha(read(join(replay,'prediction-comparison.json')))});
+  check('all94 literal checks independently evaluated',replayComparison.checks.length===94&&replayComparison.checks.every(c=>c.pass&&eq(c.expected,c.actual)),94);
+  // Reconstruct TSV independently from fresh receipt rows, preserving original column/value policy.
+  const head=['case','station','xPx','yPx','t0Px','t1Px','nT','widthArgPx','edgeFit','lPx','rPx','cPx','wPx','score','gl','gr','railMode','leftRail','innerLeft','innerRight','rightRail','combined','pairedRails','midpoint'];
+  const str=x=>x===undefined?'UNKNOWN':x===null?'null':typeof x==='object'?JSON.stringify(x):String(x);
+  const tab=[head.join('\t')];
+  for(const id of run.caseOrder)for(const s of receipts[id].stations)for(const c of s.candidates){const e=c.edgeFit,o=c.observation;tab.push([id,s.id,s.pose.xPx,s.pose.yPx,s.window.t0Px,s.window.t1Px,s.profile.stationCount,c.widthArgPx,e===null?'null':'object',...['lPx','rPx','cPx','wPx','score','gl','gr'].map(k=>e?.[k]),o.railMode,o.leftRail,o.innerLeft,o.innerRight,o.rightRail,o.score,c.pairedRails,c.midpoint].map(str).join('\t'));}
+  const independentTsv=Buffer.from(tab.join('\n')+'\n');
+  writeFileSync(join(out,'independent-all156.tsv'),independentTsv,{flag:'wx'});
+  check('all156 TSV independent reconstruction',independentTsv.equals(read(join(original,'all156-candidate-rows.tsv')))&&independentTsv.equals(read(join(replay,'all156-candidate-rows.tsv')))&&tab.length===157,{rows:tab.length-1,sha256:sha(independentTsv)});
+  check('complete raw statistics',eq(scienceStats,{profiles:52,rows:156,finiteFits:48,nullFits:108,offBankNulls:104,operations:532}),scienceStats);
+  const station=(r,id)=>r.stations.find(s=>s.id===id),fit=(r,id)=>station(r,id).candidates.find(c=>c.widthArgPx===30).edgeFit;
+  for(const id of['localized-upper-rail-loss','crossing'])check('counterexample long finite defect local null '+id,fit(receipts[id],'long-at-short-05')!==null&&fit(receipts[id],'short-05')===null&&fit(receipts[id],'short-06')===null,{long:fit(receipts[id],'long-at-short-05'),short05:fit(receipts[id],'short-05'),short06:fit(receipts[id],'short-06')});
+  const cv=r=>({status:r.status,localWidth:r.localWidth,semanticIdentity:r.semanticIdentity,rawWidthEstimate:r.rawWidthEstimate,operationsExecuted:r.operationsExecuted,sourceProvenance:r.sourceProvenance,stations:r.stations.map(({frame,...s})=>s)});
+  check('capsule semantic negative retained',eq(cv(receipts.intact),cv(receipts['organic-capsule']))&&requests.intact.provenance.rgbaSha256!==requests['organic-capsule'].provenance.rgbaSha256,'All retained CV fields equal; source RGBA differs');
+  const render=spawnSync('python',[join(replay,'render-receipt.py')],{cwd:replay,encoding:'utf8',maxBuffer:10000000});renderCalls++;
+  writeFileSync(join(out,'render.stdout.log'),render.stdout??'',{flag:'wx'});writeFileSync(join(out,'render.stderr.log'),render.stderr??'',{flag:'wx'});
+  check('receipt-only renderer exits zero',render.status===0,{exitCode:render.status,error:render.error?.message});
+  for(const name of['E807-synthetic-window-evidence.png','inspection.html'])check('byte-identical replay figure '+name,read(join(replay,name)).equals(read(join(original,name))),{original:sha(read(join(original,name))),replay:sha(read(join(replay,name)))});
+  for(const[p,h]of Object.entries(baselineFiles))check('unchanged original '+p,sha(read(p))===h,h);
+  const evidence={schema:'R807-independent-replay-verification@1',job_id:'R807',worker:'P1',startedAt,finishedAt:new Date().toISOString(),decisionCandidate:'accepted',compositionCalls,sourcePixelAdapterCalls:0,renderCalls,scienceStats,literalChecks:94,failedLiteralChecks:replayComparison.failedChecks,allChecks:checks,checkCount:checks.length,caseBindings,portability,producerResultSha256:sha(resultBytes),producerRunSha256:sha(runBytes),replayRunSha256:sha(read(join(replay,'run.json'))),comparisonSha256:sha(read(join(replay,'prediction-comparison.json'))),tsvSha256:sha(independentTsv),pngSha256:sha(read(join(replay,'E807-synthetic-window-evidence.png'))),htmlSha256:sha(read(join(replay,'inspection.html'))),frozenSourceChecks:19,acceptedClosureEntries:37,independentlyCheckedFixturePixels:4*384*320,sourcePreservationCheckedPaths:Object.keys(baselineFiles).length,contextualResources:'Replay processObservation, timestamps and aggregate resources are observed context and not byte-identical identity claims.',visualInspection:'Pending direct reviewer image inspection after this script. HTML byte comparison is not browser QA.',scientificAcceptance:false};
+  const binding=put('verification.json',evidence);console.log(JSON.stringify({verification:binding,checks:checks.length,compositionCalls,renderCalls,scienceStats,literalChecks:94}));
+} catch(error){
+  const failure={schema:'R807-review-failure@1',job_id:'R807',worker:'P1',startedAt,failedAt:new Date().toISOString(),compositionCalls,renderCalls,error:{name:error.name,message:error.message,stack:error.stack},checks,noAdaptiveRetry:true};
+  if(!existsSync(join(out,'failure.json')))put('failure.json',failure);
+  console.error(error.stack);process.exitCode=1;
+}

@@ -1,0 +1,117 @@
+{
+  "schema": "cycle04-independent-narrow-contract-review@1",
+  "job_id": "R808",
+  "worker": "P1",
+  "producer_job_id": "E808",
+  "producer": "P6",
+  "decision": "accepted",
+  "summary": "The exact new narrowed proposal resolves R806 M1 and M2 and is accepted as a contract only. Execution is classified from consistent paired branches/call counts/operation arrays, preserving executed UNKNOWN profiles and empty candidate banks; zero-call refusals remain separate and contradictions produce no validated projection. One invalid-input policy now applies, with no descriptor input. Scope is limited to exact receipt bytes/hash, explicit station-ID groups and complete ordered raw branch views. No helper implementation or admission, CV runner, generalized coordinate/scoring machinery, E807 gap finding or scientific acceptance is authorized by this review.",
+  "producerArtifactHashes": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P6/E808/narrow-contract.json",
+      "sha256": "d1c6e5e0fa7385b6476d8d8137cba17716e58d571918e27eee5bccf10095b426",
+      "bytes": 11125
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P6/E808/design.json",
+      "sha256": "f973b71a825c4535103be8b545319bc66890c32475dcda8daea07c76e03eb432",
+      "bytes": 3274
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P6/E808/result.json",
+      "sha256": "d8c1286a766b79892cfde2fd208c47a154d20d5e0eec169650bb69fe71558ade"
+    }
+  ],
+  "preservedHistory": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P1/R806/result.json",
+      "sha256": "759f979d22d3eaff5c292797abb3284981f1ce1165ffdf37c935d2067462ba08",
+      "decision": "amend",
+      "unchanged": true
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P6/design.json",
+      "sha256": "831df032c3f1ecdc151bf9df5889e0c16b22d8c5ed5667611bfd99dc2250a3ba",
+      "unchanged": true
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P6/contract-proposal.json",
+      "sha256": "bcdb7ee7a88010c474909062f047315cefe2a02cc80a8eef089bc3db34860270",
+      "unchanged": true
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P6/result.json",
+      "sha256": "d45ac419b0528f1ce42b11880aec13a78912d3f230271b23b5f9268f8e3043d6",
+      "unchanged": true
+    }
+  ],
+  "exactSourceIds": {
+    "sourcePixelCandidateFreezeSha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "acceptedCompositionManifestSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+    "currentAdapterSha256": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6",
+    "currentCompositionRecipeSha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6"
+  },
+  "checks": [
+    {
+      "id": "exact-freeze-and-history",
+      "result": "pass",
+      "detail": "All three E808 producer files parse and match root's exact assigned SHA256 values. E808 result artifact sizes/digests match the actual design and contract. Original E806 three artifacts and original R806 AMEND review independently rehashed unchanged."
+    },
+    {
+      "id": "M1-executed-UNKNOWN",
+      "result": "resolved_in_contract",
+      "detail": "The EXECUTED contract requires both current-schema branches, compositionCalls2, exact crop/source order, matching operation counts and concatenation, and top status equal to crop status while permitting independent source UNKNOWN. UNKNOWN expressly retains every profile, candidate/null/nonfinite field, raw learner and empty candidates[]. This matches current runSourcePixelRoi and runComposition source bodies."
+    },
+    {
+      "id": "M1-zero-call-and-contradictions",
+      "result": "resolved_in_contract",
+      "detail": "NOT_EXECUTED requires neither branch, absent execution field, empty operations and explicit UNKNOWN/DISABLED reason, matching current preparation/disabled returns. It returns no invented measurement rows and labels branchless group IDs unverified. Mixed branch/execution/operation shapes are invalid input with projection:null, rather than normalized into refusal or execution."
+    },
+    {
+      "id": "M2-consistent-invalid-policy",
+      "result": "resolved_in_contract",
+      "detail": "Design and contract consistently return UNKNOWN/UNCLASSIFIED_INVALID_INPUT/projection:null with reason/errorClass for unsupported/malformed input, invalid receipt linkage geometry, parsing/hash failures or contradictory shapes. Descriptor is unsupported. Finite unequal headings remain unchanged raw rows because there are no heading-dependent metrics. No conflicting keep-validated-rows behavior remains for malformed required geometry."
+    },
+    {
+      "id": "raw-only-minimal-scope",
+      "result": "pass",
+      "detail": "Allowed input keys are only enabled, expectedReceiptSha256, receiptBytes and groups. Group keys are id/longStationId/orderedShortStationIds. Output retains exact-byte binding, complete parsed receipt and raw long/ordered-short station references in both branches. All original candidate ordering, nulls, tagged nonfinite values, ungrouped stations and equivalence differences remain retained. No descriptor, source input/path, width selector, threshold or display configuration is accepted."
+    },
+    {
+      "id": "removed-generalization",
+      "result": "pass",
+      "detail": "No generalized coordinate conversion/common-normal arithmetic, numeric deltas, diagnostic guard calculation, sample-lattice reconstruction, coverage/gap score, candidate ranking, fit association, station generation, preferred branch or CV runner remains. Existing guard constants occur only as scientific caveats, not new calculations or verdicts."
+    },
+    {
+      "id": "binding-and-integrity-limits",
+      "result": "pass_with_explicit_limit",
+      "detail": "Bytes are hashed before strict UTF-8/JSON parsing; reconstructed JSON is not the evidence hash. The proposed explicit integrity-error envelope is a pure-helper API choice and does not alter the accepted adapter's throwing integrity behavior. Digest agreement proves byte identity only; receipt shape supports structural classification but does not authenticate an actual run, source provenance or protocol timing. The proposal states these limits."
+    },
+    {
+      "id": "future-tests-and-admission",
+      "result": "adequate_contract_plan_not_executed",
+      "detail": "Future pure test plan includes executed UNKNOWN/empty-bank/all-hidden shapes, zero-call refusals, contradictions, malformed geometry, finite unequal headings, exact-ID order, unknown/duplicate IDs, digest/parse errors, nonfinite/null preservation, immutability and no CV/I/O dependencies. Tests and implementation remain conditional; this review does not claim they pass."
+    }
+  ],
+  "requiredAmendments": [],
+  "admission": {
+    "contractAccepted": true,
+    "helperAdmitted": false,
+    "helperImplementedOrTested": false,
+    "E807GapVerifiedByThisReviewer": false,
+    "remainingGate": "Root must verify E807 actually demonstrated the localized synthetic reporting gap and then issue a separate bounded implementation packet. This contract acceptance satisfies only independent contract review, not the gap or implementation gate.",
+    "defaultWithoutGap": "Existing unchanged operation and direct raw receipt reporting remain sufficient; do not implement the optional helper merely because this contract is accepted.",
+    "laterReview": "Any admitted helper requires its own exact source freeze, pure test evidence and independent implementation review. No new CV or scientific acceptance follows."
+  },
+  "limitations": {
+    "cvExecutions": 0,
+    "testExecutions": 0,
+    "sourceOrRepositoryWrites": 0,
+    "gitMutations": 0,
+    "nativeOrPublicationOperations": 0,
+    "courseOrE807OutputReads": 0,
+    "writtenPath": "/workspace/scratch/8528bb251845/discovery-cycle04/P1/R808/result.json",
+    "fullPriorPreservationAudit": "No repository files written. P6's full1646-file preservation claim was not independently rerun here; root/sole integration owner retain that audit responsibility.",
+    "scientificState": "Continuity, same physical edges, calibrated width, semantic identity and course acceptance remain unestablished."
+  }
+}

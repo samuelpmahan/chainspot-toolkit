@@ -1,0 +1,151 @@
+[
+  {
+    "name": "git-ls-files",
+    "argv": [
+      "git",
+      "ls-files",
+      "-z"
+    ],
+    "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "startedUtc": "2026-10-18T13:05:45.642097+00:00",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "stdoutSha256": "deecb6dca5980f4b11ed74cb8189c542d2f46ee1bc8465bcdcc36930a39f1bef",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdoutBytes": 107716,
+    "stderrBytes": 0
+  },
+  {
+    "name": "tracked-diff",
+    "argv": [
+      "git",
+      "diff",
+      "--exit-code"
+    ],
+    "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "startedUtc": "2026-10-18T13:05:45.645928+00:00",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdoutBytes": 0,
+    "stderrBytes": 0
+  },
+  {
+    "name": "git-identities",
+    "argv": [
+      "git",
+      "rev-parse",
+      "HEAD",
+      "HEAD^{tree}"
+    ],
+    "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "startedUtc": "2026-10-18T13:05:45.650091+00:00",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "stdoutSha256": "b571817ecc73b478c5a4ac14aa09034c37889aeee47e4bd699a56ea35acc3dca",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdoutBytes": 82,
+    "stderrBytes": 0
+  },
+  {
+    "name": "git-status",
+    "argv": [
+      "git",
+      "status",
+      "--short"
+    ],
+    "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "startedUtc": "2026-10-18T13:05:45.655586+00:00",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "stdoutSha256": "f3a8f510e0c16f58796b1c99fe27202cfda041e90b416020a384a0bb4e912b0b",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdoutBytes": 92,
+    "stderrBytes": 0
+  },
+  {
+    "name": "packaged-verify",
+    "argv": [
+      "python3",
+      "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-04/verify-package.py"
+    ],
+    "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "startedUtc": "2026-10-18T13:05:45.685616+00:00",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "stdoutSha256": "e849f48702c61d4a8e87a05d829fd3ff04f62a872803ac59a56562abd43a3a45",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdoutBytes": 827,
+    "stderrBytes": 0
+  },
+  {
+    "name": "focused-tests",
+    "argv": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "experiments/capability-discovery/window-evidence/group.test.mjs"
+    ],
+    "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "startedUtc": "2026-10-18T13:05:45.932195+00:00",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "stdoutSha256": "5c98347c7dfe675135b450b8b5e6f79f2de27e4b2aeec6c4bf8a703747b3a138",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdoutBytes": 3734,
+    "stderrBytes": 0
+  },
+  {
+    "name": "stage-default",
+    "argv": [
+      "python3",
+      "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-04/stage-replay.py",
+      "--out",
+      "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/stage-default"
+    ],
+    "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "startedUtc": "2026-10-18T13:05:46.143328+00:00",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "stdoutSha256": "cc60274e0572a5a326c945dc2a40efc978881dfd0218d6eac9c7638092e2abbf",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdoutBytes": 90,
+    "stderrBytes": 0
+  },
+  {
+    "name": "stage-bulk",
+    "argv": [
+      "python3",
+      "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-04/stage-replay.py",
+      "--out",
+      "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/stage-bulk",
+      "--with-bulk"
+    ],
+    "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "startedUtc": "2026-10-18T13:05:46.374144+00:00",
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "stdoutSha256": "e9d7ee07577951ed99520e44e0afa876f3b253383be01efcc3ca98f8acdc8710",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdoutBytes": 87,
+    "stderrBytes": 0
+  },
+  {
+    "name": "stage-overwrite-refusal",
+    "argv": [
+      "python3",
+      "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-04/stage-replay.py",
+      "--out",
+      "/workspace/scratch/8528bb251845/discovery-cycle04/V1/R899/stage-default"
+    ],
+    "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "startedUtc": "2026-10-18T13:05:54.538016+00:00",
+    "exitCode": 1,
+    "expectedExitCode": 1,
+    "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderrSha256": "01d7ee924e075bdd7b4630f1c8eaf35190e3a129ad03fa58932a4b68b9cb9885",
+    "stdoutBytes": 0,
+    "stderrBytes": 39
+  }
+]

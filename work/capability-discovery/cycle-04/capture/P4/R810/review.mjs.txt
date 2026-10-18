@@ -1,0 +1,82 @@
+/** Independent R810 isolated engineering replay; one adapter call, no producer/source edits. */
+import {readFileSync,writeFileSync,existsSync,statSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+import {isDeepStrictEqual as eq} from 'node:util';
+import {fileURLToPath} from 'node:url';
+const dir=fileURLToPath(new URL('./',import.meta.url)),root='/workspace/scratch/8528bb251845',repo=`${root}/chainspot-discovery-lab`,producer=`${root}/discovery-cycle04/P5/E810`;
+const sha=b=>createHash('sha256').update(b).digest('hex'),read=p=>readFileSync(p),json=p=>JSON.parse(read(p)),put=(n,v)=>writeFileSync(`${dir}/${n}`,JSON.stringify(v,null,2)+'\n',{flag:'wx'});
+const checks=[],verify=(id,pass,detail=null)=>{checks.push({id,pass,detail});if(!pass)throw Error('REVIEW CHECK FAILED: '+id);};
+const startedAt=new Date().toISOString(),start=process.hrtime.bigint();let adapterCalls=0;
+try{
+ if(existsSync(`${dir}/receipt.json`)||existsSync(`${dir}/evidence.json`)||existsSync(`${dir}/failure.json`))throw Error('prior reviewer invocation exists; no replay retry');
+ const expected={ 'result.json':'4f5ae75c35df77a555f4a54ae7d9d963dcbf21ea0b6035a065752578e68a9bf8','artifact-manifest.json':'083b6ce875a46da58cbb1e7725b0b68aa9bfae0a38eb913501e33aa9ce5a4d9f','receipt.json':'a61a487dae244cbd9bc62ada6bffb8fc7cf651616db7b37806628ee0399739e4'};
+ for(const [name,h] of Object.entries(expected))verify(`exact producer ${name}`,sha(read(`${producer}/${name}`))===h);
+ const manifest=json(`${producer}/artifact-manifest.json`);
+ const preserve=()=>Object.fromEntries([...manifest.files.map(e=>e.path),`${producer}/result.json`,`${producer}/artifact-manifest.json`,`${root}/discovery-cycle04/P3/protocol.json`].map(p=>[p,sha(read(p))]));
+ const before=preserve();
+ for(const e of manifest.files)verify(`manifest:${e.path.split('/').at(-1)}`,sha(read(e.path))===e.sha256&&statSync(e.path).size===e.bytes);
+ const result=json(`${producer}/result.json`),p=json(result.bindings.protocolPath),analysis=json(`${producer}/analysis.json`),rows=json(`${producer}/all-candidate-rows.json`),review=json(result.bindings.acceptedReviewPath);
+ verify('protocol binding',sha(read(result.bindings.protocolPath))===result.bindings.protocolSha256);
+ verify('accepted R803 exact',review.decision==='accepted'&&sha(read(result.bindings.acceptedReviewPath))===result.bindings.acceptedReviewSha256);
+ const freeze=json(`${producer}/helper-freeze.json`);for(const e of [...freeze.files,...freeze.inputs])verify(`helper/input:${e.path}`,sha(read(e.path))===e.sha256);
+ const fpath='work/capability-discovery/cycle-03/evidence/E506/candidate-freeze.json',mpath='work/capability-discovery/cycle-02/feature-manifest-E308.json';
+ verify('adapter freeze',sha(read(`${repo}/${fpath}`))===p.design.frozenAdapterManifestSha256);verify('recipe freeze',sha(read(`${repo}/${mpath}`))===p.design.frozenRecipeManifestSha256);
+ const f=json(`${repo}/${fpath}`),m=json(`${repo}/${mpath}`),closure=[...f.files,...f.retainedContractHistoryAndEvidence,...m.files,m.existingGuard,...m.immutableSources.map(s=>({path:`experiments/capability-discovery/probes/width/${s.file}`,sha256:s.sha256}))];
+ for(const e of closure)verify(`closure:${e.path}`,sha(read(`${repo}/${e.path}`))===e.sha256);
+ const sourceBytes=execFileSync('git',['show',`${p.source.ref}:${p.source.path}`],{cwd:repo,maxBuffer:20000000}),blob=execFileSync('git',['rev-parse',`${p.source.ref}:${p.source.path}`],{cwd:repo,encoding:'utf8'}).trim();
+ verify('fresh Git source object',blob===p.source.gitBlob&&sha(sourceBytes)===p.source.pngSha256);
+ writeFileSync(`${dir}/Lenard-2.original.png`,sourceBytes,{flag:'wx'});
+ const stageArgs=[`${repo}/experiments/capability-discovery/source-pixels/stage-png.py`,'--source',`${dir}/Lenard-2.original.png`,'--expected-sha256',p.source.pngSha256,'--image-id','Lenard-2','--frame',p.source.frame,'--out',`${dir}/source.json`];
+ execFileSync('python',stageArgs,{stdio:'inherit'});
+ const source=json(`${dir}/source.json`);
+ verify('fresh PNG stage bytes',sha(read(`${dir}/source.json`))===p.sourceStaging.sha256);
+ verify('fresh complete RGBA',sha(Uint8Array.from(source.image.data))===p.source.rgbaSha256);
+ verify('decoder/dimensions',eq(source.provenance.decoder,p.source.decoder)&&source.image.width===p.source.widthPx&&source.image.height===p.source.heightPx);
+ const request={enabled:true,source,roi:p.roi,geometry:p.geometry},requestText=JSON.stringify(request)+'\n';writeFileSync(`${dir}/request.json`,requestText,{flag:'wx'});
+ verify('fresh complete request byte identity',sha(requestText)===sha(read(`${producer}/request.json`)));
+ const {runSourcePixelRoi,preserveNonFinite}=await import(`${repo}/experiments/capability-discovery/source-pixels/adapter.mjs`);
+ const t0=process.hrtime.bigint();adapterCalls++;const receipt=runSourcePixelRoi(request);const adapterElapsedMs=Number(process.hrtime.bigint()-t0)/1e6;
+ const text=JSON.stringify(receipt,preserveNonFinite,2)+'\n';writeFileSync(`${dir}/receipt.json`,text,{flag:'wx'});
+ verify('complete raw receipt exact bytes',sha(text)===expected['receipt.json'],{sha256:sha(text),bytes:Buffer.byteLength(text)});
+ verify('one adapter / two unchanged recipes',adapterCalls===1&&receipt.execution.compositionCalls===2&&eq(receipt.execution.order,['crop','original-source-frame']));
+ verify('support and operations',receipt.support.status==='SUPPORTED_CONSERVATIVE_ENVELOPE'&&receipt.operationsExecuted.length===366&&receipt.composition.operationsExecuted.length===183&&receipt.sourceComposition.operationsExecuted.length===183);
+ verify('108 candidate rows',rows.length===108&&new Set(rows.map(r=>`${r.branch}:${r.stationId}:${r.widthArgPx}`)).size===108);
+ const byKey=new Map(rows.map(r=>[`${r.branch}:${r.stationId}:${r.widthArgPx}`,r]));let rowChecks=0,profileChecks=0;
+ const counts={},finite=c=>Boolean(c?.edgeFit&&['lPx','rPx','cPx','wPx','score','gl','gr'].every(k=>Number.isFinite(c.edgeFit[k]))&&c.edgeFit.wPx>0&&c.edgeFit.gl>0&&c.edgeFit.gr>0);
+ for(const [branch,comp] of [['crop',receipt.composition],['source',receipt.sourceComposition]]){
+  counts[branch]={finite:0,null:0};verify(`${branch}:18 profiles`,comp.stations.length===18);
+  for(const declared of p.geometry.stations){const s=comp.stations.find(s=>s.id===declared.id),origin=branch==='crop'?{xPx:declared.xPx-p.roi.xPx,yPx:declared.yPx-p.roi.yPx,headingRad:declared.headingRad}:{xPx:declared.xPx,yPx:declared.yPx,headingRad:declared.headingRad};
+   verify(`${branch}:${declared.id}:pose/frame/window/count`,eq(s.pose,origin)&&s.frame===(branch==='crop'?p.roi.frame:p.geometry.frame)&&eq(s.window,{t0Px:declared.t0Px,t1Px:declared.t1Px})&&s.profile.stationCount===(declared.id.endsWith('.long')?80:16)&&s.profile.meanLum.length===241&&s.profile.visibleStationCounts.length===241&&s.profile.visibleStationCounts.every(v=>v===s.profile.stationCount));profileChecks++;
+   for(const w of p.geometry.localWidthBank.valuesPx){const c=s.candidates.find(c=>c.widthArgPx===w),r=byKey.get(`${branch}:${s.id}:${w}`),status=finite(c)?'FINITE_POSITIVE_PAIR':c.edgeFit===null?'NULL_FIT':'NONPOSITIVE_OR_NONFINITE_FIT';counts[branch][finite(c)?'finite':'null']++;
+    verify(`${branch}:${s.id}:${w}:raw row identity/status`,r?.status===status&&eq(r.stationOriginal,declared)&&r.actualFrame===s.frame&&eq(r.actualPose,s.pose)&&eq(r.window,s.window)&&r.profileStationCount===s.profile.stationCount&&eq(r.visibleStationCounts,s.profile.visibleStationCounts)&&eq(r.edgeFit,c.edgeFit)&&eq(r.midpoint,c.midpoint)&&eq(r.observation,c.observation)&&eq(r.pairedRails,c.pairedRails));
+    const projection=o=>[declared.xPx+o*(-Math.sin(declared.headingRad)),declared.yPx+o*Math.cos(declared.headingRad)];
+    verify(`${branch}:${s.id}:${w}:original projection`,finite(c)?eq(r.originalProjection.leftAtStationPx,projection(c.edgeFit.lPx))&&eq(r.originalProjection.rightAtStationPx,projection(c.edgeFit.rPx))&&eq(r.originalProjection.midpointAtStationPx,projection(c.edgeFit.cPx)):r.originalProjection===null);rowChecks++;
+   }
+  }
+  verify(`${branch}:finite/null counts`,counts[branch].finite===41&&counts[branch].null===13);
+  verify(`${branch}:UNKNOWN limits`,comp.localWidth.status==='UNKNOWN'&&comp.localWidth.widthPx===null&&comp.semanticIdentity.status==='UNKNOWN'&&comp.promoted===false);
+ }
+ const cols=['branch','stationId','widthArgPx','status','profileStationCount'],nums=['lPx','rPx','cPx','wPx','score','gl','gr'];
+ const csv=[cols.concat(nums,'candidateCenterMinusFitMidpointPx').join(','),...rows.map(r=>[...cols.map(k=>r[k]??''),...nums.map(k=>r.edgeFit?.[k]??''),r.midpoint?.candidateCenterMinusFitMidpointPx??''].join(','))].join('\n')+'\n';
+ verify('all108 CLI CSV identities/values',csv===read(`${producer}/ordered-fit-table.csv`).toString());writeFileSync(`${dir}/ordered-fit-table.csv`,csv,{flag:'wx'});
+ const assessments=[];
+ for(const [branch,comp] of [['crop',receipt.composition],['source',receipt.sourceComposition]])for(const w of p.geometry.localWidthBank.valuesPx){
+  const get=id=>comp.stations.find(s=>s.id===id)?.candidates.find(c=>c.widthArgPx===w),groups=[];
+  for(const group of p.design.groups){const shorts=Array.from({length:5},(_,i)=>get(`${group.id}.short${i+1}`)),long=get(`${group.id}.long`),ss=shorts.map(c=>finite(c)?'FINITE_POSITIVE_PAIR':c.edgeFit===null?'NULL_FIT':'NONPOSITIVE_OR_NONFINITE_FIT'),ls=finite(long)?'FINITE_POSITIVE_PAIR':long.edgeFit===null?'NULL_FIT':'NONPOSITIVE_OR_NONFINITE_FIT';
+   groups.push({group:group.id,shortStatuses:ss,longStatus:ls,interpretation:finite(long)&&shorts.some(c=>c.edgeFit===null)?'LONG_AVERAGE_AS_SUSTAINED_PAIR_FALSIFIED':shorts.every(finite)&&finite(long)?'ALL_WINDOWS_FINITE_AVERAGED_OBSERVATIONS_ONLY':shorts.every(c=>c.edgeFit===null)&&long.edgeFit===null?'NO_PAIRED_SUPPORT_NOT_CLASSIFIER':'NO_DECLARED_LONG_ONLY_COUNTEREXAMPLE',finiteShortCount:shorts.filter(finite).length});}
+  const residuals=[...Array.from({length:5},(_,i)=>`short${i+1}`),'long'].map(window=>{const a=get(`primary.${window}`),b=get(`lateral-plus6.${window}`),ok=finite(a)&&finite(b),delta=ok?b.midpoint.candidateCenterMinusFitMidpointPx-a.midpoint.candidateCenterMinusFitMidpointPx:null,residual=ok?delta-6:null;return{window,status:ok?'OBSERVED_CHANNELS':'UNKNOWN',offsetMinusPrimaryPx:delta,idealPx:6,residualPx:residual,sameEdgeDiagnostic:ok?(Math.abs(residual)>1e-9?'IDEAL_SAME_EDGE_REJECTED_IDENTITY_UNKNOWN':'WITHIN_FIXED_DIAGNOSTIC_NOT_IDENTITY_PROOF'):'UNOBSERVED_NOT_FALSIFICATION'};});
+  const actual={branch,widthArgPx:w,groups,offsetResiduals:residuals};verify(`${branch}:${w}:all group verdicts/negative offset residuals`,eq(actual,analysis.assessments.find(a=>a.branch===branch&&a.widthArgPx===w)));assessments.push(actual);
+ }
+ let comparedNumbers=0,maxDiff=0,above=0;
+ const compare=(a,b)=>{if(typeof a==='number'&&typeof b==='number'){comparedNumbers++;const delta=Math.abs(a-b);maxDiff=Math.max(maxDiff,delta);if(delta>1e-9)above++;return;}if(a&&b&&typeof a==='object'&&typeof b==='object'){for(const k of new Set([...Object.keys(a),...Object.keys(b)]))compare(a[k],b[k]);}else if(!Object.is(a,b))above++;};
+ const channels=c=>({rawWidthEstimate:c.rawWidthEstimate,stations:c.stations.map(s=>({id:s.id,profile:s.profile,candidates:s.candidates}))});compare(channels(receipt.composition),channels(receipt.sourceComposition));
+ verify('independent full raw source/crop comparison',above===0&&receipt.equivalence.status==='MATCHED_DECLARED_CONTROL'&&receipt.equivalence.absoluteTolerance===1e-9&&receipt.equivalence.differences.length===0);
+ // Exact renderer copy; it reads receipt arrays/source bytes only and resolves output at its own location.
+ for(const name of ['render-receipt.py','request-descriptor.json','run-binding.json','analysis.json'])writeFileSync(`${dir}/${name}`,read(`${producer}/${name}`),{flag:'wx'});
+ execFileSync('python',[`${dir}/render-receipt.py`],{stdio:'inherit'});
+ const figures=['E810-actual-receipt.png','E810-raw-profiles.png'].map(name=>({path:`${dir}/${name}`,sha256:sha(read(`${dir}/${name}`)),bytes:statSync(`${dir}/${name}`).size,expectedSha256:sha(read(`${producer}/${name}`))}));for(const fig of figures)verify(`exact receipt-only rerender:${fig.path.split('/').at(-1)}`,fig.sha256===fig.expectedSha256);
+ verify('all original producer/source/protocol artifacts preserved',eq(before,preserve()));
+ const evidence={schema:'R810-independent-engineering-replay@1',job_id:'R810',worker:'P4',startedAt,finishedAt:new Date().toISOString(),reviewerSha256:sha(read(fileURLToPath(import.meta.url))),checks,checkCount:checks.length,failedChecks:checks.filter(c=>!c.pass),manifestFileCount:manifest.files.length,sourceClosureEntries:closure.length,adapterCalls,recipeCalls:receipt.execution.compositionCalls,operations:receipt.operationsExecuted.length,completeReceiptSha256:sha(text),rawReceiptByteIdentity:true,requestByteIdentity:true,rowsIndependentlyVerified:rowChecks,profilesIndependentlyVerified:profileChecks,counts,assessments,sourceCrop:{comparedNumbers,maxAbsoluteDifference:maxDiff,aboveUnchanged1e9:above},figures,resources:{adapterElapsedMs,reviewElapsedMs:Number(process.hrtime.bigint()-start)/1e6,node:process.version,usage:process.resourceUsage(),memoryBytes:process.memoryUsage(),scope:'Separate reviewer process including fresh staging/JSON/replay/render. Not a speed comparison. No external time utility ran.'},producerRawResourceBoilerplate:'Original retained unchanged; reporting-clarification.json correctly disclaims any external time utility/log.',preservationExact:true,acceptance:'Engineering reproducibility only, not new independent scientific case or path acceptance'};
+ put('evidence.json',evidence);console.log(JSON.stringify({job_id:'R810',worker:'P4',checks:evidence.checkCount,rows:rowChecks,profiles:profileChecks,adapterCalls,recipeCalls:2,counts,rawReceiptByteIdentity:true,figures}));
+}catch(error){put('failure.json',{job_id:'R810',worker:'P4',adapterCalls,checks,error:{message:error.message,stack:error.stack},noAdaptiveRetry:true});console.error(error.stack);process.exitCode=1;}

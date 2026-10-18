@@ -1,0 +1,70 @@
+/** Independent R811 engineering audit/replay only; no new source/CV mathematics. */
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import assert from 'node:assert/strict';
+import {spawnSync} from 'node:child_process';
+import {pathToFileURL} from 'node:url';
+const here='/workspace/scratch/8528bb251845/discovery-cycle04/P5/R811';
+const producer='/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811';
+const repo='/workspace/scratch/8528bb251845/chainspot-discovery-lab';
+const read=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+const sha=p=>crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
+const write=(name,value)=>fs.writeFileSync(`${here}/${name}`,JSON.stringify(value,null,2)+'\n',{flag:'wx'});
+const functions={runSourcePixelRoi:'source-pixels/adapter.mjs',prepare:'source-pixels/adapter.mjs',runComposition:'composition/recipe.mjs',lumOf:'probes/width/vendor/active/ports/s6straight/pathSpace.mjs',profileAt:'probes/width/vendor/active/ports/s6straight/pathSpace.mjs',edgePairOf:'probes/width/vendor/active/ports/s6straight/pathSpace.mjs',estimateFourLaneCorridorWidth:'probes/width/vendor/dev72/fourLaneRibbon.ts',observeFourLaneCrossSection:'probes/width/vendor/dev72/fourLaneRibbon.ts'};
+const expected=id=>id==='A'?{runSourcePixelRoi:1,prepare:1,runComposition:2,lumOf:2,profileAt:2,edgePairOf:0,estimateFourLaneCorridorWidth:2,observeFourLaneCrossSection:0}:{runSourcePixelRoi:1,prepare:1,runComposition:0,lumOf:0,profileAt:0,edgePairOf:0,estimateFourLaneCorridorWidth:0,observeFourLaneCrossSection:0};
+function coverage(dir,id){
+ const files=fs.readdirSync(dir).filter(n=>n.endsWith('.json'));assert.equal(files.length,1);
+ const raw=read(`${dir}/${files[0]}`),entries=[];
+ for(const[name,suffix]of Object.entries(functions)){
+  const url=`file://${repo}/experiments/capability-discovery/${suffix}`,scripts=raw.result.filter(s=>s.url===url);assert.equal(scripts.length,1);
+  const matches=scripts[0].functions.filter(f=>f.functionName===name);assert.equal(matches.length,1);
+  const f=matches[0],entry=f.ranges[0];assert.equal(entry.count,expected(id)[name]);
+  const source=fs.readFileSync(`${repo}/experiments/capability-discovery/${suffix}`,'utf8');
+  assert.ok(source.slice(entry.startOffset,entry.startOffset+100).includes(`function ${name}`),name+' source offset');
+  entries.push({name,url,isBlockCoverage:f.isBlockCoverage,entryRange:entry,sourceSha256:sha(`${repo}/experiments/capability-discovery/${suffix}`),observedZero:entry.count===0});
+ }
+ return{requestId:id,coveragePath:`${dir}/${files[0]}`,coverageSha256:sha(`${dir}/${files[0]}`),allEightRecordsPresent:true,counts:expected(id),entries};
+}
+if(process.argv[2]==='--child'){
+ const id=process.argv[3];assert.ok(['A','B'].includes(id));
+ const request=read(`${here}/request-${id}.json`),{runSourcePixelRoi,preserveNonFinite}=await import(pathToFileURL(`${repo}/experiments/capability-discovery/source-pixels/adapter.mjs`));
+ const t=performance.now(),receipt=runSourcePixelRoi(request);
+ fs.writeFileSync(`${here}/receipt-${id}.json`,JSON.stringify(receipt,preserveNonFinite,2)+'\n',{flag:'wx'});
+ write(`process-${id}.json`,{requestId:id,adapterCalls:1,elapsedMs:performance.now()-t,resourceUsage:process.resourceUsage(),node:process.version});
+ console.log(JSON.stringify({id,status:receipt.status,compositionCalls:receipt.execution?.compositionCalls??0}));
+}else{
+ assert.equal(sha(`${producer}/result.json`),'59825f94cf8116e6b8564ed64fe00ced7aea2494e525a322289e3fb6f6109825');
+ assert.equal(sha(`${producer}/protocol.json`),'3d0b54fc2bb037131511a16f4679365fa9fec70be60f0ab888213bea8d0c6dd7');
+ assert.equal(sha(`${producer}/caller.mjs`),'05e7374e40e0f5e0f8b449c252ae58d6e249be780b2fbcb72b715a3b5a8fde94');
+ const p=read(`${producer}/protocol.json`),result=read(`${producer}/result.json`),binding=read(`${producer}/premeasurement-bindings.actual.json`);
+ for(const a of result.artifacts){assert.equal(sha(a.path),a.sha256);assert.equal(fs.statSync(a.path).size,a.bytes);}
+ for(const[file,h]of Object.entries(p.sourceCodeHashes))assert.equal(sha(`${repo}/${file}`),h);
+ const stage=read(`${producer}/staged-source.json`);assert.equal(hash(Uint8Array.from(stage.image.data)),p.source.fullRgbaSha256);assert.ok(stage.image.data.every((v,i)=>v===(i%4===3?255:100)));
+ const originalCoverage=['A','B'].map(id=>coverage(`${producer}/v8-coverage-${id}`,id));
+ for(const id of ['A','B']){
+  const req=read(`${producer}/request-${id}.json`);assert.equal(sha(`${producer}/request-${id}.json`),binding.requestSha256[id]);assert.deepEqual(req.source,stage);assert.deepEqual(req.geometry,p.geometry);assert.deepEqual(req.roi,p.requests.find(x=>x.id===id).roi);
+ }
+ write('recorded-audit.json',{producerResultSha256:sha(`${producer}/result.json`),protocolSha256:sha(`${producer}/protocol.json`),producerCallerSha256:sha(`${producer}/caller.mjs`),producerArtifactsVerified:result.artifacts.length,sourceHashesVerified:5,coverage:originalCoverage,requestOnlyRoiDiffers:true,reviewCvCallsSoFar:0});
+ const stageArgs=[`${repo}/experiments/capability-discovery/source-pixels/stage-png.py`,'--source',`${producer}/uniform-gray100.png`,'--expected-sha256',p.source.pngSha256,'--image-id',p.source.imageId,'--frame',p.source.frame,'--out',`${here}/staged-source.json`];
+ const staging=spawnSync('python',stageArgs,{encoding:'utf8'});fs.writeFileSync(`${here}/stage.stdout.log`,staging.stdout??'',{flag:'wx'});fs.writeFileSync(`${here}/stage.stderr.log`,staging.stderr??'',{flag:'wx'});write('stage-process.json',{command:'python',args:stageArgs,status:staging.status,error:staging.error?.message??null});assert.equal(staging.status,0);
+ assert.equal(sha(`${here}/staged-source.json`),sha(`${producer}/staged-source.json`));
+ const source=read(`${here}/staged-source.json`);
+ for(const id of['A','B']){const request={enabled:true,source,roi:p.requests.find(x=>x.id===id).roi,geometry:p.geometry};write(`request-${id}.json`,request);assert.equal(sha(`${here}/request-${id}.json`),sha(`${producer}/request-${id}.json`));}
+ const replay=[];
+ for(const id of['A','B']){
+  const dir=`${here}/v8-coverage-${id}`;fs.mkdirSync(dir);
+  const child=spawnSync(process.execPath,[`${here}/review-replay.mjs`,'--child',id],{encoding:'utf8',env:{...process.env,NODE_V8_COVERAGE:dir}});
+  fs.writeFileSync(`${here}/run-${id}.stdout.log`,child.stdout??'',{flag:'wx'});fs.writeFileSync(`${here}/run-${id}.stderr.log`,child.stderr??'',{flag:'wx'});write(`run-${id}.process.json`,{status:child.status,error:child.error?.message??null});assert.equal(child.status,0);
+  const actual=read(`${here}/receipt-${id}.json`),prior=read(`${producer}/receipt-${id}.json`);assert.deepEqual(actual,prior);assert.equal(sha(`${here}/receipt-${id}.json`),sha(`${producer}/receipt-${id}.json`));
+  const c=coverage(dir,id);replay.push({id,receiptByteExact:true,receiptSha256:sha(`${here}/receipt-${id}.json`),coverage:c});
+ }
+ const A=read(`${here}/receipt-A.json`),B=read(`${here}/receipt-B.json`);
+ assert.equal(A.status,'UNKNOWN');assert.equal(B.status,'UNKNOWN');assert.equal(A.execution.compositionCalls,2);assert.equal(A.operationsExecuted.length,8);assert.equal(A.equivalence.status,'MATCHED_DECLARED_CONTROL');assert.deepEqual(A.equivalence.differences,[]);
+ for(const branch of[A.composition,A.sourceComposition]){assert.equal(branch.status,'UNKNOWN');assert.equal(branch.stations.length,1);const st=branch.stations[0];assert.deepEqual(st.candidates,[]);assert.equal(st.profile.stationCount,16);assert.equal(st.profile.offsetsPx.length,241);assert.ok(st.profile.meanLum.every(x=>x===100));assert.ok(st.profile.visibleStationCounts.every(x=>x===16));assert.deepEqual(branch.rawWidthEstimate,{widthPx:40,scores:[]});}
+ assert.equal(B.operationsExecuted.length,0);assert.ok(!('composition'in B)&&!('sourceComposition'in B)&&!('execution'in B));assert.equal(B.support.failures.length,2);
+ for(const[file,h]of Object.entries(p.sourceCodeHashes))assert.equal(sha(`${repo}/${file}`),h);
+ write('replay-verification.json',{job_id:'R811',worker:'P5',decision:'accepted',stagingCalls:1,adapterCalls:2,compositionCalls:2,profileAtCalls:2,edgePairOfCalls:0,sensorCalls:0,receiptByteExactCount:2,requestByteExactCount:2,stagedSourceByteExact:true,sourceHashesUnchanged:true,replay,meaning:'Executed UNKNOWN with no requested candidate rows differs from zero-recipe support abstention; no physical/scientific inference.'});
+ console.log(JSON.stringify({status:'INDEPENDENT_REPLAY_MATCHED',adapterCalls:2,compositionCalls:2,profileAtCalls:2,receiptByteExactCount:2,coverageEightRecordsPresentEach:true}));
+}

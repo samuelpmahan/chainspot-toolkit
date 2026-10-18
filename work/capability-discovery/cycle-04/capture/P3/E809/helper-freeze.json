@@ -1,0 +1,22 @@
+{
+  "schema": "cycle04-producer-helper-freeze@1",
+  "job_id": "E809",
+  "worker": "P3",
+  "status": "AWAITING_ROOT_GO_BEFORE_CV_OR_RENDER",
+  "files": [
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/run-trial.mjs","sha256":"149c1ebd08ce69cf975a4ef4c831ddaaa5b573e1b5ca7534118f2e9f75bb7c97"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/render-receipt.py","sha256":"ef397c5b9789da31529a83cbaa6e0671a34e16629cb9e220434bdc1968f3277a"}
+  ],
+  "inputs": [
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P2/protocol.json","sha256":"ea85f4520b20996bd5aff3da699663a40fc8613081f4738457ece2e8926d8537"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P2/Lenard-1.original.png","sha256":"cb5403d21c32f451c02402aca4e2795d4ecfb9ddd7490fe714ca0c85c598dcba"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/R802/result.json","sha256":"65b173383d8e8db231674cd8613f72e42b2984759f5b084a6ab54fe9e52dbdef"}
+  ],
+  "verificationExecuted": ["sha256sum of both helpers and exact inputs", "node --check run-trial.mjs", "Python ast.parse renderer; no module execution"],
+  "repair": "v1 frozen helpers and checkpoint preserved in history-v1. Root-requested reporting-only repair requires actual branch and all18 anchor candidate rows; missing/unexecuted yields UNKNOWN/UNOBSERVED. ActualNULL_FIT remains distinct. No protocol/numeric/settings/renderer change.",
+  "adapterInvocations": 0,
+  "compositionCalls": 0,
+  "renderCalls": 0,
+  "proposedExecution": "One explicit request to unchanged adapter; paired crop/full source recipes. Then one receipt-only source-pixel figure render.",
+  "protectedBoundaries": "No writes outside P3/E809, no repository changes, no P3 zoom2 protocol changes, no P6 geometry/results disclosure."
+}

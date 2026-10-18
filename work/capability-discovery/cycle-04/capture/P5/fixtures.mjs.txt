@@ -1,0 +1,26 @@
+/** E804 exposed deterministic fixtures ONLY. Import/build does not call any CV operation. */
+import {createHash} from 'node:crypto';
+export const CASE_IDS=Object.freeze(['intact','localized-upper-rail-loss','organic-capsule','crossing']);
+export const SHORT_X=Object.freeze([104,120,136,152,168,184,200,216,232,248,264,280]);
+export const rgbaSha256=data=>createHash('sha256').update(data).digest('hex');
+const predicates={
+  intact:(x,y)=>y>=145&&y<=174,
+  'localized-upper-rail-loss':(x,y)=>(y>=145&&y<=174)||(x>=176&&x<=207&&y>=175&&y<=207),
+  'organic-capsule':(x,y)=>(x-Math.max(72,Math.min(312,x)))**2+(y-159.5)**2<=225,
+  crossing:(x,y)=>(y>=145&&y<=174)||(x>=176&&x<=207)
+};
+export function makeFixture(id){
+  if(!CASE_IDS.includes(id))throw new TypeError('unsupported E804 case');
+  const width=384,height=320,data=new Uint8Array(width*height*4),frame=`E804.${id}.original-pixel-centers`;
+  for(let y=0;y<height;y++)for(let x=0;x<width;x++){
+    const value=predicates[id](x,y)?145:100;
+    data.set([value,value,value,255],(y*width+x)*4);
+  }
+  const stations=[{id:'long-at-short-05',frame,xPx:184,yPx:160,headingRad:0,t0Px:-88,t1Px:104},
+    ...SHORT_X.map((xPx,index)=>({id:`short-${String(index).padStart(2,'0')}`,frame,xPx,yPx:160,headingRad:0,t0Px:-8,t1Px:8}))];
+  return {enabled:true,frame,image:{width,height,data,frame},
+    provenance:{imageId:`E804-${id}`,rgbaSha256:rgbaSha256(data),geometrySource:'E804 predeclared deterministic synthetic pixels; no course identity or alpha inference'},
+    training:{frame,segments:[{tee:{xPx:104,yPx:160},badge:{xPx:280,yPx:160}}]},
+    stations,localWidthBank:{frame,scope:'LOCAL',valuesPx:[24,30,36]},
+    occluders:{frame,boxes:[]},edgeSearch:{latLimPx:4,tolWidthPx:3}};
+}

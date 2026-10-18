@@ -1,0 +1,277 @@
+{
+  "schema": "cycle04-native-producer-result@1",
+  "job_id": "E809",
+  "worker": "P3",
+  "outcome": "mixed_change",
+  "summary": "Exact P2 frozen zoom1 request executed once through unchanged d31b adapter/5b59 recipe:2recipes,366operations,108candidate records. Each source/crop branch43finite+11null,0missing; bounded equivalence matches1e-9. At preregistered42 primary5/5short+longfinite, but bright5/5short+longfinite falsifies bounded finite-pair specificity; shiftedshort1null andshort4residual-8.282100436166711px reject universal same-pair+6 interpretation. Technical reuse succeeds; scientific specificity/edge identity does not. No calibrated width/semantic acceptance.",
+  "metrics": {
+    "adapterInvocations": 1,
+    "compositionCalls": 2,
+    "operationCount": 366,
+    "candidateRows": 108,
+    "branches": {
+      "crop": {
+        "rows": 54,
+        "finite": 43,
+        "null": 11,
+        "notExecutedOrMissing": 0
+      },
+      "source": {
+        "rows": 54,
+        "finite": 43,
+        "null": 11,
+        "notExecutedOrMissing": 0
+      }
+    },
+    "equivalence": "MATCHED_DECLARED_CONTROL",
+    "equivalenceDifferenceCount": 0,
+    "absoluteTolerance": 1e-9,
+    "anchor42": {
+      "observationStatus": "ALL_DECLARED_ANCHOR_ROWS_OBSERVED",
+      "requiredRows": 18,
+      "observedRows": 18,
+      "primaryShortFinite": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "primaryShortStatuses": [
+        "FINITE_POSITIVE_PAIR",
+        "FINITE_POSITIVE_PAIR",
+        "FINITE_POSITIVE_PAIR",
+        "FINITE_POSITIVE_PAIR",
+        "FINITE_POSITIVE_PAIR"
+      ],
+      "primaryLongFinite": true,
+      "primaryAll5AndLongPrediction": "NOT_FALSIFIED_AT_WINDOW_LEVEL",
+      "longAverageAsThroughout": "NO_LONG_WITH_ACTUAL_SHORT_NULL_COUNTEREXAMPLE_OBSERVED",
+      "brightShortFinite": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "brightNotAll5Prediction": "FALSIFIED",
+      "shiftedResiduals": [
+        {
+          "window": "short1",
+          "status": "UNKNOWN",
+          "primaryMidpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -8.090622377680731,
+            "candidateCenterMinusFitMidpointPx": 8.090622377680731,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0.1926338661352555,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "shiftedMidpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "offsetMinusPrimaryPx": null,
+          "predictedPx": 6,
+          "residualPx": null
+        },
+        {
+          "window": "short2",
+          "status": "OBSERVED_CHANNELS",
+          "primaryMidpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": 2.6617933349600804,
+            "candidateCenterMinusFitMidpointPx": -2.6617933349600804,
+            "candidateCenterMinusFitMidpointInNominalWidths": -0.06337603178476382,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "shiftedMidpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -3.338206665040179,
+            "candidateCenterMinusFitMidpointPx": 3.338206665040179,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0.07948111107238522,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "offsetMinusPrimaryPx": 6.000000000000259,
+          "predictedPx": 6,
+          "residualPx": 2.5934809855243657e-13
+        },
+        {
+          "window": "short3",
+          "status": "OBSERVED_CHANNELS",
+          "primaryMidpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": 4.127175268802942,
+            "candidateCenterMinusFitMidpointPx": -4.127175268802942,
+            "candidateCenterMinusFitMidpointInNominalWidths": -0.09826607782864147,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "shiftedMidpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -1.872824731197401,
+            "candidateCenterMinusFitMidpointPx": 1.872824731197401,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0.04459106502850955,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "offsetMinusPrimaryPx": 6.000000000000343,
+          "predictedPx": 6,
+          "residualPx": 3.4283687000424834e-13
+        },
+        {
+          "window": "short4",
+          "status": "OBSERVED_CHANNELS",
+          "primaryMidpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -5.282108546196845,
+            "candidateCenterMinusFitMidpointPx": 5.282108546196845,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0.12576448919516298,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "shiftedMidpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -3.0000081100301337,
+            "candidateCenterMinusFitMidpointPx": 3.0000081100301337,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0.071428764524527,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "offsetMinusPrimaryPx": -2.2821004361667114,
+          "predictedPx": 6,
+          "residualPx": -8.282100436166711
+        },
+        {
+          "window": "short5",
+          "status": "OBSERVED_CHANNELS",
+          "primaryMidpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": 3.643712383655931,
+            "candidateCenterMinusFitMidpointPx": -3.643712383655931,
+            "candidateCenterMinusFitMidpointInNominalWidths": -0.08675505675371264,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "shiftedMidpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -2.3562876163441366,
+            "candidateCenterMinusFitMidpointPx": 2.3562876163441366,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0.05610208610343183,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "offsetMinusPrimaryPx": 6.0000000000000675,
+          "predictedPx": 6,
+          "residualPx": 6.750155989720952e-14
+        },
+        {
+          "window": "long",
+          "status": "OBSERVED_CHANNELS",
+          "primaryMidpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": 3.2031994067240106,
+            "candidateCenterMinusFitMidpointPx": -3.2031994067240106,
+            "candidateCenterMinusFitMidpointInNominalWidths": -0.07626665254104788,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "shiftedMidpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -2.796800593275435,
+            "candidateCenterMinusFitMidpointPx": 2.796800593275435,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0.06659049031608179,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "offsetMinusPrimaryPx": 5.999999999999446,
+          "predictedPx": 6,
+          "residualPx": -5.542233338928781e-13
+        }
+      ]
+    },
+    "rawLearnerWidthPx": 50,
+    "adapterElapsedMs": 2983.1816850000005,
+    "callerRecordedElapsedMs": 8144.677624999999,
+    "callerMaxRssKiB": 1088336
+  },
+  "limitations": [
+    "One exposed screenshot with overlapping moving-pose profiles/shared training; no independent scientific-case or pointwise-continuity claim.",
+    "All short windows are16-sample averages; all5finite does not imply edges at every longitudinal point.",
+    "42anchor is not calibrated width; raw learner50 is diagnostic only; every34/42/50 candidate retained.",
+    "Fixed -30..30profile boundary risk remains, especially50/+6; no widening, recentering, mask or parameter tuning.",
+    "Source/crop match is only this bounded numeric control; historical crop-invariance counterexamples remain.",
+    "Bright visual control and caller endpoint/ribbon labels are impeachable testimony, not semantic ground truth.",
+    "Initial external-time wrapper failed before Node/CV; retained raw log and path-only fallback. Resource-scope clarification retained.",
+    "First presentation had title/header overlap; raw figure retained. One overwrite refusal retained, then separate display-v2 rendered from same receipt without measurement rerun."
+  ],
+  "sourceProtocol": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/protocol.json",
+    "sha256": "ea85f4520b20996bd5aff3da699663a40fc8613081f4738457ece2e8926d8537"
+  },
+  "source": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P2/Lenard-1.original.png",
+    "sha256": "cb5403d21c32f451c02402aca4e2795d4ecfb9ddd7490fe714ca0c85c598dcba",
+    "bytes": 3845174
+  },
+  "sourceGitBlob": "28bb53c3f669f82fe3bd8ed57460fc5fcd875146",
+  "fullRgbaSha256": "4fed88f3d298b544739a3bf532756d44413d292af0b4f34c627f04d152cbf45c",
+  "artifacthashes": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/receipt.json",
+      "sha256": "302e50cb5b60f752eb6f3139a4e6a98c015005203359e0ade5aebb378e1897ba",
+      "bytes": 828263
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/run-binding.json",
+      "sha256": "a341238e6accb98c12ee5c5be9c78591601a279fa13300cbae0d56cc3720f107",
+      "bytes": 2155
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/request-descriptor.json",
+      "sha256": "29904b902da200ce184a295312adf5fdde536917b124a9b1267feba6a161c0b9",
+      "bytes": 6212
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/analysis.json",
+      "sha256": "424b1010656bd47b7fb7ba4626031f93276576913ad95cff0a6f163494b1ba8d",
+      "bytes": 9925
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/all-candidate-rows.json",
+      "sha256": "04d6fdb500938f431ed983b6b1bd6a6ee084e1e46cfb86a4f5b0d5a405a1b03c",
+      "bytes": 521733
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/ordered-fit-table.csv",
+      "sha256": "1b15c9362c8e3d385830ffbeb8dde0436733db619ad6c0d694dde1f12dce6868",
+      "bytes": 18812
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/E809-actual-receipt-display-v2.png",
+      "sha256": "fdc4e82f4bd5892540d3dc32d5d605ae2e9ae83b8eed91d09c16753d14d642a0",
+      "bytes": 1166075
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/verification.json",
+      "sha256": "ce4ec5aca80ab09e179b81c38431701ad59e324c2d055c1812014c9c8f8bc484",
+      "bytes": 1047
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/artifact-manifest.json",
+      "sha256": "e69c41147811c541d6236e6755c350e8dc1bfaf8bf56814690a7cdf9a7f69fa5",
+      "bytes": 8559
+    }
+  ],
+  "semanticIdentity": "UNKNOWN",
+  "calibratedWidth": "UNKNOWN",
+  "promoted": false,
+  "sourceChanges": false,
+  "protocolOrParameterChanges": false,
+  "measurementReruns": 0,
+  "repoWrites": false,
+  "P6Disclosure": false,
+  "readiness": "READY_FOR_INDEPENDENT_REVIEW"
+}

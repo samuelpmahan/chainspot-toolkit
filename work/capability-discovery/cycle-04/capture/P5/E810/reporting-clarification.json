@@ -1,0 +1,19 @@
+{
+  "schema":"E810-reporting-clarification@1",
+  "job_id":"E810",
+  "worker":"P5",
+  "affectedArtifact":"resources.json",
+  "preservedRawField":"scope",
+  "issue":"The frozen caller carried boilerplate saying a separate time log includes process elapsed/maxRSS. That clause is inapplicable: no external time utility or separate time log was used.",
+  "actualResourceEvidence":"Node process.resourceUsage and process.memoryUsage only, with performance.now durations. run.log/run.stderr.log preserve the actual invocation logs. The caller succeeded exit0.",
+  "measurementsUnchanged":true,
+  "callerUnchangedAfterExecution":true,
+  "cvRerun":false,
+  "resourceSummary":{
+    "adapterElapsedMs":2306.9961780000003,
+    "callerElapsedMs":7849.380995,
+    "nodeProcessMaxRssKiB":1210104,
+    "memoryAfterRssBytes":643350528,
+    "meaning":"Observed single run/process including staging, JSON and paired adapter allocations; no speedup, allocator comparison, hermeticity or performance generalization."
+  }
+}

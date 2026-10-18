@@ -1,0 +1,123 @@
+{
+  "schema": "lab-reuse-design@1",
+  "job_id": "E806",
+  "worker": "P6",
+  "phase": "READ_ONLY_RECON_AND_DESIGN",
+  "decision": "confirmed_reuse",
+  "summary": "Use unchanged accepted source-pixel adapter with all long/short stations in one explicit request. Existing receipt contains every required raw channel and crop/source control. No new CV stage or measurement wrapper is needed; an optional pure receipt projection may reduce manual bookkeeping after separate admission.",
+  "intent": "Compare one caller-declared long longitudinal window with ordered caller-declared short windows without turning averaged fits, nulls, brightness, or adjacent fit similarity into path identity or acceptance.",
+  "observedRepository": {
+    "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "branch": "codex/capability-discovery-lab",
+    "head": "532fd7406e5b939e6d4d83cf92d12e2267bab11c",
+    "tree": "c170f6d54e6a45dd3cf376af070d89ba579e3d5b",
+    "statusShort": "",
+    "readOnlyReferencesFromRoot": {
+      "algorithm": "e3e11fab5de1e4562487472585259435694d88bc",
+      "platform": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "main": "37a2dba87d61262f661af70f1a22440736e61efc"
+    },
+    "referenceRefresh": "HEAD/tree/status inspected locally; no fetch, switch, reset, commit, merge, or publication performed"
+  },
+  "acceptedDependencies": [
+    {
+      "id": "accepted-d31b-source-pixels",
+      "manifest": "work/capability-discovery/cycle-03/evidence/E506/candidate-freeze.json",
+      "sha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+      "entryPoint": "experiments/capability-discovery/source-pixels/adapter.mjs#runSourcePixelRoi",
+      "entryPointSha256": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6",
+      "mode": "unchanged default-OFF operation; explicit enabled:true; mandatory crop and source executions"
+    },
+    {
+      "id": "accepted-5b59-composition",
+      "manifest": "work/capability-discovery/cycle-02/feature-manifest-E308.json",
+      "sha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+      "verifiedClosureEntries": 14,
+      "entryPoint": "experiments/capability-discovery/composition/recipe.mjs#runComposition",
+      "entryPointSha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6"
+    },
+    {
+      "id": "platform-original-profile-and-fit",
+      "path": "experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "gitBlob": "38963d20f7a8b7c7851b3a2abea2e472da8f7716",
+      "symbols": ["profileAt", "edgePairOf", "EVIDENCE", "OFFS"],
+      "rule": "read-only source semantics, never modify or import a different source to repair a trial"
+    }
+  ],
+  "options": [
+    {
+      "option": "existing-operation-only",
+      "recommended": true,
+      "change": "None in repository. Caller declares long and ordered short stations plus controls in the existing geometry.stations array; call runSourcePixelRoi once per frozen source/ROI/settings packet.",
+      "output": "Existing complete source-pixel-roi@1 receipt, request/source binding and a receipt-derived table/figure.",
+      "tradeoff": "Caller/reviewer must perform explicit-ID table projection; no new reusable code surface to review."
+    },
+    {
+      "option": "pure-receipt-projection",
+      "recommended": false,
+      "change": "Only if root finds bookkeeping reuse worthwhile: one default-OFF pure function accepting exact request descriptor, existing receipt, byte hashes and explicit long/short station-ID groups. It never imports or calls CV.",
+      "output": "Unmodified receipt reference plus complete rows, fixed adjacent/long-short differences and sampling guards, separately for crop/source.",
+      "tradeoff": "Adds a small schema/algebra/testing surface but no measurement capability. contract-proposal.json specifies its admission boundary."
+    },
+    {
+      "option": "new-window-runner-or-CV-stage",
+      "recommended": false,
+      "change": "Rejected: duplicates existing stations/window support or risks changing accepted behavior.",
+      "tradeoff": "Unnecessary implementation, execution count and review cost."
+    }
+  ],
+  "receiptFlow": [
+    "Freeze exact original source identity, ROI, complete training, candidate widths, known boxes, edge settings, all poses/windows and explicit declared groups before measurement.",
+    "Make one unchanged adapter call. Unsupported ROI remains whole-request UNKNOWN with zero recipe calls; do not enlarge ROI or drop training without a separately frozen packet.",
+    "Supported request executes crop recipe then original-source recipe exactly once each, with all long/short/control stations included. Retain both outputs and full equivalence differences.",
+    "Project every station/candidate row and complete profile/counts from both branches by declared ID, never by fit score, nearest fit, successful station subset, or learner width.",
+    "Report only predeclared algebraic differences, per-row sampling eligibility and exact fit/null states. Figure must be receipt-driven and retain nulls/disagreements."
+  ],
+  "criticalSemantics": {
+    "profile": "JS profileAt averages arange(t0,t1,1) along supplied pose. It does not establish paired edges at every longitudinal location.",
+    "minimum": "edgePairOf requires ok[j] >= max(8,0.2*nT) at at least 60% of 241 offsets before peak search. nT<8 necessarily fails this unchanged guard even with every sample visible.",
+    "null": "A null fit is unavailable evidence, not a missing edge, zero offset, discontinuity, or failure of path identity. nT>=8 is necessary, not sufficient. Keep sampling-guard failure distinct from search-stage null when receipt permits the distinction.",
+    "sensor": "Dev72 observeFourLaneCrossSection uses station pose and width, not t0/t1. At identical pose/width it repeats across changed windows. Different short-window midpoint poses provide different raw sensor observations; the projection must never imply otherwise.",
+    "association": "Station order is explicit caller declaration. Candidate width is exact widthArgPx, not calibrated width. Similar l/r/c/w across adjacent windows is raw fit-coordinate association only and does not prove that fitted edges are the same physical edges.",
+    "crop": "Exact pixel crop does not guarantee numerical fit invariance. Keep every existing >1e-9 source/crop difference and UNKNOWN; never average, replace, choose a winning branch or relax tolerance."
+  },
+  "cost": {
+    "reconExecution": "No measurement or tests executed in this design phase; only source/docs/hash/Git read-only checks.",
+    "supportedAdapterCallsPerFrozenPacket": 1,
+    "compositionCallsPerSupportedPacket": 2,
+    "stationCount": "S = sum over all declared groups of (1 long + K short) plus explicitly declared controls, avoiding duplicate station declarations only before freeze",
+    "candidateCount": "B = explicit localWidthBank.valuesPx.length",
+    "compositionOperationCountPerBranch": "3 + S*(1 + 3*B)",
+    "adapterOperationCount": "2*(3 + S*(1 + 3*B))",
+    "dominantWork": "Full/crop raster copying/luminance planes plus 241*sum(nT) profile samples in each branch and unchanged learner/sensor/fit work. Overlapping long/short windows pay repeated profiling; no acceleration claim.",
+    "optionalProjection": "Zero recipe/CV calls; O(S*B + S*241 + retained equivalence-difference count) output/projection work; exact serialized receipt already retained rather than duplicating image bytes.",
+    "resourceBoundary": "Finite accepted input validation is not a practical size cap. Root must admit the concrete frozen S/B/window lengths and expected full/crop raster cost before a run; no arbitrary new cap invented here."
+  },
+  "testPlan": [
+    "Existing unchanged adapter 8 tests, composition 10 tests, and staging 2 tests are prior evidence only until rerun under a separately admitted implementation/verification packet.",
+    "If no helper is admitted, independently replay each frozen actual caller once and require exact request/source identities, complete paired receipt and all row identities/counts.",
+    "If helper is admitted, TDD pure fixtures first: default-OFF; malformed/missing IDs; duplicate groups; exact candidate width matching; all fit/null combinations; preserved UNKNOWN; immutable inputs; nonfinite serialization; no calls to adapter/composition.",
+    "Synthetic receipt controls cover nT 1/7/8/9, fully visible and masked counts, legacy max(8,0.2*nT)/60% guard without interpreting null as absence.",
+    "Projection must retain every profile/count/raw learner/channel/fit/null, original receipt digest and every crop/source disagreement, including known rotated-fit and nearest-round seams.",
+    "Fixed algebra tests compare adjacent declared IDs and each short to its declared long at each exact width separately per branch; changing order changes only declared pairs, never resorts by fitted values.",
+    "Different-heading or nonfinite geometry must keep raw rows and mark cross-window common-normal deltas unavailable, rather than infer transformed sameness; no threshold or score verdict.",
+    "Independent reviewer receives candidate source freeze before actual course protocol release; no claim of scientific blindness for already exposed historical material."
+  ],
+  "independence": {
+    "P2P3Protocols": "not requested, received, or opened by P6 in E806",
+    "courseImages": "none opened",
+    "courseGeometry": "none inspected from cycle04 or course evidence; only generic synthetic tests/source semantics read",
+    "sourceFreeze": "design only; no candidate source implementation exists"
+  },
+  "authorization": {
+    "repositoryModification": false,
+    "newImplementationRequires": "separate explicit root implementation packet after combining current other results",
+    "git": "P6 sole integration owner, but no current commit/switch/reset/merge/push authority",
+    "scientificAcceptance": false,
+    "productionWiring": false,
+    "defaultEnabled": false,
+    "HHPageRouter": "excluded"
+  }
+}

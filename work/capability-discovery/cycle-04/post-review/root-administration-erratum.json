@@ -1,0 +1,20 @@
+{
+  "schema": "cycle04-post-review-root-erratum@1",
+  "authority": "Root coordinator message releasing E900 after R899 acceptance",
+  "evidenceClass": "Explicit coordinator transcript testimony; no raw finish rejection file invented.",
+  "events": [
+    {
+      "event": "R899 receipt initially copied under worker V1 name instead of job R899; native finish rejected missing R899 receipt.",
+      "scientificOrSourceWorkDuringIssue": false
+    },
+    {
+      "event": "Extra accepted empty solve epoch16 retained both running pins; not a new scientific packet.",
+      "binding": "capture/solves/epoch-16.json"
+    },
+    {
+      "event": "Root corrected job-named receipt, successfully finished V1/R899, then accepted epoch17 pinning only P6/E900.",
+      "binding": "capture/receipts/R899.json and capture/solves/epoch-17.json"
+    }
+  ],
+  "interpretation": "Historical captured states remain unmodified. Current administrative state is the post-review epoch17 snapshot; native execution is not inferred from any scientific score."
+}

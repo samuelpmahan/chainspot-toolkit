@@ -1,0 +1,172 @@
+{
+  "schema": "cycle04-preimplementation-contract-critique@1",
+  "job_id": "E805",
+  "worker": "P1",
+  "outcome": "confirmed_reuse",
+  "summary": "The unchanged accepted composition and source-pixel adapter can retain ordered short-window profiles and requested-width edge fits beside one long-window fit. This can expose local fit failures concealed by a long average, but cannot establish continuous paired edges, same-edge association, calibrated width, or path identity. Reuse is confirmed by source inspection and closure hashing only; no new scientific result or CV execution is claimed.",
+  "phase": "preimplementation; no CV execution",
+  "question": "Can ordered short-window raw edge fits expose missing/local pairs concealed by one long longitudinally averaged profile?",
+  "latentClaim": {
+    "testable": "A finite two-edge fit on the declared long averaged profile need not be accompanied by a finite two-edge fit on every predeclared short averaged profile along the same supplied geometry.",
+    "observationalCounterexample": "Retain the finite long-window fit together with any short-window null, nonfinite channel, changed fitted edge coordinates, visibility loss, or source/crop disagreement; report what the raw record does and does not distinguish.",
+    "notTestableFromTheseOutputsAlone": [
+      "Both physical edges exist at every individual longitudinal sample.",
+      "All short-window fits belong to one continuous pair rather than different local structures.",
+      "The fitted bright structure is the intended path or has the proposed endpoint ownership.",
+      "A null fit proves missing physical edges rather than support, visibility, search-domain, photometric, or legacy selection failure."
+    ]
+  },
+  "exactSources": {
+    "sourcePixelFreeze": {
+      "path": "work/capability-discovery/cycle-03/evidence/E506/candidate-freeze.json",
+      "sha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+      "sourceHistoryEntriesVerified": 23,
+      "mismatches": []
+    },
+    "acceptedComposition": {
+      "path": "work/capability-discovery/cycle-02/feature-manifest-E308.json",
+      "sha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+      "closureEntriesVerified": 14,
+      "mismatches": []
+    },
+    "sourcePixelAdapterSha256": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6",
+    "compositionRecipeSha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6",
+    "pathSpaceSha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+    "pathSpaceOriginal": {
+      "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "gitBlob": "38963d20f7a8b7c7851b3a2abea2e472da8f7716"
+    },
+    "dev72Original": {
+      "ref": "ef2a4fc2dc4720d3647f705464342f119d5a39a5",
+      "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689"
+    }
+  },
+  "inputContract": {
+    "unchangedAdapterKeys": ["enabled", "source", "roi", "geometry"],
+    "enabled": "Explicit enabled:true; otherwise DISABLED and zero operations.",
+    "source": "Complete caller-decoded full RGBA with exact full-RGBA hash, encoded-PNG hash testimony, image ID, named original pixel-center frame, decoder/version/color/orientation/alpha testimony. JS does not verify encoded PNG bytes.",
+    "roi": "In-bounds safe-integer half-open pixel ROI in a distinct named crop frame. No resize, clamping, compositing, AA muting, or silent enlargement.",
+    "geometry": "Explicit same-original-frame training segments, unique stations, LOCAL candidate bank, known occluder boxes, and edge settings; frozen geometrySource remains caller testimony.",
+    "stationAllowedKeys": ["id", "frame", "xPx", "yPx", "headingRad", "t0Px", "t1Px"],
+    "windowRepresentation": "Use separate uniquely identified stations for the long window and each short window. For the primary window-only comparison keep xPx/yPx/headingRad identical and vary only station id and t0Px/t1Px. This reuses profileAt and edgePairOf without new CV math.",
+    "callerManifestOutsideAdapter": [
+      "Predeclared source/request/protocol hashes and exposure status.",
+      "controlId, parentLongStationId, shortWindowOrdinal, expected station id, and candidate-width correspondence.",
+      "Exact ordered t0/t1 endpoints, arange sample counts, coverage/gaps/overlaps, and sample-grid phase relative to the parent long window.",
+      "Original-frame normal orientation, proposed offset control transform, testimony limits, and every ablation's changed fields.",
+      "Predictions and falsifiers fixed before measurements, plus explicit no-adaptive-retry policy."
+    ],
+    "schemaTrap": "Do not add parent/window/control metadata to adapter geometry or stations: unsupported keys return UNKNOWN before composition. Keep sidecar metadata joined by exact unique station IDs; do not rely on array position or lexical id sorting alone.",
+    "samplingGrid": "profileAt uses arange(t0,t1,1), excluding the nominal upper endpoint according to its actual generated array. Predeclare the exact generated sample lattice and whether short windows partition it. Fractional reanchoring or different arange phases can change sampled pixels; windows are not matched merely because endpoints look adjacent.",
+    "minimumSupportTrap": "The unchanged fitter requires visible counts >=max(8,0.2*nT) at >=60% of its normal offsets. Therefore any window with nT<8 is structurally unable to fit, even on a perfect visible ribbon. These are existing source guards, not proposed new thresholds. Declare them and never interpret such nulls as evidence of local physical edge absence.",
+    "boundedResources": "Freeze a finite station/window/control/candidate count and ROI before execution. Finite input validation is not a practical resource limit. Every supported adapter invocation executes two recipes and allocates full plus crop snapshots/luminance; no cheap-local-window speed claim follows."
+  },
+  "outputContract": {
+    "retainVerbatim": [
+      "Entire adapter receipt, preparation refusal/support failures if any, provenance, source/crop hashes, exact ROI transform, verified recipe identity, execution counts and order.",
+      "Both composition and sourceComposition separately, even when they disagree.",
+      "All raw width rows, all station poses/windows, complete profile offsets/meanLum/visibleStationCounts/stationCount, and every requested candidate row.",
+      "Every observation lane/rail/interior/combined score and rail mode, pairedRails status, edgeFit object or null, and midpoint status/fields.",
+      "All equivalence differences and paths using the existing absolute1e-9 comparison, without tolerance changes or success-row substitution."
+    ],
+    "joinKey": "request/protocol identity + source/crop branch + controlId + parentLongStationId + shortWindowOrdinal/stationId + exact widthArgPx. Preserve declared order and absent rows explicitly.",
+    "serialization": "JSON.stringify(receipt,preserveNonFinite,2); preserve nonfinite tagged objects, literal null fits, UNKNOWN, DISABLED, and NOT_EXECUTED as distinct states. Missing fit is never midpoint zero, width zero, or a numeric score.",
+    "report": "A complete ordered long-versus-short table may show raw lPx/rPx/cPx/wPx/score/gl/gr and declared visibility support. No winner selection, pass fraction, continuity score, learned cutoff, or semantic classification is required.",
+    "stateInvariant": "localWidth and semanticIdentity stay UNKNOWN; promoted=false. A finite fit is a two-edge observation in that averaged profile only.",
+    "supportFailure": "Whole request UNKNOWN with zero composition calls is NOT_EXECUTED measurement evidence, not a local null grid. Training support remains part of the conservative envelope even though the scientific contrast concerns station windows.",
+    "integrityFailure": "Well-formed full-RGBA hash disagreement or accepted-closure/snapshot mismatch is a hard integrity failure, not a scientific negative result. Preserve the raw error; do not relabel it UNKNOWN photometry."
+  },
+  "seams": [
+    {
+      "id": "visibility",
+      "finding": "profileAt averages each normal offset over its own unmasked longitudinal sample subset. visibleStationCounts do not reveal the identities of those samples.",
+      "consequence": "Left and right gradients in one averaged fit can be supported at different longitudinal locations. Even all short windows fitting does not prove simultaneous bilateral visibility at every t. Report counts and known boxes without inventing per-t masks from aggregate output."
+    },
+    {
+      "id": "null-reason",
+      "finding": "edgePairOf returns null for several reasons and does not emit a reason enum.",
+      "consequence": "Keep raw null; distinguish known structural count insufficiency from unresolved causes. Adequate counts do not establish that a width/lat-limited null means a missing edge. Do not implement a replacement fitter to diagnose it."
+    },
+    {
+      "id": "sensor-window-independence",
+      "finding": "Dev72 observeFourLaneCrossSection receives station origin/heading/width, not t0/t1. The long and short stations at one identical pose therefore repeat the same local sensor observation.",
+      "consequence": "Do not count those repeated sensor rows as independent longitudinal evidence. Reanchoring each sensor to a different window center changes the pose and sampling arithmetic, so it must be a separately declared ablation rather than a hidden part of the window-only contrast."
+    },
+    {
+      "id": "source-crop",
+      "finding": "Exact copied pixels and integer translation do not guarantee identical operations: historical strict peak selection and nearest-pixel rounding counterexamples already exist.",
+      "consequence": "Mandatory paired source/crop controls remain enabled for every supported run. A finite crop fit never overwrites source null/difference or equivalence UNKNOWN. Zero-translation full-ROI matching is not generic crop invariance."
+    },
+    {
+      "id": "midpoint-association",
+      "finding": "Midpoint displacement describes the returned averaged pair, not durable edge identity. A width-dependent fit may switch to another pair.",
+      "consequence": "Never use an expected offset correction or nearest midpoint to recenter, track, select, or claim that two controls found the same edges. Preserve failed offset relationships and each candidate width separately."
+    },
+    {
+      "id": "boundary-and-alpha",
+      "finding": "Conservative ROI support is a sampling-footprint guard, not proof that fitted peaks are safely inside the lateral profile or that transparent pixels are semantically invisible. RGB remains read regardless of alpha.",
+      "consequence": "Keep near-profile-edge fits, raw alpha, and UNKNOWN identity; do not add boundary acceptance, clipping, alpha muting, or AA benefit."
+    }
+  ],
+  "independentlySwitchableAblations": [
+    {
+      "id": "long-vs-ordered-short",
+      "switch": "Caller-side declared station families: long-only, short-only, or both; identical source/ROI/training/bank/masks/edge settings and fixed common pose.",
+      "purpose": "Isolate information lost by long averaging. These are declared input/report views, not fitter changes; retain all executed raw receipts and costs."
+    },
+    {
+      "id": "order-vs-bag",
+      "switch": "Report-only comparison of ordered short-window rows with the same rows as an unordered bag, no CV rerun.",
+      "purpose": "Check whether localization/order adds anything beyond a list of fit/null outcomes. Never replace declared order with score order or hide contradictory windows."
+    },
+    {
+      "id": "js-vs-dev72",
+      "switch": "Report-only views: JS profile/fit/counts, Dev72 local lane evidence, or both; raw source execution remains unchanged.",
+      "purpose": "Identify exactly which channel supplies the apparent longitudinal information; identical-pose Dev72 rows are duplicates, not independent support."
+    },
+    {
+      "id": "controls",
+      "switch": "Keep separately keyed predeclared proposed-ribbon, matched bright, and lateral-offset families; compare each against its own long/short baseline without pooled winner selection.",
+      "purpose": "A non-path bright control with similar ordered fit evidence falsifies semantic discriminability. This does not authorize adaptive control placement."
+    },
+    {
+      "id": "fixed-origin-vs-reanchored",
+      "switch": "Optional separately frozen caller geometry delta that moves each station origin to its window center and adjusts local t0/t1; all other fields fixed, exact sample-grid differences disclosed.",
+      "purpose": "Separate local sensor pose effects from JS window extent, while exposing arithmetic/reanchoring changes. Not necessary for the primary falsifier; never make it an automatic repair."
+    },
+    {
+      "id": "source-vs-crop-analysis",
+      "switch": "Report-only source branch versus crop branch; both mandatory executions and all equivalence differences remain retained.",
+      "purpose": "Expose conclusions that depend on numerical crop seams. This switch may not suppress either composition call or relax equivalence."
+    }
+  ],
+  "adversarialChecklistBeforeExecution": [
+    "Freeze an all-visible constant straight ribbon engineering control and predict the long/short relation without treating synthetic success as course accuracy.",
+    "Include a deliberately under-supported short-window control with nT<8; predict structural null independent of physical ribbon presence, and label it as a guard diagnostic rather than a scientific negative.",
+    "Declare a gap/interruption case where the long profile can mix paired support from elsewhere while one adequate-length local window lacks the expected pair; retain every null and candidate width.",
+    "Declare an alternating or disjoint left/right-support case; check that aggregate counts or one long pair are not misreported as simultaneous bilateral edges.",
+    "Declare two nearby competing bright structures or a crossing/branch control; all local fits may exist while association switches. Do not post-hoc connect them.",
+    "Keep a matched bright non-path control and a fixed normal-offset control; freeze heading, sign convention, windows and candidate bank before measuring.",
+    "Check masked, partly visible, and fully visible versions only as separately predeclared engineering controls with exact known-box deltas; do not remove known occluders to rescue an actual case.",
+    "Retain the known rotated fit-selection/nearest-round source-crop counterexamples as historical engineering evidence; do not rerun them as fresh scientific cases or remove mandatory paired controls.",
+    "Check integer-ROI edges, full training support and every new window envelope before a call; refusal remains zero-call UNKNOWN, with no crop enlargement or dropped training.",
+    "Check arange endpoints, nonoverlap/overlap, sample lattice phase, station IDs, sidecar joins and requested-width identity; do not claim exhaustive longitudinal coverage across undeclared gaps.",
+    "Check missing/nonfinite input, literal null fits, tagged NaN/-Infinity diagnostics, empty banks, and duplicate station IDs without collapsing distinct states.",
+    "Report all actual-image cases as exposed exploratory tests; no old trial or fresh visual declaration is blind merely because the new short-window computation has not run."
+  ],
+  "implementationBoundary": {
+    "allowedByReuseFinding": "A bounded caller manifest, exact unchanged adapter invocations, raw serialization, and complete row-preserving report can express this experiment. Source inspection supports this engineering feasibility only.",
+    "notAuthorizedOrRequired": ["new CV mathematics", "detector wiring", "tracker/recentering", "threshold or classifier", "width or path acceptance", "source/recipe edits", "HH/PageRouter or protected algorithm/platform mutation", "Git or publication operation"],
+    "cvExecutionsByP1": 0,
+    "testsExecutedByP1": 0,
+    "sourceFilesModifiedByP1": 0
+  },
+  "readEvidenceHashes": [
+    {"path": "experiments/capability-discovery/source-pixels/README.md", "sha256": "9018198980379c2dcaea71adf8685d3232df1d6d3e557ea50b311a71a851c93c"},
+    {"path": "experiments/capability-discovery/composition/README.md", "sha256": "be861f6e15fbaaf237d817ebda82dcab821e22dc13f3a0883e32b6785eda87bd"},
+    {"path": "work/capability-discovery/cycle-03/README.md", "sha256": "1d5f8ea2024ebc76a031b5c1c12042e602a6a9447fb924d04203702eae20bb3b"},
+    {"path": "work/capability-discovery/cycle-03/RESUME.md", "sha256": "80bbb67dfe212be955dfdf734ca8780eed63dedea4a305fd4d9a0d1929e16706"},
+    {"path": "work/capability-discovery/cycle-03/next-packets.json", "sha256": "03bb308837be51cdeb03752a445623b22c1a7d8fc35d0671a1eb46430da84c60"}
+  ]
+}

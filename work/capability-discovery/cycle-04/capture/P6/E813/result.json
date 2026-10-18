@@ -1,0 +1,51 @@
+{
+  "schema":"cycle04-worker-result@1",
+  "job_id":"E813",
+  "worker":"P6",
+  "outcome":"mixed_change",
+  "summary":"Reproduced R812 sparse-label admission on exact recorded E811 B with separate one-hole/partial-hole assertion failures, retained original red stdout and source, then changed only labels to require every own named index. Three new pure regressions now pass with the original14 tests:17/17 focused,130/130 Lab,2/2 staging and syntax pass. Full post-repair repository TAP is170/187 with17 failures; their names exactly match root untouched-base170-test/153-pass/17-fail control. No full-green or scientific acceptance claim. Exact E812 source/tests/README/freeze and raw R812 remain preserved; all1646 prior tracked bytes and accepted23+14 closures remain exact. Source frozen for R813; no packaging, commit or publication.",
+  "artifacts":[
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P6/E813/source-freeze.json","sha256":"5a135273510f8966af9bd69119a27f284405bc47397d42a13c93554b005b0eb9"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P6/E813/verification.json","sha256":"57bc44a871a2150b1dd6149c7c43c16e60ac97e2b7308a586d77491e050dae15"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P6/E813/red-stdout.log","sha256":"6521ddcef37573f6246681e4d0093d640b4c8391a071cb1391ce3084634d810d"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P6/E813/red-group.test.mjs","sha256":"de01b97f461e648dac502d5070da87a7126d620b9df82632938bc0d988c79ecf"},
+    {"path":"/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.mjs","sha256":"c8abdc46721e01df64f8ae81318582ee3d639104389c9f5a43b539ef3fbf5e83"},
+    {"path":"/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs","sha256":"de01b97f461e648dac502d5070da87a7126d620b9df82632938bc0d988c79ecf"},
+    {"path":"/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/README.md","sha256":"f74301a060c7dbc3208f4e7c505ad42d340c9fdb6d37a3cea9d82f4ad16ece4b"},
+    {"path":"/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/fixtures/E811-B.json","sha256":"daa7e63665a4c658489483e712b3133547b1ba23a13c1529084d221766d91974"}
+  ],
+  "repair":{
+    "rawReviewSha256":"4347c99925ff40c4c7250c306764efdec538085e77facacc1fd37df4c07ac3ae",
+    "amendment":"M1-dense-declared-short-IDs",
+    "productionChange":"One predicate only: indexed own-property/nonempty-string validation instead of sparse-skipping Array.every.",
+    "rootFlowCheckpoint":"Exact diff/source/test hashes and three original red assertions reviewed by root; explicit GO before any green invocation.",
+    "red":"One original pre-repair TAP run,17 tests14pass3fail/exit1; both actual E811 B sparse cases fail expected UNKNOWN, not an import failure.",
+    "history":"Exact old E812 three source entries/freeze plus raw R812 copied before edit. Original counterexample JSON remains exact by reference after a truncated temporary copy failed hash verification and was removed. No frozen original changed."
+  },
+  "verification":{
+    "focused":{"pass":17,"fail":0,"exitCode":0},
+    "lab":{"pass":130,"fail":0,"exitCode":0},
+    "stager":{"pass":2,"fail":0,"exitCode":0},
+    "syntax":{"exitCode":0},
+    "repository":{"tests":187,"pass":170,"fail":17,"exitCode":1,"sameNamedFailuresAsUntouchedBase":true},
+    "build":"NOT_APPLICABLE_BUILDLESS; existing repository node --test command actually run with TAP, no root package/build manifest",
+    "priorTrackedEntries":1646,
+    "priorByteLengthOrHashMismatches":[],
+    "d31bEntries":23,
+    "d31bMismatches":[],
+    "5b59Entries":14,
+    "5b59Mismatches":[],
+    "oldHistoryAndRawReviewExact":true
+  },
+  "boundaries":{
+    "sourceScope":"new window-evidence subtree only",
+    "newCVImportsOrCalls":0,
+    "newMetricsGeometryRunnerThresholds":false,
+    "ordinaryReceiptSemantics":"Dense IDs and all executed/refusal/raw-branch/order/null/nonfinite/equivalence paths unchanged; no changed scoring or geometry.",
+    "freshCourseRetuning":false,
+    "scientificAcceptance":false,
+    "nativeStateOperations":0,
+    "packageCommitOrPublication":false
+  },
+  "next":"Root dispatches independent R813 on exact new source-freeze. No package/commit until separate native ADMIN admission; publication payload fragmentation deferred as requested."
+}

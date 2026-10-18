@@ -1,0 +1,16 @@
+/** Exact sparse-array reproductions only; reads recorded B, calls no CV. */
+import {readFileSync,writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {groupWindowEvidence} from '/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.mjs';
+const dir='/workspace/scratch/8528bb251845/discovery-cycle04/P1/R812/';
+const path='/workspace/scratch/8528bb251845/discovery-cycle04/P2/E811/receipt-B.json';
+const receiptBytes=readFileSync(path),sha=b=>createHash('sha256').update(b).digest('hex');
+const oneHole=new Array(1),partial=['unverified-short'];partial.length=2;
+const reproductions=[];
+for(const[id,orderedShortStationIds]of[['one-hole',oneHole],['partial-hole',partial]]){
+ const input={enabled:true,expectedReceiptSha256:sha(receiptBytes),receiptBytes,groups:[{id,longStationId:'long',orderedShortStationIds}]};
+ const output=groupWindowEvidence(input);
+ reproductions.push({id,inputConstruction:id==='one-hole'?'const orderedShortStationIds = new Array(1)':'const orderedShortStationIds = ["unverified-short"]; orderedShortStationIds.length = 2',inputArrayLength:orderedShortStationIds.length,inputIndexedOwnProperties:Object.keys(orderedShortStationIds),holeIndices:Array.from({length:orderedShortStationIds.length},(_,i)=>i).filter(i=>!Object.hasOwn(orderedShortStationIds,i)),expected:{status:'UNKNOWN',executionState:'UNCLASSIFIED_INVALID_INPUT',projection:null},actual:output});
+}
+const result={schema:'R812-exact-sparse-counterexamples@1',job_id:'R812',worker:'P1',helperSha256:sha(readFileSync('/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.mjs')),receipt:{path,sha256:sha(receiptBytes),bytes:receiptBytes.length},actualHelperCalls:2,cvCalls:0,serializationCaveat:'JSON encodes undefined array elements as null. Exact JS construction and own-property/hole records above distinguish these sparse inputs from literal null/undefined lists.',reproductions};
+const bytes=Buffer.from(JSON.stringify(result,null,2)+'\n');writeFileSync(dir+'counterexample.json',bytes,{flag:'wx'});console.log(JSON.stringify({path:dir+'counterexample.json',sha256:sha(bytes),reproductions:2,actualHelperCalls:2,cvCalls:0}));

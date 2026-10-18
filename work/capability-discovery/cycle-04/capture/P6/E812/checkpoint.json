@@ -1,0 +1,31 @@
+{
+  "schema": "E812-written-actual-flow-checkpoint@1",
+  "job_id": "E812",
+  "worker": "P6",
+  "state": "HOLD_BEFORE_GREEN_VALIDATION",
+  "writtenIn": "experiments/capability-discovery/window-evidence/group.mjs",
+  "sourceSha256": "9669e26d3b2305f8ebcf514e1883d20ad916e759f9e458b244ebc83a87dfd62c",
+  "testSha256": "3d1726fdd84724360395acd67aa8de5f86a7643ab41f08af1cc7aa677934e312",
+  "readmeSha256": "39d75b1514970ceb63a2be9a4c2218e5893260e96270ee636302461d40f2e958",
+  "entryPoint": "groupWindowEvidence({enabled:true,expectedReceiptSha256,receiptBytes,groups:[{id,longStationId,orderedShortStationIds}]})",
+  "actuallyExecuted": "Only two red runs against the retained OFF-only baseline, each1 pass/13 assertion failures; no written implementation invocation, green validation, renderer, CV, publication or Git mutation.",
+  "walkthrough": [
+    "Return DISABLED/NOT_INSPECTED/projection:null unless enabled is exactlytrue; do not parse bytes.",
+    "Allow only the four admitted helper keys. Validate lowercase expected digest and Uint8Array/Buffer bytes; retain supplied raw-byte reference without mutation.",
+    "Compute SHA256 from those exact bytes before fatal UTF-8 decode/JSON parse. Mismatch returns UNKNOWN/INTEGRITY_MISMATCH; malformed input always returns UNKNOWN/UNCLASSIFIED_INVALID_INPUT/projection:null with an explicit reason and available raw-byte/binding evidence.",
+    "Validate explicit group key/ID/order uniqueness and current receipt schema. Branchless current-schema UNKNOWN/DISABLED with absent execution/empty operations/reason is NOT_EXECUTED; retain its raw receipt and group declarations with measurementRows:null and stationIdsVerified:false.",
+    "With branches, require both current composition schemas, allowed branch statuses, finite linkage poses/windows, complete profile/candidate containers, exact paired call/order/operation label counts, top status matching crop status, corresponding station/width sequences and retained equivalence. UNKNOWN alone never suppresses executed profiles/candidates.",
+    "Index existing parsed station objects by exact ID in each branch. Validate every declared reference before any projection; missing IDs yield no partial validated groups.",
+    "Return PROJECTED_EVIDENCE_ONLY/EXECUTED with complete parsed receipt and explicit crop/originalSource long and orderedShort raw station references; preserve all candidate ordering, null/nonfinite values, ungrouped stations and equivalence differences. No numeric transformations or selection."
+  ],
+  "invocations": [
+    {"function":"createHash/update/digest","input":"exact supplied receipt bytes","output":"computed receipt SHA256","I/O":"none"},
+    {"function":"TextDecoder fatal + JSON.parse","input":"same exact bytes after hash agreement","output":"retained parsed receipt or explicit invalid-input reason","I/O":"none"},
+    {"function":"groupProblem/receiptState/branchProblem","input":"explicit groups and parsed receipt","output":"shape/ID validity and execution classification only","I/O":"none"},
+    {"function":"Map/view grouping","input":"existing station objects and declared ID order","output":"raw object references in two branches","I/O":"none"}
+  ],
+  "sharedMachinery": "Only Node crypto plus built-in UTF-8/JSON/Map. Caller supplies byte evidence, external expected digest and declarations. No paths, pixels, protocols, descriptor, CV imports/calls or runner.",
+  "inspection": "Caller inspects returned complete receipt/raw group objects; README shows module call. No UI/renderer/storage automatically created. Byte-array JSON property is not a substitute receipt file.",
+  "boundaries": "No scientific acceptance or new execution authentication. No generalized coordinates/scoring/diagnostics, new helper metrics, production wiring, source/recipe edits, commit or push. ReceiptBytes aliases caller bytes, as documented; caller must retain them unchanged. Current tests remain hand-authored shape fixtures until independent E811 runtime oracles are supplied after source freeze.",
+  "reviewRequested": "Root review actual written flow and send GO before green validation/rendering. Suggested first command: node --test experiments/capability-discovery/window-evidence/group.test.mjs; then authorized repository/Lab preservation verification, with every failure retained."
+}

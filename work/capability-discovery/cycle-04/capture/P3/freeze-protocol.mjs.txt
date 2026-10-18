@@ -1,0 +1,98 @@
+import {readFileSync,writeFileSync,statSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+const base='/workspace/scratch/8528bb251845/discovery-cycle04/P3';
+const repo='/workspace/scratch/8528bb251845/chainspot-discovery-lab';
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const file=(relative)=>({path:`${base}/${relative}`,sha256:sha(readFileSync(`${base}/${relative}`)),bytes:statSync(`${base}/${relative}`).size});
+const write=(name,value)=>writeFileSync(`${base}/${name}`,JSON.stringify(value,null,2)+'\n',{flag:'wx'});
+const source=JSON.parse(readFileSync(`${base}/source/Lenard-2-source.json`));
+const frame='Lenard-2.original-source-pixel-centers';
+const phi=Math.atan2(12,1),u=[Math.cos(phi),Math.sin(phi)],n=[-u[1],u[0]];
+const groups=[{id:'primary',role:'visually proposed pale ribbon',x:729,y:1700},
+ {id:'lateral-plus6',role:'same heading and longitudinal support, +6 normal px from primary',x:729+6*n[0],y:1700+6*n[1]},
+ {id:'bright-organic',role:'matched nearby broad irregular bright ground patch; semantic non-path status unverified',x:1130,y:1700}];
+const stations=[];
+const coords=[];
+const lattice=[];
+for(const g of groups){
+ const long={id:`${g.id}.long`,frame,xPx:g.x,yPx:g.y,headingRad:phi,t0Px:-40,t1Px:40};
+ const shorts=[];
+ for(let j=0;j<5;j++){
+  const shift=-32+16*j;
+  const s={id:`${g.id}.short${j+1}`,frame,xPx:g.x+shift*u[0],yPx:g.y+shift*u[1],headingRad:phi,t0Px:-8,t1Px:8};
+  shorts.push(s);stations.push(s);
+ }
+ stations.push(long);
+ let maxAbs=0,exact=0;
+ const comparisons=[];
+ for(let j=0;j<80;j++){
+  const short=shorts[Math.floor(j/16)],ts=-8+j%16,tl=-40+j;
+  const a=[short.xPx+ts*u[0],short.yPx+ts*u[1]];
+  const b=[long.xPx+tl*u[0],long.yPx+tl*u[1]];
+  const d=[a[0]-b[0],a[1]-b[1]];
+  maxAbs=Math.max(maxAbs,...d.map(Math.abs));
+  if(Object.is(a[0],b[0])&&Object.is(a[1],b[1]))exact++;
+  comparisons.push({index:j,shortStation:short.id,shortT:ts,longT:tl,shortWorldCenterPx:a,longWorldCenterPx:b,deltaPx:d});
+ }
+ coords.push({group:g.id,headingRad:phi,unit:u,normal:n,comparisons});
+ lattice.push({group:g.id,samples:80,byteExactCoordinatePairs:exact,maxAbsoluteCoordinateDifferencePx:maxAbs,claim:'Analytically consecutive moving-pose windows, not a bit-exact sample partition. Centerline coordinates audited with JavaScript Math; adding normal offsets and bilinear arithmetic can retain further rounding.'});
+}
+const roi={xPx:600,yPx:1100,widthPx:610,heightPx:760,frame:'Lenard-2.E803.integer-roi'};
+const geometry={frame,geometrySource:'P3 caller visual testimony on exact platform Lenard-2 original screenshot and exact integer row/column inspection crop; no CV output consulted; endpoint names are API labels only.',
+ training:{frame,segments:[{tee:{xPx:681,yPx:1195},badge:{xPx:719,yPx:1558}}]},stations,
+ localWidthBank:{frame,scope:'LOCAL',valuesPx:[40,48,56]},occluders:{frame,boxes:[]},edgeSearch:{latLimPx:8,tolWidthPx:3}};
+const radius=4+Math.max(2*56/3,56/2+2.5),envelopes=[];
+const add=(label,x,y,r)=>envelopes.push({label,minX:x-roi.xPx-r,minY:y-roi.yPx-r,maxX:x-roi.xPx+r,maxY:y-roi.yPx+r});
+for(const [j,s] of geometry.training.segments.entries())for(const k of ['tee','badge'])add(`training[${j}].${k}`,s[k].xPx,s[k].yPx,radius);
+for(const s of stations){add(`${s.id}.sensor`,s.xPx,s.yPx,radius);for(const t of [s.t0Px,s.t1Px])add(`${s.id}.profile-end.${t}`,s.xPx+t*u[0],s.yPx+t*u[1],30);}
+const failures=envelopes.filter(e=>!(e.minX>1&&e.minY>1&&e.maxX<roi.widthPx-2&&e.maxY<roi.heightPx-2));
+if(failures.length)throw new Error('Conservative support failed');
+const sourceIdentity={ref:'49255331791b1245cf0f9cd699816175f94e70f2',path:'specimens/dev/Lenard-2.png',gitBlob:'02431ee3f091973a87cc2e7e254bc8bc0b028a7c',pngSha256:source.provenance.sourcePngSha256,rgbaSha256:source.provenance.rgbaSha256,widthPx:source.image.width,heightPx:source.image.height,frame,decoder:source.provenance.decoder};
+const recipeManifest='work/capability-discovery/cycle-02/feature-manifest-E308.json';
+const adapterFreeze='work/capability-discovery/cycle-03/evidence/E506/candidate-freeze.json';
+const frozenSources=[adapterFreeze,recipeManifest,'experiments/capability-discovery/source-pixels/adapter.mjs','experiments/capability-discovery/source-pixels/stage-png.py','experiments/capability-discovery/composition/recipe.mjs'].map(path=>({path,sha256:sha(readFileSync(`${repo}/${path}`))}));
+const expected=['d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626','5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52','df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6','e194f56e2899f516bb79dd8d6c5e4b876440d6f0932bf9d74e0a56c117f06a44','17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6'];
+if(frozenSources.some((x,i)=>x.sha256!==expected[i]))throw new Error('Frozen source identity disagreement');
+const gitBlob=execFileSync('git',['hash-object',`${base}/source/Lenard-2.png`],{cwd:repo,encoding:'utf8'}).trim();
+if(gitBlob!==sourceIdentity.gitBlob)throw new Error('Blob disagreement');
+const raw=Uint8Array.from(source.image.data);if(sha(raw)!==sourceIdentity.rgbaSha256)throw new Error('RGBA disagreement');
+write('world-sample-coordinates.json',{schema:'premeasurement-source-geometry-arithmetic@1',job_id:'E803',cvOperationsExecuted:[],groups:coords});
+write('sample-lattice-check.json',{schema:'premeasurement-lattice-audit@1',job_id:'E803',lattice,consequence:'Not a pure window-only ablation. Moving origin changes Dev72 sensor pose and can perturb floating sample positions. Long profile is independently evaluated; no arithmetic identity of computed profiles or fits is promised.'});
+write('support-check.json',{schema:'premeasurement-support-arithmetic@1',job_id:'E803',method:'Exact d31b documented envelope arithmetic duplicated without importing/running adapter or CV.',status:'SUPPORTED_CONSERVATIVE_ENVELOPE_BY_ARITHMETIC',strictCropInterior:{minExclusive:1,maxXExclusive:roi.widthPx-2,maxYExclusive:roi.heightPx-2},sensorRadiusPx:radius,profileNormalExtentPx:30,roi,envelopes,failures,cvOperationsExecuted:[]});
+write('image-inspection.json',{schema:'actual-source-image-inspection@1',job_id:'E803',worker:'P3',inspectionMethod:'view_image inspected extracted exact full source PNG and inspection-source-region.png, not a generated image.',source:sourceIdentity,inspectionCrop:{xPx:480,yPx:1240,widthPx:730,heightPx:600,transform:'exact source rows/columns, no resize/filter/color adjustment',file:file('inspection-source-region.png')},observations:[
+ 'Full screenshot visibly titles Lenard L. Woods Park; title text is not independent course identity verification.',
+ 'Lower central pale ribbon below black17 plaque is visible between surrounding textured ground; selected primary span is below the plaque and above lower circular icon.',
+ 'Bright-organic control is in broad irregular beige/green textured ground to the east, away from the selected pale ribbon; not ground-truth non-path testimony.',
+ 'Apparent small white square near (681,1195) and black17 plaque near (719,1558) supply caller training endpoints only; API tee/badge names do not verify endpoint identity.',
+ 'Overlay ribbon widths visually appear several dozen source pixels, motivating deliberately uncalibrated bank40/48/56; numerical width not measured.',
+ 'No learned masks supplied. All screenshot overlays, background texture and possible occlusion remain in the source.'],visualUncertainty:'Caller centers/heading/endpoints have unquantified visual uncertainty, plausibly several pixels; no calibrated localization accuracy claimed.',cvOperationsExecuted:[]});
+write('source-integrity.json',{schema:'source-integrity@1',job_id:'E803',source:sourceIdentity,checks:{gitBlobMatch:gitBlob===sourceIdentity.gitBlob,encodedPngMatch:sha(readFileSync(`${base}/source/Lenard-2.png`))===sourceIdentity.pngSha256,decodedFullRgbaMatch:sha(raw)===sourceIdentity.rgbaSha256},png:file('source/Lenard-2.png'),stagedSource:file('source/Lenard-2-source.json'),frozenSources,sourceTransform:'Native8-bitRGB PNG toRGBA using accepted Pillow stager, appending alpha255; no EXIF/color/resize/filter/alpha-muting operation.',recipeOrCvCalls:0});
+write('protocol.json',{schema:'cycle04-longitudinal-source-pixel-predeclaration@1',job_id:'E803',worker:'P3',status:'READY_FOR_ROOT_FREEZE_BEFORE_CV_PRODUCERS',source:sourceIdentity,sourceStaging:{path:`${base}/source/Lenard-2-source.json`,sha256:file('source/Lenard-2-source.json').sha256},roi,geometry,
+ requestAssembly:'{enabled:true,source:JSON.parse(readFileSync(protocol.sourceStaging.path)),roi:protocol.roi,geometry:protocol.geometry}; geometry and roi pass unchanged. No extra metadata goes into adapter geometry.',
+ question:'Does one visually proposed source-pixel ribbon support finite paired-edge fits throughout five consecutive short windows, rather than only in one long averaged window, and do matched offset and bright-organic controls preserve ambiguity?',
+ design:{groups,shortWindowCount:5,shortWindowLengthPx:16,shortSampleCounts:[16,16,16,16,16],longWindowLengthPx:80,longSampleCount:80,widthCandidateCount:3,totalStations:18,totalCandidateRowsPerComposition:54,pairedSourceCropCompositionCount:2,designType:'Moving-pose plus window-length exploratory comparison, not pure window-only or independent validation.',lattice,
+ matched:'All3 groups have identical heading, short/long window lengths, explicit bank, edge settings, source, ROI and empty masks. Primary/lateral origins differ by exactly+6 source normal pixels; bright group is translated to irregular bright terrain.',
+ sourceProfileConstraint:'Profiles remain frozen -30..30px at0.25px. Largest56px candidate and offset profiles may put edges near or beyond usable boundary; finite fits are not boundary-safety evidence. No later widening.',
+ sensorSemantics:'Dev72 observation is a point-pose sensor ignoring t0/t1. Five short origins move; long origin equals short3 so those two Dev72 values duplicate by design. JS profile windows differ. Never count window-length repetition as independent sensor evidence.',
+ widthBasis:'Visual approximate multi-dozen-pixel band only; widthbank40/48/56 is LOCAL, not carried over as calibrated37px from exposed full-source trials.',
+ trainingAuthority:'Fresh P3 screenshot visual testimony; no Lenard zoom2 hand annotation exists in E501. Full annotation-to-zoom2 mapping UNKNOWN and not inferred.',
+ frozenAdapterManifestSha256:expected[0],frozenRecipeManifestSha256:expected[1]},
+ predictedObservations:[
+ {id:'primary-short-versus-long',prediction:'If paired-edge evidence is locally sustained at a candidate width, each of the five short profiles and the matching long profile can retain a finite pair with compatible original-frame edges. Long-only finite pairing is expected to be possible through averaging and does not establish local continuity.'},
+ {id:'offset',prediction:'The+6 normal shift may change fixed Dev72 rail/interior channels. If exactly the same physical edge pair remains in both profiles and is selected, offset-minus-primary candidateCenterMinusFitMidpointPx should be+6px. Nulls, alternate pairs and field-of-view losses remain unaltered evidence, not zero offsets.'},
+ {id:'bright-organic',prediction:'Broad irregular bright terrain can show finite pairs, long-only pairs, or stronger raw channels than primary. Comparable evidence demonstrates ambiguity; a weak control still cannot prove path identity.'},
+ {id:'learner',prediction:'The single visually proposed square/plaque segment may yield arbitrary diagnostic width; no width promotion/calibration or verified endpoint identity follows.'}],
+ falsifiers:[
+ {id:'source-and-support',rejectIf:'Any PNG/blob/fullRGBA mismatch; missing conservative support; changed ROI/frame/geometry/bank/settings/source; no measurements may be interpreted. Do not enlarge ROI or drop training.'},
+ {id:'sustained-paired-edge',rejectIf:'For any candidate width, one or more short windows lack a finite positive two-edge fit while the long window has one: reject that candidate\'s long-average-as-sustained-local-pair assertion. If all short and long are null, paired-edge support is absent, not an accepted negative classifier.'},
+ {id:'common-edge-location',rejectIf:'Finite pairs transformed back to original source show inconsistent left/right/midpoint trajectories across windows. Report exact raw deltas; no newly selected tolerance, recentering, tracking or post-hoc accepted subset.'},
+ {id:'same-edge-offset',rejectIf:'Any jointly finite primary/offset fit violates the ideal+6 midpoint contrast outside the existing fixed1e-9 numerical comparison; record raw discrepancy and UNKNOWN same-edge identity. If unavailable in either fit, comparison is UNKNOWN. This is a strict diagnostic, not an accuracy model.'},
+ {id:'brightness-specificity',rejectIf:'Bright-organic matched controls yield comparable/stronger finite paired-edge evidence or channels. This supplies local photometric ambiguity; no channel cutoff, vote, classifier or semantic acceptance is allowed even if primary ranks highest.'},
+ {id:'crop-source-equivalence',rejectIf:'Any crop/source raw field difference exceeds unchanged1e-9 absolute tolerance. Retain both receipts and UNKNOWN; never relax tolerance or change fitter.'}],
+ reporting:{retain:'Both complete source/crop receipts; all54 candidate rows per composition; every short/long profile and visible count; all Dev72 lanes; all finite/null fits and original-frame edge/midpoint projections. Fit/null matrices are descriptive, not threshold/classifier.',prohibited:['No later widening, recentering, masks, setting/width tuning or same-experiment reruns.','No semantic identity, calibrated width, scale, source-renderer identity, production promotion, AA benefit, acceptance or global classifier inference.','No source/Git/HH/protected-stream writes.'],calibratedWidth:'UNKNOWN',semanticIdentity:'UNKNOWN',promoted:false},
+ exposure:{oldCases:'All historical cases and prior E508/E511 results are exposed. The present zoom2 source/coordinates are exploratory caller choices, not blind heldout evaluation.',freshness:'This numeric window selection/protocol is freshly predeclared, unexecuted, and not a duplicate of completed full-source grid. No CV producer output consulted.',handoff:'Geometry is not disclosed to P6 until root records freeze and releases it.'},producerExecution:{adapterRunCalls:0,recipeCalls:0,learnerCalls:0,sensorCalls:0,edgeCalls:0},inferenceLimits:['Long-window averaging does not prove per-point edges or5 statistically independent observations.','Moving-pose windows are analytically consecutive but floating sample coordinates are not all byte-exact to long-window evaluation.','Candidate56 profiles can be near fixed normal boundary; controls can lose the same pair through finite field of view.','Visual testimony is impeachable; no independently verified ribbon or tee/badge labels.']});
+const artifacts=['protocol.json','source-integrity.json','image-inspection.json','support-check.json','sample-lattice-check.json','world-sample-coordinates.json','inspection-source-region.png','inspect-source.py','freeze-protocol.mjs'].map(file);
+write('frozenhash-record.json',{schema:'premeasurement-frozenhash-record@1',job_id:'E803',worker:'P3',frozenAtUtc:new Date().toISOString(),state:'P3_READY_PENDING_ROOT_FREEZE_RELEASE',noCvMeasurements:true,artifacts,sourcePng:file('source/Lenard-2.png'),sourceStaging:file('source/Lenard-2-source.json'),selfHashPolicy:'No self-hash; root records exact hash of this frozen record.',rootMustFreezeAndRelease:true});
+write('result.json',{job_id:'E803',worker:'P3',outcome:'insufficient_evidence',summary:'Request-ready fresh exploratory Lenard zoom2 protocol predeclared and source bound;3groups x5consecutive16sample moving-pose windows+80sample long averages,54candidate rows planned per composition. Conservative support arithmetic passes. No CV/recipe run; no scientific outcome or semantic/calibrated-width acceptance. Root freeze/release required before producer.',readiness:'READY_FOR_ROOT_FREEZE_RELEASE',artifacthashes:[...artifacts,file('frozenhash-record.json')],source:sourceIdentity,cvCalls:0,repoChanges:false});
+console.log(JSON.stringify({status:'READY',protocol:file('protocol.json'),frozenhash:file('frozenhash-record.json'),result:file('result.json'),lattice,conservativeSupportFailures:failures.length},null,2));

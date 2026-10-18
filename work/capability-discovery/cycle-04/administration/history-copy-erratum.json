@@ -1,0 +1,10 @@
+{
+  "schema":"cycle04-E899-history-copy-erratum@1",
+  "job_id":"E899",
+  "issue":"A truncated temporary E813 history-R812/counterexample.json remained in scratch despite the earlier patch deletion report. E813 source-freeze/result and the history reference said it was removed. This administrative claim was too broad at that capture; original product and reviewer bytes were not corrupted.",
+  "authoritativeOriginal":{"path":"P1/R812/counterexample.json","sha256":"23eb330d6395693594e0c5bfec68151a932349d2a0dc418e242fd8657c8e666e","bytes":50209,"currentStorage":"exact capture-index mapping; raw original unchanged"},
+  "invalidCopy":{"originalScratchPath":"P6/E813/history-R812/counterexample.json","sha256":"cc28eeac036781b16e4cb367067d576eb63bf8e002968ed05683102657832528","bytes":35295,"currentQuarantine":"P6/E899/quarantine/truncated-R812-counterexample.json.partial","packagedInvalidText":"administration/rejected-R812-copy.json.partial.txt","meaning":"Incomplete invalid JSON, never authoritative counterexample; recoverably moved during E899, not silently overwritten or relabelled exact."},
+  "actualPriorCheckCoverage":"E813 checked the three old E812 source/test/README entries and the raw R812 review result exactly. R813 independently checked original R812 result/counterexample and those source/test bindings; it did not certify every transient scratch history file. Their frozen numeric/source results remain unchanged. Current package never makes an unqualified exact-history claim.",
+  "reconciliation":"Current capture stores the complete50209-byte reviewer original and maps original path/hash. Invalid35295-byte partial is separately labelled and retained only as negative administration evidence. Frozen E813/R813 records are not rewritten; this later erratum qualifies their earlier removal/history wording.",
+  "R899RequiredCheck":"Verify both sizes/hashes, distinguish original from invalid partial, inspect exact source/history check scope and ensure current docs point to this erratum. No scientific or product source change is required."
+}

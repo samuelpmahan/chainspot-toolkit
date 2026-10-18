@@ -1,0 +1,34 @@
+{
+  "schema":"R811-independent-read-only-checks@1",
+  "job_id":"R811",
+  "worker":"P5",
+  "producerArtifactsHashVerified":28,
+  "producerInitialManifestArtifactsHashVerified":25,
+  "assignedResultProtocolCallerHashesMatched":true,
+  "sourceCodeHashesVerifiedBeforeAndAfterReplay":5,
+  "independentPngInspection":{
+    "dimensions":[128,128],
+    "bitDepth":8,
+    "colorType":6,
+    "chunks":["IHDR","IDAT","IEND"],
+    "allChunkCrcValid":true,
+    "singleIdat":true,
+    "allRowFilters":0,
+    "pixelRgba":[100,100,100,255],
+    "sourcePngSha256":"78b9bd5c98c577b96089fc9f54a77ae538c8587738d48732d064661f0e37181b",
+    "rgbaSha256":"b82ebef90ff857113c3fddf4cfe9d821ac975cb03e749927dd993d5ac865feac",
+    "inspectionMethod":"Read-only PNG chunk/CRC/zlib-row validation plus independent Pillow nativeRGBA decode; no source generation or image measurement."
+  },
+  "supportEnvelopesIndependentlyRecomputed":{
+    "A":[[10,18,70,78],[26,18,86,78]],
+    "B":[[-34,-26,26,34],[-18,-26,42,34]],
+    "AEntirelyStrictInterior":true,
+    "BFailureCount":2,
+    "sensorRadiusPx":0,
+    "profileNormalExtentPx":30
+  },
+  "requestContrast":"Identical source, original frame, training[], station, heading,16-sample window, LOCAL bank[], boxes[] and edge settings; only supplied ROI origin/size/frame differs.",
+  "noProducerOrRepositoryEdits":true,
+  "noNewSourceCreated":true,
+  "noPathScienceClaim":true
+}

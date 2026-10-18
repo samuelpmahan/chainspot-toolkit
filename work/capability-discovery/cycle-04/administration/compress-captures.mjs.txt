@@ -1,0 +1,23 @@
+/** Lossless packaging rewrite only; source scratch and all prior tracked bytes unchanged. */
+import {readFileSync,writeFileSync,mkdirSync,renameSync} from 'node:fs';
+import {dirname,join} from 'node:path';
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+const pkg=process.argv[2],backup=process.argv[3],sha=b=>createHash('sha256').update(b).digest('hex');
+if(!pkg.endsWith('/work/capability-discovery/cycle-04')||!backup.endsWith('/P6/E899/uncompressed-store'))throw Error('Exact package and recoverable backup required');
+const path=join(pkg,'administration/capture-index.json'),index=JSON.parse(readFileSync(path)),changed=new Map();
+for(const r of index.files){
+  if(changed.has(r.path))continue;
+  const p=join(pkg,r.path),raw=readFileSync(p);
+  if(raw.length<100000||!/[.](json|html|log)$/.test(r.path))continue;
+  if(raw.length!==r.bytes||sha(raw)!==r.sha256)throw Error('Original storage mismatch');
+  execFileSync('zstd',['-q','-3','-o',p+'.zst',p]);
+  const stored=readFileSync(p+'.zst'),restored=execFileSync('zstd',['-q','-d','-c',p+'.zst'],{maxBuffer:64*1024*1024});
+  if(sha(restored)!==r.sha256||restored.length!==r.bytes)throw Error('Lossless roundtrip mismatch');
+  changed.set(r.path,{path:r.path+'.zst',codec:'zstd',storedSha256:sha(stored),storedBytes:stored.length,originalBytes:raw.length});
+  const keep=join(backup,r.path);mkdirSync(dirname(keep),{recursive:true});renameSync(p,keep);
+}
+for(const r of index.files)if(changed.has(r.path))Object.assign(r,changed.get(r.path));
+writeFileSync(path,JSON.stringify(index,null,2)+'\n');
+const evidence={schema:'cycle04-lossless-storage@1',command:'zstd -q -3 -o NEW.zst ORIGINAL; zstd -q -d -c NEW.zst',tool:execFileSync('zstd',['--version'],{encoding:'utf8'}).trim(),uniqueCompressedFiles:changed.size,originalBytes:[...changed.values()].reduce((n,r)=>n+r.originalBytes,0),storedBytes:[...changed.values()].reduce((n,r)=>n+r.storedBytes,0),roundtrip:'All decompressed byte lengths/SHA256 equal exact originals',recovery:'Original storage copies moved recoverably outside package; original discovery scratch never modified',CVCalls:0};
+writeFileSync(join(pkg,'administration/compression.json'),JSON.stringify(evidence,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify(evidence));

@@ -1,0 +1,62 @@
+{
+  "schema": "source-integrity@1",
+  "job_id": "E803",
+  "source": {
+    "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "path": "specimens/dev/Lenard-2.png",
+    "gitBlob": "02431ee3f091973a87cc2e7e254bc8bc0b028a7c",
+    "pngSha256": "cf5a033747c32f3e7f8774e7f712394b6af8a5d28228291f0d29a395998d55f4",
+    "rgbaSha256": "3659157b9501899ff62dcc5216dcb058a6a50d31578e751dcb665c49b97da4ee",
+    "widthPx": 1290,
+    "heightPx": 2796,
+    "frame": "Lenard-2.original-source-pixel-centers",
+    "decoder": {
+      "name": "Pillow",
+      "version": "12.3.0",
+      "outputMode": "RGBA",
+      "sourceMode": "RGB",
+      "orientation": "stored PNG pixel order; no EXIF transform",
+      "colorTransform": "none; stored RGB channels, no ICC/gamma transform",
+      "alpha": "preserved RGBA; RGB appends 255"
+    }
+  },
+  "checks": {
+    "gitBlobMatch": true,
+    "encodedPngMatch": true,
+    "decodedFullRgbaMatch": true
+  },
+  "png": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P3/source/Lenard-2.png",
+    "sha256": "cf5a033747c32f3e7f8774e7f712394b6af8a5d28228291f0d29a395998d55f4",
+    "bytes": 3806652
+  },
+  "stagedSource": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P3/source/Lenard-2-source.json",
+    "sha256": "6dd63d816e702e899cf1ab696ebc59a2241d6244cffbd0569c7a703d03e8252b",
+    "bytes": 50851315
+  },
+  "frozenSources": [
+    {
+      "path": "work/capability-discovery/cycle-03/evidence/E506/candidate-freeze.json",
+      "sha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626"
+    },
+    {
+      "path": "work/capability-discovery/cycle-02/feature-manifest-E308.json",
+      "sha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52"
+    },
+    {
+      "path": "experiments/capability-discovery/source-pixels/adapter.mjs",
+      "sha256": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6"
+    },
+    {
+      "path": "experiments/capability-discovery/source-pixels/stage-png.py",
+      "sha256": "e194f56e2899f516bb79dd8d6c5e4b876440d6f0932bf9d74e0a56c117f06a44"
+    },
+    {
+      "path": "experiments/capability-discovery/composition/recipe.mjs",
+      "sha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6"
+    }
+  ],
+  "sourceTransform": "Native8-bitRGB PNG toRGBA using accepted Pillow stager, appending alpha255; no EXIF/color/resize/filter/alpha-muting operation.",
+  "recipeOrCvCalls": 0
+}

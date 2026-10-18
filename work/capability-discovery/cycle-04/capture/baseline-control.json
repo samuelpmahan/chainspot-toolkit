@@ -1,0 +1,15 @@
+{
+  "schema": "cycle04-baseline-control@1",
+  "source": "532fd7406e5b939e6d4d83cf92d12e2267bab11c",
+  "sourceTree": "c170f6d54e6a45dd3cf376af070d89ba579e3d5b",
+  "method": "git archive exact untouched base into mktemp snapshot lab4-base-check-N8ezoD, then execute Node24.19.0 tests there; no source/helper copied into baseline",
+  "firstCommand": "node --test",
+  "firstResult": "exit1, captured default-reporter stdout ended without complete totals; retained as incomplete diagnostic, not used for counts",
+  "decisiveCommand": "node --test --test-reporter=tap",
+  "decisiveResult": {"exitCode":1,"tests":170,"pass":153,"fail":17,"cancelled":0,"skipped":0},
+  "stdout": "baseline-bare-node-tap.stdout.log",
+  "stdoutSha256": "39caf5534afb280c0e464246fa925f6052b0720ea84baa22be3954b877847356",
+  "stderr": "baseline-bare-node-tap.stderr.log",
+  "comparison": "The same17 named failures observed in E812 current bare suite: six missing checkpoint/Attempt/JPEG fixtures, nine immutable E306 history tests with missing relative probe imports, and two immutable E506 history tests with missing relative imports. Fourteen new helper tests explain current184 vs baseline170 tests. No failure hidden or repaired in immutable history; full repository is not green.",
+  "scope": "Executed engineering baseline control, not scientific measurement or production build"
+}

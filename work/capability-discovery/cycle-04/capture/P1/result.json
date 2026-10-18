@@ -1,0 +1,44 @@
+{
+  "schema": "cycle04-worker-result@1",
+  "job_id": "E805",
+  "worker": "P1",
+  "outcome": "confirmed_reuse",
+  "summary": "Read-only contract review confirms that the exact unchanged d31b source-pixel adapter and accepted5b59 composition can express ordered long/short window comparisons using unique stations plus an external caller manifest. No new CV math or source change is needed. The contract preserves mandatory source/crop controls and all null/nonfinite/visibility states; it forbids interpreting local fits as continuous edge identity. No CV execution was performed.",
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P1/contract-critique.json",
+      "sha256": "672e370eb20aa03aa632a7648825ff870f734ac9f832979754f4a41a57645d8d",
+      "role": "Bounded input/output contract, six independently switchable ablations, twelve adversarial checks, and explicit scientific limits"
+    }
+  ],
+  "exactSourceIds": {
+    "sourcePixelCandidateFreezeSha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "acceptedCompositionManifestSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+    "sourcePixelAdapterSha256": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6",
+    "compositionRecipeSha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6",
+    "pathSpaceSha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"
+  },
+  "verification": {
+    "sourceHistoryEntriesHashed": 23,
+    "sourceHistoryMismatches": [],
+    "acceptedRecipeClosureEntriesHashed": 14,
+    "acceptedRecipeClosureMismatches": [],
+    "contractJsonParsed": true,
+    "cvExecutions": 0,
+    "testExecutions": 0,
+    "repositoryWrites": 0,
+    "gitOperations": 0,
+    "nativeStateOperations": 0,
+    "publicationOperations": 0
+  },
+  "principalFindings": [
+    "A window with fewer than eight generated t samples is structurally unable to fit under the unchanged source guard; null is not physical edge absence.",
+    "Keep origin/heading fixed for a window-only comparison. Dev72 ignores t0/t1, so repeated same-pose sensor rows are duplicated observations, not longitudinal corroboration.",
+    "Parent/control/window-order metadata belongs outside the frozen adapter request: unsupported station keys cause pre-operation UNKNOWN.",
+    "Visible counts are aggregate per normal offset; fitted left and right edges may draw support from different t subsets. No simultaneous per-t bilateral claim follows.",
+    "Finite short-window pairs may switch between competing bright structures; midpoint similarity or an expected lateral shift does not solve association.",
+    "Mandatory original-source and crop receipts, fixed equivalence tolerance and every disagreement remain required. Exact pixels alone cannot establish numerical output invariance."
+  ],
+  "freshnessAndExposure": "All old cases are exposed. This review inspected prior documentation/evidence declarations but ran no source pixels or fitter. New visual declarations and any later runs remain exploratory rather than blind heldout evaluation.",
+  "nextBoundary": "Root may use this critique to freeze the bounded caller protocol. This result itself does not authorize a CV run, alter a source, or accept scientific identity/width/continuity."
+}

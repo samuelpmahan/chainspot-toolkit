@@ -1,0 +1,27 @@
+{
+  "schema": "cycle04-receipt-projection-repair-design@1",
+  "job_id": "E808",
+  "worker": "P6",
+  "phase": "NEW_NARROW_PROPOSAL_ONLY",
+  "summary": "Repair R806 M1/M2 without editing E806. Optional helper accepts only exact receipt bytes, expected hash, explicit ordered station-ID groups and an enabled flag. It returns complete raw grouped branch views or consistent explicit invalid-input/refusal states. All generalized descriptor, coordinate, diagnostic, scoring and runner machinery is removed.",
+  "M1": "Classify measurement execution using actual paired branch presence, call counts, operation arrays and their consistency. Executed UNKNOWN retains every row/profile, including empty candidate banks. Current accepted branchless UNKNOWN/DISABLED refusal with absent execution, empty operations and explicit reason is NOT_EXECUTED, without invented measurement rows. Contradictions yield UNKNOWN invalid-input with no projection.",
+  "M2": "Single policy: malformed/unsupported input or malformed required receipt linkage geometry yields UNKNOWN with projection:null and explicit reason; exact raw bytes/reference may remain untrusted evidence. No descriptor is accepted. Finite different headings preserve raw rows because the helper calculates no heading-dependent metrics.",
+  "filesProposedOnlyIfLaterAdmitted": "One pure receipt grouping module plus its minimal pure tests and usage note; actual paths/implementation are not allocated in this design packet.",
+  "flow": [
+    "Require enabled:true; validate minimal helper fields.",
+    "Hash exact supplied bytes and compare external expected digest, then strict UTF-8/JSON parse without reserializing evidence.",
+    "Check current receipt schema and execution/branch consistency; classify EXECUTED versus NOT_EXECUTED independently of UNKNOWN top-level status.",
+    "For EXECUTED, resolve exact station IDs in both branches and return full raw long/ordered-short objects without field filtering, candidate selection or arithmetic; retain complete original receipt/bytes.",
+    "For NOT_EXECUTED, retain refusal and groups as unverified declaration with no measurement rows. For malformed input, return explicit UNKNOWN with projection:null."
+  ],
+  "cost": "Zero recipe/CV calls. Hash and parse one existing receipt, then ID indexing/group references proportional to retained receipt size plus declared references. No image loading or new full/crop allocations; no measured speed or memory claim.",
+  "testPlan": "Exactly the future pure tests in narrow-contract.json, only after admission; no tests or CV executed during E808.",
+  "frozenHistory": {
+    "rawR806Sha256": "759f979d22d3eaff5c292797abb3284981f1ce1165ffdf37c935d2067462ba08",
+    "E806DesignSha256": "831df032c3f1ecdc151bf9df5889e0c16b22d8c5ed5667611bfd99dc2250a3ba",
+    "E806ContractSha256": "bcdb7ee7a88010c474909062f047315cefe2a02cc80a8eef089bc3db34860270",
+    "E806ResultSha256": "d45ac419b0528f1ce42b11880aec13a78912d3f230271b23b5f9268f8e3043d6"
+  },
+  "gate": "Root must verify an actual E807 localized reporting gap AND independent acceptance of this exact narrow contract before a separate implementation packet. This proposal does not establish either gate or new scientific acceptance.",
+  "courseAndFreshOutputAccess": "none"
+}

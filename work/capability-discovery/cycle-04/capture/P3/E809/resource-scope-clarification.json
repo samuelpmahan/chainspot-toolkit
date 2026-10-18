@@ -1,0 +1,7 @@
+{
+  "job_id":"E809",
+  "rawResourcesFile":"resources.json",
+  "clarification":"The frozen caller's generic scope string mentions a separate /usr/bin/time output. That executable was absent and no such output exists. Preserve original resources.json unchanged; launch-clarification.json and raw run.launch-v1.log record the failure before Node/CV.",
+  "actualEvidence":"resources.json process.resourceUsage fields are actual Node caller measurements, including maxRSS1088336KiB; adapterElapsedMs2983.1816850000005. run.log bash built-in time reports real8.262s/user6.908s/sys1.480s for the successful process/staging scope.",
+  "limits":"Node caller resourceUsage does not attribute memory/time causally to particular adapter operations and excludes Python child usage. Bash built-in time is not a maxRSS measurement. No throughput/speed/allocator advantage claim."
+}

@@ -1,0 +1,28 @@
+{
+  "schema": "cycle04-E812-source-freeze@1",
+  "job_id": "E812",
+  "worker": "P6",
+  "defaultEnabled": false,
+  "entryPoint": "experiments/capability-discovery/window-evidence/group.mjs#groupWindowEvidence",
+  "admittedContractSha256": "d1c6e5e0fa7385b6476d8d8137cba17716e58d571918e27eee5bccf10095b426",
+  "independentContractAcceptanceSha256": "7001dff06ec5951b33a77829432216ba934e69a60522a68de2ea01a54e83962d",
+  "files": [
+    {"path":"experiments/capability-discovery/window-evidence/group.mjs","sha256":"9669e26d3b2305f8ebcf514e1883d20ad916e759f9e458b244ebc83a87dfd62c","bytes":7614},
+    {"path":"experiments/capability-discovery/window-evidence/group.test.mjs","sha256":"3d1726fdd84724360395acd67aa8de5f86a7643ab41f08af1cc7aa677934e312","bytes":9987},
+    {"path":"experiments/capability-discovery/window-evidence/README.md","sha256":"39d75b1514970ceb63a2be9a4c2218e5893260e96270ee636302461d40f2e958","bytes":3736}
+  ],
+  "rootFlowGate": "checkpoint.json actual written flow reviewed by root; root explicit GO received before any green implementation invocation",
+  "verification": {
+    "focused":{"command":"node --test experiments/capability-discovery/window-evidence/group.test.mjs","pass":14,"fail":0,"exitCode":0,"log":"green-focused.log","logSha256":"78cb34d0dd1e95f5230391242cd2073dbd25264a6055b2f0e0e4fe34081c7aaf"},
+    "lab":{"command":"node --test experiments/capability-discovery/*.test.mjs experiments/capability-discovery/catalog/*.test.mjs experiments/capability-discovery/probes/*/*.test.mjs experiments/capability-discovery/composition/*.test.mjs experiments/capability-discovery/source-pixels/*.test.mjs experiments/capability-discovery/window-evidence/*.test.mjs","pass":127,"fail":0,"exitCode":0,"log":"green-lab.log","logSha256":"b011974ca3cb08a0332777e9b718bb75eb1e206182956a0bdb7af33b79175708"},
+    "stager":{"command":"python3 experiments/capability-discovery/source-pixels/stage-png.test.py","pass":2,"fail":0,"exitCode":0,"log":"stager-tests.log","logSha256":"cc4ce8d54ec0f6a2d972abf34157488e5e132e9d71efaebb422979f2bf3356f8"},
+    "repository":{"command":"node --test","pass":167,"fail":17,"total":184,"exitCode":1,"log":"repository-tests.log","logSha256":"b536184568fed3655fda2ab2abedc59c3c7b46f31260c295353c2237edda51de","scope":"Bare discovery includes immutable archived tests; see test-metadata.json for every failed test. No full-repository-green claim."},
+    "syntax":{"command":"node --check experiments/capability-discovery/window-evidence/group.mjs","exitCode":0,"stdout":""},
+    "build":{"status":"NOT_APPLICABLE_BUILDLESS","reason":"New operation is directly executable Node ESM with only built-in crypto; repository root has no package/build manifest or canonical build target. Existing node --test command actually run; unrelated pinned provider builds are outside this additive source scope."}
+  },
+  "TDD": "Two unchanged OFF-only-baseline red runs,1 pass/13 assertion failures each. Red1 original tool transcript is testimony; red2 exact captured stdout/test/baseline retained. Original red test source equals this frozen test hash. No missing-import-only red and no unreported green failures.",
+  "preservation": {"priorTrackedEntries":1646,"byteLengthOrSha256Mismatches":[],"d31bEntries":23,"d31bMismatches":[],"accepted5b59Entries":14,"accepted5b59Mismatches":[],"trackedDiff":"","untrackedSourceScope":"experiments/capability-discovery/window-evidence/ only"},
+  "exposureAtFreeze": {"freshP2P3CourseProtocolsRead":false,"E809E810CourseOutputsRead":false,"E811RuntimeOracleRead":false,"sourceTunedToActualCourseOutput":false},
+  "scope": "Exact-byte hash and explicit-ID raw-object grouping only. No CV import/call, runner, score/coordinate arithmetic, production wiring, accepted source changes or scientific acceptance. Existing test suites do execute their own prior engineering controls; no new scientific CV trial was authored or run by this helper.",
+  "next": "Independent R812 implementation review of exact frozen bytes and independent post-freeze runtime oracle checks. No commit or publication authorized."
+}

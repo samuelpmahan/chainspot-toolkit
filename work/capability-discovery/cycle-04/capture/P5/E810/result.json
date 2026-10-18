@@ -1,0 +1,94 @@
+{
+  "schema":"cycle04-worker-result@1",
+  "job_id":"E810",
+  "worker":"P5",
+  "outcome":"mixed_change",
+  "summary":"Executed the exact accepted frozen zoom2 protocol once through the unchanged adapter: two compositions,366 operations, all108 candidate rows present,41 finite positive pairs and13 null fits per branch. Existing operations expose a concrete long-average/local-window counterexample: primary48 and56 have finite long fits but short-window nulls, while primary40 retains all5 short and long fits. Bright terrain56 also retains all5 short and long fits, preserving semantic ambiguity. Source/crop raw controls match within unchanged1e-9; no width calibration, path acceptance or per-position continuity follows. Receipt-only source/table and raw-profile figures rendered and inspected; no CV rerun.",
+  "status":"EXECUTED_ONCE_AWAITING_INDEPENDENT_REPLAY",
+  "authorization":"Root GO for exact previously checkpointed caller/helper/protocol flow; no adaptive measurement retry, geometry changes, P6 disclosure or publication authority.",
+  "bindings":{
+    "protocolPath":"/workspace/scratch/8528bb251845/discovery-cycle04/P3/protocol.json",
+    "protocolSha256":"115fc4fb788a3c6b75733b075666a41c999894866706bb09e888e477531526a0",
+    "acceptedReviewPath":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/R803/result.json",
+    "acceptedReviewSha256":"6dbf2497b778853f3a4756a53da303d0907c3a9382dbedbef727a500ce1abf5f",
+    "helperFreezeSha256":"ada3ac0c68d9f6c0ddb7777245bc11020de3c4adbd9c9ea648b77f4aa4d50b41",
+    "callerSha256":"5e99401607300027c244b56afabf526947e4c30bcdd4b9976d4f7170ff3b7aba",
+    "rendererSha256":"f7c0967b40cf899c24d78b4885a387bec6f49f7f7d7f57eb661ed618dcaf3f3e",
+    "sourceGitBlob":"02431ee3f091973a87cc2e7e254bc8bc0b028a7c",
+    "sourcePngSha256":"cf5a033747c32f3e7f8774e7f712394b6af8a5d28228291f0d29a395998d55f4",
+    "sourceRgbaSha256":"3659157b9501899ff62dcc5216dcb058a6a50d31578e751dcb665c49b97da4ee",
+    "receiptSha256":"a61a487dae244cbd9bc62ada6bffb8fc7cf651616db7b37806628ee0399739e4",
+    "artifactManifestSha256":"083b6ce875a46da58cbb1e7725b0b68aa9bfae0a38eb913501e33aa9ce5a4d9f",
+    "verificationSha256":"273140b84d587b206aec3526acb129368b3a1922019c95532db7e52b4576fb93",
+    "reportingClarificationSha256":"94d6ab0c167af0095278e7be8eb4e769f0b5e0b8c0ccd763ed1e5a016f1f3d29"
+  },
+  "execution":{
+    "callerExitCode":0,
+    "rendererExitCode":0,
+    "adapterInvocations":1,
+    "compositionCalls":2,
+    "order":["crop","original-source-frame"],
+    "operationsEachComposition":183,
+    "operationsTotal":366,
+    "candidateRowsEachBranch":54,
+    "candidateRowsTotal":108,
+    "finitePositivePairsEachBranch":41,
+    "nullFitsEachBranch":13,
+    "missingOrNotExecutedRows":0,
+    "rawStatus":"OBSERVED_CHANNELS",
+    "supportStatus":"SUPPORTED_CONSERVATIVE_ENVELOPE",
+    "equivalenceStatus":"MATCHED_DECLARED_CONTROL",
+    "equivalenceAbsoluteTolerance":1e-9,
+    "differencesAboveTolerance":0,
+    "identityBeforeAfterExact":true,
+    "rendererCvCalls":0,
+    "cvReruns":0
+  },
+  "sourceOriginalObservations":[
+    {"widthArgPx":40,"primaryShortFinite":5,"primaryLong":"FINITE","offsetShortFinite":5,"offsetLong":"NULL","brightShortFinite":4,"brightLong":"FINITE"},
+    {"widthArgPx":48,"primaryShortFinite":4,"primaryLong":"FINITE","offsetShortFinite":5,"offsetLong":"FINITE","brightShortFinite":3,"brightLong":"NULL"},
+    {"widthArgPx":56,"primaryShortFinite":2,"primaryLong":"FINITE","offsetShortFinite":2,"offsetLong":"NULL","brightShortFinite":5,"brightLong":"FINITE"}
+  ],
+  "falsifiersActuallyObserved":[
+    "Primary48: short5 NULL with long finite; primary56: short1/3/5 NULL with long finite. These executed rows falsify interpreting those long fits as a pair sustained across all declared shorter windows; nulls do not prove the visual ribbon physically absent.",
+    "Bright terrain40: short4 NULL with long finite is another bounded averaging counterexample. Bright terrain56: all5 shorts and long finite is concrete ambiguity against using finite-pair window evidence as semantic identity.",
+    "The fixed+6 same-edge diagnostic rejects ideal association in2/5 jointly finite source comparisons at40,4/5 at48 and1/1 at56. Remaining1/1/5 comparisons are unobserved, not failures; within1e-9 residuals are not edge identity/accuracy proof."
+  ],
+  "widthDiagnostic":{
+    "rawLearnerSelectedWidthPx":48,
+    "sourceMeanScores":[{"widthArgPx":40,"score":0.04444444444444438},{"widthArgPx":48,"score":0.3830123456790121},{"widthArgPx":56,"score":0.3288888888888889}],
+    "localWidthStatus":"UNKNOWN",
+    "calibratedWidthPx":null,
+    "meaning":"Raw learner selection neither calibrates width nor overrides the primary48 short5 null. All candidate rows retained."
+  },
+  "resources":{
+    "node":"v24.19.0",
+    "adapterElapsedMs":2306.9961780000003,
+    "callerElapsedMs":7849.380995,
+    "nodeProcessMaxRssKiB":1210104,
+    "externalTimeUtilityUsed":false,
+    "scopeCorrection":"resources.json contains an inapplicable boilerplate clause about a separate time log. Raw artifact retained unchanged; reporting-clarification.json records that only Node process/resource/memory and performance.now observations were used. No external time log exists or is claimed."
+  },
+  "artifacts":{
+    "directory":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810",
+    "manifest":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/artifact-manifest.json",
+    "receipt":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/receipt.json",
+    "rows":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/all-candidate-rows.json",
+    "analysis":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/analysis.json",
+    "fitTable":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/ordered-fit-table.csv",
+    "figure":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/E810-actual-receipt.png",
+    "rawProfilesFigure":"/workspace/scratch/8528bb251845/discovery-cycle04/P5/E810/E810-raw-profiles.png",
+    "figureSha256":"03d90c754a3ec650801e568ad42b6d9e66b7b97726106c3684a51bcd2c970786",
+    "rawProfilesFigureSha256":"17e0f066d40e33d98eaac4a3ced5b5b867df1debb07520201e6a423310af4a3b"
+  },
+  "limits":[
+    "Exposed one-screenshot moving-pose exploratory comparison, not independent course evaluation or pure bitwise window partition.",
+    "Each16-sample short itself averages longitudinal data; all5 finite cannot establish per-position continuity.",
+    "Bank56/shift can encounter fixed profile boundary; no widening, recentering, masks, tuning, successful-row selection or detector changes.",
+    "Source/crop match is this declared numerical control only, not universal coordinate/fit invariance or scientific/semantic equivalence.",
+    "Dev72 fixed-pose observations ignore window bounds; long and short3 duplicate sensor pose, not independent support.",
+    "Semantic identity, calibrated width, physical scale, AA/renderer identity and path/endpoint acceptance remain UNKNOWN; promoted=false.",
+    "No source/Git/P3 files changed; P6 received no actual geometry/output; independent replay remains pending."
+  ],
+  "nextAction":"Root assigns independent replay/review to P1/P2/P4, excluding P3 protocol author and P5 producer. Preserve this receipt and exact helper/protocol bindings; any later measurement is a separately identified run, never adaptive retry."
+}

@@ -1,0 +1,1929 @@
+{
+  "schema": "R807-independent-replay-verification@1",
+  "job_id": "R807",
+  "worker": "P1",
+  "startedAt": "2026-10-18T12:12:44.140Z",
+  "finishedAt": "2026-10-18T12:12:45.418Z",
+  "decisionCandidate": "accepted",
+  "compositionCalls": 4,
+  "sourcePixelAdapterCalls": 0,
+  "renderCalls": 1,
+  "scienceStats": {
+    "profiles": 52,
+    "rows": 156,
+    "finiteFits": 48,
+    "nullFits": 108,
+    "offBankNulls": 104,
+    "operations": 532
+  },
+  "literalChecks": 94,
+  "failedLiteralChecks": [],
+  "allChecks": [
+    {
+      "id": "exact assigned producer result",
+      "pass": true,
+      "detail": "63955be1fd02b4a2e2bc1ec1bd1ed8ec1803e476b85e3e3d77179a71ae91c84a"
+    },
+    {
+      "id": "exact assigned producer run",
+      "pass": true,
+      "detail": "63c5e408df83fe53e0ac993c297aad5a1a41410af0dc4ca5e609779f36c249db"
+    },
+    {
+      "id": "checkpoint identity",
+      "pass": true,
+      "detail": "1b657518f6be6c998fb01643044b39b8cfe367886f56788172d70bc31a3f46bc"
+    },
+    {
+      "id": "reviewed producer source",
+      "pass": true,
+      "detail": "c0990667da536950ae41c2218d82108ff7b94617cfa6a056004a972375d72092"
+    },
+    {
+      "id": "reviewed renderer source",
+      "pass": true,
+      "detail": "a1d70f00cab819df895bfa926a36984bc7fa2067e905d136d4de41202028f17e"
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/producer.mjs",
+      "pass": true,
+      "detail": {
+        "sha256": "c0990667da536950ae41c2218d82108ff7b94617cfa6a056004a972375d72092",
+        "bytes": 11988
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/render-receipt.py",
+      "pass": true,
+      "detail": {
+        "sha256": "a1d70f00cab819df895bfa926a36984bc7fa2067e905d136d4de41202028f17e",
+        "bytes": 6586
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/checkpoint-freeze.json",
+      "pass": true,
+      "detail": {
+        "sha256": "1b657518f6be6c998fb01643044b39b8cfe367886f56788172d70bc31a3f46bc",
+        "bytes": 589
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/run.json",
+      "pass": true,
+      "detail": {
+        "sha256": "63c5e408df83fe53e0ac993c297aad5a1a41410af0dc4ca5e609779f36c249db",
+        "bytes": 8051
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/prediction-comparison.json",
+      "pass": true,
+      "detail": {
+        "sha256": "6077c7ab9252b955971860e5619a42399034bf2030efb7afdfbb1dc079b1eacf",
+        "bytes": 1427739
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/all156-candidate-rows.tsv",
+      "pass": true,
+      "detail": {
+        "sha256": "ca1956bcccc4464c29f90b79e1b3feeb1dea3158061ca9e1ad72512cd5fa2aa9",
+        "bytes": 60646
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/run.stdout.log",
+      "pass": true,
+      "detail": {
+        "sha256": "60b25c46bca139eec0fb76d376fb8dc19c1f379ce8b1e93254b2ab0e87d94622",
+        "bytes": 3009
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/run.stderr.log",
+      "pass": true,
+      "detail": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/render-binding.json",
+      "pass": true,
+      "detail": {
+        "sha256": "ebdf850e973e2adda67924fd2df38fb9af51533c04b3a065a34b48fd0f5fa34f",
+        "bytes": 850
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/render.stdout.log",
+      "pass": true,
+      "detail": {
+        "sha256": "b47dab3c8cf300025ef939497f9541620fd3b59688769344168cde0c43973dec",
+        "bytes": 318
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/render.stderr.log",
+      "pass": true,
+      "detail": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/E807-synthetic-window-evidence.png",
+      "pass": true,
+      "detail": {
+        "sha256": "5f2765ab00f3c213df4afa2ebf03c54f8f1a50e28f109e17a20345508b5495d8",
+        "bytes": 328045
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/inspection.html",
+      "pass": true,
+      "detail": {
+        "sha256": "883a0851e27d0d86757541d334d04426fe74cff755c23696046144785616dea6",
+        "bytes": 2411042
+      }
+    },
+    {
+      "id": "upstream source freeze /workspace/scratch/8528bb251845/discovery-cycle04/P5/fixtures.mjs",
+      "pass": true,
+      "detail": "506029a09fae4593b813ac89c75e9b0fb67c8949aaa16f448e73926b57e7d13b"
+    },
+    {
+      "id": "upstream source freeze /workspace/scratch/8528bb251845/discovery-cycle04/P5/synthetic-protocol.json",
+      "pass": true,
+      "detail": "e4f95e27e3de9e46aab3c642e9a732db28fdf572208f3c777f5cdbae8423cc6d"
+    },
+    {
+      "id": "upstream source freeze /workspace/scratch/8528bb251845/discovery-cycle04/P5/contract-freeze.json",
+      "pass": true,
+      "detail": "14927263b2d5c46b983bb4075566d8702d718614c78548a966d5a0dee2d07fc5"
+    },
+    {
+      "id": "upstream source freeze /workspace/scratch/8528bb251845/discovery-cycle04/P2/R804/result.json",
+      "pass": true,
+      "detail": "bbe0944f2a3cb37158474c54f25c568e34de36bf8bddc01d5df9095c422286c8"
+    },
+    {
+      "id": "frozen source experiments/capability-discovery/composition/README.md",
+      "pass": true,
+      "detail": "be861f6e15fbaaf237d817ebda82dcab821e22dc13f3a0883e32b6785eda87bd"
+    },
+    {
+      "id": "frozen source experiments/capability-discovery/composition/recipe.mjs",
+      "pass": true,
+      "detail": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6"
+    },
+    {
+      "id": "frozen source experiments/capability-discovery/composition/training-fixtures.mjs",
+      "pass": true,
+      "detail": "e93de4087bf9c9f1e72d0655233b93591ed989e8e2a0b4682f5111d659592789"
+    },
+    {
+      "id": "frozen source experiments/capability-discovery/source-pixels/README.md",
+      "pass": true,
+      "detail": "9018198980379c2dcaea71adf8685d3232df1d6d3e557ea50b311a71a851c93c"
+    },
+    {
+      "id": "frozen source experiments/capability-discovery/source-pixels/adapter.mjs",
+      "pass": true,
+      "detail": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6"
+    },
+    {
+      "id": "frozen source experiments/capability-discovery/source-pixels/test-fixtures.mjs",
+      "pass": true,
+      "detail": "79c98f283767acb1fd918d350bbfd25afde957146788eae6aa920f3f1b979893"
+    },
+    {
+      "id": "frozen source experiments/capability-discovery/probes/width/recipe.mjs",
+      "pass": true,
+      "detail": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0"
+    },
+    {
+      "id": "frozen source experiments/capability-discovery/probes/width/provenance.json",
+      "pass": true,
+      "detail": "0f3de094060d64f7614be6a8fa5023180e75070d33153976bdf318a734fdffaf"
+    },
+    {
+      "id": "frozen source experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+      "pass": true,
+      "detail": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"
+    },
+    {
+      "id": "frozen source experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+      "pass": true,
+      "detail": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689"
+    },
+    {
+      "id": "frozen source work/capability-discovery/cycle-02/feature-manifest-E308.json",
+      "pass": true,
+      "detail": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52"
+    },
+    {
+      "id": "frozen source work/capability-discovery/cycle-02/evidence/E302/probe.mjs",
+      "pass": true,
+      "detail": "3c34922ee6d35c85be035fc3ce9d484d9d0a9fc578062d07fcc376d091c2e14d"
+    },
+    {
+      "id": "frozen source work/capability-discovery/cycle-02/evidence/E302/result.json",
+      "pass": true,
+      "detail": "d817712fe8447f052c8a04488b33134a90a5f426f5eec48f6f507a65775d5bee"
+    },
+    {
+      "id": "frozen source work/capability-discovery/cycle-02/evidence/E303/result.json",
+      "pass": true,
+      "detail": "d605a71a31fb6d0bbd72a7b9c7f1738ab815a14f6695c186102af26289a0cc87"
+    },
+    {
+      "id": "frozen source work/capability-discovery/cycle-02/evidence/E304/result.json",
+      "pass": true,
+      "detail": "f4a4ce6e3b424aed178e8bc9cf3563b9d05bbef4471846c725dce5a4e6f69bbd"
+    },
+    {
+      "id": "frozen source work/capability-discovery/cycle-03/evidence/E506/contract.json",
+      "pass": true,
+      "detail": "87619e8b4b47bfc661a20454d44d729ff5521a9ab4dca5bb1074c2c234820fb7"
+    },
+    {
+      "id": "frozen source work/capability-discovery/cycle-03/evidence/E506/contract-amendment.json",
+      "pass": true,
+      "detail": "5e524e276f5113b161e51f2c9b7af88aa66bd1dce988a0af84c89512299ae2be"
+    },
+    {
+      "id": "frozen source work/capability-discovery/cycle-03/evidence/E510/result.json",
+      "pass": true,
+      "detail": "72d62cd54274aee4cb119b70af1458d6fa898b1293ac64f40f3d2a066b72839d"
+    },
+    {
+      "id": "frozen source work/capability-discovery/cycle-03/evidence/E511/protocol.json",
+      "pass": true,
+      "detail": "c98d0965930d6d3af0af72f3037227e27bf86033d3fdec28fc815a7a33f0e2ab"
+    },
+    {
+      "id": "accepted source-pixel freeze",
+      "pass": true,
+      "detail": "work/capability-discovery/cycle-03/evidence/E506/candidate-freeze.json"
+    },
+    {
+      "id": "accepted composition freeze",
+      "pass": true,
+      "detail": "work/capability-discovery/cycle-02/feature-manifest-E308.json"
+    },
+    {
+      "id": "accepted closure experiments/capability-discovery/source-pixels/README.md",
+      "pass": true,
+      "detail": "9018198980379c2dcaea71adf8685d3232df1d6d3e557ea50b311a71a851c93c"
+    },
+    {
+      "id": "accepted closure experiments/capability-discovery/source-pixels/adapter.mjs",
+      "pass": true,
+      "detail": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6"
+    },
+    {
+      "id": "accepted closure experiments/capability-discovery/source-pixels/adapter.test.mjs",
+      "pass": true,
+      "detail": "0445ddfcd29b799770961a4b98e7244dad29e87ecf2f7c691c54b64d97bf0ac4"
+    },
+    {
+      "id": "accepted closure experiments/capability-discovery/source-pixels/stage-png.py",
+      "pass": true,
+      "detail": "e194f56e2899f516bb79dd8d6c5e4b876440d6f0932bf9d74e0a56c117f06a44"
+    },
+    {
+      "id": "accepted closure experiments/capability-discovery/source-pixels/stage-png.test.py",
+      "pass": true,
+      "detail": "18859d5e85beaaa6ebc2b559b995e18d87065b60cd05d5166d27323c57121f46"
+    },
+    {
+      "id": "accepted closure experiments/capability-discovery/source-pixels/test-fixtures.mjs",
+      "pass": true,
+      "detail": "79c98f283767acb1fd918d350bbfd25afde957146788eae6aa920f3f1b979893"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-03/evidence/E506/adapter-tests.log",
+      "pass": true,
+      "detail": "06165329c095a3d5f372c56bbac85a6a6cd1cdf9d3cc40d89ff6bb25202dda84"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-03/evidence/E506/checkpoint-amendment.md",
+      "pass": true,
+      "detail": "4d189cce84e46dc1248b37990662349b478c4bb6c25e19f2cbcf9737801e34cf"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-03/evidence/E506/checkpoint.md",
+      "pass": true,
+      "detail": "7ca787fb16a9bcb81564168a2e13316d450e4a034c4c31565b2167a6404d19ee"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-03/evidence/E506/contract-amendment.json",
+      "pass": true,
+      "detail": "5e524e276f5113b161e51f2c9b7af88aa66bd1dce988a0af84c89512299ae2be"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-03/evidence/E506/contract.json",
+      "pass": true,
+      "detail": "87619e8b4b47bfc661a20454d44d729ff5521a9ab4dca5bb1074c2c234820fb7"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-03/evidence/E506/initial-adapter.test.mjs",
+      "pass": true,
+      "detail": "8266a9ca4b77bca642ed90dd13ca76702a0eb9c794b756bd1786fd4490acc673"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-03/evidence/E506/initial-tests-red.log",
+      "pass": true,
+      "detail": "e7cf94861f4faf0f31e178748fe57612becab603e371e73ebecdf8e848b05d71"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-03/evidence/E506/numeric-seam.json",
+      "pass": true,
+      "detail": "4515742be1bcbd3ef3949e302eb1610d39c2c63218e5382d73bf82de83d60ab5"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-03/evidence/E506/preserved-composition-tests.log",
+      "pass": true,
+      "detail": "ba34f9f8f3e6327fdcb0a66ef003070943584dc094a23bbe7f4630ad4f2a7dda"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-03/evidence/E506/seam-probe.mjs",
+      "pass": true,
+      "detail": "5ea928c7b781c58fa1acbfcff13b8bafafeb69686e2a5688a3c8ace8b55fe391"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-03/evidence/E506/staging-tests.log",
+      "pass": true,
+      "detail": "d1276a2d9d79b9ed0a61446aa751886a8b573a45c52c4fe838159bc8be061837"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-03/history/E506-first-source/README.md",
+      "pass": true,
+      "detail": "4517abcbc76bcf34aafe8726ea21ab304f39d44aa0c4e31f926b937a01d34966"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-03/history/E506-first-source/adapter.mjs",
+      "pass": true,
+      "detail": "2274dc014e8aa0fa0463462d6ca17e831f29b646d1c2ea14f25ca2d46c64e488"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-03/history/E506-first-source/adapter.test.mjs",
+      "pass": true,
+      "detail": "8266a9ca4b77bca642ed90dd13ca76702a0eb9c794b756bd1786fd4490acc673"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-03/history/E506-first-source/manifest.json",
+      "pass": true,
+      "detail": "d4ec7b69de6cb3e8c6abdecadef7d54f1bb7df1e375fdf6f6ab29f4fd15d6bf9"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-03/history/E506-first-source/stage-png.py",
+      "pass": true,
+      "detail": "5978548e3d19e084964c67ccd19b06f86c1bd0b453862cf77aa75f562dfe1839"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-03/history/E506-first-source/stage-png.test.py",
+      "pass": true,
+      "detail": "3f308301f344ea688024a7d813459ec7674498f99e00b18702477bb748d405bb"
+    },
+    {
+      "id": "accepted closure experiments/capability-discovery/composition/cli.mjs",
+      "pass": true,
+      "detail": "0e08999d39aff0ba6498bad2e90c8986fb2995b98ae44fced92ebea2f3dcf839"
+    },
+    {
+      "id": "accepted closure experiments/capability-discovery/composition/cli.test.mjs",
+      "pass": true,
+      "detail": "cb89ad358946f5f1320d72cdf5792d98eda951307da039b60712637b7d40af2d"
+    },
+    {
+      "id": "accepted closure experiments/capability-discovery/composition/composition.test.mjs",
+      "pass": true,
+      "detail": "74e50ec4cf0068c1cceb08b00e058b0f6437ba1eee934d199a4133e9a6e8b574"
+    },
+    {
+      "id": "accepted closure experiments/capability-discovery/composition/decimal-bank.test.mjs",
+      "pass": true,
+      "detail": "abce3d5d84fa1263a851f1d9aff73bcc91108420cbcb58abc61217bd900a82d8"
+    },
+    {
+      "id": "accepted closure experiments/capability-discovery/composition/recipe.mjs",
+      "pass": true,
+      "detail": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6"
+    },
+    {
+      "id": "accepted closure experiments/capability-discovery/composition/training-fixtures.mjs",
+      "pass": true,
+      "detail": "e93de4087bf9c9f1e72d0655233b93591ed989e8e2a0b4682f5111d659592789"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-02/called-shot-E306.json",
+      "pass": true,
+      "detail": "dc8bc84a3cd5789336dd5577d31666223d99f10d1d99ac22ea8f38542eb0188e"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-02/called-shot-E308.json",
+      "pass": true,
+      "detail": "ca325288914ebc90d8493154dbff4a62e973d0500a2b6c5012c07593a4d382d0"
+    },
+    {
+      "id": "accepted closure work/capability-discovery/cycle-02/evidence/E308/counterexample-input.json",
+      "pass": true,
+      "detail": "9a0b67bfbcc536e6285396eba392b4a8facb9de94d83e09f12c1bf846112bd0f"
+    },
+    {
+      "id": "accepted closure experiments/capability-discovery/probes/width/recipe.mjs",
+      "pass": true,
+      "detail": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0"
+    },
+    {
+      "id": "accepted closure experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+      "pass": true,
+      "detail": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"
+    },
+    {
+      "id": "accepted closure experiments/capability-discovery/probes/width/vendor/active/contracts/alpha.profile@1.mjs",
+      "pass": true,
+      "detail": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f"
+    },
+    {
+      "id": "accepted closure experiments/capability-discovery/probes/width/vendor/provider/fourLaneSensor.cjs",
+      "pass": true,
+      "detail": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624"
+    },
+    {
+      "id": "accepted closure experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+      "pass": true,
+      "detail": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689"
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/intact/request.json",
+      "pass": true,
+      "detail": {
+        "sha256": "2ca2455be8f18d88de8510924e18660245af471ffa780633f732ce65f36a079e",
+        "bytes": 5410135
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/intact/raw-receipt.json",
+      "pass": true,
+      "detail": {
+        "sha256": "7a059449f3d46e5b9b8cecc89f2095283284cde218c0e942f5763e59fed9df99",
+        "bytes": 202229
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/intact/binding.json",
+      "pass": true,
+      "detail": {
+        "sha256": "9a052c5af4357622f30babb02ec23f2c2a8c42a07282308e1fffbfda7c3042c9",
+        "bytes": 128605
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/localized-upper-rail-loss/request.json",
+      "pass": true,
+      "detail": {
+        "sha256": "ed08e86706c7901ed7d8d33fab36a1869b5ae18a17117d1dde58bf7db696b1e5",
+        "bytes": 5410496
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/localized-upper-rail-loss/raw-receipt.json",
+      "pass": true,
+      "detail": {
+        "sha256": "ba6830a1d1f7ced96b3e52f867d6446b0c9332a3eeb426de34032da835aac3fc",
+        "bytes": 201727
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/localized-upper-rail-loss/binding.json",
+      "pass": true,
+      "detail": {
+        "sha256": "7ae481cc01cd097c6295a85aef31fe946cdbcd3fe0bbd0d172c20e0e5915c243",
+        "bytes": 128988
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/organic-capsule/request.json",
+      "pass": true,
+      "detail": {
+        "sha256": "a9aa95caced1788e2b2d5918f41fa810ac9ab5eb8b4519885bb6d3f067a6cb04",
+        "bytes": 5410306
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/organic-capsule/raw-receipt.json",
+      "pass": true,
+      "detail": {
+        "sha256": "61af0652af469fd91ce5879097de15cf94800ebca8ff725ffa755f8678a0451a",
+        "bytes": 202364
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/organic-capsule/binding.json",
+      "pass": true,
+      "detail": {
+        "sha256": "556cf83cc46245f9d132ac5bd5e19851e70fa634ca2a42c90b3822855687736e",
+        "bytes": 128789
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/crossing/request.json",
+      "pass": true,
+      "detail": {
+        "sha256": "e628efcb3220668b34206f6f951987a1cccff28718fe277e683ddab9808b8f10",
+        "bytes": 5410173
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/crossing/raw-receipt.json",
+      "pass": true,
+      "detail": {
+        "sha256": "e547236c8f847e5369006323bb76ee2c3b9a2d5366edadf53bbfdd93b76908db",
+        "bytes": 201519
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/crossing/binding.json",
+      "pass": true,
+      "detail": {
+        "sha256": "db79d20a3e8d7ad983f4a86b8c57735642d5aff632c32f2b5d354df97f2dd7fe",
+        "bytes": 128649
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/prediction-comparison.json",
+      "pass": true,
+      "detail": {
+        "sha256": "6077c7ab9252b955971860e5619a42399034bf2030efb7afdfbb1dc079b1eacf",
+        "bytes": 1427739
+      }
+    },
+    {
+      "id": "94 original literal checks",
+      "pass": true,
+      "detail": {
+        "checks": 94,
+        "failed": []
+      }
+    },
+    {
+      "id": "unique path-only substitution",
+      "pass": true,
+      "detail": "new URL('../../P5/fixtures.mjs',import.meta.url)"
+    },
+    {
+      "id": "unique path-only substitution",
+      "pass": true,
+      "detail": "new URL('../../../chainspot-discovery-lab/experiments/capability-discovery/composition/recipe.mjs',import.meta.url)"
+    },
+    {
+      "id": "replay producer exits zero",
+      "pass": true,
+      "detail": {
+        "exitCode": 0
+      }
+    },
+    {
+      "id": "exactly four fresh calls",
+      "pass": true,
+      "detail": {
+        "compositionCalls": 4,
+        "caseOrder": [
+          "intact",
+          "localized-upper-rail-loss",
+          "organic-capsule",
+          "crossing"
+        ]
+      }
+    },
+    {
+      "id": "same case intact",
+      "pass": true,
+      "detail": "intact"
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P1/R807/replay/intact/request.json",
+      "pass": true,
+      "detail": {
+        "sha256": "2ca2455be8f18d88de8510924e18660245af471ffa780633f732ce65f36a079e",
+        "bytes": 5410135
+      }
+    },
+    {
+      "id": "byte-identical intact request",
+      "pass": true,
+      "detail": {
+        "producer": "2ca2455be8f18d88de8510924e18660245af471ffa780633f732ce65f36a079e",
+        "replay": "2ca2455be8f18d88de8510924e18660245af471ffa780633f732ce65f36a079e"
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P1/R807/replay/intact/raw-receipt.json",
+      "pass": true,
+      "detail": {
+        "sha256": "7a059449f3d46e5b9b8cecc89f2095283284cde218c0e942f5763e59fed9df99",
+        "bytes": 202229
+      }
+    },
+    {
+      "id": "byte-identical intact receipt",
+      "pass": true,
+      "detail": {
+        "producer": "7a059449f3d46e5b9b8cecc89f2095283284cde218c0e942f5763e59fed9df99",
+        "replay": "7a059449f3d46e5b9b8cecc89f2095283284cde218c0e942f5763e59fed9df99"
+      }
+    },
+    {
+      "id": "case binding scientific projection intact",
+      "pass": true,
+      "detail": "Only processObservation may differ"
+    },
+    {
+      "id": "RGBA request hash intact",
+      "pass": true,
+      "detail": "e6648f24c1616297317cb2f6062317ba83ab2c4949e5d4d22568f07b05cf1c7a"
+    },
+    {
+      "id": "independent fixture predicate intact",
+      "pass": true,
+      "detail": {
+        "pixels": 122880,
+        "mismatches": 0
+      }
+    },
+    {
+      "id": "independent exact world partition intact",
+      "pass": true,
+      "detail": {
+        "longSamples": 192,
+        "shortSamples": 192
+      }
+    },
+    {
+      "id": "source figure region exact intact",
+      "pass": true,
+      "detail": {
+        "sha256": "8c18a4f4aa121cdb3a68f5d1611d26635b19afc43cde7ff5a689f280d0379447",
+        "region": 122880
+      }
+    },
+    {
+      "id": "all stations widths intact",
+      "pass": true,
+      "detail": 13
+    },
+    {
+      "id": "same case localized-upper-rail-loss",
+      "pass": true,
+      "detail": "localized-upper-rail-loss"
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P1/R807/replay/localized-upper-rail-loss/request.json",
+      "pass": true,
+      "detail": {
+        "sha256": "ed08e86706c7901ed7d8d33fab36a1869b5ae18a17117d1dde58bf7db696b1e5",
+        "bytes": 5410496
+      }
+    },
+    {
+      "id": "byte-identical localized-upper-rail-loss request",
+      "pass": true,
+      "detail": {
+        "producer": "ed08e86706c7901ed7d8d33fab36a1869b5ae18a17117d1dde58bf7db696b1e5",
+        "replay": "ed08e86706c7901ed7d8d33fab36a1869b5ae18a17117d1dde58bf7db696b1e5"
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P1/R807/replay/localized-upper-rail-loss/raw-receipt.json",
+      "pass": true,
+      "detail": {
+        "sha256": "ba6830a1d1f7ced96b3e52f867d6446b0c9332a3eeb426de34032da835aac3fc",
+        "bytes": 201727
+      }
+    },
+    {
+      "id": "byte-identical localized-upper-rail-loss receipt",
+      "pass": true,
+      "detail": {
+        "producer": "ba6830a1d1f7ced96b3e52f867d6446b0c9332a3eeb426de34032da835aac3fc",
+        "replay": "ba6830a1d1f7ced96b3e52f867d6446b0c9332a3eeb426de34032da835aac3fc"
+      }
+    },
+    {
+      "id": "case binding scientific projection localized-upper-rail-loss",
+      "pass": true,
+      "detail": "Only processObservation may differ"
+    },
+    {
+      "id": "RGBA request hash localized-upper-rail-loss",
+      "pass": true,
+      "detail": "8388b9e4d4fe2140b05c6fbc4cfc728dd0ec706fa0f3daaf358569e6faa35ff7"
+    },
+    {
+      "id": "independent fixture predicate localized-upper-rail-loss",
+      "pass": true,
+      "detail": {
+        "pixels": 122880,
+        "mismatches": 0
+      }
+    },
+    {
+      "id": "independent exact world partition localized-upper-rail-loss",
+      "pass": true,
+      "detail": {
+        "longSamples": 192,
+        "shortSamples": 192
+      }
+    },
+    {
+      "id": "source figure region exact localized-upper-rail-loss",
+      "pass": true,
+      "detail": {
+        "sha256": "5a5e15c9ed38db6ccbc352c8afabac4007597056fa46c6949479c9de8a64d2fc",
+        "region": 122880
+      }
+    },
+    {
+      "id": "all stations widths localized-upper-rail-loss",
+      "pass": true,
+      "detail": 13
+    },
+    {
+      "id": "same case organic-capsule",
+      "pass": true,
+      "detail": "organic-capsule"
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P1/R807/replay/organic-capsule/request.json",
+      "pass": true,
+      "detail": {
+        "sha256": "a9aa95caced1788e2b2d5918f41fa810ac9ab5eb8b4519885bb6d3f067a6cb04",
+        "bytes": 5410306
+      }
+    },
+    {
+      "id": "byte-identical organic-capsule request",
+      "pass": true,
+      "detail": {
+        "producer": "a9aa95caced1788e2b2d5918f41fa810ac9ab5eb8b4519885bb6d3f067a6cb04",
+        "replay": "a9aa95caced1788e2b2d5918f41fa810ac9ab5eb8b4519885bb6d3f067a6cb04"
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P1/R807/replay/organic-capsule/raw-receipt.json",
+      "pass": true,
+      "detail": {
+        "sha256": "61af0652af469fd91ce5879097de15cf94800ebca8ff725ffa755f8678a0451a",
+        "bytes": 202364
+      }
+    },
+    {
+      "id": "byte-identical organic-capsule receipt",
+      "pass": true,
+      "detail": {
+        "producer": "61af0652af469fd91ce5879097de15cf94800ebca8ff725ffa755f8678a0451a",
+        "replay": "61af0652af469fd91ce5879097de15cf94800ebca8ff725ffa755f8678a0451a"
+      }
+    },
+    {
+      "id": "case binding scientific projection organic-capsule",
+      "pass": true,
+      "detail": "Only processObservation may differ"
+    },
+    {
+      "id": "RGBA request hash organic-capsule",
+      "pass": true,
+      "detail": "528f2027d44f0c51fc0d80c74a31c9e627b6e70b1a239eac0a9c6308e78d0917"
+    },
+    {
+      "id": "independent fixture predicate organic-capsule",
+      "pass": true,
+      "detail": {
+        "pixels": 122880,
+        "mismatches": 0
+      }
+    },
+    {
+      "id": "independent exact world partition organic-capsule",
+      "pass": true,
+      "detail": {
+        "longSamples": 192,
+        "shortSamples": 192
+      }
+    },
+    {
+      "id": "source figure region exact organic-capsule",
+      "pass": true,
+      "detail": {
+        "sha256": "40de5161d595e95c28819d7c041520d6996d8b7be4a0c127931184c22e807b1d",
+        "region": 122880
+      }
+    },
+    {
+      "id": "all stations widths organic-capsule",
+      "pass": true,
+      "detail": 13
+    },
+    {
+      "id": "same case crossing",
+      "pass": true,
+      "detail": "crossing"
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P1/R807/replay/crossing/request.json",
+      "pass": true,
+      "detail": {
+        "sha256": "e628efcb3220668b34206f6f951987a1cccff28718fe277e683ddab9808b8f10",
+        "bytes": 5410173
+      }
+    },
+    {
+      "id": "byte-identical crossing request",
+      "pass": true,
+      "detail": {
+        "producer": "e628efcb3220668b34206f6f951987a1cccff28718fe277e683ddab9808b8f10",
+        "replay": "e628efcb3220668b34206f6f951987a1cccff28718fe277e683ddab9808b8f10"
+      }
+    },
+    {
+      "id": "hash /workspace/scratch/8528bb251845/discovery-cycle04/P1/R807/replay/crossing/raw-receipt.json",
+      "pass": true,
+      "detail": {
+        "sha256": "e547236c8f847e5369006323bb76ee2c3b9a2d5366edadf53bbfdd93b76908db",
+        "bytes": 201519
+      }
+    },
+    {
+      "id": "byte-identical crossing receipt",
+      "pass": true,
+      "detail": {
+        "producer": "e547236c8f847e5369006323bb76ee2c3b9a2d5366edadf53bbfdd93b76908db",
+        "replay": "e547236c8f847e5369006323bb76ee2c3b9a2d5366edadf53bbfdd93b76908db"
+      }
+    },
+    {
+      "id": "case binding scientific projection crossing",
+      "pass": true,
+      "detail": "Only processObservation may differ"
+    },
+    {
+      "id": "RGBA request hash crossing",
+      "pass": true,
+      "detail": "f47452138ccb736da56bc5a1fd0dd2a610852ee276828b6bdef254b413b5efaa"
+    },
+    {
+      "id": "independent fixture predicate crossing",
+      "pass": true,
+      "detail": {
+        "pixels": 122880,
+        "mismatches": 0
+      }
+    },
+    {
+      "id": "independent exact world partition crossing",
+      "pass": true,
+      "detail": {
+        "longSamples": 192,
+        "shortSamples": 192
+      }
+    },
+    {
+      "id": "source figure region exact crossing",
+      "pass": true,
+      "detail": {
+        "sha256": "f8cd46d12f6fc3e2980581a7e34f10cbf7d20edaf19b2259a003d46b1b1edc75",
+        "region": 122880
+      }
+    },
+    {
+      "id": "all stations widths crossing",
+      "pass": true,
+      "detail": 13
+    },
+    {
+      "id": "prediction comparison byte-for-byte",
+      "pass": true,
+      "detail": {
+        "producer": "6077c7ab9252b955971860e5619a42399034bf2030efb7afdfbb1dc079b1eacf",
+        "replay": "6077c7ab9252b955971860e5619a42399034bf2030efb7afdfbb1dc079b1eacf"
+      }
+    },
+    {
+      "id": "all94 literal checks independently evaluated",
+      "pass": true,
+      "detail": 94
+    },
+    {
+      "id": "all156 TSV independent reconstruction",
+      "pass": true,
+      "detail": {
+        "rows": 156,
+        "sha256": "ca1956bcccc4464c29f90b79e1b3feeb1dea3158061ca9e1ad72512cd5fa2aa9"
+      }
+    },
+    {
+      "id": "complete raw statistics",
+      "pass": true,
+      "detail": {
+        "profiles": 52,
+        "rows": 156,
+        "finiteFits": 48,
+        "nullFits": 108,
+        "offBankNulls": 104,
+        "operations": 532
+      }
+    },
+    {
+      "id": "counterexample long finite defect local null localized-upper-rail-loss",
+      "pass": true,
+      "detail": {
+        "long": {
+          "lPx": -15.5,
+          "rPx": 14.5,
+          "cPx": -0.5,
+          "wPx": 30,
+          "score": 30,
+          "gl": 36,
+          "gr": 30
+        },
+        "short05": null,
+        "short06": null
+      }
+    },
+    {
+      "id": "counterexample long finite defect local null crossing",
+      "pass": true,
+      "detail": {
+        "long": {
+          "lPx": -15.5,
+          "rPx": 14.5,
+          "cPx": -0.5,
+          "wPx": 30,
+          "score": 30,
+          "gl": 30,
+          "gr": 30
+        },
+        "short05": null,
+        "short06": null
+      }
+    },
+    {
+      "id": "capsule semantic negative retained",
+      "pass": true,
+      "detail": "All retained CV fields equal; source RGBA differs"
+    },
+    {
+      "id": "receipt-only renderer exits zero",
+      "pass": true,
+      "detail": {
+        "exitCode": 0
+      }
+    },
+    {
+      "id": "byte-identical replay figure E807-synthetic-window-evidence.png",
+      "pass": true,
+      "detail": {
+        "original": "5f2765ab00f3c213df4afa2ebf03c54f8f1a50e28f109e17a20345508b5495d8",
+        "replay": "5f2765ab00f3c213df4afa2ebf03c54f8f1a50e28f109e17a20345508b5495d8"
+      }
+    },
+    {
+      "id": "byte-identical replay figure inspection.html",
+      "pass": true,
+      "detail": {
+        "original": "883a0851e27d0d86757541d334d04426fe74cff755c23696046144785616dea6",
+        "replay": "883a0851e27d0d86757541d334d04426fe74cff755c23696046144785616dea6"
+      }
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/producer.mjs",
+      "pass": true,
+      "detail": "c0990667da536950ae41c2218d82108ff7b94617cfa6a056004a972375d72092"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/render-receipt.py",
+      "pass": true,
+      "detail": "a1d70f00cab819df895bfa926a36984bc7fa2067e905d136d4de41202028f17e"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/checkpoint-freeze.json",
+      "pass": true,
+      "detail": "1b657518f6be6c998fb01643044b39b8cfe367886f56788172d70bc31a3f46bc"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/run.json",
+      "pass": true,
+      "detail": "63c5e408df83fe53e0ac993c297aad5a1a41410af0dc4ca5e609779f36c249db"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/prediction-comparison.json",
+      "pass": true,
+      "detail": "6077c7ab9252b955971860e5619a42399034bf2030efb7afdfbb1dc079b1eacf"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/all156-candidate-rows.tsv",
+      "pass": true,
+      "detail": "ca1956bcccc4464c29f90b79e1b3feeb1dea3158061ca9e1ad72512cd5fa2aa9"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/run.stdout.log",
+      "pass": true,
+      "detail": "60b25c46bca139eec0fb76d376fb8dc19c1f379ce8b1e93254b2ab0e87d94622"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/run.stderr.log",
+      "pass": true,
+      "detail": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/render-binding.json",
+      "pass": true,
+      "detail": "ebdf850e973e2adda67924fd2df38fb9af51533c04b3a065a34b48fd0f5fa34f"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/render.stdout.log",
+      "pass": true,
+      "detail": "b47dab3c8cf300025ef939497f9541620fd3b59688769344168cde0c43973dec"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/render.stderr.log",
+      "pass": true,
+      "detail": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/E807-synthetic-window-evidence.png",
+      "pass": true,
+      "detail": "5f2765ab00f3c213df4afa2ebf03c54f8f1a50e28f109e17a20345508b5495d8"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/inspection.html",
+      "pass": true,
+      "detail": "883a0851e27d0d86757541d334d04426fe74cff755c23696046144785616dea6"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/result.json",
+      "pass": true,
+      "detail": "63955be1fd02b4a2e2bc1ec1bd1ed8ec1803e476b85e3e3d77179a71ae91c84a"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P5/fixtures.mjs",
+      "pass": true,
+      "detail": "506029a09fae4593b813ac89c75e9b0fb67c8949aaa16f448e73926b57e7d13b"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P5/synthetic-protocol.json",
+      "pass": true,
+      "detail": "e4f95e27e3de9e46aab3c642e9a732db28fdf572208f3c777f5cdbae8423cc6d"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P5/contract-freeze.json",
+      "pass": true,
+      "detail": "14927263b2d5c46b983bb4075566d8702d718614c78548a966d5a0dee2d07fc5"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P2/R804/result.json",
+      "pass": true,
+      "detail": "bbe0944f2a3cb37158474c54f25c568e34de36bf8bddc01d5df9095c422286c8"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/README.md",
+      "pass": true,
+      "detail": "be861f6e15fbaaf237d817ebda82dcab821e22dc13f3a0883e32b6785eda87bd"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/recipe.mjs",
+      "pass": true,
+      "detail": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/training-fixtures.mjs",
+      "pass": true,
+      "detail": "e93de4087bf9c9f1e72d0655233b93591ed989e8e2a0b4682f5111d659592789"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/README.md",
+      "pass": true,
+      "detail": "9018198980379c2dcaea71adf8685d3232df1d6d3e557ea50b311a71a851c93c"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/adapter.mjs",
+      "pass": true,
+      "detail": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/test-fixtures.mjs",
+      "pass": true,
+      "detail": "79c98f283767acb1fd918d350bbfd25afde957146788eae6aa920f3f1b979893"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/recipe.mjs",
+      "pass": true,
+      "detail": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/provenance.json",
+      "pass": true,
+      "detail": "0f3de094060d64f7614be6a8fa5023180e75070d33153976bdf318a734fdffaf"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+      "pass": true,
+      "detail": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+      "pass": true,
+      "detail": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/feature-manifest-E308.json",
+      "pass": true,
+      "detail": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/evidence/E302/probe.mjs",
+      "pass": true,
+      "detail": "3c34922ee6d35c85be035fc3ce9d484d9d0a9fc578062d07fcc376d091c2e14d"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/evidence/E302/result.json",
+      "pass": true,
+      "detail": "d817712fe8447f052c8a04488b33134a90a5f426f5eec48f6f507a65775d5bee"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/evidence/E303/result.json",
+      "pass": true,
+      "detail": "d605a71a31fb6d0bbd72a7b9c7f1738ab815a14f6695c186102af26289a0cc87"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/evidence/E304/result.json",
+      "pass": true,
+      "detail": "f4a4ce6e3b424aed178e8bc9cf3563b9d05bbef4471846c725dce5a4e6f69bbd"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/contract.json",
+      "pass": true,
+      "detail": "87619e8b4b47bfc661a20454d44d729ff5521a9ab4dca5bb1074c2c234820fb7"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/contract-amendment.json",
+      "pass": true,
+      "detail": "5e524e276f5113b161e51f2c9b7af88aa66bd1dce988a0af84c89512299ae2be"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E510/result.json",
+      "pass": true,
+      "detail": "72d62cd54274aee4cb119b70af1458d6fa898b1293ac64f40f3d2a066b72839d"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E511/protocol.json",
+      "pass": true,
+      "detail": "c98d0965930d6d3af0af72f3037227e27bf86033d3fdec28fc815a7a33f0e2ab"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/adapter.test.mjs",
+      "pass": true,
+      "detail": "0445ddfcd29b799770961a4b98e7244dad29e87ecf2f7c691c54b64d97bf0ac4"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/stage-png.py",
+      "pass": true,
+      "detail": "e194f56e2899f516bb79dd8d6c5e4b876440d6f0932bf9d74e0a56c117f06a44"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/stage-png.test.py",
+      "pass": true,
+      "detail": "18859d5e85beaaa6ebc2b559b995e18d87065b60cd05d5166d27323c57121f46"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/adapter-tests.log",
+      "pass": true,
+      "detail": "06165329c095a3d5f372c56bbac85a6a6cd1cdf9d3cc40d89ff6bb25202dda84"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/checkpoint-amendment.md",
+      "pass": true,
+      "detail": "4d189cce84e46dc1248b37990662349b478c4bb6c25e19f2cbcf9737801e34cf"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/checkpoint.md",
+      "pass": true,
+      "detail": "7ca787fb16a9bcb81564168a2e13316d450e4a034c4c31565b2167a6404d19ee"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/initial-adapter.test.mjs",
+      "pass": true,
+      "detail": "8266a9ca4b77bca642ed90dd13ca76702a0eb9c794b756bd1786fd4490acc673"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/initial-tests-red.log",
+      "pass": true,
+      "detail": "e7cf94861f4faf0f31e178748fe57612becab603e371e73ebecdf8e848b05d71"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/numeric-seam.json",
+      "pass": true,
+      "detail": "4515742be1bcbd3ef3949e302eb1610d39c2c63218e5382d73bf82de83d60ab5"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/preserved-composition-tests.log",
+      "pass": true,
+      "detail": "ba34f9f8f3e6327fdcb0a66ef003070943584dc094a23bbe7f4630ad4f2a7dda"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/seam-probe.mjs",
+      "pass": true,
+      "detail": "5ea928c7b781c58fa1acbfcff13b8bafafeb69686e2a5688a3c8ace8b55fe391"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/staging-tests.log",
+      "pass": true,
+      "detail": "d1276a2d9d79b9ed0a61446aa751886a8b573a45c52c4fe838159bc8be061837"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/history/E506-first-source/README.md",
+      "pass": true,
+      "detail": "4517abcbc76bcf34aafe8726ea21ab304f39d44aa0c4e31f926b937a01d34966"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/history/E506-first-source/adapter.mjs",
+      "pass": true,
+      "detail": "2274dc014e8aa0fa0463462d6ca17e831f29b646d1c2ea14f25ca2d46c64e488"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/history/E506-first-source/adapter.test.mjs",
+      "pass": true,
+      "detail": "8266a9ca4b77bca642ed90dd13ca76702a0eb9c794b756bd1786fd4490acc673"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/history/E506-first-source/manifest.json",
+      "pass": true,
+      "detail": "d4ec7b69de6cb3e8c6abdecadef7d54f1bb7df1e375fdf6f6ab29f4fd15d6bf9"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/history/E506-first-source/stage-png.py",
+      "pass": true,
+      "detail": "5978548e3d19e084964c67ccd19b06f86c1bd0b453862cf77aa75f562dfe1839"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/history/E506-first-source/stage-png.test.py",
+      "pass": true,
+      "detail": "3f308301f344ea688024a7d813459ec7674498f99e00b18702477bb748d405bb"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/cli.mjs",
+      "pass": true,
+      "detail": "0e08999d39aff0ba6498bad2e90c8986fb2995b98ae44fced92ebea2f3dcf839"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/cli.test.mjs",
+      "pass": true,
+      "detail": "cb89ad358946f5f1320d72cdf5792d98eda951307da039b60712637b7d40af2d"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/composition.test.mjs",
+      "pass": true,
+      "detail": "74e50ec4cf0068c1cceb08b00e058b0f6437ba1eee934d199a4133e9a6e8b574"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/decimal-bank.test.mjs",
+      "pass": true,
+      "detail": "abce3d5d84fa1263a851f1d9aff73bcc91108420cbcb58abc61217bd900a82d8"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/called-shot-E306.json",
+      "pass": true,
+      "detail": "dc8bc84a3cd5789336dd5577d31666223d99f10d1d99ac22ea8f38542eb0188e"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/called-shot-E308.json",
+      "pass": true,
+      "detail": "ca325288914ebc90d8493154dbff4a62e973d0500a2b6c5012c07593a4d382d0"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/evidence/E308/counterexample-input.json",
+      "pass": true,
+      "detail": "9a0b67bfbcc536e6285396eba392b4a8facb9de94d83e09f12c1bf846112bd0f"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/contracts/alpha.profile@1.mjs",
+      "pass": true,
+      "detail": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/provider/fourLaneSensor.cjs",
+      "pass": true,
+      "detail": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/intact/request.json",
+      "pass": true,
+      "detail": "2ca2455be8f18d88de8510924e18660245af471ffa780633f732ce65f36a079e"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/intact/raw-receipt.json",
+      "pass": true,
+      "detail": "7a059449f3d46e5b9b8cecc89f2095283284cde218c0e942f5763e59fed9df99"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/intact/binding.json",
+      "pass": true,
+      "detail": "9a052c5af4357622f30babb02ec23f2c2a8c42a07282308e1fffbfda7c3042c9"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/localized-upper-rail-loss/request.json",
+      "pass": true,
+      "detail": "ed08e86706c7901ed7d8d33fab36a1869b5ae18a17117d1dde58bf7db696b1e5"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/localized-upper-rail-loss/raw-receipt.json",
+      "pass": true,
+      "detail": "ba6830a1d1f7ced96b3e52f867d6446b0c9332a3eeb426de34032da835aac3fc"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/localized-upper-rail-loss/binding.json",
+      "pass": true,
+      "detail": "7ae481cc01cd097c6295a85aef31fe946cdbcd3fe0bbd0d172c20e0e5915c243"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/organic-capsule/request.json",
+      "pass": true,
+      "detail": "a9aa95caced1788e2b2d5918f41fa810ac9ab5eb8b4519885bb6d3f067a6cb04"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/organic-capsule/raw-receipt.json",
+      "pass": true,
+      "detail": "61af0652af469fd91ce5879097de15cf94800ebca8ff725ffa755f8678a0451a"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/organic-capsule/binding.json",
+      "pass": true,
+      "detail": "556cf83cc46245f9d132ac5bd5e19851e70fa634ca2a42c90b3822855687736e"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/crossing/request.json",
+      "pass": true,
+      "detail": "e628efcb3220668b34206f6f951987a1cccff28718fe277e683ddab9808b8f10"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/crossing/raw-receipt.json",
+      "pass": true,
+      "detail": "e547236c8f847e5369006323bb76ee2c3b9a2d5366edadf53bbfdd93b76908db"
+    },
+    {
+      "id": "unchanged original /workspace/scratch/8528bb251845/discovery-cycle04/P4/E807/crossing/binding.json",
+      "pass": true,
+      "detail": "db79d20a3e8d7ad983f4a86b8c57735642d5aff632c32f2b5d354df97f2dd7fe"
+    }
+  ],
+  "checkCount": 228,
+  "caseBindings": [
+    {
+      "id": "intact",
+      "request": {
+        "path": "intact/request.json",
+        "sha256": "2ca2455be8f18d88de8510924e18660245af471ffa780633f732ce65f36a079e",
+        "bytes": 5410135
+      },
+      "receipt": {
+        "path": "intact/raw-receipt.json",
+        "sha256": "7a059449f3d46e5b9b8cecc89f2095283284cde218c0e942f5763e59fed9df99",
+        "bytes": 202229
+      },
+      "rgbaSha256": "e6648f24c1616297317cb2f6062317ba83ab2c4949e5d4d22568f07b05cf1c7a",
+      "scientificBindingMatched": true,
+      "replayProcessObservation": {
+        "elapsedMs": 36.084743,
+        "before": {
+          "resourceUsage": {
+            "userCPUTime": 255539,
+            "systemCPUTime": 40595,
+            "maxRSS": 121648,
+            "sharedMemorySize": 0,
+            "unsharedDataSize": 0,
+            "unsharedStackSize": 0,
+            "minorPageFault": 37153,
+            "majorPageFault": 0,
+            "swappedOut": 0,
+            "fsRead": 0,
+            "fsWrite": 10576,
+            "ipcSent": 0,
+            "ipcReceived": 0,
+            "signalsCount": 0,
+            "voluntaryContextSwitches": 214,
+            "involuntaryContextSwitches": 13
+          },
+          "memoryBytes": {
+            "rss": 124567552,
+            "heapTotal": 77479936,
+            "heapUsed": 42728680,
+            "external": 16626324,
+            "arrayBuffers": 6115682
+          }
+        },
+        "after": {
+          "resourceUsage": {
+            "userCPUTime": 303922,
+            "systemCPUTime": 44315,
+            "maxRSS": 141372,
+            "sharedMemorySize": 0,
+            "unsharedDataSize": 0,
+            "unsharedStackSize": 0,
+            "minorPageFault": 45020,
+            "majorPageFault": 0,
+            "swappedOut": 0,
+            "fsRead": 0,
+            "fsWrite": 10576,
+            "ipcSent": 0,
+            "ipcReceived": 0,
+            "signalsCount": 0,
+            "voluntaryContextSwitches": 262,
+            "involuntaryContextSwitches": 13
+          },
+          "memoryBytes": {
+            "rss": 144764928,
+            "heapTotal": 81215488,
+            "heapUsed": 57072960,
+            "external": 13548552,
+            "arrayBuffers": 3037870
+          }
+        },
+        "note": "One in-process call. maxRSS is process cumulative high-water, not case causal allocation; times are observations, not deterministic receipt fields."
+      },
+      "originalProcessObservation": {
+        "elapsedMs": 35.442853,
+        "before": {
+          "resourceUsage": {
+            "userCPUTime": 210986,
+            "systemCPUTime": 52915,
+            "maxRSS": 120496,
+            "sharedMemorySize": 0,
+            "unsharedDataSize": 0,
+            "unsharedStackSize": 0,
+            "minorPageFault": 36894,
+            "majorPageFault": 0,
+            "swappedOut": 0,
+            "fsRead": 0,
+            "fsWrite": 10584,
+            "ipcSent": 0,
+            "ipcReceived": 0,
+            "signalsCount": 0,
+            "voluntaryContextSwitches": 221,
+            "involuntaryContextSwitches": 3
+          },
+          "memoryBytes": {
+            "rss": 123387904,
+            "heapTotal": 76955648,
+            "heapUsed": 42712840,
+            "external": 16627425,
+            "arrayBuffers": 6115682
+          }
+        },
+        "after": {
+          "resourceUsage": {
+            "userCPUTime": 246688,
+            "systemCPUTime": 68847,
+            "maxRSS": 139644,
+            "sharedMemorySize": 0,
+            "unsharedDataSize": 0,
+            "unsharedStackSize": 0,
+            "minorPageFault": 44587,
+            "majorPageFault": 0,
+            "swappedOut": 0,
+            "fsRead": 0,
+            "fsWrite": 10584,
+            "ipcSent": 0,
+            "ipcReceived": 0,
+            "signalsCount": 0,
+            "voluntaryContextSwitches": 270,
+            "involuntaryContextSwitches": 3
+          },
+          "memoryBytes": {
+            "rss": 142995456,
+            "heapTotal": 81477632,
+            "heapUsed": 56265408,
+            "external": 13549653,
+            "arrayBuffers": 3037870
+          }
+        },
+        "note": "One in-process call. maxRSS is process cumulative high-water, not case causal allocation; times are observations, not deterministic receipt fields."
+      }
+    },
+    {
+      "id": "localized-upper-rail-loss",
+      "request": {
+        "path": "localized-upper-rail-loss/request.json",
+        "sha256": "ed08e86706c7901ed7d8d33fab36a1869b5ae18a17117d1dde58bf7db696b1e5",
+        "bytes": 5410496
+      },
+      "receipt": {
+        "path": "localized-upper-rail-loss/raw-receipt.json",
+        "sha256": "ba6830a1d1f7ced96b3e52f867d6446b0c9332a3eeb426de34032da835aac3fc",
+        "bytes": 201727
+      },
+      "rgbaSha256": "8388b9e4d4fe2140b05c6fbc4cfc728dd0ec706fa0f3daaf358569e6faa35ff7",
+      "scientificBindingMatched": true,
+      "replayProcessObservation": {
+        "elapsedMs": 35.46058,
+        "before": {
+          "resourceUsage": {
+            "userCPUTime": 387171,
+            "systemCPUTime": 55017,
+            "maxRSS": 178876,
+            "sharedMemorySize": 0,
+            "unsharedDataSize": 0,
+            "unsharedStackSize": 0,
+            "minorPageFault": 57405,
+            "majorPageFault": 0,
+            "swappedOut": 0,
+            "fsRead": 0,
+            "fsWrite": 21808,
+            "ipcSent": 0,
+            "ipcReceived": 0,
+            "signalsCount": 0,
+            "voluntaryContextSwitches": 288,
+            "involuntaryContextSwitches": 21
+          },
+          "memoryBytes": {
+            "rss": 183169024,
+            "heapTotal": 107020288,
+            "heapUsed": 80273864,
+            "external": 17275941,
+            "arrayBuffers": 6765259
+          }
+        },
+        "after": {
+          "resourceUsage": {
+            "userCPUTime": 426008,
+            "systemCPUTime": 60455,
+            "maxRSS": 182936,
+            "sharedMemorySize": 0,
+            "unsharedDataSize": 0,
+            "unsharedStackSize": 0,
+            "minorPageFault": 61320,
+            "majorPageFault": 0,
+            "swappedOut": 0,
+            "fsRead": 0,
+            "fsWrite": 21808,
+            "ipcSent": 0,
+            "ipcReceived": 0,
+            "signalsCount": 0,
+            "voluntaryContextSwitches": 361,
+            "involuntaryContextSwitches": 47
+          },
+          "memoryBytes": {
+            "rss": 152150016,
+            "heapTotal": 87326720,
+            "heapUsed": 20276120,
+            "external": 13640712,
+            "arrayBuffers": 3130030
+          }
+        },
+        "note": "One in-process call. maxRSS is process cumulative high-water, not case causal allocation; times are observations, not deterministic receipt fields."
+      },
+      "originalProcessObservation": {
+        "elapsedMs": 37.439832,
+        "before": {
+          "resourceUsage": {
+            "userCPUTime": 320481,
+            "systemCPUTime": 100457,
+            "maxRSS": 177884,
+            "sharedMemorySize": 0,
+            "unsharedDataSize": 0,
+            "unsharedStackSize": 0,
+            "minorPageFault": 57165,
+            "majorPageFault": 0,
+            "swappedOut": 0,
+            "fsRead": 0,
+            "fsWrite": 21816,
+            "ipcSent": 0,
+            "ipcReceived": 0,
+            "signalsCount": 0,
+            "voluntaryContextSwitches": 303,
+            "involuntaryContextSwitches": 3
+          },
+          "memoryBytes": {
+            "rss": 182153216,
+            "heapTotal": 107282432,
+            "heapUsed": 79510240,
+            "external": 17277042,
+            "arrayBuffers": 6765259
+          }
+        },
+        "after": {
+          "resourceUsage": {
+            "userCPUTime": 366588,
+            "systemCPUTime": 111840,
+            "maxRSS": 178524,
+            "sharedMemorySize": 0,
+            "unsharedDataSize": 0,
+            "unsharedStackSize": 0,
+            "minorPageFault": 60989,
+            "majorPageFault": 0,
+            "swappedOut": 0,
+            "fsRead": 0,
+            "fsWrite": 21816,
+            "ipcSent": 0,
+            "ipcReceived": 0,
+            "signalsCount": 0,
+            "voluntaryContextSwitches": 387,
+            "involuntaryContextSwitches": 3
+          },
+          "memoryBytes": {
+            "rss": 158003200,
+            "heapTotal": 94924800,
+            "heapUsed": 26450992,
+            "external": 13094758,
+            "arrayBuffers": 2582975
+          }
+        },
+        "note": "One in-process call. maxRSS is process cumulative high-water, not case causal allocation; times are observations, not deterministic receipt fields."
+      }
+    },
+    {
+      "id": "organic-capsule",
+      "request": {
+        "path": "organic-capsule/request.json",
+        "sha256": "a9aa95caced1788e2b2d5918f41fa810ac9ab5eb8b4519885bb6d3f067a6cb04",
+        "bytes": 5410306
+      },
+      "receipt": {
+        "path": "organic-capsule/raw-receipt.json",
+        "sha256": "61af0652af469fd91ce5879097de15cf94800ebca8ff725ffa755f8678a0451a",
+        "bytes": 202364
+      },
+      "rgbaSha256": "528f2027d44f0c51fc0d80c74a31c9e627b6e70b1a239eac0a9c6308e78d0917",
+      "scientificBindingMatched": true,
+      "replayProcessObservation": {
+        "elapsedMs": 25.208104,
+        "before": {
+          "resourceUsage": {
+            "userCPUTime": 503571,
+            "systemCPUTime": 84967,
+            "maxRSS": 195176,
+            "sharedMemorySize": 0,
+            "unsharedDataSize": 0,
+            "unsharedStackSize": 0,
+            "minorPageFault": 72966,
+            "majorPageFault": 0,
+            "swappedOut": 0,
+            "fsRead": 0,
+            "fsWrite": 33040,
+            "ipcSent": 0,
+            "ipcReceived": 0,
+            "signalsCount": 0,
+            "voluntaryContextSwitches": 373,
+            "involuntaryContextSwitches": 54
+          },
+          "memoryBytes": {
+            "rss": 199860224,
+            "heapTotal": 123523072,
+            "heapUsed": 89093864,
+            "external": 19965412,
+            "arrayBuffers": 9454730
+          }
+        },
+        "after": {
+          "resourceUsage": {
+            "userCPUTime": 522877,
+            "systemCPUTime": 93314,
+            "maxRSS": 195304,
+            "sharedMemorySize": 0,
+            "unsharedDataSize": 0,
+            "unsharedStackSize": 0,
+            "minorPageFault": 77913,
+            "majorPageFault": 0,
+            "swappedOut": 0,
+            "fsRead": 0,
+            "fsWrite": 33040,
+            "ipcSent": 0,
+            "ipcReceived": 0,
+            "signalsCount": 0,
+            "voluntaryContextSwitches": 394,
+            "involuntaryContextSwitches": 61
+          },
+          "memoryBytes": {
+            "rss": 198815744,
+            "heapTotal": 117727232,
+            "heapUsed": 71343984,
+            "external": 16256008,
+            "arrayBuffers": 5745326
+          }
+        },
+        "note": "One in-process call. maxRSS is process cumulative high-water, not case causal allocation; times are observations, not deterministic receipt fields."
+      },
+      "originalProcessObservation": {
+        "elapsedMs": 22.758991,
+        "before": {
+          "resourceUsage": {
+            "userCPUTime": 440656,
+            "systemCPUTime": 140313,
+            "maxRSS": 192956,
+            "sharedMemorySize": 0,
+            "unsharedDataSize": 0,
+            "unsharedStackSize": 0,
+            "minorPageFault": 70713,
+            "majorPageFault": 0,
+            "swappedOut": 0,
+            "fsRead": 0,
+            "fsWrite": 33048,
+            "ipcSent": 0,
+            "ipcReceived": 0,
+            "signalsCount": 0,
+            "voluntaryContextSwitches": 395,
+            "involuntaryContextSwitches": 4
+          },
+          "memoryBytes": {
+            "rss": 197586944,
+            "heapTotal": 131121152,
+            "heapUsed": 95377464,
+            "external": 19419459,
+            "arrayBuffers": 8907676
+          }
+        },
+        "after": {
+          "resourceUsage": {
+            "userCPUTime": 460813,
+            "systemCPUTime": 144439,
+            "maxRSS": 193724,
+            "sharedMemorySize": 0,
+            "unsharedDataSize": 0,
+            "unsharedStackSize": 0,
+            "minorPageFault": 74452,
+            "majorPageFault": 0,
+            "swappedOut": 0,
+            "fsRead": 0,
+            "fsWrite": 33048,
+            "ipcSent": 0,
+            "ipcReceived": 0,
+            "signalsCount": 0,
+            "voluntaryContextSwitches": 417,
+            "involuntaryContextSwitches": 4
+          },
+          "memoryBytes": {
+            "rss": 191467520,
+            "heapTotal": 125247488,
+            "heapUsed": 77171280,
+            "external": 15765589,
+            "arrayBuffers": 5253806
+          }
+        },
+        "note": "One in-process call. maxRSS is process cumulative high-water, not case causal allocation; times are observations, not deterministic receipt fields."
+      }
+    },
+    {
+      "id": "crossing",
+      "request": {
+        "path": "crossing/request.json",
+        "sha256": "e628efcb3220668b34206f6f951987a1cccff28718fe277e683ddab9808b8f10",
+        "bytes": 5410173
+      },
+      "receipt": {
+        "path": "crossing/raw-receipt.json",
+        "sha256": "e547236c8f847e5369006323bb76ee2c3b9a2d5366edadf53bbfdd93b76908db",
+        "bytes": 201519
+      },
+      "rgbaSha256": "f47452138ccb736da56bc5a1fd0dd2a610852ee276828b6bdef254b413b5efaa",
+      "scientificBindingMatched": true,
+      "replayProcessObservation": {
+        "elapsedMs": 26.582824,
+        "before": {
+          "resourceUsage": {
+            "userCPUTime": 596843,
+            "systemCPUTime": 105347,
+            "maxRSS": 218008,
+            "sharedMemorySize": 0,
+            "unsharedDataSize": 0,
+            "unsharedStackSize": 0,
+            "minorPageFault": 87803,
+            "majorPageFault": 0,
+            "swappedOut": 0,
+            "fsRead": 0,
+            "fsWrite": 44280,
+            "ipcSent": 0,
+            "ipcReceived": 0,
+            "signalsCount": 0,
+            "voluntaryContextSwitches": 416,
+            "involuntaryContextSwitches": 71
+          },
+          "memoryBytes": {
+            "rss": 223240192,
+            "heapTotal": 140005376,
+            "heapUsed": 90550656,
+            "external": 20382434,
+            "arrayBuffers": 9871752
+          }
+        },
+        "after": {
+          "resourceUsage": {
+            "userCPUTime": 625072,
+            "systemCPUTime": 105347,
+            "maxRSS": 224664,
+            "sharedMemorySize": 0,
+            "unsharedDataSize": 0,
+            "unsharedStackSize": 0,
+            "minorPageFault": 91645,
+            "majorPageFault": 0,
+            "swappedOut": 0,
+            "fsRead": 0,
+            "fsWrite": 44280,
+            "ipcSent": 0,
+            "ipcReceived": 0,
+            "signalsCount": 0,
+            "voluntaryContextSwitches": 434,
+            "involuntaryContextSwitches": 80
+          },
+          "memoryBytes": {
+            "rss": 214253568,
+            "heapTotal": 130920448,
+            "heapUsed": 72911984,
+            "external": 16321544,
+            "arrayBuffers": 5810862
+          }
+        },
+        "note": "One in-process call. maxRSS is process cumulative high-water, not case causal allocation; times are observations, not deterministic receipt fields."
+      },
+      "originalProcessObservation": {
+        "elapsedMs": 36.112102,
+        "before": {
+          "resourceUsage": {
+            "userCPUTime": 564747,
+            "systemCPUTime": 173168,
+            "maxRSS": 223432,
+            "sharedMemorySize": 0,
+            "unsharedDataSize": 0,
+            "unsharedStackSize": 0,
+            "minorPageFault": 87544,
+            "majorPageFault": 0,
+            "swappedOut": 0,
+            "fsRead": 0,
+            "fsWrite": 44288,
+            "ipcSent": 0,
+            "ipcReceived": 0,
+            "signalsCount": 0,
+            "voluntaryContextSwitches": 436,
+            "involuntaryContextSwitches": 4
+          },
+          "memoryBytes": {
+            "rss": 228794368,
+            "heapTotal": 147148800,
+            "heapUsed": 96279448,
+            "external": 19892015,
+            "arrayBuffers": 9380232
+          }
+        },
+        "after": {
+          "resourceUsage": {
+            "userCPUTime": 600532,
+            "systemCPUTime": 177127,
+            "maxRSS": 230088,
+            "sharedMemorySize": 0,
+            "unsharedDataSize": 0,
+            "unsharedStackSize": 0,
+            "minorPageFault": 91316,
+            "majorPageFault": 0,
+            "swappedOut": 0,
+            "fsRead": 0,
+            "fsWrite": 44288,
+            "ipcSent": 0,
+            "ipcReceived": 0,
+            "signalsCount": 0,
+            "voluntaryContextSwitches": 454,
+            "involuntaryContextSwitches": 4
+          },
+          "memoryBytes": {
+            "rss": 220872704,
+            "heapTotal": 139202560,
+            "heapUsed": 80831480,
+            "external": 15831125,
+            "arrayBuffers": 5319342
+          }
+        },
+        "note": "One in-process call. maxRSS is process cumulative high-water, not case causal allocation; times are observations, not deterministic receipt fields."
+      }
+    }
+  ],
+  "portability": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle04/P1/R807/portability.json",
+    "sha256": "5319ea8cdcd4e7fa5edba330d0f838f577beb11e0ee5717c8926ff8eea4b5286",
+    "bytes": 1247
+  },
+  "producerResultSha256": "63955be1fd02b4a2e2bc1ec1bd1ed8ec1803e476b85e3e3d77179a71ae91c84a",
+  "producerRunSha256": "63c5e408df83fe53e0ac993c297aad5a1a41410af0dc4ca5e609779f36c249db",
+  "replayRunSha256": "88333552f8caadac88c5d5aa7298e1668987e600156b24082a6016b03894f08d",
+  "comparisonSha256": "6077c7ab9252b955971860e5619a42399034bf2030efb7afdfbb1dc079b1eacf",
+  "tsvSha256": "ca1956bcccc4464c29f90b79e1b3feeb1dea3158061ca9e1ad72512cd5fa2aa9",
+  "pngSha256": "5f2765ab00f3c213df4afa2ebf03c54f8f1a50e28f109e17a20345508b5495d8",
+  "htmlSha256": "883a0851e27d0d86757541d334d04426fe74cff755c23696046144785616dea6",
+  "frozenSourceChecks": 19,
+  "acceptedClosureEntries": 37,
+  "independentlyCheckedFixturePixels": 491520,
+  "sourcePreservationCheckedPaths": 76,
+  "contextualResources": "Replay processObservation, timestamps and aggregate resources are observed context and not byte-identical identity claims.",
+  "visualInspection": "Pending direct reviewer image inspection after this script. HTML byte comparison is not browser QA.",
+  "scientificAcceptance": false
+}

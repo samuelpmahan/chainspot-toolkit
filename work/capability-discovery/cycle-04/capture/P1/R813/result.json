@@ -1,0 +1,80 @@
+{
+  "schema": "cycle04-independent-dense-label-repair-review@1",
+  "job_id": "R813",
+  "worker": "P1",
+  "producer_job_id": "E813",
+  "producer": "P6",
+  "decision": "accepted",
+  "summary": "Accepted the exact bounded E813 repair. Independent comparison proves every production byte outside labels is unchanged; own-slot/nonempty-name validation rejects both original sparse inputs and the same variants on disabled-refusal/executed shapes. The original14 test bytes remain intact within17 focused tests, all17 pass freshly. All12 reviewer probes pass, including real E811 executed UNKNOWN/empty-bank versus zero-call refusal and unchanged E809/E810 full raw/order compatibility. Fifty binding/diff/preservation/baseline checks pass with67 pure helper calls and zero CV calls. New root baseline raw evidence confirms the same17 named repository failures on untouched base and repaired tree; no full-green or scientific acceptance follows. Original R812 AMEND remains exact and historical.",
+  "exactBindings": {
+    "sourceFreeze": {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P6/E813/source-freeze.json","sha256":"5a135273510f8966af9bd69119a27f284405bc47397d42a13c93554b005b0eb9"},
+    "producerResult": {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P6/E813/result.json","sha256":"a8ee08364cdfe0ca7007c4460bf5934454ab1f22255cf9d9de78b7f6e4e796a9"},
+    "group.mjs": {"path":"/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.mjs","sha256":"c8abdc46721e01df64f8ae81318582ee3d639104389c9f5a43b539ef3fbf5e83","bytes":7708},
+    "group.test.mjs": {"path":"/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs","sha256":"de01b97f461e648dac502d5070da87a7126d620b9df82632938bc0d988c79ecf","bytes":11020},
+    "README.md": {"path":"/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/README.md","sha256":"f74301a060c7dbc3208f4e7c505ad42d340c9fdb6d37a3cea9d82f4ad16ece4b","bytes":4106},
+    "E811-B.json": {"path":"/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/fixtures/E811-B.json","sha256":"daa7e63665a4c658489483e712b3133547b1ba23a13c1529084d221766d91974","bytes":1317},
+    "admittedContractSha256":"d1c6e5e0fa7385b6476d8d8137cba17716e58d571918e27eee5bccf10095b426",
+    "originalR812AmendSha256":"4347c99925ff40c4c7250c306764efdec538085e77facacc1fd37df4c07ac3ae",
+    "originalR812CounterexampleSha256":"23eb330d6395693594e0c5bfec68151a932349d2a0dc418e242fd8657c8e666e",
+    "priorE812SourceSha256":"9669e26d3b2305f8ebcf514e1883d20ad916e759f9e458b244ebc83a87dfd62c",
+    "priorE812TestsSha256":"3d1726fdd84724360395acd67aa8de5f86a7643ab41f08af1cc7aa677934e312"
+  },
+  "repairVerification": {
+    "requiredAmendment":"R812 M1-dense-declared-short-IDs",
+    "resolved":true,
+    "productionDiff":"Replacing only the new labels function with the old single-line predicate exactly reproduces archived E812 source bytes/hash. The new loop requires an own property and named string at every index; no CV, threshold, geometry, scoring, grouping-order or I/O mechanism changes.",
+    "originalTestPreservation":"Removing only the new test-only fs import and appended3 regressions exactly reproduces old14-test bytes/hash.",
+    "retainedFixture":"New1317-byte fixture is byte-identical to actual E811 B, not a recomputed receipt.",
+    "sparseMatrix":"One-hole and valid-plus-hole lists each rejected with UNKNOWN/UNCLASSIFIED_INVALID_INPUT/projection:null on actual E811 B, a disabled refusal, and actual E809 executed shape:6/6.",
+    "scope":"No source edits by reviewer. Only original counterexamples and required scope variants were probed; no expanded discovery."
+  },
+  "actualExecution": {
+    "commands":[
+      {"command":"node --check /workspace/scratch/8528bb251845/discovery-cycle04/P1/R813/review.mjs","exitCode":0},
+      {"command":"node --test --test-reporter=tap /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/window-evidence/group.test.mjs","environment":"NODE_V8_COVERAGE=P1/R813/coverage","exitCode":0,"tests":17,"pass":17,"fail":0},
+      {"command":"node /workspace/scratch/8528bb251845/discovery-cycle04/P1/R813/review.mjs","exitCode":0,"checks":50,"probes":12,"failedProbes":0}
+    ],
+    "focusedHelperFunctionEntries":55,
+    "reviewerHelperCalls":12,
+    "totalPureHelperCalls":67,
+    "CVCalls":0,
+    "sourcePixelAdapterOrCompositionCalls":0,
+    "newScientificMeasurements":0,
+    "renderCalls":0
+  },
+  "realReceiptCompatibility": [
+    {"case":"E811-A","receiptSha256":"f89e5c5926efb400ec1cdec3413ce1fbfeabc1c0548bf86cd8311d0a314a41f6","state":"EXECUTED","result":"Top UNKNOWN, retained profile and empty bank preserved. Empty groups used because actual receipt has one station only."},
+    {"case":"E811-B","receiptSha256":"daa7e63665a4c658489483e712b3133547b1ba23a13c1529084d221766d91974","state":"NOT_EXECUTED","result":"Dense unverified declaration retained with no measurement rows; sparse declarations invalid."},
+    {"case":"E809","receiptSha256":"302e50cb5b60f752eb6f3139a4e6a98c015005203359e0ade5aebb378e1897ba","state":"EXECUTED","result":"Declared and reversed short order preserved independently in both raw branches; entire parsed receipt/equivalence unchanged, all18 stations and54 candidate rows per branch retained."},
+    {"case":"E810","receiptSha256":"a61a487dae244cbd9bc62ada6bffb8fc7cf651616db7b37806628ee0399739e4","state":"EXECUTED","result":"Declared and reversed short order preserved independently in both raw branches; entire parsed receipt/equivalence unchanged, all18 stations and54 candidate rows per branch retained."}
+  ],
+  "currentBaselineEvidence": {
+    "metadataPath":"/workspace/scratch/8528bb251845/discovery-cycle04/baseline-control.json",
+    "metadataSha256":"2d8e767d277dd972a554c280a34fb42b242ddca47e9ab9670f665904a990d15d",
+    "untouchedBaseStdoutSha256":"39caf5534afb280c0e464246fa925f6052b0720ea84baa22be3954b877847356",
+    "producerCurrentStdoutSha256":"443c460352e11d53fa5db7262d4857a271bfccb1b9cc0fe446527d3e4f1c0367",
+    "untouchedBase":{"tests":170,"pass":153,"fail":17},
+    "repairedTreeProducer":{"tests":187,"pass":170,"fail":17},
+    "same17NormalizedNamedFailures":true,
+    "reviewAction":"Independently hash-verified metadata/raw logs, parsed complete TAP totals and compared all17 named failures after snapshot-root normalization. The full suites were actually executed by root/producer, not rerun by this reviewer.",
+    "meaning":"These17 named failures also occur on the exact untouched base. Seventeen new helper tests account for187versus170 tests. This does not make the repository green or prove absence of every other possible regression.",
+    "history":"Do not rewrite R812: its unclassified-at-capture statement remains true to that review's evidence boundary. This later baseline conclusion is recorded only in R813/current control."
+  },
+  "artifacts":[
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P1/R813/review.mjs","sha256":"69e3111396b2bbf1808a3358e1001749a9e21e6802dfea01056c60185a5d97ad"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P1/R813/evidence.json","sha256":"0f134951424f5d6c6bcab0cf220e8b983b9aa8ce3a34fca354c3ff4b6f36603e"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P1/R813/focused.stdout.log","sha256":"249a1db5dee99b3ef98de2b8ec2526f1fee19a8ef7550171cf944a4b7229d8c2"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P1/R813/focused.stderr.log","sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+  ],
+  "requiredAmendments":[],
+  "limitations": {
+    "repositoryOrSourceWrites":0,
+    "GitNativeOrPublicationMutations":0,
+    "originalR812AndCounterexamplePreserved":true,
+    "defaultOFF":true,
+    "helperIOrCV": "Only crypto is imported by the runtime helper; fixture fs access is confined to tests/reviewer. No runtime helper filesystem/network I/O or CV call is added.",
+    "identity":"Hash and structural consistency remain bounded evidence, not authenticated execution/provenance, physical continuity, same-edge/path identity, calibrated width or scientific acceptance.",
+    "priorFilesAudit":"This exact repair/history/receipt check does not replace the sole owner's full1646-file preservation audit.",
+    "publication":"Technical acceptance of exact E813 source only. Packaging, checkpoint, commit, publication and any production use remain separate root-owned gates."
+  }
+}

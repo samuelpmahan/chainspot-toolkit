@@ -1,0 +1,19 @@
+{
+  "schema": "cycle04-E812-preservation-ledger@1",
+  "job_id": "E812",
+  "worker": "P6",
+  "priorManifest": "/workspace/scratch/8528bb251845/discovery-cycle04/prior-tracked.json",
+  "priorManifestSha256": "c84471988ee0cf0e118b30309ff6de0a26e68964ca8fb33c2f27ff9651a5542b",
+  "priorTrackedEntriesChecked": 1646,
+  "method": "Read each prior path after validation; compare actual byte length and SHA256 to exact recorded entry. All prior files, not just modified-path inventory.",
+  "mismatches": [],
+  "acceptedD31bClosureEntriesChecked": 23,
+  "acceptedD31bMismatches": [],
+  "accepted5b59ClosureEntriesChecked": 14,
+  "accepted5b59Mismatches": [],
+  "trackedDiffNameOnly": "",
+  "gitStatusShort": "?? experiments/capability-discovery/window-evidence/",
+  "noGitMutation": true,
+  "history": "Raw R806 AMEND hash759f979d22d3eaff5c292797abb3284981f1ce1165ffdf37c935d2067462ba08, accepted E808 contract and R808 review remain exact. E806 originals were not edited. No source, fg, ports, accepted recipe, algorithm/platform reference, HH/PageRouter or production default changed.",
+  "incidentalFileHandling": "One generated Python bytecode cache directory from the authorized staging test was moved recoverably outside the repository to E812/stager-generated-pycache. No material user file removed."
+}

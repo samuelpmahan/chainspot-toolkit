@@ -1,0 +1,125 @@
+/** Independent E804 premeasurement review. No CV modules imported or invoked. */
+import fs from 'node:fs';
+import crypto from 'node:crypto';
+import assert from 'node:assert/strict';
+import {makeFixture,CASE_IDS,SHORT_X} from '../../P5/fixtures.mjs';
+const here='/workspace/scratch/8528bb251845/discovery-cycle04/P2/R804';
+const producer='/workspace/scratch/8528bb251845/discovery-cycle04/P5';
+const repo='/workspace/scratch/8528bb251845/chainspot-discovery-lab';
+const sha=path=>crypto.createHash('sha256').update(fs.readFileSync(path)).digest('hex');
+const json=path=>JSON.parse(fs.readFileSync(path,'utf8'));
+const freeze=json(`${producer}/contract-freeze.json`);
+const protocol=json(`${producer}/synthetic-protocol.json`);
+const producerResult=json(`${producer}/result.json`);
+const producerHashes=Object.fromEntries(['synthetic-protocol.json','fixtures.mjs','contract-freeze.json','result.json'].map(name=>[name,sha(`${producer}/${name}`)]));
+for(const [name,expected] of Object.entries(freeze.artifactHashes))assert.equal(sha(`${producer}/${name}`),expected);
+for(const row of producerResult.artifacts)assert.equal(sha(row.path),row.sha256);
+const sourceHashes={};
+for(const [path,expected] of Object.entries(freeze.sourceHashes)){
+  sourceHashes[path]=sha(`${repo}/${path}`);assert.equal(sourceHashes[path],expected);
+}
+const fixtureSource=fs.readFileSync(`${producer}/fixtures.mjs`,'utf8');
+const imports=[...fixtureSource.matchAll(/from\s+['"]([^'"]+)['"]/g)].map(m=>m[1]);
+assert.deepEqual(imports,['node:crypto']);
+const independentPredicates={
+  intact:(x,y)=>y>=145&&y<=174,
+  'localized-upper-rail-loss':(x,y)=>y>=145&&y<=174||x>=176&&x<=207&&y>=175&&y<=207,
+  'organic-capsule':(x,y)=>{const distance=x<72?72-x:x>312?x-312:0;return distance*distance+(y-159.5)*(y-159.5)<=225;},
+  crossing:(x,y)=>y>=145&&y<=174||x>=176&&x<=207,
+};
+assert.deepEqual(CASE_IDS,protocol.execution.caseOrder);
+assert.deepEqual(SHORT_X,protocol.fixedGeometry.orderedShortStationCentersXPx);
+const fixtures=Object.fromEntries(CASE_IDS.map(id=>[id,makeFixture(id)]));
+const fixtureChecks=[];
+let checkedBytes=0;
+for(const [id,input] of Object.entries(fixtures)){
+  assert.equal(input.image.width,384);assert.equal(input.image.height,320);
+  assert.equal(input.image.data.length,491520);assert.equal(input.stations.length,13);
+  assert.equal(input.provenance.rgbaSha256,freeze.fixtureHashes[id]);
+  assert.equal(crypto.createHash('sha256').update(input.image.data).digest('hex'),freeze.fixtureHashes[id]);
+  assert.deepEqual(input.localWidthBank.valuesPx,[24,30,36]);
+  assert.deepEqual(input.edgeSearch,{latLimPx:4,tolWidthPx:3});
+  assert.deepEqual(input.occluders.boxes,[]);
+  for(let y=0;y<320;y++)for(let x=0;x<384;x++){
+    const expected=independentPredicates[id](x,y)?145:100,p=(y*384+x)*4;
+    assert.equal(input.image.data[p],expected);assert.equal(input.image.data[p+1],expected);
+    assert.equal(input.image.data[p+2],expected);assert.equal(input.image.data[p+3],255);checkedBytes+=4;
+  }
+  const long=input.stations[0],shorts=input.stations.slice(1);
+  const longX=Array.from({length:long.t1Px-long.t0Px},(_,k)=>long.xPx+long.t0Px+k);
+  const shortX=shorts.flatMap(s=>Array.from({length:s.t1Px-s.t0Px},(_,k)=>s.xPx+s.t0Px+k));
+  assert.deepEqual(longX,shortX);assert.equal(new Set(shortX).size,192);
+  assert.equal(longX[0],96);assert.equal(longX.at(-1),287);
+  assert(shorts.every(s=>s.t1Px-s.t0Px===16));
+  const anchor=shorts[5];
+  assert.equal(anchor.id,'short-05');
+  for(const key of ['xPx','yPx','headingRad'])assert.equal(long[key],anchor[key]);
+  let exactWorldPoints=0;
+  shorts.forEach((s,j)=>{
+    for(let k=0;k<16;k++)for(let ni=0;ni<241;ni++){
+      const t=s.t0Px+k,lt=long.t0Px+16*j+k,o=-30+ni*.25;
+      const u=[Math.cos(s.headingRad),Math.sin(s.headingRad)],n=[-u[1],u[0]];
+      const a=[s.xPx+t*u[0]+o*n[0],s.yPx+t*u[1]+o*n[1]];
+      const b=[long.xPx+lt*u[0]+o*n[0],long.yPx+lt*u[1]+o*n[1]];
+      assert.deepEqual(a,b);assert(a[0]>1&&a[0]<382&&a[1]>1&&a[1]<318);exactWorldPoints++;
+    }
+  });
+  const defectWindowIds=shorts.filter(s=>{
+    const first=s.xPx+s.t0Px,last=s.xPx+s.t1Px-1;
+    return first>=176&&last<=207;
+  }).map(s=>s.id);
+  assert.deepEqual(defectWindowIds,['short-05','short-06']);
+  fixtureChecks.push({id,rgbaSha256:input.provenance.rgbaSha256,bytes:input.image.data.length,
+    independentPixelPredicate:'PASS',longitudinalSampleCount:192,shortWindowCount:12,
+    shortSampleCount:16,uniqueExactPartitionSamples:192,exactWorldPointComparisons:exactWorldPoints,
+    defectWindowIds,samePoseLongVsShort05:true});
+}
+// Footprint checks compare source bytes only. No sampling, luminance profiles, means or CV are computed.
+const intact=fixtures.intact.image.data,organic=fixtures['organic-capsule'].image.data;
+let coreEqualBytes=0,globalDifferentPixels=0;
+for(let y=0;y<320;y++)for(let x=0;x<384;x++){
+  const p=(y*384+x)*4;
+  if(x>=72&&x<=312){for(let c=0;c<4;c++){assert.equal(intact[p+c],organic[p+c]);coreEqualBytes++;}}
+  if(intact[p]!==organic[p])globalDifferentPixels++;
+}
+assert(globalDifferentPixels>0);
+// Conservative support for nearest Dev72: all station/training centers, tangent +-4, maximum normal24.
+const trainingCenters=[.2,.35,.5,.65,.78].map(f=>104+f*176);
+const observationCenters=[...SHORT_X,184,...trainingCenters];
+assert(Math.min(...observationCenters)-4>=72&&Math.max(...observationCenters)+4<=312);
+const organicSupport={coreBoundsPx:{minX:72,maxX:312,minY:0,maxY:319},
+  coreEqualBytes,globalDifferentPixels,
+  profileFootprintBoundsPx:{minX:96,maxX:288,minY:130,maxY:191},
+  dev72ConservativeContinuousBoundsPx:{minX:Math.min(...observationCenters)-4,maxX:Math.max(...observationCenters)+4,minY:136,maxY:184},
+  method:'Full-byte equality on entire straight core x72..312, stronger than necessary bilinear/nearest footprint; full image differs outside core. Source code confirms only sampled values feed retained CV channels; full lumOf plane itself is not claimed identical.'};
+// Confirm source-derived guards/semantics by text, without importing operation modules.
+const pathSource=fs.readFileSync(`${repo}/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs`,'utf8');
+assert(pathSource.includes('count: 8, ofStations: 0.2'));
+assert(pathSource.includes('edgeGoodFrac: 0.6'));
+assert(pathSource.includes('Math.ceil((b - a) / step)'));
+assert(pathSource.includes('out[k] = a + k * step'));
+const sourceAfter=Object.fromEntries(Object.keys(sourceHashes).map(path=>[path,sha(`${repo}/${path}`)]));
+const producerAfter=Object.fromEntries(Object.keys(producerHashes).map(name=>[name,sha(`${producer}/${name}`)]));
+assert.deepEqual(sourceAfter,sourceHashes);assert.deepEqual(producerAfter,producerHashes);
+const evidence={schema:'R804-premeasurement-review-evidence@1',job_id:'R804',worker:'P2',
+  node:process.version,producerHashes,sourceHashes,fixtureChecks,checkedPixelBytes:checkedBytes,
+  organicSupport,sourceUnchanged:true,producerUnchanged:true,
+  sourceBoundSemantics:{edgeCountFloor:8,edgeCountFraction:.2,normalGoodFraction:.6,
+    shortCount:16,longCount:192,shortCountNeed:8,longCountNeed:38.4,
+    masks:'none',allRequestedProfileCoordinatesInterior:true,
+    dev72WindowDependency:'none: composition passes pose and width only; same origin long/short05 duplicates sensor controls'},
+  arithmeticPredictionCheck:{localizedBrightColumns:32,totalLongColumns:192,
+    predictedPositiveNormalMean:100+(145-100)*32/192,
+    boundary:'Closed-form predicate arithmetic only; no generated-image profile sampled or averaged.'},
+  cvMeasurementsExecuted:0,cvImports:0,recipeCalls:0,profileCalls:0,fitterCalls:0,
+  decision:'accepted',findings:[],
+  limitations:[
+    'Acceptance covers premeasurement scientific/engineering readiness, not predicted finite fits or demonstrated mechanism.',
+    'The capsule is semantically organic only by caller label. Its local pixel equivalence proves possible non-identifiability, not a realistic organic distribution.',
+    'Finite positive fits, nulls, endpoint artifacts, learner rows and fixed-source failure conditions must all be retained after root release.',
+    'No calibrated width, physical continuity, semantic endpoint identity, confidence, independence, AA or production claim follows.',
+    'No CV output was generated or old output reused. Execution claims in the producer record are checked by static import inspection and bounded current review, not an omniscient history audit.'
+  ]};
+fs.writeFileSync(`${here}/evidence.json`,JSON.stringify(evidence,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({decision:evidence.decision,producerHashes,sourceHashMatches:Object.keys(sourceHashes).length,
+  fixtureCases:fixtureChecks.length,checkedPixelBytes:checkedBytes,organicSupport,cvMeasurementsExecuted:0},null,2));

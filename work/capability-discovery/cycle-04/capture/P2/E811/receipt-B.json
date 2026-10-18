@@ -1,0 +1,53 @@
+{
+  "schema": "source-pixel-roi@1",
+  "promoted": false,
+  "operationsExecuted": [],
+  "semanticIdentity": {
+    "status": "UNKNOWN",
+    "reason": "source pixels and supplied geometry do not establish identity"
+  },
+  "localWidth": {
+    "status": "UNKNOWN",
+    "widthPx": null
+  },
+  "status": "UNKNOWN",
+  "reason": "complete required sampling support absent in declared ROI",
+  "support": {
+    "status": "UNKNOWN",
+    "method": "full training segments; station window endpoints; isotropic bounds for existing nearest/bilinear footprints; strict JS interior border",
+    "profileNormalExtentPx": 30,
+    "sensorRadiusPx": 0,
+    "envelopes": [
+      {
+        "label": "station:fixed-center:profile-window-end",
+        "minX": -34,
+        "minY": -26,
+        "maxX": 26,
+        "maxY": 34
+      },
+      {
+        "label": "station:fixed-center:profile-window-end",
+        "minX": -18,
+        "minY": -26,
+        "maxX": 42,
+        "maxY": 34
+      }
+    ],
+    "failures": [
+      {
+        "label": "station:fixed-center:profile-window-end",
+        "minX": -34,
+        "minY": -26,
+        "maxX": 26,
+        "maxY": 34
+      },
+      {
+        "label": "station:fixed-center:profile-window-end",
+        "minX": -18,
+        "minY": -26,
+        "maxX": 42,
+        "maxY": 34
+      }
+    ]
+  }
+}

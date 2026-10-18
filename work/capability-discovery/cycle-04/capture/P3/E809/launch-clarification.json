@@ -1,0 +1,14 @@
+{
+  "job_id":"E809",
+  "failureScope":"Launch-only, before Node/caller/stager/adapter/CV",
+  "attemptedWrapper":"/usr/bin/time -v -o process-resources.txt node --max-old-space-size=4096 run-trial.mjs",
+  "exitCode":127,
+  "rawLog":"run.launch-v1.log",
+  "observedError":"/usr/bin/time: No such file or directory",
+  "preRepairEvidence":"No identity-before.json, source.json or receipt.json existed; caller was not started.",
+  "repair":"Use bash built-in time around identical frozen node command, retain timing in run.log. Frozen caller supplies actual process.resourceUsage including maxRSS and its measured adapter elapsed time.",
+  "helperChanges":false,
+  "parameterChanges":false,
+  "cvCallsBeforeRepair":0,
+  "authority":"Root preauthorized incidental path-only repair before CV; no adaptive measurement retry."
+}
