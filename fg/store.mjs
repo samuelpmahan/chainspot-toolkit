@@ -89,6 +89,10 @@
  */
 
 import { PXSET_QUERIES, resolvePxSet } from './pxset.mjs';
+import { renderValue } from './render.mjs';
+
+/** Every store renders any Part by address (renderable, a default property of Parts). */
+export const RENDER_PART = 'fn.q.part.render';
 
 const FN = /^fn\.[A-Za-z0-9_.\-/@]+$/;
 const STORE = Symbol.for('chainspot.fg.store');
@@ -153,6 +157,15 @@ export function createPartStore({ base = null, name = 'root', onCall = null } = 
       const ans = q(sets, { address: io.args.a });
       answers.set(key, ans);
       return { ...ans, emits: { computed: 1 } };
+    } });
+  // renderable is a default property of every Part: any address renders by the shape of its value (fg/render.mjs)
+  const rendered = new Map();
+  store.register(RENDER_PART, { note: 'default render of the Part at args.a (fg/render.mjs), cached by address',
+    calculate: (io) => {
+      const a = io.args?.a;
+      if (!rendered.has(a)) { let d = null; try { d = dims(); } catch { /* an image-free store renders without px coordinates */ } rendered.set(a, renderValue(a, store.get(a), d)); }
+      const r = rendered.get(a);
+      return { value: r, unit: 'frame parts', emits: { parts: r.parts.length, unrenderable: r.kind === 'unrenderable' ? 1 : 0 } };
     } });
   store.register(INSTRUMENTATION_CALLS, { note: 'the calls made by args.caller and nested under them (timings: sidecar data, never hashed)',
     calculate: (io) => callSubtree(log, io.args?.caller ?? null).filter((e) => e.calculation !== INSTRUMENTATION_CALLS) });

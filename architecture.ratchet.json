@@ -1,0 +1,51 @@
+{
+ "rule": "counts per file may only go down (architecture.test.mjs)",
+ "files": {
+  "fg/attention/packet.mjs": {
+   "pixelLoops": 1
+  },
+  "fg/attention/regions.mjs": {
+   "pixelLoops": 1
+  },
+  "fg/delta/evidence.mjs": {
+   "artifactReads": 3
+  },
+  "fg/delta/project.mjs": {
+   "pixelLoops": 4
+  },
+  "fg/delta/px.mjs": {
+   "pixelLoops": 2
+  },
+  "fg/legacy.mjs": {
+   "artifactReads": 1
+  },
+  "fg/s3/fg.s3.pxTeesFamilyFix.materialize.fg.mjs": {
+   "artifactReads": 6
+  },
+  "ports/early/s1BadgeAssembly.mjs": {
+   "pixelLoops": 2
+  },
+  "ports/early/s3ForkJoin.mjs": {
+   "artifactReads": 3
+  },
+  "ports/early/s3TeeAssembly.mjs": {
+   "pixelLoops": 4
+  },
+  "ports/judge/judge.mjs": {
+   "artifactReads": 7
+  },
+  "ports/s3assoc/freeze.mjs": {
+   "artifactReads": 1
+  },
+  "ports/s3assoc/perturb.mjs": {
+   "artifactReads": 3
+  },
+  "ports/s3assoc/run.mjs": {
+   "artifactReads": 15,
+   "pixelLoops": 1
+  },
+  "ports/s4recover/run.mjs": {
+   "artifactReads": 9
+  }
+ }
+}

@@ -26,6 +26,7 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 
 import { deserialize } from 'node:v8';
 import { join, resolve } from 'node:path';
 import { instrumentedStore, profileSummary, profileFrame } from '../../fg/profile.mjs';
+import { RENDER_PART } from '../../fg/store.mjs';
 import { comparableForkJoin, forkJoinFrames } from '../../fg/forkjoin.mjs';
 import { discoverImplementations } from '../../fg/discover.mjs';
 import { createFileSink } from '../../fg/node-sink.mjs';
@@ -140,7 +141,10 @@ export async function runTeeRecoverForkJoin({ attempt, specimen, outDir = null, 
   writeFileSync(join(out, `${result.comparison.address}.json`), canonicalJson({ schema: 'nctk-s4-tee-recover-comparison@1', specimen, attempt, address: result.comparison.address, implementations: result.comparison.implementations, sha256: result.comparison.sha256, elapsedMs: timings, value: v }) + '\n');
   const doc = instrumentation(), profile = profileSummary(doc);
   writeFileSync(join(out, 'instrumentation.json'), JSON.stringify(doc) + '\n');   // sidecar: timings are never hashed evidence
-  const frames = [...forkJoinFrames(result), profileFrame(profile, { wallMs: doc.wallMs })];
+  // renderable (a default property of Parts): one page per S4 Part this run produced, rendered by the store itself
+  const partPages = store.manifest().parts.map((p) => p.address).filter((a) => a.startsWith('tk.s4.')).sort()
+    .map((a) => { const r = store.call(RENDER_PART, { a }).value; return { title: `${a} (${r.kind})`, calculation: 'fg.render', tick: 'render', parts: r.parts, verdicts: [{ name: `${a} renders`, ok: r.kind !== 'unrenderable' && r.parts.length > 0 }] }; });
+  const frames = [...forkJoinFrames(result), profileFrame(profile, { wallMs: doc.wallMs }), ...partPages];
   const records = Object.fromEntries(Object.entries(result.branches).map(([n, b]) => [n, { error: b.error, records: b.records }]));
   writeFileSync(join(out, 's4recover.records.json'), canonicalJson({ schema: 'nctk-fg-forkjoin-records@1', slot: result.slot, specimen, attempt, branches: records }) + '\n');
   writeFileSync(join(out, 's4recover.frames.json'), framesJson(frames) + '\n');

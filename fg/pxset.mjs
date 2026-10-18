@@ -81,7 +81,7 @@ export function ownerPlane(W, H, sets, { overlap = 'first' } = {}) {   // overla
 /** The default render of a set: a frame part (fg/guarantee.mjs kind 'pxset') for flipbooks and the UI. */
 export const renderPart = (set, { address, label = null } = {}) => {
   const px = []; forEach(set, (i) => px.push(i));
-  return { address, kind: 'pxset', data: { widthPx: set.W, px, label, count: px.length, bbox: bbox(set) } };
+  return { address, kind: 'pxset', data: { width: set.W, height: set.H, px, label, count: px.length, bbox: bbox(set) } };   // fg/flipbook.mjs pxset shape
 };
 
 export const PXSET_UNITS = Object.freeze({ count: 'px', bbox: 'px [x, y, width, height]', intersect: 'px', overlap: 'px' });
