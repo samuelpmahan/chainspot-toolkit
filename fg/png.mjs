@@ -10,7 +10,8 @@
  * which is fine for a handful of contact-sheet pages and wrong for a whole
  * raster (use the background raster or an artifact ref for that).
  *
- *   encodePngRgb({ width, height, rgb })  -> Uint8Array (PNG bytes)
+ *   encodePngRgb({ width, height, rgb, deflate? })  -> Uint8Array (PNG bytes); deflate: an optional real compressor
+ *       (node: zlib.deflateSync) for pages with hundreds of crops
  *   cropWindow({ rgba, width, height }, { cx, cy, size, overlays? })
  *       -> { origin: [x0, y0], width, height, png: base64 }
  *     overlays: [{ kind: 'rect', bbox: [x, y, w, h], color: [r, g, b] }
@@ -67,7 +68,7 @@ function zlibStored(raw) {
   return out;
 }
 
-export function encodePngRgb({ width, height, rgb }) {
+export function encodePngRgb({ width, height, rgb, deflate = zlibStored }) {   // deflate: a zlib-stream compressor (node: zlib.deflateSync) when size matters
   if (!Number.isInteger(width) || !Number.isInteger(height) || width < 1 || height < 1) throw new Error('encodePngRgb: width/height must be positive integers');
   if (rgb.length !== width * height * 3) throw new Error(`encodePngRgb: rgb has ${rgb.length} bytes, expected ${width * height * 3}`);
   const raw = new Uint8Array(height * (1 + width * 3));
@@ -76,7 +77,7 @@ export function encodePngRgb({ width, height, rgb }) {
   const v = new DataView(ihdr.buffer);
   v.setUint32(0, width); v.setUint32(4, height);
   ihdr[8] = 8; ihdr[9] = 2; // 8-bit, truecolor RGB
-  const parts = [new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), chunk('IHDR', ihdr), chunk('IDAT', zlibStored(raw)), chunk('IEND', new Uint8Array(0))];
+  const parts = [new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]), chunk('IHDR', ihdr), chunk('IDAT', deflate(raw)), chunk('IEND', new Uint8Array(0))];
   const out = new Uint8Array(parts.reduce((n, p) => n + p.length, 0));
   let o = 0;
   for (const p of parts) { out.set(p, o); o += p.length; }
@@ -89,7 +90,7 @@ export function base64(bytes) {
   return btoa(s);
 }
 
-export function cropWindow({ rgba, width, height }, { cx, cy, size = 120, overlays = [] }) {
+export function cropWindow({ rgba, width, height }, { cx, cy, size = 120, overlays = [], deflate = undefined }) {
   const x0 = Math.round(cx) - Math.floor(size / 2), y0 = Math.round(cy) - Math.floor(size / 2);
   const rgb = new Uint8Array(size * size * 3).fill(128);
   for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
@@ -114,5 +115,5 @@ export function cropWindow({ rgba, width, height }, { cx, cy, size = 120, overla
       for (let d = -arm; d <= arm; d++) { put(o.x + d, o.y, o.color); put(o.x, o.y + d, o.color); }
     } else throw new Error(`cropWindow: unknown overlay kind ${o.kind}`);
   }
-  return { origin: [x0, y0], width: size, height: size, png: base64(encodePngRgb({ width: size, height: size, rgb })) };
+  return { origin: [x0, y0], width: size, height: size, png: base64(encodePngRgb({ width: size, height: size, rgb, deflate })) };
 }

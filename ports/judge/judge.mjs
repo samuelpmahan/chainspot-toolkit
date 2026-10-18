@@ -45,7 +45,13 @@ function detectionStage(kind, dets, T, truthPoint, maxPx) {
     fn: m.unmatchedTruth.map((h) => `${kind} ${h}`),
     fp: T.complete ? m.unmatchedDets.map((i) => dets[i].name) : [],
     errorPx: errs.length ? { median: r2(errs.sort((a, b) => a - b)[Math.floor(errs.length / 2)]), max: r2(Math.max(...errs)) } : null,
-    matchWithinPx: maxPx, holeOfDetection: new Map(m.tp.map((p) => [p.i, p.hole]))
+    matchWithinPx: maxPx, holeOfDetection: new Map(m.tp.map((p) => [p.i, p.hole])),
+    // the same verdicts as data (one row per hole or unmatched detection), for the inspector and any other render
+    rows: [
+      ...m.tp.map((p) => ({ hole: p.hole, expected: truth.find((t) => t.hole === p.hole).point, detection: dets[p.i], errorPx: r2(p.e), verdict: dets[p.i].name.startsWith('S4 ') ? 'recoveredTP' : 'TP' })),
+      ...m.unmatchedTruth.map((h) => ({ hole: h, expected: truth.find((t) => t.hole === h).point, detection: null, errorPx: null, verdict: 'FN' })),
+      ...m.unmatchedDets.map((i) => ({ hole: null, expected: null, detection: dets[i], errorPx: null, verdict: !T.complete ? 'unjudged' : dets[i].name.startsWith('S4 ') ? 'recoveredFP' : 'FP' }))
+    ].sort((a, b) => (a.hole ?? 99) - (b.hole ?? 99))
   };
 }
 
@@ -65,7 +71,7 @@ export function judgeAttempt({ specimen, attempt, root = ROOT }) {
   // S2: baskets, BasketPoint vs Sam's basket points.
   const kj = JSON.parse(readFileSync(join(A, 's2', 'px.baskets.json'), 'utf8')).baskets;
   const kNames = nameCandidates('Basket', kj, (k) => basketPoint(k.bbox));
-  const S2 = detectionStage('Basket', kj.map((k, i) => ({ name: kNames[i], point: basketPoint(k.bbox) })), T, (h) => h.basket, MATCH_PX.basket);
+  const S2 = detectionStage('Basket', kj.map((k, i) => ({ name: kNames[i], point: basketPoint(k.bbox), bbox: k.bbox })), T, (h) => h.basket, MATCH_PX.basket);
   const S2hole = S2.holeOfDetection; delete S2.holeOfDetection; report.stages.S2 = S2;
 
   // S3: visible tees (S3 structural fix), pad centre vs Sam's tee point.
@@ -73,7 +79,7 @@ export function judgeAttempt({ specimen, attempt, root = ROOT }) {
   if (existsSync(tf)) {
     const tees = JSON.parse(readFileSync(tf, 'utf8')).tees;
     const tNames = nameCandidates('Tee', tees, (t) => t.center);
-    const S3 = detectionStage('Tee', tees.map((t, i) => ({ name: tNames[i], point: t.center })), T, (h) => h.tee, MATCH_PX.tee);
+    const S3 = detectionStage('Tee', tees.map((t, i) => ({ name: tNames[i], point: t.center, bbox: t.bbox, angleRad: t.angleRad })), T, (h) => h.tee, MATCH_PX.tee);
     const holeOfTee = S3.holeOfDetection; delete S3.holeOfDetection; report.stages.S3 = S3;
     // Why each FN, by name: every scene Part that crosses the pad footprint (half the pad diagonal around Sam's point;
     // Sam marks an occluded pad at the centroid of its VISIBLE part). Opaque sprites by their pixel sets, translucent
@@ -111,16 +117,19 @@ export function judgeAttempt({ specimen, attempt, root = ROOT }) {
     const af = join(out, 's3assoc', 'px.tees.association.json');
     if (existsSync(af)) {
       const rows = JSON.parse(readFileSync(af, 'utf8')).rows;
-      const correct = [], incorrect = [], none = [];
+      const correct = [], incorrect = [], none = [], assocRows = [];
+      const badgeCenter = new Map(badges.map((b) => [Number(b.label), [b.bbox[0] + (b.bbox[2] - 1) / 2, b.bbox[1] + (b.bbox[3] - 1) / 2]]));
       rows.forEach((r, i) => {
-        const truth = holeOfTee.get(i); if (truth == null) return;
-        const said = r.best ? Number(r.best.badge) : null, name = tNames[i];
+        const truth = holeOfTee.get(i), said = r.best ? Number(r.best.badge) : null, name = tNames[i];
+        const verdict = truth == null ? 'unjudged' : said == null ? 'none' : said === truth ? 'right' : 'wrong';
+        assocRows.push({ hole: truth ?? null, name, point: r.center, said, saidCenter: said != null ? badgeCenter.get(said) ?? null : null, truthCenter: truth != null ? badgeCenter.get(truth) ?? null : null, verdict, best: r.best ?? null });
+        if (truth == null) return;
         if (said == null) none.push(`${name} (is Tee ${truth})`);
         else if (said === truth) correct.push(`${name} -> Badge ${said}`);
         else incorrect.push(`${name} -> Badge ${said}, is Tee ${truth}`);
       });
       report.stages.S3association = { judgedTees: correct.length + incorrect.length + none.length, associatedCorrectly: correct.length, associatedIncorrectly: incorrect.length, notAssociated: none.length,
-        unjudgedTees: rows.length - (correct.length + incorrect.length + none.length), correct, incorrect, none };
+        unjudgedTees: rows.length - (correct.length + incorrect.length + none.length), correct, incorrect, none, rows: assocRows };
 
       // S5 0-bend holes: the 3-point straight test vs Sam's bent/straight, and the straight basket vs Sam's basket.
       const s = { TP: [], FP: [], FN: [], TN: [], wrongBasket: [] };
@@ -145,7 +154,7 @@ export function judgeAttempt({ specimen, attempt, root = ROOT }) {
   if (existsSync(bridgeFile)) {
     const rec = (JSON.parse(readFileSync(bridgeFile, 'utf8')).comparisons?.accepted ?? []).filter((d) => d.classification !== 'existing-s2-exact').map((d) => d.semanticBbox);
     const rNames = nameCandidates('Basket', rec, (b) => basketPoint(b)).map((n) => `S4 ${n}`);
-    const dets = [...kj.map((k, i) => ({ name: kNames[i], point: basketPoint(k.bbox) })), ...rec.map((b, i) => ({ name: rNames[i], point: basketPoint(b) }))];
+    const dets = [...kj.map((k, i) => ({ name: kNames[i], point: basketPoint(k.bbox), bbox: k.bbox })), ...rec.map((b, i) => ({ name: rNames[i], point: basketPoint(b), bbox: b }))];
     const S4b = detectionStage('Basket', dets, T, (h) => h.basket, MATCH_PX.basket); delete S4b.holeOfDetection;
     S4b.recovered = rec.length; S4b.recoveredTP = S4b.tp.filter((s) => s.startsWith('S4 ')); S4b.recoveredFP = S4b.fp.filter((s) => s.startsWith('S4 '));
     report.stages.S4baskets = S4b;
@@ -159,7 +168,8 @@ export function judgeAttempt({ specimen, attempt, root = ROOT }) {
     for (const branch of readdirSync(base).sort()) {
       const R = JSON.parse(readFileSync(join(base, branch, 'recovered.json'), 'utf8')).recovered ?? [];
       const rNames = nameCandidates('Tee', R, (t) => t.center).map((n) => `S4 ${n}`);
-      const dets = [...tees.map((t, i) => ({ name: tNames[i], point: t.center })), ...R.map((t, i) => ({ name: rNames[i], point: t.center }))];
+      const dets = [...tees.map((t, i) => ({ name: tNames[i], point: t.center, bbox: t.bbox, angleRad: t.angleRad })),
+        ...R.map((t, i) => ({ name: rNames[i], point: t.center, corners: t.corners ?? null, forHole: t.hole, rule: t.rule, confidence: t.confidence ?? null, visibleFrameFrac: t.evidence?.visibleFrameFrac ?? null }))];
       const s = detectionStage('Tee', dets, T, (h) => h.tee, MATCH_PX.tee);
       const holeOf = s.holeOfDetection; delete s.holeOfDetection;
       const assoc = { correct: [], incorrect: [], unjudged: [] };

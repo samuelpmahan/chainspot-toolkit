@@ -139,6 +139,17 @@ right and the repo is behind. Every number carries a unit.
   its px (98 of 98 baskets), and a badge also owns its mute ring
   (`has.mute.px`). The artifact JSON reshapes the same Part with different
   field names, which is how two consumers came to pick fields by hand.
+- **A PixelCache holds one raster and views on it** (Sam, 2026-10-18: "PixelCache
+  should mean this is 9 views on the same single raster"). An attempt today
+  writes nine full-frame RGBA artifacts (badgePx, muted, counters, basketPx,
+  remaining x2, teePx, refinedPx, eliminatedPx; 10.7 MB each, 96 MB of a
+  217 MB attempt), every one `px.image.cropped` with alpha zeroed on a pixel
+  set that is itself a Part. They are views: a raster query over the one
+  image and a PixelSet (`fn.q.raster.maskAlpha`), recounted in memory by the
+  materialize FGs with the sha in the receipt, never written as bytes. The
+  same rule as the Calculations: served, not stored. Attempts are
+  reproducible from the recipe, so unreferenced ones are deleted
+  (`state --prune`); the ReproducibleRecipe is the artifact.
 - **Interface vs TypedInterface; delegates are FGs** (Sam, 2026-10-18).
   An address list is an Interface; a TypedInterface also says what kind
   of Part sits at each address. A slot is a C#-style delegate: a typed

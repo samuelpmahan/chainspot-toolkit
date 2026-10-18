@@ -164,13 +164,42 @@ export const readAttempts = (root = ROOT) => (existsSync(join(root, ATTEMPTS_FIL
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
 const closureSnapshot = async (root, paths) => { const files = await snapshotPaths(root, paths.filter((p) => existsSync(join(root, p)))); return { files: files.map((f) => [f.path, f.sha256]), sha: sha(canonical(files.map((f) => [f.path, f.sha256]))) }; };
 
-/** The working tree's recipe closure for an attempt's request, against the attempt's own fork of it. */
+/**
+ * The modules a run can reach from its entries, by following relative static and dynamic imports (the recipe closure
+ * copies whole directories, so a test file or a renderer nobody imports would otherwise make every cell stale).
+ */
+export function reachableModules(root, entries) {
+  const seen = new Set(), todo = [...entries];
+  while (todo.length) {
+    const rel = todo.pop(); if (seen.has(rel) || !existsSync(join(root, rel))) continue; seen.add(rel);
+    const src = readFileSync(join(root, rel), 'utf8');
+    for (const m of src.matchAll(/(?:from|import)\s*\(?\s*['"](\.{1,2}\/[^'"]+)['"]/g)) {
+      const target = join(rel, '..', m[1]).replace(/^\.\//, '');
+      todo.push(target.replace(/\\/g, '/'));
+    }
+  }
+  return seen;
+}
+export const RUN_ENTRIES = Object.freeze(['toolkit.mjs', 'ports/run-stages.mjs']);
+/** The run's entries plus what it discovers by directory listing: every FG (fg/**\/*.fg.mjs) and every implementation (impl/**). */
+export function runEntries(root) {
+  const found = [];
+  const walk = (dir, test) => { if (!existsSync(join(root, dir))) return; for (const e of readdirSync(join(root, dir), { withFileTypes: true })) { const rel = `${dir}/${e.name}`; if (e.isDirectory()) walk(rel, test); else if (test(e.name)) found.push(rel); } };
+  walk('fg', (n) => n.endsWith('.fg.mjs')); walk('impl', (n) => n.endsWith('.mjs') && !n.endsWith('.test.mjs'));
+  return [...RUN_ENTRIES, ...found];
+}
+const isCode = (p) => /\.(mjs|js|cjs|ts)$/.test(p) && !/^source\//.test(p);   // the pinned provider is data: it is loaded by path, not by import
+
+/** The working tree's recipe closure for an attempt's request, against the attempt's own fork of it: only what the run can reach. */
 async function recipeFreshness(root, forkRoot, request) {
   try {
     const st = await stageState(root, { sourcePath: request.sourcePath, recipePath: request.recipe, selection: { until: request.until, lanes: request.lanes, only: request.only ?? undefined } });
-    const forkFiles = await snapshotPaths(forkRoot, st.files.map((f) => f.path).filter((p) => existsSync(join(forkRoot, p))));
-    const changed = differences(forkFiles, st.files).map((d) => d.path);
-    return { state: changed.length ? 'STALE' : 'VERIFIED', changed };
+    const reach = new Set([...reachableModules(root, runEntries(root)), ...reachableModules(forkRoot, runEntries(forkRoot))]);
+    const relevant = (p) => !isCode(p) || reach.has(p) || p.startsWith('impl/') || p.startsWith('contracts/');   // impl/ and contracts/ are discovered by readdir
+    const files = st.files.filter((f) => relevant(f.path));
+    const forkFiles = await snapshotPaths(forkRoot, files.map((f) => f.path).filter((p) => existsSync(join(forkRoot, p))));
+    const changed = differences(forkFiles, files).map((d) => d.path);
+    return { state: changed.length ? 'STALE' : 'VERIFIED', changed, reachable: reach.size };
   } catch (error) { return { state: 'UNKNOWN', changed: [], error: String(error.message ?? error) }; }
 }
 
@@ -205,8 +234,21 @@ export async function loadCourse(root, course, attempt) {
   if (outputs.early) {
     try { const j = judgeAttempt({ specimen: course, attempt, root }); testimony = j.testimony; judgement = j.stages ?? null; } catch (error) { judgement = null; }
   }
+  // the objects themselves, for renders (the inspector) and for courses without testimony
+  const s4run = outputs.s4recover ? readdirSync(join(out, 's4recover')).filter((d) => d.startsWith('run-')).sort().at(-1) : null;
+  const recovered = s4run && existsSync(join(out, 's4recover', s4run, 'artifacts', 'fn.Tee.recover', S4_BRANCH, 'recovered.json')) ? readJson(join(out, 's4recover', s4run, 'artifacts', 'fn.Tee.recover', S4_BRANCH, 'recovered.json')) : null;
+  const objects = {
+    badges: (board.get('px.badges') ?? []).map((b) => ({ label: b.label, bbox: b.bbox })),
+    baskets: (board.get('px.baskets') ?? []).map((k) => ({ bbox: k.bbox })),
+    tees: outputs.s3fix ? readJson(join(A, 's3fix', 'px.tees.refined.json')).tees.map((t) => ({ center: t.center, bbox: t.bbox, angleRad: t.angleRad })) : [],
+    association: outputs.s3assoc ? readJson(join(out, 's3assoc', 'px.tees.association.json')).rows.map((r) => ({ center: r.center, said: r.best ? Number(r.best.badge) : null })) : [],
+    s4baskets: outputs.basketBridge ? (readJson(join(out, 'basket-bridge', 'basket-recovery.part.json')).comparisons?.accepted ?? []).filter((d) => d.classification !== 'existing-s2-exact').map((d) => ({ bbox: d.semanticBbox, tier: d.tier })) : [],
+    s4tees: (recovered?.recovered ?? []).map((t) => ({ center: t.center, corners: t.corners ?? null, forHole: t.hole, rule: t.rule, confidence: t.confidence ?? null, visibleFrameFrac: t.evidence?.visibleFrameFrac ?? null })),
+    s4missed: (recovered?.missed ?? []).map((m) => ({ hole: m.hole, reason: m.reason }))
+  };
+  const paths = { out, snap, forkRoot, s4run: s4run ? join(out, 's4recover', s4run) : null };
   const freshness = { ...(request ? { recipe: await recipeFreshness(root, forkRoot, request) } : { recipe: { state: 'UNKNOWN', changed: [] } }), ...(await postRecipeFreshness(root, out)) };
-  return { course, attempt, request, testimony, N, counts, judgement, outputs, freshness };
+  return { course, attempt, request, testimony, N, counts, judgement, outputs, freshness, objects, paths };
 }
 
 export async function loadStateInputs(root = ROOT, attempts = readAttempts(root)) {
@@ -234,7 +276,9 @@ export async function stateMatrix(root = ROOT, { attempts = readAttempts(root) }
   const dir = join(root, 'attempts', 'state'); mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, 'matrix.json'), JSON.stringify({ at: new Date().toISOString(), ...matrix }, null, 1) + '\n');
   writeFileSync(join(dir, 'matrix.flipbook.html'), renderFlipbook([partFrame(MATRIX_PART, { rows: matrix.rows.map(({ changedPaths, goal, ...r }) => r), ...matrix.emits })], { title: 'State matrix: every stage on every dev course' }));
-  return { matrix, store, frozen, written: ['attempts/state/matrix.json', 'attempts/state/matrix.flipbook.html'] };
+  const { writeInspector } = await import('./inspect.mjs');
+  const inspector = writeInspector(root, matrix, store.get('tk.state.inputs'));
+  return { matrix, store, frozen, written: ['attempts/state/matrix.json', 'attempts/state/matrix.flipbook.html', inspector] };
 }
 
 /** Freeze: the rows and the closures they were computed with become the record a later matrix is compared against. */
