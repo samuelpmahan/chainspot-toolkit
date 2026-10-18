@@ -1,0 +1,926 @@
+{
+  "schema": "cycle02-worker-result@1",
+  "job_id": "E303",
+  "worker": "C5",
+  "outcome": "mixed_change",
+  "summary": "Existing Dev72 width learning and pathSpace bilinear width/edge calls execute portably and transfer clean local widths 30/40/50 across tested rotations, but unconditional width transfer is falsified. A non-ribbon bright ellipse produces a uniquely winning width40 (mean1, margin1), then fails on independently constructed true nominal30 ribbon: all four transferred rail/combined scores0 and constrained edgepair absent. Reverse clean30-to-ellipse evaluation receives rail/interior/combined1 and matching29px edge separation, defeating renderer identity even with exposed independent-station agreement. Local widening and a4px origin error break transfer. All-hidden and zero-lift ties select legacy20 without learned-width evidence. All evidence remains exposed exploration; no calibrated width, scale, confidence policy or endpoint identity is claimed.",
+  "commands": [
+    {
+      "command": "sha256sum protocol.json probe.mjs",
+      "exitCode": 0,
+      "stage": "freeze before first execution"
+    },
+    {
+      "command": "node probe.mjs > run.log",
+      "exitCode": 0
+    },
+    {
+      "command": "node verify.mjs > verification.log",
+      "exitCode": 0
+    },
+    {
+      "command": "tar -czf portable-probe.tar.gz README.md protocol.json probe.mjs verify.mjs source",
+      "exitCode": 0
+    },
+    {
+      "command": "mkdir -p portable-check && tar -xzf portable-probe.tar.gz -C portable-check && node portable-check/probe.mjs > portable-check/run.log && node portable-check/verify.mjs > portable-check/verification.log && cmp measurements.json portable-check/measurements.json && cmp run.log portable-check/run.log",
+      "exitCode": 0,
+      "result": "fresh extraction reproduces receipt and log byte-for-byte"
+    }
+  ],
+  "sourceIDs": [
+    {
+      "file": "vendor/active/ports/s6straight/pathSpace.mjs",
+      "origin": "chainspot-toolkit",
+      "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "sourcePath": "ports/s6straight/pathSpace.mjs",
+      "gitBlob": "38963d20f7a8b7c7851b3a2abea2e472da8f7716",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "adaptation": "path/extension only; content byte-identical",
+      "verified": true
+    },
+    {
+      "file": "vendor/active/contracts/alpha.profile@1.mjs",
+      "origin": "chainspot-toolkit",
+      "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "sourcePath": "contracts/alpha.profile@1.mjs",
+      "gitBlob": "6f50530ff8f7d5c613ee739224d475657fcbf647",
+      "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+      "adaptation": "path/extension only; content byte-identical",
+      "verified": true
+    },
+    {
+      "file": "vendor/provider/fourLaneSensor.cjs",
+      "origin": "chainspot-toolkit",
+      "ref": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "sourcePath": "source/provider/packages/alg/dist/detectors/threeFactor/features/st.fourLaneSensor.js",
+      "gitBlob": "2167c3539aa33856738e679c75869d6c3395afe8",
+      "sha256": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624",
+      "adaptation": "path/extension only; content byte-identical",
+      "verified": true
+    },
+    {
+      "file": "vendor/dev72/fourLaneRibbon.ts",
+      "origin": "samuelpmahan/ChainSpot",
+      "ref": "ef2a4fc2dc4720d3647f705464342f119d5a39a5",
+      "sourcePath": "src/lib/nuthing/fourLaneRibbon.ts",
+      "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+      "adaptation": "none; exact independently fetched source; Node builtin type stripping",
+      "verified": true
+    }
+  ],
+  "calledOperations": [
+    "Dev72 estimateFourLaneCorridorWidth",
+    "Dev72 observeFourLaneCrossSection",
+    "active pathSpace widthSearchAt",
+    "active pathSpace profileAt",
+    "active pathSpace edgePairOf",
+    "active pathSpace samp"
+  ],
+  "sourceScopeNote": "provider fourLaneSensor.cjs was bundled/hash verified but not called; alpha.profile is an exact pathSpace transitive dependency.",
+  "artifacts": {
+    "protocol.json": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle02/C5/protocol.json",
+      "sha256": "b6a0f050c04ba4d17a81cbaa7e34701ab1cd01c9e62995e19ac50812109be1af"
+    },
+    "probe.mjs": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle02/C5/probe.mjs",
+      "sha256": "68772761afe94d52dc954dbf7d30f47560ba54bf1a18e6840963c7818ee8c03f"
+    },
+    "measurements.json": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle02/C5/measurements.json",
+      "sha256": "4602b0ddb96d647143be01904f213f24bd0523151001fdda3a57a8903058671d"
+    },
+    "run.log": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle02/C5/run.log",
+      "sha256": "9ea1df789d23fcd924ac9546df566c7168d9b9412c4e58004131e895c102a5e8"
+    },
+    "verification.log": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle02/C5/verification.log",
+      "sha256": "76066ae4e85b9047cfcf0ecf16da4fbd66371648bb5e0c38e0987c3f2b5f8b38"
+    },
+    "portable-probe.tar.gz": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle02/C5/portable-probe.tar.gz",
+      "sha256": "2397cb5e54e6c49547344121e220b1541ca5afb253dece168905c295b8f7017b"
+    }
+  },
+  "actualMeasurements": {
+    "caseCount": 10,
+    "trainingCandidateStationRows": 250,
+    "evaluationCandidateStationRows": 200,
+    "transferredWidthStationRows": 40,
+    "calibratedWidthCount": 0,
+    "rows": [
+      {
+        "id": "clean30",
+        "trainingNominalWidthArgumentPx": 30,
+        "trainingOccupiedRasterRowsAtX128": 29,
+        "estimatedWidthPx": 30,
+        "candidateScoreRows": [
+          {
+            "widthPx": 20,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 50,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 60,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ],
+        "winnerScoreSeparation": 1,
+        "trainingFreeFit": {
+          "lPx": -14.5,
+          "rPx": 14.5,
+          "cPx": 0,
+          "wPx": 29,
+          "score": 36,
+          "gl": 36,
+          "gr": 36,
+          "wgPx": 29
+        },
+        "evaluationNominalWidthArgumentPx": 30,
+        "evaluationDirectBilinearSeparationRangePx": [
+          29,
+          29
+        ],
+        "evaluationFreeFit": {
+          "lPx": -14.5,
+          "rPx": 14.5,
+          "cPx": 0,
+          "wPx": 29,
+          "score": 36,
+          "gl": 36,
+          "gr": 36,
+          "wgPx": 29
+        },
+        "evaluationAtLearnedWidthFit": {
+          "lPx": -14.5,
+          "rPx": 14.5,
+          "cPx": 0,
+          "wPx": 29,
+          "score": 36,
+          "gl": 36,
+          "gr": 36
+        },
+        "evaluationCombinedScores": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "evaluationRailScores": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "diagnosticStatus": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+        "calibratedWidthPx": null
+      },
+      {
+        "id": "clean40-rotation",
+        "trainingNominalWidthArgumentPx": 40,
+        "trainingOccupiedRasterRowsAtX128": 39,
+        "estimatedWidthPx": 40,
+        "candidateScoreRows": [
+          {
+            "widthPx": 20,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 50,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 60,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ],
+        "winnerScoreSeparation": 1,
+        "trainingFreeFit": {
+          "lPx": -19.5,
+          "rPx": 19.5,
+          "cPx": 0,
+          "wPx": 39,
+          "score": 36,
+          "gl": 36,
+          "gr": 36,
+          "wgPx": 39
+        },
+        "evaluationNominalWidthArgumentPx": 40,
+        "evaluationDirectBilinearSeparationRangePx": [
+          39.973563054621735,
+          40.068341060999245
+        ],
+        "evaluationFreeFit": {
+          "lPx": -20.00452699999991,
+          "rPx": 19.998472252536704,
+          "cPx": -0.0030273737316033333,
+          "wPx": 40.00299925253661,
+          "score": 30.79540774505878,
+          "gl": 30.79540774505878,
+          "gr": 30.79560679235533,
+          "wgPx": 40
+        },
+        "evaluationAtLearnedWidthFit": {
+          "lPx": -20.00452699999991,
+          "rPx": 19.998472252536704,
+          "cPx": -0.0030273737316033333,
+          "wPx": 40.00299925253661,
+          "score": 30.79540774505878,
+          "gl": 30.79540774505878,
+          "gr": 30.79560679235533
+        },
+        "evaluationCombinedScores": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "evaluationRailScores": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "diagnosticStatus": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+        "calibratedWidthPx": null
+      },
+      {
+        "id": "clean50-rotation",
+        "trainingNominalWidthArgumentPx": 50,
+        "trainingOccupiedRasterRowsAtX128": 51,
+        "estimatedWidthPx": 50,
+        "candidateScoreRows": [
+          {
+            "widthPx": 20,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 50,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 60,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ],
+        "winnerScoreSeparation": 1,
+        "trainingFreeFit": {
+          "lPx": -24.99956343685249,
+          "rPx": 24.98890380152094,
+          "cPx": -0.005329817665774783,
+          "wPx": 49.98846723837343,
+          "score": 30.368555606305193,
+          "gl": 30.395348173697613,
+          "gr": 30.368555606305193,
+          "wgPx": 50
+        },
+        "evaluationNominalWidthArgumentPx": 50,
+        "evaluationDirectBilinearSeparationRangePx": [
+          50.1449800127443,
+          50.402899286907086
+        ],
+        "evaluationFreeFit": {
+          "lPx": -25.00252663160678,
+          "rPx": 25.00263729942792,
+          "cPx": 5.5333910569999034e-05,
+          "wPx": 50.0051639310347,
+          "score": 30.68649634513889,
+          "gl": 30.68902133833882,
+          "gr": 30.68649634513889,
+          "wgPx": 50
+        },
+        "evaluationAtLearnedWidthFit": {
+          "lPx": -25.00252663160678,
+          "rPx": 25.00263729942792,
+          "cPx": 5.5333910569999034e-05,
+          "wPx": 50.0051639310347,
+          "score": 30.68649634513889,
+          "gl": 30.68902133833882,
+          "gr": 30.68649634513889
+        },
+        "evaluationCombinedScores": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "evaluationRailScores": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "diagnosticStatus": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+        "calibratedWidthPx": null
+      },
+      {
+        "id": "local-width-change",
+        "trainingNominalWidthArgumentPx": 30,
+        "trainingOccupiedRasterRowsAtX128": 29,
+        "estimatedWidthPx": 30,
+        "candidateScoreRows": [
+          {
+            "widthPx": 20,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 50,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 60,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ],
+        "winnerScoreSeparation": 1,
+        "trainingFreeFit": {
+          "lPx": -14.5,
+          "rPx": 14.5,
+          "cPx": 0,
+          "wPx": 29,
+          "score": 36,
+          "gl": 36,
+          "gr": 36,
+          "wgPx": 29
+        },
+        "evaluationNominalWidthArgumentPx": 46,
+        "evaluationDirectBilinearSeparationRangePx": [
+          45,
+          45
+        ],
+        "evaluationFreeFit": {
+          "lPx": -22.5,
+          "rPx": 22.5,
+          "cPx": 0,
+          "wPx": 45,
+          "score": 36,
+          "gl": 36,
+          "gr": 36,
+          "wgPx": 45
+        },
+        "evaluationAtLearnedWidthFit": null,
+        "evaluationCombinedScores": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "evaluationRailScores": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "diagnosticStatus": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+        "calibratedWidthPx": null
+      },
+      {
+        "id": "offset-transfer",
+        "trainingNominalWidthArgumentPx": 30,
+        "trainingOccupiedRasterRowsAtX128": 29,
+        "estimatedWidthPx": 30,
+        "candidateScoreRows": [
+          {
+            "widthPx": 20,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 50,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 60,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ],
+        "winnerScoreSeparation": 1,
+        "trainingFreeFit": {
+          "lPx": -14.5,
+          "rPx": 14.5,
+          "cPx": 0,
+          "wPx": 29,
+          "score": 36,
+          "gl": 36,
+          "gr": 36,
+          "wgPx": 29
+        },
+        "evaluationNominalWidthArgumentPx": 30,
+        "evaluationDirectBilinearSeparationRangePx": [
+          29,
+          29
+        ],
+        "evaluationFreeFit": null,
+        "evaluationAtLearnedWidthFit": null,
+        "evaluationCombinedScores": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "evaluationRailScores": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "diagnosticStatus": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+        "calibratedWidthPx": null
+      },
+      {
+        "id": "organic-training-false-width",
+        "trainingNominalWidthArgumentPx": 40,
+        "trainingOccupiedRasterRowsAtX128": 39,
+        "estimatedWidthPx": 40,
+        "candidateScoreRows": [
+          {
+            "widthPx": 20,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 50,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 60,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ],
+        "winnerScoreSeparation": 1,
+        "trainingFreeFit": {
+          "lPx": -19.5,
+          "rPx": 19.5,
+          "cPx": 0,
+          "wPx": 39,
+          "score": 72,
+          "gl": 72,
+          "gr": 72,
+          "wgPx": 39
+        },
+        "evaluationNominalWidthArgumentPx": 30,
+        "evaluationDirectBilinearSeparationRangePx": [
+          29,
+          29
+        ],
+        "evaluationFreeFit": {
+          "lPx": -14.5,
+          "rPx": 14.5,
+          "cPx": 0,
+          "wPx": 29,
+          "score": 36,
+          "gl": 36,
+          "gr": 36,
+          "wgPx": 29
+        },
+        "evaluationAtLearnedWidthFit": null,
+        "evaluationCombinedScores": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "evaluationRailScores": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "diagnosticStatus": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+        "calibratedWidthPx": null
+      },
+      {
+        "id": "organic-evaluation-false-positive",
+        "trainingNominalWidthArgumentPx": 30,
+        "trainingOccupiedRasterRowsAtX128": 29,
+        "estimatedWidthPx": 30,
+        "candidateScoreRows": [
+          {
+            "widthPx": 20,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 50,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 60,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ],
+        "winnerScoreSeparation": 1,
+        "trainingFreeFit": {
+          "lPx": -14.5,
+          "rPx": 14.5,
+          "cPx": 0,
+          "wPx": 29,
+          "score": 36,
+          "gl": 36,
+          "gr": 36,
+          "wgPx": 29
+        },
+        "evaluationNominalWidthArgumentPx": 30,
+        "evaluationDirectBilinearSeparationRangePx": [
+          29,
+          29
+        ],
+        "evaluationFreeFit": {
+          "lPx": -14.5,
+          "rPx": 14.5,
+          "cPx": 0,
+          "wPx": 29,
+          "score": 72,
+          "gl": 72,
+          "gr": 72,
+          "wgPx": 29
+        },
+        "evaluationAtLearnedWidthFit": {
+          "lPx": -14.5,
+          "rPx": 14.5,
+          "cPx": 0,
+          "wPx": 29,
+          "score": 72,
+          "gl": 72,
+          "gr": 72
+        },
+        "evaluationCombinedScores": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "evaluationRailScores": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "diagnosticStatus": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+        "calibratedWidthPx": null
+      },
+      {
+        "id": "rails-occluded-transfer",
+        "trainingNominalWidthArgumentPx": 30,
+        "trainingOccupiedRasterRowsAtX128": 29,
+        "estimatedWidthPx": 30,
+        "candidateScoreRows": [
+          {
+            "widthPx": 20,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 50,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 60,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ],
+        "winnerScoreSeparation": 1,
+        "trainingFreeFit": {
+          "lPx": -14.5,
+          "rPx": 14.5,
+          "cPx": 0,
+          "wPx": 29,
+          "score": 36,
+          "gl": 36,
+          "gr": 36,
+          "wgPx": 29
+        },
+        "evaluationNominalWidthArgumentPx": 30,
+        "evaluationDirectBilinearSeparationRangePx": [
+          29,
+          29
+        ],
+        "evaluationFreeFit": null,
+        "evaluationAtLearnedWidthFit": null,
+        "evaluationCombinedScores": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "evaluationRailScores": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "diagnosticStatus": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+        "calibratedWidthPx": null
+      },
+      {
+        "id": "training-all-hidden",
+        "trainingNominalWidthArgumentPx": 40,
+        "trainingOccupiedRasterRowsAtX128": 39,
+        "estimatedWidthPx": 20,
+        "candidateScoreRows": [
+          {
+            "widthPx": 20,
+            "meanScore": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "visibleSamples": 0
+          },
+          {
+            "widthPx": 30,
+            "meanScore": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "visibleSamples": 0
+          },
+          {
+            "widthPx": 40,
+            "meanScore": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "visibleSamples": 0
+          },
+          {
+            "widthPx": 50,
+            "meanScore": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "visibleSamples": 0
+          },
+          {
+            "widthPx": 60,
+            "meanScore": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "visibleSamples": 0
+          }
+        ],
+        "winnerScoreSeparation": null,
+        "trainingFreeFit": null,
+        "evaluationNominalWidthArgumentPx": 40,
+        "evaluationDirectBilinearSeparationRangePx": [
+          39,
+          39
+        ],
+        "evaluationFreeFit": {
+          "lPx": -19.5,
+          "rPx": 19.5,
+          "cPx": 0,
+          "wPx": 39,
+          "score": 36,
+          "gl": 36,
+          "gr": 36,
+          "wgPx": 39
+        },
+        "evaluationAtLearnedWidthFit": null,
+        "evaluationCombinedScores": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "evaluationRailScores": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "diagnosticStatus": "ABSTAIN_NO_VISIBLE_TRAINING",
+        "calibratedWidthPx": null
+      },
+      {
+        "id": "training-zero-lift-tie",
+        "trainingNominalWidthArgumentPx": 40,
+        "trainingOccupiedRasterRowsAtX128": 39,
+        "estimatedWidthPx": 20,
+        "candidateScoreRows": [
+          {
+            "widthPx": 20,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 50,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 60,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ],
+        "winnerScoreSeparation": 0,
+        "trainingFreeFit": null,
+        "evaluationNominalWidthArgumentPx": 40,
+        "evaluationDirectBilinearSeparationRangePx": [
+          39,
+          39
+        ],
+        "evaluationFreeFit": {
+          "lPx": -19.5,
+          "rPx": 19.5,
+          "cPx": 0,
+          "wPx": 39,
+          "score": 36,
+          "gl": 36,
+          "gr": 36,
+          "wgPx": 39
+        },
+        "evaluationAtLearnedWidthFit": null,
+        "evaluationCombinedScores": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "evaluationRailScores": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "diagnosticStatus": "ABSTAIN_ZERO_OR_TIED",
+        "calibratedWidthPx": null
+      }
+    ]
+  },
+  "negativeResults": [
+    {
+      "id": "organic-training-false-width",
+      "finding": "Uniquely separated, maximal width score learns a wrong transfer width from non-ribbon training brightness; stronger gradient than clean ribbon does not repair provenance.",
+      "values": {
+        "learnedPx": 40,
+        "winnerMean": 1,
+        "margin": 1,
+        "ellipseFitPx": 39,
+        "ellipseGradientLumPerPx": 72,
+        "trueEvaluationFitPx": 29,
+        "evaluationScores": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "id": "organic-evaluation-false-positive",
+      "finding": "All four independent exposed evaluation stations and both edge operations agree on a non-ribbon organic ellipse; consistency is not renderer identity.",
+      "values": {
+        "learnedPx": 30,
+        "ellipseFitPx": 29,
+        "allPairedRailInteriorCombinedScores": 1,
+        "ellipseGradientLumPerPx": 72
+      }
+    },
+    {
+      "id": "rails-occluded-transfer",
+      "predictionFailed": true,
+      "finding": "Frozen rail boxes cover both guard bands too. The predicted inner-only score1 did not occur: rail, interior and combined all UNKNOWN. No geometry or masking was retuned after observation."
+    },
+    {
+      "id": "offset-transfer",
+      "finding": "Same nominal30/raster29 width and4px normal origin offset yield zero rail/combined scores; default latLim3 rejects both fits. Width failure and pose failure remain distinct."
+    },
+    {
+      "id": "legacy-defaults",
+      "finding": "All-hidden gives20 with all candidate visibleSamples0/mean-Infinity; zero-lift gives20 with five visible samples per candidate but all scores0. Both diagnostic outputs abstain."
+    }
+  ],
+  "limits": [
+    "All10 cases and station outputs are exposed exploration. Independent construction/stations do not constitute blinded or held-out evaluation; no C2 heldout or evaluator files were accessed.",
+    "Existing assessLocalWidth guard was not invoked or satisfied. No heldOutCheck flag was fabricated. It remains comparison-only/promoted=false and requires unratified caller confidence policy.",
+    "Widths30/40/50 vary local raster size; no image resampling or physical-scale inference is tested. Fixed source sampling and width-bank bounds are explicit algorithm limits, not global scene assumptions.",
+    "Nominal width arguments, occupied vertical raster rows, direct bilinear normal edge separation, fitted edge separation and nearest-neighbor four-lane channel scores are distinct. Rotated column row count is not normal width.",
+    "Binary grayscale synthetic rendering does not validate anti-aliased course appearance, course accuracy, endpoint identity, path ownership or broad natural-organic rejection.",
+    "Candidate bank is sparse [20,30,40,50,60]; a winner is bank-relative and can hide between-bank widths. Width search itself is limited to18..59px and a +/-30px lateral profile.",
+    "No production source/default changes, AA muting, branch changes, commits or pushes were performed by C5."
+  ],
+  "nextGuardedAction": "Keep exact-source width/edge operations as exposed comparison measurements. Preserve winner/candidate rows and unknown states; do not promote width from strict separation alone. Any caller policy needs separately constructed evaluation with source/raster frames and provenance qualifications, explicit pose uncertainty, bank/profile support bounds and organic counterexamples. C6 received seam limits before integration.",
+  "verification": {
+    "status": "PASS",
+    "scope": "artifact structure, frozen hash integrity, exact source bytes, deterministic fresh extraction; not scientific acceptance",
+    "log": "verification.log"
+  }
+}

@@ -1,0 +1,474 @@
+{
+  "schema": "discovery-cycle-worker-result@1",
+  "job_id": "E304",
+  "worker": "C4",
+  "outcome": "mixed_change",
+  "summary": "Executed eight exposed synthetic candidate cases from a protocol frozen before execution. Existing path descriptor, Dev72 sensor and exact hallway profile/edge_pair source compose usefully as separate evidence. At a crossing, designated one-turn and competing straight candidates have identical 240px length, support36/41, pairs38/41 and zero observed midpoint offset: fewer-bend preference picks the other construction endpoint. An unsupported shortcut is shorter and has fewer turns with zero conditional midpoint offset, yet substantially lower support/pair coverage. Same-length zero-turn routes differ by8px midpoint offset. Wrong expected width changes normalized length and sensor score on the same centerline, with all failed pairs retained UNKNOWN. This is new composition evidence rather than another old straight/six-bend score tie. No score, accepted weight, routing change, physical course accuracy or human acceptance is claimed.",
+  "commands": [
+    "python discovery-cycle02/C4/prepare.py",
+    "node discovery-cycle02/C4/probe.mjs > discovery-cycle02/C4/execution.log",
+    "python discovery-cycle02/C4/render.py"
+  ],
+  "sourceIDs": [
+    {
+      "sourcePath": "experiments/capability-discovery/probes/path-geometry/path-geometry.mjs",
+      "file": "vendor/path-geometry.mjs",
+      "sha256": "ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34",
+      "gitBlob": "faa18fb1b95fbb2e0db0da37df3eb09fc359b33d"
+    },
+    {
+      "sourcePath": "experiments/capability-discovery/catalog/sources/dev72-fourLaneRibbon.ts",
+      "file": "vendor/fourLaneRibbon.ts",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+      "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d"
+    },
+    {
+      "sourcePath": "experiments/capability-discovery/catalog/sources/hallway-track.py",
+      "file": "vendor/hallway-track.py",
+      "sha256": "83a1e85c032669c383845d9c3dd98ae9559f2d67457ffa63d3354d0707622bc6",
+      "gitBlob": "919bb6370228b1bd2e899b0565bfda41998eca4b"
+    }
+  ],
+  "protocolSha256": "02a5eb8eddb8d091fa0df123be8d667b4d96ae16d55c6768f884b2d3f89d5a04",
+  "hashManifest": [
+    {
+      "file": "protocol.json",
+      "bytes": 8494,
+      "sha256": "02a5eb8eddb8d091fa0df123be8d667b4d96ae16d55c6768f884b2d3f89d5a04"
+    },
+    {
+      "file": "protocol.sha256",
+      "bytes": 65,
+      "sha256": "5df3b73922d653d600233d6560d838b68b93c63c66fba353e84c2f697eea2417"
+    },
+    {
+      "file": "prepare.py",
+      "bytes": 2898,
+      "sha256": "aa269d28b5d830e269b8111ce2e456fccde9b9292e3f2b02adfe3817779d67ec"
+    },
+    {
+      "file": "probe.mjs",
+      "bytes": 4772,
+      "sha256": "c4fc2a6f597d41530e615841e6dd1c859a37962b18ef12c0951e16dedf515e63"
+    },
+    {
+      "file": "render.py",
+      "bytes": 2873,
+      "sha256": "ce4194d166cdd139f9eecc7907e55477aac0b0fda207c181e2394bb60f8780df"
+    },
+    {
+      "file": "README.md",
+      "bytes": 2571,
+      "sha256": "125e62c9339cd4d46ba74d0c1efe92654ba7c7ec64343333a23709be7adb5f2f"
+    },
+    {
+      "file": "prepared.json",
+      "bytes": 1028197,
+      "sha256": "c5c4589737163ac5e25e55d09624cda36c98d6f072f20865c70c4a24eafc84d0"
+    },
+    {
+      "file": "measurements.json",
+      "bytes": 684418,
+      "sha256": "fa58352b93cae32e7035ccd0bc1a8bc3799e33fda746f84abb579c732612a63a"
+    },
+    {
+      "file": "execution.log",
+      "bytes": 9198,
+      "sha256": "18878f7f862cdbd9075f38e0c3ecfd00edfce9a54cb739228291873b3f8e8029"
+    },
+    {
+      "file": "route-composition.png",
+      "bytes": 349183,
+      "sha256": "225e8f9a0dd30c72ad52ff9fcb92a048384a0d3d36953a576025636d180e707a"
+    },
+    {
+      "file": "vendor/path-geometry.mjs",
+      "bytes": 7045,
+      "sha256": "ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34"
+    },
+    {
+      "file": "vendor/fourLaneRibbon.ts",
+      "bytes": 19522,
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689"
+    },
+    {
+      "file": "vendor/hallway-track.py",
+      "bytes": 6161,
+      "sha256": "83a1e85c032669c383845d9c3dd98ae9559f2d67457ffa63d3354d0707622bc6"
+    }
+  ],
+  "actualMeasurements": [
+    {
+      "id": "shortcut/curvy-center",
+      "constructionCorrespondence": true,
+      "lengthPx": 380,
+      "turnCountOverOneDegree": 4,
+      "fullSignedTurnSequenceDeg": [
+        -90,
+        90,
+        90,
+        -90
+      ],
+      "runLengthsPx": [
+        60,
+        70,
+        120,
+        70,
+        60
+      ],
+      "localWidthNormalizedRuns": [
+        2,
+        2.3333333333333335,
+        4,
+        2.3333333333333335,
+        2
+      ],
+      "widthHypothesisPx": 30,
+      "supportSampling": {
+        "status": "observed",
+        "supportedSamples": 45,
+        "observedSamples": 65,
+        "totalVertices": 65,
+        "unknownSamples": 0,
+        "observedFraction": 1,
+        "supportedFractionOfObserved": 0.6923076923076923,
+        "threshold": 0.5,
+        "provenance": "E304 shortcut/curvy-center: exact source Dev72 observations; synthetic same-frame raster, no known occluders",
+        "confidence": "uncalibrated sample fraction; not probability of path identity",
+        "weighting": "one vote per supplied vertex; not arc-length weighted; no interpolation"
+      },
+      "pairedEdgeCoverage": 0.8153846153846154,
+      "meanMidpointOffsetPx": 0,
+      "meanMidpointOffsetFullWidths": 0,
+      "edgeUnknownCount": 12,
+      "sampleCount": 65
+    },
+    {
+      "id": "shortcut/straight-unsupported",
+      "constructionCorrespondence": false,
+      "lengthPx": 240,
+      "turnCountOverOneDegree": 0,
+      "fullSignedTurnSequenceDeg": [],
+      "runLengthsPx": [
+        240
+      ],
+      "localWidthNormalizedRuns": [
+        8
+      ],
+      "widthHypothesisPx": 30,
+      "supportSampling": {
+        "status": "observed",
+        "supportedSamples": 16,
+        "observedSamples": 41,
+        "totalVertices": 41,
+        "unknownSamples": 0,
+        "observedFraction": 1,
+        "supportedFractionOfObserved": 0.3902439024390244,
+        "threshold": 0.5,
+        "provenance": "E304 shortcut/straight-unsupported: exact source Dev72 observations; synthetic same-frame raster, no known occluders",
+        "confidence": "uncalibrated sample fraction; not probability of path identity",
+        "weighting": "one vote per supplied vertex; not arc-length weighted; no interpolation"
+      },
+      "pairedEdgeCoverage": 0.43902439024390244,
+      "meanMidpointOffsetPx": 0,
+      "meanMidpointOffsetFullWidths": 0,
+      "edgeUnknownCount": 23,
+      "sampleCount": 41
+    },
+    {
+      "id": "offset/center",
+      "constructionCorrespondence": true,
+      "lengthPx": 240,
+      "turnCountOverOneDegree": 0,
+      "fullSignedTurnSequenceDeg": [],
+      "runLengthsPx": [
+        240
+      ],
+      "localWidthNormalizedRuns": [
+        8
+      ],
+      "widthHypothesisPx": 30,
+      "supportSampling": {
+        "status": "observed",
+        "supportedSamples": 41,
+        "observedSamples": 41,
+        "totalVertices": 41,
+        "unknownSamples": 0,
+        "observedFraction": 1,
+        "supportedFractionOfObserved": 1,
+        "threshold": 0.5,
+        "provenance": "E304 offset/center: exact source Dev72 observations; synthetic same-frame raster, no known occluders",
+        "confidence": "uncalibrated sample fraction; not probability of path identity",
+        "weighting": "one vote per supplied vertex; not arc-length weighted; no interpolation"
+      },
+      "pairedEdgeCoverage": 1,
+      "meanMidpointOffsetPx": 0,
+      "meanMidpointOffsetFullWidths": 0,
+      "edgeUnknownCount": 0,
+      "sampleCount": 41
+    },
+    {
+      "id": "offset/offset-8px",
+      "constructionCorrespondence": false,
+      "lengthPx": 240,
+      "turnCountOverOneDegree": 0,
+      "fullSignedTurnSequenceDeg": [],
+      "runLengthsPx": [
+        240
+      ],
+      "localWidthNormalizedRuns": [
+        8
+      ],
+      "widthHypothesisPx": 30,
+      "supportSampling": {
+        "status": "observed",
+        "supportedSamples": 0,
+        "observedSamples": 41,
+        "totalVertices": 41,
+        "unknownSamples": 0,
+        "observedFraction": 1,
+        "supportedFractionOfObserved": 0,
+        "threshold": 0.5,
+        "provenance": "E304 offset/offset-8px: exact source Dev72 observations; synthetic same-frame raster, no known occluders",
+        "confidence": "uncalibrated sample fraction; not probability of path identity",
+        "weighting": "one vote per supplied vertex; not arc-length weighted; no interpolation"
+      },
+      "pairedEdgeCoverage": 1,
+      "meanMidpointOffsetPx": 8,
+      "meanMidpointOffsetFullWidths": 0.2758620689655173,
+      "edgeUnknownCount": 0,
+      "sampleCount": 41
+    },
+    {
+      "id": "crossing/turn-to-designated-end",
+      "constructionCorrespondence": true,
+      "lengthPx": 240,
+      "turnCountOverOneDegree": 1,
+      "fullSignedTurnSequenceDeg": [
+        -90
+      ],
+      "runLengthsPx": [
+        120,
+        120
+      ],
+      "localWidthNormalizedRuns": [
+        4,
+        4
+      ],
+      "widthHypothesisPx": 30,
+      "supportSampling": {
+        "status": "observed",
+        "supportedSamples": 36,
+        "observedSamples": 41,
+        "totalVertices": 41,
+        "unknownSamples": 0,
+        "observedFraction": 1,
+        "supportedFractionOfObserved": 0.8780487804878049,
+        "threshold": 0.5,
+        "provenance": "E304 crossing/turn-to-designated-end: exact source Dev72 observations; synthetic same-frame raster, no known occluders",
+        "confidence": "uncalibrated sample fraction; not probability of path identity",
+        "weighting": "one vote per supplied vertex; not arc-length weighted; no interpolation"
+      },
+      "pairedEdgeCoverage": 0.926829268292683,
+      "meanMidpointOffsetPx": 0,
+      "meanMidpointOffsetFullWidths": 0,
+      "edgeUnknownCount": 3,
+      "sampleCount": 41
+    },
+    {
+      "id": "crossing/straight-other-end",
+      "constructionCorrespondence": false,
+      "lengthPx": 240,
+      "turnCountOverOneDegree": 0,
+      "fullSignedTurnSequenceDeg": [],
+      "runLengthsPx": [
+        240
+      ],
+      "localWidthNormalizedRuns": [
+        8
+      ],
+      "widthHypothesisPx": 30,
+      "supportSampling": {
+        "status": "observed",
+        "supportedSamples": 36,
+        "observedSamples": 41,
+        "totalVertices": 41,
+        "unknownSamples": 0,
+        "observedFraction": 1,
+        "supportedFractionOfObserved": 0.8780487804878049,
+        "threshold": 0.5,
+        "provenance": "E304 crossing/straight-other-end: exact source Dev72 observations; synthetic same-frame raster, no known occluders",
+        "confidence": "uncalibrated sample fraction; not probability of path identity",
+        "weighting": "one vote per supplied vertex; not arc-length weighted; no interpolation"
+      },
+      "pairedEdgeCoverage": 0.926829268292683,
+      "meanMidpointOffsetPx": 0,
+      "meanMidpointOffsetFullWidths": 0,
+      "edgeUnknownCount": 3,
+      "sampleCount": 41
+    },
+    {
+      "id": "width-alias/width40-hypothesis",
+      "constructionCorrespondence": true,
+      "lengthPx": 240,
+      "turnCountOverOneDegree": 0,
+      "fullSignedTurnSequenceDeg": [],
+      "runLengthsPx": [
+        240
+      ],
+      "localWidthNormalizedRuns": [
+        6
+      ],
+      "widthHypothesisPx": 40,
+      "supportSampling": {
+        "status": "observed",
+        "supportedSamples": 41,
+        "observedSamples": 41,
+        "totalVertices": 41,
+        "unknownSamples": 0,
+        "observedFraction": 1,
+        "supportedFractionOfObserved": 1,
+        "threshold": 0.5,
+        "provenance": "E304 width-alias/width40-hypothesis: exact source Dev72 observations; synthetic same-frame raster, no known occluders",
+        "confidence": "uncalibrated sample fraction; not probability of path identity",
+        "weighting": "one vote per supplied vertex; not arc-length weighted; no interpolation"
+      },
+      "pairedEdgeCoverage": 1,
+      "meanMidpointOffsetPx": 0,
+      "meanMidpointOffsetFullWidths": 0,
+      "edgeUnknownCount": 0,
+      "sampleCount": 41
+    },
+    {
+      "id": "width-alias/width30-hypothesis",
+      "constructionCorrespondence": false,
+      "lengthPx": 240,
+      "turnCountOverOneDegree": 0,
+      "fullSignedTurnSequenceDeg": [],
+      "runLengthsPx": [
+        240
+      ],
+      "localWidthNormalizedRuns": [
+        8
+      ],
+      "widthHypothesisPx": 30,
+      "supportSampling": {
+        "status": "observed",
+        "supportedSamples": 0,
+        "observedSamples": 41,
+        "totalVertices": 41,
+        "unknownSamples": 0,
+        "observedFraction": 1,
+        "supportedFractionOfObserved": 0,
+        "threshold": 0.5,
+        "provenance": "E304 width-alias/width30-hypothesis: exact source Dev72 observations; synthetic same-frame raster, no known occluders",
+        "confidence": "uncalibrated sample fraction; not probability of path identity",
+        "weighting": "one vote per supplied vertex; not arc-length weighted; no interpolation"
+      },
+      "pairedEdgeCoverage": 0,
+      "meanMidpointOffsetPx": null,
+      "meanMidpointOffsetFullWidths": null,
+      "edgeUnknownCount": 41,
+      "sampleCount": 41
+    }
+  ],
+  "predictedFalsifiers": [
+    {
+      "id": "P1",
+      "observation": "Fewer turns and shorter length prefer unsupported shortcut; support and pair coverage reveal disagreement.",
+      "falsifier": "Shortcut has no support/edge-coverage deficit relative to designated curvy path."
+    },
+    {
+      "id": "P2",
+      "observation": "Equal length/bend count cannot distinguish 8px offset; paired midpoint offsets differ.",
+      "falsifier": "Observed midpoint offsets of offset and center agree within raster .5px."
+    },
+    {
+      "id": "P3",
+      "observation": "Crossing straight route can beat designated turn under a fewer-bend preference while both carry substantial support/center evidence; local evidence cannot prove endpoint association.",
+      "falsifier": "Non-designated branch has no local painted support or all pairs missing."
+    },
+    {
+      "id": "P4",
+      "observation": "Same centerline under wrong width can change support and normalized run length, while recovered midpoint remains centered when any pair exists.",
+      "falsifier": "The two width hypotheses have identical normalized runs and sensor channels."
+    }
+  ],
+  "checks": {
+    "P1": true,
+    "P2": true,
+    "P3": true,
+    "P4": true
+  },
+  "negativeResults": [
+    {
+      "finding": "A zero conditional midpoint mean does not establish continuous ribbon support.",
+      "cases": [
+        "shortcut/curvy-center",
+        "shortcut/straight-unsupported"
+      ],
+      "evidence": "Both mean observed offset0px; pairs53/65 vs18/41; support45/65 vs16/41."
+    },
+    {
+      "finding": "Bend count, length, support and centering do not determine endpoint association.",
+      "cases": [
+        "crossing/turn-to-designated-end",
+        "crossing/straight-other-end"
+      ],
+      "evidence": "Both length240px,support36/41,pairs38/41,offset0px. Designated route has1turn; competitor0."
+    },
+    {
+      "finding": "Raw support is width/pose-conditioned, not geometry correctness probability.",
+      "cases": [
+        "offset/center",
+        "offset/offset-8px",
+        "width-alias/width40-hypothesis",
+        "width-alias/width30-hypothesis"
+      ],
+      "evidence": "Both offset routes have measured pairs41/41 but source score fraction1vs0. Same centerline width40vs30 has fraction1vs0 and normalized runs6vs8; wrong-width pairsUNKNOWN41/41."
+    }
+  ],
+  "signalDistinctness": [
+    {
+      "features": [
+        "turn sequence",
+        "length"
+      ],
+      "counterexample": "Same-length crossing candidates differ in turn count; neither resolves construction association."
+    },
+    {
+      "features": [
+        "paired offsets",
+        "support/pair coverage"
+      ],
+      "counterexample": "Unsupported shortcut conditional midpoint0px hides27 missing pairs; pair count and support add distinct observations."
+    },
+    {
+      "features": [
+        "paired offsets",
+        "turn count/length"
+      ],
+      "counterexample": "Offset scene identical turns0 and240px but midpoint0vs8px."
+    },
+    {
+      "features": [
+        "local-width normalization",
+        "path geometry"
+      ],
+      "counterexample": "Width hypotheses on same240px centerline produce6vs8 full-width units; denominator is a hypothesis, not a geometry-independent score."
+    }
+  ],
+  "limits": [
+    "All fixture truth is construction correspondence, never course accuracy/human acceptance.",
+    "Exposed exploratory cases, not E305 independent evaluation.",
+    "Edge pair association remains source/caller testimony at crossing.",
+    "Support is sample fraction, not arc-length evidence/probability.",
+    "Numerical width/thresholds are fixture parameters, not validated physical constants.",
+    "Support threshold.5 and turn cutoff1degree are declared exploratory diagnostic parameters. No accepted three-bend/exponential factor or arbitrary scoring weights.",
+    "Offsets use each measured edge-pair full width; normalized runs use caller candidate width. Preserve both denominators.",
+    "Original vertices define runs; dense sampling used only for measurements and includes zero-angle collinear vertices.",
+    "No heldout E305 files or evaluator read; no native rerun; source repository remained read-only."
+  ],
+  "nextGuardedAction": "C6 may expose evidence vector seam with separate original geometry, width hypothesis/provenance, per-station sensor channels, pair counts/offsets and explicit endpoint-association UNKNOWN. Any ranking or exponential prior requires its own frozen hypothesis and independent evaluation.",
+  "status": "awaiting_independent_review"
+}

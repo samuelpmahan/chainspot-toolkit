@@ -1,0 +1,569 @@
+{
+  "schema": "discovery-independent-review@1",
+  "job_id": "R303",
+  "worker": "C3",
+  "reviewedJob": "E303",
+  "reviewedWorker": "C5",
+  "decision": "accepted",
+  "summary": "Fresh extraction of C5 portable-probe.tar.gz executed the actual producer and bundled verifier; measurements.json, run.log and verification.log reproduce byte-for-byte. Independent recomputation confirms250 training candidate/station rows,200 evaluation candidate/station rows and40 transferred-width outputs; all10 calibrated widths remain null. Nominal/raster/bilinear distinctions are preserved, including nominal30\u2192raster29 and rotated nominal50\u219251 vertical rows without calling that normal width. Bright ellipse produces uniquely winning40 at source mean1/margin1 and stronger72lum/px edges, but fails transfer to true nominal30/raster29 at all four stations; reverse transfer passes the non-ribbon ellipse with all rail/interior/combined channels1 and fit29. Hidden/zero-lift ties retain legacy20 and abstain;4px offset is distinguished from width change. Failed frozen occlusion prediction remains explicitly reported with all relevant channels UNKNOWN. Accepted as exposed mechanistic evidence only.",
+  "commands": [
+    "tar -xzf discovery-cycle02/C5/portable-probe.tar.gz -C discovery-cycle02/C3/review-R303/replay",
+    "node discovery-cycle02/C3/review-R303/replay/probe.mjs > discovery-cycle02/C3/review-R303/replay/run.log",
+    "node discovery-cycle02/C3/review-R303/replay/verify.mjs > discovery-cycle02/C3/review-R303/replay/verification.log",
+    "cmp discovery-cycle02/C5/measurements.json discovery-cycle02/C3/review-R303/replay/measurements.json",
+    "cmp discovery-cycle02/C5/run.log discovery-cycle02/C3/review-R303/replay/run.log",
+    "python discovery-cycle02/C3/review-R303/verify-independent.py > discovery-cycle02/C3/review-R303/verification.log"
+  ],
+  "hashes": {
+    "reviewedResultSha256": "d605a71a31fb6d0bbd72a7b9c7f1738ab815a14f6695c186102af26289a0cc87",
+    "portableProbeSha256": "2397cb5e54e6c49547344121e220b1541ca5afb253dece168905c295b8f7017b",
+    "protocolSha256": "b6a0f050c04ba4d17a81cbaa7e34701ab1cd01c9e62995e19ac50812109be1af",
+    "producerSha256": "68772761afe94d52dc954dbf7d30f47560ba54bf1a18e6840963c7818ee8c03f",
+    "originalMeasurementsSha256": "4602b0ddb96d647143be01904f213f24bd0523151001fdda3a57a8903058671d",
+    "replayMeasurementsSha256": "4602b0ddb96d647143be01904f213f24bd0523151001fdda3a57a8903058671d",
+    "independentVerifierSha256": "bd0788e4b15fbb3e252025a18af62a91c01df69d25b30714878ecb87eefc23e1",
+    "independentVerificationReceiptSha256": "7d87a0f007afa43108d6a7b19680d19c1047a35ae1b2f4022290d5281a5e44ba",
+    "sourceHashes": [
+      {
+        "file": "vendor/active/ports/s6straight/pathSpace.mjs",
+        "origin": "chainspot-toolkit",
+        "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+        "sourcePath": "ports/s6straight/pathSpace.mjs",
+        "gitBlob": "38963d20f7a8b7c7851b3a2abea2e472da8f7716",
+        "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+        "adaptation": "path/extension only; content byte-identical",
+        "verified": true
+      },
+      {
+        "file": "vendor/active/contracts/alpha.profile@1.mjs",
+        "origin": "chainspot-toolkit",
+        "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+        "sourcePath": "contracts/alpha.profile@1.mjs",
+        "gitBlob": "6f50530ff8f7d5c613ee739224d475657fcbf647",
+        "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+        "adaptation": "path/extension only; content byte-identical",
+        "verified": true
+      },
+      {
+        "file": "vendor/provider/fourLaneSensor.cjs",
+        "origin": "chainspot-toolkit",
+        "ref": "37a2dba87d61262f661af70f1a22440736e61efc",
+        "sourcePath": "source/provider/packages/alg/dist/detectors/threeFactor/features/st.fourLaneSensor.js",
+        "gitBlob": "2167c3539aa33856738e679c75869d6c3395afe8",
+        "sha256": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624",
+        "adaptation": "path/extension only; content byte-identical",
+        "verified": true
+      },
+      {
+        "file": "vendor/dev72/fourLaneRibbon.ts",
+        "origin": "samuelpmahan/ChainSpot",
+        "ref": "ef2a4fc2dc4720d3647f705464342f119d5a39a5",
+        "sourcePath": "src/lib/nuthing/fourLaneRibbon.ts",
+        "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+        "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+        "adaptation": "none; exact independently fetched source; Node builtin type stripping",
+        "verified": true
+      }
+    ],
+    "originalArtifactManifestVerified": [
+      {
+        "file": "protocol.json",
+        "sha256": "b6a0f050c04ba4d17a81cbaa7e34701ab1cd01c9e62995e19ac50812109be1af"
+      },
+      {
+        "file": "probe.mjs",
+        "sha256": "68772761afe94d52dc954dbf7d30f47560ba54bf1a18e6840963c7818ee8c03f"
+      },
+      {
+        "file": "measurements.json",
+        "sha256": "4602b0ddb96d647143be01904f213f24bd0523151001fdda3a57a8903058671d"
+      },
+      {
+        "file": "run.log",
+        "sha256": "9ea1df789d23fcd924ac9546df566c7168d9b9412c4e58004131e895c102a5e8"
+      },
+      {
+        "file": "verification.log",
+        "sha256": "76066ae4e85b9047cfcf0ecf16da4fbd66371648bb5e0c38e0987c3f2b5f8b38"
+      },
+      {
+        "file": "portable-probe.tar.gz",
+        "sha256": "2397cb5e54e6c49547344121e220b1541ca5afb253dece168905c295b8f7017b"
+      }
+    ]
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "verified",
+      "finding": "Four source SHA256 and Git blob identities match unchanged exact snapshots; protocol and producer hashes match the frozen E303 manifest. Replayed portable packet requires no repository import/network and writes only beside own copy."
+    },
+    {
+      "id": "F2",
+      "severity": "verified",
+      "finding": "Candidate mean/count/margin recomputed from raw observations for every case. Learned-width evaluation outputs exactly match same-width candidate observations; no scalar width hides the retained score rows. Counts250/200/40 verified."
+    },
+    {
+      "id": "F3",
+      "severity": "verified",
+      "finding": "Nominal width, occupied vertical raster rows, direct object-normal half-level separation, fitted bilinear edges and nearest-pixel Dev72 channels remain separate. In clean cases the training nominal/raster pairs are30/29,40/39,50/51. Under11degree training rotation,51 is a vertical column count rather than a normal-width claim. Direct half-level crossings use source samp; their scan interpolation is a diagnostic fixture measurement, not fitted uncertainty."
+    },
+    {
+      "id": "F4",
+      "severity": "verified",
+      "finding": "Training and evaluation are separately allocated deterministic rasters/contexts in producer build calls, sharing numeric source-coordinate conventions. Train fractions yield t=[-36,-18,0,18,33.6], evaluation t=[-43,-11,23,47]; no station t matches. Clean pairs may have identical pixels and global windows overlap in numeric coordinates across separate rasters. Neither separate allocation nor different stations makes a blinded/held-out evaluation; packet marks all outputs EXPOSED."
+    },
+    {
+      "id": "F5",
+      "severity": "verified",
+      "finding": "Organic-training false-width: mean1/margin1 selects40; ellipse fit39 and gradient72lum/source-px versus clean gradient36. Evaluation true nominal30 has direct/fitted29, constrained learned40 fit null, all four transferred rail/combined scores0. Stronger gradients and strict winner do not qualify training provenance."
+    },
+    {
+      "id": "F6",
+      "severity": "verified",
+      "finding": "Reverse clean30-to-organic ellipse: four evaluation stations have left/right rails, inner channels and combined score1; free/constrained edge fit29 with gradient72. Bilateral consistency therefore does not establish renderer/path identity."
+    },
+    {
+      "id": "F7",
+      "severity": "verified",
+      "finding": "Local widening retains nominal46/direct-fit45 while learned30 constrained fit is null and source channels0. Offset4 case retains direct object-normal29 before caller-origin shift but default latLim3 free/constrained fits null and channels0. These are distinct fixture mechanisms, not proof of ribbon absence."
+    },
+    {
+      "id": "F8",
+      "severity": "verified",
+      "finding": "All-hidden training returns legacy20 with all candidate counts0 and explicit -Infinity tags; zero-lift returns20 with five visible samples per width but tied scores0. Diagnostic states abstain and every calibratedWidthPx is null."
+    },
+    {
+      "id": "F9",
+      "severity": "verified",
+      "finding": "Frozen rails-occluded prediction failed as reported. Rail boxes y108..119 and137..148 also contain guard sample rows108/148 at nominalW30, preventing ground estimation. Rail, inner and combined outputs are null at all four evaluation stations. Negative prediction remains in result without tuning geometry/masks after observation."
+    }
+  ],
+  "rawMeasurementReview": [
+    {
+      "id": "clean30",
+      "nominalTrainPx": 30,
+      "verticalRasterRowsAtX128": 29,
+      "directTrainBilinearNormalSeparationPx": 29,
+      "estimatedWidthPx": 30,
+      "trainFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "evaluationFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "evalConstrainedFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36
+      },
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        29,
+        29,
+        29,
+        29
+      ],
+      "transferCombined": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1
+    },
+    {
+      "id": "clean40-rotation",
+      "nominalTrainPx": 40,
+      "verticalRasterRowsAtX128": 39,
+      "directTrainBilinearNormalSeparationPx": 39,
+      "estimatedWidthPx": 40,
+      "trainFit": {
+        "lPx": -19.5,
+        "rPx": 19.5,
+        "cPx": 0,
+        "wPx": 39,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 39
+      },
+      "evaluationFit": {
+        "lPx": -20.00452699999991,
+        "rPx": 19.998472252536704,
+        "cPx": -0.0030273737316033333,
+        "wPx": 40.00299925253661,
+        "score": 30.79540774505878,
+        "gl": 30.79540774505878,
+        "gr": 30.79560679235533,
+        "wgPx": 40
+      },
+      "evalConstrainedFit": {
+        "lPx": -20.00452699999991,
+        "rPx": 19.998472252536704,
+        "cPx": -0.0030273737316033333,
+        "wPx": 40.00299925253661,
+        "score": 30.79540774505878,
+        "gl": 30.79540774505878,
+        "gr": 30.79560679235533
+      },
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        39.97365202211434,
+        40.068341060999245,
+        39.97377467022488,
+        39.973563054621735
+      ],
+      "transferCombined": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1
+    },
+    {
+      "id": "clean50-rotation",
+      "nominalTrainPx": 50,
+      "verticalRasterRowsAtX128": 51,
+      "directTrainBilinearNormalSeparationPx": 49.917118052805506,
+      "estimatedWidthPx": 50,
+      "trainFit": {
+        "lPx": -24.99956343685249,
+        "rPx": 24.98890380152094,
+        "cPx": -0.005329817665774783,
+        "wPx": 49.98846723837343,
+        "score": 30.368555606305193,
+        "gl": 30.395348173697613,
+        "gr": 30.368555606305193,
+        "wgPx": 50
+      },
+      "evaluationFit": {
+        "lPx": -25.00252663160678,
+        "rPx": 25.00263729942792,
+        "cPx": 5.5333910569999034e-05,
+        "wPx": 50.0051639310347,
+        "score": 30.68649634513889,
+        "gl": 30.68902133833882,
+        "gr": 30.68649634513889,
+        "wgPx": 50
+      },
+      "evalConstrainedFit": {
+        "lPx": -25.00252663160678,
+        "rPx": 25.00263729942792,
+        "cPx": 5.5333910569999034e-05,
+        "wPx": 50.0051639310347,
+        "score": 30.68649634513889,
+        "gl": 30.68902133833882,
+        "gr": 30.68649634513889
+      },
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        50.1449800127443,
+        50.32128878483209,
+        50.321210243855234,
+        50.402899286907086
+      ],
+      "transferCombined": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1
+    },
+    {
+      "id": "local-width-change",
+      "nominalTrainPx": 30,
+      "verticalRasterRowsAtX128": 29,
+      "directTrainBilinearNormalSeparationPx": 29,
+      "estimatedWidthPx": 30,
+      "trainFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "evaluationFit": {
+        "lPx": -22.5,
+        "rPx": 22.5,
+        "cPx": 0,
+        "wPx": 45,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 45
+      },
+      "evalConstrainedFit": null,
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        45,
+        45,
+        45,
+        45
+      ],
+      "transferCombined": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1
+    },
+    {
+      "id": "offset-transfer",
+      "nominalTrainPx": 30,
+      "verticalRasterRowsAtX128": 29,
+      "directTrainBilinearNormalSeparationPx": 29,
+      "estimatedWidthPx": 30,
+      "trainFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "evaluationFit": null,
+      "evalConstrainedFit": null,
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        29,
+        29,
+        29,
+        29
+      ],
+      "transferCombined": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1
+    },
+    {
+      "id": "organic-training-false-width",
+      "nominalTrainPx": 40,
+      "verticalRasterRowsAtX128": 39,
+      "directTrainBilinearNormalSeparationPx": 39,
+      "estimatedWidthPx": 40,
+      "trainFit": {
+        "lPx": -19.5,
+        "rPx": 19.5,
+        "cPx": 0,
+        "wPx": 39,
+        "score": 72,
+        "gl": 72,
+        "gr": 72,
+        "wgPx": 39
+      },
+      "evaluationFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "evalConstrainedFit": null,
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        29,
+        29,
+        29,
+        29
+      ],
+      "transferCombined": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1
+    },
+    {
+      "id": "organic-evaluation-false-positive",
+      "nominalTrainPx": 30,
+      "verticalRasterRowsAtX128": 29,
+      "directTrainBilinearNormalSeparationPx": 29,
+      "estimatedWidthPx": 30,
+      "trainFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "evaluationFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 72,
+        "gl": 72,
+        "gr": 72,
+        "wgPx": 29
+      },
+      "evalConstrainedFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 72,
+        "gl": 72,
+        "gr": 72
+      },
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        29,
+        29,
+        29,
+        29
+      ],
+      "transferCombined": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1
+    },
+    {
+      "id": "rails-occluded-transfer",
+      "nominalTrainPx": 30,
+      "verticalRasterRowsAtX128": 29,
+      "directTrainBilinearNormalSeparationPx": 29,
+      "estimatedWidthPx": 30,
+      "trainFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "evaluationFit": null,
+      "evalConstrainedFit": null,
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        29,
+        29,
+        29,
+        29
+      ],
+      "transferCombined": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1
+    },
+    {
+      "id": "training-all-hidden",
+      "nominalTrainPx": 40,
+      "verticalRasterRowsAtX128": 39,
+      "directTrainBilinearNormalSeparationPx": 39,
+      "estimatedWidthPx": 20,
+      "trainFit": null,
+      "evaluationFit": {
+        "lPx": -19.5,
+        "rPx": 19.5,
+        "cPx": 0,
+        "wPx": 39,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 39
+      },
+      "evalConstrainedFit": null,
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        39,
+        39,
+        39,
+        39
+      ],
+      "transferCombined": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "ABSTAIN_NO_VISIBLE_TRAINING",
+      "margin": null
+    },
+    {
+      "id": "training-zero-lift-tie",
+      "nominalTrainPx": 40,
+      "verticalRasterRowsAtX128": 39,
+      "directTrainBilinearNormalSeparationPx": null,
+      "estimatedWidthPx": 20,
+      "trainFit": null,
+      "evaluationFit": {
+        "lPx": -19.5,
+        "rPx": 19.5,
+        "cPx": 0,
+        "wPx": 39,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 39
+      },
+      "evalConstrainedFit": null,
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        39,
+        39,
+        39,
+        39
+      ],
+      "transferCombined": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "ABSTAIN_ZERO_OR_TIED",
+      "margin": 0
+    }
+  ],
+  "limits": [
+    "Technical review only, not Sam acceptance or real-course accuracy.",
+    "All10 cases are exposed synthetic exploration; separate construction/stations are not blinded or independent physical evidence.",
+    "No C2 heldout/evaluator or C6 candidate read; source repo and C5 packet remain read-only.",
+    "Bright ellipse is a constructive synthetic counterexample, not a natural-image class model.",
+    "Sparse width bank[20,30,40,50,60], fixed \u00b130px profile reach, default latLim3 and sampling kernels bound transfer; no global pixel or meter scale follows.",
+    "Nearest-pixel four-lane samples and bilinear path profiles are distinct observation operators; clean transfer at tested rotations does not establish rotational calibration or anti-aliased course behavior.",
+    "Existing assessLocalWidth guard was not invoked; no confidence policy, heldOutCheck flag, ranking or production promotion is established."
+  ]
+}

@@ -1,0 +1,1499 @@
+{
+  "schema": "c1-native-counterfactual-receipt@1",
+  "job_id": "E301",
+  "worker": "C1",
+  "protocolSha256": "38d33053ff2f5b6fb3c7d4b2c0ce8d03f469928ec307191c5d867730b41c9228",
+  "producerSha256": "c3e76f988a7468a7de69337e61b9305e3b684776e5738c0e8545f44401f45675",
+  "executionUtc": "2026-10-18T08:57:41.623Z",
+  "source": {
+    "path": "artifacts/replay/source/IMG_5641.jpg",
+    "sha256": "e6616738640eee1d05d8cc2b59dd657f24b4a5a01dc2f68571b7e44c6f372b8a",
+    "bytesLength": 627609,
+    "frame": {
+      "name": "original-jpeg-pixels",
+      "widthPx": 1290,
+      "heightPx": 2091,
+      "canonicalToSource": [
+        0,
+        4
+      ],
+      "canonicalRgbaSha256": "cadc67b69fa6430ade488d16415f36068cead4262572b04c63c25ceafa254455",
+      "sourceSha256": "e6616738640eee1d05d8cc2b59dd657f24b4a5a01dc2f68571b7e44c6f372b8a"
+    }
+  },
+  "configSha256": "1d590adba57ea96fbc7a8b8d04894a2468d14c3375a70eb960aaaddda98e6491",
+  "paramsHash": "5d94617898aeee251a389615146de46cc905f2ab340e575699e2779b47fbc3c9",
+  "parameters": {
+    "corridorWidthPx": 37,
+    "fieldScale": 3,
+    "orientations": 12,
+    "widthsSrc": [
+      24,
+      32,
+      40,
+      48,
+      56,
+      64
+    ],
+    "patchBadges": true,
+    "alignmentPower": 2,
+    "worstWindowSrcPx": 90,
+    "supportTau": 0.5
+  },
+  "viewport": {
+    "topPx": 0,
+    "bottomPx": 2083,
+    "sourceFrame": "original-image"
+  },
+  "badge": {
+    "detId": "badge-9",
+    "bbox": [
+      417,
+      958,
+      54,
+      42
+    ],
+    "center": [
+      443.41806722689074,
+      978.5819327731092
+    ]
+  },
+  "headingProvenance": {
+    "legacyHeadingRad": -0.7853981633974483,
+    "s5HeadingRad": 0.047900432100886965,
+    "rowSha256": "1117c583dc87e861d7de237a2d6f86b72041925d3b1d44c42b0534dc68683fc8",
+    "rowStatus": "TWO_RAY_ZERO_BEND_GEOMETRY_CANDIDATE_UNOWNED",
+    "role": "geometry hint only; no endpoint ownership"
+  },
+  "field": {
+    "width": 430,
+    "height": 694,
+    "scale": 3,
+    "supportSha256": "e0503485b8651ac65c4343a371efe4c4cdbe484c0ce2dc80cda116f20ba0ab57",
+    "thetaSha256": "caa4ce6a7b4d379e47fe59f521b7a565c5ab345b74893a92481b9a6b84f9c7c3",
+    "hashesAfter": {
+      "supportSha256": "e0503485b8651ac65c4343a371efe4c4cdbe484c0ce2dc80cda116f20ba0ab57",
+      "thetaSha256": "caa4ce6a7b4d379e47fe59f521b7a565c5ab345b74893a92481b9a6b84f9c7c3"
+    },
+    "source": "runThreeFactor(...).measurement.field; same object all 20 calls"
+  },
+  "controls": {
+    "baselineExact": true,
+    "s5Exact": true,
+    "oldBaselineReceiptSha256": "bf0ca6a66866c53fe9ad58b55a231e4beb483b66189a5a7ffc46701031cb8ac1",
+    "oldS5ReceiptSha256": "1b9fd087d8532f7dfd0c06e25f212733de24e8c5e6fde5db1ae5fa037b8c6160"
+  },
+  "tracerCommonArgs": {
+    "viewportTopPx": 0,
+    "supportTau": 0.5,
+    "corridorWidthPx": 37,
+    "startBadgeBbox": [
+      417,
+      958,
+      54,
+      42
+    ],
+    "occluders": [
+      {
+        "id": "badge-0",
+        "bbox": [
+          728,
+          424,
+          54,
+          42
+        ]
+      },
+      {
+        "id": "badge-1",
+        "bbox": [
+          551,
+          557,
+          54,
+          42
+        ]
+      },
+      {
+        "id": "badge-2",
+        "bbox": [
+          580,
+          645,
+          54,
+          42
+        ]
+      },
+      {
+        "id": "badge-3",
+        "bbox": [
+          417,
+          719,
+          54,
+          42
+        ]
+      },
+      {
+        "id": "badge-4",
+        "bbox": [
+          835,
+          753,
+          55,
+          42
+        ]
+      },
+      {
+        "id": "badge-5",
+        "bbox": [
+          524,
+          788,
+          54,
+          42
+        ]
+      },
+      {
+        "id": "badge-6",
+        "bbox": [
+          524,
+          860,
+          54,
+          42
+        ]
+      },
+      {
+        "id": "badge-7",
+        "bbox": [
+          938,
+          897,
+          54,
+          42
+        ]
+      },
+      {
+        "id": "badge-8",
+        "bbox": [
+          1113,
+          941,
+          55,
+          42
+        ]
+      },
+      {
+        "id": "badge-10",
+        "bbox": [
+          434,
+          1043,
+          54,
+          42
+        ]
+      },
+      {
+        "id": "badge-11",
+        "bbox": [
+          879,
+          1252,
+          55,
+          42
+        ]
+      },
+      {
+        "id": "badge-12",
+        "bbox": [
+          311,
+          1279,
+          54,
+          42
+        ]
+      },
+      {
+        "id": "badge-13",
+        "bbox": [
+          676,
+          1401,
+          56,
+          42
+        ]
+      },
+      {
+        "id": "badge-14",
+        "bbox": [
+          545,
+          1510,
+          55,
+          42
+        ]
+      },
+      {
+        "id": "badge-15",
+        "bbox": [
+          167,
+          1530,
+          57,
+          42
+        ]
+      },
+      {
+        "id": "badge-16",
+        "bbox": [
+          348,
+          1619,
+          55,
+          42
+        ]
+      },
+      {
+        "id": "badge-17",
+        "bbox": [
+          214,
+          1793,
+          54,
+          42
+        ]
+      }
+    ],
+    "baskets": [
+      {
+        "basketId": "basket-0",
+        "bbox": [
+          494,
+          352,
+          46,
+          72
+        ]
+      },
+      {
+        "basketId": "basket-1",
+        "bbox": [
+          976,
+          364,
+          46,
+          72
+        ]
+      },
+      {
+        "basketId": "basket-2",
+        "bbox": [
+          741,
+          488,
+          46,
+          72
+        ]
+      },
+      {
+        "basketId": "basket-3",
+        "bbox": [
+          470,
+          553,
+          46,
+          72
+        ]
+      },
+      {
+        "basketId": "basket-4",
+        "bbox": [
+          1105,
+          689,
+          46,
+          72
+        ]
+      },
+      {
+        "basketId": "basket-5",
+        "bbox": [
+          664,
+          724,
+          46,
+          72
+        ]
+      },
+      {
+        "basketId": "basket-6",
+        "bbox": [
+          410,
+          790,
+          46,
+          72
+        ]
+      },
+      {
+        "basketId": "basket-7",
+        "bbox": [
+          416,
+          842,
+          46,
+          72
+        ]
+      },
+      {
+        "basketId": "basket-8",
+        "bbox": [
+          595,
+          875,
+          46,
+          72
+        ]
+      },
+      {
+        "basketId": "basket-9",
+        "bbox": [
+          850,
+          910,
+          46,
+          72
+        ]
+      },
+      {
+        "basketId": "basket-10",
+        "bbox": [
+          1010,
+          1010,
+          46,
+          72
+        ]
+      },
+      {
+        "basketId": "basket-11",
+        "bbox": [
+          400,
+          1103,
+          46,
+          72
+        ]
+      },
+      {
+        "basketId": "basket-12",
+        "bbox": [
+          792,
+          1247,
+          46,
+          72
+        ]
+      },
+      {
+        "basketId": "basket-13",
+        "bbox": [
+          284,
+          1339,
+          46,
+          72
+        ]
+      },
+      {
+        "basketId": "basket-14",
+        "bbox": [
+          316,
+          1456,
+          46,
+          72
+        ]
+      },
+      {
+        "basketId": "basket-15",
+        "bbox": [
+          664,
+          1515,
+          46,
+          72
+        ]
+      },
+      {
+        "basketId": "basket-16",
+        "bbox": [
+          116,
+          1566,
+          46,
+          72
+        ]
+      },
+      {
+        "basketId": "basket-17",
+        "bbox": [
+          368,
+          1734,
+          46,
+          72
+        ]
+      }
+    ],
+    "maxTraceLengthPx": 2449.249681024783
+  },
+  "outcomes": [
+    {
+      "name": "center-legacy",
+      "axis": "legacy",
+      "deltaDeg": 0,
+      "headingRad": -0.7853981633974483,
+      "startPx": [
+        443.41806722689074,
+        978.5819327731092
+      ],
+      "seedType": "center",
+      "headingDeg": -45,
+      "rawtrace": {
+        "outcome": "unknown",
+        "reason": "petered-out",
+        "points": [
+          [
+            443.41806722689074,
+            978.5819327731092
+          ],
+          [
+            449.95880495286633,
+            972.0411950471337
+          ],
+          [
+            456.4995426788419,
+            965.5004573211581
+          ],
+          [
+            463.0402804048175,
+            958.9597195951826
+          ]
+        ],
+        "lengthPx": 27.75,
+        "tunneledSegments": [],
+        "bendCount": 0
+      },
+      "nativeUnknown": true,
+      "noBasket": true,
+      "determinismExact": true,
+      "geometry": {
+        "outsideBadgeSegmentsLengthPx": 0,
+        "segmentsTouchingBadgeLengthPx": 27.749999999999986,
+        "pointCount": 4,
+        "outsidePointCount": 0
+      },
+      "samples": [
+        {
+          "point": [
+            443.41806722689074,
+            978.5819327731092
+          ],
+          "sourcePoint": [
+            443.41806722689074,
+            982.5819327731092
+          ],
+          "support": 0.5,
+          "thetaRad": 1.832595705986023,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            449.95880495286633,
+            972.0411950471337
+          ],
+          "sourcePoint": [
+            449.95880495286633,
+            976.0411950471337
+          ],
+          "support": 0.5,
+          "thetaRad": 2.356194496154785,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            456.4995426788419,
+            965.5004573211581
+          ],
+          "sourcePoint": [
+            456.4995426788419,
+            969.5004573211581
+          ],
+          "support": 0.6518518328666687,
+          "thetaRad": 2.356194496154785,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            463.0402804048175,
+            958.9597195951826
+          ],
+          "sourcePoint": [
+            463.0402804048175,
+            962.9597195951826
+          ],
+          "support": 0.8500000238418579,
+          "thetaRad": 2.6179938316345215,
+          "insideOwnBadge": true
+        }
+      ],
+      "nextStraightProbe": {
+        "point": [
+          469.5810181307931,
+          952.4189818692071
+        ],
+        "support": 0.4720896780490875,
+        "thetaRad": 0.7853981852531433,
+        "insideOwnBadge": false
+      }
+    },
+    {
+      "name": "center-legacy-minus15",
+      "axis": "legacy",
+      "deltaDeg": -15,
+      "headingRad": -1.0471975511965976,
+      "startPx": [
+        443.41806722689074,
+        978.5819327731092
+      ],
+      "seedType": "center",
+      "headingDeg": -59.99999999999999,
+      "rawtrace": {
+        "outcome": "unknown",
+        "reason": "petered-out",
+        "points": [
+          [
+            443.41806722689074,
+            978.5819327731092
+          ],
+          [
+            448.04306722689074,
+            970.5711977881032
+          ],
+          [
+            452.66806722689074,
+            962.5604628030972
+          ],
+          [
+            457.29306722689074,
+            954.5497278180911
+          ],
+          [
+            463.8338048012619,
+            948.0089899405111
+          ]
+        ],
+        "lengthPx": 37,
+        "tunneledSegments": [],
+        "bendCount": 1
+      },
+      "nativeUnknown": true,
+      "noBasket": true,
+      "determinismExact": true,
+      "geometry": {
+        "outsideBadgeSegmentsLengthPx": 9.250000000000037,
+        "segmentsTouchingBadgeLengthPx": 27.749999999999915,
+        "pointCount": 5,
+        "outsidePointCount": 2
+      },
+      "samples": [
+        {
+          "point": [
+            443.41806722689074,
+            978.5819327731092
+          ],
+          "sourcePoint": [
+            443.41806722689074,
+            982.5819327731092
+          ],
+          "support": 0.5,
+          "thetaRad": 1.832595705986023,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            448.04306722689074,
+            970.5711977881032
+          ],
+          "sourcePoint": [
+            448.04306722689074,
+            974.5711977881032
+          ],
+          "support": 0.5,
+          "thetaRad": 2.094395160675049,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            452.66806722689074,
+            962.5604628030972
+          ],
+          "sourcePoint": [
+            452.66806722689074,
+            966.5604628030972
+          ],
+          "support": 0.8500000238418579,
+          "thetaRad": 2.094395160675049,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            457.29306722689074,
+            954.5497278180911
+          ],
+          "sourcePoint": [
+            457.29306722689074,
+            958.5497278180911
+          ],
+          "support": 0.8500000238418579,
+          "thetaRad": 2.6179938316345215,
+          "insideOwnBadge": false
+        },
+        {
+          "point": [
+            463.8338048012619,
+            948.0089899405111
+          ],
+          "sourcePoint": [
+            463.8338048012619,
+            952.0089899405111
+          ],
+          "support": 0.8500000238418579,
+          "thetaRad": 0.2617993950843811,
+          "insideOwnBadge": false
+        }
+      ],
+      "nextStraightProbe": {
+        "point": [
+          470.3745423756331,
+          941.4682520629311
+        ],
+        "support": 0.3734235465526581,
+        "thetaRad": 1.0471975803375244,
+        "insideOwnBadge": false
+      }
+    },
+    {
+      "name": "center-legacy-plus15",
+      "axis": "legacy",
+      "deltaDeg": 15,
+      "headingRad": -0.5235987755982989,
+      "startPx": [
+        443.41806722689074,
+        978.5819327731092
+      ],
+      "seedType": "center",
+      "headingDeg": -30.000000000000004,
+      "rawtrace": {
+        "outcome": "unknown",
+        "reason": "petered-out",
+        "points": [
+          [
+            443.41806722689074,
+            978.5819327731092
+          ],
+          [
+            451.4288022118968,
+            973.9569327731092
+          ],
+          [
+            459.4395371969029,
+            969.3319327731092
+          ],
+          [
+            467.450272181909,
+            964.7069327731092
+          ],
+          [
+            475.46100716691507,
+            960.0819327731092
+          ]
+        ],
+        "lengthPx": 37,
+        "tunneledSegments": [],
+        "bendCount": 1
+      },
+      "nativeUnknown": true,
+      "noBasket": true,
+      "determinismExact": true,
+      "geometry": {
+        "outsideBadgeSegmentsLengthPx": 0,
+        "segmentsTouchingBadgeLengthPx": 37.00000000000008,
+        "pointCount": 5,
+        "outsidePointCount": 1
+      },
+      "samples": [
+        {
+          "point": [
+            443.41806722689074,
+            978.5819327731092
+          ],
+          "sourcePoint": [
+            443.41806722689074,
+            982.5819327731092
+          ],
+          "support": 0.5,
+          "thetaRad": 1.832595705986023,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            451.4288022118968,
+            973.9569327731092
+          ],
+          "sourcePoint": [
+            451.4288022118968,
+            977.9569327731092
+          ],
+          "support": 0.5,
+          "thetaRad": 0,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            459.4395371969029,
+            969.3319327731092
+          ],
+          "sourcePoint": [
+            459.4395371969029,
+            973.3319327731092
+          ],
+          "support": 0.8500000238418579,
+          "thetaRad": 2.356194496154785,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            467.450272181909,
+            964.7069327731092
+          ],
+          "sourcePoint": [
+            467.450272181909,
+            968.7069327731092
+          ],
+          "support": 0.6740740537643433,
+          "thetaRad": 0.2617993950843811,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            475.46100716691507,
+            960.0819327731092
+          ],
+          "sourcePoint": [
+            475.46100716691507,
+            964.0819327731092
+          ],
+          "support": 0.5407407283782959,
+          "thetaRad": 0.5235987901687622,
+          "insideOwnBadge": false
+        }
+      ],
+      "nextStraightProbe": {
+        "point": [
+          483.47174215192115,
+          955.4569327731092
+        ],
+        "support": 0.3664458990097046,
+        "thetaRad": 1.832595705986023,
+        "insideOwnBadge": false
+      }
+    },
+    {
+      "name": "center-s5",
+      "axis": "s5",
+      "deltaDeg": 0,
+      "headingRad": 0.047900432100886965,
+      "startPx": [
+        443.41806722689074,
+        978.5819327731092
+      ],
+      "seedType": "center",
+      "headingDeg": 2.74449259623379,
+      "rawtrace": {
+        "outcome": "unknown",
+        "reason": "petered-out",
+        "points": [
+          [
+            443.41806722689074,
+            978.5819327731092
+          ],
+          [
+            452.6574574180604,
+            979.0248423522759
+          ],
+          [
+            461.89684760923006,
+            979.4677519314425
+          ],
+          [
+            471.1362378003997,
+            979.9106615106092
+          ],
+          [
+            479.76444397912235,
+            976.5765112234367
+          ],
+          [
+            486.7914975634116,
+            970.5612790646977
+          ],
+          [
+            494.34245483764596,
+            965.2184760323291
+          ],
+          [
+            502.1315738500661,
+            960.2292751934817
+          ]
+        ],
+        "lengthPx": 64.75,
+        "tunneledSegments": [],
+        "bendCount": 1
+      },
+      "nativeUnknown": true,
+      "noBasket": true,
+      "determinismExact": true,
+      "geometry": {
+        "outsideBadgeSegmentsLengthPx": 37,
+        "segmentsTouchingBadgeLengthPx": 27.749999999999957,
+        "pointCount": 8,
+        "outsidePointCount": 5
+      },
+      "samples": [
+        {
+          "point": [
+            443.41806722689074,
+            978.5819327731092
+          ],
+          "sourcePoint": [
+            443.41806722689074,
+            982.5819327731092
+          ],
+          "support": 0.5,
+          "thetaRad": 1.832595705986023,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            452.6574574180604,
+            979.0248423522759
+          ],
+          "sourcePoint": [
+            452.6574574180604,
+            983.0248423522759
+          ],
+          "support": 0.5,
+          "thetaRad": 0,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            461.89684760923006,
+            979.4677519314425
+          ],
+          "sourcePoint": [
+            461.89684760923006,
+            983.4677519314425
+          ],
+          "support": 0.5,
+          "thetaRad": 0,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            471.1362378003997,
+            979.9106615106092
+          ],
+          "sourcePoint": [
+            471.1362378003997,
+            983.9106615106092
+          ],
+          "support": 0.8500000238418579,
+          "thetaRad": 2.356194496154785,
+          "insideOwnBadge": false
+        },
+        {
+          "point": [
+            479.76444397912235,
+            976.5765112234367
+          ],
+          "sourcePoint": [
+            479.76444397912235,
+            980.5765112234367
+          ],
+          "support": 0.8500000238418579,
+          "thetaRad": 2.094395160675049,
+          "insideOwnBadge": false
+        },
+        {
+          "point": [
+            486.7914975634116,
+            970.5612790646977
+          ],
+          "sourcePoint": [
+            486.7914975634116,
+            974.5612790646977
+          ],
+          "support": 0.8500000238418579,
+          "thetaRad": 2.6179938316345215,
+          "insideOwnBadge": false
+        },
+        {
+          "point": [
+            494.34245483764596,
+            965.2184760323291
+          ],
+          "sourcePoint": [
+            494.34245483764596,
+            969.2184760323291
+          ],
+          "support": 0.6686580777168274,
+          "thetaRad": 2.6179938316345215,
+          "insideOwnBadge": false
+        },
+        {
+          "point": [
+            502.1315738500661,
+            960.2292751934817
+          ],
+          "sourcePoint": [
+            502.1315738500661,
+            964.2292751934817
+          ],
+          "support": 0.5034722089767456,
+          "thetaRad": 2.6179938316345215,
+          "insideOwnBadge": false
+        }
+      ],
+      "nextStraightProbe": {
+        "point": [
+          509.92069286248625,
+          955.2400743546343
+        ],
+        "support": 0.42506906390190125,
+        "thetaRad": 0.5235987901687622,
+        "insideOwnBadge": false
+      }
+    },
+    {
+      "name": "center-s5-minus15",
+      "axis": "s5",
+      "deltaDeg": -15,
+      "headingRad": -0.21389895569826245,
+      "startPx": [
+        443.41806722689074,
+        978.5819327731092
+      ],
+      "seedType": "center",
+      "headingDeg": -12.25550740376621,
+      "rawtrace": {
+        "outcome": "unknown",
+        "reason": "petered-out",
+        "points": [
+          [
+            443.41806722689074,
+            978.5819327731092
+          ],
+          [
+            452.4572662660501,
+            976.6184204277289
+          ],
+          [
+            461.4964653052095,
+            974.6549080823486
+          ],
+          [
+            470.53566434436885,
+            972.6913957369683
+          ],
+          [
+            479.5748633835282,
+            970.727883391588
+          ]
+        ],
+        "lengthPx": 37,
+        "tunneledSegments": [],
+        "bendCount": 1
+      },
+      "nativeUnknown": true,
+      "noBasket": true,
+      "determinismExact": true,
+      "geometry": {
+        "outsideBadgeSegmentsLengthPx": 0,
+        "segmentsTouchingBadgeLengthPx": 37.00000000000012,
+        "pointCount": 5,
+        "outsidePointCount": 1
+      },
+      "samples": [
+        {
+          "point": [
+            443.41806722689074,
+            978.5819327731092
+          ],
+          "sourcePoint": [
+            443.41806722689074,
+            982.5819327731092
+          ],
+          "support": 0.5,
+          "thetaRad": 1.832595705986023,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            452.4572662660501,
+            976.6184204277289
+          ],
+          "sourcePoint": [
+            452.4572662660501,
+            980.6184204277289
+          ],
+          "support": 0.5,
+          "thetaRad": 0,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            461.4964653052095,
+            974.6549080823486
+          ],
+          "sourcePoint": [
+            461.4964653052095,
+            978.6549080823486
+          ],
+          "support": 0.5,
+          "thetaRad": 0,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            470.53566434436885,
+            972.6913957369683
+          ],
+          "sourcePoint": [
+            470.53566434436885,
+            976.6913957369683
+          ],
+          "support": 0.7555555701255798,
+          "thetaRad": 2.6179938316345215,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            479.5748633835282,
+            970.727883391588
+          ],
+          "sourcePoint": [
+            479.5748633835282,
+            974.727883391588
+          ],
+          "support": 0.8500000238418579,
+          "thetaRad": 2.094395160675049,
+          "insideOwnBadge": false
+        }
+      ],
+      "nextStraightProbe": {
+        "point": [
+          488.6140624226876,
+          968.7643710462077
+        ],
+        "support": 0.6518518328666687,
+        "thetaRad": 2.356194496154785,
+        "insideOwnBadge": false
+      }
+    },
+    {
+      "name": "center-s5-plus15",
+      "axis": "s5",
+      "deltaDeg": 15,
+      "headingRad": 0.30969981990003637,
+      "startPx": [
+        443.41806722689074,
+        978.5819327731092
+      ],
+      "seedType": "center",
+      "headingDeg": 17.744492596233787,
+      "rawtrace": {
+        "outcome": "unknown",
+        "reason": "petered-out",
+        "points": [
+          [
+            443.41806722689074,
+            978.5819327731092
+          ],
+          [
+            452.22799939735677,
+            981.4010807209452
+          ],
+          [
+            461.0379315678228,
+            984.2202286687811
+          ],
+          [
+            469.8478637382888,
+            987.0393766166171
+          ],
+          [
+            478.65779590875485,
+            989.8585245644531
+          ],
+          [
+            483.0896290353685,
+            997.9777212696605
+          ]
+        ],
+        "lengthPx": 46.25,
+        "tunneledSegments": [],
+        "bendCount": 1
+      },
+      "nativeUnknown": true,
+      "noBasket": true,
+      "determinismExact": true,
+      "geometry": {
+        "outsideBadgeSegmentsLengthPx": 9.25000000000004,
+        "segmentsTouchingBadgeLengthPx": 37.00000000000001,
+        "pointCount": 6,
+        "outsidePointCount": 2
+      },
+      "samples": [
+        {
+          "point": [
+            443.41806722689074,
+            978.5819327731092
+          ],
+          "sourcePoint": [
+            443.41806722689074,
+            982.5819327731092
+          ],
+          "support": 0.5,
+          "thetaRad": 1.832595705986023,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            452.22799939735677,
+            981.4010807209452
+          ],
+          "sourcePoint": [
+            452.22799939735677,
+            985.4010807209452
+          ],
+          "support": 0.5,
+          "thetaRad": 0.7853981852531433,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            461.0379315678228,
+            984.2202286687811
+          ],
+          "sourcePoint": [
+            461.0379315678228,
+            988.2202286687811
+          ],
+          "support": 0.8500000238418579,
+          "thetaRad": 0.5235987901687622,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            469.8478637382888,
+            987.0393766166171
+          ],
+          "sourcePoint": [
+            469.8478637382888,
+            991.0393766166171
+          ],
+          "support": 0.8500000238418579,
+          "thetaRad": 2.6179938316345215,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            478.65779590875485,
+            989.8585245644531
+          ],
+          "sourcePoint": [
+            478.65779590875485,
+            993.8585245644531
+          ],
+          "support": 0.6762937307357788,
+          "thetaRad": 1.832595705986023,
+          "insideOwnBadge": false
+        },
+        {
+          "point": [
+            483.0896290353685,
+            997.9777212696605
+          ],
+          "sourcePoint": [
+            483.0896290353685,
+            1001.9777212696605
+          ],
+          "support": 0.529746413230896,
+          "thetaRad": 1.5707963705062866,
+          "insideOwnBadge": false
+        }
+      ],
+      "nextStraightProbe": {
+        "point": [
+          487.52146216198213,
+          1006.0969179748679
+        ],
+        "support": 0.6956942081451416,
+        "thetaRad": 2.094395160675049,
+        "insideOwnBadge": false
+      }
+    },
+    {
+      "name": "exit-legacy-plus1step",
+      "axis": "legacy",
+      "deltaDeg": 0,
+      "headingRad": -0.7853981633974483,
+      "startPx": [
+        470.54073772597553,
+        951.4592622740245
+      ],
+      "seedType": "explicit-bbox-exit",
+      "exitGeometry": {
+        "seed": [
+          470.54073772597553,
+          951.4592622740245
+        ],
+        "bboxExitCanonical": [
+          463.99999999999994,
+          958
+        ],
+        "rayDistanceToExitPx": 29.107248467582323,
+        "extraPx": 9.25
+      },
+      "headingDeg": -45,
+      "rawtrace": {
+        "outcome": "unknown",
+        "reason": "petered-out",
+        "points": [
+          [
+            470.54073772597553,
+            951.4592622740245
+          ]
+        ],
+        "lengthPx": 0,
+        "tunneledSegments": [],
+        "bendCount": 0
+      },
+      "nativeUnknown": true,
+      "noBasket": true,
+      "determinismExact": true,
+      "geometry": {
+        "outsideBadgeSegmentsLengthPx": 0,
+        "segmentsTouchingBadgeLengthPx": 0,
+        "pointCount": 1,
+        "outsidePointCount": 1
+      },
+      "samples": [
+        {
+          "point": [
+            470.54073772597553,
+            951.4592622740245
+          ],
+          "sourcePoint": [
+            470.54073772597553,
+            955.4592622740245
+          ],
+          "support": 0.4720896780490875,
+          "thetaRad": 0.7853981852531433,
+          "insideOwnBadge": false
+        }
+      ],
+      "nextStraightProbe": null
+    },
+    {
+      "name": "exit-legacy-plus2step",
+      "axis": "legacy",
+      "deltaDeg": 0,
+      "headingRad": -0.7853981633974483,
+      "startPx": [
+        477.08147545195106,
+        944.9185245480488
+      ],
+      "seedType": "explicit-bbox-exit",
+      "exitGeometry": {
+        "seed": [
+          477.08147545195106,
+          944.9185245480488
+        ],
+        "bboxExitCanonical": [
+          463.99999999999994,
+          958
+        ],
+        "rayDistanceToExitPx": 29.107248467582323,
+        "extraPx": 18.5
+      },
+      "headingDeg": -45,
+      "rawtrace": {
+        "outcome": "unknown",
+        "reason": "petered-out",
+        "points": [
+          [
+            477.08147545195106,
+            944.9185245480488
+          ]
+        ],
+        "lengthPx": 0,
+        "tunneledSegments": [],
+        "bendCount": 0
+      },
+      "nativeUnknown": true,
+      "noBasket": true,
+      "determinismExact": true,
+      "geometry": {
+        "outsideBadgeSegmentsLengthPx": 0,
+        "segmentsTouchingBadgeLengthPx": 0,
+        "pointCount": 1,
+        "outsidePointCount": 1
+      },
+      "samples": [
+        {
+          "point": [
+            477.08147545195106,
+            944.9185245480488
+          ],
+          "sourcePoint": [
+            477.08147545195106,
+            948.9185245480488
+          ],
+          "support": 0.47030630707740784,
+          "thetaRad": 0.5235987901687622,
+          "insideOwnBadge": false
+        }
+      ],
+      "nextStraightProbe": null
+    },
+    {
+      "name": "exit-s5-plus1step",
+      "axis": "s5",
+      "deltaDeg": 0,
+      "headingRad": 0.047900432100886965,
+      "startPx": [
+        480.23939019116966,
+        980.3470402446015
+      ],
+      "seedType": "explicit-bbox-exit",
+      "exitGeometry": {
+        "seed": [
+          480.23939019116966,
+          980.3470402446015
+        ],
+        "bboxExitCanonical": [
+          471,
+          979.904130665435
+        ],
+        "rayDistanceToExitPx": 27.613605754533204,
+        "extraPx": 9.25
+      },
+      "headingDeg": 2.74449259623379,
+      "rawtrace": {
+        "outcome": "unknown",
+        "reason": "ambiguous-fork",
+        "points": [
+          [
+            480.23939019116966,
+            980.3470402446015
+          ]
+        ],
+        "lengthPx": 0,
+        "tunneledSegments": [],
+        "bendCount": 0
+      },
+      "nativeUnknown": true,
+      "noBasket": true,
+      "determinismExact": true,
+      "geometry": {
+        "outsideBadgeSegmentsLengthPx": 0,
+        "segmentsTouchingBadgeLengthPx": 0,
+        "pointCount": 1,
+        "outsidePointCount": 1
+      },
+      "samples": [
+        {
+          "point": [
+            480.23939019116966,
+            980.3470402446015
+          ],
+          "sourcePoint": [
+            480.23939019116966,
+            984.3470402446015
+          ],
+          "support": 0.8660011291503906,
+          "thetaRad": 2.356194496154785,
+          "insideOwnBadge": false
+        }
+      ],
+      "nextStraightProbe": null
+    },
+    {
+      "name": "exit-s5-plus2step",
+      "axis": "s5",
+      "deltaDeg": 0,
+      "headingRad": 0.047900432100886965,
+      "startPx": [
+        489.4787803823394,
+        980.7899498237682
+      ],
+      "seedType": "explicit-bbox-exit",
+      "exitGeometry": {
+        "seed": [
+          489.4787803823394,
+          980.7899498237682
+        ],
+        "bboxExitCanonical": [
+          471,
+          979.904130665435
+        ],
+        "rayDistanceToExitPx": 27.613605754533204,
+        "extraPx": 18.5
+      },
+      "headingDeg": 2.74449259623379,
+      "rawtrace": {
+        "outcome": "unknown",
+        "reason": "petered-out",
+        "points": [
+          [
+            489.4787803823394,
+            980.7899498237682
+          ],
+          [
+            498.71817057350904,
+            981.2328594029349
+          ]
+        ],
+        "lengthPx": 9.25,
+        "tunneledSegments": [],
+        "bendCount": 1
+      },
+      "nativeUnknown": true,
+      "noBasket": true,
+      "determinismExact": true,
+      "geometry": {
+        "outsideBadgeSegmentsLengthPx": 9.249999999999986,
+        "segmentsTouchingBadgeLengthPx": 0,
+        "pointCount": 2,
+        "outsidePointCount": 2
+      },
+      "samples": [
+        {
+          "point": [
+            489.4787803823394,
+            980.7899498237682
+          ],
+          "sourcePoint": [
+            489.4787803823394,
+            984.7899498237682
+          ],
+          "support": 0.8500000238418579,
+          "thetaRad": 0,
+          "insideOwnBadge": false
+        },
+        {
+          "point": [
+            498.71817057350904,
+            981.2328594029349
+          ],
+          "sourcePoint": [
+            498.71817057350904,
+            985.2328594029349
+          ],
+          "support": 0.5575562715530396,
+          "thetaRad": 1.832595705986023,
+          "insideOwnBadge": false
+        }
+      ],
+      "nextStraightProbe": {
+        "point": [
+          507.9575607646787,
+          981.6757689821015
+        ],
+        "support": 0.44088679552078247,
+        "thetaRad": 2.879793167114258,
+        "insideOwnBadge": false
+      }
+    }
+  ]
+}

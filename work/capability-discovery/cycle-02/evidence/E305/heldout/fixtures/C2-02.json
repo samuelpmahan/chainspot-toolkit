@@ -1,0 +1,65 @@
+{
+  "schema": "C2-heldout-construction-case@1",
+  "id": "C2-02",
+  "class": "rotated-scaled-corridor",
+  "seed": 30520261018,
+  "frame": "C2-synthetic-source-image-pixels; x-right y-down; pixel centers at integer+0.5",
+  "image": {
+    "width": 320,
+    "height": 256,
+    "rgbaFile": "C2-02.rgba",
+    "pngFile": "C2-02.png",
+    "channels": "RGBA8; opaque; luminance R=G=B; no alpha masking"
+  },
+  "construction": {
+    "id": "C2-02",
+    "kind": "rotated-scaled-corridor",
+    "center": [
+      160,
+      128
+    ],
+    "headingRad": 0.47,
+    "fullWidthPx": 48.0,
+    "lengthPx": 272.0,
+    "queryNormalOffsetPx": 0.0
+  },
+  "anchors": {
+    "tee": {
+      "xPx": 60.14435172212316,
+      "yPx": 77.27673603754435
+    },
+    "badge": {
+      "xPx": 122.55413189579619,
+      "yPx": 108.97877601407913
+    },
+    "meaning": "construction points only; no rendered tee/badge sprites or endpoint identity"
+  },
+  "query": {
+    "xPx": 160.0,
+    "yPx": 128.0,
+    "headingRad": 0.47,
+    "candidateWidthsPx": [
+      24,
+      32,
+      40,
+      48,
+      56
+    ],
+    "stationSpanPx": [
+      -28,
+      28
+    ]
+  },
+  "knownOccluderBboxes": [],
+  "mask": {
+    "file": "C2-02-mask.png",
+    "meaning": "255 = unavailable, 0 = visible; source pixels remain unmodified"
+  },
+  "queryVariants": [
+    {
+      "id": "declared-mask",
+      "occluderBboxes": []
+    }
+  ],
+  "labelsAre": "analytic construction labels only, never human truth or real course accuracy"
+}

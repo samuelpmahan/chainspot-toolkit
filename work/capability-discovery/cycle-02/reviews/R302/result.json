@@ -1,0 +1,125 @@
+{
+  "job_id": "R302",
+  "worker": "C2",
+  "decision": "accepted",
+  "summary": "Independent source-pinned portable replay reproduced C3 E302 receipt and stdout byte-for-byte. Four exact source files, ten reported artifact hashes, all archive file members, seven independently reconstructed rasters and all 35 condensed station records were verified. Capsule/corridor measurement identity, crossing station failure despite global width40/mean0.8, shifted +7.5px pixel-edge convention, ragged local variation and tied width40/42 rows all reproduce. Existing figure matches raw evidence. Acceptance is technical reproducibility and scoped interpretation only.",
+  "exacthashes": {
+    "reviewedC3ResultSha256": "d817712fe8447f052c8a04488b33134a90a5f426f5eec48f6f507a65775d5bee",
+    "reviewedProtocolSha256": "47cb0489e0ef166cf69dccb1f7713be38c644b087c29d96472ee11ec641ca3a0",
+    "reviewedProbeSha256": "3c34922ee6d35c85be035fc3ce9d484d9d0a9fc578062d07fcc376d091c2e14d",
+    "reviewedReceiptSha256": "a5ea9523ac5c771e39ee436eeedb6ac7b4caa8187ae17593137eeeeca8500173",
+    "replayedReceiptSha256": "a5ea9523ac5c771e39ee436eeedb6ac7b4caa8187ae17593137eeeeca8500173",
+    "reviewedArchiveSha256": "81fb7fda5bccd3f7c601b1f67c957cd0aa30c27f727b49015d24e3646d6fc3c7",
+    "reviewedFigurePngSha256": "6d79e49a2a20089d0c4df5b04eab8e4b8445d69b1bde303d957273f24121c4fd",
+    "reviewProtocolSha256": "6da702df04302d43ed99fe2fea5eb79d4bcfcfd060d67f904187226a9b4e023f",
+    "independentCheckerSha256": "34b1e9972194aa31d8cdc6117302416e287eb42caecfbe3affa3a90dbf8bc12e",
+    "identityChecksSha256": "b0df7582c127532cedc70c502d2b9622bf1ef181f2f1d9c2b99b6e7e870f5024",
+    "comparisonSha256": "6970ee9dbc676d006375a7f90cb9d114136d3a3ebabd162875c1329f1d0fd21c",
+    "sourceFiles": [
+      {
+        "file": "vendor/active/ports/s6straight/pathSpace.mjs",
+        "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+        "gitBlob": "38963d20f7a8b7c7851b3a2abea2e472da8f7716"
+      },
+      {
+        "file": "vendor/active/contracts/alpha.profile@1.mjs",
+        "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+        "gitBlob": "6f50530ff8f7d5c613ee739224d475657fcbf647"
+      },
+      {
+        "file": "vendor/provider/fourLaneSensor.cjs",
+        "sha256": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624",
+        "gitBlob": "2167c3539aa33856738e679c75869d6c3395afe8"
+      },
+      {
+        "file": "vendor/dev72/fourLaneRibbon.ts",
+        "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+        "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d"
+      }
+    ]
+  },
+  "commands": [
+    "Read-only inspection of C3 protocol/probe/render/README/result and pinned source functions",
+    "Verified C3 reported hash manifest, Git blob hashes, exact Git source objects where available, earlier pinned vendor bytes and all portable archive file members",
+    "node C2/review-R302/portable/probe.mjs > C2/review-R302/rerun.log",
+    "python C2/review-R302/check.py",
+    "view_image C3/bilateral-composition.png"
+  ],
+  "findings": [
+    {
+      "id": "integrity-and-reexecution",
+      "status": "PASS",
+      "details": "10 reported artifact hashes and all 15 archive file members matched; 4 source SHA256/Git blob identities verified; 3 source paths directly resolved at exact local Git refs, Dev72 corroborated by earlier source-pinned vendor bytes. Replayed receipt and stdout are byte-identical."
+    },
+    {
+      "id": "construction-and-capsule-identity",
+      "status": "PASS",
+      "details": "All 7 RGBA rasters independently reconstructed from explicit geometry. Capsule and corridor40 have different whole-image hashes but identical complete global and five-station profile/fit/channel objects. This retains the semantic nonidentifiability counterexample."
+    },
+    {
+      "id": "crossing-station-vs-average",
+      "status": "PASS",
+      "measurements": {
+        "globalWidthSourcePx": 40,
+        "bankMeanAt40": 0.8,
+        "centralStationXSourcePx": 150,
+        "centralPair": null,
+        "centralCombined": 0
+      },
+      "details": "Global/mean evidence does not imply sustained local evidence; central station failure remains explicit."
+    },
+    {
+      "id": "shift-convention",
+      "status": "PASS",
+      "measurements": {
+        "constructionTranslationSourcePx": 8,
+        "baselineEdgeMidpointImageYPx": 99.5,
+        "shiftedEdgeMidpointImageYPx": 107.5,
+        "normalOffsetRelativeAssertedY100Px": 7.5,
+        "recenteredScoreEachStation": 1,
+        "rawWidthBankAllZeroDespiteFiveVisibleSamples": true
+      },
+      "details": "Baseline midpoint99.5px moves to107.5px under an8px membership translation. Relative to asserted y100, normal offset is+7.5px; default center gate rejects, wider gate observes width40 and recentering returns score1."
+    },
+    {
+      "id": "variation-and-ties",
+      "status": "PASS",
+      "measurements": {
+        "ragged": {
+          "globalWidthSourcePx": 29.23780487804878,
+          "stationWidthsSourcePx": [
+            29.025862068965516,
+            47.875,
+            47.875,
+            29.057692307692307,
+            35.875
+          ]
+        },
+        "corridor40TiedCandidatesPx": [
+          40,
+          42
+        ]
+      },
+      "details": "No strict Dev72 winner separation is inferred from edge width observation; no confidence threshold invented."
+    },
+    {
+      "id": "raw-receipt-and-figure",
+      "status": "PASS",
+      "details": "All 7 condensed result rows/35 stations match raw receipt. Figure inspected: null central crossing pair, shift offset, identical capsule channels and broad ellipse missing pair are shown with units; W40 channel reference is explicit."
+    },
+    {
+      "id": "executed-vs-inspected",
+      "status": "PASS",
+      "details": "pathSpace profile/edge/width/stationContrast and Dev72 observe/estimate executed. Provider source integrity checked only; provider operation not executed."
+    }
+  ],
+  "limits": [
+    "Technical acceptance only; neither human acceptance nor real-course accuracy is established.",
+    "Exposed deterministic synthetic fixtures are mechanism examples, not independent heldout semantic validation.",
+    "Protocol hash and preexecution declaration match; original freeze chronology is not independently time authenticated.",
+    "Dev72 source Git commit/path was not locally resolvable; SHA256/Git blob and matching earlier pinned vendor bytes verify its included bytes without fresh remote retrieval.",
+    "All test headings are0; rotation/generalization was not assessed by E302 replay.",
+    "Separate station windows are spatial probes, not statistically independent observations.",
+    "No C6 candidate accessed, no C2 heldout file changed, no repository/C3 writes."
+  ]
+}

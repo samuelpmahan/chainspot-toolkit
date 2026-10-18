@@ -1,0 +1,161 @@
+{
+  "schema": "R302-identity-checks@1",
+  "hashManifest": [
+    {
+      "path": "protocol.json",
+      "expectedSha256": "47cb0489e0ef166cf69dccb1f7713be38c644b087c29d96472ee11ec641ca3a0",
+      "actualSha256": "47cb0489e0ef166cf69dccb1f7713be38c644b087c29d96472ee11ec641ca3a0",
+      "bytesMatch": true
+    },
+    {
+      "path": "probe.mjs",
+      "expectedSha256": "3c34922ee6d35c85be035fc3ce9d484d9d0a9fc578062d07fcc376d091c2e14d",
+      "actualSha256": "3c34922ee6d35c85be035fc3ce9d484d9d0a9fc578062d07fcc376d091c2e14d",
+      "bytesMatch": true
+    },
+    {
+      "path": "provenance.json",
+      "expectedSha256": "0f3de094060d64f7614be6a8fa5023180e75070d33153976bdf318a734fdffaf",
+      "actualSha256": "0f3de094060d64f7614be6a8fa5023180e75070d33153976bdf318a734fdffaf",
+      "bytesMatch": true
+    },
+    {
+      "path": "receipt.json",
+      "expectedSha256": "a5ea9523ac5c771e39ee436eeedb6ac7b4caa8187ae17593137eeeeca8500173",
+      "actualSha256": "a5ea9523ac5c771e39ee436eeedb6ac7b4caa8187ae17593137eeeeca8500173",
+      "bytesMatch": true
+    },
+    {
+      "path": "render.py",
+      "expectedSha256": "069ef87b9d9978581fc93338bc200f1effbde56ecb71fa8657f471201c49373c",
+      "actualSha256": "069ef87b9d9978581fc93338bc200f1effbde56ecb71fa8657f471201c49373c",
+      "bytesMatch": true
+    },
+    {
+      "path": "bilateral-composition.png",
+      "expectedSha256": "6d79e49a2a20089d0c4df5b04eab8e4b8445d69b1bde303d957273f24121c4fd",
+      "actualSha256": "6d79e49a2a20089d0c4df5b04eab8e4b8445d69b1bde303d957273f24121c4fd",
+      "bytesMatch": true
+    },
+    {
+      "path": "bilateral-composition.svg",
+      "expectedSha256": "6f77d63905dd1088bd81e9c8a26ba97938ba7d72c3a8ded58ad2ad045f6cbd9d",
+      "actualSha256": "6f77d63905dd1088bd81e9c8a26ba97938ba7d72c3a8ded58ad2ad045f6cbd9d",
+      "bytesMatch": true
+    },
+    {
+      "path": "README.md",
+      "expectedSha256": "0338ab022b2e0226287b58b33e06a98aad21749fcbd7e7ae455f5686b46c34c3",
+      "actualSha256": "0338ab022b2e0226287b58b33e06a98aad21749fcbd7e7ae455f5686b46c34c3",
+      "bytesMatch": true
+    },
+    {
+      "path": "run.log",
+      "expectedSha256": "01a509ec065a1fc8165106ac10bbc04e288eb58373eba7864612a12abd2188b9",
+      "actualSha256": "01a509ec065a1fc8165106ac10bbc04e288eb58373eba7864612a12abd2188b9",
+      "bytesMatch": true
+    },
+    {
+      "path": "render.log",
+      "expectedSha256": "c500e60c830a59a91e3edf3f6da4ba8b01c04ed02010dd5bc36e786ad0b38f09",
+      "actualSha256": "c500e60c830a59a91e3edf3f6da4ba8b01c04ed02010dd5bc36e786ad0b38f09",
+      "bytesMatch": true
+    }
+  ],
+  "sources": [
+    {
+      "file": "vendor/active/ports/s6straight/pathSpace.mjs",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "gitBlob": "38963d20f7a8b7c7851b3a2abea2e472da8f7716",
+      "catalogVendorByteEqual": true,
+      "exactGitObjectAvailableAndEqual": true
+    },
+    {
+      "file": "vendor/active/contracts/alpha.profile@1.mjs",
+      "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+      "gitBlob": "6f50530ff8f7d5c613ee739224d475657fcbf647",
+      "catalogVendorByteEqual": true,
+      "exactGitObjectAvailableAndEqual": true
+    },
+    {
+      "file": "vendor/provider/fourLaneSensor.cjs",
+      "sha256": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624",
+      "gitBlob": "2167c3539aa33856738e679c75869d6c3395afe8",
+      "catalogVendorByteEqual": true,
+      "exactGitObjectAvailableAndEqual": true
+    },
+    {
+      "file": "vendor/dev72/fourLaneRibbon.ts",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+      "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+      "catalogVendorByteEqual": true,
+      "exactGitObjectAvailableAndEqual": false
+    }
+  ],
+  "archiveSha256": "81fb7fda5bccd3f7c601b1f67c957cd0aa30c27f727b49015d24e3646d6fc3c7",
+  "archiveAllFileBytesEqualSourcePacket": true,
+  "archiveFiles": [
+    {
+      "file": "protocol.json",
+      "sha256": "47cb0489e0ef166cf69dccb1f7713be38c644b087c29d96472ee11ec641ca3a0"
+    },
+    {
+      "file": "probe.mjs",
+      "sha256": "3c34922ee6d35c85be035fc3ce9d484d9d0a9fc578062d07fcc376d091c2e14d"
+    },
+    {
+      "file": "provenance.json",
+      "sha256": "0f3de094060d64f7614be6a8fa5023180e75070d33153976bdf318a734fdffaf"
+    },
+    {
+      "file": "vendor/dev72/fourLaneRibbon.ts",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689"
+    },
+    {
+      "file": "vendor/active/ports/s6straight/pathSpace.mjs",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"
+    },
+    {
+      "file": "vendor/active/contracts/alpha.profile@1.mjs",
+      "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f"
+    },
+    {
+      "file": "vendor/provider/fourLaneSensor.cjs",
+      "sha256": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624"
+    },
+    {
+      "file": "README.md",
+      "sha256": "0338ab022b2e0226287b58b33e06a98aad21749fcbd7e7ae455f5686b46c34c3"
+    },
+    {
+      "file": "render.py",
+      "sha256": "069ef87b9d9978581fc93338bc200f1effbde56ecb71fa8657f471201c49373c"
+    },
+    {
+      "file": "receipt.json",
+      "sha256": "a5ea9523ac5c771e39ee436eeedb6ac7b4caa8187ae17593137eeeeca8500173"
+    },
+    {
+      "file": "bilateral-composition.png",
+      "sha256": "6d79e49a2a20089d0c4df5b04eab8e4b8445d69b1bde303d957273f24121c4fd"
+    },
+    {
+      "file": "bilateral-composition.svg",
+      "sha256": "6f77d63905dd1088bd81e9c8a26ba97938ba7d72c3a8ded58ad2ad045f6cbd9d"
+    },
+    {
+      "file": "result.json",
+      "sha256": "d817712fe8447f052c8a04488b33134a90a5f426f5eec48f6f507a65775d5bee"
+    },
+    {
+      "file": "run.log",
+      "sha256": "01a509ec065a1fc8165106ac10bbc04e288eb58373eba7864612a12abd2188b9"
+    },
+    {
+      "file": "render.log",
+      "sha256": "c500e60c830a59a91e3edf3f6da4ba8b01c04ed02010dd5bc36e786ad0b38f09"
+    }
+  ],
+  "resultSha256": "d817712fe8447f052c8a04488b33134a90a5f426f5eec48f6f507a65775d5bee",
+  "protocolFreezeClaim": "protocol field and byte hash corroborated; chronology assertion not independently time authenticated"
+}

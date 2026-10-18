@@ -1,0 +1,41 @@
+✖ decimal candidate bank fits only its exact requested width and source tolerance (16.824591ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 164.554526
+
+✖ failing tests:
+
+test at experiments/capability-discovery/composition/decimal-bank.test.mjs:7:1
+✖ decimal candidate bank fits only its exact requested width and source tolerance (16.824591ms)
+  AssertionError [ERR_ASSERTION]: caller must not admit a second implicit width32.01
+  + actual - expected
+  
+  + {
+  +   cPx: 0,
+  +   gl: 36,
+  +   gr: 36,
+  +   lPx: -16.5,
+  +   rPx: 16.5,
+  +   score: 36,
+  +   wPx: 33,
+  +   wgPx: 32.010000000000005
+  + }
+  - null
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/decimal-bank.test.mjs:18:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: { lPx: -16.5, rPx: 16.5, cPx: 0, wPx: 33, score: 36, gl: 36, gr: 36, wgPx: 32.010000000000005 },
+    expected: null,
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

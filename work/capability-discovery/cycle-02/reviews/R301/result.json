@@ -1,0 +1,217 @@
+{
+  "schema": "discovery-cycle-review-result@1",
+  "job_id": "R301",
+  "worker": "C4",
+  "reviewedJob": "E301",
+  "reviewedWorker": "C1",
+  "decision": "accepted",
+  "summary": "Independently verified634 provider files against original W2 bytes, six selected source Git blobs and SHA256s, two decoder dependency manifests, and original JPEG Git blob. Recomputed all ten counterfactuals in a fresh Node process using an own provider copy and only prior-receipt path relocation; every receipt field matches C1 except timestamp and adapted producer SHA. Baseline27.75px and S5 64.75px rawtrace controls, canonical decode/config/field identities, before/after field hashes, all10 UNKNOWN/noBasket outcomes, and both-endpoint-outside segment lengths are confirmed. Original figure inspected and own re-render has identical PNG SHA256, with seeds distinguished from emitted points and canonical\u2192source y+4 explicit. Accepted as bounded one-image negative mechanism evidence, not persistent route evidence, ownership, course accuracy or human acceptance.",
+  "commands": [
+    "Python verification-before: verify634 provider hashes/old-W2 byte equality +6 git show source identities; copy provider/protocol/S5/prior receipts into C4/review-R301; relocate only two prior-receipt path literals.",
+    "Python source-extra: verify jpeg-js and pngjs sorted dependency manifests; git cat-file blob ffdd790992dbb0f971e72204c440c0e4c4559216 equals original source JPEG.",
+    "NODE_PATH=\"$CODEX_PRIMARY_RUNTIME_NODE_MODULES\" node discovery-cycle02/C4/review-R301/counterfactual.mjs discovery-cycle02/C4/review-R301/provider IMG_5641 badge-9 tee-7 > discovery-cycle02/C4/review-R301/producer.stdout.json 2> discovery-cycle02/C4/review-R301/producer.stderr.log",
+    "python discovery-cycle02/C4/review-R301/check.py",
+    "python discovery-cycle02/C4/review-R301/render.py",
+    "view_image discovery-cycle02/C1/rawtraces.png"
+  ],
+  "hashes": {
+    "reviewArtifacts": {
+      "verification-before.json": "e075fd98eade6222390a4391a4b56ecc4debc851f36ab7be03f49d2f53df0614",
+      "source-extra.json": "7373d63121ace215a522639f41c7782016c1a5e28d722f0de5eb9abbaeefb24c",
+      "comparison.json": "ba9f6f84a98ff8642d774c5757dca1c149079d30f14192c6176f5e59cd265db0",
+      "counterfactual.mjs": "d8f4ae2bd24ce750d9e62a80d407835a53436125b3ad046efa0607ef87c32106",
+      "native-receipt.json": "48f3e7d74fe084269b9dc3ba0a428676a5004e3865dec13fce1b4987157cfda3",
+      "check.py": "4f210c6e091c87eac53aaf51349b4abfb1ea83d0a81b49899be9facfc8b625ed",
+      "render.py": "f7ea636f905e2434f29e807598ad2cfb5da0fd7d4cc03a1c9c238229bfa491f5",
+      "rawtraces.png": "357f6ab341403da4ac397d18098cb4d542d906f50bcd895a92bb351bbe6e7b49",
+      "render-receipt.json": "de848a0728c52c29717c5f8d1c57195fac8c8884f2818f3f3cabb783876c1495",
+      "producer.stdout.json": "a8569a34982eb0b2ee962a28e6f05f51d3f47b188f392b28b3e09f0225a0d67f",
+      "producer.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reviewedC1Inputs": {
+      "result.json": "a0d26e7b86e1972b9ea837bb3d2eadbbc47cf6f4220b9c12479d9001f31b56b7",
+      "protocol.json": "38d33053ff2f5b6fb3c7d4b2c0ce8d03f469928ec307191c5d867730b41c9228",
+      "source-manifest.json": "866cb82868b4ab445a3c61cbfd7d2e5078faab053d005c0ba88581dcdd405e4a",
+      "native-receipt.json": "daea366ed5efd4e2241b7e072216a1f5633063fe6c2eb98e3fbbd62e4117a6b5",
+      "rawtraces.png": "357f6ab341403da4ac397d18098cb4d542d906f50bcd895a92bb351bbe6e7b49",
+      "render.py": "f7ea636f905e2434f29e807598ad2cfb5da0fd7d4cc03a1c9c238229bfa491f5",
+      "render-receipt.json": "1b7b2367fa332f850749bda6d8f79923bc01b5b93a02eb308f50f7d3ad14e5aa"
+    },
+    "sourcePins": [
+      {
+        "path": "source/provider/packages/alg/dist/detectors/threeFactor/index.js",
+        "blob": "6bface5cddafe725af77a0df21dca1c15b5f588c",
+        "sha256": "65289bedd1af4a3cf3f6b563799821ce578ed975277a1122cbfb660b3e1cb41e"
+      },
+      {
+        "path": "source/provider/packages/alg/dist/detectors/threeFactor/ribbon.js",
+        "blob": "7278dd36e165971cf08daba5854db98e4a984bd6",
+        "sha256": "25635c2682a1f5ee3d3253207dcf6ba930ad23f968ac0bd316de1103391b8bc3"
+      },
+      {
+        "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLockMath.js",
+        "blob": "3b712771ae86d33530577a957ae52f9b90049081",
+        "sha256": "14f6147fbf98a57ff624acc86ef34cb9cbe2ae9e6d9d4537eb7111e7d49a12ed"
+      },
+      {
+        "path": "source/provider/packages/alg/dist/adapters/node.js",
+        "blob": "4fa1bb9f855eb7775013d874b76f6e52265cea51",
+        "sha256": "fe9e93faa6105548da8d4854bd020dcc60903a25967f242a62dbf4baae4ba6cd"
+      },
+      {
+        "path": "source/provider/packages/alg/dist/stages/S0/contract.js",
+        "blob": "99baea39a8eb76a7907eb9e20d8a6cbbb0955cd5",
+        "sha256": "f5f3eabbb0d6c2f2e8bb578f44615bb76e5e53ffae43e230f7cd6009ed1ec5ed"
+      },
+      {
+        "path": "source/chainspot-teams/s7/width-probe.mjs",
+        "blob": "c3dac4890ba8b06f3df195bba5148226a5705830",
+        "sha256": "c16d4ad32d78f094fede013d1fd09f3891be7cdecd1d455fc73aa6a04cdfe41d"
+      }
+    ],
+    "originalProducerSha256": "c3e76f988a7468a7de69337e61b9305e3b684776e5738c0e8545f44401f45675",
+    "reviewProducerSha256": "d8f4ae2bd24ce750d9e62a80d407835a53436125b3ad046efa0607ef87c32106",
+    "sourceJpegBlob": "ffdd790992dbb0f971e72204c440c0e4c4559216",
+    "sourceJpegSha256": "e6616738640eee1d05d8cc2b59dd657f24b4a5a01dc2f68571b7e44c6f372b8a",
+    "originalAndReviewPngSha256": "357f6ab341403da4ac397d18098cb4d542d906f50bcd895a92bb351bbe6e7b49"
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "status": "confirmed",
+      "evidenceMode": "independent byte/hash recomputation",
+      "finding": "All634 provider files equal their recorded hashes and original W2 bytes; six source bytes match actual pinned37a2dba Git blobs. Both runtime dependency manifests match. Original JPEG matches recovered Git object."
+    },
+    {
+      "id": "F2",
+      "status": "confirmed",
+      "evidenceMode": "fresh-process actual source recomputation",
+      "finding": "Ten unique counterfactuals repeated twice in new process; receipt equality excluding only timestamp/producer hash. Source/canonical/config/S5 row/field/control checks executed by producer. Shared final field hashes unchanged; no per-variant field recomputation present in inspected loop."
+    },
+    {
+      "id": "F3",
+      "status": "confirmed",
+      "evidenceMode": "independent geometry calculation",
+      "finding": "All ten rawtrace length sums match within1e-9px. Outside length includes only emitted segments whose two endpoints are outside inclusive original badge bbox; boundary-crossing segments excluded. Explicit exit seed construction lengths never added to trace length.",
+      "geometry": [
+        {
+          "id": "center-legacy",
+          "recomputedLengthCanonicalPx": 27.749999999999986,
+          "recomputedBothEndpointOutsideLengthCanonicalPx": 0,
+          "rawPointCount": 4,
+          "nativeOutcome": "unknown",
+          "nativeReason": "petered-out",
+          "nativeBasketId": null
+        },
+        {
+          "id": "center-legacy-minus15",
+          "recomputedLengthCanonicalPx": 36.99999999999995,
+          "recomputedBothEndpointOutsideLengthCanonicalPx": 9.250000000000037,
+          "rawPointCount": 5,
+          "nativeOutcome": "unknown",
+          "nativeReason": "petered-out",
+          "nativeBasketId": null
+        },
+        {
+          "id": "center-legacy-plus15",
+          "recomputedLengthCanonicalPx": 37.000000000000085,
+          "recomputedBothEndpointOutsideLengthCanonicalPx": 0,
+          "rawPointCount": 5,
+          "nativeOutcome": "unknown",
+          "nativeReason": "petered-out",
+          "nativeBasketId": null
+        },
+        {
+          "id": "center-s5",
+          "recomputedLengthCanonicalPx": 64.74999999999996,
+          "recomputedBothEndpointOutsideLengthCanonicalPx": 37.0,
+          "rawPointCount": 8,
+          "nativeOutcome": "unknown",
+          "nativeReason": "petered-out",
+          "nativeBasketId": null
+        },
+        {
+          "id": "center-s5-minus15",
+          "recomputedLengthCanonicalPx": 37.00000000000012,
+          "recomputedBothEndpointOutsideLengthCanonicalPx": 0,
+          "rawPointCount": 5,
+          "nativeOutcome": "unknown",
+          "nativeReason": "petered-out",
+          "nativeBasketId": null
+        },
+        {
+          "id": "center-s5-plus15",
+          "recomputedLengthCanonicalPx": 46.25000000000004,
+          "recomputedBothEndpointOutsideLengthCanonicalPx": 9.250000000000039,
+          "rawPointCount": 6,
+          "nativeOutcome": "unknown",
+          "nativeReason": "petered-out",
+          "nativeBasketId": null
+        },
+        {
+          "id": "exit-legacy-plus1step",
+          "recomputedLengthCanonicalPx": 0,
+          "recomputedBothEndpointOutsideLengthCanonicalPx": 0,
+          "rawPointCount": 1,
+          "nativeOutcome": "unknown",
+          "nativeReason": "petered-out",
+          "nativeBasketId": null
+        },
+        {
+          "id": "exit-legacy-plus2step",
+          "recomputedLengthCanonicalPx": 0,
+          "recomputedBothEndpointOutsideLengthCanonicalPx": 0,
+          "rawPointCount": 1,
+          "nativeOutcome": "unknown",
+          "nativeReason": "petered-out",
+          "nativeBasketId": null
+        },
+        {
+          "id": "exit-s5-plus1step",
+          "recomputedLengthCanonicalPx": 0,
+          "recomputedBothEndpointOutsideLengthCanonicalPx": 0,
+          "rawPointCount": 1,
+          "nativeOutcome": "unknown",
+          "nativeReason": "ambiguous-fork",
+          "nativeBasketId": null
+        },
+        {
+          "id": "exit-s5-plus2step",
+          "recomputedLengthCanonicalPx": 9.249999999999986,
+          "recomputedBothEndpointOutsideLengthCanonicalPx": 9.249999999999986,
+          "rawPointCount": 2,
+          "nativeOutcome": "unknown",
+          "nativeReason": "petered-out",
+          "nativeBasketId": null
+        }
+      ]
+    },
+    {
+      "id": "F4",
+      "status": "confirmed",
+      "evidenceMode": "figure inspection + identical own rerender",
+      "finding": "Ten panel IDs, raw stop reasons, seeds and emitted coordinates correspond to receipt. Native points unchanged canonical; JPEG crop y+4 matches source frame; samples sourcePoint equals point+[0,4]. Own PNG equals original hash."
+    },
+    {
+      "id": "F5",
+      "status": "confirmed_negative",
+      "evidenceMode": "actual source recomputation",
+      "finding": "All10 remain UNKNOWN/noBasket. Four post-exit continuation lengths0,0,0,9.25px do not establish persistent route. S5-exit+1step reason ambiguous-fork remains literal, not relabeled support failure."
+    },
+    {
+      "id": "F6",
+      "status": "qualified",
+      "evidenceMode": "receipt/code/manifest inspection",
+      "finding": "Provider aggregate provenance metadata discrepancy remains preserved/qualified; file/hash controls do not prove upstream whole-commit identity. Current review adds one fresh-process repetition on this same machine, extending but not erasing C1 original same-process-only evidence boundary."
+    }
+  ],
+  "limits": [
+    "One exposed original JPEG and two unowned heading hints; no ground-truth route, endpoint identity, real-course association or human acceptance.",
+    "Fresh-process replay uses same exact implementation/runtime/platform; no independent algorithm implementation, cross-platform decoder equivalence or statistical generality claimed.",
+    "All UNKNOWN outcomes remain UNKNOWN; longer rawtrace is not route or ownership evidence.",
+    "Heading\u00b115degrees and outside seed+1/+2steps are frozen experimental counterfactuals, not accepted tuning constants.",
+    "Gateway internal field computation count not instrumented; reuse claim applies to final measurement.field shared by inspected twenty trace calls.",
+    "No C2/E305 heldout or evaluator access; C1/repository remained read-only; writes only within C4 review directory.",
+    "This is technical cross-review acceptance of scoped evidence, not Sam acceptance or algorithm promotion."
+  ]
+}

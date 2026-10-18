@@ -1,0 +1,85 @@
+{
+  "job_id": "R305",
+  "worker": "C1",
+  "decision": "accepted",
+  "summary": "Accepted for frozen synthetic-input/protocol integrity only. Independent reviewer replay of the exact frozen generator matched all 27 generated files byte-for-byte, including the fixture manifest; all 31 frozen entry hashes and lengths pass. Six construction contracts and private figure were independently reviewed. Staged chronology is consistent with local file metadata and worker/root testimony; it is not independently timestamp-attested. No C6 candidate was read or executed. Private case geometry remains withheld from this public summary.",
+  "scope": "Technical protocol/fixture review only; no candidate behavior, accuracy, real route, endpoint ownership or human acceptance.",
+  "commands": [
+    "cp discovery-cycle02/C2/heldout/generate.py discovery-cycle02/C1/review-R305/generate.py",
+    "python discovery-cycle02/C1/review-R305/review.py",
+    "view_image discovery-cycle02/C1/review-R305/generated/contactsheet.png",
+    "python construction relation checks (see construction-review.json)"
+  ],
+  "hashes": {
+    "C2ProtocolSha256": "42a2d4c5df8626df88a4ed72134c66e4462bca3f35b9123578280e02ffdf6cef",
+    "C2GeneratorSha256": "e51cee65c7f00bd3236fa55c7e3e65b3bf1372919d89f011980e1b3de6c3b9de",
+    "C2FreezeManifestSha256": "ca6049549ab188fd879c5913d6df5cc5f9f299eb83ca6c9afe09b31a61130ac0",
+    "freshFixtureManifestSha256": "81f33969a9e315c635d692ddf569caba37d6b8796ccffc4800f7b615ca34d38a",
+    "freshContactSheetSha256": "c08cd397684954e346513d9bd1a44a0d97f2b1d593b781d3e481ec95a0568e10",
+    "reviewProtocolSha256": "c26fda89dcd2c2a9874e2556b4dbf13117ce0c75571e14494332eac05c0ccc23",
+    "reviewCodeSha256": "82b2fc814591b30b47d9d32ae49e40f38a12ca612e5cc953faae21f387a8c684",
+    "identityReplaySha256": "b219efe5d442cfbc4e98469f1c36adf21e78ac529d4b87aead41853a3324e397",
+    "constructionReviewSha256": "265713dfaa74caaa688959580b1b537bc8b952189af229765c3d118b9a93d284",
+    "candidateSourceFreezeRootTestimony": "9ecd88635ed69ca8fb8e44ff044ac1e8fd704133c5687685b9a3114893ed9cd0"
+  },
+  "findings": [
+    {
+      "id": "integrity",
+      "decision": "pass",
+      "detail": "31/31 freeze entries actual SHA256 and bytes length equal; public C2 result hashes match frozen protocol/manifest; copied generator matches protocol pin."
+    },
+    {
+      "id": "replay",
+      "decision": "pass",
+      "detail": "Exact generator independently executed only inside reviewer-owned directory; 27/27 files equal original frozen bytes, including generated manifest and contactsheet."
+    },
+    {
+      "id": "contracts",
+      "decision": "pass",
+      "detail": "6/6 dimensions/raw RGBA lengths, PNG/RGBA equality, opaque alpha, grayscale RGB, known mask bboxes, query-to-construction relations, distinct positive finite width inputs and explicit construction/anchor labels pass. See private checks without exposing geometry."
+    },
+    {
+      "id": "controls",
+      "decision": "pass",
+      "detail": "Frozen classes offer positive, perturbation, negative, visibility and competing-evidence controls. Protocol preserves raw component evidence, unknown/fallback distinctions and ambiguity. They are input opportunities, not guaranteed candidate outcomes."
+    },
+    {
+      "id": "figure",
+      "decision": "pass",
+      "detail": "Independently inspected generated contactsheet with view_image; intended analytic shapes and preview marks visible. Preview marks are absent from evaluation raster; explicit construction labels prevent real-course truth claims."
+    },
+    {
+      "id": "chronology",
+      "decision": "qualified",
+      "detail": "Current local mtimes show protocol/generator before generated inputs, then validation/inspection, then freeze manifest and public result. Protocol has order assertions but no embedded UTC timestamp. No immutable external timestamp or independent no-inspection audit is present. Root scoped release asserts source freeze already exists. Scope remains procedural withholding only."
+    },
+    {
+      "id": "independence",
+      "decision": "qualified",
+      "detail": "Generator imports standard Python, NumPy, Pillow only; no candidate import. This reviewer read/executed no C6 candidate. Final files cannot independently prove historic noninspection by other agents."
+    },
+    {
+      "id": "coordinator-order-testimony",
+      "decision": "qualified",
+      "detail": "Root confirms C2 fixture-freeze hash ca6049549ab188fd879c5913d6df5cc5f9f299eb83ca6c9afe09b31a61130ac0 was announced before the C6 source-freeze message, and E305 completion preceded that source-freeze message. R305 guard release followed C6 source freeze 9ecd88635ed69ca8fb8e44ff044ac1e8fd704133c5687685b9a3114893ed9cd0. This is coordinator-observed event ordering/testimony, not independent cryptographic UTC proof."
+    }
+  ],
+  "limits": [
+    "Acceptance covers fixture/protocol integrity and same-environment replay only.",
+    "No C6 candidate execution until separate R306 authorization.",
+    "Shared filesystem means withholding is procedural, not technical isolation.",
+    "No independently certified chronology or candidate-unseen audit.",
+    "Deterministic PNG reproduction verified in current NumPy/Pillow/runtime; cross-version/architecture behavior unproven.",
+    "Synthetic construction is not real-course accuracy, physical corridor identity, meter scale, endpoint ownership or human acceptance.",
+    "Actual candidate outputs may expose fewer channels than evaluation plan requests; report unavailable rather than inventing them.",
+    "Private geometry details are in reviewer-owned generated fixtures and construction evidence; public summary omits them."
+  ],
+  "evidence": {
+    "protocol": "protocol.json",
+    "checks": "identity-and-replay.json",
+    "constructionChecks": "construction-review.json",
+    "freshOutputs": "generated",
+    "generatorStdout": "generator.stdout.json"
+  },
+  "nextGuardedAction": "Root may allocate R306 against exact frozen candidate and these unchanged inputs; preserve raw receipts and honest unavailable/nonfinite/UNKNOWN channels."
+}

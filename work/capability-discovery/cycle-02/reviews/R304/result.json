@@ -1,0 +1,249 @@
+{
+  "schema": "discovery-independent-review@1",
+  "job_id": "R304",
+  "worker": "C3",
+  "reviewedJob": "E304",
+  "reviewedWorker": "C4",
+  "decision": "accepted",
+  "summary": "Independent C3 prepare/probe/render replay reproduced all four frozen checks, all eight support/pair denominators, and byte-identical prepared.json, measurements.json and figure. Three source SHA256/Git blobs and13 packet-manifest entries verified. Crossing candidates both length240px, support36/41, pairs38/41 and observed midpoint offset0; only bend count differs1vs0. Conditional means exclude missing pairs; wrong expected width retains all41 pair failures UNKNOWN and null conditional means. One result-only arithmetic typo (27 missing pairs) was reported and C4 corrected it to23; revised result hash verified. Accepted only as exposed synthetic composition evidence, without ranking, calibrated confidence, path identity, global scale or real-course acceptance.",
+  "commands": [
+    "python discovery-cycle02/C3/review-R304/replay/prepare.py > discovery-cycle02/C3/review-R304/prepare.log",
+    "node discovery-cycle02/C3/review-R304/replay/probe.mjs > discovery-cycle02/C3/review-R304/probe.log",
+    "python discovery-cycle02/C3/review-R304/replay/render.py > discovery-cycle02/C3/review-R304/render.log",
+    "python discovery-cycle02/C3/review-R304/verify.py > discovery-cycle02/C3/review-R304/verification.log"
+  ],
+  "hashes": {
+    "reviewedFinalResultSha256": "f4a4ce6e3b424aed178e8bc9cf3563b9d05bbef4471846c725dce5a4e6f69bbd",
+    "protocolSha256": "02a5eb8eddb8d091fa0df123be8d667b4d96ae16d55c6768f884b2d3f89d5a04",
+    "originalMeasurementsSha256": "fa58352b93cae32e7035ccd0bc1a8bc3799e33fda746f84abb579c732612a63a",
+    "replayMeasurementsSha256": "fa58352b93cae32e7035ccd0bc1a8bc3799e33fda746f84abb579c732612a63a",
+    "originalFigureSha256": "225e8f9a0dd30c72ad52ff9fcb92a048384a0d3d36953a576025636d180e707a",
+    "replayFigureSha256": "225e8f9a0dd30c72ad52ff9fcb92a048384a0d3d36953a576025636d180e707a",
+    "verificationScriptSha256": "b190975f0540a20d8a290ba48818f23fc917dce06dee9f5b7c32d5043030a3bf",
+    "sourceAndManifest": [
+      {
+        "file": "protocol.json",
+        "sha256": "02a5eb8eddb8d091fa0df123be8d667b4d96ae16d55c6768f884b2d3f89d5a04",
+        "verified": true
+      },
+      {
+        "file": "protocol.sha256",
+        "sha256": "5df3b73922d653d600233d6560d838b68b93c63c66fba353e84c2f697eea2417",
+        "verified": true
+      },
+      {
+        "file": "prepare.py",
+        "sha256": "aa269d28b5d830e269b8111ce2e456fccde9b9292e3f2b02adfe3817779d67ec",
+        "verified": true
+      },
+      {
+        "file": "probe.mjs",
+        "sha256": "c4fc2a6f597d41530e615841e6dd1c859a37962b18ef12c0951e16dedf515e63",
+        "verified": true
+      },
+      {
+        "file": "render.py",
+        "sha256": "ce4194d166cdd139f9eecc7907e55477aac0b0fda207c181e2394bb60f8780df",
+        "verified": true
+      },
+      {
+        "file": "README.md",
+        "sha256": "125e62c9339cd4d46ba74d0c1efe92654ba7c7ec64343333a23709be7adb5f2f",
+        "verified": true
+      },
+      {
+        "file": "prepared.json",
+        "sha256": "c5c4589737163ac5e25e55d09624cda36c98d6f072f20865c70c4a24eafc84d0",
+        "verified": true
+      },
+      {
+        "file": "measurements.json",
+        "sha256": "fa58352b93cae32e7035ccd0bc1a8bc3799e33fda746f84abb579c732612a63a",
+        "verified": true
+      },
+      {
+        "file": "execution.log",
+        "sha256": "18878f7f862cdbd9075f38e0c3ecfd00edfce9a54cb739228291873b3f8e8029",
+        "verified": true
+      },
+      {
+        "file": "route-composition.png",
+        "sha256": "225e8f9a0dd30c72ad52ff9fcb92a048384a0d3d36953a576025636d180e707a",
+        "verified": true
+      },
+      {
+        "file": "vendor/path-geometry.mjs",
+        "sha256": "ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34",
+        "verified": true
+      },
+      {
+        "file": "vendor/fourLaneRibbon.ts",
+        "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+        "verified": true
+      },
+      {
+        "file": "vendor/hallway-track.py",
+        "sha256": "83a1e85c032669c383845d9c3dd98ae9559f2d67457ffa63d3354d0707622bc6",
+        "verified": true
+      }
+    ]
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "verified",
+      "finding": "All eight actual denominators and numerators independently recomputed from source observations/edge samples; no hidden substitution of total denominator for observed support denominator.",
+      "evidence": [
+        {
+          "id": "shortcut/curvy-center",
+          "samples": 65,
+          "supportNumerator": 45,
+          "supportObservedDenominator": 65,
+          "supportUnknown": 0,
+          "pairedNumerator": 53,
+          "pairedTotalDenominator": 65,
+          "edgeUnknown": 12,
+          "conditionalMidpointDenominator": 53,
+          "conditionalMeanOffsetPx": 0.0,
+          "turnCount": 4,
+          "lengthPx": 380
+        },
+        {
+          "id": "shortcut/straight-unsupported",
+          "samples": 41,
+          "supportNumerator": 16,
+          "supportObservedDenominator": 41,
+          "supportUnknown": 0,
+          "pairedNumerator": 18,
+          "pairedTotalDenominator": 41,
+          "edgeUnknown": 23,
+          "conditionalMidpointDenominator": 18,
+          "conditionalMeanOffsetPx": 0.0,
+          "turnCount": 0,
+          "lengthPx": 240
+        },
+        {
+          "id": "offset/center",
+          "samples": 41,
+          "supportNumerator": 41,
+          "supportObservedDenominator": 41,
+          "supportUnknown": 0,
+          "pairedNumerator": 41,
+          "pairedTotalDenominator": 41,
+          "edgeUnknown": 0,
+          "conditionalMidpointDenominator": 41,
+          "conditionalMeanOffsetPx": 0.0,
+          "turnCount": 0,
+          "lengthPx": 240
+        },
+        {
+          "id": "offset/offset-8px",
+          "samples": 41,
+          "supportNumerator": 0,
+          "supportObservedDenominator": 41,
+          "supportUnknown": 0,
+          "pairedNumerator": 41,
+          "pairedTotalDenominator": 41,
+          "edgeUnknown": 0,
+          "conditionalMidpointDenominator": 41,
+          "conditionalMeanOffsetPx": 8.0,
+          "turnCount": 0,
+          "lengthPx": 240
+        },
+        {
+          "id": "crossing/turn-to-designated-end",
+          "samples": 41,
+          "supportNumerator": 36,
+          "supportObservedDenominator": 41,
+          "supportUnknown": 0,
+          "pairedNumerator": 38,
+          "pairedTotalDenominator": 41,
+          "edgeUnknown": 3,
+          "conditionalMidpointDenominator": 38,
+          "conditionalMeanOffsetPx": 0.0,
+          "turnCount": 1,
+          "lengthPx": 240
+        },
+        {
+          "id": "crossing/straight-other-end",
+          "samples": 41,
+          "supportNumerator": 36,
+          "supportObservedDenominator": 41,
+          "supportUnknown": 0,
+          "pairedNumerator": 38,
+          "pairedTotalDenominator": 41,
+          "edgeUnknown": 3,
+          "conditionalMidpointDenominator": 38,
+          "conditionalMeanOffsetPx": 0.0,
+          "turnCount": 0,
+          "lengthPx": 240
+        },
+        {
+          "id": "width-alias/width40-hypothesis",
+          "samples": 41,
+          "supportNumerator": 41,
+          "supportObservedDenominator": 41,
+          "supportUnknown": 0,
+          "pairedNumerator": 41,
+          "pairedTotalDenominator": 41,
+          "edgeUnknown": 0,
+          "conditionalMidpointDenominator": 41,
+          "conditionalMeanOffsetPx": 0.0,
+          "turnCount": 0,
+          "lengthPx": 240
+        },
+        {
+          "id": "width-alias/width30-hypothesis",
+          "samples": 41,
+          "supportNumerator": 0,
+          "supportObservedDenominator": 41,
+          "supportUnknown": 0,
+          "pairedNumerator": 0,
+          "pairedTotalDenominator": 41,
+          "edgeUnknown": 41,
+          "conditionalMidpointDenominator": 0,
+          "conditionalMeanOffsetPx": null,
+          "turnCount": 0,
+          "lengthPx": 240
+        }
+      ]
+    },
+    {
+      "id": "F2",
+      "severity": "verified",
+      "finding": "Crossing equal evidence and equal length with differing turn count is reproduced. A fewer-bend preference would choose the competing constructed endpoint; this proves association ambiguity only, not a correct ranker."
+    },
+    {
+      "id": "F3",
+      "severity": "verified",
+      "finding": "Conditional midpoint averages use only observed paired-edge samples. Shortcut mean0 excludes23 UNKNOWN pairs; curvy mean0 excludes12. Wrong-width case has0/41 pairs and null means, not zero."
+    },
+    {
+      "id": "F4",
+      "severity": "verified",
+      "finding": "Declared outgoing-segment heading matches every sample; final sample uses incoming heading; no duplicate consecutive sample points. Original vertices determine geometry runs/turns; densified vertices supply observations. Signed turn is atan2(cross,dot) in x-right/y-down axes and is not a calibrated physical bend detector."
+    },
+    {
+      "id": "F5",
+      "severity": "limitation",
+      "finding": "Exact source operations retain different samplers: hallway profile caller adapter uses float64 scipy order1 linear interpolation, mode=nearest boundary; Dev72 grayAt uses nearest integer Math.round. This is a declared seam, not numeric parity of sensor and profile or validation of historical Course adapter. Axis-aligned fixtures, outgoing corner tangent, finite profile reach, caller width hypothesis and per-station weighting bound conclusions."
+    },
+    {
+      "id": "F6",
+      "severity": "verified",
+      "finding": "Original scientific figure inspected with view_image and regenerated byte-identically. Titles match all measured counts; wrong-width mean shown UNKNOWN. Coincident width-alias paths make later purple station dots cover earlier yellow dots; numeric titles preserve the two actual support fractions. This is visual overplotting, not contrary data."
+    },
+    {
+      "id": "F7",
+      "severity": "closed_amendment",
+      "finding": "Result-only sentence incorrectly said27 missing pairs for18/41 observed. C4 corrected to23; revised result SHA verified. Measurement, protocol, source and figure unchanged."
+    }
+  ],
+  "limits": [
+    "Technical independent review only; not Sam acceptance.",
+    "Only exposed E304 synthetic packet read; no C2 heldout or C6 candidate access.",
+    "Own replay writes only C3/review-R304; C4 and source repository read-only.",
+    "No calibrated ranking or threshold is established by frozen .5 support cutoff,1degree turn predicate,3px width tolerance,12px center gate,6px station sampling, or candidate width hypotheses.",
+    "The figures and denominators measure the same constructed rasters; repeated computation is reproducibility, not independent physical evidence."
+  ]
+}

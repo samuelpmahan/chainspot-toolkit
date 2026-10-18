@@ -1,0 +1,60 @@
+{
+  "schema": "c1-badge-exit-counterfactual-protocol@1",
+  "job_id": "E301",
+  "worker": "C1",
+  "frozenAtUtc": "2026-10-18T08:57:15.410763+00:00",
+  "scope": "IMG_5641 badge-9 tee-7 only; ten unique trace variants; source repository readonly",
+  "preExecution": true,
+  "prediction": "If failure is predominantly initial badge-occlusion transit, explicit seeds just beyond the badge along a heading may prolong outside-badge support relative to the center trace. If all post-exit traces promptly peter out, this weakens an initial-transit-only explanation. Longer traces still do not establish a physical route.",
+  "falsifier": "No outside-seed continuation, or continuation that remains short and UNKNOWN, fails to establish persistent route evidence. Sensitivity to \u00b115 degrees or one-step seed displacement weakens robustness. NoBasket/UNKNOWN remains literal native output.",
+  "parameters": {
+    "centerHeadings": "legacy; legacy \u00b115 degrees; S5; S5 \u00b115 degrees",
+    "outsideSeedHeadings": [
+      "legacy",
+      "S5"
+    ],
+    "outsideSeedDistancesBeyondBboxExitPx": [
+      9.25,
+      18.5
+    ],
+    "gridStatus": "experimental counterfactual choices, never accepted physical/tuning constants",
+    "field": "the single measurement.field returned by unchanged runThreeFactor gateway; unchanged support/bestTheta shared across all calls",
+    "nativeStepPx": 9.25,
+    "fieldScale": 3,
+    "supportTau": 0.5,
+    "corridorWidthPx": 37,
+    "otherArgs": "same source badges, baskets, viewport, max trace diagonal; no synthetic endpoint",
+    "repeat": "two identical tracer calls per unique variant for exact JSON determinism; no extra field computation"
+  },
+  "sourceFrame": {
+    "canonicalToOriginalSourceTranslationPx": [
+      0,
+      4
+    ],
+    "allTraceAndSeedUnits": "canonical pixels; original source shown by adding [0,4]",
+    "bboxExit": "ray from canonical badge center to bbox boundary, then add 1 or 2 native steps; startBadgeBbox remains original bbox"
+  },
+  "controls": {
+    "priorBaseline": "../../discovery-swarm/W2/baseline-native.json",
+    "priorS5": "../../discovery-swarm/W2/heading-native.json",
+    "requireExactControlTrace": true,
+    "requireExactPriorFieldHashes": true
+  },
+  "limits": [
+    "one exposed image only; no ground truth",
+    "S5 row is unowned geometry hint; basket reference only selects exact prior row, never endpoint ownership",
+    "No E305 heldout read",
+    "No additional courses unless original gateway/source contract is actually available",
+    "Gateway internals may compute fields; only its final measurement field is reused; no new per-variant field computation",
+    "Library ownership and human acceptance untested"
+  ],
+  "sources": {
+    "original-width-probe.mjs": "c16d4ad32d78f094fede013d1fd09f3891be7cdecd1d455fc73aa6a04cdfe41d",
+    "s5-row.json": "1117c583dc87e861d7de237a2d6f86b72041925d3b1d44c42b0534dc68683fc8",
+    "provider/REPLAY-PROVENANCE.json": "424605c9166a9e011484b150cad32fb83c817bf70a51cf22080ae27cca415160",
+    "provider/packages/alg/dist/detectors/threeFactor/index.js": "65289bedd1af4a3cf3f6b563799821ce578ed975277a1122cbfb660b3e1cb41e",
+    "provider/packages/alg/dist/detectors/threeFactor/ribbon.js": "25635c2682a1f5ee3d3253207dcf6ba930ad23f968ac0bd316de1103391b8bc3",
+    "provider/packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLockMath.js": "14f6147fbf98a57ff624acc86ef34cb9cbe2ae9e6d9d4537eb7111e7d49a12ed",
+    "provider/artifacts/replay/source/IMG_5641.jpg": "e6616738640eee1d05d8cc2b59dd657f24b4a5a01dc2f68571b7e44c6f372b8a"
+  }
+}

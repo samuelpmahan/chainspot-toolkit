@@ -1,0 +1,20 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {runComposition} from './recipe.mjs';
+import {lumOf,profileAt,edgePairOf} from '../probes/width/vendor/active/ports/s6straight/pathSpace.mjs';
+test('decimal candidate bank fits only its exact requested width and source tolerance',()=>{
+ const input=JSON.parse(readFileSync(new URL('../../../work/capability-discovery/cycle-02/evidence/E308/counterexample-input.json',import.meta.url)));
+ const data=Uint8Array.from(input.image.data);
+ assert.equal(createHash('sha256').update(data).digest('hex'),'c7e2a37bd34d81ec3cff97bf99cf3de13d65f852b2f708b81010debe23096f6c');
+ assert.deepEqual(input.localWidthBank.valuesPx,[31.01]);assert.equal(input.edgeSearch.tolWidthPx,1);
+ const raster={widthPx:input.image.width,heightPx:input.image.height,rgba:data},s=input.stations[0];
+ const ctx={W:raster.widthPx,H:raster.heightPx,lum:lumOf(raster),mask:null};
+ const profile=profileAt(ctx,[s.xPx,s.yPx],s.headingRad,s.t0Px,s.t1Px);
+ const exactSource=edgePairOf(profile,31.01,{tolW:1,latLim:12});assert.equal(exactSource,null);
+ const result=runComposition(input),candidate=result.stations[0].candidates[0];
+ assert.equal(result.stations[0].candidates.length,1);
+ assert.deepEqual(candidate.edgeFit,exactSource,'caller must not admit a second implicit width32.01');
+ assert.equal(candidate.midpoint.status,'UNKNOWN');assert.equal(result.localWidth.status,'UNKNOWN');assert.equal(result.localWidth.widthPx,null);assert.equal(result.promoted,false);assert.equal(result.semanticIdentity.status,'UNKNOWN');
+});

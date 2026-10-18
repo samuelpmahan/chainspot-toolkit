@@ -1,0 +1,78 @@
+{
+  "schema": "R302-independent-comparison@1",
+  "receiptByteIdentical": true,
+  "stdoutByteIdentical": true,
+  "independentRasterConstruction": [
+    {
+      "id": "corridor40",
+      "sha256": "a2a3b7ef1a2c066eaacf2403eb849f691956aed3e035d29ae6a0250d0fe3ffed",
+      "independentConstructionMatch": true
+    },
+    {
+      "id": "corridor30",
+      "sha256": "f0bb4f51e2790116d27c4ba530a395783172166b0fb08ebc719f6417512d5562",
+      "independentConstructionMatch": true
+    },
+    {
+      "id": "center-shift8",
+      "sha256": "3015ff71d1b7c31437e22b7b2676a348f5c1d0c73ee8de4e8c6402a4690f6834",
+      "independentConstructionMatch": true
+    },
+    {
+      "id": "ragged",
+      "sha256": "6787aae06f9127c22957d64382713afbec79c895a2de54c5382f2786e97cf405",
+      "independentConstructionMatch": true
+    },
+    {
+      "id": "large-ellipse",
+      "sha256": "dbf4dd477fab5d5acc1fe7a89a73ab0f420692eed8bc2dbde8899719f862f03b",
+      "independentConstructionMatch": true
+    },
+    {
+      "id": "capsule-patch",
+      "sha256": "98cc1cf6b86667867e228ea60c33c928034b555d3a9ba2448ae517cc5271dd3f",
+      "independentConstructionMatch": true
+    },
+    {
+      "id": "crossing",
+      "sha256": "55e93b92dab84f536a6743bb3eae4f8de87bc54acd4d5e6b6e98259e5dab3a30",
+      "independentConstructionMatch": true
+    }
+  ],
+  "resultRawMeasurementIdentity": "all 7 condensed rows and 35 stations match exact receipt",
+  "capsule": {
+    "fullImagesDiffer": true,
+    "globalAndEveryStationEqualExactly": true
+  },
+  "crossing": {
+    "globalWidthSourcePx": 40,
+    "bankMeanAt40": 0.8,
+    "centralStationXSourcePx": 150,
+    "centralPair": null,
+    "centralCombined": 0
+  },
+  "shift": {
+    "constructionTranslationSourcePx": 8,
+    "baselineEdgeMidpointImageYPx": 99.5,
+    "shiftedEdgeMidpointImageYPx": 107.5,
+    "normalOffsetRelativeAssertedY100Px": 7.5,
+    "recenteredScoreEachStation": 1,
+    "rawWidthBankAllZeroDespiteFiveVisibleSamples": true
+  },
+  "ragged": {
+    "globalWidthSourcePx": 29.23780487804878,
+    "stationWidthsSourcePx": [
+      29.025862068965516,
+      47.875,
+      47.875,
+      29.057692307692307,
+      35.875
+    ]
+  },
+  "corridor40RawTiedWidthCandidatesPx": [
+    40,
+    42
+  ],
+  "sourceExecution": "pathSpace profile/edge/width/stationContrast and Dev72 observe/estimate executed; provider integrity checked only",
+  "existingFigure": "view_image inspected; station gap, shift offset, capsule equality, broad ellipse absence and explicit W40 channel reference visible"
+}

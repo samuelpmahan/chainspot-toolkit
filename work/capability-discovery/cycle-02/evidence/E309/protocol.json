@@ -1,0 +1,113 @@
+{
+  "schema": "E309-AA-sampler-seam-protocol@1",
+  "job_id": "E309",
+  "worker": "C1",
+  "frozenUtc": "2026-10-18T09:09:24.434569+00:00",
+  "status": "frozen-before-first-new-fixture-execution",
+  "scope": "EXPOSED independent simple synthetic sampler seam falsifier; not heldout",
+  "fixtures": {
+    "count": 16,
+    "widthPx": [
+      30,
+      40
+    ],
+    "ribbonCenterPhasePx": [
+      0,
+      0.25,
+      0.5,
+      0.75
+    ],
+    "rasterModes": [
+      "crisp-point",
+      "analytic-coverage-AA"
+    ],
+    "dimensionsPx": [
+      160,
+      160
+    ],
+    "coordinateConvention": "source pixel centers at integer x,y; source samplers Math.round or bilinear as original APIs",
+    "centerYPx": "80 + ribbonCenterPhasePx",
+    "nominalStrip": "infinite horizontal ribbon; yLower=centerY\u2212width/2, yUpper=centerY+width/2; all x in raster",
+    "crispEquation": "coverage(y)=1 iff yLower <= integer y < yUpper, else0; half-open convention explicit",
+    "AAEquation": "coverage(y)=max(0,min(y+0.5,yUpper)\u2212max(y\u22120.5,yLower)); pixel footprint width1 px; no multisample approximation",
+    "quantization": "RGBA=[floor(100+45*coverage+0.5)] repeated RGB, alpha255; no alpha muting",
+    "widthDefinitions": {
+      "nominalWidthPx": "construction width parameter; source px",
+      "nonzeroRasterSpanPx": "count rows with stored RGB>100; support span, not physical width",
+      "fullyBrightRowsPx": "count rows storedRGB=145",
+      "integratedRasterContrastWidthPx": "sum_y (storedRGB\u2212100)/45; quantized radiometric area width",
+      "bilinearHalfLevelEdgeSeparationPx": "distance of left/right crossings of122.5 in linear interpolation of stored row luminance; diagnostic, not source edge fit",
+      "fittedEdgeWidthPx": "literal edgePairOf wPx from original smoothed-gradient source API"
+    }
+  },
+  "query": {
+    "sampleCenterPhasePx": [
+      0,
+      0.25,
+      0.5,
+      0.75
+    ],
+    "state": "x80,y80+samplePhase,heading0; width varies over same bank",
+    "segment": "tee[30,80+samplePhase] badge[130,80+samplePhase]; abstract construction anchors only",
+    "profile": "origin[30,80+samplePhase],phi0,t0=0,t1=100,step1,lat0=0; original OFFS \u221230..30 step.25",
+    "widthBankPx": [
+      24,
+      30,
+      32,
+      36,
+      40,
+      48
+    ],
+    "edgePairOptions": "original defaults tolW3 latLim12 minOk source EVIDENCE",
+    "occluders": "empty; no masks; alpha255"
+  },
+  "predictions": [
+    "Crisp integer point raster may remain unchanged across some fractional ribbon shifts and jump at a seam; AA may vary smoothly in stored levels but quantization can preserve plateaus.",
+    "Dev72 nearest samples may change discontinuously as query phase crosses a rounding boundary; bilinear profiles may vary between integer rows. Neither sampling mode is presumed more accurate.",
+    "Numeric Dev72 selected width may be tied across raw width scores. Preserve exact winning rows and label strict-identifiability UNKNOWN when no strict finite best.",
+    "Source edge fit may be stable or vary under AA and subpixel shifts; no assumed AA improvement, calibration confidence or physical accuracy."
+  ],
+  "falsifiers": [
+    "all same-source profiles/channels invariant across phases weakens phase-sensitivity prediction",
+    "AA equal-or-worse descriptive fit/score variation falsifies any blanket AA-stability-benefit hypothesis",
+    "all tied raw scores defeat unique learned-width interpretation regardless numeric legacy return",
+    "any failed or null fit stays native absent/UNKNOWN, never filled from nominal construction"
+  ],
+  "sources": [
+    {
+      "file": "vendor/active/ports/s6straight/pathSpace.mjs",
+      "origin": "chainspot-toolkit",
+      "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "sourcePath": "ports/s6straight/pathSpace.mjs",
+      "gitBlob": "38963d20f7a8b7c7851b3a2abea2e472da8f7716",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "adaptation": "path/extension only; content byte-identical"
+    },
+    {
+      "file": "vendor/active/contracts/alpha.profile@1.mjs",
+      "origin": "chainspot-toolkit",
+      "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "sourcePath": "contracts/alpha.profile@1.mjs",
+      "gitBlob": "6f50530ff8f7d5c613ee739224d475657fcbf647",
+      "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+      "adaptation": "path/extension only; content byte-identical"
+    },
+    {
+      "file": "vendor/dev72/fourLaneRibbon.ts",
+      "origin": "samuelpmahan/ChainSpot",
+      "ref": "ef2a4fc2dc4720d3647f705464342f119d5a39a5",
+      "sourcePath": "src/lib/nuthing/fourLaneRibbon.ts",
+      "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+      "adaptation": "none; exact independently fetched source; Node builtin type stripping"
+    }
+  ],
+  "limits": [
+    "<=16 deterministic construction fixtures only;64 explicit pose rows; no production detector or threshold added",
+    "Source bank/knobs are existing algorithm inputs, never accepted physical/calibration constants",
+    "Only synthetic grayscale flat background; no texture, rotation, occlusion, routes or endpoints",
+    "Construction math and width diagnostics are fixture descriptions, not new detector signal",
+    "No C2/C6 candidate reading; no old probe execution; no S7 defaults or AA muting",
+    "Same process repeat verifies deterministic outputs only, not cross-runtime reproducibility"
+  ]
+}

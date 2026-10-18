@@ -1,0 +1,25 @@
+{
+  "schema": "tee-badge-width-transfer-exploration@1",
+  "job_id": "E303", "worker": "C5", "exposure": "ALL EXPOSED; procedural C2 evaluation not accessed",
+  "scope": "10 deterministic independently constructed training/evaluation raster pairs; software falsifiers only",
+  "candidateWidthsPx": [20,30,40,50,60],
+  "image": {"width":256,"height":256,"backgroundRgb":100,"ribbonRgb":145,"organicRgb":190,"centerPx":[128,128],"strictBoundary":"abs(normal)<nominalWidth/2; finite tangent span abs(t)<110"},
+  "training": {"teeTpx":-60,"badgeTpx":60,"sourceFractions":[0.2,0.35,0.5,0.65,0.78],"widthProfileTpx":[-40,40],"sourceOptions":{}},
+  "evaluation": {"independentConstruction":true,"stationTpx":[-43,-11,23,47],"widthProfileTpx":[-50,50],"sourceOptions":{},"edgePairArguments":{"tolW":3,"latLim":3},"freeWidthSearchArguments":{"widths":[18,60,1],"tolW":0.75,"latLim":3}},
+  "bilinearMeasurement": {"normalScanPx":[-70,70,0.05],"edgeLevel":"midpoint background/object RGB","referent":"direct normal half-level crossing separation per evaluation station; not fitted width or uncertainty"},
+  "cases": [
+    {"id":"clean30","trainWidth":30,"evalWidth":30,"trainDeg":0,"evalDeg":0,"prediction":"width30 unique; direct and fitted evaluation width29; transferred score high"},
+    {"id":"clean40-rotation","trainWidth":40,"evalWidth":40,"trainDeg":0,"evalDeg":37,"prediction":"width40 transfers; raster sampling changes fit slightly"},
+    {"id":"clean50-rotation","trainWidth":50,"evalWidth":50,"trainDeg":11,"evalDeg":-28,"prediction":"width50 transfers approximately; no global scale inferred"},
+    {"id":"local-width-change","trainWidth":30,"evalWidth":46,"trainDeg":0,"evalDeg":0,"prediction":"training30 does not transfer; free evaluation fit45, width-constrained edgepair absent or weak"},
+    {"id":"offset-transfer","trainWidth":30,"evalWidth":30,"trainDeg":0,"evalDeg":0,"evalOriginNormalOffset":4,"prediction":"correct local width but off-center four-lane score can be zero and default center gate can reject"},
+    {"id":"organic-training-false-width","trainWidth":40,"evalWidth":30,"trainDeg":0,"evalDeg":0,"trainKind":"ellipse","prediction":"bright finite ellipse may give uniquely strong width40 despite no training ribbon; width40 fails on true evaluation30"},
+    {"id":"organic-evaluation-false-positive","trainWidth":30,"evalWidth":30,"trainDeg":0,"evalDeg":0,"evalKind":"ellipse","prediction":"learned30 may receive strong paired scores on non-ribbon organic ellipse; width agreement cannot prove renderer identity"},
+    {"id":"rails-occluded-transfer","trainWidth":30,"evalWidth":30,"trainDeg":0,"evalDeg":0,"evalOcclusion":"rails","prediction":"inner combined score may remain1 while railScore unknown; masked edge evidence cannot certify width"},
+    {"id":"training-all-hidden","trainWidth":40,"evalWidth":40,"trainDeg":0,"evalDeg":0,"trainOcclusion":"all","prediction":"legacy first candidate20 despite no visible training samples; must abstain"},
+    {"id":"training-zero-lift-tie","trainWidth":40,"evalWidth":40,"trainDeg":0,"evalDeg":0,"trainRgb":100,"prediction":"all zero candidate scores tie; legacy20 must abstain even when evaluation has a ribbon"}
+  ],
+  "falsifier":"A strictly separated high source score on a non-ribbon ellipse, a width change between independently constructed stations, or offset rejection defeats unconditional width transfer/confidence.",
+  "decisionPolicy":"Diagnostic row summary only. No calibrated confidence thresholds, heldOutCheck flag, ELIGIBLE status or width promotion. Existing assessLocalWidth cannot be satisfied by exposed stations; caller confidence policy remains unratified.",
+  "limits":["Synthetic grayscale geometry is not course accuracy, physical scale, endpoint identity or organic rejection.","Dev72 nearest-neighbor bands and pathSpace bilinear profiles are distinct source channels.","All station outputs remain exposed exploration; no C2 access."]
+}

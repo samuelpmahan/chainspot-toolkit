@@ -1,0 +1,875 @@
+{
+  "status": "PASS",
+  "frameConversion": "all anchor/query coordinates exactly frozen minus(.5,.5); unchanged vectors, headings, windows and banks",
+  "maskConversion": "all7 adapted unavailable integer pixel sets exactly match frozen masks; half-open widths become inclusive extent width\u22121; no continuous-mask equivalence claimed",
+  "sourceClosureFiles": 9,
+  "immutableSourceIdentitiesVerified": 4,
+  "candidateManifestSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+  "rawFalsificationMeasurements": [
+    {
+      "id": "C2-01-declared-mask",
+      "status": "OBSERVED_CHANNELS",
+      "rawWidthEstimate": {
+        "widthPx": 32,
+        "scores": [
+          {
+            "widthPx": 24,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 32,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 48,
+            "meanScore": 0.005333333333333283,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 56,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "widthPx": 24,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 0.6,
+          "combinedScore": 0,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 32,
+          "railMode": "paired",
+          "railScore": 1,
+          "innerScore": 1,
+          "combinedScore": 1,
+          "edgeFit": {
+            "lPx": -16,
+            "rPx": 16,
+            "cPx": 0,
+            "wPx": 32,
+            "score": 44,
+            "gl": 44,
+            "gr": 44
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": 0,
+            "candidateCenterMinusFitMidpointPx": 0,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 40,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 1,
+          "combinedScore": 0,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 48,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 1,
+          "combinedScore": 0,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 56,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 1,
+          "combinedScore": 0,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        }
+      ],
+      "receiptSha256": "d4460af91d89721f37b4cd1e76e3bdd2a7e845eeba9446a4126bc844751d963b"
+    },
+    {
+      "id": "C2-02-declared-mask",
+      "status": "OBSERVED_CHANNELS",
+      "rawWidthEstimate": {
+        "widthPx": 48,
+        "scores": [
+          {
+            "widthPx": 24,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 32,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 48,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 56,
+            "meanScore": 0.005333333333333346,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "widthPx": 24,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 0,
+          "combinedScore": 0,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 32,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 0,
+          "combinedScore": 0,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 40,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 1,
+          "combinedScore": 0,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 48,
+          "railMode": "paired",
+          "railScore": 1,
+          "innerScore": 1,
+          "combinedScore": 1,
+          "edgeFit": {
+            "lPx": -23.99900394383078,
+            "rPx": 24.002055461648833,
+            "cPx": 0.001525758909027175,
+            "wPx": 48.00105940547961,
+            "score": 33.91311863349378,
+            "gl": 33.96735983517158,
+            "gr": 33.91311863349378
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": 0.001525758909027175,
+            "candidateCenterMinusFitMidpointPx": -0.001525758909027175,
+            "candidateCenterMinusFitMidpointInNominalWidths": -3.178664393806615e-05,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 56,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 1,
+          "combinedScore": 0,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        }
+      ],
+      "receiptSha256": "3da5d20504821ce2d0ff77ab4cd59bf4e828548d1e3c0422b291a1539da9c743"
+    },
+    {
+      "id": "C2-03-declared-mask",
+      "status": "OBSERVED_CHANNELS",
+      "rawWidthEstimate": {
+        "widthPx": 32,
+        "scores": [
+          {
+            "widthPx": 24,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 32,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0.006222222222222248,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 48,
+            "meanScore": 0.007111111111111149,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 56,
+            "meanScore": 0.0044444444444444444,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "widthPx": 24,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 0.6244444444444444,
+          "combinedScore": 0,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 32,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 1,
+          "combinedScore": 0,
+          "edgeFit": {
+            "lPx": -20.49641727842364,
+            "rPx": 11.49936087570988,
+            "cPx": -4.498528201356879,
+            "wPx": 31.995778154133518,
+            "score": 33.599140032736074,
+            "gl": 33.72127344343488,
+            "gr": 33.599140032736074
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -4.498528201356879,
+            "candidateCenterMinusFitMidpointPx": 4.498528201356879,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0.14057900629240247,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 40,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 1,
+          "combinedScore": 0,
+          "edgeFit": {
+            "lPx": -20.49641727842364,
+            "rPx": 22.481724379072833,
+            "cPx": 0.9926535503245972,
+            "wPx": 42.97814165749647,
+            "score": 0.03941028742625008,
+            "gl": 33.72127344343488,
+            "gr": 0.03941028742625008
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": 0.9926535503245972,
+            "candidateCenterMinusFitMidpointPx": -0.9926535503245972,
+            "candidateCenterMinusFitMidpointInNominalWidths": -0.024816338758114932,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 48,
+          "railMode": "paired",
+          "railScore": 0.022222222222222223,
+          "innerScore": 0.8274074074074075,
+          "combinedScore": 0.022222222222222223,
+          "edgeFit": {
+            "lPx": -20.49641727842364,
+            "rPx": 28.44959884032645,
+            "cPx": 3.9765907809514047,
+            "wPx": 48.94601611875009,
+            "score": 0.04318932106261286,
+            "gl": 33.72127344343488,
+            "gr": 0.04318932106261286
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": 3.9765907809514047,
+            "candidateCenterMinusFitMidpointPx": -3.9765907809514047,
+            "candidateCenterMinusFitMidpointInNominalWidths": -0.08284564126982093,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 56,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 0.7999999999999997,
+          "combinedScore": 0,
+          "edgeFit": {
+            "lPx": -26.418813485449764,
+            "rPx": 28.44959884032645,
+            "cPx": 1.0153926774383422,
+            "wPx": 54.86841232577621,
+            "score": 0.03397172788044145,
+            "gl": 0.03397172788044145,
+            "gr": 0.04318932106261286
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": 1.0153926774383422,
+            "candidateCenterMinusFitMidpointPx": -1.0153926774383422,
+            "candidateCenterMinusFitMidpointInNominalWidths": -0.018132012097113254,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        }
+      ],
+      "receiptSha256": "3bcfd4becd57d7096aad7bc628bf0a92575a16852d459d3f16e7c15e5ee157a4"
+    },
+    {
+      "id": "C2-04-declared-mask",
+      "status": "OBSERVED_CHANNELS",
+      "rawWidthEstimate": {
+        "widthPx": 48,
+        "scores": [
+          {
+            "widthPx": 24,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 32,
+            "meanScore": 0.003555555555555606,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0.592,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 48,
+            "meanScore": 0.6284444444444445,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 56,
+            "meanScore": 0.00177777777777774,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "widthPx": 24,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 0,
+          "combinedScore": 0,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 32,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 0,
+          "combinedScore": 0,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 40,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 1,
+          "combinedScore": 0,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 48,
+          "railMode": "paired",
+          "railScore": 1,
+          "innerScore": 1,
+          "combinedScore": 1,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 56,
+          "railMode": "paired",
+          "railScore": 1,
+          "innerScore": 1,
+          "combinedScore": 1,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        }
+      ],
+      "receiptSha256": "9d8f00b02dfa7ac94ad1ed1a7b7f76af34b1003bed9cd7814a9d11c07914c7ad"
+    },
+    {
+      "id": "C2-05-declared-mask",
+      "status": "OBSERVED_CHANNELS",
+      "rawWidthEstimate": {
+        "widthPx": 40,
+        "scores": [
+          {
+            "widthPx": 24,
+            "meanScore": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "visibleSamples": 0
+          },
+          {
+            "widthPx": 32,
+            "meanScore": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "visibleSamples": 0
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 48,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 56,
+            "meanScore": 1,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "widthPx": 24,
+          "railMode": "occluded",
+          "railScore": null,
+          "innerScore": null,
+          "combinedScore": null,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "UNKNOWN"
+        },
+        {
+          "widthPx": 32,
+          "railMode": "occluded",
+          "railScore": null,
+          "innerScore": null,
+          "combinedScore": null,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "UNKNOWN"
+        },
+        {
+          "widthPx": 40,
+          "railMode": "occluded",
+          "railScore": null,
+          "innerScore": 1,
+          "combinedScore": 1,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "UNKNOWN"
+        },
+        {
+          "widthPx": 48,
+          "railMode": "occluded",
+          "railScore": null,
+          "innerScore": 1,
+          "combinedScore": 1,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "UNKNOWN"
+        },
+        {
+          "widthPx": 56,
+          "railMode": "occluded",
+          "railScore": null,
+          "innerScore": 1,
+          "combinedScore": 1,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "UNKNOWN"
+        }
+      ],
+      "receiptSha256": "117a1b88446db526951c75d503b15479179bd969d81ddee86deb7f7986d1e9a3"
+    },
+    {
+      "id": "C2-05-all-hidden",
+      "status": "UNKNOWN",
+      "rawWidthEstimate": {
+        "widthPx": 24,
+        "scores": [
+          {
+            "widthPx": 24,
+            "meanScore": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "visibleSamples": 0
+          },
+          {
+            "widthPx": 32,
+            "meanScore": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "visibleSamples": 0
+          },
+          {
+            "widthPx": 40,
+            "meanScore": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "visibleSamples": 0
+          },
+          {
+            "widthPx": 48,
+            "meanScore": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "visibleSamples": 0
+          },
+          {
+            "widthPx": 56,
+            "meanScore": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "visibleSamples": 0
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "widthPx": 24,
+          "railMode": "occluded",
+          "railScore": null,
+          "innerScore": null,
+          "combinedScore": null,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "UNKNOWN"
+        },
+        {
+          "widthPx": 32,
+          "railMode": "occluded",
+          "railScore": null,
+          "innerScore": null,
+          "combinedScore": null,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "UNKNOWN"
+        },
+        {
+          "widthPx": 40,
+          "railMode": "occluded",
+          "railScore": null,
+          "innerScore": null,
+          "combinedScore": null,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "UNKNOWN"
+        },
+        {
+          "widthPx": 48,
+          "railMode": "occluded",
+          "railScore": null,
+          "innerScore": null,
+          "combinedScore": null,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "UNKNOWN"
+        },
+        {
+          "widthPx": 56,
+          "railMode": "occluded",
+          "railScore": null,
+          "innerScore": null,
+          "combinedScore": null,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "UNKNOWN"
+        }
+      ],
+      "receiptSha256": "469d2c9d107e2c5f89f71e4a912c4f8a894906d0ad896a9ee67f941023e35add"
+    },
+    {
+      "id": "C2-06-declared-mask",
+      "status": "OBSERVED_CHANNELS",
+      "rawWidthEstimate": {
+        "widthPx": 32,
+        "scores": [
+          {
+            "widthPx": 24,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 32,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 48,
+            "meanScore": 0.005333333333333283,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 56,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "candidates": [
+        {
+          "widthPx": 24,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 0,
+          "combinedScore": 0,
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 32,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 0,
+          "combinedScore": 0,
+          "edgeFit": {
+            "lPx": -16.00906892382104,
+            "rPx": 16.00838997451147,
+            "cPx": -0.0003394746547851213,
+            "wPx": 32.01745889833251,
+            "score": 12.171428571428578,
+            "gl": 12.171428571428578,
+            "gr": 12.963392857142878
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -0.0003394746547851213,
+            "candidateCenterMinusFitMidpointPx": 0.0003394746547851213,
+            "candidateCenterMinusFitMidpointInNominalWidths": 1.060858296203504e-05,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 40,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 0.16222222222222246,
+          "combinedScore": 0,
+          "edgeFit": {
+            "lPx": -27.109375000000064,
+            "rPx": 16.00838997451147,
+            "cPx": -5.550492512744297,
+            "wPx": 43.11776497451153,
+            "score": 0.9303571428571615,
+            "gl": 0.9303571428571615,
+            "gr": 12.963392857142878
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -5.550492512744297,
+            "candidateCenterMinusFitMidpointPx": 5.550492512744297,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0.13876231281860743,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 48,
+          "railMode": "paired",
+          "railScore": 0.09333333333333307,
+          "innerScore": 0.7222222222222222,
+          "combinedScore": 0.09333333333333307,
+          "edgeFit": {
+            "lPx": -27.109375000000064,
+            "rPx": 23.049999999999894,
+            "cPx": -2.029687500000085,
+            "wPx": 50.159374999999955,
+            "score": 0.9196428571428328,
+            "gl": 0.9303571428571615,
+            "gr": 0.9196428571428328
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -2.029687500000085,
+            "candidateCenterMinusFitMidpointPx": 2.029687500000085,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0.04228515625000177,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        },
+        {
+          "widthPx": 56,
+          "railMode": "paired",
+          "railScore": 0.47999999999999987,
+          "innerScore": 1,
+          "combinedScore": 0.47999999999999987,
+          "edgeFit": {
+            "lPx": -27.109375000000064,
+            "rPx": 27.171874999999737,
+            "cPx": 0.031249999999836575,
+            "wPx": 54.2812499999998,
+            "score": 0.9303571428571615,
+            "gl": 0.9303571428571615,
+            "gr": 0.9383928571427873
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": 0.031249999999836575,
+            "candidateCenterMinusFitMidpointPx": -0.031249999999836575,
+            "candidateCenterMinusFitMidpointInNominalWidths": -0.000558035714282796,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "pairedGuard": "OBSERVED_CHANNELS"
+        }
+      ],
+      "receiptSha256": "09d980e644245b85ee067c1eef45c9d7d0bcf81ffcf8bbe30e724e49ea659d22"
+    }
+  ],
+  "visualQA": {
+    "scientificFigureViewed": true,
+    "figureByteIdentical": true,
+    "originalHTMLBrowserAttempt": {
+      "attempted": true,
+      "scope": "generated local HTML visual QA only",
+      "status": "VISUAL_UNAVAILABLE",
+      "reason": "Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell\n\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551 Looks like Playwright was just installed or updated.       \u2551\n\u2551 Please run the following command to download new browsers: \u2551\n\u2551                                                            \u2551\n\u2551     npx playwright install                                 \u2551\n\u2551                                                            \u2551\n\u2551 <3 Playwright Team                                         \u2551\n\u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d"
+    }
+  }
+}

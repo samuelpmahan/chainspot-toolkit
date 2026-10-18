@@ -1,0 +1,896 @@
+{
+  "job_id": "E303",
+  "protocolSha256": "b6a0f050c04ba4d17a81cbaa7e34701ab1cd01c9e62995e19ac50812109be1af",
+  "probeSha256": "68772761afe94d52dc954dbf7d30f47560ba54bf1a18e6840963c7818ee8c03f",
+  "sourceHashes": [
+    {
+      "file": "vendor/active/ports/s6straight/pathSpace.mjs",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"
+    },
+    {
+      "file": "vendor/active/contracts/alpha.profile@1.mjs",
+      "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f"
+    },
+    {
+      "file": "vendor/provider/fourLaneSensor.cjs",
+      "sha256": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624"
+    },
+    {
+      "file": "vendor/dev72/fourLaneRibbon.ts",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689"
+    }
+  ],
+  "cases": [
+    {
+      "id": "clean30",
+      "estimate": {
+        "widthPx": 30,
+        "scores": [
+          {
+            "widthPx": 20,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 50,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 60,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1,
+      "fitTrain": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "fitEval": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "fitConstrained": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36
+      },
+      "evalLearned": [
+        {
+          "t": -43,
+          "score": 1,
+          "railScore": 1,
+          "innerScore": 1,
+          "railMode": "paired"
+        },
+        {
+          "t": -11,
+          "score": 1,
+          "railScore": 1,
+          "innerScore": 1,
+          "railMode": "paired"
+        },
+        {
+          "t": 23,
+          "score": 1,
+          "railScore": 1,
+          "innerScore": 1,
+          "railMode": "paired"
+        },
+        {
+          "t": 47,
+          "score": 1,
+          "railScore": 1,
+          "innerScore": 1,
+          "railMode": "paired"
+        }
+      ]
+    },
+    {
+      "id": "clean40-rotation",
+      "estimate": {
+        "widthPx": 40,
+        "scores": [
+          {
+            "widthPx": 20,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 50,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 60,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1,
+      "fitTrain": {
+        "lPx": -19.5,
+        "rPx": 19.5,
+        "cPx": 0,
+        "wPx": 39,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 39
+      },
+      "fitEval": {
+        "lPx": -20.00452699999991,
+        "rPx": 19.998472252536704,
+        "cPx": -0.0030273737316033333,
+        "wPx": 40.00299925253661,
+        "score": 30.79540774505878,
+        "gl": 30.79540774505878,
+        "gr": 30.79560679235533,
+        "wgPx": 40
+      },
+      "fitConstrained": {
+        "lPx": -20.00452699999991,
+        "rPx": 19.998472252536704,
+        "cPx": -0.0030273737316033333,
+        "wPx": 40.00299925253661,
+        "score": 30.79540774505878,
+        "gl": 30.79540774505878,
+        "gr": 30.79560679235533
+      },
+      "evalLearned": [
+        {
+          "t": -43,
+          "score": 1,
+          "railScore": 1,
+          "innerScore": 1,
+          "railMode": "paired"
+        },
+        {
+          "t": -11,
+          "score": 1,
+          "railScore": 1,
+          "innerScore": 1,
+          "railMode": "paired"
+        },
+        {
+          "t": 23,
+          "score": 1,
+          "railScore": 1,
+          "innerScore": 1,
+          "railMode": "paired"
+        },
+        {
+          "t": 47,
+          "score": 1,
+          "railScore": 1,
+          "innerScore": 1,
+          "railMode": "paired"
+        }
+      ]
+    },
+    {
+      "id": "clean50-rotation",
+      "estimate": {
+        "widthPx": 50,
+        "scores": [
+          {
+            "widthPx": 20,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 50,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 60,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1,
+      "fitTrain": {
+        "lPx": -24.99956343685249,
+        "rPx": 24.98890380152094,
+        "cPx": -0.005329817665774783,
+        "wPx": 49.98846723837343,
+        "score": 30.368555606305193,
+        "gl": 30.395348173697613,
+        "gr": 30.368555606305193,
+        "wgPx": 50
+      },
+      "fitEval": {
+        "lPx": -25.00252663160678,
+        "rPx": 25.00263729942792,
+        "cPx": 0.000055333910569999034,
+        "wPx": 50.0051639310347,
+        "score": 30.68649634513889,
+        "gl": 30.68902133833882,
+        "gr": 30.68649634513889,
+        "wgPx": 50
+      },
+      "fitConstrained": {
+        "lPx": -25.00252663160678,
+        "rPx": 25.00263729942792,
+        "cPx": 0.000055333910569999034,
+        "wPx": 50.0051639310347,
+        "score": 30.68649634513889,
+        "gl": 30.68902133833882,
+        "gr": 30.68649634513889
+      },
+      "evalLearned": [
+        {
+          "t": -43,
+          "score": 1,
+          "railScore": 1,
+          "innerScore": 1,
+          "railMode": "paired"
+        },
+        {
+          "t": -11,
+          "score": 1,
+          "railScore": 1,
+          "innerScore": 1,
+          "railMode": "paired"
+        },
+        {
+          "t": 23,
+          "score": 1,
+          "railScore": 1,
+          "innerScore": 1,
+          "railMode": "paired"
+        },
+        {
+          "t": 47,
+          "score": 1,
+          "railScore": 1,
+          "innerScore": 1,
+          "railMode": "paired"
+        }
+      ]
+    },
+    {
+      "id": "local-width-change",
+      "estimate": {
+        "widthPx": 30,
+        "scores": [
+          {
+            "widthPx": 20,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 50,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 60,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1,
+      "fitTrain": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "fitEval": {
+        "lPx": -22.5,
+        "rPx": 22.5,
+        "cPx": 0,
+        "wPx": 45,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 45
+      },
+      "fitConstrained": null,
+      "evalLearned": [
+        {
+          "t": -43,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 0,
+          "railMode": "paired"
+        },
+        {
+          "t": -11,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 0,
+          "railMode": "paired"
+        },
+        {
+          "t": 23,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 0,
+          "railMode": "paired"
+        },
+        {
+          "t": 47,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 0,
+          "railMode": "paired"
+        }
+      ]
+    },
+    {
+      "id": "offset-transfer",
+      "estimate": {
+        "widthPx": 30,
+        "scores": [
+          {
+            "widthPx": 20,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 50,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 60,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1,
+      "fitTrain": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "fitEval": null,
+      "fitConstrained": null,
+      "evalLearned": [
+        {
+          "t": -43,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 1,
+          "railMode": "paired"
+        },
+        {
+          "t": -11,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 1,
+          "railMode": "paired"
+        },
+        {
+          "t": 23,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 1,
+          "railMode": "paired"
+        },
+        {
+          "t": 47,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 1,
+          "railMode": "paired"
+        }
+      ]
+    },
+    {
+      "id": "organic-training-false-width",
+      "estimate": {
+        "widthPx": 40,
+        "scores": [
+          {
+            "widthPx": 20,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 50,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 60,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1,
+      "fitTrain": {
+        "lPx": -19.5,
+        "rPx": 19.5,
+        "cPx": 0,
+        "wPx": 39,
+        "score": 72,
+        "gl": 72,
+        "gr": 72,
+        "wgPx": 39
+      },
+      "fitEval": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "fitConstrained": null,
+      "evalLearned": [
+        {
+          "t": -43,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 1,
+          "railMode": "paired"
+        },
+        {
+          "t": -11,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 1,
+          "railMode": "paired"
+        },
+        {
+          "t": 23,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 1,
+          "railMode": "paired"
+        },
+        {
+          "t": 47,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 1,
+          "railMode": "paired"
+        }
+      ]
+    },
+    {
+      "id": "organic-evaluation-false-positive",
+      "estimate": {
+        "widthPx": 30,
+        "scores": [
+          {
+            "widthPx": 20,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 50,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 60,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1,
+      "fitTrain": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "fitEval": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 72,
+        "gl": 72,
+        "gr": 72,
+        "wgPx": 29
+      },
+      "fitConstrained": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 72,
+        "gl": 72,
+        "gr": 72
+      },
+      "evalLearned": [
+        {
+          "t": -43,
+          "score": 1,
+          "railScore": 1,
+          "innerScore": 1,
+          "railMode": "paired"
+        },
+        {
+          "t": -11,
+          "score": 1,
+          "railScore": 1,
+          "innerScore": 1,
+          "railMode": "paired"
+        },
+        {
+          "t": 23,
+          "score": 1,
+          "railScore": 1,
+          "innerScore": 1,
+          "railMode": "paired"
+        },
+        {
+          "t": 47,
+          "score": 1,
+          "railScore": 1,
+          "innerScore": 1,
+          "railMode": "paired"
+        }
+      ]
+    },
+    {
+      "id": "rails-occluded-transfer",
+      "estimate": {
+        "widthPx": 30,
+        "scores": [
+          {
+            "widthPx": 20,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 50,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 60,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1,
+      "fitTrain": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "fitEval": null,
+      "fitConstrained": null,
+      "evalLearned": [
+        {
+          "t": -43,
+          "score": null,
+          "railScore": null,
+          "innerScore": null,
+          "railMode": "occluded"
+        },
+        {
+          "t": -11,
+          "score": null,
+          "railScore": null,
+          "innerScore": null,
+          "railMode": "occluded"
+        },
+        {
+          "t": 23,
+          "score": null,
+          "railScore": null,
+          "innerScore": null,
+          "railMode": "occluded"
+        },
+        {
+          "t": 47,
+          "score": null,
+          "railScore": null,
+          "innerScore": null,
+          "railMode": "occluded"
+        }
+      ]
+    },
+    {
+      "id": "training-all-hidden",
+      "estimate": {
+        "widthPx": 20,
+        "scores": [
+          {
+            "widthPx": 20,
+            "meanScore": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "visibleSamples": 0
+          },
+          {
+            "widthPx": 30,
+            "meanScore": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "visibleSamples": 0
+          },
+          {
+            "widthPx": 40,
+            "meanScore": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "visibleSamples": 0
+          },
+          {
+            "widthPx": 50,
+            "meanScore": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "visibleSamples": 0
+          },
+          {
+            "widthPx": 60,
+            "meanScore": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "visibleSamples": 0
+          }
+        ]
+      },
+      "status": "ABSTAIN_NO_VISIBLE_TRAINING",
+      "margin": null,
+      "fitTrain": null,
+      "fitEval": {
+        "lPx": -19.5,
+        "rPx": 19.5,
+        "cPx": 0,
+        "wPx": 39,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 39
+      },
+      "fitConstrained": null,
+      "evalLearned": [
+        {
+          "t": -43,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 0,
+          "railMode": "paired"
+        },
+        {
+          "t": -11,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 0,
+          "railMode": "paired"
+        },
+        {
+          "t": 23,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 0,
+          "railMode": "paired"
+        },
+        {
+          "t": 47,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 0,
+          "railMode": "paired"
+        }
+      ]
+    },
+    {
+      "id": "training-zero-lift-tie",
+      "estimate": {
+        "widthPx": 20,
+        "scores": [
+          {
+            "widthPx": 20,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 50,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 60,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "status": "ABSTAIN_ZERO_OR_TIED",
+      "margin": 0,
+      "fitTrain": null,
+      "fitEval": {
+        "lPx": -19.5,
+        "rPx": 19.5,
+        "cPx": 0,
+        "wPx": 39,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 39
+      },
+      "fitConstrained": null,
+      "evalLearned": [
+        {
+          "t": -43,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 0,
+          "railMode": "paired"
+        },
+        {
+          "t": -11,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 0,
+          "railMode": "paired"
+        },
+        {
+          "t": 23,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 0,
+          "railMode": "paired"
+        },
+        {
+          "t": 47,
+          "score": 0,
+          "railScore": 0,
+          "innerScore": 0,
+          "railMode": "paired"
+        }
+      ]
+    }
+  ]
+}

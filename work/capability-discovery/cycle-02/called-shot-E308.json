@@ -1,0 +1,12 @@
+{
+  "schema":"called-shot@1","job_id":"E308","worker":"C6",
+  "scope":"bounded caller repair for R306 decimal-bank arange defect; no vendor or detector edits",
+  "priorCandidateManifestSha256":"9ecd88635ed69ca8fb8e44ff044ac1e8fd704133c5687685b9a3114893ed9cd0",
+  "reviewAMENDResultSha256":"61900599e779c78119a198bed9a80be240b9dae70a09da3b17920d87a9a7ac3a",
+  "exposedInput":"exact C5 R306 counterexample-input.json; requested candidate31.01px, tolWidth1px,160x160 nominal34/raster33 stripe; existing independent C5 geometry now exposed training regression",
+  "operations":"same original Dev72 learner/observer and existing lumOf/profileAt; call exact existing edgePairOf(profile, requestedWidth, explicit tolerance/lateral limit) once per bank width; reuse the already computed raw profile",
+  "predictionBeforeExecution":"old wrapper erroneously exposes w33/wg32.010000000000005 pair; direct source edgePairOf(profile,31.01,{tolW:1,latLim:12}) is null; regression fails before caller repair and passes after it; original9candidate controls remain passing",
+  "falsifier":"Any accepted pair that differs from the existing direct edgePairOf for that exact requested bank value, or any new calibrated width/path identity/promotion, source mutation or lost UNKNOWN behavior falsifies repair",
+  "withholding":"C2 heldout/evaluator remains unread by C6; repair occurs before independent evaluation",
+  "executionPermission":"ordinary short tests preauthorized after actual flow explanation; no broad repository rerun, commit, push or PR"
+}

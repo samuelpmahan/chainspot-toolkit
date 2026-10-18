@@ -1,0 +1,65 @@
+{
+  "schema": "C2-independent-protocol@1",
+  "job_id": "E305",
+  "worker": "C2",
+  "stage": "frozen-before-fixture-generation-and-before-candidate-inspection",
+  "seed": 30520261018,
+  "generator": {
+    "file": "generate.py",
+    "sha256": "e51cee65c7f00bd3236fa55c7e3e65b3bf1372919d89f011980e1b3de6c3b9de"
+  },
+  "caseCount": 6,
+  "classes": [
+    "straight-corridor",
+    "rotated-scaled-corridor",
+    "shifted-valid-corridor",
+    "bright-organic-negative",
+    "partial-rail-mask-interior-only",
+    "crossing-ambiguous-edges"
+  ],
+  "withholding": "Procedural shared-filesystem withholding; no technical isolation. Other workers must not read heldout before root explicit release after C6 source freeze.",
+  "candidate": {
+    "identity": "UNSEEN; must be separately frozen and allocated by root before execution",
+    "executionAuthorizedNow": false
+  },
+  "constructionContract": {
+    "units": "source-image px, heading radians, grayscale luminance levels 0..255; dimensionless source scores stay labeled",
+    "raster": "4x4 analytic occupancy averaging at pixel subcenters; opaque RGBA8; integer modular seeded texture",
+    "geometryTruth": "explicit construction geometry only; no course accuracy, identity or human acceptance",
+    "masks": "known source-frame bboxes; mask=255 unavailable; do not alpha-mute raster"
+  },
+  "evaluationPlan": {
+    "readBeforeExecution": [
+      "freeze candidate exact bytes/code hash and parameters",
+      "record source operation IDs/refs, raw widths bank, input manifests and adapter contract",
+      "preserve immutable raw receipt including explicit nonfinite tags"
+    ],
+    "recordPerCase": [
+      "all candidate width score rows and visibleSamples, selected numeric legacy width and separately any eligible/UNKNOWN width claim",
+      "left/right lane means, occlusion flags, railMode, railScore, innerScore and combined score, retaining null/NaN/Infinity distinctly",
+      "bilateral edge fit l/r/c/w/gl/gr/score or absent, visible profile support/station counts and boundary flags",
+      "construction/query center offsets and ambiguity notes; retain alternative edge hypotheses if exposed"
+    ],
+    "predictedObservations": [
+      "Straight positive cases can expose width and paired gradients; finite result alone is not calibrated confidence. Rotated/scaled results may differ due to sampler/raster/source limits.",
+      "Shifted valid corridor may fail a fixed-center gate even though the constructed strip exists; report gate effect rather than absence.",
+      "Large bright ellipse may produce positive local width/fourlane/edge evidence. Retain any resulting false positive against corridor construction class; do not require the legacy method to reject.",
+      "Known masks over both rails permit visible interior support but forbid bilateral rail identity/evidence assertion. All-hidden variant forbids evidence-supported learned width even if legacy numeric fallback exists.",
+      "Crossing profiles may contain multiple plausible edges or lose contrast. Record ambiguity/alternatives and raw channels; do not force a unique physical corridor claim."
+    ],
+    "falsifiers": [
+      "candidate labels width learned from no visible samples or only numeric fallback",
+      "candidate asserts bilateral rail evidence when either required rail is known unavailable",
+      "candidate collapses interior-only combined score into rail identity",
+      "candidate suppresses nonfinite/unknown or alternative-edge evidence",
+      "candidate/result claims real-course accuracy, meter scale, endpoint ownership or human acceptance from synthetic data"
+    ],
+    "noInventedPolicy": "No new numerical acceptance/confidence/calibration thresholds. Existing algorithm knobs must be reported as existing source parameters; selected width separation is descriptive, not confidence.",
+    "acceptanceScope": "Fixture generation and determinism only in E305; no candidate test or truth acceptance now."
+  },
+  "checksBeforeRelease": [
+    "run generator twice into disjoint C2 directories and compare all hashes/bytes",
+    "verify image and mask dimensions, RGBA byte lengths and 6 deterministic construction classes",
+    "visually inspect private contactsheet; report procedural withholding rather than technical isolation"
+  ]
+}

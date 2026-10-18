@@ -1,0 +1,89 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "capability-discovery-cycle02",
+    "scope": "ribbon-evidence-composition-falsifiers",
+    "source": "7c59b053f09b27d4685c754738b50a987fa0eeed",
+    "actualCapacity": "six fresh-context workers plus root coordinator; no carried active leases"
+  },
+  "workers": [
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "C5",
+    "C6"
+  ],
+  "review_policy": {
+    "enabled": true,
+    "review_prefix": "R",
+    "reviewer_must_differ_from_extractor": true
+  },
+  "jobs": [
+    {
+      "id": "E301",
+      "kind": "extract",
+      "allow_workers": [
+        "C1",
+        "C2"
+      ],
+      "subject": "Execute new source-pinned IMG5641 badge-exit/heading counterfactuals on one unchanged support/theta field; freeze grid and keep all unknowns and raw traces."
+    },
+    {
+      "id": "E302",
+      "kind": "extract",
+      "allow_workers": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5"
+      ],
+      "subject": "Execute bilateral edge/centerline falsifiers on ribbons, shifted centers and bright organic/crossing negatives using existing exact operations; quantify channel seams."
+    },
+    {
+      "id": "E303",
+      "kind": "extract",
+      "allow_workers": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5"
+      ],
+      "subject": "Execute tee-badge width-transfer falsifiers with independent local scale/rotation/occlusion conditions; freeze train/evaluation distinction and preserve unsupported fits."
+    },
+    {
+      "id": "E304",
+      "kind": "extract",
+      "allow_workers": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5"
+      ],
+      "subject": "Execute posthoc route-evidence composition counterexamples using existing descriptors, competing straight/bent/unsupported paths and centerline evidence; no invented accepted score weights."
+    },
+    {
+      "id": "E305",
+      "kind": "extract",
+      "allow_workers": [
+        "C1",
+        "C2",
+        "C3",
+        "C4",
+        "C5"
+      ],
+      "subject": "Freeze procedurally withheld synthetic evaluation cases and discriminating protocol before reading candidate; source/course availability and negative controls recorded."
+    },
+    {
+      "id": "E306",
+      "kind": "extract",
+      "allow_workers": [
+        "C6"
+      ],
+      "subject": "Sole integration/Git owner: implement bounded executable ribbon evidence recipe using existing width learner, four-lane sensor and edge-pair fit; prototype OFF, preserve previous frozen sources, no withheld cases until released."
+    }
+  ]
+}

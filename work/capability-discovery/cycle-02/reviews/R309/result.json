@@ -1,0 +1,353 @@
+{
+  "schema": "discovery-independent-review@1",
+  "job_id": "R309",
+  "worker": "C3",
+  "reviewedJob": "E309",
+  "reviewedWorker": "C1",
+  "decision": "accepted",
+  "summary": "Executed E309 actual source producer in own copied packet; fresh-process receipt and stdout reproduce byte-for-byte. Three exact source SHA256/Git blob identities and frozen protocol/producer hashes verified. Independently reconstructed all16 analytic/point coverage and quantized RGBA rasters, their width diagnostics, and64 bilinear profile rows. Confirmed384 direct width-bank observations/384 edge queries,288 native null fits,48 tied learner rows, and calibration UNKNOWN on all64 poses. Nominal-width channels all remain1; non-nominal bank channels vary across phases in6/16 fixtures while learner outputs vary in0/16 and profiles in16/16. AA fitted-width span.293478px versus crisp0 and gradient22.7\u201336 versus crisp36 are reproduced. This is source-operator sensitivity on exposed constructions, not universal AA benefit, production AA appearance, calibrated width, or physical accuracy.",
+  "commands": [
+    "mkdir -p discovery-cycle02/C3/review-R309/replay; copy E309 protocol.json/probe.mjs/original-provenance.json/vendor into own replay directory",
+    "node discovery-cycle02/C3/review-R309/replay/probe.mjs > discovery-cycle02/C3/review-R309/replay/stdout.json 2> discovery-cycle02/C3/review-R309/replay/stderr.log",
+    "cmp discovery-cycle02/C1/E309/receipt.json discovery-cycle02/C3/review-R309/replay/receipt.json",
+    "cmp discovery-cycle02/C1/E309/stdout.json discovery-cycle02/C3/review-R309/replay/stdout.json",
+    "python discovery-cycle02/C3/review-R309/verify-independent.py > discovery-cycle02/C3/review-R309/verification.log"
+  ],
+  "hashes": {
+    "reviewedResultSha256": "9cfc6174a2bea0f1c2e74b2653e096686f14da2d9a22fd56dfd36f259ccc3880",
+    "protocolSha256": "1fed00ef6a266e1ac811c279f550c662f2babe354a6d3f96658d19c4741788cf",
+    "producerSha256": "bd46611bc04b7cb57892fc3421b3043b2ed1b0d507c2070074c90046acaeaeaf",
+    "originalReceiptSha256": "373f66de20a6263800631e942c6e143a38e070e137c08f25186dcb999e1692db",
+    "replayReceiptSha256": "373f66de20a6263800631e942c6e143a38e070e137c08f25186dcb999e1692db",
+    "originalStdoutSha256": "f5eb5b67d99fe2b031896f2fe6a8db2b9a9db48b07d86b93133cc22c889ab424",
+    "replayStdoutSha256": "f5eb5b67d99fe2b031896f2fe6a8db2b9a9db48b07d86b93133cc22c889ab424",
+    "independentVerifierSha256": "bf26f311c0109f67d677ff8d9840b665305bf466caafb9df097497bb190a8e3a",
+    "independentVerificationSha256": "7185886322f53762a6e6943eb97fcefd5b5bac328518e72e055b1573137d0704",
+    "sources": [
+      {
+        "file": "vendor/active/ports/s6straight/pathSpace.mjs",
+        "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+        "gitBlob": "38963d20f7a8b7c7851b3a2abea2e472da8f7716"
+      },
+      {
+        "file": "vendor/active/contracts/alpha.profile@1.mjs",
+        "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+        "gitBlob": "6f50530ff8f7d5c613ee739224d475657fcbf647"
+      },
+      {
+        "file": "vendor/dev72/fourLaneRibbon.ts",
+        "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+        "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d"
+      }
+    ]
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "verified",
+      "finding": "Frozen protocol hash1fed00ef\u2026 and producer hashbd46611b\u2026 match actual bytes; all three source SHA256 and Git blobs match exact bundled snapshots. Freeze prepare.py was inspected but deliberately not rerun, preserving frozen timestamp/protocol."
+    },
+    {
+      "id": "F2",
+      "severity": "verified",
+      "finding": "Pixel centers are integer coordinates. Crisp uses lower<=y<upper; AA uses exact intersection length of footprint[y-.5,y+.5] with nominal horizontal strip. RGBA level=floor(100+45coverage+.5), alpha255. Independent reconstruction matches every coverage/row luminance and full160x160 RGBA hash. This is exact horizontal analytic coverage, not approximate supersampling."
+    },
+    {
+      "id": "F3",
+      "severity": "verified",
+      "finding": "Nominal strip width, nonzero support rows, fully bright rows, quantized contrast-area width, bilinear122.5 crossings and source smoothed-gradient fit remain distinct. AA phase0 quantizes two half-coverage rows122.5\u2192123, producing area width nominal+1/45px and half-level separation nominal+.043478px. Nominal width is not silently substituted for either diagnostic or source fitted width."
+    },
+    {
+      "id": "F4",
+      "severity": "verified",
+      "finding": "All64 profile rows independently reproduce linear interpolation of stored row values at source normal offsets. All100stations are visible per profile. Dev72 retains nearest Math.round source sampling, source band normalization/clamping and its original learner. These two samplers are different observation operators, not interchangeable estimates of one calibrated width."
+    },
+    {
+      "id": "F5",
+      "severity": "verified",
+      "finding": "All64 nominal-width left/right rail, inner and combined channels equal1. This saturated nominal scalar omits bank information: for W30-p0 crisp, width24 inner channels drop1\u2192.5 at query phase0\u2192.5 while width24 combined stays0; nominal channels stay1 and learner remains tied30/32. Raw channel changes occur in bank-conditioned observations, not in the nominal-width channels themselves.",
+      "evidence": [
+        {
+          "queryPhasePx": 0,
+          "width24": {
+            "laneOffsetsPx": [
+              -12,
+              -4,
+              4,
+              12
+            ],
+            "laneWidthPx": 8,
+            "leftRail": 0,
+            "innerLeft": 1,
+            "innerRight": 1,
+            "rightRail": 1,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0,
+            "innerScore": 1,
+            "score": 0
+          },
+          "learner": {
+            "widthPx": 30,
+            "scores": [
+              {
+                "widthPx": 24,
+                "meanScore": 0,
+                "visibleSamples": 5
+              },
+              {
+                "widthPx": 30,
+                "meanScore": 1,
+                "visibleSamples": 5
+              },
+              {
+                "widthPx": 32,
+                "meanScore": 1,
+                "visibleSamples": 5
+              },
+              {
+                "widthPx": 36,
+                "meanScore": 0,
+                "visibleSamples": 5
+              },
+              {
+                "widthPx": 40,
+                "meanScore": 0,
+                "visibleSamples": 5
+              },
+              {
+                "widthPx": 48,
+                "meanScore": 0,
+                "visibleSamples": 5
+              }
+            ]
+          }
+        },
+        {
+          "queryPhasePx": 0.5,
+          "width24": {
+            "laneOffsetsPx": [
+              -12,
+              -4,
+              4,
+              12
+            ],
+            "laneWidthPx": 8,
+            "leftRail": 0,
+            "innerLeft": 0.5,
+            "innerRight": 0.5,
+            "rightRail": 1,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0,
+            "innerScore": 0.5,
+            "score": 0
+          },
+          "learner": {
+            "widthPx": 30,
+            "scores": [
+              {
+                "widthPx": 24,
+                "meanScore": 0,
+                "visibleSamples": 5
+              },
+              {
+                "widthPx": 30,
+                "meanScore": 1,
+                "visibleSamples": 5
+              },
+              {
+                "widthPx": 32,
+                "meanScore": 1,
+                "visibleSamples": 5
+              },
+              {
+                "widthPx": 36,
+                "meanScore": 0,
+                "visibleSamples": 5
+              },
+              {
+                "widthPx": 40,
+                "meanScore": 0,
+                "visibleSamples": 5
+              },
+              {
+                "widthPx": 48,
+                "meanScore": 0,
+                "visibleSamples": 5
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "F6",
+      "severity": "verified",
+      "finding": "Across query phases, learner vector varies for0/16 fixtures, four-lane bank observations for6/16, profiles for16/16. Independently recomputed48 tied best rows remain unique-width UNKNOWN; original numeric width40 may select36 where36/40 tie. All64 calibration claims remain UNKNOWN."
+    },
+    {
+      "id": "F7",
+      "severity": "verified",
+      "finding": "All384 bank-conditioned edge fits retained, including288 native nulls; no nominal-width fit is absent. Crisp nominal fitted widths exactly30/40 with score36. AA nominal-fit variation span.29347826087px and minimum gradient22.7lum/source-px reproduced for each tested width. A blanket AA fit-stability benefit is contradicted by these constructed source fits; no ranking or accuracy conclusion follows."
+    },
+    {
+      "id": "F8",
+      "severity": "verified",
+      "finding": "Fresh separate Node process reproduces receipt/stdout byte-for-byte, extending original same-process repeat evidence on the same runtime. It does not test cross-runtime reproducibility. No figure is present; complete raw arrays support all reviewed numeric claims."
+    }
+  ],
+  "measurements": {
+    "fixtures": 16,
+    "poses": 64,
+    "directObservations": 384,
+    "edgeQueries": 384,
+    "nativeNullFits": 288,
+    "learnerTies": 48,
+    "calibrationUnknownRows": 64,
+    "queryPhaseVaryingFixtures": {
+      "learner": 0,
+      "fourlane": 6,
+      "profile": 16
+    },
+    "modeStability": [
+      {
+        "nominalWidthPx": 30,
+        "mode": "crisp-point",
+        "poseRows": 16,
+        "learnerLegacyWidthsPx": [
+          30
+        ],
+        "learnerTieRows": 16,
+        "nominalFitAbsent": 0,
+        "nominalFittedWidthPx": {
+          "min": 30,
+          "max": 30,
+          "span": 0
+        },
+        "nominalFitScoreLumPerPx": {
+          "min": 36,
+          "max": 36,
+          "span": 0
+        },
+        "nominalRailScoreDimensionless": {
+          "min": 1,
+          "max": 1,
+          "span": 0
+        },
+        "nominalCombinedScoreDimensionless": {
+          "min": 1,
+          "max": 1,
+          "span": 0
+        }
+      },
+      {
+        "nominalWidthPx": 30,
+        "mode": "analytic-coverage-AA",
+        "poseRows": 16,
+        "learnerLegacyWidthsPx": [
+          30
+        ],
+        "learnerTieRows": 16,
+        "nominalFitAbsent": 0,
+        "nominalFittedWidthPx": {
+          "min": 30,
+          "max": 30.293478260869566,
+          "span": 0.2934782608695663
+        },
+        "nominalFitScoreLumPerPx": {
+          "min": 22.69999999999999,
+          "max": 36,
+          "span": 13.300000000000011
+        },
+        "nominalRailScoreDimensionless": {
+          "min": 1,
+          "max": 1,
+          "span": 0
+        },
+        "nominalCombinedScoreDimensionless": {
+          "min": 1,
+          "max": 1,
+          "span": 0
+        }
+      },
+      {
+        "nominalWidthPx": 40,
+        "mode": "crisp-point",
+        "poseRows": 16,
+        "learnerLegacyWidthsPx": [
+          40,
+          36
+        ],
+        "learnerTieRows": 12,
+        "nominalFitAbsent": 0,
+        "nominalFittedWidthPx": {
+          "min": 40,
+          "max": 40,
+          "span": 0
+        },
+        "nominalFitScoreLumPerPx": {
+          "min": 36,
+          "max": 36,
+          "span": 0
+        },
+        "nominalRailScoreDimensionless": {
+          "min": 1,
+          "max": 1,
+          "span": 0
+        },
+        "nominalCombinedScoreDimensionless": {
+          "min": 1,
+          "max": 1,
+          "span": 0
+        }
+      },
+      {
+        "nominalWidthPx": 40,
+        "mode": "analytic-coverage-AA",
+        "poseRows": 16,
+        "learnerLegacyWidthsPx": [
+          40,
+          36
+        ],
+        "learnerTieRows": 4,
+        "nominalFitAbsent": 0,
+        "nominalFittedWidthPx": {
+          "min": 40,
+          "max": 40.29347826086956,
+          "span": 0.29347826086956275
+        },
+        "nominalFitScoreLumPerPx": {
+          "min": 22.69999999999999,
+          "max": 36,
+          "span": 13.300000000000011
+        },
+        "nominalRailScoreDimensionless": {
+          "min": 1,
+          "max": 1,
+          "span": 0
+        },
+        "nominalCombinedScoreDimensionless": {
+          "min": 1,
+          "max": 1,
+          "span": 0
+        }
+      }
+    ]
+  },
+  "limits": [
+    "Technical independent review only; not Sam acceptance.",
+    "All16 deterministic horizontal grayscale fixtures and64 poses remain EXPOSED; no blinded evaluation or independent physical evidence.",
+    "No C2/C6 files or previous probe producer read/executed for this review; only C1/E309 packet and own output.",
+    "AA construction is horizontal one-pixel footprint coverage plus explicit8bit quantization, not a model of all production antialiasing, rotation, texture, occlusion or endpoint identity.",
+    "Nominal channel saturation and fewer ties do not calibrate width/confidence. Numerical source bank/defaults remain test inputs, not accepted physical constants.",
+    "Nearest Dev72 and bilinear profile samplers are retained separately; source derivative-fit sensitivity is not physical accuracy or proof of an AA benefit.",
+    "No source/default change, AA muting, S7 run, ranking policy, acceptance threshold or production integration performed."
+  ]
+}

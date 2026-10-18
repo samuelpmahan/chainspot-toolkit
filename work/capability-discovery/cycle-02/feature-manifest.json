@@ -1,0 +1,88 @@
+{
+  "schema": "composition-candidate-freeze@1",
+  "job_id": "E306",
+  "defaultEnabled": false,
+  "sourceOnlyFreeze": true,
+  "files": [
+    {
+      "path": "experiments/capability-discovery/composition/cli.mjs",
+      "sha256": "0e08999d39aff0ba6498bad2e90c8986fb2995b98ae44fced92ebea2f3dcf839"
+    },
+    {
+      "path": "experiments/capability-discovery/composition/cli.test.mjs",
+      "sha256": "cb89ad358946f5f1320d72cdf5792d98eda951307da039b60712637b7d40af2d"
+    },
+    {
+      "path": "experiments/capability-discovery/composition/composition.test.mjs",
+      "sha256": "74e50ec4cf0068c1cceb08b00e058b0f6437ba1eee934d199a4133e9a6e8b574"
+    },
+    {
+      "path": "experiments/capability-discovery/composition/recipe.mjs",
+      "sha256": "3d4fff6cd15f2dc261d7a9ce1d248dfa1311f048c38923420c8ce6f2f1759a13"
+    },
+    {
+      "path": "experiments/capability-discovery/composition/training-fixtures.mjs",
+      "sha256": "e93de4087bf9c9f1e72d0655233b93591ed989e8e2a0b4682f5111d659592789"
+    },
+    {
+      "path": "work/capability-discovery/cycle-02/called-shot-E306.json",
+      "sha256": "dc8bc84a3cd5789336dd5577d31666223d99f10d1d99ac22ea8f38542eb0188e"
+    }
+  ],
+  "existingGuard": {
+    "path": "experiments/capability-discovery/probes/width/recipe.mjs",
+    "sha256": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0"
+  },
+  "immutableSources": [
+    {
+      "file": "vendor/active/ports/s6straight/pathSpace.mjs",
+      "origin": "chainspot-toolkit",
+      "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "sourcePath": "ports/s6straight/pathSpace.mjs",
+      "gitBlob": "38963d20f7a8b7c7851b3a2abea2e472da8f7716",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "adaptation": "path/extension only; content byte-identical"
+    },
+    {
+      "file": "vendor/active/contracts/alpha.profile@1.mjs",
+      "origin": "chainspot-toolkit",
+      "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "sourcePath": "contracts/alpha.profile@1.mjs",
+      "gitBlob": "6f50530ff8f7d5c613ee739224d475657fcbf647",
+      "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+      "adaptation": "path/extension only; content byte-identical"
+    },
+    {
+      "file": "vendor/provider/fourLaneSensor.cjs",
+      "origin": "chainspot-toolkit",
+      "ref": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "sourcePath": "source/provider/packages/alg/dist/detectors/threeFactor/features/st.fourLaneSensor.js",
+      "gitBlob": "2167c3539aa33856738e679c75869d6c3395afe8",
+      "sha256": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624",
+      "adaptation": "path/extension only; content byte-identical"
+    },
+    {
+      "file": "vendor/dev72/fourLaneRibbon.ts",
+      "origin": "samuelpmahan/ChainSpot",
+      "ref": "ef2a4fc2dc4720d3647f705464342f119d5a39a5",
+      "sourcePath": "src/lib/nuthing/fourLaneRibbon.ts",
+      "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+      "adaptation": "none; exact independently fetched source; Node builtin type stripping"
+    }
+  ],
+  "withholding": "procedural; C6 has not read C2 heldout/evaluator geometry",
+  "entryPoint": "experiments/capability-discovery/composition/recipe.mjs#runComposition",
+  "cli": "node experiments/capability-discovery/composition/cli.mjs --input INPUT.json --out OUTPUT.json --inspect INSPECTION.html",
+  "inputSchema": "experiments/capability-discovery/composition/README.md",
+  "tests": {
+    "command": "node --test experiments/capability-discovery/composition/*.test.mjs",
+    "pass": 9,
+    "originalLabPlusCandidatePass": 104
+  },
+  "scientificState": {
+    "localWidth": "UNKNOWN",
+    "semanticIdentity": "UNKNOWN",
+    "promoted": false
+  }
+}

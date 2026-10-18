@@ -1,0 +1,302 @@
+{
+  "job_id": "R308",
+  "worker": "C4",
+  "reviewedJob": "E308",
+  "reviewedWorker": "C6",
+  "decision": "accepted",
+  "summary": "Accepted exact repaired manifest5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52 as a bounded caller repair. Independently checked14 frozen candidate/guard/source files and immutable source Git blob identities, ran all10 candidate tests, replayed exact C5 counterexample through CLI into own outputs, and compared8 nearby requested widths directly to existing source edgePairOf. Requested31.01px/tolerance1 now givesnull and midpointUNKNOWN. Every decimal/integer case exactly matches direct source tolerance behavior; candidate count/order and one shared profile are retained; original integer30 fits and signed offsets remain. No singleton arange emulation or widthSearchAt is called by repaired recipe, and operationsExecuted reports actual edgePairOf. All width/identity promotion remains UNKNOWN/false. Current README flow and package navigation need ADMIN updates; historical firstfreeze and R306 AMEND remain untouched.",
+  "commands": [
+    {
+      "command": "Verify exact C6 feature-manifest-E308 SHA256; verify9manifest files+1guard+4immutable source SHA256/Git blob identities; bind historical R306 AMEND and firstfreeze hashes.",
+      "result": "14/14 exact; AMEND unchanged"
+    },
+    {
+      "command": "TMPDIR=/workspace/scratch/8528bb251845/discovery-cycle02/C4/review-R308/tmp node --test /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/*.test.mjs > discovery-cycle02/C4/review-R308/candidate-tests.log",
+      "exitCode": 0,
+      "pass": 10,
+      "fail": 0
+    },
+    {
+      "command": "node /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/cli.mjs --input discovery-cycle02/C4/review-R308/counterexample-input.json --out discovery-cycle02/C4/review-R308/cli-counterexample.json --inspect discovery-cycle02/C4/review-R308/cli-counterexample.html",
+      "exitCode": 0
+    },
+    {
+      "command": "node /workspace/scratch/8528bb251845/discovery-cycle02/C4/review-R308/oracle.mjs > discovery-cycle02/C4/review-R308/oracle.log",
+      "exitCode": 0,
+      "directOracleCases": 8,
+      "integerPositiveControls": 2
+    },
+    {
+      "command": "Recheck all14 frozen file SHA256s, exact repaired manifest and historical R306 result hash after execution.",
+      "result": "unchanged"
+    }
+  ],
+  "hashes": {
+    "candidateManifestSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+    "verified": [
+      {
+        "path": "experiments/capability-discovery/composition/cli.mjs",
+        "sha256": "0e08999d39aff0ba6498bad2e90c8986fb2995b98ae44fced92ebea2f3dcf839",
+        "status": "exact"
+      },
+      {
+        "path": "experiments/capability-discovery/composition/cli.test.mjs",
+        "sha256": "cb89ad358946f5f1320d72cdf5792d98eda951307da039b60712637b7d40af2d",
+        "status": "exact"
+      },
+      {
+        "path": "experiments/capability-discovery/composition/composition.test.mjs",
+        "sha256": "74e50ec4cf0068c1cceb08b00e058b0f6437ba1eee934d199a4133e9a6e8b574",
+        "status": "exact"
+      },
+      {
+        "path": "experiments/capability-discovery/composition/decimal-bank.test.mjs",
+        "sha256": "abce3d5d84fa1263a851f1d9aff73bcc91108420cbcb58abc61217bd900a82d8",
+        "status": "exact"
+      },
+      {
+        "path": "experiments/capability-discovery/composition/recipe.mjs",
+        "sha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6",
+        "status": "exact"
+      },
+      {
+        "path": "experiments/capability-discovery/composition/training-fixtures.mjs",
+        "sha256": "e93de4087bf9c9f1e72d0655233b93591ed989e8e2a0b4682f5111d659592789",
+        "status": "exact"
+      },
+      {
+        "path": "work/capability-discovery/cycle-02/called-shot-E306.json",
+        "sha256": "dc8bc84a3cd5789336dd5577d31666223d99f10d1d99ac22ea8f38542eb0188e",
+        "status": "exact"
+      },
+      {
+        "path": "work/capability-discovery/cycle-02/called-shot-E308.json",
+        "sha256": "ca325288914ebc90d8493154dbff4a62e973d0500a2b6c5012c07593a4d382d0",
+        "status": "exact"
+      },
+      {
+        "path": "work/capability-discovery/cycle-02/evidence/E308/counterexample-input.json",
+        "sha256": "9a0b67bfbcc536e6285396eba392b4a8facb9de94d83e09f12c1bf846112bd0f",
+        "status": "exact"
+      },
+      {
+        "path": "experiments/capability-discovery/probes/width/recipe.mjs",
+        "sha256": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0",
+        "status": "exact"
+      },
+      {
+        "path": "experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+        "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+        "gitBlob": "38963d20f7a8b7c7851b3a2abea2e472da8f7716",
+        "status": "exact"
+      },
+      {
+        "path": "experiments/capability-discovery/probes/width/vendor/active/contracts/alpha.profile@1.mjs",
+        "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+        "gitBlob": "6f50530ff8f7d5c613ee739224d475657fcbf647",
+        "status": "exact"
+      },
+      {
+        "path": "experiments/capability-discovery/probes/width/vendor/provider/fourLaneSensor.cjs",
+        "sha256": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624",
+        "gitBlob": "2167c3539aa33856738e679c75869d6c3395afe8",
+        "status": "exact"
+      },
+      {
+        "path": "experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+        "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+        "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+        "status": "exact"
+      }
+    ],
+    "historicalR306ResultSha256": "61900599e779c78119a198bed9a80be240b9dae70a09da3b17920d87a9a7ac3a",
+    "historicalR306Decision": "amend",
+    "historicalFirstFreezeSha256": "9ecd88635ed69ca8fb8e44ff044ac1e8fd704133c5687685b9a3114893ed9cd0",
+    "reviewArtifacts": {
+      "protocol.json": "5c339c189371182e49aa0c93633ca86bd66dd1c04772bc3ba09b51a04f1f720f",
+      "hash-checks.json": "585693b506dd5c492ebeb218e46218b594dad29f0823c561800da278d4740a63",
+      "counterexample-input.json": "9a0b67bfbcc536e6285396eba392b4a8facb9de94d83e09f12c1bf846112bd0f",
+      "candidate-tests.log": "876f8c9663576d37ee0b29c592f90f3569a0c871bf732325e553410413958727",
+      "cli-counterexample.json": "8b24e1f1fc4901563e557a287924ec17e1b805cdab5366b696cdb8f455977450",
+      "cli-counterexample.html": "225092bade595cd975dbdb4bd9998ff5fc466d2d49dd9139cd30a139cd3a4089",
+      "cli.log": "a4a2b98fd77b80d47c5b01864690441fd47fe0f64eaa0c697718760b0312612a",
+      "oracle.mjs": "fbe969094e00f9f93c5b384281d67a270f833970bc3a0e0fff597b426982c3e2",
+      "oracle-measurements.json": "31f68875eeb07298ee7da5c45da22789b6ad46f806c83dd65d365ba8e9a4aa46",
+      "oracle.log": "14162ae4f5628dc98522eece50fc05a62c8486fa90d7a7780f1db67c645eee68"
+    }
+  },
+  "findings": [
+    {
+      "id": "R308-1",
+      "status": "confirmed_repair",
+      "finding": "Exact source oracle edgePairOf(profile,31.01,{tolW:1,latLim:12}) returnsnull. CLI returnsone requested31.01 candidate with edgeFitnull and midpointUNKNOWN. Source old arange remains [31.01,32.010000000000005] but the repaired caller bypasses singleton-range enumeration.",
+      "oldArangeEnumeration": [
+        31.01,
+        32.010000000000005
+      ],
+      "cliCandidate": {
+        "widthArgPx": 31.01,
+        "observation": {
+          "laneOffsetsPx": [
+            -15.505,
+            -5.168333333333334,
+            5.168333333333334,
+            15.505
+          ],
+          "laneWidthPx": 10.336666666666668,
+          "leftRail": 1,
+          "innerLeft": 1,
+          "innerRight": 1,
+          "rightRail": 1,
+          "leftRailOccluded": false,
+          "innerLeftOccluded": false,
+          "innerRightOccluded": false,
+          "rightRailOccluded": false,
+          "railMode": "paired",
+          "railScore": 1,
+          "innerScore": 1,
+          "score": 1
+        },
+        "pairedRails": {
+          "status": "OBSERVED_CHANNELS",
+          "leftRail": 1,
+          "rightRail": 1,
+          "combinedScore": 1,
+          "positiveEvidenceClaimed": false
+        },
+        "edgeFit": null,
+        "midpoint": {
+          "status": "UNKNOWN",
+          "reason": "no finite positive two-edge fit in declared profile window"
+        }
+      }
+    },
+    {
+      "id": "R308-2",
+      "status": "confirmed",
+      "finding": "Eight nearby widths are honored exactly, with no candidate+1 tolerance leakage; wrapped edgeFit deepEquals directsource for every request.",
+      "cases": [
+        {
+          "requestedWidthPx": 31,
+          "sourceFitWidthPx": null,
+          "wrapperMidpointStatus": "UNKNOWN"
+        },
+        {
+          "requestedWidthPx": 31.01,
+          "sourceFitWidthPx": null,
+          "wrapperMidpointStatus": "UNKNOWN"
+        },
+        {
+          "requestedWidthPx": 31.99,
+          "sourceFitWidthPx": null,
+          "wrapperMidpointStatus": "UNKNOWN"
+        },
+        {
+          "requestedWidthPx": 32,
+          "sourceFitWidthPx": 33,
+          "wrapperMidpointStatus": "OBSERVED_CHANNELS"
+        },
+        {
+          "requestedWidthPx": 32.01,
+          "sourceFitWidthPx": 33,
+          "wrapperMidpointStatus": "OBSERVED_CHANNELS"
+        },
+        {
+          "requestedWidthPx": 33,
+          "sourceFitWidthPx": 33,
+          "wrapperMidpointStatus": "OBSERVED_CHANNELS"
+        },
+        {
+          "requestedWidthPx": 34,
+          "sourceFitWidthPx": 33,
+          "wrapperMidpointStatus": "OBSERVED_CHANNELS"
+        },
+        {
+          "requestedWidthPx": 34.01,
+          "sourceFitWidthPx": null,
+          "wrapperMidpointStatus": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "id": "R308-3",
+      "status": "confirmed",
+      "finding": "One profile computed and retained for the station, exact edgePairOf called8times for8explicit bank entries. operationsExecuted has no widthSearchAt label; source imports/calls have no singleton arange emulation. Source profile still legitimately uses original arange for station sampling.",
+      "sharedProfileCalls": 1,
+      "edgePairCalls": 8,
+      "operationsExecuted": [
+        "lumOf",
+        "estimateFourLaneCorridorWidth",
+        "assessLocalWidth",
+        "profileAt",
+        "observeFourLaneCrossSection",
+        "assessPairedRails",
+        "edgePairOf (shared profile; exact requested width)",
+        "observeFourLaneCrossSection",
+        "assessPairedRails",
+        "edgePairOf (shared profile; exact requested width)",
+        "observeFourLaneCrossSection",
+        "assessPairedRails",
+        "edgePairOf (shared profile; exact requested width)",
+        "observeFourLaneCrossSection",
+        "assessPairedRails",
+        "edgePairOf (shared profile; exact requested width)",
+        "observeFourLaneCrossSection",
+        "assessPairedRails",
+        "edgePairOf (shared profile; exact requested width)",
+        "observeFourLaneCrossSection",
+        "assessPairedRails",
+        "edgePairOf (shared profile; exact requested width)",
+        "observeFourLaneCrossSection",
+        "assessPairedRails",
+        "edgePairOf (shared profile; exact requested width)",
+        "observeFourLaneCrossSection",
+        "assessPairedRails",
+        "edgePairOf (shared profile; exact requested width)"
+      ]
+    },
+    {
+      "id": "R308-4",
+      "status": "confirmed",
+      "finding": "All original9candidate controls remain passing with new regression10/10. Independent integer30 positive and shifted station controls remain w29px, center-minus-midpoint0 and3.25px. localWidthnull/UNKNOWN, semanticIdentityUNKNOWN and promotedfalse preserved.",
+      "integerControls": [
+        {
+          "yPx": 80,
+          "fittedWidthPx": 29,
+          "candidateCenterMinusFitMidpointPx": 0
+        },
+        {
+          "yPx": 83.25,
+          "fittedWidthPx": 29,
+          "candidateCenterMinusFitMidpointPx": 3.25
+        }
+      ]
+    },
+    {
+      "id": "R308-5",
+      "status": "admin_update_needed_nonblocking_for_exact_code_review",
+      "finding": "Current composition README execution-order paragraph still describes widthSearchAt and the false one-element [width,width+1,1] claim. Update current prose to shared profile + exact edgePairOf per requested width. Package cycle02 README/RESUME/next-packets currently describe the earlier snapshot and pending R306; add repaired manifest and this independent review as current navigation/state. Preserve historical called-shotE306, firstfreeze, R306 AMEND and original evidence verbatim.",
+      "paths": [
+        "experiments/capability-discovery/composition/README.md",
+        "work/capability-discovery/cycle-02/README.md",
+        "work/capability-discovery/cycle-02/RESUME.md",
+        "work/capability-discovery/cycle-02/next-packets.json"
+      ],
+      "operationsExecuted": "current repaired code/receipt already correct; no source amendment requested"
+    },
+    {
+      "id": "R308-6",
+      "status": "confirmed_history",
+      "finding": "Original R306 decision remainsAMEND at61900599e779c78119a198bed9a80be240b9dae70a09da3b17920d87a9a7ac3a; firstfreeze9ecd88635ed69ca8fb8e44ff044ac1e8fd704133c5687685b9a3114893ed9cd0 remains distinct. No acceptance relabeling."
+    }
+  ],
+  "limits": [
+    "Independent technical review of exact repaired caller only; no C2 heldout/evaluator access or independent evaluation claimed.",
+    "Counterexample and added width variants are exposed synthetic tests, not real-course width calibration, semantic path identity or human acceptance.",
+    "Vendor source bytes unchanged; source numerical tolerances and sampler semantics remain explicit caller/source parameters.",
+    "No broad repository suite repeated; six previously known missing-fixture failures remain outside bounded review.",
+    "Source verification and finite input controls do not establish practical resource bounds for arbitrarily large images/station windows/banks.",
+    "Top-level null remains outside documented object-shaped input domain, as explicitly noted in historical R306 limits.",
+    "C6 remains sole integrator; reviewer made no repository/C6/C5 edits. Documentation ADMIN update is required before current delivery claims, but does not change the exact accepted executable freeze."
+  ]
+}

@@ -1,0 +1,3890 @@
+{
+  "schema": "c1-source-manifest@1",
+  "origin": "Exact read-only original W2 copied provider; selected executable source bytes independently match toolkit main pin",
+  "toolkitOrigin": "chainspot-toolkit",
+  "toolkitRef": "37a2dba87d61262f661af70f1a22440736e61efc",
+  "functions": {
+    "gateway": "runThreeFactor export, packages/alg/dist/detectors/threeFactor/index.js",
+    "stage": "stageContract.execute, packages/alg/dist/stages/S0/contract.js",
+    "decode": "decodeNodeFile, packages/alg/dist/adapters/node.js",
+    "trace": "traceBadgeToBasket, packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLockMath.js",
+    "field": "measurement.field output of runThreeFactor; ribbon.js computeRibbonSupport + patchBadgeOcclusion unchanged original functions; no direct recompute performed"
+  },
+  "selectedGitPins": [
+    {
+      "toolkitRef": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/index.js",
+      "gitBlob": "6bface5cddafe725af77a0df21dca1c15b5f588c",
+      "sha256": "65289bedd1af4a3cf3f6b563799821ce578ed975277a1122cbfb660b3e1cb41e",
+      "localPath": "provider/packages/alg/dist/detectors/threeFactor/index.js",
+      "bytesEqual": true
+    },
+    {
+      "toolkitRef": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/ribbon.js",
+      "gitBlob": "7278dd36e165971cf08daba5854db98e4a984bd6",
+      "sha256": "25635c2682a1f5ee3d3253207dcf6ba930ad23f968ac0bd316de1103391b8bc3",
+      "localPath": "provider/packages/alg/dist/detectors/threeFactor/ribbon.js",
+      "bytesEqual": true
+    },
+    {
+      "toolkitRef": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLockMath.js",
+      "gitBlob": "3b712771ae86d33530577a957ae52f9b90049081",
+      "sha256": "14f6147fbf98a57ff624acc86ef34cb9cbe2ae9e6d9d4537eb7111e7d49a12ed",
+      "localPath": "provider/packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLockMath.js",
+      "bytesEqual": true
+    },
+    {
+      "toolkitRef": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "source/provider/packages/alg/dist/adapters/node.js",
+      "gitBlob": "4fa1bb9f855eb7775013d874b76f6e52265cea51",
+      "sha256": "fe9e93faa6105548da8d4854bd020dcc60903a25967f242a62dbf4baae4ba6cd",
+      "localPath": "provider/packages/alg/dist/adapters/node.js",
+      "bytesEqual": true
+    },
+    {
+      "toolkitRef": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "source/provider/packages/alg/dist/stages/S0/contract.js",
+      "gitBlob": "99baea39a8eb76a7907eb9e20d8a6cbbb0955cd5",
+      "sha256": "f5f3eabbb0d6c2f2e8bb578f44615bb76e5e53ffae43e230f7cd6009ed1ec5ed",
+      "localPath": "provider/packages/alg/dist/stages/S0/contract.js",
+      "bytesEqual": true
+    },
+    {
+      "toolkitRef": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "source/chainspot-teams/s7/width-probe.mjs",
+      "gitBlob": "c3dac4890ba8b06f3df195bba5148226a5705830",
+      "sha256": "c16d4ad32d78f094fede013d1fd09f3891be7cdecd1d455fc73aa6a04cdfe41d",
+      "localPath": "original-width-probe.mjs",
+      "bytesEqual": true
+    }
+  ],
+  "providerFiles": [
+    {
+      "path": "REPLAY-PROVENANCE.json",
+      "sha256": "424605c9166a9e011484b150cad32fb83c817bf70a51cf22080ae27cca415160",
+      "bytes": 543,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "artifacts/composed-render-20260927/AlexClark-original-capture.json",
+      "sha256": "58057142c6af270661f4df9bc049813048053938b9c3e183ca0f9a05ad721050",
+      "bytes": 76265,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "artifacts/composed-render-20260927/IMG_5641-capture.json",
+      "sha256": "cece6ab325e5884a1835de101071c432855c0adb0c29c2aed138a481b5585a44",
+      "bytes": 77302,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "artifacts/replay/source/IMG_5641.jpg",
+      "sha256": "e6616738640eee1d05d8cc2b59dd657f24b4a5a01dc2f68571b7e44c6f372b8a",
+      "bytes": 627609,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "1cf655d24ad6efbf8bd3ae63de291055f8f44fc9bf5a4d8ba2eb0e3ffdd5f075",
+      "bytes": 19082,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "package.json",
+      "sha256": "fbc907ea04ed9501bf13416446c436776c8dd86e85abd0df420ca94e67e7623f",
+      "bytes": 294,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/adapters/browser.d.ts",
+      "sha256": "0c8d8f865d09ea710ba6ca58b40d3e9ec9f96c0e5f1e22208a70e25432fa4243",
+      "bytes": 217,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/adapters/browser.js",
+      "sha256": "c78b7813a276c508279506054524cb74e458533637b2117979b17dbce84db530",
+      "bytes": 2264,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/adapters/browser.js.map",
+      "sha256": "03f75475a46151db513497d4916ea74d193c2b17825b36f32fc9a0c362166f18",
+      "bytes": 1411,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/adapters/node.d.ts",
+      "sha256": "b12ce4944e64b613dda69e06d46d23d1c2f0133e7800042f87954870ce9283a4",
+      "bytes": 229,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/adapters/node.js",
+      "sha256": "fe9e93faa6105548da8d4854bd020dcc60903a25967f242a62dbf4baae4ba6cd",
+      "bytes": 2413,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/adapters/node.js.map",
+      "sha256": "32933ca14d7dec85b78d4adffd985f8f3e40846746e181ab037e9a10d9d0b1c6",
+      "bytes": 1578,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/autoCrop.d.ts",
+      "sha256": "fc21a1fd2bf6935f01a032dda5120b7fca04e99117c22bec1059ac90ee453049",
+      "bytes": 257,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/autoCrop.js",
+      "sha256": "82ad41d30aba861750b3e365f6822fd39e8c59b264256229a81b81f47a64fbbc",
+      "bytes": 4459,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/autoCrop.js.map",
+      "sha256": "1ac90e56e946cc446b6e17f8945396ff3d92507e5e940b57658026e727afac8b",
+      "bytes": 3743,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detect.d.ts",
+      "sha256": "d0558f787ce6170284848f91ca4b0ce4ad6454e9a75602cc3d4125a25b4ea843",
+      "bytes": 3629,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detect.js",
+      "sha256": "6003ea793ed8af36b48d62b01b56acad682a00628a85d6da431ff665624f432c",
+      "bytes": 1019,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detect.js.map",
+      "sha256": "1ff990567518babdce63be5ab221a4e4fd928e25b0f1af93351558efe4d1f8c8",
+      "bytes": 292,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/hsv.d.ts",
+      "sha256": "9acaf20129244110ffb6ce21c947d224cb56feb62f23f86b6a8dbf5896f10e6a",
+      "bytes": 169,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/hsv.js",
+      "sha256": "17135be07c6b6de43ef2647f43e63f02c305af93a97900b94cfadaa3c1ce16bb",
+      "bytes": 811,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/hsv.js.map",
+      "sha256": "f3aa32430fe27aa3abe8b02b34cc48874caddf5ec7ee579f1fab628dad3744c5",
+      "bytes": 1100,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/assets/basket-sprite.json",
+      "sha256": "c2867340d477a5e2f88e83b78516fc89005004a4aa279b6b9bc86a6f98e3598f",
+      "bytes": 3234,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/assets/logistic.json",
+      "sha256": "a86497b308da33f093ac4540a841b228272f0a14fbbb5ebbfa1490d047ebceb7",
+      "bytes": 151330,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/badgeStage.d.ts",
+      "sha256": "acc8604f7304727c35e72d141fdeabbb53688b74a373773cfa6803b133f41cab",
+      "bytes": 1086,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/badgeStage.js",
+      "sha256": "fd1b1fb0b3db97bbdb3a507bc8e2884abe1f0f740b5bcafdca9915cf1405b02d",
+      "bytes": 2561,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/badgeStage.js.map",
+      "sha256": "d9a63a0d7452f9d610efde1f2e2c3b58fa1b53b82f406c32bfd86747c04c44c6",
+      "bytes": 1889,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/components.d.ts",
+      "sha256": "8d8e04166f2e66610e795b2bef38c211329ff55bbb3100927edc261d601b7576",
+      "bytes": 2771,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/components.js",
+      "sha256": "fa113c54b6ced1ef19825641ffd75c8316e617ffa7a5c1717c6d75687afa90d2",
+      "bytes": 10065,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/components.js.map",
+      "sha256": "020da0a8dab16bc84143b30f9ef813a0decf3f6b4464bfa4733456cd875f828c",
+      "bytes": 11065,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/digits/badgeGlyph.d.ts",
+      "sha256": "285c4ce9ed3a33ce6929c9b6df6e8ff8bad6f3879b530cd8ce867d4d5e17d27c",
+      "bytes": 879,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/digits/badgeGlyph.js",
+      "sha256": "50f98491457d2766c980c36445f449d27208abbbbe9b435e8d1eb3315aa2ff10",
+      "bytes": 1953,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/digits/badgeGlyph.js.map",
+      "sha256": "eefb5ae5780f26b2579564c743bedfe13f8da2969dc5c9b3582584d07cd4000e",
+      "bytes": 2120,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/digits/logisticInference.d.ts",
+      "sha256": "de33c69bbb16839801278b8f9b0e36e72a6c73504356235e9b8054c8545e017e",
+      "bytes": 448,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/digits/logisticInference.js",
+      "sha256": "09bbcf0724d05b5bef4338742ceba0d8ec5ffd9fe5cae93d6d690d91f917085f",
+      "bytes": 1302,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/digits/logisticInference.js.map",
+      "sha256": "eb69ec9db3bd3b5a4d56a90306554822a8f34dbdeaeeb342919d507dc610aec1",
+      "bytes": 1521,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/digits/normalize.d.ts",
+      "sha256": "556fdcfa19a6a1635c737bf4dea3ff4ed5232af55c765a6e61adb7a5a3372784",
+      "bytes": 1032,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/digits/normalize.js",
+      "sha256": "d2b411b723ea0d34ded678ec42d3a60e6812b82a3c898a4bfd99a6bd58157da3",
+      "bytes": 2410,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/digits/normalize.js.map",
+      "sha256": "60c8e707ab1dcaa5adceaa805108db2bbba5f4bff255e725149d101862b29ddd",
+      "bytes": 2342,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/digits/readBadges.d.ts",
+      "sha256": "2282825ce621429ae74becb1dfbc4611c606ebb5ec9e7baa4cd06c7c723ef612",
+      "bytes": 2260,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/digits/readBadges.js",
+      "sha256": "3db4fddbca58aedfff0e08fc52ce9ea7af7cc2b7898c35ae909dc90b9dd7056b",
+      "bytes": 2598,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/digits/readBadges.js.map",
+      "sha256": "2e9c3f2b252cce9cfb3d48f15d5f43681834951b13c1adaa3567afc5e233fb1a",
+      "bytes": 2229,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/digits/segment.d.ts",
+      "sha256": "91a9026e50e094c10aa148017fac6b4791a59a269564829c4b8f273559c87b92",
+      "bytes": 3794,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/digits/segment.js",
+      "sha256": "074ad884ab31a20ce131b98b8303716a2df2b0835601ea41a0ae2140db200fd8",
+      "bytes": 8780,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/digits/segment.js.map",
+      "sha256": "6ca20e4e8d62fb641d6655fcc137cc3d34d35d4908cd4f036651fb028f8f914d",
+      "bytes": 6579,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/endpoints.d.ts",
+      "sha256": "bd5c6fc6edc2e72e8451dcb666f38902e633f964f44b7cd2508b94948c062a9d",
+      "bytes": 5253,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/endpoints.js",
+      "sha256": "00bbfcc813dd38cda9e08c79afc628852ad316036b8a467e7146d20519dd5b41",
+      "bytes": 17289,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/endpoints.js.map",
+      "sha256": "e46e0535f31e28c1e83e32dc9ef8412f54742ac6d6eafb9f2768cc703b6b7f6a",
+      "bytes": 16694,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/families.d.ts",
+      "sha256": "2cdee7ccc1b499e26d2fb16802148d9b766cb311ac4f090e17dd47fb690ddbfb",
+      "bytes": 1026,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/families.js",
+      "sha256": "3fb58d14c0bb99fa310f86db3a64960c17b03dc1ff79ebe4e29e3eb2f9f75a25",
+      "bytes": 2350,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/families.js.map",
+      "sha256": "9a10c87ea3df50ca1e37aa1e20ffa71b76f8e1200c438f68d7dbcfccb6522ea9",
+      "bytes": 2736,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/index.d.ts",
+      "sha256": "2961e1c26d1f48e4889986e4778ce5165bd901954c08f57f09395a46e33c0985",
+      "bytes": 455,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/index.js",
+      "sha256": "ddb485d4e2fed95759d095e5f66700651a0c0c4f71f5abde68be417f0e039ec7",
+      "bytes": 5580,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/index.js.map",
+      "sha256": "f8d23502d7a26daf6c71728288cf1a8107c149dff9e687b6c47da57f5460674a",
+      "bytes": 5676,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/raster.d.ts",
+      "sha256": "5ac1a4752236383062b9113f1fa921cd49dd695b3d119a92928ed46eb5bf3cce",
+      "bytes": 1411,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/raster.js",
+      "sha256": "31d334de947235f6640a4e6b02fa8307b8cba486a127d1ce5ec632ba3eb1c05c",
+      "bytes": 2566,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/raster.js.map",
+      "sha256": "b8e968044754151f96b8471b41767437effd082502bb82c184b91a96a303a964",
+      "bytes": 2704,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/screenChrome.d.ts",
+      "sha256": "3886acdbfec67cf8f0077bec423b2815bb11d04d30385114606dedd7769ef735",
+      "bytes": 1799,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/screenChrome.js",
+      "sha256": "96c3c0912dfa3295137cca9d9e137bb5b9de25a676cadee5e071d76ce54acbad",
+      "bytes": 4228,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/labEndpoint/screenChrome.js.map",
+      "sha256": "8767d9d110aff4679460ddb0b658e9ce9c08c8a8fc729a4dcf1ecaff23286d3f",
+      "bytes": 4685,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/landingDroplet.d.ts",
+      "sha256": "f4eedd7305e38d90cac374819bbb07403db95d20ae0e09fdafe74b4bf84d0ba6",
+      "bytes": 655,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/landingDroplet.js",
+      "sha256": "286af30247f543a5567f969c87076d519d0ff0448e8808cf28c57d080daefb1c",
+      "bytes": 5824,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/landingDroplet.js.map",
+      "sha256": "060f898e5b5993cf68f4b65e3bf2054b259e5d4ddb08beab1e60867cda1a3dcd",
+      "bytes": 5029,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/purpleMass.d.ts",
+      "sha256": "0f0223cf0fe07c31ab073df3f5775791855ad902f42eae0d731c229a127e9fe0",
+      "bytes": 1367,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/purpleMass.js",
+      "sha256": "f37f21f14524755e3e9cb1c6c974def31b08db8339cd8cf4eba586ed02ca7649",
+      "bytes": 5100,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/purpleMass.js.map",
+      "sha256": "6081bdec129f8f1864832cbf172c97f3807a1fc8d2e4613bfc42351313c987df",
+      "bytes": 4768,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/strongHole.d.ts",
+      "sha256": "fc16d442cf047dee655b9049a3a201e0c574f98c19d39a3bd63882e5626f4714",
+      "bytes": 2142,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/strongHole.js",
+      "sha256": "cd1a055fa3e52f261920cf98119d7db1940ccb9f1c2f18e6f1befd853e32e958",
+      "bytes": 6018,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/strongHole.js.map",
+      "sha256": "8631cd9916f9f9b7eb6d8b6945ced3bffbc7004c0af953ed9cde84843bbb0827",
+      "bytes": 4005,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/assets/badge-glyph-templates.json",
+      "sha256": "00af1d9d7bc40790a76aee0f8a2cce68b930c2ba4a94575b2842235fb1253b41",
+      "bytes": 11572,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/assets/basket-sprite.json",
+      "sha256": "c2867340d477a5e2f88e83b78516fc89005004a4aa279b6b9bc86a6f98e3598f",
+      "bytes": 3234,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/assets/logistic.json",
+      "sha256": "a86497b308da33f093ac4540a841b228272f0a14fbbb5ebbfa1490d047ebceb7",
+      "bytes": 151330,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/assignment.d.ts",
+      "sha256": "dd483171d8dc980feb943dd5d5669bd098e52066bdf454bacf85f6a46074f18b",
+      "bytes": 1826,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/assignment.js",
+      "sha256": "9f18504ad128684f2fcf5ea520d36c77892f1a592a7f8815bcf625619f27bff9",
+      "bytes": 13066,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/assignment.js.map",
+      "sha256": "d30ce5878e59202e23790c8356b6aaf2b488fcaa73994da3f46a9e81f5f62190",
+      "bytes": 14714,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/badgeEvidence.d.ts",
+      "sha256": "9abc8d23db7758e23d4f99d6a69ba8af4d1783b978bcf1ef43e33e4c4c184196",
+      "bytes": 2434,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/badgeEvidence.js",
+      "sha256": "47b423b29179d07480906457008ca76839c12fef8c71aca3a828c996e252081c",
+      "bytes": 8477,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/badgeEvidence.js.map",
+      "sha256": "2ed69339b56d90dd55ae5082b588245d04da91b952b1a3807b435c70412531e0",
+      "bytes": 8490,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/badgeStage.d.ts",
+      "sha256": "d28f94016726cd9a1faad8b7e9b653ce39dd20dea876fcc682b47f7c24baaf75",
+      "bytes": 4514,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/badgeStage.js",
+      "sha256": "ae68fe0e1c7c47a12a3b27098b509f615b4c62cdd8771357a6235697234b9887",
+      "bytes": 7020,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/badgeStage.js.map",
+      "sha256": "f334f212fd9d55a454c0f61ecf4b0d017a9046454c6c6b2d4f931720eacaa6bb",
+      "bytes": 5078,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/componentAssembly.d.ts",
+      "sha256": "e5b16f5f76d39561a1f5a498ab61ccddb77f9fd6238bb36f26df82d49e2e5a17",
+      "bytes": 4450,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/componentAssembly.js",
+      "sha256": "a70e0e72b46515ffdabb8ea767d0d9b1e631ff5beba7fcb344cbf94cac3b5521",
+      "bytes": 9817,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/componentAssembly.js.map",
+      "sha256": "c475ebd4c63b5f0e17d0da072b8c425693f602d0f94fcb81582342e47f04a906",
+      "bytes": 10060,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/componentField.d.ts",
+      "sha256": "a1a44d0480e83f1049d276f06db0d9c1734565658016114dfaca60efdb2bce20",
+      "bytes": 1452,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/componentField.js",
+      "sha256": "e35c2d7d044283f7e7b4dc20683a9b4b67267f9280a1c0a4a2884f335b45bbe2",
+      "bytes": 1154,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/componentField.js.map",
+      "sha256": "d31a6bda097be1f0bb6b21d7250f36d30fe371eb543eb47bfef34b6b642d7fe5",
+      "bytes": 685,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/components.d.ts",
+      "sha256": "edccf04414087c7a447e6dc242ebec22382e69eaaa58e07cc6ee9c65559f2235",
+      "bytes": 3117,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/components.js",
+      "sha256": "b52628941ee06259aa6d2f4b4d24de930f51204218acacb138993e65fda752f0",
+      "bytes": 10177,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/components.js.map",
+      "sha256": "8e580b614897bfe0d8043bad2e78bd11ea2ab69776c9615646df4113e2c7b28e",
+      "bytes": 11149,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/config.d.ts",
+      "sha256": "5c5c089ab9162e41b9a21cd351bc4d9cb98b2e6fd7d55cf20c027d341862acef",
+      "bytes": 1615,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/config.js",
+      "sha256": "475601fb3b1d5c94119269a8a0149e677c692a4c3114d45ec934a3facbb2b9b2",
+      "bytes": 7559,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/config.js.map",
+      "sha256": "a3d0841e8d85d50ac289a9eef806cf8bed41b9f1fec8bdcec05e49398043d700",
+      "bytes": 5460,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/configs/badge-glyph-template-on.json",
+      "sha256": "5be0cf90d77192e9e483202957587cb98bdeee7a9b901a93a2038f745e920e4d",
+      "bytes": 713,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/configs/badge-m2-aa-on.json",
+      "sha256": "39d35321a4bd4c1cf7e355570585404eb5e71ef5199abd4a6aaae79f85e91ac5",
+      "bytes": 621,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/configs/clean-basket-family-on.json",
+      "sha256": "854ce256d2629b0ace8f1633a2f241177499e2e64f85531a983d3eb4b12338b1",
+      "bytes": 579,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/configs/default.json",
+      "sha256": "934fb03f1b10ba488f0729e28a3873fd447790b9f0dfdbeb60c00270a84a7080",
+      "bytes": 712,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/configs/family-on.json",
+      "sha256": "91f7da2495700b426f49e94c33eac0d6ac646c2b779b838c89436fa1b07f56a7",
+      "bytes": 606,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/configs/phantom-tee-on.json",
+      "sha256": "11bae2c3902ddbdd185a67c4fcdfdf9cb8f383ba80905dd83d765e35ab0391d4",
+      "bytes": 647,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/configs/posterior-tee-recovery-on.json",
+      "sha256": "1d590adba57ea96fbc7a8b8d04894a2468d14c3375a70eb960aaaddda98e6491",
+      "bytes": 582,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/configs/straight-test-on.json",
+      "sha256": "de191edfa8549c234aa97cc33d958980c82f45a59fe123d3fe1f896329d801d2",
+      "bytes": 479,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/configs/straight-test-truth-assisted-compare.json",
+      "sha256": "ede4f140205455ba2bd66131bec3e9bce31f76fc2317b8a32417c9b625130ee6",
+      "bytes": 519,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/configs/tbs-four-lane-sensor-on.json",
+      "sha256": "ec9ab1e39fbb063321176e47d8ea70d953e2cd19accc5cd98d158787d0d703f5",
+      "bytes": 447,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/configs/tee-badge-lock-on.json",
+      "sha256": "30be3e58757abbf057b4655bbf6fbf4d4bbd96d58a06e5e39fa82ecff8df415d",
+      "bytes": 597,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/configs/tee-family-on.json",
+      "sha256": "372b1eda2df83fd35bec8d946d1206af8a4253f0ffd9ce2b6404665b1030a380",
+      "bytes": 756,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/configs/tee-min-area-pose-on.json",
+      "sha256": "86378105441795885b9e028088eede8d9946836a834af865881a6e99a8a24cf5",
+      "bytes": 692,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/configs/tee-recovery-on.json",
+      "sha256": "bb5f1e042df497faaaddb33d906e7d4011c3b2c1e84d111bebda3a77e92a1f08",
+      "bytes": 516,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/configs/tee-recovery-phantom-on.json",
+      "sha256": "8958fbf1d5f6235b7049d824a74fcf8655038084ff77967a23ffec662e4f4bdc",
+      "bytes": 693,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/configs/threeFactor-config.schema.json",
+      "sha256": "f8bb383e4a0f7a0ab13c0f65cc640f9f3c1cf8d8d92757bbf6ada47558844720",
+      "bytes": 52484,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/configs/zfit-on.json",
+      "sha256": "fd152cd0c97689e5c02fc607e94befdd7d06c386d9d689ce0fcd83a822512f93",
+      "bytes": 302,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/custody.d.ts",
+      "sha256": "21290e37475585210f11dbce8e51f064430e3575a46b94c925d144ecbea4b21e",
+      "bytes": 4060,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/custody.js",
+      "sha256": "f9ae96369b08f75268b2cea203f95aa7a9625e9904f0d45b342abc1f484de74a",
+      "bytes": 8072,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/custody.js.map",
+      "sha256": "50b2f50e6de3384c9fa511a6bc663e03cd64214a949ef3107be490e93ee75dda",
+      "bytes": 7924,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/digits/badgeGlyph.d.ts",
+      "sha256": "788f100e5f7452f579859d65cde122bba59ff41ee0a34bca847f5e6402fcd0cb",
+      "bytes": 3741,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/digits/badgeGlyph.js",
+      "sha256": "675dc9f59218e65a65834526887ab7b9370419bcf0084be05e5c5c69e700ef10",
+      "bytes": 5819,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/digits/badgeGlyph.js.map",
+      "sha256": "b5bb957fe422dce0df927d369dab454d7d7c0beb2fb3aa984badd44f8b37275e",
+      "bytes": 4471,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/digits/badgeGlyphTemplateMath.d.ts",
+      "sha256": "d80e5eb0e784eeab93a462c88117e9a8b304dc8c56def4f71e480cbfb5bbc4bb",
+      "bytes": 6697,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/digits/badgeGlyphTemplateMath.js",
+      "sha256": "f722ab6ed5fd0d34aec011d93e8f91156082f88d2d9b8a84d56b15fc33541f3c",
+      "bytes": 10528,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/digits/badgeGlyphTemplateMath.js.map",
+      "sha256": "d1238db922ca05209258dcb87d9c26e2fcfd09d848a73899b44c0c7087886adb",
+      "bytes": 8471,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/digits/logisticInference.d.ts",
+      "sha256": "de33c69bbb16839801278b8f9b0e36e72a6c73504356235e9b8054c8545e017e",
+      "bytes": 448,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/digits/logisticInference.js",
+      "sha256": "09bbcf0724d05b5bef4338742ceba0d8ec5ffd9fe5cae93d6d690d91f917085f",
+      "bytes": 1302,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/digits/logisticInference.js.map",
+      "sha256": "e409cf0e58eac707309935dd86b8109545b6f1aff9d854d1e6b91ef4e68d9515",
+      "bytes": 1521,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/digits/normalize.d.ts",
+      "sha256": "7da92fdd59004b527d57b759ee6e8ae11cc1cb484632f59c31186d8f8a82f76c",
+      "bytes": 1099,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/digits/normalize.js",
+      "sha256": "09a52eb87c5b405a9584c584ade7b9a072420d531aedb83fe92619131794a109",
+      "bytes": 2493,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/digits/normalize.js.map",
+      "sha256": "0c918c4ccdec4877f5528c164a36ef8f65ace70e185bbd126f1105eab9d6e843",
+      "bytes": 2456,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/digits/readBadges.d.ts",
+      "sha256": "ba211be0e71cf9ce9386ecd6fe2ec5737750b69874448b9e53d71f68599f95b9",
+      "bytes": 3018,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/digits/readBadges.js",
+      "sha256": "ae82e23fcdf1bf7047953ccd8e71abc6a02b5b628d7f0dd6e89b5a2f58b920e5",
+      "bytes": 3113,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/digits/readBadges.js.map",
+      "sha256": "760cb9ea02982fb16368e6f723b14ff514190b8aa5e94916e964470c35d5e689",
+      "bytes": 2630,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/digits/segment.d.ts",
+      "sha256": "35e6cdd8858b4cf2ed08a60b6b5364947d43b3dd9b983549d909ca513f0b0322",
+      "bytes": 5468,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/digits/segment.js",
+      "sha256": "9df1b0a6eb12d9cf45b6891814ea1857a8cf53762dda41fd0a5cd5b173995080",
+      "bytes": 8714,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/digits/segment.js.map",
+      "sha256": "c6dc9c89d0ab818af71e364a4b7d930c8bd360114b28502e63ba4a11917c9851",
+      "bytes": 6731,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/endpoints.d.ts",
+      "sha256": "a3ce45977e5abb64797c0176a52fc4edb268f6adcdbbbabce93bc54508cd076e",
+      "bytes": 8847,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/endpoints.js",
+      "sha256": "21339359c6ec0fac7cfdd990fef1a172335db0fb20c6621f3d96c021efe78b46",
+      "bytes": 20125,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/endpoints.js.map",
+      "sha256": "16ded3f4cfa6841e025c82c054525245bb789e93e1bcce30d01ecb9230fd712b",
+      "bytes": 20166,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/engine.d.ts",
+      "sha256": "cfa9ac3d99b0abcbbd797f38b03e1231f774ba40bbecf8e4bc5d129801129b47",
+      "bytes": 1984,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/engine.js",
+      "sha256": "6074f3c6efd549e4711f54dc99d3a12ebaa5a3afdfab603b0452a2e73782005e",
+      "bytes": 13354,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/engine.js.map",
+      "sha256": "c836ef5aed62e429e07a5c60c8e60d5c5d0d48cfcf9e3e47c9fa5df14073b5f3",
+      "bytes": 9186,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/families.d.ts",
+      "sha256": "2cdee7ccc1b499e26d2fb16802148d9b766cb311ac4f090e17dd47fb690ddbfb",
+      "bytes": 1026,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/families.js",
+      "sha256": "3fb58d14c0bb99fa310f86db3a64960c17b03dc1ff79ebe4e29e3eb2f9f75a25",
+      "bytes": 2350,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/families.js.map",
+      "sha256": "b962e74645bd124438e11875cc8dd3ac640ba95adb3ddc0722cab0a371fba28f",
+      "bytes": 2736,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g1.badgeGlyphTemplate.d.ts",
+      "sha256": "9af6af305cfee1b8b21c592fc7943fa93d686bbd8e164f56a92d2556a0a1180b",
+      "bytes": 5062,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g1.badgeGlyphTemplate.js",
+      "sha256": "6ce1313e99b2d807a74e669bcfeefbd118f7b5a04f08dc5ce0e7351e0988c411",
+      "bytes": 16136,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g1.badgeGlyphTemplate.js.map",
+      "sha256": "10fbb44c852433d3cce686c993fa98e4eee332e4fb6978b2890cf82f28a8a695",
+      "bytes": 8222,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g1.badgeGlyphTemplateReceipt.d.ts",
+      "sha256": "6597b98f5a4ad3258aa35344d0b41f9b4fdc9c7556a677602134546770f46c06",
+      "bytes": 2042,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g1.badgeGlyphTemplateReceipt.js",
+      "sha256": "44aff975ea29d5f648cba8d1bf9704df4207bb6aa08e565e65952c265937c5b4",
+      "bytes": 8866,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g1.badgeGlyphTemplateReceipt.js.map",
+      "sha256": "622b2b1dc21c2a76a49d4dc34fb63c46c115ed18b1aceb1ba28eaa1ed550cd6d",
+      "bytes": 7428,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g1.badges.d.ts",
+      "sha256": "e3673d6137d3cc97e885d0923e880fcc26f916d4d304c2a8019e8e1ea69b23f0",
+      "bytes": 1863,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g1.badges.js",
+      "sha256": "420bfc1106d97b8451ecb74fb114143ef6edd59e6451f3b441b7b45bab72b95f",
+      "bytes": 4933,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g1.badges.js.map",
+      "sha256": "4f036e27b1513af2a8f05fe4b6be89a6878d1506ce06ed1844ee23a91525bd6e",
+      "bytes": 1722,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g1.digits.d.ts",
+      "sha256": "4b0ed51b7665c77dd5f102e987706e584307eb94aaec427c1a6fd8e1b5ee67bb",
+      "bytes": 1098,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g1.digits.js",
+      "sha256": "44b5e2444c02586d548a8887a99563ecb8546b3d7997da50d797ff61ff9cb6b6",
+      "bytes": 7260,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g1.digits.js.map",
+      "sha256": "a95c12420c36862f46a395c7620988d472b9f3d0ea66d3369637277d98245b10",
+      "bytes": 1966,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g2.cleanBasketFamily.d.ts",
+      "sha256": "cf741bb8e8f979d28eb40a812ab8ddad991f54b1f7bc8dc5c0179ce6815670c3",
+      "bytes": 3133,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g2.cleanBasketFamily.js",
+      "sha256": "cb84829dae8f14725a5fd5cc2693604c1c6605f3c2f15501ace7005f70d72b03",
+      "bytes": 14312,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g2.cleanBasketFamily.js.map",
+      "sha256": "5776609cc31cc83a88e928dfc0d006278772274f1a8de0bae2253de2765cebfa",
+      "bytes": 13059,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g2.sprite.d.ts",
+      "sha256": "5911e9b3c236ecb22482a345ea9d0a9c1c50239c2cee63d883f6135b2943229b",
+      "bytes": 3148,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g2.sprite.js",
+      "sha256": "78e03cf79da6960533aa63ebdf04a67b13c7d7b77c7d94fce2368a70cdf3ab7b",
+      "bytes": 10042,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g2.sprite.js.map",
+      "sha256": "a7d637067eedefabe49b5d54c368ef6d77cc5f16bcec0e852a0413129769e340",
+      "bytes": 6583,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.endpoints.d.ts",
+      "sha256": "800379b306238c74265c598935ef1f285910a67f82b235c50aa83d4d46f3fdb5",
+      "bytes": 1939,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.endpoints.js",
+      "sha256": "a68dedffbd594d495f949b02dcf95b096a8a4f4abbe15c4ddb4be4c8841b296e",
+      "bytes": 4852,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.endpoints.js.map",
+      "sha256": "033334031b207b34ae9867364af4f3a8e770a1f24c793077b8ea952a368347bf",
+      "bytes": 1877,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.phantomTee.d.ts",
+      "sha256": "707709072f86f21d837b1b7a43f054bf1ec49a3eb9035973f4317b33450f4ebf",
+      "bytes": 1036,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.phantomTee.js",
+      "sha256": "39b7ef1fa582ac7abaeb285366eb4003b21ad365a67ef904bfaecaac022c8e94",
+      "bytes": 12899,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.phantomTee.js.map",
+      "sha256": "bdca4f623ed1485f6b9606b309342638724ad8558ac7fccca960b65beda661e3",
+      "bytes": 10526,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.teeFamily.d.ts",
+      "sha256": "34cf6b48ee5eb503e036af5ed0487398acf054280cf8630bded024d411c86b6e",
+      "bytes": 4382,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.teeFamily.js",
+      "sha256": "e88b4291cdf7d840b04076b431b0dade6fb51b51067f632519a9ffc7961145cf",
+      "bytes": 29355,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.teeFamily.js.map",
+      "sha256": "83fc33d121d26c66da4f24ffe59480a3cc23af4ab9b96f490a8eca30111cbe53",
+      "bytes": 20228,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPose.d.ts",
+      "sha256": "b2c23d6cda736f5d5ef5544e663d8029edbcdaafcbbcfa932350d41f2d061e60",
+      "bytes": 501,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPose.js",
+      "sha256": "04cc100c4a2f85899a5d5521b9acc814e384e2acefb78d349966ba89ac31fa74",
+      "bytes": 9955,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPose.js.map",
+      "sha256": "002ba50698c8d2e036184e194d38a93e80477fa4ea56d6e56d5b4e548927281f",
+      "bytes": 8037,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPoseMath.d.ts",
+      "sha256": "0da0931a5e1ff21701c0558c4f5485f4da7e6173bbcce1506cc789d5914a39f1",
+      "bytes": 1683,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPoseMath.js",
+      "sha256": "ce24f3fab6ba86368a4d47c887aa5b9b5f596f01b4203e9fac4ef6901976566e",
+      "bytes": 8703,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPoseMath.js.map",
+      "sha256": "69505b51844919675d83855c2c942d832974f162156d506cdaa24d940fc6a504",
+      "bytes": 8776,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPoseReceipt.d.ts",
+      "sha256": "fe26be4b2062fa03a07e04eb9fc97622cec8bc179691fd8d22195a4f40f51600",
+      "bytes": 2659,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPoseReceipt.js",
+      "sha256": "156895bb8ebac906438bf70a901657bde7dbd528a6c7b5ffee0664c5026403c2",
+      "bytes": 7937,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPoseReceipt.js.map",
+      "sha256": "7f0dc6a34ee0ecb1ddbabd9ed32d992faa9ba743a1d0351810b5b3a72178ba65",
+      "bytes": 6133,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.teeReceipts.d.ts",
+      "sha256": "82afec4a2cd46e71f754c8bc278462d3f29e2e8565e70c14f232c6d4dd092311",
+      "bytes": 425,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.teeReceipts.js",
+      "sha256": "8e4681c2bca9676118bd2bd98bc3f593f7b9c92d2b3309c675252e4390f17010",
+      "bytes": 10056,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.teeReceipts.js.map",
+      "sha256": "03ba1b6bf5ad141b209fc0a371dfcf74bfd2ca950f0f15d8b360fab5cd58ca1f",
+      "bytes": 5457,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.teeRecovery.d.ts",
+      "sha256": "af9c613d48915e2c4294f85a51f51cffab287cfde0d81c157ea44eac48951e79",
+      "bytes": 9349,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.teeRecovery.js",
+      "sha256": "526d4e6fa06a2ad301c5f2a882773890bf692a73b1115b716ced6e5fcb24c4c4",
+      "bytes": 55773,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g3.teeRecovery.js.map",
+      "sha256": "eded79fe572893a2306207f523d7eb548dfd99d89391d1ffc34ef4fd5f6a775c",
+      "bytes": 44368,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecovery.d.ts",
+      "sha256": "1a61c4503e77922e76e39f11d7b2a891adb93d5374822c4598211264d1198dc5",
+      "bytes": 5632,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecovery.js",
+      "sha256": "d1566daff3813e7e30e1bee457807973e596e8fa44fbd816ec342e28cf2588e9",
+      "bytes": 33638,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecovery.js.map",
+      "sha256": "42bf530132acf188629c4aa9edc7a4ded38c00ef00b048f63e48f4e366612f13",
+      "bytes": 29322,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecoveryReceipt.d.ts",
+      "sha256": "4cb7c631fcaa9a3cbabaf64fe91c5bf8e83590c7aad2e9bed9ad075d6724b02a",
+      "bytes": 417,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecoveryReceipt.js",
+      "sha256": "ebe9cf39e88ec581dfb462a12720041e74f74d415feaddb7e4ec6cc0b28265b5",
+      "bytes": 9035,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecoveryReceipt.js.map",
+      "sha256": "cca1e3c216ce95680b870b2f72860de5214904957b686fd62ef3288d284e2be1",
+      "bytes": 6689,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.scoring.d.ts",
+      "sha256": "1bf59b1b0fb4ceca27a0470329f3322de2056b83374054ba1b644ae8c5865edb",
+      "bytes": 2187,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.scoring.js",
+      "sha256": "f66b74a81576dc5eab3db87823c0601c7494929d1082437a95aad90b5bbfb229",
+      "bytes": 6250,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.scoring.js.map",
+      "sha256": "a53ea82cc67d5479150711609d116571a15205ecc2304502aaa5c7ab878764c1",
+      "bytes": 2049,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.search.d.ts",
+      "sha256": "cdf2a18d1508348d4ba46f6c2ccce619099d33f5850831bb9810a2bd915113c4",
+      "bytes": 539,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.search.js",
+      "sha256": "8e400f2c32399528d64df6ade1bd1180fdad18c37a8dc3969b96b2b88dd94ca7",
+      "bytes": 1510,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.search.js.map",
+      "sha256": "9c2d9a438d75d373ef5bbcbb3ff479af80bbb1bcf8162ec617888d234b456a90",
+      "bytes": 643,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLock.d.ts",
+      "sha256": "9daa52a74e9025f84c1c87975a36792f4500aea3eeb43155c3c352004701f878",
+      "bytes": 1443,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLock.js",
+      "sha256": "b852ee659014dd114a48cbc42d8c3635e3388f73010171e6084d735896e1926a",
+      "bytes": 17133,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLock.js.map",
+      "sha256": "5727f0a9d781090c9777d700a5f5365ca41de73615444645a5385862ebc19c74",
+      "bytes": 14166,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLockMath.d.ts",
+      "sha256": "5543fd88a1eddfa02cdeb996dda54bb54c47ddfa80b5b9e24433b77cb54c58fe",
+      "bytes": 17727,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLockMath.js",
+      "sha256": "14f6147fbf98a57ff624acc86ef34cb9cbe2ae9e6d9d4537eb7111e7d49a12ed",
+      "bytes": 41281,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLockMath.js.map",
+      "sha256": "0b8e07754f2fec2703a050714015f43bb4ca019aab44ae2c2aa4b5cd85b0e4ff",
+      "bytes": 38039,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLockReceipt.d.ts",
+      "sha256": "c40724662c6aec2772bad1a38d1a0b3be3104de5caff50908d41d0c996e37fa8",
+      "bytes": 5192,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLockReceipt.js",
+      "sha256": "784425893af1979087a42e5779215607a602ffe91b409a83b31a8da7799797bf",
+      "bytes": 15195,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLockReceipt.js.map",
+      "sha256": "ffb208080758d18f3e6eb8756badfd39fb0d2a5da4d5c63c678552fb88fe36dd",
+      "bytes": 12751,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g5.badgeM2Aa.d.ts",
+      "sha256": "0260c122ec371d42fbc3fc78b81ae8a7e7d2e6ed26f956cc6c6ebf1f2cb7956f",
+      "bytes": 5505,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g5.badgeM2Aa.js",
+      "sha256": "86929fe879c80a6a847b452226c2a2196fa394ff50ff3733df409e67a9d92014",
+      "bytes": 18562,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g5.badgeM2Aa.js.map",
+      "sha256": "fbbae100ab58fe17f212f044734e0911064c1e4a3a6c0fa65d25c07186238191",
+      "bytes": 10642,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g5.ribbon.d.ts",
+      "sha256": "130c9ca9e740e24f19401650c8c8fd5d55b8644c780b1f220996ad2b541a5be8",
+      "bytes": 1863,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g5.ribbon.js",
+      "sha256": "ebc1e562dbc362bff7749cdeea12c11a2597dd8fc3f2421069fc21ad8853053b",
+      "bytes": 5162,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g5.ribbon.js.map",
+      "sha256": "d17c589e4936206b010f2e4ecf5f67805c9f534a946348e2bf6fbc8c4edd9a43",
+      "bytes": 1701,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g5.routing.d.ts",
+      "sha256": "ad6950d79cbea81d62ea46d3cb4f373cdd7da215dbffed1c8ac74d57c886e34c",
+      "bytes": 1153,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g5.routing.js",
+      "sha256": "2657fb59c0ac28ec6b2a691406d50e8fc239bca14cf8f8f85cef0e0206dec251",
+      "bytes": 3812,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g5.routing.js.map",
+      "sha256": "0bb3c102e5291ee69261f2a9133bedc37099e3ce0353d61cc102c233d185e8fd",
+      "bytes": 1519,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g5.supportRoi.d.ts",
+      "sha256": "28614bcd7927ceb96ed9748c7e12121b0e75e37917a6950d05f29bc9e475e075",
+      "bytes": 1289,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g5.supportRoi.js",
+      "sha256": "46465baf9f79d4598437f5a17cd3c76ab21f6d4084dcc4574b45cdd2ecc42729",
+      "bytes": 4803,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g5.supportRoi.js.map",
+      "sha256": "92f62d7c0705e7308c5094f91c9f85cb4c47362f1a87a453cecfe070f93f5b27",
+      "bytes": 2970,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g5.zfit.d.ts",
+      "sha256": "a8c411159b60e799d9d7c45b2113b05497f83d3974f87b773fc56d761b5a2310",
+      "bytes": 1659,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g5.zfit.js",
+      "sha256": "03d33340eac0a3fc22fe3f72d7b7bf175e285a115adf1717a5c44010b5f9c053",
+      "bytes": 4386,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/g5.zfit.js.map",
+      "sha256": "f825632b361cf813107fa121485347e1c15f69fb3e1311b99f0371cf6050f122",
+      "bytes": 1847,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/registry.d.ts",
+      "sha256": "394f22482188b922421befec0c8158627f2d1a08a53b0e54f6ca9115a3f99b14",
+      "bytes": 171,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/registry.js",
+      "sha256": "3cc6d48be2343bc3378ee2f4c709a2bd32415d80a4e066c3735b58b02b6a793f",
+      "bytes": 3394,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/registry.js.map",
+      "sha256": "2b72f29733ce05a01efb07def545f17dc98bdb4b3e01cd3306c646550b3364e3",
+      "bytes": 1703,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/shared.hsv.d.ts",
+      "sha256": "741f764987351b5aa4229a55b0c4a71999012a477200c2dfaa9668f9ccdaafe5",
+      "bytes": 428,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/shared.hsv.js",
+      "sha256": "e8c5989629cb0d9d120aec52c12b9ea7d6637017e9e59e48008508b67b3f7fca",
+      "bytes": 2355,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/shared.hsv.js.map",
+      "sha256": "b117461aa1fc0e71b4e0c1af407c357a2682d47f4f4048810c3317efcf141b89",
+      "bytes": 779,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/st.fourLaneSensor.d.ts",
+      "sha256": "f1a39ceba3b69c23107f0391701a42af7c35a4907825a4ce70fbf1a0e4550a7f",
+      "bytes": 2906,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/st.fourLaneSensor.js",
+      "sha256": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624",
+      "bytes": 8533,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/st.fourLaneSensor.js.map",
+      "sha256": "cfce76ea63223b970afeeed5a15585b8d02f67ceb54f4d93c56c686699f262b2",
+      "bytes": 8324,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/st.straightTest.contract.d.ts",
+      "sha256": "1b17b910e242b622e14abcdac07f4508b4c90d035efc5437e8d9a74ca6875883",
+      "bytes": 6970,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/st.straightTest.contract.js",
+      "sha256": "89dd42dedcfa2a26347207400deeadba0cd3300cf8fd4be7c3ccbb20c92717fa",
+      "bytes": 677,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/st.straightTest.contract.js.map",
+      "sha256": "5fc8505bc2e1d18141824de08a085f58cc364490ec333fbfbe13b1f5068a87a8",
+      "bytes": 325,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/st.straightTest.d.ts",
+      "sha256": "95db83aa4448836d6fb63aa622e0cdfeb73a8ba8a759a4e806a47a5842ed51ad",
+      "bytes": 940,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/st.straightTest.js",
+      "sha256": "3ff1c67d8906e2de3fcc346116291acf4a3b7d4ad17f605792b2ff422c715ae5",
+      "bytes": 15902,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/st.straightTest.js.map",
+      "sha256": "6834569954cf2a70295d2937a051147ec5cda34e50b06487003e6607e9db91c0",
+      "bytes": 14309,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/teePoseVisuals.d.ts",
+      "sha256": "e01cc6a8a3e853e037950fa34f81c67182caec761ef2f5b0d14b2a74b00babdc",
+      "bytes": 629,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/teePoseVisuals.js",
+      "sha256": "84afbae2d2253ad14e5155881651fec085a914efefee57d5a8193263f0126efc",
+      "bytes": 2182,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/teePoseVisuals.js.map",
+      "sha256": "8b33e34d88db0a92447b6b31f25d987c0d1209d16a506deb2605de52e6b62c7b",
+      "bytes": 1978,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/traceIdentity.d.ts",
+      "sha256": "437c09ecb737cc401ab83051e1719758c2bd88e5a8c374c574d938762b5377a5",
+      "bytes": 593,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/traceIdentity.js",
+      "sha256": "cc1b569fa9dfbee591522d6c4fc7ab81f33849351547e8f131b6fb364613230f",
+      "bytes": 1796,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/traceIdentity.js.map",
+      "sha256": "4a9fc38cb91bafa1fd093259a1c37e04e6fb960828afa4b19bb46d297797a397",
+      "bytes": 1273,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/types.d.ts",
+      "sha256": "748958a2a6406164f95be1cdf0379b26657c75357aae61c224799d99d12d7855",
+      "bytes": 12051,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/types.js",
+      "sha256": "17a52ed479d06ec823b9e963fd8635559cc6c85fac3859f7c18693b4367dc3dd",
+      "bytes": 2887,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/features/types.js.map",
+      "sha256": "4c6bb1e93bb12cf1bec0fae037959622fd8e4f6d9db20832e08742ad8648e420",
+      "bytes": 1346,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/gate-sets.d.ts",
+      "sha256": "63012f4a28686f5c8869dbec31dc54b73628c7e1229c63bc8fa7bcd792533f70",
+      "bytes": 2615,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/gate-sets.js",
+      "sha256": "5cb7878d47d42bddc0c7a9c7d338807fd3d20a90b5fa713a069c424d9e65a7fd",
+      "bytes": 15232,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/gate-sets.js.map",
+      "sha256": "94b8f576f341abd73492a461748cf8077fb2ae64ceaf5447811cd0aecd77c811",
+      "bytes": 11154,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/hash.d.ts",
+      "sha256": "9b15f012880ef3e2ecc8b4cf7b4e3561d9356e657372ef30c2191dedb5d975f7",
+      "bytes": 205,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/hash.js",
+      "sha256": "65a56ca1a75fc11194613b4e8e03cdf25c42c45df670e3d5477e5a5245fc7f94",
+      "bytes": 1160,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/hash.js.map",
+      "sha256": "48db533b20d409ebf27bb1ccd00cf7a376fa5eefbadbe8091faacc8f4ce5e836",
+      "bytes": 1331,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/index.d.ts",
+      "sha256": "bcdbb29db373f514241c5a38653c1fa146c5c37b87ed9cfa24d8ac5ebd05e570",
+      "bytes": 3380,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/index.js",
+      "sha256": "65289bedd1af4a3cf3f6b563799821ce578ed975277a1122cbfb660b3e1cb41e",
+      "bytes": 10173,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/index.js.map",
+      "sha256": "5fdcd24e49b7d3536e314b21506ffe1aff5a3fd8baf0bf4504905fc274e86088",
+      "bytes": 7387,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/m1Representation.d.ts",
+      "sha256": "7fcc0f2446cb2ae57067e67ee98cf2dedb7ca990ceba5f889d7c2b44d975c145",
+      "bytes": 4379,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/m1Representation.js",
+      "sha256": "bc6923f9194c5457bf694aaffca4e33e92bce4a37a5fb708c01152ad63975dd5",
+      "bytes": 7553,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/m1Representation.js.map",
+      "sha256": "4916d3352f721bbae2a0258c9997644a615be84ab88440a34924d2d7023bab43",
+      "bytes": 6829,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/m2RawFrameStatsControl.d.ts",
+      "sha256": "7c6d9321bf469be131839cff7832e31ae8189eb23f34a21fc14eec667d846d02",
+      "bytes": 3662,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/m2RawFrameStatsControl.js",
+      "sha256": "9e03f15cda79dc824b7f5beb43cd604aebf03fe17c48dd8e74bf208e95009bfb",
+      "bytes": 13276,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/m2RawFrameStatsControl.js.map",
+      "sha256": "ddbedb804f38e3a794f73b534ff78e9802f987123615ccc88d5c8273f005c580",
+      "bytes": 14373,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/m2Representation.d.ts",
+      "sha256": "bdab62def6e2be806101dda782d2312982a81ff2b3d89eae2b71046b674506e0",
+      "bytes": 20890,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/m2Representation.js",
+      "sha256": "cbeef96396415d535ac40bb41a0f7c7ea04cfdfebd7874b3375b9a2e2682275a",
+      "bytes": 57875,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/m2Representation.js.map",
+      "sha256": "f336015123d962f0aed3c07a44cae10a2cc0d231ea73559d84ed08ab0b047192",
+      "bytes": 49278,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/measure.d.ts",
+      "sha256": "9879deca2914934afffcc875df21adce6746fa39f05a41864098fc99964d0bd3",
+      "bytes": 4586,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/measure.js",
+      "sha256": "bf1fc335acf7ea3f843bc5ae9f929e2ea5ac66dd4788ce6705eb163584751219",
+      "bytes": 42365,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/measure.js.map",
+      "sha256": "ee6ac359874527d74eea12326a5bc4544fc403391de60a315bf8e9a1d24289f8",
+      "bytes": 35043,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/objects.d.ts",
+      "sha256": "d561d5ed3218a63f654ef3b84669f4bf9e9d8f86109ef5cedac5ce7ead68ed60",
+      "bytes": 3485,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/objects.js",
+      "sha256": "7fe9dbcb931af116695c14ab2af5867693a7b496ba7a7ab90b3afefd936ee27c",
+      "bytes": 7609,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/objects.js.map",
+      "sha256": "faa51e29f7fd014b002b4dfdd5f4d32d18de17dd2b7d98aa58f5ae94296290ff",
+      "bytes": 6150,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/occlusion.d.ts",
+      "sha256": "d421062b4af4f1846f4e7e146dc792a4f51be9f7500fef6f752ec4746335f2ef",
+      "bytes": 1889,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/occlusion.js",
+      "sha256": "d4d0071be1f2b04dce0e4f77fae675992966f28551a68841c3a839ab0c9f7d2e",
+      "bytes": 2022,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/occlusion.js.map",
+      "sha256": "f33d327a4d7802f8b970b4f1204b56fb084bcaef68b519eaa3988eabb79d37c9",
+      "bytes": 1384,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/raster.d.ts",
+      "sha256": "ed628ce847f0b1edef466d61a16f58264f115c7f2d58d40be5b5c5872a3c8ade",
+      "bytes": 2321,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/raster.js",
+      "sha256": "0a08746a7cdaf09b3c009ac104af26a1ffcbc34cd7c9f19b0f00021bbfc846cc",
+      "bytes": 2561,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/raster.js.map",
+      "sha256": "7467b68302a6f290a05d722f1ea39c622f5fdbe188fc52285d2ac4480c81f815",
+      "bytes": 2749,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/ribbon.d.ts",
+      "sha256": "e73afe6c6f23263da1c95de656dc276af0d321ba9506c31efb2903f59c877bfb",
+      "bytes": 1826,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/ribbon.js",
+      "sha256": "25635c2682a1f5ee3d3253207dcf6ba930ad23f968ac0bd316de1103391b8bc3",
+      "bytes": 14194,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/ribbon.js.map",
+      "sha256": "534bfd5bd296e269269250a6e7b0c4eba20e80acee71002f35ea0105f5d30c8f",
+      "bytes": 18375,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/routing.d.ts",
+      "sha256": "429e4e4382df4c02fdec0c000636d7a2a9ee6712a12311a8af0168ccbc68bfbc",
+      "bytes": 1306,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/routing.js",
+      "sha256": "193e462e9f4a583f6d65d803c9c8b3cad265bf107faed92df3b737fee17e351d",
+      "bytes": 4590,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/routing.js.map",
+      "sha256": "7a4a4b48624c68bce6bbd720d4e101efc2bad17795ce7e3f0ae6f64026adfdc1",
+      "bytes": 5894,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/schema.d.ts",
+      "sha256": "426d7cc03cdbdc2c7af78829ee272f0a78c827bb6266d6863c1217b07f269f59",
+      "bytes": 100,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/schema.js",
+      "sha256": "57e2bf8cd5215bd1058a9428ded4a8f9ac94ac8a625e65453db76eac5db17b54",
+      "bytes": 3170,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/schema.js.map",
+      "sha256": "8fee919ce1a4b04fbf5e802e5e7821993a221291255be693f271f85eeccd583d",
+      "bytes": 2451,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/scoring.d.ts",
+      "sha256": "06b9afc30641e2d6465b3a74dd4713b4048e2c1cb9473e63c5ce8f0f6eb82a59",
+      "bytes": 3441,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/scoring.js",
+      "sha256": "c327df5a44723178004ad8f0965f3a67e1f292765681691b6f5b96c556705055",
+      "bytes": 14557,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/scoring.js.map",
+      "sha256": "c5a96d3c4c7b1d3caeab1c8ead386d9a33175a16fabdff51035426f0ea5a6c8f",
+      "bytes": 17746,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/screenChrome.d.ts",
+      "sha256": "3886acdbfec67cf8f0077bec423b2815bb11d04d30385114606dedd7769ef735",
+      "bytes": 1799,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/screenChrome.js",
+      "sha256": "96c3c0912dfa3295137cca9d9e137bb5b9de25a676cadee5e071d76ce54acbad",
+      "bytes": 4228,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/screenChrome.js.map",
+      "sha256": "84772af652e96a534f0b16a462f7d0142a0f0bcd537831042d8f0445e66c0441",
+      "bytes": 4685,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/shared-services.d.ts",
+      "sha256": "ab299a7c6eb5d20eeb34454f98b5de2b02a0d0ad8cfcc1b8af4140bd0f414b92",
+      "bytes": 705,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/shared-services.js",
+      "sha256": "65c462abd9cd91fb655b8c54d2358993e3ccc0f1823b2925d61c9a0a43bef9ee",
+      "bytes": 746,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/shared-services.js.map",
+      "sha256": "31a61cfcdf3340b54ab0734f4b92dd9a3c863088ee772f1447a0fcca11e5b4b3",
+      "bytes": 298,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/smartBasket.d.ts",
+      "sha256": "c90e5948711e8ccd09a5c4e2f2386bee116e705c5af30367f5cc5c5dcba3381a",
+      "bytes": 2611,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/smartBasket.js",
+      "sha256": "abf8f173d8c07909f1c4f3ad6fabd1f37ed4d0f34ca881ec6461accd9e2f010b",
+      "bytes": 25341,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/smartBasket.js.map",
+      "sha256": "2d0f996280b4b240194849c383610a06a1e22db9cfacbacd53fdef5adc9e5c4c",
+      "bytes": 28296,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/types.d.ts",
+      "sha256": "76164daa676dc929e9f16f3b1301d004f7b83f24a5a5daebc283adc9854c20e3",
+      "bytes": 12081,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/types.js",
+      "sha256": "7556f44d9255e361d304d47202395e74050b65251a58e175bcb41446a7b9ec40",
+      "bytes": 272,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/threeFactor/types.js.map",
+      "sha256": "4ea3ed1eb0c25c601bb281a40dd95de199e30a390282a042104ebb4565c408d5",
+      "bytes": 197,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/walkTrace.d.ts",
+      "sha256": "b95667fadf2c17a1eefeb327aaac8206a66d4d78547fef94a0da69af8b70de66",
+      "bytes": 671,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/walkTrace.js",
+      "sha256": "c601f9fc7e14a23485428008f95591e63fb5746f210e8636b97a494141e47bc9",
+      "bytes": 9001,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/detectors/walkTrace.js.map",
+      "sha256": "b9dc84aca1a98e9dff118f064efbf8d5071c74dd0f9ccf4d60c5c9628552e4af",
+      "bytes": 9309,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/board.d.ts",
+      "sha256": "ada40832e35a48eba754579979e9f8fbb798bf4687c51b2db33d6e0870dbef75",
+      "bytes": 1655,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/board.js",
+      "sha256": "0849480a10add759328b41f23ad77f3eeae75f69ed8a15affaf94bb570702716",
+      "bytes": 3723,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/board.js.map",
+      "sha256": "3428a6bca0b79c9384988eea195c496a9991c9c3bd4929cf470955c92c05dbb3",
+      "bytes": 3109,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/compile.d.ts",
+      "sha256": "3010dd8441f16c0690de17c981091f93bed8d3c0bc374e47b564d163ab725b85",
+      "bytes": 1062,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/compile.js",
+      "sha256": "d4ac364361bd98a7afe59febe7240a32b3e967618760ec0868a1057b60ecae1b",
+      "bytes": 6053,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/compile.js.map",
+      "sha256": "e4044b5569e16fd1646ca9f52b29d1b80ff3c0a1502a12b07740566a25e818ac",
+      "bytes": 3292,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/contract.d.ts",
+      "sha256": "7da1882c5530f1c322d4a223e2910a49a0a1a9b607683b031fb832a68ea399a6",
+      "bytes": 6257,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/contract.js",
+      "sha256": "cfad26ff29117574e05aa65cf1180bf81282eb4e8884bee13881fccadc21fae7",
+      "bytes": 687,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/contract.js.map",
+      "sha256": "afb0a07b88dc3ddd13c0cc2fbbf21d5d27d9a2e8bd787c6f3df664f9d477ad7e",
+      "bytes": 239,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/feature-set.d.ts",
+      "sha256": "acfe78a398524661c41cfc7dcc4ec68c6bde1f966f9c4187e6bbdb90bb00ae11",
+      "bytes": 4918,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/feature-set.js",
+      "sha256": "73b2649721b85df176341d9a173ff7087e83bfbda2a41bc4fbc47a3b927222f5",
+      "bytes": 11706,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/feature-set.js.map",
+      "sha256": "213120bcb13d78e646d7faea0b98b0ee21556e410ad96a8418a204ad923def40",
+      "bytes": 11181,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/gateway.d.ts",
+      "sha256": "974ad42203c8f0fc4df2d34b35d1b8560ea6e683d2bc258b06ad6da1092e4b36",
+      "bytes": 1576,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/gateway.js",
+      "sha256": "8c4652362d9739316b80dbd3f23dc595d8ff532d5ac9e8d11637df30d8915c97",
+      "bytes": 7399,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/gateway.js.map",
+      "sha256": "a7dea703b290562883528a574175829a381b713af327db1fd9617bbbf6ab640c",
+      "bytes": 6202,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/index.d.ts",
+      "sha256": "b07f1eff296069f5a18878417b5fda86f28c6f61d0f3046638ebfa072243e312",
+      "bytes": 251,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/index.js",
+      "sha256": "f0cf24f280df4cec260306a794e5da0b95d28517d6da7129a67c8a5fae4066b3",
+      "bytes": 1566,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/index.js.map",
+      "sha256": "372c16d78971989d5c8faf11198306d6bb60eb584940010b0cc950303260df33",
+      "bytes": 316,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/node-intake.d.ts",
+      "sha256": "49144460e088a5af6aab2348f244eb77a986f81213b25dc460e61d7210679448",
+      "bytes": 709,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/node-intake.js",
+      "sha256": "e8b30830ef0b19f772183a23ff8bd0ae98f9bcb9de6515e998e28a22488f578e",
+      "bytes": 1011,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/node-intake.js.map",
+      "sha256": "dda663d240462ce8d3f5ef869fd69222c81aee0954ad253f5477a7dd0f51eb7f",
+      "bytes": 525,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/node-sink.d.ts",
+      "sha256": "c1b3b0580e215670ea2ccdcfc2c3d74d8042edd23b905fefb5d4352a5cdd7fff",
+      "bytes": 106,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/node-sink.js",
+      "sha256": "0803f10d7a6513f3a1211397acdccfe1bd1dfa9136a52451f7818bd9ec54c0f1",
+      "bytes": 1897,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/node-sink.js.map",
+      "sha256": "6c309bc08ef66ca43fcb9d0fe0146008f85f14374f4dea3890b0f75c2a094025",
+      "bytes": 1290,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/operations.d.ts",
+      "sha256": "3b154400e99c6575196c461197d788cb29152bf8ec24748a07b306496a6ed1c7",
+      "bytes": 3165,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/operations.js",
+      "sha256": "98e0d01066ef07948e6cf92b9a3e5f10fede36c83789ab8d44c11b5a84bece54",
+      "bytes": 38945,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/operations.js.map",
+      "sha256": "8dec35ec1c650e7a89818a68d567c559e4f6b05c0fd9445b28cc8c0ed78d5b17",
+      "bytes": 28702,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/pcr.d.ts",
+      "sha256": "033f0b8982cc27d988dbcbf7ea4acc6eb7cfa1dfc9a20754024b5e261c6539bb",
+      "bytes": 1451,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/pcr.js",
+      "sha256": "a1fcd9d7d27cedc2e4f9f74d4fcc6825347e23c36f62828ea98bbf9fb75e1ddd",
+      "bytes": 2523,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/pcr.js.map",
+      "sha256": "e7e852fa922e008c2c0d4cc7af4b87b169316b7fb845aa17b841b94f60c30a58",
+      "bytes": 2328,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/sha256.d.ts",
+      "sha256": "6976596ac542324965fac817d9eb543ab211712163299b01bccfb639a8c420ad",
+      "bytes": 201,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/sha256.js",
+      "sha256": "499da2aaa1e2a657eea4a020badc585dad026b9731bfec89282a9da35e6dc07a",
+      "bytes": 4869,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/sha256.js.map",
+      "sha256": "1df1b2f9d41b2837533ead76bc9a565cb7e53607ba33c7d6c96b96117929cb01",
+      "bytes": 5777,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/sink.d.ts",
+      "sha256": "f967097076270b9f5359e705b306c855aace70ecebbb14cd26d6a4bf4b636601",
+      "bytes": 785,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/sink.js",
+      "sha256": "a840ab8b7808da678d7defc91aad21a7a7ead7a2e183f0dc278dc8d50edd9552",
+      "bytes": 1799,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/exec/sink.js.map",
+      "sha256": "9d90b27ead401322786f2a4c39de97d996244f8a46f98bc9e053f6be36880a55",
+      "bytes": 1205,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/canonicalFrame.d.ts",
+      "sha256": "db6b35c726201a00945b445b6848e77466bfe045facac060850bda82d588389b",
+      "bytes": 207,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/canonicalFrame.js",
+      "sha256": "ac539989a3a97fb93e2a8101cc7148188e57f213d2494b2fd3718f4116981ad4",
+      "bytes": 1251,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/canonicalFrame.js.map",
+      "sha256": "2629dfed01574abd03919fc087dbb84cfc67d99186b1eb017e7e4b3b92ff32d9",
+      "bytes": 343,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/composite.d.ts",
+      "sha256": "f02a132ebbc4c420737ebe4fe6b56df92deab9df7c07ee01862ff5cee3e0110f",
+      "bytes": 1035,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/composite.js",
+      "sha256": "9d8eaa439e728dcec5e1e7132610b719549ef974fcf5624da38d47932df808fa",
+      "bytes": 4837,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/composite.js.map",
+      "sha256": "95ad9ad8ce58c1db9a46009c60b668743f3151dc8ab5c55da08b0e0ef629acf7",
+      "bytes": 4118,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/crop.d.ts",
+      "sha256": "c97c2442173de5595752f615b6c9fc7ae4c1f3b1f8217bce25d4f62572a38a54",
+      "bytes": 532,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/crop.js",
+      "sha256": "0d8d1ad20381b6815065d8887586a5591dda4ae88c6c7667d48a7442a4765aa9",
+      "bytes": 1344,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/crop.js.map",
+      "sha256": "45903c5c22156345b05e87949646722fdecfae5941987cca7ed62e87c1894c9e",
+      "bytes": 858,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/hash.d.ts",
+      "sha256": "e98320c98f93c8219ba33138a5fb03d168724c087614a92d12c91287e8131549",
+      "bytes": 71,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/hash.js",
+      "sha256": "6860cc94c7e68c027471ff90fa5eb38eb8826a2d607efb5d88f8c324060f6e3e",
+      "bytes": 1261,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/hash.js.map",
+      "sha256": "c9a162fb3e6a9015a60445c1bd1dc68eb8f0dd5cee1cf72e6e1a6f6f5ff2c199",
+      "bytes": 623,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/inputAsset.d.ts",
+      "sha256": "acc9291dd5ab0c8bbc944312ab2cfbbce25652d0833895a29957aeb106d2dc9e",
+      "bytes": 740,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/inputAsset.js",
+      "sha256": "5c2e8310c72eba497cb55c358be7e509d8b550e037cb105955ba495329d302ba",
+      "bytes": 1793,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/inputAsset.js.map",
+      "sha256": "ea9f830d186cbc5310da593ef1fbde9ad5c7754e897e9f9faabe87b95336ff33",
+      "bytes": 859,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/ledger.d.ts",
+      "sha256": "d96de61a32ba0b5e2e0b46bcb7baa0f3da6f825d22b1bd0a862ade2f42699b74",
+      "bytes": 939,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/ledger.js",
+      "sha256": "8f7947ec1f34cacdb69af0a4f656c7e5f6b3decce4cda87f1ec8817d4e0e45f5",
+      "bytes": 1058,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/ledger.js.map",
+      "sha256": "c5fb08da14a92abc67b30383ecdc5492ab1456641ed4875cd8fa539564ea52c2",
+      "bytes": 574,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/projection.d.ts",
+      "sha256": "40bd40e912a84aefd5aad29f259771d5bf6f8eceda155beddc28173a626435d2",
+      "bytes": 581,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/projection.js",
+      "sha256": "7907c41e3014c7427ed7db84d3f52c3b9cf15fe2952b08de7b87d79a932c8b60",
+      "bytes": 1576,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/projection.js.map",
+      "sha256": "27a3177e776b45ad8fe567595bbea3fa1b202bf52a222b8222cc9c0f0f7113de",
+      "bytes": 729,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/roundPreRead.d.ts",
+      "sha256": "36759d8626cd249f4d3653279ea5c9cf23c1f871f78236fdc25b565431bc11fc",
+      "bytes": 352,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/roundPreRead.js",
+      "sha256": "b0b8ad6cd7608dc0c3f722f88adac91c9d4223ece1dc12558400f0b6ce99e7b9",
+      "bytes": 1826,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/roundPreRead.js.map",
+      "sha256": "fc5c61d50cee176661f20f543911e641ee326169756ff68ace80047461d2d3a3",
+      "bytes": 1114,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/stitchSolve.d.ts",
+      "sha256": "0c23c4be96d56d7ad3f830e23ced337b4b6c77010f13bca24220554fabbefb5c",
+      "bytes": 1906,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/stitchSolve.js",
+      "sha256": "7305066c69cb7b7dde62d9147027c0f99defa128fc242ddd5382d5bafa44c560",
+      "bytes": 4731,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/stitchSolve.js.map",
+      "sha256": "5c43767264f12a911c41354d4955a3e4aeee3e3e01100bece405d2cfc58fbadd",
+      "bytes": 3453,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/stripChrome.d.ts",
+      "sha256": "fe787707e8f2c18b798df8931d91b7beb493294e8e417236634c0a2d6e7d87a9",
+      "bytes": 467,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/stripChrome.js",
+      "sha256": "c93dd9d8632a59561014892bdef36fcb5d231b558d7836789cd4531013cc8a06",
+      "bytes": 5691,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/stripChrome.js.map",
+      "sha256": "d5f2bd2ed638b7acfe2ca1b49336bc0ce650423e3b79fc0bfbd1446edea150c9",
+      "bytes": 5834,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/thrownRound.d.ts",
+      "sha256": "821c6126d8b262fbede5aa73611b53b6e1d1225e106f6265c27b7a3413651b18",
+      "bytes": 936,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/thrownRound.js",
+      "sha256": "0203caf6b425a03738df3052ab25484ecc80f8f47c4edb9c56093dd21db2c3ed",
+      "bytes": 2487,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/thrownRound.js.map",
+      "sha256": "c12b31fa249298e6da0be8de0c5daa140a6766d257582a6c32c394f91a9e27b9",
+      "bytes": 1221,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/truth.d.ts",
+      "sha256": "29ece9fa8494c40b1e09f16dd0b9360728518ebaa91fd3faaab8d7d30c8cd204",
+      "bytes": 1566,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/truth.js",
+      "sha256": "afb5ecdd21a4501856be01ac0af409b809043acf6f7f0e1cf1115480bb124c8a",
+      "bytes": 1433,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/truth.js.map",
+      "sha256": "25d7803c0c7010512f570f4cffa24599ffb955e1819f843c6140ec836332114c",
+      "bytes": 929,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/types.d.ts",
+      "sha256": "e059752d12deba1d0f7ff9d933cfb4e60233905cab20612d6e8a6f821be56cfc",
+      "bytes": 138,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/types.js",
+      "sha256": "b524d78d26d967bc5f0c79241fdceac5fc5ad19dd25c363f7da76b625e267a92",
+      "bytes": 287,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/g0/types.js.map",
+      "sha256": "b434a27e88f6499b0bad3d2819d63a991cced5c8eacb2f7de19fc709650d5fcb",
+      "bytes": 146,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/index.d.ts",
+      "sha256": "f48116b0971ed0224b121090bbc2b2f1c235d9f6fbb1d2e3b694df7b275870c6",
+      "bytes": 106,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/index.js",
+      "sha256": "2cb20517b43a323bfcf525c283efb9826f832667a6589b3e718315f9a0419dc9",
+      "bytes": 1836,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/index.js.map",
+      "sha256": "96b27e572ec5fa0ab1632326e7a67f2c960b063fbbd8b77abf96645e8b752e5a",
+      "bytes": 334,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/raster.d.ts",
+      "sha256": "01358769aefbede80fc60ca442247451bdd93de182d9fb72d7271fe29d7d7cf7",
+      "bytes": 498,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/raster.js",
+      "sha256": "7d67d61af7fea1377c307f019fecabf402d4514a3c515c1c12ac5b56dd8fa4b4",
+      "bytes": 877,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/raster.js.map",
+      "sha256": "c43a3fd4432c1666b94e05a5e1ef5227c78d89278148a8d72e18586fc2e6e83a",
+      "bytes": 941,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S0/clean/index.d.ts",
+      "sha256": "052d7e980ec50aec51490ae1a20849e3f4bc04dfa39fed2f88191b39d0e0c1d8",
+      "bytes": 2881,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S0/clean/index.js",
+      "sha256": "50bc0070b69eb2ec79606ead08e6a505738e93fe941f982c092a6798ec8adba8",
+      "bytes": 9040,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S0/clean/index.js.map",
+      "sha256": "107050e8823e5756054b71801346c96a1aa3635a192a260ec07765a2857f2183",
+      "bytes": 6547,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S0/contract.d.ts",
+      "sha256": "2555767cda2edca093e29c36421a7162a16882c08a871bb7345d5397f7dfa71d",
+      "bytes": 101,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S0/contract.js",
+      "sha256": "f5f3eabbb0d6c2f2e8bb578f44615bb76e5e53ffae43e230f7cd6009ed1ec5ed",
+      "bytes": 1318,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S0/contract.js.map",
+      "sha256": "5e67c3b7a6293ed7deb5bb80da79fb8835562f908117532f68e80349a52d7e8e",
+      "bytes": 950,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S1/candidate/Badge.d.ts",
+      "sha256": "b626a38dd9806452539a94a2956fc0e4d794b0717fc6444b6351658f6ecfc3d7",
+      "bytes": 4202,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S1/candidate/Badge.js",
+      "sha256": "d0eb77ae8dd89ca5ebcee30963e180ce71b954a8d254a9c0559000be8cc59655",
+      "bytes": 11211,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S1/candidate/Badge.js.map",
+      "sha256": "2dfbb8c130f62588602ca33c9d16d1e5f015b4dbe69df08d20b7802178bd1c53",
+      "bytes": 11750,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S1/candidate/index.d.ts",
+      "sha256": "b3a440f214bb3bae5a6ad707a2c1fc4b6cc8e27be8b1a4bbb6d9b7de62917962",
+      "bytes": 2040,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S1/candidate/index.js",
+      "sha256": "2601fa2ba1a324cec4229294800c65aaded15de5aa5b6ac5da76d817e4d7e89d",
+      "bytes": 10079,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S1/candidate/index.js.map",
+      "sha256": "d075450dcfcf6d9c2d6868df037aaeba972ac6908d09cb9e5bde9e25bd05f22c",
+      "bytes": 8317,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S1/clean/Badge.d.ts",
+      "sha256": "8422962a04253d7b0a873c708d79ec68e3ec1254b6502d47ae4439fc8d018eaa",
+      "bytes": 4210,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S1/clean/Badge.js",
+      "sha256": "8364eb8a75f00d77d09370ece78dc7ac9215dc4961694b51b7c5ad99a5a74c5c",
+      "bytes": 11171,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S1/clean/Badge.js.map",
+      "sha256": "c306ddbf240e00485fd188a1b9214305dbd117b7d13cf051e9ff39ca0b21ae84",
+      "bytes": 11766,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S1/clean/index.d.ts",
+      "sha256": "b3a440f214bb3bae5a6ad707a2c1fc4b6cc8e27be8b1a4bbb6d9b7de62917962",
+      "bytes": 2040,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S1/clean/index.js",
+      "sha256": "2601fa2ba1a324cec4229294800c65aaded15de5aa5b6ac5da76d817e4d7e89d",
+      "bytes": 10079,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S1/clean/index.js.map",
+      "sha256": "915bff0467e2bc7477668c0b0cd13076054e9939d40d53c474234c996bf571a6",
+      "bytes": 8313,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S1/contract.d.ts",
+      "sha256": "2555767cda2edca093e29c36421a7162a16882c08a871bb7345d5397f7dfa71d",
+      "bytes": 101,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S1/contract.js",
+      "sha256": "906f77c984624bcdab68d205e386b2f863a2480aeaa9fc2f668f157849e1aa8f",
+      "bytes": 4104,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S1/contract.js.map",
+      "sha256": "1222a26dae5560c9bced117f789a3cd271859d0aa4d0eb12f4091d7670cdbd0f",
+      "bytes": 3682,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S2/candidate/Basket.d.ts",
+      "sha256": "d39c0da87a3c3d92eb013b871da16e32c7bf6aeddfa21816d25b125328692296",
+      "bytes": 3024,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S2/candidate/Basket.js",
+      "sha256": "9fed5eab97dd90b5ffdf619075b27831452a43a60ab6932932be89f58efe82e0",
+      "bytes": 6693,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S2/candidate/Basket.js.map",
+      "sha256": "56efa6dfbfc46cce808827072f5b5def747316c3e0d08ae51fa29796d68df39e",
+      "bytes": 7037,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S2/candidate/index.d.ts",
+      "sha256": "d16769f0b5c07a8345a70e1894643ff627c3fa387de67bfb117f64db943c8c8c",
+      "bytes": 1388,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S2/candidate/index.js",
+      "sha256": "9a9a5abcd8510fdf947747adb4aa80402dcf9260dc66225761c369be3e51c62c",
+      "bytes": 5509,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S2/candidate/index.js.map",
+      "sha256": "43b6f0d11fe9f6922957b8c60df21c7878f788aa8c29acd0e2c2aa04a0387f9c",
+      "bytes": 4226,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S2/clean/Basket.d.ts",
+      "sha256": "d39c0da87a3c3d92eb013b871da16e32c7bf6aeddfa21816d25b125328692296",
+      "bytes": 3024,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S2/clean/Basket.js",
+      "sha256": "9fed5eab97dd90b5ffdf619075b27831452a43a60ab6932932be89f58efe82e0",
+      "bytes": 6693,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S2/clean/Basket.js.map",
+      "sha256": "6e8ffe5b20186a4fdd6e2e6d1a250496334de749687730689513e7d530e0609d",
+      "bytes": 7033,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S2/clean/index.d.ts",
+      "sha256": "d16769f0b5c07a8345a70e1894643ff627c3fa387de67bfb117f64db943c8c8c",
+      "bytes": 1388,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S2/clean/index.js",
+      "sha256": "9a9a5abcd8510fdf947747adb4aa80402dcf9260dc66225761c369be3e51c62c",
+      "bytes": 5509,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S2/clean/index.js.map",
+      "sha256": "a7a3c72d8e3bac9d97bbc8eede5e9a471842345dfcf91ca72881efd68e6a7060",
+      "bytes": 4222,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S2/contract.d.ts",
+      "sha256": "2555767cda2edca093e29c36421a7162a16882c08a871bb7345d5397f7dfa71d",
+      "bytes": 101,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S2/contract.js",
+      "sha256": "5e36ea3578be73c325007a0e45d7ed2ea378404e4cbac27fce2697facf160b6a",
+      "bytes": 3807,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S2/contract.js.map",
+      "sha256": "ec7c482aa937605793fa5eea68edf9b88f4bf543eaa0b5eb6cbed463580a2592",
+      "bytes": 2961,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S3/clean/Tee.d.ts",
+      "sha256": "7b12a501ac505c22ee0c1551ededeb94b75dc9ab1ddad69ed093ac050c626145",
+      "bytes": 3078,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S3/clean/Tee.js",
+      "sha256": "4d48cfa7d5357e5f8ab396bd19901cb4aed2513c0ac62fb700242fd1cd9c604d",
+      "bytes": 6428,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S3/clean/Tee.js.map",
+      "sha256": "4fac4e2cc90bf017e3dc4d50d18b4abc55a1b42d32f607e9e71221572437187a",
+      "bytes": 7122,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S3/clean/index.d.ts",
+      "sha256": "80aa0d858be6330e6c91aa9977582e0b09fd54bd56898460edd3c045285cdbc2",
+      "bytes": 1330,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S3/clean/index.js",
+      "sha256": "f72fe77c8e1d7dc42a2ca33816307235d022819315d1ea5c79ed30203d4b32f2",
+      "bytes": 5484,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S3/clean/index.js.map",
+      "sha256": "86a094b73ac0ade2764f493321f1a3922729b56000771426ccd7b6cf0cfc027d",
+      "bytes": 4400,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S3/contract.d.ts",
+      "sha256": "2555767cda2edca093e29c36421a7162a16882c08a871bb7345d5397f7dfa71d",
+      "bytes": 101,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S3/contract.js",
+      "sha256": "b54d5a98e4c17ed88585241f23148a167c24916d99bd7ae68270e7497ed63de7",
+      "bytes": 4396,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S3/contract.js.map",
+      "sha256": "44635504ff93455fec3dd7cb68c7d54dc796b6f5f107c45bec97bc42ebaf9e56",
+      "bytes": 4045,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S3/exp/fill-consistent/contract.d.ts",
+      "sha256": "a88a4952961e7001b1fef9de57cea7e87807d66fc49f4cd121449314e9de2424",
+      "bytes": 107,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S3/exp/fill-consistent/contract.js",
+      "sha256": "4734146f2151f14e7f01a687d9fb89dfcba6d86ed808694729818ba3c2d3b490",
+      "bytes": 4259,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S3/exp/fill-consistent/contract.js.map",
+      "sha256": "2961da6bebc048721b20b2701d13a50959c0e936e8c170ea684fb1fe7bdd14fd",
+      "bytes": 3631,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S3/exp/fill-consistent/index.d.ts",
+      "sha256": "e63ea1a91b2f1d7184bc082e22962e145f00416333dfce87c3fda7bb704d8a6e",
+      "bytes": 674,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S3/exp/fill-consistent/index.js",
+      "sha256": "3ea097464a6b19959d138c4696a67080f5ce7728af36764c4d3df3f564258dd5",
+      "bytes": 2001,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S3/exp/fill-consistent/index.js.map",
+      "sha256": "bf8ed243cb6a73a39c4bce2bf661e51bab423ca9ea9c56726145096869e818de",
+      "bytes": 1986,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S4/exp/axis-local/contract.d.ts",
+      "sha256": "e0147953a7d6721be2e3c8f0b9f8c18d6c3717404749377a033ad8b5678062ff",
+      "bytes": 518,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S4/exp/axis-local/contract.js",
+      "sha256": "74d1ebae7ac9b9eb35b496a578b070c8093f1505277db8db7b4d10b24879165d",
+      "bytes": 4413,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S4/exp/axis-local/contract.js.map",
+      "sha256": "d44cb0803513cf8a8c1e5889fa101a583781f5fe012da47b2ae987fbb3afdacc",
+      "bytes": 4732,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S4/exp/axis-local/index.d.ts",
+      "sha256": "be7cfbc1dba35c4633b5e11cc29fa468a20d3acb992b3106e6cf5637686eac10",
+      "bytes": 1795,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S4/exp/axis-local/index.js",
+      "sha256": "9fcb336505eabeca9e2ad5a59be1dab8589dadb685a032886d74a0c1ac11ab50",
+      "bytes": 2818,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S4/exp/axis-local/index.js.map",
+      "sha256": "008982021fa9e1ffa3cb70bc6130feec1cc03ab072f8f9f619b87204c9bf78f8",
+      "bytes": 3412,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S4/exp/open-frame/contract.d.ts",
+      "sha256": "a88a4952961e7001b1fef9de57cea7e87807d66fc49f4cd121449314e9de2424",
+      "bytes": 107,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S4/exp/open-frame/contract.js",
+      "sha256": "0a490005684962bb274bb03b197d8da8d2010740b4bc52f1f999b28c618e6521",
+      "bytes": 4001,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S4/exp/open-frame/contract.js.map",
+      "sha256": "26bdf2615d06ce16b47526df83f9625f2e9cbc3aae01030286c63228759311a1",
+      "bytes": 3668,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S4/exp/open-frame/index.d.ts",
+      "sha256": "662c65f230dc05a3f6ef52fd6ba636339e201564b13709a83b32ea0255f6872a",
+      "bytes": 1357,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S4/exp/open-frame/index.js",
+      "sha256": "7147f3b2dbd662a792995203e6ac8c366d478cdd896698c6748335b47b431a00",
+      "bytes": 5363,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/S4/exp/open-frame/index.js.map",
+      "sha256": "d4993b1f7d241f969f86161bf78ee920513dea9418d12ef11806cd573777e2e0",
+      "bytes": 6590,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/componentPxC.d.ts",
+      "sha256": "f1c0460e987f111ae9095863a346a68d4931d43fc1186a635c4110d1cedd448c",
+      "bytes": 618,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/componentPxC.js",
+      "sha256": "23de9b37a8672d851fef152d8793e4cf23fd547e21f2fbc52526ad65e1516c91",
+      "bytes": 438,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/componentPxC.js.map",
+      "sha256": "83da54e5f8f8dd9e6c5be0e5efeb110a17e335bff1dbfe491dbb8f791571864a",
+      "bytes": 315,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/contract.d.ts",
+      "sha256": "fa5e7cd0532ea06a21105beb78c5b7345fec2a0e80d014880d085c4dac6eaf1f",
+      "bytes": 971,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/contract.js",
+      "sha256": "957b7144e488534b55fc61e06309e28f04ddb3f4060fa982621998a46263287c",
+      "bytes": 113,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stages/contract.js.map",
+      "sha256": "89d9663f5a9e7a9d359151f726bc401b11676efbab2e628f03f918326f18a25b",
+      "bytes": 118,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stitch.d.ts",
+      "sha256": "762677a17731dc587a20fe5bd272e25f746213d69fd331e89c1763e50da895b5",
+      "bytes": 588,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stitch.js",
+      "sha256": "17b12a4a1c1fbce96f849641b6745015919cfe4bd452003cfe61ce0c50af04ac",
+      "bytes": 3980,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/dist/stitch.js.map",
+      "sha256": "7d11d7833810241a46eb4cbba8e6649820958a3e8e5805cc51e489348ed4939f",
+      "bytes": 5034,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/package.json",
+      "sha256": "c244bd295eb0872da4540e64fc8c69928c232c35b7e0b4692cf7362e865b3c14",
+      "bytes": 1189,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/scripts/copy-assets.mjs",
+      "sha256": "d531d91d4abedc510a6798f8a095610d132ba7c60d95c5760c94ee4fb267671f",
+      "bytes": 914,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/adapters/browser.ts",
+      "sha256": "d1d2b07e314242c45377968e04e98809c8293697efe7222d51603a70f0b82145",
+      "bytes": 2052,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/adapters/node.ts",
+      "sha256": "a1984646b2463dcb8faf678b56902a525fc22d533ce8fb3035b6eb7b6d23ae89",
+      "bytes": 2073,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/autoCrop.ts",
+      "sha256": "e82ffbdd55396bbc357301c746560d7c1bc725230938f0e27107ba08675ee20e",
+      "bytes": 4075,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detect.ts",
+      "sha256": "5341a6b41c37e8a2788b81d8ff55e7464a156a80e158759cb618e24b7376c257",
+      "bytes": 4472,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/hsv.ts",
+      "sha256": "be00d1b9625aa4b99cbbcdf2d6f1877a0b440699e5f2b559d646b597798f5a9a",
+      "bytes": 699,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/labEndpoint/README.md",
+      "sha256": "ef00c2800d834b3003e46b58f9ec952bfb32af41f742e81a57c4bd30f4e7bced",
+      "bytes": 1014,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/labEndpoint/assets/basket-sprite.json",
+      "sha256": "c2867340d477a5e2f88e83b78516fc89005004a4aa279b6b9bc86a6f98e3598f",
+      "bytes": 3234,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/labEndpoint/assets/logistic.json",
+      "sha256": "a86497b308da33f093ac4540a841b228272f0a14fbbb5ebbfa1490d047ebceb7",
+      "bytes": 151330,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/labEndpoint/badgeStage.ts",
+      "sha256": "75f7d07a97e899eccbab7943754e392751fb2c87bf144e65a6c17515e799043f",
+      "bytes": 2573,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/labEndpoint/components.ts",
+      "sha256": "389bb80a2c04e9b59a5a89f753cb00724cc16b21da14f6558f40965d993f7369",
+      "bytes": 9095,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/labEndpoint/digits/badgeGlyph.ts",
+      "sha256": "1e68623460120e39c2958b0a255ee7e660655fb7af41e216b89ac535347d89a6",
+      "bytes": 1888,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/labEndpoint/digits/logisticInference.ts",
+      "sha256": "3a1c5b48aa8924661c2187c8664f5a3ac5698027f0722b414225b798bc1eefb5",
+      "bytes": 1368,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/labEndpoint/digits/normalize.ts",
+      "sha256": "b12eed555413f5fab6cf0758f000ba3feb857604de61f09c161895715bc239a9",
+      "bytes": 2165,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/labEndpoint/digits/readBadges.ts",
+      "sha256": "b2fed7d3d64a989a48f1d504e9e0a789fc5ec9930bea1e0f325fb04890bf4e34",
+      "bytes": 3451,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/labEndpoint/digits/segment.ts",
+      "sha256": "d00c80a9f7ae184008e1f8a1b1b0b11d6f25e534e1cd26060410545fefd43240",
+      "bytes": 8501,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/labEndpoint/endpoints.ts",
+      "sha256": "8fbc7b9feb94f00b402ebc8c238e2fbc7eec61f075cad15750c00f95390bf322",
+      "bytes": 15881,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/labEndpoint/families.ts",
+      "sha256": "6ed95d4d9d6bad72dfb58751e8bf812afebbd789528e0458562bfd1979038406",
+      "bytes": 2250,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/labEndpoint/index.ts",
+      "sha256": "b239333081c075291d79583ec39a488c8f451394c434e5853cd1cd617b12d3c2",
+      "bytes": 5276,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/labEndpoint/raster.ts",
+      "sha256": "3d72b225f43c2faa6542d61bb8368de50154c607fcbed7d60ce4174a631ca069",
+      "bytes": 2572,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/labEndpoint/screenChrome.ts",
+      "sha256": "c1194782b3413822ae2c22bff3ad6d8479261562ae4fdd1f62d7e1b16e2d2a22",
+      "bytes": 4676,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/landingDroplet.ts",
+      "sha256": "b3fa6061420da6747525b948a087cb4761b2c26fbef1813bfab7c25e62bd557d",
+      "bytes": 5094,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/purpleMass.ts",
+      "sha256": "1127a108bc65641e5ee4524bfb982ec7d64dbd0c7cce4fcd8d20630f6168e3d8",
+      "bytes": 4834,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/strongHole.ts",
+      "sha256": "f63694e16bfc00e44ba275e8ebf61eab0511e794e1f08c572fc3db7240bdce7a",
+      "bytes": 5897,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/assets/badge-glyph-templates.json",
+      "sha256": "00af1d9d7bc40790a76aee0f8a2cce68b930c2ba4a94575b2842235fb1253b41",
+      "bytes": 11572,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/assets/basket-sprite.json",
+      "sha256": "c2867340d477a5e2f88e83b78516fc89005004a4aa279b6b9bc86a6f98e3598f",
+      "bytes": 3234,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/assets/logistic.json",
+      "sha256": "a86497b308da33f093ac4540a841b228272f0a14fbbb5ebbfa1490d047ebceb7",
+      "bytes": 151330,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/assignment.ts",
+      "sha256": "2f56a606fce6543ca96bcd1a1b2300af4e2ce0c29f2c27fd9378bc76f065946e",
+      "bytes": 12475,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/badgeEvidence.ts",
+      "sha256": "299fa62cf204482a585f6176f6909f17341a2060351b1de63991f49467d44659",
+      "bytes": 9051,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/badgeStage.ts",
+      "sha256": "081315be6c9f0e888f6916d8e73badc1204a1fe51b95157f7d0bb526ffb64418",
+      "bytes": 9108,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/componentAssembly.ts",
+      "sha256": "0b3d795d568f68a3e780caef1777c308babf9840dd42b5f89d6eeba789cbc126",
+      "bytes": 11438,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/componentField.ts",
+      "sha256": "eeb9d88138e36aa3620078514cbf9af3b4cbb9d16364a8700dfc703582fb0032",
+      "bytes": 1659,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/components.ts",
+      "sha256": "872887cb2400367a783760a8db336f6a1e89a7eb131ffef4d0ef1552996d7b3d",
+      "bytes": 9508,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/config.ts",
+      "sha256": "032dd349a78178c7acb5693942d5e6f50fca6daed5cde1ca7a25530e41323480",
+      "bytes": 7799,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/configs/badge-glyph-template-on.json",
+      "sha256": "5be0cf90d77192e9e483202957587cb98bdeee7a9b901a93a2038f745e920e4d",
+      "bytes": 713,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/configs/badge-m2-aa-on.json",
+      "sha256": "39d35321a4bd4c1cf7e355570585404eb5e71ef5199abd4a6aaae79f85e91ac5",
+      "bytes": 621,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/configs/clean-basket-family-on.json",
+      "sha256": "854ce256d2629b0ace8f1633a2f241177499e2e64f85531a983d3eb4b12338b1",
+      "bytes": 579,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/configs/default.json",
+      "sha256": "934fb03f1b10ba488f0729e28a3873fd447790b9f0dfdbeb60c00270a84a7080",
+      "bytes": 712,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/configs/family-on.json",
+      "sha256": "91f7da2495700b426f49e94c33eac0d6ac646c2b779b838c89436fa1b07f56a7",
+      "bytes": 606,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/configs/phantom-tee-on.json",
+      "sha256": "11bae2c3902ddbdd185a67c4fcdfdf9cb8f383ba80905dd83d765e35ab0391d4",
+      "bytes": 647,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/configs/posterior-tee-recovery-on.json",
+      "sha256": "1d590adba57ea96fbc7a8b8d04894a2468d14c3375a70eb960aaaddda98e6491",
+      "bytes": 582,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/configs/straight-test-on.json",
+      "sha256": "de191edfa8549c234aa97cc33d958980c82f45a59fe123d3fe1f896329d801d2",
+      "bytes": 479,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/configs/straight-test-truth-assisted-compare.json",
+      "sha256": "ede4f140205455ba2bd66131bec3e9bce31f76fc2317b8a32417c9b625130ee6",
+      "bytes": 519,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/configs/tbs-four-lane-sensor-on.json",
+      "sha256": "ec9ab1e39fbb063321176e47d8ea70d953e2cd19accc5cd98d158787d0d703f5",
+      "bytes": 447,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/configs/tee-badge-lock-on.json",
+      "sha256": "30be3e58757abbf057b4655bbf6fbf4d4bbd96d58a06e5e39fa82ecff8df415d",
+      "bytes": 597,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/configs/tee-family-on.json",
+      "sha256": "372b1eda2df83fd35bec8d946d1206af8a4253f0ffd9ce2b6404665b1030a380",
+      "bytes": 756,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/configs/tee-min-area-pose-on.json",
+      "sha256": "86378105441795885b9e028088eede8d9946836a834af865881a6e99a8a24cf5",
+      "bytes": 692,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/configs/tee-recovery-on.json",
+      "sha256": "bb5f1e042df497faaaddb33d906e7d4011c3b2c1e84d111bebda3a77e92a1f08",
+      "bytes": 516,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/configs/tee-recovery-phantom-on.json",
+      "sha256": "8958fbf1d5f6235b7049d824a74fcf8655038084ff77967a23ffec662e4f4bdc",
+      "bytes": 693,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/configs/threeFactor-config.schema.json",
+      "sha256": "f8bb383e4a0f7a0ab13c0f65cc640f9f3c1cf8d8d92757bbf6ada47558844720",
+      "bytes": 52484,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/configs/zfit-on.json",
+      "sha256": "fd152cd0c97689e5c02fc607e94befdd7d06c386d9d689ce0fcd83a822512f93",
+      "bytes": 302,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/custody.ts",
+      "sha256": "6ede7fe76c12830a8fb68f1af26041d437cacb71d41edc5e548da148e7ad9b95",
+      "bytes": 10857,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/digits/badgeGlyph.ts",
+      "sha256": "a59405c193b9c333cb190c852e2501c2eacc5a7184b6f4c365ac1ee9d7fcb97c",
+      "bytes": 6559,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/digits/badgeGlyphTemplateMath.ts",
+      "sha256": "6f4dc4072dade9d9062435ce83c57e1a9a689c4313a44b5693380b31695faf3b",
+      "bytes": 12801,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/digits/logisticInference.ts",
+      "sha256": "3a1c5b48aa8924661c2187c8664f5a3ac5698027f0722b414225b798bc1eefb5",
+      "bytes": 1368,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/digits/normalize.ts",
+      "sha256": "d8f27ac00dd052d4e278cb94fff839261cd725b91e8b1d0755c07cfa6e035899",
+      "bytes": 2331,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/digits/readBadges.ts",
+      "sha256": "f57b1f1985b151c68beba3523a2bfa5bac257ad2d7d72e1f52e435761ec3aaf0",
+      "bytes": 4679,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/digits/segment.ts",
+      "sha256": "91d516b4194a4c941932c1593ef7b5ff57bd07340166de3824fbf49f49420bd8",
+      "bytes": 10434,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/endpoints.ts",
+      "sha256": "37b3778e76b2728ac023f550684b26e94f06ebf0d86477eb4f70c23d6b01d8e7",
+      "bytes": 22089,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/engine.ts",
+      "sha256": "e2fa2d84239de0c798b1b611b831980063961b0bc93e74a57098bd37f86e0793",
+      "bytes": 13526,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/families.ts",
+      "sha256": "6ed95d4d9d6bad72dfb58751e8bf812afebbd789528e0458562bfd1979038406",
+      "bytes": 2250,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g1.badgeGlyphTemplate.ts",
+      "sha256": "919f43346629265ae3028df3be1852a5e68f9920a0f8b900b572b0f1edfb3aab",
+      "bytes": 16623,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g1.badgeGlyphTemplateReceipt.ts",
+      "sha256": "b002ff9a8e2bff482c305a480740153872fbbbb94ab8ec257912e1fa4ac54a34",
+      "bytes": 10227,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g1.badges.ts",
+      "sha256": "8077df35a1b0e3bda24794acb0142f47c8f877e3bc4a1b361f8fa01d289b01d4",
+      "bytes": 4293,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g1.digits.ts",
+      "sha256": "abc38e43aad57d8b06a283de27e8b01954536fe65933e2e26e1943f4cc7d9859",
+      "bytes": 6735,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g2.cleanBasketFamily.ts",
+      "sha256": "de66a1bc7b481ce39cbef512a287bc5364e65bf5907874ebce9345853da9aab6",
+      "bytes": 13758,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g2.sprite.ts",
+      "sha256": "45d291a8b2ce8c2df059151a5d223346c94cffa4e13639d7c878016393b30e7d",
+      "bytes": 8886,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g3.endpoints.ts",
+      "sha256": "530b007d5a129e6cb6448b32b8e6298103552c261eaa87f60cc1290162ca54c9",
+      "bytes": 4200,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g3.phantomTee.ts",
+      "sha256": "b21604da608c142b83aeb6481e2a78449ac02a094f8c61f0d649ef103257a29f",
+      "bytes": 12679,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g3.teeFamily.ts",
+      "sha256": "e4fe6d82899d63f0a10889c810c7a6d2cd93135d16e3be6b1c87b83d498a22ae",
+      "bytes": 27555,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g3.teeMinAreaPose.ts",
+      "sha256": "0bfb2e974cd461463b04ef41e46e86374e93b38e2598b49d5c259e070797d281",
+      "bytes": 9784,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g3.teeMinAreaPoseMath.ts",
+      "sha256": "ef6f816956b9c596843d75909f7b50a6d138c0e75de23c4d043f5491be93b4c9",
+      "bytes": 9225,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g3.teeMinAreaPoseReceipt.ts",
+      "sha256": "53a77c4fd002b022fa77153d8ee85f9b9f1666ae9e94e2e30b5cec2d4e951add",
+      "bytes": 8552,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g3.teeReceipts.ts",
+      "sha256": "0b642b00b13b6d84e4dea5e3d84109a42044fc5c8f17b156396161685a85ba48",
+      "bytes": 8959,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g3.teeRecovery.ts",
+      "sha256": "3aa5535b966a20791d2ee2da705639ec7ff6df35c0795b2551824f898b7b6458",
+      "bytes": 58445,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g4.posteriorTeeRecovery.ts",
+      "sha256": "f2b0929d663447964ab452a5b812cbff89904cdebcbb4236fd48f8d85dc73e68",
+      "bytes": 36918,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g4.posteriorTeeRecoveryReceipt.ts",
+      "sha256": "23dd1e1a04c3d68834a0ddc872f963bd5378c4370765b6b05d7041c3f226fdfb",
+      "bytes": 8356,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g4.scoring.ts",
+      "sha256": "3f2b7d0624b52c83851a737871df2080036c4938c1b89763e42b5dc60caafdb3",
+      "bytes": 5518,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g4.search.ts",
+      "sha256": "ccbbcb10a18eb270f0a0db3ce75a8c0f672fe157596b5a723fdda37504c8e17e",
+      "bytes": 1290,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g4.teeBadgeLock.ts",
+      "sha256": "015300b3cc8fa9e2e471564e2d7ce88106186882ce0ad0784ef7b3b76cda71e3",
+      "bytes": 17756,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g4.teeBadgeLockMath.ts",
+      "sha256": "b9532fa20d351a85b3f264cc8054b2bdd1eb4a91a4a019c7759c4730b2d41141",
+      "bytes": 53178,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g4.teeBadgeLockReceipt.ts",
+      "sha256": "5edd0ef8265b7c4a131bc22fd6a59d1e3f1de77213f4464c359e6baa10da54e3",
+      "bytes": 19375,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g5.badgeM2Aa.ts",
+      "sha256": "056d72ea3e3bedc9ec71ea048bb52e22b98e82ea22dd3e5235957618619c865d",
+      "bytes": 20674,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g5.ribbon.ts",
+      "sha256": "bf74e920da8584fa58d6d2acf1e5bd02bda8bd19e93ca70e1238f3d3b00a2fdf",
+      "bytes": 4522,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g5.routing.ts",
+      "sha256": "054c29d742281e7a5a79400b3e69fade7e55ae81e8585da07eb9193d32a37aa1",
+      "bytes": 3438,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g5.supportRoi.ts",
+      "sha256": "7f53513e3030b9c82fbd698d4cd6e7ebedc3a29a33979d34a0d3e1b74d24d42c",
+      "bytes": 4710,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/g5.zfit.ts",
+      "sha256": "0c6f151c79d1b2076a37ce251c051f54632f8d42a93dbe2816dd784ab20ad385",
+      "bytes": 3870,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/registry.ts",
+      "sha256": "6ef284a0875cfd96bd9b604465565ac485b62d0c39c1521a74fba150e90b20ef",
+      "bytes": 2820,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/shared.hsv.ts",
+      "sha256": "0f560f06e1f10d187474280072303f57689ffc1aa635dfe913403a82e3adb481",
+      "bytes": 2163,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/st.fourLaneSensor.ts",
+      "sha256": "b28a966f068f65d1087507e6220dd172b45ffcc48ac4c3caa6f8443618fc3904",
+      "bytes": 9650,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/st.straightTest.contract.ts",
+      "sha256": "b071207327959b62096e4dff3b0153c52ec44653de4ed47724e8d9c107936457",
+      "bytes": 6963,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/st.straightTest.ts",
+      "sha256": "cffefb9ab40b2082d2cf464d9ceb4e2a5e941e63227578216d392bed317e4778",
+      "bytes": 13446,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/teePoseVisuals.ts",
+      "sha256": "76ded72011bb4510b49d50cd2e9c3fc034b7ae76dc883968ba6da1516dabc039",
+      "bytes": 2018,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/traceIdentity.ts",
+      "sha256": "8c864bd92abe03a8cd8bc2b8eca0615a7b70cb450a58fbdd0d5a295641806a03",
+      "bytes": 1765,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/features/types.ts",
+      "sha256": "c171463dea8a4ac16b23199d51686b260811148940107f80e76d40efdb1915a7",
+      "bytes": 14115,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/gate-sets.ts",
+      "sha256": "8796a328142824683a9a28a1e2a47e636952b22c6f8b88c95d32ab0fe252ff1b",
+      "bytes": 14881,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/hash.ts",
+      "sha256": "55c3d59326119fc102764e0694f4a9e4d6c94343719e57bd382b4ce7377a93de",
+      "bytes": 1008,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/index.ts",
+      "sha256": "3dc5c9872f76b062f6c31a7513c4c47412615572d6e53e279d81754bf668e80b",
+      "bytes": 9628,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/m1Representation.ts",
+      "sha256": "d83c60773159db22037b6347981cde8d0f9c704b42223e50a3078e696f2d358c",
+      "bytes": 10573,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/m2RawFrameStatsControl.ts",
+      "sha256": "b0ef29abb1622155244f8ceb8d0be5a3bee8bdb11ffade51b8c762c5a631d37f",
+      "bytes": 16330,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/m2Representation.ts",
+      "sha256": "d786dab9af424d54f268af1ccd880ccae40f1a62ee390e0411ad4f78cecced2c",
+      "bytes": 72263,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/measure.ts",
+      "sha256": "2b6d8abba46580501a51d6b08ee32e3f259664358f7233a1876012057300a7bf",
+      "bytes": 41022,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/objects.ts",
+      "sha256": "55029b38fe4ab3823eaaa7e9237282998ddd0a2e29c80f48ce6841389271d597",
+      "bytes": 9272,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/occlusion.ts",
+      "sha256": "fd0ef8c5c9a4234fd33da443dd0cf1c59df1106d98e6ec00a1b05d1c92763bba",
+      "bytes": 2472,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/raster.ts",
+      "sha256": "0d694e8fce555b70d56427cf0f201e2dc74d8a41054d792bf0441435fef8e869",
+      "bytes": 3576,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/ribbon.ts",
+      "sha256": "b2bac13005c815cbbd0b854dc2ed16db4d6dcea6ceed3cbea4c70cd2745045bb",
+      "bytes": 13741,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/routing.ts",
+      "sha256": "718c025e8db224198c553b09c1657d4494731bec90654487345a613268c0d1e1",
+      "bytes": 5183,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/schema.ts",
+      "sha256": "6f07e2ad953daffc91f6765e387db0504966d2d4fa5f49b440f9cc08d1843df5",
+      "bytes": 2902,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/scoring.ts",
+      "sha256": "d0d23d68d408806076b34b40f3c8140fc9a06e663c7ceafccfdfde8c79a22d22",
+      "bytes": 17257,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/screenChrome.ts",
+      "sha256": "c1194782b3413822ae2c22bff3ad6d8479261562ae4fdd1f62d7e1b16e2d2a22",
+      "bytes": 4676,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/shared-services.ts",
+      "sha256": "d1db0ebb76d3477db437042656ed7156f7f916f392e3e2059ffe2f1b61b6eaf3",
+      "bytes": 787,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/smartBasket.ts",
+      "sha256": "291ad8d34fc9a835dcd01c6505b1647e5dc681ccae37472cd37b6e9b52456117",
+      "bytes": 24819,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/threeFactor/types.ts",
+      "sha256": "c9c4b914b9de990333f9e84bafba98f4cb86a9a57485b24599d7a1fecf5d81fa",
+      "bytes": 11260,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/detectors/walkTrace.ts",
+      "sha256": "013f985e88c6dd965592025957ac3870a07f3a189b42e5bae62658fdad57eef2",
+      "bytes": 7778,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/exec/board.ts",
+      "sha256": "3f6bad3c444ec8e1c107f96336b8d863bce0125f39fe39cb5a225fcfb1866675",
+      "bytes": 4361,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/exec/compile.ts",
+      "sha256": "1ee93d632f66c2a506524a3706bc03d8acc14c48f950ea8825d7ba16c09e9f7f",
+      "bytes": 6312,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/exec/contract.ts",
+      "sha256": "21716541e466d521fd1bcebf89f4d2fc8c76aeb5665a2fcbc30d6063ed715aad",
+      "bytes": 6688,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/exec/feature-set.ts",
+      "sha256": "8a745f7548556824a897d7f1b491e99410ff3b8a3827b17fa70a23535f5bbc38",
+      "bytes": 15085,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/exec/gateway.ts",
+      "sha256": "c79e00b91378f2af3717fb99c6c4ae76ad226098f97acc595822e35a04584e6f",
+      "bytes": 8277,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/exec/index.ts",
+      "sha256": "3a86cea02b04166aa60e20303c72d9d6b9e5530c5762b6bd682f423159813ce9",
+      "bytes": 615,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/exec/node-intake.ts",
+      "sha256": "53f9752c7c50e4a9e079037ee95551cc860ccf7d8be12b3fd9fd55d7d3662087",
+      "bytes": 1142,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/exec/node-sink.ts",
+      "sha256": "41967507a232c3e8209c414e2d2381d82bb8a180ef006106ab45d9166a2251e7",
+      "bytes": 1720,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/exec/operations.ts",
+      "sha256": "5bb9f97e0e8e235fa3e80a32761a701cdcfc107369565e3ec77e5ea6b95a26b8",
+      "bytes": 36916,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/exec/pcr.ts",
+      "sha256": "ba214fc58bafc3e703892a7e9160d131b07806f19a83772af98f8d1c946d3e54",
+      "bytes": 3302,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/exec/sha256.ts",
+      "sha256": "6e0165aab586c80b1e503e3bc7cce0e17720a1c879c330dac1f3106ac3a0f6fa",
+      "bytes": 4356,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/exec/sink.ts",
+      "sha256": "ef75def6f64ede0e702a769cb3923b60f910c2bdb17f66b7a68490ac2b7610e9",
+      "bytes": 1953,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/g0/canonicalFrame.ts",
+      "sha256": "aca7bbf5fe771184f05f2eb67cb0d98b9cdca370a3899ed26f1f1553fd0d164b",
+      "bytes": 1338,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/g0/composite.ts",
+      "sha256": "2c1cb3c93c881bd6612e0f95b310c5543024a244277811f1c85c4d91f83127c7",
+      "bytes": 5191,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/g0/crop.ts",
+      "sha256": "a3af85388e3550177983cd1489f4a073468321cf50da3adf8fb7086e7a57b9b7",
+      "bytes": 1609,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/g0/hash.ts",
+      "sha256": "3f3d795f10f02d44dd978f989049e97ab133d63839c31054a4744c73f581b562",
+      "bytes": 1156,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/g0/inputAsset.ts",
+      "sha256": "559a843d0a138645e2f89db3e787812a6e82fc13dbfdcefcee13f67ef73ecd83",
+      "bytes": 1940,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/g0/ledger.ts",
+      "sha256": "4237a30f5a1206de5e2264024edfa1ec812eb6964023531049b5d47cbfd185c0",
+      "bytes": 1561,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/g0/projection.ts",
+      "sha256": "f9ced807442d72b76e60f77150ded79c0024dd8415e5bad7ed94cc3305f26d28",
+      "bytes": 1649,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/g0/roundPreRead.ts",
+      "sha256": "056bacc971fa251f144024f1e6136b3a63b0f06a8b900d74cbf063e353dc980a",
+      "bytes": 1874,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/g0/stitchSolve.ts",
+      "sha256": "5e73c5eec6b67cd351e7591f0ad908c95965259c0b5c109d8059c36f481b5c0b",
+      "bytes": 5077,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/g0/stripChrome.ts",
+      "sha256": "31c2884ab22864fb1f3d8855a6562dee8811822205c497a0fb0d47b8f9d9fc04",
+      "bytes": 5365,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/g0/thrownRound.ts",
+      "sha256": "91a928987948dbb9556b443d3c26636f23ba4d9c1df8275abd1d211c820c0138",
+      "bytes": 2686,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/g0/truth.ts",
+      "sha256": "8398fa01ed181fc393dd89544690f316438316d9288a62c951134da48a611402",
+      "bytes": 2667,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/g0/types.ts",
+      "sha256": "912167848b88efeadcd26f992e029fdf2bd5b4f9ee9bdf61ec94418b4c9f6ef4",
+      "bytes": 310,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/index.ts",
+      "sha256": "f6132f331a3f961af610df6e5a6a0200cb4ae9d54ded938ec10419a487e2458f",
+      "bytes": 975,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/raster.ts",
+      "sha256": "3290e61cb4a905e81483742b18b8fe5602dfe79584f640eb597ad85f56da69b2",
+      "bytes": 1056,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S0/clean/S0.pcr.yaml",
+      "sha256": "e8e221e8afb32e63fce6f780dd044e0c4961c848221389e65079d2ac7696319b",
+      "bytes": 424,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S0/clean/S0.stage.yaml",
+      "sha256": "1d09d563a0534633f7e64327e0a2a896e464294d1e0c52d5cdbd73838eb4e5c8",
+      "bytes": 400,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S0/clean/index.ts",
+      "sha256": "4c0f2b0f648e334554c7c671025f93d076f171f825c4174e85d0a6bf1f3ffa67",
+      "bytes": 9536,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S0/contract.ts",
+      "sha256": "cdd5a92d1f6dff24836d625876848b1429db2c893ec184953ea73a6a1a342043",
+      "bytes": 927,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S1/candidate/Badge.ts",
+      "sha256": "3963ffbb755801d02e69a9d1997845ae0937d965cd1693197490abd5dd5c20f7",
+      "bytes": 12426,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S1/candidate/index.ts",
+      "sha256": "0900f0b27a9ab8532aee5fe8e0080276a133594ab1dd024d3c7c5310aaabd356",
+      "bytes": 10009,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S1/clean/Badge.ts",
+      "sha256": "f0353ed9b190046763ad0ebc60e00d4f6354e9b506e11115f2a3134358d0c3ff",
+      "bytes": 12527,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S1/clean/index.ts",
+      "sha256": "0900f0b27a9ab8532aee5fe8e0080276a133594ab1dd024d3c7c5310aaabd356",
+      "bytes": 10009,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S1/contract.ts",
+      "sha256": "0f6cc3a25e7c2df055aabc56ed6392cf83e29e7e1b34d7ee5a575c9b1d6560ff",
+      "bytes": 3316,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S2/candidate/Basket.ts",
+      "sha256": "002742fbc0bedbd537b1ec34f8656eda60b3c3d5b6b320f57ae21a00b2e4d88b",
+      "bytes": 7873,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S2/candidate/index.ts",
+      "sha256": "b65e81f220a311459eed87de85b46a229d024609825ffcdbcb84c36f7937c4cc",
+      "bytes": 5171,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S2/clean/Basket.ts",
+      "sha256": "002742fbc0bedbd537b1ec34f8656eda60b3c3d5b6b320f57ae21a00b2e4d88b",
+      "bytes": 7873,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S2/clean/index.ts",
+      "sha256": "b65e81f220a311459eed87de85b46a229d024609825ffcdbcb84c36f7937c4cc",
+      "bytes": 5171,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S2/contract.ts",
+      "sha256": "48714d555ea170be6d8a3c00813795ec3391411948559330382fb088c2247dc3",
+      "bytes": 2763,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S3/clean/Tee.ts",
+      "sha256": "cf9b089d730a9ef6fa2f79cc2d3683c80733dab583b8272162c78fc190ff1ac8",
+      "bytes": 7849,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S3/clean/index.ts",
+      "sha256": "d4dc3703886676bcd108f76da516d9311743669a0c92aabc810ca831258ae828",
+      "bytes": 5089,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S3/contract.ts",
+      "sha256": "e5edea7f91dbe2736b8b6c9d7a19fa4fb13ffc5203f1f956a72467d7f7f3c1a6",
+      "bytes": 3599,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S3/exp/fill-consistent/contract.ts",
+      "sha256": "b561bfc79c6267cfe63e9d7f7a8dcbfc248b1290147f834021ec8f18ee4d9bed",
+      "bytes": 4031,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S3/exp/fill-consistent/index.ts",
+      "sha256": "165ff76f06ce57fa64351ba88c060098dd0b9808531400f3ffba9360c377c87c",
+      "bytes": 1931,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S4/exp/axis-local/contract.ts",
+      "sha256": "91f3a46f2985a51e9021940c12fac6df875ca4c28f21bbb5029c251a929444e1",
+      "bytes": 3971,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S4/exp/axis-local/index.ts",
+      "sha256": "3e44c83f738abcb4dca5a27bfb7e86b634e1a1f7eb3de40350cb81a5b4318d0f",
+      "bytes": 3592,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S4/exp/open-frame/contract.ts",
+      "sha256": "ea4c64ee12f2cbe5e5024842b4143122f7a8d785dca745c81b18fc51cb9fa965",
+      "bytes": 3567,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/S4/exp/open-frame/index.ts",
+      "sha256": "f08f290d7135588ff650ac45487392cfbbdda0db9c1a7b28cd58b72c44c2b443",
+      "bytes": 5166,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/componentPxC.ts",
+      "sha256": "075828271dc36f10177e9d891d2c5ca82ec8c693654af09a4a61e59c8fa9a915",
+      "bytes": 606,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stages/contract.ts",
+      "sha256": "886933ffdf2dc1d0c58ada052cd5775b847e1db592c8591294e6bdb9e3e666b3",
+      "bytes": 918,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/src/stitch.ts",
+      "sha256": "2e95aa0d6580942d6d47811d94f1f5cf7a76f06a27fb17cfca49f6d72729b365",
+      "bytes": 3982,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "packages/alg/tsconfig.json",
+      "sha256": "05dbaee4c1eb7008def12bc319620a03aec72e81a9bccb878e12afcf659c1583",
+      "bytes": 342,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "scripts/chainspot-lab/package-lock.json",
+      "sha256": "f2f1747f75e897424617432a53cb9f6c1f1fda9031894ccc2b74d20087f6dc5d",
+      "bytes": 15796,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "scripts/chainspot-lab/package.json",
+      "sha256": "c48b64d7759401f7c9ee562945921a91e919e6ee63cdc3227f0e93203126b0b5",
+      "bytes": 1001,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "scripts/chainspot-lab/sweep/composedRenderContract.mjs",
+      "sha256": "0ff6a06c23dc9cec8c7499225423c48d871345d16e5b34a10b7e1e0713ac14ee",
+      "bytes": 5008,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "scripts/chainspot-lab/sweep/composedRenderReplay.mjs",
+      "sha256": "3d5128198e134e6935a85848534a04d1740d5ad9aad56595d5068603f7ec6ce9",
+      "bytes": 13287,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "scripts/chainspot-lab/sweep/pxcSnapshot.ts",
+      "sha256": "3fbbcd0d9b191c9d93de66ae10b8bab7944b2a6cbb19df183ea3adfb7ce405e4",
+      "bytes": 1487,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "scripts/chainspot-lab/sweep/realStageReplay.mjs",
+      "sha256": "e8ba6f1626cfa0c6d1c96311b7d9404881f070503cd1bca2fc23c562a7b3ab90",
+      "bytes": 11965,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "scripts/chainspot-lab/sweep/recoveredPadFitCapture.mjs",
+      "sha256": "6e384e245b2db66729404cce77d5dd3309a3d46ff66ea7721d74c75ac90ad133",
+      "bytes": 5822,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "scripts/chainspot-lab/sweep/recoveredPadFitCompare.mjs",
+      "sha256": "46c415b76ad33ec51485feb54a991c68d131166a0c2d34230016917b2c6607bf",
+      "bytes": 5651,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "scripts/chainspot-lab/sweep/recoveredPadFitGateway.mjs",
+      "sha256": "ead35d0d52b7cc1615a9866272a06f73f8417d157b698f3713e2da3bab5e4fb6",
+      "bytes": 8179,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "scripts/chainspot-lab/sweep/recoveredPadFitRender.py",
+      "sha256": "48166755b3a80bfa28cac8ec74b73ea6a7fa2924e07a26a861aeefdb5a92c2f3",
+      "bytes": 6191,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "scripts/chainspot-lab/sweep/s5s6ComposedProjection.mjs",
+      "sha256": "5fc15d9149ae9b8ed0bc292d2528417d9df139d7a6d14aee634d00a909e913f7",
+      "bytes": 10195,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "scripts/chainspot-lab/sweep/s5s6Features.mjs",
+      "sha256": "374b7c57d236a25466bf2d3f666b0bacc3098eb17f6d4a60d2134d5d81a4beeb",
+      "bytes": 1897,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "scripts/chainspot-lab/sweep/s5s6Replay.mjs",
+      "sha256": "266a07bac1238b317f45b6261be3c640c56809e89c31c5257723884635e8611e",
+      "bytes": 25187,
+      "exactOriginalW2Bytes": true
+    },
+    {
+      "path": "scripts/chainspot-lab/sweep/stageOperation.ts",
+      "sha256": "590675a8389de7eed61ab6f1e47bfa334261f7ec3f4657cd60496e4ad74a6a9e",
+      "bytes": 5732,
+      "exactOriginalW2Bytes": true
+    }
+  ],
+  "providerFileCount": 634,
+  "providerAllOriginalBytes": true,
+  "decoderDependencies": [
+    {
+      "name": "jpeg-js",
+      "version": "0.4.4",
+      "packageJsonSha256": "8a0418edb81e7bdb69d1d78c4c1aeedeecc839deb58a8eeba6f25ae92ed14e62",
+      "sortedFileManifestSha256": "68f7fcaa8fe1241a0d642ee419f02ac1ea8fc60efed896973e2c4ada871d0e20",
+      "location": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/jpeg-js",
+      "fileCount": 9
+    },
+    {
+      "name": "pngjs",
+      "version": "7.0.0",
+      "packageJsonSha256": "85b17f2f852aece03e71edb4ed4d9fddf6a0a8f0b69ac75d7f00b6592d62d37c",
+      "sortedFileManifestSha256": "7bb43056748f83a5355c9063110182ff0ef4c5fcbe7a93bc6f9556dbce8cf964",
+      "location": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/pngjs",
+      "fileCount": 27
+    }
+  ],
+  "provenanceLimitation": "Bundled REPLAY-PROVENANCE.json and old capture providerIdentity declare different aggregate identities. Both preserved verbatim; neither substituted for actual file hash manifest, selected git blob equality, native field hashes, source/canonical hash checks or exact prior rawtrace controls. No independently revalidated original upstream entire commit checkout claimed."
+}

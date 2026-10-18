@@ -1,0 +1,21 @@
+{
+  "job_id": "E305",
+  "worker": "C2",
+  "outcome": "mixed_change",
+  "summary": "Froze six deterministic synthetic evaluation cases before C6 candidate inspection. Two generation runs produced 27 byte-identical files each; 31 files are bound by the frozen input manifest. Private image inspection and fixture integrity checks completed. Heldout inputs remain procedurally withheld on the shared filesystem pending root release after C6 source freeze. C6 candidate inspection and execution counts are zero. This packet freezes evaluation inputs only; it establishes no candidate or truth acceptance.",
+  "hashes": {
+    "protocolSha256": "42a2d4c5df8626df88a4ed72134c66e4462bca3f35b9123578280e02ffdf6cef",
+    "freezeManifestSha256": "ca6049549ab188fd879c5913d6df5cc5f9f299eb83ca6c9afe09b31a61130ac0"
+  },
+  "counts": {
+    "cases": 6,
+    "generationRuns": 2,
+    "byteIdenticalFilesPerRun": 27,
+    "frozenManifestEntries": 31,
+    "candidateInspections": 0,
+    "candidateExecutions": 0
+  },
+  "proceduralStatus": "FROZEN_WITHHELD_UNTIL_ROOT_RELEASE_AFTER_C6_SOURCE_FREEZE",
+  "limitation": "Shared-filesystem procedural withholding, not technical isolation; no candidate evaluation or acceptance in E305.",
+  "nextGuardedAction": "Wait for actual root allocation."
+}

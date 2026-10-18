@@ -1,0 +1,154 @@
+{
+  "status": "PASS",
+  "frozenEntriesVerified": 31,
+  "regeneratedFixtureFiles": 27,
+  "candidateManifestSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+  "adapterHash": "15d73841039700f7ed180db3ba22b536c5a72e571f408166f1f9c02eaf0df165",
+  "runs": [
+    {
+      "argv": [
+        "python",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/heldout/generate.py",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/heldout/fixtures"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"caseCount\": 6, \"fileCount\": 26, \"manifestSha256\": \"81f33969a9e315c635d692ddf569caba37d6b8796ccffc4800f7b615ca34d38a\"}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "python",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/adapter.py"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"caseCount\": 6, \"actualCLIRunsPlanned\": 7, \"sourceClosureFiles\": 9, \"heldoutUnchanged\": true}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/candidate/experiments/capability-discovery/composition/cli.mjs",
+        "--input",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/inputs/C2-01-declared-mask.json",
+        "--out",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/receipts/C2-01-declared-mask.json",
+        "--inspect",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/html/C2-01-declared-mask.html"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"status\":\"OBSERVED_CHANNELS\",\"promoted\":false,\"receipt\":\"/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/receipts/C2-01-declared-mask.json\",\"inspection\":\"/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/html/C2-01-declared-mask.html\"}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/candidate/experiments/capability-discovery/composition/cli.mjs",
+        "--input",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/inputs/C2-02-declared-mask.json",
+        "--out",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/receipts/C2-02-declared-mask.json",
+        "--inspect",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/html/C2-02-declared-mask.html"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"status\":\"OBSERVED_CHANNELS\",\"promoted\":false,\"receipt\":\"/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/receipts/C2-02-declared-mask.json\",\"inspection\":\"/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/html/C2-02-declared-mask.html\"}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/candidate/experiments/capability-discovery/composition/cli.mjs",
+        "--input",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/inputs/C2-03-declared-mask.json",
+        "--out",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/receipts/C2-03-declared-mask.json",
+        "--inspect",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/html/C2-03-declared-mask.html"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"status\":\"OBSERVED_CHANNELS\",\"promoted\":false,\"receipt\":\"/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/receipts/C2-03-declared-mask.json\",\"inspection\":\"/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/html/C2-03-declared-mask.html\"}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/candidate/experiments/capability-discovery/composition/cli.mjs",
+        "--input",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/inputs/C2-04-declared-mask.json",
+        "--out",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/receipts/C2-04-declared-mask.json",
+        "--inspect",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/html/C2-04-declared-mask.html"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"status\":\"OBSERVED_CHANNELS\",\"promoted\":false,\"receipt\":\"/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/receipts/C2-04-declared-mask.json\",\"inspection\":\"/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/html/C2-04-declared-mask.html\"}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/candidate/experiments/capability-discovery/composition/cli.mjs",
+        "--input",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/inputs/C2-05-declared-mask.json",
+        "--out",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/receipts/C2-05-declared-mask.json",
+        "--inspect",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/html/C2-05-declared-mask.html"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"status\":\"OBSERVED_CHANNELS\",\"promoted\":false,\"receipt\":\"/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/receipts/C2-05-declared-mask.json\",\"inspection\":\"/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/html/C2-05-declared-mask.html\"}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/candidate/experiments/capability-discovery/composition/cli.mjs",
+        "--input",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/inputs/C2-05-all-hidden.json",
+        "--out",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/receipts/C2-05-all-hidden.json",
+        "--inspect",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/html/C2-05-all-hidden.html"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"status\":\"UNKNOWN\",\"promoted\":false,\"receipt\":\"/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/receipts/C2-05-all-hidden.json\",\"inspection\":\"/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/html/C2-05-all-hidden.html\"}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/candidate/experiments/capability-discovery/composition/cli.mjs",
+        "--input",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/inputs/C2-06-declared-mask.json",
+        "--out",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/receipts/C2-06-declared-mask.json",
+        "--inspect",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/html/C2-06-declared-mask.html"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"status\":\"OBSERVED_CHANNELS\",\"promoted\":false,\"receipt\":\"/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/receipts/C2-06-declared-mask.json\",\"inspection\":\"/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/html/C2-06-declared-mask.html\"}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "python",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C3/review-R307/replay/E307/report.py"
+      ],
+      "exitCode": 0,
+      "stdout": "{\"caseCount\": 6, \"runCount\": 7, \"assertions\": \"PASS channel-honesty/frame checks; no accuracy assertion\", \"figure\": \"evaluation.png\", \"htmlContentParsed\": 7}\n",
+      "stderr": ""
+    }
+  ],
+  "byteIdentity": [
+    "all31frozen entries after generator",
+    "all7 adapted inputs",
+    "input-manifest.json",
+    "source-closure.json",
+    "candidate-freeze.json",
+    "all7receipt JSON",
+    "all7HTML",
+    "measurements.json",
+    "evaluation.png",
+    "html-inspection.json"
+  ]
+}

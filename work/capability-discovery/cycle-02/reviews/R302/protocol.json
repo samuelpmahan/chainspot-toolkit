@@ -1,0 +1,35 @@
+{
+  "schema": "R302-independent-review-protocol@1",
+  "job_id": "R302",
+  "worker": "C2",
+  "beforeReexecution": true,
+  "candidate": "E302 C3 portable bilateral composition only; C6 remains unseen",
+  "inputIdentities": {
+    "protocol.json": "47cb0489e0ef166cf69dccb1f7713be38c644b087c29d96472ee11ec641ca3a0",
+    "probe.mjs": "3c34922ee6d35c85be035fc3ce9d484d9d0a9fc578062d07fcc376d091c2e14d",
+    "provenance.json": "0f3de094060d64f7614be6a8fa5023180e75070d33153976bdf318a734fdffaf",
+    "receipt.json": "a5ea9523ac5c771e39ee436eeedb6ac7b4caa8187ae17593137eeeeca8500173",
+    "portable-probe.tar.gz": "81fb7fda5bccd3f7c601b1f67c957cd0aa30c27f727b49015d24e3646d6fc3c7",
+    "bilateral-composition.png": "6d79e49a2a20089d0c4df5b04eab8e4b8445d69b1bde303d957273f24121c4fd"
+  },
+  "execution": "node C2/review-R302/portable/probe.mjs; outputs stay inside extracted own directory",
+  "expectations": [
+    "receipt bytes and all 7 RGBA raster hashes reproduce exactly at same Node runtime",
+    "capsule and corridor40 differ as complete images but exposed global + all5 station profiles/fits/channels equal exactly",
+    "crossing has global width40 with central station at x150 no edge pair/zero combined and width-bank selected mean0.8",
+    "shift membership is8px translated from corridor40 but pixel-edge midpoint is107.5 and normal offset+7.5 relative asserted y100; diagnose default center gate, not path absence",
+    "ragged station widths expose variation hidden by global width",
+    "provider hash check is integrity only; provider operation never executed"
+  ],
+  "falsifiers": [
+    "source/protocol/archive or rerun identity mismatch",
+    "summary contradicts raw station/average outputs or shift sign/coordinate convention",
+    "capsule equality only partial despite entire exposed-composition claim",
+    "figure misrepresents raw data or omits counterexamples"
+  ],
+  "limits": [
+    "technical reproducibility review only, no independent semantic truth or human acceptance",
+    "protocol chronology claimed in packet not externally time authenticated",
+    "no C6 access or heldout mutation"
+  ]
+}

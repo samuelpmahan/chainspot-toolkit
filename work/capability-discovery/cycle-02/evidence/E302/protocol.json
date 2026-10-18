@@ -1,0 +1,21 @@
+{
+  "schema": "C3-E302-bilateral-composition-protocol@1",
+  "job_id": "E302", "worker": "C3", "frozen_before_execution": true,
+  "frame": "synthetic RGBA source image, x right, y down, normal n=(-sin(phi),cos(phi)); lengths source px, scores dimensionless, profile luminance RGB mean",
+  "fixture": {"widthPx":320,"heightPx":200,"backgroundRgb":[100,100,100],"foregroundRgb":[145,145,145],"tee":[40,100],"badge":[260,100],"phiRad":0,"mask":null,"occluders":[]},
+  "cases": [
+    {"id":"corridor40","membership":"80 <= y < 120 for all x","semantic":"genuine synthetic straight corridor","prediction":"bilateral fit near40, midpoint near99.5; strong paired Dev72 channels"},
+    {"id":"corridor30","membership":"85 <= y < 115 for all x","semantic":"second LOCAL scale genuine straight corridor","prediction":"width fit near30 and distinct from40 without meter claim"},
+    {"id":"center-shift8","membership":"88 <= y < 128 for all x","semantic":"straight corridor displaced 8px from asserted centerline","prediction":"wide center gate recovers edge midpoint ~7.5px; uncorrected rail channels weaker than recentered pose"},
+    {"id":"ragged","membership":"abs(y-100) < (28+24*(0.5+0.5*sin(x/17)))/2","semantic":"width-varying bright organic strip","prediction":"global averaged width may look plausible, independent station-window widths vary"},
+    {"id":"large-ellipse","membership":"((x-150)/140)^2+((y-100)/58)^2 <= 1","semantic":"large bright organic patch","prediction":"bright center lacks bilateral edges within fixed profile; width search null or weak artifact, guard-relative interior may be low"},
+    {"id":"capsule-patch","membership":"distance to segment (60,99.5)-(240,99.5) <=20","semantic":"bright organic capsule without tee/badge/path identity","prediction":"all exposed Tee→Badge sample windows may equal corridor40 and survive composition; preserve this counterexample"},
+    {"id":"crossing","membership":"80 <=y<120 OR 137 <=x<163","semantic":"corridor plus transverse crossing","prediction":"global width fit can remain strong while central crossing station loses paired support"}
+  ],
+  "operations": ["widthSearchAt default widths=[18,60,1],tolW=.75,latLim=3; also explicit diagnostic latLim=12","profileAt + edgePairOf expected W=30 and40,tolW=3,latLim=12","estimateFourLaneCorridorWidth candidateWidthsPx=[24,30,36,40,42,48,54]","observeFourLaneCrossSection original pose and edge-midpoint recentered pose using measured local width"],
+  "stationFractions":[0.2,0.35,0.5,0.65,0.78],"stationXSourcePx":[84,117,150,183,211.6],"stationProfileWindows":"each x station ±8 px, 16 integer stations, existing profileAt default minimum8 retained",
+  "globalProfileWindow":{"origin":[40,100],"t0Px":44,"t1Px":188,"note":"interior segment; separate from per-station windows; no endpoint sprite evidence"},
+  "falsifiers": ["Any genuine corridor lacks a bilateral source fit despite fully visible edges in fixed window falsifies claimed reusable composition on these fixtures.","If shifted center remains indistinguishable after raw midpoint disclosure, midpoint adds no diagnostic information.","If capsule patch reproduces corridor channels, any universal organic rejection or path identity claim is falsified.","If ragged/crossing global fits and station channels disagree, global width plus bright support is insufficient for sustained local evidence."],
+  "policy":"No fabricated confidence threshold, no promotion, no heldout, no production constants, no meter scale. Compare raw evidence and exact identities only. These are exposed mechanistic synthetic tests.",
+  "executionFlow":"Generate deterministic fixture RGBA; verify exact vendored source hashes; invoke source functions unchanged; retain global and station profiles, fitted edge positions, channel outputs and normalized ratios; assert only mechanistic predictions/constructive counterexample identities, then render scientific raster/width/channel figure."
+}

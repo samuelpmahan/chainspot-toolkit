@@ -1,0 +1,208 @@
+✖ default OFF executes no operations (1.388542ms)
+✖ real positive exposes raw channels and fitted two-edge midpoint without calibration (4.84904ms)
+✖ shifted station retains fixed-center zero plus real signed midpoint (2.001459ms)
+✖ interior-only score1 remains UNKNOWN bilateral evidence (3.000656ms)
+✖ all-hidden numeric learner return is raw only and no fitted midpoint (1.374991ms)
+✖ empty training bank preserves legacy fallback40 as UNKNOWN (1.225673ms)
+✖ frame, provenance and finite violations fail closed before source operations (2.866681ms)
+✖ organic shape identical across exposed samples cannot acquire semantic path identity (1.949249ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 0
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 107.712918
+
+✖ failing tests:
+
+test at experiments/capability-discovery/composition/composition.test.mjs:8:1
+✖ default OFF executes no operations (1.388542ms)
+  AssertionError [ERR_ASSERTION]: composition entry point must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at call (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/composition.test.mjs:6:31)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/composition.test.mjs:8:57)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/composition/composition.test.mjs:9:1
+✖ real positive exposes raw channels and fitted two-edge midpoint without calibration (4.84904ms)
+  AssertionError [ERR_ASSERTION]: composition entry point must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at call (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/composition.test.mjs:6:31)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/composition.test.mjs:10:74)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/composition/composition.test.mjs:16:1
+✖ shifted station retains fixed-center zero plus real signed midpoint (2.001459ms)
+  AssertionError [ERR_ASSERTION]: composition entry point must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at call (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/composition.test.mjs:6:31)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/composition.test.mjs:17:72)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/composition/composition.test.mjs:20:1
+✖ interior-only score1 remains UNKNOWN bilateral evidence (3.000656ms)
+  AssertionError [ERR_ASSERTION]: composition entry point must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at call (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/composition.test.mjs:6:31)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/composition.test.mjs:22:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/composition/composition.test.mjs:25:1
+✖ all-hidden numeric learner return is raw only and no fitted midpoint (1.374991ms)
+  AssertionError [ERR_ASSERTION]: composition entry point must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at call (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/composition.test.mjs:6:31)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/composition.test.mjs:26:101)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/composition/composition.test.mjs:30:1
+✖ empty training bank preserves legacy fallback40 as UNKNOWN (1.225673ms)
+  AssertionError [ERR_ASSERTION]: composition entry point must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at call (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/composition.test.mjs:6:31)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/composition.test.mjs:31:99)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/composition/composition.test.mjs:34:1
+✖ frame, provenance and finite violations fail closed before source operations (2.866681ms)
+  AssertionError [ERR_ASSERTION]: composition entry point must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at call (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/composition.test.mjs:6:31)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/composition.test.mjs:36:84)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/composition/composition.test.mjs:38:1
+✖ organic shape identical across exposed samples cannot acquire semantic path identity (1.949249ms)
+  AssertionError [ERR_ASSERTION]: composition entry point must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at call (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/composition.test.mjs:6:31)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/composition.test.mjs:39:11)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

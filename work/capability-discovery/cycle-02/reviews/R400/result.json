@@ -1,0 +1,113 @@
+{
+  "job_id": "R400",
+  "worker": "C5",
+  "decision": "accepted",
+  "summary": "Accepted the bounded final package inventory, provenance mappings, retained negative evidence and reproduction claims. Every220 listed file SHA256/byte count matches; the self-excluded manifest makes221 actual files and4 PNGs. Both exact freezes are preserved: historical9ecd with R306 AMEND, current5b59 with accepted R308 repair. All959 preexisting tracked files and prior f040 Lab manifest are unchanged;136 captured copies match original records. The E303 staging helper copies exact producer bytes/source links without replay. Released evaluation staging regenerates31 frozen entries matching original bytes, retains the original adapter, changes only the declared REPO path in its portable copy, and reproduces seven-input/source-closure manifests without candidate CLI calls. README/RESUME/next-packets distinguish current105/105 Lab tests, historical143/149 with six missing-fixture failures, scoped accepted R307/R309 evidence, now-exposed evaluation, and historical C6 ADMIN reservation. No new scientific acceptance or publication authority is conferred.",
+  "commands": [
+    {
+      "argv": [
+        "python",
+        "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/stage-producer.py",
+        "--job",
+        "E303",
+        "--out",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C5/review-R400/producer-stage"
+      ],
+      "exitCode": 0,
+      "output": "/workspace/scratch/8528bb251845/discovery-cycle02/C5/review-R400/producer-stage/discovery-cycle02/C5\n"
+    },
+    {
+      "argv": [
+        "python",
+        "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-02/stage-evaluation.py",
+        "--out",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C5/review-R400/evaluation-stage"
+      ],
+      "exitCode": 0,
+      "output": "/workspace/scratch/8528bb251845/discovery-cycle02/C5/review-R400/evaluation-stage/discovery-cycle02/C2/E307\n"
+    },
+    {
+      "argv": [
+        "python",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C5/review-R400/evaluation-stage/discovery-cycle02/C2/heldout/generate.py"
+      ],
+      "exitCode": 0,
+      "output": "{\"caseCount\": 6, \"fileCount\": 26, \"manifestSha256\": \"81f33969a9e315c635d692ddf569caba37d6b8796ccffc4800f7b615ca34d38a\"}\n"
+    },
+    {
+      "argv": [
+        "python",
+        "/workspace/scratch/8528bb251845/discovery-cycle02/C5/review-R400/evaluation-stage/discovery-cycle02/C2/E307/adapter-portable.py"
+      ],
+      "exitCode": 0,
+      "output": "{\"caseCount\": 6, \"actualCLIRunsPlanned\": 7, \"sourceClosureFiles\": 9, \"heldoutUnchanged\": true}\n"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python audit.py > audit.log",
+      "result": "completed audit-measurements.json was emitted; tool transport disconnected after execution; inner helper commands each exited0. A redundant retry correctly refused preexisting scratch outputs. No producer/image-case replay followed."
+    },
+    {
+      "command": "independent final package hashes, regenerated31 entries and adapted manifest byte checks",
+      "exitCode": 0,
+      "result": "final-checks.json PASS"
+    }
+  ],
+  "hashes": {
+    "packageManifestSha256": "5cc1894f8e95b22636269cba13b4b55a319d7028e92deb7a0f656e0547731215",
+    "historicalCandidateManifestSha256": "9ecd88635ed69ca8fb8e44ff044ac1e8fd704133c5687685b9a3114893ed9cd0",
+    "currentCandidateManifestSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+    "priorLabManifestSha256": "f040ac94649369a3a964ec8e4ea6b8948cc8bbfd56586507ce97a68f66c9ce4d",
+    "acceptedReviews": {
+      "R307": "d93389ed6d2c830b4ac22c2177b7020be9153523c873246264864998fa29eef4",
+      "R308": "f5a9c7b51c71728f91eb4d8dfd0456c512bc3f9c3afa7b136bf98094acedc0e7",
+      "R309": "ed55b813e3c89e80420438022757e5d628a888ca79b8f3565740182fc67b2729"
+    },
+    "originalAdapterSha256": "15d73841039700f7ed180db3ba22b536c5a72e571f408166f1f9c02eaf0df165",
+    "portableAdapterSha256": "f9c7f833eace71b9ad9f6c4b510f7710108911db2f4e419661e34fdf222550d1",
+    "auditMeasurementsSha256": "1390e022ace37a45d6bb4c6c17f134df71aae90adec78bbbe8cca69776986b28",
+    "auditScriptSha256": "0be9f8c9349c95affd111c3281df0516c42923f4bc079846a68db9fd5648a71b",
+    "protocolSha256": "8b5348d60cc12e99bb1ba689ef432c5995fb5285a1b54fa49d81cfa85654081a",
+    "finalChecksSha256": "95b0244903ae2c492e037395e1e22cfc80e54d0cd525d9661883a2809ea1de4b"
+  },
+  "findings": [
+    {
+      "id": "R400-F1",
+      "disposition": "confirmed",
+      "finding": "Package scope is solely new composition plus cycle02. All220 listed entries match their hashes and sizes; all221 actual new files including the manifest are within scope. No tracked production, HH, PageRouter, defaults, AA or prior evidence changed."
+    },
+    {
+      "id": "R400-F2",
+      "disposition": "confirmed",
+      "finding": "Historical first-freeze source is separately byte-bound; repaired current source matches all14 file/guard/vendor identities and immutable source blobs. R306 AMEND is retained with actual counterexample and repair red/green evidence; current source is accepted only for bounded caller behavior."
+    },
+    {
+      "id": "R400-F3",
+      "disposition": "confirmed",
+      "finding": "All136 capture records match source bytes. Released E307 raw false positives, missing pairs, UNKNOWN rails, tagged nonfinite fallback and E303 failed occlusion prediction remain present. R307/R309 accepted results bind their exact retained evidence and scoped interpretations."
+    },
+    {
+      "id": "R400-F4",
+      "disposition": "confirmed",
+      "finding": "Bounded helper execution verified four E303 producer/protocol files and original source symlinks; regenerated31 C2 frozen entries match original bytes; seven adapted-input hashes and source closure match retained manifests. Original adapter bytes remain unchanged; portable adapter differs only in one declared REPO path literal."
+    },
+    {
+      "id": "R400-F5",
+      "disposition": "confirmed",
+      "finding": "Native epoch19 capture reserves C6E400 and explicitly disclaims live dispatch authority; current pool4 plus2 HH workers plus root is historical allocation context. Documentation makes no allocator-causality/speedup, calibration, endpoint ownership, meter scale, human acceptance, main merge, PR or deployment claim."
+    },
+    {
+      "id": "R400-F6",
+      "disposition": "informational",
+      "finding": "Package accounting is220 manifest-listed files/8612398 listed bytes, plus the self-excluded44666-byte manifest:221 files/8657064 total bytes. The221/8.61MB shorthand mixes inclusion conventions; exact numbers are preserved here and do not affect content integrity."
+    }
+  ],
+  "limits": [
+    "Package/inventory/reproduction audit only; earlier independent scientific/source/figure reviews retain their own authority. No completed native image cases, candidate evaluation calls, AA probe, scientific renders or full repository tests were rerun.",
+    "The root105/105 current Lab result and earlier149-test/143-pass/six-missing-fixture result are verified retained logs, not fresh executions by this reviewer. Prior95 test sources are unchanged under all959 baseline blob comparisons.",
+    "Staging uses symlinks to immutable checkout sources and external runtime dependencies. It is portable across checkout paths through declared adapters, not a self-contained provider/JPEG or browser runtime bundle.",
+    "Original JPEG and decoder/Python libraries remain explicit prerequisites; HTML browser visual QA remains unavailable due missing Chromium. Unsupported raw band means/all edge alternatives/boundary confidence flags remain unsupported.",
+    "All released C2 cases are now exposed for future work; no same-cycle feedback tuning or reuse as newly independent evaluation.",
+    "Manifest self-excludes by design. Final Git tree/commit and remote publication verification remain root/sole-owner steps after this accepted audit; no publication is performed or authorized by this result."
+  ],
+  "nextAction": "Root may complete its final exact-package check and apply previously scoped checkpoint/publication authorization; no further scientific execution is needed for this package audit."
+}

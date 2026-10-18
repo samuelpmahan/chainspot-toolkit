@@ -1,0 +1,124 @@
+{
+  "epoch": 0,
+  "at": "2026-10-18T08:53:47.325870+00:00",
+  "ready_jobs": [
+    "E301",
+    "E302",
+    "E303",
+    "E304",
+    "E305",
+    "E306"
+  ],
+  "pinned_workers": [],
+  "assignments": {
+    "C3": "E302",
+    "C6": "E306",
+    "C2": "E305",
+    "C5": "E303",
+    "C1": "E301",
+    "C4": "E304"
+  },
+  "dispatch": {
+    "C3": "E302",
+    "C6": "E306",
+    "C2": "E305",
+    "C5": "E303",
+    "C1": "E301",
+    "C4": "E304"
+  },
+  "native_seconds": 0.005585016999248182,
+  "native_constraints": {
+    "solved": true,
+    "brokenVal": 0,
+    "brokenCount": 0,
+    "constraints": [
+      {
+        "name": "independent_review",
+        "desc": "avoidAssignmentsSpec: Avoid 6 assignments on scope packets",
+        "value": 0
+      },
+      {
+        "name": "pin_in_flight",
+        "desc": "avoidMovingSpec: Avoid moving 0 objects",
+        "value": 0
+      },
+      {
+        "name": "ready_packet_capacity",
+        "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+        "value": 0
+      }
+    ]
+  },
+  "independent_capacity_check": true,
+  "independent_eligibility_check": true,
+  "exact_score": 600,
+  "native_score": 600,
+  "caps": {
+    "E301": 1,
+    "E302": 1,
+    "E303": 1,
+    "E304": 1,
+    "E305": 1,
+    "E306": 1,
+    "R301": 0,
+    "R302": 0,
+    "R303": 0,
+    "R304": 0,
+    "R305": 0,
+    "R306": 0,
+    "BENCH": 6
+  },
+  "eligible": {
+    "E301": [
+      "C1",
+      "C2"
+    ],
+    "E302": [
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5"
+    ],
+    "E303": [
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5"
+    ],
+    "E304": [
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5"
+    ],
+    "E305": [
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5"
+    ],
+    "E306": [
+      "C6"
+    ]
+  },
+  "weights": {
+    "E301": 100,
+    "E302": 100,
+    "E303": 100,
+    "E304": 100,
+    "E305": 100,
+    "E306": 100
+  },
+  "agent_by_worker": {
+    "C1": null,
+    "C2": null,
+    "C3": null,
+    "C4": null,
+    "C5": null,
+    "C6": null
+  }
+}

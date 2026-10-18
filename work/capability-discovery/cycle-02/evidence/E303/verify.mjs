@@ -1,0 +1,11 @@
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import assert from 'node:assert/strict';
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const r=JSON.parse(readFileSync(new URL('measurements.json',import.meta.url)));
+assert.equal(r.protocolSha256,sha(readFileSync(new URL('protocol.json',import.meta.url))));
+assert.equal(r.probeSha256,sha(readFileSync(new URL('probe.mjs',import.meta.url))));
+assert.equal(r.cases.length,10);
+assert.ok(r.cases.every(c=>c.calibratedWidthPx===null&&c.rawTrainingRows.length===5&&c.rawTrainingRows.every(x=>x.stations.length===5)&&c.rawEvaluationRows.length===4&&c.rawEvaluationRows.every(x=>x.candidateObservations.length===5)));
+for(const s of r.sourceHashes) assert.equal(s.sha256,sha(readFileSync(new URL('source/'+s.file,import.meta.url))));
+console.log(JSON.stringify({status:'PASS',integrity:'frozen protocol/probe and four exact source hashes match',caseCount:10,trainingCandidateStationRows:250,evaluationCandidateStationRows:200,transferStationRows:40,calibratedWidths:0}));

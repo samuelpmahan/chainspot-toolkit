@@ -1,0 +1,64 @@
+{
+  "job_id": "E306",
+  "worker": "C6",
+  "outcome": "mixed_change",
+  "summary": "Implemented a default-OFF executable local ribbon evidence recipe and CLI using exact existing Dev72 learner/observer and JS profile/widthSearchAt/edgePairOf. Explicit frame, finite geometry and raw RGBA SHA checks fail closed. Retains raw learner rows, every station/candidate channel, profile visibility and edge fit. Actual finite paired fits expose signed midpoint offsets; missing pairs remain UNKNOWN. Width calibration and semantic identity always UNKNOWN; promoted=false. No production source or existing evidence changed. Candidate source frozen before independent evaluation, which C6 has not read.",
+  "commands": [
+    "node --test experiments/capability-discovery/composition/composition.test.mjs (RED8 then GREEN8)",
+    "node --test experiments/capability-discovery/composition/cli.test.mjs (RED1)",
+    "node --test experiments/capability-discovery/composition/*.test.mjs (GREEN9)",
+    "node --test experiments/capability-discovery/plan.test.mjs experiments/capability-discovery/catalog/catalog.test.mjs experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs experiments/capability-discovery/probes/width/recipe.test.mjs experiments/capability-discovery/probes/path-geometry/path-geometry.test.mjs experiments/capability-discovery/composition/*.test.mjs (104PASS)",
+    "node --test (149total143pass6knownmissingfixturefailures)",
+    "sha256sum --check discovery-cycle02/C6/preexisting-sha256.txt (all preexisting tracked files unchanged)",
+    "node experiments/capability-discovery/composition/cli.mjs --input discovery-cycle02/C6/training-input.json --out work/capability-discovery/cycle-02/training-positive.json --inspect work/capability-discovery/cycle-02/inspection.html"
+  ],
+  "sourceIDs_hash_manifest": {
+    "file": "work/capability-discovery/cycle-02/feature-manifest.json",
+    "sha256": "9ecd88635ed69ca8fb8e44ff044ac1e8fd704133c5687685b9a3114893ed9cd0",
+    "frozenExistingTree": "340903effe6cf7fd9e83e113cf8a8b7a48f97613",
+    "candidateBranch": "codex/capability-discovery-lab"
+  },
+  "actual_measurements": {
+    "positive": {
+      "combined": 1,
+      "fitWidthPx": 29,
+      "fitCenterPx": 0,
+      "localWidth": "UNKNOWN"
+    },
+    "shift3_25Px": {
+      "fixedPoseCombined": 0,
+      "fitCenterPx": -3.25,
+      "candidateMinusMidpointPx": 3.25
+    },
+    "interiorOnly": {
+      "combined": 1,
+      "railScore": null,
+      "pairedGuard": "UNKNOWN"
+    },
+    "allHidden": {
+      "rawSelectedWidthPx": 24,
+      "allVisibleSamples": 0,
+      "rawMeanScores": "-Infinity",
+      "measuredWidthPx": null,
+      "midpoint": "UNKNOWN"
+    },
+    "emptyBankSegments": {
+      "rawSelectedWidthPx": 40,
+      "measuredWidthPx": null
+    },
+    "organicCapsule": "exposed sampled evidence identical to ribbon; semanticIdentityUNKNOWN"
+  },
+  "negative_results": [
+    "No width certainty, course acceptance, endpoint identity, renderer provenance, automatic organic rejection or meter scale established.",
+    "Full suite six unchanged failures: inventory selected checkpoint; early accepted S2 basket Parts; plate-first18 badges; body-first17 baskets; interior-first18 tees; strict native-byte reuse/JPEG closure.",
+    "Playwright HTML screenshot attempted but bundled Chromium executable absent; CLI HTML content test passed, visual screenshot not verified."
+  ],
+  "limits": [
+    "C2 withholding is procedural on shared filesystem; no C2 heldout/evaluator access by C6.",
+    "Known occluder boxes and geometry provenance are caller testimony.",
+    "JS averaged-profile two-edge fit is not evidence of two rails at every underlying station.",
+    "Dev72 nearest/tangent visibility differs from JS bilinear masked profile.",
+    "104 suite invocation preceded exposed fixture capsule-end refinement; final9passed after refinement; original95sourcesunchanged."
+  ],
+  "next_guarded_action": "Independent review/evaluation of exact frozen candidate; no further candidate change without new freeze/cycle. No commit or push yet."
+}

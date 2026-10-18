@@ -1,0 +1,182 @@
+{
+  "job_id": "R306",
+  "worker": "C5",
+  "decision": "amend",
+  "summary": "The exact frozen composition is scientifically conservative and all nine tests pass, but a valid fractional candidate width breaches the documented singleton-bank search contract. Source arange uses ceil((end-start)/step): [31.01,31.01+1,1] enumerates31.01 and32.010000000000005. On a nominal34/occupied33-row stripe with bank[31.01] and tolerance1, the wrapper exposes width33 and observed midpoint using unintended32.01; a direct requested31.01 edge pair returns null. Fix or explicitly constrain the singleton seam before acceptance. All11 candidate/guard/source SHA256 values and four Git blobs match; ten input guard falsifiers fail closed, signed midpoint and copied-source integrity tests pass. CLI preserves hidden nonfinite rows. Local width and semantic identity remain UNKNOWN throughout.",
+  "commands": [
+    {
+      "command": "node review.mjs > review.log",
+      "exitCode": 0
+    },
+    {
+      "command": "TMPDIR=/workspace/scratch/8528bb251845/discovery-cycle02/C5/review-R306/tmp node --test experiments/capability-discovery/composition/*.test.mjs > /workspace/scratch/8528bb251845/discovery-cycle02/C5/review-R306/composition-tests.log",
+      "exitCode": 0,
+      "pass": 9,
+      "fail": 0
+    },
+    {
+      "command": "node /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/cli.mjs --input counterexample-input.json --out cli-counterexample.json --inspect cli-counterexample.html",
+      "exitCode": 0
+    },
+    {
+      "command": "node /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/cli.mjs --input hidden-input.json --out cli-hidden.json --inspect cli-hidden.html",
+      "exitCode": 0
+    }
+  ],
+  "hashes": {
+    "candidateManifestSha256": "9ecd88635ed69ca8fb8e44ff044ac1e8fd704133c5687685b9a3114893ed9cd0",
+    "verifiedFrozenFiles": [
+      {
+        "path": "experiments/capability-discovery/composition/cli.mjs",
+        "sha256": "0e08999d39aff0ba6498bad2e90c8986fb2995b98ae44fced92ebea2f3dcf839",
+        "matches": true
+      },
+      {
+        "path": "experiments/capability-discovery/composition/cli.test.mjs",
+        "sha256": "cb89ad358946f5f1320d72cdf5792d98eda951307da039b60712637b7d40af2d",
+        "matches": true
+      },
+      {
+        "path": "experiments/capability-discovery/composition/composition.test.mjs",
+        "sha256": "74e50ec4cf0068c1cceb08b00e058b0f6437ba1eee934d199a4133e9a6e8b574",
+        "matches": true
+      },
+      {
+        "path": "experiments/capability-discovery/composition/recipe.mjs",
+        "sha256": "3d4fff6cd15f2dc261d7a9ce1d248dfa1311f048c38923420c8ce6f2f1759a13",
+        "matches": true
+      },
+      {
+        "path": "experiments/capability-discovery/composition/training-fixtures.mjs",
+        "sha256": "e93de4087bf9c9f1e72d0655233b93591ed989e8e2a0b4682f5111d659592789",
+        "matches": true
+      },
+      {
+        "path": "work/capability-discovery/cycle-02/called-shot-E306.json",
+        "sha256": "dc8bc84a3cd5789336dd5577d31666223d99f10d1d99ac22ea8f38542eb0188e",
+        "matches": true
+      },
+      {
+        "path": "experiments/capability-discovery/probes/width/recipe.mjs",
+        "sha256": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0",
+        "matches": true
+      },
+      {
+        "path": "experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+        "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+        "gitBlob": "38963d20f7a8b7c7851b3a2abea2e472da8f7716",
+        "matches": true
+      },
+      {
+        "path": "experiments/capability-discovery/probes/width/vendor/active/contracts/alpha.profile@1.mjs",
+        "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+        "gitBlob": "6f50530ff8f7d5c613ee739224d475657fcbf647",
+        "matches": true
+      },
+      {
+        "path": "experiments/capability-discovery/probes/width/vendor/provider/fourLaneSensor.cjs",
+        "sha256": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624",
+        "gitBlob": "2167c3539aa33856738e679c75869d6c3395afe8",
+        "matches": true
+      },
+      {
+        "path": "experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+        "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+        "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+        "matches": true
+      }
+    ],
+    "reviewArtifacts": {
+      "protocol.json": "d4bcfa7f583f48d747d34f0120797317db15dbbd7509835ba30c1b038a130d9a",
+      "review.mjs": "d4e71bb6d70a23766ec77a894748642451b5fdea2c683000789b4c553f8e2bbf",
+      "measurements.json": "2038c6fc660d18294b737e7946c1813a8dc6d0ca66b1b0b0959f4f337f6316a3",
+      "review.log": "310fd64225029bd0839eafef3c2b3aa7c2d57d8c6ccc818f7738e09056a8d987",
+      "composition-tests.log": "1e09405c1bf0a5b7f69967594b1b45682396b487f85dfae5bc5f23573b2c9cde",
+      "counterexample-input.json": "9a0b67bfbcc536e6285396eba392b4a8facb9de94d83e09f12c1bf846112bd0f",
+      "counterexample-receipt.json": "dd3829973efc1bdd9fdd3f21d430c9dc804d13d726a2efa01bf16c529553dbff",
+      "cli-counterexample.json": "dd3829973efc1bdd9fdd3f21d430c9dc804d13d726a2efa01bf16c529553dbff",
+      "cli-counterexample.html": "cdacabd7ba7a46f5bd5080c087be5f653be1406c3d785902dfbf5a891f414dfa",
+      "cli-hidden.json": "f872eec36d0733bd3b79673e5b03a441551cba11f384990e82328cd517e58933",
+      "cli-hidden.html": "cca4de795e4c01f8c674738fd7158aa31407eb949f4ec0c407d04f70698cc307",
+      "verification.json": "4a1a5a4b191ed2a29fa6e0f86db04972c628c0b0dc62724dfe669e23ce577357"
+    }
+  },
+  "findings": [
+    {
+      "id": "R306-1",
+      "severity": "medium",
+      "disposition": "amend",
+      "source": "experiments/capability-discovery/composition/recipe.mjs runComposition bank.map widthSearchAt widths argument",
+      "claim": "Each discrete bank entry becomes one-element source range [width,width+1,1].",
+      "counterexample": {
+        "nominalRasterWidthArgumentPx": 34,
+        "occupiedRasterRows": 33,
+        "requestedBank": [
+          31.01
+        ],
+        "declaredTolerancePx": 1,
+        "sourceArangeActualValues": [
+          31.01,
+          32.010000000000005
+        ],
+        "directRequestedWidthEdgePair": null,
+        "wrapperFit": {
+          "lPx": -16.5,
+          "rPx": 16.5,
+          "cPx": 0,
+          "wPx": 33,
+          "score": 36,
+          "gl": 36,
+          "gr": 36,
+          "wgPx": 32.010000000000005
+        },
+        "wrapperWidthArgument": 31.01,
+        "wrapperMidpoint": {
+          "status": "OBSERVED_CHANNELS",
+          "fitMidpointNormalOffsetPx": 0,
+          "candidateCenterMinusFitMidpointPx": 0,
+          "candidateCenterMinusFitMidpointInNominalWidths": 0,
+          "denominator": "explicit candidate width; not calibrated width",
+          "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+        },
+        "calibratedWidth": {
+          "status": "UNKNOWN",
+          "widthPx": null,
+          "reasons": [
+            "explicit confidence policy required; no numerical defaults"
+          ],
+          "promoted": false
+        }
+      },
+      "reproducer": "counterexample-input.json via frozen CLI; direct source comparison in review.mjs",
+      "requestedChange": "Guarantee exactly one requested candidate width under source arange semantics, or call the existing exact edgePairOf on the existing profile for each explicit width; preserve raw scores/UNKNOWN and source bytes. Add a regression asserting fractional-bank fit cannot be admitted only by unintended candidate+1."
+    },
+    {
+      "id": "R306-2",
+      "severity": "info",
+      "disposition": "confirmed",
+      "finding": "All11 frozen file SHA256 values and four immutable-source Git blobs match before/after execution. Ten frame/hash/nonfinite/bank/mask/id invalid-input controls return UNKNOWN before source operations. Own copied vendor tamper throws source-integrity error."
+    },
+    {
+      "id": "R306-3",
+      "severity": "info",
+      "disposition": "confirmed",
+      "finding": "Forward/reverse headings preserve candidate-center-minus-fit-midpoint=-cPx; nominal-width normalization is explicitly labelled. Dev72 dimensionless scores and bilinear profile gradient units are distinct, with separate sampling seam and no agreement confidence claim."
+    },
+    {
+      "id": "R306-4",
+      "severity": "info",
+      "disposition": "confirmed",
+      "finding": "Arbitrary imageId/geometrySource claims remain caller provenance and do not promote semantic identity. Empty and all-hidden evidence preserve raw numerical defaults; calibrated width remains null. CLI serializes -Infinity with numberKind tag."
+    }
+  ],
+  "limits": [
+    "No C2 heldout/evaluator access; this is independent source review with exposed reviewer fixtures, not course evaluation.",
+    "Only bounded160x160 rasters and40-station profile windows executed. Finite input validation does not establish a practical resource envelope for arbitrarily large rasters/windows/banks.",
+    "Top-level null input throws before validation; documented object-shaped input is the supported domain reviewed. This is an explicit unsupported-input limit, not the scientific amendment.",
+    "Frame strings and supplied occluder/geometry provenance cannot verify physical coordinate correctness; exact RGBA hash binds bytes only.",
+    "README is referenced by the manifest but is not itself in the six frozen candidate files; conclusions use inspected code and exact frozen file hashes.",
+    "No production edits, AA muting, full known-failing fixture suite, commits or pushes performed."
+  ],
+  "nextAction": "C6 owns the singleton amendment. Root must freeze revised source and assign independent regression review before technical acceptance."
+}

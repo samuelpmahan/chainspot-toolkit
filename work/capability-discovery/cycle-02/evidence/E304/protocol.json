@@ -1,0 +1,347 @@
+{
+  "schema": "route-composition-protocol@1",
+  "job_id": "E304",
+  "worker": "C4",
+  "status": "frozen_before_execution",
+  "frame": "synthetic scene-local source px, x right/y down, 300x200",
+  "budget": {
+    "scenes": 4,
+    "candidateCases": 8
+  },
+  "sources": [
+    {
+      "sourcePath": "experiments/capability-discovery/probes/path-geometry/path-geometry.mjs",
+      "file": "vendor/path-geometry.mjs",
+      "sha256": "ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34",
+      "gitBlob": "faa18fb1b95fbb2e0db0da37df3eb09fc359b33d"
+    },
+    {
+      "sourcePath": "experiments/capability-discovery/catalog/sources/dev72-fourLaneRibbon.ts",
+      "file": "vendor/fourLaneRibbon.ts",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+      "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d"
+    },
+    {
+      "sourcePath": "experiments/capability-discovery/catalog/sources/hallway-track.py",
+      "file": "vendor/hallway-track.py",
+      "sha256": "83a1e85c032669c383845d9c3dd98ae9559f2d67457ffa63d3354d0707622bc6",
+      "gitBlob": "919bb6370228b1bd2e899b0565bfda41998eca4b"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "shortcut",
+      "ribbons": [
+        {
+          "points": [
+            [
+              30,
+              140
+            ],
+            [
+              90,
+              140
+            ],
+            [
+              90,
+              70
+            ],
+            [
+              210,
+              70
+            ],
+            [
+              210,
+              140
+            ],
+            [
+              270,
+              140
+            ]
+          ],
+          "width": 30
+        }
+      ],
+      "candidates": [
+        {
+          "id": "curvy-center",
+          "points": [
+            [
+              30,
+              140
+            ],
+            [
+              90,
+              140
+            ],
+            [
+              90,
+              70
+            ],
+            [
+              210,
+              70
+            ],
+            [
+              210,
+              140
+            ],
+            [
+              270,
+              140
+            ]
+          ],
+          "width": 30,
+          "corresponds": true
+        },
+        {
+          "id": "straight-unsupported",
+          "points": [
+            [
+              30,
+              140
+            ],
+            [
+              270,
+              140
+            ]
+          ],
+          "width": 30,
+          "corresponds": false
+        }
+      ],
+      "truth": "Only curvy construction belongs to designated route; shortcut traverses unpainted region."
+    },
+    {
+      "id": "offset",
+      "ribbons": [
+        {
+          "points": [
+            [
+              15,
+              100
+            ],
+            [
+              285,
+              100
+            ]
+          ],
+          "width": 30
+        }
+      ],
+      "candidates": [
+        {
+          "id": "center",
+          "points": [
+            [
+              30,
+              100
+            ],
+            [
+              270,
+              100
+            ]
+          ],
+          "width": 30,
+          "corresponds": true
+        },
+        {
+          "id": "offset-8px",
+          "points": [
+            [
+              30,
+              108
+            ],
+            [
+              270,
+              108
+            ]
+          ],
+          "width": 30,
+          "corresponds": false
+        }
+      ],
+      "truth": "Designated route is y=100 centerline, not the y=108 path. Offset is construction truth, no real acceptance."
+    },
+    {
+      "id": "crossing",
+      "ribbons": [
+        {
+          "points": [
+            [
+              15,
+              150
+            ],
+            [
+              285,
+              150
+            ]
+          ],
+          "width": 30
+        },
+        {
+          "points": [
+            [
+              150,
+              15
+            ],
+            [
+              150,
+              175
+            ]
+          ],
+          "width": 30
+        }
+      ],
+      "candidates": [
+        {
+          "id": "turn-to-designated-end",
+          "points": [
+            [
+              30,
+              150
+            ],
+            [
+              150,
+              150
+            ],
+            [
+              150,
+              30
+            ]
+          ],
+          "width": 30,
+          "corresponds": true
+        },
+        {
+          "id": "straight-other-end",
+          "points": [
+            [
+              30,
+              150
+            ],
+            [
+              270,
+              150
+            ]
+          ],
+          "width": 30,
+          "corresponds": false
+        }
+      ],
+      "truth": "Fixture designates north endpoint as continuation. Both branches are painted; local evidence does not establish that association."
+    },
+    {
+      "id": "width-alias",
+      "ribbons": [
+        {
+          "points": [
+            [
+              15,
+              100
+            ],
+            [
+              285,
+              100
+            ]
+          ],
+          "width": 41
+        }
+      ],
+      "candidates": [
+        {
+          "id": "width40-hypothesis",
+          "points": [
+            [
+              30,
+              100
+            ],
+            [
+              270,
+              100
+            ]
+          ],
+          "width": 40,
+          "corresponds": true
+        },
+        {
+          "id": "width30-hypothesis",
+          "points": [
+            [
+              30,
+              100
+            ],
+            [
+              270,
+              100
+            ]
+          ],
+          "width": 30,
+          "corresponds": false
+        }
+      ],
+      "truth": "Same geometric centerline; only width40 hypothesis approximates 41px raster construction. This correspondence is width-hypothesis truth, not endpoint identity."
+    }
+  ],
+  "raster": {
+    "backgroundGray": 100,
+    "ribbonGray": 145,
+    "insideRule": "minimum Euclidean distance to construction segments strictly less than width/2; union at crossing",
+    "alpha": 255
+  },
+  "sampling": {
+    "spacingPx": 6,
+    "includeVertices": true,
+    "supportThreshold": 0.5,
+    "meaning": "fixture diagnostic cutoff only, not accepted confidence",
+    "crossSectionHeading": "outgoing segment, final vertex incoming",
+    "edgeProfileStationOffsetsPx": [
+      -5,
+      -4,
+      -3,
+      -2,
+      -1,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "edgeLateralOffsetsPx": "-30..30 at .25px",
+    "edgeExpectedWidth": "candidate width hypothesis",
+    "edgeTolerancePx": 3,
+    "edgeCenterLimitPx": 12,
+    "occlusion": "none; source pair returning None preserved UNKNOWN"
+  },
+  "predictions": [
+    {
+      "id": "P1",
+      "observation": "Fewer turns and shorter length prefer unsupported shortcut; support and pair coverage reveal disagreement.",
+      "falsifier": "Shortcut has no support/edge-coverage deficit relative to designated curvy path."
+    },
+    {
+      "id": "P2",
+      "observation": "Equal length/bend count cannot distinguish 8px offset; paired midpoint offsets differ.",
+      "falsifier": "Observed midpoint offsets of offset and center agree within raster .5px."
+    },
+    {
+      "id": "P3",
+      "observation": "Crossing straight route can beat designated turn under a fewer-bend preference while both carry substantial support/center evidence; local evidence cannot prove endpoint association.",
+      "falsifier": "Non-designated branch has no local painted support or all pairs missing."
+    },
+    {
+      "id": "P4",
+      "observation": "Same centerline under wrong width can change support and normalized run length, while recovered midpoint remains centered when any pair exists.",
+      "falsifier": "The two width hypotheses have identical normalized runs and sensor channels."
+    }
+  ],
+  "noRanking": "No aggregate weights, magic exponential factor, accepted three-bend prior, native selection or production change. Compare single-feature preferences only.",
+  "limits": [
+    "All fixture truth is construction correspondence, never course accuracy/human acceptance.",
+    "Exposed exploratory cases, not E305 independent evaluation.",
+    "Edge pair association remains source/caller testimony at crossing.",
+    "Support is sample fraction, not arc-length evidence/probability.",
+    "Numerical width/thresholds are fixture parameters, not validated physical constants."
+  ]
+}

@@ -1,0 +1,472 @@
+{
+  "status": "PASS",
+  "sourceFilesVerified": 4,
+  "candidateRowsRecomputed": {
+    "train": 250,
+    "evaluation": 200,
+    "transferredWidth": 40
+  },
+  "byteIdenticalReplayFiles": [
+    "measurements.json",
+    "run.log",
+    "verification.log"
+  ],
+  "artifactHashes": [
+    {
+      "file": "protocol.json",
+      "sha256": "b6a0f050c04ba4d17a81cbaa7e34701ab1cd01c9e62995e19ac50812109be1af"
+    },
+    {
+      "file": "probe.mjs",
+      "sha256": "68772761afe94d52dc954dbf7d30f47560ba54bf1a18e6840963c7818ee8c03f"
+    },
+    {
+      "file": "measurements.json",
+      "sha256": "4602b0ddb96d647143be01904f213f24bd0523151001fdda3a57a8903058671d"
+    },
+    {
+      "file": "run.log",
+      "sha256": "9ea1df789d23fcd924ac9546df566c7168d9b9412c4e58004131e895c102a5e8"
+    },
+    {
+      "file": "verification.log",
+      "sha256": "76066ae4e85b9047cfcf0ecf16da4fbd66371648bb5e0c38e0987c3f2b5f8b38"
+    },
+    {
+      "file": "portable-probe.tar.gz",
+      "sha256": "2397cb5e54e6c49547344121e220b1541ca5afb253dece168905c295b8f7017b"
+    }
+  ],
+  "trainTpx": [
+    -36.0,
+    -18.0,
+    0.0,
+    18.0,
+    33.60000000000001
+  ],
+  "evalTpx": [
+    -43,
+    -11,
+    23,
+    47
+  ],
+  "allCalibratedWidthsNull": true,
+  "caseSummaries": [
+    {
+      "id": "clean30",
+      "nominalTrainPx": 30,
+      "verticalRasterRowsAtX128": 29,
+      "directTrainBilinearNormalSeparationPx": 29,
+      "estimatedWidthPx": 30,
+      "trainFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "evaluationFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "evalConstrainedFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36
+      },
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        29,
+        29,
+        29,
+        29
+      ],
+      "transferCombined": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1
+    },
+    {
+      "id": "clean40-rotation",
+      "nominalTrainPx": 40,
+      "verticalRasterRowsAtX128": 39,
+      "directTrainBilinearNormalSeparationPx": 39,
+      "estimatedWidthPx": 40,
+      "trainFit": {
+        "lPx": -19.5,
+        "rPx": 19.5,
+        "cPx": 0,
+        "wPx": 39,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 39
+      },
+      "evaluationFit": {
+        "lPx": -20.00452699999991,
+        "rPx": 19.998472252536704,
+        "cPx": -0.0030273737316033333,
+        "wPx": 40.00299925253661,
+        "score": 30.79540774505878,
+        "gl": 30.79540774505878,
+        "gr": 30.79560679235533,
+        "wgPx": 40
+      },
+      "evalConstrainedFit": {
+        "lPx": -20.00452699999991,
+        "rPx": 19.998472252536704,
+        "cPx": -0.0030273737316033333,
+        "wPx": 40.00299925253661,
+        "score": 30.79540774505878,
+        "gl": 30.79540774505878,
+        "gr": 30.79560679235533
+      },
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        39.97365202211434,
+        40.068341060999245,
+        39.97377467022488,
+        39.973563054621735
+      ],
+      "transferCombined": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1
+    },
+    {
+      "id": "clean50-rotation",
+      "nominalTrainPx": 50,
+      "verticalRasterRowsAtX128": 51,
+      "directTrainBilinearNormalSeparationPx": 49.917118052805506,
+      "estimatedWidthPx": 50,
+      "trainFit": {
+        "lPx": -24.99956343685249,
+        "rPx": 24.98890380152094,
+        "cPx": -0.005329817665774783,
+        "wPx": 49.98846723837343,
+        "score": 30.368555606305193,
+        "gl": 30.395348173697613,
+        "gr": 30.368555606305193,
+        "wgPx": 50
+      },
+      "evaluationFit": {
+        "lPx": -25.00252663160678,
+        "rPx": 25.00263729942792,
+        "cPx": 5.5333910569999034e-05,
+        "wPx": 50.0051639310347,
+        "score": 30.68649634513889,
+        "gl": 30.68902133833882,
+        "gr": 30.68649634513889,
+        "wgPx": 50
+      },
+      "evalConstrainedFit": {
+        "lPx": -25.00252663160678,
+        "rPx": 25.00263729942792,
+        "cPx": 5.5333910569999034e-05,
+        "wPx": 50.0051639310347,
+        "score": 30.68649634513889,
+        "gl": 30.68902133833882,
+        "gr": 30.68649634513889
+      },
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        50.1449800127443,
+        50.32128878483209,
+        50.321210243855234,
+        50.402899286907086
+      ],
+      "transferCombined": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1
+    },
+    {
+      "id": "local-width-change",
+      "nominalTrainPx": 30,
+      "verticalRasterRowsAtX128": 29,
+      "directTrainBilinearNormalSeparationPx": 29,
+      "estimatedWidthPx": 30,
+      "trainFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "evaluationFit": {
+        "lPx": -22.5,
+        "rPx": 22.5,
+        "cPx": 0,
+        "wPx": 45,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 45
+      },
+      "evalConstrainedFit": null,
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        45,
+        45,
+        45,
+        45
+      ],
+      "transferCombined": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1
+    },
+    {
+      "id": "offset-transfer",
+      "nominalTrainPx": 30,
+      "verticalRasterRowsAtX128": 29,
+      "directTrainBilinearNormalSeparationPx": 29,
+      "estimatedWidthPx": 30,
+      "trainFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "evaluationFit": null,
+      "evalConstrainedFit": null,
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        29,
+        29,
+        29,
+        29
+      ],
+      "transferCombined": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1
+    },
+    {
+      "id": "organic-training-false-width",
+      "nominalTrainPx": 40,
+      "verticalRasterRowsAtX128": 39,
+      "directTrainBilinearNormalSeparationPx": 39,
+      "estimatedWidthPx": 40,
+      "trainFit": {
+        "lPx": -19.5,
+        "rPx": 19.5,
+        "cPx": 0,
+        "wPx": 39,
+        "score": 72,
+        "gl": 72,
+        "gr": 72,
+        "wgPx": 39
+      },
+      "evaluationFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "evalConstrainedFit": null,
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        29,
+        29,
+        29,
+        29
+      ],
+      "transferCombined": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1
+    },
+    {
+      "id": "organic-evaluation-false-positive",
+      "nominalTrainPx": 30,
+      "verticalRasterRowsAtX128": 29,
+      "directTrainBilinearNormalSeparationPx": 29,
+      "estimatedWidthPx": 30,
+      "trainFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "evaluationFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 72,
+        "gl": 72,
+        "gr": 72,
+        "wgPx": 29
+      },
+      "evalConstrainedFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 72,
+        "gl": 72,
+        "gr": 72
+      },
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        29,
+        29,
+        29,
+        29
+      ],
+      "transferCombined": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1
+    },
+    {
+      "id": "rails-occluded-transfer",
+      "nominalTrainPx": 30,
+      "verticalRasterRowsAtX128": 29,
+      "directTrainBilinearNormalSeparationPx": 29,
+      "estimatedWidthPx": 30,
+      "trainFit": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "evaluationFit": null,
+      "evalConstrainedFit": null,
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        29,
+        29,
+        29,
+        29
+      ],
+      "transferCombined": [
+        null,
+        null,
+        null,
+        null
+      ],
+      "status": "EXPOSED_SEPARATED_SOURCE_SCORE_ONLY",
+      "margin": 1
+    },
+    {
+      "id": "training-all-hidden",
+      "nominalTrainPx": 40,
+      "verticalRasterRowsAtX128": 39,
+      "directTrainBilinearNormalSeparationPx": 39,
+      "estimatedWidthPx": 20,
+      "trainFit": null,
+      "evaluationFit": {
+        "lPx": -19.5,
+        "rPx": 19.5,
+        "cPx": 0,
+        "wPx": 39,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 39
+      },
+      "evalConstrainedFit": null,
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        39,
+        39,
+        39,
+        39
+      ],
+      "transferCombined": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "ABSTAIN_NO_VISIBLE_TRAINING",
+      "margin": null
+    },
+    {
+      "id": "training-zero-lift-tie",
+      "nominalTrainPx": 40,
+      "verticalRasterRowsAtX128": 39,
+      "directTrainBilinearNormalSeparationPx": null,
+      "estimatedWidthPx": 20,
+      "trainFit": null,
+      "evaluationFit": {
+        "lPx": -19.5,
+        "rPx": 19.5,
+        "cPx": 0,
+        "wPx": 39,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 39
+      },
+      "evalConstrainedFit": null,
+      "evaluationDirectBilinearNormalSeparationsPx": [
+        39,
+        39,
+        39,
+        39
+      ],
+      "transferCombined": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "ABSTAIN_ZERO_OR_TIED",
+      "margin": 0
+    }
+  ]
+}

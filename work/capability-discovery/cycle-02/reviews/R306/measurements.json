@@ -1,0 +1,316 @@
+{
+  "job_id": "R306",
+  "candidateManifestSha256": "9ecd88635ed69ca8fb8e44ff044ac1e8fd704133c5687685b9a3114893ed9cd0",
+  "hashes": [
+    {
+      "path": "experiments/capability-discovery/composition/cli.mjs",
+      "sha256": "0e08999d39aff0ba6498bad2e90c8986fb2995b98ae44fced92ebea2f3dcf839",
+      "actual": "0e08999d39aff0ba6498bad2e90c8986fb2995b98ae44fced92ebea2f3dcf839",
+      "verified": true
+    },
+    {
+      "path": "experiments/capability-discovery/composition/cli.test.mjs",
+      "sha256": "cb89ad358946f5f1320d72cdf5792d98eda951307da039b60712637b7d40af2d",
+      "actual": "cb89ad358946f5f1320d72cdf5792d98eda951307da039b60712637b7d40af2d",
+      "verified": true
+    },
+    {
+      "path": "experiments/capability-discovery/composition/composition.test.mjs",
+      "sha256": "74e50ec4cf0068c1cceb08b00e058b0f6437ba1eee934d199a4133e9a6e8b574",
+      "actual": "74e50ec4cf0068c1cceb08b00e058b0f6437ba1eee934d199a4133e9a6e8b574",
+      "verified": true
+    },
+    {
+      "path": "experiments/capability-discovery/composition/recipe.mjs",
+      "sha256": "3d4fff6cd15f2dc261d7a9ce1d248dfa1311f048c38923420c8ce6f2f1759a13",
+      "actual": "3d4fff6cd15f2dc261d7a9ce1d248dfa1311f048c38923420c8ce6f2f1759a13",
+      "verified": true
+    },
+    {
+      "path": "experiments/capability-discovery/composition/training-fixtures.mjs",
+      "sha256": "e93de4087bf9c9f1e72d0655233b93591ed989e8e2a0b4682f5111d659592789",
+      "actual": "e93de4087bf9c9f1e72d0655233b93591ed989e8e2a0b4682f5111d659592789",
+      "verified": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-02/called-shot-E306.json",
+      "sha256": "dc8bc84a3cd5789336dd5577d31666223d99f10d1d99ac22ea8f38542eb0188e",
+      "actual": "dc8bc84a3cd5789336dd5577d31666223d99f10d1d99ac22ea8f38542eb0188e",
+      "verified": true
+    },
+    {
+      "path": "experiments/capability-discovery/probes/width/recipe.mjs",
+      "sha256": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0",
+      "actual": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0",
+      "verified": true
+    },
+    {
+      "path": "experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "actual": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "verified": true
+    },
+    {
+      "path": "experiments/capability-discovery/probes/width/vendor/active/contracts/alpha.profile@1.mjs",
+      "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+      "actual": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+      "verified": true
+    },
+    {
+      "path": "experiments/capability-discovery/probes/width/vendor/provider/fourLaneSensor.cjs",
+      "sha256": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624",
+      "actual": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624",
+      "verified": true
+    },
+    {
+      "path": "experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+      "actual": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+      "verified": true
+    }
+  ],
+  "controls": [
+    {
+      "id": "frame",
+      "status": "UNKNOWN",
+      "reason": "positive integer raster dimensions and matching image frame required",
+      "operations": []
+    },
+    {
+      "id": "hash",
+      "status": "UNKNOWN",
+      "reason": "RGBA provenance hash mismatch",
+      "operations": []
+    },
+    {
+      "id": "nonfiniteHeading",
+      "status": "UNKNOWN",
+      "reason": "finite station poses, nonempty longitudinal windows and matching frames required",
+      "operations": []
+    },
+    {
+      "id": "nonfiniteWindow",
+      "status": "UNKNOWN",
+      "reason": "finite station poses, nonempty longitudinal windows and matching frames required",
+      "operations": []
+    },
+    {
+      "id": "nonfiniteBank",
+      "status": "UNKNOWN",
+      "reason": "explicit distinct positive LOCAL candidate widths in same frame required (empty allowed)",
+      "operations": []
+    },
+    {
+      "id": "duplicateBank",
+      "status": "UNKNOWN",
+      "reason": "explicit distinct positive LOCAL candidate widths in same frame required (empty allowed)",
+      "operations": []
+    },
+    {
+      "id": "zeroBank",
+      "status": "UNKNOWN",
+      "reason": "explicit distinct positive LOCAL candidate widths in same frame required (empty allowed)",
+      "operations": []
+    },
+    {
+      "id": "negativeMask",
+      "status": "UNKNOWN",
+      "reason": "finite nonnegative same-frame occluder boxes required",
+      "operations": []
+    },
+    {
+      "id": "nonfiniteMask",
+      "status": "UNKNOWN",
+      "reason": "finite nonnegative same-frame occluder boxes required",
+      "operations": []
+    },
+    {
+      "id": "duplicateStation",
+      "status": "UNKNOWN",
+      "reason": "unique station identifiers required",
+      "operations": []
+    }
+  ],
+  "singletonCounterexample": {
+    "nominalRasterWidthArgumentPx": 34,
+    "occupiedRasterRows": 33,
+    "requestedBank": [
+      31.01
+    ],
+    "declaredTolerancePx": 1,
+    "sourceArangeActualValues": [
+      31.01,
+      32.010000000000005
+    ],
+    "directRequestedWidthEdgePair": null,
+    "wrapperFit": {
+      "lPx": -16.5,
+      "rPx": 16.5,
+      "cPx": 0,
+      "wPx": 33,
+      "score": 36,
+      "gl": 36,
+      "gr": 36,
+      "wgPx": 32.010000000000005
+    },
+    "wrapperWidthArgument": 31.01,
+    "wrapperMidpoint": {
+      "status": "OBSERVED_CHANNELS",
+      "fitMidpointNormalOffsetPx": 0,
+      "candidateCenterMinusFitMidpointPx": 0,
+      "candidateCenterMinusFitMidpointInNominalWidths": 0,
+      "denominator": "explicit candidate width; not calibrated width",
+      "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+    },
+    "calibratedWidth": {
+      "status": "UNKNOWN",
+      "widthPx": null,
+      "reasons": [
+        "explicit confidence policy required; no numerical defaults"
+      ],
+      "promoted": false
+    }
+  },
+  "midpoints": [
+    {
+      "headingRad": 0,
+      "fit": {
+        "lPx": -17.75,
+        "rPx": 11.25,
+        "cPx": -3.25,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 30
+      },
+      "midpoint": {
+        "status": "OBSERVED_CHANNELS",
+        "fitMidpointNormalOffsetPx": -3.25,
+        "candidateCenterMinusFitMidpointPx": 3.25,
+        "candidateCenterMinusFitMidpointInNominalWidths": 0.10833333333333334,
+        "denominator": "explicit candidate width; not calibrated width",
+        "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+      },
+      "observation": {
+        "laneOffsetsPx": [
+          -15,
+          -5,
+          5,
+          15
+        ],
+        "laneWidthPx": 10,
+        "leftRail": 0,
+        "innerLeft": 1,
+        "innerRight": 1,
+        "rightRail": 0,
+        "leftRailOccluded": false,
+        "innerLeftOccluded": false,
+        "innerRightOccluded": false,
+        "rightRailOccluded": false,
+        "railMode": "paired",
+        "railScore": 0,
+        "innerScore": 1,
+        "score": 0
+      }
+    },
+    {
+      "headingRad": 3.141592653589793,
+      "fit": {
+        "lPx": -11.25,
+        "rPx": 17.75,
+        "cPx": 3.25,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 30
+      },
+      "midpoint": {
+        "status": "OBSERVED_CHANNELS",
+        "fitMidpointNormalOffsetPx": 3.25,
+        "candidateCenterMinusFitMidpointPx": -3.25,
+        "candidateCenterMinusFitMidpointInNominalWidths": -0.10833333333333334,
+        "denominator": "explicit candidate width; not calibrated width",
+        "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+      },
+      "observation": {
+        "laneOffsetsPx": [
+          -15,
+          -5,
+          5,
+          15
+        ],
+        "laneWidthPx": 10,
+        "leftRail": 0,
+        "innerLeft": 1,
+        "innerRight": 1,
+        "rightRail": 0,
+        "leftRailOccluded": false,
+        "innerLeftOccluded": false,
+        "innerRightOccluded": false,
+        "rightRailOccluded": false,
+        "railMode": "paired",
+        "railScore": 0,
+        "innerScore": 1,
+        "score": 0
+      }
+    }
+  ],
+  "hidden": {
+    "status": "UNKNOWN",
+    "width": {
+      "widthPx": 30,
+      "scores": [
+        {
+          "widthPx": 30,
+          "meanScore": {
+            "numberKind": "nonfinite",
+            "value": "-Infinity"
+          },
+          "visibleSamples": 0
+        }
+      ]
+    },
+    "localWidth": {
+      "status": "UNKNOWN",
+      "widthPx": null,
+      "reasons": [
+        "explicit confidence policy required; no numerical defaults"
+      ],
+      "promoted": false
+    }
+  },
+  "empty": {
+    "status": "UNKNOWN",
+    "width": {
+      "widthPx": 40,
+      "scores": []
+    }
+  },
+  "claimant": {
+    "semanticIdentity": {
+      "status": "UNKNOWN",
+      "reason": "brightness, paired edges and width do not establish path identity or endpoint ownership"
+    },
+    "localWidth": {
+      "status": "UNKNOWN",
+      "widthPx": null,
+      "reasons": [
+        "explicit confidence policy required; no numerical defaults"
+      ],
+      "promoted": false
+    },
+    "inputProvenance": {
+      "imageId": "ASSERTED-INDEPENDENT-COURSE",
+      "geometrySource": "unverified human claim",
+      "rgbaSha256": "e92a95c4e97c402e450cb2438df0e625717690fc0b21dd109be90dbfffce736e"
+    }
+  },
+  "subpixelMask": {
+    "status": "OBSERVED_CHANNELS",
+    "samplingSeam": "Dev72 uses nearest pixels and tangent bands; JS uses bilinear profiles, box pixel mask and fixed offsets -30..30 at .25px. They are separate observations, not calibrated agreement."
+  },
+  "integrityError": "frozen source integrity mismatch: vendor/provider/fourLaneSensor.cjs",
+  "unsupportedTopLevelNullError": "Cannot read properties of null (reading 'enabled')"
+}

@@ -1,0 +1,363 @@
+{
+  "job_id": "R308",
+  "counterexampleCli": {
+    "candidate": {
+      "widthArgPx": 31.01,
+      "observation": {
+        "laneOffsetsPx": [
+          -15.505,
+          -5.168333333333334,
+          5.168333333333334,
+          15.505
+        ],
+        "laneWidthPx": 10.336666666666668,
+        "leftRail": 1,
+        "innerLeft": 1,
+        "innerRight": 1,
+        "rightRail": 1,
+        "leftRailOccluded": false,
+        "innerLeftOccluded": false,
+        "innerRightOccluded": false,
+        "rightRailOccluded": false,
+        "railMode": "paired",
+        "railScore": 1,
+        "innerScore": 1,
+        "score": 1
+      },
+      "pairedRails": {
+        "status": "OBSERVED_CHANNELS",
+        "leftRail": 1,
+        "rightRail": 1,
+        "combinedScore": 1,
+        "positiveEvidenceClaimed": false
+      },
+      "edgeFit": null,
+      "midpoint": {
+        "status": "UNKNOWN",
+        "reason": "no finite positive two-edge fit in declared profile window"
+      }
+    },
+    "operationsExecuted": [
+      "lumOf",
+      "estimateFourLaneCorridorWidth",
+      "assessLocalWidth",
+      "profileAt",
+      "observeFourLaneCrossSection",
+      "assessPairedRails",
+      "edgePairOf (shared profile; exact requested width)"
+    ]
+  },
+  "oldArangeEnumeration": [
+    31.01,
+    32.010000000000005
+  ],
+  "decimalCases": [
+    {
+      "requestedWidthPx": 31,
+      "sourceOracle": null,
+      "wrappedFit": null,
+      "midpoint": {
+        "status": "UNKNOWN",
+        "reason": "no finite positive two-edge fit in declared profile window"
+      }
+    },
+    {
+      "requestedWidthPx": 31.01,
+      "sourceOracle": null,
+      "wrappedFit": null,
+      "midpoint": {
+        "status": "UNKNOWN",
+        "reason": "no finite positive two-edge fit in declared profile window"
+      }
+    },
+    {
+      "requestedWidthPx": 31.99,
+      "sourceOracle": null,
+      "wrappedFit": null,
+      "midpoint": {
+        "status": "UNKNOWN",
+        "reason": "no finite positive two-edge fit in declared profile window"
+      }
+    },
+    {
+      "requestedWidthPx": 32,
+      "sourceOracle": {
+        "lPx": -16.5,
+        "rPx": 16.5,
+        "cPx": 0,
+        "wPx": 33,
+        "score": 36,
+        "gl": 36,
+        "gr": 36
+      },
+      "wrappedFit": {
+        "lPx": -16.5,
+        "rPx": 16.5,
+        "cPx": 0,
+        "wPx": 33,
+        "score": 36,
+        "gl": 36,
+        "gr": 36
+      },
+      "midpoint": {
+        "status": "OBSERVED_CHANNELS",
+        "fitMidpointNormalOffsetPx": 0,
+        "candidateCenterMinusFitMidpointPx": 0,
+        "candidateCenterMinusFitMidpointInNominalWidths": 0,
+        "denominator": "explicit candidate width; not calibrated width",
+        "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+      }
+    },
+    {
+      "requestedWidthPx": 32.01,
+      "sourceOracle": {
+        "lPx": -16.5,
+        "rPx": 16.5,
+        "cPx": 0,
+        "wPx": 33,
+        "score": 36,
+        "gl": 36,
+        "gr": 36
+      },
+      "wrappedFit": {
+        "lPx": -16.5,
+        "rPx": 16.5,
+        "cPx": 0,
+        "wPx": 33,
+        "score": 36,
+        "gl": 36,
+        "gr": 36
+      },
+      "midpoint": {
+        "status": "OBSERVED_CHANNELS",
+        "fitMidpointNormalOffsetPx": 0,
+        "candidateCenterMinusFitMidpointPx": 0,
+        "candidateCenterMinusFitMidpointInNominalWidths": 0,
+        "denominator": "explicit candidate width; not calibrated width",
+        "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+      }
+    },
+    {
+      "requestedWidthPx": 33,
+      "sourceOracle": {
+        "lPx": -16.5,
+        "rPx": 16.5,
+        "cPx": 0,
+        "wPx": 33,
+        "score": 36,
+        "gl": 36,
+        "gr": 36
+      },
+      "wrappedFit": {
+        "lPx": -16.5,
+        "rPx": 16.5,
+        "cPx": 0,
+        "wPx": 33,
+        "score": 36,
+        "gl": 36,
+        "gr": 36
+      },
+      "midpoint": {
+        "status": "OBSERVED_CHANNELS",
+        "fitMidpointNormalOffsetPx": 0,
+        "candidateCenterMinusFitMidpointPx": 0,
+        "candidateCenterMinusFitMidpointInNominalWidths": 0,
+        "denominator": "explicit candidate width; not calibrated width",
+        "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+      }
+    },
+    {
+      "requestedWidthPx": 34,
+      "sourceOracle": {
+        "lPx": -16.5,
+        "rPx": 16.5,
+        "cPx": 0,
+        "wPx": 33,
+        "score": 36,
+        "gl": 36,
+        "gr": 36
+      },
+      "wrappedFit": {
+        "lPx": -16.5,
+        "rPx": 16.5,
+        "cPx": 0,
+        "wPx": 33,
+        "score": 36,
+        "gl": 36,
+        "gr": 36
+      },
+      "midpoint": {
+        "status": "OBSERVED_CHANNELS",
+        "fitMidpointNormalOffsetPx": 0,
+        "candidateCenterMinusFitMidpointPx": 0,
+        "candidateCenterMinusFitMidpointInNominalWidths": 0,
+        "denominator": "explicit candidate width; not calibrated width",
+        "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+      }
+    },
+    {
+      "requestedWidthPx": 34.01,
+      "sourceOracle": null,
+      "wrappedFit": null,
+      "midpoint": {
+        "status": "UNKNOWN",
+        "reason": "no finite positive two-edge fit in declared profile window"
+      }
+    }
+  ],
+  "integerPositiveControls": [
+    {
+      "yPx": 80,
+      "sourceOracle": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36
+      },
+      "wrapped": {
+        "widthArgPx": 30,
+        "observation": {
+          "laneOffsetsPx": [
+            -15,
+            -5,
+            5,
+            15
+          ],
+          "laneWidthPx": 10,
+          "leftRail": 1,
+          "innerLeft": 1,
+          "innerRight": 1,
+          "rightRail": 1,
+          "leftRailOccluded": false,
+          "innerLeftOccluded": false,
+          "innerRightOccluded": false,
+          "rightRailOccluded": false,
+          "railMode": "paired",
+          "railScore": 1,
+          "innerScore": 1,
+          "score": 1
+        },
+        "pairedRails": {
+          "status": "OBSERVED_CHANNELS",
+          "leftRail": 1,
+          "rightRail": 1,
+          "combinedScore": 1,
+          "positiveEvidenceClaimed": false
+        },
+        "edgeFit": {
+          "lPx": -14.5,
+          "rPx": 14.5,
+          "cPx": 0,
+          "wPx": 29,
+          "score": 36,
+          "gl": 36,
+          "gr": 36
+        },
+        "midpoint": {
+          "status": "OBSERVED_CHANNELS",
+          "fitMidpointNormalOffsetPx": 0,
+          "candidateCenterMinusFitMidpointPx": 0,
+          "candidateCenterMinusFitMidpointInNominalWidths": 0,
+          "denominator": "explicit candidate width; not calibrated width",
+          "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+        }
+      }
+    },
+    {
+      "yPx": 83.25,
+      "sourceOracle": {
+        "lPx": -17.75,
+        "rPx": 11.25,
+        "cPx": -3.25,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36
+      },
+      "wrapped": {
+        "widthArgPx": 30,
+        "observation": {
+          "laneOffsetsPx": [
+            -15,
+            -5,
+            5,
+            15
+          ],
+          "laneWidthPx": 10,
+          "leftRail": 0,
+          "innerLeft": 1,
+          "innerRight": 1,
+          "rightRail": 0,
+          "leftRailOccluded": false,
+          "innerLeftOccluded": false,
+          "innerRightOccluded": false,
+          "rightRailOccluded": false,
+          "railMode": "paired",
+          "railScore": 0,
+          "innerScore": 1,
+          "score": 0
+        },
+        "pairedRails": {
+          "status": "OBSERVED_CHANNELS",
+          "leftRail": 0,
+          "rightRail": 0,
+          "combinedScore": 0,
+          "positiveEvidenceClaimed": false
+        },
+        "edgeFit": {
+          "lPx": -17.75,
+          "rPx": 11.25,
+          "cPx": -3.25,
+          "wPx": 29,
+          "score": 36,
+          "gl": 36,
+          "gr": 36
+        },
+        "midpoint": {
+          "status": "OBSERVED_CHANNELS",
+          "fitMidpointNormalOffsetPx": -3.25,
+          "candidateCenterMinusFitMidpointPx": 3.25,
+          "candidateCenterMinusFitMidpointInNominalWidths": 0.10833333333333334,
+          "denominator": "explicit candidate width; not calibrated width",
+          "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+        }
+      }
+    }
+  ],
+  "operationsExecuted": [
+    "lumOf",
+    "estimateFourLaneCorridorWidth",
+    "assessLocalWidth",
+    "profileAt",
+    "observeFourLaneCrossSection",
+    "assessPairedRails",
+    "edgePairOf (shared profile; exact requested width)",
+    "observeFourLaneCrossSection",
+    "assessPairedRails",
+    "edgePairOf (shared profile; exact requested width)",
+    "observeFourLaneCrossSection",
+    "assessPairedRails",
+    "edgePairOf (shared profile; exact requested width)",
+    "observeFourLaneCrossSection",
+    "assessPairedRails",
+    "edgePairOf (shared profile; exact requested width)",
+    "observeFourLaneCrossSection",
+    "assessPairedRails",
+    "edgePairOf (shared profile; exact requested width)",
+    "observeFourLaneCrossSection",
+    "assessPairedRails",
+    "edgePairOf (shared profile; exact requested width)",
+    "observeFourLaneCrossSection",
+    "assessPairedRails",
+    "edgePairOf (shared profile; exact requested width)",
+    "observeFourLaneCrossSection",
+    "assessPairedRails",
+    "edgePairOf (shared profile; exact requested width)"
+  ],
+  "sharedProfileCalls": 1,
+  "edgePairCalls": 8,
+  "limits": "Exact source oracle equality on exposed raster; no scientific promotion or independent C2 evaluation."
+}

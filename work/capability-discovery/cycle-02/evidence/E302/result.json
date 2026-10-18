@@ -1,0 +1,4236 @@
+{
+  "schema": "discovery-worker-result@1",
+  "job_id": "E302",
+  "worker": "C3",
+  "outcome": "mixed_change",
+  "summary": "Seven new exposed synthetic cases and35 stations executed with six passing mechanistic assertions. Existing bilateral profile fits measure LOCAL widths30/40px and reveal a7.5px displaced centerline. Re-centering the unchanged Dev72 operation recovers score1 after an allzero width bank at the asserted pose. Ragged global width29.238px hides station widths29.026\u201347.875px; a crossing global width40px/Dev72 mean.8 hides a central station with no pair and score0. A broad bright ellipse has no pair in the source profile window. Most importantly, a non-path organic capsule exactly reproduces the corridor40 global profiles, all five station profiles, fitted edges, width rows and raw channel outputs. Bilateral composition adds geometric diagnostics but does not establish semantic path identity or universally reject organic patches. Perfect corridor40 also ties Dev72 candidates40/42 at score1, so strict Dev72 winner separation cannot be silently required for observed edge width40.",
+  "commands": [
+    "node discovery-cycle02/C3/probe.mjs > discovery-cycle02/C3/run.log",
+    "python discovery-cycle02/C3/render.py > discovery-cycle02/C3/render.log"
+  ],
+  "sourceIDs": [
+    {
+      "file": "vendor/active/ports/s6straight/pathSpace.mjs",
+      "origin": "chainspot-toolkit",
+      "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "sourcePath": "ports/s6straight/pathSpace.mjs",
+      "gitBlob": "38963d20f7a8b7c7851b3a2abea2e472da8f7716",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "adaptation": "path/extension only; content byte-identical",
+      "verified": true
+    },
+    {
+      "file": "vendor/active/contracts/alpha.profile@1.mjs",
+      "origin": "chainspot-toolkit",
+      "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "sourcePath": "contracts/alpha.profile@1.mjs",
+      "gitBlob": "6f50530ff8f7d5c613ee739224d475657fcbf647",
+      "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+      "adaptation": "path/extension only; content byte-identical",
+      "verified": true
+    },
+    {
+      "file": "vendor/provider/fourLaneSensor.cjs",
+      "origin": "chainspot-toolkit",
+      "ref": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "sourcePath": "source/provider/packages/alg/dist/detectors/threeFactor/features/st.fourLaneSensor.js",
+      "gitBlob": "2167c3539aa33856738e679c75869d6c3395afe8",
+      "sha256": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624",
+      "adaptation": "path/extension only; content byte-identical",
+      "verified": true
+    },
+    {
+      "file": "vendor/dev72/fourLaneRibbon.ts",
+      "origin": "samuelpmahan/ChainSpot",
+      "ref": "ef2a4fc2dc4720d3647f705464342f119d5a39a5",
+      "sourcePath": "src/lib/nuthing/fourLaneRibbon.ts",
+      "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+      "adaptation": "none; exact independently fetched source; Node builtin type stripping",
+      "verified": true
+    }
+  ],
+  "hashManifest": [
+    {
+      "path": "protocol.json",
+      "sha256": "47cb0489e0ef166cf69dccb1f7713be38c644b087c29d96472ee11ec641ca3a0",
+      "bytes": 3945
+    },
+    {
+      "path": "probe.mjs",
+      "sha256": "3c34922ee6d35c85be035fc3ce9d484d9d0a9fc578062d07fcc376d091c2e14d",
+      "bytes": 6882
+    },
+    {
+      "path": "provenance.json",
+      "sha256": "0f3de094060d64f7614be6a8fa5023180e75070d33153976bdf318a734fdffaf",
+      "bytes": 2129
+    },
+    {
+      "path": "receipt.json",
+      "sha256": "a5ea9523ac5c771e39ee436eeedb6ac7b4caa8187ae17593137eeeeca8500173",
+      "bytes": 726242
+    },
+    {
+      "path": "render.py",
+      "sha256": "069ef87b9d9978581fc93338bc200f1effbde56ecb71fa8657f471201c49373c",
+      "bytes": 3789
+    },
+    {
+      "path": "bilateral-composition.png",
+      "sha256": "6d79e49a2a20089d0c4df5b04eab8e4b8445d69b1bde303d957273f24121c4fd",
+      "bytes": 504093
+    },
+    {
+      "path": "bilateral-composition.svg",
+      "sha256": "6f77d63905dd1088bd81e9c8a26ba97938ba7d72c3a8ded58ad2ad045f6cbd9d",
+      "bytes": 422418
+    },
+    {
+      "path": "README.md",
+      "sha256": "0338ab022b2e0226287b58b33e06a98aad21749fcbd7e7ae455f5686b46c34c3",
+      "bytes": 2500
+    },
+    {
+      "path": "run.log",
+      "sha256": "01a509ec065a1fc8165106ac10bbc04e288eb58373eba7864612a12abd2188b9",
+      "bytes": 8904
+    },
+    {
+      "path": "render.log",
+      "sha256": "c500e60c830a59a91e3edf3f6da4ba8b01c04ed02010dd5bc36e786ad0b38f09",
+      "bytes": 108
+    }
+  ],
+  "tests": {
+    "status": "PASS",
+    "caseCount": 7,
+    "stationCount": 35,
+    "assertions": [
+      {
+        "id": "two-local-widths",
+        "status": "PASS",
+        "meaning": "Distinct LOCAL source-pixel widths measured without a meter-scale claim."
+      },
+      {
+        "id": "midpoint-reveals-shift",
+        "status": "PASS",
+        "meaning": "Center-midpoint is geometric diagnosis; default rejection alone does not mean ribbon absent."
+      },
+      {
+        "id": "capsule-survives-entire-composition",
+        "status": "PASS",
+        "meaning": "Organic capsule and corridor have byte-identical exposed measurement profiles/channels; semantic path identity is not observed."
+      },
+      {
+        "id": "large-bright-no-local-pair",
+        "status": "PASS",
+        "meaning": "Bright patch contains no selected bilateral pair within fixed normal profile window."
+      },
+      {
+        "id": "crossing-local-failure-global-fit",
+        "status": "PASS",
+        "meaning": "A global pair can coexist with unsupported central crossing station."
+      },
+      {
+        "id": "ragged-independent-window-variation",
+        "status": "PASS",
+        "meaning": "Independent station profile fits disclose variation hidden by one averaged cross section; >10 is a descriptive fixture assertion, not acceptance policy."
+      }
+    ],
+    "figureInspectedWith": "view_image; readable 7-row raster/edge/channel comparison"
+  },
+  "actualMeasurements": [
+    {
+      "case": "corridor40",
+      "globalEdges": {
+        "lPx": -20.5,
+        "rPx": 19.5,
+        "cPx": -0.5,
+        "wPx": 40,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 40
+      },
+      "globalDefaultEdges": {
+        "lPx": -20.5,
+        "rPx": 19.5,
+        "cPx": -0.5,
+        "wPx": 40,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 40
+      },
+      "fourLaneWidthRows": {
+        "widthPx": 40,
+        "scores": [
+          {
+            "widthPx": 24,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 36,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 42,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 48,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 54,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "stations": [
+        {
+          "xPx": 84,
+          "edgeFit": {
+            "lPx": -20.5,
+            "rPx": 19.5,
+            "cPx": -0.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 84,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": -0.0125
+          }
+        },
+        {
+          "xPx": 117,
+          "edgeFit": {
+            "lPx": -20.5,
+            "rPx": 19.5,
+            "cPx": -0.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 117,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": -0.0125
+          }
+        },
+        {
+          "xPx": 150,
+          "edgeFit": {
+            "lPx": -20.5,
+            "rPx": 19.5,
+            "cPx": -0.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 150,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": -0.0125
+          }
+        },
+        {
+          "xPx": 183,
+          "edgeFit": {
+            "lPx": -20.5,
+            "rPx": 19.5,
+            "cPx": -0.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 183,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": -0.0125
+          }
+        },
+        {
+          "xPx": 211.6,
+          "edgeFit": {
+            "lPx": -20.5,
+            "rPx": 19.5,
+            "cPx": -0.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 211.6,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": -0.0125
+          }
+        }
+      ]
+    },
+    {
+      "case": "corridor30",
+      "globalEdges": {
+        "lPx": -15.5,
+        "rPx": 14.5,
+        "cPx": -0.5,
+        "wPx": 30,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 30
+      },
+      "globalDefaultEdges": {
+        "lPx": -15.5,
+        "rPx": 14.5,
+        "cPx": -0.5,
+        "wPx": 30,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 30
+      },
+      "fourLaneWidthRows": {
+        "widthPx": 30,
+        "scores": [
+          {
+            "widthPx": 24,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 36,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 42,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 48,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 54,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "stations": [
+        {
+          "xPx": 84,
+          "edgeFit": {
+            "lPx": -15.5,
+            "rPx": 14.5,
+            "cPx": -0.5,
+            "wPx": 30,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 30
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 1,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 84,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 30
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 0.75,
+            "centerOffsetOverWidth": -0.016666666666666666
+          }
+        },
+        {
+          "xPx": 117,
+          "edgeFit": {
+            "lPx": -15.5,
+            "rPx": 14.5,
+            "cPx": -0.5,
+            "wPx": 30,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 30
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 1,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 117,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 30
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 0.75,
+            "centerOffsetOverWidth": -0.016666666666666666
+          }
+        },
+        {
+          "xPx": 150,
+          "edgeFit": {
+            "lPx": -15.5,
+            "rPx": 14.5,
+            "cPx": -0.5,
+            "wPx": 30,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 30
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 1,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 150,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 30
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 0.75,
+            "centerOffsetOverWidth": -0.016666666666666666
+          }
+        },
+        {
+          "xPx": 183,
+          "edgeFit": {
+            "lPx": -15.5,
+            "rPx": 14.5,
+            "cPx": -0.5,
+            "wPx": 30,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 30
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 1,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 183,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 30
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 0.75,
+            "centerOffsetOverWidth": -0.016666666666666666
+          }
+        },
+        {
+          "xPx": 211.6,
+          "edgeFit": {
+            "lPx": -15.5,
+            "rPx": 14.5,
+            "cPx": -0.5,
+            "wPx": 30,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 30
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 1,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 211.6,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 30
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 0.75,
+            "centerOffsetOverWidth": -0.016666666666666666
+          }
+        }
+      ]
+    },
+    {
+      "case": "center-shift8",
+      "globalEdges": {
+        "lPx": -12.5,
+        "rPx": 27.5,
+        "cPx": 7.5,
+        "wPx": 40,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 40
+      },
+      "globalDefaultEdges": null,
+      "fourLaneWidthRows": {
+        "widthPx": 24,
+        "scores": [
+          {
+            "widthPx": 24,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 36,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 42,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 48,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 54,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "stations": [
+        {
+          "xPx": 84,
+          "edgeFit": {
+            "lPx": -12.5,
+            "rPx": 27.5,
+            "cPx": 7.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -12,
+                -4,
+                4,
+                12
+              ],
+              "laneWidthPx": 8,
+              "leftRail": 1,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 84,
+              "yPx": 107.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": 0.1875
+          }
+        },
+        {
+          "xPx": 117,
+          "edgeFit": {
+            "lPx": -12.5,
+            "rPx": 27.5,
+            "cPx": 7.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -12,
+                -4,
+                4,
+                12
+              ],
+              "laneWidthPx": 8,
+              "leftRail": 1,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 117,
+              "yPx": 107.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": 0.1875
+          }
+        },
+        {
+          "xPx": 150,
+          "edgeFit": {
+            "lPx": -12.5,
+            "rPx": 27.5,
+            "cPx": 7.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -12,
+                -4,
+                4,
+                12
+              ],
+              "laneWidthPx": 8,
+              "leftRail": 1,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 150,
+              "yPx": 107.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": 0.1875
+          }
+        },
+        {
+          "xPx": 183,
+          "edgeFit": {
+            "lPx": -12.5,
+            "rPx": 27.5,
+            "cPx": 7.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -12,
+                -4,
+                4,
+                12
+              ],
+              "laneWidthPx": 8,
+              "leftRail": 1,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 183,
+              "yPx": 107.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": 0.1875
+          }
+        },
+        {
+          "xPx": 211.6,
+          "edgeFit": {
+            "lPx": -12.5,
+            "rPx": 27.5,
+            "cPx": 7.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -12,
+                -4,
+                4,
+                12
+              ],
+              "laneWidthPx": 8,
+              "leftRail": 1,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 211.6,
+              "yPx": 107.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": 0.1875
+          }
+        }
+      ]
+    },
+    {
+      "case": "ragged",
+      "globalEdges": {
+        "lPx": -14.61890243902439,
+        "rPx": 14.61890243902439,
+        "cPx": 0,
+        "wPx": 29.23780487804878,
+        "score": 7.15625,
+        "gl": 7.15625,
+        "gr": 7.15625,
+        "wgPx": 29
+      },
+      "globalDefaultEdges": {
+        "lPx": -14.61890243902439,
+        "rPx": 14.61890243902439,
+        "cPx": 0,
+        "wPx": 29.23780487804878,
+        "score": 7.15625,
+        "gl": 7.15625,
+        "gr": 7.15625,
+        "wgPx": 29
+      },
+      "fourLaneWidthRows": {
+        "widthPx": 30,
+        "scores": [
+          {
+            "widthPx": 24,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 0.4,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 36,
+            "meanScore": 0.12,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0.2,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 42,
+            "meanScore": 0.27999999999999997,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 48,
+            "meanScore": 0.4,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 54,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "stations": [
+        {
+          "xPx": 84,
+          "edgeFit": {
+            "lPx": -14.512931034482758,
+            "rPx": 14.512931034482758,
+            "cPx": 0,
+            "wPx": 29.025862068965516,
+            "score": 34.03125,
+            "gl": 34.03125,
+            "gr": 34.03125,
+            "wgPx": 29
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 1,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 84,
+              "yPx": 100,
+              "headingRad": 0,
+              "corridorWidthPx": 29.025862068965516
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -14.512931034482758,
+                -4.837643678160919,
+                4.837643678160919,
+                14.512931034482758
+              ],
+              "laneWidthPx": 9.675287356321839,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 0.725646551724138,
+            "centerOffsetOverWidth": 0
+          }
+        },
+        {
+          "xPx": 117,
+          "edgeFit": {
+            "lPx": -24,
+            "rPx": 23.875,
+            "cPx": -0.0625,
+            "wPx": 47.875,
+            "score": 11.25,
+            "gl": 11.25,
+            "gr": 11.25,
+            "wgPx": 47
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 0.4,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 1,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 117,
+              "yPx": 99.9375,
+              "headingRad": 0,
+              "corridorWidthPx": 47.875
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -23.9375,
+                -7.979166666666667,
+                7.979166666666667,
+                23.9375
+              ],
+              "laneWidthPx": 15.958333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1.196875,
+            "centerOffsetOverWidth": -0.0013054830287206266
+          }
+        },
+        {
+          "xPx": 150,
+          "edgeFit": {
+            "lPx": -24,
+            "rPx": 23.875,
+            "cPx": -0.0625,
+            "wPx": 47.875,
+            "score": 11.25,
+            "gl": 11.25,
+            "gr": 11.25,
+            "wgPx": 47
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 0.4,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 1,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 150,
+              "yPx": 99.9375,
+              "headingRad": 0,
+              "corridorWidthPx": 47.875
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -23.9375,
+                -7.979166666666667,
+                7.979166666666667,
+                23.9375
+              ],
+              "laneWidthPx": 15.958333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1.196875,
+            "centerOffsetOverWidth": -0.0013054830287206266
+          }
+        },
+        {
+          "xPx": 183,
+          "edgeFit": {
+            "lPx": -14.528846153846153,
+            "rPx": 14.528846153846153,
+            "cPx": 0,
+            "wPx": 29.057692307692307,
+            "score": 32.0625,
+            "gl": 32.0625,
+            "gr": 32.0625,
+            "wgPx": 29
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 1,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 183,
+              "yPx": 100,
+              "headingRad": 0,
+              "corridorWidthPx": 29.057692307692307
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -14.528846153846153,
+                -4.842948717948718,
+                4.842948717948718,
+                14.528846153846153
+              ],
+              "laneWidthPx": 9.685897435897436,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 0.7264423076923077,
+            "centerOffsetOverWidth": 0
+          }
+        },
+        {
+          "xPx": 211.6,
+          "edgeFit": {
+            "lPx": -18,
+            "rPx": 17.875,
+            "cPx": -0.0625,
+            "wPx": 35.875,
+            "score": 8.4375,
+            "gl": 8.4375,
+            "gr": 8.4375,
+            "wgPx": 35
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0.6,
+              "innerRight": 0.6,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.6,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0.6,
+              "innerRight": 0.6,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.6,
+              "score": 0
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 211.6,
+              "yPx": 99.9375,
+              "headingRad": 0,
+              "corridorWidthPx": 35.875
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -17.9375,
+                -5.979166666666667,
+                5.979166666666667,
+                17.9375
+              ],
+              "laneWidthPx": 11.958333333333334,
+              "leftRail": 0.6,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 0.6,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0.6,
+              "innerScore": 1,
+              "score": 0.6
+            }
+          },
+          "ratios": {
+            "widthOver40": 0.896875,
+            "centerOffsetOverWidth": -0.0017421602787456446
+          }
+        }
+      ]
+    },
+    {
+      "case": "large-ellipse",
+      "globalEdges": null,
+      "globalDefaultEdges": null,
+      "fourLaneWidthRows": {
+        "widthPx": 24,
+        "scores": [
+          {
+            "widthPx": 24,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 36,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 42,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 48,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 54,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "stations": [
+        {
+          "xPx": 84,
+          "edgeFit": null,
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -12,
+                -4,
+                4,
+                12
+              ],
+              "laneWidthPx": 8,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            }
+          },
+          "recentered": null,
+          "ratios": null
+        },
+        {
+          "xPx": 117,
+          "edgeFit": null,
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -12,
+                -4,
+                4,
+                12
+              ],
+              "laneWidthPx": 8,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            }
+          },
+          "recentered": null,
+          "ratios": null
+        },
+        {
+          "xPx": 150,
+          "edgeFit": null,
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -12,
+                -4,
+                4,
+                12
+              ],
+              "laneWidthPx": 8,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            }
+          },
+          "recentered": null,
+          "ratios": null
+        },
+        {
+          "xPx": 183,
+          "edgeFit": null,
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -12,
+                -4,
+                4,
+                12
+              ],
+              "laneWidthPx": 8,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            }
+          },
+          "recentered": null,
+          "ratios": null
+        },
+        {
+          "xPx": 211.6,
+          "edgeFit": null,
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -12,
+                -4,
+                4,
+                12
+              ],
+              "laneWidthPx": 8,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            }
+          },
+          "recentered": null,
+          "ratios": null
+        }
+      ]
+    },
+    {
+      "case": "capsule-patch",
+      "globalEdges": {
+        "lPx": -20.5,
+        "rPx": 19.5,
+        "cPx": -0.5,
+        "wPx": 40,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 40
+      },
+      "globalDefaultEdges": {
+        "lPx": -20.5,
+        "rPx": 19.5,
+        "cPx": -0.5,
+        "wPx": 40,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 40
+      },
+      "fourLaneWidthRows": {
+        "widthPx": 40,
+        "scores": [
+          {
+            "widthPx": 24,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 36,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 42,
+            "meanScore": 1,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 48,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 54,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "stations": [
+        {
+          "xPx": 84,
+          "edgeFit": {
+            "lPx": -20.5,
+            "rPx": 19.5,
+            "cPx": -0.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 84,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": -0.0125
+          }
+        },
+        {
+          "xPx": 117,
+          "edgeFit": {
+            "lPx": -20.5,
+            "rPx": 19.5,
+            "cPx": -0.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 117,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": -0.0125
+          }
+        },
+        {
+          "xPx": 150,
+          "edgeFit": {
+            "lPx": -20.5,
+            "rPx": 19.5,
+            "cPx": -0.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 150,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": -0.0125
+          }
+        },
+        {
+          "xPx": 183,
+          "edgeFit": {
+            "lPx": -20.5,
+            "rPx": 19.5,
+            "cPx": -0.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 183,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": -0.0125
+          }
+        },
+        {
+          "xPx": 211.6,
+          "edgeFit": {
+            "lPx": -20.5,
+            "rPx": 19.5,
+            "cPx": -0.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 211.6,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": -0.0125
+          }
+        }
+      ]
+    },
+    {
+      "case": "crossing",
+      "globalEdges": {
+        "lPx": -20.5,
+        "rPx": 19.5,
+        "cPx": -0.5,
+        "wPx": 40,
+        "score": 29.5,
+        "gl": 29.5,
+        "gr": 29.5,
+        "wgPx": 40
+      },
+      "globalDefaultEdges": {
+        "lPx": -20.5,
+        "rPx": 19.5,
+        "cPx": -0.5,
+        "wPx": 40,
+        "score": 29.5,
+        "gl": 29.5,
+        "gr": 29.5,
+        "wgPx": 40
+      },
+      "fourLaneWidthRows": {
+        "widthPx": 40,
+        "scores": [
+          {
+            "widthPx": 24,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 30,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 36,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0.8,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 42,
+            "meanScore": 0.8,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 48,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 54,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "stations": [
+        {
+          "xPx": 84,
+          "edgeFit": {
+            "lPx": -20.5,
+            "rPx": 19.5,
+            "cPx": -0.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 84,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": -0.0125
+          }
+        },
+        {
+          "xPx": 117,
+          "edgeFit": {
+            "lPx": -20.5,
+            "rPx": 19.5,
+            "cPx": -0.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 117,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": -0.0125
+          }
+        },
+        {
+          "xPx": 150,
+          "edgeFit": null,
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 0,
+              "innerLeft": 0,
+              "innerRight": 0,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0,
+              "score": 0
+            }
+          },
+          "recentered": null,
+          "ratios": null
+        },
+        {
+          "xPx": 183,
+          "edgeFit": {
+            "lPx": -20.5,
+            "rPx": 19.5,
+            "cPx": -0.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 183,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": -0.0125
+          }
+        },
+        {
+          "xPx": 211.6,
+          "edgeFit": {
+            "lPx": -20.5,
+            "rPx": 19.5,
+            "cPx": -0.5,
+            "wPx": 40,
+            "score": 36,
+            "gl": 36,
+            "gr": 36,
+            "wgPx": 40
+          },
+          "rawChannels": {
+            "atWidth30": {
+              "laneOffsetsPx": [
+                -15,
+                -5,
+                5,
+                15
+              ],
+              "laneWidthPx": 10,
+              "leftRail": 0,
+              "innerLeft": 0.5,
+              "innerRight": 0.5,
+              "rightRail": 0,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 0,
+              "innerScore": 0.5,
+              "score": 0
+            },
+            "atWidth40": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            },
+            "atLearnedWidth": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "recentered": {
+            "state": {
+              "xPx": 211.6,
+              "yPx": 99.5,
+              "headingRad": 0,
+              "corridorWidthPx": 40
+            },
+            "observation": {
+              "laneOffsetsPx": [
+                -20,
+                -6.666666666666667,
+                6.666666666666667,
+                20
+              ],
+              "laneWidthPx": 13.333333333333334,
+              "leftRail": 1,
+              "innerLeft": 1,
+              "innerRight": 1,
+              "rightRail": 1,
+              "leftRailOccluded": false,
+              "innerLeftOccluded": false,
+              "innerRightOccluded": false,
+              "rightRailOccluded": false,
+              "railMode": "paired",
+              "railScore": 1,
+              "innerScore": 1,
+              "score": 1
+            }
+          },
+          "ratios": {
+            "widthOver40": 1,
+            "centerOffsetOverWidth": -0.0125
+          }
+        }
+      ]
+    }
+  ],
+  "negativeResults": [
+    "Organic capsule survives composition with evidence identical to genuine corridor; this falsifies universal rejection/path identity claim.",
+    "Perfect width40 Dev72 bank ties40/42; scalar selected width omits ambiguity.",
+    "Allzero visible banks still return numeric24 for shifted and broad-bright cases; not measured width.",
+    "Global fit40 plus mean.8 is insufficient sustained evidence in crossing fixture."
+  ],
+  "limits": [
+    "Exposed deterministic synthetic mechanism fixtures, no held-out validation.",
+    "No endpoint identity, physical scale, organic-class rejection or production policy claimed.",
+    "Dev72 nearest-pixel sampler differs from pathSpace bilinear profile; fitted pixel-edge width and corridor tolerance remain distinct.",
+    "No new pixel measurement math; fixture raster generation only.",
+    "Source profile reach and width search defaults remain source-pixel contracts, not global scale invariants.",
+    "Separate spatial station windows are not statistically independent evidence; all fixtures are exposed exploration.",
+    "No E305 heldout file or evaluator detail read.",
+    "Only C3 scratch written; shared source repository remains read-only."
+  ],
+  "nextGuardedAction": "C6 may retain paired edge positions/midpoint and station-width/channel sequences as comparison-only evidence. Keep global-only/unsupported/ambiguous states explicit. Any path-identity or organic discrimination claim requires evidence beyond these identical cross sections and a fresh independently withheld evaluation after candidate freeze.",
+  "reviewStatus": "Await actual independent cross-review; not self-accepted."
+}

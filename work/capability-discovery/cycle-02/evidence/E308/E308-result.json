@@ -1,0 +1,42 @@
+{
+  "job_id": "E308",
+  "worker": "C6",
+  "outcome": "mixed_change",
+  "summary": "Reproduced independent R306 decimal-bank defect with exact reviewer input and existing source oracle before repair. Old caller returned a33px fit using hidden wg32.010000000000005 although requested width31.01/tolerance1 produced no exact source pair. Replaced singleton-range widthSearchAt emulation with existing edgePairOf(sharedProfile, exactRequestedWidth, explicit settings). No new detector math, source weights, vendor edits, calibration, identity or defaults. All9prior controls plus new regression pass10/10. New candidate frozen; no C2 access or independent evaluation yet.",
+  "commands": [
+    "node --test experiments/capability-discovery/composition/decimal-bank.test.mjs > discovery-cycle02/C6/E308-red.log (expected failure)",
+    "node --test experiments/capability-discovery/composition/*.test.mjs > discovery-cycle02/C6/E308-green.log (10/10PASS)",
+    "SHA256 verification of four original immutable vendor sources and existing guard (PASS)"
+  ],
+  "oldNewHashes": {
+    "oldManifest": "9ecd88635ed69ca8fb8e44ff044ac1e8fd704133c5687685b9a3114893ed9cd0",
+    "oldRecipe": "3d4fff6cd15f2dc261d7a9ce1d248dfa1311f048c38923420c8ce6f2f1759a13",
+    "reviewAMEND": "61900599e779c78119a198bed9a80be240b9dae70a09da3b17920d87a9a7ac3a",
+    "newManifest": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+    "newRecipe": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6",
+    "regressionInputRGBA": "c7e2a37bd34d81ec3cff97bf99cf3de13d65f852b2f708b81010debe23096f6c"
+  },
+  "sourceIDs_hash_manifest": "work/capability-discovery/cycle-02/feature-manifest-E308.json",
+  "actual_measurements": {
+    "requestedCandidateWidthPx": 31.01,
+    "explicitTolerancePx": 1,
+    "oldUnexpectedFit": {
+      "wPx": 33,
+      "wgPx": 32.010000000000005
+    },
+    "directExactSourceFit": null,
+    "repairedFit": null,
+    "repairedMidpoint": "UNKNOWN",
+    "candidateControlsPass": 10,
+    "localWidth": "UNKNOWN/null",
+    "semanticIdentity": "UNKNOWN",
+    "promoted": false
+  },
+  "limits": [
+    "C2 withholding procedural; heldout/evaluator still unread.",
+    "No broad repository rerun for caller-only repair; E306143/149 had6knownmissingfixturefailures.",
+    "Existing evidence and documentation from first freeze remain historical; ADMIN will update current flow references after independent review.",
+    "No commit/push/PR."
+  ],
+  "next_guarded_action": "Independent R308 review of exact5b59dce1 freeze; stop candidate edits. Root release required before C2 evaluation."
+}

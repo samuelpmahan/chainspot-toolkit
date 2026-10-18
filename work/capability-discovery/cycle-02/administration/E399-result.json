@@ -1,0 +1,116 @@
+{
+  "job_id": "E399",
+  "worker": "C6",
+  "outcome": "mixed_change",
+  "summary": "Completed bounded ADMIN documentation/evidence staging only. Copied50 exact public evidence/review/log files (4729515 bytes), wrote capture manifest plus README, RESUME and guarded next-packets. Inspected three copied PNG figures. Frozen five candidate mjs files and called-shot protocol remain unchanged. Package is partial: native snapshots, C2 release/evaluation and final review integration/publication are pending. Packaging stopped immediately for native lease transition to guarded E308 repair.",
+  "scope": "new work/capability-discovery/cycle-02 only; no source code changes, C2 reads, commits, pushes or PR",
+  "commands": [
+    "python discovery-cycle02/C6/package-docs.py",
+    "view_image on E301/rawtraces.png, E302/bilateral-composition.png, E304/route-composition.png"
+  ],
+  "exactFiles": [
+    "work/capability-discovery/cycle-02/README.md",
+    "work/capability-discovery/cycle-02/RESUME.md",
+    "work/capability-discovery/cycle-02/called-shot-E306.json",
+    "work/capability-discovery/cycle-02/capture-manifest.json",
+    "work/capability-discovery/cycle-02/evidence/E301/counterfactual.mjs",
+    "work/capability-discovery/cycle-02/evidence/E301/native-receipt.json",
+    "work/capability-discovery/cycle-02/evidence/E301/protocol.json",
+    "work/capability-discovery/cycle-02/evidence/E301/rawtraces.png",
+    "work/capability-discovery/cycle-02/evidence/E301/render-receipt.json",
+    "work/capability-discovery/cycle-02/evidence/E301/render.py",
+    "work/capability-discovery/cycle-02/evidence/E301/result.json",
+    "work/capability-discovery/cycle-02/evidence/E301/s5-row.json",
+    "work/capability-discovery/cycle-02/evidence/E301/source-manifest.json",
+    "work/capability-discovery/cycle-02/evidence/E302/bilateral-composition.png",
+    "work/capability-discovery/cycle-02/evidence/E302/probe.mjs",
+    "work/capability-discovery/cycle-02/evidence/E302/protocol.json",
+    "work/capability-discovery/cycle-02/evidence/E302/provenance.json",
+    "work/capability-discovery/cycle-02/evidence/E302/receipt.json",
+    "work/capability-discovery/cycle-02/evidence/E302/render.py",
+    "work/capability-discovery/cycle-02/evidence/E302/result.json",
+    "work/capability-discovery/cycle-02/evidence/E303/measurements.json",
+    "work/capability-discovery/cycle-02/evidence/E303/probe.mjs",
+    "work/capability-discovery/cycle-02/evidence/E303/protocol.json",
+    "work/capability-discovery/cycle-02/evidence/E303/result.json",
+    "work/capability-discovery/cycle-02/evidence/E303/run.log",
+    "work/capability-discovery/cycle-02/evidence/E303/source/provenance.json",
+    "work/capability-discovery/cycle-02/evidence/E303/verification.log",
+    "work/capability-discovery/cycle-02/evidence/E303/verify.mjs",
+    "work/capability-discovery/cycle-02/evidence/E304/amendment-R304.json",
+    "work/capability-discovery/cycle-02/evidence/E304/measurements.json",
+    "work/capability-discovery/cycle-02/evidence/E304/prepare.py",
+    "work/capability-discovery/cycle-02/evidence/E304/probe.mjs",
+    "work/capability-discovery/cycle-02/evidence/E304/protocol.json",
+    "work/capability-discovery/cycle-02/evidence/E304/protocol.sha256",
+    "work/capability-discovery/cycle-02/evidence/E304/render.py",
+    "work/capability-discovery/cycle-02/evidence/E304/result-initial-before-R304.json",
+    "work/capability-discovery/cycle-02/evidence/E304/result.json",
+    "work/capability-discovery/cycle-02/evidence/E304/route-composition.png",
+    "work/capability-discovery/cycle-02/evidence/E306/protocol.json",
+    "work/capability-discovery/cycle-02/evidence/E306/result.json",
+    "work/capability-discovery/cycle-02/feature-manifest.json",
+    "work/capability-discovery/cycle-02/inspection.html",
+    "work/capability-discovery/cycle-02/next-packets.json",
+    "work/capability-discovery/cycle-02/reviews/R303/result.json",
+    "work/capability-discovery/cycle-02/reviews/R303/verification.json",
+    "work/capability-discovery/cycle-02/reviews/R303/verification.log",
+    "work/capability-discovery/cycle-02/reviews/R304/result.json",
+    "work/capability-discovery/cycle-02/reviews/R304/verification.json",
+    "work/capability-discovery/cycle-02/reviews/R304/verification.log",
+    "work/capability-discovery/cycle-02/reviews/R305/result.json",
+    "work/capability-discovery/cycle-02/training-positive.json",
+    "work/capability-discovery/cycle-02/verification/cli-red.log",
+    "work/capability-discovery/cycle-02/verification/composition-tests.log",
+    "work/capability-discovery/cycle-02/verification/lab-tests.log",
+    "work/capability-discovery/cycle-02/verification/repository-tests.log",
+    "work/capability-discovery/cycle-02/verification/source-preservation.log",
+    "work/capability-discovery/cycle-02/verification/tdd-green.log",
+    "work/capability-discovery/cycle-02/verification/tdd-red.log"
+  ],
+  "frozenSourceVerification": [
+    {
+      "path": "experiments/capability-discovery/composition/cli.mjs",
+      "sha256": "0e08999d39aff0ba6498bad2e90c8986fb2995b98ae44fced92ebea2f3dcf839",
+      "matchesFreeze": true
+    },
+    {
+      "path": "experiments/capability-discovery/composition/cli.test.mjs",
+      "sha256": "cb89ad358946f5f1320d72cdf5792d98eda951307da039b60712637b7d40af2d",
+      "matchesFreeze": true
+    },
+    {
+      "path": "experiments/capability-discovery/composition/composition.test.mjs",
+      "sha256": "74e50ec4cf0068c1cceb08b00e058b0f6437ba1eee934d199a4133e9a6e8b574",
+      "matchesFreeze": true
+    },
+    {
+      "path": "experiments/capability-discovery/composition/recipe.mjs",
+      "sha256": "3d4fff6cd15f2dc261d7a9ce1d248dfa1311f048c38923420c8ce6f2f1759a13",
+      "matchesFreeze": true
+    },
+    {
+      "path": "experiments/capability-discovery/composition/training-fixtures.mjs",
+      "sha256": "e93de4087bf9c9f1e72d0655233b93591ed989e8e2a0b4682f5111d659592789",
+      "matchesFreeze": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-02/called-shot-E306.json",
+      "sha256": "dc8bc84a3cd5789336dd5577d31666223d99f10d1d99ac22ea8f38542eb0188e",
+      "matchesFreeze": true
+    }
+  ],
+  "knownErrata": [
+    "R304 missing pairs23 rather than27; original/revised hashes and reconstructed original qualifier preserved",
+    "C1/C4 start acknowledgements delayed after actual assignment; no intervening solve during mismatch",
+    "R306 first candidate AMEND: floating-point arange hidden second width; source freeze not relabelled accepted"
+  ],
+  "pending": [
+    "REPRODUCE.md referenced by draft README not yet written",
+    "native state/assignment snapshots and final receipts",
+    "R306 final AMEND capture and bounded repair/new freeze/review",
+    "C2 heldout/evaluator release and execution",
+    "root final package check then local checkpoint and connected publication"
+  ],
+  "nextGuardedAction": "Pause all packaging edits; await native E308 assignment. C2 embargo remains intact."
+}

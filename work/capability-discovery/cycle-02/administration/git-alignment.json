@@ -1,0 +1,21 @@
+{
+  "schema": "authorized-git-parent-alignment@1",
+  "scope": "read existing origin branch, verify exact commit/tree and clean tracked state, soft-align same local branch while preserving all untracked work",
+  "commands": [
+    "git diff --quiet && git diff --cached --quiet",
+    "GIT_TERMINAL_PROMPT=0 git fetch --no-tags origin codex/capability-discovery-lab",
+    "git rev-parse FETCH_HEAD FETCH_HEAD^{tree} HEAD^{tree}",
+    "git reset --soft 7c59b053f09b27d4685c754738b50a987fa0eeed",
+    "verify all9 E308 candidate freeze entries and clean tracked state"
+  ],
+  "branch": "codex/capability-discovery-lab",
+  "previousLocalCommit": "a210aed670ea29e869b00ddb9a39817513cfd997",
+  "publishedParent": "7c59b053f09b27d4685c754738b50a987fa0eeed",
+  "verifiedExactTree": "340903effe6cf7fd9e83e113cf8a8b7a48f97613",
+  "sourceFreeze": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+  "candidateEntriesVerifiedUnchanged": 9,
+  "untrackedPackagePreserved": true,
+  "commitPerformed": false,
+  "pushPerformed": false,
+  "configurationOrCredentialsChanged": false
+}

@@ -1,0 +1,204 @@
+{
+  "status": "PASS",
+  "sourceHashesVerified": 3,
+  "packetManifestVerified": 13,
+  "byteIdenticalReplayFiles": [
+    "prepared.json",
+    "measurements.json",
+    "route-composition.png"
+  ],
+  "fourFrozenChecks": {
+    "P1": true,
+    "P2": true,
+    "P3": true,
+    "P4": true
+  },
+  "allEightDenominators": [
+    {
+      "id": "shortcut/curvy-center",
+      "samples": 65,
+      "supportNumerator": 45,
+      "supportObservedDenominator": 65,
+      "supportUnknown": 0,
+      "pairedNumerator": 53,
+      "pairedTotalDenominator": 65,
+      "edgeUnknown": 12,
+      "conditionalMidpointDenominator": 53,
+      "conditionalMeanOffsetPx": 0.0,
+      "turnCount": 4,
+      "lengthPx": 380
+    },
+    {
+      "id": "shortcut/straight-unsupported",
+      "samples": 41,
+      "supportNumerator": 16,
+      "supportObservedDenominator": 41,
+      "supportUnknown": 0,
+      "pairedNumerator": 18,
+      "pairedTotalDenominator": 41,
+      "edgeUnknown": 23,
+      "conditionalMidpointDenominator": 18,
+      "conditionalMeanOffsetPx": 0.0,
+      "turnCount": 0,
+      "lengthPx": 240
+    },
+    {
+      "id": "offset/center",
+      "samples": 41,
+      "supportNumerator": 41,
+      "supportObservedDenominator": 41,
+      "supportUnknown": 0,
+      "pairedNumerator": 41,
+      "pairedTotalDenominator": 41,
+      "edgeUnknown": 0,
+      "conditionalMidpointDenominator": 41,
+      "conditionalMeanOffsetPx": 0.0,
+      "turnCount": 0,
+      "lengthPx": 240
+    },
+    {
+      "id": "offset/offset-8px",
+      "samples": 41,
+      "supportNumerator": 0,
+      "supportObservedDenominator": 41,
+      "supportUnknown": 0,
+      "pairedNumerator": 41,
+      "pairedTotalDenominator": 41,
+      "edgeUnknown": 0,
+      "conditionalMidpointDenominator": 41,
+      "conditionalMeanOffsetPx": 8.0,
+      "turnCount": 0,
+      "lengthPx": 240
+    },
+    {
+      "id": "crossing/turn-to-designated-end",
+      "samples": 41,
+      "supportNumerator": 36,
+      "supportObservedDenominator": 41,
+      "supportUnknown": 0,
+      "pairedNumerator": 38,
+      "pairedTotalDenominator": 41,
+      "edgeUnknown": 3,
+      "conditionalMidpointDenominator": 38,
+      "conditionalMeanOffsetPx": 0.0,
+      "turnCount": 1,
+      "lengthPx": 240
+    },
+    {
+      "id": "crossing/straight-other-end",
+      "samples": 41,
+      "supportNumerator": 36,
+      "supportObservedDenominator": 41,
+      "supportUnknown": 0,
+      "pairedNumerator": 38,
+      "pairedTotalDenominator": 41,
+      "edgeUnknown": 3,
+      "conditionalMidpointDenominator": 38,
+      "conditionalMeanOffsetPx": 0.0,
+      "turnCount": 0,
+      "lengthPx": 240
+    },
+    {
+      "id": "width-alias/width40-hypothesis",
+      "samples": 41,
+      "supportNumerator": 41,
+      "supportObservedDenominator": 41,
+      "supportUnknown": 0,
+      "pairedNumerator": 41,
+      "pairedTotalDenominator": 41,
+      "edgeUnknown": 0,
+      "conditionalMidpointDenominator": 41,
+      "conditionalMeanOffsetPx": 0.0,
+      "turnCount": 0,
+      "lengthPx": 240
+    },
+    {
+      "id": "width-alias/width30-hypothesis",
+      "samples": 41,
+      "supportNumerator": 0,
+      "supportObservedDenominator": 41,
+      "supportUnknown": 0,
+      "pairedNumerator": 0,
+      "pairedTotalDenominator": 41,
+      "edgeUnknown": 41,
+      "conditionalMidpointDenominator": 0,
+      "conditionalMeanOffsetPx": null,
+      "turnCount": 0,
+      "lengthPx": 240
+    }
+  ],
+  "samplerAndTangentChecks": {
+    "headingsMatchDeclaredOutgoingSegment": true,
+    "finalHeadingIncoming": true,
+    "noDuplicateConsecutiveSamplePoints": true,
+    "profileAdapter": "same float64 synthetic raster; scipy.ndimage.map_coordinates order=1 mode=nearest",
+    "Dev72Sampler": "source grayAt Math.round nearest pixel; different interpolation kernel is retained"
+  },
+  "hashes": [
+    {
+      "file": "protocol.json",
+      "sha256": "02a5eb8eddb8d091fa0df123be8d667b4d96ae16d55c6768f884b2d3f89d5a04",
+      "verified": true
+    },
+    {
+      "file": "protocol.sha256",
+      "sha256": "5df3b73922d653d600233d6560d838b68b93c63c66fba353e84c2f697eea2417",
+      "verified": true
+    },
+    {
+      "file": "prepare.py",
+      "sha256": "aa269d28b5d830e269b8111ce2e456fccde9b9292e3f2b02adfe3817779d67ec",
+      "verified": true
+    },
+    {
+      "file": "probe.mjs",
+      "sha256": "c4fc2a6f597d41530e615841e6dd1c859a37962b18ef12c0951e16dedf515e63",
+      "verified": true
+    },
+    {
+      "file": "render.py",
+      "sha256": "ce4194d166cdd139f9eecc7907e55477aac0b0fda207c181e2394bb60f8780df",
+      "verified": true
+    },
+    {
+      "file": "README.md",
+      "sha256": "125e62c9339cd4d46ba74d0c1efe92654ba7c7ec64343333a23709be7adb5f2f",
+      "verified": true
+    },
+    {
+      "file": "prepared.json",
+      "sha256": "c5c4589737163ac5e25e55d09624cda36c98d6f072f20865c70c4a24eafc84d0",
+      "verified": true
+    },
+    {
+      "file": "measurements.json",
+      "sha256": "fa58352b93cae32e7035ccd0bc1a8bc3799e33fda746f84abb579c732612a63a",
+      "verified": true
+    },
+    {
+      "file": "execution.log",
+      "sha256": "18878f7f862cdbd9075f38e0c3ecfd00edfce9a54cb739228291873b3f8e8029",
+      "verified": true
+    },
+    {
+      "file": "route-composition.png",
+      "sha256": "225e8f9a0dd30c72ad52ff9fcb92a048384a0d3d36953a576025636d180e707a",
+      "verified": true
+    },
+    {
+      "file": "vendor/path-geometry.mjs",
+      "sha256": "ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34",
+      "verified": true
+    },
+    {
+      "file": "vendor/fourLaneRibbon.ts",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+      "verified": true
+    },
+    {
+      "file": "vendor/hallway-track.py",
+      "sha256": "83a1e85c032669c383845d9c3dd98ae9559f2d67457ffa63d3354d0707622bc6",
+      "verified": true
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "schema": "C2-heldout-construction-case@1",
+  "id": "C2-05",
+  "class": "partial-rail-mask-interior-only",
+  "seed": 30520261018,
+  "frame": "C2-synthetic-source-image-pixels; x-right y-down; pixel centers at integer+0.5",
+  "image": {
+    "width": 320,
+    "height": 256,
+    "rgbaFile": "C2-05.rgba",
+    "pngFile": "C2-05.png",
+    "channels": "RGBA8; opaque; luminance R=G=B; no alpha masking"
+  },
+  "construction": {
+    "id": "C2-05",
+    "kind": "partial-rail-mask-interior-only",
+    "center": [
+      160,
+      128
+    ],
+    "headingRad": 0.0,
+    "fullWidthPx": 40.0,
+    "lengthPx": 280.0,
+    "queryNormalOffsetPx": 0.0
+  },
+  "anchors": {
+    "tee": {
+      "xPx": 48.0,
+      "yPx": 128.0
+    },
+    "badge": {
+      "xPx": 118.0,
+      "yPx": 128.0
+    },
+    "meaning": "construction points only; no rendered tee/badge sprites or endpoint identity"
+  },
+  "query": {
+    "xPx": 160.0,
+    "yPx": 128.0,
+    "headingRad": 0.0,
+    "candidateWidthsPx": [
+      24,
+      32,
+      40,
+      48,
+      56
+    ],
+    "stationSpanPx": [
+      -28,
+      28
+    ]
+  },
+  "knownOccluderBboxes": [
+    {
+      "bboxX": 0,
+      "bboxY": 101,
+      "bboxW": 320,
+      "bboxH": 14
+    },
+    {
+      "bboxX": 0,
+      "bboxY": 141,
+      "bboxW": 320,
+      "bboxH": 14
+    }
+  ],
+  "mask": {
+    "file": "C2-05-mask.png",
+    "meaning": "255 = unavailable, 0 = visible; source pixels remain unmodified"
+  },
+  "queryVariants": [
+    {
+      "id": "declared-mask",
+      "occluderBboxes": [
+        {
+          "bboxX": 0,
+          "bboxY": 101,
+          "bboxW": 320,
+          "bboxH": 14
+        },
+        {
+          "bboxX": 0,
+          "bboxY": 141,
+          "bboxW": 320,
+          "bboxH": 14
+        }
+      ]
+    },
+    {
+      "id": "all-hidden",
+      "occluderBboxes": [
+        {
+          "bboxX": 0,
+          "bboxY": 0,
+          "bboxW": 320,
+          "bboxH": 256
+        }
+      ]
+    }
+  ],
+  "labelsAre": "analytic construction labels only, never human truth or real course accuracy"
+}

@@ -1,0 +1,128 @@
+{
+  "schema": "scratch-stage-verification@1",
+  "checks": [
+    {
+      "job": "E302",
+      "actualProducerExecuted": true,
+      "output": "receipt.json",
+      "sha256": "a5ea9523ac5c771e39ee436eeedb6ac7b4caa8187ae17593137eeeeca8500173",
+      "retainedBytesEqual": true,
+      "stageReceipt": {
+        "schema": "exact-producer-scratch-stage@1",
+        "job": "E302",
+        "producerDirectory": "/workspace/scratch/8528bb251845/discovery-cycle02/C6/stage-check-E302/discovery-cycle02/C3",
+        "files": [
+          {
+            "file": "probe.mjs",
+            "sha256": "3c34922ee6d35c85be035fc3ce9d484d9d0a9fc578062d07fcc376d091c2e14d",
+            "adaptation": "none; producer/protocol bytes identical"
+          },
+          {
+            "file": "protocol.json",
+            "sha256": "47cb0489e0ef166cf69dccb1f7713be38c644b087c29d96472ee11ec641ca3a0",
+            "adaptation": "none; producer/protocol bytes identical"
+          },
+          {
+            "file": "provenance.json",
+            "sha256": "0f3de094060d64f7614be6a8fa5023180e75070d33153976bdf318a734fdffaf",
+            "adaptation": "none; producer/protocol bytes identical"
+          },
+          {
+            "file": "render.py",
+            "sha256": "069ef87b9d9978581fc93338bc200f1effbde56ecb71fa8657f471201c49373c",
+            "adaptation": "none; producer/protocol bytes identical"
+          }
+        ],
+        "sourceMapping": "absolute symlinks to exact existing checkout sources; no producer path/string adaptations",
+        "expectedOutput": "receipt.json",
+        "limits": "C1 executionUtc may change; Node/runtime/decoder dependencies remain external prerequisites. Staging is not replay verification."
+      }
+    },
+    {
+      "job": "E303",
+      "actualProducerExecuted": true,
+      "output": "measurements.json",
+      "sha256": "4602b0ddb96d647143be01904f213f24bd0523151001fdda3a57a8903058671d",
+      "retainedBytesEqual": true,
+      "stageReceipt": {
+        "schema": "exact-producer-scratch-stage@1",
+        "job": "E303",
+        "producerDirectory": "/workspace/scratch/8528bb251845/discovery-cycle02/C6/stage-check-E303/discovery-cycle02/C5",
+        "files": [
+          {
+            "file": "probe.mjs",
+            "sha256": "68772761afe94d52dc954dbf7d30f47560ba54bf1a18e6840963c7818ee8c03f",
+            "adaptation": "none; producer/protocol bytes identical"
+          },
+          {
+            "file": "protocol.json",
+            "sha256": "b6a0f050c04ba4d17a81cbaa7e34701ab1cd01c9e62995e19ac50812109be1af",
+            "adaptation": "none; producer/protocol bytes identical"
+          },
+          {
+            "file": "verify.mjs",
+            "sha256": "2c4ba36f957bd71cb9df91028a4502db1217fdf5c01fc479755c7fe578e4e31d",
+            "adaptation": "none; producer/protocol bytes identical"
+          },
+          {
+            "file": "source/provenance.json",
+            "sha256": "0f3de094060d64f7614be6a8fa5023180e75070d33153976bdf318a734fdffaf",
+            "adaptation": "none; producer/protocol bytes identical"
+          }
+        ],
+        "sourceMapping": "absolute symlinks to exact existing checkout sources; no producer path/string adaptations",
+        "expectedOutput": "measurements.json",
+        "limits": "C1 executionUtc may change; Node/runtime/decoder dependencies remain external prerequisites. Staging is not replay verification."
+      }
+    },
+    {
+      "job": "E304",
+      "actualProducerExecuted": true,
+      "output": "measurements.json",
+      "sha256": "fa58352b93cae32e7035ccd0bc1a8bc3799e33fda746f84abb579c732612a63a",
+      "retainedBytesEqual": true,
+      "stageReceipt": {
+        "schema": "exact-producer-scratch-stage@1",
+        "job": "E304",
+        "producerDirectory": "/workspace/scratch/8528bb251845/discovery-cycle02/C6/stage-check-E304/discovery-cycle02/C4",
+        "files": [
+          {
+            "file": "prepare.py",
+            "sha256": "aa269d28b5d830e269b8111ce2e456fccde9b9292e3f2b02adfe3817779d67ec",
+            "adaptation": "none; producer/protocol bytes identical"
+          },
+          {
+            "file": "probe.mjs",
+            "sha256": "c4fc2a6f597d41530e615841e6dd1c859a37962b18ef12c0951e16dedf515e63",
+            "adaptation": "none; producer/protocol bytes identical"
+          },
+          {
+            "file": "protocol.json",
+            "sha256": "02a5eb8eddb8d091fa0df123be8d667b4d96ae16d55c6768f884b2d3f89d5a04",
+            "adaptation": "none; producer/protocol bytes identical"
+          },
+          {
+            "file": "protocol.sha256",
+            "sha256": "5df3b73922d653d600233d6560d838b68b93c63c66fba353e84c2f697eea2417",
+            "adaptation": "none; producer/protocol bytes identical"
+          },
+          {
+            "file": "render.py",
+            "sha256": "ce4194d166cdd139f9eecc7907e55477aac0b0fda207c181e2394bb60f8780df",
+            "adaptation": "none; producer/protocol bytes identical"
+          }
+        ],
+        "sourceMapping": "absolute symlinks to exact existing checkout sources; no producer path/string adaptations",
+        "expectedOutput": "measurements.json",
+        "limits": "C1 executionUtc may change; Node/runtime/decoder dependencies remain external prerequisites. Staging is not replay verification."
+      }
+    },
+    {
+      "job": "E301",
+      "actualProducerExecutedDuringADMIN": false,
+      "stagedProviderHashEntriesVerified": 634,
+      "mismatches": 0,
+      "reason": "Ten counterfactuals already independently replayed by R301; ADMIN did not repeat unchanged evidence."
+    }
+  ]
+}
