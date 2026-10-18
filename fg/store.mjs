@@ -72,9 +72,26 @@
  *              own base (never the parent's live board), toolkit Parts and
  *              Calculations resolve through the parent, and the child's own
  *              writes stay in the child.
- *   store.provenance(address)   { address, producedBy, inParts, store } or
- *              { address, producedBy: 'provider-board' } or null
+ *   store.provenance(address)   { address, producedBy, inParts, key, store } or
+ *              { address, producedBy: 'provider-board', key } or null
  *   store.manifest()            this store's toolkit Parts and Calculations
+ *
+ * The keyspace (Sam, 2026-10-18: "ComparableForkJoin exists so that everything is included by default. This is made
+ * tractable by the warm caching of PxC. If you model this one after Redis you don't even need separate branches"):
+ *   address@variant        a variant of a Part is its own address (px.tees.refined@structural); nothing collides, so
+ *                          every implementation can run and be kept side by side in ONE store
+ *   store.point(address, 'address@variant', { by })
+ *                          the accepted variant: get(address) follows the pointer (write-once, with its author)
+ *   store.variants(address)  the variant addresses present or declared for an address
+ *   store.keyOf(address)   the content key of a Part: for a produced Part, the cache key of the call that made it;
+ *                          for a provider or constant Part, a digest of its value (typed arrays by their bytes)
+ *   cache key              sha256 of { fn, code, args, inputs: [[inPart, keyOf(inPart)]...] }; code is the
+ *                          Calculation's declared `code` key, else the digest of calculate's source. A call whose key is
+ *                          in the store's cache writes its outParts from the cache without computing (the call is
+ *                          logged with cached: 1). createPartStore({ cache }) takes any { has, get, set }; the default
+ *                          is a Map shared by the store and its branches, so a variant computed once in a run is never
+ *                          computed twice; a runner passes a persistent cache to make the next run warm.
+ *   store.keyspace()       every Part of this store with its key and producer: the snapshot as a key dump
  *
  * Address namespaces (the early runner's table of Parts, producers and
  * inParts is in ports/early/earlyStore.mjs):
@@ -90,6 +107,7 @@
 
 import { PXSET_QUERIES, resolvePxSet } from './pxset.mjs';
 import { renderValue } from './render.mjs';
+import { digest, sha256Hex, plain } from './canon.mjs';
 
 /** Every store renders any Part by address (renderable, a default property of Parts). */
 export const RENDER_PART = 'fn.q.part.render';
@@ -126,6 +144,20 @@ function emitsOf(values) {
   }
   return out;
 }
+
+/** A value's content key: canonical JSON with every typed array replaced by the digest of its bytes (a raster hashes once, by bytes). */
+const isTyped = (v) => ArrayBuffer.isView(v) && !(v instanceof DataView);
+function withByteDigests(v, depth = 0) {
+  if (isTyped(v)) return { '@typed': v.constructor.name, length: v.length, sha256: sha256Hex(v) };
+  if (v instanceof ArrayBuffer) return { '@typed': 'ArrayBuffer', length: v.byteLength, sha256: sha256Hex(new Uint8Array(v)) };
+  if (Array.isArray(v)) return v.map((x) => withByteDigests(x, depth + 1));
+  if (v instanceof Map) return { '@map': [...v].map(([k, x]) => [withByteDigests(k, depth + 1), withByteDigests(x, depth + 1)]) };
+  if (v instanceof Set) return { '@set': [...v].map((x) => withByteDigests(x, depth + 1)) };
+  if (v && typeof v === 'object') { const o = {}; for (const k of Object.keys(v)) if (typeof v[k] !== 'function') o[k] = withByteDigests(v[k], depth + 1); return o; }
+  return v;
+}
+export const contentKey = (value) => digest(withByteDigests(value));
+export const variantOf = (address, name) => `${address}@${name}`;
 
 /** The image size of a store's raster Part (px.image.cropped, else the canonical pixels). */
 export function imageDims(store) {
@@ -168,9 +200,9 @@ export function callSubtree(entries, caller) {
  * each entry timed with the emits its output declared, and offers it back as the capability INSTRUMENTATION_CALLS.
  * onCall stays a hook for runners that also stream entries elsewhere.
  */
-export function createPartStore({ base = null, name = 'root', onCall = null } = {}) {
+export function createPartStore({ base = null, name = 'root', onCall = null, cache = new Map() } = {}) {
   const log = [];
-  const store = makeStore({ base, name, parent: null, shared: { seq: 0, stack: [], log, onCall: (entry) => { log.push(entry); onCall?.(entry); } } });
+  const store = makeStore({ base, name, parent: null, shared: { seq: 0, stack: [], log, cache, baseKeys: new WeakMap(), onCall: (entry) => { log.push(entry); onCall?.(entry); } } });
   // The PxC is queryable: pixel-set math lives in fg/pxset.mjs and is invoked from outside by Part address.
   registerQueries(store, PXSET_QUERIES, { resolve: (ref) => resolvePxSet((a) => store.get(a), ref, () => imageDims(store)) });
   // renderable is a default property of every Part: any address renders by the shape of its value (fg/render.mjs)
@@ -188,7 +220,7 @@ export function createPartStore({ base = null, name = 'root', onCall = null } = 
 }
 
 function makeStore({ base, name, parent, shared }) {
-  const parts = new Map(); // address -> { value, producedBy, inParts }
+  const parts = new Map(); // address -> { value, producedBy, inParts, key } or { pointerTo, producedBy, inParts, key }
   const calcs = new Map(); // fn -> spec
   const producers = new Map(); // outPart address -> fn (registered here)
   const failures = new Map(); // address -> error of a failed lazy production
@@ -200,11 +232,26 @@ function makeStore({ base, name, parent, shared }) {
   const producerOwner = (address) => { for (const s of chain()) if (s._producers.has(address)) return s; return null; };
   const onBase = (address) => { const b = board(); return Boolean(b && typeof b.has === 'function' && b.has(address)); };
 
-  const write = (address, value, producedBy, inParts) => {
+  const write = (address, value, producedBy, inParts, key = null) => {
     if (ownPart(address)) throw new PartStoreError(`Part '${address}' is write-once; ${ownPart(address).producedBy} already produced it`);
     if (onBase(address)) throw new PartStoreError(`Part '${address}' is a provider-board address; a toolkit Calculation (${producedBy}) may not shadow it`);
-    parts.set(address, Object.freeze({ value, producedBy, inParts }));
+    parts.set(address, Object.freeze({ value, producedBy, inParts, key }));
   };
+  // the content key of any Part this store can see: a produced Part carries the key of the call that made it; a provider
+  // or constant Part is digested once (by object identity, so a raster hashes once per run)
+  const keyOf = (address) => {
+    const own = ownPart(address);
+    if (own) { if (own.pointerTo) return keyOf(own.pointerTo); if (own.key) return own.key; const k = contentKey(own.value); return k; }
+    if (onBase(address)) {
+      const v = board().get(address);
+      if (v && typeof v === 'object') { if (!shared.baseKeys.has(v)) shared.baseKeys.set(v, contentKey(v)); return shared.baseKeys.get(v); }
+      return contentKey(v);
+    }
+    const owner = producerOwner(address);
+    if (owner) { owner._produce(address); return keyOf(address); }
+    throw new PartStoreError(`keyOf: no Part at '${address}' on store ${name}`);
+  };
+  const cacheable = (args) => { try { plain(args ?? null); return true; } catch { return false; } };
 
   // Lazy production of a Part whose producer is registered on THIS store.
   const produceHere = (address) => {
@@ -245,7 +292,7 @@ function makeStore({ base, name, parent, shared }) {
 
     get(address) {
       const own = ownPart(address);
-      if (own) return own.value;
+      if (own) return own.pointerTo ? self.get(own.pointerTo) : own.value;
       if (onBase(address)) return board().get(address);
       const owner = producerOwner(address);
       if (owner && !owner._calcs.get(owner._producers.get(address)).lazy)
@@ -256,12 +303,13 @@ function makeStore({ base, name, parent, shared }) {
 
     _produce: produceHere,
 
-    register(fn, { inParts = [], outParts = [], calls = [], calculate, lazy = true, note = null } = {}) {
+    register(fn, { inParts = [], outParts = [], calls = [], calculate, lazy = true, note = null, code = null } = {}) {
       if (typeof fn !== 'string' || !FN.test(fn)) throw new PartStoreError(`register: ${JSON.stringify(fn)} is not a fn.* Calculation address`);
       if (findCalc(fn)) throw new PartStoreError(`register: Calculation '${fn}' is already registered`);
       if (typeof calculate !== 'function') throw new PartStoreError(`register ${fn}: calculate(io) is required`);
       const spec = Object.freeze({
         address: fn, store: name, note, lazy: lazy !== false,
+        code: code ?? sha256Hex(String(calculate)),   // the code key: pass the module graph's digest when a helper can change the result
         inParts: addressList(inParts, `register ${fn}: inParts`),
         outParts: addressList(outParts, `register ${fn}: outParts`),
         calls: addressList(calls, `register ${fn}: calls`),
@@ -280,7 +328,7 @@ function makeStore({ base, name, parent, shared }) {
 
     constant(fn, values) {
       const outParts = Object.keys(values);
-      return self.register(fn, { outParts, calculate: () => ({ ...values }) });
+      return self.register(fn, { outParts, code: contentKey(values), calculate: () => ({ ...values }) });   // keyed by its value: a root input
     },
 
     registered: (fn) => Boolean(findCalc(fn)),
@@ -292,7 +340,7 @@ function makeStore({ base, name, parent, shared }) {
       const entry = {
         seq: shared.seq++, parent: shared.stack.at(-1) ?? null, depth: shared.stack.length,
         calculation: fn, store: name, caller, site: typeof args?.site === 'string' ? args.site : null,
-        inParts: spec.inParts, outParts: spec.outParts, elapsedMs: null, status: 'running', error: null, emits: null
+        inParts: spec.inParts, outParts: spec.outParts, elapsedMs: null, status: 'running', error: null, emits: null, key: null, cached: false
       };
       const started = now();
       shared.stack.push(entry.seq);
@@ -324,18 +372,24 @@ function makeStore({ base, name, parent, shared }) {
             return self.call(inner, innerArgs, { caller: fn });
           }
         });
-        const finish = (result) => {
+        // the cache key of this call: the Calculation, its code, its arguments and the content keys of its inputs
+        const key = spec.outParts.length && cacheable(args) ? digest({ fn, code: spec.code, args: plain(args ?? null), inputs: spec.inParts.map((a) => [a, keyOf(a)]) }) : null;
+        entry.key = key;
+        const finish = (result, fromCache = false) => {
           if (spec.outParts.length) {
             if (!result || typeof result !== 'object') throw new PartStoreError(`${fn} must return { [outPart]: value } for ${spec.outParts.join(', ')}`);
             const keys = Object.keys(result);
             const missing = spec.outParts.filter((a) => !keys.includes(a));
             const extra = keys.filter((a) => !spec.outParts.includes(a));
             if (missing.length || extra.length) throw new PartStoreError(`${fn} returned outParts that differ from its declaration (missing: ${missing.join(', ') || '-'}; undeclared: ${extra.join(', ') || '-'})`);
-            for (const address of spec.outParts) write(address, result[address], fn, spec.inParts);
+            for (const address of spec.outParts) write(address, result[address], fn, spec.inParts, key);
+            if (key && !fromCache && shared.cache) shared.cache.set(key, result);
           }
           entry.emits = emitsOf(spec.outParts.length ? spec.outParts.map((a) => result[a]) : [result]);
+          if (fromCache) { entry.cached = true; entry.emits = { ...(entry.emits ?? {}), cached: 1 }; }
           return result;
         };
+        if (key && shared.cache?.has(key)) { const out = finish(shared.cache.get(key), true); exit('ok'); return out; }
         const result = spec.calculate(io);
         if (isPromise(result)) {
           pop();
@@ -373,19 +427,38 @@ function makeStore({ base, name, parent, shared }) {
       return makeStore({ base: branchBase, name: branchName, parent: self, shared });
     },
 
+    /** The accepted variant: get(address) follows the pointer. Write-once, by a named author (a comparator FG, a runner). */
+    point(address, target, { by = 'pointer' } = {}) {
+      if (!self.has(target)) throw new PartStoreError(`point ${address}: target '${target}' is not on store ${name}`);
+      if (ownPart(address)) throw new PartStoreError(`point ${address}: the address is already written (${ownPart(address).producedBy})`);
+      if (onBase(address)) throw new PartStoreError(`point ${address}: a provider-board address cannot be pointed`);
+      parts.set(address, Object.freeze({ pointerTo: target, producedBy: by, inParts: [target], key: keyOf(target) }));
+    },
+    /** The variants of an address (address@name) this store can see: written, declared by a Calculation, or on the board. */
+    variants(address) {
+      const out = new Set();
+      for (const s of chain()) { for (const a of s._parts.keys()) if (a.startsWith(`${address}@`)) out.add(a); for (const a of s._producers.keys()) if (a.startsWith(`${address}@`)) out.add(a); }
+      return [...out].sort();
+    },
+    keyOf,
+    /** Every Part of this store with its key: the snapshot as a key dump. */
+    keyspace() {
+      return [...parts.keys()].sort().map((address) => { const p = parts.get(address); return { address, key: p.key ?? keyOf(address), producedBy: p.producedBy, pointerTo: p.pointerTo ?? null }; });
+    },
+
     provenance(address) {
       const own = ownPart(address);
       if (own) {
-        for (const s of chain()) if (s._parts.has(address)) return { address, producedBy: own.producedBy, inParts: own.inParts, store: s.name };
+        for (const s of chain()) if (s._parts.has(address)) return { address, producedBy: own.producedBy, inParts: own.inParts, key: own.key ?? null, pointerTo: own.pointerTo ?? null, store: s.name };
       }
-      if (onBase(address)) return { address, producedBy: 'provider-board', inParts: null, store: name };
+      if (onBase(address)) return { address, producedBy: 'provider-board', inParts: null, key: keyOf(address), store: name };
       return null;
     },
 
     manifest() {
       return {
         store: name,
-        parts: [...parts.keys()].sort().map((address) => ({ address, producedBy: parts.get(address).producedBy, inParts: parts.get(address).inParts })),
+        parts: [...parts.keys()].sort().map((address) => ({ address, producedBy: parts.get(address).producedBy, inParts: parts.get(address).inParts, key: parts.get(address).key ?? null, pointerTo: parts.get(address).pointerTo ?? null })),
         calculations: [...calcs.values()].sort((a, b) => a.address.localeCompare(b.address))
           .map(({ address, inParts, outParts, calls, lazy, note }) => ({ address, inParts, outParts, calls, lazy, note }))
       };

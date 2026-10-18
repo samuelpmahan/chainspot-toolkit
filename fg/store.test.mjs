@@ -28,11 +28,14 @@ test('toolkit and provider Parts resolve uniformly; lazy production records prov
   assert.equal(store.get('tk.area'), 8);
   assert.equal(store.get('tk.area'), 8);
   assert.equal(calls.length, 1, 'produced once');
-  assert.deepEqual(store.provenance('tk.area'), { address: 'tk.area', producedBy: 'fn.tk.area', inParts: ['px.image'], store: 'root' });
-  assert.deepEqual(store.provenance('px.image'), { address: 'px.image', producedBy: 'provider-board', inParts: null, store: 'root' });
+  const prov = store.provenance('tk.area');
+  assert.match(prov.key, /^[0-9a-f]{64}$/, 'a produced Part carries the key of the call that made it');
+  assert.deepEqual(prov, { address: 'tk.area', producedBy: 'fn.tk.area', inParts: ['px.image'], key: prov.key, pointerTo: null, store: 'root' });
+  const base = store.provenance('px.image');
+  assert.deepEqual(base, { address: 'px.image', producedBy: 'provider-board', inParts: null, key: base.key, store: 'root' });
   assert.equal(store.has('tk.nothing'), false);
   assert.throws(() => store.get('tk.nothing'), (e) => e instanceof PartStoreError && /no Part at 'tk\.nothing'/.test(e.message));
-  assert.deepEqual(store.manifest().parts, [{ address: 'tk.area', producedBy: 'fn.tk.area', inParts: ['px.image'] }]);
+  assert.deepEqual(store.manifest().parts, [{ address: 'tk.area', producedBy: 'fn.tk.area', inParts: ['px.image'], key: prov.key, pointerTo: null }]);
 });
 
 test('Parts are write-once and never shadow the provider board', () => {
@@ -135,4 +138,45 @@ test('every Calculation call carries the measures its output emits (Parts and ca
   store.register('fn.t.search', { calculate: (io) => ({ best: io.args.k, emits: { poses: 7 * io.args.k } }) });
   store.get('t.counted'); store.call('fn.t.search', { k: 2 });
   assert.deepEqual(log.map((e) => [e.calculation, e.emits]), [['fn.t.count', { items: 3 }], ['fn.t.search', { poses: 14 }]]);
+});
+
+test('the keyspace: variants are addresses, a pointer names the accepted one, keys follow content and code', () => {
+  const board = createBoard([['px.sizes', [3, 9, 4]], ['px.raster', { rgba: new Uint8Array([1, 2, 3, 4]), widthPx: 1, heightPx: 1 }]]);
+  const store = createPartStore({ base: board });
+  let ran = 0;
+  store.register('fn.pick@big', { inParts: ['px.sizes'], outParts: ['px.picked@big'], code: 'big', calculate: (io) => { ran++; return { 'px.picked@big': io.in('px.sizes').filter((x) => x > 3) }; } });
+  store.register('fn.pick@all', { inParts: ['px.sizes'], outParts: ['px.picked@all'], code: 'all', calculate: (io) => { ran++; return { 'px.picked@all': io.in('px.sizes') }; } });
+  assert.deepEqual(store.variants('px.picked'), ['px.picked@all', 'px.picked@big'], 'declared variants are listed before they are produced');
+  assert.deepEqual(store.get('px.picked@big'), [9, 4]);
+  store.point('px.picked', 'px.picked@big', { by: 'cmp.fn.pick' });
+  assert.deepEqual(store.get('px.picked'), [9, 4], 'get follows the pointer');
+  assert.equal(store.provenance('px.picked').pointerTo, 'px.picked@big');
+  assert.throws(() => store.point('px.picked', 'px.picked@all'), /already written/);
+  assert.notEqual(store.keyOf('px.picked@big'), store.keyOf('px.picked@all'), 'different code, different key');
+  assert.equal(store.keyOf('px.picked'), store.keyOf('px.picked@big'), 'a pointer has its target\'s key');
+  assert.ok(store.keyspace().every((k) => /^[0-9a-f]{64}$/.test(k.key)));
+  // a raster is keyed by its bytes: the same bytes in a different buffer give the same key
+  const again = createPartStore({ base: createBoard([['px.raster', { rgba: new Uint8Array([1, 2, 3, 4]), widthPx: 1, heightPx: 1 }]]) });
+  assert.equal(again.keyOf('px.raster'), store.keyOf('px.raster'));
+});
+
+test('the cache: the same call on the same inputs is served, not computed; a changed input or code recomputes', () => {
+  const cache = new Map();
+  let ran = 0;
+  const make = (sizes, code = 'v1') => {
+    const store = createPartStore({ base: createBoard([['px.sizes', sizes]]), cache });
+    store.register('fn.pick', { inParts: ['px.sizes'], outParts: ['px.picked'], code, calculate: (io) => { ran++; return { 'px.picked': { px: io.in('px.sizes').filter((x) => x > 3), emits: { kept: 2 } } }; } });
+    return store;
+  };
+  const a = make([3, 9, 4]); a.get('px.picked');
+  const b = make([3, 9, 4]); assert.deepEqual(b.get('px.picked').px, [9, 4]);
+  assert.equal(ran, 1, 'the second store was served from the cache');
+  const served = b.calls().find((e) => e.calculation === 'fn.pick');
+  assert.equal(served.cached, true); assert.deepEqual(served.emits, { kept: 2, cached: 1 }); assert.equal(served.key, a.calls().find((e) => e.calculation === 'fn.pick').key);
+  assert.equal(b.provenance('px.picked').key, a.provenance('px.picked').key);
+  const c = make([3, 9, 5]); c.get('px.picked'); assert.equal(ran, 2, 'a changed input recomputes');
+  const d = make([3, 9, 4], 'v2'); d.get('px.picked'); assert.equal(ran, 3, 'changed code recomputes');
+  // a constant is keyed by its value, so two runs with different values never share a cached Part
+  const e1 = createPartStore({ cache }); e1.constant('fn.c', { 'tk.c': 1 }); const e2 = createPartStore({ cache }); e2.constant('fn.c', { 'tk.c': 2 });
+  assert.equal(e2.get('tk.c'), 2);
 });

@@ -17,3 +17,13 @@
   (`partKind`, `renderValue`). If something does not render, add a case there. `fg/render.dev.test.mjs` renders every
   Part of every dev PxC.
 - **Names:** use candidates (`Basket cX`, `fg/names.mjs`) until identity is proven, then the hole number.
+- **Keys (the keyspace):** every Part has a content key (`store.keyOf(address)`): a produced Part carries the cache
+  key of the call that made it, `sha256({ fn, code, args, inputs: [[inPart, key]...] })`; a provider or constant Part
+  is digested by value (typed arrays by their bytes, once per run). A call whose key is in the store's cache is served,
+  not computed, and logged with `cached: 1`. `createPartStore({ cache })` takes any `{ has, get, set }`; the default
+  Map is shared with the store's branches. The `code` of a Calculation defaults to the digest of `calculate`'s
+  source: pass `code` yourself when `calculate` wraps something else (an implementation, a file), or the key will
+  not change when that something changes.
+- **Variants:** `address@variant` is its own address (`px.tees.refined@structural`), so every implementation of a
+  slot lives side by side in one store; `store.variants(address)` lists them; `store.point(address, target, { by })`
+  names the accepted one and `get(address)` follows it. A branch is a key prefix, not a separate store.

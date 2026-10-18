@@ -85,6 +85,7 @@ export function comparableForkJoin({
     try {
       branch.register(slot, {
         inParts: spec.reads, outParts: [part], calls: spec.calls, note: `implementation ${name}`,
+        code: digest({ implementation: name, source: String(spec.calculate) }),   // the implementation's own code, not the wrapper's
         calculate: (io) => ({ [part]: apply(Object.freeze({ get: io.in, has: io.board.has, call: io.call }), spec.calculate, name) })
       });
       branch.call(slot, undefined, { caller: `forkjoin:${name}` });

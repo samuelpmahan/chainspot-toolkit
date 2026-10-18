@@ -156,6 +156,18 @@ right and the repo is behind. Every number carries a unit.
   are broken of over-reliance on sha-based equivalence (a crop changes every
   hash downstream while the geometry is the same; "hash discrepancies are not
   geometry"). Never remove it to make hashes line up.
+- **Everything is included by default; the cache makes it tractable** (Sam,
+  2026-10-18: "default OFF hardens over time until prototyping is impossible.
+  ComparableForkJoin exists so that everything is included by default. This
+  is made tractable by the warm caching of PxC. If you model this one after
+  Redis you don't even need separate branches"). Lane flags that default OFF
+  are the thing to retire: every implementation runs every time, as a variant
+  key in ONE store (`px.tees.refined@structural`), a pointer names the
+  accepted variant, and a call whose inputs and code have not changed is a
+  cache hit (key = sha256 of the Calculation, its code, its args and its
+  inputs' keys), so running everything costs only the new work. The snapshot
+  is the keyspace dump. `fg/store.mjs` carries this: keyOf, variants, point,
+  cache, keyspace.
 - **Interface vs TypedInterface; delegates are FGs** (Sam, 2026-10-18).
   An address list is an Interface; a TypedInterface also says what kind
   of Part sits at each address. A slot is a C#-style delegate: a typed
