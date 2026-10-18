@@ -139,7 +139,7 @@ export async function runHoleTraceForkJoin({ attempt, specimen, outDir = null, r
     const marks = store.get('tk.s7.holes').holes.flatMap((h) => judgedMarks(tr.find((t) => t.hole === h.hole), j.rows.find((r) => r.hole === h.hole), holePaths.holes.find((p) => p.hole === h.hole), { width: 2 }));
     const png = drawCrop(raster, { x0: 0, y0: 0, w: raster.widthPx, h: raster.heightPx, scale: 1 }, marks, { deflate: (r) => deflateSync(r) });
     writeFileSync(join(out, 's7trace.overview.png'), Buffer.from(png.png, 'base64'));
-    overview = { path: join(out, 's7trace.overview.png'), variant: cmp.accepted, legend: LEGEND, labels: tr.map((t) => ({ hole: t.hole, at: t.path[0] ?? null, status: t.status, ok: j.rows.find((r) => r.hole === t.hole)?.ok ?? null })) };
+    overview = { path: join(out, 's7trace.overview.png'), variant: cmp.accepted, legend: LEGEND, labels: tr.map((t) => ({ hole: t.hole, at: t.path[0] ?? store.get('tk.s7.scene').badges[Number(t.hole)] ?? null, status: t.status, ok: j.rows.find((r) => r.hole === t.hole)?.ok ?? null })) };
     writeFileSync(join(out, 's7trace.overview.json'), JSON.stringify(overview, null, 1) + '\n');
   }
   const partPages = store.manifest().parts.map((p) => p.address).filter((a) => a.startsWith('tk.s7.')).sort()
