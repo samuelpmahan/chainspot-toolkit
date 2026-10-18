@@ -190,6 +190,7 @@ export function judgeAttempt({ specimen, attempt, root = ROOT }) {
     const run = join(s6dir, s6runs.at(-1)), base = join(run, 'artifacts', 'fn.Hole.straight');
     const cmpFile = join(run, 'cmp.fn.Hole.straight.json'), cmp = existsSync(cmpFile) ? JSON.parse(readFileSync(cmpFile, 'utf8')) : null;
     const holes = [...T.holes.values()].map((h) => ({ hole: String(h.hole), tee: h.tee, basket: h.basket, bends: h.bends ?? [], bent: h.bent }));
+    const samPathOf = (n) => { const h = holes.find((x) => x.hole === String(n)); return h ? [h.tee, ...h.bends, h.basket] : null; };   // Sam's tee -> bends -> basket (canonical px), for renders
     report.stages.S6straight = { run: s6runs.at(-1), accepted: cmp?.accepted ?? null, acceptRule: cmp?.acceptRule ?? null, variants: {} };
     for (const variant of existsSync(base) ? readdirSync(base).sort() : []) {
       const f = join(base, variant, 'straight.json'); if (!existsSync(f)) continue;
@@ -198,7 +199,7 @@ export function judgeAttempt({ specimen, attempt, root = ROOT }) {
       report.stages.S6straight.variants[variant] = { laneNotRun: Boolean(doc.laneNotRun), ...j.totals,
         tp: named('TP'), fp: named('FP'), fn: named('FN'), tn: named('TN'), wrongBasket: j.rows.filter((r) => r.outcome === 'TP' && !r.basketAgrees).map((r) => `Hole ${r.hole} -> ${r.basketSaid}`),
         rows: j.rows.map((r) => ({ hole: r.hole === null ? null : Number(r.hole), pair: r.pair, tee: r.tee, source: r.source, verdict: r.verdict, truthBent: r.truthBent ?? null, truthBends: r.truthBends ?? null,
-          basketSaid: r.basketSaid, basketSaidPoint: r.basketSaidPoint, basketTruthPoint: r.basketTruthPoint ?? null, basketErrorPx: r.basketErrorPx ?? null, outcome: r.outcome, pass: r.pass, why: r.why ?? r.condition ?? null })),
+          basketSaid: r.basketSaid, basketSaidPoint: r.basketSaidPoint, basketTruthPoint: r.basketTruthPoint ?? null, samPath: samPathOf(r.hole), basketErrorPx: r.basketErrorPx ?? null, outcome: r.outcome, pass: r.pass, why: r.why ?? r.condition ?? null })),
         note: 'TP straight called straight; FP bent called straight; FN straight not called straight (bent or unknown); TN bent not called straight' };
     }
   }
