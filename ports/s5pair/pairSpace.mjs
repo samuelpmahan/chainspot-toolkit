@@ -13,9 +13,11 @@
  *       other tee, +1 px. alphaProfile (contracts/alpha.profile@1): when it carries fitted overlay classes, each pixel
  *       of the pad window under a C1 / C2 fill disc is un-composited (unmix) before fitting; emits unmixedPx.
  *       Answer: centre px, unit direction as an AXIS (mod pi: angle in (-90, 90] deg), shape px, rms, sigma.
- *   fn.q.pair.plate({ badges, index })   a badge's plate centre px (the S1 dark plate part's bbox, pixel centres)
- *   fn.q.pair.residual({ axis, badge })  angleResidualDeg (axis vs ray tee -> badge, signed), signedPerpPx (badge
- *       centre off the axis line; + = right of the axis on screen, y down), alongPx (tee centre -> badge along the axis)
+ *   fn.q.pair.plate({ badges, index })   a badge's plate centre px (the S1 badge sprite bbox centre, pixel centres: the recorded rule)
+ *   fn.q.pair.residual({ center, axis, plate })  the S5 stage's signature (agent A, ports/s5pair/residualQuery.mjs on
+ *       its branch; the same name, arguments and definitions, so the two merge): angleResidualDeg (unsigned, axis vs
+ *       ray tee -> plate), signedAngleResidualDeg, signedPerpPx (+ = right of the axis facing the plate, screen y down),
+ *       alongPx, distancePx
  */
 import { fitPadPose } from '../s3assoc/padPose.mjs';
 import { basketPoint } from '../s3assoc/associate.mjs';
@@ -101,25 +103,42 @@ function occluderPlanes(W, H, badges, baskets, tees) {
   return { base, teeMasks };
 }
 
-/** Plate centre of a badge: its S1 dark plate part's bbox (else the badge bbox), pixel centres (x + (w - 1) / 2). */
+/**
+ * Plate centre of a badge: the centre of the whole badge sprite, its S1 bbox, at pixel centres (x + (w - 1) / 2): the
+ * recorded rule (ports/s3assoc/run.mjs; the plate shares the sprite's centre), so the 76/76 signal reproduces. The S1
+ * dark plate part's own bbox sits 0.5 px off it on some two-digit badges (golden 10, 13, 15): reported, not used.
+ */
 export function plateCenterOf(b) {
-  const dark = (b.has?.findPx?.parts ?? []).find((p) => p.polarity === 'dark'), bb = dark?.bbox ?? b.bbox;
-  return { center: [bb[0] + (bb[2] - 1) / 2, bb[1] + (bb[3] - 1) / 2], rule: dark ? 'S1 dark plate part bbox centre (pixel centres)' : 'S1 badge bbox centre (pixel centres; no dark plate part)' };
+  const [x, y, w, h] = b.bbox, dark = (b.has?.findPx?.parts ?? []).find((p) => p.polarity === 'dark');
+  const center = [x + (w - 1) / 2, y + (h - 1) / 2];
+  const dc = dark ? [dark.bbox[0] + (dark.bbox[2] - 1) / 2, dark.bbox[1] + (dark.bbox[3] - 1) / 2] : null;
+  return { center, rule: 'S1 badge sprite bbox centre, pixel centres (the recorded rule)', darkPlateOffsetPx: dc ? Math.hypot(dc[0] - center[0], dc[1] - center[1]) : null };
 }
 
-/** The residual of a badge centre against a tee axis (an axis mod pi: the sense facing the badge is chosen here). */
-export function residualOf(axis, badge) {
-  const v = [badge[0] - axis.center[0], badge[1] - axis.center[1]];
-  let u = axis.dirUnit;
-  if (u[0] * v[0] + u[1] * v[1] < 0) u = [-u[0], -u[1]];
-  const alongPx = u[0] * v[0] + u[1] * v[1], signedPerpPx = u[0] * v[1] - u[1] * v[0];
-  return { angleResidualDeg: Math.atan2(signedPerpPx, alongPx) * DEG, signedPerpPx, alongPx, distancePx: Math.hypot(v[0], v[1]), facing: u };
+/**
+ * The residual of a badge plate centre against a tee axis: agent A's fn.q.pair.residual signature and definitions
+ * ({ center, axis: unit vector, sign irrelevant, plate }; the pinned S5's signedAxis), so the stage and the learning
+ * call one query. angleResidualDeg is unsigned (A's); signedAngleResidualDeg carries the sign of signedPerpPx (the
+ * learning profiles its mean and sigma). A non-finite input is a recorded condition (unavailable), never a throw.
+ */
+const finitePoint = (p) => Array.isArray(p) && p.length === 2 && p.every(Number.isFinite);
+export function residual({ center, axis, plate }) {
+  if (!finitePoint(center) || !finitePoint(plate) || !finitePoint(axis) || Math.hypot(axis[0], axis[1]) < 1e-9) return { unavailable: 'a tee centre, axis or plate centre is not finite' };
+  const n = Math.hypot(axis[0], axis[1]), dx = plate[0] - center[0], dy = plate[1] - center[1];
+  let ux = axis[0] / n, uy = axis[1] / n;
+  if (dx * ux + dy * uy < 0) { ux = -ux; uy = -uy; }
+  const alongPx = dx * ux + dy * uy, signedPerpPx = -uy * dx + ux * dy;
+  return {
+    angleResidualDeg: r3(Math.atan2(Math.abs(signedPerpPx), Math.abs(alongPx)) * DEG),
+    signedAngleResidualDeg: r3(Math.atan2(signedPerpPx, alongPx) * DEG),
+    signedPerpPx: r3(signedPerpPx), alongPx: r3(alongPx), distancePx: r3(Math.hypot(dx, dy))
+  };
 }
 
 export const PAIR_UNITS = Object.freeze({
   axis: 'px (canonical S0-cropped frame: centre, shape); unitless dirUnit (an axis mod pi); deg (angleDeg, sigma); RGB level (rmsRgb); px (unmixedPx)',
   plate: 'px (canonical S0-cropped frame)',
-  residual: 'deg (angleResidualDeg: tee axis to the ray tee centre -> badge plate centre, signed like signedPerpPx); px (signedPerpPx: badge centre off the axis line, + = right of the axis facing the badge, screen y down; alongPx, distancePx)'
+  residual: 'deg (angleResidualDeg: tee long axis to the ray tee centre -> badge plate centre, unsigned; signedAngleResidualDeg: the same with the sign of signedPerpPx); px (signedPerpPx: badge plate centre to the axis line, cross(axis, ray) with the axis oriented toward the plate, screen y down: + = right of the axis; alongPx along the axis; distancePx tee centre to plate)'
 });
 
 /** The table (math once): (resolved args, raw args, memo) -> { value, unit, emits }. */
@@ -164,9 +183,9 @@ export function pairQueries() {
       const b = badges[index];
       return b ? { value: { index, label: String(b.label), ...plateCenterOf(b) }, unit: PAIR_UNITS.plate, emits: {} } : { value: { index, condition: `no badge ${index} in px.badges` }, unit: PAIR_UNITS.plate, emits: { missing: 1 } };
     },
-    'fn.q.pair.residual': ({ axis, badge }) => {
-      const r = residualOf(axis, badge);
-      return { value: { angleResidualDeg: r.angleResidualDeg, signedPerpPx: r.signedPerpPx, alongPx: r.alongPx, distancePx: r.distancePx }, unit: PAIR_UNITS.residual, emits: { pairs: 1 } };
+    'fn.q.pair.residual': ({ center, axis, plate }) => {
+      const value = residual({ center, axis, plate });
+      return { value, unit: PAIR_UNITS.residual, emits: value.unavailable ? { unavailable: 1 } : { pairs: 1 } };
     }
   };
 }

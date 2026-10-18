@@ -20,10 +20,23 @@
 import { r3 } from './pairSpace.mjs';
 import { nameCandidates } from '../../fg/names.mjs';
 import { ALPHA_PROFILE_PART } from '../../contracts/alpha.profile@1.mjs';
+import { ASSOC_BOUNDS } from '../s3assoc/associate.mjs';
 
 export const RESIDUAL_PROFILE_PART = 'tk.s5.residualProfile';
 export const RESIDUAL_STRIPS_PART = 'tk.s5.residualStrips';
 export const STRAIGHT_TRUTH_PART = 'testimony.s5.straightHoles';
+/** The frozen S3 association (baselines/s3assoc/<course>.json): the recorded per-hole z the 76/76 came from. */
+export const RECORDED_ASSOC_PART = 'tk.s5.recordedAssociation';
+/**
+ * The recorded signal (docs/evidence/s7main/README.md "Two independent geometric signals"; docs/evidence/s3assoc):
+ * a pad's axis lines up with its own badge when z = lateral / sqrt(sigma0^2 + (dist x sigma_theta)^2) <= 3 with the
+ * badge 40-230 px away; sigma0 = 0.85 px (76 confirmed pairings), sigma_theta = the pad's own profile-curvature angle
+ * sigma, floored at 0.0005 rad (ports/s3assoc/associate.mjs ASSOC_BOUNDS, the rule as shipped). Recorded: 76/76 real
+ * pads on golden, lenard, townelake, heritage, alex; a random angle at the real position 1.7% (own badge).
+ */
+export const LINE_UP_RULE = Object.freeze({ zMax: ASSOC_BOUNDS.zMax, sigma0Px: ASSOC_BOUNDS.sigma0Px, sigmaThetaFloorRad: ASSOC_BOUNDS.sigmaThetaFloorRad, minDistPx: 40, maxDistPx: 230, recorded: '76/76 real pads (golden, lenard, townelake, heritage, alex)' });
+export const zOf = (signedPerpPx, distancePx, sigmaThDeg) => Math.abs(signedPerpPx) / Math.sqrt(LINE_UP_RULE.sigma0Px ** 2 + (distancePx * Math.max((sigmaThDeg * Math.PI) / 180, LINE_UP_RULE.sigmaThetaFloorRad)) ** 2);
+const linesUp = (r) => r.z <= LINE_UP_RULE.zMax && r.distancePx >= LINE_UP_RULE.minDistPx && r.distancePx <= LINE_UP_RULE.maxDistPx;
 /** How far a fit's |angle residual| may sit from the course's straight-hole mean before the residual indicts it (z). */
 export const INDICT_Z = 3;
 
@@ -39,13 +52,15 @@ export function distribution(xs, unit) {
 }
 
 const profileOf = (rows, pick) => ({
-  angleResidualDeg: distribution(rows.map((r) => pick(r).angleResidualDeg), 'Deg'),
+  signedAngleResidualDeg: distribution(rows.map((r) => pick(r).signedAngleResidualDeg), 'Deg'),
   signedPerpPx: distribution(rows.map((r) => pick(r).signedPerpPx), 'Px'),
-  absAngleResidualDeg: distribution(rows.map((r) => Math.abs(pick(r).angleResidualDeg)), 'Deg')
+  angleResidualDeg: distribution(rows.map((r) => pick(r).angleResidualDeg), 'Deg')
 });
 
 const PROFILE_UNITS = Object.freeze({
-  angleResidualDeg: 'deg: tee axis (fn.q.pair.axis, course template, pose fit) to the ray tee centre -> badge plate centre; signed, + = badge right of the axis facing it (screen y down)',
+  signedAngleResidualDeg: 'deg: tee axis (fn.q.pair.axis, course template, pose fit) to the ray tee centre -> badge plate centre; + = badge right of the axis facing it (screen y down)',
+  angleResidualDeg: 'deg: the same angle, unsigned (fn.q.pair.residual, the stage\'s definition)',
+  z: 'z: |signedPerpPx| / sqrt(0.85^2 + (distancePx x max(sigma_theta, 0.0005 rad))^2), the shipped association rule',
   signedPerpPx: 'px: badge plate centre off the tee axis line, same sign',
   alongPx: 'px: tee centre to badge plate centre along the axis',
   sigma: 'sample standard deviation (n - 1) over the straight pairs of this course'
@@ -53,7 +68,7 @@ const PROFILE_UNITS = Object.freeze({
 
 export const S5_RESIDUAL_CALCULATIONS = Object.freeze([
   ['fn.tk.s5.residualProfile', {
-    inParts: ['px.tees', 'px.badges', 'px.baskets', 'px.image.cropped', STRAIGHT_TRUTH_PART, ALPHA_PROFILE_PART],
+    inParts: ['px.tees', 'px.badges', 'px.baskets', 'px.image.cropped', STRAIGHT_TRUTH_PART, RECORDED_ASSOC_PART, ALPHA_PROFILE_PART],
     outParts: [RESIDUAL_PROFILE_PART],
     calls: ['fn.q.pair.axis', 'fn.q.pair.plate', 'fn.q.pair.residual'],
     calculate: (io) => {
@@ -76,7 +91,7 @@ export const S5_RESIDUAL_CALCULATIONS = Object.freeze([
       const plates = badges.map((_, j) => q('fn.q.pair.plate', { badges: 'px.badges', index: j }));
       const holes = truth.holes ?? [];
       const matchPx = truth.matchTeePx;
-      const res = (axis, j) => q('fn.q.pair.residual', { axis: { center: axis.center, dirUnit: axis.dirUnit }, badge: plates[j].center });
+      const res = (a, j) => { const v = q('fn.q.pair.residual', { center: a.center, axis: a.dirUnit, plate: plates[j].center }); return { ...v, z: r3(zOf(v.signedPerpPx, v.distancePx, a.sigma.thDeg)) }; };
       const rows = tees.map((t, i) => {
         const a = raw[i];
         const near = holes.map((h) => ({ h, d: Math.hypot(h.tee[0] - a.center[0], h.tee[1] - a.center[1]) })).sort((x, y) => x.d - y.d)[0];
@@ -88,15 +103,30 @@ export const S5_RESIDUAL_CALCULATIONS = Object.freeze([
         return {
           ...base, hole: near.h.hole, identity: `Tee ${near.h.hole}`, testimonyPx: r3(near.d), badge: `Badge ${badges[j].label}`, badgeIndex: j, plateCenter: plates[j].center.map(r3),
           straight: !near.h.bent, status: near.h.bent ? 'bent (referent)' : 'straight',
-          angleResidualDeg: r3(r.angleResidualDeg), signedPerpPx: r3(r.signedPerpPx), alongPx: r3(r.alongPx),
-          ...(u ? { unmixed: { angleResidualDeg: r3(u.angleResidualDeg), signedPerpPx: r3(u.signedPerpPx), axisDeg: r3(unmixed[i].angleDeg), unmixedPx: unmixed[i].unmixedPx } } : {})
+          signedAngleResidualDeg: r.signedAngleResidualDeg, angleResidualDeg: r.angleResidualDeg, signedPerpPx: r.signedPerpPx, alongPx: r.alongPx, distancePx: r.distancePx,
+          z: r.z, linesUp: linesUp(r),
+          ...(u ? { unmixed: { signedAngleResidualDeg: u.signedAngleResidualDeg, angleResidualDeg: u.angleResidualDeg, signedPerpPx: u.signedPerpPx, z: u.z, linesUp: linesUp(u), axisDeg: r3(unmixed[i].angleDeg), unmixedPx: unmixed[i].unmixedPx } } : {})
         };
       });
-      const paired = rows.filter((r) => r.angleResidualDeg != null), straight = paired.filter((r) => r.straight), bent = paired.filter((r) => r.straight === false);
+      const paired = rows.filter((r) => r.signedAngleResidualDeg != null), straight = paired.filter((r) => r.straight), bent = paired.filter((r) => r.straight === false);
       const rawProfile = profileOf(straight, (r) => r);
       // the residual indicts a fit (DOCTRINE S5) when it sits beyond INDICT_Z course-local sigmas of the straight mean
-      const m = rawProfile.angleResidualDeg.meanDeg, s = rawProfile.angleResidualDeg.sigmaDeg;
-      for (const r of paired) r.zCourse = s ? r3((r.angleResidualDeg - m) / s) : null;
+      const m = rawProfile.signedAngleResidualDeg.meanDeg, s = rawProfile.signedAngleResidualDeg.sigmaDeg;
+      for (const r of paired) r.zCourse = s ? r3((r.signedAngleResidualDeg - m) / s) : null;
+      // the recorded signal, reproduced first: every paired pad (the tee -> badge segment is straight on every hole)
+      const recorded = io.in(RECORDED_ASSOC_PART);
+      const recHoles = recorded?.holes ? Object.entries(recorded.holes).map(([h, b]) => ({ hole: Number(h), z: b.z, latPx: b.latPx, badge: b.badgeLabel })) : [];
+      const recLinesUp = recHoles.filter((h) => String(h.badge) === String(h.hole) && h.z <= LINE_UP_RULE.zMax);
+      const ours = paired.filter(linesUp);
+      const perHole = paired.map((r) => { const h = recHoles.find((x) => x.hole === r.hole); return { hole: r.hole, tee: r.tee, z: r.z, linesUp: r.linesUp, recordedZ: h?.z ?? null, recordedLinesUp: h ? String(h.badge) === String(h.hole) && h.z <= LINE_UP_RULE.zMax : null }; });
+      const changed = perHole.filter((p) => p.recordedLinesUp !== null && p.recordedLinesUp !== p.linesUp).map((p) => `Hole ${p.hole}`);
+      const lineUp = {
+        rule: LINE_UP_RULE, nPads: paired.length, linesUpWithOwnBadge: ours.length, fraction: paired.length ? r3(ours.length / paired.length) : null,
+        allPairs: profileOf(paired, (r) => r),
+        recorded: recorded?.holes ? { source: recorded.source, frozenPairs: recHoles.length, linesUpWithOwnBadge: recLinesUp.length } : (recorded ?? { status: 'no recorded association' }),
+        verdict: !recorded?.holes ? 'no recorded association to compare' : !changed.length && ours.length === paired.length && recLinesUp.length === recHoles.length ? `same: ${ours.length}/${paired.length} line up, as recorded (${recLinesUp.length}/${recHoles.length} frozen)` : `changed: ${ours.length}/${paired.length} line up vs recorded ${recLinesUp.length}/${recHoles.length}${changed.length ? `; differs on ${changed.join(', ')}` : ''}`,
+        perHole
+      };
       for (const r of paired) if (r.zCourse != null && Math.abs(r.zCourse) > INDICT_Z) r.status = `${r.status}; indicted (|z| > ${INDICT_Z})`;
       const condition = !holes.length ? (truth.status ?? 'no testimony') : !straight.length ? 'no straight pair' : null;
       const value = {
@@ -105,13 +135,16 @@ export const S5_RESIDUAL_CALCULATIONS = Object.freeze([
         template: template ? Object.fromEntries(Object.entries(template).map(([k, v]) => [k, r3(v)])) : null, templateRule,
         alpha: alphaCondition,
         condition,
+        lineUp,
         straight: { raw: rawProfile, ...(unmixed ? { unmixed: profileOf(straight, (r) => r.unmixed) } : { unmixed: alphaCondition }) },
         bentReferent: profileOf(bent, (r) => r),
         counts: { tees: tees.length, paired: paired.length, straightPairs: straight.length, bentPairs: bent.length, unpaired: rows.length - paired.length, indicted: paired.filter((r) => r.status.includes('indicted')).length },
         rows,
         emits: {
           straightPairs: straight.length, bentPairs: bent.length,
-          angleResidualSigmaDeg: rawProfile.angleResidualDeg.sigmaDeg, angleResidualMeanDeg: rawProfile.angleResidualDeg.meanDeg,
+          pads: paired.length, padsLiningUpWithOwnBadge: ours.length,
+          allPairsAngleSigmaDeg: lineUp.allPairs.signedAngleResidualDeg.sigmaDeg, allPairsPerpSigmaPx: lineUp.allPairs.signedPerpPx.sigmaPx,
+          angleResidualSigmaDeg: rawProfile.signedAngleResidualDeg.sigmaDeg, angleResidualMeanDeg: rawProfile.signedAngleResidualDeg.meanDeg,
           signedPerpSigmaPx: rawProfile.signedPerpPx.sigmaPx, signedPerpMeanPx: rawProfile.signedPerpPx.meanPx,
           unmixedPx: unmixed ? unmixed.reduce((a, u) => a + (u.unmixedPx ?? 0), 0) : 0, alphaProfile: profiled ? 1 : 0
         }
@@ -124,7 +157,7 @@ export const S5_RESIDUAL_CALCULATIONS = Object.freeze([
     outParts: [RESIDUAL_STRIPS_PART],
     calculate: (io) => {
       const img = io.in('px.image.cropped'), P = io.in(RESIDUAL_PROFILE_PART);
-      const strips = P.rows.filter((r) => r.angleResidualDeg != null).sort((a, b) => a.hole - b.hole).map((r) => stripOf(img, r));
+      const strips = P.rows.filter((r) => r.signedAngleResidualDeg != null).sort((a, b) => a.hole - b.hole).map((r) => stripOf(img, r));
       return { [RESIDUAL_STRIPS_PART]: { schema: 'nctk-s5-residual-strips@1', course: P.course, strips, legend: STRIP_LEGEND, scale: STRIP_SCALE, emits: { strips: strips.length } } };
     }
   }]
@@ -155,7 +188,7 @@ function stripOf(img, r) {
   const color = r.status.includes('indicted') ? STRIP_COLORS.indicted : r.straight ? STRIP_COLORS.straight : STRIP_COLORS.bent;
   const sign = (v, d = 2) => `${v >= 0 ? '+' : ''}${v.toFixed(d)}`;
   return {
-    label: `${r.identity} (${r.tee}) -> ${r.badge} [${r.status}]: angle ${sign(r.angleResidualDeg)} deg, perp ${sign(r.signedPerpPx)} px at ${r.alongPx.toFixed(0)} px along${r.unmixed ? `; unmixed ${sign(r.unmixed.angleResidualDeg)} deg` : ''}`,
+    label: `${r.identity} (${r.tee}) -> ${r.badge} [${r.status}]: angle ${sign(r.signedAngleResidualDeg)} deg, perp ${sign(r.signedPerpPx)} px at ${r.alongPx.toFixed(0)} px along, z ${r.z.toFixed(2)}${r.unmixed ? `; unmixed ${sign(r.unmixed.signedAngleResidualDeg)} deg` : ''}`,
     panels: [crop(r.center), crop(r.plateCenter)],
     lines: [
       { from: [r.center[0] - far * u[0], r.center[1] - far * u[1]], to: [r.center[0] + far * u[0], r.center[1] + far * u[1]], color },

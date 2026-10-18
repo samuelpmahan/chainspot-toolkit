@@ -5,8 +5,8 @@ import { renderValue } from '../../fg/render.mjs';
 import { coverageAt } from '../s3assoc/padPose.mjs';
 import { basketPoint } from '../s3assoc/associate.mjs';
 import { composite, noProfile, ALPHA_PROFILE_PART, ALPHA_PROFILE_SCHEMA } from '../../contracts/alpha.profile@1.mjs';
-import { registerPairQueries, padWindow, fillDiscs, residualOf, axisOf, PAIR_QUERY_NAMES } from './pairSpace.mjs';
-import { S5_RESIDUAL_CALCULATIONS, RESIDUAL_PROFILE_PART, RESIDUAL_STRIPS_PART, STRAIGHT_TRUTH_PART, distribution } from './residualProfile.mjs';
+import { registerPairQueries, padWindow, fillDiscs, residual, axisOf, PAIR_QUERY_NAMES } from './pairSpace.mjs';
+import { S5_RESIDUAL_CALCULATIONS, RESIDUAL_PROFILE_PART, RESIDUAL_STRIPS_PART, STRAIGHT_TRUTH_PART, RECORDED_ASSOC_PART, distribution } from './residualProfile.mjs';
 
 const D2R = Math.PI / 180;
 const FRAME = [247, 247, 247], INNER = [158, 157, 159];
@@ -95,7 +95,7 @@ test('fn.q.pair.*: unitful, cached, profiled, renderable', () => {
   const calls = {
     'fn.q.pair.axis': { raster: 'px.image.cropped', tees: 'px.tees', badges: 'px.badges', baskets: 'px.baskets', teeIndex: 0 },
     'fn.q.pair.plate': { badges: 'px.badges', index: 0 },
-    'fn.q.pair.residual': { axis: { center: [0, 0], dirUnit: [1, 0] }, badge: [100, 2] }
+    'fn.q.pair.residual': { center: [0, 0], axis: [1, 0], plate: [100, 2] }
   };
   for (const fn of PAIR_QUERY_NAMES) {
     const first = s.call(fn, calls[fn]), again = s.call(fn, calls[fn]);
@@ -108,14 +108,15 @@ test('fn.q.pair.*: unitful, cached, profiled, renderable', () => {
   assert.ok(s.call('fn.q.pair.axis', { ...calls['fn.q.pair.axis'], teeIndex: 5 }).value.condition, 'a missing tee is a recorded condition');
 });
 
-test('residualOf / axisOf: an axis mod pi faces the badge; sign + = right of the axis on screen', () => {
-  const ax = { center: [10, 10], ...axisOf(Math.PI) };   // the same axis as angle 0
+test('residual / axisOf: the stage\'s signature; an axis mod pi faces the plate; sign + = right of the axis on screen', () => {
+  const ax = axisOf(Math.PI);   // the same axis as angle 0
   assert.ok(Math.abs(ax.angleDeg) < 1e-9);
-  const r = residualOf(ax, [110, 12]);
+  const r = residual({ center: [10, 10], axis: ax.dirUnit, plate: [110, 12] });
   assert.ok(Math.abs(r.alongPx - 100) < 0.05 && Math.abs(r.signedPerpPx - 2) < 1e-9);
-  assert.ok(Math.abs(r.angleResidualDeg - (Math.atan2(2, 100) * 180) / Math.PI) < 1e-9);
-  const l = residualOf(ax, [-90, 12]);   // badge behind: the axis turns to face it; below the line is now its left
-  assert.ok(Math.abs(l.alongPx - 100) < 0.05 && Math.abs(l.signedPerpPx + 2) < 1e-9);
+  assert.ok(Math.abs(r.signedAngleResidualDeg - (Math.atan2(2, 100) * 180) / Math.PI) < 1e-3 && r.angleResidualDeg === r.signedAngleResidualDeg);
+  const l = residual({ center: [10, 10], axis: ax.dirUnit, plate: [-90, 12] });   // plate behind: the axis turns to face it; below is now its left
+  assert.ok(Math.abs(l.alongPx - 100) < 0.05 && Math.abs(l.signedPerpPx + 2) < 1e-9 && l.angleResidualDeg > 0 && l.signedAngleResidualDeg < 0);
+  assert.ok(residual({ center: [0, NaN], axis: [1, 0], plate: [1, 1] }).unavailable, 'a non-finite input is a recorded condition');
   assert.deepEqual(distribution([], 'Deg').n, 0);
   assert.deepEqual(distribution([1, 3], 'Px'), { n: 2, meanPx: 2, sigmaPx: 1.414, medianPx: 2, maxAbsPx: 3 });
 });
@@ -134,7 +135,8 @@ function toyBoard({ withTruth = true } = {}) {
 }
 const toyStore = ({ withTruth = true, profile = noProfile('S7 lane not merged (fixture)') } = {}) => {
   const t = toyBoard({ withTruth }), s = createPartStore({ base: board(t.values) });
-  s.constant('fn.t.roots', { [STRAIGHT_TRUTH_PART]: t.truth, [ALPHA_PROFILE_PART]: profile });
+  const recorded = { source: 'fixture', holes: { 1: { badgeLabel: '1', z: 0.4, latPx: 0.3 }, 2: { badgeLabel: '2', z: 0.2, latPx: 0.2 }, 3: { badgeLabel: '3', z: 0.5, latPx: 0.4 } } };
+  s.constant('fn.t.roots', { [STRAIGHT_TRUTH_PART]: t.truth, [ALPHA_PROFILE_PART]: profile, [RECORDED_ASSOC_PART]: recorded });
   registerPairQueries(s);
   for (const [fn, spec] of S5_RESIDUAL_CALCULATIONS) s.register(fn, spec);
   return { s, t };
@@ -149,12 +151,15 @@ test('tk.s5.residualProfile: the straight-pair distribution on a toy board, bent
   assert.equal(P.counts.straightPairs, 2); assert.equal(P.counts.bentPairs, 1);
   for (const r of P.rows) {
     const p = t.pads[r.hole - 1];
-    assert.ok(Math.abs(r.angleResidualDeg - p.delta) < 0.15, `${r.identity}: ${r.angleResidualDeg} deg vs ${p.delta} deg`);
+    assert.ok(Math.abs(r.signedAngleResidualDeg - p.delta) < 0.15, `${r.identity}: ${r.signedAngleResidualDeg} deg vs ${p.delta} deg`);
     assert.ok(Math.abs(r.signedPerpPx - p.along * Math.sin(p.delta * D2R)) < 0.4, `${r.identity}: ${r.signedPerpPx} px`);
   }
-  assert.ok(Math.abs(P.straight.raw.angleResidualDeg.meanDeg - 0.1) < 0.15);
-  assert.equal(P.straight.raw.angleResidualDeg.n, 2);
-  assert.equal(P.bentReferent.angleResidualDeg.n, 1);
+  assert.ok(Math.abs(P.straight.raw.signedAngleResidualDeg.meanDeg - 0.1) < 0.15);
+  assert.equal(P.straight.raw.signedAngleResidualDeg.n, 2);
+  assert.equal(P.bentReferent.signedAngleResidualDeg.n, 1);
+  // the recorded signal: holes 1, 2 line up with their own badge (z <= 3, 40-230 px); hole 3's badge is 4 deg off
+  assert.equal(P.lineUp.nPads, 3); assert.equal(P.lineUp.linesUpWithOwnBadge, 2);
+  assert.match(P.lineUp.verdict, /^changed: 2\/3 line up vs recorded 3\/3; differs on Hole 3/);
   const e = s.calls().find((c) => c.calculation === 'fn.tk.s5.residualProfile');
   assert.equal(e.emits.straightPairs, 2); assert.equal(e.emits.alphaProfile, 0);
   assert.notEqual(s.call(RENDER_PART, { a: RESIDUAL_PROFILE_PART }).value.kind, 'unrenderable');
@@ -170,12 +175,13 @@ test('tk.s5.residualProfile: with a fixture alpha profile both raw and unmixed a
   const { s } = toyStore({ profile: fixtureProfile({ r1Px: 30, c1: { rgb: [235, 92, 88], alpha: 0.3 } }) });
   const P = s.get(RESIDUAL_PROFILE_PART);
   assert.equal(P.alpha.status, 'applied');
-  assert.equal(P.straight.unmixed.angleResidualDeg.n, 2);   // no basket on the toy board: nothing under a disc, same numbers
-  assert.equal(P.straight.unmixed.angleResidualDeg.meanDeg, P.straight.raw.angleResidualDeg.meanDeg);
+  assert.equal(P.straight.unmixed.signedAngleResidualDeg.n, 2);   // no basket on the toy board: nothing under a disc, same numbers
+  assert.equal(P.straight.unmixed.signedAngleResidualDeg.meanDeg, P.straight.raw.signedAngleResidualDeg.meanDeg);
   const { s: blind } = toyStore({ withTruth: false });
   const B = blind.get(RESIDUAL_PROFILE_PART);
   assert.equal(B.condition, 'no testimony');
   assert.equal(B.counts.paired, 0);
-  assert.equal(B.straight.raw.angleResidualDeg.n, 0);
+  assert.equal(B.straight.raw.signedAngleResidualDeg.n, 0);
+  assert.equal(B.lineUp.nPads, 0);
   assert.notEqual(blind.call(RENDER_PART, { a: RESIDUAL_STRIPS_PART }).value.kind, 'unrenderable');
 });
