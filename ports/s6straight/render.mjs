@@ -30,7 +30,8 @@ export function straightSvg({ widthPx, heightPx, image = null, title, accepted, 
     if (r.verdict === 'straight' && r.basket) out.push(`<circle cx="${f1(to[0])}" cy="${f1(to[1])}" r="5" fill="${c}" stroke="#000" stroke-width="1"/>`);
     const other = (others[r.pair] ?? []).map((o) => `${o.name}: ${o.verdict}`).join(', ');
     const label = `${r.hole}: ${r.verdict}${r.verdict === 'straight' && r.basket ? ` -> ${r.basket.name}` : ''}${r.outcome ? ` (${r.outcome}${r.basketAgrees === false ? ', wrong basket' : ''})` : ''}${other ? ` | ${other}` : ''}`;
-    out.push(`<text x="${f1(r.tee.center[0] + 9)}" y="${f1(r.tee.center[1] - 9)}" font-size="17" font-weight="700" fill="${bad ?? c}" stroke="#000" stroke-width="4" paint-order="stroke">${esc(label)}</text>`);
+    const right = r.tee.center[0] > widthPx - 420;   // near the right edge the label reads leftward, so it stays on the image
+    out.push(`<text x="${f1(r.tee.center[0] + (right ? -9 : 9))}" y="${f1(r.tee.center[1] - 9)}" text-anchor="${right ? 'end' : 'start'}" font-size="17" font-weight="700" fill="${bad ?? c}" stroke="#000" stroke-width="4" paint-order="stroke">${esc(label)}</text>`);
   }
   const legend = [
     [COLOR.straight, 'solid', `straight (${accepted}): tee centre -> the basket it names`],
