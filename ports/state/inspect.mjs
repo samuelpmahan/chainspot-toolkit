@@ -21,7 +21,7 @@ import { join } from 'node:path';
 import { deserialize } from 'node:v8';
 import { deflateSync } from 'node:zlib';
 import { cropWindow } from '../../fg/png.mjs';
-import { CELLS, S4_BRANCH, recoveredHoles } from './matrix.mjs';
+import { CELLS, s4Accepted, recoveredHoles } from './matrix.mjs';
 
 export const NEAR_MISS_PX = 3;          // a presentation tag, not a rule: errors above it are worth a look (mark or result?)
 export const SPARSE_VISIBLE = 0.25;     // a recovery with less of its frame visible than this is listed first for a look: it rests on less evidence, which is not a verdict
@@ -117,7 +117,7 @@ export function cellRows(cell, course) {
     return rows;
   }
 
-  const stage = cell.key === 'S4tees' ? J?.S4tees?.branches?.[S4_BRANCH] : J?.[cell.key];
+  const stage = cell.key === 'S4tees' ? J?.S4tees?.branches?.[s4Accepted(course)] : J?.[cell.key];
   const s4Recovered = cell.key === 'S2' || cell.key === 'S3' ? recoveredHoles(course, cell.key) : new Set();   // occlusion is expected: S4 recovers
   const fnWhy = new Map((J?.S3?.fn ?? []).map((s) => [Number(s.split(' ')[1]), paren(s)]));
   const missedWhy = new Map(O.s4missed.map((m) => [Number(m.hole), m.reason]));

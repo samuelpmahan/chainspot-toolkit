@@ -24,6 +24,7 @@ import { comparableForkJoin, forkJoinFrames } from './forkjoin.mjs';
 import { framesJson, renderFlipbook } from './flipbook.mjs';
 import { canonicalJson } from './canon.mjs';
 import { toyBoard } from './fixtures/board.mjs';
+import { createPartStore } from './store.mjs';
 
 const here = fileURLToPath(new URL('.', import.meta.url));
 const fixtures = join(here, 'fixtures');
@@ -134,8 +135,12 @@ test('comparableForkJoin runs two discovered implementations under the same FGs 
   assert.equal(comparison.frames[0].fg, `cmp.${SLOT}`);
   // branch artifacts are kept apart by the scoped sink
   assert.notEqual(result.branches.byRow.records['fg.toy.blobs.materialize'].artifacts[0].uri, result.branches.bySize.records['fg.toy.blobs.materialize'].artifacts[0].uri);
-  // deterministic end to end
-  assert.equal(canonicalJson(run()), canonicalJson(result));
+  // deterministic end to end: everything but the timings, which are sidecar data (never hashed evidence)
+  const sansTimings = (r) => ({ ...r, branches: Object.fromEntries(Object.entries(r.branches).map(([n, b]) => [n, { ...b, timing: null }])), comparison: { ...r.comparison, timingsMs: null } });
+  assert.equal(canonicalJson(sansTimings(run())), canonicalJson(sansTimings(result)));
+  // on keys: every implementation's Part stays addressable on the parent store, and a timing comes from the log, not a stopwatch
+  assert.deepEqual(result.comparison.variants, { byRow: `${PART}@byRow`, bySize: `${PART}@bySize` });
+  for (const n of ['byRow', 'bySize']) assert.equal(typeof result.branches[n].timing.ms, 'number');
 });
 
 test('a branch that fails a guarantee is a comparison result, not a crash', () => {
@@ -151,7 +156,7 @@ test('a branch that fails a guarantee is a comparison result, not a crash', () =
     assert.equal(result.branches.phantom.records['fg.toy.family.materialize'].status, 'failed');
     assert.equal(result.branches.broken.error.stage, 'apply');
     // an implementation reads only its declared Parts, exactly like an FG
-    assert.deepEqual(result.branches.sneaky.error, { stage: 'apply', guarantee: null, message: `${SLOT} read 'px.blobs', which is not among its declared inParts` });
+    assert.deepEqual(result.branches.sneaky.error, { stage: 'apply', guarantee: null, message: `${SLOT}@sneaky read 'px.blobs', which is not among its declared inParts` });
     assert.deepEqual(result.comparison.value.failedBranches, ['broken', 'phantom', 'sneaky']);
   });
 });
@@ -171,4 +176,17 @@ test('flipbook renders one page per frame, over an embedded raster', async () =>
   assert.ok(!/<script[^>]+src=/.test(html), 'self-contained');
   assert.deepEqual(JSON.parse(framesJson(frames)), JSON.parse(canonicalJson(frames)));
   assert.equal(renderFlipbook([]).match(/<section class="page"/g), null);
+});
+
+test('on keys: variants live on the parent store, accept names the pointer, the comparator still reads the plain address', async () => {
+  const implementations = await discoverImplementations(join(fixtures, 'impl'), SLOT);
+  const { registry } = await loadRegistry({ root: join(fixtures, 'fgs') });
+  const parent = createPartStore({ name: 'parent' });
+  const result = comparableForkJoin({ slot: SLOT, part: PART, implementations, store: parent, restore: () => toyBoard(), guarantees: registry.guarantees, compare: compareFamilies,
+    accept: (value, { names }) => names.find((n) => n === 'bySize') });
+  assert.deepEqual(parent.variants(PART), [`${PART}@byRow`, `${PART}@bySize`], 'both variants outlive the fork-join');
+  assert.equal(result.comparison.accepted, 'bySize');
+  assert.deepEqual(parent.get(PART), parent.get(`${PART}@bySize`), 'the plain address follows the pointer');
+  assert.equal(parent.provenance(PART).producedBy, `cmp.${SLOT}`);
+  assert.ok(parent.calls().some((e) => e.calculation === `${SLOT}@byRow`), 'each implementation is its own Calculation in the log');
 });

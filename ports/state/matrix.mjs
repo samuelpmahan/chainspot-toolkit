@@ -45,7 +45,8 @@ export const ATTEMPTS_FILE = 'docs/evidence/dev-s1s4/ATTEMPTS';
 export const FROZEN_FILE = 'docs/evidence/dev-s1s4/frozen.json';
 export const MATRIX_PART = 'tk.state.matrix';
 export const MATRIX_CALCULATION = 'fn.tk.state.matrix';
-export const S4_BRANCH = 'greedyOccluded';
+/** The S4 tee variant a course ships: the pointer the runner set by its stated rule (cmp.fn.Tee.recover.json accepted), never a constant here. */
+export const s4Accepted = (course) => course.s4?.accepted ?? null;
 
 /** The cells of a course, in stage order, and which closures each was computed with. */
 export const CELLS = Object.freeze([
@@ -54,7 +55,7 @@ export const CELLS = Object.freeze([
   { key: 'S3', stage: 'S3', what: 'tees', closures: ['recipe'] },
   { key: 'S3association', stage: 'S3', what: 'tee to badge', closures: ['recipe', 's3assoc'] },
   { key: 'S4baskets', stage: 'S4', what: 'baskets after recovery', closures: ['recipe'] },
-  { key: 'S4tees', stage: 'S4', what: `tees after recovery (${S4_BRANCH})`, closures: ['recipe', 's4recover'] }
+  { key: 'S4tees', stage: 'S4', what: 'tees after recovery (accepted variant)', closures: ['recipe', 's4recover'] }
 ]);
 /** The steps outside the recipe, and the files each runs from (the recipe closure already covers fg/ and ports/early). */
 export const POST_RECIPE_CLOSURES = Object.freeze({
@@ -69,7 +70,7 @@ export const UNITS = Object.freeze({
 
 /** The holes S4 recovered for an S2 or S3 cell: a TP (observed or recovered) in the S4 cell of the same kind. */
 export function recoveredHoles(course, key) {
-  const rows = key === 'S2' ? course.judgement?.S4baskets?.rows : key === 'S3' ? course.judgement?.S4tees?.branches?.[S4_BRANCH]?.rows : null;
+  const rows = key === 'S2' ? course.judgement?.S4baskets?.rows : key === 'S3' ? course.judgement?.S4tees?.branches?.[s4Accepted(course)]?.rows : null;
   return new Set((rows ?? []).filter((r) => r.verdict === 'TP' || r.verdict === 'recoveredTP').map((r) => r.hole));
 }
 /** The FN holes of an S2 / S3 result that S4 did not recover (the only FNs that count against them). */
@@ -89,7 +90,7 @@ export function statusOf(cell, course, result, freshness) {
 const judgedOf = (course, key) => {
   const s = course.judgement?.[key];
   if (!s) return null;
-  return key === 'S4tees' ? (s.branches?.[S4_BRANCH] ?? null) : s;
+  return key === 'S4tees' ? (s.branches?.[s4Accepted(course)] ?? null) : s;
 };
 const holes = (t) => (t.complete ? `all ${t.annotatedHoles.length} holes` : `holes ${t.annotatedHoles.join(', ')}`);
 const fpOf = (course, r) => (course.testimony.complete ? r.FP : '-');
@@ -149,13 +150,29 @@ export function matrixRows(inputs, frozen = null) {
       expected: expectedOf(cell, course), result, status,
       freshness: freshness.state, changedPaths: freshness.changed,
       vsFrozen: !frozen ? null : !f ? 'new' : f.result === result && (status === f.status || status === 'stale') ? 'same' : `changed (was ${f.status}: ${f.result})`,
-      attempt: course.attempt
+      attempt: course.attempt,
+      ...(cell.key === 'S4tees' && present ? { variants: variantsOf(course) } : {})
     });
   }
   const count = (s) => rows.filter((r) => r.status === s).length;
   return { rows, courses: inputs.courses.map((c) => c.course), cells: CELLS.map((c) => c.key),
     emits: { cells: rows.length, met: count('met'), unmet: count('unmet'), unjudged: count('unjudged'), missing: count('missing'), stale: count('stale') }, units: UNITS };
 }
+
+/**
+ * Every S4 tee variant of a course, side by side: judged TP/FN/FP (or the count closure), standalone ms, and which one
+ * the pointer names. The speed/accuracy frontier of one course is this list; across courses it is the S4tees column.
+ */
+export function variantsOf(course) {
+  const s4 = course.s4; if (!s4) return [];
+  const names = Object.keys(s4.timingsMs ?? s4.variants ?? {}).sort();
+  return names.map((name) => {
+    const j = course.judgement?.S4tees?.branches?.[name] ?? null;
+    const judged = course.testimony && j ? `${j.TP}/${j.FN}/${fpOf(course, j)} TP/FN/FP (+${j.recovered} recovered, ${j.recoveredForHoleCorrectly} right hole)` : s4.recoveredCount?.[name] != null ? `${(course.counts.tees ?? 0) + s4.recoveredCount[name]} of N = ${course.N}` : null;
+    return { name, judged, standaloneMs: s4.timingsMs?.[name]?.ms ?? null, accepted: s4.accepted === name };
+  });
+}
+export const variantsText = (variants) => variants.map((v) => `${v.accepted ? '→ ' : ''}${v.name} ${v.judged ?? '-'}${v.standaloneMs != null ? ` ${Math.round(v.standaloneMs)} ms` : ''}`).join('; ');
 
 /** The matrix as a markdown table (the legible render of the ledger). */
 export function matrixMarkdown(m) {
@@ -165,6 +182,8 @@ export function matrixMarkdown(m) {
     L.push(`| ${r.course} | ${r.key} ${r.what} | ${r.expected} | ${r.result ?? '-'} | **${r.status}** | ${fresh}${r.vsFrozen ? ` | ${r.vsFrozen}` : ''} |`);
   }
   const e = m.emits;
+  const frontier = m.rows.filter((r) => r.variants?.length);
+  if (frontier.length) L.push('', 'S4 tee variants per course (→ the pointer; ms = standalone, a cache hit charged what it cost to compute; by the rule in cmp.fn.Tee.recover.json):', ...frontier.map((r) => `- ${r.course}: ${variantsText(r.variants)}`));
   L.push('', `${e.cells} cells: ${e.met} met, ${e.unmet} unmet, ${e.unjudged} unjudged, ${e.missing} missing, ${e.stale} stale.`);
   const goals = new Map(m.rows.map((r) => [r.stage, r.goal]));
   L.push('', 'Goals (stages/*.json responsibility):', ...[...goals].map(([s, g]) => `- ${s}: ${g}`));
@@ -240,17 +259,22 @@ export async function loadCourse(root, course, attempt) {
     associated: outputs.s3assoc ? readJson(join(out, 's3assoc', 'px.tees.association.json')).rows.filter((r) => r.best).length : null,
     s4baskets: outputs.basketBridge ? (readJson(join(out, 'basket-bridge', 'basket-recovery.part.json')).comparisons?.accepted ?? []).filter((d) => d.classification !== 'existing-s2-exact').length : null,
     s4tees: null };
-  if (outputs.s4recover) {
-    const run = readdirSync(join(out, 's4recover')).filter((d) => d.startsWith('run-')).sort().at(-1), f = join(out, 's4recover', run, 'artifacts', 'fn.Tee.recover', S4_BRANCH, 'recovered.json');
-    counts.s4tees = existsSync(f) ? (readJson(f).recovered ?? []).length : null;
-  }
+  // the S4 fork-join's own record: every variant, its standalone cost, and the pointer the runner set by its stated rule
+  const s4run = outputs.s4recover ? readdirSync(join(out, 's4recover')).filter((d) => d.startsWith('run-')).sort().at(-1) : null;
+  const cmpFile = s4run ? join(out, 's4recover', s4run, 'cmp.fn.Tee.recover.json') : null;
+  const cmp = cmpFile && existsSync(cmpFile) ? readJson(cmpFile) : null;
+  const variantDir = (name) => join(out, 's4recover', s4run, 'artifacts', 'fn.Tee.recover', name, 'recovered.json');
+  const names = cmp ? (cmp.implementations ?? Object.keys(cmp.timingsMs ?? {})) : [];
+  const s4 = cmp ? { accepted: cmp.accepted ?? null, rule: cmp.acceptRule ?? null, decidedBy: cmp.acceptedBy ?? null, variants: cmp.variants ?? null,
+    timingsMs: cmp.timingsMs ?? Object.fromEntries(Object.entries(cmp.elapsedMs ?? {}).map(([n, ms]) => [n, { ms, calls: null, cacheHits: null }])),
+    recoveredCount: Object.fromEntries(names.map((n) => [n, existsSync(variantDir(n)) ? (readJson(variantDir(n)).recovered ?? []).length : null])) } : null;
+  if (s4?.accepted) counts.s4tees = s4.recoveredCount[s4.accepted] ?? null;
   let judgement = null, testimony = null;
   if (outputs.early) {
     try { const j = judgeAttempt({ specimen: course, attempt, root }); testimony = j.testimony; judgement = j.stages ?? null; } catch (error) { judgement = null; }
   }
   // the objects themselves, for renders (the inspector) and for courses without testimony
-  const s4run = outputs.s4recover ? readdirSync(join(out, 's4recover')).filter((d) => d.startsWith('run-')).sort().at(-1) : null;
-  const recovered = s4run && existsSync(join(out, 's4recover', s4run, 'artifacts', 'fn.Tee.recover', S4_BRANCH, 'recovered.json')) ? readJson(join(out, 's4recover', s4run, 'artifacts', 'fn.Tee.recover', S4_BRANCH, 'recovered.json')) : null;
+  const recovered = s4?.accepted && existsSync(variantDir(s4.accepted)) ? readJson(variantDir(s4.accepted)) : null;
   const objects = {
     badges: (board.get('px.badges') ?? []).map((b) => ({ label: b.label, bbox: b.bbox })),
     baskets: (board.get('px.baskets') ?? []).map((k) => ({ bbox: k.bbox })),
@@ -262,7 +286,7 @@ export async function loadCourse(root, course, attempt) {
   };
   const paths = { out, snap, forkRoot, s4run: s4run ? join(out, 's4recover', s4run) : null };
   const freshness = { ...(request ? { recipe: await recipeFreshness(root, forkRoot, request) } : { recipe: { state: 'UNKNOWN', changed: [] } }), ...(await postRecipeFreshness(root, out)) };
-  return { course, attempt, request, testimony, N, counts, judgement, outputs, freshness, objects, paths };
+  return { course, attempt, request, testimony, N, counts, judgement, outputs, freshness, objects, paths, s4 };
 }
 
 export async function loadStateInputs(root = ROOT, attempts = readAttempts(root)) {
@@ -313,6 +337,20 @@ export async function freeze(root, matrix, inputs) {
 const DEV_REQUEST = Object.freeze({ recipe: 'recipes/chainspot-s0-s7.json', until: 4, lanes: ['s3-findfamily-structural-fix', 's4.basketRecovery'] });
 const run = (root, args, log) => { log(`  $ node ${args.join(' ')}`); const r = spawnSync('node', args, { cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }); if (r.status !== 0) throw new Error(`${args[0]} failed (${r.status}): ${(r.stderr || r.stdout).slice(-2000)}`); return r.stdout; };
 
+/** The variant most of the annotated courses accepted in their latest S4 run (ties: alphabetical), or null when none has a pointer. */
+export function acceptedOnAnnotated(root, courses, attempts) {
+  const votes = new Map();
+  for (const c of courses) {
+    if (!c.testimony) continue;
+    const out = join(root, 'attempts', 'stages', attempts.get(c.course) ?? c.attempt, 'fork', 'stage-output', 's4recover');
+    const run = existsSync(out) ? readdirSync(out).filter((d) => d.startsWith('run-')).sort().at(-1) : null;
+    const f = run ? join(out, run, 'cmp.fn.Tee.recover.json') : null;
+    const accepted = f && existsSync(f) ? readJson(f).accepted : null;
+    if (accepted) votes.set(accepted, (votes.get(accepted) ?? 0) + 1);
+  }
+  return [...votes].sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]))[0]?.[0] ?? null;
+}
+
 /** Re-run exactly the cells that need it, record the closures each step ran with, and update ATTEMPTS. */
 export async function retest(root, inputs, { all = false, only = null, log = () => {} } = {}) {
   const attempts = new Map(readAttempts(root));
@@ -333,7 +371,12 @@ export async function retest(root, inputs, { all = false, only = null, log = () 
     const closures = existsSync(join(out, 'state', 'closures.json')) ? readJson(join(out, 'state', 'closures.json')) : {};
     const record = async (k) => { closures[k] = { ...(await closureSnapshot(root, POST_RECIPE_CLOSURES[k])), at: new Date().toISOString() }; mkdirSync(join(out, 'state'), { recursive: true }); writeFileSync(join(out, 'state', 'closures.json'), JSON.stringify(closures, null, 1) + '\n'); };
     if (redoRecipe || needs(c, 's3assoc') || !c.outputs.s3assoc) { log(`${c.course}: S3 association`); run(root, ['ports/s3assoc/run.mjs', '--specimen', c.course, '--attempt', attempt], log); await record('s3assoc'); }
-    if (redoRecipe || needs(c, 's4recover') || !c.outputs.s4recover) { log(`${c.course}: S4 tee recovery`); run(root, ['ports/s4recover/run.mjs', '--specimen', c.course, '--attempt', attempt], log); await record('s4recover'); }
+    if (redoRecipe || needs(c, 's4recover') || !c.outputs.s4recover) {
+      // a course without testimony ships the variant the annotated courses accepted (their latest runs, this pass or before)
+      const elsewhere = c.testimony ? null : acceptedOnAnnotated(root, inputs.courses, attempts);
+      log(`${c.course}: S4 tee recovery${elsewhere ? ` (pointer from the annotated courses: ${elsewhere})` : ''}`);
+      run(root, ['ports/s4recover/run.mjs', '--specimen', c.course, '--attempt', attempt, ...(elsewhere ? ['--accept', elsewhere] : [])], log); await record('s4recover');
+    }
   }
   writeFileSync(join(root, ATTEMPTS_FILE), [...attempts].map(([c, a]) => `${c} ${a}`).join('\n') + '\n');
   return [...attempts];

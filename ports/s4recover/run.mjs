@@ -116,7 +116,32 @@ function findKey(obj, key) {
   return undefined;
 }
 
-export async function runTeeRecoverForkJoin({ attempt, specimen, outDir = null, root = ROOT }) {
+/**
+ * The pointer rule (Sam, 2026-10-18: "ship one S4 recovery per course, fastest at 18/18"): among the variants whose
+ * judged result ties the best (own hole, then impostors, other hole, still missing), the fastest standalone. A course
+ * without testimony takes the variant the annotated courses accepted (acceptedElsewhere); with none on record there is
+ * no pointer, and that is recorded, not thrown.
+ */
+export function acceptRule({ acceptedElsewhere = null, judged = true } = {}) {
+  const rule = judged
+    ? 'fastest standalone variant whose judged result ties the best (landsOwnHole desc, impostors asc, landsOtherHole asc, stillMissing asc)'
+    : `no testimony: the variant the annotated courses accepted${acceptedElsewhere ? ` (${acceptedElsewhere})` : ' (none on record: no pointer)'}`;
+  const accept = (value, { names, branches, timingsMs }) => {
+    const live = names.filter((n) => !branches[n].error);
+    if (!judged) { accept.decided = acceptedElsewhere && live.includes(acceptedElsewhere) ? 'annotated courses' : 'nothing'; return accept.decided === 'nothing' ? null : acceptedElsewhere; }
+    const score = (n) => { const b = value.branches[n]; return [-(b.landsOwnHole ?? -1), b.impostors ?? Infinity, b.landsOtherHole ?? Infinity, b.stillMissing ?? Infinity]; };
+    const cmpScore = (a, b) => { const A = score(a), B = score(b); for (let i = 0; i < A.length; i++) if (A[i] !== B[i]) return A[i] - B[i]; return 0; };
+    const sorted = [...live].sort(cmpScore);
+    if (!sorted.length) { accept.decided = 'nothing'; return null; }
+    const tied = sorted.filter((n) => cmpScore(n, sorted[0]) === 0);
+    accept.decided = tied.length > 1 ? `tie on judged result among ${tied.join(', ')}: fastest standalone` : 'best judged result';
+    return tied.sort((a, b) => (timingsMs[a]?.ms ?? Infinity) - (timingsMs[b]?.ms ?? Infinity))[0];
+  };
+  accept.rule = rule; accept.decided = null;
+  return accept;
+}
+
+export async function runTeeRecoverForkJoin({ attempt, specimen, outDir = null, root = ROOT, acceptedElsewhere = null }) {
   const loaded = loadAttemptParts({ attempt, specimen, root });
   const out = outDir ?? join(loaded.out, 's4recover', `run-${new Date().toISOString().replace(/[:.]/g, '-')}`); // evidence is never overwritten (file sink)
   // Profiled by construction (fg/profile.mjs): every Calculation call is timed with its emits into instrumentation.json.
@@ -128,17 +153,24 @@ export async function runTeeRecoverForkJoin({ attempt, specimen, outDir = null, 
   for (const address of ['tk.s4.padTemplate', 'tk.s4.evidence', 'tk.s4.adjacentBrightComponents']) store.get(address);   // tk.s4.hallway stays lazy
   const implementations = await discoverImplementations(join(root, 'impl'), TEE_RECOVER_SLOT.slot);
   const sink = createFileSink(join(out, 'artifacts'), { relativeTo: out });
-  const timings = {};
+  const accept = acceptRule({ acceptedElsewhere, judged: Boolean(loaded.values['testimony.source.teePoints']?.path) });
   const result = comparableForkJoin({
     slot: TEE_RECOVER_SLOT.slot, part: TEE_RECOVER_SLOT.part, implementations, store,
     restore: () => loaded.board,   // every branch reads the same S3 PxC board
-    apply: (parts, impl, name) => { const t = performance.now(); const v = impl(parts); timings[name] = Math.round(performance.now() - t); return { slot: TEE_RECOVER_SLOT.slot, implementation: name, ...v }; },
+    apply: (parts, impl, name) => ({ slot: TEE_RECOVER_SLOT.slot, implementation: name, ...impl(parts) }),   // timed by the store, never by hand
     guarantees: GUARANTEES, sink,
-    compare: compareRecovered({ contract, parentStore: store })
+    compare: compareRecovered({ contract, parentStore: store }), accept
   });
   mkdirSync(out, { recursive: true });
-  const v = result.comparison.value;
-  writeFileSync(join(out, `${result.comparison.address}.json`), canonicalJson({ schema: 'nctk-s4-tee-recover-comparison@1', specimen, attempt, address: result.comparison.address, implementations: result.comparison.implementations, sha256: result.comparison.sha256, elapsedMs: timings, value: v }) + '\n');
+  const v = result.comparison.value, cmp = result.comparison;
+  const timings = Object.fromEntries(Object.entries(cmp.timingsMs).map(([n, t]) => [n, t.ms]));
+  writeFileSync(join(out, `${cmp.address}.json`), canonicalJson({
+    schema: 'nctk-s4-tee-recover-comparison@2', specimen, attempt, address: cmp.address, implementations: cmp.implementations, sha256: cmp.sha256,
+    variants: cmp.variants, accepted: cmp.accepted, acceptRule: accept.rule, acceptedBy: accept.decided,
+    timingsMs: cmp.timingsMs,   // standalone: self time of every call under the variant; a cache hit is charged what it cost to compute (fg/forkjoin.mjs standaloneMs)
+    value: v
+  }) + '\n');
+  writeFileSync(join(out, 'keyspace.json'), canonicalJson({ schema: 'nctk-keyspace@1', specimen, attempt, store: store.manifest().store, parts: store.keyspace() }) + '\n');
   const doc = instrumentation(), profile = profileSummary(doc);
   writeFileSync(join(out, 'instrumentation.json'), JSON.stringify(doc) + '\n');   // sidecar: timings are never hashed evidence
   // renderable (a default property of Parts): one page per S4 Part this run produced, rendered by the store itself
@@ -149,16 +181,16 @@ export async function runTeeRecoverForkJoin({ attempt, specimen, outDir = null, 
   writeFileSync(join(out, 's4recover.records.json'), canonicalJson({ schema: 'nctk-fg-forkjoin-records@1', slot: result.slot, specimen, attempt, branches: records }) + '\n');
   writeFileSync(join(out, 's4recover.frames.json'), framesJson(frames) + '\n');
   writeFileSync(join(out, 's4recover.flipbook.html'), renderFlipbook(frames, { title: `S4 ${TEE_RECOVER_SLOT.slot} fork-join (${specimen}): ${result.comparison.implementations.join(' vs ')}`, background: loaded.background, records: { branches: records }, stage: 'S4' }));
-  return { out, comparison: v, timingsMs: timings, frames: frames.length, branches: records, profile };
+  return { out, comparison: v, accepted: cmp.accepted, variants: cmp.variants, timingsMs: timings, frames: frames.length, branches: records, profile };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1]]] : acc), []));
-  if (!args.attempt || !args.specimen) { console.error('usage: node ports/s4recover/run.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR]'); process.exit(2); }
-  const r = await runTeeRecoverForkJoin({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null });
+  if (!args.attempt || !args.specimen) { console.error('usage: node ports/s4recover/run.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR] [--accept VARIANT  (for a course without testimony: what the annotated courses accepted)]'); process.exit(2); }
+  const r = await runTeeRecoverForkJoin({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null, acceptedElsewhere: args.accept ?? null });
   const c = r.comparison;
   console.log(JSON.stringify({
-    out: r.out, frames: r.frames, timingsMs: r.timingsMs, profile: r.profile.slice(0, 12).map((p) => `${p.calculation}: ${p.calls}x self ${p.selfMs} ms total ${p.totalMs} ms ${JSON.stringify(p.emits)}`), template: c.template, seeds: c.seeds, assignmentCount: c.assignment.length,
+    out: r.out, frames: r.frames, accepted: r.accepted, timingsMs: r.timingsMs, profile: r.profile.slice(0, 12).map((p) => `${p.calculation}: ${p.calls}x self ${p.selfMs} ms total ${p.totalMs} ms ${JSON.stringify(p.emits)}`), template: c.template, seeds: c.seeds, assignmentCount: c.assignment.length,
     branches: Object.fromEntries(Object.entries(c.branches).map(([n, b]) => [n, { ...b, perTee: b.perTee.map((t) => `${t.hole}:${t.verdict}@${t.errorPx}px conf${t.confidence} seed${t.fromSeed} occ${JSON.stringify(Object.fromEntries(Object.entries(t.occludedBy ?? {}).filter(([, x]) => x)))}`) }])),
     errors: Object.fromEntries(Object.entries(r.branches).map(([n, b]) => [n, b.error]))
   }, null, 1));

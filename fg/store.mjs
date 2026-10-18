@@ -66,12 +66,17 @@
  *              the declared reads, call only for the declared calls; any
  *              other address or Calculation throws a PartStoreError naming
  *              who reached for what.
- *   store.branch(base, { name })
+ *   store.branch(base, { name, alias?, sharedParts? })
  *              a child store over another provider board (a restored
  *              snapshot): provider reads resolve ONLY against the child's
  *              own base (never the parent's live board), toolkit Parts and
  *              Calculations resolve through the parent, and the child's own
- *              writes stay in the child.
+ *              writes stay in the child. With alias { address: 'address@v' }
+ *              the child reads and writes the variant wherever code names
+ *              the plain address; with sharedParts: true its Parts are
+ *              written into the parent's map, so they outlive the branch.
+ *              A fork-join branch is both: a key prefix, not a separate
+ *              store (Sam: "model this one after Redis").
  *   store.provenance(address)   { address, producedBy, inParts, key, store } or
  *              { address, producedBy: 'provider-board', key } or null
  *   store.manifest()            this store's toolkit Parts and Calculations
@@ -219,8 +224,9 @@ export function createPartStore({ base = null, name = 'root', onCall = null, cac
   return store;
 }
 
-function makeStore({ base, name, parent, shared }) {
-  const parts = new Map(); // address -> { value, producedBy, inParts, key } or { pointerTo, producedBy, inParts, key }
+function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false }) {
+  const parts = sharedParts && parent ? parent._parts : new Map(); // address -> { value, producedBy, inParts, key } or { pointerTo, producedBy, inParts, key }
+  const A = (address) => alias[address] ?? address;   // the alias: a plain address names its variant on this branch
   const calcs = new Map(); // fn -> spec
   const producers = new Map(); // outPart address -> fn (registered here)
   const failures = new Map(); // address -> error of a failed lazy production
@@ -283,6 +289,7 @@ function makeStore({ base, name, parent, shared }) {
     _producers: producers,
 
     has(address) {
+      address = A(address);
       if (ownPart(address)) return true;
       if (onBase(address)) return true;
       const owner = producerOwner(address);
@@ -291,6 +298,7 @@ function makeStore({ base, name, parent, shared }) {
     },
 
     get(address) {
+      address = A(address);
       const own = ownPart(address);
       if (own) return own.pointerTo ? self.get(own.pointerTo) : own.value;
       if (onBase(address)) return board().get(address);
@@ -310,8 +318,8 @@ function makeStore({ base, name, parent, shared }) {
       const spec = Object.freeze({
         address: fn, store: name, note, lazy: lazy !== false,
         code: code ?? sha256Hex(String(calculate)),   // the code key: pass the module graph's digest when a helper can change the result
-        inParts: addressList(inParts, `register ${fn}: inParts`),
-        outParts: addressList(outParts, `register ${fn}: outParts`),
+        inParts: addressList(inParts, `register ${fn}: inParts`).map(A),
+        outParts: addressList(outParts, `register ${fn}: outParts`).map(A),
         calls: addressList(calls, `register ${fn}: calls`),
         calculate
       });
@@ -340,9 +348,10 @@ function makeStore({ base, name, parent, shared }) {
       const entry = {
         seq: shared.seq++, parent: shared.stack.at(-1) ?? null, depth: shared.stack.length,
         calculation: fn, store: name, caller, site: typeof args?.site === 'string' ? args.site : null,
-        inParts: spec.inParts, outParts: spec.outParts, elapsedMs: null, status: 'running', error: null, emits: null, key: null, cached: false
+        inParts: spec.inParts, outParts: spec.outParts, elapsedMs: null, status: 'running', error: null, emits: null, key: null, cached: false, computedMs: null
       };
       const started = now();
+      let key = null, toCache = null;
       shared.stack.push(entry.seq);
       let popped = false;
       const pop = () => { if (!popped) { popped = true; shared.stack.splice(shared.stack.lastIndexOf(entry.seq), 1); } };
@@ -351,6 +360,7 @@ function makeStore({ base, name, parent, shared }) {
         entry.elapsedMs = roundMs(now() - started);
         entry.status = status;
         entry.error = error ? String(error?.message ?? error) : null;
+        if (status === 'ok' && toCache) shared.cache.set(key, { result: toCache, elapsedMs: entry.elapsedMs });
         shared.onCall?.(entry);
       };
       try {
@@ -360,6 +370,7 @@ function makeStore({ base, name, parent, shared }) {
           inputs.set(address, self.get(address));
         }
         const read = (address) => {
+          address = A(address);
           if (!inputs.has(address)) throw new PartStoreError(`${fn} read '${address}', which is not among its declared inParts`);
           return inputs.get(address);
         };
@@ -373,23 +384,28 @@ function makeStore({ base, name, parent, shared }) {
           }
         });
         // the cache key of this call: the Calculation, its code, its arguments and the content keys of its inputs
-        const key = spec.outParts.length && cacheable(args) ? digest({ fn, code: spec.code, args: plain(args ?? null), inputs: spec.inParts.map((a) => [a, keyOf(a)]) }) : null;
+        key = spec.outParts.length && cacheable(args) ? digest({ fn, code: spec.code, args: plain(args ?? null), inputs: spec.inParts.map((a) => [a, keyOf(a)]) }) : null;
         entry.key = key;
         const finish = (result, fromCache = false) => {
           if (spec.outParts.length) {
             if (!result || typeof result !== 'object') throw new PartStoreError(`${fn} must return { [outPart]: value } for ${spec.outParts.join(', ')}`);
-            const keys = Object.keys(result);
+            const out = Object.fromEntries(Object.entries(result).map(([k, v]) => [A(k), v]));   // a branch writes the variant its alias names
+            const keys = Object.keys(out);
             const missing = spec.outParts.filter((a) => !keys.includes(a));
             const extra = keys.filter((a) => !spec.outParts.includes(a));
             if (missing.length || extra.length) throw new PartStoreError(`${fn} returned outParts that differ from its declaration (missing: ${missing.join(', ') || '-'}; undeclared: ${extra.join(', ') || '-'})`);
-            for (const address of spec.outParts) write(address, result[address], fn, spec.inParts, key);
-            if (key && !fromCache && shared.cache) shared.cache.set(key, result);
-          }
-          entry.emits = emitsOf(spec.outParts.length ? spec.outParts.map((a) => result[a]) : [result]);
+            for (const address of spec.outParts) write(address, out[address], fn, spec.inParts, key);
+            if (key && !fromCache && shared.cache) toCache = out;
+            entry.emits = emitsOf(spec.outParts.map((a) => out[a]));
+          } else entry.emits = emitsOf([result]);
           if (fromCache) { entry.cached = true; entry.emits = { ...(entry.emits ?? {}), cached: 1 }; }
           return result;
         };
-        if (key && shared.cache?.has(key)) { const out = finish(shared.cache.get(key), true); exit('ok'); return out; }
+        if (key && shared.cache?.has(key)) {
+          const hit = shared.cache.get(key);
+          const out = finish(hit.result, true); entry.computedMs = hit.elapsedMs ?? null;   // a hit is charged what it cost to compute, once
+          exit('ok'); return out;
+        }
         const result = spec.calculate(io);
         if (isPromise(result)) {
           pop();
@@ -405,10 +421,10 @@ function makeStore({ base, name, parent, shared }) {
     },
 
     scope({ who, reads = [], calls = [] }) {
-      const allowedReads = new Set(reads);
+      const allowedReads = new Set(reads.map(A));
       const allowedCalls = new Set(calls);
       const guardRead = (address) => {
-        if (!allowedReads.has(address)) throw new PartStoreError(`${who} read undeclared address '${address}' (declare it in reads)`);
+        if (!allowedReads.has(A(address))) throw new PartStoreError(`${who} read undeclared address '${address}' (declare it in reads)`);
       };
       return Object.freeze({
         get: (address) => { guardRead(address); return self.get(address); },
@@ -423,8 +439,8 @@ function makeStore({ base, name, parent, shared }) {
     /** Every call this store and its branches made so far (the default profile). */
     calls: () => [...shared.log],
 
-    branch(branchBase, { name: branchName = `${name}/branch` } = {}) {
-      return makeStore({ base: branchBase, name: branchName, parent: self, shared });
+    branch(branchBase, { name: branchName = `${name}/branch`, alias: branchAlias = {}, sharedParts: branchShared = false } = {}) {
+      return makeStore({ base: branchBase, name: branchName, parent: self, shared, alias: branchAlias, sharedParts: branchShared });
     },
 
     /** The accepted variant: get(address) follows the pointer. Write-once, by a named author (a comparator FG, a runner). */
@@ -440,13 +456,15 @@ function makeStore({ base, name, parent, shared }) {
       for (const s of chain()) { for (const a of s._parts.keys()) if (a.startsWith(`${address}@`)) out.add(a); for (const a of s._producers.keys()) if (a.startsWith(`${address}@`)) out.add(a); }
       return [...out].sort();
     },
-    keyOf,
+    keyOf: (address) => keyOf(A(address)),
+    alias: Object.freeze({ ...alias }),
     /** Every Part of this store with its key: the snapshot as a key dump. */
     keyspace() {
       return [...parts.keys()].sort().map((address) => { const p = parts.get(address); return { address, key: p.key ?? keyOf(address), producedBy: p.producedBy, pointerTo: p.pointerTo ?? null }; });
     },
 
     provenance(address) {
+      address = A(address);
       const own = ownPart(address);
       if (own) {
         for (const s of chain()) if (s._parts.has(address)) return { address, producedBy: own.producedBy, inParts: own.inParts, key: own.key ?? null, pointerTo: own.pointerTo ?? null, store: s.name };

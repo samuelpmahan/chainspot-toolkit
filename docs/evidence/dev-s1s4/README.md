@@ -12,8 +12,12 @@ How the judging works:
 - Every stage is judged by one rule per kind: a tee is a TP within 8 px,
   a basket within 12 px.
 - FP is judged only where Sam annotated all 18 holes.
-- S4 tees are shown for the `greedyOccluded` branch; `pinned` and the
-  no-badge-ray ablation are in the JSON.
+- S4 tees are shown for the accepted variant: the pointer the S4 runner
+  sets by its stated rule (`cmp.fn.Tee.recover.json`: `accepted`,
+  `acceptRule`), the fastest standalone variant whose judged result ties
+  the best; a course without testimony takes what the annotated courses
+  accepted. Every variant's judged result and standalone ms sit beside
+  the S4tees row (`node scripts/pxc.mjs state`).
 - Acceptance is Sam's; this is agreement only.
 
 The Lenard zooms are views of Lenard, not courses, so they are not
