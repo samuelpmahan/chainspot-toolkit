@@ -38,7 +38,7 @@ plus alex holes 6, 13 and 16.
 That is 63 of 65 claims right. Both errors are on heritage, the
 smallest-scale and most crowded course.
 
-## Alex and northpark (`alex.png`, `northpark.png`; `*-look.png` = every hole not confirmed by two signals)
+## Alex and northpark (`alex.jpg`, `northpark.jpg`; `*-look.jpg` = every hole not confirmed by two signals)
 
 | course | basket claims | tees |
 |---|---|---|
@@ -47,7 +47,7 @@ smallest-scale and most crowded course.
 
 - **Trust.** On calibration, two-signal and spoke-only claims were never
   wrong; straight-only and exclusivity were right 5/6 and 10/11. So the
-  single-signal and settled holes in the `*-look.png` sheets are the ones
+  single-signal and settled holes in the `*-look.jpg` sheets are the ones
   to eyeball. Alex's 3 annotated holes (6, 13, 16) all agree.
 - **Missing tees: a hypothesis, consistent but not proven.** Each tee S4
   cannot place sits where hole n-1's basket is, and that basket's spoke

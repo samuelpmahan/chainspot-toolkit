@@ -76,7 +76,7 @@ def crop_sheet(C, R, im):
 if __name__ == '__main__':
     allR = json.load(open(os.path.join(HERE, 'crossval.json')))
     for c in sys.argv[1:] or list(allR):
-        C = cv.load(c); im = draw_course(C, allR[c]); im.save(os.path.join(HERE, f'{c}.png'))
+        C = cv.load(c); im = draw_course(C, allR[c]); im.save(os.path.join(HERE, f'{c}.jpg'), quality=88)
         s = crop_sheet(C, allR[c], im)
-        if s: s.save(os.path.join(HERE, f'{c}-look.png'))
+        if s: s.save(os.path.join(HERE, f'{c}-look.jpg'), quality=88)
         print(c, 'rendered')
