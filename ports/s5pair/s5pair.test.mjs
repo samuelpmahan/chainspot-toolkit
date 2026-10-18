@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { createPartStore, registerQueries, RENDER_PART } from '../../fg/store.mjs';
 import { comparableForkJoin } from '../../fg/forkjoin.mjs';
 import { discoverImplementations } from '../../fg/discover.mjs';
-import { PAIR_QUERIES } from '../../fg/queries/pair.mjs';
+import { PAIR_QUERIES } from './residualQuery.mjs';
 import { S4_CALCULATIONS } from '../s4recover/teeRecover.mjs';
 import { MATCH_PX } from '../judge/judge.mjs';
 import { PAIR_SLOT, judgePairs } from './pairBadge.mjs';
@@ -103,7 +103,7 @@ test('fn.Tee.pairBadge fork-join: toolkit pairs S3 + S4 tees with residuals from
   assert.equal(pairs.length, 4);
   assert.equal(pairs[0].angleResidualDeg, 0, 'tee 1 points straight at its plate');
   assert.ok(Math.abs(pairs[3].angleResidualDeg - 0.573) < 0.01, 'the S4 tee is 0.01 rad off its ray');
-  assert.ok(store.calls().some((e) => e.calculation === 'fn.q.pair.axisResidual'), 'the residual is a profiled store query');
+  assert.ok(store.calls().some((e) => e.calculation === 'fn.q.pair.residual'), 'the residual is a profiled store query');
   assert.ok(result.branches.toolkit.records[PAIR_SLOT.materialize].totals.paired === 3);
   assert.notEqual(store.call(RENDER_PART, { a: PAIR_SLOT.part }).value.kind, 'unrenderable', 'px.tees.pairs renders');
   assert.ok(v.disagreements.length === 0, 'a variant whose lane did not run is not compared tee by tee');

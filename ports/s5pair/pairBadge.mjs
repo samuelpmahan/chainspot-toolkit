@@ -4,7 +4,7 @@
  * Sam's S5 doctrine (DOCTRINE.md row S5): a tee's long axis points directly at its badge; the residual indicts the tee
  * fit; judged as "hole n's tee pairs with badge n". After S4 every tee of the course (S3 observed + S4 recovered) is
  * paired with at most one badge, and each pair carries the axis residual against the ray to that badge's plate centre
- * (fn.q.pair.axisResidual, fg/queries/pair.mjs): angleResidualDeg (deg) and signedPerpPx (px). S6 later takes the
+ * (fn.q.pair.residual, ports/s5pair/residualQuery.mjs; the S5 learning lane's fn.q.pair.* replaces it at merge): angleResidualDeg (deg) and signedPerpPx (px). S6 later takes the
  * straight-hole pairs.
  *
  * The slot's Part px.tees.pairs is { implementation, rule, absent?, pairs: [pair], units }, one pair per tee:

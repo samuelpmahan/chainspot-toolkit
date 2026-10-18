@@ -3,10 +3,10 @@
  *   S3 observed tees: the badge ports/s3assoc associated each visible pad with (Sam, 2026-10-17: an unoccluded pad
  *     pairs with at most 2 badges, one obviously better; global one-to-one by z), at the s3assoc AA-fit pose.
  *   S4 recovered tees: the badge each was recovered FOR (fn.Tee.recover, the accepted variant: px.tees.recovered).
- * The residual of every pair is measured here, by the store (fn.q.pair.axisResidual), against the badge plate centre
+ * The residual of every pair is measured here, by the store (fn.q.pair.residual), against the badge plate centre
  * (tk.s4.badgePlates: the S1 dark plate part's bbox centre). No new signal decides anything: the pairs are S3's and S4's.
  */
-import { PAIR_CALLS, PAIR_UNITS } from '../../fg/queries/pair.mjs';
+import { PAIR_CALLS, PAIR_UNITS, unitAxis } from '../../ports/s5pair/residualQuery.mjs';
 import { nameCandidates } from '../../fg/names.mjs';
 
 export const reads = ['px.tees.association', 'px.tees.recovered', 'tk.s4.badgePlates'];
@@ -21,7 +21,7 @@ export default function toolkit(parts) {
     const target = badge != null ? plateOf.get(String(badge)) : null;
     if (badge == null) return { angleResidualDeg: null, signedPerpPx: null, alongPx: null, distancePx: null };
     if (!target) return { unavailable: `Badge ${badge} has no plate in tk.s4.badgePlates`, angleResidualDeg: null, signedPerpPx: null, alongPx: null, distancePx: null };
-    return parts.call('fn.q.pair.axisResidual', { center, angleRad, target }).value;
+    return parts.call('fn.q.pair.residual', { center, axis: unitAxis(angleRad), plate: target }).value;
   };
   const rows = assoc.rows ?? [];
   const observed = rows.map((r, i) => {
@@ -39,7 +39,7 @@ export default function toolkit(parts) {
       evidence: { s4BadgeRayResidualDeg: t.badgeRayResidualDeg ?? null, confidence: t.confidence ?? null } };
   });
   return {
-    rule: 'S3 observed tees: the s3assoc badge; S4 recovered tees: the badge each was recovered for; residuals measured by fn.q.pair.axisResidual against tk.s4.badgePlates plate centres',
+    rule: 'S3 observed tees: the s3assoc badge; S4 recovered tees: the badge each was recovered for; residuals measured by fn.q.pair.residual against tk.s4.badgePlates plate centres',
     laneNotRun: null, notes: [assoc.absent, rec.absent].filter(Boolean),
     s4Variant: rec.variant ?? null, units: PAIR_UNITS,
     pairs: [...observed, ...recovered]

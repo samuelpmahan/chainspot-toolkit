@@ -102,3 +102,19 @@ test('tk.state.matrix is a Part: derived on a store, profiled with emits, render
   const r = renderValue(MATRIX_PART, { rows: m.rows.map(({ changedPaths, goal, ...row }) => row), ...m.emits });
   assert.notEqual(r.kind, 'unrenderable'); assert.ok(r.parts.some((p) => p.kind === 'ledger'));
 });
+
+test('inspector S5pairs rows: a ray to the paired plate coloured by verdict, the true badge dashed when wrong, unpaired badges boxed', async () => {
+  const { cellRows, COLORS } = await import('./inspect.mjs');
+  const rows = [
+    { hole: 1, name: 'Tee ca', origin: 'S3 observed', point: [10, 50], said: 1, saidCenter: [10, 10], truthCenter: [10, 10], verdict: 'right', teeErrorPx: 0.3, residualDeg: 0.2, signedPerpPx: 0.1 },
+    { hole: 2, name: 'S4 Tee ca', origin: 'S4 recovered', point: [40, 50], said: 3, saidCenter: [70, 10], truthCenter: [40, 10], verdict: 'wrong', teeErrorPx: 1, residualDeg: 9, signedPerpPx: 6 }
+  ];
+  const c = { ...golden, judgement: { ...golden.judgement, S5pairs: { accepted: 'toolkit', variants: { toolkit: { ...pairs(1, 1, 0, 0, ['Badge 2']), rows } } } },
+    objects: { badges: [], pairs: [], pairBadges: [{ label: '2', plateCenter: [40, 10] }], unpairedBadges: [] } };
+  const r = cellRows(cell('S5pairs'), c);
+  assert.deepEqual(r.map((x) => [x.name, x.verdict]), [['Tee ca', 'right'], ['S4 Tee ca', 'wrong'], ['Badge 2 (unpaired)', 'unpaired']]);
+  assert.ok(r[0].marks.some((m) => m.kind === 'line' && m.color === COLORS.right && m.b[1] === 10));
+  assert.ok(r[1].marks.some((m) => m.kind === 'line' && m.color === COLORS.expected && m.dash), 'the badge of its own hole, dashed');
+  assert.equal(r[1].reason, 'pairs with Badge 3, is Tee 2');
+  assert.deepEqual(r[2].marks.map((m) => m.kind), ['rect']);
+});

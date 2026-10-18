@@ -6,11 +6,11 @@
  * tk.s5.latePinned, already in the canonical frame (source y - S0 upperRowsRemoved), each badge by its holeRead.
  *
  * The pairs are the pinned S5's; only the residual is re-measured here, by the same store query the toolkit variant
- * uses (fn.q.pair.axisResidual against tk.s4.badgePlates), so the variants' records compare. The pinned S5's own
+ * uses (fn.q.pair.residual against tk.s4.badgePlates), so the variants' records compare. The pinned S5's own
  * measures (angle residual, signed perpendicular to its own badge centroid) ride along as evidence.
  * When the attempt has no pinned S5 (lane not run) that is the recorded result: no pairs, laneNotRun says why.
  */
-import { PAIR_CALLS, PAIR_UNITS } from '../../fg/queries/pair.mjs';
+import { PAIR_CALLS, PAIR_UNITS, unitAxis } from '../../ports/s5pair/residualQuery.mjs';
 import { nameCandidates } from '../../fg/names.mjs';
 
 export const reads = ['tk.s5.latePinned', 'tk.s4.badgePlates'];
@@ -28,7 +28,7 @@ export default function pinned(parts) {
   const pairOf = (a, name, i) => {
     const s = selected.get(a.detId) ?? null, badge = s?.holeRead != null ? String(s.holeRead) : null, target = badge != null ? plateOf.get(badge) ?? null : null;
     const m = badge == null ? { angleResidualDeg: null, signedPerpPx: null, alongPx: null, distancePx: null }
-      : target ? parts.call('fn.q.pair.axisResidual', { center: a.center, angleRad: a.angleRad, target }).value
+      : target ? parts.call('fn.q.pair.residual', { center: a.center, axis: unitAxis(a.angleRad), plate: target }).value
         : { unavailable: `Badge ${badge} has no plate in tk.s4.badgePlates`, angleResidualDeg: null, signedPerpPx: null, alongPx: null, distancePx: null };
     return { tee: name, origin: a.kind === 'visible' ? 'S3 observed' : 'S4 recovered', teeIndex: i, center: a.center, angleRad: a.angleRad, angleDeg: r3(a.angleRad * 180 / Math.PI),
       badge, plateCenter: target, ...m,
@@ -36,7 +36,7 @@ export default function pinned(parts) {
       evidence: { detId: a.detId, geometrySource: a.geometrySource ?? null, pinnedAngleResidualDeg: s?.angleResidualDeg ?? null, pinnedSignedPerpPx: s?.signedPerpPx ?? null, pinnedBadgeId: s?.badgeId ?? null } };
   };
   return {
-    rule: 'pinned S5 output (late/s5-global-assignment.json selected pairs), residual re-measured by fn.q.pair.axisResidual',
+    rule: 'pinned S5 output (late/s5-global-assignment.json selected pairs), residual re-measured by fn.q.pair.residual',
     laneNotRun: null, notes: late.notes ?? [], units: PAIR_UNITS,
     unmatchedBadgeIds: late.unmatchedBadgeIds, unusedTeeIds: late.unusedTeeIds,
     pairs: [...visible.map((a, i) => pairOf(a, vNames[i], i)), ...recovered.map((a, i) => pairOf(a, rNames[i], i))]

@@ -30,7 +30,7 @@ import { discoverImplementations } from '../../fg/discover.mjs';
 import { createFileSink } from '../../fg/node-sink.mjs';
 import { framesJson, renderFlipbook } from '../../fg/flipbook.mjs';
 import { canonicalJson } from '../../fg/canon.mjs';
-import { PAIR_QUERIES } from '../../fg/queries/pair.mjs';
+import { PAIR_QUERIES } from './residualQuery.mjs';
 import { S4_CALCULATIONS } from '../s4recover/teeRecover.mjs';
 import { loadTestimony } from '../judge/testimony.mjs';
 import { PAIR_SLOT } from './pairBadge.mjs';
@@ -131,7 +131,7 @@ export async function runPairBadgeForkJoin({ attempt, specimen, outDir = null, r
   const { store, document: instrumentation } = instrumentedStore({ name: `s5pair:${specimen}`, base: loaded.board });
   store.constant('fn.tk.s5pair.laneOutputs', loaded.values);
   for (const [fn, spec] of S4_CALCULATIONS.filter(([fn]) => fn === 'fn.tk.s4.badgePlates')) store.register(fn, spec);   // the plate centres S4 recovers against
-  registerQueries(store, PAIR_QUERIES, { note: 'tee-badge pair math behind the PxC boundary (fg/queries/pair.mjs)' });
+  registerQueries(store, PAIR_QUERIES, { note: 'tee-badge pair math behind the PxC boundary (ports/s5pair/residualQuery.mjs)' });
   store.get('tk.s4.badgePlates');   // shared by every branch: produced once on the parent
   const implementations = await discoverImplementations(join(root, 'impl'), PAIR_SLOT.slot);
   const sink = createFileSink(join(out, 'artifacts'), { relativeTo: out });

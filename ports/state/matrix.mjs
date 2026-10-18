@@ -65,7 +65,7 @@ export const POST_RECIPE_CLOSURES = Object.freeze({
   s3assoc: ['ports/s3assoc'],
   s4recover: ['ports/s4recover', 'impl/fn.Tee.recover', 'contracts/tee.pose@1.mjs'],
   // the S5 runner and its implementations, plus what they import outside them (the plate centres are S4's Calculation)
-  s5pair: ['ports/s5pair', 'impl/fn.Tee.pairBadge', 'fg/queries/pair.mjs', 'ports/s4recover/teeRecover.mjs', 'ports/s4recover/poseSpace.mjs', 'ports/judge/testimony.mjs']
+  s5pair: ['ports/s5pair', 'impl/fn.Tee.pairBadge', 'ports/s4recover/teeRecover.mjs', 'ports/s4recover/poseSpace.mjs', 'ports/judge/testimony.mjs']
 });
 export const UNITS = Object.freeze({
   cells: 'count (stage x course cells)', stale: 'count (cells)', unmet: 'count (cells)', unjudged: 'count (cells)', missing: 'count (cells)', met: 'count (cells)'
