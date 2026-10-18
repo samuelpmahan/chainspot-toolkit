@@ -10,7 +10,8 @@
  *   3. each assigned hole is traced BACKWARDS from its BasketPoint toward its badge with both endpoints known (the
  *      follower with the badge as its only target), then the tee -> badge leg (straight hallway) is put in front and
  *      the inner vertices refined by render-and-score
- * Evidence thresholds are the follower's own: a leg is a ribbon at pass fraction 0.6 (find_bend), 0.75 to close on an
+ * A bent pair is scored as one bend on the hole's own ray (the badge precedes the first bend): V on the ray, legs badge -> V
+ * and V -> BasketPoint, over both legs' stations. Evidence thresholds are the follower's own: a leg is a ribbon at pass fraction 0.6 (find_bend), 0.75 to close on an
  * endpoint (close_on_bp). Every number is px or a fraction of stations, canonical frame.
  */
 import { arange, stationContrast, trace, refineVertices, ribbonThroughBadge, TAU, FRONT, unit, round } from './hallway.mjs';
@@ -23,7 +24,7 @@ const pass = (S, O, phi, ts, W) => {
   for (let k = 0; k < ts.length; k++) if (okl[k] && okr[k]) m.push(Math.min(cl[k], cr[k]));
   return m;
 };
-export const ENDPOINT_RULES = Object.freeze({ ribbonPass: 0.6, closePass: 0.75, minStations: 12, scanStations: 25, startHeadings: 4, headingSeparationDeg: 10, minTurnDeg: 4 });
+export const ENDPOINT_RULES = Object.freeze({ ribbonPass: 0.6, closePass: 0.75, maxLegW: 15, minStations: 12, scanStations: 25, startHeadings: 4, headingSeparationDeg: 10, minTurnDeg: 4 });
 
 /** The forward headings out of a badge: the tee -> badge direction when the hole has a tee, else both ways along the best ribbon lines through it. */
 function forwardHeadings(S, h, W) {
@@ -48,6 +49,33 @@ export function scorePairs(S, holes, W, { tees = [] } = {}) {
       const pf = m.filter((x) => x > TAU).length / m.length;
       if (pf >= ENDPOINT_RULES.ribbonPass) cands.push({ n: h.n, k, score: pf, how: 'straight segment badge -> BasketPoint', stations: m.length });
     });
+    // one bend on the hole's own ray: the tee -> badge leg is straight hallway and the badge precedes the first bend, so a
+    // bent hole's first vertex V lies on the ray out of the badge; score badge -> V -> BasketPoint over both legs' stations
+    for (const f of h.tee ? fw : []) {
+      const u = [Math.cos(f.phi), Math.sin(f.phi)], t0 = h.half + 2;
+      const reachT = Math.max(...S.bp.map((b) => (b[0] - h.c[0]) * u[0] + (b[1] - h.c[1]) * u[1])) + 2 * W;
+      const ts1 = arange(t0, Math.max(t0 + 1, Math.min(reachT, 1500)), 1.0), st = stationContrast(S, h.c, f.phi, ts1, W);
+      const n1 = new Int32Array(ts1.length + 1), p1 = new Int32Array(ts1.length + 1);
+      for (let i = 0; i < ts1.length; i++) { const ok = st.okl[i] && st.okr[i]; n1[i + 1] = n1[i] + (ok ? 1 : 0); p1[i + 1] = p1[i] + (ok && Math.min(st.cl[i], st.cr[i]) > TAU ? 1 : 0); }
+      S.bp.forEach((b, k) => {
+        let best = null;
+        for (const tv of arange(Math.max(W * 0.5, t0), ts1[ts1.length - 1] ?? t0, 2.0)) {
+          const V = [h.c[0] + u[0] * tv, h.c[1] + u[1] * tv], d = [b[0] - V[0], b[1] - V[1]], Lg = Math.hypot(d[0], d[1]);
+          if (Lg < 0.5 * W || Lg > ENDPOINT_RULES.maxLegW * W) continue;
+          const psi = Math.atan2(d[1], d[0]), turn = Math.abs(pyMod(deg(psi - f.phi) + 180, 360) - 180);
+          if (turn < ENDPOINT_RULES.minTurnDeg || turn > 150) continue;
+          const i1 = Math.max(0, Math.min(ts1.length, Math.floor(tv - 0.5 * W - t0) + 1)), a1 = n1[i1], b1 = p1[i1];
+          if (a1 >= ENDPOINT_RULES.minStations && b1 / a1 < ENDPOINT_RULES.ribbonPass) continue;   // the first leg must be ribbon
+          // a last leg shorter than 1.2 W lies in the basket's own masked sprite and rings: only the first leg can testify
+          const m2 = Lg < 1.2 * W ? [] : pass(S, V, psi, arange(W * 0.75, Lg - W * 0.5, 1.0), W);
+          if (Lg >= 1.2 * W && m2.length < ENDPOINT_RULES.minStations) continue;
+          if (Lg < 1.2 * W && a1 < ENDPOINT_RULES.minStations) continue;
+          const pf = (b1 + m2.filter((x) => x > TAU).length) / (a1 + m2.length);
+          if (best === null || pf > best.score) best = { score: pf, V, turnDeg: turn };
+        }
+        if (best && best.score >= ENDPOINT_RULES.closePass) cands.push({ n: h.n, k, score: best.score, how: `one bend on the hole's ray (${round(best.turnDeg, 1)} deg)`, verts: [h.c, best.V, b].map((v) => v.map((x) => round(x, 2))) });
+      });
+    }
     routes[h.n] = fw.map((f) => {
       const r = trace(S, h.c, f.phi, W, { selfC: h.tee ? h.tee.teeCenter : null, tees });
       const pf = r.legs.length ? r.legs.reduce((s, l) => s + l.passFrac, 0) / r.legs.length : 0;
@@ -105,7 +133,8 @@ export function solveEndpoints(S, holes, W, { tees = [], matcher }) {
     if (back.verts) { verts = [start, ...back.verts.slice(1)]; how = 'endpoints: traced back from the assigned BasketPoint to the badge'; }
     else {
       const route = routes[h.n].find((r) => r.end === lock.k);
-      if (route) { verts = [start, ...route.verts.slice(1)]; how = 'endpoints: the forward route that ended on the assigned BasketPoint (the backward trace did not reach the badge)'; }
+      if (pair?.verts) { verts = [start, ...pair.verts.slice(1)]; how = `endpoints: the scored pair's route, ${pair.how} (the backward trace did not reach the badge)`; }
+      else if (route) { verts = [start, ...route.verts.slice(1)]; how = 'endpoints: the forward route that ended on the assigned BasketPoint (the backward trace did not reach the badge)'; }
       else { verts = [start, h.c, S.bp[lock.k]]; how = 'endpoints: straight badge -> BasketPoint segment (the backward trace did not reach the badge)'; }
     }
     // the badge is a vertex only where the path turns there (the tee -> badge leg is straight hallway)
