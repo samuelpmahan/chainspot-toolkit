@@ -21,8 +21,16 @@
  *       path:   { rgb: [r, g, b], alpha, sigmaRgb, sigmaAlpha, samplesPx, fitOn: 'straight holes h, k, ...', residualRms },
  *       c1Fill: { ... }, c2Fill: { ... }, c2Dash: { ... }        // a class not fitted is { status: 'not fitted', reason }
  *     },
- *     method: 'how alpha and rgb were separated (text, for the reader)'
+ *     method: 'how alpha and rgb were separated (text, for the reader)',
+ *     fit: { ... }                           // optional diagnostics for the reader and the render (scale, per-class
+ *                                            // pairs, exclusions in px, control ratio, alpha by sample geometry,
+ *                                            // residual histogram, crop anchors); not a consumer surface: consumers
+ *                                            // read overlays, r1Px and nothing else
  *   }
+ * Units: rgb and sigmaRgb in RGB levels 0..255; alpha and sigmaAlpha as fractions 0..1; residualRms in RGB levels (the
+ * per-pair rms of inside - (alpha x rgb + (1 - alpha) x outside), pairs being bin means); samplesPx in px of the image
+ * (inside + outside px kept); fitOn names the Parts (candidates, holes) the class was fitted on. Producer:
+ * fn.tk.s7.alphaProfile (fg/alpha/alphaProfile.calc.mjs), queries fn.q.alpha.* (fg/alpha/alphaSpace.mjs).
  * A missing profile is a recorded condition (noProfile), never a throw: consumers fall back to the raw raster and
  * say so in their emits.
  *
