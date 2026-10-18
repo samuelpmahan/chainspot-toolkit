@@ -140,9 +140,11 @@ export const alphaProfile = [ALPHA_PROFILE_FN, {
       overlays.c1Fill = c1.overlay; fit.perClass.c1Fill = { ...c1.diag, control: 'the C1 control edge at 1.5 x R1 (C2 fill on both sides)' };
       overlays.c2Fill = c2.overlay; fit.perClass.c2Fill = { ...c2.diag, control: 'control edges at 1.5 x R1 (C2 fill both sides) and beyond 2 x R1 (terrain both sides)' };
       // the render's crop anchor: the most isolated basket (largest distance to its nearest neighbour)
-      const iso = centres.map((c, i) => Math.min(Infinity, ...centres.filter((_, j) => j !== i).map((o) => Math.hypot(o[0] - c[0], o[1] - c[1]))));
+      const img = io.in(RASTER), half = 2.2 * r1Px;
+      const inside = (c) => c[0] - half >= 0 && c[1] - half >= 0 && c[0] + half < img.widthPx && c[1] + half < img.heightPx;
+      const iso = centres.map((c, i) => (inside(c) ? 1e6 : 0) + Math.min(1e5, ...centres.filter((_, j) => j !== i).map((o) => Math.hypot(o[0] - c[0], o[1] - c[1]))));
       const k = iso.indexOf(Math.max(...iso));
-      fit.anchors = { basket: { name: names[k], centre: centres[k], rule: 'most isolated BasketPoint (largest nearest-neighbour distance)',
+      fit.anchors = { basket: { name: names[k], centre: centres[k], rule: 'most isolated BasketPoint (largest nearest-neighbour distance) whose C2 disc lies inside the image',
         spritesInWindow: call('fn.q.alpha.spritesInWindow', { raster: RASTER, sprites: SPRITES, centre: centres[k], size: RENDER_WINDOW_PX }).value } };
     }
     overlays.c2Dash = notFitted('dash phase not modelled (fg/scene/parts.mjs C2D dashPhaseModelled: false); its stroke and AA band are excluded from every fill sample instead');
