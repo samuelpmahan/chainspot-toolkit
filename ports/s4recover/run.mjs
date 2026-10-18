@@ -33,6 +33,7 @@ import { framesJson, renderFlipbook } from '../../fg/flipbook.mjs';
 import { canonicalJson } from '../../fg/canon.mjs';
 import contract from '../../contracts/tee.pose@1.mjs';
 import { TEE_RECOVER_SLOT, S4_CALCULATIONS } from './teeRecover.mjs';
+import { registerPoseQueries } from './poseSpace.mjs';
 import { GUARANTEES } from './guarantees.mjs';
 import { compareRecovered } from './compare.mjs';
 import { loadTestimony, TESTIMONY_DY as JUDGE_TESTIMONY_DY } from '../judge/testimony.mjs';
@@ -121,6 +122,7 @@ export async function runTeeRecoverForkJoin({ attempt, specimen, outDir = null, 
   const { store, document: instrumentation } = instrumentedStore({ name: `s4recover:${specimen}`, base: loaded.board });
   store.constant('fn.tk.s4recover.laneOutputs', loaded.values);
   for (const [fn, spec] of S4_CALCULATIONS) store.register(fn, spec);
+  registerPoseQueries(store);   // the pose search behind the PxC boundary: fn.q.pose.*
   // Shared Parts are produced once here, on the parent store; every branch reads them through it.
   for (const address of ['tk.s4.padTemplate', 'tk.s4.evidence', 'tk.s4.adjacentBrightComponents']) store.get(address);   // tk.s4.hallway stays lazy
   const implementations = await discoverImplementations(join(root, 'impl'), TEE_RECOVER_SLOT.slot);

@@ -81,7 +81,7 @@ test('the rigid pad template is measured from the anchors: 30 x 21 px, strokes 3
 });
 
 for (const badgeRay of [true, false]) {
-  test(`greedy search recovers a pad half under a basket within 1 px / 2 deg (badgeRay ${badgeRay})`, () => {
+  test(`greedy search recovers a pad half under a basket within 1 px / 2 deg (badgeRay ${badgeRay})`, async () => {
     const ctx = createRecoveryContext(course());
     assert.deepEqual(ctx.assignment.map((a) => a.label), ['1', '2', '3'], 'anchors pair with their badges by the badge-ray rule');
     const coveredBefore = evaluatePose(ctx, target.cx, target.cy, target.th).evidence.occludedBy;
@@ -95,8 +95,11 @@ for (const badgeRay of [true, false]) {
     assert.ok(errPx <= 1, `center error ${errPx} px`);
     assert.ok(errDeg <= 2, `angle error ${errDeg} deg`);
     assert.ok(t.evidence.occludedBy.basket > 0, 'occluded px are counted per occluder');
-    // ownership: the recovered pad's px are now owned
-    assert.ok(ctx.owned.some((v) => v === OCC.recoveredTee));
+    // ownership is an argument of the questions (poseSpace views), never a mutation of the context: pure
+    assert.ok(ctx.owned.every((v) => v === 0), 'recovery never writes into the context it was given');
+    const { poseSpace } = await import('./poseSpace.mjs');
+    const v = poseSpace(ctx).evaluate({ owned: [{ center: t.center, angleRad: t.angleRad }], center: t.center, angleRad: t.angleRad });
+    assert.ok(v.evidence.occludedBy.recoveredTee > 0, 'in the view that owns the recovered pad, its px are owned');
     // the judge: Sam marks an occluded pad at the centroid of its VISIBLE hole
     // (interior px not under the opaque basket); that point lands it on hole 4,
     // and the recovered visibleCenter reproduces it within 1 px

@@ -96,6 +96,7 @@ export const RULES = Object.freeze({
 });
 
 import { nameCandidates } from '../../fg/names.mjs';
+import { greedyLoop, localQueries } from './poseSpace.mjs';
 import { pxList, componentStats, ownerPlane } from '../../fg/pxset.mjs';
 import { basketPoint } from '../../fg/s2/fg.s2.basketInvariants.observe.fg.mjs';
 
@@ -570,6 +571,17 @@ const anglesFor = (badgeRay, cx, cy, plate) => {
  * owns and that reach into the badge's search disk, on a SEED_STEP_PX grid; refinement then works at sub-pixel as
  * before. The old disk path (every centre near any unoccluded white px) stays as RULES.visibleSeeds = 'disk'.
  */
+/** Each unowned component's frame-white px and their bbox (against the context's evidence at the time). */
+export function seedWhiteOf(ctx) {
+  const { W, cls, ev } = ctx;
+  return ctx.unowned.map((c) => {
+    const white = Int32Array.from(c.px.filter((i) => cls[i] === CLASS.WHITE && ev[i] < 8));
+    let ax = Infinity, ay = Infinity, bx2 = -Infinity, by2 = -Infinity;
+    for (const i of white) { const x = i % W, y = (i / W) | 0; if (x < ax) ax = x; if (x > bx2) bx2 = x; if (y < ay) ay = y; if (y > by2) by2 = y; }
+    return { white, box: [ax, ay, bx2, by2] };
+  }).filter((c) => c.white.length >= RULES.minVisibleFramePx);
+}
+
 function componentMask(ctx, badge) {
   const { W, H, cls, ev, tpl } = ctx;
   const R = ctx.searchRadiusPx, [bx, by] = badge.plateCenter, R2 = R * R, reach = tpl.halfLengthOutPx, step = RULES.seedStepPx;
@@ -578,13 +590,7 @@ function componentMask(ctx, badge) {
   const bw = x1 - x0 + 1, bh = y1 - y0 + 1, mask = new Uint8Array(bw * bh);
   const rr = Math.ceil(reach), reach2 = reach * reach;
   let seeds = 0;
-  // each component's frame-white px and bbox are computed once per context, not once per search
-  ctx.seedWhite ??= ctx.unowned.map((c) => {
-    const white = Int32Array.from(c.px.filter((i) => cls[i] === CLASS.WHITE && ev[i] < 8));
-    let ax = Infinity, ay = Infinity, bx2 = -Infinity, by2 = -Infinity;
-    for (const i of white) { const x = i % W, y = (i / W) | 0; if (x < ax) ax = x; if (x > bx2) bx2 = x; if (y < ay) ay = y; if (y > by2) by2 = y; }
-    return { white, box: [ax, ay, bx2, by2] };
-  }).filter((c) => c.white.length >= RULES.minVisibleFramePx);
+  ctx.seedWhite ??= seedWhiteOf(ctx);   // computed once per context, not once per search
   const near = (b) => { const dx = Math.max(b[0] - bx, 0, bx - b[2]), dy = Math.max(b[1] - by, 0, by - b[3]); return dx * dx + dy * dy <= (R + reach) ** 2; };
   for (const c of ctx.seedWhite) {
     if (!near(c.box)) continue;
@@ -742,7 +748,7 @@ export function occluderSearch(ctx, bi, { hallwayTest = true, keepCenters = fals
   // feasibility flips, so the region is its outline, not every centre in it. Peek fragments come from the adjacency
   // query (tk.s4.adjacentBrightComponents): only sprites a fragment touches, only centres within a pad's reach of it.
   const badge = ctx.badges[bi], plate = badge.plateCenter, tpl = ctx.tpl;
-  if (ctx.hallway === undefined) ctx.hallway = learnHallwayWidth(ctx);   // direct calls (tests); the store path passes tk.s4.hallway
+  if (ctx.hallway === undefined) ctx.hallway = learnHallwayWidth(ctx);   // poseSpace sets it (tk.s4.hallway on a store)
   const Wh = hallwayTest ? ctx.hallway?.widthPx ?? null : null;
   const dists = ctx.assignment.map((a) => a.distancePx);
   const range = dists.length ? [Math.min(...dists) * (1 - RULES.hiddenDistMargin), Math.max(...dists) * (1 + RULES.hiddenDistMargin)] : [0, Infinity];
@@ -802,75 +808,20 @@ export function occluderSearch(ctx, bi, { hallwayTest = true, keepCenters = fals
       hallwayPassFrac: steps.length ? r3(pass.length / steps.length) : null, bbox: sp.bbox, peek,
       ...(keepCenters ? { centers: outline, hallwayCenters: pass.map((sm) => sm.p) } : {}) });
   }
-  return { regions, distanceRangePx: range.map(r3), hallway: ctx.hallway, evaluatedPoses: evaluated };
+  return { regions, distanceRangePx: range.map(r3), hallway: ctx.hallway, plateCenter: plate, evaluatedPoses: evaluated };
 }
 
 // The area a badge's search reads: its candidate disk plus a margin of 3 template radii (pose reach and refinement drift).
-function searchBox(ctx, badge) {
+export function searchBox(ctx, badge) {
   const R = ctx.searchRadiusPx + 3 * Math.hypot(ctx.tpl.halfLengthOutPx + RULES.outsideRingPx + 1, ctx.tpl.halfWidthOutPx + RULES.outsideRingPx + 1), [x, y] = badge.plateCenter;
   return [x - R, y - R, x + R, y + R];
 }
-const pxBox = (px, W) => { let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity; for (const i of px) { const x = i % W, y = (i / W) | 0; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } return [x0, y0, x1, y1]; };
-const boxesMeet = (a, b) => a[0] <= b[2] && b[0] <= a[2] && a[1] <= b[3] && b[1] <= a[3];
+export const pxBox = (px, W) => { let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity; for (const i of px) { const x = i % W, y = (i / W) | 0; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } return [x0, y0, x1, y1]; };
+export const boxesMeet = (a, b) => a[0] <= b[2] && b[0] <= a[2] && a[1] <= b[3] && b[1] <= a[3];
 
-export function greedyRecover(ctx, { badgeRay = true, call = null } = {}) {
-  const N = ctx.badges.length;
-  // Through the store when the caller can (fn.tk.s4.searchBadge / fn.tk.s4.occluderSearch: each call timed and its
-  // emits recorded by the store); directly otherwise (unit tests).
-  const search = (bi) => (call ? call('fn.tk.s4.searchBadge', { ctx, bi, badgeRay }) : searchBadge(ctx, ctx.badges[bi], { badgeRay }));
-  const hiddenSearch_ = (bi) => (call ? call('fn.tk.s4.occluderSearch', { ctx, bi }) : occluderSearch(ctx, bi));
-  if (!ctx.tpl) {
-    const assigned = new Set(ctx.assignment.map((a) => a.badge));
-    return { recovered: [], log: [], rounds: 0, evaluatedPoses: 0, need: Math.max(0, N - ctx.tees.length),
-      missed: ctx.badges.map((b, i) => i).filter((i) => !assigned.has(i)).map((i) => ({ badgeIndex: i, hole: ctx.badges[i].label, reason: `no pad template: ${ctx.unavailable}` })) };
-  }
-  const assignedBadges = new Set(ctx.assignment.map((a) => a.badge));
-  const pending = new Set(ctx.badges.map((_, i) => i).filter((i) => !assignedBadges.has(i)));
-  const need = Math.max(0, N - ctx.tees.length);
-  const recovered = [], log = [];
-  let rounds = 0, evaluatedPoses = 0;
-  const cache = new Map(); let reusedSearches = 0;
-  while (pending.size && recovered.length < need) {
-    rounds++;
-    let pick = null;
-    for (const bi of [...pending].sort((a, b) => a - b)) {
-      // Same question, same answer: a badge's search is reused across rounds unless a newly owned pad lies in its area.
-      const hit = cache.get(bi), r = hit ? hit.r : search(bi);
-      if (!hit) cache.set(bi, { r, box: searchBox(ctx, ctx.badges[bi]) }); else reusedSearches++;
-      if (!hit) evaluatedPoses += r.evaluatedPoses;
-      log.push({ round: rounds, badge: bi, label: ctx.badges[bi].label, candidateCenters: r.candidateCenters, seedsInDisk: r.seedsInDisk, best: r.best ? { center: r.best.center, angleDeg: r3(r.best.angleRad * DEG), score: r.best.score, accepted: r.best.accepted, fromSeed: r.best.seed ?? null } : null });
-      if (r.best?.accepted && (!pick || r.best.score > pick.best.score)) pick = { bi, best: r.best };
-    }
-    if (!pick) break;
-    const full = evaluatePose(ctx, pick.best.center[0], pick.best.center[1], pick.best.angleRad, { collect: true });
-    for (const i of full.px.pad) ownPx(ctx, i);
-    const pb = pxBox(full.px.pad.filter((i) => i >= 0), ctx.W);
-    for (const [b, e] of cache) if (boxesMeet(e.box, pb)) cache.delete(b);
-    recovered.push(recoveredTee(ctx, pick.bi, full, { round: rounds, fromSeed: pick.best.seed ?? null, rule: badgeRay ? 'greedy occluded template, badge-ray constrained' : 'greedy occluded template, free angle (ablation)' }));
-    pending.delete(pick.bi);
-  }
-  // Fast pass done; what is still missing is assumed occluded: search the occluders (entailment, not visibility).
-  const hiddenSearch = {};
-  for (const bi of [...pending].sort((a, b) => a - b)) {
-    if (recovered.length >= need) break;
-    const o = hiddenSearch_(bi); evaluatedPoses += o.evaluatedPoses; hiddenSearch[ctx.badges[bi].label] = o;
-    // Direct evidence first: exactly one occluder with a peeking frame fragment pins the pad there. Otherwise exactly one
-    // occluder with hallway to the badge. Otherwise recorded, not guessed.
-    const peeking = o.regions.filter((r) => r.peek), hall = o.regions.filter((r) => r.feasibleCenters > 0);
-    const g = peeking.length === 1 ? { ...peeking[0], centroid: peeking[0].peek.center, by: 'peeking frame fragment' } : !peeking.length && hall.length === 1 ? { ...hall[0], by: 'hallway to the badge' } : null;
-    if (!g) continue;
-    const plate = ctx.badges[bi].plateCenter, th = Math.atan2(plate[1] - g.centroid[1], plate[0] - g.centroid[0]);
-    const full = evaluatePose(ctx, g.centroid[0], g.centroid[1], th, { collect: true });
-    for (const i of full.px.pad) if (i >= 0) ownPx(ctx, i);
-    recovered.push(recoveredTee(ctx, bi, full, { rule: `occluder search: hidden under ${g.occluder} (${g.by})`, hidden: g, accepted: true }));
-    pending.delete(bi);
-  }
-  const missed = [...pending].sort((a, b) => a - b).map((bi) => {
-    const last = [...log].reverse().find((l) => l.badge === bi), o = hiddenSearch[ctx.badges[bi].label];
-    const reason = recovered.length >= need ? `stopped at cardinality N = ${N} badges` : !o ? 'no accepted pose' : o.regions.length ? `occluder search: ${o.regions.length} occluders fit (${o.regions.map((r) => r.occluder).join(', ')})` : 'no accepted pose; no occluder can hide it';
-    return { badgeIndex: bi, hole: ctx.badges[bi].label, lastBest: last?.best ?? null, hidden: o ?? null, reason };
-  });
-  return { recovered, missed, need, rounds, evaluatedPoses, reusedSearches, log };
+/** Direct use (tests, scripts): the one loop (poseSpace.mjs greedyLoop) over the same questions answered locally. */
+export function greedyRecover(ctx, { badgeRay = true } = {}) {
+  return greedyLoop(localQueries(ctx), { badgeRay });
 }
 
 export function recoveredTee(ctx, bi, e, extra = {}) {
@@ -960,12 +911,6 @@ export const S4_CALCULATIONS = Object.freeze([
     const h = learnHallwayWidth({ raster, tpl, occ: E.occ, badges, tees, assignment: assignTeesToBadges(tees, badges) });
     return { 'tk.s4.hallway': h ? { ...h, emits: { widthPx: h.widthPx, segments: h.fromSegments } } : null };
   } }],
-  // capabilities: called once per badge search with the branch's context (call-time args); timed per call by the store
-  ['fn.tk.s4.searchBadge', { calculate: (io) => { const { ctx, bi, badgeRay } = io.args; const r = searchBadge(ctx, ctx.badges[bi], { badgeRay });
-    return { ...r, emits: { poses: r.evaluatedPoses, candidateCentres: r.candidateCenters } }; } }],
-  // the occluder search is what needs the hallway, so it declares it: tk.s4.hallway is produced on its first call only
-  ['fn.tk.s4.occluderSearch', { inParts: ['tk.s4.hallway'], calculate: (io) => { const { ctx, bi } = io.args; if (ctx.hallway === undefined) ctx.hallway = io.in('tk.s4.hallway'); const o = occluderSearch(ctx, bi);
-    return { ...o, emits: { poses: o.evaluatedPoses, occluders: o.regions.length } }; } }],
   ['fn.tk.s4.unownedBrightComponents', { inParts: ['px.components', 'px.badges', 'px.baskets', 'px.tees.refined'], outParts: ['tk.s4.unownedBrightComponents'],
     calculate: (io) => ({ 'tk.s4.unownedBrightComponents': unownedBrightComponents(io.in('px.components').bright, io.in('px.badges'), io.in('px.baskets'), io.in('px.tees.refined')) }) }],
   ['fn.tk.s4.adjacentBrightComponents', { inParts: ['tk.s4.unownedBrightComponents'], outParts: ['tk.s4.adjacentBrightComponents'],
@@ -997,4 +942,4 @@ export function adjacentBrightComponents(bright, badges, baskets, tees, opts) {
 }
 
 export const SLOT_READS = Object.freeze(['px.image.cropped', 'tk.s4.badgePlates', 'tk.s4.basketBodies', 'tk.s4.basketRecovery', 'px.tees.refined', 'px.tees.familyRefined', 'tk.s4.adjacentBrightComponents', 'tk.s4.unownedBrightComponents', 'tk.s4.padTemplate', 'tk.s4.evidence']);
-export const SLOT_CALLS = Object.freeze(['fn.tk.s4.searchBadge', 'fn.tk.s4.occluderSearch']);
+export { POSE_CALLS as SLOT_CALLS } from './poseSpace.mjs';

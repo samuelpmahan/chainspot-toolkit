@@ -16,19 +16,19 @@
  * parts -> { recovered: [tee], missed: [...], template, assignment, ... }
  * (ports/s4recover/teeRecover.mjs recoveredTee shape).
  */
-import { SLOT_READS, SLOT_CALLS, createRecoveryContext, recoveryInputs, greedyRecover } from '../../ports/s4recover/teeRecover.mjs';
+import { SLOT_CALLS } from '../../ports/s4recover/teeRecover.mjs';
+import { greedyLoop, storeQueries } from '../../ports/s4recover/poseSpace.mjs';
 
-export const reads = [...SLOT_READS];
+export const reads = [];   // every question goes through fn.q.pose.* (the PxC boundary)
 export const calls = [...SLOT_CALLS];
 
 export const BADGE_RAY = true;
 
 export function run(parts, { badgeRay }) {
-  const ctx = createRecoveryContext(recoveryInputs(parts.get));
-  const g = greedyRecover(ctx, { badgeRay, call: parts.call });
+  const g = greedyLoop(storeQueries(parts.call), { badgeRay }), ov = g.overview;
   return {
     rule: badgeRay ? 'greedy occluded rigid template; theta within 3 deg of the badge ray' : 'greedy occluded rigid template; theta free (ablation of the badge-ray rule)',
-    template: ctx.tpl, assignment: ctx.assignment, searchRadiusPx: ctx.searchRadiusPx, searchRule: ctx.searchRule,
+    template: ov.template, assignment: ov.assignment, searchRadiusPx: ov.searchRadiusPx, searchRule: ov.searchRule,
     need: g.need, rounds: g.rounds, evaluatedPoses: g.evaluatedPoses,
     recovered: g.recovered, missed: g.missed, log: g.log
   };

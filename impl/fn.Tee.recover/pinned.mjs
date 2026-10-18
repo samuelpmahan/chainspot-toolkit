@@ -12,28 +12,29 @@
  * (ports/s4recover/teeRecover.mjs evaluatePose), so the three branches'
  * records are comparable. S4's own observed px count is kept beside it.
  */
-import { SLOT_READS, createRecoveryContext, recoveryInputs, evaluatePose, recoveredTee } from '../../ports/s4recover/teeRecover.mjs';
+import { SLOT_CALLS } from '../../ports/s4recover/teeRecover.mjs';
+import { storeQueries } from '../../ports/s4recover/poseSpace.mjs';
 
-export const reads = [...SLOT_READS, 'tk.s4.lateGeometry'];
+export const reads = ['tk.s4.lateGeometry'];
+export const calls = [...SLOT_CALLS];
 
 export default function pinned(parts) {
   const geometry = parts.get('tk.s4.lateGeometry');
-  const ctx = createRecoveryContext(recoveryInputs(parts.get));
+  const q = storeQueries(parts.call), ov = q('overview', {});
   const unplaced = [];
-  const recovered = (ctx.tpl ? geometry.recovered : []).flatMap((r) => {
-    const bi = ctx.badges.findIndex((b) => b.label === r.holeRead);
+  const recovered = (ov.template ? geometry.recovered : []).flatMap((r) => {
+    const bi = ov.badges.findIndex((b) => b.label === r.holeRead);
     if (bi < 0) { unplaced.push({ detId: r.detId, holeRead: r.holeRead, reason: 'names a hole no S1 badge carries' }); return []; }
-    const e = evaluatePose(ctx, r.center[0], r.center[1], r.angleRad, { collect: true });
-    const tee = recoveredTee(ctx, bi, e, { rule: 'pinned S4 broadRecovery (refinedAxes.recovered)', s4: { detId: r.detId, resultRef: r.resultRef, observedPixelCount: r.observedPixelCount, sizePx: r.sizePx, geometrySource: r.geometrySource } });
+    const tee = q('describe', { badge: bi, center: r.center, angleRad: r.angleRad, extra: { rule: 'pinned S4 broadRecovery (refinedAxes.recovered)', s4: { detId: r.detId, resultRef: r.resultRef, observedPixelCount: r.observedPixelCount, sizePx: r.sizePx, geometrySource: r.geometrySource } } });
     return [{ ...tee, sizePx: r.sizePx, accepted: true }];
   });
   const got = new Set(recovered.map((t) => t.badgeIndex));
-  const assigned = new Set(ctx.assignment.map((a) => a.badge));
+  const assigned = new Set(ov.assignment.map((a) => a.badge));
   return {
     rule: 'pinned S4 output, re-measured evidence only',
-    template: ctx.tpl, assignment: ctx.assignment,
-    need: Math.max(0, ctx.badges.length - ctx.tees.length),
+    template: ov.template, assignment: ov.assignment,
+    need: ov.need,
     recovered, unplaced,
-    missed: ctx.badges.map((b, i) => i).filter((i) => !assigned.has(i) && !got.has(i)).map((i) => ({ badgeIndex: i, hole: ctx.badges[i].label, reason: ctx.tpl ? 'pinned S4 recovered no tee for this badge' : `no pad template: ${ctx.unavailable}` }))
+    missed: ov.badges.filter((b) => !assigned.has(b.index) && !got.has(b.index)).map((b) => ({ badgeIndex: b.index, hole: b.label, reason: ov.template ? 'pinned S4 recovered no tee for this badge' : `no pad template: ${ov.unavailable}` }))
   };
 }

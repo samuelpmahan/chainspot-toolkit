@@ -110,6 +110,11 @@ right and the repo is behind. Every number carries a unit.
   `componentStats`), never re-derive them. Tests are written once over the
   union (`pxsetProperties`: every backing of the same px answers the same)
   and run on any input (`fg/pxset.dev.test.mjs`: every dev course).
+  The S4 pose search lives behind the boundary the same way
+  (`ports/s4recover/poseSpace.mjs`, `fn.q.pose.*`). The greedy loop only
+  asks questions; the pads already owned are an argument, never shared
+  mutable state; answers are reused inside the store when a new pad cannot
+  change them.
 - **Profiling is a property, not code in the work** (Sam, 2026-10-18).
   (1) Work worth measuring is a Calculation: the PartStore times every call
   and copies the measures its output declares in `emits` onto the call's
