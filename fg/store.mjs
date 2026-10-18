@@ -127,6 +127,32 @@ function emitsOf(values) {
   return out;
 }
 
+/** The image size of a store's raster Part (px.image.cropped, else the canonical pixels). */
+export function imageDims(store) {
+  for (const a of ['px.image.cropped', 'px.course.canonicalPixels']) if (store.has(a)) return store.get(a);
+  throw new PartStoreError('no raster Part for the image size (px.image.cropped / px.course.canonicalPixels)');
+}
+
+/**
+ * Register a family of PxC queries: { 'fn.q.<family>.<name>': (resolvedArgs, rawArgs) => ({ value, unit }) }. The one
+ * way a query enters a store (scripts/pxc.mjs scaffold query writes a table for it): every answer is cached by its
+ * arguments (Parts are write-once), profiled (emits computed/cached), and must carry a unit. resolve(ref) turns an
+ * argument that is a Part reference into the value the math wants (default: store.get for string arguments).
+ */
+export function registerQueries(store, table, { resolve = (ref) => store.get(ref), note = 'PxC query' } = {}) {
+  const answers = new Map();
+  for (const [fn, q] of Object.entries(table)) store.register(fn, { note,
+    calculate: (io) => {
+      const args = io.args ?? {}, key = `${fn} ${JSON.stringify(args)}`;
+      if (answers.has(key)) return { ...answers.get(key), emits: { cached: 1 } };
+      const resolved = Object.fromEntries(Object.entries(args).map(([k, v]) => [k, typeof v === 'string' ? resolve(v) : v]));
+      const ans = q(resolved, args);
+      if (!ans || !('value' in ans) || typeof ans.unit !== 'string') throw new PartStoreError(`${fn} must answer { value, unit }`);
+      answers.set(key, ans);
+      return { ...ans, emits: { computed: 1 } };
+    } });
+}
+
 /** The name of the capability every store offers: the calls made by args.caller and nested under them. */
 export const INSTRUMENTATION_CALLS = 'fn.tk.instrumentation.calls';
 
@@ -145,25 +171,14 @@ export function callSubtree(entries, caller) {
 export function createPartStore({ base = null, name = 'root', onCall = null } = {}) {
   const log = [];
   const store = makeStore({ base, name, parent: null, shared: { seq: 0, stack: [], log, onCall: (entry) => { log.push(entry); onCall?.(entry); } } });
-  // The PxC is queryable: pixel-set math lives in fg/pxset.mjs and is invoked from outside by Part address. Answers
-  // are cached by their arguments (Parts are write-once, so a cached answer can never go stale).
-  const answers = new Map();
-  const dims = () => { for (const a of ['px.image.cropped', 'px.course.canonicalPixels']) if (store.has(a)) return store.get(a); throw new PartStoreError('pxset queries: no raster Part for the image size'); };
-  for (const [fn, q] of Object.entries(PXSET_QUERIES)) store.register(fn, { note: 'PxC query (fg/pxset.mjs), cached by its arguments',
-    calculate: (io) => {
-      const key = `${fn} ${JSON.stringify(io.args)}`;
-      if (answers.has(key)) return { ...answers.get(key), emits: { cached: 1 } };
-      const sets = Object.fromEntries(Object.entries(io.args).map(([k, ref]) => [k, resolvePxSet((a) => store.get(a), ref, dims)]));
-      const ans = q(sets, { address: io.args.a });
-      answers.set(key, ans);
-      return { ...ans, emits: { computed: 1 } };
-    } });
+  // The PxC is queryable: pixel-set math lives in fg/pxset.mjs and is invoked from outside by Part address.
+  registerQueries(store, PXSET_QUERIES, { resolve: (ref) => resolvePxSet((a) => store.get(a), ref, () => imageDims(store)) });
   // renderable is a default property of every Part: any address renders by the shape of its value (fg/render.mjs)
   const rendered = new Map();
   store.register(RENDER_PART, { note: 'default render of the Part at args.a (fg/render.mjs), cached by address',
     calculate: (io) => {
       const a = io.args?.a;
-      if (!rendered.has(a)) { let d = null; try { d = dims(); } catch { /* an image-free store renders without px coordinates */ } rendered.set(a, renderValue(a, store.get(a), d)); }
+      if (!rendered.has(a)) { let d = null; try { d = imageDims(store); } catch { /* an image-free store renders without px coordinates */ } rendered.set(a, renderValue(a, store.get(a), d)); }
       const r = rendered.get(a);
       return { value: r, unit: 'frame parts', emits: { parts: r.parts.length, unrenderable: r.kind === 'unrenderable' ? 1 : 0 } };
     } });

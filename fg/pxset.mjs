@@ -94,7 +94,7 @@ export const PXSET_QUERIES = Object.freeze({
   'fn.q.pxset.count': ({ a }) => ({ value: count(a), unit: PXSET_UNITS.count }),
   'fn.q.pxset.bbox': ({ a }) => ({ value: bbox(a), unit: PXSET_UNITS.bbox }),
   'fn.q.pxset.intersectCount': ({ a, b }) => ({ value: intersectCount(a, b), unit: PXSET_UNITS.intersect }),
-  'fn.q.pxset.render': ({ a }, { address }) => ({ value: renderPart(a, { address }), unit: 'frame part' })
+  'fn.q.pxset.render': ({ a }, raw) => ({ value: renderPart(a, { address: raw.a }), unit: 'frame part' })
 });
 
 /**
