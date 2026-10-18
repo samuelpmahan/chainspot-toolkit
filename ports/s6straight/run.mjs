@@ -8,7 +8,9 @@
  * The S3 PxC (early/s3.pxc.bin) is the store's board: px.badges, px.baskets, px.image.cropped are read by address and
  * S6's own Calculations (holeStraight.mjs S6_CALCULATIONS) derive tk.s6.* Parts from them. Lane outputs not on the
  * board are root inputs (absent means that lane did not run: recorded, never thrown):
- *   s3assoc/px.tees.association.json                     tk.s6.association  (observed tee -> badge)
+ *   s3assoc/px.tees.association.json                     px.tees.association (observed tee -> badge, pad template)
+ *   early/artifacts/s3fix/px.tees.refined.json           px.tees.refined (S3 tee px: the path mask)
+ *   early/artifacts/s3fix/px.tees.family-refined.json    tk.s6.padLength (the family model's major median, course.py C.L)
  *   s4recover/<latest run>/cmp.fn.Tee.recover.json       tk.s6.s4Recovered  (the accepted variant's recovered.json:
  *     -> accepted -> artifacts/fn.Tee.recover/<v>/recovered.json            each tee with the hole it was recovered for)
  *   basket-bridge/basket-recovery.part.json              tk.s6.basketRecovery (S4 recovered basket boxes)
@@ -37,6 +39,7 @@ import { GUARANTEES } from './guarantees.mjs';
 import { compareStraight } from './compare.mjs';
 import { straightSvg } from './render.mjs';
 import { loadTestimony } from '../judge/testimony.mjs';
+import { registerPathLoss as registerPathMeasurement } from './pathLoss.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
@@ -62,7 +65,12 @@ export function loadS6Inputs({ attempt, specimen, root = ROOT }) {
   const upper = findKey(receipt, 'upperRowsRemoved'), originalPx = findKey(receipt, 'originalPx');
 
   const assoc = readOpt(join(out, 's3assoc', 'px.tees.association.json'), { rows: [], absent: 'S3 association not run: no observed tee-badge pairs' });
-  const association = { absent: assoc.absent ?? null, rows: assoc.rows.map((r) => ({ tee: r.tee, candidate: r.candidate, center: r.center, pose: r.pose ? { cx: r.pose.cx, cy: r.pose.cy, thDeg: r.pose.thDeg } : null, best: r.best ? { badge: r.best.badge } : null, verdict: r.verdict })) };
+  const association = { absent: assoc.absent ?? null, condition: assoc.absent ?? null, template: assoc.template ?? null, rows: assoc.rows };
+  const refinedFile = join(out, 'early', 'artifacts', 's3fix', 'px.tees.refined.json');
+  const famFile = join(out, 'early', 'artifacts', 's3fix', 'px.tees.family-refined.json'), fam = existsSync(famFile) ? readJson(famFile).model : null;
+  // s3first.py's C.L (course.py): the S3 family model's major median, the pad length every course without AA-fit pads used
+  const padLength = fam?.major?.median ? { lengthPx: fam.major.median, rule: 'S3 family model major median (px.tees.family-refined model.major.median; course.py C.L)' } : { lengthPx: null, condition: 'no S3 family model' };
+  const refined = existsSync(refinedFile) ? readJson(refinedFile).tees.map((t) => ({ label: t.label, center: t.center, angleRad: t.angleRad, bbox: t.bbox, px: t.px })) : [];
 
   const s4dir = join(out, 's4recover'), s4run = latestRun(s4dir);
   const cmp = s4run ? readOpt(join(s4dir, s4run, 'cmp.fn.Tee.recover.json'), null) : null;
@@ -99,7 +107,7 @@ export function loadS6Inputs({ attempt, specimen, root = ROOT }) {
   const bytes = existsSync(srcPath) ? readFileSync(srcPath) : null;
   const background = bytes && originalPx ? { src: `data:image/${bytes[0] === 0x89 ? 'png' : 'jpeg'};base64,${bytes.toString('base64')}`, width: originalPx.width, height: originalPx.height, x: 0, y: -upper } : null;
   return { out, board, upperRowsRemoved: upper, background,
-    values: { 'tk.s6.association': association, 'tk.s6.s4Recovered': s4Recovered, 'tk.s6.basketRecovery': basketRecovery, 'tk.s6.lateS6': lateS6, 'testimony.source.holes': holes } };
+    values: { 'px.tees.association': association, 'px.tees.refined': refined, 'tk.s6.padLength': padLength, 'tk.s6.s4Recovered': s4Recovered, 'tk.s6.basketRecovery': basketRecovery, 'tk.s6.lateS6': lateS6, 'testimony.source.holes': holes } };
 }
 
 /**
@@ -133,6 +141,7 @@ export async function runHoleStraightForkJoin({ attempt, specimen, outDir = null
   store.constant('fn.tk.s6straight.laneOutputs', loaded.values);
   for (const [fn, spec] of S6_CALCULATIONS) store.register(fn, spec);
   registerQueries(store, holeQueries((a) => store.get(a)), { resolve: (ref) => ref, note: 'S6 hole questions (ports/s6straight/holeStraight.mjs)' });
+  registerPathMeasurement(store);   // fn.q.path.* and tk.s6.pathMask / tk.s6.hallway (agent B's half): produced on first need
   for (const address of ['tk.s6.holePairs', 'tk.s6.baskets']) store.get(address);   // shared by every branch: produced once on the parent
   const implementations = await discoverImplementations(join(root, 'impl'), HOLE_STRAIGHT_SLOT.slot);
   const sink = createFileSink(join(out, 'artifacts'), { relativeTo: out });

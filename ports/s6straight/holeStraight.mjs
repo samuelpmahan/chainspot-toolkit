@@ -9,7 +9,7 @@
  *     tk.s6.badgeCenters  px.badges -> [{ label, center }]: the badge sprite's bbox centre (the point ports/s3assoc uses)
  *     tk.s6.baskets       px.baskets + tk.s6.basketRecovery -> [{ index, name, source, bbox, point }]: S2 baskets and the
  *                         S4 recovered basket boxes, each with its BasketPoint (ports/s3assoc/associate.mjs basketPoint)
- *     tk.s6.holePairs         tk.s6.association + tk.s6.s4Recovered + tk.s6.badgeCenters -> one pair per tee after S4: the S3
+ *     tk.s6.holePairs         px.tees.association + tk.s6.s4Recovered + tk.s6.badgeCenters -> one pair per tee after S4: the S3
  *                         observed tees with the badge S3 association gave them, and the tees the S4 accepted variant
  *                         recovered, with the badge each was recovered for (forHole)
  *   S6_QUERIES        fn.q.hole.* (registerQueries: cached by arguments, profiled, { value, unit }):
@@ -77,8 +77,8 @@ export const S6_CALCULATIONS = Object.freeze([
     const v = basketsOf(io.in('px.baskets'), io.in('tk.s6.basketRecovery').recoveredBoxes ?? []);
     return { 'tk.s6.baskets': v };
   } }],
-  ['fn.tk.s6.holePairs', { inParts: ['tk.s6.association', 'tk.s6.s4Recovered', 'tk.s6.badgeCenters'], outParts: ['tk.s6.holePairs'], calculate: (io) => ({
-    'tk.s6.holePairs': pairsOf(io.in('tk.s6.association'), io.in('tk.s6.s4Recovered'), io.in('tk.s6.badgeCenters')) }) }]
+  ['fn.tk.s6.holePairs', { inParts: ['px.tees.association', 'tk.s6.s4Recovered', 'tk.s6.badgeCenters'], outParts: ['tk.s6.holePairs'], calculate: (io) => ({
+    'tk.s6.holePairs': pairsOf(io.in('px.tees.association'), io.in('tk.s6.s4Recovered'), io.in('tk.s6.badgeCenters')) }) }]
 ]);
 
 /** The pinned late S6 two-ray rows of one pair: same badge, tee centre within the tee match rule. */

@@ -11,6 +11,7 @@ import { createPartStore, registerQueries } from '../../fg/store.mjs';
 import { comparableForkJoin } from '../../fg/forkjoin.mjs';
 import { discoverImplementations } from '../../fg/discover.mjs';
 import { renderValue } from '../../fg/render.mjs';
+import { registerPathLoss } from './pathLoss.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 // a basket sprite bbox whose BasketPoint is (x, y)
@@ -90,19 +91,22 @@ test('the fork-join on a synthetic store: every impl, one verdict per pair, judg
   const W = 800, H = 800, rgba = new Uint8Array(W * H * 4).fill(120);
   const board = new Map([['px.badges', badges], ['px.baskets', s2], ['px.image.cropped', { rgba, widthPx: W, heightPx: H }]]);
   const store = createPartStore({ name: 's6-test', base: { has: (a) => board.has(a), get: (a) => board.get(a) } });
-  store.constant('fn.tk.s6straight.laneOutputs', { 'tk.s6.association': association, 'tk.s6.s4Recovered': s4, 'tk.s6.basketRecovery': { recoveredBoxes },
+  store.constant('fn.tk.s6straight.laneOutputs', { 'px.tees.association': { ...association, template: { L: 30 } }, 'px.tees.refined': [], 'tk.s6.padLength': { lengthPx: 30 }, 'tk.s6.s4Recovered': s4, 'tk.s6.basketRecovery': { recoveredBoxes },
     'tk.s6.lateS6': { absent: 'late S6 not run (test)', rows: [], templateTops: {} }, 'testimony.source.holes': { path: 'test', rule: 'synthetic', holes } });
   for (const [fn, spec] of S6_CALCULATIONS) store.register(fn, spec);
   registerQueries(store, holeQueries((a) => store.get(a)), { resolve: (r) => r });
+  registerPathLoss(store);   // agent B's fn.q.path.* and tk.s6.pathMask / tk.s6.hallway
   const implementations = await discoverImplementations(join(ROOT, 'impl'), HOLE_STRAIGHT_SLOT.slot);
-  assert.deepEqual(Object.keys(implementations).sort(), ['pathLoss', 'pinned', 'straight3']);
+  assert.deepEqual(Object.keys(implementations).sort(), ['pathLoss', 'pinned', 'segmentVerify', 'straight3']);
   const accept = acceptRule({ judged: true });
   const r = comparableForkJoin({ slot: HOLE_STRAIGHT_SLOT.slot, part: HOLE_STRAIGHT_SLOT.part, implementations, store, restore: () => ({ has: (a) => board.has(a), get: (a) => board.get(a) }),
     apply: (parts, impl, name) => ({ implementation: name, ...impl(parts) }), guarantees: GUARANTEES, compare: compareStraight({ parentStore: store }), accept });
-  for (const n of ['pathLoss', 'pinned', 'straight3']) assert.equal(r.branches[n].error, null, `${n}: ${r.branches[n].error?.message}`);
+  for (const n of ['pathLoss', 'pinned', 'segmentVerify', 'straight3']) assert.equal(r.branches[n].error, null, `${n}: ${r.branches[n].error?.message}`);
   const b = r.comparison.value.branches;
   assert.deepEqual([b.straight3.TP, b.straight3.FP, b.straight3.FN, b.straight3.TN], [2, 0, 0, 1]);
   assert.equal(b.pinned.laneNotRun, true); assert.equal(b.pathLoss.laneNotRun, true);
+  // a flat raster has no ribbon: no hallway width, so the 3-point STRAIGHT pairs stay unknown and the bent one is bent
+  assert.deepEqual(store.get(r.comparison.variants.segmentVerify).verdicts.map((v) => v.verdict), ['unknown', 'bent', 'unknown']);
   assert.equal(r.comparison.accepted, 'straight3'); assert.equal(store.get(HOLE_STRAIGHT_SLOT.part).implementation, 'straight3', 'the pointer resolves');
   const s3 = store.get(r.comparison.variants.straight3);
   assert.deepEqual(verdictCounts(s3.verdicts), { pairs: 3, straight: 2, bent: 1, unknown: 0 });
@@ -117,4 +121,27 @@ test('drawCourse draws segments at half scale', () => {
   const raster = { rgba: new Uint8Array(40 * 20 * 4).fill(200), widthPx: 40, heightPx: 20 };
   const c = drawCourse(raster, { segments: [{ kind: 'verdict', verdict: 'straight', from: [2, 10], to: [38, 10] }] });
   assert.deepEqual([c.width, c.height], [20, 10]); assert.ok(c.png.length > 20);
+});
+
+test('segmentVerify on a synthetic ribbon: a 3-point STRAIGHT pair whose ribbon runs to the basket verifies; one whose ribbon stops does not', async () => {
+  const { ribbonRaster } = await import('./fixtures/ribbon.mjs');
+  const W = 640, H = 640, half = 18;
+  const r1 = ribbonRaster({ W, H, from: [100, 200], to: [500, 200], halfPx: half }), r2 = ribbonRaster({ W, H, from: [100, 450], to: [150, 450], halfPx: half, seed: 9 });
+  const rgba = new Uint8Array(r1.rgba); for (let y = 380; y < H; y++) rgba.set(r2.rgba.subarray(y * W * 4, (y + 1) * W * 4), y * W * 4);   // hole 2's ribbon stops past its pad (the hole bends there): no ribbon on the line to its basket
+  const bb = [{ label: '1', bbox: [240, 190, 21, 21], px: [] }, { label: '2', bbox: [240, 440, 21, 21], px: [] }];
+  const kj = [{ bbox: bboxAt([500, 200]), px: [] }, { bbox: bboxAt([500, 450]), px: [] }];
+  const rows = [1, 2].map((n) => ({ tee: `t${n}`, candidate: `Tee c${n}`, center: [100, n === 1 ? 200 : 450], thDeg: 0, pose: { cx: 100, cy: n === 1 ? 200 : 450, thDeg: 0 }, best: { badge: String(n), sense: 1 }, verdict: 'ASSOCIATED' }));
+  const board = new Map([['px.badges', bb], ['px.baskets', kj], ['px.image.cropped', { rgba, widthPx: W, heightPx: H }]]);
+  const store = createPartStore({ name: 's6-ribbon', base: { has: (a) => board.has(a), get: (a) => board.get(a) } });
+  store.constant('fn.tk.s6straight.laneOutputs', { 'px.tees.association': { rows, template: { L: 20 } }, 'px.tees.refined': [], 'tk.s6.padLength': { lengthPx: 20 },
+    'tk.s6.s4Recovered': { accepted: null, recovered: [] }, 'tk.s6.basketRecovery': { recoveredBoxes: [] }, 'tk.s6.lateS6': { absent: 'test', rows: [], templateTops: {} }, 'testimony.source.holes': { path: null, rule: 'none', holes: [] } });
+  for (const [fn, spec] of S6_CALCULATIONS) store.register(fn, spec);
+  registerQueries(store, holeQueries((a) => store.get(a)), { resolve: (r) => r });
+  registerPathLoss(store);
+  const { default: segmentVerify, reads, calls } = await import('../../impl/fn.Hole.straight/segmentVerify.mjs');
+  const scoped = store.scope({ who: 'test', reads, calls });
+  const out = segmentVerify({ get: scoped.get, has: scoped.has, call: scoped.call });
+  assert.ok(Math.abs(store.get('tk.s6.hallway').widthPx - 2 * half) <= 2, `hallway ${store.get('tk.s6.hallway').widthPx} px learned on the tee -> badge segments`);
+  assert.deepEqual(out.verdicts.map((v) => [v.hole, v.verdict]), [['1', 'straight'], ['2', 'bent']]);
+  assert.ok(out.verdicts[0].evidence.edgeScoreLumPerPx >= 6); assert.match(out.verdicts[1].evidence.step, /segment not verified/);
 });

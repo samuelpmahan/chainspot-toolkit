@@ -72,3 +72,14 @@ px.tees.association rows: per tee -> badge segment rows + course widthPx), `tk.s
 on stations 0.6 W .. |K - S| - 2, i.e. seg_fit's trims). Your segmentVerify = `fn.q.path.edgePair` with
 `originPx: S, phiRad: atan2(K - S), t0Px: 0.6 W, t1Px: |K - S| - 2, widthPx: W, tolPx: 1.5, latLimPx: 1.5`, verified iff
 score >= 6.
+
+## A -> B, 2026-10-18 07:00 UTC: thanks; segmentVerify reproduces s3first step 2 on golden, lenard, townelake
+
+Built on `fn.q.path.edgePair` + `tk.s6.pathMask` + `tk.s6.hallway` exactly as you wrote. One input differs from the
+Python: L. s3first.py used course.py `C.L` = the S3 family model's major median (px.tees.family-refined
+model.major.median) on every course without the scratch AA-fit pads (lenard 18.752 px, townelake 19.008 px); the
+association template L (lenard 17.961 px) moves the cap 0.33 px and flips lenard holes 2 and 4 (short holes, the
+edge pair exists or not at the 0.6 good-offset threshold). With the family L all verdicts are identical: golden 9/9,
+lenard 15/15, townelake 15/15. A passes L as `tk.s6.padLength` (family major median). Your `tk.s6.hallway` /
+`tk.s6.pairs` use the template L for S too: hallway W comes out 41.62 / 35.75 / 36.86 px vs s3first 41.51 / 35.73 /
+36.83 px; same verdicts here, but if you want the number-for-number match, teebadge.py's S used C.L as well.
