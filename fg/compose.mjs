@@ -254,7 +254,8 @@ const instrumented = decorator({
 export const profiled = decorator({
   name: 'profiled', property: 'profiled', calls: [INSTRUMENTATION_CALLS],
   after: (env, s) => {
-    const profile = profileSummary({ calculations: env.call(INSTRUMENTATION_CALLS, { caller: env.id }) }).map(({ calculation, calls, emits, threw }) => ({ calculation, calls, emits, threw }));
+    const profile = profileSummary({ calculations: env.call(INSTRUMENTATION_CALLS, { caller: env.id }) }).map(({ calculation, calls, emits, threw }) => ({ calculation, calls, emits, threw }))
+      .sort((a, b) => (a.calculation < b.calculation ? -1 : a.calculation > b.calculation ? 1 : 0));   // by name: a record never depends on timing
     const units = { calls: 'count (Calculation calls)', threw: 'count (calls that threw)' };
     for (const row of profile) for (const k of Object.keys(row.emits)) units[k] ??= `as emitted by ${row.calculation} (summed over its calls)`;
     return { out: { ...(s.out ?? {}), profile }, units: { ...(s.units ?? {}), ...units } };

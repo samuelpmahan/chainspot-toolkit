@@ -14,23 +14,19 @@
  * Artifacts artifacts/s3/px.tees.json, teePx.rgba.bin, remaining.rgba.bin
  * (bytes unchanged); record stages[S3].materialization / materializations.S3.
  */
-import { guarantee, pipe, read, step } from '../compose.mjs';
-import { conserved, framed, materialized, objectsFrame, published, unitful, witnessed } from '../mixins.mjs';
+import { step } from '../compose.mjs';
+import { materializeGuarantee } from '../skeletons.mjs';
+import { conserved, framed, materialized, objectsFrame, witnessed } from '../mixins.mjs';
 import { unionOf, viewBytes } from '../legacy.mjs';
 import { serializeTee } from './serialize.mjs';
 
 const ID = 'fg.s3.pxTees.materialize';
 const PART = 'px.tees';
 const PRODUCED_BY = 'Tee.findPx';
-const CAPTURED = 'tk.stage.S3.captured';
 const MATERIALIZER = 'fn.provider.S3.materializeSubtraction';
 const UNITS = {};
 
-const serialize = step('serialize px.tees', (env, s) => {
-  const tees = s.parts[PART];
-  const captured = s.parts[CAPTURED];
-  if (!Array.isArray(tees) || !tees.length) env.fail('px.tees is missing or empty on the board after S3');
-  if (!captured?.tees || captured.tees.length !== tees.length) env.fail('captured S3 run tees disagree with the board px.tees');
+const serialize = (env, s, { tees, captured }) => {
   const pxSha = (px) => env.call('fn.tk.sha256', { bytes: viewBytes(px) });
   const serialized = tees.map((tee, index) => {
     if (!tee.px || !tee.bbox) env.fail(`tee ${index} lacks px or bbox (opaque tee object)`);
@@ -39,7 +35,7 @@ const serialize = step('serialize px.tees', (env, s) => {
   const claimed = unionOf(serialized.map((t) => t.px));
   const claimedVisits = serialized.reduce((n, t) => n + t.pxCount, 0);
   return { serialized, claimed, claimedVisits, image: captured.image, planFingerprint: captured.plan.planFingerprint, totals: { claimedPx: claimed.size, claimedVisits, overlapWithinLayerPx: claimedVisits - claimed.size } };
-}, { calls: ['fn.tk.sha256'] });
+};
 
 const witness = witnessed.provider(MATERIALIZER, {
   name: 'serializerMatchesMaterializer', as: 'materializer',
@@ -114,13 +110,8 @@ const frames = framed((s) => {
   ];
 });
 
-export default guarantee({
-  id: ID, guards: [PART], audit: [unitful({ units: UNITS })],
-  result: (s) => ({ totals: s.totals, teeCount: s.serialized.length, layerIntegrity: s.layerIntegrity, producedBy: PRODUCED_BY })
-}, pipe(read(PART, CAPTURED),
-  serialize, witness, rasterRecount, conserved.layer('S3'), assemble, artifacts, frames,
-  published({
-    stage: 'S3', key: 'materialization', materialization: 'S3',
-    header: () => ({ part: PART, producedBy: PRODUCED_BY }),
-    body: (s) => ({ teeCount: s.serialized.length, planFingerprint: s.planFingerprint, totals: s.totals, witness: s.witnessSummary, layerIntegrity: s.layerIntegrity })
-  })));
+export default materializeGuarantee({
+  stage: 'S3', noun: { one: 'tee', many: 'tees' }, producedBy: PRODUCED_BY, units: UNITS,
+  serialize, serializeCalls: ['fn.tk.sha256'], witness, checks: [rasterRecount], layered: true, assemble, artifacts, frames,
+  body: (s) => ({ teeCount: s.serialized.length, planFingerprint: s.planFingerprint, totals: s.totals, witness: s.witnessSummary, layerIntegrity: s.layerIntegrity })
+});

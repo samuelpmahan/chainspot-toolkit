@@ -11,22 +11,18 @@
  * bytes (artifacts/s1/px.badges.json, badgePx.rgba.bin, muted.rgba.bin);
  * the record is published at stages[S1].materialization / materializations.S1.
  */
-import { guarantee, pipe, read, step } from '../compose.mjs';
-import { conserved, framed, materialized, objectsFrame, published, unitful, witnessed } from '../mixins.mjs';
+import { step } from '../compose.mjs';
+import { materializeGuarantee } from '../skeletons.mjs';
+import { conserved, framed, materialized, objectsFrame, witnessed } from '../mixins.mjs';
 import { legacyPlain, unionOf } from '../legacy.mjs';
 
 const ID = 'fg.s1.pxBadges.materialize';
 const PART = 'px.badges';
 const PRODUCED_BY = 'Badge.findPx';
-const CAPTURED = 'tk.stage.S1.captured';
 const MATERIALIZER = 'fn.provider.S1.materializeSubtractions';
 const UNITS = { confidence: 'fraction (reader confidence)', radiusPx: 'px' };
 
-const serialize = step('serialize px.badges', (env, s) => {
-  const badges = s.parts[PART];
-  const captured = s.parts[CAPTURED];
-  if (!Array.isArray(badges) || !badges.length) env.fail('px.badges is missing or empty on the board after S1');
-  if (!captured?.badges || captured.badges.length !== badges.length) env.fail('captured S1 run badges disagree with the board px.badges');
+const serialize = (env, s, { badges }) => {
   const serialized = badges.map((badge, index) => {
     if (!badge.px || !badge.has?.mute?.px) env.fail(`badge ${index} lacks px or has.mute.px (opaque badge object)`);
     return {
@@ -48,7 +44,7 @@ const serialize = step('serialize px.badges', (env, s) => {
   };
   totals.addedMutePx = totals.mutedPx - totals.badgePx;
   return { serialized, totals };
-});
+};
 
 const witness = witnessed.provider(MATERIALIZER, {
   name: 'serializerMatchesMaterializer', as: 'materializer',
@@ -121,13 +117,7 @@ const frames = framed((s) => [
   }
 ]);
 
-export default guarantee({
-  id: ID, guards: [PART], audit: [unitful({ units: UNITS })],
-  result: (s) => ({ totals: s.totals, badgeCount: s.serialized.length, producedBy: PRODUCED_BY })
-}, pipe(read(PART, CAPTURED),
-  serialize, witness, rasters, rasterRecount, assemble, artifacts, frames,
-  published({
-    stage: 'S1', key: 'materialization', materialization: 'S1',
-    header: () => ({ part: PART, producedBy: PRODUCED_BY }),
-    body: (s) => ({ badgeCount: s.serialized.length, totals: s.totals })
-  })));
+export default materializeGuarantee({
+  stage: 'S1', noun: { one: 'badge', many: 'badges' }, producedBy: PRODUCED_BY, units: UNITS,
+  serialize, witness, checks: [rasters, rasterRecount], assemble, artifacts, frames
+});

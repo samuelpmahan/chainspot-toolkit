@@ -14,8 +14,9 @@
  * / materializations.S2 and, as every held record, becomes the Part
  * tk.fg.s2.pxBaskets.materialize.record that S3's stack ledger reads.
  */
-import { guarantee, pipe, read, step } from '../compose.mjs';
-import { conserved, framed, materialized, objectsFrame, published, unitful, witnessed } from '../mixins.mjs';
+import { step } from '../compose.mjs';
+import { materializeGuarantee } from '../skeletons.mjs';
+import { conserved, framed, materialized, objectsFrame, witnessed } from '../mixins.mjs';
 import { legacyPlain, unionOf, viewBytes } from '../legacy.mjs';
 
 const ID = 'fg.s2.pxBaskets.materialize';
@@ -25,11 +26,7 @@ const UNITS = {};
 const CAPTURED = 'tk.stage.S2.captured';
 const MATERIALIZER = 'fn.provider.S2.materializeSubtraction';
 
-const serialize = step('serialize px.baskets', (env, s) => {
-  const baskets = s.parts[PART];
-  const captured = s.parts[CAPTURED];
-  if (!Array.isArray(baskets) || !baskets.length) env.fail('px.baskets is missing or empty on the board after S2');
-  if (!captured?.baskets || captured.baskets.length !== baskets.length) env.fail('captured S2 run baskets disagree with the board px.baskets');
+const serialize = (env, s, { baskets, captured }) => {
   const pxSha = (px) => env.call('fn.tk.sha256', { bytes: viewBytes(px) });
   const serialized = baskets.map((basket, index) => {
     if (!basket.px || !basket.bbox) env.fail(`basket ${index} lacks px or bbox (opaque basket object)`);
@@ -47,7 +44,7 @@ const serialize = step('serialize px.baskets', (env, s) => {
   const claimed = unionOf(serialized.map((b) => b.px));
   const claimedVisits = serialized.reduce((n, b) => n + b.pxCount, 0);
   return { serialized, claimed, claimedVisits, image: captured.image, totals: { claimedPx: claimed.size, claimedVisits, overlapWithinLayerPx: claimedVisits - claimed.size } };
-}, { calls: ['fn.tk.sha256'] });
+};
 
 const witness = witnessed.provider(MATERIALIZER, {
   name: 'serializerMatchesMaterializer', as: 'materializer',
@@ -120,13 +117,8 @@ const frames = framed((s) => {
   ];
 });
 
-export default guarantee({
-  id: ID, guards: [PART], audit: [unitful({ units: UNITS })],
-  result: (s) => ({ totals: s.totals, basketCount: s.serialized.length, layerIntegrity: s.layerIntegrity, producedBy: PRODUCED_BY })
-}, pipe(read(PART, CAPTURED),
-  serialize, witness, rasterRecount, conserved.layer('S2'), assemble, artifacts, frames,
-  published({
-    stage: 'S2', key: 'materialization', materialization: 'S2',
-    header: () => ({ part: PART, producedBy: PRODUCED_BY }),
-    body: (s) => ({ basketCount: s.serialized.length, familyCount: s.parts[CAPTURED].family.members.length, shellMemberCount: s.parts[CAPTURED].shellFamily.members.length, totals: s.totals, witness: s.witnessSummary, layerIntegrity: s.layerIntegrity })
-  })));
+export default materializeGuarantee({
+  stage: 'S2', noun: { one: 'basket', many: 'baskets' }, producedBy: PRODUCED_BY, units: UNITS,
+  serialize, serializeCalls: ['fn.tk.sha256'], witness, checks: [rasterRecount], layered: true, assemble, artifacts, frames,
+  body: (s) => ({ basketCount: s.serialized.length, familyCount: s.parts[CAPTURED].family.members.length, shellMemberCount: s.parts[CAPTURED].shellFamily.members.length, totals: s.totals, witness: s.witnessSummary, layerIntegrity: s.layerIntegrity })
+});
