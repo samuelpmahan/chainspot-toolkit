@@ -21,6 +21,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { inflateSync, deflateSync } from 'node:zlib';
+import { runnerCache, casFlag } from '../../fg/casRunner.mjs';
 import { instrumentedStore, profileSummary, profileFrame } from '../../fg/profile.mjs';
 import { RENDER_PART } from '../../fg/store.mjs';
 import { framesJson, renderFlipbook } from '../../fg/flipbook.mjs';
@@ -53,7 +54,7 @@ function recompressPng(bytes) {
 const alphaSummary = (store) => { const p = store.get(ALPHA_PROFILE_PART), o = p?.overlays?.path; return { producedBy: store.provenance(ALPHA_PROFILE_PART)?.producedBy ?? null, status: p?.status ?? null, path: o ? (o.alpha != null ? { alpha: o.alpha, sigmaAlpha: o.sigmaAlpha, rgb: o.rgb, fitOn: o.fitOn } : o) : null }; };
 const summarized = (v) => JSON.parse(JSON.stringify(v, (k, x) => (ArrayBuffer.isView(x) ? { typedArray: x.constructor.name, length: x.length } : x)));
 
-export function runPathLoss({ attempt, specimen, outDir = null, root = ROOT }) {
+export function runPathLoss({ attempt, specimen, outDir = null, root = ROOT, cas = true }) {
   const loaded = loadAttemptParts({ attempt, specimen, root });
   const out = outDir ?? join(loaded.out, 's6pathLoss', `run-${new Date().toISOString().replace(/[:.]/g, '-')}`);
   const assocFile = join(loaded.out, 's3assoc', 'px.tees.association.json');
@@ -61,7 +62,7 @@ export function runPathLoss({ attempt, specimen, outDir = null, root = ROOT }) {
   const T = loadTestimony(specimen, root);
   const testimony = T ? { path: T.file, rule: `canonical frame (annotation y - ${T.dy} px); bent = corridorBends non-empty`, holes: [...T.holes.values()].map((h) => ({ hole: h.hole, teePx: h.tee, basketPx: h.basket, bent: h.bent })) }
     : { path: null, rule: `no testimony for ${specimen}: nothing judged`, holes: [] };
-  const { store, document: instrumentation } = instrumentedStore({ name: `s6pathLoss:${specimen}`, base: loaded.board });
+  const { store, document: instrumentation } = instrumentedStore({ name: `s6pathLoss:${specimen}`, base: loaded.board, ...runnerCache({ root, entry: import.meta.filename, cas }) });
   store.constant('fn.tk.s6pathLoss.laneOutputs', { 'px.tees.refined': loaded.values['px.tees.refined'], 'tk.s6.basketRecovery': loaded.values['tk.s4.basketRecovery'], 'px.tees.association': { rows: association.rows, template: association.template ?? null, condition: association.condition ?? null }, [TESTIMONY_PART]: testimony });
   registerAlphaProfile(store, { s4LaneOutputs: s4LaneOutputsFor(loaded.values, { omit: ['px.tees.refined'] }), association: loadAssociation({ out: loaded.out, attempt, specimen }), course: specimen });   // px.tees.refined: already a root here
   registerPathLoss(store);
@@ -86,8 +87,8 @@ export function runPathLoss({ attempt, specimen, outDir = null, root = ROOT }) {
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1]]] : acc), []));
-  if (!args.attempt || !args.specimen) { console.error('usage: node ports/s6straight/pathLoss.run.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR]'); process.exit(2); }
-  const r = runPathLoss({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null });
+  if (!args.attempt || !args.specimen) { console.error('usage: node ports/s6straight/pathLoss.run.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR] [--no-cas]'); process.exit(2); }
+  const r = runPathLoss({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null, cas: casFlag() });
   const v = r.value;
   console.log(JSON.stringify({
     out: r.out, sheet: r.sheetPath, emits: r.emits, hallway: { widthPx: r.hallway.widthPx, segments: r.hallway.emits?.segmentsCount, iqrPx: r.hallway.widthIqrPx },

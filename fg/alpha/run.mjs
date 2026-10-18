@@ -17,6 +17,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import zlib from 'node:zlib';
+import { runnerCache, casFlag } from '../casRunner.mjs';
 import { instrumentedStore, profileSummary, profileFrame } from '../profile.mjs';
 import { RENDER_PART } from '../store.mjs';
 import { framesJson, renderFlipbook } from '../flipbook.mjs';
@@ -72,11 +73,11 @@ export function registerAlphaProfile(store, { s4LaneOutputs = null, association,
   registerAlphaQueries(store);
 }
 
-export function runAlphaProfile({ attempt, specimen, outDir = null, root = ROOT }) {
+export function runAlphaProfile({ attempt, specimen, outDir = null, root = ROOT, cas = true }) {
   const loaded = loadAttemptParts({ attempt, specimen, root });
   const association = loadAssociation({ out: loaded.out, attempt, specimen });
   const out = outDir ?? join(loaded.out, 's7alpha', `run-${new Date().toISOString().replace(/[:.]/g, '-')}`);   // evidence is never overwritten
-  const { store, document: instrumentation } = instrumentedStore({ name: `s7alpha:${specimen}`, base: loaded.board });
+  const { store, document: instrumentation } = instrumentedStore({ name: `s7alpha:${specimen}`, base: loaded.board, ...runnerCache({ root, entry: import.meta.filename, cas }) });
   registerAlphaProfile(store, { s4LaneOutputs: loaded.values, association, course: specimen });
   const profile = store.get(ALPHA_PROFILE_PART);
   mkdirSync(out, { recursive: true });
@@ -103,8 +104,8 @@ export function runAlphaProfile({ attempt, specimen, outDir = null, root = ROOT 
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1]]] : acc), []));
-  if (!args.attempt || !args.specimen) { console.error('usage: node fg/alpha/run.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR]'); process.exit(2); }
-  const r = runAlphaProfile({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null });
+  if (!args.attempt || !args.specimen) { console.error('usage: node fg/alpha/run.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR] [--no-cas]'); process.exit(2); }
+  const r = runAlphaProfile({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null, cas: casFlag() });
   const p = r.profile;
   console.log(JSON.stringify({ out: r.out, course: p.course, r1Px: p.r1Px, overlays: p.overlays, scale: p.fit.scale, perClass: Object.fromEntries(Object.entries(p.fit.perClass).map(([k, v]) => [k, { pairs: v.pairs, trimmedPairs: v.trimmedPairs, controlRatio: v.controlRatio, alphaOls: v.alphaOls, alphaByGeometry: v.alphaByGeometry.map((g) => `${g.binArcPx}/${g.depthPx}: ${g.alpha}`).join(', '), bounded: v.bounded, counts: v.counts }])),
     shot: r.shot, profile: r.profile_.slice(0, 8).map((x) => `${x.calculation}: ${x.calls}x self ${x.selfMs} ms ${JSON.stringify(x.emits)}`) }, null, 1));

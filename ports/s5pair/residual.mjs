@@ -27,6 +27,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { loadAttemptParts } from '../s4recover/run.mjs';
 import { registerAlphaProfile, loadAssociation } from '../../fg/alpha/run.mjs';
+import { runnerCache, casFlag } from '../../fg/casRunner.mjs';
 import { instrumentedStore, profileSummary, profileFrame } from '../../fg/profile.mjs';
 import { RENDER_PART } from '../../fg/store.mjs';
 import { framesJson, renderFlipbook } from '../../fg/flipbook.mjs';
@@ -57,10 +58,10 @@ export function loadResidualInputs({ attempt, specimen, root = ROOT }) {
   return { out, board, truth, pinned, background, recorded, s4LaneOutputs: loaded.values, association: loadAssociation({ out, attempt, specimen }) };
 }
 
-export function runResidualProfile({ attempt, specimen, outDir = null, root = ROOT }) {
+export function runResidualProfile({ attempt, specimen, outDir = null, root = ROOT, cas = true }) {
   const L = loadResidualInputs({ attempt, specimen, root });
   const out = outDir ?? join(L.out, 's5pair', `run-${new Date().toISOString().replace(/[:.]/g, '-')}`);
-  const { store, document: instrumentation } = instrumentedStore({ name: `s5pair:${specimen}`, base: L.board });
+  const { store, document: instrumentation } = instrumentedStore({ name: `s5pair:${specimen}`, base: L.board, ...runnerCache({ root, entry: import.meta.filename, cas }) });
   store.constant('fn.tk.s5residual.laneOutputs', { [STRAIGHT_TRUTH_PART]: L.truth, [RECORDED_ASSOC_PART]: L.recorded });
   // the S7 profile is an inPart of the measurement: its Calculations registered here, produced on first need
   registerAlphaProfile(store, { s4LaneOutputs: L.s4LaneOutputs, association: L.association, course: specimen });
@@ -93,8 +94,8 @@ export function runResidualProfile({ attempt, specimen, outDir = null, root = RO
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1]]] : acc), []));
-  if (!args.attempt || !args.specimen) { console.error('usage: node ports/s5pair/residual.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR]'); process.exit(2); }
-  const r = runResidualProfile({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null });
+  if (!args.attempt || !args.specimen) { console.error('usage: node ports/s5pair/residual.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR] [--no-cas]'); process.exit(2); }
+  const r = runResidualProfile({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null, cas: casFlag() });
   const P = r.profile;
   console.log(JSON.stringify({
     out: r.out, course: P.course, condition: P.condition,

@@ -30,6 +30,7 @@ import { deserialize } from 'node:v8';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { deflateSync } from 'node:zlib';
+import { runnerCache, casFlag } from '../../fg/casRunner.mjs';
 import { instrumentedStore, profileSummary, profileFrame } from '../../fg/profile.mjs';
 import { RENDER_PART, registerQueries } from '../../fg/store.mjs';
 import { comparableForkJoin, forkJoinFrames } from '../../fg/forkjoin.mjs';
@@ -139,10 +140,10 @@ export function acceptRule({ acceptedElsewhere = null, judged = true } = {}) {
   return accept;
 }
 
-export async function runHoleStraightForkJoin({ attempt, specimen, outDir = null, root = ROOT, acceptedElsewhere = null }) {
+export async function runHoleStraightForkJoin({ attempt, specimen, outDir = null, root = ROOT, acceptedElsewhere = null, cas = true }) {
   const loaded = loadS6Inputs({ attempt, specimen, root });
   const out = outDir ?? join(loaded.out, 's6straight', `run-${new Date().toISOString().replace(/[:.]/g, '-')}`);
-  const { store, document: instrumentation } = instrumentedStore({ name: `s6straight:${specimen}`, base: loaded.board });
+  const { store, document: instrumentation } = instrumentedStore({ name: `s6straight:${specimen}`, base: loaded.board, ...runnerCache({ root, entry: import.meta.filename, cas }) });
   store.constant('fn.tk.s6straight.laneOutputs', loaded.values);
   for (const [fn, spec] of S6_CALCULATIONS) store.register(fn, spec);
   registerQueries(store, holeQueries((a) => store.get(a)), { resolve: (ref) => ref, note: 'S6 hole questions (ports/s6straight/holeStraight.mjs)' });
@@ -209,8 +210,8 @@ function writeRender({ out, specimen, attempt, store, result, judged, background
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1]]] : acc), []));
-  if (!args.attempt || !args.specimen) { console.error('usage: node ports/s6straight/run.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR] [--accept VARIANT  (for a course without testimony: what the annotated courses accepted)]'); process.exit(2); }
-  const r = await runHoleStraightForkJoin({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null, acceptedElsewhere: args.accept ?? null });
+  if (!args.attempt || !args.specimen) { console.error('usage: node ports/s6straight/run.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR] [--no-cas  (do not use the persistent cache attempts/cas)] [--accept VARIANT  (for a course without testimony: what the annotated courses accepted)]'); process.exit(2); }
+  const r = await runHoleStraightForkJoin({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null, acceptedElsewhere: args.accept ?? null, cas: casFlag() });
   const c = r.comparison;
   console.log(JSON.stringify({
     out: r.out, frames: r.frames, accepted: r.accepted, acceptedBy: r.acceptedBy, timingsMs: r.timingsMs, render: r.render,
