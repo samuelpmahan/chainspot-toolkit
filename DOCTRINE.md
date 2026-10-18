@@ -4,6 +4,21 @@ What Sam has decided, each with the evidence that made it concrete. Agents
 read this before changing a Stage. Where the repo and Sam disagree, Sam is
 right and the repo is behind. Every number carries a unit.
 
+## How to read these rulings (Sam, 2026-10-18)
+
+- **Phronesis and cleanrooming.** Sam's rulings are practical judgement on particular cases (heritage hole 8 is
+  straight); the cleanroom keeps that judgement honest: rebuild from behaviour and a stated spec, prove equivalence
+  on outputs (geometry, not hashes), hold validation out (`sealed/`).
+- **Metaphors are specs.** "Model it after Redis" became the keyspace; "known endpoints, work backwards" is
+  conditioning on a collider; "scoring and matching are separate, symbiotic phases" is two kinds of Calculation.
+  An agent that treats one as an image builds the wrong thing.
+- **The scene is a generative model.** Course -> hole n -> {tee, badge, basket, path}; stages condition on the known
+  nodes first (badges, ring geometry, then endpoints) and infer the uncertain ones from them.
+- **What it learns is generalization.** Declarative composition makes recombination predictable, which is what lets
+  a shot be called before the run; a called shot that lands on a combination never run before is the evidence that
+  something was learned rather than memorized, and an uncalled change is where the model is wrong. Dev is solved
+  reliably first; then the rest of the corpus opens up for true learning, and `sealed/` stays the unseen test.
+
 ## The scene
 
 - The image is a satellite photo with **rendered sprites** drawn over it:
