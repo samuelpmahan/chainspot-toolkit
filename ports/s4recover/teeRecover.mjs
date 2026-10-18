@@ -87,7 +87,8 @@ export const RULES = Object.freeze({
   hiddenMinFrac: 0.5,          // the occluding sprites must hide at least this fraction of the pad's template px
   hiddenMaxNegativeFrac: 0.02, // visible px contradicting the pad (wrong class, white just outside) / template px
   hallwayMinStepLum: 12,       // tee->badge edge step; dev: real segments median 27-44 lum, other-badge impostors max 9.7
-  hallwaySubsamplePx: 3        // feasible hidden centres are hallway-tested on this grid
+  hallwaySubsamplePx: 3,       // feasible hidden centres are hallway-tested on this grid
+  peekMinFramePx: 3            // frame-white px of a hidden pad visible outside its occluder: direct evidence, pins the pose
 });
 
 import { nameCandidates } from '../../fg/names.mjs';
@@ -217,6 +218,12 @@ export function classifyRaster({ rgba, widthPx: W, heightPx: H }, tpl) {
 
 export function buildOccluders({ widthPx: W, heightPx: H }, { badges = [], baskets = [], recoveredBasketBoxes = [], tees = [], basketFringePx = RULES.basketFringePx }, tpl) {
   const occ = new Uint8Array(W * H);
+  // The fringe is the black outline's anti-alias seam: black blended into the background, never brighter than it. A
+  // frame-white px there is not the basket's: it is a sprite underneath peeking out (Sam, 2026-10-18: Tee 5 in Basket
+  // 4's notch), so the fringe never claims it.
+  const rgba = arguments[0].rgba;
+  const frameWhite = (i) => { if (!rgba || !tpl?.whiteMinLevel) return false; const k = i * 4, a = rgba[k], b = rgba[k + 1], c = rgba[k + 2];
+    return Math.min(a, b, c) >= tpl.whiteMinLevel && Math.max(a, b, c) - Math.min(a, b, c) <= RULES.whiteChromaMax; };
   const box = ([x, y, w, h], code) => {
     for (let yy = Math.max(0, Math.floor(y)); yy < Math.min(H, Math.ceil(y + h)); yy++)
       for (let xx = Math.max(0, Math.floor(x)); xx < Math.min(W, Math.ceil(x + w)); xx++) occ[yy * W + xx] = code;
@@ -228,7 +235,7 @@ export function buildOccluders({ widthPx: W, heightPx: H }, { badges = [], baske
     for (let dy = -f; dy <= f; dy++) for (let dx = -f; dx <= f; dx++) {
       if (dx * dx + dy * dy > f2) continue;
       const xx = x + dx, yy = y + dy;
-      if (xx >= 0 && yy >= 0 && xx < W && yy < H) occ[yy * W + xx] = OCC.basketFringe;
+      if (xx >= 0 && yy >= 0 && xx < W && yy < H && !frameWhite(yy * W + xx)) occ[yy * W + xx] = OCC.basketFringe;
     }
   };
   for (const b of baskets) for (const i of b.px) fringeAt(i % W, Math.floor(i / W));
@@ -531,6 +538,26 @@ export function learnHallwayWidth(ctx) {
 }
 
 /**
+ * What a peeking frame fragment pins (Sam: "that's an edge not a corner -- calculate it"). The fragment = the visible
+ * frame-white px of the best peek pose, measured in that pad's own axes (u = long axis on the badge ray, n = across):
+ *   side edge  one run parallel to u: fixes the angle and the across-position; the pad can slide along u
+ *   end edge   one run parallel to n: fixes the along-position; the pad can slide along n
+ *   corner     runs along both: fixes the position
+ * The tied best poses measure the residual freedom directly: their spread along u and along n (px).
+ */
+export function fragmentGeometry(ctx, poses) {
+  const best = poses[0], e = evaluatePose(ctx, best.cx, best.cy, best.th, { collect: true }), px = e.px.visibleFrame;
+  const c = Math.cos(best.th), s = Math.sin(best.th);
+  const uv = px.map((i) => { const dx = (i % ctx.W) - best.cx, dy = Math.floor(i / ctx.W) - best.cy; return [dx * c + dy * s, -dx * s + dy * c]; });
+  const ext = (k) => (uv.length ? Math.max(...uv.map((p) => p[k])) - Math.min(...uv.map((p) => p[k])) + 1 : 0);
+  const alongU = ext(0), alongN = ext(1), stroke = Math.max(ctx.tpl.strokeEndPx, ctx.tpl.strokeSidePx) + 1;
+  const kind = alongU > stroke && alongN > stroke ? 'corner' : alongU > alongN ? 'side edge (parallel to the long axis)' : 'end edge (parallel to the short axis)';
+  const spread = (k) => { const v = poses.map((p) => k === 0 ? (p.cx - best.cx) * c + (p.cy - best.cy) * s : -(p.cx - best.cx) * s + (p.cy - best.cy) * c); return r3(Math.max(...v) - Math.min(...v)); };
+  return { fragment: { px: px.length, extentAlongLongAxisPx: alongU, extentAcrossPx: alongN, strokePx: r3(stroke - 1), kind },
+    freedom: { slideAlongLongAxisPx: spread(0), slideAcrossPx: spread(1), rule: 'spread of the tied best poses, in the pad axes' } };
+}
+
+/**
  * Occluder search for a badge with no visible pad: under every opaque sprite whose distance to the badge lies in this
  * course's tee->badge range, every centre (1 px grid over the sprite bbox +- the pad half-width) with its axis on the
  * badge ray is feasible when opaque sprites hide >= hiddenMinFrac of the pad and the visible rest contradicts it in
@@ -546,7 +573,7 @@ export function occluderSearch(ctx, bi, { hallwayTest = true, keepCenters = fals
   let evaluated = 0;
   for (const sp of ctx.sprites) {
     if (sp.kind === 'badge' && String(sp.label) === String(badge.label)) continue;
-    const [x, y, w, h] = sp.bbox, feas = [];
+    const [x, y, w, h] = sp.bbox, feas = [], peeks = [];
     for (let cy = Math.floor(y - m); cy <= Math.ceil(y + h + m); cy++) for (let cx = Math.floor(x - m); cx <= Math.ceil(x + w + m); cx++) {
       const d = Math.hypot(plate[0] - cx, plate[1] - cy);
       if (d < range[0] || d > range[1]) continue;
@@ -555,18 +582,24 @@ export function occluderSearch(ctx, bi, { hallwayTest = true, keepCenters = fals
       const hidden = Object.entries(ev.occludedBy).filter(([k]) => OPAQUE.has(k)).reduce((n, [, v]) => n + v, 0);
       const neg = ev.negativeFramePx + ev.negativeInteriorPx + RULES.outsideWhiteWeight * ev.outsideWhitePx;
       if (!(total && hidden >= RULES.hiddenMinFrac * total && neg <= RULES.hiddenMaxNegativeFrac * total)) continue;
+      if (ev.visibleFramePx >= RULES.peekMinFramePx) peeks.push({ cx, cy, th, frame: ev.visibleFramePx });
       // the tee->badge segment must be hallway (subsampled grid; unknown width = no hallway test, recorded)
       let step = null;
       if (Wh && (cx % RULES.hallwaySubsamplePx || cy % RULES.hallwaySubsamplePx)) continue;
       if (Wh) { step = hallwayStep(ctx, [cx, cy], plate, Wh).stepLum; if (step == null || step < RULES.hallwayMinStepLum) continue; }
       feas.push({ cx, cy, th, hiddenFrac: hidden / total, visible: ev.visibleFramePx + ev.visibleInteriorPx, step });
     }
-    if (!feas.length) continue;
+    // Peek: the pose(s) whose frame covers the most visible frame-white px; that projection is the pose.
+    const peekMax = peeks.length ? Math.max(...peeks.map((p) => p.frame)) : 0, top = peeks.filter((p) => p.frame === peekMax);
+    const peek = top.length ? { visibleFramePx: peekMax, poses: top.length, center: [r3(top.reduce((n, p) => n + p.cx, 0) / top.length), r3(top.reduce((n, p) => n + p.cy, 0) / top.length)] } : null;
+    if (peek) Object.assign(peek, fragmentGeometry(ctx, top));
+    if (!feas.length && !peek) continue;
+    if (!feas.length) { regions.push({ occluder: sp.name, feasibleCenters: 0, centroid: peek.center, extentPx: null, distanceToBadgePx: r3(Math.hypot(plate[0] - peek.center[0], plate[1] - peek.center[1])), maxVisiblePadPx: null, hallwayStepLum: null, bbox: sp.bbox, peek, ...(keepCenters ? { centers: [] } : {}) }); continue; }
     const cx = feas.reduce((n, f) => n + f.cx, 0) / feas.length, cy = feas.reduce((n, f) => n + f.cy, 0) / feas.length;
     const xs = feas.map((f) => f.cx), ys = feas.map((f) => f.cy);
     regions.push({ occluder: sp.name, feasibleCenters: feas.length, centroid: [r3(cx), r3(cy)], extentPx: [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)],
       distanceToBadgePx: r3(Math.hypot(plate[0] - cx, plate[1] - cy)), maxVisiblePadPx: Math.max(...feas.map((f) => f.visible)),
-      hallwayStepLum: Wh ? r3(quantile(feas.map((f) => f.step), 0.5)) : null, bbox: sp.bbox,
+      hallwayStepLum: Wh ? r3(quantile(feas.map((f) => f.step), 0.5)) : null, bbox: sp.bbox, peek,
       ...(keepCenters ? { centers: feas.map((f) => [f.cx, f.cy]) } : {}) });
   }
   return { regions, distanceRangePx: range.map(r3), hallway: ctx.hallway, evaluatedPoses: evaluated };
@@ -604,11 +637,15 @@ export function greedyRecover(ctx, { badgeRay = true } = {}) {
   for (const bi of [...pending].sort((a, b) => a - b)) {
     if (recovered.length >= need) break;
     const o = occluderSearch(ctx, bi); evaluatedPoses += o.evaluatedPoses; hiddenSearch[ctx.badges[bi].label] = o;
-    if (o.regions.length !== 1) continue;   // none, or more than one occluder fits: recorded, not guessed
-    const g = o.regions[0], plate = ctx.badges[bi].plateCenter, th = Math.atan2(plate[1] - g.centroid[1], plate[0] - g.centroid[0]);
+    // Direct evidence first: exactly one occluder with a peeking frame fragment pins the pad there. Otherwise exactly one
+    // occluder with hallway to the badge. Otherwise recorded, not guessed.
+    const peeking = o.regions.filter((r) => r.peek), hall = o.regions.filter((r) => r.feasibleCenters > 0);
+    const g = peeking.length === 1 ? { ...peeking[0], centroid: peeking[0].peek.center, by: 'peeking frame fragment' } : !peeking.length && hall.length === 1 ? { ...hall[0], by: 'hallway to the badge' } : null;
+    if (!g) continue;
+    const plate = ctx.badges[bi].plateCenter, th = Math.atan2(plate[1] - g.centroid[1], plate[0] - g.centroid[0]);
     const full = evaluatePose(ctx, g.centroid[0], g.centroid[1], th, { collect: true });
     for (const i of full.px.pad) if (i >= 0) ctx.owned[i] = OCC.recoveredTee;
-    recovered.push(recoveredTee(ctx, bi, full, { rule: `occluder search: hidden under ${g.occluder}`, hidden: g, accepted: true }));
+    recovered.push(recoveredTee(ctx, bi, full, { rule: `occluder search: hidden under ${g.occluder} (${g.by})`, hidden: g, accepted: true }));
     pending.delete(bi);
   }
   const missed = [...pending].sort((a, b) => a - b).map((bi) => {
