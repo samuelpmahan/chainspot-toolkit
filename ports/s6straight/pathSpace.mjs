@@ -60,7 +60,8 @@ export const PATH_UNITS = Object.freeze({
   width: 'px (the best edge pair over the width search)',
   overlayFraction: 'fraction (0..1) of path overlay per station (alpha, or the white-overlay proxy)',
   samples: 'RGB level per station and lateral offset (px)',
-  loss: 'fractions of visible stations; longest gaps px; contrast lum; overlay fraction'
+  loss: 'fractions of visible stations; longest gaps px; contrast lum; overlay fraction',
+  overlayPass: 'fraction (0..1) of the visible stations whose overlay fraction >= thresholdFrac; longestGapPx: longest run of failing visible stations (px)'
 });
 
 // ------------------------------------------------------------------ raster access (scipy map_coordinates order=1 mode='nearest')
@@ -290,6 +291,18 @@ function gapsOf(fail, visible, stepPx) {
   return gaps.sort((a, b) => b.lengthPx - a.lengthPx || a.fromStation - b.fromStation);
 }
 
+/**
+ * The overlay loss of a station vector at a threshold: the fraction of visible stations (overlayFrac != null) that
+ * carry the path (>= thresholdFrac), its complement, and the longest run of failing visible stations (px). One copy:
+ * lossAt and fn.q.path.overlayPass (the matching rules over tk.s6.pairFeatures) both call it.
+ */
+export function overlayPassOf(overlayFrac, thresholdFrac, stepPx = 1) {
+  const thr = thresholdFrac, vis = overlayFrac.map((v) => (v != null ? 1 : 0)), fail = overlayFrac.map((v) => (v != null && thr != null && v < thr ? 1 : 0));
+  const visO = overlayFrac.filter((v) => v != null), op = thr != null ? visO.filter((v) => v >= thr).length : null, og = gapsOf(fail, vis, stepPx);
+  return { visibleCount: visO.length, passCount: op, passFrac: op != null && visO.length ? r3(op / visO.length) : null, lossFrac: op != null && visO.length ? r3(1 - op / visO.length) : null,
+    longestGapPx: thr != null ? og[0]?.lengthPx ?? 0 : null, gapsCount: thr != null ? og.length : null, gaps: og };
+}
+
 /** Both measures on the same stations: the edge test (proven) and the overlay fraction (new), with their agreement. */
 export function lossAt(c, a) {
   const { originPx: O, phiRad: phi, t0Px, t1Px, stepPx = 1, widthPx: W, profile = null, threshold = null, tauLum = EVIDENCE.tauLum } = a;
@@ -305,17 +318,17 @@ export function lossAt(c, a) {
     if (edgeVisible[k]) { ev++; if (m > tauLum) ep++; else edgeFail[k] = 1; }
   }
   const thr = threshold?.frac, oVis = ov.overlayFrac.map((v) => (v != null ? 1 : 0)), oFail = ov.overlayFrac.map((v) => (v != null && thr != null && v < thr ? 1 : 0));
-  const visO = ov.overlayFrac.filter((v) => v != null), op = thr != null ? visO.filter((v) => v >= thr).length : null;
+  const visO = ov.overlayFrac.filter((v) => v != null), pass = overlayPassOf(ov.overlayFrac, thr, stepPx), op = pass.passCount;
   const both = { edgePassOverlayPass: 0, edgePassOverlayFail: 0, edgeFailOverlayPass: 0, edgeFailOverlayFail: 0 };
   if (thr != null) for (let k = 0; k < N; k++) if (edgeVisible[k] && oVis[k]) both[`edge${edgeFail[k] ? 'Fail' : 'Pass'}Overlay${oFail[k] ? 'Fail' : 'Pass'}`]++;
-  const eg = gapsOf(edgeFail, edgeVisible, stepPx), og = gapsOf(oFail, oVis, stepPx);
+  const eg = gapsOf(edgeFail, edgeVisible, stepPx);
   return {
     ...base, condition: null, stationsCount: N,
     edge: { measure: `edge test: min-side contrast > ${tauLum} lum (contrast.py station_contrast at W; s7edge)`, visibleCount: ev, passCount: ep, passFrac: ev ? r3(ep / ev) : null, lossFrac: ev ? r3(1 - ep / ev) : null, longestGapPx: eg[0]?.lengthPx ?? 0, gapsCount: eg.length, medianContrastLum: r3(median(edgeMinLum.filter((v) => v != null))) },
     overlay: { measure: ov.kind, alpha: ov.alpha, threshold: threshold ?? null, visibleCount: visO.length, meanOverlayFrac: visO.length ? r3(visO.reduce((x, y) => x + y, 0) / visO.length) : null, medianOverlayFrac: r3(median(visO)),
-      passFrac: op != null && visO.length ? r3(op / visO.length) : null, lossFrac: op != null && visO.length ? r3(1 - op / visO.length) : null, longestGapPx: thr != null ? og[0]?.lengthPx ?? 0 : null, gapsCount: thr != null ? og.length : null, noBackgroundCount: ov.noBackgroundCount },
+      passFrac: pass.passFrac, lossFrac: pass.lossFrac, longestGapPx: pass.longestGapPx, gapsCount: pass.gapsCount, noBackgroundCount: ov.noBackgroundCount },
     agreementCounts: thr != null ? both : null,
-    stations: { tPx: Array.from(ts, r3), edgeMinLum, overlayFrac: ov.overlayFrac, edgeGapsPx: eg.slice(0, 8), overlayGapsPx: og.slice(0, 8) },
+    stations: { tPx: Array.from(ts, r3), edgeMinLum, overlayFrac: ov.overlayFrac, edgeGapsPx: eg.slice(0, 8), overlayGapsPx: pass.gaps.slice(0, 8) },
     corridor: corridorOf(s, W)
   };
 }
@@ -342,7 +355,9 @@ export const PATH_QUERIES = Object.freeze({
   'fn.q.path.width': q('width', PATH_UNITS.width, (c, a) => widthSearchAt(c, a.originPx, a.phiRad, a.t0Px, a.t1Px, { widths: a.widthsPx ?? EVIDENCE.widthsPx, tolW: a.tolPx ?? EVIDENCE.widthTolPx, latLim: a.latLimPx ?? EVIDENCE.widthLatPx, minOk: a.minOk ?? EVIDENCE.edgeMinOk }) ?? { condition: 'no edge pair at any width' }),
   'fn.q.path.overlayFraction': q('overlayFraction', PATH_UNITS.overlayFraction, (c, a) => (a.widthPx > 0 ? overlayAt(samplesAt(c, a.originPx, a.phiRad, tsOf(a), a.widthPx), a.widthPx, a.profile ?? null) : { condition: 'no corridor width' })),
   'fn.q.path.samples': q('samples', PATH_UNITS.samples, (c, a) => (a.widthPx > 0 ? samplesAt(c, a.originPx, a.phiRad, tsOf(a), a.widthPx) : { condition: 'no corridor width' })),
-  'fn.q.path.loss': q('loss', PATH_UNITS.loss, (c, a) => lossAt(c, a))
+  'fn.q.path.loss': q('loss', PATH_UNITS.loss, (c, a) => lossAt(c, a)),
+  // pure on its arguments (no raster): the matching rules ask it for the pass fraction of a stored station vector at THEIR threshold
+  'fn.q.path.overlayPass': (_, a) => { const { gaps, passCount, ...rest } = overlayPassOf(a.overlayFrac ?? [], a.thresholdFrac ?? null, a.stepPx ?? 1); return { value: rest, unit: PATH_UNITS.overlayPass }; }
 });
 export const PATH_QUERY_NAMES = Object.freeze(Object.keys(PATH_QUERIES));
 export { noProfile, unpack };

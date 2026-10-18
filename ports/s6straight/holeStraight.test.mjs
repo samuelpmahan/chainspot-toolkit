@@ -12,6 +12,7 @@ import { comparableForkJoin } from '../../fg/forkjoin.mjs';
 import { discoverImplementations } from '../../fg/discover.mjs';
 import { renderValue } from '../../fg/render.mjs';
 import { registerPathLoss, THRESHOLD_OF_LEVEL } from './pathLoss.mjs';
+import { registerPairFeatures } from './pairFeatures.mjs';
 import { registerAlphaProfile } from '../../fg/alpha/run.mjs';
 import { ALPHA_PROFILE_PART } from '../../contracts/alpha.profile@1.mjs';
 
@@ -98,6 +99,7 @@ test('the fork-join on a synthetic store: every impl, one verdict per pair, judg
   for (const [fn, spec] of S6_CALCULATIONS) store.register(fn, spec);
   registerQueries(store, holeQueries((a) => store.get(a)), { resolve: (r) => r });
   registerPathLoss(store);   // agent B's fn.q.path.* and tk.s6.pathMask / tk.s6.hallway
+  registerPairFeatures(store);   // S6 scoring: the table the five variants' matching rules read
   registerAlphaProfile(store, { association, course: 's6-test' });   // as the runner: the S7 profile the pathLoss variant reads
   const implementations = await discoverImplementations(join(ROOT, 'impl'), HOLE_STRAIGHT_SLOT.slot);
   assert.deepEqual(Object.keys(implementations).sort(), ['assigned', 'pathLoss', 'pinned', 'segmentVerify', 'straight3']);
@@ -144,6 +146,7 @@ test('segmentVerify on a synthetic ribbon: a 3-point STRAIGHT pair whose ribbon 
   for (const [fn, spec] of S6_CALCULATIONS) store.register(fn, spec);
   registerQueries(store, holeQueries((a) => store.get(a)), { resolve: (r) => r });
   registerPathLoss(store);
+  registerPairFeatures(store);
   registerAlphaProfile(store, { association: { rows }, course: 's6-ribbon' });
   const { default: segmentVerify, reads, calls } = await import('../../impl/fn.Hole.straight/segmentVerify.mjs');
   const scoped = store.scope({ who: 'test', reads, calls });

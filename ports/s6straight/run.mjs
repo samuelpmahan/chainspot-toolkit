@@ -43,6 +43,7 @@ import { compareStraight } from './compare.mjs';
 import { straightSvg } from './render.mjs';
 import { loadTestimony } from '../judge/testimony.mjs';
 import { registerPathLoss as registerPathMeasurement } from './pathLoss.mjs';
+import { registerPairFeatures } from './pairFeatures.mjs';
 import { loadAttemptParts } from '../s4recover/run.mjs';
 import { registerAlphaProfile, s4LaneOutputsFor, loadAssociation } from '../../fg/alpha/run.mjs';
 
@@ -150,8 +151,9 @@ export async function runHoleStraightForkJoin({ attempt, specimen, outDir = null
   // the S7 profile the pathLoss variant reads: its Calculations registered here, produced on first need (never eagerly)
   const s4 = loadAttemptParts({ attempt, specimen, root });
   registerAlphaProfile(store, { s4LaneOutputs: s4LaneOutputsFor(s4.values, { omit: Object.keys(loaded.values) }), association: loadAssociation({ out: loaded.out, attempt, specimen }), course: specimen });
+  registerPairFeatures(store);   // S6 SCORING: tk.s6.pairFeatures and its feature Parts; the five variants are MATCHING rules over it
   // shared by every branch: produced once on the parent, so no variant's standalone time is charged for them (the S4 convention)
-  for (const address of ['tk.s6.holePairs', 'tk.s6.baskets', 'tk.s6.badgeCenters', 'tk.s6.hallway']) store.get(address);
+  for (const address of ['tk.s6.holePairs', 'tk.s6.baskets', 'tk.s6.badgeCenters', 'tk.s6.hallway', 'tk.s6.pairFeatures']) store.get(address);
   const implementations = await discoverImplementations(join(root, 'impl'), HOLE_STRAIGHT_SLOT.slot);
   const sink = createFileSink(join(out, 'artifacts'), { relativeTo: out });
   const judged = Boolean(loaded.values['testimony.source.holes'].path);
