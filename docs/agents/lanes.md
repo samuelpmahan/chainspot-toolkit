@@ -28,9 +28,12 @@ Nothing is understood from the code alone. Run it, read what it wrote, then ask 
 4. **Then work with Sam on goals and motivations.** `DOCTRINE.md` holds his rulings; `stages/s*.json` holds each
    stage's `responsibility`. Ask him what each stage is for and why before proposing a signal. Implement his general
    rules as he gives them; no detours he did not ask for.
-5. **Current frontier** (from the scoreboard): heritage Tee 6 still FN after S4; alex 17/18 tees; northpark unjudged
-   (no testimony: cross-validate, `docs/evidence/crossval/`); S2 basket FNs (golden 6; lenard 9, 12; heritage 12,
-   13, 17) are recovered by S4 `basketRecovery`.
+5. **Current frontier** (`node scripts/pxc.mjs state`, 2026-10-18): after S4 every judged course closes 18/18 baskets
+   and tees (alex: its 3 annotated holes); the 8 unmet cells are all pre-S4 (S2 basket FNs: golden 6; lenard 9, 12;
+   heritage 12, 13, 17; S3 tee FNs on five courses, each named with its occluder). Northpark is unjudged (no
+   testimony: cross-validate, `docs/evidence/crossval/`); its S4 Tee #17 (confidence 0.053) is the weakest recovery
+   on dev. Golden's 15 basket marks sit 3.73 px up the stem from the sprite base (the inspector's near-miss filter
+   shows it); the other courses' marks sit at the base.
 
 ## Rules the algorithm lane works under
 

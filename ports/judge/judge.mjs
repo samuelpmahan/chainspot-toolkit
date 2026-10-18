@@ -109,7 +109,7 @@ export function judgeAttempt({ specimen, attempt, root = ROOT }) {
       const h = T.holes.get(Number(t.split(' ')[1])), hits = occl(h.tee).filter((o) => o.name !== t);
       S3.occluders[t] = hits;
       const opaque = hits.filter((o) => o.opaque), clear = hits.length === 0;
-      const why = clear ? 'nothing crosses it: S3 missed a clear pad' : opaque.length ? `partly hidden by ${opaque.map((o) => `${o.name} (${Math.round(o.fraction * 100)}%)`).join(', ')}: S4` : `crossed only by translucent ${hits.map((o) => `${o.name} (${Math.round(o.fraction * 100)}%)`).join(', ')}: S3 must see through them`;
+      const why = clear ? 'nothing crosses it: S3 missed a clear pad' : opaque.length ? `partly hidden by ${opaque.map((o) => `${o.name} (${Math.round(o.fraction * 100)}%)`).join(', ')}; owner: S4 recovery` : `crossed only by translucent ${hits.map((o) => `${o.name} (${Math.round(o.fraction * 100)}%)`).join(', ')}; owner: S3 must see through them`;
       return `${t} (${why})`;
     });
 

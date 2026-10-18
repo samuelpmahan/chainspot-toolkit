@@ -20,8 +20,9 @@
  *   node scripts/pxc.mjs state                 print the matrix; write attempts/state/matrix.{json,flipbook.html}
  *   node scripts/pxc.mjs state --retest [all] [--course a,b]  re-run the stale, unverified and missing cells (all: every
  *                                              cell; --course: these courses only), then print
- *   node scripts/pxc.mjs state --freeze        record rows and closures in docs/evidence/dev-s1s4/frozen.json; later
- *                                              matrices show each row as same / changed / new against it
+ *   node scripts/pxc.mjs state --freeze        record rows, every object's geometry and the closures in
+ *                                              docs/evidence/dev-s1s4/frozen.json; later matrices and inspectors show
+ *                                              each cell and object as same / changed / new against it (before drawn dashed)
  *   node scripts/pxc.mjs state --prune [--dry-run]  delete every attempt under attempts/stages that nothing under
  *                                              docs/evidence references (Sam: "Reproducibility is the key"); --retest prunes
  *                                              automatically once it has finished
@@ -277,7 +278,7 @@ export async function stateMatrix(root = ROOT, { attempts = readAttempts(root) }
   writeFileSync(join(dir, 'matrix.json'), JSON.stringify({ at: new Date().toISOString(), ...matrix }, null, 1) + '\n');
   writeFileSync(join(dir, 'matrix.flipbook.html'), renderFlipbook([partFrame(MATRIX_PART, { rows: matrix.rows.map(({ changedPaths, goal, ...r }) => r), ...matrix.emits })], { title: 'State matrix: every stage on every dev course' }));
   const { writeInspector } = await import('./inspect.mjs');
-  const inspector = writeInspector(root, matrix, store.get('tk.state.inputs'));
+  const inspector = writeInspector(root, matrix, store.get('tk.state.inputs'), frozen);
   return { matrix, store, frozen, written: ['attempts/state/matrix.json', 'attempts/state/matrix.flipbook.html', inspector] };
 }
 
@@ -285,8 +286,10 @@ export async function stateMatrix(root = ROOT, { attempts = readAttempts(root) }
 export async function freeze(root, matrix, inputs) {
   const closures = {};
   for (const [k, paths] of Object.entries(POST_RECIPE_CLOSURES)) closures[k] = (await closureSnapshot(root, paths)).sha;
-  const doc = { schema: 'nctk-state-frozen@1', at: new Date().toISOString(), closures,
+  const { frozenObjects } = await import('./inspect.mjs');
+  const doc = { schema: 'nctk-state-frozen@2', at: new Date().toISOString(), closures,
     rows: matrix.rows.map(({ course, key, expected, result, status, attempt }) => ({ course, key, expected, result, status, attempt })),
+    objects: frozenObjects(inputs),   // per object: hole, name, verdict, error, center, geometry; the inspector draws it dashed when a row changes
     attempts: Object.fromEntries(inputs.courses.map((c) => [c.course, c.attempt])) };
   writeFileSync(join(root, FROZEN_FILE), JSON.stringify(doc, null, 1) + '\n');
   return doc;

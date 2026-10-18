@@ -9,6 +9,7 @@
  *   node scripts/pxc.mjs scaffold query <family>          fg/queries/<family>.mjs + test (fn.q.<family>.*)
  *   node scripts/pxc.mjs scaffold calculation <dir> <name>   <dir>/<name>.calc.mjs + test (a Calculation with emits)
  *   node scripts/pxc.mjs scaffold mixin <name>            fg/mixins.<name>.mjs + test (an FG property)
+ *   node scripts/pxc.mjs shot <file.html> <outdir> "<hash>"...   full-page screenshots of a render at deep links (inspector)
  *   node scripts/pxc.mjs state [--retest [all]] [--freeze] [--json]   every stage on every dev course: goal, expected,
  *                                                         result, status (derived), freshness; retest re-runs only stale cells
  * Scaffolds never overwrite a file.
@@ -175,6 +176,7 @@ test('${name} composes onto any FG and keeps the defaults', () => {
 
 if (cmd === 'explain') explain(rest[0]);
 else if (cmd === 'state') await (await import('../ports/state/matrix.mjs')).stateCommand(rest, { say });
+else if (cmd === 'shot') { const [file, outDir, ...hashes] = rest; if (!file || !outDir || !hashes.length) say('usage: shot <file.html> <outdir> "<hash>" ...'); else for (const f of await (await import('./pxc/shot.mjs')).shot(file, outDir, hashes)) say(`  wrote ${f}`); }
 else if (cmd === 'doctor') await doctor(rest);
 else if (cmd === 'scaffold') scaffold(rest);
 else say(readFileSync(new URL(import.meta.url)).toString().split('*/')[0].split('\n').slice(2).map((l) => l.replace(/^ \* ?/, '')).join('\n'));
