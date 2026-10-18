@@ -338,12 +338,13 @@ export function createRecoveryContext(inputs) {
   const s2b = (inputs.baskets ?? []).filter((b) => b.bbox), s4b = inputs.recoveredBasketBoxes ?? [];
   const n2 = nameCandidates('Basket', s2b, (b) => basketPoint(b.bbox)), n4 = nameCandidates('Basket', s4b, (bb) => basketPoint(bb)).map((n) => `S4 ${n}`);
   const sprites = [
-    ...s2b.map((b, i) => ({ kind: 'basket', name: n2[i], bbox: b.bbox })),
+    ...s2b.map((b, i) => ({ kind: 'basket', name: n2[i], part: `basket ${b.index ?? i}`, bbox: b.bbox })),
     ...s4b.map((bb, i) => ({ kind: 'basket', name: n4[i], bbox: bb })),
-    ...inputs.badges.map((b) => ({ kind: 'badge', name: `Badge ${b.label}`, label: b.label, bbox: b.bbox }))
+    ...inputs.badges.map((b) => ({ kind: 'badge', name: `Badge ${b.label}`, part: `Badge ${b.label}`, label: b.label, bbox: b.bbox }))
   ];
   return {
     W: raster.widthPx, H: raster.heightPx, raster, tpl, cls, occ, owned: new Uint8Array(raster.widthPx * raster.heightPx), sprites,
+    adjacent: inputs.adjacent ?? null,
     badges: inputs.badges, tees: inputs.tees, assignment, seeds: inputs.seeds ?? [],
     searchRadiusPx: r3(RULES.searchRadiusFactor * maxAssignedPx),
     searchRule: `centers within ${RULES.searchRadiusFactor} x the largest S3 tee-badge distance (${r3(maxAssignedPx)} px) of the badge plate center, whose frame core holds >= 1 unoccluded frame-white px`
@@ -574,6 +575,9 @@ export function occluderSearch(ctx, bi, { hallwayTest = true, keepCenters = fals
   for (const sp of ctx.sprites) {
     if (sp.kind === 'badge' && String(sp.label) === String(badge.label)) continue;
     const [x, y, w, h] = sp.bbox, feas = [], peeks = [];
+    // Fragments come from the query, not a pixel scan: S1 bright components touching this occluder, owned by no Part.
+    const frags = ctx.adjacent ? ctx.adjacent.filter((c) => c.touches.includes(sp.part)) : null;
+    const fragPx = frags ? new Set(frags.flatMap((c) => c.px)) : null;
     for (let cy = Math.floor(y - m); cy <= Math.ceil(y + h + m); cy++) for (let cx = Math.floor(x - m); cx <= Math.ceil(x + w + m); cx++) {
       const d = Math.hypot(plate[0] - cx, plate[1] - cy);
       if (d < range[0] || d > range[1]) continue;
@@ -582,7 +586,11 @@ export function occluderSearch(ctx, bi, { hallwayTest = true, keepCenters = fals
       const hidden = Object.entries(ev.occludedBy).filter(([k]) => OPAQUE.has(k)).reduce((n, [, v]) => n + v, 0);
       const neg = ev.negativeFramePx + ev.negativeInteriorPx + RULES.outsideWhiteWeight * ev.outsideWhitePx;
       if (!(total && hidden >= RULES.hiddenMinFrac * total && neg <= RULES.hiddenMaxNegativeFrac * total)) continue;
-      if (ev.visibleFramePx >= RULES.peekMinFramePx) peeks.push({ cx, cy, th, frame: ev.visibleFramePx });
+      if (ev.visibleFramePx >= RULES.peekMinFramePx && (!fragPx || fragPx.size)) {
+        // with the query: count only the visible frame px that belong to an adjacent component
+        const n = fragPx ? evaluatePose(ctx, cx, cy, th, { collect: true }).px.visibleFrame.filter((i) => fragPx.has(i)).length : ev.visibleFramePx;
+        if (n >= RULES.peekMinFramePx) peeks.push({ cx, cy, th, frame: n });
+      }
       // the tee->badge segment must be hallway (subsampled grid; unknown width = no hallway test, recorded)
       let step = null;
       if (Wh && (cx % RULES.hallwaySubsamplePx || cy % RULES.hallwaySubsamplePx)) continue;
@@ -592,7 +600,7 @@ export function occluderSearch(ctx, bi, { hallwayTest = true, keepCenters = fals
     // Peek: the pose(s) whose frame covers the most visible frame-white px; that projection is the pose.
     const peekMax = peeks.length ? Math.max(...peeks.map((p) => p.frame)) : 0, top = peeks.filter((p) => p.frame === peekMax);
     const peek = top.length ? { visibleFramePx: peekMax, poses: top.length, center: [r3(top.reduce((n, p) => n + p.cx, 0) / top.length), r3(top.reduce((n, p) => n + p.cy, 0) / top.length)] } : null;
-    if (peek) Object.assign(peek, fragmentGeometry(ctx, top));
+    if (peek) Object.assign(peek, fragmentGeometry(ctx, top), { components: (frags ?? []).map((c) => ({ label: c.label, areaPx: c.areaPx })) });
     if (!feas.length && !peek) continue;
     if (!feas.length) { regions.push({ occluder: sp.name, feasibleCenters: 0, centroid: peek.center, extentPx: null, distanceToBadgePx: r3(Math.hypot(plate[0] - peek.center[0], plate[1] - peek.center[1])), maxVisiblePadPx: null, hallwayStepLum: null, bbox: sp.bbox, peek, ...(keepCenters ? { centers: [] } : {}) }); continue; }
     const cx = feas.reduce((n, f) => n + f.cx, 0) / feas.length, cy = feas.reduce((n, f) => n + f.cy, 0) / feas.length;
@@ -698,15 +706,59 @@ export function padFragmentSeeds(fam) {
 /** Plain inputs for createRecoveryContext from the slot's Parts (parts.get). */
 export function recoveryInputs(get) {
   const raster = get('px.image.cropped');
-  const badges = get('px.badges');
-  const baskets = get('px.baskets');
+  const badges = get('tk.s4.badgePlates');
+  const baskets = get('tk.s4.basketBodies');
   const recoveredBasketBoxes = get('tk.s4.basketRecovery').recoveredBoxes;
   const tees = get('px.tees.refined');
   const fam = get('px.tees.familyRefined');
   return {
     raster, badges, baskets, recoveredBasketBoxes, tees,
-    anchors: fam.anchors, interiorTone: fam.model.interiorTone, seeds: padFragmentSeeds(fam)
+    anchors: fam.anchors, interiorTone: fam.model.interiorTone, seeds: padFragmentSeeds(fam),
+    adjacent: get('tk.s4.adjacentBrightComponents')
   };
 }
 
-export const SLOT_READS = Object.freeze(['px.image.cropped', 'px.badges', 'px.baskets', 'tk.s4.basketRecovery', 'px.tees.refined', 'px.tees.familyRefined']);
+/**
+ * S4's own Calculations over PxC Parts (read by address from the S3 PxC board; never re-read from files):
+ *   fn.tk.s4.badgePlates      px.badges -> tk.s4.badgePlates (plate centre = the S1 dark plate part's bbox centre)
+ *   fn.tk.s4.basketBodies     px.baskets -> tk.s4.basketBodies (bbox, px)
+ *   fn.tk.s4.adjacentBrightComponents (Sam: "bright components adjacent to known Occluders")
+ *       px.components + the opaque Parts -> every S1 bright component that touches an opaque Part (badge px + mute,
+ *       basket px; within 2 px) and is mostly (>= 50%) owned by no Part: hidden sprites' visible fragments live here.
+ */
+export const S4_CALCULATIONS = Object.freeze([
+  ['fn.tk.s4.badgePlates', { inParts: ['px.badges'], outParts: ['tk.s4.badgePlates'], calculate: (io) => ({
+    'tk.s4.badgePlates': io.in('px.badges').map((b, index) => {
+      const dark = (b.has?.findPx?.parts ?? []).find((p) => p.polarity === 'dark'), bb = dark?.bbox ?? b.bbox;
+      return { index, label: b.label, bbox: b.bbox, px: b.px, mutePx: b.has?.mute?.px ?? [], plateCenter: [bb[0] + bb[2] / 2, bb[1] + bb[3] / 2], plateHalfMinPx: Math.min(bb[2], bb[3]) / 2, plateRule: dark ? 'center of the S1 dark plate part bbox' : 'center of the S1 badge bbox' };
+    }) }) }],
+  ['fn.tk.s4.basketBodies', { inParts: ['px.baskets'], outParts: ['tk.s4.basketBodies'], calculate: (io) => ({
+    'tk.s4.basketBodies': io.in('px.baskets').map((b, index) => ({ index, label: index, bbox: b.bbox, px: b.px })) }) }],
+  ['fn.tk.s4.adjacentBrightComponents', { inParts: ['px.components', 'px.badges', 'px.baskets', 'px.tees.refined'], outParts: ['tk.s4.adjacentBrightComponents'],
+    calculate: (io) => ({ 'tk.s4.adjacentBrightComponents': adjacentBrightComponents(io.in('px.components').bright, io.in('px.badges'), io.in('px.baskets'), io.in('px.tees.refined')) }) }]
+]);
+
+export function adjacentBrightComponents(bright, badges, baskets, tees, { touchPx = 2, minUnownedFrac = 0.5 } = {}) {
+  const W = bright.mask.width, H = bright.mask.height, labels = bright.labels, owner = new Int32Array(W * H).fill(-1), names = [];
+  const own = (name, px) => { const k = names.push(name) - 1; for (const p of px) owner[p] = k; };
+  badges.forEach((b) => own(`Badge ${b.label}`, [...b.px, ...(b.has?.mute?.px ?? [])]));
+  baskets.forEach((k, i) => own(`basket ${i}`, k.px));
+  tees.forEach((t, i) => own(`tee ${i}`, t.px ?? []));
+  const opaque = (k) => k >= 0 && !names[k].startsWith('tee ');
+  const area = new Map(), unowned = new Map(), touches = new Map(), pxOf = new Map();
+  for (let i = 0; i < W * H; i++) {
+    const l = labels[i]; if (!l) continue;
+    area.set(l, (area.get(l) ?? 0) + 1);
+    if (owner[i] >= 0) continue;
+    unowned.set(l, (unowned.get(l) ?? 0) + 1); if (!pxOf.has(l)) pxOf.set(l, []); pxOf.get(l).push(i);
+    const x = i % W, y = (i / W) | 0;
+    for (let dy = -touchPx; dy <= touchPx; dy++) for (let dx = -touchPx; dx <= touchPx; dx++) {
+      const xx = x + dx, yy = y + dy; if (xx < 0 || yy < 0 || xx >= W || yy >= H) continue;
+      const o = owner[yy * W + xx];
+      if (opaque(o)) { if (!touches.has(l)) touches.set(l, new Set()); touches.get(l).add(names[o]); }
+    }
+  }
+  return [...touches].filter(([l]) => unowned.get(l) / area.get(l) >= minUnownedFrac).map(([l, set]) => ({ label: l, areaPx: area.get(l), unownedPx: unowned.get(l), touches: [...set].sort(), px: pxOf.get(l) }));
+}
+
+export const SLOT_READS = Object.freeze(['px.image.cropped', 'tk.s4.badgePlates', 'tk.s4.basketBodies', 'tk.s4.basketRecovery', 'px.tees.refined', 'px.tees.familyRefined', 'tk.s4.adjacentBrightComponents']);

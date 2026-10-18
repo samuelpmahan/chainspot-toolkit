@@ -5,20 +5,17 @@
  *   node ports/s4recover/run.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR]
  *
  * Reads a completed `--until 4 --lanes s3-findfamily-structural-fix,
- * s4.basketRecovery` Attempt's artifacts (never re-runs the provider):
- *   early/artifacts/s3/remaining.rgba.bin       canonical RGB raster (alpha ignored)
- *   early/artifacts/s1/px.badges.json           S1 badges: px, mute px, bbox, label;
- *                                               plate center = center of the dark plate part bbox
- *   early/artifacts/s2/px.baskets.json          S2 basket px
- *   basket-bridge/basket-recovery.part.json     S4 accepted basket decisions not exact to S2
- *                                               (classification != existing-s2-exact): semanticBbox
+ * s4.basketRecovery` Attempt (never re-runs the provider). The S3 PxC
+ * (early/s3.pxc.bin) is the store's board: S0-S3 Parts are read by address
+ * (px.image.cropped, px.badges, px.baskets, px.components, ...) and S4's own
+ * Calculations (teeRecover.mjs S4_CALCULATIONS) derive tk.s4.* Parts from them.
+ * Lane outputs that are not on that board are root inputs:
+ *   basket-bridge/basket-recovery.part.json     S4 accepted basket decisions not exact to S2 (semanticBbox)
  *   early/artifacts/s3fix/px.tees.refined.json  S3 structural refined tees
- *   early/artifacts/s3fix/px.tees.family-refined.json  pad model (incl. interiorTone), anchors,
- *                                               candidates (for pad-fragment seeds)
- *   late/geometry.json                          pinned S4 refinedAxes.recovered (SOURCE px ->
- *                                               canonical y = y - S0 upperRowsRemoved)
- *   testimony/<specimen>/*.annotation.json      Sam's tee points (canonical y = y - TESTIMONY_DY)
- * into a PartStore as constants, discovers impl/fn.Tee.recover/*.mjs, runs
+ *   early/artifacts/s3fix/px.tees.family-refined.json  pad model (incl. interiorTone), anchors, candidates
+ *   late/geometry.json                          pinned S4 refinedAxes.recovered (source px -> canonical)
+ *   testimony/<specimen>/*.annotation.json      Sam's tee points (judge guarantee only)
+ * It discovers impl/fn.Tee.recover/*.mjs, runs
  * comparableForkJoin with ports/s4recover/guarantees.mjs, joins by
  * contracts/tee.pose@1, and writes under <out> (default
  * attempts/stages/<id>/fork/stage-output/s4recover/run-<ISO time>/):
@@ -26,6 +23,7 @@
  *   s4recover.{records.json,frames.json,flipbook.html}
  */
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
+import { deserialize } from 'node:v8';
 import { join, resolve } from 'node:path';
 import { createPartStore } from '../../fg/store.mjs';
 import { comparableForkJoin, forkJoinFrames } from '../../fg/forkjoin.mjs';
@@ -34,7 +32,7 @@ import { createFileSink } from '../../fg/node-sink.mjs';
 import { framesJson, renderFlipbook } from '../../fg/flipbook.mjs';
 import { canonicalJson } from '../../fg/canon.mjs';
 import contract from '../../contracts/tee.pose@1.mjs';
-import { TEE_RECOVER_SLOT } from './teeRecover.mjs';
+import { TEE_RECOVER_SLOT, S4_CALCULATIONS } from './teeRecover.mjs';
 import { GUARANTEES } from './guarantees.mjs';
 import { compareRecovered } from './compare.mjs';
 import { loadTestimony, TESTIMONY_DY as JUDGE_TESTIMONY_DY } from '../judge/testimony.mjs';
@@ -51,18 +49,11 @@ export function loadAttemptParts({ attempt, specimen, root = ROOT }) {
   const out = join(fork, 'stage-output');
   const A = join(out, 'early', 'artifacts');
   const record = readJson(join(root, 'attempts', 'stages', `${attempt}.json`));
-  const badgesArt = readJson(join(A, 's1', 'px.badges.json'));
-  const { widthPx, heightPx } = badgesArt.image;
-  const rgba = new Uint8Array(readFileSync(join(A, 's3', 'remaining.rgba.bin')));
-  if (rgba.length !== widthPx * heightPx * 4) throw new Error(`raster ${rgba.length} bytes != ${widthPx} x ${heightPx} x 4`);
-  const raster = { rgba, widthPx, heightPx, note: 'canonical RGB from early/artifacts/s3/remaining.rgba.bin; alpha (S1-S3 ownership) ignored' };
-
-  const badges = badgesArt.badges.map((b) => {
-    const dark = b.findPx.parts.find((p) => p.polarity === 'dark');
-    const bb = dark?.bbox ?? b.bbox;
-    return { index: b.index, label: b.label, bbox: b.bbox, px: b.px, mutePx: b.mute?.px ?? [], plateCenter: [bb[0] + bb[2] / 2, bb[1] + bb[3] / 2], plateHalfMinPx: Math.min(bb[2], bb[3]) / 2, plateRule: dark ? 'center of the S1 dark plate part bbox' : 'center of the S1 badge bbox' };
-  });
-  const baskets = readJson(join(A, 's2', 'px.baskets.json')).baskets.map((b) => ({ index: b.index, label: b.label, bbox: b.bbox, px: b.px }));
+  // The S3 PxC is the board: every S0-S3 Part by its address (px.image.cropped, px.badges, px.baskets, px.components, ...).
+  // S4 reads those Parts; it never re-derives them from the artifact files written beside them.
+  const pxc = new Map(deserialize(readFileSync(join(out, 'early', 's3.pxc.bin'))));
+  const board = Object.freeze({ has: (a) => pxc.has(a), get: (a) => pxc.get(a), addresses: [...pxc.keys()] });
+  const { widthPx, heightPx } = pxc.get('px.image.cropped');
   // Optional upstream outputs: absent means that lane did not run; record it and feed forward with nothing from it.
   const readOpt = (p, absent) => (existsSync(p) ? readJson(p) : absent);
   const bridge = readOpt(join(out, 'basket-bridge', 'basket-recovery.part.json'), { comparisons: { accepted: [] }, absent: 'basket-bridge lane not run: no recovered basket boxes' });
@@ -105,8 +96,9 @@ export function loadAttemptParts({ attempt, specimen, root = ROOT }) {
 
   return {
     fork, out, upperRowsRemoved: upper, sourcePath: record.request.sourcePath,
+    board,
+    // lane outputs not on the S3 board (S3 structural fix, S4 basket bridge, late S4) and the testimony: root inputs
     values: {
-      'px.image.cropped': raster, 'px.badges': badges, 'px.baskets': baskets,
       'tk.s4.basketRecovery': { recoveredBoxes, rule: 'S4 basketRecovery accepted decisions with classification != existing-s2-exact; semanticBbox, canonical px' },
       'px.tees.refined': refined, 'px.tees.familyRefined': familyRefined,
       'tk.s4.lateGeometry': lateGeometry, 'testimony.source.teePoints': teePoints
@@ -125,14 +117,15 @@ function findKey(obj, key) {
 export async function runTeeRecoverForkJoin({ attempt, specimen, outDir = null, root = ROOT }) {
   const loaded = loadAttemptParts({ attempt, specimen, root });
   const out = outDir ?? join(loaded.out, 's4recover', `run-${new Date().toISOString().replace(/[:.]/g, '-')}`); // evidence is never overwritten (file sink)
-  const store = createPartStore({ name: `s4recover:${specimen}` });
-  store.constant('fn.tk.s4recover.attemptParts', loaded.values);
+  const store = createPartStore({ name: `s4recover:${specimen}`, base: loaded.board });
+  store.constant('fn.tk.s4recover.laneOutputs', loaded.values);
+  for (const [fn, spec] of S4_CALCULATIONS) store.register(fn, spec);
   const implementations = await discoverImplementations(join(root, 'impl'), TEE_RECOVER_SLOT.slot);
   const sink = createFileSink(join(out, 'artifacts'), { relativeTo: out });
   const timings = {};
   const result = comparableForkJoin({
     slot: TEE_RECOVER_SLOT.slot, part: TEE_RECOVER_SLOT.part, implementations, store,
-    restore: () => null,
+    restore: () => loaded.board,   // every branch reads the same S3 PxC board
     apply: (parts, impl, name) => { const t = performance.now(); const v = impl(parts); timings[name] = Math.round(performance.now() - t); return { slot: TEE_RECOVER_SLOT.slot, implementation: name, ...v }; },
     guarantees: GUARANTEES, sink,
     compare: compareRecovered({ contract, parentStore: store })

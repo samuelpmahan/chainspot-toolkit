@@ -91,6 +91,15 @@ right and the repo is behind. Every number carries a unit.
 
 ## How we work
 
+- **PxC is the PixelCache: Parts are addressed, never hunted for** (Sam,
+  2026-10-18). Every Calculation's output is a Part at an address, held in
+  the PxC and reused by every consumer that names it (`px.components`,
+  `px.badges`, ...). A consumer reads the board (`store.get(address)`); it
+  never checks whether some file exists or re-derives a Part from artifact
+  files written beside it. Derived views are Calculations of their own with
+  their own addresses (`tk.s4.*`), not reshaped copies at an existing
+  address. `ports/s4recover` reads the S3 PxC this way.
+
 - FGs are functional: Composition -> Composition. Mixins, flow combinators
   (ComparableForkJoin, AblationForkJoin), tests and forced renders are all
   FGs. Parallel implementations, compared directly, are the priority.
