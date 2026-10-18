@@ -11,3 +11,4 @@ Start with `AGENTS.md` at the repo root. Open a page here only when the task nee
 | `calculations` | add a step that computes something, or measure what it does |
 | `fg` | add a check or property to a stage's FunctionalGuarantee |
 | `evidence` | report a result, render it, judge it, or claim a constant |
+| `lanes` | work as the platform lane or the algorithm lane, or start the algorithm lane |

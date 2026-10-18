@@ -5,7 +5,7 @@ evidence behind them. Every rule here was learned the hard way.
 
 This file is the map; the details are one step away:
 - `node scripts/pxc.mjs explain <topic>` prints a topic page from `docs/agents/`: prototyping, boundary, parts,
-  calculations, fg, evidence.
+  calculations, fg, evidence, lanes (two agents: platform and algorithm, who owns what, how the algorithm lane starts).
 - `node scripts/pxc.mjs doctor [file | --attempt id]` shows what is outside the system, with the fix.
 - `node scripts/pxc.mjs scaffold query | calculation | mixin ...` writes the right shape, with a passing test.
 
