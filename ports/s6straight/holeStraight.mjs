@@ -118,6 +118,26 @@ export function holeQueries(get) {
 }
 export const HOLE_QUERY_NAMES = Object.freeze(['fn.q.hole.straight3', 'fn.q.hole.pinned']);
 
+/**
+ * The straight segment of a hole (s3first.py step 2, seg_fit): the ribbon's round cap S = tee centre + u * FRONT * L
+ * (FRONT = 10.6 / 25.02 pad lengths, s7edge badgeseed.py; u = the pad axis toward its badge, else tee -> badge;
+ * L = the course pad length), read toward a BasketPoint K on stations 0.6 W .. |K - S| - 2 px with the hallway width W,
+ * width within 1.5 px, centre within 1.5 px; a segment is verified when its edge step score >= 6 lum/px.
+ */
+export const SEGMENT_VERIFY = Object.freeze({ front: 10.6 / 25.02, trim0OfWidth: 0.6, trim1Px: 2, tolWPx: 1.5, latLimPx: 1.5, minScoreLumPerPx: 6 });
+export function capOf(pair, L) {
+  const T = pair.tee.center, B = pair.badge.center ?? T;
+  let u = pair.tee.angleRad != null ? [Math.cos(pair.tee.angleRad), Math.sin(pair.tee.angleRad)] : [B[0] - T[0], B[1] - T[1]];
+  const n0 = Math.hypot(...u); u = [u[0] / n0, u[1] / n0];
+  if ((B[0] - T[0]) * u[0] + (B[1] - T[1]) * u[1] < 0) u = [-u[0], -u[1]];
+  return [T[0] + u[0] * SEGMENT_VERIFY.front * L, T[1] + u[1] * SEGMENT_VERIFY.front * L];
+}
+/** The fn.q.path.edgePair arguments of the segment S -> K (the same arguments, so the same cached answer, for every variant). */
+export function segmentArgs(S, K, W) {
+  const V = SEGMENT_VERIFY, d = [K[0] - S[0], K[1] - S[1]], Lg = Math.hypot(...d);
+  return { lengthPx: Lg, args: { raster: 'px.image.cropped', mask: 'tk.s6.pathMask', originPx: S, phiRad: Math.atan2(d[1], d[0]), t0Px: W * V.trim0OfWidth, t1Px: Lg - V.trim1Px, widthPx: W, tolPx: V.tolWPx, latLimPx: V.latLimPx } };
+}
+
 /** A verdict row, the one shape every implementation writes. */
 export function verdictRow(pair, verdict, { basket = null, evidence = {}, condition = null } = {}) {
   return { pair: pair.id, hole: pair.hole, source: pair.source, tee: { name: pair.tee.name, center: pair.tee.center }, badge: pair.badge,

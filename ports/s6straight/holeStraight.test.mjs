@@ -97,11 +97,11 @@ test('the fork-join on a synthetic store: every impl, one verdict per pair, judg
   registerQueries(store, holeQueries((a) => store.get(a)), { resolve: (r) => r });
   registerPathLoss(store);   // agent B's fn.q.path.* and tk.s6.pathMask / tk.s6.hallway
   const implementations = await discoverImplementations(join(ROOT, 'impl'), HOLE_STRAIGHT_SLOT.slot);
-  assert.deepEqual(Object.keys(implementations).sort(), ['pathLoss', 'pinned', 'segmentVerify', 'straight3']);
+  assert.deepEqual(Object.keys(implementations).sort(), ['assigned', 'pathLoss', 'pinned', 'segmentVerify', 'straight3']);
   const accept = acceptRule({ judged: true });
   const r = comparableForkJoin({ slot: HOLE_STRAIGHT_SLOT.slot, part: HOLE_STRAIGHT_SLOT.part, implementations, store, restore: () => ({ has: (a) => board.has(a), get: (a) => board.get(a) }),
     apply: (parts, impl, name) => ({ implementation: name, ...impl(parts) }), guarantees: GUARANTEES, compare: compareStraight({ parentStore: store }), accept });
-  for (const n of ['pathLoss', 'pinned', 'segmentVerify', 'straight3']) assert.equal(r.branches[n].error, null, `${n}: ${r.branches[n].error?.message}`);
+  for (const n of ['assigned', 'pathLoss', 'pinned', 'segmentVerify', 'straight3']) assert.equal(r.branches[n].error, null, `${n}: ${r.branches[n].error?.message}`);
   const b = r.comparison.value.branches;
   assert.deepEqual([b.straight3.TP, b.straight3.FP, b.straight3.FN, b.straight3.TN], [2, 0, 0, 1]);
   assert.equal(b.pinned.laneNotRun, true); assert.equal(b.pathLoss.laneNotRun, true);
@@ -144,4 +144,18 @@ test('segmentVerify on a synthetic ribbon: a 3-point STRAIGHT pair whose ribbon 
   assert.ok(Math.abs(store.get('tk.s6.hallway').widthPx - 2 * half) <= 2, `hallway ${store.get('tk.s6.hallway').widthPx} px learned on the tee -> badge segments`);
   assert.deepEqual(out.verdicts.map((v) => [v.hole, v.verdict]), [['1', 'straight'], ['2', 'bent']]);
   assert.ok(out.verdicts[0].evidence.edgeScoreLumPerPx >= 6); assert.match(out.verdicts[1].evidence.step, /segment not verified/);
+  // assigned: every hole scored to every BasketPoint, one to one; the same verdicts here, with the assignment recorded
+  const A = await import('../../impl/fn.Hole.straight/assigned.mjs'), sa = store.scope({ who: 'test-assigned', reads: A.reads, calls: A.calls });
+  const as = A.default({ get: sa.get, has: sa.has, call: sa.call });
+  assert.deepEqual(as.verdicts.map((v) => [v.hole, v.verdict, v.basket?.name ?? null]), [['1', 'straight', 'Basket ca'], ['2', 'bent', null]]);
+  assert.equal(as.assignment.length, 2);
+});
+
+test('assignHolesToBaskets: the provider matcher, cardinality first, then score; two holes on one basket: the stronger ribbon keeps it', async () => {
+  const { assignHolesToBaskets } = await import('./assign.mjs');
+  const holes = [{ id: 'P0', label: '1', order: 0, center: [0, 0] }, { id: 'P1', label: '2', order: 1, center: [0, 10] }], baskets = [{ index: 0 }, { index: 1 }];
+  const one = assignHolesToBaskets(holes, baskets, [{ hole: 'P0', basket: 0, score: 9 }, { hole: 'P1', basket: 0, score: 2 }]);
+  assert.equal(one.locks.get('P0').basket, 0); assert.equal(one.locks.has('P1'), false, 'one basket, the 9 lum/px ribbon keeps it');
+  const two = assignHolesToBaskets(holes, baskets, [{ hole: 'P0', basket: 0, score: 9 }, { hole: 'P0', basket: 1, score: 8 }, { hole: 'P1', basket: 0, score: 2 }]);
+  assert.deepEqual([two.locks.get('P0').basket, two.locks.get('P1').basket], [1, 0], 'cardinality before score');
 });

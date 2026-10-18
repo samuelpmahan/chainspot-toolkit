@@ -13,13 +13,12 @@
  * Verified -> straight (that basket); not verified, or not STRAIGHT by the 3-point test -> bent (sent to pathfinding).
  * The math is agent B's (ports/s6straight/pathSpace.mjs fn.q.path.*); nothing is re-derived here.
  */
-import { verdictRow } from '../../ports/s6straight/holeStraight.mjs';
+import { verdictRow, SEGMENT_VERIFY, capOf, segmentArgs } from '../../ports/s6straight/holeStraight.mjs';
 
 export const reads = ['tk.s6.holePairs', 'tk.s6.baskets', 'tk.s6.hallway', 'tk.s6.padLength'];
 export const calls = ['fn.q.hole.straight3', 'fn.q.path.edgePair'];
 
-/** s3first.py seg_fit as called in step 2 (s3first.py lines 64-74); FRONT from s7edge badgeseed.py (Alex stack, 12 pads). */
-export const SEGMENT_VERIFY = Object.freeze({ front: 10.6 / 25.02, trim0OfWidth: 0.6, trim1Px: 2, tolWPx: 1.5, latLimPx: 1.5, minScoreLumPerPx: 6 });
+export { SEGMENT_VERIFY };   // s3first.py seg_fit as called in step 2 (s3first.py lines 64-74): ports/s6straight/holeStraight.mjs
 const r2 = (v) => Math.round(v * 100) / 100;
 
 export default function segmentVerify(parts) {
@@ -31,14 +30,8 @@ export default function segmentVerify(parts) {
     if (s.verdict !== 'STRAIGHT') return verdictRow(p, 'bent', { evidence: { test: 'segment verify', step: '3-point test not STRAIGHT: nothing to verify', tlsMaxPx: s.tlsMaxPx } });
     if (!W) return verdictRow(p, 'unknown', { condition: `no hallway width (tk.s6.hallway: ${hallway?.condition ?? 'absent'})`, evidence: { test: 'segment verify' } });
     if (!L) return verdictRow(p, 'unknown', { condition: 'no pad length (tk.s6.padLength: the S3 family model)', evidence: { test: 'segment verify' } });
-    const T = p.tee.center, B = p.badge.center, basket = baskets[s.basket], K = basket.point;
-    // the pad axis toward its badge (the tee -> badge direction when the pair carries no angle)
-    let u = p.tee.angleRad != null ? [Math.cos(p.tee.angleRad), Math.sin(p.tee.angleRad)] : [B[0] - T[0], B[1] - T[1]];
-    const n0 = Math.hypot(...u); u = [u[0] / n0, u[1] / n0];
-    if ((B[0] - T[0]) * u[0] + (B[1] - T[1]) * u[1] < 0) u = [-u[0], -u[1]];
-    const S = [T[0] + u[0] * V.front * L, T[1] + u[1] * V.front * L], d = [K[0] - S[0], K[1] - S[1]], Lg = Math.hypot(...d);
-    const e = parts.call('fn.q.path.edgePair', { raster: 'px.image.cropped', mask: 'tk.s6.pathMask', originPx: S, phiRad: Math.atan2(d[1], d[0]),
-      t0Px: W * V.trim0OfWidth, t1Px: Lg - V.trim1Px, widthPx: W, tolPx: V.tolWPx, latLimPx: V.latLimPx }).value;
+    const basket = baskets[s.basket], S = capOf(p, L), { lengthPx: Lg, args } = segmentArgs(S, basket.point, W);
+    const e = parts.call('fn.q.path.edgePair', args).value;
     const evidence = { test: 'segment verify', capPx: S.map(r2), segmentLengthPx: r2(Lg), hallwayWidthPx: r2(W), tlsMaxPx: s.tlsMaxPx,
       edgeWidthPx: e?.wPx != null ? r2(e.wPx) : null, edgeCentrePx: e?.cPx != null ? r2(e.cPx) : null, edgeScoreLumPerPx: e?.score != null ? r2(e.score) : null, edgeCondition: e?.condition ?? null };
     return e?.score != null && e.score >= V.minScoreLumPerPx ? verdictRow(p, 'straight', { basket, evidence })

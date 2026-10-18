@@ -142,7 +142,8 @@ export async function runHoleStraightForkJoin({ attempt, specimen, outDir = null
   for (const [fn, spec] of S6_CALCULATIONS) store.register(fn, spec);
   registerQueries(store, holeQueries((a) => store.get(a)), { resolve: (ref) => ref, note: 'S6 hole questions (ports/s6straight/holeStraight.mjs)' });
   registerPathMeasurement(store);   // fn.q.path.* and tk.s6.pathMask / tk.s6.hallway (agent B's half): produced on first need
-  for (const address of ['tk.s6.holePairs', 'tk.s6.baskets']) store.get(address);   // shared by every branch: produced once on the parent
+  // shared by every branch: produced once on the parent, so no variant's standalone time is charged for them (the S4 convention)
+  for (const address of ['tk.s6.holePairs', 'tk.s6.baskets', 'tk.s6.badgeCenters', 'tk.s6.hallway']) store.get(address);
   const implementations = await discoverImplementations(join(root, 'impl'), HOLE_STRAIGHT_SLOT.slot);
   const sink = createFileSink(join(out, 'artifacts'), { relativeTo: out });
   const judged = Boolean(loaded.values['testimony.source.holes'].path);
