@@ -1,0 +1,3326 @@
+{
+ "golden": {
+  "summary": {
+   "badges": 18,
+   "tees": 18,
+   "teesS4": 3,
+   "baskets": 18,
+   "basketsS4": 1,
+   "duplicateClaims": [
+    13,
+    14
+   ]
+  },
+  "holes": {
+   "1": {
+    "hole": 1,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     879.83,
+     425.18
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 13,
+     "ridgeLum": 20.0,
+     "marginLum": 0.0,
+     "toTee": 2
+    },
+    "status": "spoke only (basket claimed twice)",
+    "basket": 13,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": null,
+     "weight": 0,
+     "signals": [],
+     "how": "unresolved"
+    },
+    "truthAgrees": null
+   },
+   "2": {
+    "hole": 2,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     452.51,
+     571.26
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 14,
+     "ridgeLum": 2.9,
+     "marginLum": 1.7,
+     "toTee": 3
+    },
+    "status": "spoke only (basket claimed twice)",
+    "basket": 14,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": null,
+     "weight": 0,
+     "signals": [],
+     "how": "unresolved"
+    },
+    "truthAgrees": null
+   },
+   "3": {
+    "hole": 3,
+    "badge": true,
+    "tee": "S4",
+    "teeCenter": [
+     734.5,
+     711.0
+    ],
+    "straight": {
+     "basket": 3,
+     "tlsPx": 0.12,
+     "alongPx": 120.8
+    },
+    "spoke": {
+     "basket": 3,
+     "ridgeLum": 12.2,
+     "marginLum": 12.5,
+     "toTee": 4
+    },
+    "status": "agree",
+    "basket": 3,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 3,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "4": {
+    "hole": 4,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     428.58,
+     641.67
+    ],
+    "straight": null,
+    "spoke": null,
+    "status": "unresolved",
+    "basket": null,
+    "basketSrc": null,
+    "resolved": {
+     "basket": null,
+     "weight": 0,
+     "signals": [],
+     "how": "unresolved"
+    },
+    "truthAgrees": null
+   },
+   "5": {
+    "hole": 5,
+    "badge": true,
+    "tee": "S4",
+    "teeCenter": [
+     484.5,
+     847.75
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 5,
+     "ridgeLum": 13.4,
+     "marginLum": 11.5,
+     "toTee": 6
+    },
+    "status": "spoke only",
+    "basket": 5,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 5,
+     "weight": 1.0,
+     "signals": [
+      "spoke"
+     ],
+     "how": "one signal (spoke)"
+    },
+    "truthAgrees": true
+   },
+   "6": {
+    "hole": 6,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     676.44,
+     843.99
+    ],
+    "straight": {
+     "basket": 17,
+     "tlsPx": 0.29,
+     "alongPx": 116.5
+    },
+    "spoke": {
+     "basket": 17,
+     "ridgeLum": 11.6,
+     "marginLum": 11.6,
+     "toTee": 7
+    },
+    "status": "agree",
+    "basket": 17,
+    "basketSrc": "S4",
+    "resolved": {
+     "basket": 17,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "7": {
+    "hole": 7,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     366.25,
+     977.9
+    ],
+    "straight": {
+     "basket": 8,
+     "tlsPx": 0.01,
+     "alongPx": 429.4
+    },
+    "spoke": {
+     "basket": 7,
+     "ridgeLum": 9.4,
+     "marginLum": 7.9,
+     "toTee": 8
+    },
+    "status": "conflict",
+    "basket": null,
+    "basketSrc": null,
+    "resolved": {
+     "basket": 7,
+     "weight": 1.0,
+     "signals": [
+      "spoke"
+     ],
+     "how": "exclusivity settled a conflict"
+    },
+    "truthAgrees": true
+   },
+   "8": {
+    "hole": 8,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     519.34,
+     1007.58
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 10,
+     "ridgeLum": 13.1,
+     "marginLum": 6.6,
+     "toTee": 9
+    },
+    "status": "spoke only",
+    "basket": 10,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 10,
+     "weight": 1.0,
+     "signals": [
+      "spoke"
+     ],
+     "how": "one signal (spoke)"
+    },
+    "truthAgrees": true
+   },
+   "9": {
+    "hole": 9,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     372.09,
+     1176.8
+    ],
+    "straight": {
+     "basket": 12,
+     "tlsPx": 0.23,
+     "alongPx": 115.4
+    },
+    "spoke": {
+     "basket": 12,
+     "ridgeLum": 13.1,
+     "marginLum": 11.7,
+     "toTee": 10
+    },
+    "status": "agree",
+    "basket": 12,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 12,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "10": {
+    "hole": 10,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     258.06,
+     1452.21
+    ],
+    "straight": {
+     "basket": 15,
+     "tlsPx": 0.06,
+     "alongPx": 103.7
+    },
+    "spoke": {
+     "basket": 15,
+     "ridgeLum": 12.3,
+     "marginLum": 1.4,
+     "toTee": 11
+    },
+    "status": "agree",
+    "basket": 15,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 15,
+     "weight": 1.28,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "11": {
+    "hole": 11,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     76.92,
+     1823.53
+    ],
+    "straight": {
+     "basket": 16,
+     "tlsPx": 0.5,
+     "alongPx": 150.5
+    },
+    "spoke": {
+     "basket": 2,
+     "ridgeLum": 8.1,
+     "marginLum": 0.3,
+     "toTee": 12
+    },
+    "status": "conflict",
+    "basket": null,
+    "basketSrc": null,
+    "resolved": {
+     "basket": 16,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "exclusivity settled a conflict"
+    },
+    "truthAgrees": true
+   },
+   "12": {
+    "hole": 12,
+    "badge": true,
+    "tee": "S4",
+    "teeCenter": [
+     416.75,
+     1763.75
+    ],
+    "straight": {
+     "basket": 13,
+     "tlsPx": 0.46,
+     "alongPx": 117.5
+    },
+    "spoke": null,
+    "status": "straight only (basket claimed twice)",
+    "basket": 13,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 13,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "one signal (straight)"
+    },
+    "truthAgrees": true
+   },
+   "13": {
+    "hole": 13,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     446.08,
+     1468.17
+    ],
+    "straight": {
+     "basket": 14,
+     "tlsPx": 0.19,
+     "alongPx": 127.9
+    },
+    "spoke": null,
+    "status": "straight only (basket claimed twice)",
+    "basket": 14,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 14,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "one signal (straight)"
+    },
+    "truthAgrees": true
+   },
+   "14": {
+    "hole": 14,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     676.51,
+     1497.23
+    ],
+    "straight": {
+     "basket": 8,
+     "tlsPx": 0.99,
+     "alongPx": 471.1
+    },
+    "spoke": {
+     "basket": 11,
+     "ridgeLum": 9.5,
+     "marginLum": 6.4,
+     "toTee": 15
+    },
+    "status": "conflict",
+    "basket": null,
+    "basketSrc": null,
+    "resolved": {
+     "basket": 11,
+     "weight": 1.0,
+     "signals": [
+      "spoke"
+     ],
+     "how": "exclusivity settled a conflict"
+    },
+    "truthAgrees": true
+   },
+   "15": {
+    "hole": 15,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     871.48,
+     1358.21
+    ],
+    "straight": {
+     "basket": 4,
+     "tlsPx": 1.18,
+     "alongPx": 557.6
+    },
+    "spoke": {
+     "basket": 9,
+     "ridgeLum": 14.2,
+     "marginLum": 13.3,
+     "toTee": 16
+    },
+    "status": "conflict",
+    "basket": null,
+    "basketSrc": null,
+    "resolved": {
+     "basket": 9,
+     "weight": 1.0,
+     "signals": [
+      "spoke"
+     ],
+     "how": "exclusivity settled a conflict"
+    },
+    "truthAgrees": true
+   },
+   "16": {
+    "hole": 16,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     1155.0,
+     1175.08
+    ],
+    "straight": {
+     "basket": 4,
+     "tlsPx": 0.67,
+     "alongPx": 201.1
+    },
+    "spoke": {
+     "basket": 4,
+     "ridgeLum": 7.9,
+     "marginLum": 0.3,
+     "toTee": 17
+    },
+    "status": "agree",
+    "basket": 4,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 4,
+     "weight": 1.06,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "17": {
+    "hole": 17,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     1068.07,
+     847.15
+    ],
+    "straight": {
+     "basket": 8,
+     "tlsPx": 0.57,
+     "alongPx": 111.9
+    },
+    "spoke": {
+     "basket": 8,
+     "ridgeLum": 5.4,
+     "marginLum": 0.1,
+     "toTee": 18
+    },
+    "status": "agree",
+    "basket": 8,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 8,
+     "weight": 1.02,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "18": {
+    "hole": 18,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     787.91,
+     842.31
+    ],
+    "straight": null,
+    "spoke": null,
+    "status": "unresolved",
+    "basket": null,
+    "basketSrc": null,
+    "resolved": {
+     "basket": null,
+     "weight": 0,
+     "signals": [],
+     "how": "unresolved"
+    },
+    "truthAgrees": null
+   }
+  }
+ },
+ "lenard": {
+  "summary": {
+   "badges": 18,
+   "tees": 18,
+   "teesS4": 1,
+   "baskets": 18,
+   "basketsS4": 2,
+   "duplicateClaims": []
+  },
+  "holes": {
+   "1": {
+    "hole": 1,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     466.83,
+     1298.91
+    ],
+    "straight": {
+     "basket": 9,
+     "tlsPx": 0.27,
+     "alongPx": 62.2
+    },
+    "spoke": {
+     "basket": 9,
+     "ridgeLum": 20.0,
+     "marginLum": 13.3,
+     "toTee": 2
+    },
+    "status": "agree",
+    "basket": 9,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 9,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "2": {
+    "hole": 2,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     258.6,
+     1190.18
+    ],
+    "straight": {
+     "basket": 8,
+     "tlsPx": 0.47,
+     "alongPx": 71.5
+    },
+    "spoke": {
+     "basket": 8,
+     "ridgeLum": 20.0,
+     "marginLum": 8.1,
+     "toTee": 3
+    },
+    "status": "agree",
+    "basket": 8,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 8,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "3": {
+    "hole": 3,
+    "badge": true,
+    "tee": "S4",
+    "teeCenter": [
+     315.25,
+     970.75
+    ],
+    "straight": {
+     "basket": 6,
+     "tlsPx": 0.45,
+     "alongPx": 98.9
+    },
+    "spoke": {
+     "basket": 6,
+     "ridgeLum": 17.1,
+     "marginLum": 16.5,
+     "toTee": 4
+    },
+    "status": "agree",
+    "basket": 6,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 6,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "4": {
+    "hole": 4,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     440.76,
+     776.52
+    ],
+    "straight": {
+     "basket": 5,
+     "tlsPx": 0.7,
+     "alongPx": 71.7
+    },
+    "spoke": {
+     "basket": 7,
+     "ridgeLum": 14.9,
+     "marginLum": 0.0,
+     "toTee": 5
+    },
+    "status": "conflict",
+    "basket": null,
+    "basketSrc": null,
+    "resolved": {
+     "basket": 5,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "exclusivity settled a conflict"
+    },
+    "truthAgrees": true
+   },
+   "5": {
+    "hole": 5,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     602.36,
+     457.91
+    ],
+    "straight": {
+     "basket": 3,
+     "tlsPx": 0.37,
+     "alongPx": 105.7
+    },
+    "spoke": {
+     "basket": 4,
+     "ridgeLum": 20.0,
+     "marginLum": 12.6,
+     "toTee": 6
+    },
+    "status": "conflict",
+    "basket": null,
+    "basketSrc": null,
+    "resolved": {
+     "basket": 3,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "exclusivity settled a conflict"
+    },
+    "truthAgrees": true
+   },
+   "6": {
+    "hole": 6,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     734.65,
+     155.94
+    ],
+    "straight": {
+     "basket": 0,
+     "tlsPx": 0.14,
+     "alongPx": 121.7
+    },
+    "spoke": {
+     "basket": 0,
+     "ridgeLum": 12.7,
+     "marginLum": 11.2,
+     "toTee": 7
+    },
+    "status": "agree",
+    "basket": 0,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 0,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "7": {
+    "hole": 7,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     864.09,
+     225.64
+    ],
+    "straight": {
+     "basket": 1,
+     "tlsPx": 0.07,
+     "alongPx": 141.4
+    },
+    "spoke": null,
+    "status": "straight only",
+    "basket": 1,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 1,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "one signal (straight)"
+    },
+    "truthAgrees": true
+   },
+   "8": {
+    "hole": 8,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     1033.74,
+     260.29
+    ],
+    "straight": {
+     "basket": 2,
+     "tlsPx": 0.45,
+     "alongPx": 110.5
+    },
+    "spoke": {
+     "basket": 2,
+     "ridgeLum": 7.7,
+     "marginLum": 6.0,
+     "toTee": 9
+    },
+    "status": "agree",
+    "basket": 2,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 2,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "9": {
+    "hole": 9,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     895.31,
+     380.84
+    ],
+    "straight": {
+     "basket": 16,
+     "tlsPx": 0.64,
+     "alongPx": 95.6
+    },
+    "spoke": {
+     "basket": 16,
+     "ridgeLum": 11.0,
+     "marginLum": 8.9,
+     "toTee": 10
+    },
+    "status": "agree",
+    "basket": 16,
+    "basketSrc": "S4",
+    "resolved": {
+     "basket": 16,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "10": {
+    "hole": 10,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     803.83,
+     453.01
+    ],
+    "straight": {
+     "basket": 4,
+     "tlsPx": 0.12,
+     "alongPx": 140.9
+    },
+    "spoke": {
+     "basket": 10,
+     "ridgeLum": 2.5,
+     "marginLum": -2.4,
+     "toTee": 11
+    },
+    "status": "conflict",
+    "basket": null,
+    "basketSrc": null,
+    "resolved": {
+     "basket": 4,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "exclusivity settled a conflict"
+    },
+    "truthAgrees": true
+   },
+   "11": {
+    "hole": 11,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     579.79,
+     684.21
+    ],
+    "straight": {
+     "basket": 7,
+     "tlsPx": 0.01,
+     "alongPx": 114.0
+    },
+    "spoke": {
+     "basket": 11,
+     "ridgeLum": 6.7,
+     "marginLum": 0.1,
+     "toTee": 12
+    },
+    "status": "conflict",
+    "basket": null,
+    "basketSrc": null,
+    "resolved": {
+     "basket": 7,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "exclusivity settled a conflict"
+    },
+    "truthAgrees": true
+   },
+   "12": {
+    "hole": 12,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     404.97,
+     831.74
+    ],
+    "straight": {
+     "basket": 17,
+     "tlsPx": 0.3,
+     "alongPx": 84.3
+    },
+    "spoke": {
+     "basket": 17,
+     "ridgeLum": 10.1,
+     "marginLum": 5.4,
+     "toTee": 13
+    },
+    "status": "agree",
+    "basket": 17,
+    "basketSrc": "S4",
+    "resolved": {
+     "basket": 17,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "13": {
+    "hole": 13,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     281.72,
+     1249.76
+    ],
+    "straight": {
+     "basket": 11,
+     "tlsPx": 0.34,
+     "alongPx": 137.6
+    },
+    "spoke": {
+     "basket": 1,
+     "ridgeLum": 12.1,
+     "marginLum": -0.1,
+     "toTee": 14
+    },
+    "status": "conflict",
+    "basket": null,
+    "basketSrc": null,
+    "resolved": {
+     "basket": 11,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "exclusivity settled a conflict"
+    },
+    "truthAgrees": true
+   },
+   "14": {
+    "hole": 14,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     262.28,
+     1394.54
+    ],
+    "straight": {
+     "basket": 13,
+     "tlsPx": 0.26,
+     "alongPx": 159.3
+    },
+    "spoke": {
+     "basket": 13,
+     "ridgeLum": 14.9,
+     "marginLum": 12.7,
+     "toTee": 15
+    },
+    "status": "agree",
+    "basket": 13,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 13,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "15": {
+    "hole": 15,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     240.56,
+     1750.72
+    ],
+    "straight": {
+     "basket": 15,
+     "tlsPx": 0.52,
+     "alongPx": 102.7
+    },
+    "spoke": {
+     "basket": 15,
+     "ridgeLum": 10.9,
+     "marginLum": 4.8,
+     "toTee": 16
+    },
+    "status": "agree",
+    "basket": 15,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 15,
+     "weight": 1.96,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "16": {
+    "hole": 16,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     308.52,
+     1797.84
+    ],
+    "straight": {
+     "basket": 12,
+     "tlsPx": 0.08,
+     "alongPx": 122.6
+    },
+    "spoke": {
+     "basket": 12,
+     "ridgeLum": 9.7,
+     "marginLum": 5.0,
+     "toTee": 17
+    },
+    "status": "agree",
+    "basket": 12,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 12,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "17": {
+    "hole": 17,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     353.91,
+     1480.81
+    ],
+    "straight": {
+     "basket": 14,
+     "tlsPx": 0.06,
+     "alongPx": 149.6
+    },
+    "spoke": {
+     "basket": 14,
+     "ridgeLum": 9.7,
+     "marginLum": 7.5,
+     "toTee": 18
+    },
+    "status": "agree",
+    "basket": 14,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 14,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "18": {
+    "hole": 18,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     438.23,
+     1675.64
+    ],
+    "straight": {
+     "basket": 10,
+     "tlsPx": 0.58,
+     "alongPx": 106.3
+    },
+    "spoke": null,
+    "status": "straight only",
+    "basket": 10,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 10,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "one signal (straight)"
+    },
+    "truthAgrees": true
+   }
+  }
+ },
+ "townelake": {
+  "summary": {
+   "badges": 18,
+   "tees": 18,
+   "teesS4": 1,
+   "baskets": 18,
+   "basketsS4": 0,
+   "duplicateClaims": []
+  },
+  "holes": {
+   "1": {
+    "hole": 1,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     1177.65,
+     972.65
+    ],
+    "straight": {
+     "basket": 5,
+     "tlsPx": 0.1,
+     "alongPx": 90.7
+    },
+    "spoke": {
+     "basket": 5,
+     "ridgeLum": 16.8,
+     "marginLum": 4.1,
+     "toTee": 2
+    },
+    "status": "agree",
+    "basket": 5,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 5,
+     "weight": 1.82,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "2": {
+    "hole": 2,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     912.26,
+     1064.01
+    ],
+    "straight": {
+     "basket": 13,
+     "tlsPx": 0.01,
+     "alongPx": 184.3
+    },
+    "spoke": {
+     "basket": 13,
+     "ridgeLum": 14.7,
+     "marginLum": 13.9,
+     "toTee": 3
+    },
+    "status": "agree",
+    "basket": 13,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 13,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "3": {
+    "hole": 3,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     934.68,
+     1533.65
+    ],
+    "straight": {
+     "basket": 15,
+     "tlsPx": 0.24,
+     "alongPx": 115.7
+    },
+    "spoke": {
+     "basket": 15,
+     "ridgeLum": 12.6,
+     "marginLum": 0.1,
+     "toTee": 4
+    },
+    "status": "agree",
+    "basket": 15,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 15,
+     "weight": 1.02,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "4": {
+    "hole": 4,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     601.26,
+     1371.62
+    ],
+    "straight": {
+     "basket": 12,
+     "tlsPx": 0.56,
+     "alongPx": 115.7
+    },
+    "spoke": {
+     "basket": 12,
+     "ridgeLum": 9.1,
+     "marginLum": 4.7,
+     "toTee": 5
+    },
+    "status": "agree",
+    "basket": 12,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 12,
+     "weight": 1.94,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "5": {
+    "hole": 5,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     749.49,
+     1269.02
+    ],
+    "straight": {
+     "basket": 11,
+     "tlsPx": 0.05,
+     "alongPx": 75.8
+    },
+    "spoke": {
+     "basket": 11,
+     "ridgeLum": 11.3,
+     "marginLum": 10.2,
+     "toTee": 6
+    },
+    "status": "agree",
+    "basket": 11,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 11,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "6": {
+    "hole": 6,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     605.11,
+     1207.3
+    ],
+    "straight": {
+     "basket": 6,
+     "tlsPx": 0.33,
+     "alongPx": 104.2
+    },
+    "spoke": {
+     "basket": 6,
+     "ridgeLum": 12.9,
+     "marginLum": 10.4,
+     "toTee": 7
+    },
+    "status": "agree",
+    "basket": 6,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 6,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "7": {
+    "hole": 7,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     758.93,
+     1021.34
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 4,
+     "ridgeLum": 16.9,
+     "marginLum": 16.9,
+     "toTee": 8
+    },
+    "status": "spoke only",
+    "basket": 4,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 4,
+     "weight": 1.0,
+     "signals": [
+      "spoke"
+     ],
+     "how": "one signal (spoke)"
+    },
+    "truthAgrees": true
+   },
+   "8": {
+    "hole": 8,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     768.59,
+     665.47
+    ],
+    "straight": {
+     "basket": 2,
+     "tlsPx": 0.56,
+     "alongPx": 82.3
+    },
+    "spoke": {
+     "basket": 2,
+     "ridgeLum": 14.4,
+     "marginLum": 12.5,
+     "toTee": 9
+    },
+    "status": "agree",
+    "basket": 2,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 2,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "9": {
+    "hole": 9,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     756.87,
+     456.89
+    ],
+    "straight": {
+     "basket": 0,
+     "tlsPx": 0.0,
+     "alongPx": 108.8
+    },
+    "spoke": {
+     "basket": 0,
+     "ridgeLum": 13.4,
+     "marginLum": 12.1,
+     "toTee": 10
+    },
+    "status": "agree",
+    "basket": 0,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 0,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "10": {
+    "hole": 10,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     546.68,
+     350.35
+    ],
+    "straight": {
+     "basket": 1,
+     "tlsPx": 0.15,
+     "alongPx": 101.2
+    },
+    "spoke": {
+     "basket": 1,
+     "ridgeLum": 15.1,
+     "marginLum": 7.6,
+     "toTee": 11
+    },
+    "status": "agree",
+    "basket": 1,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 1,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "11": {
+    "hole": 11,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     709.09,
+     537.16
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 3,
+     "ridgeLum": 15.3,
+     "marginLum": 6.2,
+     "toTee": 12
+    },
+    "status": "spoke only",
+    "basket": 3,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 3,
+     "weight": 1.0,
+     "signals": [
+      "spoke"
+     ],
+     "how": "one signal (spoke)"
+    },
+    "truthAgrees": true
+   },
+   "12": {
+    "hole": 12,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     696.0,
+     827.34
+    ],
+    "straight": {
+     "basket": 7,
+     "tlsPx": 0.6,
+     "alongPx": 150.1
+    },
+    "spoke": {
+     "basket": 7,
+     "ridgeLum": 19.0,
+     "marginLum": 9.3,
+     "toTee": 13
+    },
+    "status": "agree",
+    "basket": 7,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 7,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "13": {
+    "hole": 13,
+    "badge": true,
+    "tee": "S4",
+    "teeCenter": [
+     387.25,
+     1045.5
+    ],
+    "straight": {
+     "basket": 8,
+     "tlsPx": 0.23,
+     "alongPx": 120.4
+    },
+    "spoke": {
+     "basket": 8,
+     "ridgeLum": 14.8,
+     "marginLum": 14.8,
+     "toTee": 14
+    },
+    "status": "agree",
+    "basket": 8,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 8,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "14": {
+    "hole": 14,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     184.27,
+     1132.89
+    ],
+    "straight": {
+     "basket": 10,
+     "tlsPx": 0.17,
+     "alongPx": 114.2
+    },
+    "spoke": {
+     "basket": 10,
+     "ridgeLum": 16.0,
+     "marginLum": -4.0,
+     "toTee": 15
+    },
+    "status": "agree",
+    "basket": 10,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 10,
+     "weight": 1.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "15": {
+    "hole": 15,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     373.25,
+     1178.23
+    ],
+    "straight": {
+     "basket": 14,
+     "tlsPx": 0.26,
+     "alongPx": 157.2
+    },
+    "spoke": {
+     "basket": 14,
+     "ridgeLum": 16.7,
+     "marginLum": 16.7,
+     "toTee": 16
+    },
+    "status": "agree",
+    "basket": 14,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 14,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "16": {
+    "hole": 16,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     309.26,
+     1710.01
+    ],
+    "straight": {
+     "basket": 13,
+     "tlsPx": 1.36,
+     "alongPx": 502.8
+    },
+    "spoke": {
+     "basket": 17,
+     "ridgeLum": 8.5,
+     "marginLum": 6.9,
+     "toTee": 17
+    },
+    "status": "conflict",
+    "basket": null,
+    "basketSrc": null,
+    "resolved": {
+     "basket": 17,
+     "weight": 1.0,
+     "signals": [
+      "spoke"
+     ],
+     "how": "exclusivity settled a conflict"
+    },
+    "truthAgrees": true
+   },
+   "17": {
+    "hole": 17,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     845.32,
+     1724.85
+    ],
+    "straight": {
+     "basket": 16,
+     "tlsPx": 0.37,
+     "alongPx": 97.5
+    },
+    "spoke": {
+     "basket": 16,
+     "ridgeLum": 20.0,
+     "marginLum": 19.0,
+     "toTee": 18
+    },
+    "status": "agree",
+    "basket": 16,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 16,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "18": {
+    "hole": 18,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     1019.37,
+     1414.89
+    ],
+    "straight": {
+     "basket": 9,
+     "tlsPx": 0.76,
+     "alongPx": 165.9
+    },
+    "spoke": null,
+    "status": "straight only",
+    "basket": 9,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 9,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "one signal (straight)"
+    },
+    "truthAgrees": true
+   }
+  }
+ },
+ "heritage": {
+  "summary": {
+   "badges": 18,
+   "tees": 17,
+   "teesS4": 3,
+   "baskets": 18,
+   "basketsS4": 3,
+   "duplicateClaims": [
+    12
+   ]
+  },
+  "holes": {
+   "1": {
+    "hole": 1,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     25.48,
+     1611.95
+    ],
+    "straight": {
+     "basket": 11,
+     "tlsPx": 0.95,
+     "alongPx": 464.2
+    },
+    "spoke": {
+     "basket": 13,
+     "ridgeLum": 4.1,
+     "marginLum": -0.1,
+     "toTee": 2
+    },
+    "status": "conflict",
+    "basket": null,
+    "basketSrc": null,
+    "resolved": {
+     "basket": 11,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "exclusivity settled a conflict"
+    },
+    "truthAgrees": false
+   },
+   "2": {
+    "hole": 2,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     395.56,
+     1529.58
+    ],
+    "straight": null,
+    "spoke": null,
+    "status": "unresolved",
+    "basket": null,
+    "basketSrc": null,
+    "resolved": {
+     "basket": null,
+     "weight": 0,
+     "signals": [],
+     "how": "unresolved"
+    },
+    "truthAgrees": null
+   },
+   "3": {
+    "hole": 3,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     580.54,
+     1533.97
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 10,
+     "ridgeLum": 13.0,
+     "marginLum": 11.5,
+     "toTee": 4
+    },
+    "status": "spoke only",
+    "basket": 10,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 10,
+     "weight": 1.0,
+     "signals": [
+      "spoke"
+     ],
+     "how": "one signal (spoke)"
+    },
+    "truthAgrees": true
+   },
+   "4": {
+    "hole": 4,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     708.08,
+     1394.66
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 12,
+     "ridgeLum": 20.0,
+     "marginLum": 0.0,
+     "toTee": 5
+    },
+    "status": "spoke only (basket claimed twice)",
+    "basket": 12,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": null,
+     "weight": 0,
+     "signals": [],
+     "how": "unresolved"
+    },
+    "truthAgrees": null
+   },
+   "5": {
+    "hole": 5,
+    "badge": true,
+    "tee": "S4",
+    "teeCenter": [
+     727,
+     1150
+    ],
+    "straight": null,
+    "spoke": null,
+    "status": "unresolved",
+    "basket": null,
+    "basketSrc": null,
+    "resolved": {
+     "basket": null,
+     "weight": 0,
+     "signals": [],
+     "how": "unresolved"
+    },
+    "truthAgrees": null
+   },
+   "6": {
+    "hole": 6,
+    "badge": true,
+    "tee": null,
+    "teeCenter": null,
+    "straight": null,
+    "spoke": {
+     "basket": 1,
+     "ridgeLum": 20.0,
+     "marginLum": 20.1,
+     "toTee": 7
+    },
+    "status": "spoke only",
+    "basket": 1,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 1,
+     "weight": 1.0,
+     "signals": [
+      "spoke"
+     ],
+     "how": "one signal (spoke)"
+    },
+    "truthAgrees": true
+   },
+   "7": {
+    "hole": 7,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     870.8,
+     713.36
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 0,
+     "ridgeLum": 14.2,
+     "marginLum": 13.9,
+     "toTee": 8
+    },
+    "status": "spoke only",
+    "basket": 0,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 0,
+     "weight": 1.0,
+     "signals": [
+      "spoke"
+     ],
+     "how": "one signal (spoke)"
+    },
+    "truthAgrees": true
+   },
+   "8": {
+    "hole": 8,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     1029.03,
+     743.16
+    ],
+    "straight": {
+     "basket": 4,
+     "tlsPx": 0.71,
+     "alongPx": 195.0
+    },
+    "spoke": {
+     "basket": 4,
+     "ridgeLum": 19.2,
+     "marginLum": 17.9,
+     "toTee": 9
+    },
+    "status": "agree",
+    "basket": 4,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 4,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "9": {
+    "hole": 9,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     1094.63,
+     1047.46
+    ],
+    "straight": {
+     "basket": 12,
+     "tlsPx": 0.32,
+     "alongPx": 546.7
+    },
+    "spoke": null,
+    "status": "straight only (basket claimed twice)",
+    "basket": 12,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 12,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "one signal (straight)"
+    },
+    "truthAgrees": false
+   },
+   "10": {
+    "hole": 10,
+    "badge": true,
+    "tee": "S4",
+    "teeCenter": [
+     976.0,
+     1145.5
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 3,
+     "ridgeLum": 4.9,
+     "marginLum": 2.3,
+     "toTee": 11
+    },
+    "status": "spoke only",
+    "basket": 3,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 3,
+     "weight": 0.46,
+     "signals": [
+      "spoke"
+     ],
+     "how": "one signal (spoke)"
+    },
+    "truthAgrees": true
+   },
+   "11": {
+    "hole": 11,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     882.49,
+     850.36
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 5,
+     "ridgeLum": 10.5,
+     "marginLum": -0.4,
+     "toTee": 12
+    },
+    "status": "spoke only",
+    "basket": 5,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": null,
+     "weight": 0,
+     "signals": [],
+     "how": "unresolved"
+    },
+    "truthAgrees": null
+   },
+   "12": {
+    "hole": 12,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     797.94,
+     1151.9
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 15,
+     "ridgeLum": 11.8,
+     "marginLum": 2.4,
+     "toTee": 13
+    },
+    "status": "spoke only",
+    "basket": 15,
+    "basketSrc": "S4",
+    "resolved": {
+     "basket": 15,
+     "weight": 0.48,
+     "signals": [
+      "spoke"
+     ],
+     "how": "one signal (spoke)"
+    },
+    "truthAgrees": true
+   },
+   "13": {
+    "hole": 13,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     829.05,
+     1348.51
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 16,
+     "ridgeLum": 12.8,
+     "marginLum": 7.7,
+     "toTee": 14
+    },
+    "status": "spoke only",
+    "basket": 16,
+    "basketSrc": "S4",
+    "resolved": {
+     "basket": 16,
+     "weight": 1.0,
+     "signals": [
+      "spoke"
+     ],
+     "how": "one signal (spoke)"
+    },
+    "truthAgrees": true
+   },
+   "14": {
+    "hole": 14,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     956.98,
+     1484.62
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 8,
+     "ridgeLum": 20.0,
+     "marginLum": 13.7,
+     "toTee": 15
+    },
+    "status": "spoke only",
+    "basket": 8,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 8,
+     "weight": 1.0,
+     "signals": [
+      "spoke"
+     ],
+     "how": "one signal (spoke)"
+    },
+    "truthAgrees": true
+   },
+   "15": {
+    "hole": 15,
+    "badge": true,
+    "tee": "S4",
+    "teeCenter": [
+     1223,
+     1515
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 14,
+     "ridgeLum": 16.3,
+     "marginLum": 5.0,
+     "toTee": 16
+    },
+    "status": "spoke only",
+    "basket": 14,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 14,
+     "weight": 1.0,
+     "signals": [
+      "spoke"
+     ],
+     "how": "one signal (spoke)"
+    },
+    "truthAgrees": true
+   },
+   "16": {
+    "hole": 16,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     1005.41,
+     1565.44
+    ],
+    "straight": null,
+    "spoke": null,
+    "status": "unresolved",
+    "basket": null,
+    "basketSrc": null,
+    "resolved": {
+     "basket": null,
+     "weight": 0,
+     "signals": [],
+     "how": "unresolved"
+    },
+    "truthAgrees": null
+   },
+   "17": {
+    "hole": 17,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     684.52,
+     1631.16
+    ],
+    "straight": {
+     "basket": 17,
+     "tlsPx": 0.22,
+     "alongPx": 119.7
+    },
+    "spoke": {
+     "basket": 17,
+     "ridgeLum": 7.1,
+     "marginLum": 6.5,
+     "toTee": 18
+    },
+    "status": "agree",
+    "basket": 17,
+    "basketSrc": "S4",
+    "resolved": {
+     "basket": 17,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    },
+    "truthAgrees": true
+   },
+   "18": {
+    "hole": 18,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     349.25,
+     1477.41
+    ],
+    "straight": null,
+    "spoke": null,
+    "status": "unresolved",
+    "basket": null,
+    "basketSrc": null,
+    "resolved": {
+     "basket": null,
+     "weight": 0,
+     "signals": [],
+     "how": "unresolved"
+    },
+    "truthAgrees": null
+   }
+  }
+ },
+ "alex": {
+  "summary": {
+   "badges": 18,
+   "tees": 17,
+   "teesS4": 4,
+   "baskets": 18,
+   "basketsS4": 3,
+   "duplicateClaims": []
+  },
+  "holes": {
+   "1": {
+    "hole": 1,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     616.36,
+     1593.03
+    ],
+    "straight": {
+     "basket": 10,
+     "tlsPx": 0.35,
+     "alongPx": 151.3
+    },
+    "spoke": {
+     "basket": 10,
+     "ridgeLum": 15.5,
+     "marginLum": 12.3,
+     "toTee": 2
+    },
+    "status": "agree",
+    "basket": 10,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 10,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "2": {
+    "hole": 2,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     632.99,
+     1286.2
+    ],
+    "straight": {
+     "basket": 11,
+     "tlsPx": 0.14,
+     "alongPx": 82.1
+    },
+    "spoke": {
+     "basket": 11,
+     "ridgeLum": 12.4,
+     "marginLum": 10.1,
+     "toTee": 3
+    },
+    "status": "agree",
+    "basket": 11,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 11,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "3": {
+    "hole": 3,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     362.6,
+     1741.42
+    ],
+    "straight": {
+     "basket": 14,
+     "tlsPx": 0.53,
+     "alongPx": 130.1
+    },
+    "spoke": {
+     "basket": 14,
+     "ridgeLum": 12.7,
+     "marginLum": 10.7,
+     "toTee": 4
+    },
+    "status": "agree",
+    "basket": 14,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 14,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "4": {
+    "hole": 4,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     368.6,
+     2055.82
+    ],
+    "straight": {
+     "basket": 17,
+     "tlsPx": 0.23,
+     "alongPx": 126.0
+    },
+    "spoke": {
+     "basket": 17,
+     "ridgeLum": 17.8,
+     "marginLum": 15.8,
+     "toTee": 5
+    },
+    "status": "agree",
+    "basket": 17,
+    "basketSrc": "S4",
+    "resolved": {
+     "basket": 17,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "5": {
+    "hole": 5,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     472.31,
+     1886.56
+    ],
+    "straight": {
+     "basket": 13,
+     "tlsPx": 0.08,
+     "alongPx": 139.5
+    },
+    "spoke": {
+     "basket": 13,
+     "ridgeLum": 9.9,
+     "marginLum": 3.3,
+     "toTee": 6
+    },
+    "status": "agree",
+    "basket": 13,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 13,
+     "weight": 1.66,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "6": {
+    "hole": 6,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     673.31,
+     1845.6
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 12,
+     "ridgeLum": 11.5,
+     "marginLum": -8.4,
+     "toTee": 7
+    },
+    "status": "spoke only",
+    "basket": 12,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 12,
+     "weight": 0,
+     "signals": [],
+     "how": "elimination (last hole, last basket)"
+    },
+    "truthAgrees": true
+   },
+   "7": {
+    "hole": 7,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     454.12,
+     1402.65
+    ],
+    "straight": {
+     "basket": 15,
+     "tlsPx": 0.34,
+     "alongPx": 115.3
+    },
+    "spoke": {
+     "basket": 15,
+     "ridgeLum": 15.6,
+     "marginLum": 1.4,
+     "toTee": 8
+    },
+    "status": "agree",
+    "basket": 15,
+    "basketSrc": "S4",
+    "resolved": {
+     "basket": 15,
+     "weight": 1.28,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "8": {
+    "hole": 8,
+    "badge": true,
+    "tee": "S4",
+    "teeCenter": [
+     453.5,
+     861.25
+    ],
+    "straight": {
+     "basket": 7,
+     "tlsPx": 0.01,
+     "alongPx": 142.7
+    },
+    "spoke": {
+     "basket": 7,
+     "ridgeLum": 5.9,
+     "marginLum": 4.2,
+     "toTee": 9
+    },
+    "status": "agree",
+    "basket": 7,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 7,
+     "weight": 1.84,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "9": {
+    "hole": 9,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     429.43,
+     655.0
+    ],
+    "straight": {
+     "basket": 5,
+     "tlsPx": 0.04,
+     "alongPx": 141.6
+    },
+    "spoke": {
+     "basket": 5,
+     "ridgeLum": 14.7,
+     "marginLum": 14.1,
+     "toTee": 10
+    },
+    "status": "agree",
+    "basket": 5,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 5,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "10": {
+    "hole": 10,
+    "badge": true,
+    "tee": "S4",
+    "teeCenter": [
+     383.75,
+     300.0
+    ],
+    "straight": {
+     "basket": 6,
+     "tlsPx": 0.15,
+     "alongPx": 126.9
+    },
+    "spoke": {
+     "basket": 6,
+     "ridgeLum": 9.9,
+     "marginLum": 1.0,
+     "toTee": 11
+    },
+    "status": "agree",
+    "basket": 6,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 6,
+     "weight": 1.2,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "11": {
+    "hole": 11,
+    "badge": true,
+    "tee": "S4",
+    "teeCenter": [
+     539,
+     508
+    ],
+    "straight": {
+     "basket": 2,
+     "tlsPx": 0.05,
+     "alongPx": 119.2
+    },
+    "spoke": null,
+    "status": "straight only",
+    "basket": 2,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 2,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "one signal (straight)"
+    }
+   },
+   "12": {
+    "hole": 12,
+    "badge": true,
+    "tee": null,
+    "teeCenter": null,
+    "straight": null,
+    "spoke": {
+     "basket": 0,
+     "ridgeLum": 16.3,
+     "marginLum": 15.8,
+     "toTee": 13
+    },
+    "status": "spoke only",
+    "basket": 0,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 0,
+     "weight": 1.0,
+     "signals": [
+      "spoke"
+     ],
+     "how": "one signal (spoke)"
+    }
+   },
+   "13": {
+    "hole": 13,
+    "badge": true,
+    "tee": "S4",
+    "teeCenter": [
+     735,
+     68
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 3,
+     "ridgeLum": 6.4,
+     "marginLum": 4.4,
+     "toTee": 14
+    },
+    "status": "spoke only",
+    "basket": 3,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 3,
+     "weight": 0.88,
+     "signals": [
+      "spoke"
+     ],
+     "how": "one signal (spoke)"
+    },
+    "truthAgrees": true
+   },
+   "14": {
+    "hole": 14,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     909.83,
+     304.39
+    ],
+    "straight": {
+     "basket": 1,
+     "tlsPx": 0.19,
+     "alongPx": 121.4
+    },
+    "spoke": {
+     "basket": 1,
+     "ridgeLum": 14.0,
+     "marginLum": 14.4,
+     "toTee": 15
+    },
+    "status": "agree",
+    "basket": 1,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 1,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "15": {
+    "hole": 15,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     705.88,
+     106.9
+    ],
+    "straight": {
+     "basket": 4,
+     "tlsPx": 0.28,
+     "alongPx": 107.6
+    },
+    "spoke": {
+     "basket": 4,
+     "ridgeLum": 13.0,
+     "marginLum": 3.6,
+     "toTee": 16
+    },
+    "status": "agree",
+    "basket": 4,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 4,
+     "weight": 1.72,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "16": {
+    "hole": 16,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     603.5,
+     434.02
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 8,
+     "ridgeLum": 8.5,
+     "marginLum": 8.0,
+     "toTee": 17
+    },
+    "status": "spoke only",
+    "basket": 8,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 8,
+     "weight": 1.0,
+     "signals": [
+      "spoke"
+     ],
+     "how": "one signal (spoke)"
+    },
+    "truthAgrees": true
+   },
+   "17": {
+    "hole": 17,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     675.06,
+     698.09
+    ],
+    "straight": {
+     "basket": 9,
+     "tlsPx": 0.43,
+     "alongPx": 121.7
+    },
+    "spoke": {
+     "basket": 9,
+     "ridgeLum": 5.4,
+     "marginLum": -0.1,
+     "toTee": 18
+    },
+    "status": "agree",
+    "basket": 9,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 9,
+     "weight": 1.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "18": {
+    "hole": 18,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     511.78,
+     1018.24
+    ],
+    "straight": {
+     "basket": 16,
+     "tlsPx": 0.05,
+     "alongPx": 87.2
+    },
+    "spoke": null,
+    "status": "straight only",
+    "basket": 16,
+    "basketSrc": "S4",
+    "resolved": {
+     "basket": 16,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "one signal (straight)"
+    }
+   }
+  }
+ },
+ "northpark": {
+  "summary": {
+   "badges": 18,
+   "tees": 17,
+   "teesS4": 1,
+   "baskets": 18,
+   "basketsS4": 1,
+   "duplicateClaims": []
+  },
+  "holes": {
+   "1": {
+    "hole": 1,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     814.18,
+     1639.08
+    ],
+    "straight": {
+     "basket": 16,
+     "tlsPx": 0.12,
+     "alongPx": 187.9
+    },
+    "spoke": {
+     "basket": 16,
+     "ridgeLum": 12.4,
+     "marginLum": -0.4,
+     "toTee": 2
+    },
+    "status": "agree",
+    "basket": 16,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 16,
+     "weight": 1.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "2": {
+    "hole": 2,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     538.09,
+     1581.99
+    ],
+    "straight": {
+     "basket": 15,
+     "tlsPx": 0.58,
+     "alongPx": 89.3
+    },
+    "spoke": {
+     "basket": 15,
+     "ridgeLum": 14.1,
+     "marginLum": 14.0,
+     "toTee": 3
+    },
+    "status": "agree",
+    "basket": 15,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 15,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "3": {
+    "hole": 3,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     1052.69,
+     1607.19
+    ],
+    "straight": {
+     "basket": 13,
+     "tlsPx": 0.33,
+     "alongPx": 91.8
+    },
+    "spoke": {
+     "basket": 13,
+     "ridgeLum": 20.0,
+     "marginLum": 19.9,
+     "toTee": 4
+    },
+    "status": "agree",
+    "basket": 13,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 13,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "4": {
+    "hole": 4,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     1186.05,
+     1321.26
+    ],
+    "straight": {
+     "basket": 14,
+     "tlsPx": 0.5,
+     "alongPx": 128.0
+    },
+    "spoke": null,
+    "status": "straight only",
+    "basket": 14,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 14,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "one signal (straight)"
+    }
+   },
+   "5": {
+    "hole": 5,
+    "badge": true,
+    "tee": null,
+    "teeCenter": null,
+    "straight": null,
+    "spoke": {
+     "basket": 11,
+     "ridgeLum": 18.0,
+     "marginLum": 18.2,
+     "toTee": 6
+    },
+    "status": "spoke only",
+    "basket": 11,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 11,
+     "weight": 1.0,
+     "signals": [
+      "spoke"
+     ],
+     "how": "one signal (spoke)"
+    }
+   },
+   "6": {
+    "hole": 6,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     1083.66,
+     1099.82
+    ],
+    "straight": {
+     "basket": 17,
+     "tlsPx": 0.01,
+     "alongPx": 195.6
+    },
+    "spoke": {
+     "basket": 17,
+     "ridgeLum": 12.6,
+     "marginLum": 2.3,
+     "toTee": 7
+    },
+    "status": "agree",
+    "basket": 17,
+    "basketSrc": "S4",
+    "resolved": {
+     "basket": 17,
+     "weight": 1.46,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "7": {
+    "hole": 7,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     786.99,
+     793.4
+    ],
+    "straight": {
+     "basket": 0,
+     "tlsPx": 0.35,
+     "alongPx": 97.0
+    },
+    "spoke": null,
+    "status": "straight only",
+    "basket": 0,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 0,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "one signal (straight)"
+    }
+   },
+   "8": {
+    "hole": 8,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     913.41,
+     562.87
+    ],
+    "straight": {
+     "basket": 3,
+     "tlsPx": 0.08,
+     "alongPx": 158.8
+    },
+    "spoke": {
+     "basket": 12,
+     "ridgeLum": 3.8,
+     "marginLum": -7.9,
+     "toTee": 9
+    },
+    "status": "conflict",
+    "basket": null,
+    "basketSrc": null,
+    "resolved": {
+     "basket": 3,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "exclusivity settled a conflict"
+    }
+   },
+   "9": {
+    "hole": 9,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     592.22,
+     662.76
+    ],
+    "straight": {
+     "basket": 1,
+     "tlsPx": 0.33,
+     "alongPx": 152.9
+    },
+    "spoke": {
+     "basket": 1,
+     "ridgeLum": 10.7,
+     "marginLum": 2.3,
+     "toTee": 10
+    },
+    "status": "agree",
+    "basket": 1,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 1,
+     "weight": 1.46,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "10": {
+    "hole": 10,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     358.36,
+     734.04
+    ],
+    "straight": {
+     "basket": 2,
+     "tlsPx": 0.02,
+     "alongPx": 129.5
+    },
+    "spoke": {
+     "basket": 2,
+     "ridgeLum": 16.5,
+     "marginLum": 16.3,
+     "toTee": 11
+    },
+    "status": "agree",
+    "basket": 2,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 2,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "11": {
+    "hole": 11,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     82.67,
+     763.56
+    ],
+    "straight": {
+     "basket": 5,
+     "tlsPx": 0.27,
+     "alongPx": 133.2
+    },
+    "spoke": {
+     "basket": 5,
+     "ridgeLum": 6.2,
+     "marginLum": 1.1,
+     "toTee": 12
+    },
+    "status": "agree",
+    "basket": 5,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 5,
+     "weight": 1.22,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "12": {
+    "hole": 12,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     458.91,
+     743.87
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 6,
+     "ridgeLum": 15.5,
+     "marginLum": 14.4,
+     "toTee": 13
+    },
+    "status": "spoke only",
+    "basket": 6,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 6,
+     "weight": 1.0,
+     "signals": [
+      "spoke"
+     ],
+     "how": "one signal (spoke)"
+    }
+   },
+   "13": {
+    "hole": 13,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     836.09,
+     847.09
+    ],
+    "straight": {
+     "basket": 7,
+     "tlsPx": 0.32,
+     "alongPx": 127.0
+    },
+    "spoke": {
+     "basket": 7,
+     "ridgeLum": 10.9,
+     "marginLum": 9.0,
+     "toTee": 14
+    },
+    "status": "agree",
+    "basket": 7,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 7,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "14": {
+    "hole": 14,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     823.41,
+     1067.32
+    ],
+    "straight": null,
+    "spoke": {
+     "basket": 4,
+     "ridgeLum": 13.2,
+     "marginLum": 0.2,
+     "toTee": 15
+    },
+    "status": "spoke only",
+    "basket": 4,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 4,
+     "weight": 0.04,
+     "signals": [
+      "spoke"
+     ],
+     "how": "one signal (spoke)"
+    }
+   },
+   "15": {
+    "hole": 15,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     586.26,
+     943.88
+    ],
+    "straight": {
+     "basket": 8,
+     "tlsPx": 0.35,
+     "alongPx": 122.4
+    },
+    "spoke": {
+     "basket": 8,
+     "ridgeLum": 19.1,
+     "marginLum": 18.0,
+     "toTee": 16
+    },
+    "status": "agree",
+    "basket": 8,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 8,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "16": {
+    "hole": 16,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     797.82,
+     1168.71
+    ],
+    "straight": {
+     "basket": 9,
+     "tlsPx": 0.35,
+     "alongPx": 90.9
+    },
+    "spoke": {
+     "basket": 9,
+     "ridgeLum": 15.3,
+     "marginLum": 14.2,
+     "toTee": 17
+    },
+    "status": "agree",
+    "basket": 9,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 9,
+     "weight": 2.0,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "17": {
+    "hole": 17,
+    "badge": true,
+    "tee": "S3",
+    "teeCenter": [
+     1058.2,
+     1251.18
+    ],
+    "straight": {
+     "basket": 10,
+     "tlsPx": 0.42,
+     "alongPx": 98.8
+    },
+    "spoke": {
+     "basket": 10,
+     "ridgeLum": 7.1,
+     "marginLum": 3.9,
+     "toTee": 18
+    },
+    "status": "agree",
+    "basket": 10,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 10,
+     "weight": 1.78,
+     "signals": [
+      "straight",
+      "spoke"
+     ],
+     "how": "two signals agree"
+    }
+   },
+   "18": {
+    "hole": 18,
+    "badge": true,
+    "tee": "S4",
+    "teeCenter": [
+     826.0,
+     1223.5
+    ],
+    "straight": {
+     "basket": 12,
+     "tlsPx": 0.47,
+     "alongPx": 104.9
+    },
+    "spoke": null,
+    "status": "straight only",
+    "basket": 12,
+    "basketSrc": "S2",
+    "resolved": {
+     "basket": 12,
+     "weight": 1.0,
+     "signals": [
+      "straight"
+     ],
+     "how": "one signal (straight)"
+    }
+   }
+  }
+ }
+}
