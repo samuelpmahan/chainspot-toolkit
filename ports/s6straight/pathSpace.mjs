@@ -1,187 +1,342 @@
 /**
- * fn.q.path.*: the hole-path measurement along a segment, written once behind the PxC boundary (docs/agents/boundary.md;
+ * fn.q.path.*: the hole-path measurement along a centreline, written once behind the PxC boundary (docs/agents/boundary.md;
  * scaffolded by `node scripts/pxc.mjs scaffold query path`). Browser-safe.
  *
- * The scene (DOCTRINE): the hole path is a semi-transparent grey ribbon composited over the photo. Along a straight
- * hole it runs from the tee to the basket without leaving the segment (S6: "straight holes are the trivial case:
- * objective path loss along tee to basket; learn the course-local path transparency profile there"). These questions
- * measure how much path overlay each pixel on a segment carries; nothing here decides straight or bent.
+ * The scene (DOCTRINE): the hole path is a semi-transparent grey ribbon composited over the photo; along a straight hole it
+ * runs from the tee to the basket without leaving the segment. The PROVEN measure is the graduated Python evidence
+ * (docs/evidence/s7main, s7edge): the ribbon's two edges, read on unmasked stations only. The alpha overlay fraction
+ * (contracts/alpha.profile@1) is a SECOND measure, taken on the same stations and compared against it.
  *
- * State is an argument, never a global. Every question takes:
- *   raster    Part reference (string) to the canonical pixels: 'px.image.cropped' ({ rgba, widthPx, heightPx })
- *   opaque    Part reference (string) to a Part carrying `occ`, one byte per raster px, nonzero where an opaque sprite
- *             covers it ('tk.s4.evidence'); null = no opaque plane (nothing is hidden)
- *   segment   { fromPx: [x, y], toPx: [x, y] }: tee centre -> basket point, canonical px
- *   windowPx  w = half the corridor width (px): the ribbon is the lateral band |offset| <= w
- *   profile   the tk.s7.alphaProfile value (contracts/alpha.profile@1) or null / a noProfile condition
- *   threshold (loss only) { frac, rule }: a pixel whose overlay fraction is below frac is lost
+ * Ports, the same math (proved number for number against the Python: ports/s6straight/prove.mjs):
+ *   fn.q.path.profile          track.py profile: the lateral luminance profile at offsets -30..30 px step 0.25, averaged
+ *                              over stations t0..t1 (arange) along unit(phi) from O; masked samples dropped
+ *   fn.q.path.edgePair         track.py edge_pair: the best rising + falling step pair of width near Wexp, sub-px
+ *   fn.q.path.stationContrast  contrast.py station_contrast: per station, inside band minus outside band on each side
+ *   fn.q.path.width            teebadge.py's free width search: the best edge pair over Wg = 18..59 px on one profile
+ * New:
+ *   fn.q.path.overlayFraction  per station, the fraction of path overlay the centre pixel carries:
+ *                              overlayFraction(observed, background, profile.overlays.path), background = per-channel
+ *                              median of the unmasked lateral samples outside the ribbon (w < |offset| <= 2w, w = W / 2).
+ *                              Without a profile: the recorded condition `no alpha profile` and a PROXY (the same
+ *                              least-squares alpha against a WHITE overlay: brightness, not alpha)
+ *   fn.q.path.samples          the straightened corridor (lateral colours at integer offsets -2w..2w per station): render
+ *   fn.q.path.loss             both measures side by side on the same stations: the edge test (min-side contrast > tau
+ *                              = 8 lum, s7edge: golden 80% vs 1% of stations) and the overlay fraction below a threshold
  *
- *   fn.q.path.samples          one sample per 1 px of segment length: its centre colour and the lateral colours at
- *                              integer offsets -2w..2w px across it (bilinear over every raster px, AA blend included:
- *                              nothing is muted); which samples an opaque sprite hides
- *   fn.q.path.overlayFraction  per sample, the fraction of path overlay the centre pixel carries:
- *                              overlayFraction(observed, background, profile.overlays.path) (the contract's least-squares
- *                              alpha), background = per-channel median of the visible lateral samples outside the ribbon
- *                              (w < |offset| <= 2w). Without a profile: the recorded condition `no alpha profile` and a
- *                              PROXY, the same least-squares alpha against a white overlay (rgb 255, 255, 255): the
- *                              ribbon's brightness over its own background, not its alpha
- *   fn.q.path.loss             the loss profile: lossFrac (fraction of the visible segment length whose overlay fraction
- *                              is below the threshold), longestGapPx, meanOverlayFrac, the gaps, plus the profile above
- *
- * Data conditions (a degenerate segment, no corridor width, no background, no threshold) are recorded in the answer,
- * never thrown. registerQueries (fg/store.mjs) caches each answer by its arguments and profiles each call.
+ * Arguments (state is an argument; nothing is read from globals): strings are Part references, resolved by the store:
+ *   raster  'px.image.cropped' ({ rgba, widthPx, heightPx }); lum = mean of R, G, B (course.py)
+ *   mask    'tk.s6.pathMask' ({ widthPx, heightPx, mask: Uint8Array 0/1 }); a sample is masked when the bilinear mask
+ *           exceeds 0.01 or it lies outside 1 < x < W - 2, 1 < y < H - 2 (track.py); null = nothing masked
+ *   originPx [x, y], phiRad, t0Px, t1Px, stepPx (stations = arange(t0, t1, step)), widthPx W, ...
+ * Data conditions are recorded in the answer, never thrown. registerQueries caches each answer by its arguments.
  */
 import { overlayFraction as contractOverlayFraction, hasOverlay, noProfile } from '../../contracts/alpha.profile@1.mjs';
 
 const r3 = (v) => (v == null || Number.isNaN(v) ? null : Math.round(v * 1000) / 1000);
-const median = (xs) => { const s = [...xs].sort((a, b) => a - b), n = s.length; return n ? (n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2) : null; };
+const median = (xs) => { const s = Float64Array.from(xs).sort(), n = s.length; return n ? (n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2) : null; };
+/** numpy.percentile (linear). */
+export const percentile = (xs, q) => { const s = Float64Array.from(xs).sort(), n = s.length; if (!n) return null; const p = (q / 100) * (n - 1), i = Math.floor(p), f = p - i; return i + 1 < n ? s[i] + (s[i + 1] - s[i]) * f : s[i]; };
+/** numpy.arange(a, b, step) */
+export const arange = (a, b, step = 1) => { const n = Math.max(0, Math.ceil((b - a) / step)), out = new Float64Array(n); for (let k = 0; k < n; k++) out[k] = a + k * step; return out; };
 
+/** The recorded constants of the graduated evidence (docs/evidence/s7main, s7edge). */
+export const EVIDENCE = Object.freeze({
+  offsetsPx: Object.freeze({ from: -30, to: 30.01, step: 0.25 }),   // track.py OFFS
+  maskOver: 0.01,                                                    // a sample is masked when bilinear MASK > 0.01
+  edgeMinOk: Object.freeze({ count: 8, ofStations: 0.2 }),           // s7main edge_pair good = ok >= max(8, 0.2 nT) (s7edge: 3, 0.4)
+  edgeGoodFrac: 0.6, smoothTaps: 5, endZero: 6,
+  bandPx: Object.freeze([1, 3]), alongPx: 2,                         // contrast.py station_contrast
+  tauLum: 8,                                                         // the edge test: min-side contrast > 8 lum (s7edge README)
+  widthsPx: Object.freeze([18, 60, 1]), widthTolPx: 0.75, widthLatPx: 3   // teebadge.py width search
+});
 /** The overlay a proxy assumes when no alpha profile exists: white. Its "fraction" is brightness, not alpha. */
-export const PROXY_OVERLAY = Object.freeze({ rgb: Object.freeze([255, 255, 255]), rule: 'proxy: least-squares alpha against a WHITE overlay (no fitted path colour); a brightness measure, not the path alpha' });
-/** The background band, in multiples of w: outside the ribbon, inside the sampled strip. */
-export const BACKGROUND_BAND = Object.freeze({ fromW: 1, toW: 2, rule: 'background = per-channel median of the visible lateral samples with w < |offset| <= 2w' });
+export const PROXY_OVERLAY = Object.freeze({ rgb: Object.freeze([255, 255, 255]), rule: 'PROXY: least-squares alpha against a WHITE overlay (no fitted path colour): brightness over the lateral background, not the path alpha' });
+export const BACKGROUND_BAND = Object.freeze({ fromW: 1, toW: 2, rule: 'background = per-channel median of the unmasked lateral samples with w < |offset| <= 2w (w = W / 2)' });
 
 export const PATH_UNITS = Object.freeze({
-  samples: 'per sample: centre RGB level and lateral RGB level at offsetsPx (px across the segment); 1 px of segment length per sample',
-  overlayFraction: 'fraction (0..1) of path overlay per sample (alpha, or the white-overlay proxy when no profile)',
-  loss: 'lossFrac fraction of the visible segment length; longestGapPx px; meanOverlayFrac fraction'
+  profile: 'lum (mean of R, G, B) per lateral offset (px); ok: unmasked station count',
+  edgePair: 'px (l, r, c, w: lateral offsets); score, gl, gr: lum/px',
+  stationContrast: 'lum per station (inside band minus outside band), per side',
+  width: 'px (the best edge pair over the width search)',
+  overlayFraction: 'fraction (0..1) of path overlay per station (alpha, or the white-overlay proxy)',
+  samples: 'RGB level per station and lateral offset (px)',
+  loss: 'fractions of visible stations; longest gaps px; contrast lum; overlay fraction'
 });
 
-/** Bilinear RGB at (x, y), 0..255 per channel; null off the raster. */
-function rgbAt({ rgba, widthPx: W, heightPx: H }, x, y) {
+// ------------------------------------------------------------------ raster access (scipy map_coordinates order=1 mode='nearest')
+
+const LUM = new WeakMap();
+/** course.py lum = rgb.mean(-1), once per raster. */
+export function lumOf(raster) {
+  let L = LUM.get(raster);
+  if (!L) {
+    const { rgba, widthPx: W, heightPx: H } = raster; L = new Float64Array(W * H);
+    for (let i = 0; i < W * H; i++) L[i] = (rgba[4 * i] + rgba[4 * i + 1] + rgba[4 * i + 2]) / 3;
+    LUM.set(raster, L);
+  }
+  return L;
+}
+const clampI = (i, n) => (i < 0 ? 0 : i >= n ? n - 1 : i);
+/** Bilinear sample of a W x H plane (scipy map_coordinates order=1, mode='nearest'). */
+export function samp(plane, W, H, x, y) {
   const x0 = Math.floor(x), y0 = Math.floor(y), fx = x - x0, fy = y - y0;
-  if (x0 < 0 || y0 < 0 || x0 >= W || y0 >= H || (fx > 0 && x0 + 1 >= W) || (fy > 0 && y0 + 1 >= H)) return null;
-  const out = [0, 0, 0];
-  const w = [[x0, y0, (1 - fx) * (1 - fy)], [x0 + 1, y0, fx * (1 - fy)], [x0, y0 + 1, (1 - fx) * fy], [x0 + 1, y0 + 1, fx * fy]];
-  for (const [X, Y, k] of w) {
-    if (!k) continue;
-    const i = (Y * W + X) * 4;
-    out[0] += rgba[i] * k; out[1] += rgba[i + 1] * k; out[2] += rgba[i + 2] * k;
+  const xa = clampI(x0, W), xb = clampI(x0 + 1, W), ya = clampI(y0, H), yb = clampI(y0 + 1, H);
+  return (1 - fy) * ((1 - fx) * plane[ya * W + xa] + fx * plane[ya * W + xb]) + fy * ((1 - fx) * plane[yb * W + xa] + fx * plane[yb * W + xb]);
+}
+const ctxOf = (raster, mask) => ({ lum: lumOf(raster), W: raster.widthPx, H: raster.heightPx, mask: mask?.mask ?? null, raster });
+const maskedAt = (c, x, y) => !(x > 1 && x < c.W - 2 && y > 1 && y < c.H - 2) || Boolean(c.mask && samp(c.mask, c.W, c.H, x, y) > EVIDENCE.maskOver);
+const unit = (phi) => [Math.cos(phi), Math.sin(phi)];
+export const OFFS = arange(EVIDENCE.offsetsPx.from, EVIDENCE.offsetsPx.to, EVIDENCE.offsetsPx.step);
+
+// ------------------------------------------------------------------ the ported math (track.py, contrast.py, teebadge.py)
+
+/** track.py profile(C, O, phi, t0, t1, lat0, step). */
+export function profileAt(c, O, phi, t0, t1, { lat0 = 0, step = 1 } = {}) {
+  const u = unit(phi), n = [-u[1], u[0]], T = arange(t0, t1, step), M = OFFS.length;
+  if (!T.length) return { prof: null, ok: null, nT: 0 };
+  const sum = new Float64Array(M), ok = new Int32Array(M);
+  for (const t of T) for (let j = 0; j < M; j++) {
+    const o = OFFS[j] + lat0, x = O[0] + t * u[0] + o * n[0], y = O[1] + t * u[1] + o * n[1];
+    if (maskedAt(c, x, y)) continue;
+    sum[j] += samp(c.lum, c.W, c.H, x, y); ok[j]++;
+  }
+  const prof = new Float64Array(M); for (let j = 0; j < M; j++) prof[j] = ok[j] ? sum[j] / ok[j] : NaN;
+  return { prof, ok, nT: T.length };
+}
+
+/** track.py edge_pair(prof, ok, nT, Wexp, tolW, lat_lim): null when there is no pair. */
+export function edgePairOf({ prof, ok, nT }, Wexp, { tolW = 3, latLim = 12, minOk = EVIDENCE.edgeMinOk } = {}) {
+  if (!prof) return null;
+  const M = prof.length, good = new Uint8Array(M), need = Math.max(minOk.count, minOk.ofStations * nT);
+  let nGood = 0; for (let j = 0; j < M; j++) if (ok[j] >= need) { good[j] = 1; nGood++; }
+  if (nGood / M < EVIDENCE.edgeGoodFrac) return null;
+  const p = Float64Array.from(prof), gi = []; for (let j = 0; j < M; j++) if (good[j]) gi.push(j);
+  for (let j = 0; j < M; j++) {   // np.interp over the good offsets, ends held
+    if (good[j]) continue;
+    if (j <= gi[0]) { p[j] = prof[gi[0]]; continue; }
+    if (j >= gi.at(-1)) { p[j] = prof[gi.at(-1)]; continue; }
+    let k = 0; while (gi[k + 1] < j) k++;
+    const a = gi[k], b = gi[k + 1]; p[j] = prof[a] + (prof[b] - prof[a]) * ((j - a) / (b - a));
+  }
+  const h = (EVIDENCE.smoothTaps - 1) / 2, s = new Float64Array(M);   // np.convolve(p, ones(5)/5, 'same'), zero padded
+  for (let j = 0; j < M; j++) { let v = 0; for (let k = j - h; k <= j + h; k++) if (k >= 0 && k < M) v += p[k] / EVIDENCE.smoothTaps; s[j] = v; }
+  const g = new Float64Array(M), dO = EVIDENCE.offsetsPx.step;   // np.gradient / 0.25
+  for (let j = 0; j < M; j++) g[j] = (j === 0 ? s[1] - s[0] : j === M - 1 ? s[M - 1] - s[M - 2] : (s[j + 1] - s[j - 1]) / 2) / dO;
+  for (let j = 0; j < M; j++) if (j < EVIDENCE.endZero || j >= M - EVIDENCE.endZero || !good[j]) g[j] = 0;
+  const L = [], R = [];
+  for (let i = 1; i < M - 1; i++) { if (g[i] > 0 && g[i] >= g[i - 1] && g[i] >= g[i + 1]) L.push(i); if (g[i] < 0 && g[i] <= g[i - 1] && g[i] <= g[i + 1]) R.push(i); }
+  let best = null;
+  for (const i of L) for (const j of R) {
+    const w = OFFS[j] - OFFS[i]; if (Math.abs(w - Wexp) > tolW) continue;
+    const cc = (OFFS[i] + OFFS[j]) / 2; if (Math.abs(cc) > latLim) continue;
+    const sc = Math.min(g[i], -g[j]); if (!best || sc > best[2]) best = [i, j, sc];
+  }
+  if (!best) return null;
+  const sub = (i) => { const a = g[i - 1], b = g[i], c2 = g[i + 1], den = a - 2 * b + c2; return OFFS[i] + (den !== 0 ? ((0.5 * (a - c2)) / den) * dO : 0); };
+  const [i, j, sc] = best, l = sub(i), r = sub(j);
+  return { lPx: l, rPx: r, cPx: (l + r) / 2, wPx: r - l, score: sc, gl: g[i], gr: -g[j] };
+}
+
+/** contrast.py station_contrast(C, O, phi, ts, W, band, along): per station left/right contrast and validity. */
+export function stationContrastAt(c, O, phi, ts, W, { band = EVIDENCE.bandPx, along = EVIDENCE.alongPx } = {}) {
+  const u = unit(phi), n = [-u[1], u[0]], h = W / 2, ins = arange(band[0], band[1] + 1e-9, 0.5), da = arange(-along, along + 1e-9, 1);
+  const N = ts.length, out = { cl: new Float64Array(N), cr: new Float64Array(N), okl: new Uint8Array(N), okr: new Uint8Array(N) };
+  const S = (t, offs) => {   // nanmean over (da x offs), and the unmasked fraction
+    let sum = 0, k = 0;
+    for (const d of da) for (const o of offs) {
+      const TT = t + d, x = O[0] + TT * u[0] + o * n[0], y = O[1] + TT * u[1] + o * n[1];
+      if (maskedAt(c, x, y)) continue; sum += samp(c.lum, c.W, c.H, x, y); k++;
+    }
+    return [k ? sum / k : NaN, k / (da.length * offs.length)];
+  };
+  for (let q = 0; q < N; q++) for (const sgn of [-1, 1]) {
+    const [vi, oki] = S(ts[q], Array.from(ins, (x) => sgn * (h - x))), [vo, oko] = S(ts[q], Array.from(ins, (x) => sgn * (h + x)));
+    const okv = Math.min(oki, oko) > 0.5 ? 1 : 0;
+    if (sgn < 0) { out.cl[q] = vi - vo; out.okl[q] = okv; } else { out.cr[q] = vi - vo; out.okr[q] = okv; }
   }
   return out;
 }
-const coveredAt = (opaque, W, H, x, y) => {
-  const X = Math.round(x), Y = Math.round(y);
-  if (X < 0 || Y < 0 || X >= W || Y >= H) return true;
-  return Boolean(opaque?.occ && opaque.occ[Y * W + X]);
-};
 
-// ------------------------------------------------------------------ the math, once
-
-/** fn.q.path.samples: centre and lateral colours along the segment, 1 px apart. */
-export function sampleSegment(raster, { segment, windowPx, opaque = null }) {
-  const from = segment?.fromPx, to = segment?.toPx;
-  const base = { schema: 'nctk-s6-path-samples@1', segment: { fromPx: from ?? null, toPx: to ?? null }, windowPx: r3(windowPx) };
-  if (!Array.isArray(from) || !Array.isArray(to)) return { ...base, condition: 'no segment', samplesCount: 0 };
-  if (!(windowPx > 0)) return { ...base, condition: 'no corridor width', samplesCount: 0 };
-  const L = Math.hypot(to[0] - from[0], to[1] - from[1]);
-  if (L < 1) return { ...base, condition: 'degenerate segment (shorter than 1 px)', samplesCount: 0 };
-  const W = raster.widthPx, H = raster.heightPx;
-  const u = [(to[0] - from[0]) / L, (to[1] - from[1]) / L], n = [-u[1], u[0]];
-  const R = Math.ceil(BACKGROUND_BAND.toW * windowPx), M = 2 * R + 1, N = Math.floor(L) + 1;
-  const centerRgbLevel = new Float32Array(N * 3), lateralRgbLevel = new Float32Array(N * M * 3).fill(NaN);
-  const hiddenCenter = new Uint8Array(N), hiddenLateral = new Uint8Array(N * M);
-  for (let k = 0; k < N; k++) {
-    const cx = from[0] + u[0] * k, cy = from[1] + u[1] * k;
-    const c = rgbAt(raster, cx, cy);
-    if (c) centerRgbLevel.set(c, k * 3); else centerRgbLevel.fill(NaN, k * 3, k * 3 + 3);
-    hiddenCenter[k] = !c || coveredAt(opaque, W, H, cx, cy) ? 1 : 0;
-    for (let j = -R; j <= R; j++) {
-      const x = cx + n[0] * j, y = cy + n[1] * j, at = k * M + (j + R);
-      const p = rgbAt(raster, x, y);
-      if (p) lateralRgbLevel.set(p, at * 3);
-      hiddenLateral[at] = !p || coveredAt(opaque, W, H, x, y) ? 1 : 0;
-    }
-  }
-  let hidden = 0; for (const h of hiddenCenter) hidden += h;
-  return {
-    ...base, condition: null, lengthPx: r3(L), stepPx: 1, samplesCount: N, lateralReachPx: R, offsetsPx: [-R, R],
-    directionUnit: u.map(r3), normalUnit: n.map(r3), hiddenCount: hidden,
-    layout: 'centerRgbLevel[k*3 + c]; lateralRgbLevel[(k*M + (offset + R))*3 + c], M = 2R + 1; hidden* = 1 where an opaque sprite covers the px or it is off the raster',
-    centerRgbLevel, lateralRgbLevel, hiddenCenter, hiddenLateral
-  };
+/** teebadge.py: the free width search, best edge pair over widths Wg on one profile. */
+export function widthSearchAt(c, O, phi, t0, t1, { widths = EVIDENCE.widthsPx, tolW = EVIDENCE.widthTolPx, latLim = EVIDENCE.widthLatPx, minOk } = {}) {
+  const P = profileAt(c, O, phi, t0, t1);
+  let best = null;
+  for (const Wg of arange(...widths)) { const e = P.prof ? edgePairOf(P, Wg, { tolW, latLim, minOk }) : null; if (e && (!best || e.score > best.score)) best = { ...e, wgPx: Wg }; }
+  return best;
 }
 
-/** fn.q.path.overlayFraction: per sample, the overlay fraction the centre pixel carries (alpha, or the proxy). */
-export function overlayProfile(s, { windowPx, profile = null }) {
-  const withProfile = hasOverlay(profile, 'path');
-  const overlay = withProfile ? profile.overlays.path : PROXY_OVERLAY;
+// ------------------------------------------------------------------ the mask (course.py), from owned pixel lists
+
+/** binary_fill_holes (scipy default: 4-connected background) then binary_dilation, `iterations` times, cross element. */
+export function spriteMaskOf(W, H, lists, { iterations = 2 } = {}) {
+  const spr = new Uint8Array(W * H); for (const px of lists) for (const i of px) spr[i] = 1;
+  const outside = new Uint8Array(W * H), stack = [];   // background reachable from the border = not a hole
+  const seed = (i) => { if (!spr[i] && !outside[i]) { outside[i] = 1; stack.push(i); } };
+  for (let x = 0; x < W; x++) { seed(x); seed((H - 1) * W + x); } for (let y = 0; y < H; y++) { seed(y * W); seed(y * W + W - 1); }
+  while (stack.length) { const i = stack.pop(), x = i % W, y = (i / W) | 0; if (x > 0) seed(i - 1); if (x < W - 1) seed(i + 1); if (y > 0) seed(i - W); if (y < H - 1) seed(i + W); }
+  const filled = new Uint8Array(W * H); for (let i = 0; i < W * H; i++) filled[i] = outside[i] ? 0 : 1;
+  let cur = filled;
+  for (let it = 0; it < iterations; it++) {
+    const nx = Uint8Array.from(cur);
+    for (let i = 0; i < W * H; i++) { if (cur[i]) continue; const x = i % W, y = (i / W) | 0; if ((x > 0 && cur[i - 1]) || (x < W - 1 && cur[i + 1]) || (y > 0 && cur[i - W]) || (y < H - 1 && cur[i + W])) nx[i] = 1; }
+    cur = nx;
+  }
+  return { filled, sprite: cur };
+}
+
+/** scipy.ndimage.uniform_filter1d(x, size), mode 'reflect'. */
+function uniform1d(x, size) {
+  const n = x.length, h = Math.floor(size / 2), out = new Float64Array(n);
+  const at = (i) => { while (i < 0 || i >= n) i = i < 0 ? -i - 1 : 2 * n - i - 1; return x[i]; };
+  for (let i = 0; i < n; i++) { let s = 0; for (let k = i - h; k < i - h + size; k++) s += at(k); out[i] = s / size; }
+  return out;
+}
+/** course.py _r1: the C1 radius from the mean radial luminance around the basket points (sprites masked), C2 = 2 x C1. */
+export function ringRadiusOf(lum, sprite, W, H, bps, { rs = [10, 260, 0.5] } = {}) {
+  const th = Array.from(arange(0, 360, 1), (d) => (d * Math.PI) / 180), R = arange(...rs), prof = new Float64Array(R.length);
+  R.forEach((r, ri) => {
+    const v = [];
+    for (const [bx, by] of bps) {
+      let s = 0, k = 0;
+      for (const a of th) { const x = bx + r * Math.cos(a), y = by + r * Math.sin(a); if (samp(sprite, W, H, x, y) < 0.01 && x > 1 && x < W - 2 && y > 1 && y < H - 2) { s += samp(lum, W, H, x, y); k++; } }
+      if (k > 20) v.push(s / k);
+    }
+    prof[ri] = v.length ? v.reduce((a, b) => a + b, 0) / v.length : NaN;
+  });
+  const sm = uniform1d(prof, 15), hp = prof.map((p, i) => p - sm[i]);
+  let best = null;
+  for (let i = 0; i < R.length; i++) {
+    const r = R[i]; if (2 * r > R[R.length - 1]) break;
+    let j = 0; for (let k = 1; k < R.length; k++) if (Math.abs(R[k] - 2 * r) < Math.abs(R[j] - 2 * r)) j = k;
+    const sc = hp[i] + hp[j]; if (!best || sc > best[0]) best = [sc, r];
+  }
+  return best ? best[1] : null;
+}
+/** course.py ring: |d - R1| <= 3.5 or |d - 2 R1| <= 4.5 px around every basket point. */
+export function ringMaskOf(W, H, bps, R1) {
+  const ring = new Uint8Array(W * H);
+  for (const [bx, by] of bps) {
+    const x0 = Math.trunc(Math.max(bx - 2 * R1 - 8, 0)), x1 = Math.trunc(Math.min(bx + 2 * R1 + 9, W)), y0 = Math.trunc(Math.max(by - 2 * R1 - 8, 0)), y1 = Math.trunc(Math.min(by + 2 * R1 + 9, H));
+    for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) { const d = Math.hypot(x - bx, y - by); if (Math.abs(d - R1) <= 3.5 || Math.abs(d - 2 * R1) <= 4.5) ring[y * W + x] = 1; }
+  }
+  return ring;
+}
+/** The path mask Part value: opaque sprites (filled, dilated 2 px) OR the C1/C2 rings. */
+export function pathMaskOf(raster, lists, bps, { r1Range = [10, 260, 0.5], r1Px = null } = {}) {
+  const W = raster.widthPx, H = raster.heightPx, { sprite } = spriteMaskOf(W, H, lists);
+  const R1 = r1Px ?? ringRadiusOf(lumOf(raster), sprite, W, H, bps, { rs: r1Range });
+  const ring = R1 ? ringMaskOf(W, H, bps, R1) : new Uint8Array(W * H), mask = new Uint8Array(W * H);
+  let spriteN = 0, ringN = 0, n = 0;
+  for (let i = 0; i < W * H; i++) { if (sprite[i]) spriteN++; if (ring[i]) ringN++; if (sprite[i] || ring[i]) { mask[i] = 1; n++; } }
+  return { widthPx: W, heightPx: H, mask, r1Px: R1, spriteCount: spriteN, ringCount: ringN, maskedCount: n,
+    rule: 'course.py MASK: owned sprite px (fill holes, dilate 2, cross) OR rings |d - R1| <= 3.5, |d - 2 R1| <= 4.5 px around BasketPoints; R1 = course.py _r1' };
+}
+
+// ------------------------------------------------------------------ the second measure: alpha overlay fraction on the same stations
+
+/** Per station: the centre colour, the lateral colours at integer offsets -2w..2w, which samples the mask hides. */
+export function samplesAt(c, O, phi, ts, W) {
+  const w = W / 2, R = Math.ceil(BACKGROUND_BAND.toW * w), M = 2 * R + 1, N = ts.length, u = unit(phi), n = [-u[1], u[0]], { rgba } = c.raster;
+  const rgbAt = (x, y) => [0, 1, 2].map((ch) => { const x0 = Math.floor(x), y0 = Math.floor(y), fx = x - x0, fy = y - y0, g = (X, Y) => rgba[(clampI(Y, c.H) * c.W + clampI(X, c.W)) * 4 + ch];
+    return (1 - fy) * ((1 - fx) * g(x0, y0) + fx * g(x0 + 1, y0)) + fy * ((1 - fx) * g(x0, y0 + 1) + fx * g(x0 + 1, y0 + 1)); });
+  const centerRgbLevel = new Float32Array(N * 3), lateralRgbLevel = new Float32Array(N * M * 3), hiddenCenter = new Uint8Array(N), hiddenLateral = new Uint8Array(N * M);
+  for (let k = 0; k < N; k++) {
+    const cx = O[0] + ts[k] * u[0], cy = O[1] + ts[k] * u[1];
+    centerRgbLevel.set(rgbAt(cx, cy), k * 3); hiddenCenter[k] = maskedAt(c, cx, cy) ? 1 : 0;
+    for (let j = -R; j <= R; j++) { const x = cx + j * n[0], y = cy + j * n[1], at = k * M + j + R; lateralRgbLevel.set(rgbAt(x, y), at * 3); hiddenLateral[at] = maskedAt(c, x, y) ? 1 : 0; }
+  }
+  let hidden = 0; for (const x of hiddenCenter) hidden += x;
+  return { schema: 'nctk-s6-path-samples@1', stationsCount: N, windowPx: r3(w), lateralReachPx: R, offsetsPx: [-R, R], hiddenCount: hidden,
+    layout: 'centerRgbLevel[k*3 + c]; lateralRgbLevel[(k*M + offset + R)*3 + c], M = 2R + 1; hidden* = 1 where the mask hides the sample',
+    centerRgbLevel, lateralRgbLevel, hiddenCenter, hiddenLateral };
+}
+
+export function overlayAt(s, W, profile) {
+  const withProfile = hasOverlay(profile, 'path'), overlay = withProfile ? profile.overlays.path : PROXY_OVERLAY, w = W / 2;
   const alpha = withProfile
     ? { condition: 'alpha profile', mode: 'profile', overlayRgbLevel: overlay.rgb, pathAlphaFrac: overlay.alpha, fitOn: overlay.fitOn ?? null }
     : { condition: 'no alpha profile', mode: 'proxy', reason: profile?.reason ?? (profile ? `profile has no fitted path overlay (${profile.overlays?.path?.reason ?? profile.status ?? 'unknown'})` : 'no profile given'), overlayRgbLevel: PROXY_OVERLAY.rgb, rule: PROXY_OVERLAY.rule };
-  const base = { schema: 'nctk-s6-overlay-fraction@1', kind: withProfile ? 'overlay fraction (alpha profile)' : 'PROXY overlay fraction (no alpha profile: white-overlay brightness)', alpha, segment: s.segment, windowPx: s.windowPx, background: BACKGROUND_BAND.rule };
-  if (s.condition) return { ...base, condition: s.condition, samplesCount: 0, overlayFrac: [], corridor: null };
-  const N = s.samplesCount, R = s.lateralReachPx, M = 2 * R + 1;
-  const overlayFrac = new Array(N).fill(null);
-  let noBackground = 0, undecidable = 0;
-  const minBackground = Math.max(3, Math.ceil(windowPx / 2));   // need a real band, not one stray px
+  const N = s.stationsCount, R = s.lateralReachPx, M = 2 * R + 1, overlayFrac = new Array(N).fill(null), minBg = Math.max(3, Math.ceil(w / 2));
+  let noBackground = 0;
   for (let k = 0; k < N; k++) {
     if (s.hiddenCenter[k]) continue;
     const bg = [[], [], []];
     for (let j = -R; j <= R; j++) {
-      if (Math.abs(j) <= windowPx || Math.abs(j) > BACKGROUND_BAND.toW * windowPx) continue;
-      const at = k * M + (j + R);
-      if (s.hiddenLateral[at]) continue;
-      for (let c = 0; c < 3; c++) bg[c].push(s.lateralRgbLevel[at * 3 + c]);
+      if (Math.abs(j) <= w || Math.abs(j) > BACKGROUND_BAND.toW * w) continue;
+      const at = k * M + j + R; if (s.hiddenLateral[at]) continue;
+      for (let ch = 0; ch < 3; ch++) bg[ch].push(s.lateralRgbLevel[at * 3 + ch]);
     }
-    if (bg[0].length < minBackground) { noBackground++; continue; }
-    const background = bg.map(median), observed = [0, 1, 2].map((c) => s.centerRgbLevel[k * 3 + c]);
-    const f = contractOverlayFraction(observed, background, overlay);
-    if (f == null) { undecidable++; continue; }
-    overlayFrac[k] = r3(f);
+    if (bg[0].length < minBg) { noBackground++; continue; }
+    const f = contractOverlayFraction([0, 1, 2].map((ch) => s.centerRgbLevel[k * 3 + ch]), bg.map(median), overlay);
+    if (f != null) overlayFrac[k] = r3(f);
   }
-  // the straightened corridor (rows: offset -R..R across, columns: 1 px along), for the render: the samples' own colours
-  const rgb = new Uint8Array(N * M * 3).fill(96);
-  for (let k = 0; k < N; k++) for (let j = 0; j < M; j++) for (let c = 0; c < 3; c++) {
-    const v = s.lateralRgbLevel[(k * M + j) * 3 + c]; if (!Number.isNaN(v)) rgb[(j * N + k) * 3 + c] = Math.round(v);
+  return { schema: 'nctk-s6-overlay-fraction@1', kind: withProfile ? 'overlay fraction (alpha profile)' : 'PROXY overlay fraction (no alpha profile: white-overlay brightness)', alpha,
+    background: BACKGROUND_BAND.rule, stationsCount: N, hiddenCount: s.hiddenCount, noBackgroundCount: noBackground, minBackgroundCount: minBg, overlayFrac };
+}
+
+/** Runs of consecutive visible stations that fail; a masked station ends a run (no evidence either way). */
+function gapsOf(fail, visible, stepPx) {
+  const gaps = []; let start = -1;
+  for (let k = 0; k <= fail.length; k++) {
+    const lost = k < fail.length && visible[k] && fail[k];
+    if (lost) { if (start < 0) start = k; } else if (start >= 0) { gaps.push({ fromStation: start, toStation: k - 1, lengthPx: (k - start) * stepPx }); start = -1; }
   }
+  return gaps.sort((a, b) => b.lengthPx - a.lengthPx || a.fromStation - b.fromStation);
+}
+
+/** Both measures on the same stations: the edge test (proven) and the overlay fraction (new), with their agreement. */
+export function lossAt(c, a) {
+  const { originPx: O, phiRad: phi, t0Px, t1Px, stepPx = 1, widthPx: W, profile = null, threshold = null, tauLum = EVIDENCE.tauLum } = a;
+  const base = { schema: 'nctk-s6-path-loss-profile@1', originPx: O, phiRad: phi, t0Px, t1Px, stepPx, widthPx: W, tauLum };
+  if (!(W > 0)) return { ...base, condition: 'no corridor width', stationsCount: 0 };
+  const ts = arange(t0Px, t1Px, stepPx);
+  if (!ts.length) return { ...base, condition: `no stations (t0 ${r3(t0Px)} px >= t1 ${r3(t1Px)} px)`, stationsCount: 0 };
+  const sc = stationContrastAt(c, O, phi, ts, W), s = samplesAt(c, O, phi, ts, W), ov = overlayAt(s, W, profile);
+  const N = ts.length, edgeMinLum = new Array(N), edgeVisible = new Uint8Array(N), edgeFail = new Uint8Array(N);
+  let ev = 0, ep = 0;
+  for (let k = 0; k < N; k++) {
+    edgeVisible[k] = sc.okl[k] && sc.okr[k] ? 1 : 0; const m = Math.min(sc.cl[k], sc.cr[k]); edgeMinLum[k] = edgeVisible[k] ? r3(m) : null;
+    if (edgeVisible[k]) { ev++; if (m > tauLum) ep++; else edgeFail[k] = 1; }
+  }
+  const thr = threshold?.frac, oVis = ov.overlayFrac.map((v) => (v != null ? 1 : 0)), oFail = ov.overlayFrac.map((v) => (v != null && thr != null && v < thr ? 1 : 0));
+  const visO = ov.overlayFrac.filter((v) => v != null), op = thr != null ? visO.filter((v) => v >= thr).length : null;
+  const both = { edgePassOverlayPass: 0, edgePassOverlayFail: 0, edgeFailOverlayPass: 0, edgeFailOverlayFail: 0 };
+  if (thr != null) for (let k = 0; k < N; k++) if (edgeVisible[k] && oVis[k]) both[`edge${edgeFail[k] ? 'Fail' : 'Pass'}Overlay${oFail[k] ? 'Fail' : 'Pass'}`]++;
+  const eg = gapsOf(edgeFail, edgeVisible, stepPx), og = gapsOf(oFail, oVis, stepPx);
   return {
-    ...base, condition: null, samplesCount: N, stepPx: 1, lengthPx: s.lengthPx, hiddenCount: s.hiddenCount, noBackgroundCount: noBackground, undecidableCount: undecidable,
-    minBackgroundCount: minBackground, overlayFrac,
-    corridor: { widthPx: N, heightPx: M, offsetsPx: [-R, R], ribbonHalfPx: s.windowPx, rgbLevel: rgb, hiddenCenter: s.hiddenCenter, layout: 'rgbLevel[(row*widthPx + col)*3 + c], row = offset + R (across), col = sample (along)' }
+    ...base, condition: null, stationsCount: N,
+    edge: { measure: `edge test: min-side contrast > ${tauLum} lum (contrast.py station_contrast at W; s7edge)`, visibleCount: ev, passCount: ep, passFrac: ev ? r3(ep / ev) : null, lossFrac: ev ? r3(1 - ep / ev) : null, longestGapPx: eg[0]?.lengthPx ?? 0, gapsCount: eg.length, medianContrastLum: r3(median(edgeMinLum.filter((v) => v != null))) },
+    overlay: { measure: ov.kind, alpha: ov.alpha, threshold: threshold ?? null, visibleCount: visO.length, meanOverlayFrac: visO.length ? r3(visO.reduce((x, y) => x + y, 0) / visO.length) : null, medianOverlayFrac: r3(median(visO)),
+      passFrac: op != null && visO.length ? r3(op / visO.length) : null, lossFrac: op != null && visO.length ? r3(1 - op / visO.length) : null, longestGapPx: thr != null ? og[0]?.lengthPx ?? 0 : null, gapsCount: thr != null ? og.length : null, noBackgroundCount: ov.noBackgroundCount },
+    agreementCounts: thr != null ? both : null,
+    stations: { tPx: Array.from(ts, r3), edgeMinLum, overlayFrac: ov.overlayFrac, edgeGapsPx: eg.slice(0, 8), overlayGapsPx: og.slice(0, 8) },
+    corridor: corridorOf(s, W)
   };
 }
-
-/** fn.q.path.loss: the loss profile from an overlay profile and a threshold. */
-export function lossProfile(p, { threshold = null }) {
-  const thr = threshold?.frac;
-  const base = { schema: 'nctk-s6-path-loss-profile@1', alpha: p.alpha, threshold: threshold ? { frac: thr ?? null, rule: threshold.rule ?? null } : null, segment: p.segment, windowPx: p.windowPx };
-  if (p.condition) return { ...base, condition: p.condition, lossFrac: null, longestGapPx: null, meanOverlayFrac: null, gapsPx: [], profile: p };
-  const f = p.overlayFrac, visible = f.filter((v) => v != null);
-  const meanOverlayFrac = visible.length ? r3(visible.reduce((a, b) => a + b, 0) / visible.length) : null;
-  const common = { segmentLengthPx: p.lengthPx, samplesCount: p.samplesCount, visiblePx: visible.length, hiddenPx: p.hiddenCount, unmeasuredPx: p.samplesCount - visible.length, meanOverlayFrac, medianOverlayFrac: r3(median(visible)) };
-  if (!(thr >= 0)) return { ...base, ...common, condition: 'no threshold', lossFrac: null, longestGapPx: null, belowPx: null, gapsPx: [], profile: p };
-  if (!visible.length) return { ...base, ...common, condition: 'no visible samples (every sample hidden or without background)', lossFrac: null, longestGapPx: null, belowPx: null, gapsPx: [], profile: p };
-  // a gap: consecutive VISIBLE samples below the threshold; a hidden or unmeasured sample ends a gap (no evidence either way)
-  const gaps = []; let below = 0, start = -1;
-  for (let k = 0; k <= f.length; k++) {
-    const lost = k < f.length && f[k] != null && f[k] < thr;
-    if (lost) { below++; if (start < 0) start = k; }
-    else if (start >= 0) { gaps.push({ fromPx: start, toPx: k - 1, lengthPx: k - start }); start = -1; }
-  }
-  gaps.sort((a, b) => b.lengthPx - a.lengthPx || a.fromPx - b.fromPx);
-  return { ...base, ...common, condition: null, belowPx: below, lossFrac: r3(below / visible.length), longestGapPx: gaps[0]?.lengthPx ?? 0, gapsCount: gaps.length, gapsPx: gaps, profile: p };
+/** The straightened corridor for the render: rows = offset -R..R, columns = station. */
+function corridorOf(s, W) {
+  const N = s.stationsCount, R = s.lateralReachPx, M = 2 * R + 1, rgb = new Uint8Array(N * M * 3);
+  for (let k = 0; k < N; k++) for (let j = 0; j < M; j++) for (let ch = 0; ch < 3; ch++) rgb[(j * N + k) * 3 + ch] = Math.round(s.lateralRgbLevel[(k * M + j) * 3 + ch]);
+  return { widthPx: N, heightPx: M, offsetsPx: [-R, R], ribbonHalfPx: r3(W / 2), rgbLevel: rgb, hiddenCenter: s.hiddenCenter, layout: 'rgbLevel[(row*widthPx + col)*3 + c], row = offset + R, col = station' };
 }
 
-// ------------------------------------------------------------------ store-side memo (one per raster and opaque plane)
+// ------------------------------------------------------------------ the queries
 
-const MEMO = new WeakMap(), NO_OPAQUE = {};
-const memoOf = (raster, opaque) => {
-  let byOpaque = MEMO.get(raster); if (!byOpaque) MEMO.set(raster, (byOpaque = new WeakMap()));
-  const o = opaque ?? NO_OPAQUE; let m = byOpaque.get(o); if (!m) byOpaque.set(o, (m = new Map()));
-  return m;
-};
-const memo = (m, key, f) => { if (!m.has(key)) m.set(key, f()); return m.get(key); };
-const samplesOf = (raster, opaque, a) => memo(memoOf(raster, opaque), `s ${JSON.stringify([a.segment?.fromPx, a.segment?.toPx, a.windowPx])}`, () => sampleSegment(raster, { segment: a.segment, windowPx: a.windowPx, opaque }));
-const fractionsOf = (raster, opaque, a) => memo(memoOf(raster, opaque), `f ${JSON.stringify([a.segment?.fromPx, a.segment?.toPx, a.windowPx, a.profile ?? null])}`, () => overlayProfile(samplesOf(raster, opaque, a), { windowPx: a.windowPx, profile: a.profile ?? null }));
 const rasterOf = (r) => (r && r.rgba && Number.isInteger(r.widthPx) ? r : null);
-const noRaster = (fn) => ({ value: { schema: 'nctk-s6-path@1', condition: `${fn}: no raster (pass raster: 'px.image.cropped')` }, unit: 'condition' });
+const cond = (fn, condition) => ({ value: { schema: 'nctk-s6-path@1', condition: `${fn}: ${condition}` }, unit: 'condition' });
+const tsOf = (a) => arange(a.t0Px, a.t1Px, a.stepPx ?? 1);
+const unpack = (v) => (v ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, x instanceof Float64Array ? Array.from(x, (y) => (Number.isNaN(y) ? null : y)) : x instanceof Int32Array ? Array.from(x) : x])) : v);
+const q = (fn, unitText, f) => ({ raster, mask = null, ...a }) => (rasterOf(raster) ? { value: f(ctxOf(raster, mask), a), unit: unitText } : cond(fn, "no raster (pass raster: 'px.image.cropped')"));
 
 /** registerQueries(store, PATH_QUERIES): string arguments are Part references, resolved before the math runs. */
 export const PATH_QUERIES = Object.freeze({
-  'fn.q.path.samples': ({ raster, opaque = null, ...a }) => (rasterOf(raster) ? { value: samplesOf(raster, opaque, a), unit: PATH_UNITS.samples } : noRaster('samples')),
-  'fn.q.path.overlayFraction': ({ raster, opaque = null, ...a }) => (rasterOf(raster) ? { value: fractionsOf(raster, opaque, a), unit: PATH_UNITS.overlayFraction } : noRaster('overlayFraction')),
-  'fn.q.path.loss': ({ raster, opaque = null, ...a }) => (rasterOf(raster) ? { value: lossProfile(fractionsOf(raster, opaque, a), { threshold: a.threshold ?? null }), unit: PATH_UNITS.loss } : noRaster('loss'))
+  'fn.q.path.profile': q('profile', PATH_UNITS.profile, (c, a) => { const p = profileAt(c, a.originPx, a.phiRad, a.t0Px, a.t1Px, { lat0: a.lat0Px ?? 0, step: a.stepPx ?? 1 }); return p.prof ? { offsetsPx: [OFFS[0], OFFS.at(-1), EVIDENCE.offsetsPx.step], profLum: Array.from(p.prof, (y) => (Number.isNaN(y) ? null : y)), okCount: Array.from(p.ok), stationsCount: p.nT } : { condition: 'no stations', stationsCount: 0 }; }),
+  'fn.q.path.edgePair': q('edgePair', PATH_UNITS.edgePair, (c, a) => edgePairOf(profileAt(c, a.originPx, a.phiRad, a.t0Px, a.t1Px, { lat0: a.lat0Px ?? 0, step: a.stepPx ?? 1 }), a.widthPx, { tolW: a.tolPx ?? 3, latLim: a.latLimPx ?? 12, minOk: a.minOk ?? EVIDENCE.edgeMinOk }) ?? { condition: 'no edge pair' }),
+  'fn.q.path.stationContrast': q('stationContrast', PATH_UNITS.stationContrast, (c, a) => { const r = stationContrastAt(c, a.originPx, a.phiRad, tsOf(a), a.widthPx, { band: a.bandPx ?? EVIDENCE.bandPx, along: a.alongPx ?? EVIDENCE.alongPx }); return { leftLum: Array.from(r.cl), rightLum: Array.from(r.cr), okLeft: Array.from(r.okl), okRight: Array.from(r.okr), stationsCount: r.cl.length }; }),
+  'fn.q.path.width': q('width', PATH_UNITS.width, (c, a) => widthSearchAt(c, a.originPx, a.phiRad, a.t0Px, a.t1Px, { widths: a.widthsPx ?? EVIDENCE.widthsPx, tolW: a.tolPx ?? EVIDENCE.widthTolPx, latLim: a.latLimPx ?? EVIDENCE.widthLatPx, minOk: a.minOk ?? EVIDENCE.edgeMinOk }) ?? { condition: 'no edge pair at any width' }),
+  'fn.q.path.overlayFraction': q('overlayFraction', PATH_UNITS.overlayFraction, (c, a) => (a.widthPx > 0 ? overlayAt(samplesAt(c, a.originPx, a.phiRad, tsOf(a), a.widthPx), a.widthPx, a.profile ?? null) : { condition: 'no corridor width' })),
+  'fn.q.path.samples': q('samples', PATH_UNITS.samples, (c, a) => (a.widthPx > 0 ? samplesAt(c, a.originPx, a.phiRad, tsOf(a), a.widthPx) : { condition: 'no corridor width' })),
+  'fn.q.path.loss': q('loss', PATH_UNITS.loss, (c, a) => lossAt(c, a))
 });
 export const PATH_QUERY_NAMES = Object.freeze(Object.keys(PATH_QUERIES));
-export { noProfile };
+export { noProfile, unpack };

@@ -36,3 +36,39 @@ here and A will do it; either way one copy.
 Also: A's pair Part is `tk.s6.holePairs` (every tee after S4: S3 observed + S4 recovered, each with its badge), so it
 does not collide with your `tk.s6.pairs`. A's `pathLoss` variant stays a later variant (coordinator); it records
 `lane not run` until then.
+
+## B -> A, 2026-10-18: fn.q.path.* exists (ports/s6straight/pathSpace.mjs); one copy, build on it
+
+Items 1-5 are ported in MY file and proved identical to the Python on golden (attempt-1792304513153-45ae22e2e6d3;
+`node ports/s6straight/pathSpace.prove.mjs --attempt ID --dump DIR`, DIR = the evidence scripts' own dumps):
+teebadge per-segment width / centre / score / visible stations / contrast median all within 3e-13; course width
+41.51 px both; profile ok counts 0 differences; course.py MASK 0 px different (220502 px) when built from the board's
+owned pixel lists; R1 44.5 px both; s7edge calibc edge test 757 on / 1503 off stations, 0.8045 / 0.0120 pass at
+tau 8 lum both. Note: the README's golden width 41.58 px is NOT what the unchanged teebadge.py gives on today's
+attempt + baselines/s3assoc/golden.json: it gives 41.51 px (so does the JS).
+
+Register: `registerPathQueries(store)` or `registerPathLoss(store)` (queries + Calculations), from
+`ports/s6straight/pathLoss.mjs` (it re-exports PATH_QUERY_NAMES, PATH_CALLS). Every query answers { value, unit };
+string args are Part references. Common args: `raster: 'px.image.cropped'`, `mask: 'tk.s6.pathMask'` (or null),
+`originPx: [x, y]`, `phiRad`, stations `t0Px, t1Px, stepPx = 1` (numpy arange).
+
+| query | = Python | extra args | value |
+|---|---|---|---|
+| `fn.q.path.profile` | track.py profile | `lat0Px = 0` | `{ offsetsPx: [-30, 30, 0.25], profLum[241] (null = no visible), okCount[241], stationsCount }` |
+| `fn.q.path.edgePair` | track.py edge_pair on that profile | `widthPx` (Wexp), `tolPx = 3`, `latLimPx = 12`, `minOk = { count: 8, ofStations: 0.2 }` (s7edge: 3, 0.4) | `{ lPx, rPx, cPx, wPx, score, gl, gr }` or `{ condition: 'no edge pair' }` |
+| `fn.q.path.stationContrast` | contrast.py station_contrast | `widthPx`, `bandPx = [1, 3]`, `alongPx = 2` | `{ leftLum[], rightLum[], okLeft[], okRight[] }` (0/1) |
+| `fn.q.path.width` | teebadge.py width search | `widthsPx = [18, 60, 1]`, `tolPx = 0.75`, `latLimPx = 3` | best edge pair + `wgPx` |
+| `fn.q.path.overlayFraction` | new (alpha.profile@1) | `widthPx`, `profile` (value or null) | `{ alpha: { condition, mode }, overlayFrac[] (null = masked / no background) }` |
+| `fn.q.path.samples` | new (render) | `widthPx` | the straightened corridor colours |
+| `fn.q.path.loss` | both on the same stations | `widthPx`, `profile`, `threshold: { frac, rule }`, `tauLum = 8` | `{ edge: { passFrac, lossFrac, longestGapPx, visibleCount }, overlay: { meanOverlayFrac, passFrac, lossFrac, longestGapPx }, agreementCounts, stations }` |
+
+Pure functions behind them (for a test or a harness, same math): `profileAt, edgePairOf, stationContrastAt,
+widthSearchAt, pathMaskOf, ringRadiusOf, spriteMaskOf`.
+
+Parts (pathLoss.mjs, Calculations): `tk.s6.pathMask` (course.py MASK from px.baskets, px.badges ownedPx and
+px.tees.refined; R1 from course.py _r1; BasketPoint by fg basketPoint), `tk.s6.hallway` (teebadge.py learn over the
+px.tees.association rows: per tee -> badge segment rows + course widthPx), `tk.s6.pairs` (tee cap S = T + u FRONT L
+-> straight3 BasketPoint, FRONT = 10.6 / 25.02, L = association template L), `tk.s6.pathLoss` (per pair both measures
+on stations 0.6 W .. |K - S| - 2, i.e. seg_fit's trims). Your segmentVerify = `fn.q.path.edgePair` with
+`originPx: S, phiRad: atan2(K - S), t0Px: 0.6 W, t1Px: |K - S| - 2, widthPx: W, tolPx: 1.5, latLimPx: 1.5`, verified iff
+score >= 6.
