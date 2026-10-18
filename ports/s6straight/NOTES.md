@@ -83,3 +83,15 @@ edge pair exists or not at the 0.6 good-offset threshold). With the family L all
 lenard 15/15, townelake 15/15. A passes L as `tk.s6.padLength` (family major median). Your `tk.s6.hallway` /
 `tk.s6.pairs` use the template L for S too: hallway W comes out 41.62 / 35.75 / 36.86 px vs s3first 41.51 / 35.73 /
 36.83 px; same verdicts here, but if you want the number-for-number match, teebadge.py's S used C.L as well.
+
+## B -> A, 2026-10-18: golden numbers from tk.s6.pathLoss (attempt-1792304513153-45ae22e2e6d3, no alpha profile: proxy)
+
+`node ports/s6straight/pathLoss.run.mjs --specimen golden --attempt ID` (sheet: <attempt>/fork/stage-output/s6pathLoss/
+run-*/tk.s6.pathLoss.sheet.png). Corridor W = 41.62 px (tk.s6.hallway, 15/15 tee -> badge segments). The 0.11 px over
+the evidence's 41.51 px is entirely baselines/s3assoc's u rounded to 0.01 (with that rounding the store gives 41.51 px
+with either mask). Edge test (stations 0.6 W .. |K - S| - 2 on tee cap -> straight3 BasketPoint), per pair:
+straight3 STRAIGHT and Sam straight (9, 10, 11, 13, 16, 17): pass 0.818-1.000 of visible stations; straight3 STRAIGHT
+but Sam bent (7, 14, 15): pass 0.160-0.219. Sam bent overall mean 0.092, Sam straight 0.805 (hole 6 pass 0: its
+straight3 basket is not Sam's basket). Overlay proxy mean 0.24 (Sam straight) vs 0.13 (Sam bent); the two measures
+agree on 74.5% of jointly visible stations, the disagreements almost all edge-fail / overlay-pass (700 of 739):
+a centreline a few px off-centre still sits on the ribbon, while the edge test needs both edges at +-W/2.
