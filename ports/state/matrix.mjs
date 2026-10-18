@@ -29,6 +29,7 @@
  *                                              docs/evidence references (Sam: "Reproducibility is the key"); --retest prunes
  *                                              automatically once it has finished
  */
+import { loadTestimony } from '../judge/testimony.mjs';
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { join, resolve } from 'node:path';
@@ -405,7 +406,8 @@ const run = (root, args, log) => { log(`  $ node ${args.join(' ')}`); const r = 
 export function acceptedOnAnnotated(root, courses, attempts, { dir = 's4recover', cmp = 'cmp.fn.Tee.recover.json' } = {}) {
   const votes = new Map();
   for (const c of courses) {
-    if (!c.testimony) continue;
+    // annotated means the course has testimony on disk (c.testimony comes from the judge, which is null when the attempt was rebuilt this pass)
+    if (!c.testimony && !loadTestimony(c.course, root)) continue;
     const out = join(root, 'attempts', 'stages', attempts.get(c.course) ?? c.attempt, 'fork', 'stage-output', dir);
     const run = existsSync(out) ? readdirSync(out).filter((d) => d.startsWith('run-')).sort().at(-1) : null;
     const f = run ? join(out, run, cmp) : null;
