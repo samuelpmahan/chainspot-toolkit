@@ -16,15 +16,16 @@
  * parts -> { recovered: [tee], missed: [...], template, assignment, ... }
  * (ports/s4recover/teeRecover.mjs recoveredTee shape).
  */
-import { SLOT_READS, createRecoveryContext, recoveryInputs, greedyRecover } from '../../ports/s4recover/teeRecover.mjs';
+import { SLOT_READS, SLOT_CALLS, createRecoveryContext, recoveryInputs, greedyRecover } from '../../ports/s4recover/teeRecover.mjs';
 
 export const reads = [...SLOT_READS];
+export const calls = [...SLOT_CALLS];
 
 export const BADGE_RAY = true;
 
 export function run(parts, { badgeRay }) {
   const ctx = createRecoveryContext(recoveryInputs(parts.get));
-  const g = greedyRecover(ctx, { badgeRay });
+  const g = greedyRecover(ctx, { badgeRay, call: parts.call });
   return {
     rule: badgeRay ? 'greedy occluded rigid template; theta within 3 deg of the badge ray' : 'greedy occluded rigid template; theta free (ablation of the badge-ray rule)',
     template: ctx.tpl, assignment: ctx.assignment, searchRadiusPx: ctx.searchRadiusPx, searchRule: ctx.searchRule,

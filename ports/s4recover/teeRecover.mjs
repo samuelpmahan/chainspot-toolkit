@@ -326,14 +326,16 @@ export function createRecoveryContext(inputs) {
   const { raster } = inputs;
   // No usable template (no S3 anchors, or their profiles gave no frame crossings) is data, not a stop: the context
   // carries why, recovery returns nothing recovered with that reason, and everything downstream still runs.
-  let tpl;
-  try { tpl = fitPadTemplate(raster, inputs.anchors, inputs.interiorTone); }
-  catch (e) {
-    return { W: raster.widthPx, H: raster.heightPx, raster, tpl: null, unavailable: e.message, badges: inputs.badges, tees: inputs.tees,
+  // Shared Parts (tk.s4.padTemplate, tk.s4.evidence, tk.s4.hallway) are used when given: computed once per run,
+  // read by every branch; a branch only copies the evidence plane it writes recovered pads into.
+  const T = inputs.template ?? padTemplatePart(raster, inputs.anchors, inputs.interiorTone);
+  const tpl = T.tpl;
+  if (!tpl) {
+    return { W: raster.widthPx, H: raster.heightPx, raster, tpl: null, unavailable: T.unavailable, badges: inputs.badges, tees: inputs.tees,
       assignment: assignTeesToBadges(inputs.tees, inputs.badges), seeds: inputs.seeds ?? [], searchRadiusPx: null, searchRule: null };
   }
-  const cls = classifyRaster(raster, tpl);
-  const occ = buildOccluders(raster, inputs, tpl);
+  const E = inputs.evidence ?? evidencePart(raster, inputs, tpl);
+  const cls = E.cls, occ = E.occ;
   const assignment = assignTeesToBadges(inputs.tees, inputs.badges);
   const maxAssignedPx = assignment.length ? Math.max(...assignment.map((a) => a.distancePx)) : 8 * tpl.lengthPx;
   // Opaque sprites by name: where a fully hidden pad can be (occluder search).
@@ -349,11 +351,23 @@ export function createRecoveryContext(inputs) {
   return {
     W: raster.widthPx, H: raster.heightPx, raster, tpl, cls, occ, owned: new Uint8Array(raster.widthPx * raster.heightPx), sprites,
     adjacent: inputs.adjacent ?? null, unowned: inputs.unowned ?? null,
-    ev: evidencePlane(cls, occ, raster.widthPx * raster.heightPx),
+    ev: Uint8Array.from(E.ev), hallway: inputs.hallway ?? undefined,
     badges: inputs.badges, tees: inputs.tees, assignment, seeds: inputs.seeds ?? [],
     searchRadiusPx: r3(RULES.searchRadiusFactor * maxAssignedPx),
     searchRule: `centers within ${RULES.searchRadiusFactor} x the largest S3 tee-badge distance (${r3(maxAssignedPx)} px) of the badge plate center, whose frame core holds >= 1 unoccluded frame-white px`
   };
+}
+
+/** tk.s4.padTemplate: the rigid pad template from the S3 anchors, or why there is none. */
+export function padTemplatePart(raster, anchors, interiorTone) {
+  try { const tpl = fitPadTemplate(raster, anchors, interiorTone); return { tpl, unavailable: null, emits: { anchors: anchors.length, lengthPx: tpl.lengthPx, widthPx: tpl.widthPx } }; }
+  catch (e) { return { tpl: null, unavailable: e.message, emits: { anchors: anchors.length } }; }
+}
+/** tk.s4.evidence: px classes, occluder kinds and the evidence plane over them (immutable; branches copy ev). */
+export function evidencePart(raster, inputs, tpl) {
+  const n = raster.widthPx * raster.heightPx, cls = classifyRaster(raster, tpl), occ = buildOccluders(raster, inputs, tpl), ev = evidencePlane(cls, occ, n);
+  let white = 0, covered = 0; for (let i = 0; i < n; i++) { if (cls[i] === CLASS.WHITE && !occ[i]) white++; if (occ[i]) covered++; }
+  return { cls, occ, ev, emits: { rasterPx: n, uncoveredFrameWhitePx: white, coveredPx: covered } };
 }
 
 const emptyOccluded = () => Object.fromEntries([...OCC_NAMES.slice(1), 'tint', 'offRaster'].map((k) => [k, 0]));
@@ -727,7 +741,7 @@ export function occluderSearch(ctx, bi, { hallwayTest = true, keepCenters = fals
   // feasibility flips, so the region is its outline, not every centre in it. Peek fragments come from the adjacency
   // query (tk.s4.adjacentBrightComponents): only sprites a fragment touches, only centres within a pad's reach of it.
   const badge = ctx.badges[bi], plate = badge.plateCenter, tpl = ctx.tpl;
-  ctx.hallway ??= learnHallwayWidth(ctx);
+  if (ctx.hallway === undefined) ctx.hallway = learnHallwayWidth(ctx);   // direct calls (tests); the store path passes tk.s4.hallway
   const Wh = hallwayTest ? ctx.hallway?.widthPx ?? null : null;
   const dists = ctx.assignment.map((a) => a.distancePx);
   const range = dists.length ? [Math.min(...dists) * (1 - RULES.hiddenDistMargin), Math.max(...dists) * (1 + RULES.hiddenDistMargin)] : [0, Infinity];
@@ -798,8 +812,12 @@ function searchBox(ctx, badge) {
 const pxBox = (px, W) => { let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity; for (const i of px) { const x = i % W, y = (i / W) | 0; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } return [x0, y0, x1, y1]; };
 const boxesMeet = (a, b) => a[0] <= b[2] && b[0] <= a[2] && a[1] <= b[3] && b[1] <= a[3];
 
-export function greedyRecover(ctx, { badgeRay = true } = {}) {
+export function greedyRecover(ctx, { badgeRay = true, call = null } = {}) {
   const N = ctx.badges.length;
+  // Through the store when the caller can (fn.tk.s4.searchBadge / fn.tk.s4.occluderSearch: each call timed and its
+  // emits recorded by the store); directly otherwise (unit tests).
+  const search = (bi) => (call ? call('fn.tk.s4.searchBadge', { ctx, bi, badgeRay }) : searchBadge(ctx, ctx.badges[bi], { badgeRay }));
+  const hiddenSearch_ = (bi) => (call ? call('fn.tk.s4.occluderSearch', { ctx, bi }) : occluderSearch(ctx, bi));
   if (!ctx.tpl) {
     const assigned = new Set(ctx.assignment.map((a) => a.badge));
     return { recovered: [], log: [], rounds: 0, evaluatedPoses: 0, need: Math.max(0, N - ctx.tees.length),
@@ -816,7 +834,7 @@ export function greedyRecover(ctx, { badgeRay = true } = {}) {
     let pick = null;
     for (const bi of [...pending].sort((a, b) => a - b)) {
       // Same question, same answer: a badge's search is reused across rounds unless a newly owned pad lies in its area.
-      const hit = cache.get(bi), r = hit ? hit.r : searchBadge(ctx, ctx.badges[bi], { badgeRay });
+      const hit = cache.get(bi), r = hit ? hit.r : search(bi);
       if (!hit) cache.set(bi, { r, box: searchBox(ctx, ctx.badges[bi]) }); else reusedSearches++;
       if (!hit) evaluatedPoses += r.evaluatedPoses;
       log.push({ round: rounds, badge: bi, label: ctx.badges[bi].label, candidateCenters: r.candidateCenters, seedsInDisk: r.seedsInDisk, best: r.best ? { center: r.best.center, angleDeg: r3(r.best.angleRad * DEG), score: r.best.score, accepted: r.best.accepted, fromSeed: r.best.seed ?? null } : null });
@@ -834,7 +852,7 @@ export function greedyRecover(ctx, { badgeRay = true } = {}) {
   const hiddenSearch = {};
   for (const bi of [...pending].sort((a, b) => a - b)) {
     if (recovered.length >= need) break;
-    const o = occluderSearch(ctx, bi); evaluatedPoses += o.evaluatedPoses; hiddenSearch[ctx.badges[bi].label] = o;
+    const o = hiddenSearch_(bi); evaluatedPoses += o.evaluatedPoses; hiddenSearch[ctx.badges[bi].label] = o;
     // Direct evidence first: exactly one occluder with a peeking frame fragment pins the pad there. Otherwise exactly one
     // occluder with hallway to the badge. Otherwise recorded, not guessed.
     const peeking = o.regions.filter((r) => r.peek), hall = o.regions.filter((r) => r.feasibleCenters > 0);
@@ -905,7 +923,8 @@ export function recoveryInputs(get) {
     raster, badges, baskets, recoveredBasketBoxes, tees,
     anchors: fam.anchors, interiorTone: fam.model.interiorTone, seeds: padFragmentSeeds(fam),
     adjacent: get('tk.s4.adjacentBrightComponents'),
-    unowned: get('tk.s4.unownedBrightComponents')
+    unowned: get('tk.s4.unownedBrightComponents'),
+    template: get('tk.s4.padTemplate'), evidence: get('tk.s4.evidence')
   };
 }
 
@@ -925,6 +944,27 @@ export const S4_CALCULATIONS = Object.freeze([
     }) }) }],
   ['fn.tk.s4.basketBodies', { inParts: ['px.baskets'], outParts: ['tk.s4.basketBodies'], calculate: (io) => ({
     'tk.s4.basketBodies': io.in('px.baskets').map((b, index) => ({ index, label: index, bbox: b.bbox, px: b.px })) }) }],
+  ['fn.tk.s4.padTemplate', { inParts: ['px.image.cropped', 'px.tees.familyRefined'], outParts: ['tk.s4.padTemplate'], calculate: (io) => {
+    const fam = io.in('px.tees.familyRefined');
+    return { 'tk.s4.padTemplate': padTemplatePart(io.in('px.image.cropped'), fam.anchors, fam.model.interiorTone) };
+  } }],
+  ['fn.tk.s4.evidence', { inParts: ['px.image.cropped', 'tk.s4.padTemplate', 'tk.s4.badgePlates', 'tk.s4.basketBodies', 'tk.s4.basketRecovery', 'px.tees.refined'], outParts: ['tk.s4.evidence'], calculate: (io) => {
+    const tpl = io.in('tk.s4.padTemplate').tpl;
+    return { 'tk.s4.evidence': tpl ? evidencePart(io.in('px.image.cropped'), { badges: io.in('tk.s4.badgePlates'), baskets: io.in('tk.s4.basketBodies'), recoveredBasketBoxes: io.in('tk.s4.basketRecovery').recoveredBoxes, tees: io.in('px.tees.refined') }, tpl) : null };
+  } }],
+  ['fn.tk.s4.hallway', { inParts: ['px.image.cropped', 'tk.s4.padTemplate', 'tk.s4.evidence', 'tk.s4.badgePlates', 'px.tees.refined'], outParts: ['tk.s4.hallway'], calculate: (io) => {
+    const tpl = io.in('tk.s4.padTemplate').tpl, E = io.in('tk.s4.evidence');
+    if (!tpl || !E) return { 'tk.s4.hallway': null };
+    const raster = io.in('px.image.cropped'), badges = io.in('tk.s4.badgePlates'), tees = io.in('px.tees.refined');
+    const h = learnHallwayWidth({ raster, tpl, occ: E.occ, badges, tees, assignment: assignTeesToBadges(tees, badges) });
+    return { 'tk.s4.hallway': h ? { ...h, emits: { widthPx: h.widthPx, segments: h.fromSegments } } : null };
+  } }],
+  // capabilities: called once per badge search with the branch's context (call-time args); timed per call by the store
+  ['fn.tk.s4.searchBadge', { calculate: (io) => { const { ctx, bi, badgeRay } = io.args; const r = searchBadge(ctx, ctx.badges[bi], { badgeRay });
+    return { ...r, emits: { poses: r.evaluatedPoses, candidateCentres: r.candidateCenters } }; } }],
+  // the occluder search is what needs the hallway, so it declares it: tk.s4.hallway is produced on its first call only
+  ['fn.tk.s4.occluderSearch', { inParts: ['tk.s4.hallway'], calculate: (io) => { const { ctx, bi } = io.args; if (ctx.hallway === undefined) ctx.hallway = io.in('tk.s4.hallway'); const o = occluderSearch(ctx, bi);
+    return { ...o, emits: { poses: o.evaluatedPoses, occluders: o.regions.length } }; } }],
   ['fn.tk.s4.unownedBrightComponents', { inParts: ['px.components', 'px.badges', 'px.baskets', 'px.tees.refined'], outParts: ['tk.s4.unownedBrightComponents'],
     calculate: (io) => ({ 'tk.s4.unownedBrightComponents': unownedBrightComponents(io.in('px.components').bright, io.in('px.badges'), io.in('px.baskets'), io.in('px.tees.refined')) }) }],
   ['fn.tk.s4.adjacentBrightComponents', { inParts: ['tk.s4.unownedBrightComponents'], outParts: ['tk.s4.adjacentBrightComponents'],
@@ -965,4 +1005,5 @@ export function adjacentBrightComponents(bright, badges, baskets, tees, opts) {
   return unownedBrightComponents(bright, badges, baskets, tees, opts).filter(isAdjacentFragment);
 }
 
-export const SLOT_READS = Object.freeze(['px.image.cropped', 'tk.s4.badgePlates', 'tk.s4.basketBodies', 'tk.s4.basketRecovery', 'px.tees.refined', 'px.tees.familyRefined', 'tk.s4.adjacentBrightComponents', 'tk.s4.unownedBrightComponents']);
+export const SLOT_READS = Object.freeze(['px.image.cropped', 'tk.s4.badgePlates', 'tk.s4.basketBodies', 'tk.s4.basketRecovery', 'px.tees.refined', 'px.tees.familyRefined', 'tk.s4.adjacentBrightComponents', 'tk.s4.unownedBrightComponents', 'tk.s4.padTemplate', 'tk.s4.evidence']);
+export const SLOT_CALLS = Object.freeze(['fn.tk.s4.searchBadge', 'fn.tk.s4.occluderSearch']);

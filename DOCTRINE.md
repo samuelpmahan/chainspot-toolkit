@@ -99,6 +99,19 @@ right and the repo is behind. Every number carries a unit.
   files written beside it. Derived views are Calculations of their own with
   their own addresses (`tk.s4.*`), not reshaped copies at an existing
   address. `ports/s4recover` reads the S3 PxC this way.
+- **Profiling is a property, not code in the work** (Sam, 2026-10-18).
+  (1) Work worth measuring is a Calculation: the PartStore times every call
+  and copies the measures its output declares in `emits` onto the call's
+  entry. (2) A runner's store is instrumented (`fg/profile.mjs`
+  `instrumentedStore`, or `registerInstrumentation` on an existing store);
+  the calls go to the `instrumentation.json` sidecar. (3) Any FG adds the
+  `profiled` mixin (`fg/mixins.mjs`) and its record gets its own call
+  subtree: calls and summed emits, deterministic, with units. Timings stay
+  in the sidecar, never in hashed records; `profileSummary` /
+  `profileFrame` turn any sidecar into a table or flipbook page.
+  A Part a Calculation needs is declared as ITS inPart, so it is produced on
+  first need. Declaring it on a caller resolves it eagerly (golden paid
+  254 ms for a hallway it never used).
 
 - FGs are functional: Composition -> Composition. Mixins, flow combinators
   (ComparableForkJoin, AblationForkJoin), tests and forced renders are all

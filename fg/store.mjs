@@ -24,7 +24,8 @@
  *     base     the provider PxC (or a () => board getter, when the runner's
  *              live board object changes between stages); null for a store
  *              with no provider Parts
- *     onCall   instrumentation hook, called once per Calculation invocation
+ *     onCall   instrumentation hook, called once per Calculation invocation; the entry carries the call's
+ *              `emits` (measures its output declared, see emitsOf)
  *              at exit with { seq, parent, depth, calculation, store, caller,
  *              site, inParts, outParts, elapsedMs, status, error }: Sam's
  *              "auto-instrument every Calculation". Nondeterministic (it
@@ -105,6 +106,20 @@ export class PartStoreError extends Error {
 }
 
 export const isPartStore = (value) => Boolean(value && value[STORE]);
+
+/**
+ * The emit channel, for every Calculation call: a produced Part (or a capability's return value) that carries an
+ * `emits` field holding a plain object of measures has it copied (detached) onto the call's instrumentation entry. A
+ * Calculation declares its measures on its output and is profiled without knowing anything about profiling.
+ */
+function emitsOf(values) {
+  let out = null;
+  for (const v of values) {
+    if (v && typeof v === 'object' && !Array.isArray(v) && v.emits && typeof v.emits === 'object' && !Array.isArray(v.emits))
+      out = { ...(out ?? {}), ...JSON.parse(JSON.stringify(v.emits)) };
+  }
+  return out;
+}
 
 export function createPartStore({ base = null, name = 'root', onCall = null } = {}) {
   return makeStore({ base, name, parent: null, shared: { seq: 0, stack: [], onCall } });
@@ -215,7 +230,7 @@ function makeStore({ base, name, parent, shared }) {
       const entry = {
         seq: shared.seq++, parent: shared.stack.at(-1) ?? null, depth: shared.stack.length,
         calculation: fn, store: name, caller, site: typeof args?.site === 'string' ? args.site : null,
-        inParts: spec.inParts, outParts: spec.outParts, elapsedMs: null, status: 'running', error: null
+        inParts: spec.inParts, outParts: spec.outParts, elapsedMs: null, status: 'running', error: null, emits: null
       };
       const started = now();
       shared.stack.push(entry.seq);
@@ -256,6 +271,7 @@ function makeStore({ base, name, parent, shared }) {
             if (missing.length || extra.length) throw new PartStoreError(`${fn} returned outParts that differ from its declaration (missing: ${missing.join(', ') || '-'}; undeclared: ${extra.join(', ') || '-'})`);
             for (const address of spec.outParts) write(address, result[address], fn, spec.inParts);
           }
+          entry.emits = emitsOf(spec.outParts.length ? spec.outParts.map((a) => result[a]) : [result]);
           return result;
         };
         const result = spec.calculate(io);

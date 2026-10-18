@@ -127,3 +127,12 @@ test('async producers resolve through call; lazy: false producers run only when 
   fresh.call('fn.tk.gateway', ['run']);
   assert.equal(fresh.get('tk.captured'), 'run');
 });
+
+test('every Calculation call carries the measures its output emits (Parts and capabilities alike)', () => {
+  const log = [];
+  const store = createPartStore({ name: 'emits', onCall: (e) => log.push(e) });
+  store.register('fn.t.count', { outParts: ['t.counted'], calculate: () => ({ 't.counted': { value: 3, emits: { items: 3 } } }) });
+  store.register('fn.t.search', { calculate: (io) => ({ best: io.args.k, emits: { poses: 7 * io.args.k } }) });
+  store.get('t.counted'); store.call('fn.t.search', { k: 2 });
+  assert.deepEqual(log.map((e) => [e.calculation, e.emits]), [['fn.t.count', { items: 3 }], ['fn.t.search', { poses: 14 }]]);
+});

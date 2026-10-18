@@ -44,6 +44,7 @@ import { tickEvidence } from './branchOp.mjs';
 import { layerLedger, s1Sets } from './layers.mjs';
 import { legacyArtifact, legacyCanon, prettyJsonBytes, unionOf, zeroAlphaCount } from './legacy.mjs';
 import { canonicalJson } from './canon.mjs';
+import { INSTRUMENTATION_CALLS, profileSummary } from './profile.mjs';
 
 const stageOf = (fgId) => fgId.split('.')[1];
 const SHA = 'fn.tk.sha256';
@@ -442,5 +443,27 @@ export const unitful = ({ units: declared = {}, params = {} } = {}) => decorator
     const survey = Object.fromEntries(Object.entries(s.artifactJson ?? {}).map(([id, v]) => [id, unitlessPaths(v, { ...paramUnits, ...units })]));
     env.check('unitful', unitless.length === 0, { unitless: unitless.slice(0, 80), count: unitless.length });
     return { record: { ...s.record, units: { ...units }, unitSurvey: survey, ...(Object.keys(params).length ? { parameterUnits: Object.fromEntries(Object.entries(params).map(([n, [, map]]) => [n, map])) } : {}) } };
+  }
+});
+
+// ------------------------------------------------------------- profiled
+
+/**
+ * profiled: the FG's own call subtree, read back from the store's instrumentation (fg/profile.mjs), onto its record as
+ * DETERMINISTIC measures only: per Calculation the number of calls and the summed emits (poses, px, ...). Elapsed times
+ * stay in the instrumentation sidecar (grouped by caller there): a record is hashed evidence, a timing never is.
+ * Plug and play: pipe(..., profiled) on any FG whose store is instrumented; on a store that is not, it records why.
+ */
+export const profiled = decorator({
+  name: 'profiled', property: 'profiled', calls: [INSTRUMENTATION_CALLS],
+  after: (env, s) => {
+    let profile;
+    try { profile = profileSummary({ calculations: env.call(INSTRUMENTATION_CALLS, { caller: env.id }) }).map(({ calculation, calls, emits, threw }) => ({ calculation, calls, emits, threw })); }
+    catch (e) { profile = { unavailable: `store is not instrumented: ${e.message}` }; }
+    // every number it publishes carries a unit (unitful): calls and failures are counts; an emitted measure keeps the
+    // meaning its Calculation gave it
+    const units = { calls: 'count (Calculation calls)', threw: 'count (calls that threw)' };
+    for (const row of Array.isArray(profile) ? profile : []) for (const k of Object.keys(row.emits)) units[k] ??= `as emitted by ${row.calculation} (summed over its calls)`;
+    return { out: { ...(s.out ?? {}), profile }, units: { ...(s.units ?? {}), ...units } };   // the record step assembles s.out
   }
 });

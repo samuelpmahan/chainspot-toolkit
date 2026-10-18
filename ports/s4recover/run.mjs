@@ -25,7 +25,7 @@
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
 import { deserialize } from 'node:v8';
 import { join, resolve } from 'node:path';
-import { createPartStore } from '../../fg/store.mjs';
+import { instrumentedStore, profileSummary, profileFrame } from '../../fg/profile.mjs';
 import { comparableForkJoin, forkJoinFrames } from '../../fg/forkjoin.mjs';
 import { discoverImplementations } from '../../fg/discover.mjs';
 import { createFileSink } from '../../fg/node-sink.mjs';
@@ -117,9 +117,12 @@ function findKey(obj, key) {
 export async function runTeeRecoverForkJoin({ attempt, specimen, outDir = null, root = ROOT }) {
   const loaded = loadAttemptParts({ attempt, specimen, root });
   const out = outDir ?? join(loaded.out, 's4recover', `run-${new Date().toISOString().replace(/[:.]/g, '-')}`); // evidence is never overwritten (file sink)
-  const store = createPartStore({ name: `s4recover:${specimen}`, base: loaded.board });
+  // Profiled by construction (fg/profile.mjs): every Calculation call is timed with its emits into instrumentation.json.
+  const { store, document: instrumentation } = instrumentedStore({ name: `s4recover:${specimen}`, base: loaded.board });
   store.constant('fn.tk.s4recover.laneOutputs', loaded.values);
   for (const [fn, spec] of S4_CALCULATIONS) store.register(fn, spec);
+  // Shared Parts are produced once here, on the parent store; every branch reads them through it.
+  for (const address of ['tk.s4.padTemplate', 'tk.s4.evidence', 'tk.s4.adjacentBrightComponents']) store.get(address);   // tk.s4.hallway stays lazy
   const implementations = await discoverImplementations(join(root, 'impl'), TEE_RECOVER_SLOT.slot);
   const sink = createFileSink(join(out, 'artifacts'), { relativeTo: out });
   const timings = {};
@@ -133,12 +136,14 @@ export async function runTeeRecoverForkJoin({ attempt, specimen, outDir = null, 
   mkdirSync(out, { recursive: true });
   const v = result.comparison.value;
   writeFileSync(join(out, `${result.comparison.address}.json`), canonicalJson({ schema: 'nctk-s4-tee-recover-comparison@1', specimen, attempt, address: result.comparison.address, implementations: result.comparison.implementations, sha256: result.comparison.sha256, elapsedMs: timings, value: v }) + '\n');
-  const frames = forkJoinFrames(result);
+  const doc = instrumentation(), profile = profileSummary(doc);
+  writeFileSync(join(out, 'instrumentation.json'), JSON.stringify(doc) + '\n');   // sidecar: timings are never hashed evidence
+  const frames = [...forkJoinFrames(result), profileFrame(profile, { wallMs: doc.wallMs })];
   const records = Object.fromEntries(Object.entries(result.branches).map(([n, b]) => [n, { error: b.error, records: b.records }]));
   writeFileSync(join(out, 's4recover.records.json'), canonicalJson({ schema: 'nctk-fg-forkjoin-records@1', slot: result.slot, specimen, attempt, branches: records }) + '\n');
   writeFileSync(join(out, 's4recover.frames.json'), framesJson(frames) + '\n');
   writeFileSync(join(out, 's4recover.flipbook.html'), renderFlipbook(frames, { title: `S4 ${TEE_RECOVER_SLOT.slot} fork-join (${specimen}): ${result.comparison.implementations.join(' vs ')}`, background: loaded.background, records: { branches: records }, stage: 'S4' }));
-  return { out, comparison: v, timingsMs: timings, frames: frames.length, branches: records };
+  return { out, comparison: v, timingsMs: timings, frames: frames.length, branches: records, profile };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
@@ -147,7 +152,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const r = await runTeeRecoverForkJoin({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null });
   const c = r.comparison;
   console.log(JSON.stringify({
-    out: r.out, frames: r.frames, timingsMs: r.timingsMs, template: c.template, seeds: c.seeds, assignmentCount: c.assignment.length,
+    out: r.out, frames: r.frames, timingsMs: r.timingsMs, profile: r.profile.slice(0, 12).map((p) => `${p.calculation}: ${p.calls}x self ${p.selfMs} ms total ${p.totalMs} ms ${JSON.stringify(p.emits)}`), template: c.template, seeds: c.seeds, assignmentCount: c.assignment.length,
     branches: Object.fromEntries(Object.entries(c.branches).map(([n, b]) => [n, { ...b, perTee: b.perTee.map((t) => `${t.hole}:${t.verdict}@${t.errorPx}px conf${t.confidence} seed${t.fromSeed} occ${JSON.stringify(Object.fromEntries(Object.entries(t.occludedBy ?? {}).filter(([, x]) => x)))}`) }])),
     errors: Object.fromEntries(Object.entries(r.branches).map(([n, b]) => [n, b.error]))
   }, null, 1));

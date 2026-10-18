@@ -6,9 +6,10 @@
  * 3 deg of the direction to the badge. The recovered tee's residual against
  * its badge ray is still recorded as evidence.
  */
-import { SLOT_READS } from '../../ports/s4recover/teeRecover.mjs';
+import { SLOT_READS, SLOT_CALLS } from '../../ports/s4recover/teeRecover.mjs';
 import { run } from './greedyOccluded.mjs';
 
 export const reads = [...SLOT_READS];
+export const calls = [...SLOT_CALLS];
 
 export default function greedyOccludedNoBadgeRay(parts) { return run(parts, { badgeRay: false }); }
