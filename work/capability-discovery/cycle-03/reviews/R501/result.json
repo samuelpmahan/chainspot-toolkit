@@ -1,0 +1,65 @@
+{
+  "schema": "cycle03-independent-review@1",
+  "job_id": "R501",
+  "worker": "D2",
+  "reviewedJob": "E501",
+  "reviewedWorker": "D1",
+  "decision": "accepted",
+  "summary": "Accepted D1 bounded read-only source reconnaissance. Listed hashes/ref mappings reproduce. Historical annotation crops differ in dimensions/hash from full screenshots; canonical y offsets are correctly kept separate from unknown full-source translation. Existing CV composition is reusable without new CV math, while exact provenance-bound RGBA crop adaptation remains a separate required caller/adapter responsibility. No new algorithm output, classifier success, calibrated width, course accuracy or human acceptance is established.",
+  "auditedFiles": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/result.json",
+      "sha256": "50ad2028d8b11312f2e4c644b442001fd10e0d541d33772e49fd0362ad52979c"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/source-inventory.json",
+      "sha256": "47046f0aeace11ad4c02c536596749df610915707eb8c8f40958e86d8807d330"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/testimony-coordinate-inventory.json",
+      "sha256": "5edaa7200b7c5e52a90711217e52ec9a8203b9e739eaa77136e8866d7812c3f8"
+    }
+  ],
+  "probes": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/review-R501/probes.json",
+    "sha256": "e2dc21c6609f1dceed1d700a6989b62bc133cb9af2dd2d10a26b6f20e218c032",
+    "count": 122,
+    "allPassed": true,
+    "kind": "Readonly Git source/blob SHA256, local SHA256, annotation payload/metadata equality, fixture source PNG SHA256/IHDR dimensions, tracked-path absence checks; no CV executions."
+  },
+  "sourceSemantics": [
+    {
+      "claim": "decodeNodeFile imageId hashes file bytes, not decoded RGBA",
+      "evidence": "platform source/provider/packages/alg/src/adapters/node.ts: createHash update(bytes), PNG.sync.read and jpeg.decode."
+    },
+    {
+      "claim": "S0 full-source y requires actual top removal receipt",
+      "evidence": "platform stages/S0/clean/index.ts computes upperRowsRemoved=crop.insets?.top??0 and retains receipt; no receipt generated here."
+    },
+    {
+      "claim": "display-only crop is unsafe as evidence-RGBA adapter",
+      "evidence": "platform fg/png.mjs cropWindow rounds centre, fills out-of-bounds RGB128, copies only RGB, permits overlays, and encodePngRgb writes color type2. It does not preserve RGBA/alpha or strict in-bounds crop contract."
+    },
+    {
+      "claim": "gray crop primitive does exact rows but is not RGBA composition input",
+      "evidence": "platform raster.ts cropRaster copies one-byte gray subarray rows; distinct from four-byte RGBA evidence."
+    },
+    {
+      "claim": "composition preserves bounded current reuse",
+      "evidence": "current recipe.mjs is default OFF, validates same frame/hash, snapshots RGBA, verifies sources and directly calls existing operations with exact requested bank width. Alpha is retained in snapshot; RGB evidence channels do not infer transparency. No measurement run performed."
+    },
+    {
+      "claim": "testimony frame mismatch and correction provenance",
+      "evidence": "Exact four annotation payloads and readmes checked; Heritage1290x2115, Lenard1290x2089, TowneLake1290x2012 with different image hashes vs full PNG1290x2796. Heritage corrected hole8 is platform-only contextual testimony; e3 corrected path absence verified."
+    }
+  ],
+  "limits": [
+    "Technical source/inventory acceptance only, not scientific or human acceptance.",
+    "No exhaustive algorithm re-mine: checked listed source identity inventory and a limited historical receipt sample.",
+    "Published lab3a5d37/treea96ab remains explicitly coordinator-supplied; local tree unavailable independently confirmed.",
+    "No independently verified original annotation-to-full-PNG mapping or historical exact crop receipt.",
+    "No measurement producer, recipe, learner, edge or sensor execution; no tuning, CV, repo or Git mutation.",
+    "D2 E502 protocol SHA256 ee4ac0852dfe1838c3d637ff967b65918ca9bb077ab9f1a6b2df9763ec3e916a rechecked unchanged."
+  ],
+  "amendmentsRequired": []
+}

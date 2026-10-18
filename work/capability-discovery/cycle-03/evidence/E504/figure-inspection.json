@@ -1,0 +1,23 @@
+{
+  "schema": "D4-native-source-figure-inspection@1",
+  "inspectedAtUTC": "2026-10-18T09:54:57.751855+00:00",
+  "method": "view_image actual full screenshots; native integer inspection crops; then both annotated scientific-source PNGs at native size",
+  "images": [
+    {
+      "file": "NorthPark-full.scientific-source.png",
+      "sha256": "36dbde83c738f66df3c762a7d1f3cb57150a11901e62a35e858e0957dacb14f4",
+      "visualInspection": "Source is visible at native pixel size; overlay green proposed ribbon/red matched offset/orange bright non-path are in requested source regions. NP bottom ribbon lies close to road and dashed ring, retained as confound; TowneLake non-path is open grassy terrain with tree texture. No output-driven changes."
+    },
+    {
+      "file": "TowneLake-full.scientific-source.png",
+      "sha256": "4ef45e9fd0a7ccc1d7a6ff8879e0acc37482ef4c9165abd5366851a77cd00cab",
+      "visualInspection": "Source is visible at native pixel size; overlay green proposed ribbon/red matched offset/orange bright non-path are in requested source regions. NP bottom ribbon lies close to road and dashed ring, retained as confound; TowneLake non-path is open grassy terrain with tree texture. No output-driven changes."
+    }
+  ],
+  "limitations": [
+    "Proposed visual geometry has no independent semantic authority.",
+    "TowneLake hand annotation crop cannot currently be mapped to original PNG with verified translation.",
+    "Figure crops retain source pixels without resize; white surrounding canvas and colored overlays are visualization only; raw source-crop PNGs are separate."
+  ],
+  "measurementsExecuted": false
+}

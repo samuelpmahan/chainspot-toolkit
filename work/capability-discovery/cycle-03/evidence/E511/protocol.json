@@ -1,0 +1,176 @@
+{
+  "schema": "E511-exposed-support-ablation-protocol@1",
+  "job_id": "E511",
+  "worker": "V2",
+  "status": "FROZEN_BEFORE_ADAPTER_INVOCATION",
+  "frozenAtUtc": "2026-10-18T10:26:08.603922+00:00",
+  "question": "Was conservative crop support alone preventing any local measurement in original E508?",
+  "prior": {
+    "resultSha256": "fe72e28f57e94930a3d0385ed97608a4e7f97635857accaee73888b6c9881322",
+    "descriptorSha256": "3d52ed4de577f5c5a86ca3a0f10e5944e5a3bdf40fde51b948648fe79b87da94",
+    "protocolSha256": "112693cce17cf30035191a6cded1829482a589bc19c3f6bbbb3320718c2c0ba2",
+    "receiptSha256": "d79b32c3ff08c7c30e5e02d74dab24e3f96e6447835c1906c660cc60b43c7f3a",
+    "meaning": "E508 remains one UNKNOWN support abstention with9NOT_EXECUTED rows. This is a separate exposed diagnostic, not repair or reinterpretation of old rows."
+  },
+  "candidate": {
+    "sha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "sourceHistoryEntries": 23,
+    "recipeManifestSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+    "recipeClosureEntries": 14
+  },
+  "input": {
+    "requestDescriptorSha256": "53e36bf685b1d1a0a7156c4ee7b9fee2131fddd1bc253bf29c31475f10e79433",
+    "source": {
+      "stagedJsonSha256": "0ff967ecde36cb6ed81b23bc58ef5293f60aa56639c6d896e238e912a27c717a",
+      "pngSha256": "27ad16bcf2c075316048ec39bc5035e0ebbe260bde32140466a3010f15d75834",
+      "fullRgbaSha256": "c93a4c532da248a61e29e56bf86273e6eaee9151643bd681974a882928f50766",
+      "width": 1290,
+      "height": 2796,
+      "frame": "Lenard-full.original-source-pixel-centers",
+      "decoder": {
+        "name": "Pillow",
+        "version": "12.3.0",
+        "outputMode": "RGBA",
+        "sourceMode": "RGB",
+        "orientation": "stored PNG pixel order; no EXIF transform",
+        "colorTransform": "none; stored RGB channels, no ICC/gamma transform",
+        "alpha": "preserved RGBA; RGB appends 255"
+      }
+    },
+    "projection": "Exact E508 compact descriptor including all geometry/testimony/settings/source/projection fields, changing only five ROI fields. Staged original source reused with encoded/fullRGBA/staged-JSON hash checks."
+  },
+  "delta": {
+    "oldRoi": {
+      "xPx": 180,
+      "yPx": 1795,
+      "widthPx": 210,
+      "heightPx": 215,
+      "frame": "Lenard-full.original-source-pixel-centers.roi-180-1795-210-215"
+    },
+    "newRoi": {
+      "xPx": 0,
+      "yPx": 0,
+      "widthPx": 1290,
+      "heightPx": 2796,
+      "frame": "Lenard-full.original-source-pixel-centers.E511.full-control"
+    },
+    "changedRequestFields": [
+      {
+        "path": "roi.xPx",
+        "before": 180,
+        "after": 0
+      },
+      {
+        "path": "roi.yPx",
+        "before": 1795,
+        "after": 0
+      },
+      {
+        "path": "roi.widthPx",
+        "before": 210,
+        "after": 1290
+      },
+      {
+        "path": "roi.heightPx",
+        "before": 215,
+        "after": 2796
+      },
+      {
+        "path": "roi.frame",
+        "before": "Lenard-full.original-source-pixel-centers.roi-180-1795-210-215",
+        "after": "Lenard-full.original-source-pixel-centers.E511.full-control"
+      }
+    ],
+    "unchanged": "Every descriptor field outside roi; geometry/training/stations/headings/windows/LOCAL[29,37,45]/empty masks/edge settings/frame/source pixel bytes."
+  },
+  "unchangedGeometry": {
+    "frame": "Lenard-full.original-source-pixel-centers",
+    "geometrySource": "Fresh explicit caller visual testimony after viewing full source PNG and integer lower-map crop with source coordinate grid. No detector, learner, sensor, edge, or recipe output consulted.",
+    "training": {
+      "frame": "Lenard-full.original-source-pixel-centers",
+      "segments": [
+        {
+          "tee": {
+            "xPx": 262,
+            "yPx": 1827
+          },
+          "badge": {
+            "xPx": 225,
+            "yPx": 1985
+          }
+        }
+      ]
+    },
+    "stations": [
+      {
+        "id": "primary",
+        "frame": "Lenard-full.original-source-pixel-centers",
+        "xPx": 250,
+        "yPx": 1880,
+        "headingRad": 1.8008284199331293,
+        "t0Px": -12,
+        "t1Px": 12
+      },
+      {
+        "id": "lateral-plus16",
+        "frame": "Lenard-full.original-source-pixel-centers",
+        "xPx": 234.42145475216358,
+        "yPx": 1876.3518596571523,
+        "headingRad": 1.8008284199331293,
+        "t0Px": -12,
+        "t1Px": 12
+      },
+      {
+        "id": "bright-patch",
+        "frame": "Lenard-full.original-source-pixel-centers",
+        "xPx": 330,
+        "yPx": 1885,
+        "headingRad": 1.8008284199331293,
+        "t0Px": -12,
+        "t1Px": 12
+      }
+    ],
+    "localWidthBank": {
+      "frame": "Lenard-full.original-source-pixel-centers",
+      "scope": "LOCAL",
+      "valuesPx": [
+        29,
+        37,
+        45
+      ]
+    },
+    "occluders": {
+      "frame": "Lenard-full.original-source-pixel-centers",
+      "boxes": []
+    },
+    "edgeSearch": {
+      "latLimPx": 4,
+      "tolWidthPx": 3
+    }
+  },
+  "predictions": [
+    "Full original image ROI should contain all accepted conservative support envelopes and permit exactly two unchanged composition calls.",
+    "Zero translation retains identical source/crop pixels, dimensions and pose numeric values; raw controls are predicted to MATCHED_DECLARED_CONTROL within existing1e-9 tolerance. This is a prediction, not a result.",
+    "All learner rows, station profiles/counts and all9 station/width candidate channels/fits/nulls retained regardless of disagreement or expected ordering."
+  ],
+  "falsifiers": [
+    "Any continued support refusal remains raw UNKNOWN, with no further ROI/geometry/source/settings changes.",
+    "Any source/crop numeric difference above unchanged1e-9 tolerance remains raw UNKNOWN; no tie/rounding/tolerance repair.",
+    "Hash/closure mismatch aborts as integrity failure, not scientific evidence.",
+    "Finite channels, returned learner width or matched controls do not establish semantic identity, calibrated width, reliable path discrimination or acceptance."
+  ],
+  "execution": {
+    "adapterCalls": 1,
+    "compositionCalls": "2 if supported,0 if preparation abstains",
+    "serialization": "JSON.stringify(receipt,preserveNonFinite,2)",
+    "runners": "run.sh and run-diagnostic.mjs accept repository/protocol/descriptor/staged-source/output paths; all outputs exclusive",
+    "noRetry": true
+  },
+  "exposure": "Fully exposed follow-up after original E508 and independent R508. D3 geometry was disclosed to D6 before candidate freeze. No blind heldout claim.",
+  "limits": [
+    "Source original annotation-to-full screenshot mapping UNKNOWN; API tee/badge labels remain proposed testimony.",
+    "Full-frame diagnostic allocates full-size ROI plus original snapshots/luminance and processes both; cost retained, no speedup claim.",
+    "No adapter/CV/recipe source edit, repository/Git change, scientific acceptance, meter scale, recentering or tracking.",
+    "Independent reviewer other than V2 must evaluate output."
+  ]
+}

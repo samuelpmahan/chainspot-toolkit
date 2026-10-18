@@ -1,0 +1,41 @@
+{
+  "schema": "cycle03-owner-registry@1",
+  "capturedAtUTC": "2026-10-18T10:45:20.589864+00:00",
+  "nativeStatePath": "native/final-admin/state.json",
+  "nativeStateSha256": "0f55666ac1778daca4c09519632e0ccbe0fa0581a01a5cb443a135940ce76c04",
+  "rootOwnerStatusPath": "native/final-admin/live-owner-status.json",
+  "liveAuthority": "Root-owned scratch state; captured files are historical, never a free-worker map",
+  "root": "Sole native state/coordinator and connected publication owner",
+  "nativeWorkers": {
+    "D6": {
+      "job": "E599",
+      "agent": "/root/c3_d6"
+    },
+    "V1": {
+      "job": null,
+      "agent": null
+    },
+    "V2": {
+      "job": null,
+      "agent": null
+    },
+    "V3": {
+      "job": null,
+      "agent": null
+    }
+  },
+  "reservedSourceGitOwner": {
+    "worker": "D6",
+    "job_id": "E599",
+    "status": "ACTIVE ADMIN; not free and cannot review its own package"
+  },
+  "activeLabWorkers": [
+    "D6"
+  ],
+  "freshPackageReviewer": {
+    "worker": "V4",
+    "status": "proposal only, not started; root will allocate through actual solve/start after this freeze"
+  },
+  "capacityBoundary": "Earlier six-worker solves and four-worker review map remain historical; completed/idle contexts are not extra active capacity. Root final live-owner status records separate HH activity; no HH source/artifact integrated.",
+  "next": "Freeze exact package for independent R599; no commit until root later exact authorization."
+}

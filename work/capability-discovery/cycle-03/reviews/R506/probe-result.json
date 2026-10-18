@@ -1,0 +1,609 @@
+{
+  "candidateImplementationRead": true,
+  "candidateExecuted": true,
+  "checks": [
+    {
+      "name": "frozen literal RGBA crop identity",
+      "pass": true
+    },
+    {
+      "name": "frozen literal RGBA crop interior-alpha",
+      "pass": true
+    },
+    {
+      "name": "frozen literal RGBA crop top-left-one",
+      "pass": true
+    },
+    {
+      "name": "frozen literal RGBA crop bottom-right-one",
+      "pass": true
+    },
+    {
+      "name": "frozen literal RGBA crop right-bottom-touch",
+      "pass": true
+    },
+    {
+      "name": "frozen literal RGBA crop one-row",
+      "pass": true
+    },
+    {
+      "name": "frozen literal RGBA crop one-column",
+      "pass": true
+    },
+    {
+      "name": "frozen reject negative-x",
+      "pass": true
+    },
+    {
+      "name": "frozen reject negative-y",
+      "pass": true
+    },
+    {
+      "name": "frozen reject over-right",
+      "pass": true
+    },
+    {
+      "name": "frozen reject over-bottom",
+      "pass": true
+    },
+    {
+      "name": "frozen reject zero-width",
+      "pass": true
+    },
+    {
+      "name": "frozen reject zero-height",
+      "pass": true
+    },
+    {
+      "name": "frozen reject negative-width",
+      "pass": true
+    },
+    {
+      "name": "frozen reject fractional-origin",
+      "pass": true
+    },
+    {
+      "name": "frozen reject fractional-size",
+      "pass": true
+    },
+    {
+      "name": "frozen reject origin-at-width",
+      "pass": true
+    },
+    {
+      "name": "frozen reject origin-at-height",
+      "pass": true
+    },
+    {
+      "name": "frozen reject unsafe-integer",
+      "pass": true
+    },
+    {
+      "name": "frozen reject string-x",
+      "pass": true
+    },
+    {
+      "name": "frozen reject null-x",
+      "pass": true
+    },
+    {
+      "name": "fractional rotated geometry and out-of-crop boxes unchanged translation",
+      "pass": true
+    },
+    {
+      "name": "frame mismatch fails before observations",
+      "pass": true
+    },
+    {
+      "name": "duplicate id fails before observations",
+      "pass": true
+    },
+    {
+      "name": "degenerate training fails before observations",
+      "pass": true
+    },
+    {
+      "name": "negative box fails before observations",
+      "pass": true
+    },
+    {
+      "name": "unknown geometry fails before observations",
+      "pass": true
+    },
+    {
+      "name": "nonfinite point fails before observations",
+      "pass": true
+    },
+    {
+      "name": "outside full frame fails before observations",
+      "pass": true
+    },
+    {
+      "name": "source point outside crop fails before observations",
+      "pass": true
+    },
+    {
+      "name": "profile crop-edge fails before observations",
+      "pass": true
+    },
+    {
+      "name": "learner source edge fails before observations",
+      "pass": true
+    },
+    {
+      "name": "empty crop fails before observations",
+      "pass": true
+    },
+    {
+      "name": "fractional size fails before observations",
+      "pass": true
+    },
+    {
+      "name": "RGBA hash mismatch throws before observations",
+      "pass": true
+    },
+    {
+      "name": "empty bank no width promotion and serializable",
+      "pass": true
+    },
+    {
+      "name": "empty training no width promotion and serializable",
+      "pass": true
+    },
+    {
+      "name": "empty stations no width promotion and serializable",
+      "pass": true
+    },
+    {
+      "name": "short window no width promotion and serializable",
+      "pass": true
+    },
+    {
+      "name": "all hidden no width promotion and serializable",
+      "pass": true
+    },
+    {
+      "name": "independent original seam exact source control and UNKNOWN",
+      "pass": true
+    },
+    {
+      "name": "independent matched control",
+      "pass": true
+    }
+  ],
+  "passed": 42,
+  "seamMaximumProfileDifference": 2.5579538487363607e-13,
+  "tieRows": [
+    {
+      "shift": -2.842170943040401e-14,
+      "rawFull": 160.49999999999997,
+      "rawCrop": 100.5,
+      "roundFull": 160,
+      "roundCrop": 101,
+      "sameTranslatedRound": false,
+      "equivalence": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.candidates.0.edgeFit.lPx",
+            "crop": -15.215764857721513,
+            "source": -12.523526622095767,
+            "absoluteDifference": 2.692238235625746
+          },
+          {
+            "path": "stations.0.candidates.0.edgeFit.rPx",
+            "crop": 8.040557072984694,
+            "source": 14.3153032390881,
+            "absoluteDifference": 6.274746166103407
+          },
+          {
+            "path": "stations.0.candidates.0.edgeFit.cPx",
+            "crop": -3.58760389236841,
+            "source": 0.8958883084961666,
+            "absoluteDifference": 4.483492200864577
+          },
+          {
+            "path": "stations.0.candidates.0.edgeFit.wPx",
+            "crop": 23.256321930706207,
+            "source": 26.838829861183868,
+            "absoluteDifference": 3.582507930477661
+          },
+          {
+            "path": "stations.0.candidates.0.midpoint.fitMidpointNormalOffsetPx",
+            "crop": -3.58760389236841,
+            "source": 0.8958883084961666,
+            "absoluteDifference": 4.483492200864577
+          },
+          {
+            "path": "stations.0.candidates.0.midpoint.candidateCenterMinusFitMidpointPx",
+            "crop": 3.58760389236841,
+            "source": -0.8958883084961666,
+            "absoluteDifference": 4.483492200864577
+          },
+          {
+            "path": "stations.0.candidates.0.midpoint.candidateCenterMinusFitMidpointInNominalWidths",
+            "crop": 0.14948349551535042,
+            "source": -0.03732867952067361,
+            "absoluteDifference": 0.18681217503602404
+          },
+          {
+            "path": "stations.0.candidates.1.edgeFit.lPx",
+            "crop": -17.007126723653986,
+            "source": -12.523526622095767,
+            "absoluteDifference": 4.483600101558219
+          },
+          {
+            "path": "stations.0.candidates.1.edgeFit.rPx",
+            "crop": 15.218939199375814,
+            "source": 18.79995521077224,
+            "absoluteDifference": 3.581016011396425
+          },
+          {
+            "path": "stations.0.candidates.1.edgeFit.cPx",
+            "crop": -0.8940937621390859,
+            "source": 3.138214294338236,
+            "absoluteDifference": 4.032308056477322
+          },
+          {
+            "path": "stations.0.candidates.1.edgeFit.wPx",
+            "crop": 32.2260659230298,
+            "source": 31.323481832868005,
+            "absoluteDifference": 0.9025840901617954
+          },
+          {
+            "path": "stations.0.candidates.1.midpoint.fitMidpointNormalOffsetPx",
+            "crop": -0.8940937621390859,
+            "source": 3.138214294338236,
+            "absoluteDifference": 4.032308056477322
+          },
+          {
+            "path": "stations.0.candidates.1.midpoint.candidateCenterMinusFitMidpointPx",
+            "crop": 0.8940937621390859,
+            "source": -3.138214294338236,
+            "absoluteDifference": 4.032308056477322
+          },
+          {
+            "path": "stations.0.candidates.1.midpoint.candidateCenterMinusFitMidpointInNominalWidths",
+            "crop": 0.029803125404636196,
+            "source": -0.10460714314460787,
+            "absoluteDifference": 0.13441026854924407
+          },
+          {
+            "path": "stations.0.candidates.2.edgeFit.lPx",
+            "crop": -18.796533330895798,
+            "source": -21.490726825212228,
+            "absoluteDifference": 2.69419349431643
+          },
+          {
+            "path": "stations.0.candidates.2.edgeFit.rPx",
+            "crop": 17.010945931437394,
+            "source": 14.3153032390881,
+            "absoluteDifference": 2.6956426923492938
+          },
+          {
+            "path": "stations.0.candidates.2.edgeFit.cPx",
+            "crop": -0.8927936997292019,
+            "source": -3.5877117930620637,
+            "absoluteDifference": 2.694918093332862
+          },
+          {
+            "path": "stations.0.candidates.2.edgeFit.wPx",
+            "crop": 35.80747926233319,
+            "source": 35.80603006430033,
+            "absoluteDifference": 0.0014491980328585896
+          },
+          {
+            "path": "stations.0.candidates.2.midpoint.fitMidpointNormalOffsetPx",
+            "crop": -0.8927936997292019,
+            "source": -3.5877117930620637,
+            "absoluteDifference": 2.694918093332862
+          },
+          {
+            "path": "stations.0.candidates.2.midpoint.candidateCenterMinusFitMidpointPx",
+            "crop": 0.8927936997292019,
+            "source": 3.5877117930620637,
+            "absoluteDifference": 2.694918093332862
+          },
+          {
+            "path": "stations.0.candidates.2.midpoint.candidateCenterMinusFitMidpointInNominalWidths",
+            "crop": 0.02479982499247783,
+            "source": 0.09965866091839065,
+            "absoluteDifference": 0.07485883592591282
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "shift": 0,
+      "rawFull": 160.5,
+      "rawCrop": 100.50000000000003,
+      "roundFull": 161,
+      "roundCrop": 101,
+      "sameTranslatedRound": true,
+      "equivalence": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.candidates.0.edgeFit.lPx",
+            "crop": -15.215764857721513,
+            "source": -12.523526622095767,
+            "absoluteDifference": 2.692238235625746
+          },
+          {
+            "path": "stations.0.candidates.0.edgeFit.rPx",
+            "crop": 8.040557072984694,
+            "source": 14.3153032390881,
+            "absoluteDifference": 6.274746166103407
+          },
+          {
+            "path": "stations.0.candidates.0.edgeFit.cPx",
+            "crop": -3.58760389236841,
+            "source": 0.8958883084961666,
+            "absoluteDifference": 4.483492200864577
+          },
+          {
+            "path": "stations.0.candidates.0.edgeFit.wPx",
+            "crop": 23.256321930706207,
+            "source": 26.838829861183868,
+            "absoluteDifference": 3.582507930477661
+          },
+          {
+            "path": "stations.0.candidates.0.midpoint.fitMidpointNormalOffsetPx",
+            "crop": -3.58760389236841,
+            "source": 0.8958883084961666,
+            "absoluteDifference": 4.483492200864577
+          },
+          {
+            "path": "stations.0.candidates.0.midpoint.candidateCenterMinusFitMidpointPx",
+            "crop": 3.58760389236841,
+            "source": -0.8958883084961666,
+            "absoluteDifference": 4.483492200864577
+          },
+          {
+            "path": "stations.0.candidates.0.midpoint.candidateCenterMinusFitMidpointInNominalWidths",
+            "crop": 0.14948349551535042,
+            "source": -0.03732867952067361,
+            "absoluteDifference": 0.18681217503602404
+          },
+          {
+            "path": "stations.0.candidates.1.edgeFit.lPx",
+            "crop": -17.007126723653986,
+            "source": -12.523526622095767,
+            "absoluteDifference": 4.483600101558219
+          },
+          {
+            "path": "stations.0.candidates.1.edgeFit.rPx",
+            "crop": 15.218939199375814,
+            "source": 18.79995521077224,
+            "absoluteDifference": 3.581016011396425
+          },
+          {
+            "path": "stations.0.candidates.1.edgeFit.cPx",
+            "crop": -0.8940937621390859,
+            "source": 3.138214294338236,
+            "absoluteDifference": 4.032308056477322
+          },
+          {
+            "path": "stations.0.candidates.1.edgeFit.wPx",
+            "crop": 32.2260659230298,
+            "source": 31.323481832868005,
+            "absoluteDifference": 0.9025840901617954
+          },
+          {
+            "path": "stations.0.candidates.1.midpoint.fitMidpointNormalOffsetPx",
+            "crop": -0.8940937621390859,
+            "source": 3.138214294338236,
+            "absoluteDifference": 4.032308056477322
+          },
+          {
+            "path": "stations.0.candidates.1.midpoint.candidateCenterMinusFitMidpointPx",
+            "crop": 0.8940937621390859,
+            "source": -3.138214294338236,
+            "absoluteDifference": 4.032308056477322
+          },
+          {
+            "path": "stations.0.candidates.1.midpoint.candidateCenterMinusFitMidpointInNominalWidths",
+            "crop": 0.029803125404636196,
+            "source": -0.10460714314460787,
+            "absoluteDifference": 0.13441026854924407
+          },
+          {
+            "path": "stations.0.candidates.2.edgeFit.lPx",
+            "crop": -18.796533330895798,
+            "source": -21.490726825212228,
+            "absoluteDifference": 2.69419349431643
+          },
+          {
+            "path": "stations.0.candidates.2.edgeFit.rPx",
+            "crop": 17.010945931437394,
+            "source": 14.3153032390881,
+            "absoluteDifference": 2.6956426923492938
+          },
+          {
+            "path": "stations.0.candidates.2.edgeFit.cPx",
+            "crop": -0.8927936997292019,
+            "source": -3.5877117930620637,
+            "absoluteDifference": 2.694918093332862
+          },
+          {
+            "path": "stations.0.candidates.2.edgeFit.wPx",
+            "crop": 35.80747926233319,
+            "source": 35.80603006430033,
+            "absoluteDifference": 0.0014491980328585896
+          },
+          {
+            "path": "stations.0.candidates.2.midpoint.fitMidpointNormalOffsetPx",
+            "crop": -0.8927936997292019,
+            "source": -3.5877117930620637,
+            "absoluteDifference": 2.694918093332862
+          },
+          {
+            "path": "stations.0.candidates.2.midpoint.candidateCenterMinusFitMidpointPx",
+            "crop": 0.8927936997292019,
+            "source": 3.5877117930620637,
+            "absoluteDifference": 2.694918093332862
+          },
+          {
+            "path": "stations.0.candidates.2.midpoint.candidateCenterMinusFitMidpointInNominalWidths",
+            "crop": 0.02479982499247783,
+            "source": 0.09965866091839065,
+            "absoluteDifference": 0.07485883592591282
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "shift": 2.842170943040401e-14,
+      "rawFull": 160.50000000000003,
+      "rawCrop": 100.50000000000006,
+      "roundFull": 161,
+      "roundCrop": 101,
+      "sameTranslatedRound": true,
+      "equivalence": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.candidates.0.edgeFit.lPx",
+            "crop": -15.215764857721513,
+            "source": -12.523526622095767,
+            "absoluteDifference": 2.692238235625746
+          },
+          {
+            "path": "stations.0.candidates.0.edgeFit.rPx",
+            "crop": 8.040557072984694,
+            "source": 14.3153032390881,
+            "absoluteDifference": 6.274746166103407
+          },
+          {
+            "path": "stations.0.candidates.0.edgeFit.cPx",
+            "crop": -3.58760389236841,
+            "source": 0.8958883084961666,
+            "absoluteDifference": 4.483492200864577
+          },
+          {
+            "path": "stations.0.candidates.0.edgeFit.wPx",
+            "crop": 23.256321930706207,
+            "source": 26.838829861183868,
+            "absoluteDifference": 3.582507930477661
+          },
+          {
+            "path": "stations.0.candidates.0.midpoint.fitMidpointNormalOffsetPx",
+            "crop": -3.58760389236841,
+            "source": 0.8958883084961666,
+            "absoluteDifference": 4.483492200864577
+          },
+          {
+            "path": "stations.0.candidates.0.midpoint.candidateCenterMinusFitMidpointPx",
+            "crop": 3.58760389236841,
+            "source": -0.8958883084961666,
+            "absoluteDifference": 4.483492200864577
+          },
+          {
+            "path": "stations.0.candidates.0.midpoint.candidateCenterMinusFitMidpointInNominalWidths",
+            "crop": 0.14948349551535042,
+            "source": -0.03732867952067361,
+            "absoluteDifference": 0.18681217503602404
+          },
+          {
+            "path": "stations.0.candidates.1.edgeFit.lPx",
+            "crop": -17.007126723653986,
+            "source": -12.523526622095767,
+            "absoluteDifference": 4.483600101558219
+          },
+          {
+            "path": "stations.0.candidates.1.edgeFit.rPx",
+            "crop": 15.218939199375814,
+            "source": 18.79995521077224,
+            "absoluteDifference": 3.581016011396425
+          },
+          {
+            "path": "stations.0.candidates.1.edgeFit.cPx",
+            "crop": -0.8940937621390859,
+            "source": 3.138214294338236,
+            "absoluteDifference": 4.032308056477322
+          },
+          {
+            "path": "stations.0.candidates.1.edgeFit.wPx",
+            "crop": 32.2260659230298,
+            "source": 31.323481832868005,
+            "absoluteDifference": 0.9025840901617954
+          },
+          {
+            "path": "stations.0.candidates.1.midpoint.fitMidpointNormalOffsetPx",
+            "crop": -0.8940937621390859,
+            "source": 3.138214294338236,
+            "absoluteDifference": 4.032308056477322
+          },
+          {
+            "path": "stations.0.candidates.1.midpoint.candidateCenterMinusFitMidpointPx",
+            "crop": 0.8940937621390859,
+            "source": -3.138214294338236,
+            "absoluteDifference": 4.032308056477322
+          },
+          {
+            "path": "stations.0.candidates.1.midpoint.candidateCenterMinusFitMidpointInNominalWidths",
+            "crop": 0.029803125404636196,
+            "source": -0.10460714314460787,
+            "absoluteDifference": 0.13441026854924407
+          },
+          {
+            "path": "stations.0.candidates.2.edgeFit.lPx",
+            "crop": -18.796533330895798,
+            "source": -21.490726825212228,
+            "absoluteDifference": 2.69419349431643
+          },
+          {
+            "path": "stations.0.candidates.2.edgeFit.rPx",
+            "crop": 17.010945931437394,
+            "source": 14.3153032390881,
+            "absoluteDifference": 2.6956426923492938
+          },
+          {
+            "path": "stations.0.candidates.2.edgeFit.cPx",
+            "crop": -0.8927936997292019,
+            "source": -3.5877117930620637,
+            "absoluteDifference": 2.694918093332862
+          },
+          {
+            "path": "stations.0.candidates.2.edgeFit.wPx",
+            "crop": 35.80747926233319,
+            "source": 35.80603006430033,
+            "absoluteDifference": 0.0014491980328585896
+          },
+          {
+            "path": "stations.0.candidates.2.midpoint.fitMidpointNormalOffsetPx",
+            "crop": -0.8927936997292019,
+            "source": -3.5877117930620637,
+            "absoluteDifference": 2.694918093332862
+          },
+          {
+            "path": "stations.0.candidates.2.midpoint.candidateCenterMinusFitMidpointPx",
+            "crop": 0.8927936997292019,
+            "source": 3.5877117930620637,
+            "absoluteDifference": 2.694918093332862
+          },
+          {
+            "path": "stations.0.candidates.2.midpoint.candidateCenterMinusFitMidpointInNominalWidths",
+            "crop": 0.02479982499247783,
+            "source": 0.09965866091839065,
+            "absoluteDifference": 0.07485883592591282
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    }
+  ],
+  "limits": [
+    "exposed synthetic engineering probes, not blind scientific evaluation",
+    "tiny crop support uses explicit empty collections to isolate pixel copy",
+    "near half-pixel rows test three predeclared local perturbations only"
+  ]
+}

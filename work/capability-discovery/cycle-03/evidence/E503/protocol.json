@@ -1,0 +1,175 @@
+{
+  "schema": "actual-source-pixel-predeclaration@1",
+  "job_id": "E503",
+  "worker": "D3",
+  "status": "PROTOCOL_READY_FROZEN_BEFORE_PRODUCERS",
+  "source": {
+    "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "path": "specimens/dev/Lenard-full.png",
+    "gitBlob": "6bb6db0704ba1697056afccb4c0a4ada0dbfa34e",
+    "pngSha256": "27ad16bcf2c075316048ec39bc5035e0ebbe260bde32140466a3010f15d75834",
+    "rgbaSha256": "c93a4c532da248a61e29e56bf86273e6eaee9151643bd681974a882928f50766",
+    "widthPx": 1290,
+    "heightPx": 2796,
+    "decode": "Pillow RGBA conversion without resizing, color correction, alpha muting, or filtering"
+  },
+  "frame": "Lenard-full.original-source-pixel-centers",
+  "pixelConvention": "integer coordinates are original screenshot pixel centers; x right, y down; headings atan2(dy,dx); normal=(-sin(heading),cos(heading))",
+  "geometrySource": "Fresh explicit caller visual testimony after viewing full source PNG and integer lower-map crop with source coordinate grid. No detector, learner, sensor, edge, or recipe output consulted.",
+  "testimony": {
+    "annotationPath": "testimony/lenard/Lenard-full.annotation.json",
+    "annotationSha256": "7a055685ef09741722546cafc52c0d1778fbd3f7889131c59f3b858bdc9cde11",
+    "annotationReadmeSha256": "7624197c26582d149ba1f20ada381cc11463125a901be116be996c53ef67e5c6",
+    "authority": "Sam hand annotation remains Sam testimony; caller labels below are visually proposed, not accepted course identity.",
+    "annotationSourceDimensionsPx": [
+      1290,
+      2089
+    ],
+    "annotationSourceSha256": "15cc47e1c956a486e51244b8ac4b26e6387050534b01964e4bf71644461e9dc2",
+    "knownMapping": "README states canonical y=annotation y-2; full-source canonical crop offset not established here.",
+    "annotationToFullSource": "UNKNOWN; no guessed offset applied",
+    "trainingProvenance": "Visually inspected apparent white tee square and black plaque14. Proposed pixel endpoints are fresh full-source testimony; no annotation coordinate transformed."
+  },
+  "crop": {
+    "xPx": 180,
+    "yPx": 1795,
+    "widthPx": 210,
+    "heightPx": 215,
+    "exclusiveRightPx": 390,
+    "exclusiveBottomPx": 2010,
+    "transform": "crop(x,y) = original-source(x-180,y-1795); integer translation only",
+    "resize": false
+  },
+  "training": {
+    "frame": "Lenard-full.original-source-pixel-centers",
+    "segments": [
+      {
+        "tee": {
+          "xPx": 262,
+          "yPx": 1827
+        },
+        "badge": {
+          "xPx": 225,
+          "yPx": 1985
+        },
+        "proposedLabels": "apparent tee14 square / plaque14 center; unverified"
+      }
+    ]
+  },
+  "stations": [
+    {
+      "id": "primary",
+      "frame": "Lenard-full.original-source-pixel-centers",
+      "xPx": 250,
+      "yPx": 1880,
+      "headingRad": 1.8008284199331293,
+      "t0Px": -12,
+      "t1Px": 12,
+      "role": "visually proposed straight pale ribbon"
+    },
+    {
+      "id": "lateral-plus16",
+      "frame": "Lenard-full.original-source-pixel-centers",
+      "xPx": 234.42145475216358,
+      "yPx": 1876.3518596571523,
+      "headingRad": 1.8008284199331293,
+      "t0Px": -12,
+      "t1Px": 12,
+      "role": "matched lateral offset +16 normal pixels"
+    },
+    {
+      "id": "bright-patch",
+      "frame": "Lenard-full.original-source-pixel-centers",
+      "xPx": 330,
+      "yPx": 1885,
+      "headingRad": 1.8008284199331293,
+      "t0Px": -12,
+      "t1Px": 12,
+      "role": "nearby broad bright ground patch; proposed non-ribbon comparison"
+    }
+  ],
+  "localWidthBank": {
+    "frame": "Lenard-full.original-source-pixel-centers",
+    "scope": "LOCAL",
+    "valuesPx": [
+      29,
+      37,
+      45
+    ],
+    "declarationBasis": "Visual pale-strip width roughly mid30s px in source grid; symmetric \u00b18px alternatives deliberately broad. No width measured by producer; no meter scale or calibration."
+  },
+  "edgeSearch": {
+    "latLimPx": 4,
+    "tolWidthPx": 3,
+    "declarationBasis": "Fixed small midpoint search relative to 16px displaced control; explicit \u00b13px width-fit allowance. Chosen before measurements."
+  },
+  "occluders": {
+    "frame": "Lenard-full.original-source-pixel-centers",
+    "boxes": [],
+    "authority": "No exact known-occluder masks supplied by inspected testimony; visible symbols are retained, not inferred masks."
+  },
+  "samplingEnvelope": {
+    "fullProfileNormalPx": [
+      -30,
+      30
+    ],
+    "retainedConservativeNormalMarginPx": 42,
+    "retainedConservativeTangentHalfExtentPx": 18,
+    "explanation": "Includes \u00b112px longitudinal window, \u00b14px tangent samples plus2px margin, profile \u00b130px plus12px guard covering bank halfwidth, explicit lateral search and edge neighborhoods. Crop keeps these supports strictly inside source; producer must verify exact existing sampler reach."
+  },
+  "predeclaredObservations": [
+    {
+      "case": "primary",
+      "expectation": "A locally bright elongated strip may show interior and paired-edge evidence near one LOCAL bank width; raw null/UNKNOWN and station disagreement remain possible."
+    },
+    {
+      "case": "lateral-plus16",
+      "expectation": "At identical heading/window but +16normal shift, fixed rails/interior may weaken or change. A valid free profile fit can report nonzero midpoint; sign and exact request are retained. No forced recenter or expectation of zero."
+    },
+    {
+      "case": "bright-patch",
+      "expectation": "The broad bright irregular patch can produce bright interior and even paired edges. Comparable or stronger scores explicitly demonstrate local photometric ambiguity, without accepted non-path identity."
+    },
+    {
+      "case": "training",
+      "expectation": "One visually proposed tee/plaque segment is insufficient to establish valid training identity or unique width; learner output remains diagnostic with calibration UNKNOWN."
+    }
+  ],
+  "falsifiers": [
+    {
+      "claim": "geometry/crop fidelity",
+      "rejectIf": "Any source/PNG/RGBA hash mismatch, resizing, noninteger crop origin, undocumented transform, alpha muting, or support outside retained crop; do not interpret measurements."
+    },
+    {
+      "claim": "pose-sensitive local ribbon evidence",
+      "rejectIf": "Offset station differs in window/heading/bank/masks or source pixels beyond declared translation, or observations are used to alter geometry/settings and rerun as same experiment."
+    },
+    {
+      "claim": "local photometry establishes path identity",
+      "rejectIf": "Always unsupported by this experiment; comparable bright-patch evidence is a concrete counterexample, while weak patch evidence still cannot prove semantic identity."
+    },
+    {
+      "claim": "strict primary vs control ordering",
+      "rejectIf": "Any declared channel reverses or loses expected ordering; retain discrepancy and UNKNOWN, no score aggregation or threshold repair."
+    }
+  ],
+  "inferenceLimits": [
+    "Exploratory caller-selected regions, not independent route ground truth.",
+    "Annotation/app crop mismatch prevents direct use of original annotation geometry in full screenshot.",
+    "Approximate visual centers and heading have unquantified pixel uncertainty; antialiasing and nearest-versus-bilinear samplers can disagree.",
+    "No masks means overlays/background features can contaminate profile or training.",
+    "No recipe/learner/sensor/edge operation was run in E503; next root packet required.",
+    "All geometry/settings now exposed; later changes require new declaration identity, not independent reuse."
+  ],
+  "producerExecution": {
+    "recipe": false,
+    "learner": false,
+    "sensor": false,
+    "edge": false
+  },
+  "frozenFiles": [
+    "protocol.json",
+    "Lenard-source-crop.png",
+    "Lenard-source-geometry.png"
+  ]
+}

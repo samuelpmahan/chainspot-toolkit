@@ -1,0 +1,18 @@
+{
+  "schema": "R511-reviewer-corrections@1",
+  "noAdditionalAdapterCalls": true,
+  "staging": {
+    "initialImageId": "Lenard-full.png@49255331791b1245cf0f9cd699816175f94e70f2",
+    "initialStagedSha256": "eedaaf96ef70a96aa76c33ee699a8115d49487ad35b71e9d5c5bbb93e736feef",
+    "correctImageId": "Lenard-full",
+    "correctStagedSha256": "0ff967ecde36cb6ed81b23bc58ef5293f60aa56639c6d896e238e912a27c717a",
+    "detectedBeforeAdapter": true,
+    "initialArtifact": "initial-staging-wrong-image-id.json"
+  },
+  "auditAssertion": {
+    "initial": "source/crop entire station exact",
+    "failure": "AssertionError: source/crop entire station exact primary",
+    "cause": "Declared source and crop frame strings differ even at zero coordinate translation. All other station raw fields are exact.",
+    "correction": "Compare every station field excluding only declared frame metadata, consistent with accepted comparator scope. No CV rerun."
+  }
+}

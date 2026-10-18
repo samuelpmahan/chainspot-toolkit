@@ -1,0 +1,80 @@
+{
+  "passed": 12,
+  "checks": [
+    {
+      "name": "frozen oracle-rgba-level0.png source/decoded hashes and alpha0 RGB exact",
+      "pass": true
+    },
+    {
+      "name": "frozen oracle-rgba-level9.png source/decoded hashes and alpha0 RGB exact",
+      "pass": true
+    },
+    {
+      "name": "same decoded RGBA alternate encoding fails expected encoded hash",
+      "pass": true
+    },
+    {
+      "name": "16bit type2 refused before quantization",
+      "pass": true
+    },
+    {
+      "name": "16bit type6 refused before quantization",
+      "pass": true
+    },
+    {
+      "name": "L refused",
+      "pass": true
+    },
+    {
+      "name": "P refused",
+      "pass": true
+    },
+    {
+      "name": "RGB transparency metadata refused",
+      "pass": true
+    },
+    {
+      "name": "corrupt image refused with matching source hash",
+      "pass": true
+    },
+    {
+      "name": "RGB native8 appends alpha255",
+      "pass": true
+    },
+    {
+      "name": "actual staging CLI exact file read/hash/decode/output",
+      "pass": true
+    },
+    {
+      "name": "CLI does not overwrite existing output",
+      "pass": true
+    }
+  ],
+  "cli": {
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python",
+      "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/stage-png.py",
+      "--source",
+      "/workspace/scratch/8528bb251845/discovery-cycle03/D5/oracle-rgba-level9.png",
+      "--expected-sha256",
+      "15bff03cc1d6dad28c4ba9baa4fcd9fbfbaac6717bc39a556dfff9b1e3f5b162",
+      "--image-id",
+      "D5 actual CLI file control",
+      "--frame",
+      "original",
+      "--out",
+      "/workspace/scratch/8528bb251845/discovery-cycle03/D5/review-R506/staged-source.json"
+    ],
+    "first": {
+      "code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "second": {
+      "code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/stage-png.py\", line 53, in <module>\n    with Path(args.out).open('x') as handle:\n         ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py\", line 1013, in open\n    return io.open(self, mode, buffering, encoding, errors, newline)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileExistsError: [Errno 17] File exists: '/workspace/scratch/8528bb251845/discovery-cycle03/D5/review-R506/staged-source.json'\n"
+    }
+  },
+  "Pillow": "12.3.0"
+}

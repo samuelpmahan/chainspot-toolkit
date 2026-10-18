@@ -1,0 +1,80 @@
+{
+  "schema": "cycle03-independent-review@1",
+  "job_id": "R510",
+  "worker": "D2",
+  "reviewedJob": "E510",
+  "reviewedWorker": "D1",
+  "decision": "accepted",
+  "summary": "Exact pinned historical numeric-seam receipt is faithfully rendered. All six full-source/crop rows at requested widths24/30/36 retain recorded l/r/c and remaining fit fields in JSON/CSV; plot and displayed values originate those rows. Unchanged renderer independently reproduced PNG and tables byte-for-byte. Viewed original figure is legible, preserves historical R506-pending/no-acceptance label and all UNKNOWN statements. Acceptance is limited to trace/table/render identity and verdict faithfulness.",
+  "auditedFiles": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/result.json",
+      "sha256": "72d62cd54274aee4cb119b70af1458d6fa898b1293ac64f40f3d2a066b72839d"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/render_figure.py",
+      "sha256": "ba6e91afe1b1ab8194752613cf05068e6ad2485f4b6bfbff986435856522979c"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/render-manifest.json",
+      "sha256": "c501fbe475f99930e9a35fdb7f3261e76392878f791174e0c58a8047976d983e"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/numeric-seam-input.json",
+      "sha256": "4515742be1bcbd3ef3949e302eb1610d39c2c63218e5382d73bf82de83d60ab5"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/fit-table.json",
+      "sha256": "212aff8cdd4d01f4697d529ef0a96bf0f15a183ef011ec43d44bda035e302a61"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/fit-table.csv",
+      "sha256": "c76ef44f5073971d7332ab193b7c126cfd1eacbbd692526d5fb19043401d87b8"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/numeric-seam-figure.png",
+      "sha256": "8d788228f8528efd26054f9863a6190c44269c4c32b9e2c41804f8e4b51ee6f8"
+    }
+  ],
+  "receipt": {
+    "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/numeric-seam.json",
+    "sha256": "4515742be1bcbd3ef3949e302eb1610d39c2c63218e5382d73bf82de83d60ab5"
+  },
+  "probes": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/review-R510/probes.json",
+    "sha256": "e428d677ca95b646b76446fc96a7afd1c2f3963c03244bbd696a0f1b40c7d308",
+    "count": 105,
+    "allPassed": true
+  },
+  "rendererReplay": {
+    "directory": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/review-R510",
+    "unmodifiedRenderer": true,
+    "tablesByteIdentical": true,
+    "figureByteIdentical": true,
+    "figureSha256": "8d788228f8528efd26054f9863a6190c44269c4c32b9e2c41804f8e4b51ee6f8"
+  },
+  "visualInspection": {
+    "originalPngViewed": true,
+    "findings": "All three width groups show two full/crop intervals, left/right endpoint ticks, midpoint dots and rounded midpoint labels. Right table contains all six l/r/c rows. Profile-difference and equality labels, input hash, producer-hypothesis wording, historical R506 pending/no acceptance, and equivalence/scientific/semantic UNKNOWN lines are visible and unclipped."
+  },
+  "metadataFaithfulness": {
+    "profileMaximumAbsoluteDifference": 2.5579538487363607e-13,
+    "displayRounded": "2.55795 x 10^-13",
+    "visibleCountsEqual": true,
+    "sensorEqual": [
+      true,
+      true,
+      true
+    ],
+    "note": "Display banner strings are fixed for this pinned receipt; independently checked against its metadata. No recomputation of profiles, sensor channels or fits."
+  },
+  "limitations": [
+    "Rendering audit only; no CV source/math/scientific acceptance and no claim the renderer independently validates source-pixel mapping.",
+    "R506 pending is preserved as capture-time truth; this review does not relabel its result.",
+    "Floating addition-order/strict-score explanation remains explicitly producer hypothesis.",
+    "Displayed coordinates round to0.001px; exact raw numbers remain JSON/CSV.",
+    "No candidate or CV producer executed, no recipe/learner/edge/sensor recomputation, no source changes or Git mutation.",
+    "Own E502 protocol hash rechecked unchanged."
+  ],
+  "amendmentsRequired": []
+}

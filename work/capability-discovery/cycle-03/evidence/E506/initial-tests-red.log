@@ -1,0 +1,39 @@
+✔ standalone default OFF performs no recipe calls (1.789253ms)
+✔ crop is exact original RGBA row spans including nonopaque alpha, all supplied geometry translates (63.299833ms)
+✔ preparation snapshots are recursively immutable and isolate caller mutation (28.514357ms)
+✔ missing, malformed, unsupported geometry and noninteger/out-of-bounds ROI are UNKNOWN before operations (209.258395ms)
+✔ well-formed false full RGBA hash is hard integrity failure (18.826863ms)
+✔ finite partial-sample crops abstain before recipe, including training support (32.969787ms)
+✔ full and cropped same-operation raw controls agree; no acceptance is invented (110.271151ms)
+✖ rotated profile and sensor control uses translated same original samples within declared numeric tolerance (103.729844ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 7
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 700.564824
+
+✖ failing tests:
+
+test at experiments/capability-discovery/source-pixels/adapter.test.mjs:50:1
+✖ rotated profile and sensor control uses translated same original samples within declared numeric tolerance (103.729844ms)
+  AssertionError [ERR_ASSERTION]: root.0.edgeFit.lPx: -11.625 vs -15.12500000000051
+      at close (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/adapter.test.mjs:13:57)
+      at close (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/adapter.test.mjs:14:138)
+      at close (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/adapter.test.mjs:14:138)
+      at close (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/adapter.test.mjs:14:138)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/adapter.test.mjs:53:130)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

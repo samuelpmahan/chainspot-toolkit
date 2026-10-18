@@ -1,0 +1,231 @@
+{
+  "schema": "E508-all-requested-rows-analysis@1",
+  "receiptSha256": "d79b32c3ff08c7c30e5e02d74dab24e3f96e6447835c1906c660cc60b43c7f3a",
+  "adapterStatus": "UNKNOWN",
+  "adapterCalls": 1,
+  "compositionCalls": 0,
+  "operationsExecuted": [],
+  "allRequestedRows": [
+    {
+      "stationId": "primary",
+      "widthArgPx": 29,
+      "status": "NOT_EXECUTED_SUPPORT_UNKNOWN",
+      "rawProfilePresent": false,
+      "rawObservationPresent": false,
+      "rawEdgeFitPresent": false,
+      "rawMidpointPresent": false,
+      "reason": "complete required sampling support absent in declared ROI"
+    },
+    {
+      "stationId": "primary",
+      "widthArgPx": 37,
+      "status": "NOT_EXECUTED_SUPPORT_UNKNOWN",
+      "rawProfilePresent": false,
+      "rawObservationPresent": false,
+      "rawEdgeFitPresent": false,
+      "rawMidpointPresent": false,
+      "reason": "complete required sampling support absent in declared ROI"
+    },
+    {
+      "stationId": "primary",
+      "widthArgPx": 45,
+      "status": "NOT_EXECUTED_SUPPORT_UNKNOWN",
+      "rawProfilePresent": false,
+      "rawObservationPresent": false,
+      "rawEdgeFitPresent": false,
+      "rawMidpointPresent": false,
+      "reason": "complete required sampling support absent in declared ROI"
+    },
+    {
+      "stationId": "lateral-plus16",
+      "widthArgPx": 29,
+      "status": "NOT_EXECUTED_SUPPORT_UNKNOWN",
+      "rawProfilePresent": false,
+      "rawObservationPresent": false,
+      "rawEdgeFitPresent": false,
+      "rawMidpointPresent": false,
+      "reason": "complete required sampling support absent in declared ROI"
+    },
+    {
+      "stationId": "lateral-plus16",
+      "widthArgPx": 37,
+      "status": "NOT_EXECUTED_SUPPORT_UNKNOWN",
+      "rawProfilePresent": false,
+      "rawObservationPresent": false,
+      "rawEdgeFitPresent": false,
+      "rawMidpointPresent": false,
+      "reason": "complete required sampling support absent in declared ROI"
+    },
+    {
+      "stationId": "lateral-plus16",
+      "widthArgPx": 45,
+      "status": "NOT_EXECUTED_SUPPORT_UNKNOWN",
+      "rawProfilePresent": false,
+      "rawObservationPresent": false,
+      "rawEdgeFitPresent": false,
+      "rawMidpointPresent": false,
+      "reason": "complete required sampling support absent in declared ROI"
+    },
+    {
+      "stationId": "bright-patch",
+      "widthArgPx": 29,
+      "status": "NOT_EXECUTED_SUPPORT_UNKNOWN",
+      "rawProfilePresent": false,
+      "rawObservationPresent": false,
+      "rawEdgeFitPresent": false,
+      "rawMidpointPresent": false,
+      "reason": "complete required sampling support absent in declared ROI"
+    },
+    {
+      "stationId": "bright-patch",
+      "widthArgPx": 37,
+      "status": "NOT_EXECUTED_SUPPORT_UNKNOWN",
+      "rawProfilePresent": false,
+      "rawObservationPresent": false,
+      "rawEdgeFitPresent": false,
+      "rawMidpointPresent": false,
+      "reason": "complete required sampling support absent in declared ROI"
+    },
+    {
+      "stationId": "bright-patch",
+      "widthArgPx": 45,
+      "status": "NOT_EXECUTED_SUPPORT_UNKNOWN",
+      "rawProfilePresent": false,
+      "rawObservationPresent": false,
+      "rawEdgeFitPresent": false,
+      "rawMidpointPresent": false,
+      "reason": "complete required sampling support absent in declared ROI"
+    }
+  ],
+  "learner": {
+    "status": "UNKNOWN",
+    "rawRowsPresent": false,
+    "reason": "No composition executed after whole-request support abstention."
+  },
+  "profiles": {
+    "status": "UNKNOWN",
+    "rawProfilesPresent": false,
+    "visibleCountsPresent": false,
+    "reason": "None of the3stations was measured; no profile, visible count, four-lane scores, fit or null-fit claim exists."
+  },
+  "matchedOriginalCropControl": {
+    "status": "UNKNOWN",
+    "rawSourceCompositionPresent": false,
+    "rawCropCompositionPresent": false,
+    "rawEquivalencePresent": false,
+    "rawDifferencesPresent": false,
+    "reason": "Paired calls are conditional on preparation support. Zero calls means no numerical equivalence comparison, not matched outputs or an empty-difference verdict."
+  },
+  "support": {
+    "status": "UNKNOWN",
+    "method": "full training segments; station window endpoints; isotropic bounds for existing nearest/bilinear footprints; strict JS interior border",
+    "profileNormalExtentPx": 30,
+    "sensorRadiusPx": 34,
+    "envelopes": [
+      {
+        "label": "training[0].tee",
+        "minX": 48,
+        "minY": -2,
+        "maxX": 116,
+        "maxY": 66
+      },
+      {
+        "label": "training[0].badge",
+        "minX": 11,
+        "minY": 156,
+        "maxX": 79,
+        "maxY": 224
+      },
+      {
+        "label": "station:primary:sensor",
+        "minX": 36,
+        "minY": 51,
+        "maxX": 104,
+        "maxY": 119
+      },
+      {
+        "label": "station:primary:profile-window-end",
+        "minX": 42.73610525713582,
+        "minY": 43.3160910641227,
+        "maxX": 102.73610525713582,
+        "maxY": 103.3160910641227
+      },
+      {
+        "label": "station:primary:profile-window-end",
+        "minX": 37.26389474286418,
+        "minY": 66.6839089358773,
+        "maxX": 97.26389474286418,
+        "maxY": 126.6839089358773
+      },
+      {
+        "label": "station:lateral-plus16:sensor",
+        "minX": 20.421454752163584,
+        "minY": 47.35185965715232,
+        "maxX": 88.42145475216358,
+        "maxY": 115.35185965715232
+      },
+      {
+        "label": "station:lateral-plus16:profile-window-end",
+        "minX": 27.157560009299402,
+        "minY": 39.66795072127502,
+        "maxX": 87.1575600092994,
+        "maxY": 99.66795072127502
+      },
+      {
+        "label": "station:lateral-plus16:profile-window-end",
+        "minX": 21.685349495027765,
+        "minY": 63.035768593029616,
+        "maxX": 81.68534949502776,
+        "maxY": 123.03576859302962
+      },
+      {
+        "label": "station:bright-patch:sensor",
+        "minX": 116,
+        "minY": 56,
+        "maxX": 184,
+        "maxY": 124
+      },
+      {
+        "label": "station:bright-patch:profile-window-end",
+        "minX": 122.73610525713582,
+        "minY": 48.3160910641227,
+        "maxX": 182.73610525713582,
+        "maxY": 108.3160910641227
+      },
+      {
+        "label": "station:bright-patch:profile-window-end",
+        "minX": 117.26389474286418,
+        "minY": 71.6839089358773,
+        "maxX": 177.26389474286418,
+        "maxY": 131.6839089358773
+      }
+    ],
+    "failures": [
+      {
+        "label": "training[0].tee",
+        "minX": 48,
+        "minY": -2,
+        "maxX": 116,
+        "maxY": 66
+      },
+      {
+        "label": "training[0].badge",
+        "minX": 11,
+        "minY": 156,
+        "maxX": 79,
+        "maxY": 224
+      }
+    ]
+  },
+  "predeclaredObservations": {
+    "primary": "UNTESTED: no scores or fit were produced.",
+    "lateral-plus16": "UNTESTED: same frozen heading/window/normal offset retained, but no translated midpoint contrast measured.",
+    "bright-patch": "UNTESTED: neither positive local photometry nor semantic rejection demonstrated.",
+    "training": "UNKNOWN: full-segment conservative support failure; no width row or selection produced."
+  },
+  "falsifierOutcome": "Frozen whole-request sampling support absent. Trial abstains unchanged before producers; this is an operational support limitation, not a scientific negative on any region.",
+  "widthStatus": "UNKNOWN",
+  "semanticIdentity": "UNKNOWN",
+  "noTuning": true,
+  "exposure": "Predeclared exploratory trial; D3 geometry was messaged to adapter owner before freeze. The retained exposure note remains applicable. No blind heldout claim."
+}

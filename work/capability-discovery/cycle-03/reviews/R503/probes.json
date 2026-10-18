@@ -1,0 +1,437 @@
+{
+  "protocolSha256": "112693cce17cf30035191a6cded1829482a589bc19c3f6bbbb3320718c2c0ba2",
+  "manifestEntries": [
+    {
+      "path": "protocol.json",
+      "ok": true,
+      "sha256": "112693cce17cf30035191a6cded1829482a589bc19c3f6bbbb3320718c2c0ba2"
+    },
+    {
+      "path": "Lenard-source-crop.png",
+      "ok": true,
+      "sha256": "3ab29f152fb70ea6205c3aa268ad35f406daf5b99afe55bdd6973762fd6981e9"
+    },
+    {
+      "path": "Lenard-source-geometry.png",
+      "ok": true,
+      "sha256": "971d171766531e1adbeae088b524874700ea51e2a58a5c077d23d4a69533df53"
+    },
+    {
+      "path": "verification.json",
+      "ok": true,
+      "sha256": "330d6efb33a896fe0f0936ffe78a04ef13a3ee51cd77f51a82053bd33d1e39be"
+    },
+    {
+      "path": "source/Lenard-full.png",
+      "ok": true,
+      "sha256": "27ad16bcf2c075316048ec39bc5035e0ebbe260bde32140466a3010f15d75834"
+    },
+    {
+      "path": "source/Lenard-full.annotation.json",
+      "ok": true,
+      "sha256": "7a055685ef09741722546cafc52c0d1778fbd3f7889131c59f3b858bdc9cde11"
+    },
+    {
+      "path": "source/testimony-README.md",
+      "ok": true,
+      "sha256": "7624197c26582d149ba1f20ada381cc11463125a901be116be996c53ef67e5c6"
+    },
+    {
+      "path": "source/lower-map-inspection.png",
+      "ok": true,
+      "sha256": "f51ed0d6338325df9713929659856d7a2a23c38d209a9c2835b78bc4d81e3fbd"
+    },
+    {
+      "path": "source/lower-map-grid.png",
+      "ok": true,
+      "sha256": "aae5cae66a4a063eca5e3a4378ac62dc062b0a20ad3cba96d12514c5361cb965"
+    }
+  ],
+  "pinnedPngExactByteEquality": true,
+  "pinnedGitBlob": "6bb6db0704ba1697056afccb4c0a4ada0dbfa34e",
+  "pinnedPngSha256": "27ad16bcf2c075316048ec39bc5035e0ebbe260bde32140466a3010f15d75834",
+  "sourceRgbaSha256": "c93a4c532da248a61e29e56bf86273e6eaee9151643bd681974a882928f50766",
+  "cropExactRgbaByteEquality": true,
+  "cropRgbaSha256": "c5a0a7061293db69fcf76844fc7c7c867bb6cd531a05e2bd2ca91597c3b58f5d",
+  "frameAndMatchedPoseChecks": {
+    "allFramesMatch": true,
+    "normalOffsetPx": 16,
+    "tangentOffsetPx": 8.260059303211165e-14,
+    "offsetErrorPx": 8.482103908136196e-14,
+    "headingWindowMatched": true,
+    "bankScope": "LOCAL",
+    "bankPx": [
+      29,
+      37,
+      45
+    ],
+    "latLimPx": 4,
+    "tolWidthPx": 3
+  },
+  "exactSamplingReach": {
+    "method": "Geometry-only enumeration based on direct source read: Dev72 nearest round reads at guards +/-2W/3, inner offsets +/-W/6 plus {-W/9,0,W/9}, rails +/-W/2 +/-2.5, tangent {-4,-2,0,2,4}; learner f={.2,.35,.5,.65,.78}; JS t=-12..11, normal=-30..30 step.25, all four bilinear integer neighbors and maskedAt boundary.",
+    "profile": [
+      {
+        "stationId": "primary",
+        "normalOffsets": 241,
+        "longitudinalSamples": 24,
+        "bilinearPoints": 5784,
+        "cornerReadReferences": 23136,
+        "pixelBounds": [
+          218,
+          1861,
+          282,
+          1898
+        ],
+        "minimumMaskBoundaryMarginPx": 38.282131174598874,
+        "allReadsInsideCrop": true,
+        "allPassGeometryMaskBoundary": true
+      },
+      {
+        "stationId": "lateral-plus16",
+        "normalOffsets": 241,
+        "longitudinalSamples": 24,
+        "bilinearPoints": 5784,
+        "cornerReadReferences": 23136,
+        "pixelBounds": [
+          202,
+          1857,
+          267,
+          1894
+        ],
+        "minimumMaskBoundaryMarginPx": 22.703585926762457,
+        "allReadsInsideCrop": true,
+        "allPassGeometryMaskBoundary": true
+      },
+      {
+        "stationId": "bright-patch",
+        "normalOffsets": 241,
+        "longitudinalSamples": 24,
+        "bilinearPoints": 5784,
+        "cornerReadReferences": 23136,
+        "pixelBounds": [
+          298,
+          1866,
+          362,
+          1903
+        ],
+        "minimumMaskBoundaryMarginPx": 27.05412240317088,
+        "allReadsInsideCrop": true,
+        "allPassGeometryMaskBoundary": true
+      }
+    ],
+    "sensorAndTraining": [
+      {
+        "kind": "station:primary",
+        "widthPx": 29,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          230,
+          1872,
+          270,
+          1888
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "station:primary",
+        "widthPx": 37,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          225,
+          1870,
+          275,
+          1890
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "station:primary",
+        "widthPx": 45,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          220,
+          1869,
+          280,
+          1891
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "station:lateral-plus16",
+        "widthPx": 29,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          215,
+          1868,
+          254,
+          1885
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "station:lateral-plus16",
+        "widthPx": 37,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          209,
+          1867,
+          259,
+          1886
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "station:lateral-plus16",
+        "widthPx": 45,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          204,
+          1866,
+          265,
+          1887
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "station:bright-patch",
+        "widthPx": 29,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          310,
+          1877,
+          350,
+          1893
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "station:bright-patch",
+        "widthPx": 37,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          305,
+          1875,
+          355,
+          1895
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "station:bright-patch",
+        "widthPx": 45,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          300,
+          1874,
+          360,
+          1896
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "learner-fraction:0.2",
+        "widthPx": 29,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          235,
+          1850,
+          274,
+          1867
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "learner-fraction:0.2",
+        "widthPx": 37,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          230,
+          1849,
+          280,
+          1868
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "learner-fraction:0.2",
+        "widthPx": 45,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          224,
+          1848,
+          285,
+          1869
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "learner-fraction:0.35",
+        "widthPx": 29,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          229,
+          1874,
+          269,
+          1891
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "learner-fraction:0.35",
+        "widthPx": 37,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          224,
+          1873,
+          274,
+          1892
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "learner-fraction:0.35",
+        "widthPx": 45,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          219,
+          1872,
+          279,
+          1893
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "learner-fraction:0.5",
+        "widthPx": 29,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          224,
+          1898,
+          263,
+          1914
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "learner-fraction:0.5",
+        "widthPx": 37,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          219,
+          1896,
+          268,
+          1916
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "learner-fraction:0.5",
+        "widthPx": 45,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          213,
+          1895,
+          274,
+          1917
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "learner-fraction:0.65",
+        "widthPx": 29,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          218,
+          1921,
+          258,
+          1938
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "learner-fraction:0.65",
+        "widthPx": 37,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          213,
+          1920,
+          263,
+          1939
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "learner-fraction:0.65",
+        "widthPx": 45,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          208,
+          1919,
+          268,
+          1940
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "learner-fraction:0.78",
+        "widthPx": 29,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          213,
+          1942,
+          253,
+          1959
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "learner-fraction:0.78",
+        "widthPx": 37,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          208,
+          1941,
+          258,
+          1960
+        ],
+        "allReadsInsideCrop": true
+      },
+      {
+        "kind": "learner-fraction:0.78",
+        "widthPx": 45,
+        "nearestReadCount": 60,
+        "pixelBounds": [
+          203,
+          1940,
+          263,
+          1961
+        ],
+        "allReadsInsideCrop": true
+      }
+    ],
+    "nearestReadReferences": 1440,
+    "bilinearPointCount": 17352,
+    "allReadsInsideCrop": true,
+    "edgeSearchNoAdditionalRasterReads": true,
+    "fullSamplerBoundaryPreserved": true
+  },
+  "annotationMapping": "UNKNOWN correctly retained: absent historical crop original-source translation not inferred from canonical y-2.",
+  "producerExecution": false,
+  "pinnedTestimonyExactByteEquality": true,
+  "freezeManifestSha256": "0930973bbf246c30a7a05368aa33b3ebb022d9ca0dd5eeddadbffbf1434cb0ce",
+  "exactSourceFiles": [
+    {
+      "path": "experiments/capability-discovery/composition/recipe.mjs",
+      "sha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6"
+    },
+    {
+      "path": "experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689"
+    },
+    {
+      "path": "experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"
+    }
+  ]
+}

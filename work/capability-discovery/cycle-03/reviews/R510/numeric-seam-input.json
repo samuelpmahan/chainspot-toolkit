@@ -1,0 +1,77 @@
+{
+  "schema": "source-pixel-numeric-seam@1",
+  "hypothesis": "Integer image/geometry translation preserves exact source pixels, while floating sample addition order changes profile roundoff; legacy strict score comparison can select different tied peaks.",
+  "cropHash": "b7f1f8d34733d8f21b609cca40481cd74dcabec9261c661c7e6f73622ddd16c6",
+  "fullHash": "7c9c30b08d264196dfb875b31d116e30553dd176106d06fd00805eee6fbe5a86",
+  "profileMaximumAbsoluteDifference": 2.5579538487363607e-13,
+  "visibleCountsEqual": true,
+  "rows": [
+    {
+      "widthArgPx": 24,
+      "croppedFit": {
+        "lPx": -11.625,
+        "rPx": 14.12500000000068,
+        "cPx": 1.2500000000003402,
+        "wPx": 25.750000000000682,
+        "score": 10.949532299300358,
+        "gl": 10.949532299300358,
+        "gr": 10.949532299300387
+      },
+      "fullFit": {
+        "lPx": -15.12500000000051,
+        "rPx": 10.624999999998638,
+        "cPx": -2.250000000000936,
+        "wPx": 25.749999999999147,
+        "score": 10.949532299300415,
+        "gl": 10.949532299300444,
+        "gr": 10.949532299300415
+      },
+      "sensorEqual": true
+    },
+    {
+      "widthArgPx": 30,
+      "croppedFit": {
+        "lPx": -15.12499999999949,
+        "rPx": 14.12500000000068,
+        "cPx": -0.4999999999994049,
+        "wPx": 29.25000000000017,
+        "score": 10.949532299300387,
+        "gl": 10.949532299300387,
+        "gr": 10.949532299300387
+      },
+      "fullFit": {
+        "lPx": -19.62499999999983,
+        "rPx": 11.87500000000068,
+        "cPx": -3.8749999999995746,
+        "wPx": 31.50000000000051,
+        "score": 10.949532299300444,
+        "gl": 10.949532299300444,
+        "gr": 10.949532299300472
+      },
+      "sensorEqual": true
+    },
+    {
+      "widthArgPx": 36,
+      "croppedFit": {
+        "lPx": -17.37500000000017,
+        "rPx": 16.37500000000017,
+        "cPx": -0.5,
+        "wPx": 33.75000000000034,
+        "score": 10.949532299300358,
+        "gl": 10.949532299300358,
+        "gr": 10.949532299300358
+      },
+      "fullFit": {
+        "lPx": -19.62499999999983,
+        "rPx": 16.37499999999983,
+        "cPx": -1.625,
+        "wPx": 35.99999999999966,
+        "score": 10.949532299300415,
+        "gl": 10.949532299300444,
+        "gr": 10.949532299300415
+      },
+      "sensorEqual": true
+    }
+  ],
+  "interpretation": "Counterexample to blanket fitted-output invariance despite complete support. Raw fits must remain visible, compared and labelled unstable; no correction, tolerance-based acceptance or CV-source change."
+}

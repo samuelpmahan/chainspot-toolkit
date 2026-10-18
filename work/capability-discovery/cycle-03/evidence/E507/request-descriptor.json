@@ -1,0 +1,96 @@
+{
+  "schema": "E507-supported-request-descriptor@1",
+  "requestWithoutSource": {
+    "enabled": true,
+    "roi": {
+      "xPx": 970,
+      "yPx": 1120,
+      "widthPx": 280,
+      "heightPx": 270,
+      "frame": "HeritagePark-full@4925533:source-pixel-centres:roi[970,1120,280,270]"
+    },
+    "geometry": {
+      "frame": "HeritagePark-full@4925533:source-pixel-centres",
+      "geometrySource": "D2-visual-fullsource-H8-v1; fresh visual caller testimony; all endpoint/ribbon/control identities UNKNOWN; declaration SHA256 ee4ac0852dfe1838c3d637ff967b65918ca9bb077ab9f1a6b2df9763ec3e916a",
+      "training": {
+        "frame": "HeritagePark-full@4925533:source-pixel-centres",
+        "segments": [
+          {
+            "tee": {
+              "xPx": 1030,
+              "yPx": 1174
+            },
+            "badge": {
+              "xPx": 1047,
+              "yPx": 1251
+            }
+          }
+        ]
+      },
+      "stations": [
+        {
+          "id": "H8_visual_ribbon",
+          "frame": "HeritagePark-full@4925533:source-pixel-centres",
+          "xPx": 1062,
+          "yPx": 1320,
+          "headingRad": 1.3535028958718756,
+          "t0Px": -24,
+          "t1Px": 24
+        },
+        {
+          "id": "H8_lateral_plus55",
+          "frame": "HeritagePark-full@4925533:source-pixel-centres",
+          "xPx": 1008.2933509773312,
+          "yPx": 1331.8573121218878,
+          "headingRad": 1.3535028958718756,
+          "t0Px": -24,
+          "t1Px": 24
+        },
+        {
+          "id": "H_bright_field_ground",
+          "frame": "HeritagePark-full@4925533:source-pixel-centres",
+          "xPx": 1180,
+          "yPx": 1250,
+          "headingRad": 1.3535028958718756,
+          "t0Px": -24,
+          "t1Px": 24
+        }
+      ],
+      "localWidthBank": {
+        "frame": "HeritagePark-full@4925533:source-pixel-centres",
+        "scope": "LOCAL",
+        "valuesPx": [
+          24,
+          30,
+          36
+        ]
+      },
+      "occluders": {
+        "frame": "HeritagePark-full@4925533:source-pixel-centres",
+        "boxes": []
+      },
+      "edgeSearch": {
+        "latLimPx": 3,
+        "tolWidthPx": 1
+      }
+    }
+  },
+  "source": {
+    "originalPngSha256": "fb77ea132dd29136905088344ed35d170057dea2135e86b06f91e672bc4b2f7f",
+    "fullRgbaSha256Declared": "b3dcd536b305ed92763d42633706d2f4efafce6ea74a4f91f2a98c7a78619a04",
+    "imageId": "HeritagePark-full@49255331791b1245cf0f9cd699816175f94e70f2",
+    "frame": "HeritagePark-full@4925533:source-pixel-centres"
+  },
+  "declarationSha256": "ee4ac0852dfe1838c3d637ff967b65918ca9bb077ab9f1a6b2df9763ec3e916a",
+  "mapping": {
+    "cropRect": "x/y/width/height renamed xPx/yPx/widthPx/heightPx without numerical change; explicit distinct crop frame added",
+    "training": "frame+segments exact; removed semanticAcceptance explanatory field",
+    "stations": "exact complete station objects unchanged",
+    "localWidthBank": "frame/scope/valuesPx exact; removed basis explanatory field",
+    "occluders": "frame/boxes exact empty array; removed basis explanatory field",
+    "edgeSearch": "exact unchanged",
+    "geometrySource": "existing visual testimony ID plus unaccepted identity and exact declaration binding, no strengthened claim",
+    "excluded": "source image materialization metadata, historical testimony context, controls role descriptions, predeclaration and releaseGate retained only in original declaration; no invented adapter fields"
+  },
+  "noTuning": true
+}

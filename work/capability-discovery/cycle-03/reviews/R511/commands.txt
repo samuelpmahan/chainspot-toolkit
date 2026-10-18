@@ -1,0 +1,26 @@
+Working directory: /workspace/scratch/8528bb251845
+Repository/Git read-only. All writes below stay in discovery-cycle03/V1/review-R511.
+
+1. Independently resolve platform commit:path and capture exact PNG bytes with Python subprocess:
+ git -C chainspot-discovery-lab rev-parse 49255331791b1245cf0f9cd699816175f94e70f2:specimens/dev/Lenard-full.png
+ git -C chainspot-discovery-lab cat-file blob 6bb6db0704ba1697056afccb4c0a4ada0dbfa34e
+ Verify encoded SHA256, then write captured bytes to Lenard-full.png.
+
+2. Frozen staging (successful exact binding):
+ python chainspot-discovery-lab/experiments/capability-discovery/source-pixels/stage-png.py --source discovery-cycle03/V1/review-R511/Lenard-full.png --expected-sha256 27ad16bcf2c075316048ec39bc5035e0ebbe260bde32140466a3010f15d75834 --image-id Lenard-full --frame Lenard-full.original-source-pixel-centers --out discovery-cycle03/V1/review-R511/staged-original-source.json
+ Initial pre-CV staging used imageId Lenard-full.png@49255331791b1245cf0f9cd699816175f94e70f2; retained mismatched giant stage as initial-staging-wrong-image-id.json after hash check. It was never passed to an adapter.
+
+3. Sole independent adapter replay:
+ bash discovery-cycle03/V2/E511/run.sh chainspot-discovery-lab discovery-cycle03/V2/E511/protocol.json discovery-cycle03/V2/E511/request-descriptor.json discovery-cycle03/V1/review-R511/staged-original-source.json discovery-cycle03/V1/review-R511/replay > discovery-cycle03/V1/review-R511/replay.log 2>&1
+
+4. Receipt-only render, after copying exact frozen protocol to own output folder:
+ cp discovery-cycle03/V2/E511/protocol.json discovery-cycle03/V1/review-R511/protocol.json
+ python discovery-cycle03/V2/E511/analyze-render.py discovery-cycle03/V1/review-R511/replay discovery-cycle03/V2/E511/request-descriptor.json /workspace/scratch/8528bb251845/discovery-cycle03/D3/Lenard-source-crop.png discovery-cycle03/V1/review-R511 > discovery-cycle03/V1/review-R511/render.log 2>&1
+ view_image /workspace/scratch/8528bb251845/discovery-cycle03/V2/E511/Lenard-E511-actual.png detail=original
+ Reproduced PNG is byte-identical to that inspected PNG.
+
+5. Independent reproducibility/semantics/closure/old-evidence audit, no CV calls:
+ python discovery-cycle03/V1/review-R511/audit.py > discovery-cycle03/V1/review-R511/audit.log 2>&1
+ Final audit180/180. Initial reviewer audit excluded no frame name and failed on intentional source/crop frame difference; correction recorded separately, no CV rerun.
+
+Do not rerun freeze.py: its purpose is creation of the original immutable pre-run declaration. No source or request modifications were made.

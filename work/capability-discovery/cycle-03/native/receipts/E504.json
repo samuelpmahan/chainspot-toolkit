@@ -1,0 +1,56 @@
+{
+  "schema": "capability-discovery-worker-result@1",
+  "job_id": "E504",
+  "worker": "D4",
+  "outcome": "insufficient_evidence",
+  "protocol_ready": true,
+  "summary": "Two minimal actual-image control protocols frozen before measurements: NorthPark-full and TowneLake-full each have one visually proposed straight ribbon station, an exact +12px normal matched control, and a visually supported bright non-path station. Original PNGs and scientific native source figures are materialized and inspected. All geometry is explicitly supplied caller visual testimony. NorthPark testimony is absent; TowneLake historical annotation is retained but unprojected because full-source translation is unestablished. No recipe/learner/sensor/profile/edge producer executed.",
+  "protocol": {
+    "path": "protocol.json",
+    "sha256": "56fdd556f4ed53599de93cadb35c85d453df4edde26f0d00a087d4d4282c65f2"
+  },
+  "manifest": {
+    "path": "file-manifest.json",
+    "sha256": "49cc1140c1daa8c26620ab473c7a5354bc9f800d72ac304c9f298f59356e40b0",
+    "entries": 15
+  },
+  "sourceIDs": [
+    {
+      "gitRef": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "path": "specimens/dev/NorthPark-full.png",
+      "gitBlob": "4209f4057c5dacdcd2e895b5ded8e5e5e42f999a",
+      "pngSha256": "7da949829ce487eba4cb0060f80589c652716239973b395c8f7fc3ceb56617f6",
+      "rgbaSha256": "70877c3ed1c0269161bf96db072040f4ba0106ba6a7a517f938df5b1c859ab60",
+      "widthPx": 1290,
+      "heightPx": 2796
+    },
+    {
+      "gitRef": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "path": "specimens/dev/TowneLake-full.png",
+      "gitBlob": "b25f5e74fb1ee18255e148c332f2cd430399cf9a",
+      "pngSha256": "da2a0ccca4e017cfa9a31d59882903c51905e57b7b21d55b513d788dcf7c18ed",
+      "rgbaSha256": "96c794f10e8bd8e20379d166ef09860acf6b3555a832c83cf6fd30dda7b4cced",
+      "widthPx": 1290,
+      "heightPx": 2796
+    }
+  ],
+  "actualMeasurements": [],
+  "negativeResults": [
+    "NorthPark pinned testimony tree contains no northpark directory.",
+    "TowneLake annotation dimensions/hash identify an absent historical app crop; README canonical y-1 does not establish original-full-source offset. No annotation endpoints projected."
+  ],
+  "commands": [
+    "Read composition README, cycle02 WORKER/README/RESUME, cycle03 root-plan/spec.",
+    "Read-only git ls-tree/show pinned platform PNGs/testimony/AGENTS/DOCTRINE; PNG SHA256 match C2 fixture inventory.",
+    "Pillow source decode and native integer crop only; SHA256 provenance; explicit geometry-margin checks.",
+    "view_image both full screenshots, native inspection crops, and final annotated scientific figures.",
+    "python discovery-cycle03/D4/freeze_protocol.py (only RGBA hashes/crops/geometry/annotations; no CV)."
+  ],
+  "limits": [
+    "Caller-chosen exploratory controls, not independent route ground truth or held-out evaluation.",
+    "LOCAL banks [32,40,48] / [29,37,45] and edgeSearch lateral20/tolerance2 source px are frozen hypotheses; no calibrated physical constants or width acceptance.",
+    "Empty occluder lists; sprite/ring/road/terrain interference may remain.",
+    "No semantic path classification, meter scale, CV/source/Git mutation, AA muting, calibration, weights, sealed corpus or unrelated work."
+  ],
+  "nextGuardedAction": "Root packet must release exact accepted adapter and frozen protocol before actual producers. Retain all requested bank rows/UNKNOWN and signed +12px same-edge difference falsifier; do not retune based on outputs."
+}

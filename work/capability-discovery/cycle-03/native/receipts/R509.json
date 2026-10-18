@@ -1,0 +1,147 @@
+{
+  "schema": "capability-discovery-review-result@1",
+  "job_id": "R509",
+  "worker": "V3",
+  "decision": "accepted",
+  "acceptanceScope": "Bounded independent technical replay and receipt/figure fidelity only. No scientific acceptance, semantic path identity, confidence calibration, measured width or production promotion.",
+  "summary": "Two fresh pinned-PNG staging runs and two actual adapter invocations reproduced both full E509 receipts byte for byte (four unchanged composition calls). All23candidate and14legacy files verified unchanged before/after each invocation and independent before/after audit. All18 station/width rows per channel, every profile/count, null, raw field and failed control are retained. Independent arithmetic and exact renderer replay confirm figures. NorthPark ties0/raw32, sensor0, nonpath pairs all3; +12 conditional shift unavailable32/matches40/fails48. TowneLake ribbon37 strongest.765926/fit36.8165; offset0 with pairs; nonpath null all3. Calibration/identity UNKNOWN, promoted=false. Historical NorthPark typo preserved with separate erratum; actual correct per-course caveats verified.",
+  "independence": {
+    "reviewer": "V3",
+    "producer": "D4",
+    "sourceOwner": "D6",
+    "repositoryReadOnly": true,
+    "writesOnly": "/workspace/scratch/8528bb251845/discovery-cycle03/V3",
+    "subagents": false,
+    "stateOrGitMutations": false
+  },
+  "inputs": {
+    "E509Result": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D4/E509/result.json",
+      "sha256": "31ccf9d738033c8a113246bb16bdf2922488e5e85d068aa9b6b160b52f7ed041"
+    },
+    "artifactManifest": {
+      "sha256": "c2a68be74c3040adc17628f35eee180523b4918a7f9526620bbbf70d30dbca43",
+      "all20EntriesVerified": true
+    },
+    "declaration": {
+      "sha256": "56fdd556f4ed53599de93cadb35c85d453df4edde26f0d00a087d4d4282c65f2",
+      "exactMappingNoTuning": true
+    },
+    "candidateFreeze": {
+      "sha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+      "all23EntriesBeforeAfter": true
+    },
+    "legacyManifest": {
+      "sha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+      "all14EntriesBeforeAfter": true
+    },
+    "R506": {
+      "decision": "accepted",
+      "scope": "Technical only"
+    },
+    "premeasurement": {
+      "all15FilesUnchanged": true,
+      "manifestSha256": "49cc1140c1daa8c26620ab473c7a5354bc9f800d72ac304c9f298f59356e40b0"
+    }
+  },
+  "checks": {
+    "beforeAuditCount": 72,
+    "afterAuditCount": 92,
+    "allPassed": true,
+    "originalPlatform492PngGitBlobAndBytes": true,
+    "fullRgbaAndIntegerCropBytesExact": true,
+    "stagedSourcesByteIdentical": true,
+    "requestsNumericAndDescriptiveMappingExact": true,
+    "receiptSerialization": "Unchanged retained portable caller invokes JSON.stringify(receipt,preserveNonFinite,2); caller SHA256f353ede634cdb221f65a6014b14f79d23c17da0a40846dc1b866da81623bf654 verified",
+    "comparison": "Full receipt bytes and complete parsed values exactly equal; no fields/timing excluded from receipts. Nondeterministic resource/time/path sidecar fields excluded from equivalence comparison; sidecar original closure/input bindings retained.",
+    "actualAdapterRuns": 2,
+    "actualCompositionCalls": 4,
+    "rowsPerSourceOrCropChannel": 18,
+    "rawSourceCropTolerance": 1e-09,
+    "sourceCropDifferencesAboveTolerance": 0,
+    "rendererReplay": {
+      "analysisAndBothPngsExact": true,
+      "noCvRecompute": true
+    },
+    "figureInspection": "figure-inspection.json"
+  },
+  "receipts": [
+    {
+      "imageId": "NorthPark-full",
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/V3/NorthPark-full.receipt.json",
+      "sha256": "82ae2e1ea210f27c57ddd5c83301c4722cff1b3a22bc3bf901957b24ca88cdd2",
+      "byteIdenticalToE509": true,
+      "stagedSha256": "8f4c0e0e69e44266e95d448eb8388a30e89cd802bb684df2978a61df584a2e70",
+      "fullRgbaSha256": "70877c3ed1c0269161bf96db072040f4ba0106ba6a7a517f938df5b1c859ab60",
+      "cropRgbaSha256": "289f79fe1482221cda51911984878ab354f1a2e2904bc859f22c8476354125c2"
+    },
+    {
+      "imageId": "TowneLake-full",
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/V3/TowneLake-full.receipt.json",
+      "sha256": "1784b2028b955d2ce27ed4bd96d29a450b71bc45091c424ba05bfe8dbf6c86ae",
+      "byteIdenticalToE509": true,
+      "stagedSha256": "29f0b1145e86222667708d401f79f40e00b7797e84c539cde85d3243e15fe7df",
+      "fullRgbaSha256": "96c794f10e8bd8e20379d166ef09860acf6b3555a832c83cf6fd30dda7b4cced",
+      "cropRgbaSha256": "6d5730aaba3b23d25a5972ab70ad042ee63a152b1c77713c74465c8be2e3c602"
+    }
+  ],
+  "commands": [
+    "python discovery-cycle03/V3/audit.py before",
+    "python chainspot-discovery-lab/experiments/capability-discovery/source-pixels/stage-png.py --source discovery-cycle03/D4/NorthPark-full.png --expected-sha256 7da949829ce487eba4cb0060f80589c652716239973b395c8f7fc3ceb56617f6 --image-id NorthPark-full --frame NorthPark-full:original-1290x2796 --out discovery-cycle03/V3/NorthPark-full.staged-source.json",
+    "node discovery-cycle03/V3/run-trial.mjs --repo chainspot-discovery-lab --protocol discovery-cycle03/D4/protocol.json --source discovery-cycle03/V3/NorthPark-full.staged-source.json --descriptor discovery-cycle03/D4/E509/NorthPark-full.request-descriptor.json --out discovery-cycle03/V3/NorthPark-full.receipt.json --meta discovery-cycle03/V3/NorthPark-full.run-sidecar.json",
+    "python chainspot-discovery-lab/experiments/capability-discovery/source-pixels/stage-png.py --source discovery-cycle03/D4/TowneLake-full.png --expected-sha256 da2a0ccca4e017cfa9a31d59882903c51905e57b7b21d55b513d788dcf7c18ed --image-id TowneLake-full --frame TowneLake-full:original-1290x2796 --out discovery-cycle03/V3/TowneLake-full.staged-source.json",
+    "node discovery-cycle03/V3/run-trial.mjs --repo chainspot-discovery-lab --protocol discovery-cycle03/D4/protocol.json --source discovery-cycle03/V3/TowneLake-full.staged-source.json --descriptor discovery-cycle03/D4/E509/TowneLake-full.request-descriptor.json --out discovery-cycle03/V3/TowneLake-full.receipt.json --meta discovery-cycle03/V3/TowneLake-full.run-sidecar.json",
+    "python discovery-cycle03/V3/audit.py after",
+    "python discovery-cycle03/V3/summarize.py",
+    "git show 49255331791b1245cf0f9cd699816175f94e70f2:specimens/dev/{NorthPark-full,TowneLake-full}.png via audit.py subprocess, exact bytes compared",
+    "view_image retained actual PNGs; TowneLake detail original; historical NorthPark premeasurement detail original"
+  ],
+  "evidence": [
+    {
+      "path": "audit.py",
+      "sha256": "716fc5f5e562d9a02e3d3c9b5cc122da091b9410e5568714a34312fcb923f054"
+    },
+    {
+      "path": "audit-before.json",
+      "sha256": "ea6aa90e068d42e190bd7744699bafff19ed455dc58a2469386121f593fb19b8"
+    },
+    {
+      "path": "audit-after.json",
+      "sha256": "c9ca2d3821b9ed8496fed0bbaaab3c99ad6ed9a89fd74a33742959cbbb76dc75"
+    },
+    {
+      "path": "run-trial.mjs",
+      "sha256": "f353ede634cdb221f65a6014b14f79d23c17da0a40846dc1b866da81623bf654"
+    },
+    {
+      "path": "summarize.py",
+      "sha256": "6446ba2a87751cc8958c1a26f14e61f041a9b27ba3ae501d301413524ac09c14"
+    },
+    {
+      "path": "independent-raw-audit.json",
+      "sha256": "789e6850fb7619b7825d3bc27cae9256dd81159ffa3a2c6e120a655cfead779a"
+    },
+    {
+      "path": "renderer-replay.json",
+      "sha256": "f51b5e8a90ba4cdeff064c9c1368b5d820db022baf3b653f4e824cf7e782844e"
+    },
+    {
+      "path": "premeasurement-preservation.json",
+      "sha256": "a596d1c22f0872901de5537e6ad47fe65d2d70a33502fc5dd0f88528180e3a6d"
+    },
+    {
+      "path": "figure-inspection.json",
+      "sha256": "501c3f5b015d0b80858e397ec29fd28f38b6ff8f21c40fbdf9ff1c5297e1837f"
+    }
+  ],
+  "limitations": [
+    "Caller-selected exploratory exposed regions and supplied visual geometry; no independently established path/nonpath truth or endpoint ownership.",
+    "NorthPark testimony absent; TowneLake historical annotation-to-full mapping remains UNKNOWN.",
+    "Prior geometry message exposure precludes fully blind heldout claim.",
+    "Raw learner32 is a tied diagnostic; learner45 differs from strongest fixed-sensor width37. Neither is calibrated width.",
+    "Failed conditional same-edge shifts, missing pairs, near-boundary fits and sensor/profile disagreement remain literal evidence; no success-row substitution, tuning, masks, AA muting, weights, sealed corpus or CV/source changes.",
+    "Matching these fixed source/crop controls does not generalize over retained rotated and half-pixel adapter counterexamples; no confidence or physical scale follows.",
+    "Resource sidecars describe observed processes only and are not replay equality targets or speed/allocator claims.",
+    "Acceptance is bounded to exact technical E509 reuse and display fidelity. Human scientific retention authority remains unresolved."
+  ]
+}

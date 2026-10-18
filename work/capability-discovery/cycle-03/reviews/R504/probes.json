@@ -1,0 +1,194 @@
+{
+  "schema": "R504-static-independent-probes@1",
+  "reviewedProtocolSha256": "56fdd556f4ed53599de93cadb35c85d453df4edde26f0d00a087d4d4282c65f2",
+  "manifestSha256": "49cc1140c1daa8c26620ab473c7a5354bc9f800d72ac304c9f298f59356e40b0",
+  "resultSha256": "d9f8a5e0df938a0f24f4dfb0c73beab02b7f19d6ae6cdb7ebf39e4fcd84c3d29",
+  "fileChecks": [
+    {
+      "path": "NorthPark-full.inspection-crop.png",
+      "hashAndSizeMatch": true
+    },
+    {
+      "path": "NorthPark-full.png",
+      "hashAndSizeMatch": true
+    },
+    {
+      "path": "NorthPark-full.scientific-source.png",
+      "hashAndSizeMatch": true
+    },
+    {
+      "path": "NorthPark-full.source-crop.png",
+      "hashAndSizeMatch": true
+    },
+    {
+      "path": "NorthPark-full.terrain-inspection.png",
+      "hashAndSizeMatch": true
+    },
+    {
+      "path": "TowneLake-full.annotation.json",
+      "hashAndSizeMatch": true
+    },
+    {
+      "path": "TowneLake-full.inspection-crop.png",
+      "hashAndSizeMatch": true
+    },
+    {
+      "path": "TowneLake-full.png",
+      "hashAndSizeMatch": true
+    },
+    {
+      "path": "TowneLake-full.scientific-source.png",
+      "hashAndSizeMatch": true
+    },
+    {
+      "path": "TowneLake-full.source-crop.png",
+      "hashAndSizeMatch": true
+    },
+    {
+      "path": "TowneLake-full.terrain-inspection.png",
+      "hashAndSizeMatch": true
+    },
+    {
+      "path": "TowneLake-testimony-README.md",
+      "hashAndSizeMatch": true
+    },
+    {
+      "path": "figure-inspection.json",
+      "hashAndSizeMatch": true
+    },
+    {
+      "path": "freeze_protocol.py",
+      "hashAndSizeMatch": true
+    },
+    {
+      "path": "protocol.json",
+      "hashAndSizeMatch": true
+    }
+  ],
+  "caseChecks": [
+    {
+      "imageId": "NorthPark-full",
+      "sourceByteEqualityToPinnedGitShow": true,
+      "sourcePngAndRgbaHashes": true,
+      "sourceBlobAndDimensions": true,
+      "cropExactRgbaEqualityAndHashes": true,
+      "integerTranslationOnly": true,
+      "framesConsistent": true,
+      "offsetNormal12ResidualPx": 2.1773972928151947e-13,
+      "sameHeadingWindow": true,
+      "frozenBank": [
+        32,
+        40,
+        48
+      ],
+      "frozenSettings": {
+        "latLimPx": 20,
+        "tolWidthPx": 2
+      },
+      "maxBankGuardReachPx": 32.0,
+      "maxBankOuterRailReachPx": 26.5,
+      "maxBankSensorNormalReachPx": 32.0,
+      "boundsChecks": [
+        {
+          "kind": "all declared station sensor coordinates",
+          "coordinateSamples": 540,
+          "originalBoundsXYXY": [
+            711.982442667808,
+            1800.8459589951563,
+            729.517557332192,
+            2119.6404586575372
+          ],
+          "strictOriginalEquivalentJsBoundsPass": true,
+          "minimumAxisClearanceFromCropPixelCentersPx": 39.35954134246276
+        },
+        {
+          "kind": "all JS profile coordinates -30..30 at.25; actual t0..t1 exclusive",
+          "coordinateSamples": 26028,
+          "originalBoundsXYXY": [
+            698.0934190384967,
+            1802.2253483282043,
+            742.4077128237789,
+            2118.3086344739045
+          ],
+          "strictOriginalEquivalentJsBoundsPass": true,
+          "minimumAxisClearanceFromCropPixelCentersPx": 40.691365526095524
+        },
+        {
+          "kind": "all training band offsets: actual fractions plus full-span endpoint hull",
+          "coordinateSamples": 1260,
+          "originalBoundsXYXY": [
+            659.482442667808,
+            2040.845958995156,
+            775.517557332192,
+            2110.154041004844
+          ],
+          "strictOriginalEquivalentJsBoundsPass": true,
+          "minimumAxisClearanceFromCropPixelCentersPx": 48.8459589951558
+        }
+      ]
+    },
+    {
+      "imageId": "TowneLake-full",
+      "sourceByteEqualityToPinnedGitShow": true,
+      "sourcePngAndRgbaHashes": true,
+      "sourceBlobAndDimensions": true,
+      "cropExactRgbaEqualityAndHashes": true,
+      "integerTranslationOnly": true,
+      "framesConsistent": true,
+      "offsetNormal12ResidualPx": 1.0841599276764049e-14,
+      "sameHeadingWindow": true,
+      "frozenBank": [
+        29,
+        37,
+        45
+      ],
+      "frozenSettings": {
+        "latLimPx": 20,
+        "tolWidthPx": 2
+      },
+      "maxBankGuardReachPx": 30.0,
+      "maxBankOuterRailReachPx": 25.0,
+      "maxBankSensorNormalReachPx": 30.0,
+      "boundsChecks": [
+        {
+          "kind": "all declared station sensor coordinates",
+          "coordinateSamples": 540,
+          "originalBoundsXYXY": [
+            281.6857955029916,
+            1779.4210763604096,
+            927.9420244444958,
+            2148.544200699947
+          ],
+          "strictOriginalEquivalentJsBoundsPass": true,
+          "minimumAxisClearanceFromCropPixelCentersPx": 31.685795502991596
+        },
+        {
+          "kind": "all JS profile coordinates -30..30 at.25; actual t0..t1 exclusive",
+          "coordinateSamples": 26028,
+          "originalBoundsXYXY": [
+            275.1481789850443,
+            1767.3201996324783,
+            934.9825345407468,
+            2159.7807290901687
+          ],
+          "strictOriginalEquivalentJsBoundsPass": true,
+          "minimumAxisClearanceFromCropPixelCentersPx": 25.148178985044296
+        },
+        {
+          "kind": "all training band offsets: actual fractions plus full-span endpoint hull",
+          "coordinateSamples": 1260,
+          "originalBoundsXYXY": [
+            277.05797555550413,
+            1706.4557993000533,
+            396.94202444449587,
+            1853.5442006999467
+          ],
+          "strictOriginalEquivalentJsBoundsPass": true,
+          "minimumAxisClearanceFromCropPixelCentersPx": 27.05797555550413
+        }
+      ]
+    }
+  ],
+  "producerExecution": false,
+  "method": "Independent Python PNG decode/byte comparison, git show/rev-parse provenance checks, exact coordinate algebra and enumeration only. No recipe, learner, profileAt, sensor or edgePairOf invoked."
+}

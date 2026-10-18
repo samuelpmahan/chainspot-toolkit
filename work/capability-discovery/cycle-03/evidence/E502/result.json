@@ -1,0 +1,72 @@
+{
+  "schema": "cycle03-worker-result@1",
+  "job_id": "E502",
+  "worker": "D2",
+  "outcome": "insufficient_evidence",
+  "status": "PROTOCOL_READY_NO_MEASUREMENTS",
+  "summary": "Frozen one visually proposed Heritage straight ribbon, same-heading +55px lateral wooded-ground control, and bright mown-field ground control. Original full-PNG integer pixel centres; no guessed annotation-frame mapping. All candidate widths and controls precede output inspection. Scientific reuse cannot be assessed before authorized measurements.",
+  "protocol": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/frozen-protocol.json",
+    "sha256": "ee4ac0852dfe1838c3d637ff967b65918ca9bb077ab9f1a6b2df9763ec3e916a"
+  },
+  "freezeManifest": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/freeze-manifest.json",
+    "sha256": "a30938c4664cf9d4c5a763eadeacec4c226d55714a7553aa3d204815f57e567c"
+  },
+  "scientificFigure": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/protocol-figure.png",
+    "sha256": "5cf8df91d3ce39fa50ccf1191449cece9b343f0f9c7aa1f03654dcb4d34c292e",
+    "viewImageInspected": true,
+    "nativeSourcePixelsUnscaled": true
+  },
+  "sourcePixelCrop": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/source-pixel-crop.png",
+    "sha256": "7e07117be19075176dd7e5a3bb1afe7f006d9d0a0ad87ca21eeea39f90da8e9d",
+    "rgbaEqualityVerified": true
+  },
+  "geometryEnclosure": {
+    "verified": true,
+    "stationEnvelopeNormalPx": 32,
+    "stationEnvelopeTangentPx": 29,
+    "trainingEndpointEnvelopeNormalPx": 32,
+    "trainingEndpointTangentMarginPx": 5,
+    "stationSourceBounds": [
+      {
+        "id": "H8_visual_ribbon",
+        "minXPx": 1024.5004578134517,
+        "maxXPx": 1099.4995421865483,
+        "minYPx": 1284.7831489171308,
+        "maxYPx": 1355.2168510828692
+      },
+      {
+        "id": "H8_lateral_plus55",
+        "minXPx": 970.793808790783,
+        "maxXPx": 1045.7928931638794,
+        "minYPx": 1296.6404610390186,
+        "maxYPx": 1367.074163204757
+      },
+      {
+        "id": "H_bright_field_ground",
+        "minXPx": 1142.5004578134517,
+        "maxXPx": 1217.4995421865483,
+        "minYPx": 1214.7831489171308,
+        "maxYPx": 1285.2168510828692
+      }
+    ]
+  },
+  "operationsExecuted": [
+    "read-only git show source PNG and historical testimony",
+    "Pillow decode RGBA, integer crop, exact source-row byte equality",
+    "read-only visual inspection and figure annotation",
+    "geometry-only declared envelope validation"
+  ],
+  "prohibitedMeasurementsExecuted": [],
+  "recipeSourceOnlyFreezeUnchanged": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+  "publication": "No repo edits, Git mutations or producer execution. Wait for root next packet.",
+  "limits": [
+    "All tee/badge/ribbon/control identities are caller visual testimony, unaccepted.",
+    "Historical annotation source image dimensions/hash differ from full PNG; exact mapping unproven.",
+    "Control field texture may give paired edges; no expected-positive/negative truth.",
+    "No calibration, acceptance, weights, AA muting or semantic route claim."
+  ]
+}

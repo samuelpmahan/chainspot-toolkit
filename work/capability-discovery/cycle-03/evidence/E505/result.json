@@ -1,0 +1,93 @@
+{
+  "schema": "capability-discovery-result@1",
+  "job_id": "E505",
+  "worker": "D5",
+  "outcome": "mixed_change",
+  "scope": "independent predeclared adversarial contract/oracles and read-only existing-adapter exploration; not candidate evaluation",
+  "summary": "Existing composition and source operations can remain reused unchanged/default OFF. New explicit provenance and exact source-pixel crop/geometry glue is required: display cropWindow is not reusable as evidence crop (rounds center, pads RGB128, drops alpha, applies overlays), S0/crop pipeline proposes chrome stripping, and composite materialization has broader rounding/padding plus a different dimension-prefixed hash. Existing decodeNodeFile supplies source-file hash and decoded RGBA but E506 proposes a separately declared Pillow PNG staging route. No D6 implementation has been read or executed.",
+  "contract": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D5/contract.md",
+    "sha256": "535e4d325e7a9befd667e9aa64e6ca9595b2e74aa555bf90cdef638dba416827"
+  },
+  "oracles": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D5/oracles.json",
+    "sha256": "9cb658ef11c43c9c7aca8049847104fbdb586c8a07f541d08011f53cfce4f3e8",
+    "cases": {
+      "pixelCrops": 7,
+      "invalidCrops": 14,
+      "support": 8
+    }
+  },
+  "freeze": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D5/predeclaration-manifest.json",
+    "sha256": "ee63a52ce50e4bef00ad3f269a283c2c117a9bb8c4d1723ed1bc335edb3933f7"
+  },
+  "contractOnlyComparison": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D5/contract-comparison.json",
+    "sha256": "3a78289881afd01bfbb3e4ed1165fe1a00678cd8a9605934fd1c7e7231f36106"
+  },
+  "sourceReadHashes": [
+    {
+      "path": "experiments/capability-discovery/composition/README.md",
+      "sha256": "be861f6e15fbaaf237d817ebda82dcab821e22dc13f3a0883e32b6785eda87bd"
+    },
+    {
+      "path": "experiments/capability-discovery/composition/recipe.mjs",
+      "sha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6"
+    },
+    {
+      "path": "experiments/capability-discovery/composition/cli.mjs",
+      "sha256": "0e08999d39aff0ba6498bad2e90c8986fb2995b98ae44fced92ebea2f3dcf839"
+    },
+    {
+      "path": "source/provider/packages/alg/src/adapters/node.ts",
+      "sha256": "a1984646b2463dcb8faf678b56902a525fc22d533ce8fb3035b6eb7b6d23ae89"
+    },
+    {
+      "path": "source/provider/packages/alg/src/g0/crop.ts",
+      "sha256": "a3af85388e3550177983cd1489f4a073468321cf50da3adf8fb7086e7a57b9b7"
+    },
+    {
+      "path": "source/provider/packages/alg/src/g0/composite.ts",
+      "sha256": "2c1cb3c93c881bd6612e0f95b310c5543024a244277811f1c85c4d91f83127c7"
+    },
+    {
+      "path": "source/provider/packages/alg/src/stages/S0/clean/index.ts",
+      "sha256": "4c0f2b0f648e334554c7c671025f93d076f171f825c4174e85d0a6bf1f3ffa67"
+    },
+    {
+      "path": "experiments/capability-discovery/probes/root-inventory/source/fg/png.mjs",
+      "sha256": "7668bab9de6a19a2cc6f44e5ac47d6e89373da130764365cf32011187a980241"
+    },
+    {
+      "path": "experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689"
+    },
+    {
+      "path": "experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"
+    },
+    {
+      "path": "work/capability-discovery/cycle-02/README.md",
+      "sha256": "befd1492a4ce8d41b22ceac4f98b1e5e8130c97bf89255d3ccbb5df899803a39"
+    },
+    {
+      "path": "work/capability-discovery/cycle-02/RESUME.md",
+      "sha256": "3fa859fb7f92d6664b38b0d135811e3e8b0bdb7e09204d47a7b9fce66fc0e357"
+    }
+  ],
+  "verification": "Rehashed every independent predeclaration manifest file and checked all seven literal crop oracles by independent channel-index gathering; source/candidate recipe not executed. Fixture/oracle construction is not self-approval.",
+  "predictedFalsifiers": [
+    "A near-edge crop can leave some sensor bands finite or a raw first-bank fallback selected even though complete sampled support is absent; any receipt promoting that to a supported/calibrated width, silently padding/clamping pixels, or dropping missing-support diagnostics fails.",
+    "Two PNG encodings share decoded RGBA yet differ in encoded bytes: checking only decoded hash must not authorize a mismatched expected source-file SHA."
+  ],
+  "boundaries": [
+    "D5 scratch only written; repo read only",
+    "No source changes, Git, HH, AA muting, subagents, alternate CV or sealed corpus",
+    "No actual course producer run; negative controls remain proposals",
+    "Caller geometry/source metadata testimony is not truth",
+    "All tested future image regions are exposed after run",
+    "No self-review or candidate acceptance; R506 needs exact future candidate freeze"
+  ],
+  "next": "Ready for separately allocated R506 independent adapter falsification after actual candidate freeze/release."
+}

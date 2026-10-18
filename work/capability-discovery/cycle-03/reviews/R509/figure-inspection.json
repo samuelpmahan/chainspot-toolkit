@@ -1,0 +1,34 @@
+{
+  "schema": "R509-actual-figure-inspection@1",
+  "method": "Direct view_image inspection of both retained actual scientific PNGs; TowneLake rechecked with detail original at2218x1771 in response to suspected preview glyph truncation. Historical NorthPark premeasurement figure inspected separately at original resolution.",
+  "actualFigures": [
+    {
+      "imageId": "NorthPark-full",
+      "sha256": "d2ca5cc65e318578c0790aa6f448da4d585fb2ffdfe82929e582d01be87ea654",
+      "footerVerified": "NorthPark testimony absent; all geometry is caller visual testimony.",
+      "allNineRowsVisible": true,
+      "nullUnknownAndFailedControlsVisible": true,
+      "profileSourceCropOverlayVisible": true,
+      "labelsLegible": true,
+      "clippingOrOverlapObserved": false
+    },
+    {
+      "imageId": "TowneLake-full",
+      "sha256": "c8368e43e8c79c82a5b456ddfa6ed15879195f25de9a27eaed83a2dd645f7dd8",
+      "footerVerified": "TowneLake historical annotation → original-source mapping UNKNOWN; geometry is caller visual testimony.",
+      "allNineRowsVisible": true,
+      "nullUnknownAndFailedControlsVisible": true,
+      "profileSourceCropOverlayVisible": true,
+      "labelsLegible": true,
+      "clippingOrOverlapObserved": false
+    }
+  ],
+  "historicalNorthPark": {
+    "sha256": "36dbde83c738f66df3c762a7d1f3cb57150a11901e62a35e858e0957dacb14f4",
+    "footerTypoVisible": true,
+    "preservedOriginal": true,
+    "separateDisplayErratumSha256": "366d3f7d7309e0500f5e2a61305ae5393bfdedd6d2eb7ad1a7329f8fc18c46c0"
+  },
+  "renderReplay": "Exact retained renderer, receipts and crops replayed in own scratch; both PNGs and analysis byte-identical; no CV operations invoked by renderer.",
+  "previewLimitation": "Smaller downsampled TowneLake preview can lose thin glyph strokes. Original2218x1771 PNG has complete right annotation lines and all11 table headers; no display amendment warranted."
+}

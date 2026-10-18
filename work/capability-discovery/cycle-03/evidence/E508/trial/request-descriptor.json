@@ -1,0 +1,107 @@
+{
+  "schema": "E508-compact-request@1",
+  "enabled": true,
+  "source": {
+    "stagedJsonSha256": "0ff967ecde36cb6ed81b23bc58ef5293f60aa56639c6d896e238e912a27c717a",
+    "pngSha256": "27ad16bcf2c075316048ec39bc5035e0ebbe260bde32140466a3010f15d75834",
+    "fullRgbaSha256": "c93a4c532da248a61e29e56bf86273e6eaee9151643bd681974a882928f50766",
+    "width": 1290,
+    "height": 2796,
+    "frame": "Lenard-full.original-source-pixel-centers",
+    "decoder": {
+      "name": "Pillow",
+      "version": "12.3.0",
+      "outputMode": "RGBA",
+      "sourceMode": "RGB",
+      "orientation": "stored PNG pixel order; no EXIF transform",
+      "colorTransform": "none; stored RGB channels, no ICC/gamma transform",
+      "alpha": "preserved RGBA; RGB appends 255"
+    }
+  },
+  "roi": {
+    "xPx": 180,
+    "yPx": 1795,
+    "widthPx": 210,
+    "heightPx": 215,
+    "frame": "Lenard-full.original-source-pixel-centers.roi-180-1795-210-215"
+  },
+  "geometry": {
+    "frame": "Lenard-full.original-source-pixel-centers",
+    "geometrySource": "Fresh explicit caller visual testimony after viewing full source PNG and integer lower-map crop with source coordinate grid. No detector, learner, sensor, edge, or recipe output consulted.",
+    "training": {
+      "frame": "Lenard-full.original-source-pixel-centers",
+      "segments": [
+        {
+          "tee": {
+            "xPx": 262,
+            "yPx": 1827
+          },
+          "badge": {
+            "xPx": 225,
+            "yPx": 1985
+          }
+        }
+      ]
+    },
+    "stations": [
+      {
+        "id": "primary",
+        "frame": "Lenard-full.original-source-pixel-centers",
+        "xPx": 250,
+        "yPx": 1880,
+        "headingRad": 1.8008284199331293,
+        "t0Px": -12,
+        "t1Px": 12
+      },
+      {
+        "id": "lateral-plus16",
+        "frame": "Lenard-full.original-source-pixel-centers",
+        "xPx": 234.42145475216358,
+        "yPx": 1876.3518596571523,
+        "headingRad": 1.8008284199331293,
+        "t0Px": -12,
+        "t1Px": 12
+      },
+      {
+        "id": "bright-patch",
+        "frame": "Lenard-full.original-source-pixel-centers",
+        "xPx": 330,
+        "yPx": 1885,
+        "headingRad": 1.8008284199331293,
+        "t0Px": -12,
+        "t1Px": 12
+      }
+    ],
+    "localWidthBank": {
+      "frame": "Lenard-full.original-source-pixel-centers",
+      "scope": "LOCAL",
+      "valuesPx": [
+        29,
+        37,
+        45
+      ]
+    },
+    "occluders": {
+      "frame": "Lenard-full.original-source-pixel-centers",
+      "boxes": []
+    },
+    "edgeSearch": {
+      "latLimPx": 4,
+      "tolWidthPx": 3
+    }
+  },
+  "projection": {
+    "method": "Exact supported-field projection only. No numeric/coordinate/window/width/box/settings tuning.",
+    "stripped": [
+      "top-level protocol metadata, expected observations, falsifiers and explanatory fields",
+      "training.segments[].proposedLabels",
+      "stations[].role",
+      "localWidthBank.declarationBasis",
+      "edgeSearch.declarationBasis",
+      "occluders.authority",
+      "crop.exclusiveRightPx/exclusiveBottomPx/transform/resize and explanatory metadata"
+    ],
+    "retainedMeaning": "All stripped testimony remains in exact frozen protocol. API tee/badge are proposed visual endpoint fields; no accepted identities.",
+    "cropFrame": "New name only; adapter translates exact original-frame values by integer crop origin."
+  }
+}

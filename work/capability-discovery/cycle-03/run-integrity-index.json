@@ -1,0 +1,117 @@
+{
+  "schema": "cycle03-actual-run-bindings@1",
+  "candidateFreezeSha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+  "runs": [
+    {
+      "job_id": "E507",
+      "imageId": "HeritagePark-full",
+      "caller": {
+        "path": "evidence/E507/run-heritage.mjs",
+        "sha256": "93b4da4f27e13c469f60fe4becce380626d6bc00b7c39b0b8b33e7be709d6c3f"
+      },
+      "sourceStageSha256": "b3ec6a7a88144ebadf57e1fefcdffd4271b60486613709857a5b5263dfac98f2",
+      "requestDescriptorSha256": "77ce358eaa28eb6e2bc9e7536e45ed72997566705ee00a610abdf30fa2fa7458",
+      "completeRequestJsonSha256": "fcd1d44d67015708c6b29438eeea9adeef54d6a0411d85c3aeac080bcad965c8",
+      "requestHashTiming": "postexecution deterministic reconstruction, not originally instrumented",
+      "receiptSha256": "778d6b6ce0e49c9b89becd7bdd0eb1aa5cc581f62acc18d2dd86d112ccd55767",
+      "adapterCalls": 1,
+      "compositionCalls": 2
+    },
+    {
+      "job_id": "E508",
+      "imageId": "Lenard-full",
+      "caller": {
+        "path": "evidence/E508/run-trial.mjs",
+        "sha256": "22c959895c8a37f43757e1ca36807512b97c11731791e2bc8f657f6c5842680f"
+      },
+      "sourceStageSha256": "0ff967ecde36cb6ed81b23bc58ef5293f60aa56639c6d896e238e912a27c717a",
+      "requestDescriptorSha256": "3d52ed4de577f5c5a86ca3a0f10e5944e5a3bdf40fde51b948648fe79b87da94",
+      "completeRequestJsonSha256": "dea2aed145b7976c2019bc9f2e36481bf02de7b6d692ba62a1142954da9c32a3",
+      "requestHashTiming": "recorded by actual caller",
+      "receiptSha256": "d79b32c3ff08c7c30e5e02d74dab24e3f96e6447835c1906c660cc60b43c7f3a",
+      "adapterCalls": 1,
+      "compositionCalls": 0
+    },
+    {
+      "job_id": "E509",
+      "imageId": "NorthPark-full",
+      "caller": {
+        "path": "evidence/E509/run-trial.mjs",
+        "sha256": "f353ede634cdb221f65a6014b14f79d23c17da0a40846dc1b866da81623bf654"
+      },
+      "sourceStageSha256": "8f4c0e0e69e44266e95d448eb8388a30e89cd802bb684df2978a61df584a2e70",
+      "requestDescriptorSha256": "ed4ca3f04998994dabfe4d880fbd5d247f4f3166c5888c2b9e61851cace0e600",
+      "completeRequestJsonSha256": "bf0df2f222dd617272f7e06b14f69c8b05ffd3ab37be86dbc4bf86c2b751dd97",
+      "requestHashTiming": "recorded by actual caller",
+      "receiptSha256": "82ae2e1ea210f27c57ddd5c83301c4722cff1b3a22bc3bf901957b24ca88cdd2",
+      "adapterCalls": 1,
+      "compositionCalls": 2
+    },
+    {
+      "job_id": "E509",
+      "imageId": "TowneLake-full",
+      "caller": {
+        "path": "evidence/E509/run-trial.mjs",
+        "sha256": "f353ede634cdb221f65a6014b14f79d23c17da0a40846dc1b866da81623bf654"
+      },
+      "sourceStageSha256": "29f0b1145e86222667708d401f79f40e00b7797e84c539cde85d3243e15fe7df",
+      "requestDescriptorSha256": "019ad72954a379c86295f445fca2f74acbbfef749d8e31443ddb3f94b414c6ad",
+      "completeRequestJsonSha256": "ff77a522693735993e9fb95fcf5d324ce79b7a77f5af04801063a0ed67f329b6",
+      "requestHashTiming": "recorded by actual caller",
+      "receiptSha256": "1784b2028b955d2ce27ed4bd96d29a450b71bc45091c424ba05bfe8dbf6c86ae",
+      "adapterCalls": 1,
+      "compositionCalls": 2
+    }
+  ],
+  "limits": "Four fixed original exploratory producer calls including one support-only abstention. Independent reviewers made four distinct actual replay calls/six recipe calls, reproduced the same exposed inputs; no parameters changed. Synthetic engineering probes and any separately approved future diagnostic are separate.",
+  "actualProducerAdapterCalls": 4,
+  "actualProducerCompositionCalls": 6,
+  "independentActualReplays": [
+    {
+      "job_id": "R507",
+      "adapterCalls": 1,
+      "compositionCalls": 2,
+      "receiptIdentity": "complete bytes equal original E507"
+    },
+    {
+      "job_id": "R508",
+      "adapterCalls": 1,
+      "compositionCalls": 0,
+      "receiptIdentity": "complete bytes equal original E508 support abstention"
+    },
+    {
+      "job_id": "R509",
+      "adapterCalls": 2,
+      "compositionCalls": 4,
+      "receiptIdentity": "both complete receipts byte equal original E509"
+    },
+    {
+      "job_id": "R511",
+      "adapterCalls": 1,
+      "compositionCalls": 2,
+      "receiptIdentity": "complete bytes equal E511; CSV/actual figure byte equal; process resources distinct"
+    }
+  ],
+  "separateSupportDiagnostic": {
+    "job_id": "E511",
+    "imageId": "Lenard-full",
+    "caller": {
+      "path": "evidence/E511/run-diagnostic.mjs",
+      "sha256": "526f9a033e75d72bcec8e50853cee0a05c17d9d78d540d1e273a8513043fdd9e"
+    },
+    "sourceStageSha256": "0ff967ecde36cb6ed81b23bc58ef5293f60aa56639c6d896e238e912a27c717a",
+    "requestDescriptorSha256": "53e36bf685b1d1a0a7156c4ee7b9fee2131fddd1bc253bf29c31475f10e79433",
+    "completeRequestJsonSha256": "fd77e8620ca4f308ec6ae94e83a3676b3859ee35475d0fb66fbe524bfbdc80c5",
+    "requestHashTiming": "recorded by actual caller",
+    "receiptSha256": "7f008b06d5757a306d6942708c7767346e7ba73059504eb60010bb46fd57942b",
+    "adapterCalls": 1,
+    "compositionCalls": 2,
+    "operationCount": 66,
+    "scope": "New ROI-only full-frame exposed diagnostic; original E508 support abstention unchanged; R511 independently accepted exact receipt/CSV/figure after180checks."
+  },
+  "allRecordedActualProducerAndIndependentReplayCalls": {
+    "adapterCalls": 10,
+    "compositionCalls": 16,
+    "scope": "Four original producer calls/six recipes; four independent original-trial replays/six recipes; one separate full-frame diagnostic/two recipes and one independent diagnostic replay/two recipes. Synthetic engineering probes excluded. No new run by package owner."
+  }
+}

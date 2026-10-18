@@ -1,0 +1,22 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {pathToFileURL} from 'node:url';
+import path from 'node:path';
+const args=Object.fromEntries(Array.from({length:(process.argv.length-2)/2},(_,i)=>[process.argv[2+i*2].replace(/^--/,''),process.argv[3+i*2]]));
+for(const k of ['repo','protocol','source','descriptor','out','meta'])if(!args[k])throw Error('required --'+k);
+const repo=path.resolve(args.repo),sha=b=>createHash('sha256').update(b).digest('hex');
+const protocolHash='56fdd556f4ed53599de93cadb35c85d453df4edde26f0d00a087d4d4282c65f2';
+const candidatePath='work/capability-discovery/cycle-03/evidence/E506/candidate-freeze.json',candidateHash='d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626';
+function verify(){const b=readFileSync(path.join(repo,candidatePath));if(sha(b)!==candidateHash)throw Error('candidate freeze integrity mismatch');const m=JSON.parse(b);const acceptedPath=m.acceptedRecipe.path;const legacyBytes=readFileSync(path.join(repo,acceptedPath));if(sha(legacyBytes)!==m.acceptedRecipe.sha256)throw Error('legacy manifest mismatch');const legacy=JSON.parse(legacyBytes);const candidate=[...m.files,...m.retainedContractHistoryAndEvidence],old=[...legacy.files,legacy.existingGuard,...legacy.immutableSources.map(s=>({path:'experiments/capability-discovery/probes/width/'+s.file,sha256:s.sha256}))];const entries=[...candidate,...old].map(e=>{const actual=sha(readFileSync(path.join(repo,e.path)));if(actual!==e.sha256)throw Error('closure mismatch:'+e.path);return {...e,verifiedSha256:actual};});if(sha(readFileSync(args.protocol))!==protocolHash)throw Error('course declaration mismatch');return {candidateFreezeSha256:candidateHash,candidateEntries:candidate.length,legacyEntries:old.length,protocolSha256:protocolHash,entries};}
+const before=verify();
+const descriptorBytes=readFileSync(args.descriptor),sourceBytes=readFileSync(args.source);const descriptor=JSON.parse(descriptorBytes),source=JSON.parse(sourceBytes);const request={enabled:descriptor.enabled,source,roi:descriptor.roi,geometry:descriptor.geometry};
+const requestJsonSha256=sha(JSON.stringify(request));
+const {runSourcePixelRoi,preserveNonFinite}=await import(pathToFileURL(path.join(repo,'experiments/capability-discovery/source-pixels/adapter.mjs')));
+const startedAtUTC=new Date().toISOString(),start=performance.now(),cpuStart=process.cpuUsage(),memoryBefore=process.memoryUsage();
+const receipt=runSourcePixelRoi(request);
+const elapsedMs=performance.now()-start,cpu=process.cpuUsage(cpuStart),memoryAfter=process.memoryUsage();
+const after=verify(),serialized=JSON.stringify(receipt,preserveNonFinite,2)+'\n';
+writeFileSync(args.out,serialized,{flag:'wx'});
+const meta={schema:'E509-actual-node-cli-run@1',argv:process.argv.slice(2),runtime:{node:process.version,platform:process.platform,arch:process.arch},startedAtUTC,elapsedMs,cpuMicroseconds:cpu,memoryBefore,memoryAfter,processResourceUsage:process.resourceUsage(),callerSha256:sha(readFileSync(new URL(import.meta.url))),input:{descriptorSha256:sha(descriptorBytes),stagedSourceJsonSha256:sha(sourceBytes),fullSupportedRequestJsonSha256:requestJsonSha256,sourceRgbaSha256:source.provenance.rgbaSha256,sourcePngSha256:source.provenance.sourcePngSha256},output:{receiptSha256:sha(serialized),bytes:Buffer.byteLength(serialized)},verificationBefore:before,verificationAfter:after,execution:receipt.execution??null,status:receipt.status,equivalence:receipt.equivalence?.status??null,note:'One adapter invocation; paired unchanged composition calls only if support accepted. Resource observations are this process, no allocator acceleration claim.'};
+writeFileSync(args.meta,JSON.stringify(meta,null,2)+'\n',{flag:'wx'});
+process.stdout.write(JSON.stringify({status:meta.status,equivalence:meta.equivalence,execution:meta.execution,elapsedMs,receiptSha256:meta.output.receiptSha256})+'\n');

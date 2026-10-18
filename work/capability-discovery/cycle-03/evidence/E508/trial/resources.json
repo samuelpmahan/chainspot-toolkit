@@ -1,0 +1,59 @@
+{
+  "schema": "E508-producer-resources@1",
+  "node": "v24.19.0",
+  "elapsedMs": 151.8076749999999,
+  "adapterCalls": 1,
+  "compositionCalls": 0,
+  "operationsExecuted": 0,
+  "usageBefore": {
+    "userCPUTime": 537830,
+    "systemCPUTime": 339052,
+    "maxRSS": 383120,
+    "sharedMemorySize": 0,
+    "unsharedDataSize": 0,
+    "unsharedStackSize": 0,
+    "minorPageFault": 151974,
+    "majorPageFault": 0,
+    "swappedOut": 0,
+    "fsRead": 0,
+    "fsWrite": 24,
+    "ipcSent": 0,
+    "ipcReceived": 0,
+    "signalsCount": 0,
+    "voluntaryContextSwitches": 158,
+    "involuntaryContextSwitches": 3
+  },
+  "usageAfter": {
+    "userCPUTime": 658882,
+    "systemCPUTime": 375838,
+    "maxRSS": 414816,
+    "sharedMemorySize": 0,
+    "unsharedDataSize": 0,
+    "unsharedStackSize": 0,
+    "minorPageFault": 180238,
+    "majorPageFault": 0,
+    "swappedOut": 0,
+    "fsRead": 0,
+    "fsWrite": 24,
+    "ipcSent": 0,
+    "ipcReceived": 0,
+    "signalsCount": 0,
+    "voluntaryContextSwitches": 173,
+    "involuntaryContextSwitches": 4
+  },
+  "memoryBefore": {
+    "rss": 359677952,
+    "heapTotal": 186998784,
+    "heapUsed": 177897568,
+    "external": 115093430,
+    "arrayBuffers": 53874091
+  },
+  "memoryAfter": {
+    "rss": 424771584,
+    "heapTotal": 251654144,
+    "heapUsed": 242461576,
+    "external": 126689449,
+    "arrayBuffers": 65470070
+  },
+  "note": "Observed process/adapter resources only; no acceleration, allocator causality or speedup claim."
+}

@@ -1,0 +1,59 @@
+{
+  "schema": "E511-actual-process-resources@1",
+  "node": "v24.19.0",
+  "adapterCalls": 1,
+  "compositionCalls": 2,
+  "operationsExecuted": 66,
+  "elapsedMs": 4727.888487,
+  "usageBefore": {
+    "userCPUTime": 616763,
+    "systemCPUTime": 351610,
+    "maxRSS": 397044,
+    "sharedMemorySize": 0,
+    "unsharedDataSize": 0,
+    "unsharedStackSize": 0,
+    "minorPageFault": 154740,
+    "majorPageFault": 0,
+    "swappedOut": 0,
+    "fsRead": 0,
+    "fsWrite": 56,
+    "ipcSent": 0,
+    "ipcReceived": 0,
+    "signalsCount": 0,
+    "voluntaryContextSwitches": 145,
+    "involuntaryContextSwitches": 210
+  },
+  "usageAfter": {
+    "userCPUTime": 3954491,
+    "systemCPUTime": 1851843,
+    "maxRSS": 1280468,
+    "sharedMemorySize": 0,
+    "unsharedDataSize": 0,
+    "unsharedStackSize": 0,
+    "minorPageFault": 624427,
+    "majorPageFault": 0,
+    "swappedOut": 0,
+    "fsRead": 0,
+    "fsWrite": 56,
+    "ipcSent": 0,
+    "ipcReceived": 0,
+    "signalsCount": 0,
+    "voluntaryContextSwitches": 319,
+    "involuntaryContextSwitches": 641
+  },
+  "memoryBefore": {
+    "rss": 371183616,
+    "heapTotal": 186998784,
+    "heapUsed": 177883456,
+    "external": 129524263,
+    "arrayBuffers": 68301451
+  },
+  "memoryAfter": {
+    "rss": 785276928,
+    "heapTotal": 397656064,
+    "heapUsed": 392760632,
+    "external": 133642940,
+    "arrayBuffers": 94259254
+  },
+  "scope": "Single diagnostic adapter call after staged-source parse/request hashing; process maxRSS includes those earlier allocations. Full-frame ROI and source each run unchanged composition. No allocator causality or speedup claim."
+}

@@ -1,0 +1,149 @@
+{
+  "schema": "E511-compact-evidence-manifest@1",
+  "job_id": "E511",
+  "worker": "V2",
+  "files": [
+    {
+      "path": "Lenard-E511-actual.png",
+      "sha256": "e82734db4fc6c34168911031a4b2f5118c3272827dd6fe544380b686205a078d",
+      "bytes": 597577
+    },
+    {
+      "path": "REPRODUCE.txt",
+      "sha256": "c3c432dc717c044286c8d4315e72d6232ec33e3059e429f90211d99945c2b245",
+      "bytes": 2037
+    },
+    {
+      "path": "all-nine-candidates.csv",
+      "sha256": "956795255ffc77bd2edd77703c041f0f01c8cd9364b3d6585c08a2ae81b33f4b",
+      "bytes": 2408
+    },
+    {
+      "path": "analysis.json",
+      "sha256": "b87c06c1611fac9d2e3d2b47903ed897752f9bdc045431d93fd59e46514e4c10",
+      "bytes": 65085
+    },
+    {
+      "path": "analyze-render.py",
+      "sha256": "b6b621aaaa4bb597ab32a436e1df1648279299591d4bba1c92d30cd256b163a4",
+      "bytes": 9379
+    },
+    {
+      "path": "figure-inspection.json",
+      "sha256": "a3b7b0704d7571d34676a6f9902a0da49e4947ba41fb7cde0daaaeb7fe9b3310",
+      "bytes": 1604
+    },
+    {
+      "path": "finalize.py",
+      "sha256": "57fc4baf3205b5293412c7d42973a251972233d6d0942fba458c3b620e4927c3",
+      "bytes": 13184
+    },
+    {
+      "path": "freeze.py",
+      "sha256": "15f74494bfd35788a1f197dc7ab7999b52600815d63bbb992739e36a1c772b83",
+      "bytes": 4734
+    },
+    {
+      "path": "pre-run-freeze.log",
+      "sha256": "ae26b6b705622aa065a0e86ee1ca915d670cf837f6dbecd1cf8cb41a07cd4d78",
+      "bytes": 896
+    },
+    {
+      "path": "pre-run-manifest.json",
+      "sha256": "55907def1070ad17de7ff2154f431fbf4ed41e4cab9e7bdf3ee5a1cfb88496de",
+      "bytes": 1657
+    },
+    {
+      "path": "protocol.json",
+      "sha256": "c98d0965930d6d3af0af72f3037227e27bf86033d3fdec28fc815a7a33f0e2ab",
+      "bytes": 7058
+    },
+    {
+      "path": "render-initial-error.log",
+      "sha256": "dc35446fb921bc95437cab481c5678a13d3540f85dff07d6bec6368c22af56f2",
+      "bytes": 1298
+    },
+    {
+      "path": "render.log",
+      "sha256": "d7e6df29f8a130a072b44cb5ca5f2a655c0c94d9b3ebe2cfccdb5155944604e6",
+      "bytes": 337
+    },
+    {
+      "path": "request-descriptor.json",
+      "sha256": "53e36bf685b1d1a0a7156c4ee7b9fee2131fddd1bc253bf29c31475f10e79433",
+      "bytes": 3394
+    },
+    {
+      "path": "result.json",
+      "sha256": "5100f74afc640a9039f49c1a06f5ac15a0bb2b0f325d8cc7ae4f247154695df3",
+      "bytes": 9084
+    },
+    {
+      "path": "run-diagnostic.mjs",
+      "sha256": "526f9a033e75d72bcec8e50853cee0a05c17d9d78d540d1e273a8513043fdd9e",
+      "bytes": 5911
+    },
+    {
+      "path": "run.sh",
+      "sha256": "110606dc172345b1e042a8d06605c05540128653221cb1b1b1c105b45307c748",
+      "bytes": 230
+    },
+    {
+      "path": "trial/identity-after.json",
+      "sha256": "818f70db6578276654824703a41bd18e032a23c65806ef32ddf00c7ad31dbc8a",
+      "bytes": 7753
+    },
+    {
+      "path": "trial/identity-before.json",
+      "sha256": "818f70db6578276654824703a41bd18e032a23c65806ef32ddf00c7ad31dbc8a",
+      "bytes": 7753
+    },
+    {
+      "path": "trial/input-binding.json",
+      "sha256": "b0d53e803dd5702428d11bda063253e19480d57fd90cbd67fdaec9c625bd834d",
+      "bytes": 677
+    },
+    {
+      "path": "trial/receipt.json",
+      "sha256": "7f008b06d5757a306d6942708c7767346e7ba73059504eb60010bb46fd57942b",
+      "bytes": 146024
+    },
+    {
+      "path": "trial/resources.json",
+      "sha256": "3de1c97910b883fa982e08df66a008a59878f87e04473d846670b2532aa82a41",
+      "bytes": 1597
+    },
+    {
+      "path": "trial/run-binding.json",
+      "sha256": "2faaf87cb4a05b5594d4d375f67ba1df4af1d78e9b4acf77f34680f61ee862b2",
+      "bytes": 914
+    },
+    {
+      "path": "trial.log",
+      "sha256": "15ad4807a6be469e94dcba3f4ea0f49143f4c2217bcb7e963cc48cf38a24b92f",
+      "bytes": 297
+    },
+    {
+      "path": "verification.json",
+      "sha256": "1ffa150dee10c7cb01b22b55736e582ce8f5d0414ae0d09d69f094c9bca325e0",
+      "bytes": 167508
+    }
+  ],
+  "externalInputsExcluded": [
+    {
+      "role": "original PNG",
+      "platformGitRef": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "platformPath": "specimens/dev/Lenard-full.png",
+      "gitBlob": "6bb6db0704ba1697056afccb4c0a4ada0dbfa34e",
+      "pngSha256": "27ad16bcf2c075316048ec39bc5035e0ebbe260bde32140466a3010f15d75834",
+      "fullRgbaSha256": "c93a4c532da248a61e29e56bf86273e6eaee9151643bd681974a882928f50766",
+      "cropRgbaSha256": "c93a4c532da248a61e29e56bf86273e6eaee9151643bd681974a882928f50766",
+      "stagedSourceJsonSha256": "0ff967ecde36cb6ed81b23bc58ef5293f60aa56639c6d896e238e912a27c717a",
+      "unchanged": true
+    },
+    {
+      "role": "giant staged source JSON",
+      "sha256": "0ff967ecde36cb6ed81b23bc58ef5293f60aa56639c6d896e238e912a27c717a"
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "schema": "cycle03.actual-image-frozen-protocol@1",
+  "job_id": "E502",
+  "worker": "D2",
+  "status": "PROTOCOL_READY_NO_MEASUREMENTS",
+  "frozenAt": "2026-10-18",
+  "recipeSourceOnlyFreeze": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+  "source": {
+    "gitCommit": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "path": "specimens/dev/HeritagePark-full.png",
+    "gitBlob": "799879fb3a9dfcab7be373cbf74becd92aaf274a",
+    "fileSha256": "fb77ea132dd29136905088344ed35d170057dea2135e86b06f91e672bc4b2f7f",
+    "rgbaSha256": "b3dcd536b305ed92763d42633706d2f4efafce6ea74a4f91f2a98c7a78619a04",
+    "width": 1290,
+    "height": 2796,
+    "decode": "Pillow convert RGBA; no resize, filtering, alpha muting or colour adjustment",
+    "localPath": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/HeritagePark-full.png"
+  },
+  "frame": "HeritagePark-full@4925533:source-pixel-centres",
+  "coordinateConvention": "Original full PNG pixel centres are integer (x,y), x right/y down, radians clockwise in screen frame; no annotation-to-PNG transform assumed. Full-to-crop translation is (x-970,y-1120); headings, lengths and widths unchanged.",
+  "geometrySource": {
+    "id": "D2-visual-fullsource-H8-v1",
+    "kind": "fresh visual caller testimony",
+    "inspection": [
+      "original full PNG via view_image",
+      "native 640x1000 visual inspection crop at [600,1000]",
+      "native 280x270 inspection crop at [970,1120]"
+    ],
+    "historicalTestimony": [
+      {
+        "id": "testimony-readme",
+        "gitCommit": "49255331791b1245cf0f9cd699816175f94e70f2",
+        "path": "testimony/heritage/README.md",
+        "sha256": "ed3682e621b72377c302bd6d794864648eefacfb62169076a79ed407f84b1c1e",
+        "use": "caller historical testimony context only; NOT source-coordinate transfer"
+      },
+      {
+        "id": "original-annotation",
+        "gitCommit": "49255331791b1245cf0f9cd699816175f94e70f2",
+        "path": "testimony/heritage/HeritagePark-full.annotation.json",
+        "sha256": "b283326728b382285b7c09b5ae4e63a333949e6022f146016cfd94ab7a566c5b",
+        "use": "caller historical testimony context only; NOT source-coordinate transfer"
+      },
+      {
+        "id": "corrected-annotation",
+        "gitCommit": "49255331791b1245cf0f9cd699816175f94e70f2",
+        "path": "testimony/heritage/HeritagePark-full.corrected-2026-10-18.annotation.json",
+        "sha256": "c301c86905557641925a22886195aa4ffd53b79cea196e5a4d4972f938f211b7",
+        "use": "caller historical testimony context only; NOT source-coordinate transfer"
+      }
+    ],
+    "frameWarning": "Annotations identify a 1290x2115 different image hash. README annotation y-2 mapping is to historical S0 crop only; never added to full screenshot. No exact annotation->full-PNG mapping proven.",
+    "identity": "tee, number badge, hole 8 and ribbon labels are visually proposed, not accepted physical or route identity",
+    "selectedRegion": "One apparent straight translucent ribbon below visually numbered 8 badge; window deliberately ends before basket-like glyph.",
+    "trainingSelection": "Fresh white small-square centre (1030,1174) and dark rounded number-like badge centre (1047,1251), read visually from original pixels. Historical hole8 straight correction is contextual testimony only."
+  },
+  "cropRect": {
+    "x": 970,
+    "y": 1120,
+    "width": 280,
+    "height": 270
+  },
+  "crop": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/source-pixel-crop.png",
+    "fileSha256": "7e07117be19075176dd7e5a3bb1afe7f006d9d0a0ad87ca21eeea39f90da8e9d",
+    "rgbaSha256": "d81a61eb23a1ed57e83b35277b2e84713fe8e4bf24679f82218cd11842847584",
+    "resized": false,
+    "sourcePixelEquality": {
+      "verified": true,
+      "method": "RGBA byte equality to concatenated full-source rows; every pixel",
+      "pixelCount": 75600
+    },
+    "reach": "All station profile normal offsets -30..30 with 1px bilinear pad; sensor max bank36 guard normal24 and rail20.5, tangent +/-4; full training segment plus normal32/tangent5; declared crop includes these and additional margins. No clipping or resampling permitted.",
+    "requiredEnvelope": {
+      "normalReachPx": 32,
+      "stationTangentReachPx": 29,
+      "trainingTangentMarginPx": 5
+    }
+  },
+  "training": {
+    "frame": "HeritagePark-full@4925533:source-pixel-centres",
+    "segments": [
+      {
+        "tee": {
+          "xPx": 1030,
+          "yPx": 1174
+        },
+        "badge": {
+          "xPx": 1047,
+          "yPx": 1251
+        }
+      }
+    ],
+    "semanticAcceptance": "UNKNOWN"
+  },
+  "stations": [
+    {
+      "id": "H8_visual_ribbon",
+      "frame": "HeritagePark-full@4925533:source-pixel-centres",
+      "xPx": 1062,
+      "yPx": 1320,
+      "headingRad": 1.3535028958718756,
+      "t0Px": -24,
+      "t1Px": 24
+    },
+    {
+      "id": "H8_lateral_plus55",
+      "frame": "HeritagePark-full@4925533:source-pixel-centres",
+      "xPx": 1008.2933509773312,
+      "yPx": 1331.8573121218878,
+      "headingRad": 1.3535028958718756,
+      "t0Px": -24,
+      "t1Px": 24
+    },
+    {
+      "id": "H_bright_field_ground",
+      "frame": "HeritagePark-full@4925533:source-pixel-centres",
+      "xPx": 1180,
+      "yPx": 1250,
+      "headingRad": 1.3535028958718756,
+      "t0Px": -24,
+      "t1Px": 24
+    }
+  ],
+  "controls": [
+    {
+      "stationId": "H8_visual_ribbon",
+      "role": "proposed ribbon observation; not ground truth"
+    },
+    {
+      "stationId": "H8_lateral_plus55",
+      "role": "matched same-heading same-window lateral offset, +55px along normal [-sin(h),cos(h)]; visually wooded/ground texture outside proposed ribbon"
+    },
+    {
+      "stationId": "H_bright_field_ground",
+      "role": "nearby bright mown-field ground control, same heading/window; apparent organic/soil ground with mowing stripes and no visible route overlay in selected window; identity unaccepted"
+    }
+  ],
+  "localWidthBank": {
+    "frame": "HeritagePark-full@4925533:source-pixel-centres",
+    "scope": "LOCAL",
+    "valuesPx": [
+      24,
+      30,
+      36
+    ],
+    "basis": "Visual apparent ribbon breadth around 30 original source pixels, bracketed by +/-6px; historical corridorWidth30 is contextual testimony, not a measured width or calibration. All declared candidates retained; no output-driven bank expansion."
+  },
+  "edgeSearch": {
+    "latLimPx": 3,
+    "tolWidthPx": 1
+  },
+  "occluders": {
+    "frame": "HeritagePark-full@4925533:source-pixel-centres",
+    "boxes": [],
+    "basis": "No independent actual known occluder box testimony supplied in original frame. Badge/art/ground left visible; no masks invented."
+  },
+  "predeclaration": {
+    "predictedObservation": "Visual ribbon station may show two lateral brightness transitions and stronger rail/interior contrast near candidate30 than same-heading +55px wooded control. Bright field control may itself give strong or paired responses due mowing texture; any such response is retained as a specificity counterexample. Training selection may tie or choose a different candidate; it is diagnostic only.",
+    "falsifiers": [
+      "No finite positive two-edge fit at visual ribbon for all declared bank values, or weak/one-sided rail channels, falsifies the local visual paired-ribbon expectation.",
+      "Equal or stronger paired/combined channels on lateral or field controls falsify any claim that this local composition isolates the visual ribbon from these controls.",
+      "Byte mismatch, wrong original dimensions, changed PNG/hash, resizing, clipping required support, or altered geometry invalidates execution provenance."
+    ],
+    "unknowns": [
+      "semantic path/ribbon identity",
+      "training endpoint identity",
+      "renderer/AA/overlay provenance",
+      "physical width and meter scale",
+      "course accuracy and endpoint ownership",
+      "sampling uncertainty: nearest RGB sensor vs bilinear longitudinal average; no AA muting"
+    ],
+    "analysisPolicy": "Retain all candidate scores/nulls, profile counts and raw learner rows. No recentering, retuning, threshold invention, tuning after outputs, semantic acceptance, or classification. Source frame/crop equality is integrity evidence only."
+  },
+  "releaseGate": "No producer or recipe/learner/edge/sensor measurement until root next explicit packet; current declaration precedes all such measurements. Prior synthetic cases exposed, not repeated."
+}

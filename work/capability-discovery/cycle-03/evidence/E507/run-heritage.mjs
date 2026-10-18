@@ -1,0 +1,18 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {createHash} from 'node:crypto';
+const [repoPath,sourceStagePath,descriptorPath,receiptPath,resourcePath]=process.argv.slice(2);
+if(!resourcePath) throw new Error('usage: node run-heritage.mjs REPO STAGED_SOURCE_JSON REQUEST_DESCRIPTOR RECEIPT_JSON RESOURCE_JSON');
+const start=performance.now(),sha=b=>createHash('sha256').update(b).digest('hex');
+const sourceBytes=readFileSync(sourceStagePath),descriptorBytes=readFileSync(descriptorPath);
+const source=JSON.parse(sourceBytes),descriptor=JSON.parse(descriptorBytes);
+if(source.provenance.sourcePngSha256!==descriptor.source.originalPngSha256||source.provenance.rgbaSha256!==descriptor.source.fullRgbaSha256Declared)throw new Error('stager descriptor source hash mismatch');
+const request={...descriptor.requestWithoutSource,source};
+const {runSourcePixelRoi,preserveNonFinite}=await import(pathToFileURL(resolve(repoPath,'experiments/capability-discovery/source-pixels/adapter.mjs')));
+const receipt=runSourcePixelRoi(request);
+const serialized=JSON.stringify(receipt,preserveNonFinite,2)+'\n';
+writeFileSync(receiptPath,serialized,{flag:'wx'});
+const sidecar={schema:'E507-observed-execution-cost@1',node:process.version,elapsedMs:performance.now()-start,maxRssKiB:process.resourceUsage().maxRSS,compositionCalls:receipt.execution?.compositionCalls??0,operationsExecuted:receipt.operationsExecuted?.length??0,sourceStageFileSha256:sha(sourceBytes),requestDescriptorSha256:sha(descriptorBytes),receiptSha256:sha(serialized),note:'Observed caller elapsed incl JSON parse, import, actual adapter and receipt serialization; maxRSS Node process. No allocator causality or acceleration claim.'};
+writeFileSync(resourcePath,JSON.stringify(sidecar,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({status:receipt.status,reason:receipt.reason??null,support:receipt.support?.status,compositionCalls:sidecar.compositionCalls,equivalence:receipt.equivalence?.status,resource:sidecar}));

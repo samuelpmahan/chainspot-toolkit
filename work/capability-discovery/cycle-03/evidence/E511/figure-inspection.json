@@ -1,0 +1,17 @@
+{
+  "schema": "E511-actual-figure-inspection@1",
+  "job_id": "E511",
+  "worker": "V2",
+  "method": "functions.view_image direct inspection of final original PNG",
+  "figureSha256": "e82734db4fc6c34168911031a4b2f5118c3272827dd6fe544380b686205a078d",
+  "receiptSha256": "7f008b06d5757a306d6942708c7767346e7ba73059504eb60010bb46fd57942b",
+  "observations": [
+    "Title correctly identifies E511 full-frame support ablation and measurement availability.",
+    "Original frozen crop is context only; full1290x2796 computational ROI explicitly distinguished. Three fixed stations are correctly located with separate labels.",
+    "All three actual raw RGB profiles displayed with241 offsets, nT24, normal offset axes and station legend.",
+    "Table retains all nine station/29,37,45 identities with all four lane scores, combined scores, fitted widths, signed candidate-minus-midpoint and edge score. Six fits and three NULL/UNKNOWN rows match actual receipt.",
+    "Raw learner37 and every score shown diagnostically; support/two calls/66operations/zero translation/control match and original E5089NOT_EXECUTED statement match receipt and protocol.",
+    "Footer retains local bright-patch fit ambiguity, unknown width/identity, no semantic acceptance and exposed/non-heldout boundary."
+  ],
+  "renderHistory": "Initial CSV generation raised duplicate score-key error after analysis write; fixed distinct combinedScore/edgeScore names, no adapter rerun. First PNG inspected then station-label spacing and typographic spacing improved; final PNG inspected again. Raw receipt and pre-run inputs unchanged."
+}

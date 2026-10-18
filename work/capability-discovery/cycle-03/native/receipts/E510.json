@@ -1,0 +1,78 @@
+{
+  "schema": "cycle03-worker-result@1",
+  "job_id": "E510",
+  "worker": "D1",
+  "outcome": "confirmed_reuse",
+  "summary": "Rendered a legible scientific figure solely from the fixed numeric-seam receipt: full-source and crop fitted left/right edges and midpoint at explicit widths 24,30,36. The reported tiny profile roundoff difference coexists with visibly discrete fit jumps. No CV or candidate was run; this is a rendering of a recorded counterexample, with R506 pending.",
+  "input": {
+    "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/numeric-seam.json",
+    "sha256": "4515742be1bcbd3ef3949e302eb1610d39c2c63218e5382d73bf82de83d60ab5",
+    "rawCopyPath": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/numeric-seam-input.json",
+    "rawCopyByteEquality": true
+  },
+  "renderManifest": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/render-manifest.json",
+    "sha256": "c501fbe475f99930e9a35fdb7f3261e76392878f791174e0c58a8047976d983e"
+  },
+  "files": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/render_figure.py",
+      "sha256": "ba6e91afe1b1ab8194752613cf05068e6ad2485f4b6bfbff986435856522979c",
+      "bytes": 5586
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/numeric-seam-input.json",
+      "sha256": "4515742be1bcbd3ef3949e302eb1610d39c2c63218e5382d73bf82de83d60ab5",
+      "bytes": 2541
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/numeric-seam-figure.png",
+      "sha256": "8d788228f8528efd26054f9863a6190c44269c4c32b9e2c41804f8e4b51ee6f8",
+      "bytes": 365412
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/fit-table.json",
+      "sha256": "212aff8cdd4d01f4697d529ef0a96bf0f15a183ef011ec43d44bda035e302a61",
+      "bytes": 2025
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/fit-table.csv",
+      "sha256": "c76ef44f5073971d7332ab193b7c126cfd1eacbbd692526d5fb19043401d87b8",
+      "bytes": 917
+    }
+  ],
+  "receiptMetadata": {
+    "profileMaximumAbsoluteDifference": 2.5579538487363607e-13,
+    "visibleCountsEqual": true,
+    "sensorEqual": [
+      true,
+      true,
+      true
+    ],
+    "fullHash": "7c9c30b08d264196dfb875b31d116e30553dd176106d06fd00805eee6fbe5a86",
+    "cropHash": "b7f1f8d34733d8f21b609cca40481cd74dcabec9261c661c7e6f73622ddd16c6"
+  },
+  "figureInspection": {
+    "view_image": true,
+    "findings": "Legible full/crop edge intervals and midpoint dots at widths 24,30,36; table rounded to .001 px; labels/source hash and pending/UNKNOWN limits visible. No clipping or figure edits needed."
+  },
+  "validation": {
+    "inputPinHashVerified": true,
+    "tableRowsExactlyMatchReceipt": true,
+    "csvNumericRoundTripExact": true,
+    "widthBank": [
+      24,
+      30,
+      36
+    ],
+    "displayRoundingOnly": "0.001px; source JSON/CSV retain recorded numeric values"
+  },
+  "limits": [
+    "R506 independent source validation pending; no acceptance.",
+    "Reproducible recorded counterexample is a label for the producer receipt, not a claim this rendering independently replayed it.",
+    "Raw profile/scoring arithmetic and candidate execution were not recomputed.",
+    "Exact source-pixel identity and interpretation are reported producer evidence; this figure does not newly validate the source mapping.",
+    "Equivalence UNKNOWN; scientific validity UNKNOWN; semantic/route identity UNKNOWN.",
+    "Only renderer, byte-identical input copy, table and figure artifacts written in assigned scratch directory. Source and Git read only."
+  ]
+}

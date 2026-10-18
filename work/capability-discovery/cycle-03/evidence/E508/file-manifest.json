@@ -1,0 +1,97 @@
+{
+  "schema": "E508-compact-evidence-manifest@1",
+  "job_id": "E508",
+  "files": [
+    {
+      "path": "Lenard-actual-receipt.png",
+      "bytes": 482854,
+      "sha256": "b6b15381dbdd1d87d5890a9cd4958059ebca7f74e687785c5360f5cb10ef1868"
+    },
+    {
+      "path": "REPLAY.txt",
+      "bytes": 1974,
+      "sha256": "ed9213aec531a05906e29fe7e0ec84fba3c4da9b66c18ed2e4c931deeca8f86d"
+    },
+    {
+      "path": "analysis.json",
+      "bytes": 7608,
+      "sha256": "178d73ec14921bf0a5b7e8f9a003b444aaae59ea047f08d7179bedff7c93a140"
+    },
+    {
+      "path": "exposure-note.json",
+      "bytes": 1027,
+      "sha256": "86f4e40fa26ed344571c1dcfc4438c017bfd6a8a4f2c8d221e9d0812a8015cd4"
+    },
+    {
+      "path": "figure-inspection.json",
+      "bytes": 938,
+      "sha256": "6be3c3f3591cd11fec61e6b68c4524b0906203ab528a85e7ca5ce7f4b8ddb286"
+    },
+    {
+      "path": "frozen-protocol.json",
+      "bytes": 7763,
+      "sha256": "112693cce17cf30035191a6cded1829482a589bc19c3f6bbbb3320718c2c0ba2"
+    },
+    {
+      "path": "render-analysis.py",
+      "bytes": 6560,
+      "sha256": "c2b3339c49e6edef24809a9f173a35a14a352b6aa92afb28a20aad4a25d66227"
+    },
+    {
+      "path": "run-trial.mjs",
+      "bytes": 6996,
+      "sha256": "22c959895c8a37f43757e1ca36807512b97c11731791e2bc8f657f6c5842680f"
+    },
+    {
+      "path": "run.sh",
+      "bytes": 751,
+      "sha256": "0e23093c741a72b3a42aa15125533dadb347c476f6c9adfb5b0be07c32e84560"
+    },
+    {
+      "path": "trial/identity-after.json",
+      "bytes": 7204,
+      "sha256": "4ec9ba7924ea27431283edc0995db1cdc0f0a91590dc3d57df6ed8d9fe916742"
+    },
+    {
+      "path": "trial/identity-before.json",
+      "bytes": 7204,
+      "sha256": "4ec9ba7924ea27431283edc0995db1cdc0f0a91590dc3d57df6ed8d9fe916742"
+    },
+    {
+      "path": "trial/receipt.json",
+      "bytes": 3014,
+      "sha256": "d79b32c3ff08c7c30e5e02d74dab24e3f96e6447835c1906c660cc60b43c7f3a"
+    },
+    {
+      "path": "trial/request-descriptor.json",
+      "bytes": 3400,
+      "sha256": "3d52ed4de577f5c5a86ca3a0f10e5944e5a3bdf40fde51b948648fe79b87da94"
+    },
+    {
+      "path": "trial/resources.json",
+      "bytes": 1460,
+      "sha256": "bac4a32b936e82761e3ef21ce16bef153d482cc9d94b054ef1befdda809dec44"
+    },
+    {
+      "path": "trial/run-binding.json",
+      "bytes": 800,
+      "sha256": "b4691a28193f4087c9d3bb6c2a5d7be514fe6955e1f8ba84d1fed85a025defb6"
+    }
+  ],
+  "ephemeralInputsNotForPackaging": [
+    {
+      "path": "trial/staged-original-source.json",
+      "bytes": 50763147,
+      "sha256": "0ff967ecde36cb6ed81b23bc58ef5293f60aa56639c6d896e238e912a27c717a",
+      "reason": "Giant reproducible original RGBA JSON; retain hash, regenerate with frozen stager."
+    }
+  ],
+  "externalSource": {
+    "sourceId": "Lenard-full",
+    "platformGitRef": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "platformPath": "specimens/dev/Lenard-full.png",
+    "gitBlob": "6bb6db0704ba1697056afccb4c0a4ada0dbfa34e",
+    "pngSha256": "27ad16bcf2c075316048ec39bc5035e0ebbe260bde32140466a3010f15d75834",
+    "fullRgbaSha256": "c93a4c532da248a61e29e56bf86273e6eaee9151643bd681974a882928f50766"
+  }
+}

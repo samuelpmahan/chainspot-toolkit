@@ -1,0 +1,93 @@
+{
+  "schema": "cycle03-reconnaissance-result@1",
+  "job_id": "E501",
+  "worker": "D1",
+  "outcome": "confirmed_reuse",
+  "summary": "Existing frozen local composition and platform crop/decode/pixel operations cover the bounded actual-image probe. No new CV operation is needed. Annotation-to-full-image translation remains UNKNOWN without an exact crop receipt; explicit source-pixel caller geometry is usable if independently reviewed and labelled testimony.",
+  "sourceInventory": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/source-inventory.json",
+    "sha256": "47046f0aeace11ad4c02c536596749df610915707eb8c8f40958e86d8807d330"
+  },
+  "testimonyCoordinateInventory": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/testimony-coordinate-inventory.json",
+    "sha256": "5edaa7200b7c5e52a90711217e52ec9a8203b9e739eaa77136e8866d7812c3f8"
+  },
+  "exactReferences": {
+    "platform": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "algorithm": "e3e11fab5de1e4562487472585259435694d88bc",
+    "main": "37a2dba87d61262f661af70f1a22440736e61efc",
+    "labPublishedCoordinatorBinding": "3a5d37f5881fa0745de096293139daba18d8efc2",
+    "labTreeCoordinatorBinding": "a96ab4f64803eb941c9af183852bedae189c765d",
+    "recipeSourceOnlyFreeze": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+    "recipeFileSha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6"
+  },
+  "reuse": [
+    {
+      "operation": "decodeNodeFile",
+      "sourcePath": "source/provider/packages/alg/src/adapters/node.ts",
+      "semantics": "PNG.sync.read or jpeg.decode; imageId hashes source file bytes, not RGBA."
+    },
+    {
+      "operation": "S0 cropFullImage / stripChromeProposal / materializeComposite",
+      "sourcePath": "source/provider/packages/alg/src/stages/S0/clean/index.ts",
+      "semantics": "Existing crop receipt carries exact upper/lower removed rows; no run performed. sourceY=canonicalY+upperRowsRemoved."
+    },
+    {
+      "operation": "cropRaster / applyCrop",
+      "sourcePath": "source/provider/packages/alg/src/raster.ts;source/provider/packages/alg/src/g0/crop.ts",
+      "semantics": "Gray row-copy crop and placement shift; not an RGBA composition input adapter."
+    },
+    {
+      "operation": "cropWindow / encodePngRgb",
+      "sourcePath": "fg/png.mjs",
+      "semantics": "Inspection-only RGB window with rounded origin, gray out-of-bounds fill, optional overlays; drops alpha, so do not use display PNG as input evidence."
+    },
+    {
+      "operation": "runComposition",
+      "sourcePath": "experiments/capability-discovery/composition/recipe.mjs",
+      "semantics": "Already snapshots exact RGBA; verifies vendor hashes; calls lumOf, Dev72 width learner/observer, paired-rail/local-width guards, shared JS profileAt and exact-width edgePairOf. No tracker/router/recenter."
+    }
+  ],
+  "coordinateSeams": [
+    "Full nine platform PNGs are1290x2796. Annotation source hashes/dimensions differ; Lenard annotation1290x2089.",
+    "Heritage/Lenard canonicalY=annotationY\u22122; TowneLake canonicalY=annotationY\u22121. These offsets alone do not identify full-source coordinates.",
+    "Geometry must share one frame across raster, training tee/badge points, stations, occluders and LOCAL width bank. Integer crop translation must be applied exactly once.",
+    "Annotation holes provide tee/basket/bends/nominal widths; they do not supply badge centers, exact sprite masks or station headings/windows.",
+    "Heritage platform corrected2026-10-18 file makes hole8 straight; original bytes remain; algorithm e3 has original only. NorthPark/Lenard zooms have geometry baselines without testimony.",
+    "Historical BasketPoint (+0.34,+0.73) relative to sprite tip is distinct from annotation basket conventions; do not silently substitute.",
+    "Sensor nearest RGB and JS bilinear mean/mask have different semantics. Alpha is ignored by evidence; no AA muting/dilation authorized."
+  ],
+  "activeNonoverlap": {
+    "D1": "read-only source provenance/inventory",
+    "D2": "Heritage predeclaration",
+    "D3": "Lenard predeclaration",
+    "D4": "NorthPark/TowneLake predeclaration",
+    "D5": "independent adapter falsifiers/predeclaration",
+    "D6": "sole source/Git owner and bounded source-pixel adapter"
+  },
+  "alreadyExecutedExclusions": [
+    "E203 catalogue synthetic operations and E103/R103 routing/scoring counterexamples exist; no remine or duplicate algorithm.",
+    "Historical s7edge/s7main actual-image widths/paths, ledger six-full-plus-five-zoom measurements and cache demonstrations are exposed prior evidence; do not call a rerun independent.",
+    "Cycle02 ten unchanged badge-exit variants, E307 six-case/seven-CLI evaluation, E308 decimal-bank repair/R308 checks and E30916-fixture64-pose sampler/AA exploration are complete and exposed.",
+    "Historical old worker/admin/native flags in cycle02 are not live occupancy. Current cycle03 root allocation is authoritative."
+  ],
+  "referenceEvidenceCaveats": [
+    "s7main README reports Lenard35.75, current s3first-lenard.json records35.73; inventory preserves exact receipt source. Neither is a new calibrated width.",
+    "Routing support/cost/reachability/rank/selection are existing operations and cannot establish ownership; blank support can yield a selected singleton under recorded pure-call evidence.",
+    "Path smoothness, brightness, width score separation, fit offset or channel agreement cannot mint acceptance, semantic route identity, meter scale or confidence."
+  ],
+  "execution": {
+    "sourceReadsAndHashesOnly": true,
+    "algorithmExecution": false,
+    "cvChanges": false,
+    "parameterTuning": false,
+    "gitMutations": false,
+    "hhTouched": false,
+    "subagents": false
+  },
+  "limits": [
+    "No sealed corpus accessed; four full-course PNGs plus five Lenard zooms available.",
+    "No exact tracked historical Lenard S0/full-source offset found in inspected source evidence.",
+    "No local tree object for published lab hash; publication/tree identity remains coordinator-supplied."
+  ]
+}

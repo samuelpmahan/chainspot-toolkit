@@ -1,0 +1,11 @@
+{
+  "schema": "exposure-disclosure@1",
+  "job_id": "E503",
+  "worker": "D3",
+  "recordedAtUtc": "2026-10-18T09:54:42.801813+00:00",
+  "disclosure": "Before adapter candidate freeze, D3 sent proposed source hash, integer crop, station coordinates, training endpoints, LOCAL bank/settings and empty masks to D6 while asking for fixed API schema. D6 subsequently instructed geometry be kept private until candidate freeze and stated it would not inspect course files/images. D3 acknowledged exposure and requested no tuning to disclosed coordinates.",
+  "impact": "Course declaration remains premeasurement, with no producer outputs. Adapter independence from these particular coordinates cannot be claimed solely from withheld files because message-level exposure occurred. Root must account for this in review.",
+  "frozenProtocolUnchanged": true,
+  "producerOutputsExposed": false,
+  "next": "No further course details sent to D6 before candidate freeze. Root retains authority over release and independence interpretation."
+}

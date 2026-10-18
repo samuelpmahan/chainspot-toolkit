@@ -1,0 +1,20 @@
+{
+  "schema": "E509-request-schema-mapping@1",
+  "declarationSha256": "56fdd556f4ed53599de93cadb35c85d453df4edde26f0d00a087d4d4282c65f2",
+  "preserved": "Every frozen source xPx/yPx/headingRad/t0Px/t1Px, training tee/badge endpoint, LOCAL bank/order, edgeSearch, empty box list, and ROI integer origin/dimensions preserved exactly. Source frame retained, distinct crop frame appended only.",
+  "stripped": [
+    "case/source/provenance descriptive metadata carried separately in source-descriptor and geometrySource",
+    "training.apiFieldWarning (not supported geometry field)",
+    "station.role (not supported station field)",
+    "localWidthBank.chosenBeforeMeasurements and meaning (not supported bank fields)",
+    "sourceCrop hash/margin/translation explanation (not supported ROI fields; unchanged integers retained)"
+  ],
+  "added": [
+    "enabled:true required to execute authorized experiment",
+    "distinct ROI frame name with :frozen-integer-roi suffix",
+    "source object supplied exactly from frozen stage-png.py output"
+  ],
+  "parameterChanges": false,
+  "numericChanges": false,
+  "sourceAndRoiFrames": "original coordinates before adapter; integer translation by adapter only"
+}

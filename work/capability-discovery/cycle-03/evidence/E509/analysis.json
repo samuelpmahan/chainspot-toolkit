@@ -1,0 +1,1431 @@
+{
+  "schema": "E509-actual-receipt-analysis@1",
+  "declarationSha256": "56fdd556f4ed53599de93cadb35c85d453df4edde26f0d00a087d4d4282c65f2",
+  "scoresSource": "Direct unchanged original-source receipt rows; no recomputed image scores, detector or fitting call. Differences are arithmetic over already emitted raw fields.",
+  "courses": [
+    {
+      "imageId": "NorthPark-full",
+      "receiptSha256": "82ae2e1ea210f27c57ddd5c83301c4722cff1b3a22bc3bf901957b24ca88cdd2",
+      "requestDescriptorSha256": "ed4ca3f04998994dabfe4d880fbd5d247f4f3166c5888c2b9e61851cace0e600",
+      "sourcePngSha256": "7da949829ce487eba4cb0060f80589c652716239973b395c8f7fc3ceb56617f6",
+      "fullRgbaSha256": "70877c3ed1c0269161bf96db072040f4ba0106ba6a7a517f938df5b1c859ab60",
+      "cropRgbaSha256": "289f79fe1482221cda51911984878ab354f1a2e2904bc859f22c8476354125c2",
+      "support": {
+        "status": "SUPPORTED_CONSERVATIVE_ENVELOPE",
+        "method": "full training segments; station window endpoints; isotropic bounds for existing nearest/bilinear footprints; strict JS interior border",
+        "profileNormalExtentPx": 30,
+        "sensorRadiusPx": 36,
+        "envelopes": [
+          {
+            "label": "training[0].tee",
+            "minX": 29,
+            "minY": 302,
+            "maxX": 101,
+            "maxY": 374
+          },
+          {
+            "label": "training[0].badge",
+            "minX": 134,
+            "minY": 297,
+            "maxX": 206,
+            "maxY": 369
+          },
+          {
+            "label": "station:NorthPark-full-ribbon:sensor",
+            "minX": 81.5,
+            "minY": 299.5,
+            "maxX": 153.5,
+            "maxY": 371.5
+          },
+          {
+            "label": "station:NorthPark-full-ribbon:profile-window-end",
+            "minX": 69.5203735209601,
+            "minY": 306.35617268947817,
+            "maxX": 129.5203735209601,
+            "maxY": 366.35617268947817
+          },
+          {
+            "label": "station:NorthPark-full-ribbon:profile-window-end",
+            "minX": 105.4796264790399,
+            "minY": 304.64382731052183,
+            "maxX": 165.4796264790399,
+            "maxY": 364.64382731052183
+          },
+          {
+            "label": "station:NorthPark-full-offset12:sensor",
+            "minX": 82.07078179298537,
+            "minY": 311.48641765269304,
+            "maxX": 154.07078179298537,
+            "maxY": 383.48641765269304
+          },
+          {
+            "label": "station:NorthPark-full-offset12:profile-window-end",
+            "minX": 70.09115531394548,
+            "minY": 318.3425903421712,
+            "maxX": 130.09115531394548,
+            "maxY": 378.3425903421712
+          },
+          {
+            "label": "station:NorthPark-full-offset12:profile-window-end",
+            "minX": 106.05040827202527,
+            "minY": 316.63024496321486,
+            "maxX": 166.05040827202527,
+            "maxY": 376.63024496321486
+          },
+          {
+            "label": "station:NorthPark-full-bright-nonpath:sensor",
+            "minX": 88,
+            "minY": 57,
+            "maxX": 160,
+            "maxY": 129
+          },
+          {
+            "label": "station:NorthPark-full-bright-nonpath:profile-window-end",
+            "minX": 76.0203735209601,
+            "minY": 63.85617268947817,
+            "maxX": 136.0203735209601,
+            "maxY": 123.85617268947817
+          },
+          {
+            "label": "station:NorthPark-full-bright-nonpath:profile-window-end",
+            "minX": 111.9796264790399,
+            "minY": 62.14382731052183,
+            "maxX": 171.9796264790399,
+            "maxY": 122.14382731052183
+          }
+        ],
+        "failures": []
+      },
+      "execution": {
+        "compositionCalls": 2,
+        "order": [
+          "crop",
+          "original-source-frame"
+        ],
+        "cropOperationCount": 33,
+        "sourceOperationCount": 33
+      },
+      "rawLearner": {
+        "widthPx": 32,
+        "scores": [
+          {
+            "widthPx": 32,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 40,
+            "meanScore": 0,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 48,
+            "meanScore": 0,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "localWidth": {
+        "status": "UNKNOWN",
+        "widthPx": null,
+        "reasons": [
+          "explicit confidence policy required; no numerical defaults"
+        ],
+        "promoted": false
+      },
+      "semanticIdentity": {
+        "status": "UNKNOWN",
+        "reason": "brightness, paired edges and width do not establish path identity or endpoint ownership"
+      },
+      "rows": [
+        {
+          "stationId": "NorthPark-full-ribbon",
+          "role": "proposed visually straight ribbon",
+          "bankWidthPx": 32,
+          "observation": {
+            "laneOffsetsPx": [
+              -16,
+              -5.333333333333333,
+              5.333333333333333,
+              16
+            ],
+            "laneWidthPx": 10.666666666666666,
+            "leftRail": 0.23407407407407405,
+            "innerLeft": 0,
+            "innerRight": 0,
+            "rightRail": 0,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0,
+            "innerScore": 0,
+            "score": 0
+          },
+          "pairedRails": {
+            "status": "OBSERVED_CHANNELS",
+            "leftRail": 0.23407407407407405,
+            "rightRail": 0,
+            "combinedScore": 0,
+            "positiveEvidenceClaimed": false
+          },
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "profileStationCount": 36,
+          "visibleCountRange": [
+            36,
+            36
+          ]
+        },
+        {
+          "stationId": "NorthPark-full-ribbon",
+          "role": "proposed visually straight ribbon",
+          "bankWidthPx": 40,
+          "observation": {
+            "laneOffsetsPx": [
+              -20,
+              -6.666666666666667,
+              6.666666666666667,
+              20
+            ],
+            "laneWidthPx": 13.333333333333334,
+            "leftRail": 0.9170370370370377,
+            "innerLeft": 0.29728395061728463,
+            "innerRight": 0,
+            "rightRail": 0,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0,
+            "innerScore": 0,
+            "score": 0
+          },
+          "pairedRails": {
+            "status": "OBSERVED_CHANNELS",
+            "leftRail": 0.9170370370370377,
+            "rightRail": 0,
+            "combinedScore": 0,
+            "positiveEvidenceClaimed": false
+          },
+          "edgeFit": {
+            "lPx": -14.859681786288839,
+            "rPx": 27.02525541395741,
+            "cPx": 6.082786813834286,
+            "wPx": 41.88493720024625,
+            "score": 5.04219035955208,
+            "gl": 5.04219035955208,
+            "gr": 9.11580699066235
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": 6.082786813834286,
+            "candidateCenterMinusFitMidpointPx": -6.082786813834286,
+            "candidateCenterMinusFitMidpointInNominalWidths": -0.15206967034585714,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "profileStationCount": 36,
+          "visibleCountRange": [
+            36,
+            36
+          ]
+        },
+        {
+          "stationId": "NorthPark-full-ribbon",
+          "role": "proposed visually straight ribbon",
+          "bankWidthPx": 48,
+          "observation": {
+            "laneOffsetsPx": [
+              -24,
+              -8,
+              8,
+              24
+            ],
+            "laneWidthPx": 16,
+            "leftRail": 0.27555555555555566,
+            "innerLeft": 0.20839506172839478,
+            "innerRight": 0,
+            "rightRail": 0.41185185185185247,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0.27555555555555566,
+            "innerScore": 0,
+            "score": 0
+          },
+          "pairedRails": {
+            "status": "OBSERVED_CHANNELS",
+            "leftRail": 0.27555555555555566,
+            "rightRail": 0.41185185185185247,
+            "combinedScore": 0,
+            "positiveEvidenceClaimed": false
+          },
+          "edgeFit": {
+            "lPx": -19.692356094390586,
+            "rPx": 27.02525541395741,
+            "cPx": 3.666449659783412,
+            "wPx": 46.717611508348,
+            "score": 9.11580699066235,
+            "gl": 13.345980455741568,
+            "gr": 9.11580699066235
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": 3.666449659783412,
+            "candidateCenterMinusFitMidpointPx": -3.666449659783412,
+            "candidateCenterMinusFitMidpointInNominalWidths": -0.07638436791215442,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "profileStationCount": 36,
+          "visibleCountRange": [
+            36,
+            36
+          ]
+        },
+        {
+          "stationId": "NorthPark-full-offset12",
+          "role": "matched +12 px normal translation; heading/window unchanged",
+          "bankWidthPx": 32,
+          "observation": {
+            "laneOffsetsPx": [
+              -16,
+              -5.333333333333333,
+              5.333333333333333,
+              16
+            ],
+            "laneWidthPx": 10.666666666666666,
+            "leftRail": 0,
+            "innerLeft": 0,
+            "innerRight": 0,
+            "rightRail": 0.45037037037037064,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0,
+            "innerScore": 0,
+            "score": 0
+          },
+          "pairedRails": {
+            "status": "OBSERVED_CHANNELS",
+            "leftRail": 0,
+            "rightRail": 0.45037037037037064,
+            "combinedScore": 0,
+            "positiveEvidenceClaimed": false
+          },
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "profileStationCount": 36,
+          "visibleCountRange": [
+            36,
+            36
+          ]
+        },
+        {
+          "stationId": "NorthPark-full-offset12",
+          "role": "matched +12 px normal translation; heading/window unchanged",
+          "bankWidthPx": 40,
+          "observation": {
+            "laneOffsetsPx": [
+              -20,
+              -6.666666666666667,
+              6.666666666666667,
+              20
+            ],
+            "laneWidthPx": 13.333333333333334,
+            "leftRail": 0,
+            "innerLeft": 0,
+            "innerRight": 0.05308641975308635,
+            "rightRail": 0,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0,
+            "innerScore": 0,
+            "score": 0
+          },
+          "pairedRails": {
+            "status": "OBSERVED_CHANNELS",
+            "leftRail": 0,
+            "rightRail": 0,
+            "combinedScore": 0,
+            "positiveEvidenceClaimed": false
+          },
+          "edgeFit": {
+            "lPx": -26.859681786288583,
+            "rPx": 15.025255413957732,
+            "cPx": -5.917213186165426,
+            "wPx": 41.88493720024631,
+            "score": 5.042190359552137,
+            "gl": 5.042190359552137,
+            "gr": 9.115806990662179
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -5.917213186165426,
+            "candidateCenterMinusFitMidpointPx": 5.917213186165426,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0.14793032965413563,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "profileStationCount": 36,
+          "visibleCountRange": [
+            36,
+            36
+          ]
+        },
+        {
+          "stationId": "NorthPark-full-offset12",
+          "role": "matched +12 px normal translation; heading/window unchanged",
+          "bankWidthPx": 48,
+          "observation": {
+            "laneOffsetsPx": [
+              -24,
+              -8,
+              8,
+              24
+            ],
+            "laneWidthPx": 16,
+            "leftRail": 0.43999999999999995,
+            "innerLeft": 0,
+            "innerRight": 0.6799999999999998,
+            "rightRail": 0,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0,
+            "innerScore": 0,
+            "score": 0
+          },
+          "pairedRails": {
+            "status": "OBSERVED_CHANNELS",
+            "leftRail": 0.43999999999999995,
+            "rightRail": 0,
+            "combinedScore": 0,
+            "positiveEvidenceClaimed": false
+          },
+          "edgeFit": {
+            "lPx": -23.783595808584447,
+            "rPx": 25.842203795022485,
+            "cPx": 1.0293039932190187,
+            "wPx": 49.625799603606936,
+            "score": 3.426863358621631,
+            "gl": 3.426863358621631,
+            "gr": 7.501613251209108
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": 1.0293039932190187,
+            "candidateCenterMinusFitMidpointPx": -1.0293039932190187,
+            "candidateCenterMinusFitMidpointInNominalWidths": -0.02144383319206289,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "profileStationCount": 36,
+          "visibleCountRange": [
+            36,
+            36
+          ]
+        },
+        {
+          "stationId": "NorthPark-full-bright-nonpath",
+          "role": "bright non-path visual control",
+          "bankWidthPx": 32,
+          "observation": {
+            "laneOffsetsPx": [
+              -16,
+              -5.333333333333333,
+              5.333333333333333,
+              16
+            ],
+            "laneWidthPx": 10.666666666666666,
+            "leftRail": 0.18814814814814756,
+            "innerLeft": 0.31259259259259187,
+            "innerRight": 0.3140740740740733,
+            "rightRail": 0.048888888888888635,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0.048888888888888635,
+            "innerScore": 0.31259259259259187,
+            "score": 0.048888888888888635
+          },
+          "pairedRails": {
+            "status": "OBSERVED_CHANNELS",
+            "leftRail": 0.18814814814814756,
+            "rightRail": 0.048888888888888635,
+            "combinedScore": 0.048888888888888635,
+            "positiveEvidenceClaimed": false
+          },
+          "edgeFit": {
+            "lPx": -25.513702607130977,
+            "rPx": 5.501320007390523,
+            "cPx": -10.006191299870228,
+            "wPx": 31.0150226145215,
+            "score": 1.666682976918139,
+            "gl": 2.399257773583713,
+            "gr": 1.666682976918139
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -10.006191299870228,
+            "candidateCenterMinusFitMidpointPx": 10.006191299870228,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0.3126934781209446,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "profileStationCount": 36,
+          "visibleCountRange": [
+            36,
+            36
+          ]
+        },
+        {
+          "stationId": "NorthPark-full-bright-nonpath",
+          "role": "bright non-path visual control",
+          "bankWidthPx": 40,
+          "observation": {
+            "laneOffsetsPx": [
+              -20,
+              -6.666666666666667,
+              6.666666666666667,
+              20
+            ],
+            "laneWidthPx": 13.333333333333334,
+            "leftRail": 0.01037037037036978,
+            "innerLeft": 0.4079012345679012,
+            "innerRight": 0.4133333333333345,
+            "rightRail": 0.20740740740740762,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0.01037037037036978,
+            "innerScore": 0.4079012345679012,
+            "score": 0.01037037037036978
+          },
+          "pairedRails": {
+            "status": "OBSERVED_CHANNELS",
+            "leftRail": 0.01037037037036978,
+            "rightRail": 0.20740740740740762,
+            "combinedScore": 0.01037037037036978,
+            "positiveEvidenceClaimed": false
+          },
+          "edgeFit": {
+            "lPx": -16.54262330355068,
+            "rPx": 22.934911829537285,
+            "cPx": 3.196144262993302,
+            "wPx": 39.47753513308797,
+            "score": 2.742847314077892,
+            "gl": 2.742847314077892,
+            "gr": 4.1282978217290065
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": 3.196144262993302,
+            "candidateCenterMinusFitMidpointPx": -3.196144262993302,
+            "candidateCenterMinusFitMidpointInNominalWidths": -0.07990360657483256,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "profileStationCount": 36,
+          "visibleCountRange": [
+            36,
+            36
+          ]
+        },
+        {
+          "stationId": "NorthPark-full-bright-nonpath",
+          "role": "bright non-path visual control",
+          "bankWidthPx": 48,
+          "observation": {
+            "laneOffsetsPx": [
+              -24,
+              -8,
+              8,
+              24
+            ],
+            "laneWidthPx": 16,
+            "leftRail": 0,
+            "innerLeft": 0.5303703703703699,
+            "innerRight": 0.5832098765432091,
+            "rightRail": 0.31407407407407456,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0,
+            "innerScore": 0.5303703703703699,
+            "score": 0
+          },
+          "pairedRails": {
+            "status": "OBSERVED_CHANNELS",
+            "leftRail": 0,
+            "rightRail": 0.31407407407407456,
+            "combinedScore": 0,
+            "positiveEvidenceClaimed": false
+          },
+          "edgeFit": {
+            "lPx": -25.513702607130977,
+            "rPx": 22.934911829537285,
+            "cPx": -1.2893953887968461,
+            "wPx": 48.448614436668265,
+            "score": 2.399257773583713,
+            "gl": 2.399257773583713,
+            "gr": 4.1282978217290065
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -1.2893953887968461,
+            "candidateCenterMinusFitMidpointPx": 1.2893953887968461,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0.026862403933267626,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "profileStationCount": 36,
+          "visibleCountRange": [
+            36,
+            36
+          ]
+        }
+      ],
+      "matchedOffsetComparisons": [
+        {
+          "bankWidthPx": 32,
+          "expectedSameEdgesDeltaPx": 12,
+          "observedMidpointDifferencePx": null,
+          "residualFromExpectedPx": null,
+          "fitWidthChangePx": null,
+          "interpretation": "No paired baseline/control midpoint; hypothesis unavailable."
+        },
+        {
+          "bankWidthPx": 40,
+          "expectedSameEdgesDeltaPx": 12,
+          "observedMidpointDifferencePx": 11.999999999999712,
+          "residualFromExpectedPx": -2.877698079828406e-13,
+          "fitWidthChangePx": 6.394884621840902e-14,
+          "interpretation": "Raw difference retained; no tolerance/acceptance threshold applied. Different selected edges or boundary influence may break same-edge premise."
+        },
+        {
+          "bankWidthPx": 48,
+          "expectedSameEdgesDeltaPx": 12,
+          "observedMidpointDifferencePx": 2.6371456665643933,
+          "residualFromExpectedPx": -9.362854333435607,
+          "fitWidthChangePx": 2.908188095258936,
+          "interpretation": "Raw difference retained; no tolerance/acceptance threshold applied. Different selected edges or boundary influence may break same-edge premise."
+        }
+      ],
+      "sourceCropEquivalence": {
+        "status": "MATCHED_DECLARED_CONTROL",
+        "absoluteTolerance": 1e-09,
+        "differences": [],
+        "reason": "declared raw channels match within fixed numerical tolerance; no semantic or scientific equivalence follows",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      },
+      "subToleranceDifferenceAudit": {
+        "allNumericalUnequalCount": 737,
+        "maxAbsoluteDifference": 3.467448550509289e-12,
+        "tenLargest": [
+          {
+            "path": "stations.0.profile.meanLum.195",
+            "absoluteDifference": 3.467448550509289e-12,
+            "source": 154.3728973898079,
+            "crop": 154.37289738980442
+          },
+          {
+            "path": "stations.0.profile.meanLum.197",
+            "absoluteDifference": 2.8990143619012088e-12,
+            "source": 164.32118528968988,
+            "crop": 164.32118528968698
+          },
+          {
+            "path": "stations.0.profile.meanLum.192",
+            "absoluteDifference": 2.6147972675971687e-12,
+            "source": 138.14604158954978,
+            "crop": 138.1460415895524
+          },
+          {
+            "path": "stations.1.profile.meanLum.145",
+            "absoluteDifference": 2.6147972675971687e-12,
+            "source": 143.6415869388552,
+            "crop": 143.6415869388578
+          },
+          {
+            "path": "stations.0.profile.meanLum.193",
+            "absoluteDifference": 2.5295321393059567e-12,
+            "source": 143.64158693886534,
+            "crop": 143.64158693886282
+          },
+          {
+            "path": "stations.0.profile.meanLum.191",
+            "absoluteDifference": 2.4726887204451486e-12,
+            "source": 132.6725863017414,
+            "crop": 132.67258630173893
+          },
+          {
+            "path": "stations.0.profile.meanLum.194",
+            "absoluteDifference": 2.4726887204451486e-12,
+            "source": 149.07534643484942,
+            "crop": 149.0753464348519
+          },
+          {
+            "path": "stations.1.profile.meanLum.146",
+            "absoluteDifference": 2.4726887204451486e-12,
+            "source": 149.07534643484942,
+            "crop": 149.07534643484695
+          },
+          {
+            "path": "stations.1.profile.meanLum.147",
+            "absoluteDifference": 2.4726887204451486e-12,
+            "source": 154.37289738979834,
+            "crop": 154.3728973898008
+          },
+          {
+            "path": "stations.1.profile.meanLum.144",
+            "absoluteDifference": 2.4442670110147446e-12,
+            "source": 138.14604158954978,
+            "crop": 138.14604158954734
+          }
+        ],
+        "meaning": "Raw floating roundoff may exist below fixed1e-9 tolerance; exact same semantic/fit identity is not inferred."
+      },
+      "resourceSidecar": "NorthPark-full.run-sidecar.json",
+      "adapterElapsedMs": 2731.402795,
+      "processMaxRSSKiB": 819452,
+      "findings": [
+        "All learner rows mean0/visible5 tie; raw32 is diagnostic default/tie selection, not measured width.",
+        "Proposed ribbon and +12 control combined scores0 at all3 bank widths. Ribbon pairs absent at32; finite fitted pairs at40/48.",
+        "Bright non-path has finite pairs at all3 widths, positive interior channels and nonzero combined at32/40: concrete local photometry ambiguity for caller visual non-path hypothesis.",
+        "Same-edge +12 observation holds numerically at40 (delta about12), unavailable at32 and fails at48 (delta about2.637); no row chosen to replace failed controls.",
+        "Nearby road and dashed-ring/terrain are visible confounds; fitted geometry cannot be assigned to rendered ribbon."
+      ]
+    },
+    {
+      "imageId": "TowneLake-full",
+      "receiptSha256": "1784b2028b955d2ce27ed4bd96d29a450b71bc45091c424ba05bfe8dbf6c86ae",
+      "requestDescriptorSha256": "019ad72954a379c86295f445fca2f74acbbfef749d8e31443ddb3f94b414c6ad",
+      "sourcePngSha256": "da2a0ccca4e017cfa9a31d59882903c51905e57b7b21d55b513d788dcf7c18ed",
+      "fullRgbaSha256": "96c794f10e8bd8e20379d166ef09860acf6b3555a832c83cf6fd30dda7b4cced",
+      "cropRgbaSha256": "6d5730aaba3b23d25a5972ab70ad042ee63a152b1c77713c74465c8be2e3c602",
+      "support": {
+        "status": "SUPPORTED_CONSERVATIVE_ENVELOPE",
+        "method": "full training segments; station window endpoints; isotropic bounds for existing nearest/bilinear footprints; strict JS interior border",
+        "profileNormalExtentPx": 30,
+        "sensorRadiusPx": 34,
+        "envelopes": [
+          {
+            "label": "training[0].tee",
+            "minX": 85,
+            "minY": 31,
+            "maxX": 153,
+            "maxY": 99
+          },
+          {
+            "label": "training[0].badge",
+            "minX": 21,
+            "minY": 141,
+            "maxX": 89,
+            "maxY": 209
+          },
+          {
+            "label": "station:TowneLake-full-ribbon:sensor",
+            "minX": 36,
+            "minY": 110,
+            "maxX": 104,
+            "maxY": 178
+          },
+          {
+            "label": "station:TowneLake-full-ribbon:profile-window-end",
+            "minX": 49.052084409465465,
+            "minY": 98.44172992123117,
+            "maxX": 109.05208440946546,
+            "maxY": 158.44172992123117
+          },
+          {
+            "label": "station:TowneLake-full-ribbon:profile-window-end",
+            "minX": 30.947915590534535,
+            "minY": 129.55827007876883,
+            "maxX": 90.94791559053454,
+            "maxY": 189.55827007876883
+          },
+          {
+            "label": "station:TowneLake-full-offset12:sensor",
+            "minX": 25.627819947487467,
+            "minY": 103.96527706035636,
+            "maxX": 93.62781994748747,
+            "maxY": 171.96527706035636
+          },
+          {
+            "label": "station:TowneLake-full-offset12:profile-window-end",
+            "minX": 38.67990435695293,
+            "minY": 92.40700698158753,
+            "maxX": 98.67990435695293,
+            "maxY": 152.40700698158753
+          },
+          {
+            "label": "station:TowneLake-full-offset12:profile-window-end",
+            "minX": 20.575735538022002,
+            "minY": 123.52354713912518,
+            "maxX": 80.575735538022,
+            "maxY": 183.52354713912518
+          },
+          {
+            "label": "station:TowneLake-full-bright-nonpath:sensor",
+            "minX": 616,
+            "minY": 436,
+            "maxX": 684,
+            "maxY": 504
+          },
+          {
+            "label": "station:TowneLake-full-bright-nonpath:profile-window-end",
+            "minX": 629.0520844094655,
+            "minY": 424.4417299212314,
+            "maxX": 689.0520844094655,
+            "maxY": 484.4417299212314
+          },
+          {
+            "label": "station:TowneLake-full-bright-nonpath:profile-window-end",
+            "minX": 610.9479155905345,
+            "minY": 455.5582700787686,
+            "maxX": 670.9479155905345,
+            "maxY": 515.5582700787686
+          }
+        ],
+        "failures": []
+      },
+      "execution": {
+        "compositionCalls": 2,
+        "order": [
+          "crop",
+          "original-source-frame"
+        ],
+        "cropOperationCount": 33,
+        "sourceOperationCount": 33
+      },
+      "rawLearner": {
+        "widthPx": 45,
+        "scores": [
+          {
+            "widthPx": 29,
+            "meanScore": 0.0705185185185185,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 37,
+            "meanScore": 0.09125925925925937,
+            "visibleSamples": 5
+          },
+          {
+            "widthPx": 45,
+            "meanScore": 0.22192592592592578,
+            "visibleSamples": 5
+          }
+        ]
+      },
+      "localWidth": {
+        "status": "UNKNOWN",
+        "widthPx": null,
+        "reasons": [
+          "explicit confidence policy required; no numerical defaults"
+        ],
+        "promoted": false
+      },
+      "semanticIdentity": {
+        "status": "UNKNOWN",
+        "reason": "brightness, paired edges and width do not establish path identity or endpoint ownership"
+      },
+      "rows": [
+        {
+          "stationId": "TowneLake-full-ribbon",
+          "role": "proposed visually straight ribbon",
+          "bankWidthPx": 29,
+          "observation": {
+            "laneOffsetsPx": [
+              -14.5,
+              -4.833333333333333,
+              4.833333333333333,
+              14.5
+            ],
+            "laneWidthPx": 9.666666666666666,
+            "leftRail": 0.44740740740740753,
+            "innerLeft": 1,
+            "innerRight": 0.7209876543209879,
+            "rightRail": 0.07259259259259225,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0.07259259259259225,
+            "innerScore": 0.7209876543209879,
+            "score": 0.07259259259259225
+          },
+          "pairedRails": {
+            "status": "OBSERVED_CHANNELS",
+            "leftRail": 0.44740740740740753,
+            "rightRail": 0.07259259259259225,
+            "combinedScore": 0.07259259259259225,
+            "positiveEvidenceClaimed": false
+          },
+          "edgeFit": {
+            "lPx": -22.94892573888335,
+            "rPx": 6.593976905614753,
+            "cPx": -8.177474416634299,
+            "wPx": 29.542902644498103,
+            "score": 2.3927887775717522,
+            "gl": 2.6362714530650635,
+            "gr": 2.3927887775717522
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -8.177474416634299,
+            "candidateCenterMinusFitMidpointPx": 8.177474416634299,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0.28198187643566547,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "profileStationCount": 36,
+          "visibleCountRange": [
+            36,
+            36
+          ]
+        },
+        {
+          "stationId": "TowneLake-full-ribbon",
+          "role": "proposed visually straight ribbon",
+          "bankWidthPx": 37,
+          "observation": {
+            "laneOffsetsPx": [
+              -18.5,
+              -6.166666666666667,
+              6.166666666666667,
+              18.5
+            ],
+            "laneWidthPx": 12.333333333333334,
+            "leftRail": 0.7659259259259262,
+            "innerLeft": 1,
+            "innerRight": 1,
+            "rightRail": 0.7792592592592589,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0.7659259259259262,
+            "innerScore": 1,
+            "score": 0.7659259259259262
+          },
+          "pairedRails": {
+            "status": "OBSERVED_CHANNELS",
+            "leftRail": 0.7659259259259262,
+            "rightRail": 0.7792592592592589,
+            "combinedScore": 0.7659259259259262,
+            "positiveEvidenceClaimed": false
+          },
+          "edgeFit": {
+            "lPx": -16.837781825427925,
+            "rPx": 19.978694515051238,
+            "cPx": 1.5704563448116566,
+            "wPx": 36.81647634047916,
+            "score": 11.121918267989571,
+            "gl": 11.121918267989571,
+            "gr": 13.000707694060708
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": 1.5704563448116566,
+            "candidateCenterMinusFitMidpointPx": -1.5704563448116566,
+            "candidateCenterMinusFitMidpointInNominalWidths": -0.04244476607599072,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "profileStationCount": 36,
+          "visibleCountRange": [
+            36,
+            36
+          ]
+        },
+        {
+          "stationId": "TowneLake-full-ribbon",
+          "role": "proposed visually straight ribbon",
+          "bankWidthPx": 45,
+          "observation": {
+            "laneOffsetsPx": [
+              -22.5,
+              -7.5,
+              7.5,
+              22.5
+            ],
+            "laneWidthPx": 15,
+            "leftRail": 0.16592592592592598,
+            "innerLeft": 1,
+            "innerRight": 0.9180246913580242,
+            "rightRail": 0.5688888888888888,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0.16592592592592598,
+            "innerScore": 0.9180246913580242,
+            "score": 0.16592592592592598
+          },
+          "pairedRails": {
+            "status": "OBSERVED_CHANNELS",
+            "leftRail": 0.16592592592592598,
+            "rightRail": 0.5688888888888888,
+            "combinedScore": 0.16592592592592598,
+            "positiveEvidenceClaimed": false
+          },
+          "edgeFit": {
+            "lPx": -22.94892573888335,
+            "rPx": 19.978694515051238,
+            "cPx": -1.485115611916056,
+            "wPx": 42.92762025393459,
+            "score": 2.6362714530650635,
+            "gl": 2.6362714530650635,
+            "gr": 13.000707694060708
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -1.485115611916056,
+            "candidateCenterMinusFitMidpointPx": 1.485115611916056,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0.03300256915369013,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "profileStationCount": 36,
+          "visibleCountRange": [
+            36,
+            36
+          ]
+        },
+        {
+          "stationId": "TowneLake-full-offset12",
+          "role": "matched +12 px normal translation; heading/window unchanged",
+          "bankWidthPx": 29,
+          "observation": {
+            "laneOffsetsPx": [
+              -14.5,
+              -4.833333333333333,
+              4.833333333333333,
+              14.5
+            ],
+            "laneWidthPx": 9.666666666666666,
+            "leftRail": 0.005925925925925589,
+            "innerLeft": 0.4111111111111114,
+            "innerRight": 0,
+            "rightRail": 0,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0,
+            "innerScore": 0,
+            "score": 0
+          },
+          "pairedRails": {
+            "status": "OBSERVED_CHANNELS",
+            "leftRail": 0.005925925925925589,
+            "rightRail": 0,
+            "combinedScore": 0,
+            "positiveEvidenceClaimed": false
+          },
+          "edgeFit": {
+            "lPx": -28.386254898180944,
+            "rPx": -1.1245563712133588,
+            "cPx": -14.755405634697151,
+            "wPx": 27.261698526967585,
+            "score": 1.7020305145067027,
+            "gl": 10.861284465884125,
+            "gr": 1.7020305145067027
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -14.755405634697151,
+            "candidateCenterMinusFitMidpointPx": 14.755405634697151,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0.5088070908516259,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "profileStationCount": 36,
+          "visibleCountRange": [
+            36,
+            36
+          ]
+        },
+        {
+          "stationId": "TowneLake-full-offset12",
+          "role": "matched +12 px normal translation; heading/window unchanged",
+          "bankWidthPx": 37,
+          "observation": {
+            "laneOffsetsPx": [
+              -18.5,
+              -6.166666666666667,
+              6.166666666666667,
+              18.5
+            ],
+            "laneWidthPx": 12.333333333333334,
+            "leftRail": 0.23851851851851885,
+            "innerLeft": 0.4945679012345686,
+            "innerRight": 0,
+            "rightRail": 0,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0,
+            "innerScore": 0,
+            "score": 0
+          },
+          "pairedRails": {
+            "status": "OBSERVED_CHANNELS",
+            "leftRail": 0.23851851851851885,
+            "rightRail": 0,
+            "combinedScore": 0,
+            "positiveEvidenceClaimed": false
+          },
+          "edgeFit": {
+            "lPx": -28.386254898180944,
+            "rPx": 7.978694515051321,
+            "cPx": -10.203780191564812,
+            "wPx": 36.36494941323227,
+            "score": 10.861284465884125,
+            "gl": 10.861284465884125,
+            "gr": 13.000707694060793
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -10.203780191564812,
+            "candidateCenterMinusFitMidpointPx": 10.203780191564812,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0.2757778430152652,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "profileStationCount": 36,
+          "visibleCountRange": [
+            36,
+            36
+          ]
+        },
+        {
+          "stationId": "TowneLake-full-offset12",
+          "role": "matched +12 px normal translation; heading/window unchanged",
+          "bankWidthPx": 45,
+          "observation": {
+            "laneOffsetsPx": [
+              -22.5,
+              -7.5,
+              7.5,
+              22.5
+            ],
+            "laneWidthPx": 15,
+            "leftRail": 0,
+            "innerLeft": 0.8614814814814815,
+            "innerRight": 0,
+            "rightRail": 0.053333333333333774,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0,
+            "innerScore": 0,
+            "score": 0
+          },
+          "pairedRails": {
+            "status": "OBSERVED_CHANNELS",
+            "leftRail": 0,
+            "rightRail": 0.053333333333333774,
+            "combinedScore": 0,
+            "positiveEvidenceClaimed": false
+          },
+          "edgeFit": {
+            "lPx": -28.386254898180944,
+            "rPx": 15.296393615463211,
+            "cPx": -6.544930641358866,
+            "wPx": 43.68264851364415,
+            "score": 1.4189612833170884,
+            "gl": 10.861284465884125,
+            "gr": 1.4189612833170884
+          },
+          "midpoint": {
+            "status": "OBSERVED_CHANNELS",
+            "fitMidpointNormalOffsetPx": -6.544930641358866,
+            "candidateCenterMinusFitMidpointPx": 6.544930641358866,
+            "candidateCenterMinusFitMidpointInNominalWidths": 0.14544290314130814,
+            "denominator": "explicit candidate width; not calibrated width",
+            "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+          },
+          "profileStationCount": 36,
+          "visibleCountRange": [
+            36,
+            36
+          ]
+        },
+        {
+          "stationId": "TowneLake-full-bright-nonpath",
+          "role": "bright non-path visual control",
+          "bankWidthPx": 29,
+          "observation": {
+            "laneOffsetsPx": [
+              -14.5,
+              -4.833333333333333,
+              4.833333333333333,
+              14.5
+            ],
+            "laneWidthPx": 9.666666666666666,
+            "leftRail": 0,
+            "innerLeft": 0,
+            "innerRight": 0,
+            "rightRail": 0.09481481481481448,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0,
+            "innerScore": 0,
+            "score": 0
+          },
+          "pairedRails": {
+            "status": "OBSERVED_CHANNELS",
+            "leftRail": 0,
+            "rightRail": 0.09481481481481448,
+            "combinedScore": 0,
+            "positiveEvidenceClaimed": false
+          },
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "profileStationCount": 36,
+          "visibleCountRange": [
+            36,
+            36
+          ]
+        },
+        {
+          "stationId": "TowneLake-full-bright-nonpath",
+          "role": "bright non-path visual control",
+          "bankWidthPx": 37,
+          "observation": {
+            "laneOffsetsPx": [
+              -18.5,
+              -6.166666666666667,
+              6.166666666666667,
+              18.5
+            ],
+            "laneWidthPx": 12.333333333333334,
+            "leftRail": 0,
+            "innerLeft": 0,
+            "innerRight": 0,
+            "rightRail": 0.034074074074073715,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0,
+            "innerScore": 0,
+            "score": 0
+          },
+          "pairedRails": {
+            "status": "OBSERVED_CHANNELS",
+            "leftRail": 0,
+            "rightRail": 0.034074074074073715,
+            "combinedScore": 0,
+            "positiveEvidenceClaimed": false
+          },
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "profileStationCount": 36,
+          "visibleCountRange": [
+            36,
+            36
+          ]
+        },
+        {
+          "stationId": "TowneLake-full-bright-nonpath",
+          "role": "bright non-path visual control",
+          "bankWidthPx": 45,
+          "observation": {
+            "laneOffsetsPx": [
+              -22.5,
+              -7.5,
+              7.5,
+              22.5
+            ],
+            "laneWidthPx": 15,
+            "leftRail": 0,
+            "innerLeft": 0,
+            "innerRight": 0,
+            "rightRail": 0,
+            "leftRailOccluded": false,
+            "innerLeftOccluded": false,
+            "innerRightOccluded": false,
+            "rightRailOccluded": false,
+            "railMode": "paired",
+            "railScore": 0,
+            "innerScore": 0,
+            "score": 0
+          },
+          "pairedRails": {
+            "status": "OBSERVED_CHANNELS",
+            "leftRail": 0,
+            "rightRail": 0,
+            "combinedScore": 0,
+            "positiveEvidenceClaimed": false
+          },
+          "edgeFit": null,
+          "midpoint": {
+            "status": "UNKNOWN",
+            "reason": "no finite positive two-edge fit in declared profile window"
+          },
+          "profileStationCount": 36,
+          "visibleCountRange": [
+            36,
+            36
+          ]
+        }
+      ],
+      "matchedOffsetComparisons": [
+        {
+          "bankWidthPx": 29,
+          "expectedSameEdgesDeltaPx": 12,
+          "observedMidpointDifferencePx": 6.577931218062853,
+          "residualFromExpectedPx": -5.422068781937147,
+          "fitWidthChangePx": -2.2812041175305175,
+          "interpretation": "Raw difference retained; no tolerance/acceptance threshold applied. Different selected edges or boundary influence may break same-edge premise."
+        },
+        {
+          "bankWidthPx": 37,
+          "expectedSameEdgesDeltaPx": 12,
+          "observedMidpointDifferencePx": 11.774236536376469,
+          "residualFromExpectedPx": -0.22576346362353128,
+          "fitWidthChangePx": -0.4515269272468956,
+          "interpretation": "Raw difference retained; no tolerance/acceptance threshold applied. Different selected edges or boundary influence may break same-edge premise."
+        },
+        {
+          "bankWidthPx": 45,
+          "expectedSameEdgesDeltaPx": 12,
+          "observedMidpointDifferencePx": 5.05981502944281,
+          "residualFromExpectedPx": -6.94018497055719,
+          "fitWidthChangePx": 0.7550282597095617,
+          "interpretation": "Raw difference retained; no tolerance/acceptance threshold applied. Different selected edges or boundary influence may break same-edge premise."
+        }
+      ],
+      "sourceCropEquivalence": {
+        "status": "MATCHED_DECLARED_CONTROL",
+        "absoluteTolerance": 1e-09,
+        "differences": [],
+        "reason": "declared raw channels match within fixed numerical tolerance; no semantic or scientific equivalence follows",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      },
+      "subToleranceDifferenceAudit": {
+        "allNumericalUnequalCount": 703,
+        "maxAbsoluteDifference": 9.805489753489383e-13,
+        "tenLargest": [
+          {
+            "path": "stations.0.profile.meanLum.200",
+            "absoluteDifference": 9.805489753489383e-13,
+            "source": 95.152340582261,
+            "crop": 95.15234058226002
+          },
+          {
+            "path": "stations.1.candidates.0.edgeFit.wPx",
+            "absoluteDifference": 9.308109838457312e-13,
+            "source": 27.261698526967585,
+            "crop": 27.261698526968516
+          },
+          {
+            "path": "stations.1.candidates.0.edgeFit.rPx",
+            "absoluteDifference": 9.179323967600794e-13,
+            "source": -1.1245563712133588,
+            "crop": -1.124556371212441
+          },
+          {
+            "path": "stations.0.candidates.2.edgeFit.wPx",
+            "absoluteDifference": 8.810729923425242e-13,
+            "source": 42.92762025393459,
+            "crop": 42.92762025393547
+          },
+          {
+            "path": "stations.1.profile.meanLum.7",
+            "absoluteDifference": 8.810729923425242e-13,
+            "source": 136.23107351927604,
+            "crop": 136.23107351927516
+          },
+          {
+            "path": "stations.0.profile.meanLum.55",
+            "absoluteDifference": 8.242295734817162e-13,
+            "source": 136.23107351927604,
+            "crop": 136.2310735192752
+          },
+          {
+            "path": "stations.0.profile.meanLum.196",
+            "absoluteDifference": 8.100187187665142e-13,
+            "source": 107.5641259712523,
+            "crop": 107.56412597125149
+          },
+          {
+            "path": "stations.0.profile.meanLum.51",
+            "absoluteDifference": 7.815970093361102e-13,
+            "source": 124.93593881043456,
+            "crop": 124.93593881043378
+          },
+          {
+            "path": "stations.1.profile.meanLum.3",
+            "absoluteDifference": 7.105427357601002e-13,
+            "source": 124.93593881043459,
+            "crop": 124.93593881043388
+          },
+          {
+            "path": "stations.0.candidates.0.edgeFit.lPx",
+            "absoluteDifference": 6.892264536872972e-13,
+            "source": -22.94892573888335,
+            "crop": -22.94892573888404
+          }
+        ],
+        "meaning": "Raw floating roundoff may exist below fixed1e-9 tolerance; exact same semantic/fit identity is not inferred."
+      },
+      "resourceSidecar": "TowneLake-full.run-sidecar.json",
+      "adapterElapsedMs": 2075.845169,
+      "processMaxRSSKiB": 836648,
+      "findings": [
+        "Learner raw45 mean.221926 exceeds37(.091259)/29(.070519), despite strongest proposed-ribbon fixed sensor at37(.765926); no width calibration follows.",
+        "Ribbon finite pairs all3 widths; offset combined scores0 all3 while paired profiles remain finite.",
+        "Bright non-path combined0 and no finite pair at any bank width; midpoint remains UNKNOWN, never zero.",
+        "Same-edge expected +12 delta is not exact for any row: about6.578/11.774/5.060 at29/37/45. Cropping/finite profile reach, terrain and peak selection can alter selected edges; no followup tuning.",
+        "At offset profile some left fits near -28.386px profile edge are retained without a boundary-safety claim."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,947 @@
+{
+  "schema": "D5-source-pixel-oracles@1",
+  "job_id": "E505",
+  "worker": "D5",
+  "candidateRead": false,
+  "candidateExecuted": false,
+  "fixture": {
+    "width": 7,
+    "height": 5,
+    "sourceFiles": [
+      {
+        "path": "oracle-rgba-level0.png",
+        "sourceFileSha256": "233224d4224e67ced828c8aa1ea098ba676469c9705a64a76b778f74085322fb"
+      },
+      {
+        "path": "oracle-rgba-level9.png",
+        "sourceFileSha256": "15bff03cc1d6dad28c4ba9baa4fcd9fbfbaac6717bc39a556dfff9b1e3f5b162"
+      }
+    ],
+    "decodedRgbaSha256": "f09bf993c3e2a2d18680fa77aa494728d670d5167d56c957b3e28674058b57ae",
+    "rgba": [
+      3,
+      5,
+      9,
+      0,
+      20,
+      76,
+      22,
+      1,
+      37,
+      147,
+      35,
+      127,
+      54,
+      218,
+      48,
+      254,
+      71,
+      33,
+      61,
+      255,
+      88,
+      104,
+      74,
+      0,
+      105,
+      175,
+      87,
+      1,
+      32,
+      16,
+      56,
+      127,
+      49,
+      87,
+      69,
+      254,
+      66,
+      158,
+      82,
+      255,
+      83,
+      229,
+      95,
+      0,
+      100,
+      44,
+      108,
+      1,
+      117,
+      115,
+      121,
+      127,
+      134,
+      186,
+      134,
+      254,
+      61,
+      27,
+      103,
+      255,
+      78,
+      98,
+      116,
+      0,
+      95,
+      169,
+      129,
+      1,
+      112,
+      240,
+      142,
+      127,
+      129,
+      55,
+      155,
+      254,
+      146,
+      126,
+      168,
+      255,
+      163,
+      197,
+      181,
+      0,
+      90,
+      38,
+      150,
+      1,
+      107,
+      109,
+      163,
+      127,
+      124,
+      180,
+      176,
+      254,
+      141,
+      251,
+      189,
+      255,
+      158,
+      66,
+      202,
+      0,
+      175,
+      137,
+      215,
+      1,
+      192,
+      208,
+      228,
+      127,
+      119,
+      49,
+      197,
+      254,
+      136,
+      120,
+      210,
+      255,
+      153,
+      191,
+      223,
+      0,
+      170,
+      6,
+      236,
+      1,
+      187,
+      77,
+      249,
+      127,
+      204,
+      148,
+      6,
+      254,
+      221,
+      219,
+      19,
+      255
+    ],
+    "note": "Both files decode identically; source hash and decoded hash have different referents. Hidden RGB under alpha0 must remain exact."
+  },
+  "crops": [
+    {
+      "id": "identity",
+      "crop": {
+        "x": 0,
+        "y": 0,
+        "width": 7,
+        "height": 5
+      },
+      "width": 7,
+      "height": 5,
+      "rgba": [
+        3,
+        5,
+        9,
+        0,
+        20,
+        76,
+        22,
+        1,
+        37,
+        147,
+        35,
+        127,
+        54,
+        218,
+        48,
+        254,
+        71,
+        33,
+        61,
+        255,
+        88,
+        104,
+        74,
+        0,
+        105,
+        175,
+        87,
+        1,
+        32,
+        16,
+        56,
+        127,
+        49,
+        87,
+        69,
+        254,
+        66,
+        158,
+        82,
+        255,
+        83,
+        229,
+        95,
+        0,
+        100,
+        44,
+        108,
+        1,
+        117,
+        115,
+        121,
+        127,
+        134,
+        186,
+        134,
+        254,
+        61,
+        27,
+        103,
+        255,
+        78,
+        98,
+        116,
+        0,
+        95,
+        169,
+        129,
+        1,
+        112,
+        240,
+        142,
+        127,
+        129,
+        55,
+        155,
+        254,
+        146,
+        126,
+        168,
+        255,
+        163,
+        197,
+        181,
+        0,
+        90,
+        38,
+        150,
+        1,
+        107,
+        109,
+        163,
+        127,
+        124,
+        180,
+        176,
+        254,
+        141,
+        251,
+        189,
+        255,
+        158,
+        66,
+        202,
+        0,
+        175,
+        137,
+        215,
+        1,
+        192,
+        208,
+        228,
+        127,
+        119,
+        49,
+        197,
+        254,
+        136,
+        120,
+        210,
+        255,
+        153,
+        191,
+        223,
+        0,
+        170,
+        6,
+        236,
+        1,
+        187,
+        77,
+        249,
+        127,
+        204,
+        148,
+        6,
+        254,
+        221,
+        219,
+        19,
+        255
+      ],
+      "cropRgbaSha256": "f09bf993c3e2a2d18680fa77aa494728d670d5167d56c957b3e28674058b57ae",
+      "law": "dst[4*(j*width+i)+c] = src[4*((y+j)*7+x+i)+c] for c=0..3"
+    },
+    {
+      "id": "interior-alpha",
+      "crop": {
+        "x": 2,
+        "y": 1,
+        "width": 3,
+        "height": 3
+      },
+      "width": 3,
+      "height": 3,
+      "rgba": [
+        66,
+        158,
+        82,
+        255,
+        83,
+        229,
+        95,
+        0,
+        100,
+        44,
+        108,
+        1,
+        95,
+        169,
+        129,
+        1,
+        112,
+        240,
+        142,
+        127,
+        129,
+        55,
+        155,
+        254,
+        124,
+        180,
+        176,
+        254,
+        141,
+        251,
+        189,
+        255,
+        158,
+        66,
+        202,
+        0
+      ],
+      "cropRgbaSha256": "7acb39e3928cecafe3deb38a95baff44de8c0bb450fc14ddffd45c67bb2cb507",
+      "law": "dst[4*(j*width+i)+c] = src[4*((y+j)*7+x+i)+c] for c=0..3"
+    },
+    {
+      "id": "top-left-one",
+      "crop": {
+        "x": 0,
+        "y": 0,
+        "width": 1,
+        "height": 1
+      },
+      "width": 1,
+      "height": 1,
+      "rgba": [
+        3,
+        5,
+        9,
+        0
+      ],
+      "cropRgbaSha256": "1868bb0e3046b695eb294e8937deedcc7a14d1a6b6e07e21555e9960cec71301",
+      "law": "dst[4*(j*width+i)+c] = src[4*((y+j)*7+x+i)+c] for c=0..3"
+    },
+    {
+      "id": "bottom-right-one",
+      "crop": {
+        "x": 6,
+        "y": 4,
+        "width": 1,
+        "height": 1
+      },
+      "width": 1,
+      "height": 1,
+      "rgba": [
+        221,
+        219,
+        19,
+        255
+      ],
+      "cropRgbaSha256": "4c6dcdf745ce0dfabcb6c98942636fb8f82ef37a7ee5663ca374e90a5964823e",
+      "law": "dst[4*(j*width+i)+c] = src[4*((y+j)*7+x+i)+c] for c=0..3"
+    },
+    {
+      "id": "right-bottom-touch",
+      "crop": {
+        "x": 4,
+        "y": 2,
+        "width": 3,
+        "height": 3
+      },
+      "width": 3,
+      "height": 3,
+      "rgba": [
+        129,
+        55,
+        155,
+        254,
+        146,
+        126,
+        168,
+        255,
+        163,
+        197,
+        181,
+        0,
+        158,
+        66,
+        202,
+        0,
+        175,
+        137,
+        215,
+        1,
+        192,
+        208,
+        228,
+        127,
+        187,
+        77,
+        249,
+        127,
+        204,
+        148,
+        6,
+        254,
+        221,
+        219,
+        19,
+        255
+      ],
+      "cropRgbaSha256": "58800b2a433136ac8c5a112d9dbd01d37b0896e20a75b053ac24e26d9a96af34",
+      "law": "dst[4*(j*width+i)+c] = src[4*((y+j)*7+x+i)+c] for c=0..3"
+    },
+    {
+      "id": "one-row",
+      "crop": {
+        "x": 0,
+        "y": 4,
+        "width": 7,
+        "height": 1
+      },
+      "width": 7,
+      "height": 1,
+      "rgba": [
+        119,
+        49,
+        197,
+        254,
+        136,
+        120,
+        210,
+        255,
+        153,
+        191,
+        223,
+        0,
+        170,
+        6,
+        236,
+        1,
+        187,
+        77,
+        249,
+        127,
+        204,
+        148,
+        6,
+        254,
+        221,
+        219,
+        19,
+        255
+      ],
+      "cropRgbaSha256": "fed1cfd12784808773ab61dc468ced2a52cb4a7be85c98a27fb40412c68abbf2",
+      "law": "dst[4*(j*width+i)+c] = src[4*((y+j)*7+x+i)+c] for c=0..3"
+    },
+    {
+      "id": "one-column",
+      "crop": {
+        "x": 6,
+        "y": 0,
+        "width": 1,
+        "height": 5
+      },
+      "width": 1,
+      "height": 5,
+      "rgba": [
+        105,
+        175,
+        87,
+        1,
+        134,
+        186,
+        134,
+        254,
+        163,
+        197,
+        181,
+        0,
+        192,
+        208,
+        228,
+        127,
+        221,
+        219,
+        19,
+        255
+      ],
+      "cropRgbaSha256": "305bb76788f6e52d1554c5b7f6be313fc877009eaeec57d0c9a825fea181b6bd",
+      "law": "dst[4*(j*width+i)+c] = src[4*((y+j)*7+x+i)+c] for c=0..3"
+    }
+  ],
+  "geometry": {
+    "crop": {
+      "x": 2,
+      "y": 1,
+      "width": 3,
+      "height": 3
+    },
+    "source": {
+      "frame": "full-frame-integer-centers",
+      "training": {
+        "frame": "full-frame-integer-centers",
+        "segments": [
+          {
+            "tee": {
+              "xPx": 2.25,
+              "yPx": 1.5
+            },
+            "badge": {
+              "xPx": 4.75,
+              "yPx": 3.25
+            }
+          }
+        ]
+      },
+      "stations": [
+        {
+          "id": "fractional",
+          "frame": "full-frame-integer-centers",
+          "xPx": 3.25,
+          "yPx": 2.5,
+          "headingRad": 0.731,
+          "t0Px": -0.25,
+          "t1Px": 2.75
+        },
+        {
+          "id": "vertical",
+          "frame": "full-frame-integer-centers",
+          "xPx": 4,
+          "yPx": 3,
+          "headingRad": 1.5707963267948966,
+          "t0Px": -1,
+          "t1Px": 1
+        }
+      ],
+      "occluders": {
+        "frame": "full-frame-integer-centers",
+        "boxes": [
+          {
+            "bboxX": 1.25,
+            "bboxY": 0.5,
+            "bboxW": 3.5,
+            "bboxH": 2.25
+          },
+          {
+            "bboxX": -1,
+            "bboxY": 4,
+            "bboxW": 2,
+            "bboxH": 0
+          },
+          {
+            "bboxX": 6.5,
+            "bboxY": 4.5,
+            "bboxW": 1,
+            "bboxH": 1
+          }
+        ]
+      },
+      "localWidthBank": {
+        "frame": "full-frame-integer-centers",
+        "scope": "LOCAL",
+        "valuesPx": [
+          2.5,
+          3.01
+        ]
+      },
+      "edgeSearch": {
+        "latLimPx": 1.25,
+        "tolWidthPx": 0.125
+      }
+    },
+    "expected": {
+      "frame": "crop-frame",
+      "training": {
+        "frame": "crop-frame",
+        "segments": [
+          {
+            "tee": {
+              "xPx": 0.25,
+              "yPx": 0.5
+            },
+            "badge": {
+              "xPx": 2.75,
+              "yPx": 2.25
+            }
+          }
+        ]
+      },
+      "stations": [
+        {
+          "id": "fractional",
+          "frame": "crop-frame",
+          "xPx": 1.25,
+          "yPx": 1.5,
+          "headingRad": 0.731,
+          "t0Px": -0.25,
+          "t1Px": 2.75
+        },
+        {
+          "id": "vertical",
+          "frame": "crop-frame",
+          "xPx": 2,
+          "yPx": 2,
+          "headingRad": 1.5707963267948966,
+          "t0Px": -1,
+          "t1Px": 1
+        }
+      ],
+      "occluders": {
+        "frame": "crop-frame",
+        "boxes": [
+          {
+            "bboxX": -0.75,
+            "bboxY": -0.5,
+            "bboxW": 3.5,
+            "bboxH": 2.25
+          },
+          {
+            "bboxX": -3,
+            "bboxY": 3,
+            "bboxW": 2,
+            "bboxH": 0
+          },
+          {
+            "bboxX": 4.5,
+            "bboxY": 3.5,
+            "bboxW": 1,
+            "bboxH": 1
+          }
+        ]
+      },
+      "localWidthBank": {
+        "frame": "crop-frame",
+        "scope": "LOCAL",
+        "valuesPx": [
+          2.5,
+          3.01
+        ]
+      },
+      "edgeSearch": {
+        "latLimPx": 1.25,
+        "tolWidthPx": 0.125
+      }
+    },
+    "note": "Known boxes remain untrimmed even when partly or fully outside crop; no geometry rounding, rotation, clipping or omission."
+  },
+  "invalidCropCases": [
+    {
+      "id": "negative-x",
+      "crop": [
+        -1,
+        0,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "negative-y",
+      "crop": [
+        0,
+        -1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "over-right",
+      "crop": [
+        6,
+        0,
+        2,
+        1
+      ]
+    },
+    {
+      "id": "over-bottom",
+      "crop": [
+        0,
+        4,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "zero-width",
+      "crop": [
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "zero-height",
+      "crop": [
+        0,
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "id": "negative-width",
+      "crop": [
+        0,
+        0,
+        -1,
+        1
+      ]
+    },
+    {
+      "id": "fractional-origin",
+      "crop": [
+        0.5,
+        0,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "fractional-size",
+      "crop": [
+        0,
+        0,
+        1.5,
+        1
+      ]
+    },
+    {
+      "id": "origin-at-width",
+      "crop": [
+        7,
+        0,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "origin-at-height",
+      "crop": [
+        0,
+        5,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "unsafe-integer",
+      "crop": [
+        9007199254740992,
+        0,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "string-x",
+      "crop": [
+        "0",
+        0,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "null-x",
+      "crop": [
+        null,
+        0,
+        1,
+        1
+      ]
+    }
+  ],
+  "malformedCases": [
+    "top-level null/array/string",
+    "missing source file/hash",
+    "wrong source file hash with valid decoded RGBA",
+    "wrong decoded RGBA hash where accepted",
+    "unsupported suffix/corrupt PNG/JPEG",
+    "nonfinite number NaN/Infinity in direct API",
+    "missing/mismatched named frames",
+    "short/long RGBA array, float/negative/>255 byte where direct raster API exposed",
+    "zero source dimensions/unsafe byte count",
+    "missing geometry testimony",
+    "duplicate station ids",
+    "degenerate tee==badge",
+    "negative/nonfinite box width/height",
+    "negative edge search/duplicate nonpositive candidate width"
+  ],
+  "supportCases": [
+    {
+      "id": "fully-inside",
+      "station": [
+        64.25,
+        56.5,
+        0.731,
+        -5.5,
+        6.5
+      ],
+      "bank": [
+        24,
+        32.01
+      ],
+      "image": [
+        128,
+        112
+      ],
+      "expected": "eligible raw observations only; width/identity still UNKNOWN"
+    },
+    {
+      "id": "profile-normal-border",
+      "station": [
+        64,
+        31,
+        0,
+        -1,
+        2
+      ],
+      "bank": [
+        24
+      ],
+      "image": [
+        128,
+        112
+      ],
+      "expected": "fixed OFFS=-30 reaches y=1 so JS explicitly masks it; support not complete"
+    },
+    {
+      "id": "sensor-nearest-boundary",
+      "station": [
+        0.1,
+        56,
+        0,
+        -1,
+        2
+      ],
+      "bank": [
+        24
+      ],
+      "image": [
+        128,
+        112
+      ],
+      "expected": "tangent x=-3.9 rounds outside; partial remaining samples do not prove complete support"
+    },
+    {
+      "id": "outside-crop-inside-source",
+      "station": [
+        -0.25,
+        40,
+        0,
+        -1,
+        2
+      ],
+      "bank": [
+        24
+      ],
+      "image": [
+        96,
+        96
+      ],
+      "expected": "explicit reject or UNKNOWN/insufficient support; never silently clamp pose/pad pixels"
+    },
+    {
+      "id": "all-hidden",
+      "boxes": [
+        {
+          "bboxX": 0,
+          "bboxY": 0,
+          "bboxW": 127,
+          "bboxH": 111
+        }
+      ],
+      "image": [
+        128,
+        112
+      ],
+      "expected": "no observed width/pair; retained diagnostic width is not width evidence"
+    },
+    {
+      "id": "empty-bank",
+      "bank": [],
+      "expected": "explicit abstention or unchanged UNKNOWN diagnostic fallback40; never minted observed width"
+    },
+    {
+      "id": "empty-training",
+      "segments": [],
+      "expected": "explicit abstention or unchanged UNKNOWN fallback; never calibrated width"
+    },
+    {
+      "id": "window-too-short",
+      "t0Px": 0,
+      "t1Px": 0.1,
+      "expected": "one station cannot meet existing minOk.count12; pair null/UNKNOWN"
+    }
+  ],
+  "predictedFalsifier": "A near-edge crop can leave some sensor bands finite or a raw first-bank fallback selected even though complete sampled support is absent; any receipt promoting that to a supported/calibrated width, silently padding/clamping pixels, or dropping missing-support diagnostics fails."
+}

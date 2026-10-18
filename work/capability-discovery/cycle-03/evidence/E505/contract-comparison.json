@@ -1,0 +1,49 @@
+{
+  "schema": "D5-E505-contract-only-comparison@1",
+  "candidateImplementationRead": false,
+  "candidateImplementationRun": false,
+  "independentFreeze": {
+    "path": "predeclaration-manifest.json",
+    "sha256": "ee63a52ce50e4bef00ad3f269a283c2c117a9bb8c4d1723ed1bc335edb3933f7"
+  },
+  "readD6Contract": {
+    "path": "work/capability-discovery/cycle-03/evidence/E506/contract.json",
+    "sha256": "87619e8b4b47bfc661a20454d44d729ff5521a9ab4dca5bb1074c2c234820fb7"
+  },
+  "decision": "No candidate approval; contract comparison only",
+  "agreements": [
+    "default OFF, unchanged recipe and vendor closure",
+    "exact integer row-copy all RGBA and translation-only geometry/boxes",
+    "conservative operation-support prerequisite can explicitly reject before observations",
+    "no calibrated width/semantic identity/promotion",
+    "explicit invalid/mismatch outcomes and snapshot isolation"
+  ],
+  "differences": [
+    {
+      "id": "encoded-source-binding",
+      "finding": "D6 JS API receives decoded bytes and a claimed encoded PNG hash. That API cannot independently verify the encoded-source claim; only staging/actual-source replay can do so. D6 labels this testimony.",
+      "reviewRequirement": "R506 must rehash actual PNG bytes, verify expected-hash mismatch halts staging, bind decoded RGBA and crop hashes to exact staging receipt, and distinguish verified pixels from caller source-file testimony."
+    },
+    {
+      "id": "decoder-route",
+      "finding": "D5 explored existing pinned decodeNodeFile (PNG/JPEG); E506 instead proposes separate Pillow RGB/RGBA PNG-only staging. This is a changed boundary rather than direct reuse of that decoder.",
+      "reviewRequirement": "Record actual Pillow version/mode, no orientation/ICC/gamma/resizing/color transform; exercise alpha0 hidden RGB, unsupported modes and corrupt files. Do not claim JPEG/other-mode support."
+    },
+    {
+      "id": "small-valid-crop",
+      "finding": "A 1x1 or boundary-touch crop is a valid pixel copy but cannot support default profile footprint.",
+      "reviewRequirement": "Allow explicit insufficient-support rejection without mislabelling its pixel bounds malformed; pure crop byte oracle remains exact."
+    },
+    {
+      "id": "empty-collections",
+      "finding": "E506 retains existing empty-bank/training/stations meaning while using a maximum-bank support bound.",
+      "reviewRequirement": "Exercise empty bank/training/stations; do not create NaN/Infinity support math or promote fallback40 to width."
+    }
+  ],
+  "practicalLimits": [
+    "caller testimony not physical/semantic truth",
+    "negative controls proposed, not actual course success",
+    "all future evaluated regions become exposed",
+    "no implementation inspected; no actual image/adapter candidate run; no independent candidate approval"
+  ]
+}

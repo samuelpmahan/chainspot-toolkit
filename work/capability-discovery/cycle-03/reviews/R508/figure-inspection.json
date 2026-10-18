@@ -1,0 +1,21 @@
+{
+  "schema": "R508-direct-figure-inspection@1",
+  "job_id": "R508",
+  "worker": "V2",
+  "method": "functions.view_image direct visual inspection of actual E508 Lenard-actual-receipt.png",
+  "figure": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D3/E508/Lenard-actual-receipt.png",
+    "sha256": "b6b15381dbdd1d87d5890a9cd4958059ebca7f74e687785c5360f5cb10ef1868"
+  },
+  "observations": [
+    "Title identifies E508 Lenard fixed actual-source trial abstaining before measurements.",
+    "UNKNOWN headline and text give one adapter invocation, zero composition calls, zero CV operations.",
+    "Original-source pixel context, cyan ROI and two red training endpoint envelopes are legible; tee envelope y[-2,66] and badge y[156,224] correctly exceed strict crop y>1,y<213.",
+    "Recorded station envelopes remain green and inside ROI; text correctly states whole request still abstains.",
+    "Table shows primary, lateral-plus16, bright-patch each at requested29,37,45px, all nine rows NOT EXECUTED. No scores, profiles, fitted widths, null-fit results or midpoint measurements are fabricated.",
+    "Full-original/crop equivalence explicitly UNKNOWN because neither control executed.",
+    "Footer keeps width and identity UNKNOWN, caller exploratory status and prior geometry disclosure."
+  ],
+  "verdict": "CONSISTENT_WITH_EXACT_RAW_RECEIPT",
+  "limits": "Visual annotation is support geometry only, not measured path/endpoint identity, width, reliability or scientific acceptance."
+}

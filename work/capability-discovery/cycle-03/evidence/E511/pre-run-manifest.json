@@ -1,0 +1,51 @@
+{
+  "schema": "E511-pre-run-freeze-manifest@1",
+  "job_id": "E511",
+  "worker": "V2",
+  "frozenAtUtc": "2026-10-18T10:26:08.603922+00:00",
+  "files": [
+    {
+      "path": "protocol.json",
+      "sha256": "c98d0965930d6d3af0af72f3037227e27bf86033d3fdec28fc815a7a33f0e2ab",
+      "bytes": 7058
+    },
+    {
+      "path": "request-descriptor.json",
+      "sha256": "53e36bf685b1d1a0a7156c4ee7b9fee2131fddd1bc253bf29c31475f10e79433",
+      "bytes": 3394
+    },
+    {
+      "path": "run-diagnostic.mjs",
+      "sha256": "526f9a033e75d72bcec8e50853cee0a05c17d9d78d540d1e273a8513043fdd9e",
+      "bytes": 5911
+    },
+    {
+      "path": "run.sh",
+      "sha256": "110606dc172345b1e042a8d06605c05540128653221cb1b1b1c105b45307c748",
+      "bytes": 230
+    },
+    {
+      "path": "freeze.py",
+      "sha256": "15f74494bfd35788a1f197dc7ab7999b52600815d63bbb992739e36a1c772b83",
+      "bytes": 4734
+    }
+  ],
+  "sourceInputExcluded": {
+    "stagedJsonSha256": "0ff967ecde36cb6ed81b23bc58ef5293f60aa56639c6d896e238e912a27c717a",
+    "pngSha256": "27ad16bcf2c075316048ec39bc5035e0ebbe260bde32140466a3010f15d75834",
+    "fullRgbaSha256": "c93a4c532da248a61e29e56bf86273e6eaee9151643bd681974a882928f50766",
+    "width": 1290,
+    "height": 2796,
+    "frame": "Lenard-full.original-source-pixel-centers",
+    "decoder": {
+      "name": "Pillow",
+      "version": "12.3.0",
+      "outputMode": "RGBA",
+      "sourceMode": "RGB",
+      "orientation": "stored PNG pixel order; no EXIF transform",
+      "colorTransform": "none; stored RGB channels, no ICC/gamma transform",
+      "alpha": "preserved RGBA; RGB appends 255"
+    }
+  },
+  "noAdapterOrCompositionRunYet": true
+}

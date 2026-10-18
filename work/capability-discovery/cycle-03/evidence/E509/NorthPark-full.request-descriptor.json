@@ -1,0 +1,75 @@
+{
+  "enabled": true,
+  "roi": {
+    "xPx": 600,
+    "yPx": 1740,
+    "widthPx": 260,
+    "heightPx": 420,
+    "frame": "NorthPark-full:original-1290x2796:frozen-integer-roi"
+  },
+  "geometry": {
+    "frame": "NorthPark-full:original-1290x2796",
+    "geometrySource": "{\"annotationAuthority\": \"No NorthPark testimony directory exists in pinned testimony tree. Both endpoints are supplied from direct visual inspection in original full screenshot; no tee/badge/hole identity is asserted.\", \"author\": \"D4\", \"brightControl\": \"Bright tan sports-field patch, visually outside the rendered ribbons. Surface/organic identity is unverified; this is a bright non-path hypothesis.\", \"kind\": \"explicit-caller-visual-testimony\", \"originalPixelEndpointInspection\": true, \"semanticIdentity\": \"UNKNOWN\"}",
+    "training": {
+      "frame": "NorthPark-full:original-1290x2796",
+      "segments": [
+        {
+          "tee": {
+            "xPx": 665,
+            "yPx": 2078
+          },
+          "badge": {
+            "xPx": 770,
+            "yPx": 2073
+          }
+        }
+      ]
+    },
+    "stations": [
+      {
+        "id": "NorthPark-full-ribbon",
+        "frame": "NorthPark-full:original-1290x2796",
+        "xPx": 717.5,
+        "yPx": 2075.5,
+        "headingRad": -0.047583103276983396,
+        "t0Px": -18,
+        "t1Px": 18
+      },
+      {
+        "id": "NorthPark-full-offset12",
+        "frame": "NorthPark-full:original-1290x2796",
+        "xPx": 718.0707817929854,
+        "yPx": 2087.486417652693,
+        "headingRad": -0.047583103276983396,
+        "t0Px": -18,
+        "t1Px": 18
+      },
+      {
+        "id": "NorthPark-full-bright-nonpath",
+        "frame": "NorthPark-full:original-1290x2796",
+        "xPx": 724,
+        "yPx": 1833,
+        "headingRad": -0.047583103276983396,
+        "t0Px": -18,
+        "t1Px": 18
+      }
+    ],
+    "localWidthBank": {
+      "frame": "NorthPark-full:original-1290x2796",
+      "scope": "LOCAL",
+      "valuesPx": [
+        32,
+        40,
+        48
+      ]
+    },
+    "occluders": {
+      "frame": "NorthPark-full:original-1290x2796",
+      "boxes": []
+    },
+    "edgeSearch": {
+      "latLimPx": 20,
+      "tolWidthPx": 2
+    }
+  }
+}

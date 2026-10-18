@@ -1,0 +1,206 @@
+{
+  "schema": "capability-discovery-worker-result@1",
+  "job_id": "E511",
+  "worker": "V2",
+  "outcome": "confirmed_reuse",
+  "summary": "The separately frozen ROI-only full-frame Lenard diagnostic permits local measurements: one adapter invocation passed conservative support, ran two unchanged compositions/66operations, and raw zero-translation controls matched within unchanged1e-9. All3learner rows,3profiles/counts and9candidate rows retained, including6finite fits and3nulls. Original E508 remains9NOT_EXECUTED and is not retroactively measured. Raw learner37 and local contrast do not establish width, path identity, reliability or scientific acceptance. Actual receipt-driven figure inspected; independent R511 remains required.",
+  "question": "Was conservative crop support alone preventing any local measurement in original E508?",
+  "answer": "YES for this separately declared full-frame diagnostic: ROI-only replacement changed the accepted support gate from UNKNOWN to supported and allowed local measurements. It does not measure original E508 rows retrospectively, establish smaller-ROI outputs, or validate semantics.",
+  "preRunFreeze": {
+    "protocolSha256": "c98d0965930d6d3af0af72f3037227e27bf86033d3fdec28fc815a7a33f0e2ab",
+    "descriptorSha256": "53e36bf685b1d1a0a7156c4ee7b9fee2131fddd1bc253bf29c31475f10e79433",
+    "manifestSha256": "55907def1070ad17de7ff2154f431fbf4ed41e4cab9e7bdf3ee5a1cfb88496de",
+    "callerSha256": "526f9a033e75d72bcec8e50853cee0a05c17d9d78d540d1e273a8513043fdd9e",
+    "reportedToRootBeforeExecution": true
+  },
+  "delta": {
+    "oldRoi": {
+      "xPx": 180,
+      "yPx": 1795,
+      "widthPx": 210,
+      "heightPx": 215,
+      "frame": "Lenard-full.original-source-pixel-centers.roi-180-1795-210-215"
+    },
+    "newRoi": {
+      "xPx": 0,
+      "yPx": 0,
+      "widthPx": 1290,
+      "heightPx": 2796,
+      "frame": "Lenard-full.original-source-pixel-centers.E511.full-control"
+    },
+    "changedRequestFields": [
+      {
+        "path": "roi.xPx",
+        "before": 180,
+        "after": 0
+      },
+      {
+        "path": "roi.yPx",
+        "before": 1795,
+        "after": 0
+      },
+      {
+        "path": "roi.widthPx",
+        "before": 210,
+        "after": 1290
+      },
+      {
+        "path": "roi.heightPx",
+        "before": 215,
+        "after": 2796
+      },
+      {
+        "path": "roi.frame",
+        "before": "Lenard-full.original-source-pixel-centers.roi-180-1795-210-215",
+        "after": "Lenard-full.original-source-pixel-centers.E511.full-control"
+      }
+    ],
+    "unchanged": "Every descriptor field outside roi; geometry/training/stations/headings/windows/LOCAL[29,37,45]/empty masks/edge settings/frame/source pixel bytes."
+  },
+  "source": {
+    "platformGitRef": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "platformPath": "specimens/dev/Lenard-full.png",
+    "gitBlob": "6bb6db0704ba1697056afccb4c0a4ada0dbfa34e",
+    "pngSha256": "27ad16bcf2c075316048ec39bc5035e0ebbe260bde32140466a3010f15d75834",
+    "fullRgbaSha256": "c93a4c532da248a61e29e56bf86273e6eaee9151643bd681974a882928f50766",
+    "cropRgbaSha256": "c93a4c532da248a61e29e56bf86273e6eaee9151643bd681974a882928f50766",
+    "stagedSourceJsonSha256": "0ff967ecde36cb6ed81b23bc58ef5293f60aa56639c6d896e238e912a27c717a",
+    "unchanged": true
+  },
+  "code": {
+    "sha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "sourceHistoryEntries": 23,
+    "recipeManifestSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+    "recipeClosureEntries": 14
+  },
+  "input": {
+    "protocol": "protocol.json",
+    "descriptor": "request-descriptor.json",
+    "completeRequestJsonSha256": "fd77e8620ca4f308ec6ae94e83a3676b3859ee35475d0fb66fbe524bfbdc80c5",
+    "binding": "trial/input-binding.json",
+    "giantStagedSourceExcluded": true
+  },
+  "output": {
+    "receipt": {
+      "path": "trial/receipt.json",
+      "sha256": "7f008b06d5757a306d6942708c7767346e7ba73059504eb60010bb46fd57942b"
+    },
+    "analysis": {
+      "path": "analysis.json",
+      "sha256": "b87c06c1611fac9d2e3d2b47903ed897752f9bdc045431d93fd59e46514e4c10"
+    },
+    "csv": {
+      "path": "all-nine-candidates.csv",
+      "sha256": "956795255ffc77bd2edd77703c041f0f01c8cd9364b3d6585c08a2ae81b33f4b"
+    },
+    "figure": {
+      "path": "Lenard-E511-actual.png",
+      "sha256": "e82734db4fc6c34168911031a4b2f5118c3272827dd6fe544380b686205a078d"
+    },
+    "inspection": {
+      "path": "figure-inspection.json",
+      "sha256": "a3b7b0704d7571d34676a6f9902a0da49e4947ba41fb7cde0daaaeb7fe9b3310"
+    },
+    "binding": {
+      "path": "trial/run-binding.json",
+      "sha256": "2faaf87cb4a05b5594d4d375f67ba1df4af1d78e9b4acf77f34680f61ee862b2"
+    }
+  },
+  "execution": {
+    "adapterCalls": 1,
+    "compositionCalls": 2,
+    "operationsExecuted": 66,
+    "elapsedMs": 4727.888487,
+    "maxRssKiB": 1280468,
+    "resourceSidecar": "trial/resources.json",
+    "cost": "Two full-size compositions, snapshots/luminance; process maxRSS includes parse/hash allocations. No speedup/allocator causality."
+  },
+  "actual": {
+    "status": "OBSERVED_CHANNELS",
+    "support": "SUPPORTED_CONSERVATIVE_ENVELOPE",
+    "equivalence": {
+      "status": "MATCHED_DECLARED_CONTROL",
+      "absoluteTolerance": 1e-09,
+      "differences": [],
+      "reason": "declared raw channels match within fixed numerical tolerance; no semantic or scientific equivalence follows",
+      "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+    },
+    "rawLearner": {
+      "widthPx": 37,
+      "scores": [
+        {
+          "widthPx": 29,
+          "meanScore": 0.09866666666666682,
+          "visibleSamples": 5
+        },
+        {
+          "widthPx": 37,
+          "meanScore": 0.4553086419753087,
+          "visibleSamples": 5
+        },
+        {
+          "widthPx": 45,
+          "meanScore": 0,
+          "visibleSamples": 5
+        }
+      ]
+    },
+    "fitCounts": {
+      "total": 9,
+      "finite": 6,
+      "null": 3
+    },
+    "midpointContrasts": [
+      {
+        "widthArgPx": 29,
+        "primaryFitPresent": true,
+        "offsetFitPresent": false,
+        "offsetMinusPrimaryCandidateCenterMinusFitMidpointPx": null,
+        "comparisonStatus": "UNKNOWN_UNPAIRED_NULL",
+        "limit": "A+16 offset does not guarantee that both fits identify the same physical edges; no semantic identity supplied."
+      },
+      {
+        "widthArgPx": 37,
+        "primaryFitPresent": true,
+        "offsetFitPresent": true,
+        "offsetMinusPrimaryCandidateCenterMinusFitMidpointPx": -1.2444566538696602,
+        "comparisonStatus": "OBSERVED_CHANNEL_DIFFERENCE_WITHOUT_SAME_EDGE_IDENTITY",
+        "limit": "A+16 offset does not guarantee that both fits identify the same physical edges; no semantic identity supplied."
+      },
+      {
+        "widthArgPx": 45,
+        "primaryFitPresent": false,
+        "offsetFitPresent": true,
+        "offsetMinusPrimaryCandidateCenterMinusFitMidpointPx": null,
+        "comparisonStatus": "UNKNOWN_UNPAIRED_NULL",
+        "limit": "A+16 offset does not guarantee that both fits identify the same physical edges; no semantic identity supplied."
+      }
+    ],
+    "width": "UNKNOWN",
+    "semanticIdentity": "UNKNOWN"
+  },
+  "verification": {
+    "path": "verification.json",
+    "sha256": "1ffa150dee10c7cb01b22b55736e582ce8f5d0414ae0d09d69f094c9bca325e0",
+    "producerChecks": 77,
+    "allPassed": true,
+    "independentAcceptance": false
+  },
+  "originalEvidencePreserved": {
+    "E508ResultSha256": "fe72e28f57e94930a3d0385ed97608a4e7f97635857accaee73888b6c9881322",
+    "R508ResultSha256": "897ad555a5417f7fefb8c1839faf8f66cd36d474b8aaa5c547411d6871ea9dae",
+    "meaning": "Old nine rows remain NOT_EXECUTED; no old receipt/geometry retuning or rescue."
+  },
+  "limits": [
+    "Source original annotation-to-full screenshot mapping UNKNOWN; API tee/badge labels remain proposed testimony.",
+    "Full-frame diagnostic allocates full-size ROI plus original snapshots/luminance and processes both; cost retained, no speedup claim.",
+    "No adapter/CV/recipe source edit, repository/Git change, scientific acceptance, meter scale, recentering or tracking.",
+    "Independent reviewer other than V2 must evaluate output.",
+    "This is an exposed support ablation; source/math/geometry unchanged except ROI. Zero-translation matched control does not imply generic crop invariance.",
+    "Six finite fits include both lateral and bright controls; no path/non-path discriminator or fitted-width acceptance follows.",
+    "Display uses existing original ROI crop; computational E511 ROI is the full original frame.",
+    "No source/recipe/Git edit, independent review claim or scientific acceptance."
+  ],
+  "exposure": "Fully exposed follow-up after original E508 and independent R508. D3 geometry was disclosed to D6 before candidate freeze. No blind heldout claim.",
+  "next": "Independent R511 reviewer may reproduce frozen packet and audit all raw rows/controls. V2 cannot accept its own diagnostic."
+}

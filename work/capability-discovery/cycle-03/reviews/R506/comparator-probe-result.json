@@ -1,0 +1,669 @@
+{
+  "method": "Review-only extraction of exact comparator source with import URLs absolutized; actual adapter exported API also exercised separately",
+  "candidateSha256": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6",
+  "checks": [
+    {
+      "name": "identical NaN/Infinity",
+      "expected": "MATCHED_DECLARED_CONTROL",
+      "result": {
+        "status": "MATCHED_DECLARED_CONTROL",
+        "absoluteTolerance": 1e-9,
+        "differences": [],
+        "reason": "declared raw channels match within fixed numerical tolerance; no semantic or scientific equivalence follows",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "below tolerance",
+      "expected": "MATCHED_DECLARED_CONTROL",
+      "result": {
+        "status": "MATCHED_DECLARED_CONTROL",
+        "absoluteTolerance": 1e-9,
+        "differences": [],
+        "reason": "declared raw channels match within fixed numerical tolerance; no semantic or scientific equivalence follows",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "above tolerance",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "rawWidthEstimate.scores.0.meanScore",
+            "crop": 1.000000002,
+            "source": 1,
+            "absoluteDifference": 1.999999943436137e-9
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "raw row deleted",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "rawWidthEstimate.scores.0.visibleSamples",
+            "crop": {
+              "missing": true
+            },
+            "source": 5,
+            "absoluteDifference": null
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "raw width changed",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "rawWidthEstimate.widthPx",
+            "crop": 30,
+            "source": 24,
+            "absoluteDifference": 6
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "raw candidate width changed",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.candidates.0.widthArgPx",
+            "crop": 30,
+            "source": 24,
+            "absoluteDifference": 6
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "profile numeric",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.profile.meanLum.1",
+            "crop": 101,
+            "source": 100,
+            "absoluteDifference": 1
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "visible count",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.profile.visibleStationCounts.1",
+            "crop": 7,
+            "source": 8,
+            "absoluteDifference": 1
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "station count",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.profile.stationCount",
+            "crop": 9,
+            "source": 8,
+            "absoluteDifference": 1
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "offset array extra",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.profile.offsetsPx.3",
+            "crop": 31,
+            "source": {
+              "missing": true
+            },
+            "absoluteDifference": null
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "profile array shorter",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.profile.meanLum.2",
+            "crop": {
+              "missing": true
+            },
+            "source": {
+              "numberKind": "nonfinite",
+              "value": "Infinity"
+            },
+            "absoluteDifference": null
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "candidate array extra",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.candidates.1",
+            "crop": {},
+            "source": {
+              "missing": true
+            },
+            "absoluteDifference": null
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "candidate array shorter",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.candidates.0",
+            "crop": {
+              "missing": true
+            },
+            "source": {
+              "widthArgPx": 24,
+              "observation": {
+                "score": 1,
+                "leftRail": null,
+                "railMode": "occluded"
+              },
+              "pairedRails": {
+                "status": "UNKNOWN"
+              },
+              "edgeFit": null,
+              "midpoint": {
+                "status": "UNKNOWN",
+                "reason": "none"
+              }
+            },
+            "absoluteDifference": null
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "station array extra",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.1",
+            "crop": {
+              "id": "q"
+            },
+            "source": {
+              "missing": true
+            },
+            "absoluteDifference": null
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "station array shorter",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0",
+            "crop": {
+              "missing": true
+            },
+            "source": {
+              "id": "p",
+              "profile": {
+                "offsetsPx": [
+                  -30,
+                  0,
+                  30
+                ],
+                "meanLum": [
+                  null,
+                  100,
+                  null
+                ],
+                "visibleStationCounts": [
+                  0,
+                  8,
+                  0
+                ],
+                "stationCount": 8
+              },
+              "candidates": [
+                {
+                  "widthArgPx": 24,
+                  "observation": {
+                    "score": 1,
+                    "leftRail": null,
+                    "railMode": "occluded"
+                  },
+                  "pairedRails": {
+                    "status": "UNKNOWN"
+                  },
+                  "edgeFit": null,
+                  "midpoint": {
+                    "status": "UNKNOWN",
+                    "reason": "none"
+                  }
+                }
+              ]
+            },
+            "absoluteDifference": null
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "station missing",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations",
+            "crop": {
+              "missing": true
+            },
+            "source": [
+              {
+                "id": "p",
+                "profile": {
+                  "offsetsPx": [
+                    -30,
+                    0,
+                    30
+                  ],
+                  "meanLum": [
+                    null,
+                    100,
+                    null
+                  ],
+                  "visibleStationCounts": [
+                    0,
+                    8,
+                    0
+                  ],
+                  "stationCount": 8
+                },
+                "candidates": [
+                  {
+                    "widthArgPx": 24,
+                    "observation": {
+                      "score": 1,
+                      "leftRail": null,
+                      "railMode": "occluded"
+                    },
+                    "pairedRails": {
+                      "status": "UNKNOWN"
+                    },
+                    "edgeFit": null,
+                    "midpoint": {
+                      "status": "UNKNOWN",
+                      "reason": "none"
+                    }
+                  }
+                ]
+              }
+            ],
+            "absoluteDifference": null
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "profile missing",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.profile",
+            "crop": {
+              "missing": true
+            },
+            "source": {
+              "offsetsPx": [
+                -30,
+                0,
+                30
+              ],
+              "meanLum": [
+                null,
+                100,
+                null
+              ],
+              "visibleStationCounts": [
+                0,
+                8,
+                0
+              ],
+              "stationCount": 8
+            },
+            "absoluteDifference": null
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "candidate field missing",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.candidates.0.observation",
+            "crop": {
+              "missing": true
+            },
+            "source": {
+              "score": 1,
+              "leftRail": null,
+              "railMode": "occluded"
+            },
+            "absoluteDifference": null
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "observation bool missing",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.candidates.0.observation.occluded",
+            "crop": true,
+            "source": {
+              "missing": true
+            },
+            "absoluteDifference": null
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "observation null vs numeric",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.candidates.0.observation.leftRail",
+            "crop": 0,
+            "source": null,
+            "absoluteDifference": null
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "observation string",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.candidates.0.observation.railMode",
+            "crop": "paired",
+            "source": "occluded",
+            "absoluteDifference": null
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "paired guard",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.candidates.0.pairedRails.status",
+            "crop": "OBSERVED_CHANNELS",
+            "source": "UNKNOWN",
+            "absoluteDifference": null
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "fit missing vs null",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.candidates.0.edgeFit",
+            "crop": {
+              "missing": true
+            },
+            "source": null,
+            "absoluteDifference": null
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "fit numeric",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.candidates.0.edgeFit",
+            "crop": {
+              "lPx": -12,
+              "rPx": 12,
+              "wPx": 24
+            },
+            "source": null,
+            "absoluteDifference": null
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "midpoint changed",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.candidates.0.midpoint.reason",
+            "crop": "different",
+            "source": "none",
+            "absoluteDifference": null
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "NaN vs -Infinity",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.profile.meanLum.0",
+            "crop": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "source": {
+              "numberKind": "nonfinite",
+              "value": "NaN"
+            },
+            "absoluteDifference": {
+              "numberKind": "nonfinite",
+              "value": "NaN"
+            }
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "Infinity vs -Infinity",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.profile.meanLum.2",
+            "crop": {
+              "numberKind": "nonfinite",
+              "value": "-Infinity"
+            },
+            "source": {
+              "numberKind": "nonfinite",
+              "value": "Infinity"
+            },
+            "absoluteDifference": {
+              "numberKind": "nonfinite",
+              "value": "Infinity"
+            }
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    },
+    {
+      "name": "nonfinite vs finite",
+      "expected": "UNKNOWN",
+      "result": {
+        "status": "UNKNOWN",
+        "absoluteTolerance": 1e-9,
+        "differences": [
+          {
+            "path": "stations.0.profile.meanLum.2",
+            "crop": 0,
+            "source": {
+              "numberKind": "nonfinite",
+              "value": "Infinity"
+            },
+            "absoluteDifference": {
+              "numberKind": "nonfinite",
+              "value": "Infinity"
+            }
+          }
+        ],
+        "reason": "same-operation output disagreement; ROI equivalence remains UNKNOWN",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      }
+    }
+  ],
+  "passed": 28,
+  "limit": "Pinned unchanged composition emits dense plain arrays/objects. Comparator is not an arbitrary schema validator for sparse arrays or array-vs-object substitution; no such inputs are accepted from callers or produced by pinned recipe."
+}

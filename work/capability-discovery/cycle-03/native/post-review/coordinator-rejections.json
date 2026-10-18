@@ -1,0 +1,25 @@
+{
+  "schema": "cycle03-coordinator-rejections@1",
+  "events": [
+    {
+      "action": "finish D6 E506",
+      "reason": "raw producer report missing nonempty summary",
+      "effect": "rejected; no lease release",
+      "correction": "retain raw report; explicit matching envelope summary from producer finding; outcome unchanged"
+    },
+    {
+      "action": "solve epoch05",
+      "effect": "accepted empty solve, D6 correctly pinned because finish rejected"
+    },
+    {
+      "action": "start D5 R506",
+      "reason": "not in latest native assignment",
+      "effect": "rejected before actual tool dispatch",
+      "correction": "finish validated envelope, re-solve then matching start/readback"
+    }
+  ],
+  "notClaimed": [
+    "atomic CAS",
+    "native autonomous tool dispatch"
+  ]
+}

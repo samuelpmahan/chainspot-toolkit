@@ -1,0 +1,205 @@
+{
+  "schema": "R599-independent-package-audit@1",
+  "job_id": "R599",
+  "worker": "V4",
+  "manifestSha256": "ee6eec4517fad81de22fbf23b2691f4ac7138f2139d4b731e9e83f1d85787e7d",
+  "packageFiles": 408,
+  "packageBytesExcludingManifest": 13207438,
+  "independentHeadBlobComparisons": 1195,
+  "exactCandidateSourceHistoryEntries": 23,
+  "unchangedLegacyRecipeEntries": 14,
+  "independentStage": {
+    "exactOriginals": 361,
+    "separatePathOnlyCompanions": 8,
+    "externalPNG": 4
+  },
+  "checks": [
+    {
+      "name": "externalSourceProvenance",
+      "passed": true,
+      "detail": [
+        {
+          "imageId": "HeritagePark-full",
+          "gitBlob": "799879fb3a9dfcab7be373cbf74becd92aaf274a",
+          "PNG": "fb77ea132dd29136905088344ed35d170057dea2135e86b06f91e672bc4b2f7f",
+          "RGBA": "b3dcd536b305ed92763d42633706d2f4efafce6ea74a4f91f2a98c7a78619a04",
+          "size": [
+            1290,
+            2796
+          ]
+        },
+        {
+          "imageId": "Lenard-full",
+          "gitBlob": "6bb6db0704ba1697056afccb4c0a4ada0dbfa34e",
+          "PNG": "27ad16bcf2c075316048ec39bc5035e0ebbe260bde32140466a3010f15d75834",
+          "RGBA": "c93a4c532da248a61e29e56bf86273e6eaee9151643bd681974a882928f50766",
+          "size": [
+            1290,
+            2796
+          ]
+        },
+        {
+          "imageId": "NorthPark-full",
+          "gitBlob": "4209f4057c5dacdcd2e895b5ded8e5e5e42f999a",
+          "PNG": "7da949829ce487eba4cb0060f80589c652716239973b395c8f7fc3ceb56617f6",
+          "RGBA": "70877c3ed1c0269161bf96db072040f4ba0106ba6a7a517f938df5b1c859ab60",
+          "size": [
+            1290,
+            2796
+          ]
+        },
+        {
+          "imageId": "TowneLake-full",
+          "gitBlob": "b25f5e74fb1ee18255e148c332f2cd430399cf9a",
+          "PNG": "da2a0ccca4e017cfa9a31d59882903c51905e57b7b21d55b513d788dcf7c18ed",
+          "RGBA": "96c794f10e8bd8e20379d166ef09860acf6b3555a832c83cf6fd30dda7b4cced",
+          "size": [
+            1290,
+            2796
+          ]
+        }
+      ]
+    },
+    {
+      "name": "completeReceiptIdentity",
+      "passed": true,
+      "detail": {
+        "raw": "evidence/E507/receipt.json",
+        "sha256": "778d6b6ce0e49c9b89becd7bdd0eb1aa5cc581f62acc18d2dd86d112ccd55767",
+        "independentCopies": [
+          "reviews/R507/receipt.json"
+        ]
+      }
+    },
+    {
+      "name": "completeReceiptIdentity",
+      "passed": true,
+      "detail": {
+        "raw": "evidence/E508/trial/receipt.json",
+        "sha256": "d79b32c3ff08c7c30e5e02d74dab24e3f96e6447835c1906c660cc60b43c7f3a",
+        "independentCopies": [
+          "reviews/R508/replay/receipt.json"
+        ]
+      }
+    },
+    {
+      "name": "completeReceiptIdentity",
+      "passed": true,
+      "detail": {
+        "raw": "evidence/E509/NorthPark-full.receipt.json",
+        "sha256": "82ae2e1ea210f27c57ddd5c83301c4722cff1b3a22bc3bf901957b24ca88cdd2",
+        "independentCopies": [
+          "reviews/R509/NorthPark-full.receipt.json"
+        ]
+      }
+    },
+    {
+      "name": "completeReceiptIdentity",
+      "passed": true,
+      "detail": {
+        "raw": "evidence/E509/TowneLake-full.receipt.json",
+        "sha256": "1784b2028b955d2ce27ed4bd96d29a450b71bc45091c424ba05bfe8dbf6c86ae",
+        "independentCopies": [
+          "reviews/R509/TowneLake-full.receipt.json"
+        ]
+      }
+    },
+    {
+      "name": "completeReceiptIdentity",
+      "passed": true,
+      "detail": {
+        "raw": "evidence/E511/trial/receipt.json",
+        "sha256": "7f008b06d5757a306d6942708c7767346e7ba73059504eb60010bb46fd57942b",
+        "independentCopies": [
+          "reviews/R511/replay/receipt.json"
+        ]
+      }
+    },
+    {
+      "name": "figureIdentity",
+      "passed": true,
+      "detail": {
+        "raw": "evidence/E507/scientific-figure.png",
+        "sha256": "b5ac38ca1f4d188e7a19e76a5325217e4002e70562740c55ec566c26000cb999",
+        "independentEvidence": [
+          "reviews/R507/scientific-figure.png"
+        ]
+      }
+    },
+    {
+      "name": "figureIdentity",
+      "passed": true,
+      "detail": {
+        "raw": "evidence/E509/NorthPark-full.actual-scientific.png",
+        "sha256": "d2ca5cc65e318578c0790aa6f448da4d585fb2ffdfe82929e582d01be87ea654",
+        "independentEvidence": "R509 exact renderer replay recorded; regenerable staging tree excluded"
+      }
+    },
+    {
+      "name": "figureIdentity",
+      "passed": true,
+      "detail": {
+        "raw": "evidence/E509/TowneLake-full.actual-scientific.png",
+        "sha256": "c8368e43e8c79c82a5b456ddfa6ed15879195f25de9a27eaed83a2dd645f7dd8",
+        "independentEvidence": "R509 exact renderer replay recorded; regenerable staging tree excluded"
+      }
+    },
+    {
+      "name": "figureIdentity",
+      "passed": true,
+      "detail": {
+        "raw": "evidence/E511/Lenard-E511-actual.png",
+        "sha256": "e82734db4fc6c34168911031a4b2f5118c3272827dd6fe544380b686205a078d",
+        "independentEvidence": [
+          "reviews/R511/Lenard-E511-actual.png"
+        ]
+      }
+    },
+    {
+      "name": "pairedControlAndScientificBoundaries",
+      "passed": true,
+      "detail": "All four supported retained receipts contain two unchanged recipes, fixed1e-9 controls, nine candidates per frame, UNKNOWN semantic/local width, promoted=false"
+    },
+    {
+      "name": "HeritageNulls",
+      "passed": true,
+      "detail": "All9 crop and9 source fits null"
+    },
+    {
+      "name": "originalLenardAbstention",
+      "passed": true,
+      "detail": "Zero operations/no measurement outputs; nine NOT_EXECUTED rows unchanged"
+    },
+    {
+      "name": "NorthParkNegative",
+      "passed": true,
+      "detail": "All3 bright non-path candidate fits retained"
+    },
+    {
+      "name": "separateE511Diagnostic",
+      "passed": true,
+      "detail": "6finite/3null fits and66operations, separate unchanged originalE508"
+    },
+    {
+      "name": "nearestHalfNegative",
+      "passed": true,
+      "detail": "Full160.49999999999997/crop100.5, rail0.8/0 retained UNKNOWN"
+    },
+    {
+      "name": "rotatedNegative",
+      "passed": true,
+      "detail": "2.56e-13 profile roundoff with3.5px left-fit jump retained"
+    },
+    {
+      "name": "acceptedR511",
+      "passed": true,
+      "detail": "Exact expected independent resultSHA verified"
+    },
+    {
+      "name": "failureHistory",
+      "passed": true,
+      "detail": "Uncaptured helper typo explicitly testimony; retained raw renderer error log exists"
+    }
+  ],
+  "execution": "Read-only hash/provenance/staging checks and raw receipt comparison only. No CV/science/render/native solver rerun; no new broad tests; no repository/Git edits."
+}

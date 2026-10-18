@@ -1,0 +1,120 @@
+{
+  "schema": "capability-discovery-independent-review@1",
+  "job_id": "R504",
+  "worker": "D3",
+  "decision": "accepted",
+  "reviewedAtUtc": "2026-10-18T10:00:32.298046+00:00",
+  "summary": "Accepted as a frozen premeasurement caller-testimony protocol for two actual-source images. Exact source/crop bytes, manifest hashes, frames, +12 normal matched geometry, all declared banks/settings, full sampler support and training-span containment independently verified. Both actual annotated scientific PNGs inspected. Acceptance covers provenance/geometry/readiness only; path identity, width validity and measurement outcome remain UNKNOWN.",
+  "exactProtocol": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D4/protocol.json",
+    "sha256": "56fdd556f4ed53599de93cadb35c85d453df4edde26f0d00a087d4d4282c65f2"
+  },
+  "reviewedResult": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D4/result.json",
+    "sha256": "d9f8a5e0df938a0f24f4dfb0c73beab02b7f19d6ae6cdb7ebf39e4fcd84c3d29"
+  },
+  "reviewedManifest": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D4/file-manifest.json",
+    "sha256": "49cc1140c1daa8c26620ab473c7a5354bc9f800d72ac304c9f298f59356e40b0",
+    "entriesVerified": 15
+  },
+  "probes": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D3/review-R504/probes.json",
+      "sha256": "f81888bdb761137b9c72867162cc639e292e6af908824998ab88f6ecb5541d06"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D3/review-R504/figure-inspection.json",
+      "sha256": "be13c40d2e7c7d78dc60f24ae0e38948530f2c2a2c30db07e9d0544b214431ee"
+    }
+  ],
+  "sourceSamplerReadOnlyInspection": [
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/recipe.mjs",
+      "sha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"
+    }
+  ],
+  "checks": [
+    "Full PNG bytes equal pinned git show, PNG/RGBA hashes and blob IDs/dimensions match; all15 file-manifest hash/size entries match and result binds manifest/protocol.",
+    "Saved computational crops equal exact full-source integer ROI RGBA bytes; translation is only subtraction of crop origin; no resize.",
+    "Nested frames match; all banks remain explicit LOCAL; lateral limit20/tolerance2 and empty boxes remain frozen.",
+    "Both offset residuals from +12*(-sin heading,cos heading) below3e-13px; headings and t[-18,+18] identical. Declared candidateCenterMinusFitMidpoint difference sign+12 is algebraically consistent with source normal and -c convention.",
+    "Actual station Dev72 sample coordinates independently enumerated at all candidate widths: guard\u00b12W/3, rails\u00b1W/2\u00b12.5, inner sublanes and tangent[-4,-2,0,2,4].",
+    "JS exact t[-18,18) at1px, normal[-30,30] at.25px enumerated; strict JS boundary check x>1,x<W-2,y>1,y<H-2 passes after crop translation; bilinear taps and nearest samples remain inside. edgeSearch limits fit selection only and do not increase source support.",
+    "Learner actual fractions[.2,.35,.5,.65,.78] checked. The complete segment span is also enclosed: all candidate sample offsets at f=0,1 plus actual fractions stay inside; affine interpolation proves intermediate positions.",
+    "No occluder boxes supplied; no derived masks invented. Historical TowneLake annotation remains unprojected; absent NorthPark testimony not replaced by assumed authority."
+  ],
+  "boundaryClarifications": {
+    "imageCropBoundary": "No unsupported image/crop boundary found for current declarations. Conservative source-sampler bounds pass with minimum axis clearances~25.15px(TowneLake profiles),~27.06px(TowneLake full training span),~39.36px(NorthPark stations),~48.85px(NorthPark full training span).",
+    "marginTextCorrection": "D4 marginReason cites maxwidth/2 plus2.5, but Dev72 guards reach2W/3:32px NorthPark and30px TowneLake; rail reach is26.5px/25px. The exact reviewed geometry safely contains these guards and tangent samples. Treat32px as D4 display/check envelope, not a universal Euclidean sampler radius or a claim that all samples have32px residual crop clearance. No geometry change is needed.",
+    "fixedProfileBoundary": "Larger source crop does not extend JS profile beyond normal\u00b130px. endZero6 at.25px zeros gradient bins beyond\u00b128.5px before subpixel peak refinement. Wide shifted bands can lose one same-edge partner even with sufficient image margin; null/UNKNOWN is an expected limitation, not permission to change window/bank/recenter. latLim20 cannot recover edges outside retained profile.",
+    "conditionalNominalExamples": [
+      {
+        "imageId": "NorthPark-full",
+        "conditionalNominalCenteredPrimaryOffset12EdgesPx": [
+          {
+            "requestedWidthPx": 32,
+            "leftPx": -28.0,
+            "rightPx": 4.0,
+            "insideRawProfile": true
+          },
+          {
+            "requestedWidthPx": 40,
+            "leftPx": -32.0,
+            "rightPx": 8.0,
+            "insideRawProfile": false
+          },
+          {
+            "requestedWidthPx": 48,
+            "leftPx": -36.0,
+            "rightPx": 12.0,
+            "insideRawProfile": false
+          }
+        ],
+        "assumption": "Illustration assumes the primary is centered on a physical band with width equal to the requested bank value. This is not an observation; a displaced primary or different fitted width can change feasibility."
+      },
+      {
+        "imageId": "TowneLake-full",
+        "conditionalNominalCenteredPrimaryOffset12EdgesPx": [
+          {
+            "requestedWidthPx": 29,
+            "leftPx": -26.5,
+            "rightPx": 2.5,
+            "insideRawProfile": true
+          },
+          {
+            "requestedWidthPx": 37,
+            "leftPx": -30.5,
+            "rightPx": 6.5,
+            "insideRawProfile": false
+          },
+          {
+            "requestedWidthPx": 45,
+            "leftPx": -34.5,
+            "rightPx": 10.5,
+            "insideRawProfile": false
+          }
+        ],
+        "assumption": "Illustration assumes the primary is centered on a physical band with width equal to the requested bank value. This is not an observation; a displaced primary or different fitted width can change feasibility."
+      }
+    ],
+    "measurementInterpretation": "Protocol expectations are conditional on both poses fitting the same physical edges. No blanket expectation that every bank row supplies a matched pair is accepted. Every width/null must be retained without selecting a favorable row."
+  },
+  "limits": [
+    "Review is independent of D4 authoring but uses exposed caller-selected regions; not held-out route evaluation.",
+    "No semantic acceptance of ribbon/nonpath/tee/badge labels, calibration or physical scale.",
+    "Unmasked road/ring/sprite/terrain confounds and nearest-vs-bilinear/AA uncertainty remain.",
+    "Source pixel sampling support is verified; profile-boundary fit quality or identity is not verified by crop containment.",
+    "No recipe, learner, sensor, profileAt or edgePairOf measurements run; no source/protocol change made."
+  ],
+  "producerExecution": false,
+  "nextGuard": "Root must release exact independently accepted adapter with this unchanged protocol before actual composition execution. Preserve UNKNOWN and the profile-boundary clarification in interpretation."
+}

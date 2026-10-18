@@ -1,0 +1,103 @@
+{
+  "schema": "cycle03-independent-declaration-review@1",
+  "job_id": "R502",
+  "worker": "D1",
+  "producer": "D2",
+  "reviewedJob": "E502",
+  "decision": "accepted",
+  "summary": "Accepted technical provenance and source-pixel geometry predeclaration for the exact Heritage protocol. Git PNG/file/RGBA bindings, every crop byte, fixed width bank, matched55px control and complete current sampler support independently verified. Visual identities remain caller testimony, never route or scientific acceptance.",
+  "auditedProtocol": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/frozen-protocol.json",
+    "sha256": "ee4ac0852dfe1838c3d637ff967b65918ca9bb077ab9f1a6b2df9763ec3e916a"
+  },
+  "auditedFreezeManifest": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/freeze-manifest.json",
+    "sha256": "a30938c4664cf9d4c5a763eadeacec4c226d55714a7553aa3d204815f57e567c"
+  },
+  "auditedProducerResult": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/result.json",
+    "sha256": "2d6210238936e424bc326b7d3e524aeaa61f3bcc2be6dbb179a30675bc88d129"
+  },
+  "independentChecks": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/review-R502/checks.json",
+    "sha256": "c16f964d4c7e5e36fcb56a3c335080cd36b6ea05fa3f4f1534aead4c276858fd"
+  },
+  "sourceIds": {
+    "platformCommit": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "pngPath": "specimens/dev/HeritagePark-full.png",
+    "gitBlob": "799879fb3a9dfcab7be373cbf74becd92aaf274a",
+    "pngSha256": "fb77ea132dd29136905088344ed35d170057dea2135e86b06f91e672bc4b2f7f",
+    "rgbaSha256": "b3dcd536b305ed92763d42633706d2f4efafce6ea74a4f91f2a98c7a78619a04",
+    "cropRgbaSha256": "d81a61eb23a1ed57e83b35277b2e84713fe8e4bf24679f82218cd11842847584",
+    "recipeSourceOnlyFreeze": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+    "auditedSamplerFiles": [
+      {
+        "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+        "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+        "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/recipe.mjs",
+        "sha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6"
+      }
+    ]
+  },
+  "findings": [
+    {
+      "id": "integrity",
+      "status": "pass",
+      "detail": "All9 freeze-manifest entries independently hash/length checked; source file equals exact pinned Git blob. Independent Pillow RGBA decode is1290x2796 and matches declared RGBA hash. All75600 crop pixels equal corresponding full-source RGBA rows."
+    },
+    {
+      "id": "figure",
+      "status": "pass",
+      "detail": "Reviewed actual full-source image and pinned protocol figure via view_image. Crop displays small white square, number-like8 badge, proposed translucent segment, wooded lateral ground and bright striped field consistent with the declared visual selections. This corroborates visual selection only."
+    },
+    {
+      "id": "offset",
+      "status": "pass",
+      "detail": "Control displacement equals55*[-sin(h),cos(h)] with residual[0,\u22126.75e\u221214]. h=1.3535028958718756 and window[-24,24) match. Width bank[24,30,36] and edge limits3/1 are explicit and fixed."
+    },
+    {
+      "id": "profile-reach",
+      "status": "pass",
+      "detail": "Enumerated declared current-source coordinate grid only:48longitudinal stations\u00d7241normal offsets per image station,11568samples each. All3 stations pass source profile boundary condition1<x<W\u22122,1<y<H\u22122 in crop coordinates; all4 bilinear neighbours are present. Tightest lateral-control localX is3.8247153117789594, avoiding crop guard loss."
+    },
+    {
+      "id": "sensor-training-reach",
+      "status": "pass",
+      "detail": "Enumerated12sensor normal-band offsets\u00d75tangent samples\u00d73widths for each of3image stations and5current-source training fractions(.2,.35,.5,.65,.78). All1440nearest-pixel coordinates remain within crop. No sensor pixel, luminance or score was evaluated."
+    },
+    {
+      "id": "frame-mismatch",
+      "status": "pass-with-limit",
+      "detail": "Historical annotation identifies1290x2115 sourceSHA385210ecbea6ce123140ea1ba0c8d1ef9c8506b2399bdcc08d5574717c6dbbb1, distinct from pinned1290x2796 PNG. Protocol explicitly refuses annotation\u22122\u2192full PNG transfer and uses newly declared original-source coordinates. Historical README/original/corrected bytes also match their pinned GitSHA256."
+    },
+    {
+      "id": "falsification-scope",
+      "status": "pass-with-limit",
+      "detail": "Attempted wrong-source, wrong-frame, crop-clipping and matched-offset falsification found no technical defect at this exact freeze. Nearby field texture and visual path selection remain plausible specificity confounders; protocol retains all responses/nulls and treats equal/stronger controls as counterexamples. No semantic identity or calibrated width follows."
+    }
+  ],
+  "execution": {
+    "compositionRun": false,
+    "learnerRun": false,
+    "sensorRun": false,
+    "profileRun": false,
+    "edgeRun": false,
+    "changedDeclaration": false,
+    "repoEdits": false,
+    "gitMutations": false,
+    "geometryEnumerationOnly": true
+  },
+  "readiness": "Eligible for root-controlled next producer gate after independent adapter acceptance and other root requirements; this review does not itself authorize producer execution.",
+  "limits": [
+    "Technical predeclaration review only; no scientific acceptance or route identity.",
+    "Original sampling semantics differ: nearest RGB versus bilinear longitudinal mean, no AA muting or masks.",
+    "Reading script and static source cannot independently prove no prior off-record producer execution; inspected declaration/result list no measurements and script imports only image/geometry/file helpers.",
+    "Any protocol, source bytes, crop, geometry, bank or sampler change invalidates this exact review binding."
+  ]
+}

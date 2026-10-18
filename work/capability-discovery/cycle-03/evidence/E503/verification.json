@@ -1,0 +1,58 @@
+{
+  "schema": "predeclaration-static-verification@1",
+  "checks": [
+    {
+      "stationId": "primary",
+      "conservativeOriginalSourceBounds": [
+        205.00216083872567,
+        1852.8977681962087,
+        294.9978391612743,
+        1907.1022318037913
+      ],
+      "strictlyInsideCrop": true
+    },
+    {
+      "stationId": "lateral-plus16",
+      "conservativeOriginalSourceBounds": [
+        189.42361559088926,
+        1849.249627853361,
+        279.4192939134379,
+        1903.4540914609436
+      ],
+      "strictlyInsideCrop": true
+    },
+    {
+      "stationId": "bright-patch",
+      "conservativeOriginalSourceBounds": [
+        285.0021608387257,
+        1857.8977681962087,
+        374.9978391612743,
+        1912.1022318037913
+      ],
+      "strictlyInsideCrop": true
+    }
+  ],
+  "cropExactRgbaByteEquality": true,
+  "cropRgbaSha256": "c5a0a7061293db69fcf76844fc7c7c867bb6cd531a05e2bd2ca91597c3b58f5d",
+  "sourceDimensionsPx": [
+    1290,
+    2796
+  ],
+  "sourceHashMatchesInventory": true,
+  "imageViewed": [
+    "source/Lenard-full.png",
+    "source/lower-map-inspection.png",
+    "source/lower-map-grid.png",
+    "Lenard-source-geometry.png"
+  ],
+  "scientificPngViewedAndChecked": "Geometry overlay includes all three stations, training endpoints, \u00b130px normal crossbars, conservative margin boxes and original-source grid. Display figure uses nearest interpolation; computational crop was saved without resizing.",
+  "operationsRun": [
+    "PNG decode",
+    "raw byte hashes",
+    "integer crop",
+    "manual caller geometry serialization",
+    "scientific annotation rendering",
+    "coordinate-envelope containment check"
+  ],
+  "forbiddenProducersRun": false
+}

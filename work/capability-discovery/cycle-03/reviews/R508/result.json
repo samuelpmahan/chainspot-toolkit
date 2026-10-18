@@ -1,0 +1,109 @@
+{
+  "schema": "capability-discovery-independent-review@1",
+  "job_id": "R508",
+  "worker": "V2",
+  "decision": "accepted",
+  "reviewedAtUtc": "2026-10-18T10:23:59.491848+00:00",
+  "summary": "Accepted bounded reproduction of unchanged E508 Lenard support abstention. All129 independent checks passed. Exactly one fresh adapter replay returned byte-identical UNKNOWN receipt with tee minY-2 and badge maxY224 outside strict215px ROI interior; zero composition calls and CV operations. Exact source PNG/fullRGBA/native crop rows, supported request mapping, candidate23-entry history/source plus unchanged14-entry recipe closure verified. All9 requested station/width rows correctly remain NOT_EXECUTED; actual support figure directly inspected. No learner/profile/fit/null-fit/equivalence observation or scientific reliability accepted.",
+  "reviewedResult": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D3/E508/result.json",
+    "sha256": "fe72e28f57e94930a3d0385ed97608a4e7f97635857accaee73888b6c9881322"
+  },
+  "candidateFreeze": {
+    "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/candidate-freeze.json",
+    "sha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "sourceHistoryEntries": 23,
+    "recipeManifestEntries": 1,
+    "recipeClosureEntries": 14
+  },
+  "protocol": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D3/protocol.json",
+    "sha256": "112693cce17cf30035191a6cded1829482a589bc19c3f6bbbb3320718c2c0ba2"
+  },
+  "checks": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/V2/audit.json",
+    "sha256": "f7577fee9ff53ee085d3a599f05dce022a277119e5eafca443bd894b8c1cf351",
+    "count": 129,
+    "passed": true
+  },
+  "replay": {
+    "commandFile": "commands.txt",
+    "adapterCalls": 1,
+    "compositionCalls": 0,
+    "cvOperations": 0,
+    "receiptSha256": "d79b32c3ff08c7c30e5e02d74dab24e3f96e6447835c1906c660cc60b43c7f3a",
+    "receiptByteIdentical": true,
+    "completeRequestJsonSha256": "dea2aed145b7976c2019bc9f2e36481bf02de7b6d692ba62a1142954da9c32a3",
+    "rawStatus": "UNKNOWN",
+    "supportFailures": [
+      {
+        "label": "training[0].tee",
+        "minX": 48,
+        "minY": -2,
+        "maxX": 116,
+        "maxY": 66
+      },
+      {
+        "label": "training[0].badge",
+        "minX": 11,
+        "minY": 156,
+        "maxX": 79,
+        "maxY": 224
+      }
+    ],
+    "paths": {
+      "receipt": "replay/receipt.json",
+      "binding": "replay/run-binding.json",
+      "resources": "replay/resources.json",
+      "log": "replay.log"
+    }
+  },
+  "figureInspection": {
+    "path": "figure-inspection.json",
+    "sha256": "6fa38b95f39b6fe462523cef638845fd5da7e4ce631fe8e09c4a9958f41beab9"
+  },
+  "samplingDistinction": {
+    "exactSamplerStaticGeometry": {
+      "nearestReferences": 1440,
+      "profileReferences": 17352,
+      "nearestBounds": [
+        23,
+        53,
+        180,
+        166
+      ],
+      "profileBounds": [
+        22.703585926762464,
+        62.827687578435444,
+        181.9458775968291,
+        107.5505130007271
+      ],
+      "meaning": "Static coordinate enumeration does not measure image values. Actual fixed sensor/learner/profile geometry can remain in-bounds while accepted isotropic endpoint envelope rejects. This does not override adapter abstention or execute any measurement."
+    },
+    "acceptedConservativeEnvelope": "Entire training endpoint isotropic radius34 envelopes reject. This stricter accepted gate is not a contradiction of original exact-sampler in-bounds geometry; no downstream measurement may override it.",
+    "adapterCropConstruction": "The support return precedes adapter crop construction; native crop row fidelity was independently checked from the frozen source."
+  },
+  "scientificState": {
+    "learner": "UNOBSERVED",
+    "profiles": "UNOBSERVED",
+    "fits": "UNOBSERVED",
+    "nullFits": "UNOBSERVED",
+    "sourceCropEquivalence": "UNKNOWN: no paired comparison executed",
+    "width": "UNKNOWN",
+    "semanticIdentity": "UNKNOWN",
+    "scientificReliability": "NOT_ESTABLISHED"
+  },
+  "independence": {
+    "worker": "Fresh V2 independent of producer D3 and source owner D6",
+    "exposureNoteSha256": "86f4e40fa26ed344571c1dcfc4438c017bfd6a8a4f2c8d221e9d0812a8015cd4",
+    "limitation": "Caller geometry was disclosed to source owner before freeze. Exploratory predeclared case, not blind heldout evaluation; process testimony does not authenticate nonuse."
+  },
+  "limits": [
+    "One independent unchanged adapter replay; no original output modified.",
+    "No crop enlargement, geometry/settings changes, full-source diagnostic, or direct CV invocation.",
+    "Crop byte checks independently derive the declared integer source crop; adapter itself returns before construction of crop.",
+    "No measurement, null-fit result, equivalence, width calibration, scientific acceptance or semantic identity is inferred.",
+    "Caller-selected exploratory declaration; prefreeze geometry disclosure retained."
+  ],
+  "nextGuard": "Any source-full-frame diagnostic requires a separate root declaration. This review executes no diagnostic, retuning, enlargement or second adapter replay."
+}

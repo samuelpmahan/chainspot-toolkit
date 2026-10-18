@@ -1,0 +1,42 @@
+{
+  "schema": "cycle03-root-verification@1",
+  "labTests": {
+    "command": "node --test experiments/capability-discovery/*.test.mjs experiments/capability-discovery/catalog/*.test.mjs experiments/capability-discovery/probes/*/*.test.mjs experiments/capability-discovery/composition/*.test.mjs experiments/capability-discovery/source-pixels/*.test.mjs",
+    "pass": 113,
+    "fail": 0,
+    "log": "root-lab-tests.log"
+  },
+  "stagerTests": {
+    "command": "python3 experiments/capability-discovery/source-pixels/stage-png.test.py",
+    "pass": 2,
+    "fail": 0
+  },
+  "preservedRecipeClosureEntries": 14,
+  "currentCandidateEntries": 23,
+  "visualInspection": [
+    "D2/protocol-figure.png",
+    "D3/Lenard-source-geometry.png",
+    "D4/NorthPark-full.scientific-source.png",
+    "D4/TowneLake-full.scientific-source.png",
+    "D1/figure-E510/numeric-seam-figure.png",
+    "D2/E507/scientific-figure.png",
+    "D3/E508/Lenard-actual-receipt.png",
+    "D4/E509/NorthPark-full.actual-scientific.png",
+    "D4/E509/TowneLake-full.actual-scientific.png original resolution",
+    "V2/E511/Lenard-E511-actual.png original resolution"
+  ],
+  "displayFinding": "NorthPark historical premeasurement figure footer misnames TowneLake; original bytes preserved, actual-run figure must correct per-course caveat",
+  "limits": [
+    "113lab+2staging tests ran on unchanged d31b accepted source; no broad repository-green claim (six baseline missing-fixture failures retained)",
+    "R506 independently accepted exact source and85checks; R507/R508/R509 exact actual trial replays accepted; R511 independently accepted separate full-frame diagnostic180checks, exact receipt/CSV/figure replay. Source/geometry/identity scientific acceptance not granted.",
+    "All source/crop comparisons are numerical diagnostics only; width/semantic/scientific/human acceptance UNKNOWN",
+    "HTML browser visual QA unavailable; standard scientific PNG figures inspected including TL at original resolution"
+  ],
+  "displayFindingFollowup": "TowneLake apparent annotation/header loss at reduced tool resolution independently checked at original2218x1771 by V3; original labels complete, no artifact correction warranted. Root original-resolution inspected separately.",
+  "initialLimitsAtTestCapture": [
+    "not full repository green: six known absent saved-fixture failures retained from prior exact-main reproduction; no new broad rerun justified",
+    "tests are engineering controls, no scientific/route acceptance",
+    "R506 independent review pending; no course producers released yet"
+  ],
+  "finalReviewUpdateAt": "2026-10-18T10:44:42.349294+00:00"
+}

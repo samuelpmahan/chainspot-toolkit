@@ -1,0 +1,112 @@
+{
+  "schema": "cycle03-independent-predeclaration-review@1",
+  "job_id": "R505",
+  "worker": "D1",
+  "producer": "D5",
+  "reviewedJob": "E505",
+  "decision": "accepted",
+  "summary": "Accepted the exact independent source-pixel contract and synthetic oracle predeclaration. All 7 crop byte/alpha/hash oracles,14 invalid crops, geometry translations and 8 source-semantic support obligations are consistent with existing source semantics. The preserved first freeze differs only by the corrected minOk.count12\u21928 explanation; expected null/UNKNOWN outcome is unchanged. No candidate implementation inspected or executed and no scientific/CV acceptance follows.",
+  "audited": {
+    "producerResult": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D5/result.json",
+      "sha256": "204af9198d554099ef355b084959c5e0d413a23675c2102cf349ccac9f3a3a68"
+    },
+    "contract": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D5/contract.md",
+      "sha256": "535e4d325e7a9befd667e9aa64e6ca9595b2e74aa555bf90cdef638dba416827"
+    },
+    "oracles": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D5/oracles.json",
+      "sha256": "9cb658ef11c43c9c7aca8049847104fbdb586c8a07f541d08011f53cfce4f3e8"
+    },
+    "predeclarationManifest": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D5/predeclaration-manifest.json",
+      "sha256": "ee63a52ce50e4bef00ad3f269a283c2c117a9bb8c4d1723ed1bc335edb3933f7"
+    },
+    "firstManifest": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D5/history-first-predeclaration/predeclaration-manifest.json",
+      "sha256": "ba084aeaafac4033b47af3de75816022a3ca73450d35185c7b8544ef23415eab"
+    },
+    "firstOracles": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D5/history-first-predeclaration/oracles.json",
+      "sha256": "851f3c9ab5cb8ac901fa7318a32bf74ec4edf0cdbf5a526329aebe02dcdd17f3"
+    },
+    "firstScript": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D5/history-first-predeclaration/freeze-oracles.py",
+      "sha256": "2708ce024a4fe7cf028e72e1c0d1fa5c512291e2c19b6995b9f561d1c256213e"
+    },
+    "contractComparison": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D5/contract-comparison.json",
+      "sha256": "3a78289881afd01bfbb3e4ed1165fe1a00678cd8a9605934fd1c7e7231f36106"
+    },
+    "checks": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/review-R505/checks.json",
+      "sha256": "ea67ec63aedb92325f339f1d7c70aab1e6e25a805065a51c79176f0d877e33c0"
+    },
+    "sourceHashChecks": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/review-R505/source-hash-checks.json",
+      "sha256": "e86a639bc5d53ebf806de3eea43ebbf85c9c5266bc2db451014a237728dcd7b8"
+    }
+  },
+  "probes": [
+    {
+      "id": "manifest-current-original",
+      "scope": "Hash and length verification",
+      "result": "All 13 current entries and 13 original entries pass. Original changed JSON/script retained; unchanged original bytes verified against root fixture files. All 12 producer source-read hashes match current immutable local files."
+    },
+    {
+      "id": "rgba-row-copy",
+      "scope": "Independent per-channel gathering of literal source bytes; PNG decoding, no measurements",
+      "result": "7/7 crop literals, crop.rgba files andSHA256 match exact rows. Includes identity,1x1 corners, right/bottom touch,1 row/column, alpha0/1/127/254/255 and hidden RGB."
+    },
+    {
+      "id": "encoded-versus-decoded",
+      "scope": "Independent decode of both fixture PNGs",
+      "result": "Both 7x5 RGBA decodes equal all 140 literal bytes and decoded SHA f09bf993c3e2a2d18680fa77aa494728d670d5167d56c957b3e28674058b57ae; encoded SHA 233224d4\u2026 and 15bff03c\u2026 differ. Expected-source-hash substitution falsifier is valid."
+    },
+    {
+      "id": "invalid-crops",
+      "scope": "Independent bounded integer/safe-integer contract predicate only",
+      "result": "14/14 declared invalid cases fail the declared contract. Edge-touching and 1x1 valid byte-copy fixtures are correctly separate from operational-support feasibility."
+    },
+    {
+      "id": "translation",
+      "scope": "Deep independent expected-geometry reconstruction",
+      "result": "Matches exact declared expected JSON. Fractional tee/badge/station origins preserved; headings 0.731 and pi/2, windows, width [2.5,3.01], edge settings and box sizes unchanged. Box local origins [-.75,-.5], [-3,3], [4.5,3.5] retained without clipping; all nested frames change explicitly."
+    },
+    {
+      "id": "support-first-four",
+      "scope": "Source-coordinate enumeration only; no pixels sampled",
+      "result": "Fully-inside 2892/2892 profile coordinates satisfy original boundary guard and 120/120 nearest sensor coordinates are in bounds. Border case 720/723 profile coordinates pass, correctly incomplete. Near-edge sensor 36/60 in bounds, correctly partial. Outside-crop pose 0/723 profile coordinates pass while 36/60 nearest sensor coordinates are in bounds, validating warning against inferring support from finite possible channels."
+    },
+    {
+      "id": "support-last-four",
+      "scope": "Static existing source logic and predeclared semantic obligations",
+      "result": "All-hidden boxes cover entire 128x112 image under inclusive source semantics, preventing valid finite observations at in-frame samples. Empty bank/segments preserve raw numeric fallback only with width UNKNOWN. Window [0,.1) contains one arange station, below minOk.count8, so no edge pair can qualify. These four records are semantic obligations with partial input schemas, not self-contained candidate execution fixtures."
+    },
+    {
+      "id": "history-minOk",
+      "scope": "Exact original/current JSON/script comparison",
+      "result": "After replacing only text minOk.count12 with minOk.count8, original JSON equals current JSON and original script equals current script. No expected outcome, pixel, crop, geometry or other case changed. Existing pathSpace EVIDENCE.edgeMinOk is count 8, ofStations .2."
+    }
+  ],
+  "historyOrdering": {
+    "fileBacked": "Current manifest states correction occurred before D6 contract/implementation read; both initial/current manifests say candidateRead:false, candidateRun:false. Contract comparison binds already-corrected manifest ee63a52c\u2026 and says implementation unread/unrun.",
+    "chronologyAuthority": "Ordering is retained producer testimony plus coordinator session history; static files alone do not authenticate the instant of a read. No relabelled outcome found.",
+    "firstOracleSha256": "851f3c9ab5cb8ac901fa7318a32bf74ec4edf0cdbf5a526329aebe02dcdd17f3",
+    "correctedOracleSha256": "9cb658ef11c43c9c7aca8049847104fbdb586c8a07f541d08011f53cfce4f3e8"
+  },
+  "sourceSemantics": {
+    "dev72Sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+    "pathSpaceSha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+    "recipeSha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6",
+    "recipeFreeze": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52"
+  },
+  "boundaries": [
+    "Finite exact source pixels and finite diagnostics are integrity/observation evidence, never calibrated width, route identity or scientific acceptance.",
+    "The D5 contract prefers existing pinned decoder; D5 comparison explicitly identifies the proposed changed Pillow PNG staging boundary and encoded-source testimony seam. This review neither inspects nor approves that candidate route.",
+    "No D6 candidate source or execution inspected; no composition, learner, observer, profile, edge or course measurement executed.",
+    "Support obligations must be bound to actual candidate API after exact freeze/release. Incomplete test record schemas are not evidence those candidate calls ran.",
+    "No production/source edits, Git mutations,HH or subagents."
+  ]
+}

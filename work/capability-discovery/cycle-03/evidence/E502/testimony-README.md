@@ -1,0 +1,18 @@
+# HeritagePark testimony
+
+`HeritagePark-full.annotation.json` is **Sam's hand annotation** (from chainspot-corpus
+dev/Annotated.zip), copied byte for byte. Testimony, not detector output;
+acceptance stays Sam's. Do not edit: a corrected annotation is a new file.
+
+- Frame: annotated on an app crop of `specimens/dev/HeritagePark-full.png` that is
+  not in the corpus (see `sourceImage` dims/sha256 in the file). Measured
+  mapping (tee points coincide with ring-hole centroids to < 0.5 px):
+  **canonical y = annotation y - 2** against this toolkit's S0 crop.
+- Basket points here sit 0.25-1.75 px above the C1/C2 circle centre; golden's
+  sit 4 px above (a different annotation convention).
+
+## Corrections (each a new file; the judge takes the latest `*.corrected-<date>.annotation.json`)
+
+- `HeritagePark-full.corrected-2026-10-18.annotation.json`: hole 8 is straight (Sam, 2026-10-18: "im fine calling that
+  straight"). The original's single bend sat 2.67 px off the 272 px tee -> basket line, inside the 30 px corridor; the
+  S6 render was cross-referenced by eye. The `corrections` field in the file records the change.

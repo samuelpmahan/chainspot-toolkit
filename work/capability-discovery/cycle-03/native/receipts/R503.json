@@ -1,0 +1,55 @@
+{
+  "schema": "capability-discovery-independent-review@1",
+  "job_id": "R503",
+  "worker": "D4",
+  "decision": "accepted",
+  "scope": "Technical acceptance of exact premeasurement declaration, source/crop fidelity and sufficient sampler geometry only; no semantic identity or adapter-independence acceptance.",
+  "reviewedProtocol": {
+    "path": "discovery-cycle03/D3/protocol.json",
+    "sha256": "112693cce17cf30035191a6cded1829482a589bc19c3f6bbbb3320718c2c0ba2"
+  },
+  "reviewedFreezeManifest": {
+    "path": "discovery-cycle03/D3/freeze-manifest.json",
+    "sha256": "0930973bbf246c30a7a05368aa33b3ebb022d9ca0dd5eeddadbffbf1434cb0ce",
+    "entriesVerified": 9
+  },
+  "summary": "All nine frozen file hashes/sizes verify. Materialized Lenard PNG equals pinned platform Git blob bytes, and its RGBA hash matches declaration. The 210x215 integer crop equals original-source RGBA at (180,1795) with no resize. Original source frames agree; matched station is +16px along (-sin heading,cos heading), tangent error below machine precision, identical heading/window, shared LOCAL bank [29,37,45], latLim4/tolerance3. Geometry-only enumeration confirms every nearest sensor/learner read and every bilinear profile corner lies inside crop and preserves maskedAt boundary behavior. Scientific figure and raw native crop inspected: proposed ribbon/offset and broad bright patch are visibly supported hypotheses. Historical annotation-to-full-source mapping remains UNKNOWN. No composition or measurement ran in this review.",
+  "probes": {
+    "path": "probes.json",
+    "sha256": "0dbc904abafe77975ad9c095477f9b2f64d6fcd59be86a9c78799972342f8b5b",
+    "geometryScript": {
+      "path": "probe.py",
+      "sha256": "8484b58a90dbcdf7add3cd629825cc9d7441437fb1e144bcc9e98ac402cd6c7e"
+    },
+    "nearestPixelReadReferences": 1440,
+    "bilinearSamplePoints": 17352,
+    "allSamplerReadsInsideCrop": true,
+    "edgeFitAdditionalRasterReads": false
+  },
+  "visualInspection": [
+    {
+      "path": "discovery-cycle03/D3/Lenard-source-geometry.png",
+      "sha256": "971d171766531e1adbeae088b524874700ea51e2a58a5c077d23d4a69533df53",
+      "method": "view_image; paired raw-image/annotated figure legible, expected three stations and training endpoints present; axes/legend distinguish source pixels and unverified identities."
+    },
+    {
+      "path": "discovery-cycle03/D3/Lenard-source-crop.png",
+      "sha256": "3ab29f152fb70ea6205c3aa268ad35f406daf5b99afe55bdd6973762fd6981e9",
+      "method": "view_image native crop; actual satellite/overlay texture visible."
+    }
+  ],
+  "independenceLimitation": {
+    "path": "discovery-cycle03/D3/exposure-note.json",
+    "sha256": "86f4e40fa26ed344571c1dcfc4438c017bfd6a8a4f2c8d221e9d0812a8015cd4",
+    "finding": "D3 reports pre-adapter-freeze disclosure to D6 of source hash, crop, station/train coordinates, bank/settings and masks. Withholding files did not prevent message-level geometry exposure. Adapter independence from these exact coordinates cannot be inferred; no producer outputs reportedly exposed. This does not alter source/crop checks, but downstream reports must retain the limitation."
+  },
+  "limits": [
+    "Caller visual testimony is not accepted tee, plaque, ribbon, non-ribbon, hole or route identity.",
+    "Full historical crop is absent; canonical y=annotation y-2 is not a verified original-source translation.",
+    "The selected +/-16px translated true-edge midpoint would fall outside latLim4 if exactly centered at baseline; missing shifted fits must remain UNKNOWN, never zero or evidence of absence.",
+    "Figure uses nearest display enlargement; computational crop alone is exact native pixels.",
+    "Source masks empty; background, sprites and ring interference remain.",
+    "Producer nonexecution before freeze is declaration/process testimony, not independently attested event history; this review invokes no producer."
+  ],
+  "nextGuardedAction": "Root may release the unchanged declaration only after accepted exact adapter review; retain disclosure limitation, all bank rows, missing fits, and semantic UNKNOWN. Any output-driven geometry/settings change requires a new freeze."
+}

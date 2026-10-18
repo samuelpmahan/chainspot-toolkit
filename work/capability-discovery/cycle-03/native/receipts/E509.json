@@ -1,0 +1,93 @@
+{
+  "schema": "capability-discovery-worker-result@1",
+  "job_id": "E509",
+  "worker": "D4",
+  "outcome": "confirmed_reuse",
+  "outcomeScope": "Technical reuse of unchanged accepted operations on frozen actual source pixels, with matched source/crop raw diagnostics only; scientific hypotheses and semantic identity are not accepted.",
+  "summary": "Executed two unchanged actual-image trials using frozen PNG staging and retained Node CLI, four composition calls total. Both source/crop comparisons MATCHED_DECLARED_CONTROL at fixed1e-9, with zero reported differences and all36 longitudinal samples visible per normal offset. NorthPark learner rows tie0 (raw32 diagnostic); ribbon/control combined0 at all widths; bright non-path fits all3 widths. Expected +12 midpoint change is unavailable at32, observed12 at40 and fails at48 (2.637px). TowneLake learner raw45; ribbon37 combined.765926/fitted36.8165px; offset combined0 but finite fits; bright non-path allfits null/UNKNOWN. TowneLake midpoint deltas6.578/11.774/5.060px retain failures of universal same-edge translation. Original-source and crop outputs, all18 bank/station rows, profiles/counts, learner rows/fits/nulls and differences preserved. Both actual figures inspected; historical NorthPark display erratum separate, original freeze unchanged. No CV changes, tuning, crop enlargement, masks, AA muting or unrelated work.",
+  "protocol": {
+    "path": "../protocol.json",
+    "sha256": "56fdd556f4ed53599de93cadb35c85d453df4edde26f0d00a087d4d4282c65f2"
+  },
+  "sourceFreeze": {
+    "path": "work/capability-discovery/cycle-03/evidence/E506/candidate-freeze.json",
+    "sha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "adapterEntries": 23,
+    "legacyEntries": 14,
+    "verifiedBeforeAfterEachRun": true,
+    "verifiedFinal": true
+  },
+  "artifactManifest": {
+    "path": "artifact-manifest.json",
+    "sha256": "c2a68be74c3040adc17628f35eee180523b4918a7f9526620bbbf70d30dbca43",
+    "entries": 20
+  },
+  "analysis": {
+    "path": "analysis.json",
+    "sha256": "8ce208971720f8a3f6ad3a4b53738006c0efdd76a9a1f8442bd4405fcd8a05cf"
+  },
+  "receipts": [
+    {
+      "imageId": "NorthPark-full",
+      "path": "NorthPark-full.receipt.json",
+      "sha256": "82ae2e1ea210f27c57ddd5c83301c4722cff1b3a22bc3bf901957b24ca88cdd2",
+      "support": "SUPPORTED_CONSERVATIVE_ENVELOPE",
+      "compositionCalls": 2,
+      "equivalence": {
+        "status": "MATCHED_DECLARED_CONTROL",
+        "absoluteTolerance": 1e-09,
+        "differences": [],
+        "reason": "declared raw channels match within fixed numerical tolerance; no semantic or scientific equivalence follows",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      },
+      "fullRgbaSha256": "70877c3ed1c0269161bf96db072040f4ba0106ba6a7a517f938df5b1c859ab60",
+      "cropRgbaSha256": "289f79fe1482221cda51911984878ab354f1a2e2904bc859f22c8476354125c2",
+      "maxRawNumericSourceCropDifference": 3.467448550509289e-12
+    },
+    {
+      "imageId": "TowneLake-full",
+      "path": "TowneLake-full.receipt.json",
+      "sha256": "1784b2028b955d2ce27ed4bd96d29a450b71bc45091c424ba05bfe8dbf6c86ae",
+      "support": "SUPPORTED_CONSERVATIVE_ENVELOPE",
+      "compositionCalls": 2,
+      "equivalence": {
+        "status": "MATCHED_DECLARED_CONTROL",
+        "absoluteTolerance": 1e-09,
+        "differences": [],
+        "reason": "declared raw channels match within fixed numerical tolerance; no semantic or scientific equivalence follows",
+        "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+      },
+      "fullRgbaSha256": "96c794f10e8bd8e20379d166ef09860acf6b3555a832c83cf6fd30dda7b4cced",
+      "cropRgbaSha256": "6d5730aaba3b23d25a5972ab70ad042ee63a152b1c77713c74465c8be2e3c602",
+      "maxRawNumericSourceCropDifference": 9.805489753489383e-13
+    }
+  ],
+  "resourceObservations": [
+    {
+      "imageId": "NorthPark-full",
+      "adapterElapsedMs": 2731.402795,
+      "processMaxRSSKiB": 819452,
+      "sidecar": "NorthPark-full.run-sidecar.json"
+    },
+    {
+      "imageId": "TowneLake-full",
+      "adapterElapsedMs": 2075.845169,
+      "processMaxRSSKiB": 836648,
+      "sidecar": "TowneLake-full.run-sidecar.json"
+    }
+  ],
+  "actualCompositionCalls": 4,
+  "commands": "REPRODUCE.md plus exact process.argv in each *.run-sidecar.json; run-trial.mjs retained portable caller.",
+  "schemaMapping": "schema-mapping.json strips only unsupported descriptive fields, preserves numeric frozen inputs.",
+  "displayErratum": "display-erratum.json preserves historical NorthPark wrong-footer figure hash; corrected caveat only in new actual figures.",
+  "limits": [
+    "Exploratory predeclared caller-selected regions; no independent route or non-path ground truth and no semantic classifier verdict.",
+    "Prior D2/D3 message exposure to adapter owner means course evaluation is not fully blind; no output-based tuning performed.",
+    "NorthPark testimony absent; TowneLake historical app-crop mapping to original source remains UNKNOWN.",
+    "Raw learner selection is diagnostic; ties, sensor disagreement, missing pairs and boundary-near fits retained; local width calibration UNKNOWN, promoted=false.",
+    "All matched-shift residuals retained; no threshold introduced, winning-row replacement, recentering, score aggregation or physical width claim.",
+    "Resource elapsed is adapter call only; peak RSS is whole Node process. No allocator acceleration or cross-runtime/decoder equivalence claim.",
+    "Giant staged RGBA and original PNGs omitted from compact publication manifest, retained as reproducible hashed scratch inputs."
+  ],
+  "nextGuardedAction": "Different-principal replay/source+figure audit on exact unchanged code, protocol, requests and receipt hashes. Scientific retention remains human authority."
+}

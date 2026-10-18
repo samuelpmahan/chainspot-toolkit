@@ -1,0 +1,96 @@
+{
+  "schema": "cycle03-independent-review-result@1",
+  "job_id": "R511",
+  "worker": "V1",
+  "decision": "accepted",
+  "summary": "Technical reproducibility accepted for separate ROI-only E511 diagnostic:180checks pass; one independent replay/two unchanged compositions/66operations; complete raw receipt, input/run/identity bindings, CSV and actual figure byte-identical. All9rows retained:6fits3nulls, bright controls37/45 fit despitecombined0,37px same-edge+16 expectation fails. E508/R508 remain unchanged nineNOT_EXECUTED; no semantic/scientific/human acceptance.",
+  "review": "review.md",
+  "audit": "audit.json",
+  "auditCheckCount": 180,
+  "producerResultSha256": "5100f74afc640a9039f49c1a06f5ac15a0bb2b0f325d8cc7ae4f247154695df3",
+  "producerManifestSha256": "1d5d2a52ba18fae92f1d147de660e9ab0a0474ceda1f11c1efee9041cf5a5cbc",
+  "preRunProtocolSha256": "c98d0965930d6d3af0af72f3037227e27bf86033d3fdec28fc815a7a33f0e2ab",
+  "preRunDescriptorSha256": "53e36bf685b1d1a0a7156c4ee7b9fee2131fddd1bc253bf29c31475f10e79433",
+  "preRunManifestSha256": "55907def1070ad17de7ff2154f431fbf4ed41e4cab9e7bdf3ee5a1cfb88496de",
+  "completeRequestJsonSha256": "fd77e8620ca4f308ec6ae94e83a3676b3859ee35475d0fb66fbe524bfbdc80c5",
+  "sourcePngSha256": "27ad16bcf2c075316048ec39bc5035e0ebbe260bde32140466a3010f15d75834",
+  "sourceFullAndCropRgbaSha256": "c93a4c532da248a61e29e56bf86273e6eaee9151643bd681974a882928f50766",
+  "sourceStagedJsonSha256": "0ff967ecde36cb6ed81b23bc58ef5293f60aa56639c6d896e238e912a27c717a",
+  "rawReceiptSha256": "7f008b06d5757a306d6942708c7767346e7ba73059504eb60010bb46fd57942b",
+  "rawReceiptByteIdentical": true,
+  "rawReceiptBytes": 146024,
+  "nonfiniteEncodings": [],
+  "figureSha256": "e82734db4fc6c34168911031a4b2f5118c3272827dd6fe544380b686205a078d",
+  "figureByteIdentical": true,
+  "figureInspectedAtOriginalResolution": true,
+  "csvByteIdentical": true,
+  "analysisScientificProjectionExactExcludingResources": true,
+  "candidateEntriesBeforeAfter": 23,
+  "legacyEntriesBeforeAfter": 14,
+  "oldE508AndR508CompactManifestEntriesExact": true,
+  "adapterReplayCalls": 1,
+  "compositionCalls": 2,
+  "operationsExecuted": 66,
+  "fitCounts": {
+    "total": 9,
+    "finite": 6,
+    "null": 3
+  },
+  "rawLearnerWidthPxDiagnosticOnly": 37,
+  "primaryCombinedScores": [
+    0,
+    0.7130864197530864,
+    0
+  ],
+  "lateralAndBrightCombinedEach": [
+    0,
+    0,
+    0
+  ],
+  "paired37LateralMinusPrimaryMidpointPx": -1.2444566538696602,
+  "identityAndCalibratedWidth": "UNKNOWN;promoted=false",
+  "equivalence": "MATCHED_DECLARED_CONTROL at fixed1e-9;zero coordinate translation only;not generic crop/semantic/calibrated equivalence",
+  "technicalReplayFailures": [],
+  "provenanceFinding": "Pre-freeze helper source-path typo raw traceback not retained; producer prose testimony only, root confirmed no raw capture. Actual CSV duplicate-key render-only failure is retained. No claim all administrative errors are captured.",
+  "reviewerCorrections": "reviewer-corrections.json;incorrect imageId staging detected before adapter;frame-name assertion corrected without CV rerun",
+  "observedReplayCost": {
+    "elapsedMs": 3822.2664160000004,
+    "maxRssKiB": 1280716,
+    "scope": "Observed only;cost sidecars excluded from byte proof;no allocator/speedup causality"
+  },
+  "codeHashes": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/V2/E511/run.sh",
+      "sha256": "110606dc172345b1e042a8d06605c05540128653221cb1b1b1c105b45307c748"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/V2/E511/run-diagnostic.mjs",
+      "sha256": "526f9a033e75d72bcec8e50853cee0a05c17d9d78d540d1e273a8513043fdd9e"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/V2/E511/analyze-render.py",
+      "sha256": "b6b621aaaa4bb597ab32a436e1df1648279299591d4bba1c92d30cd256b163a4"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/stage-png.py",
+      "sha256": "e194f56e2899f516bb79dd8d6c5e4b876440d6f0932bf9d74e0a56c117f06a44"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/adapter.mjs",
+      "sha256": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/recipe.mjs",
+      "sha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6"
+    }
+  ],
+  "commands": "commands.txt",
+  "limits": [
+    "Independent technical reproduction only;no scientific/semantic/human acceptance",
+    "Exposed follow-up after E508/R508;prefreeze D3geometry disclosure to source owner retained;not blind",
+    "Original E508 nine rows remain NOT_EXECUTED,not null fits;no retroactive measurement",
+    "Geometry/endpoint identity,annotation-to-full mapping,physical scale,renderer provenance,uncertainty and route discrimination unresolved",
+    "No repository/Git/source/threshold/geometry changes;no broad test suite claim",
+    "Full-frame two-composition memory/time cost retained"
+  ]
+}

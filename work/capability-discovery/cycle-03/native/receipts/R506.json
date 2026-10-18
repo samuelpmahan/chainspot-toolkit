@@ -1,0 +1,120 @@
+{
+  "schema": "capability-discovery-review-result@1",
+  "job_id": "R506",
+  "worker": "D5",
+  "decision": "accepted",
+  "summary": "Exact E506 wrapper/stager is technically accepted for bounded exploratory source-pixel runs. Frozen crop/alpha/geometry/hash/support negatives pass; unchanged original-frame control is verified. Both retained rotated fit-selection instability and new half-pixel nearest-RGB counterexample produce equivalence UNKNOWN with raw crop/source receipts. No crop-only reuse or scientific acceptance follows.",
+  "reviewerIndependentOfProducer": {
+    "reviewer": "D5",
+    "producer": "D6",
+    "repoEdits": false,
+    "sourceGitEdits": false,
+    "selfApproval": false
+  },
+  "candidate": {
+    "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-03/evidence/E506/candidate-freeze.json",
+    "sha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "all23EntriesVerified": true,
+    "adapterSha256": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6"
+  },
+  "preservedRecipe": {
+    "sha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+    "all14EntriesVerifiedUnchanged": true
+  },
+  "predeclaredOracles": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D5/predeclaration-manifest.json",
+    "sha256": "ee63a52ce50e4bef00ad3f269a283c2c117a9bb8c4d1723ed1bc335edb3933f7",
+    "allEntriesRehashed": true
+  },
+  "commands": [
+    {
+      "command": "node --test experiments/capability-discovery/source-pixels/adapter.test.mjs",
+      "result": "8/8 passed",
+      "log": "focused-0.json"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python experiments/capability-discovery/source-pixels/stage-png.test.py",
+      "result": "2/2 passed",
+      "log": "focused-1.json"
+    },
+    {
+      "command": "node --test experiments/capability-discovery/composition/*.test.mjs",
+      "result": "10/10 passed",
+      "log": "focused-2.json"
+    },
+    {
+      "command": "node /workspace/scratch/8528bb251845/discovery-cycle03/D5/review-R506/probe.mjs",
+      "result": "42 checks passed"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python /workspace/scratch/8528bb251845/discovery-cycle03/D5/review-R506/stager-probe.py",
+      "result": "12 checks passed; actual CLI output exclusive"
+    },
+    {
+      "command": "node /workspace/scratch/8528bb251845/discovery-cycle03/D5/review-R506/comparator-probe.mjs",
+      "result": "28 checks passed"
+    },
+    {
+      "command": "node /workspace/scratch/8528bb251845/discovery-cycle03/D5/review-R506/integration-probe.mjs",
+      "result": "2 checks passed"
+    },
+    {
+      "command": "node /workspace/scratch/8528bb251845/discovery-cycle03/D5/review-R506/nearest-tie-probe.mjs",
+      "result": "1 actual nearest-RGB falsifier correctly UNKNOWN"
+    }
+  ],
+  "independentChecks": 85,
+  "focusedTests": {
+    "adapter": 8,
+    "staging": 2,
+    "composition": 10,
+    "fullRepository": "not rerun by this reviewer"
+  },
+  "findings": [
+    {
+      "id": "retained-rotated-fit-seam",
+      "status": "correctly UNKNOWN",
+      "profileMaxDelta": 2.5579538487363607e-13,
+      "cropLeftEdge": -11.625,
+      "sourceLeftEdge": -15.12500000000051,
+      "raw": "numeric-controls.json"
+    },
+    {
+      "id": "new-nearest-half-pixel-seam",
+      "status": "correctly UNKNOWN; applicability failure for numeric crop equivalence",
+      "fullSampleX": 160.49999999999997,
+      "cropSampleX": 100.5,
+      "cropLeftRail": 0,
+      "sourceLeftRail": 0.8,
+      "raw": "nearest-tie-probe-result.json"
+    },
+    {
+      "id": "finite-partial-support",
+      "status": "raw finite channels rejected before wrapper operations",
+      "raw": "integration-probe-result.json"
+    },
+    {
+      "id": "source-encoded-hash-boundary",
+      "status": "stager verifies exact bytes; JS labels claimed encoded hash testimony; actual integrated triplehash verified",
+      "raw": "stager-probe-result.json"
+    }
+  ],
+  "limits": [
+    "Caller geometry/identity testimony is not truth",
+    "Controls and future course regions exposed, not blind independent scientific evaluation",
+    "Unsupported native16bit/palette/grayscale/animated/JPEG staging; actual accepted boundary native8bit RGB/RGBA single PNG",
+    "Conservative support may reject usable crops; no practical resource envelope or speed claim",
+    "Comparator covers pinned dense output schema, not arbitrary sparse-array/object substitutions",
+    "MATCHED_DECLARED_CONTROL has numerical scope only; UNKNOWN equivalence forbids crop-only output reuse",
+    "localWidth/calibration/semanticIdentity UNKNOWN; promoted=false"
+  ],
+  "report": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D5/review-R506/review.md",
+    "sha256": "6eb4b6b7f0b9e58ed992838d4c4aae13a6bb092a6b5ee9e1eb12f2cad6b7d0ee"
+  },
+  "artifactManifest": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D5/review-R506/review-manifest.json",
+    "sha256": "9a0a1dc269f0016799a3cbd167142ae1df2d048c00d12efd1b3929e951544371"
+  },
+  "courseGate": "Exact reviewed candidate may proceed to separately frozen exploratory course runs retaining mandatory paired controls and UNKNOWN cases; no code change authorized by this review."
+}

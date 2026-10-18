@@ -1,0 +1,165 @@
+{
+  "schema": "cycle03-worker-result@1",
+  "job_id": "E507",
+  "worker": "D2",
+  "outcome": "confirmed_reuse",
+  "summary": "Confirmed bounded execution reuse of the frozen source-pixel adapter and unchanged composition: one supported fixed HeritagePark trial, two composition calls, all3stations x3widths retained. Scientific paired-ribbon expectation FALSIFIED: all9 crop fits and all9 full-source fits are null. Sensor contrast is partial only: ribbon combined[0,.688889,.340741] vs both controls[0,0,0]. Calibrated width and semantic identity remain UNKNOWN.",
+  "outcomeScope": "confirmed_reuse concerns callable unchanged machinery only; no scientific/physical/route success, source/math change or acceptance follows.",
+  "receipt": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/E507/receipt.json",
+    "sha256": "778d6b6ce0e49c9b89becd7bdd0eb1aa5cc581f62acc18d2dd86d112ccd55767"
+  },
+  "filesManifest": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/E507/files-manifest.json",
+    "sha256": "dae380bbb5ed5a4a526b1ce9dd21b3bbd621b3946b68b7c2de8ccc138784454a",
+    "count": 16
+  },
+  "scientificFigure": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/E507/scientific-figure.png",
+    "sha256": "b5ac38ca1f4d188e7a19e76a5325217e4002e70562740c55ec566c26000cb999",
+    "viewImageInspected": true,
+    "visualFindings": "Actual source crop, all3 full/crop profiles and all4lane+combined channels at24/30/36 visible and legible. Final layout avoids overlap. Null fits/falsifier/UNKNOWN labels are explicit."
+  },
+  "source": {
+    "platformCommit": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "pngPath": "specimens/dev/HeritagePark-full.png",
+    "pngSha256": "fb77ea132dd29136905088344ed35d170057dea2135e86b06f91e672bc4b2f7f",
+    "sourceRgbaSha256": "b3dcd536b305ed92763d42633706d2f4efafce6ea74a4f91f2a98c7a78619a04",
+    "cropRgbaSha256": "d81a61eb23a1ed57e83b35277b2e84713fe8e4bf24679f82218cd11842847584",
+    "stagedSourceJsonSha256": "b3ec6a7a88144ebadf57e1fefcdffd4271b60486613709857a5b5263dfac98f2",
+    "sourceAndCropRowsByteEqual": true,
+    "decoder": {
+      "name": "Pillow",
+      "version": "12.3.0",
+      "outputMode": "RGBA",
+      "sourceMode": "RGB",
+      "orientation": "stored PNG pixel order; no EXIF transform",
+      "colorTransform": "none; stored RGB channels, no ICC/gamma transform",
+      "alpha": "preserved RGBA; RGB appends 255"
+    }
+  },
+  "request": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/E507/request-descriptor.json",
+    "sha256": "77ce358eaa28eb6e2bc9e7536e45ed72997566705ee00a610abdf30fa2fa7458",
+    "geometryDeclarationSha256": "ee4ac0852dfe1838c3d637ff967b65918ca9bb077ab9f1a6b2df9763ec3e916a",
+    "mapping": "Exact numerical fields retained; only supported-schema field renames/removal of explanatory fields, documented in descriptor."
+  },
+  "integrity": {
+    "candidateManifestSha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+    "candidateEntriesVerifiedBeforeAfter": 23,
+    "legacyEntriesVerifiedBeforeAfter": 14,
+    "protocolUnchangedBeforeAfter": true,
+    "beforeAfterReceiptSha256": "a46162163df7e459b51c1d183fc392793f56598b9ff4c04b2b1ef71dab8d1f13"
+  },
+  "executedEvidence": {
+    "actualAdapterCalls": 1,
+    "compositionCalls": 2,
+    "compositionOrder": [
+      "crop",
+      "original-source-frame"
+    ],
+    "cropOperationCount": 33,
+    "sourceOperationCount": 33,
+    "supportStatus": "SUPPORTED_CONSERVATIVE_ENVELOPE",
+    "sourceCropEquivalence": {
+      "status": "MATCHED_DECLARED_CONTROL",
+      "absoluteTolerance": 1e-09,
+      "differences": [],
+      "reason": "declared raw channels match within fixed numerical tolerance; no semantic or scientific equivalence follows",
+      "scope": "raw learner, profiles/counts, candidate observation/pairedRails/edgeFit/midpoint; frame/translated pose metadata excluded"
+    },
+    "allSensorObservationObjectsExactlyEqual": true,
+    "allFitObjectsExactlyEqual": true,
+    "allMidpointObjectsExactlyEqual": true,
+    "profiles": [
+      {
+        "id": "H8_visual_ribbon",
+        "profileStationCount": 48,
+        "normalOffsetCount": 241,
+        "minVisibleCount": 48,
+        "maxVisibleCount": 48,
+        "profileMaximumAbsoluteDifference": 1.4495071809506044e-12,
+        "profileNumericallyDifferentSamples": 219,
+        "visibleCountsExactlyEqual": true
+      },
+      {
+        "id": "H8_lateral_plus55",
+        "profileStationCount": 48,
+        "normalOffsetCount": 241,
+        "minVisibleCount": 48,
+        "maxVisibleCount": 48,
+        "profileMaximumAbsoluteDifference": 4.689582056016661e-13,
+        "profileNumericallyDifferentSamples": 231,
+        "visibleCountsExactlyEqual": true
+      },
+      {
+        "id": "H_bright_field_ground",
+        "profileStationCount": 48,
+        "normalOffsetCount": 241,
+        "minVisibleCount": 48,
+        "maxVisibleCount": 48,
+        "profileMaximumAbsoluteDifference": 3.979039320256561e-13,
+        "profileNumericallyDifferentSamples": 196,
+        "visibleCountsExactlyEqual": true
+      }
+    ],
+    "rawLearnerDiagnostic": {
+      "widthPx": 30,
+      "scores": [
+        {
+          "widthPx": 24,
+          "meanScore": 0.20375308641975343,
+          "visibleSamples": 5
+        },
+        {
+          "widthPx": 30,
+          "meanScore": 0.541037037037037,
+          "visibleSamples": 5
+        },
+        {
+          "widthPx": 36,
+          "meanScore": 0.27970370370370345,
+          "visibleSamples": 5
+        }
+      ]
+    },
+    "allCandidateRows": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/E507/all-candidate-rows.json",
+    "rawReceiptSerializesNonfiniteVia": "exported preserveNonFinite replacer"
+  },
+  "hypothesisAssessment": {
+    "pairedRibbonExpectation": "FALSIFIED: no finite positive two-edge fit for proposed ribbon at any declared24/30/36 candidate; all9 station-bank fits null in crop and source.",
+    "matchedContrastExpectation": "PARTIAL OBSERVATION: ribbon combined at30=.6888888888888889 and36=.3407407407407406 exceeds both controls0; candidate24 ribbon combined0 ties both controls0. This is uncalibrated fixed-pose sensor contrast only.",
+    "controlSpecificityFalsifier": "Not triggered by combined channels here: controls combined0 at all3 widths and all fits null. Individual one-sided rail lifts remain nonzero in some controls and are retained.",
+    "widthIdentityAcceptance": "UNKNOWN; raw learner diagnostic selects30 with visibleSamples5 per candidate; no confidence policy/calibration and no semantic/route acceptance.",
+    "equivalenceClaim": "MATCHED_DECLARED_CONTROL within unchanged1e-9 for this trial only; exact raw profile roundoff differences retained. No universal invariance."
+  },
+  "observedExecutionCost": {
+    "elapsedSeconds": 2.678901749000943,
+    "maxRssKiB": 805044,
+    "sidecars": [
+      "caller-resources.json",
+      "process-resources.json"
+    ],
+    "causalClaim": "none; observed resource cost only"
+  },
+  "reproduction": {
+    "guide": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/E507/REPRODUCE.md",
+    "portableCaller": "/workspace/scratch/8528bb251845/discovery-cycle03/D2/E507/run-heritage.mjs",
+    "requires": "Exact source closure, PNG Git object, frozen protocol, Pillow12.3.0 and Node24.19.0; renderer uses matplotlib/numpy.",
+    "doNotPackage": [
+      "staged-source.json",
+      "duplicate original source PNG"
+    ]
+  },
+  "limitations": [
+    "No retuning, recentering, altered crop/window/settings or second actual run.",
+    "Profiles average48 longitudinal positions, not per-position paired-edge proof.",
+    "Nearest sensor and bilinear averaged profile are different sampling channels; no AA claim.",
+    "Raw numeric width and positive sensor contrast do not establish path identity, renderer provenance, physical scale or calibrated width.",
+    "No heldout independence; source/testimony inspected before geometry freeze and geometry messages exposed to adapter author.",
+    "Positive sensor contrast and diagnostic learner30 do not establish a two-edge fit or accepted ribbon.",
+    "One actual adapter invocation only; missing /usr/bin/time failed before Node launch, retained Python wrapper supplied resource observations.",
+    "Figure rerendered for layout from same receipt only; no score recomputation or second trial.",
+    "No repo edits, Git mutations, CV source changes, HH work, calibration or AA muting."
+  ]
+}

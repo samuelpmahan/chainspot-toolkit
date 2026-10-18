@@ -1,0 +1,75 @@
+{
+  "enabled": true,
+  "roi": {
+    "xPx": 250,
+    "yPx": 1660,
+    "widthPx": 720,
+    "heightPx": 540,
+    "frame": "TowneLake-full:original-1290x2796:frozen-integer-roi"
+  },
+  "geometry": {
+    "frame": "TowneLake-full:original-1290x2796",
+    "geometrySource": "{\"annotationAuthority\": \"Pinned annotation is available but targets absent 1290x2012 historical app crop SHA256 de12c697e0afce02c428df17ccc0ddb99849956387096a6555a64d0967dc1eca. README gives annotation-to-canonical y-1 only; original full screenshot translation is unestablished. Abstain from annotation projection. Both training endpoints are newly supplied visual original-source pixels, not mapped Sam testimony; API tee/badge fields have no semantic identity claim.\", \"author\": \"D4\", \"brightControl\": \"Open grass/irregular terrain patch between drawn ribbons, visually inspected as a bright non-path hypothesis. No independent terrain segmentation or semantic truth.\", \"kind\": \"explicit-caller-visual-testimony\", \"originalPixelEndpointInspection\": true, \"semanticIdentity\": \"UNKNOWN\"}",
+    "training": {
+      "frame": "TowneLake-full:original-1290x2796",
+      "segments": [
+        {
+          "tee": {
+            "xPx": 369,
+            "yPx": 1725
+          },
+          "badge": {
+            "xPx": 305,
+            "yPx": 1835
+          }
+        }
+      ]
+    },
+    "stations": [
+      {
+        "id": "TowneLake-full-ribbon",
+        "frame": "TowneLake-full:original-1290x2796",
+        "xPx": 320,
+        "yPx": 1804,
+        "headingRad": 2.097739553984326,
+        "t0Px": -18,
+        "t1Px": 18
+      },
+      {
+        "id": "TowneLake-full-offset12",
+        "frame": "TowneLake-full:original-1290x2796",
+        "xPx": 309.62781994748747,
+        "yPx": 1797.9652770603564,
+        "headingRad": 2.097739553984326,
+        "t0Px": -18,
+        "t1Px": 18
+      },
+      {
+        "id": "TowneLake-full-bright-nonpath",
+        "frame": "TowneLake-full:original-1290x2796",
+        "xPx": 900,
+        "yPx": 2130,
+        "headingRad": 2.097739553984326,
+        "t0Px": -18,
+        "t1Px": 18
+      }
+    ],
+    "localWidthBank": {
+      "frame": "TowneLake-full:original-1290x2796",
+      "scope": "LOCAL",
+      "valuesPx": [
+        29,
+        37,
+        45
+      ]
+    },
+    "occluders": {
+      "frame": "TowneLake-full:original-1290x2796",
+      "boxes": []
+    },
+    "edgeSearch": {
+      "latLimPx": 20,
+      "tolWidthPx": 2
+    }
+  }
+}

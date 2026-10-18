@@ -1,0 +1,14 @@
+E511 exact authorized adapter invocation (executed ONCE):
+bash /workspace/scratch/8528bb251845/discovery-cycle03/V2/E511/run.sh /workspace/scratch/8528bb251845/chainspot-discovery-lab /workspace/scratch/8528bb251845/discovery-cycle03/V2/E511/protocol.json /workspace/scratch/8528bb251845/discovery-cycle03/V2/E511/request-descriptor.json /workspace/scratch/8528bb251845/discovery-cycle03/V2/replay/staged-original-source.json /workspace/scratch/8528bb251845/discovery-cycle03/V2/E511/trial > /workspace/scratch/8528bb251845/discovery-cycle03/V2/E511/trial.log 2>&1
+
+Pre-run freeze (no producer call):
+python /workspace/scratch/8528bb251845/discovery-cycle03/V2/E511/freeze.py
+
+Receipt-only rendering (no CV imports/calls; rerender does not repeat adapter):
+python /workspace/scratch/8528bb251845/discovery-cycle03/V2/E511/analyze-render.py /workspace/scratch/8528bb251845/discovery-cycle03/V2/E511/trial /workspace/scratch/8528bb251845/discovery-cycle03/V2/E511/request-descriptor.json /workspace/scratch/8528bb251845/discovery-cycle03/D3/Lenard-source-crop.png /workspace/scratch/8528bb251845/discovery-cycle03/V2/E511
+functions.view_image(path=/workspace/scratch/8528bb251845/discovery-cycle03/V2/E511/Lenard-E511-actual.png)
+python /workspace/scratch/8528bb251845/discovery-cycle03/V2/E511/finalize.py
+
+Portable runner arguments:
+bash run.sh REPOSITORY_ROOT PROTOCOL_JSON DESCRIPTOR_JSON VERIFIED_STAGED_SOURCE_JSON FRESH_OUTPUT_DIRECTORY
+Reproduce verified staging using frozen accepted stage-png.py and exact source PNG identity from descriptor when needed. The original source PNG and giant staged source JSON are external inputs, not packaged artifacts. Reuse source under strict encoded/fullRGBA/stagedJSON hash checks; preserve Pillow12.3.0 staging identity for exact staged JSON hash. Initial freeze helper path typo stopped before creating freeze or invoking adapter; corrected before final protocol/manifest creation. Initial render-only CSV error retained in render-initial-error.log. No repeat adapter invocation occurred.

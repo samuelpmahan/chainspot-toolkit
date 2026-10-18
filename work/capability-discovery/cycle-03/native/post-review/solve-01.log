@@ -1,0 +1,139 @@
+I1018 12:53:39.539221     5 CoreSolver.cpp:218] Problem run_uuid: 3cd6d904-8eb9-4a2d-a53e-0f691d983cdb
+I1018 12:53:39.539335     5 CoreSolver.cpp:87] Objects: 6
+I1018 12:53:39.539343     5 CoreSolver.cpp:88] Containers: 13
+I1018 12:53:39.539345     5 CoreSolver.cpp:89] Scopes: 2
+I1018 12:53:39.539346     5 CoreSolver.cpp:90] Partitions: 0
+I1018 12:53:39.539348     5 CoreSolver.cpp:91] Goals: 2
+I1018 12:53:39.539349     5 CoreSolver.cpp:92] Constraints: 3
+I1018 12:53:39.539369     5 CoreSolver.cpp:298] Materializing problem...
+I1018 12:53:39.540029     5 CoreSolver.cpp:309] Using parallelized materializer = false; number of threads = 1
+I1018 12:53:39.540359     5 CoreSolver.cpp:324] Setting up the solver...
+I1018 12:53:39.540432     5 Orchestrator.cpp:52] Number of nodes in the expression graph = 101
+I1018 12:53:39.540464     5 Orchestrator.cpp:238] Number of object equivalence sets = 6
+I1018 12:53:39.540470     5 EquivalenceSetsStore.cpp:217] Equivalence sets built in 0.00 s
+I1018 12:53:39.540526     5 ChainSolver.cpp:27] Initial objective: (0, 0)
+I1018 12:53:39.540733     5 CoreLocalSearchSolve.cpp:502] Running local search until 1.000000 seconds or 500 moves
+I1018 12:53:39.541349     5 CoreLocalSearchSolve.cpp:340] 
+I1018 12:53:39.541349     5 CoreLocalSearchSolve.cpp:340] moves applied: 0 (zero moves performed), moves this cycle: 0, total: 0; containers explored: 0, cycles started: 1
+I1018 12:53:39.541349     5 CoreLocalSearchSolve.cpp:340] time: 0.001s, find worst: 0.000s, eval: 0.001s, apply: 0.000s, prune: 0.000s
+I1018 12:53:39.541983     5 CoreLocalSearchSolve.cpp:291] 
+I1018 12:53:39.541983     5 CoreLocalSearchSolve.cpp:291] Stopping solve because unable to find more moves
+I1018 12:53:39.541996     5 CoreLocalSearchSolve.cpp:300] 
+I1018 12:53:39.541996     5 CoreLocalSearchSolve.cpp:300] **** LocalSearch::solve summary ****
+I1018 12:53:39.541996     5 CoreLocalSearchSolve.cpp:300] moves applied: 2 (SINGLE applied 2 times => 2 moves), moves this cycle: 0, total: 2; containers explored: 13, cycles started: 2
+I1018 12:53:39.541996     5 CoreLocalSearchSolve.cpp:300] time: 0.001s, find worst: 0.000s, eval: 0.001s, apply: 0.000s, prune: 0.000s
+I1018 12:53:39.541996     5 CoreLocalSearchSolve.cpp:300] objective: (-400, 2) | estimated lower bound: (-400, -6)
+I1018 12:53:39.541996     5 CoreLocalSearchSolve.cpp:300] evals per second: 58385.051, total: 64, invalid: 92.188%, worse: 3.125%, neutral: 0.000%, better: 4.688%, search iterations: 28, avg evals/iteration: 2.3
+I1018 12:53:39.541996     5 CoreLocalSearchSolve.cpp:300] end reason: UNABLE_TO_FIND_MORE_MOVES (unable to find more moves)
+I1018 12:53:39.542015     5 ChainSolver.cpp:38] Final objective: (-400, 2)
+I1018 12:53:39.542228     5 ProblemSolver.cpp:182] ManifoldUploadPolicy = ON_FAILURE. Not uploading to Manifold.
+I1018 12:53:39.542240     5 CoreSolver.cpp:176] Visualizing Hierarchical profile with :
+I1018 12:53:39.542242     5 CoreSolver.cpp:177]  - Nodes with runtime >= 5% of total = 0.00s,  OR
+I1018 12:53:39.542244     5 CoreSolver.cpp:180]  - Nodes with nonzero memory >= 5% of total = 0.00 MBs
+I1018 12:53:39.542244     5 CoreSolver.cpp:180] 
+I1018 12:53:39.542274     5 CoreSolver.cpp:186] Rebalancer Hierarchical Time Profile: 
+I1018 12:53:39.542274     5 CoreSolver.cpp:186] ProblemSolver::Solve ··································│==================================================================================================== [0.00s total]
+I1018 12:53:39.542274     5 CoreSolver.cpp:186]    └─CoreSolver::Solve ································│============================================================================================ [0.00s total]
+I1018 12:53:39.542274     5 CoreSolver.cpp:186]        ├─Materialization ······························│======================================= [0.00s total]
+I1018 12:53:39.542274     5 CoreSolver.cpp:186]        │   └─Calling materializer ·····················│================================ [0.00s total]
+I1018 12:53:39.542274     5 CoreSolver.cpp:186]        │       └─Materialize Constraints & Goals ······│======== [0.00s total]
+I1018 12:53:39.542274     5 CoreSolver.cpp:186]        └─LocalSearch::solve ···························│========================================= [0.00s total]
+I1018 12:53:39.542274     5 CoreSolver.cpp:186] 
+I1018 12:53:39.542274     5 CoreSolver.cpp:186] 
+I1018 12:53:39.542308     5 CoreSolver.cpp:189] Rebalancer Peak Memory Contribution Profile: 
+I1018 12:53:39.542308     5 CoreSolver.cpp:189] ProblemSolver::Solve ··································│ [0 B  total, 0 B  delta]
+I1018 12:53:39.542308     5 CoreSolver.cpp:189]    └─CoreSolver::Solve ································│ [0 B  total, 0 B  delta]
+I1018 12:53:39.542308     5 CoreSolver.cpp:189]        ├─Materialization ······························│ [0 B  total, 0 B  delta]
+I1018 12:53:39.542308     5 CoreSolver.cpp:189]        │   └─Calling materializer ·····················│ [0 B  total, 0 B  delta]
+I1018 12:53:39.542308     5 CoreSolver.cpp:189]        │       └─Materialize Constraints & Goals ······│ [0 B  total, 0 B  delta]
+I1018 12:53:39.542308     5 CoreSolver.cpp:189]        └─LocalSearch::solve ···························│ [0 B  total, 0 B  delta]
+I1018 12:53:39.542308     5 CoreSolver.cpp:189] 
+I1018 12:53:39.542308     5 CoreSolver.cpp:189] 
+{
+  "epoch": 1,
+  "at": "2026-10-18T09:53:39.542795+00:00",
+  "ready_jobs": [
+    "R501",
+    "R502"
+  ],
+  "pinned_workers": [
+    "D3",
+    "D4",
+    "D5",
+    "D6"
+  ],
+  "assignments": {
+    "D1": "R502",
+    "D5": "E505",
+    "D3": "E503",
+    "D6": "E506",
+    "D4": "E504",
+    "D2": "R501"
+  },
+  "dispatch": {
+    "D1": "R502",
+    "D2": "R501"
+  },
+  "native_seconds": 0.0033339009969495237,
+  "native_constraints": {
+    "solved": true,
+    "brokenVal": 0,
+    "brokenCount": 0,
+    "constraints": [
+      {
+        "name": "independent_review",
+        "desc": "avoidAssignmentsSpec: Avoid 6 assignments on scope packets",
+        "value": 0
+      },
+      {
+        "name": "pin_in_flight",
+        "desc": "avoidMovingSpec: Avoid moving 4 objects",
+        "value": 0
+      },
+      {
+        "name": "ready_packet_capacity",
+        "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+        "value": 0
+      }
+    ]
+  },
+  "independent_capacity_check": true,
+  "independent_eligibility_check": true,
+  "exact_score": 400,
+  "native_score": 400,
+  "caps": {
+    "E501": 0,
+    "E502": 0,
+    "E503": 1,
+    "E504": 1,
+    "E505": 1,
+    "E506": 1,
+    "R501": 1,
+    "R502": 1,
+    "R503": 0,
+    "R504": 0,
+    "R505": 0,
+    "R506": 0,
+    "BENCH": 6
+  },
+  "eligible": {
+    "R501": [
+      "D2"
+    ],
+    "R502": [
+      "D1"
+    ]
+  },
+  "weights": {
+    "R501": 200,
+    "R502": 200
+  },
+  "agent_by_worker": {
+    "D1": null,
+    "D2": null,
+    "D3": "/root/c3_d3",
+    "D4": "/root/c3_d4",
+    "D5": "/root/c3_d5",
+    "D6": "/root/c3_d6"
+  }
+}

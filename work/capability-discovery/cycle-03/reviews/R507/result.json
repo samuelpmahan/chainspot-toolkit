@@ -1,0 +1,50 @@
+{
+  "schema": "cycle03-independent-review-result@1",
+  "job_id": "R507",
+  "worker": "V1",
+  "decision": "accepted",
+  "summary": "Technical reproducibility accepted: one independent unchanged adapter replay, two composition calls; complete receipt and figure byte-identical. Predeclared paired-ribbon hypothesis remains FALSIFIED, all9fits null per frame, all width/identity acceptance UNKNOWN. No scientific or human acceptance.",
+  "review": "review.md",
+  "producerResultSha256": "ce3e3953b59114b0c7d5920871a877a9c8078d871f90d4b661248a64bd44b6d5",
+  "candidateManifestSha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+  "protocolSha256": "ee4ac0852dfe1838c3d637ff967b65918ca9bb077ab9f1a6b2df9763ec3e916a",
+  "requestDescriptorSha256": "77ce358eaa28eb6e2bc9e7536e45ed72997566705ee00a610abdf30fa2fa7458",
+  "rawReceiptSha256": "778d6b6ce0e49c9b89becd7bdd0eb1aa5cc581f62acc18d2dd86d112ccd55767",
+  "scientificFigureSha256": "b5ac38ca1f4d188e7a19e76a5325217e4002e70562740c55ec566c26000cb999",
+  "actualAdapterReplayCalls": 1,
+  "compositionCalls": 2,
+  "rawReceiptByteForByteEqual": true,
+  "figureViewedViaViewImage": true,
+  "all9CropAndAll9SourceFitsNull": true,
+  "ribbonCombinedScores": [
+    0,
+    0.6888888888888889,
+    0.3407407407407406
+  ],
+  "eachControlCombinedScores": [
+    0,
+    0,
+    0
+  ],
+  "identityAndCalibratedWidth": "UNKNOWN",
+  "equivalence": "MATCHED_DECLARED_CONTROL at fixed absolute1e-9 only; no semantic/calibrated equivalence",
+  "candidateEntriesBeforeAfter": 23,
+  "legacyEntriesBeforeAfter": 14,
+  "priorTrackedFilesVerified": 1195,
+  "technicalFailures": [],
+  "limits": [
+    "Technical reproducibility only; no scientific/semantic/human acceptance",
+    "Exploratory exposed source/testimony and prefreeze geometry messages; not blind evaluation",
+    "Same-image visual caller geometry unverified; no meter scale or calibration",
+    "Resources observational and excluded from deterministic equality",
+    "No new broad test-suite claim; no repository/Git edits"
+  ],
+  "detailedChecks": [
+    "input-verification.json",
+    "replay-verification.json"
+  ],
+  "giantRegenerableInputsExcludedFromReviewManifest": [
+    "HeritagePark-full.png",
+    "staged-source.json"
+  ]
+}

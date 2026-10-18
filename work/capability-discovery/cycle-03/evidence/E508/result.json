@@ -1,0 +1,114 @@
+{
+  "schema": "capability-discovery-worker-result@1",
+  "job_id": "E508",
+  "worker": "D3",
+  "outcome": "insufficient_evidence",
+  "summary": "Exact fixed Lenard actual-source adapter trial executed once and returned UNKNOWN before all measurements: frozen ROI lacks accepted conservative full-training sampling support. Sensor radius34px gives tee minY\u22122 and badge maxY224 in215px-high crop (strict y>1,y<213). One adapter call, zero composition calls and zero CV operations. All3stations\u00d73bank rows remain NOT_EXECUTED_SUPPORT_UNKNOWN; learner/profile/scores/fits and full-source/crop equivalence are unobserved. Frozen geometry/settings and source/legacy closure hashes unchanged. Actual receipt-driven scientific figure inspected; no rerun/enlargement/tuning.",
+  "candidateFreezeSha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626",
+  "protocolSha256": "112693cce17cf30035191a6cded1829482a589bc19c3f6bbbb3320718c2c0ba2",
+  "source": {
+    "sourceId": "Lenard-full",
+    "platformGitRef": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "platformPath": "specimens/dev/Lenard-full.png",
+    "gitBlob": "6bb6db0704ba1697056afccb4c0a4ada0dbfa34e",
+    "pngSha256": "27ad16bcf2c075316048ec39bc5035e0ebbe260bde32140466a3010f15d75834",
+    "fullRgbaSha256": "c93a4c532da248a61e29e56bf86273e6eaee9151643bd681974a882928f50766"
+  },
+  "input": {
+    "stagedOriginalJsonSha256": "0ff967ecde36cb6ed81b23bc58ef5293f60aa56639c6d896e238e912a27c717a",
+    "completeRequestJsonSha256": "dea2aed145b7976c2019bc9f2e36481bf02de7b6d692ba62a1142954da9c32a3",
+    "compactRequestDescriptor": {
+      "path": "trial/request-descriptor.json",
+      "sha256": "3d52ed4de577f5c5a86ca3a0f10e5944e5a3bdf40fde51b948648fe79b87da94"
+    },
+    "projection": "Supported scalar fields copied exactly. Explanation-only fields stripped for strict API, documented in request descriptor and retained unchanged declaration."
+  },
+  "output": {
+    "receipt": {
+      "path": "trial/receipt.json",
+      "sha256": "d79b32c3ff08c7c30e5e02d74dab24e3f96e6447835c1906c660cc60b43c7f3a"
+    },
+    "analysis": {
+      "path": "analysis.json",
+      "sha256": "178d73ec14921bf0a5b7e8f9a003b444aaae59ea047f08d7179bedff7c93a140"
+    },
+    "figure": {
+      "path": "Lenard-actual-receipt.png",
+      "sha256": "b6b15381dbdd1d87d5890a9cd4958059ebca7f74e687785c5360f5cb10ef1868"
+    },
+    "figureInspection": {
+      "path": "figure-inspection.json",
+      "sha256": "6be3c3f3591cd11fec61e6b68c4524b0906203ab528a85e7ca5ce7f4b8ddb286"
+    }
+  },
+  "portableCaller": {
+    "path": "run-trial.mjs",
+    "sha256": "22c959895c8a37f43757e1ca36807512b97c11731791e2bc8f657f6c5842680f",
+    "invocation": "bash run.sh REPOSITORY_ROOT FROZEN_PROTOCOL_JSON ORIGINAL_LENARD_PNG FRESH_OUTPUT_DIRECTORY"
+  },
+  "identityChecks": {
+    "before": {
+      "path": "trial/identity-before.json",
+      "sha256": "4ec9ba7924ea27431283edc0995db1cdc0f0a91590dc3d57df6ed8d9fe916742"
+    },
+    "after": {
+      "path": "trial/identity-after.json",
+      "sha256": "4ec9ba7924ea27431283edc0995db1cdc0f0a91590dc3d57df6ed8d9fe916742"
+    },
+    "byteEqual": true,
+    "verifiedEntries": 38
+  },
+  "manifest": {
+    "path": "file-manifest.json",
+    "sha256": "d6c805541105b631435278cf220b453f9ac505c8b7be73723f4cd113aba8e42c",
+    "entries": 15
+  },
+  "execution": {
+    "adapterCalls": 1,
+    "compositionCalls": 0,
+    "operationsExecuted": 0,
+    "elapsedMs": 151.8076749999999,
+    "resourceSidecar": "trial/resources.json",
+    "allocatorCausalityClaim": false
+  },
+  "rawState": {
+    "adapterStatus": "UNKNOWN",
+    "reason": "complete required sampling support absent in declared ROI",
+    "supportFailures": [
+      {
+        "label": "training[0].tee",
+        "minX": 48,
+        "minY": -2,
+        "maxX": 116,
+        "maxY": 66
+      },
+      {
+        "label": "training[0].badge",
+        "minX": 11,
+        "minY": 156,
+        "maxX": 79,
+        "maxY": 224
+      }
+    ],
+    "rawCompositionPresent": false,
+    "rawSourceCompositionPresent": false,
+    "rawEquivalencePresent": false,
+    "interpretedEquivalence": "UNKNOWN; no comparison executed",
+    "width": "UNKNOWN",
+    "semanticIdentity": "UNKNOWN"
+  },
+  "exposureNote": {
+    "path": "exposure-note.json",
+    "sha256": "86f4e40fa26ed344571c1dcfc4438c017bfd6a8a4f2c8d221e9d0812a8015cd4",
+    "meaning": "Proposed geometry disclosed by message before adapter freeze; retain exploratory predeclared status, not blind heldout."
+  },
+  "limits": [
+    "Conservative support abstention may reject usable actual samples; no downstream sampling was attempted to circumvent it.",
+    "All expected primary/offset/bright-patch photometric observations remain untested, not negative or null-fit measurements.",
+    "No paired original/crop outputs or numeric differences exist; absence must never be read as equivalence.",
+    "Original app annotation\u2192full screenshot translation remains UNKNOWN; caller labels are visually proposed only.",
+    "No source math, tolerance, pose, training endpoint, mask, width bank, or crop changed; no second trial.",
+    "Resources describe this aborted adapter invocation only; no speedup or allocator causality."
+  ],
+  "next": "Independent reviewer may replay unchanged support abstention and audit exact source/code/request/output/figure bindings. Any future crop change is a new explicit declaration/trial, not a repair of E508."
+}

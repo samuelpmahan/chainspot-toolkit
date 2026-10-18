@@ -1,0 +1,260 @@
+{
+  "schema": "chainspot.source-pixel-control-protocol@1",
+  "job_id": "E504",
+  "worker": "D4",
+  "freezeStage": "pre-measurement",
+  "frozenAtUTC": "2026-10-18T09:54:31.576403+00:00",
+  "sourceRecipeFreezeSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+  "sourceCheckoutCommit": "3a5d37f5881fa0745de096293139daba18d8efc2",
+  "scope": "Exploratory source-pixel comparisons with caller-selected visual controls; no route ground truth or semantic acceptance. All selected regions are exposed.",
+  "coordinateConvention": "Original PNG integer pixel-center coordinates; x right, y down, heading from +x toward +y; normal=(-sin heading,cos heading). Integer crop translation only, no resize or S0 canonical conversion.",
+  "sampling": "Retain full RGBA unchanged; no AA muting, masking, normalization or filtering. All occluder boxes empty: manual windows intentionally avoid sprites where possible; texture/ring overlap may remain.",
+  "measurementsExecuted": false,
+  "cases": [
+    {
+      "imageId": "NorthPark-full",
+      "frame": "NorthPark-full:original-1290x2796",
+      "source": {
+        "gitRef": "49255331791b1245cf0f9cd699816175f94e70f2",
+        "path": "specimens/dev/NorthPark-full.png",
+        "gitBlob": "4209f4057c5dacdcd2e895b5ded8e5e5e42f999a",
+        "pngSha256": "7da949829ce487eba4cb0060f80589c652716239973b395c8f7fc3ceb56617f6",
+        "rgbaSha256": "70877c3ed1c0269161bf96db072040f4ba0106ba6a7a517f938df5b1c859ab60",
+        "widthPx": 1290,
+        "heightPx": 2796
+      },
+      "geometryProvenance": {
+        "kind": "explicit-caller-visual-testimony",
+        "author": "D4",
+        "originalPixelEndpointInspection": true,
+        "semanticIdentity": "UNKNOWN",
+        "annotationAuthority": "No NorthPark testimony directory exists in pinned testimony tree. Both endpoints are supplied from direct visual inspection in original full screenshot; no tee/badge/hole identity is asserted.",
+        "brightControl": "Bright tan sports-field patch, visually outside the rendered ribbons. Surface/organic identity is unverified; this is a bright non-path hypothesis."
+      },
+      "training": {
+        "frame": "NorthPark-full:original-1290x2796",
+        "segments": [
+          {
+            "tee": {
+              "xPx": 665,
+              "yPx": 2078
+            },
+            "badge": {
+              "xPx": 770,
+              "yPx": 2073
+            }
+          }
+        ],
+        "apiFieldWarning": "tee and badge are API endpoint names only; visual endpoints do not identify sprites or holes"
+      },
+      "stations": [
+        {
+          "id": "NorthPark-full-ribbon",
+          "frame": "NorthPark-full:original-1290x2796",
+          "xPx": 717.5,
+          "yPx": 2075.5,
+          "headingRad": -0.047583103276983396,
+          "t0Px": -18,
+          "t1Px": 18,
+          "role": "proposed visually straight ribbon"
+        },
+        {
+          "id": "NorthPark-full-offset12",
+          "frame": "NorthPark-full:original-1290x2796",
+          "xPx": 718.0707817929854,
+          "yPx": 2087.486417652693,
+          "headingRad": -0.047583103276983396,
+          "t0Px": -18,
+          "t1Px": 18,
+          "role": "matched +12 px normal translation; heading/window unchanged"
+        },
+        {
+          "id": "NorthPark-full-bright-nonpath",
+          "frame": "NorthPark-full:original-1290x2796",
+          "xPx": 724,
+          "yPx": 1833,
+          "headingRad": -0.047583103276983396,
+          "t0Px": -18,
+          "t1Px": 18,
+          "role": "bright non-path visual control"
+        }
+      ],
+      "localWidthBank": {
+        "frame": "NorthPark-full:original-1290x2796",
+        "scope": "LOCAL",
+        "valuesPx": [
+          32,
+          40,
+          48
+        ],
+        "chosenBeforeMeasurements": true,
+        "meaning": "Explicit candidate widths only; no measured width or physical scale"
+      },
+      "occluders": {
+        "frame": "NorthPark-full:original-1290x2796",
+        "boxes": []
+      },
+      "edgeSearch": {
+        "latLimPx": 20,
+        "tolWidthPx": 2
+      },
+      "sourceCrop": {
+        "xPx": 600,
+        "yPx": 1740,
+        "widthPx": 260,
+        "heightPx": 420,
+        "translationToCrop": {
+          "dxPx": -600,
+          "dyPx": -1740
+        },
+        "resize": false,
+        "rawPngFile": "NorthPark-full.source-crop.png",
+        "pngSha256": "1c37fa5a86f183a1906c36255f2746b677493d1eeacf838142cd313227f2ca4d",
+        "rgbaSha256": "289f79fe1482221cda51911984878ab354f1a2e2904bc859f22c8476354125c2",
+        "requiredSamplingMarginPx": 32,
+        "marginReason": "Profile normal offsets +/-30 px plus 2 px reserve; sensor widths max<=48/2, delta2.5 and tangent +/-4 are covered by 32px margin. All declared training endpoints also >=32px from crop bounds.",
+        "geometryBoundsCheck": "All profile/sample envelope corner points remain strictly within integer crop; no RGB/edge measurement used."
+      },
+      "predeclaredExpectedObservation": {
+        "ribbon": "Some bank widths may return finite paired geometry on the visually straight band; all missing/weak/boundary fits remain literal raw diagnostics.",
+        "matchedOffset": "If both poses fit the same physical edges at the same bank width, candidateCenterMinusFitMidpoint(offset)-candidateCenterMinusFitMidpoint(ribbon) should be about +12 source px. No recenter/rerun or parameter adjustment is authorized. Fixed-pose sensor score may decrease; it is not calibrated.",
+        "brightNonpath": "Bright non-path may produce positive lanes or paired geometry. Such agreement is a counterexample to semantic path identity, never a false-positive count against independent truth."
+      },
+      "predeclaredFalsifier": {
+        "geometry": "Missing baseline pairs, different fitted edge structures, or failure of the signed +12px midpoint difference weakens/falsifies the proposed same-edge translation observation. Retain outcomes at every width without selecting a winning row.",
+        "semantics": "Any bright non-path pair or high channel score defeats using these local channels alone as semantic ribbon identification. Negative non-path output would only show this one region did not match.",
+        "protocol": "Any changed source bytes, resizing, undocumented coordinate translation, insufficient sampling margins, producer execution before release, or output-driven pose/bank adjustment invalidates this freeze."
+      },
+      "acceptance": "UNKNOWN; no hard score threshold, calibration, path classification or route association."
+    },
+    {
+      "imageId": "TowneLake-full",
+      "frame": "TowneLake-full:original-1290x2796",
+      "source": {
+        "gitRef": "49255331791b1245cf0f9cd699816175f94e70f2",
+        "path": "specimens/dev/TowneLake-full.png",
+        "gitBlob": "b25f5e74fb1ee18255e148c332f2cd430399cf9a",
+        "pngSha256": "da2a0ccca4e017cfa9a31d59882903c51905e57b7b21d55b513d788dcf7c18ed",
+        "rgbaSha256": "96c794f10e8bd8e20379d166ef09860acf6b3555a832c83cf6fd30dda7b4cced",
+        "widthPx": 1290,
+        "heightPx": 2796
+      },
+      "geometryProvenance": {
+        "kind": "explicit-caller-visual-testimony",
+        "author": "D4",
+        "originalPixelEndpointInspection": true,
+        "semanticIdentity": "UNKNOWN",
+        "annotationAuthority": "Pinned annotation is available but targets absent 1290x2012 historical app crop SHA256 de12c697e0afce02c428df17ccc0ddb99849956387096a6555a64d0967dc1eca. README gives annotation-to-canonical y-1 only; original full screenshot translation is unestablished. Abstain from annotation projection. Both training endpoints are newly supplied visual original-source pixels, not mapped Sam testimony; API tee/badge fields have no semantic identity claim.",
+        "brightControl": "Open grass/irregular terrain patch between drawn ribbons, visually inspected as a bright non-path hypothesis. No independent terrain segmentation or semantic truth."
+      },
+      "training": {
+        "frame": "TowneLake-full:original-1290x2796",
+        "segments": [
+          {
+            "tee": {
+              "xPx": 369,
+              "yPx": 1725
+            },
+            "badge": {
+              "xPx": 305,
+              "yPx": 1835
+            }
+          }
+        ],
+        "apiFieldWarning": "tee and badge are API endpoint names only; visual endpoints do not identify sprites or holes"
+      },
+      "stations": [
+        {
+          "id": "TowneLake-full-ribbon",
+          "frame": "TowneLake-full:original-1290x2796",
+          "xPx": 320,
+          "yPx": 1804,
+          "headingRad": 2.097739553984326,
+          "t0Px": -18,
+          "t1Px": 18,
+          "role": "proposed visually straight ribbon"
+        },
+        {
+          "id": "TowneLake-full-offset12",
+          "frame": "TowneLake-full:original-1290x2796",
+          "xPx": 309.62781994748747,
+          "yPx": 1797.9652770603564,
+          "headingRad": 2.097739553984326,
+          "t0Px": -18,
+          "t1Px": 18,
+          "role": "matched +12 px normal translation; heading/window unchanged"
+        },
+        {
+          "id": "TowneLake-full-bright-nonpath",
+          "frame": "TowneLake-full:original-1290x2796",
+          "xPx": 900,
+          "yPx": 2130,
+          "headingRad": 2.097739553984326,
+          "t0Px": -18,
+          "t1Px": 18,
+          "role": "bright non-path visual control"
+        }
+      ],
+      "localWidthBank": {
+        "frame": "TowneLake-full:original-1290x2796",
+        "scope": "LOCAL",
+        "valuesPx": [
+          29,
+          37,
+          45
+        ],
+        "chosenBeforeMeasurements": true,
+        "meaning": "Explicit candidate widths only; no measured width or physical scale"
+      },
+      "occluders": {
+        "frame": "TowneLake-full:original-1290x2796",
+        "boxes": []
+      },
+      "edgeSearch": {
+        "latLimPx": 20,
+        "tolWidthPx": 2
+      },
+      "sourceCrop": {
+        "xPx": 250,
+        "yPx": 1660,
+        "widthPx": 720,
+        "heightPx": 540,
+        "translationToCrop": {
+          "dxPx": -250,
+          "dyPx": -1660
+        },
+        "resize": false,
+        "rawPngFile": "TowneLake-full.source-crop.png",
+        "pngSha256": "aa7c4296a5122edac06f7d721a0bde401aa7eceaec26614f1ee9e8153637b273",
+        "rgbaSha256": "6d5730aaba3b23d25a5972ab70ad042ee63a152b1c77713c74465c8be2e3c602",
+        "requiredSamplingMarginPx": 32,
+        "marginReason": "Profile normal offsets +/-30 px plus 2 px reserve; sensor widths max<=48/2, delta2.5 and tangent +/-4 are covered by 32px margin. All declared training endpoints also >=32px from crop bounds.",
+        "geometryBoundsCheck": "All profile/sample envelope corner points remain strictly within integer crop; no RGB/edge measurement used."
+      },
+      "predeclaredExpectedObservation": {
+        "ribbon": "Some bank widths may return finite paired geometry on the visually straight band; all missing/weak/boundary fits remain literal raw diagnostics.",
+        "matchedOffset": "If both poses fit the same physical edges at the same bank width, candidateCenterMinusFitMidpoint(offset)-candidateCenterMinusFitMidpoint(ribbon) should be about +12 source px. No recenter/rerun or parameter adjustment is authorized. Fixed-pose sensor score may decrease; it is not calibrated.",
+        "brightNonpath": "Bright non-path may produce positive lanes or paired geometry. Such agreement is a counterexample to semantic path identity, never a false-positive count against independent truth."
+      },
+      "predeclaredFalsifier": {
+        "geometry": "Missing baseline pairs, different fitted edge structures, or failure of the signed +12px midpoint difference weakens/falsifies the proposed same-edge translation observation. Retain outcomes at every width without selecting a winning row.",
+        "semantics": "Any bright non-path pair or high channel score defeats using these local channels alone as semantic ribbon identification. Negative non-path output would only show this one region did not match.",
+        "protocol": "Any changed source bytes, resizing, undocumented coordinate translation, insufficient sampling margins, producer execution before release, or output-driven pose/bank adjustment invalidates this freeze."
+      },
+      "acceptance": "UNKNOWN; no hard score threshold, calibration, path classification or route association.",
+      "availableTestimony": [
+        {
+          "path": "testimony/townelake/TowneLake-full.annotation.json",
+          "gitBlob": "84e8236792ff32c8c38b0b53dd65906aedd4951d",
+          "sha256": "137eb37ff881c8312b6a168a6523bb46d0ec5652c481e7780abe6d861b1fe0f4",
+          "usedForGeometry": false
+        },
+        {
+          "path": "testimony/townelake/README.md",
+          "gitBlob": "b8d573dbe279d8af13c0be91f15015bc9193cb99",
+          "sha256": "936df4cd250f6641d54d086a2b4f2b7113a746d65a57d74eea94fdee83a6a472"
+        }
+      ]
+    }
+  ]
+}

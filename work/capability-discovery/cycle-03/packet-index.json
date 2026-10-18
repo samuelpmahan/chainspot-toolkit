@@ -1,0 +1,108 @@
+{
+  "schema": "cycle03-packet-index@1",
+  "producerPackets": [
+    {
+      "job_id": "E501",
+      "worker": "D1",
+      "result": "evidence/E501/result.json"
+    },
+    {
+      "job_id": "E502",
+      "worker": "D2",
+      "result": "evidence/E502/result.json"
+    },
+    {
+      "job_id": "E503",
+      "worker": "D3",
+      "result": "evidence/E503/result.json"
+    },
+    {
+      "job_id": "E504",
+      "worker": "D4",
+      "result": "evidence/E504/result.json"
+    },
+    {
+      "job_id": "E505",
+      "worker": "D5",
+      "result": "evidence/E505/result.json"
+    },
+    {
+      "job_id": "E506",
+      "worker": "D6",
+      "result": "evidence/E506/result.json"
+    },
+    {
+      "job_id": "E507",
+      "worker": "D2",
+      "result": "evidence/E507/result.json"
+    },
+    {
+      "job_id": "E508",
+      "worker": "D3",
+      "result": "evidence/E508/result.json"
+    },
+    {
+      "job_id": "E509",
+      "worker": "D4",
+      "result": "evidence/E509/result.json"
+    },
+    {
+      "job_id": "E510",
+      "worker": "D1",
+      "result": "evidence/E510/result.json"
+    },
+    {
+      "job_id": "E511",
+      "worker": "V2",
+      "result": "evidence/E511/result.json"
+    }
+  ],
+  "reviews": [
+    {
+      "job_id": "R501",
+      "path": "reviews/R501/result.json"
+    },
+    {
+      "job_id": "R502",
+      "path": "reviews/R502/result.json"
+    },
+    {
+      "job_id": "R503",
+      "path": "reviews/R503/result.json"
+    },
+    {
+      "job_id": "R504",
+      "path": "reviews/R504/result.json"
+    },
+    {
+      "job_id": "R505",
+      "path": "reviews/R505/result.json"
+    },
+    {
+      "job_id": "R506",
+      "path": "reviews/R506/result.json"
+    },
+    {
+      "job_id": "R510",
+      "path": "reviews/R510/result.json"
+    },
+    {
+      "job_id": "R507",
+      "path": "reviews/R507/result.json"
+    },
+    {
+      "job_id": "R508",
+      "path": "reviews/R508/result.json"
+    },
+    {
+      "job_id": "R509",
+      "path": "reviews/R509/result.json"
+    },
+    {
+      "job_id": "R511",
+      "path": "reviews/R511/result.json"
+    }
+  ],
+  "pathRule": "Original report/manifests remain exact including original path strings. administration/capture-manifest-*.json maps original scratch-relative to packaged paths; stage-replay.py reconstructs original directory layout with path-only caller relocation.",
+  "native": "native/ holds exact root artifacts and historical captures; live root state remains authoritative."
+}

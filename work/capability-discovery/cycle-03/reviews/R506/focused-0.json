@@ -1,0 +1,11 @@
+{
+  "command": "node --test experiments/capability-discovery/source-pixels/adapter.test.mjs",
+  "status": "fulfilled",
+  "value": {
+    "chunk_id": "b40200",
+    "wall_time_seconds": 0.993409243,
+    "exit_code": 0,
+    "original_token_count": 224,
+    "output": "✔ standalone default OFF performs no recipe calls (1.828104ms)\n✔ crop is exact original RGBA row spans including nonopaque alpha, all supplied geometry translates (94.44592ms)\n✔ preparation snapshots are recursively immutable and isolate caller mutation (34.425204ms)\n✔ missing, malformed, unsupported geometry and noninteger/out-of-bounds ROI are UNKNOWN before operations (240.119474ms)\n✔ well-formed false full RGBA hash is hard integrity failure (17.221951ms)\n✔ finite partial-sample crops abstain before recipe, including training support (31.948597ms)\n✔ full and cropped same-operation raw controls agree; no acceptance is invented (204.266641ms)\n✔ rotated numeric falsifier persists: complete pixels/support do not promote unstable crop fits (277.599739ms)\nℹ tests 8\nℹ suites 0\nℹ pass 8\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 1093.777029\n"
+  }
+}

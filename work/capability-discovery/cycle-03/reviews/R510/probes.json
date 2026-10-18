@@ -1,0 +1,806 @@
+{
+  "schema": "R510-rendering-only-probes@1",
+  "count": 105,
+  "allPassed": true,
+  "probes": [
+    {
+      "probe": "E510 exact fixed result",
+      "pass": true,
+      "actual": "72d62cd54274aee4cb119b70af1458d6fa898b1293ac64f40f3d2a066b72839d",
+      "expected": "72d62cd54274aee4cb119b70af1458d6fa898b1293ac64f40f3d2a066b72839d"
+    },
+    {
+      "probe": "source numeric receipt hash",
+      "pass": true,
+      "actual": "4515742be1bcbd3ef3949e302eb1610d39c2c63218e5382d73bf82de83d60ab5",
+      "expected": "4515742be1bcbd3ef3949e302eb1610d39c2c63218e5382d73bf82de83d60ab5"
+    },
+    {
+      "probe": "input raw copy byte equality",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "manifest binding",
+      "pass": true,
+      "actual": "c501fbe475f99930e9a35fdb7f3261e76392878f791174e0c58a8047976d983e",
+      "expected": "c501fbe475f99930e9a35fdb7f3261e76392878f791174e0c58a8047976d983e"
+    },
+    {
+      "probe": "declared SHA render_figure.py",
+      "pass": true,
+      "actual": "ba6e91afe1b1ab8194752613cf05068e6ad2485f4b6bfbff986435856522979c",
+      "expected": "ba6e91afe1b1ab8194752613cf05068e6ad2485f4b6bfbff986435856522979c"
+    },
+    {
+      "probe": "declared bytes render_figure.py",
+      "pass": true,
+      "actual": 5586,
+      "expected": 5586
+    },
+    {
+      "probe": "declared SHA numeric-seam-input.json",
+      "pass": true,
+      "actual": "4515742be1bcbd3ef3949e302eb1610d39c2c63218e5382d73bf82de83d60ab5",
+      "expected": "4515742be1bcbd3ef3949e302eb1610d39c2c63218e5382d73bf82de83d60ab5"
+    },
+    {
+      "probe": "declared bytes numeric-seam-input.json",
+      "pass": true,
+      "actual": 2541,
+      "expected": 2541
+    },
+    {
+      "probe": "declared SHA numeric-seam-figure.png",
+      "pass": true,
+      "actual": "8d788228f8528efd26054f9863a6190c44269c4c32b9e2c41804f8e4b51ee6f8",
+      "expected": "8d788228f8528efd26054f9863a6190c44269c4c32b9e2c41804f8e4b51ee6f8"
+    },
+    {
+      "probe": "declared bytes numeric-seam-figure.png",
+      "pass": true,
+      "actual": 365412,
+      "expected": 365412
+    },
+    {
+      "probe": "declared SHA fit-table.json",
+      "pass": true,
+      "actual": "212aff8cdd4d01f4697d529ef0a96bf0f15a183ef011ec43d44bda035e302a61",
+      "expected": "212aff8cdd4d01f4697d529ef0a96bf0f15a183ef011ec43d44bda035e302a61"
+    },
+    {
+      "probe": "declared bytes fit-table.json",
+      "pass": true,
+      "actual": 2025,
+      "expected": 2025
+    },
+    {
+      "probe": "declared SHA fit-table.csv",
+      "pass": true,
+      "actual": "c76ef44f5073971d7332ab193b7c126cfd1eacbbd692526d5fb19043401d87b8",
+      "expected": "c76ef44f5073971d7332ab193b7c126cfd1eacbbd692526d5fb19043401d87b8"
+    },
+    {
+      "probe": "declared bytes fit-table.csv",
+      "pass": true,
+      "actual": 917,
+      "expected": 917
+    },
+    {
+      "probe": "manifest SHA render_figure.py",
+      "pass": true,
+      "actual": "ba6e91afe1b1ab8194752613cf05068e6ad2485f4b6bfbff986435856522979c",
+      "expected": "ba6e91afe1b1ab8194752613cf05068e6ad2485f4b6bfbff986435856522979c"
+    },
+    {
+      "probe": "manifest SHA numeric-seam-input.json",
+      "pass": true,
+      "actual": "4515742be1bcbd3ef3949e302eb1610d39c2c63218e5382d73bf82de83d60ab5",
+      "expected": "4515742be1bcbd3ef3949e302eb1610d39c2c63218e5382d73bf82de83d60ab5"
+    },
+    {
+      "probe": "manifest SHA numeric-seam-figure.png",
+      "pass": true,
+      "actual": "8d788228f8528efd26054f9863a6190c44269c4c32b9e2c41804f8e4b51ee6f8",
+      "expected": "8d788228f8528efd26054f9863a6190c44269c4c32b9e2c41804f8e4b51ee6f8"
+    },
+    {
+      "probe": "manifest SHA fit-table.json",
+      "pass": true,
+      "actual": "212aff8cdd4d01f4697d529ef0a96bf0f15a183ef011ec43d44bda035e302a61",
+      "expected": "212aff8cdd4d01f4697d529ef0a96bf0f15a183ef011ec43d44bda035e302a61"
+    },
+    {
+      "probe": "manifest SHA fit-table.csv",
+      "pass": true,
+      "actual": "c76ef44f5073971d7332ab193b7c126cfd1eacbbd692526d5fb19043401d87b8",
+      "expected": "c76ef44f5073971d7332ab193b7c126cfd1eacbbd692526d5fb19043401d87b8"
+    },
+    {
+      "probe": "unchanged renderer replay bytes render_figure.py",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "unchanged renderer replay bytes numeric-seam-input.json",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "unchanged renderer replay bytes fit-table.json",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "unchanged renderer replay bytes fit-table.csv",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "unchanged renderer replay bytes numeric-seam-figure.png",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "widths exactly24/30/36",
+      "pass": true,
+      "actual": [
+        24,
+        30,
+        36
+      ],
+      "expected": [
+        24,
+        30,
+        36
+      ]
+    },
+    {
+      "probe": "table input binding",
+      "pass": true,
+      "actual": "4515742be1bcbd3ef3949e302eb1610d39c2c63218e5382d73bf82de83d60ab5",
+      "expected": "4515742be1bcbd3ef3949e302eb1610d39c2c63218e5382d73bf82de83d60ab5"
+    },
+    {
+      "probe": "all6 JSON rows/all fit fields exact",
+      "pass": true,
+      "actual": [
+        {
+          "widthArgPx": 24,
+          "frame": "Full source",
+          "lPx": -15.12500000000051,
+          "rPx": 10.624999999998638,
+          "cPx": -2.250000000000936,
+          "wPx": 25.749999999999147,
+          "score": 10.949532299300415,
+          "gl": 10.949532299300444,
+          "gr": 10.949532299300415,
+          "sensorEqual": true
+        },
+        {
+          "widthArgPx": 24,
+          "frame": "Crop",
+          "lPx": -11.625,
+          "rPx": 14.12500000000068,
+          "cPx": 1.2500000000003402,
+          "wPx": 25.750000000000682,
+          "score": 10.949532299300358,
+          "gl": 10.949532299300358,
+          "gr": 10.949532299300387,
+          "sensorEqual": true
+        },
+        {
+          "widthArgPx": 30,
+          "frame": "Full source",
+          "lPx": -19.62499999999983,
+          "rPx": 11.87500000000068,
+          "cPx": -3.8749999999995746,
+          "wPx": 31.50000000000051,
+          "score": 10.949532299300444,
+          "gl": 10.949532299300444,
+          "gr": 10.949532299300472,
+          "sensorEqual": true
+        },
+        {
+          "widthArgPx": 30,
+          "frame": "Crop",
+          "lPx": -15.12499999999949,
+          "rPx": 14.12500000000068,
+          "cPx": -0.4999999999994049,
+          "wPx": 29.25000000000017,
+          "score": 10.949532299300387,
+          "gl": 10.949532299300387,
+          "gr": 10.949532299300387,
+          "sensorEqual": true
+        },
+        {
+          "widthArgPx": 36,
+          "frame": "Full source",
+          "lPx": -19.62499999999983,
+          "rPx": 16.37499999999983,
+          "cPx": -1.625,
+          "wPx": 35.99999999999966,
+          "score": 10.949532299300415,
+          "gl": 10.949532299300444,
+          "gr": 10.949532299300415,
+          "sensorEqual": true
+        },
+        {
+          "widthArgPx": 36,
+          "frame": "Crop",
+          "lPx": -17.37500000000017,
+          "rPx": 16.37500000000017,
+          "cPx": -0.5,
+          "wPx": 33.75000000000034,
+          "score": 10.949532299300358,
+          "gl": 10.949532299300358,
+          "gr": 10.949532299300358,
+          "sensorEqual": true
+        }
+      ],
+      "expected": [
+        {
+          "widthArgPx": 24,
+          "frame": "Full source",
+          "lPx": -15.12500000000051,
+          "rPx": 10.624999999998638,
+          "cPx": -2.250000000000936,
+          "wPx": 25.749999999999147,
+          "score": 10.949532299300415,
+          "gl": 10.949532299300444,
+          "gr": 10.949532299300415,
+          "sensorEqual": true
+        },
+        {
+          "widthArgPx": 24,
+          "frame": "Crop",
+          "lPx": -11.625,
+          "rPx": 14.12500000000068,
+          "cPx": 1.2500000000003402,
+          "wPx": 25.750000000000682,
+          "score": 10.949532299300358,
+          "gl": 10.949532299300358,
+          "gr": 10.949532299300387,
+          "sensorEqual": true
+        },
+        {
+          "widthArgPx": 30,
+          "frame": "Full source",
+          "lPx": -19.62499999999983,
+          "rPx": 11.87500000000068,
+          "cPx": -3.8749999999995746,
+          "wPx": 31.50000000000051,
+          "score": 10.949532299300444,
+          "gl": 10.949532299300444,
+          "gr": 10.949532299300472,
+          "sensorEqual": true
+        },
+        {
+          "widthArgPx": 30,
+          "frame": "Crop",
+          "lPx": -15.12499999999949,
+          "rPx": 14.12500000000068,
+          "cPx": -0.4999999999994049,
+          "wPx": 29.25000000000017,
+          "score": 10.949532299300387,
+          "gl": 10.949532299300387,
+          "gr": 10.949532299300387,
+          "sensorEqual": true
+        },
+        {
+          "widthArgPx": 36,
+          "frame": "Full source",
+          "lPx": -19.62499999999983,
+          "rPx": 16.37499999999983,
+          "cPx": -1.625,
+          "wPx": 35.99999999999966,
+          "score": 10.949532299300415,
+          "gl": 10.949532299300444,
+          "gr": 10.949532299300415,
+          "sensorEqual": true
+        },
+        {
+          "widthArgPx": 36,
+          "frame": "Crop",
+          "lPx": -17.37500000000017,
+          "rPx": 16.37500000000017,
+          "cPx": -0.5,
+          "wPx": 33.75000000000034,
+          "score": 10.949532299300358,
+          "gl": 10.949532299300358,
+          "gr": 10.949532299300358,
+          "sensorEqual": true
+        }
+      ]
+    },
+    {
+      "probe": "CSV row count",
+      "pass": true,
+      "actual": 6,
+      "expected": 6
+    },
+    {
+      "probe": "CSV row0 widthArgPx",
+      "pass": true,
+      "actual": 24.0,
+      "expected": 24
+    },
+    {
+      "probe": "CSV row0 frame",
+      "pass": true,
+      "actual": "Full source",
+      "expected": "Full source"
+    },
+    {
+      "probe": "CSV row0 lPx",
+      "pass": true,
+      "actual": -15.12500000000051,
+      "expected": -15.12500000000051
+    },
+    {
+      "probe": "CSV row0 rPx",
+      "pass": true,
+      "actual": 10.624999999998638,
+      "expected": 10.624999999998638
+    },
+    {
+      "probe": "CSV row0 cPx",
+      "pass": true,
+      "actual": -2.250000000000936,
+      "expected": -2.250000000000936
+    },
+    {
+      "probe": "CSV row0 wPx",
+      "pass": true,
+      "actual": 25.749999999999147,
+      "expected": 25.749999999999147
+    },
+    {
+      "probe": "CSV row0 score",
+      "pass": true,
+      "actual": 10.949532299300415,
+      "expected": 10.949532299300415
+    },
+    {
+      "probe": "CSV row0 gl",
+      "pass": true,
+      "actual": 10.949532299300444,
+      "expected": 10.949532299300444
+    },
+    {
+      "probe": "CSV row0 gr",
+      "pass": true,
+      "actual": 10.949532299300415,
+      "expected": 10.949532299300415
+    },
+    {
+      "probe": "CSV row0 sensorEqual",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "CSV row1 widthArgPx",
+      "pass": true,
+      "actual": 24.0,
+      "expected": 24
+    },
+    {
+      "probe": "CSV row1 frame",
+      "pass": true,
+      "actual": "Crop",
+      "expected": "Crop"
+    },
+    {
+      "probe": "CSV row1 lPx",
+      "pass": true,
+      "actual": -11.625,
+      "expected": -11.625
+    },
+    {
+      "probe": "CSV row1 rPx",
+      "pass": true,
+      "actual": 14.12500000000068,
+      "expected": 14.12500000000068
+    },
+    {
+      "probe": "CSV row1 cPx",
+      "pass": true,
+      "actual": 1.2500000000003402,
+      "expected": 1.2500000000003402
+    },
+    {
+      "probe": "CSV row1 wPx",
+      "pass": true,
+      "actual": 25.750000000000682,
+      "expected": 25.750000000000682
+    },
+    {
+      "probe": "CSV row1 score",
+      "pass": true,
+      "actual": 10.949532299300358,
+      "expected": 10.949532299300358
+    },
+    {
+      "probe": "CSV row1 gl",
+      "pass": true,
+      "actual": 10.949532299300358,
+      "expected": 10.949532299300358
+    },
+    {
+      "probe": "CSV row1 gr",
+      "pass": true,
+      "actual": 10.949532299300387,
+      "expected": 10.949532299300387
+    },
+    {
+      "probe": "CSV row1 sensorEqual",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "CSV row2 widthArgPx",
+      "pass": true,
+      "actual": 30.0,
+      "expected": 30
+    },
+    {
+      "probe": "CSV row2 frame",
+      "pass": true,
+      "actual": "Full source",
+      "expected": "Full source"
+    },
+    {
+      "probe": "CSV row2 lPx",
+      "pass": true,
+      "actual": -19.62499999999983,
+      "expected": -19.62499999999983
+    },
+    {
+      "probe": "CSV row2 rPx",
+      "pass": true,
+      "actual": 11.87500000000068,
+      "expected": 11.87500000000068
+    },
+    {
+      "probe": "CSV row2 cPx",
+      "pass": true,
+      "actual": -3.8749999999995746,
+      "expected": -3.8749999999995746
+    },
+    {
+      "probe": "CSV row2 wPx",
+      "pass": true,
+      "actual": 31.50000000000051,
+      "expected": 31.50000000000051
+    },
+    {
+      "probe": "CSV row2 score",
+      "pass": true,
+      "actual": 10.949532299300444,
+      "expected": 10.949532299300444
+    },
+    {
+      "probe": "CSV row2 gl",
+      "pass": true,
+      "actual": 10.949532299300444,
+      "expected": 10.949532299300444
+    },
+    {
+      "probe": "CSV row2 gr",
+      "pass": true,
+      "actual": 10.949532299300472,
+      "expected": 10.949532299300472
+    },
+    {
+      "probe": "CSV row2 sensorEqual",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "CSV row3 widthArgPx",
+      "pass": true,
+      "actual": 30.0,
+      "expected": 30
+    },
+    {
+      "probe": "CSV row3 frame",
+      "pass": true,
+      "actual": "Crop",
+      "expected": "Crop"
+    },
+    {
+      "probe": "CSV row3 lPx",
+      "pass": true,
+      "actual": -15.12499999999949,
+      "expected": -15.12499999999949
+    },
+    {
+      "probe": "CSV row3 rPx",
+      "pass": true,
+      "actual": 14.12500000000068,
+      "expected": 14.12500000000068
+    },
+    {
+      "probe": "CSV row3 cPx",
+      "pass": true,
+      "actual": -0.4999999999994049,
+      "expected": -0.4999999999994049
+    },
+    {
+      "probe": "CSV row3 wPx",
+      "pass": true,
+      "actual": 29.25000000000017,
+      "expected": 29.25000000000017
+    },
+    {
+      "probe": "CSV row3 score",
+      "pass": true,
+      "actual": 10.949532299300387,
+      "expected": 10.949532299300387
+    },
+    {
+      "probe": "CSV row3 gl",
+      "pass": true,
+      "actual": 10.949532299300387,
+      "expected": 10.949532299300387
+    },
+    {
+      "probe": "CSV row3 gr",
+      "pass": true,
+      "actual": 10.949532299300387,
+      "expected": 10.949532299300387
+    },
+    {
+      "probe": "CSV row3 sensorEqual",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "CSV row4 widthArgPx",
+      "pass": true,
+      "actual": 36.0,
+      "expected": 36
+    },
+    {
+      "probe": "CSV row4 frame",
+      "pass": true,
+      "actual": "Full source",
+      "expected": "Full source"
+    },
+    {
+      "probe": "CSV row4 lPx",
+      "pass": true,
+      "actual": -19.62499999999983,
+      "expected": -19.62499999999983
+    },
+    {
+      "probe": "CSV row4 rPx",
+      "pass": true,
+      "actual": 16.37499999999983,
+      "expected": 16.37499999999983
+    },
+    {
+      "probe": "CSV row4 cPx",
+      "pass": true,
+      "actual": -1.625,
+      "expected": -1.625
+    },
+    {
+      "probe": "CSV row4 wPx",
+      "pass": true,
+      "actual": 35.99999999999966,
+      "expected": 35.99999999999966
+    },
+    {
+      "probe": "CSV row4 score",
+      "pass": true,
+      "actual": 10.949532299300415,
+      "expected": 10.949532299300415
+    },
+    {
+      "probe": "CSV row4 gl",
+      "pass": true,
+      "actual": 10.949532299300444,
+      "expected": 10.949532299300444
+    },
+    {
+      "probe": "CSV row4 gr",
+      "pass": true,
+      "actual": 10.949532299300415,
+      "expected": 10.949532299300415
+    },
+    {
+      "probe": "CSV row4 sensorEqual",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "CSV row5 widthArgPx",
+      "pass": true,
+      "actual": 36.0,
+      "expected": 36
+    },
+    {
+      "probe": "CSV row5 frame",
+      "pass": true,
+      "actual": "Crop",
+      "expected": "Crop"
+    },
+    {
+      "probe": "CSV row5 lPx",
+      "pass": true,
+      "actual": -17.37500000000017,
+      "expected": -17.37500000000017
+    },
+    {
+      "probe": "CSV row5 rPx",
+      "pass": true,
+      "actual": 16.37500000000017,
+      "expected": 16.37500000000017
+    },
+    {
+      "probe": "CSV row5 cPx",
+      "pass": true,
+      "actual": -0.5,
+      "expected": -0.5
+    },
+    {
+      "probe": "CSV row5 wPx",
+      "pass": true,
+      "actual": 33.75000000000034,
+      "expected": 33.75000000000034
+    },
+    {
+      "probe": "CSV row5 score",
+      "pass": true,
+      "actual": 10.949532299300358,
+      "expected": 10.949532299300358
+    },
+    {
+      "probe": "CSV row5 gl",
+      "pass": true,
+      "actual": 10.949532299300358,
+      "expected": 10.949532299300358
+    },
+    {
+      "probe": "CSV row5 gr",
+      "pass": true,
+      "actual": 10.949532299300358,
+      "expected": 10.949532299300358
+    },
+    {
+      "probe": "CSV row5 sensorEqual",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "receipt max profile difference",
+      "pass": true,
+      "actual": 2.5579538487363607e-13,
+      "expected": 2.5579538487363607e-13
+    },
+    {
+      "probe": "receipt visible count equality label",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "sensor equal per declared width",
+      "pass": true,
+      "actual": [
+        true,
+        true,
+        true
+      ],
+      "expected": [
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "probe": "display maxdiff six significant digits",
+      "pass": true,
+      "actual": "2.55795e-13",
+      "expected": "2.55795e-13"
+    },
+    {
+      "probe": "display all3 sensors equal",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "display visible counts equal",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "figure dimensions",
+      "pass": true,
+      "actual": [
+        2520,
+        1584
+      ],
+      "expected": [
+        2520,
+        1584
+      ]
+    },
+    {
+      "probe": "renderer label/data trace row['lPx']",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "renderer label/data trace row['rPx']",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "renderer label/data trace row['cPx']",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "renderer label/data trace R506 pending. No acceptance.",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "renderer label/data trace Equivalence UNKNOWN",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "renderer label/data trace Scientific validity UNKNOWN",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "renderer label/data trace Semantic / route identity UNKNOWN",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "renderer label/data trace Producer hypothesis:",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "renderer label/data trace reported exact source-pixel copy",
+      "pass": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "probe": "E502 protocol remains frozen",
+      "pass": true,
+      "actual": "ee4ac0852dfe1838c3d637ff967b65918ca9bb077ab9f1a6b2df9763ec3e916a",
+      "expected": "ee4ac0852dfe1838c3d637ff967b65918ca9bb077ab9f1a6b2df9763ec3e916a"
+    }
+  ],
+  "noCvRecompute": true
+}

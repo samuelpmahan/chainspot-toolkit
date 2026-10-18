@@ -1,0 +1,12 @@
+{
+  "schema": "source-pixel-roi-contract-amendment@1",
+  "job_id": "E506",
+  "originalContractSha256": "87619e8b4b47bfc661a20454d44d729ff5521a9ab4dca5bb1074c2c234820fb7",
+  "firstSourceHistoryManifestSha256": "d4ec7b69de6cb3e8c6abdecadef7d54f1bb7df1e375fdf6f6ab29f4fd15d6bf9",
+  "trigger": "Original rotated control failed: profile difference2.5579538487363607e-13 caused legacy strict pair selection to jump several pixels despite exact source/crop pixel and geometry contract. Initial red and all first source bytes retained.",
+  "repair": "prepareSourcePixelRoi remains crop-only/no CV. runSourcePixelRoi always runs exact unchanged composition twice: declared crop and full RGBA in exact ORIGINAL frame/coordinates. Retain composition and sourceComposition separately. No altered source-frame coordinate recomputation, CV signal or source edits.",
+  "receipt": "execution declares2 composition calls and both operation counts/order. equivalence compares every raw learner row, station profile/count, candidate observation, paired-rail, fit and midpoint field. Frame and translated pose metadata are excluded. Retain every difference above fixed absolute tolerance1e-9, with both values and delta. A disagreement returns equivalence UNKNOWN even if both raw measurements are finite. Matching output only receives MATCHED_DECLARED_CONTROL, not physical/scientific/semantic equivalence. Raw measurement status remains separately visible.",
+  "cost": "Every supported enabled run must allocate full/crop snapshots and execute both composition operations; no optional skipping or silent performance shortcut. No encoded PNG/full RGBA dumps are retained as evidence artifacts.",
+  "tests": "Original rotated falsifier must still show finite fit/midpoint differences and equivalence UNKNOWN. Working matched full/crop control must remain MATCHED_DECLARED_CONTROL. Existing pixel/geometry/support/integrity/immutability controls remain unchanged.",
+  "authorization": "Root explicitly approved bounded paired-receipt repair and ordinary tests after revised flow report; independent reviewer still required before course release."
+}

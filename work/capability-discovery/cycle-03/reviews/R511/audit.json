@@ -1,0 +1,442 @@
+{
+  "schema": "R511-independent-audit@1",
+  "checks": [
+    "file-manifest.json:Lenard-E511-actual.png",
+    "file-manifest.json:REPRODUCE.txt",
+    "file-manifest.json:all-nine-candidates.csv",
+    "file-manifest.json:analysis.json",
+    "file-manifest.json:analyze-render.py",
+    "file-manifest.json:figure-inspection.json",
+    "file-manifest.json:finalize.py",
+    "file-manifest.json:freeze.py",
+    "file-manifest.json:pre-run-freeze.log",
+    "file-manifest.json:pre-run-manifest.json",
+    "file-manifest.json:protocol.json",
+    "file-manifest.json:render-initial-error.log",
+    "file-manifest.json:render.log",
+    "file-manifest.json:request-descriptor.json",
+    "file-manifest.json:result.json",
+    "file-manifest.json:run-diagnostic.mjs",
+    "file-manifest.json:run.sh",
+    "file-manifest.json:trial/identity-after.json",
+    "file-manifest.json:trial/identity-before.json",
+    "file-manifest.json:trial/input-binding.json",
+    "file-manifest.json:trial/receipt.json",
+    "file-manifest.json:trial/resources.json",
+    "file-manifest.json:trial/run-binding.json",
+    "file-manifest.json:trial.log",
+    "file-manifest.json:verification.json",
+    "pre-run-manifest.json:protocol.json",
+    "pre-run-manifest.json:request-descriptor.json",
+    "pre-run-manifest.json:run-diagnostic.mjs",
+    "pre-run-manifest.json:run.sh",
+    "pre-run-manifest.json:freeze.py",
+    "result hash",
+    "manifest hash",
+    "same descriptor keys ",
+    "same descriptor keys source",
+    "same descriptor keys source.decoder",
+    "same descriptor keys roi",
+    "same descriptor keys geometry",
+    "same descriptor keys geometry.training",
+    "same descriptor keys geometry.localWidthBank",
+    "same descriptor keys geometry.occluders",
+    "same descriptor keys geometry.edgeSearch",
+    "same descriptor keys projection",
+    "exact five ROI deltas",
+    "all other complete descriptor fields unchanged",
+    "geometry equals frozen protocol",
+    "original preserved D3/E508/result.json",
+    "original preserved D3/E508/trial/request-descriptor.json",
+    "original preserved D3/E508/trial/receipt.json",
+    "original preserved D3/protocol.json",
+    "R508 result exact",
+    "old packet manifest D3/E508/Lenard-actual-receipt.png",
+    "old packet manifest D3/E508/REPLAY.txt",
+    "old packet manifest D3/E508/analysis.json",
+    "old packet manifest D3/E508/exposure-note.json",
+    "old packet manifest D3/E508/figure-inspection.json",
+    "old packet manifest D3/E508/frozen-protocol.json",
+    "old packet manifest D3/E508/render-analysis.py",
+    "old packet manifest D3/E508/run-trial.mjs",
+    "old packet manifest D3/E508/run.sh",
+    "old packet manifest D3/E508/trial/identity-after.json",
+    "old packet manifest D3/E508/trial/identity-before.json",
+    "old packet manifest D3/E508/trial/receipt.json",
+    "old packet manifest D3/E508/trial/request-descriptor.json",
+    "old packet manifest D3/E508/trial/resources.json",
+    "old packet manifest D3/E508/trial/run-binding.json",
+    "old packet manifest V2/audit.json",
+    "old packet manifest V2/audit.py",
+    "old packet manifest V2/caller/run-trial.mjs",
+    "old packet manifest V2/caller/run.sh",
+    "old packet manifest V2/commands.txt",
+    "old packet manifest V2/figure-inspection.json",
+    "old packet manifest V2/finalize.py",
+    "old packet manifest V2/replay/identity-after.json",
+    "old packet manifest V2/replay/identity-before.json",
+    "old packet manifest V2/replay/receipt.json",
+    "old packet manifest V2/replay/request-descriptor.json",
+    "old packet manifest V2/replay/resources.json",
+    "old packet manifest V2/replay/run-binding.json",
+    "old packet manifest V2/replay.log",
+    "old packet manifest V2/result.json",
+    "old support UNKNOWN zero operations",
+    "old nine NOT_EXECUTED rows",
+    "candidate count23",
+    "legacy count14",
+    "closure experiments/capability-discovery/source-pixels/README.md",
+    "closure experiments/capability-discovery/source-pixels/adapter.mjs",
+    "closure experiments/capability-discovery/source-pixels/adapter.test.mjs",
+    "closure experiments/capability-discovery/source-pixels/stage-png.py",
+    "closure experiments/capability-discovery/source-pixels/stage-png.test.py",
+    "closure experiments/capability-discovery/source-pixels/test-fixtures.mjs",
+    "closure work/capability-discovery/cycle-03/evidence/E506/adapter-tests.log",
+    "closure work/capability-discovery/cycle-03/evidence/E506/checkpoint-amendment.md",
+    "closure work/capability-discovery/cycle-03/evidence/E506/checkpoint.md",
+    "closure work/capability-discovery/cycle-03/evidence/E506/contract-amendment.json",
+    "closure work/capability-discovery/cycle-03/evidence/E506/contract.json",
+    "closure work/capability-discovery/cycle-03/evidence/E506/initial-adapter.test.mjs",
+    "closure work/capability-discovery/cycle-03/evidence/E506/initial-tests-red.log",
+    "closure work/capability-discovery/cycle-03/evidence/E506/numeric-seam.json",
+    "closure work/capability-discovery/cycle-03/evidence/E506/preserved-composition-tests.log",
+    "closure work/capability-discovery/cycle-03/evidence/E506/seam-probe.mjs",
+    "closure work/capability-discovery/cycle-03/evidence/E506/staging-tests.log",
+    "closure work/capability-discovery/cycle-03/history/E506-first-source/README.md",
+    "closure work/capability-discovery/cycle-03/history/E506-first-source/adapter.mjs",
+    "closure work/capability-discovery/cycle-03/history/E506-first-source/adapter.test.mjs",
+    "closure work/capability-discovery/cycle-03/history/E506-first-source/manifest.json",
+    "closure work/capability-discovery/cycle-03/history/E506-first-source/stage-png.py",
+    "closure work/capability-discovery/cycle-03/history/E506-first-source/stage-png.test.py",
+    "closure work/capability-discovery/cycle-02/feature-manifest-E308.json",
+    "closure experiments/capability-discovery/composition/cli.mjs",
+    "closure experiments/capability-discovery/composition/cli.test.mjs",
+    "closure experiments/capability-discovery/composition/composition.test.mjs",
+    "closure experiments/capability-discovery/composition/decimal-bank.test.mjs",
+    "closure experiments/capability-discovery/composition/recipe.mjs",
+    "closure experiments/capability-discovery/composition/training-fixtures.mjs",
+    "closure work/capability-discovery/cycle-02/called-shot-E306.json",
+    "closure work/capability-discovery/cycle-02/called-shot-E308.json",
+    "closure work/capability-discovery/cycle-02/evidence/E308/counterexample-input.json",
+    "closure experiments/capability-discovery/probes/width/recipe.mjs",
+    "closure experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+    "closure experiments/capability-discovery/probes/width/vendor/active/contracts/alpha.profile@1.mjs",
+    "closure experiments/capability-discovery/probes/width/vendor/provider/fourLaneSensor.cjs",
+    "closure experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+    "byte-identical replay identity-before.json",
+    "byte-identical replay identity-after.json",
+    "byte-identical replay input-binding.json",
+    "byte-identical replay run-binding.json",
+    "byte-identical replay receipt.json",
+    "pre/post identity exact",
+    "staged exact hash",
+    "staged original bytes exact",
+    "PNG byte binding",
+    "Git source blob",
+    "Git source bytes",
+    "native RGB dimensions",
+    "every full RGBA byte",
+    "fullRGBA binding",
+    "alpha255",
+    "display crop exact native rows",
+    "analysis scientific fields exact",
+    "CSV exact",
+    "figure exact",
+    "two compositions66ops",
+    "supported",
+    "zero transform",
+    "full crop sameRGBA",
+    "fixed numeric control",
+    "UNKNOWN and no promotion source-pixel-roi@1",
+    "UNKNOWN and no promotion local-ribbon-composition@1",
+    "UNKNOWN and no promotion local-ribbon-composition@1",
+    "source/crop station raw fields exact excluding declared frame primary",
+    "profile offsets/counts primary",
+    "exact bank primary",
+    "same receipt row primary29",
+    "finite fit or explicit null 0",
+    "same receipt row primary37",
+    "finite fit or explicit null 1",
+    "same receipt row primary45",
+    "finite fit or explicit null 2",
+    "source/crop station raw fields exact excluding declared frame lateral-plus16",
+    "profile offsets/counts lateral-plus16",
+    "exact bank lateral-plus16",
+    "same receipt row lateral-plus1629",
+    "finite fit or explicit null 3",
+    "same receipt row lateral-plus1637",
+    "finite fit or explicit null 4",
+    "same receipt row lateral-plus1645",
+    "finite fit or explicit null 5",
+    "source/crop station raw fields exact excluding declared frame bright-patch",
+    "profile offsets/counts bright-patch",
+    "exact bank bright-patch",
+    "same receipt row bright-patch29",
+    "finite fit or explicit null 6",
+    "same receipt row bright-patch37",
+    "finite fit or explicit null 7",
+    "same receipt row bright-patch45",
+    "finite fit or explicit null 8",
+    "six fits three nulls",
+    "bright patch37/45 fits combined0",
+    "37 same edge+16 expectation fails",
+    "all learner rows exact"
+  ],
+  "checkCount": 180,
+  "passed": true,
+  "exactFiveChanges": [
+    {
+      "path": "roi.xPx",
+      "before": 180,
+      "after": 0
+    },
+    {
+      "path": "roi.yPx",
+      "before": 1795,
+      "after": 0
+    },
+    {
+      "path": "roi.widthPx",
+      "before": 210,
+      "after": 1290
+    },
+    {
+      "path": "roi.heightPx",
+      "before": 215,
+      "after": 2796
+    },
+    {
+      "path": "roi.frame",
+      "before": "Lenard-full.original-source-pixel-centers.roi-180-1795-210-215",
+      "after": "Lenard-full.original-source-pixel-centers.E511.full-control"
+    }
+  ],
+  "allNineRows": [
+    {
+      "stationId": "primary",
+      "widthArgPx": 29,
+      "combined": 0,
+      "edgeFit": {
+        "lPx": -10.715506043327073,
+        "rPx": 17.742823260620035,
+        "cPx": 3.513658608646481,
+        "wPx": 28.45832930394711,
+        "score": 2.4936537391529896,
+        "gl": 2.4936537391529896,
+        "gr": 9.054360536405966
+      },
+      "midpoint": {
+        "status": "OBSERVED_CHANNELS",
+        "fitMidpointNormalOffsetPx": 3.513658608646481,
+        "candidateCenterMinusFitMidpointPx": -3.513658608646481,
+        "candidateCenterMinusFitMidpointInNominalWidths": -0.12116064167746486,
+        "denominator": "explicit candidate width; not calibrated width",
+        "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+      }
+    },
+    {
+      "stationId": "primary",
+      "widthArgPx": 37,
+      "combined": 0.7130864197530864,
+      "edgeFit": {
+        "lPx": -18.179629722555774,
+        "rPx": 17.742823260620035,
+        "cPx": -0.21840323096786918,
+        "wPx": 35.92245298317581,
+        "score": 9.054360536405966,
+        "gl": 12.299726262541299,
+        "gr": 9.054360536405966
+      },
+      "midpoint": {
+        "status": "OBSERVED_CHANNELS",
+        "fitMidpointNormalOffsetPx": -0.21840323096786918,
+        "candidateCenterMinusFitMidpointPx": 0.21840323096786918,
+        "candidateCenterMinusFitMidpointInNominalWidths": 0.005902790026158626,
+        "denominator": "explicit candidate width; not calibrated width",
+        "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+      }
+    },
+    {
+      "stationId": "primary",
+      "widthArgPx": 45,
+      "combined": 0,
+      "edgeFit": null,
+      "midpoint": {
+        "status": "UNKNOWN",
+        "reason": "no finite positive two-edge fit in declared profile window"
+      }
+    },
+    {
+      "stationId": "lateral-plus16",
+      "widthArgPx": 29,
+      "combined": 0,
+      "edgeFit": null,
+      "midpoint": {
+        "status": "UNKNOWN",
+        "reason": "no finite positive two-edge fit in declared profile window"
+      }
+    },
+    {
+      "stationId": "lateral-plus16",
+      "widthArgPx": 37,
+      "combined": 0,
+      "edgeFit": {
+        "lPx": -16.88935029752603,
+        "rPx": 18.94145714332961,
+        "cPx": 1.026053422901791,
+        "wPx": 35.83080744085564,
+        "score": 1.989559579985439,
+        "gl": 1.989559579985439,
+        "gr": 3.088671586953865
+      },
+      "midpoint": {
+        "status": "OBSERVED_CHANNELS",
+        "fitMidpointNormalOffsetPx": 1.026053422901791,
+        "candidateCenterMinusFitMidpointPx": -1.026053422901791,
+        "candidateCenterMinusFitMidpointInNominalWidths": -0.027731173591940297,
+        "denominator": "explicit candidate width; not calibrated width",
+        "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+      }
+    },
+    {
+      "stationId": "lateral-plus16",
+      "widthArgPx": 45,
+      "combined": 0,
+      "edgeFit": {
+        "lPx": -26.71550604332707,
+        "rPx": 18.94145714332961,
+        "cPx": -3.88702444999873,
+        "wPx": 45.65696318665668,
+        "score": 2.4936537391529896,
+        "gl": 2.4936537391529896,
+        "gr": 3.088671586953865
+      },
+      "midpoint": {
+        "status": "OBSERVED_CHANNELS",
+        "fitMidpointNormalOffsetPx": -3.88702444999873,
+        "candidateCenterMinusFitMidpointPx": 3.88702444999873,
+        "candidateCenterMinusFitMidpointInNominalWidths": 0.08637832111108289,
+        "denominator": "explicit candidate width; not calibrated width",
+        "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+      }
+    },
+    {
+      "stationId": "bright-patch",
+      "widthArgPx": 29,
+      "combined": 0,
+      "edgeFit": null,
+      "midpoint": {
+        "status": "UNKNOWN",
+        "reason": "no finite positive two-edge fit in declared profile window"
+      }
+    },
+    {
+      "stationId": "bright-patch",
+      "widthArgPx": 37,
+      "combined": 0,
+      "edgeFit": {
+        "lPx": -18.38451777927887,
+        "rPx": 21.324389666263194,
+        "cPx": 1.4699359434921622,
+        "wPx": 39.70890744554207,
+        "score": 0.3629198922914725,
+        "gl": 0.3629198922914725,
+        "gr": 14.981094293619662
+      },
+      "midpoint": {
+        "status": "OBSERVED_CHANNELS",
+        "fitMidpointNormalOffsetPx": 1.4699359434921622,
+        "candidateCenterMinusFitMidpointPx": -1.4699359434921622,
+        "candidateCenterMinusFitMidpointInNominalWidths": -0.039727998472761136,
+        "denominator": "explicit candidate width; not calibrated width",
+        "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+      }
+    },
+    {
+      "stationId": "bright-patch",
+      "widthArgPx": 45,
+      "combined": 0,
+      "edgeFit": {
+        "lPx": -24.741806878695996,
+        "rPx": 21.324389666263194,
+        "cPx": -1.7087086062164012,
+        "wPx": 46.06619654495919,
+        "score": 1.859738989421146,
+        "gl": 1.859738989421146,
+        "gr": 14.981094293619662
+      },
+      "midpoint": {
+        "status": "OBSERVED_CHANNELS",
+        "fitMidpointNormalOffsetPx": -1.7087086062164012,
+        "candidateCenterMinusFitMidpointPx": 1.7087086062164012,
+        "candidateCenterMinusFitMidpointInNominalWidths": 0.03797130236036447,
+        "denominator": "explicit candidate width; not calibrated width",
+        "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+      }
+    }
+  ],
+  "rawLearner": {
+    "widthPx": 37,
+    "scores": [
+      {
+        "widthPx": 29,
+        "meanScore": 0.09866666666666682,
+        "visibleSamples": 5
+      },
+      {
+        "widthPx": 37,
+        "meanScore": 0.4553086419753087,
+        "visibleSamples": 5
+      },
+      {
+        "widthPx": 45,
+        "meanScore": 0,
+        "visibleSamples": 5
+      }
+    ]
+  },
+  "midpoint37Contrast": {
+    "widthArgPx": 37,
+    "primaryFitPresent": true,
+    "offsetFitPresent": true,
+    "offsetMinusPrimaryCandidateCenterMinusFitMidpointPx": -1.2444566538696602,
+    "comparisonStatus": "OBSERVED_CHANNEL_DIFFERENCE_WITHOUT_SAME_EDGE_IDENTITY",
+    "limit": "A+16 offset does not guarantee that both fits identify the same physical edges; no semantic identity supplied."
+  },
+  "nonfiniteEncodings": [],
+  "receiptSha256": "7f008b06d5757a306d6942708c7767346e7ba73059504eb60010bb46fd57942b",
+  "completeRequestJsonSha256": "fd77e8620ca4f308ec6ae94e83a3676b3859ee35475d0fb66fbe524bfbdc80c5",
+  "sourceStagedSha256": "0ff967ecde36cb6ed81b23bc58ef5293f60aa56639c6d896e238e912a27c717a",
+  "sourcePngSha256": "27ad16bcf2c075316048ec39bc5035e0ebbe260bde32140466a3010f15d75834",
+  "fullRgbaSha256": "c93a4c532da248a61e29e56bf86273e6eaee9151643bd681974a882928f50766",
+  "figureSha256": "e82734db4fc6c34168911031a4b2f5118c3272827dd6fe544380b686205a078d",
+  "codeHashes": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/V2/E511/run.sh",
+      "sha256": "110606dc172345b1e042a8d06605c05540128653221cb1b1b1c105b45307c748"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/V2/E511/run-diagnostic.mjs",
+      "sha256": "526f9a033e75d72bcec8e50853cee0a05c17d9d78d540d1e273a8513043fdd9e"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/V2/E511/analyze-render.py",
+      "sha256": "b6b621aaaa4bb597ab32a436e1df1648279299591d4bba1c92d30cd256b163a4"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/stage-png.py",
+      "sha256": "e194f56e2899f516bb79dd8d6c5e4b876440d6f0932bf9d74e0a56c117f06a44"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/adapter.mjs",
+      "sha256": "df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/composition/recipe.mjs",
+      "sha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6"
+    }
+  ],
+  "resourceFieldsExcludedFromDeterministicEquality": true,
+  "administrativeTypos": "Pre-freeze helper source-path typo is producer testimony only; raw traceback not retained. Root independently confirmed absence. Retained render-initial-error.log shows duplicate score-key TypeError outside CV.",
+  "reviewerStagingCorrection": "Initial reviewer staging used a guessed imageId and produced staged SHA eedaaf96ef70a96aa76c33ee699a8115d49487ad35b71e9d5c5bbb93e736feef. Detected before any adapter call; retained as initial-staging-wrong-image-id.json, restaged with exact Lenard-full imageId. One adapter replay only."
+}

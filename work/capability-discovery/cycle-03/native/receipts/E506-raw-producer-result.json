@@ -1,0 +1,51 @@
+{
+  "schema": "discovery-worker-result@1",
+  "job_id": "E506",
+  "worker": "D6",
+  "outcome": "mixed_change",
+  "state": "candidate_frozen_awaiting_independent_R506",
+  "candidateFreeze": {
+    "path": "work/capability-discovery/cycle-03/evidence/E506/candidate-freeze.json",
+    "sha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626"
+  },
+  "frozenPaths": [
+    "experiments/capability-discovery/source-pixels/README.md",
+    "experiments/capability-discovery/source-pixels/adapter.mjs",
+    "experiments/capability-discovery/source-pixels/adapter.test.mjs",
+    "experiments/capability-discovery/source-pixels/stage-png.py",
+    "experiments/capability-discovery/source-pixels/stage-png.test.py",
+    "experiments/capability-discovery/source-pixels/test-fixtures.mjs"
+  ],
+  "contract": {
+    "originalSha256": "87619e8b4b47bfc661a20454d44d729ff5521a9ab4dca5bb1074c2c234820fb7",
+    "amendmentSha256": "5e524e276f5113b161e51f2c9b7af88aa66bd1dce988a0af84c89512299ae2be"
+  },
+  "tests": {
+    "adapter": {
+      "command": "node --test experiments/capability-discovery/source-pixels/adapter.test.mjs",
+      "pass": 8,
+      "fail": 0
+    },
+    "staging": {
+      "command": "python experiments/capability-discovery/source-pixels/stage-png.test.py",
+      "pass": 2,
+      "fail": 0
+    },
+    "preservedComposition": {
+      "command": "node --test experiments/capability-discovery/composition/*.test.mjs",
+      "pass": 10,
+      "fail": 0
+    },
+    "originalRed": {
+      "pass": 7,
+      "fail": 1,
+      "reason": "rotated strict legacy pair-selection instability; preserved counterexample now requires equivalence UNKNOWN"
+    },
+    "fullRepository": "not rerun; bounded additive module"
+  },
+  "preservedRecipeSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52",
+  "actualFlow": "work/capability-discovery/cycle-03/evidence/E506/checkpoint-amendment.md",
+  "finding": "Exact source-pixel crop and geometry do not guarantee strict legacy fit invariance; paired original-frame source/crop evidence now mandatory and equivalence UNKNOWN on disagreement. No CV math change.",
+  "exposure": "D2/D3 accidentally messaged proposed geometry; no course files/images/protocols opened or used to tune; trials exploratory predeclared, not fully blind independent evaluation",
+  "git": "No commit or push; all source/Git edits stopped pending R506 and separate E599 authorization."
+}

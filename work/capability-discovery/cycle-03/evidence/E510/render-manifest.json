@@ -1,0 +1,47 @@
+{
+  "schema": "E510-render-manifest@1",
+  "job_id": "E510",
+  "worker": "D1",
+  "inputSha256": "4515742be1bcbd3ef3949e302eb1610d39c2c63218e5382d73bf82de83d60ab5",
+  "files": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/render_figure.py",
+      "sha256": "ba6e91afe1b1ab8194752613cf05068e6ad2485f4b6bfbff986435856522979c",
+      "bytes": 5586
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/numeric-seam-input.json",
+      "sha256": "4515742be1bcbd3ef3949e302eb1610d39c2c63218e5382d73bf82de83d60ab5",
+      "bytes": 2541
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/numeric-seam-figure.png",
+      "sha256": "8d788228f8528efd26054f9863a6190c44269c4c32b9e2c41804f8e4b51ee6f8",
+      "bytes": 365412
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/fit-table.json",
+      "sha256": "212aff8cdd4d01f4697d529ef0a96bf0f15a183ef011ec43d44bda035e302a61",
+      "bytes": 2025
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle03/D1/figure-E510/fit-table.csv",
+      "sha256": "c76ef44f5073971d7332ab193b7c126cfd1eacbbd692526d5fb19043401d87b8",
+      "bytes": 917
+    }
+  ],
+  "figureInspection": {
+    "view_image": true,
+    "findings": "Legible full/crop edge intervals and midpoint dots at widths 24,30,36; table rounded to .001 px; labels/source hash and pending/UNKNOWN limits visible. No clipping or figure edits needed."
+  },
+  "figureDimensionsPx": [
+    2520,
+    1584
+  ],
+  "tableIdentityChecks": {
+    "jsonExactReceiptFields": true,
+    "csvNumericRoundTripExact": true,
+    "rows": 6
+  },
+  "noCvExecution": true
+}

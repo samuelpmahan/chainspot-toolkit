@@ -1,0 +1,14 @@
+E508 fixed Lenard actual-source trial
+
+Portable invocation (all path roots supplied as arguments):
+  bash run.sh REPOSITORY_ROOT FROZEN_PROTOCOL_JSON ORIGINAL_LENARD_PNG FRESH_OUTPUT_DIRECTORY
+Use the included frozen-protocol.json, exact source PNG SHA25627ad16bcf2c075316048ec39bc5035e0ebbe260bde32140466a3010f15d75834, and candidate d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626. The shell caller invokes the exact accepted stage-png.py then actual Node run-trial.mjs. Output creation is exclusive; use a fresh directory.
+
+The compact request descriptor retains every supported geometry scalar unchanged. Human explanation fields are stripped only for strict API compatibility and remain in frozen-protocol.json. No source, pose, width bank, window, lateral search, tolerance, or masks were tuned. runSourcePixelRoi is invoked exactly once and serializes with exported preserveNonFinite.
+
+Expected actual fixed-trial result: UNKNOWN, absent conservative training support, one adapter call and zero composition calls. The two raw training endpoint envelopes are retained in receipt.json. Paired original/crop measurements are conditional on support; here neither was executed and equivalence is UNKNOWN. All9 requested rows in analysis.json are NOT_EXECUTED_SUPPORT_UNKNOWN. No automatic retry, crop enlargement or downstream producer is authorized.
+
+Scientific render invocation (consumes actual receipt and request descriptor):
+  python render-analysis.py TRIAL_OUTPUT_DIRECTORY ORIGINAL_LENARD_PNG RENDER_OUTPUT_DIRECTORY
+
+Package the compact receipts, hashes, runner, declaration, exposure note, analysis and inspected figure. Do not package the original PNG or trial/staged-original-source.json (49MiB); these are reproducible external/ephemeral inputs identified by hash. This is an exposed predeclared exploratory trial, with prior message-level geometry disclosure; no blind heldout evaluation, path identity, width calibration or speedup claim.

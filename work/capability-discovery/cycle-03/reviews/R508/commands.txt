@@ -1,0 +1,10 @@
+R508 V2 consequential reproduction commands (executed unchanged; all writes confined to V2):
+mkdir -p /workspace/scratch/8528bb251845/discovery-cycle03/V2/caller
+cp /workspace/scratch/8528bb251845/discovery-cycle03/D3/E508/run.sh /workspace/scratch/8528bb251845/discovery-cycle03/D3/E508/run-trial.mjs /workspace/scratch/8528bb251845/discovery-cycle03/V2/caller/
+bash /workspace/scratch/8528bb251845/discovery-cycle03/V2/caller/run.sh /workspace/scratch/8528bb251845/chainspot-discovery-lab /workspace/scratch/8528bb251845/discovery-cycle03/D3/protocol.json /workspace/scratch/8528bb251845/discovery-cycle03/D3/source/Lenard-full.png /workspace/scratch/8528bb251845/discovery-cycle03/V2/replay > /workspace/scratch/8528bb251845/discovery-cycle03/V2/replay.log 2>&1
+python /workspace/scratch/8528bb251845/discovery-cycle03/V2/audit.py
+functions.view_image(path=/workspace/scratch/8528bb251845/discovery-cycle03/D3/E508/Lenard-actual-receipt.png)
+python /workspace/scratch/8528bb251845/discovery-cycle03/V2/finalize.py
+
+Audit performs read-only git show/ref-path resolution on platform492, Pillow decode/crop byte comparison, file/hash/size/request/raw-receipt checks and geometry-only sample-location enumeration. It invokes no CV producers. Giant staging JSON is an ephemeral input; hash retained in exact replay/run-binding.json. Do not package staged-original-source.json.
+Read-only documentation/source inspected: source-pixels README/adapter/stager contract, composition README/recipe, vendor/dev72/fourLaneRibbon.ts, vendor/active/ports/s6straight/pathSpace.mjs, candidate freeze, E508 caller/renderer/manifest/report/analysis/exposure, protocol and earlier R503 support distinction. No other work tree or branch opened.
