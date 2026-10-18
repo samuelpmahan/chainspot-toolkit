@@ -103,10 +103,11 @@ right and the repo is behind. Every number carries a unit.
   (1) Work worth measuring is a Calculation: the PartStore times every call
   and copies the measures its output declares in `emits` onto the call's
   entry. (2) A runner's store is instrumented (`fg/profile.mjs`
-  `instrumentedStore`, or `registerInstrumentation` on an existing store);
-  the calls go to the `instrumentation.json` sidecar. (3) Any FG adds the
-  `profiled` mixin (`fg/mixins.mjs`) and its record gets its own call
-  subtree: calls and summed emits, deterministic, with units. Timings stay
+  every store keeps its call log and offers it as
+  `fn.tk.instrumentation.calls`; runners write it as the
+  `instrumentation.json` sidecar. (3) `profiled` is a DEFAULT property of
+  every composed FG (with instrumented, rendered): its record gets its own
+  call subtree, calls and summed emits, deterministic, with units. Timings stay
   in the sidecar, never in hashed records; `profileSummary` /
   `profileFrame` turn any sidecar into a table or flipbook page.
   A Part a Calculation needs is declared as ITS inPart, so it is produced on

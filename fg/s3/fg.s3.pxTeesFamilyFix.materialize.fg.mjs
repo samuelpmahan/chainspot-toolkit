@@ -23,7 +23,7 @@
  * materializations.S3FamilyFix; lane evidence experiments.branches.S3FIX.
  */
 import { branchRun, guarantee, pipe, step } from '../compose.mjs';
-import { conserved, delta, framed, gated, judged, lane, materialized, profiled, published, sameCanon, unitful, witnessed } from '../mixins.mjs';
+import { conserved, delta, framed, gated, judged, lane, materialized, published, sameCanon, unitful, witnessed } from '../mixins.mjs';
 import { computeFamilyFix, rederiveFamilyFixVerdicts, FAMILY_FIX, FIX_BOUNDS, FIX_BOUNDS_UNITS, ringKeyOf } from '../../ports/early/s3FamilyFix.mjs';
 import { legacyCanon, unionOf, viewBytes } from '../legacy.mjs';
 import { serializeFamily, serializeRings, serializeTee, teeTuple } from './serialize.mjs';
@@ -275,7 +275,6 @@ export default guarantee({
     }
   }),
   frames,
-  profiled,
   published({
     stage: 'S3', key: 'familyFixMaterialization', materialization: 'S3FamilyFix',
     header: () => ({ specDelta: FAMILY_FIX.specDelta, parts: [FAMILY, TEES], producedBy: FAMILY_FIX.refinedCalculation }),

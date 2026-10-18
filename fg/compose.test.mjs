@@ -57,7 +57,7 @@ test('unit test FG: fn.testimony.teePoints on the golden annotation', () => {
     ['everyAnnotatedTeeConverted', 'canonicalIsSourceMinusUpperRows', 'holesInOrder', 'insideCanonicalFrame', 'rendered']);
   assert.deepEqual(record.callCount, { 'fn.testimony.teePoints': 1 });
   assert.equal(frames.length, 1, 'forced render: the test outcome is a flipbook page');
-  assert.deepEqual(record.properties, ['instrumented', 'rendered']);
+  assert.deepEqual(record.properties, ['profiled', 'instrumented', 'rendered']);
 });
 
 test('component test FG: teePoints -> judgeMembers over a span, real code paths, fixture members', () => {
@@ -103,7 +103,7 @@ test('decorators compose in code order; declarations union; forced render fails 
       delta({ out: 'px.toy', base: 'px.toy.base', by: 'fn.toy', outPx: (s) => s.parts['px.toy'].objects.map((o, i) => [`#${i}`, o.px]), basePx: (s) => s.parts['px.toy.base'].map((o, i) => [`#${i}`, o.px]) }),
       step('needs base', (env, s) => ({ parts: { ...s.parts, 'px.toy.base': env.get('px.toy.base') } }), { reads: ['px.toy.base'] })));
   assert.deepEqual(fg.plan.map((p) => p.name).slice(0, 3), ['read px.toy', 'first', 'second']);
-  assert.deepEqual(fg.properties, ['first', 'second', 'framed', 'delta:px.toy.base', 'instrumented', 'rendered']);
+  assert.deepEqual(fg.properties, ['first', 'second', 'framed', 'delta:px.toy.base', 'profiled', 'instrumented', 'rendered']);
   assert.deepEqual(fg.reads, ['px.toy', 'px.toy.base'], 'a step declares its own reads; the FG is their union');
   // the delta ran before the step that reads its base: the plan order is the execution order, so this FG fails by name
   assert.throws(() => runGuarantee(fg, { store: toyStore(), sink: createMemorySink() }), /run threw/);

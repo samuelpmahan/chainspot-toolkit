@@ -121,8 +121,27 @@ function emitsOf(values) {
   return out;
 }
 
+/** The name of the capability every store offers: the calls made by args.caller and nested under them. */
+export const INSTRUMENTATION_CALLS = 'fn.tk.instrumentation.calls';
+
+/** The calls made by `caller` (an FG id, an implementation, a Calculation) and everything nested under them. */
+export function callSubtree(entries, caller) {
+  const inTree = new Set(), sorted = [...entries].sort((a, b) => a.seq - b.seq);
+  for (const e of sorted) if (e.caller === caller || (e.parent != null && inTree.has(e.parent))) inTree.add(e.seq);
+  return sorted.filter((e) => inTree.has(e.seq));
+}
+
+/**
+ * Profiled is a default property of every Calculation: every store keeps the log of its calls (and its branches'),
+ * each entry timed with the emits its output declared, and offers it back as the capability INSTRUMENTATION_CALLS.
+ * onCall stays a hook for runners that also stream entries elsewhere.
+ */
 export function createPartStore({ base = null, name = 'root', onCall = null } = {}) {
-  return makeStore({ base, name, parent: null, shared: { seq: 0, stack: [], onCall } });
+  const log = [];
+  const store = makeStore({ base, name, parent: null, shared: { seq: 0, stack: [], log, onCall: (entry) => { log.push(entry); onCall?.(entry); } } });
+  store.register(INSTRUMENTATION_CALLS, { note: 'the calls made by args.caller and nested under them (timings: sidecar data, never hashed)',
+    calculate: (io) => callSubtree(log, io.args?.caller ?? null).filter((e) => e.calculation !== INSTRUMENTATION_CALLS) });
+  return store;
 }
 
 function makeStore({ base, name, parent, shared }) {
@@ -303,6 +322,9 @@ function makeStore({ base, name, parent, shared }) {
         }
       });
     },
+
+    /** Every call this store and its branches made so far (the default profile). */
+    calls: () => [...shared.log],
 
     branch(branchBase, { name: branchName = `${name}/branch` } = {}) {
       return makeStore({ base: branchBase, name: branchName, parent: self, shared });

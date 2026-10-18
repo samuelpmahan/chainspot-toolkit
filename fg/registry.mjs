@@ -142,7 +142,7 @@ export const declaredParts = (part) => String(part).split(/\s*\+\s*/).filter(Boo
  * would not be readable without the code); a hand-written FG with no
  * declared properties is not.
  */
-export const DEFAULT_PROPERTIES = Object.freeze(['instrumented', 'rendered']);
+export const DEFAULT_PROPERTIES = Object.freeze(['instrumented', 'profiled', 'rendered']);
 export function propertyMismatch(declaredList, implementedList) {
   const implemented = implementedList.filter((p) => !DEFAULT_PROPERTIES.includes(p) || (declaredList ?? []).includes(p));
   if (declaredList === undefined && !implemented.length) return null;

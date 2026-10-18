@@ -68,7 +68,6 @@
 import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import { registerInstrumentation } from '../../fg/profile.mjs';
 import { createPartStore } from '../../fg/store.mjs';
 import { TEE_POINTS_CALCULATION } from '../../fg/s3/teeFamily.mjs';
 import { executePlanInstrumented } from './instrument.mjs';
@@ -115,7 +114,6 @@ function locateTestimony(forkRoot, sourceSha256) {
  */
 export function createEarlyStore({ forkRoot, source, getBoard, dist, restorePxC, instrumentation }) {
   const store = createPartStore({ base: getBoard, name: 'early', onCall: (entry) => instrumentation.calculations.push(entry) });
-  registerInstrumentation(store, () => instrumentation.calculations);   // FG property `profiled` reads its own calls here
   const { executeCompiledPlan } = dist('exec/gateway');
   const { nullFeatureContext, defaultKnobs } = dist('detectors/threeFactor/features/types');
   const { createMemorySink } = dist('exec/sink');

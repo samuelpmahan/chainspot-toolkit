@@ -76,6 +76,8 @@ import { defineGuarantee, runGuarantee } from './guarantee.mjs';
 import { runBranchOp, BRANCH_CALLS } from './branchOp.mjs';
 import { comparableForkJoin } from './forkjoin.mjs';
 import { createMemorySink } from './sinks.mjs';
+import { INSTRUMENTATION_CALLS } from './store.mjs';
+import { profileSummary } from './profile.mjs';
 import { createPartStore } from './store.mjs';
 import { plain } from './canon.mjs';
 
@@ -242,7 +244,21 @@ const recorded = (result) => decorator({
 /** Default decorators: every composed FG is instrumented and must render. */
 const instrumented = decorator({
   name: 'instrumented', property: 'instrumented',
-  after: (env, s) => ({ record: { ...s.record, callCount: Object.fromEntries(env.calls) } })
+  after: (env, s) => ({ record: { ...s.record, callCount: Object.fromEntries([...env.calls].filter(([fn]) => fn !== INSTRUMENTATION_CALLS)) } })   // reading its own profile is not the FG's work
+});
+/**
+ * profiled (default): the FG's own call subtree, read back from its store (fg/store.mjs INSTRUMENTATION_CALLS), onto its
+ * record as deterministic measures only: per Calculation the calls and the summed emits, with units. Timings stay in
+ * the store's call log / the sidecar: a record is hashed evidence, a timing never is.
+ */
+export const profiled = decorator({
+  name: 'profiled', property: 'profiled', calls: [INSTRUMENTATION_CALLS],
+  after: (env, s) => {
+    const profile = profileSummary({ calculations: env.call(INSTRUMENTATION_CALLS, { caller: env.id }) }).map(({ calculation, calls, emits, threw }) => ({ calculation, calls, emits, threw }));
+    const units = { calls: 'count (Calculation calls)', threw: 'count (calls that threw)' };
+    for (const row of profile) for (const k of Object.keys(row.emits)) units[k] ??= `as emitted by ${row.calculation} (summed over its calls)`;
+    return { out: { ...(s.out ?? {}), profile }, units: { ...(s.units ?? {}), ...units } };
+  }
 });
 const rendered = decorator({
   name: 'rendered (forced render)', property: 'rendered',
@@ -255,7 +271,7 @@ const rendered = decorator({
  */
 export function guarantee({ id, guards, reads = [], calls = [], requires = [], lane = null, site = 'stage', result = (s) => ({ totals: s.totals ?? null }), audit = [] }, c, runtime = {}) {
   if (!isComposition(c)) throw new Error(`guarantee ${id}: the second argument must be a Composition`);
-  const full = pipe(c, recorded(result), ...audit, instrumented, rendered);
+  const full = pipe(c, profiled, recorded(result), ...audit, instrumented, rendered);
   return defineGuarantee({
     id, guards, site,
     reads: uniq([reads, full.reads]), calls: uniq([calls, full.calls]), requires: uniq([requires, full.requires]),

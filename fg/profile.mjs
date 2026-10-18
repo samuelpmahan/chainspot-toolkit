@@ -4,43 +4,28 @@
  * The pattern (Sam, 2026-10-18: profiling, instrumentation and properties as reusable FunctionalGuarantee pieces):
  *   1. work worth measuring is a Calculation: the PartStore times every call (onCall) and copies the measures its
  *      output declares in `emits` onto the call's entry (fg/store.mjs emitsOf);
- *   2. a runner builds its store with instrumentedStore() and writes the sidecar with its document();
+ *   2. every store keeps its call log (a default property, fg/store.mjs); a runner writes it as the sidecar
+ *      (instrumentedStore().document());
  *   3. profileSummary(doc) aggregates any sidecar per Calculation (calls, total / self ms, summed numeric emits) and
  *      profileFrame(summary) renders it as a ledger frame for any flipbook.
  * Elapsed times are nondeterministic, so they live in the sidecar and in frames, never in hashed records.
  */
 import { createPartStore } from './store.mjs';
 
-export const INSTRUMENTATION_CALLS = 'fn.tk.instrumentation.calls';
+export { INSTRUMENTATION_CALLS, callSubtree } from './store.mjs';
 
-/** The calls made by `caller` (an FG id, an implementation, a Calculation) and everything nested under them. */
-export function callSubtree(entries, caller) {
-  const inTree = new Set();
-  const sorted = [...entries].sort((a, b) => a.seq - b.seq);
-  for (const e of sorted) if (e.caller === caller || (e.parent != null && inTree.has(e.parent))) inTree.add(e.seq);
-  return sorted.filter((e) => inTree.has(e.seq));
-}
-
-/**
- * Any store whose calls are instrumented offers them back as one capability, so an FG property can read its own
- * profile through the same door it reads everything else: store.call / env.call.
- */
-export function registerInstrumentation(store, entries) {
-  store.register(INSTRUMENTATION_CALLS, { note: 'the instrumented calls made by args.caller and nested under them (sidecar data)',
-    calculate: (io) => callSubtree(entries(), io.args?.caller ?? null).filter((e) => e.calculation !== INSTRUMENTATION_CALLS) });
-}
+/** Kept for runners written before profiling became a default: every store already offers its calls. */
+export function registerInstrumentation() {}
 
 const now = () => (globalThis.performance?.now ? globalThis.performance.now() : Date.now());
 
 /** A PartStore whose every Calculation call lands in an instrumentation document (schema nctk-instrumentation@1). */
 export function instrumentedStore({ name, base = null } = {}) {
-  const calculations = [];
   const startedMs = now();
-  const store = createPartStore({ name, base, onCall: (entry) => calculations.push({ ...entry }) });
-  registerInstrumentation(store, () => calculations);
+  const store = createPartStore({ name, base });
   return {
     store,
-    document: () => ({ schema: 'nctk-instrumentation@1', wallMs: Math.round((now() - startedMs) * 1000) / 1000, ops: [], calculations: [...calculations].sort((a, b) => a.seq - b.seq), store: store.manifest() })
+    document: () => ({ schema: 'nctk-instrumentation@1', wallMs: Math.round((now() - startedMs) * 1000) / 1000, ops: [], calculations: store.calls().sort((a, b) => a.seq - b.seq), store: store.manifest() })
   };
 }
 
