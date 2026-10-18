@@ -1,8 +1,8 @@
 /**
  * The two FunctionalGuarantees every fn.Hole.trace fork-join branch runs (site 'forkjoin'; browser-safe).
  *
- *   fg.s7.holeTrace.materialize  one trace per hole (every S1 badge label exactly once); every vertex finite and inside
- *     the raster; a reached trace ends on a named basket; the trace stays in the ribbon of its own legs (each walked
+ *   fg.s7.holeTrace.materialize  one trace per hole (every S1 badge label exactly once); every vertex finite (one off the
+ *     raster is recorded, not failed: a hidden tee's cap can lie beyond the frame); a reached trace ends on a named basket; the trace stays in the ribbon of its own legs (each walked
  *     leg's vertices are the polyline: nothing to leave) and no vertex is farther than W / 2 from the polyline through
  *     its neighbours' ribbon; written as an artifact with a frame
  *   fg.s7.holeTrace.testimony    judged against Sam's corridors (ports/s7trace/judgeBends.mjs): ends at his basket,
@@ -26,8 +26,10 @@ export const materialize = defineGuarantee({
     const badges = ctx.get('px.badges').map((b) => String(b.label)), img = ctx.get('px.image.cropped'), W = ctx.get('tk.s7.hallway').widthPx;
     const holes = v.traces.map((t) => String(t.hole));
     ctx.check('oneTracePerHole', badges.length === holes.length && badges.every((b) => holes.filter((h) => h === b).length === 1), { badges: badges.length, traces: holes.length });
-    const bad = v.traces.filter((t) => !t.path.every((p) => Array.isArray(p) && p.length === 2 && p.every(Number.isFinite) && p[0] > -1 && p[1] > -1 && p[0] < img.widthPx + 1 && p[1] < img.heightPx + 1)).map((t) => t.hole);
-    ctx.check('verticesFiniteInsideRaster', bad.length === 0, { bad });
+    const bad = v.traces.filter((t) => !t.path.every((p) => Array.isArray(p) && p.length === 2 && p.every(Number.isFinite))).map((t) => t.hole);
+    ctx.check('verticesFinite', bad.length === 0, { bad });
+    // a vertex off the raster is data, not a failure: a hidden tee's predicted cap or a lost walk's end can lie beyond the frame
+    const offRaster = v.traces.filter((t) => t.path.some((p) => p[0] < -0.5 || p[1] < -0.5 || p[0] > img.widthPx - 0.5 || p[1] > img.heightPx - 0.5)).map((t) => t.hole);
     ctx.check('statusesKnown', v.traces.every((t) => STATUSES.has(t.status)), { statuses: [...new Set(v.traces.map((t) => t.status))] });
     const noBasket = v.traces.filter((t) => t.status === STATUS.reached && !t.end?.basket).map((t) => t.hole);
     ctx.check('reachedEndsOnANamedBasket', noBasket.length === 0, { noBasket });
@@ -45,7 +47,7 @@ export const materialize = defineGuarantee({
         { address: `${PART}#artifact`, kind: 'scalar', artifact, data: { value: v.traces.length, unit: 'traces (one per hole)' } }
       ]
     });
-    return { totals: { traces: v.traces.length, ...counts, bends: v.traces.reduce((s, t) => s + t.bends.length, 0) }, widthPx: W };
+    return { totals: { traces: v.traces.length, ...counts, bends: v.traces.reduce((s, t) => s + t.bends.length, 0), offRaster: offRaster.length }, offRasterHoles: offRaster, widthPx: W };
   }
 });
 
