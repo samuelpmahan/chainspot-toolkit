@@ -2,7 +2,7 @@
 #   thin white circles: this course's tee->badge distance range around badge n
 #   grey dots: centres where the pad is hidden enough and nothing visible contradicts it (occlusion only)
 #   green dots: those that also see hallway between the pad front and the badge (edge step >= 12 lum)
-#   per occluder: its box, name (K n = the basket cross-validation assigned to hole n), the pad at its feasible centroid
+#   per occluder: its box, its candidate name (Basket cX until a hole proves it; badges by their read label), the pad at its feasible centroid
 #   pointing at the badge, the segment to the badge, and the hallway edge step along it (lum)
 #   yellow cross: Sam's tee point where testimony exists
 import json, sys, os, glob, math, numpy as np
@@ -31,7 +31,7 @@ for f in sys.argv[1:]:
         L, Wd = D['tpl']['L'], D['tpl']['W']
         for i, r in enumerate(v['regions']):
             col = PAL[i % len(PAL)]; bx, by, bw, bh = r['bbox']
-            name = r['occluder'].replace('S2 basket', 'basket') + (f" = {kname[tuple(r['bbox'])]}" if tuple(r['bbox']) in kname else '')
+            name = r['occluder']
             d.rectangle([P((bx, by)), P((bx + bw, by + bh))], outline=col, width=3)
             for p in r['centers'][::2]: X, Y = P(p); d.point((X, Y), fill=(170, 170, 170))
             for p in r['hallwayCenters']: X, Y = P(p); d.ellipse([X - 3, Y - 3, X + 3, Y + 3], fill=(40, 255, 60))

@@ -90,6 +90,9 @@ export const RULES = Object.freeze({
   hallwaySubsamplePx: 3        // feasible hidden centres are hallway-tested on this grid
 });
 
+import { nameCandidates } from '../../fg/names.mjs';
+import { basketPoint } from '../../fg/s2/fg.s2.basketInvariants.observe.fg.mjs';
+
 const DEG = 180 / Math.PI;
 const r3 = (v) => Math.round(v * 1000) / 1000;
 export const axisDiffDeg = (a, b) => { let d = Math.abs(a - b) % Math.PI; if (d > Math.PI / 2) d = Math.PI - d; return d * DEG; };
@@ -323,9 +326,13 @@ export function createRecoveryContext(inputs) {
   const assignment = assignTeesToBadges(inputs.tees, inputs.badges);
   const maxAssignedPx = assignment.length ? Math.max(...assignment.map((a) => a.distancePx)) : 8 * tpl.lengthPx;
   // Opaque sprites by name: where a fully hidden pad can be (occluder search).
+  // Baskets carry candidate names (fg/names.mjs, raster order of the BasketPoint, as the judge names them) until a hole
+  // proves them; badges carry the label S1 read.
+  const s2b = (inputs.baskets ?? []).filter((b) => b.bbox), s4b = inputs.recoveredBasketBoxes ?? [];
+  const n2 = nameCandidates('Basket', s2b, (b) => basketPoint(b.bbox)), n4 = nameCandidates('Basket', s4b, (bb) => basketPoint(bb)).map((n) => `S4 ${n}`);
   const sprites = [
-    ...(inputs.baskets ?? []).filter((b) => b.bbox).map((b, i) => ({ kind: 'basket', name: `S2 basket ${b.label ?? i}`, bbox: b.bbox })),
-    ...(inputs.recoveredBasketBoxes ?? []).map((bb, i) => ({ kind: 'basket', name: `S4 basket ${i}`, bbox: bb })),
+    ...s2b.map((b, i) => ({ kind: 'basket', name: n2[i], bbox: b.bbox })),
+    ...s4b.map((bb, i) => ({ kind: 'basket', name: n4[i], bbox: bb })),
     ...inputs.badges.map((b) => ({ kind: 'badge', name: `Badge ${b.label}`, label: b.label, bbox: b.bbox }))
   ];
   return {
