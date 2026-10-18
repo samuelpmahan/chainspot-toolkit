@@ -76,7 +76,7 @@ right and the repo is behind. Every number carries a unit.
 | S4 | recover tees and baskets until counts match badge cardinality N; occlusion-aware by default: assume the sought sprite is occluded; entail from what must be true | Sam's points |
 | S5 | a tee's **long axis points directly at its badge**; residual indicts the tee fit | hole n's tee pairs with badge n |
 | S6 | straight holes are the trivial case: objective path loss along tee to basket; learn the course-local path transparency profile there | straight-hole residual |
-| S7 | find the path signal and ride it; all holes resolve tee to badge to basket, trace stays in the ribbon; perfection = bend points on the centreline | Sam's bends |
+| S7 | find the path signal and ride it; all holes resolve tee to badge to basket, trace stays in the ribbon; perfection = bend points on the centreline. Known endpoints first (Sam, 2026-10-18): the ABFeature era paired every badge with every basket endpoint, scored the pairs and assigned them one-to-one, which is what let it assume known endpoints and work backwards from the basket. The hallway tracker prototypes (`docs/evidence/s7edge`, `s7main`: 16/18 on golden, lenard, townelake) graduate before any new signal | Sam's bends |
 
 ## Points and identity
 
