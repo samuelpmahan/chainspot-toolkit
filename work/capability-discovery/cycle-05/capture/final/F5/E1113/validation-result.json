@@ -1,0 +1,32 @@
+{
+  "schema": "capability-discovery-packet-result@1",
+  "job_id": "E1113",
+  "worker": "F5",
+  "outcome": "mixed_change",
+  "status": "BOUNDED_NONCV_VALIDATION_COMPLETE_F6_HANDBACK_ACKNOWLEDGED",
+  "summary": "Synthetic8 CLI adapter written only in admitted cli.mjs. After root's actual-flow checkpoint and explicit NON-CV GO, first syntax check exited0 and first cli.test run passed2/2 with0failures: disabled exclusive writer and missing-manifest refusal only. No positive enabled request, frozen gateway import, public query, CV producer, PNG decode or renderer was executed. Exact fragment-first tagged writer and pinned raw fixture loader are implemented; no positive-run correctness or scientific claim follows from these two engineering tests.",
+  "sourcePath": "experiments/capability-discovery/station-evidence/cli.mjs",
+  "sourceSha256": "4ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c",
+  "phaseHistory": "result.json preserved unchanged as prevalidation checkpoint receipt; this validation-result.json is the final actual-validation phase receipt",
+  "commands": [
+    {"command":"node --check experiments/capability-discovery/station-evidence/cli.mjs","exitCode":0,"receipt":"syntax-first.json","firstAttempt":true},
+    {"command":"node --test experiments/capability-discovery/station-evidence/cli.test.mjs","exitCode":0,"tests":2,"pass":2,"fail":0,"receipt":"cli-tests-first.json","firstAttempt":true}
+  ],
+  "testsExecuted": 2,
+  "syntaxChecksExecuted": 1,
+  "positiveEnabledRequests": 0,
+  "frozenGatewayImports": 0,
+  "PATHCalls": 0,
+  "cvProducerExecutions": 0,
+  "imageDecodes": 0,
+  "renders": 0,
+  "postTestRepairs": 0,
+  "repositoryFilesWritten": ["experiments/capability-discovery/station-evidence/cli.mjs"],
+  "gitOperations": 0,
+  "nativeStateWrites": 0,
+  "hhActions": 0,
+  "ownership": "F6 explicitly ACKNOWLEDGED sole CLI integration ownership at exact source SHA2564ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c; F5 makes no further CLI writes.",
+  "next": "F6 integrates/final-source-freezes within separate root authority. Independent review and any enabled producer remain separately gated.",
+  "promoted": false,
+  "scientificAcceptance": "UNKNOWN"
+}

@@ -1,0 +1,145 @@
+{
+  "schema": "cycle05-E1111-candidate-source-freeze@1",
+  "job_id": "E1111",
+  "worker": "F6",
+  "status": "AWAIT_INDEPENDENT_IMPLEMENTATION_REVIEW_NO_PRODUCER",
+  "defaultEnabled": false,
+  "entryPoint": "experiments/capability-discovery/station-evidence/recipe.mjs#runStationEvidence",
+  "CLI": "node experiments/capability-discovery/station-evidence/cli.mjs run --manifest FILE.json --out NEWDIR",
+  "contract": {
+    "path": "discovery-cycle05/F5/E1110/executable-contract.json",
+    "sha256": "645cd963d2815d49fbb543ffa4916acd70c545ca345f3b1cf8013b84c337dbb4",
+    "addendumSha256": "0fe0681961202780332387ac4c340dc5eb0a2dfc08c6db1d2ce5f93f6fa9ab8a",
+    "review": "R1110 accepted with import-before-store causal-order clarification"
+  },
+  "protocol": {
+    "profile": "synthetic8",
+    "path": "discovery-cycle05/F4/E1102/protocol.json",
+    "sha256": "3b7f1d2b166c759997c73f820c433ff653c84114e83c28af62c68ec003967ff5",
+    "inventorySha256": "c103c508e5cb8668bbc5069620046c3f5b2c3eea05d018af9d17169e308529aa"
+  },
+  "files": [
+    {
+      "path": "experiments/capability-discovery/station-evidence/README.md",
+      "bytes": 9900,
+      "sha256": "f9ba7778979f7a678369d49554fa5b4758ecf17fafacb155c8faaf7af3a9640c"
+    },
+    {
+      "path": "experiments/capability-discovery/station-evidence/cli.mjs",
+      "bytes": 9436,
+      "sha256": "4ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c"
+    },
+    {
+      "path": "experiments/capability-discovery/station-evidence/cli.test.mjs",
+      "bytes": 1458,
+      "sha256": "74d04d9487f24fdfdeac51fc055d576146eed8bc8403ae9929d671ae04e3d2b8"
+    },
+    {
+      "path": "experiments/capability-discovery/station-evidence/codec.mjs",
+      "bytes": 7322,
+      "sha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015"
+    },
+    {
+      "path": "experiments/capability-discovery/station-evidence/codec.test.mjs",
+      "bytes": 4624,
+      "sha256": "de792743c2dc779f5fb7891c950a02e706b3f7618840a6b77862e0ce992c2bd1"
+    },
+    {
+      "path": "experiments/capability-discovery/station-evidence/recipe.mjs",
+      "bytes": 25430,
+      "sha256": "ef7248daf5c83fd014c4a5004aa511e41399492a46be0460fe566ab421383ad3"
+    },
+    {
+      "path": "experiments/capability-discovery/station-evidence/recipe.test.mjs",
+      "bytes": 4695,
+      "sha256": "dfc8893b079f6f390e090447acc2fd553b2d05930d1fa7c9ee2804017f7c575f"
+    }
+  ],
+  "prior": {
+    "filesChecked": 2062,
+    "changed": [],
+    "originalLocalHead": "036d3e14416c40266917c51a0fe8d03785b050f3",
+    "originalTree": "e21271ef77a501d4f41d1c9456ce1d23a87c5add",
+    "head": "036d3e14416c40266917c51a0fe8d03785b050f3",
+    "tree": "e21271ef77a501d4f41d1c9456ce1d23a87c5add",
+    "status": "?? experiments/capability-discovery/station-evidence/"
+  },
+  "verification": {
+    "core": {
+      "command": "node --test --test-reporter=tap experiments/capability-discovery/station-evidence/codec.test.mjs experiments/capability-discovery/station-evidence/recipe.test.mjs",
+      "firstRun": true,
+      "tests": 40,
+      "pass": 40,
+      "fail": 0,
+      "exitCode": 0,
+      "redObserved": false,
+      "postTestRepairs": 0
+    },
+    "CLI": {
+      "authority": "F5 actual validation-result.json; read and hash-bound here, not rerun by F6",
+      "syntaxExitCode": 0,
+      "tests": 2,
+      "pass": 2,
+      "fail": 0,
+      "exitCode": 0,
+      "postTestRepairs": 0
+    },
+    "wholeRepository": "NOT_RUN; no green claim; historical17 broad-suite failures not altered",
+    "positiveEnabledRequests": 0,
+    "frozenGatewayImports": 0,
+    "PartStoreCreations": 0,
+    "PATHCalls": 0,
+    "CVCalls": 0,
+    "producerCalls": 0,
+    "imageDecodes": 0,
+    "renders": 0,
+    "gitMutations": 0
+  },
+  "ownership": {
+    "sourceIntegration": "F6",
+    "CLIAuthored": "F5 only cli.mjs, exact handback ACKed before integration",
+    "nativeStateAndConnectedPublisher": "root",
+    "independentSourceReviewer": "pending distinct principal; F6/F5 cannot self-accept"
+  },
+  "boundEvidence": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F6/E1111/first-noncv.stdout.log",
+      "bytes": 7032,
+      "sha256": "746fcf1abe9e76e3cade48c7c9cbad900b01a09087223e7978944500975b6b23"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F6/E1111/initial-tests.json",
+      "bytes": 1302,
+      "sha256": "c16096c9661c2d699e965031d4c190629b6b92e6a580e9d96269a8490443ea46"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F5/E1113/result.json",
+      "bytes": 1617,
+      "sha256": "082b9fc73530ab69668508e18c0affebc9f8da5c8d273499fd0ae0ccefb0ae1e"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F5/E1113/validation-result.json",
+      "bytes": 2221,
+      "sha256": "f800f21ea8083057393833f0059d819e653f7bb4dc71164fa2a24d304ed0e363"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F4/R1110/result.json",
+      "bytes": 3708,
+      "sha256": "c4d877c6bcff74d639d60e019731af2d1cf3bd9c9089c1f7d1857ed7248e9908"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle05/admission-E1111.json",
+      "bytes": 1538,
+      "sha256": "bd741b97344343a6f3546a1aa88f9230444e2c2b59e463a7131372efc1d8e1e7"
+    }
+  ],
+  "claims": {
+    "promoted": false,
+    "pathIdentity": "UNKNOWN",
+    "physicalEdgeIdentity": "UNKNOWN",
+    "calibratedWidth": "UNKNOWN",
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN"
+  },
+  "next": "Root independently reviews exact source freeze before separately admitting fixed32 PATH+8constant synthetic producer. Stop; no Git/publication or CV execution."
+}

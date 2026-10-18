@@ -1,0 +1,89 @@
+{
+  "schema": "cycle05-E1199-archive-handoff@1",
+  "job_id": "E1199",
+  "worker": "F6",
+  "outcome": "mixed_change",
+  "summary": "Assembled exact default-OFF station-evidence source plus accepted cycle05 engineering/raw replay/display/native history. One final capture, lossless aliases/zstd, all old2062 and source7 unchanged; final manifest/checksums and fresh restoration verified. Ready for fresh independent package audit; no Git mutation/publication/scientific acceptance.",
+  "status": "READY_FOR_INDEPENDENT_PACKAGE_AUDIT_NOT_SELF_ACCEPTED",
+  "package": "work/capability-discovery/cycle-05",
+  "manifest": {
+    "path": "work/capability-discovery/cycle-05/package-manifest.json",
+    "sha256": "3569cc5d36ef2318e254e7bcd3b74401a6db167c9595da6caf3171340284010e",
+    "listedFiles": 392,
+    "listedBytes": 3202420,
+    "sourceFiles": 7,
+    "packageFilesExcludingManifestChecksums": 385,
+    "newFilesIncludingManifestChecksums": 394
+  },
+  "capture": {
+    "phase": "final",
+    "indexSha256": "4056daa360defc2ef914e07eca68d537948d35e17bc433c92d7513b91646c708",
+    "originals": 462,
+    "uniqueStoredIdentities": 338,
+    "aliases": 124,
+    "omitted": 3,
+    "deferred": 0
+  },
+  "executions": {
+    "capture": {
+      "exitCode": 0,
+      "firstAndOnlyPhase": "final",
+      "helperSHA256": "5338ff570f18ff8716aa01bbee86fd931f51c6cb1a156ba14867a19b768e6572"
+    },
+    "verifier": {
+      "exitCode": 0,
+      "payloadFiles": 392,
+      "priorTrackedExact": 2062,
+      "frozenSourceExact": 7
+    },
+    "checksums": {
+      "exitCode": 0,
+      "command": "sha256sum --quiet -c work/capability-discovery/cycle-05/SHA256SUMS"
+    },
+    "stage": {
+      "exitCode": 0,
+      "restored": 462,
+      "separatePathOnlyCompanions": 2,
+      "eachOriginalAndCompanionRehashed": true
+    },
+    "badAlias": {
+      "tests": 2,
+      "pass": 2,
+      "expectedChildExitCodes": [
+        1,
+        1
+      ],
+      "counterexample": "Alias path/stored hash/length consistently changed to stored B but raw identity claims cached A; both refuse"
+    },
+    "existingStageRefusal": {
+      "exitCode": 1,
+      "expected": true,
+      "beforeWrite": true
+    }
+  },
+  "actualHistory": {
+    "preExecutionAdminFindings": "Root phase path collision and two alias cache linkage findings caught before execution; exact first bodies retained, not failed runs.",
+    "documentationAmendment": "Root precision findings arrived just after first verified audit candidate; exact first candidate manifest/checksums/docs retained and superseded with doc-only current manifest.",
+    "sourceEditingToolDiagnostic": "One apply_patch request refused because Delete+Add targeted the same file in one patch; no file changed by that refused request. Applied Update patches successfully. This is tool-protocol history, not shell stderr or test failure.",
+    "actualFirstAggregate": "E1117 first aggregate invocation of exact172-test command, not first constituent test execution;42 new tests already ran,130 have history.",
+    "activeJobBoundary": "Active E1199 not recursively captured. Current final validation/result and later audit/native/publication remain separate post-capture administration."
+  },
+  "omissions": {
+    "count": 3,
+    "scope": "Deferred unexecuted Lenard3/4/5 original PNG bodies; exact source Git/encoded/RGBA/decoder identities retained. Not restored or assumed available.",
+    "lenardPreset": "Unimplemented; current synthetic-only recipe rejects it. Concrete guarded fresh preset proposal in next-packets.json; routine coordinator admission uses existing autonomous authorization, human calibration/release gates separate."
+  },
+  "boundaries": {
+    "CVCalls": 0,
+    "producerCalls": 0,
+    "rendererCalls": 0,
+    "codecImports": 0,
+    "GitMutations": 0,
+    "oldTrackedChanged": 0,
+    "frozenSourceChanged": 0,
+    "HEAD": "036d3e14416c40266917c51a0fe8d03785b050f3",
+    "tree": "e21271ef77a501d4f41d1c9456ce1d23a87c5add",
+    "sourceFreeze": "0a2351f595fd72d55af79fccb4532deb1b58125a2c440e37d6276fba5d21da4b"
+  },
+  "next": "Root native finish/readback then next ADMIN + independent package audit. No commit until separately assigned; F6 retains sole eventual integration/Git ownership."
+}

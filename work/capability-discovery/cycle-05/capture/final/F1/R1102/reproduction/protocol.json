@@ -1,0 +1,67 @@
+{
+  "schema": "chainspot.frozen-synthetic-protocol/v1",
+  "cycle": "cycle05",
+  "job": "E1102",
+  "worker": "F4",
+  "frozenAtUTC": "2026-10-18T13:58:03Z",
+  "phase": "pre-producer",
+  "source": {
+    "repository": "chainspot-discovery-lab",
+    "localCommit": "036d3e14416c40266917c51a0fe8d03785b050f3",
+    "publishedCommit": "b17fdb6e211f886b1a5c01b60d808b73134c4df5",
+    "tree": "e21271ef77a501d4f41d1c9456ce1d23a87c5add",
+    "path": "experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+    "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+    "readOnly": true
+  },
+  "geometry": {
+    "widthPx": 384,
+    "heightPx": 320,
+    "pixelCoordinates": "0-based integer pixel centers (x,y); flattened row-major i=y*384+x; RGBA byte offset=4*i",
+    "boundsSemantics": "[a,b) is half-open; explicit inclusive equivalents appear where important",
+    "raster": "uint8 RGBA interleaved, background RGB100, bright RGB145, alpha255 everywhere; no antialiasing or compositing",
+    "stripe": {"xHalfOpen": [0,384], "yHalfOpen": [145,175], "yInclusive": [145,174], "brightAreaPx": 11520, "nominalWidthPx": 30, "midpointY": 159.5, "relativeCenterAtNominalOriginPx": -0.5},
+    "gaps": {"gap2": {"xHalfOpen": [191,193], "xInclusive": [191,192], "yHalfOpen": [145,175], "removedBrightAreaPx": 60}, "gap6": {"xHalfOpen": [189,195], "xInclusive": [189,194], "yHalfOpen": [145,175], "removedBrightAreaPx": 180}},
+    "ellipse": {"centerPx": [191.5,159.5], "radiiPx": [96,70], "membership": "((x-191.5)/96)^2+((y-159.5)/70)^2 <= 1 at integer pixel centers"},
+    "capsule": {"segmentStartPx": [128,159.5], "segmentEndPx": [256,159.5], "radiusPx": 15, "membership": "dx=max(128-x,0,x-256); dx*dx+(y-159.5)^2 <= 225", "interpretation": "organic bright distractor; identical to stripe in the sampled local footprint, not evidence of path identity"},
+    "masks": {"clear": {"ones": 0, "zeros": 122880}, "gap6": {"xHalfOpen": [189,195], "yHalfOpen": [0,320], "ones": 1920, "zeros": 120960}, "allHidden": {"ones": 122880, "zeros": 0}},
+    "maskEncoding": "row-major uint8 exactly 0 or 1; 1 means hidden; mask area is literal pixel count, not bilinearly expanded sample support"
+  },
+  "queryContract": {
+    "publicQueriesOnly": ["fn.q.path.profile", "fn.q.path.edgePair", "fn.q.path.stationContrast", "fn.q.path.loss"],
+    "commonArguments": {"originPx": [192,160], "phiRad": 0, "t0Px": -8, "t1Px": 8, "stepPx": 1, "widthPx": 30},
+    "stationCount": 16,
+    "stationTPx": [-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7],
+    "stationXPxAtPhi0": [184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199],
+    "normal": [0,1],
+    "profileArguments": {"lat0Px": 0},
+    "edgePairArguments": {"lat0Px": 0, "tolPx": 3, "latLimPx": 12, "minOk": {"count": 8, "ofStations": 0.2}},
+    "stationContrastArguments": {"bandPx": [1,3], "alongPx": 2},
+    "lossArguments": {"profile": null, "threshold": null, "tauLum": 8},
+    "lossBoundary": "loss uses its source-default band[1,3],along2 internally; tau8 is historical diagnostic only; no fitted overlay profile or alpha acceptance claim",
+    "sourceSampling": "bilinear; profile offsets -30..30 inclusive at0.25; per-side contrast ins1..3 step0.5 and along -2..2 inclusive; strict side validity min(insideFraction,outsideFraction)>0.5; mask bilinear>0.01 is hidden",
+    "interpretation": "caller-supplied width30 is local nominal control, not measured path width or semantic path identification"
+  },
+  "cases": [
+    {"id": "intact", "raster": "intact", "mask": "clear"},
+    {"id": "gap2", "raster": "gap2", "mask": "clear"},
+    {"id": "gap6", "raster": "gap6", "mask": "clear"},
+    {"id": "largeBrightEllipse", "raster": "ellipse", "mask": "clear"},
+    {"id": "organicCapsule", "raster": "capsule", "mask": "clear"},
+    {"id": "normalOffsetPlus6", "raster": "intact", "mask": "clear", "argumentsOverride": {"originPx": [192,166]}},
+    {"id": "maskedGap6", "raster": "gap6", "mask": "gap6"},
+    {"id": "allHidden", "raster": "intact", "mask": "allHidden"}
+  ],
+  "predictions": [
+    {"id": "P1", "cases": ["intact"], "prediction": "finite averaged edge pair around width30 and center-0.5; visible raw per-side contrasts positive; historical tau8 diagnostic passes", "falsifier": "no finite pair, center inconsistent with preserved seam, or nonpositive visible contrast"},
+    {"id": "P2", "cases": ["gap2","gap6"], "prediction": "averaged profile can retain finite edge pair despite interruption; gap2 central contrast is diluted by five along taps and is not guaranteed to fail tau8; gap6 has central five-tap windows entirely inside gap and can yield raw0 contrast and visible tau8 failure", "falsifier": "gap6 central complete-gap window has nonzero stripe/background contrast, or average profile has no valid width30 pair; retain raw observations even if prediction fails"},
+    {"id": "P3", "cases": ["largeBrightEllipse"], "prediction": "all sampled lateral and contrast-band locations are bright, so local profile is flat and raw contrast0; no expected width30 edge pair", "falsifier": "finite positive expected-width edge pair or nonzero raw local contrast away from boundaries"},
+    {"id": "P4", "cases": ["organicCapsule"], "prediction": "same pixels as intact in all declared query footprints, so same local observations; positive evidence cannot discriminate path from this bright organic distractor", "falsifier": "local observations differ from intact under byte-identical sampled footprint and identical arguments"},
+    {"id": "P5", "cases": ["normalOffsetPlus6"], "prediction": "averaged edge pair can remain finite with center near-6.5 within latLim12 while contrast sampled at caller-expected width30 edge bands is0 on both sides; pose sensitivity is not an automatic pose correction", "falsifier": "nonzero expected-edge-band contrast or pair recentered to0 without caller pose change"},
+    {"id": "P6", "cases": ["maskedGap6"], "prediction": "10 unmasked profile stations can preserve pair under minOk8; strict majority contrast validity marks central masked supports invalid, and those are UNKNOWN rather than visible failures; near-mask surviving-sample contrast can remain45", "falsifier": "masked stations counted as visible failed evidence, or unsupported nonfinite values converted to finite0 without validity context"},
+    {"id": "P7", "cases": ["allHidden"], "prediction": "no supported edge pair; contrast side validity0, numeric values may be nonfinite; loss visibleCount0 and pass/loss fractions null; zero longestGapPx with visibleCount0 is not continuity evidence", "falsifier": "all-hidden reported as visible pass/failure or semantic continuity"}
+  ],
+  "predeclaredAcceptance": {"generator": "exact deterministic source bytes, exact binary-mask areas, SHA256 inventory, canonical geometry/protocol hashes; never validates CV predictions", "producer": "blocked until independent protocol critique and root admission", "measurement": "retain raw side contrasts/validities, profile support, edgePair condition, loss visible denominator/null/nonfinite semantics; report falsifiers without tuning"},
+  "prohibitions": ["no CV calls at fixture phase", "no measurement-output inspection", "no post-output fixture/parameter tuning", "no source edits", "no AI images", "no large sweeps", "no HH", "no protected branches", "no real data", "no repository or Git mutations"],
+  "openClaims": {"pathIdentity": "UNKNOWN", "truePhysicalWidth": "UNKNOWN", "realWorldGenerality": "UNKNOWN", "overlayAlpha": "UNKNOWN"}
+}

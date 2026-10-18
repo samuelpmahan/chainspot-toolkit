@@ -1,0 +1,25 @@
+"""CV-free falsifier: internally consistent stored alias must still bind original bytes."""
+from pathlib import Path
+import hashlib,json,subprocess,tempfile
+repo=Path('/workspace/scratch/8528bb251845/chainspot-discovery-lab')
+source=repo/'work/capability-discovery/cycle-05'
+sha=lambda b:hashlib.sha256(b).hexdigest()
+results=[]
+with tempfile.TemporaryDirectory(prefix='cycle05-alias-negative-') as tmp:
+    root=Path(tmp);pkg=root/'repo/work/capability-discovery/cycle-05'
+    (pkg/'administration').mkdir(parents=True)
+    for name in ('verify-package.py','stage-replay.py'):(pkg/name).write_bytes((source/name).read_bytes())
+    a=b'original A';b=b'different stored B'
+    (pkg/'a').write_bytes(a);(pkg/'b').write_bytes(b)
+    record=lambda name,raw:{'original':name,'path':name,'bytes':len(raw),'sha256':sha(raw),'storedBytes':len(raw),'storedSha256':sha(raw),'codec':None}
+    ra=record('a',a);rb=record('b',b)
+    forged={**ra,'original':'forged-alias','path':'b','storedBytes':len(b),'storedSha256':sha(b),'aliasOf':'a'}
+    index={'files':[ra,rb,forged],'omitted':[],'deferred':[]}
+    (pkg/'administration/capture-index-final.json').write_text(json.dumps(index))
+    for name in ('verify-package.py','stage-replay.py'):
+        cmd=['python3',str(pkg/name),'--phase','final']
+        if name=='stage-replay.py':cmd+=['--out',str(root/'stage')]
+        done=subprocess.run(cmd,capture_output=True,text=True)
+        assert done.returncode!=0 and ('Original mismatch: forged-alias' in done.stderr or 'Original integrity mismatch: forged-alias' in done.stderr),(name,done.returncode,done.stdout,done.stderr)
+        results.append({'helper':name,'exitCode':done.returncode,'stdout':done.stdout,'stderr':done.stderr,'counterexample':'path + correct stored hash/length changed to existing B; original hash/length remains A','refused':True})
+print(json.dumps({'tests':2,'pass':2,'CVCalls':0,'results':results},indent=2))

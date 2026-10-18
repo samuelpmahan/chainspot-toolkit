@@ -1,0 +1,43 @@
+{
+  "schema": "cycle05-E1117-actual-regressions@1",
+  "job_id": "E1117",
+  "worker": "F6",
+  "commands": [
+    {
+      "id": "lab",
+      "command": "node --test --test-reporter=tap experiments/capability-discovery/*.test.mjs experiments/capability-discovery/catalog/*.test.mjs experiments/capability-discovery/probes/*/*.test.mjs experiments/capability-discovery/composition/*.test.mjs experiments/capability-discovery/source-pixels/*.test.mjs experiments/capability-discovery/window-evidence/*.test.mjs experiments/capability-discovery/station-evidence/*.test.mjs",
+      "exitCode": 0,
+      "firstAttempt": true,
+      "counts": {
+        "tests": 172,
+        "pass": 172,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "reporterDurationMs": 2555.417962
+      },
+      "rawLog": "lab.raw.log",
+      "channel": "exec-command combined process output retained without filtering",
+      "sourceEdits": 0
+    },
+    {
+      "id": "stager",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 experiments/capability-discovery/source-pixels/stage-png.test.py",
+      "exitCode": 0,
+      "firstAttempt": true,
+      "counts": {
+        "tests": 2,
+        "pass": 2,
+        "fail": 0
+      },
+      "rawLog": "stager.raw.log",
+      "channel": "exec-command combined process output; Python unittest normally reports to stderr",
+      "sourceEdits": 0
+    }
+  ],
+  "repairs": 0,
+  "reruns": 0,
+  "scientificProducerCalls": 0,
+  "note": "Existing engineering tests execute some image/CV controls; no per-internal-CV-call counter was installed or inferred. These admitted aggregate regressions are distinct from the fixed32 PATH scientific producer. No full repository suite or known-failure repair was run."
+}

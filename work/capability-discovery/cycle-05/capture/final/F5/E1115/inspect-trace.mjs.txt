@@ -1,0 +1,74 @@
+/** Read retained files only. Imports the pure codec, never the recipe/gateway/CV. */
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { join } from 'node:path';
+import { encodeBytes, decodeBytes } from '../../../../chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs';
+
+const base = '/workspace/scratch/8528bb251845', here = join(base, 'discovery-cycle05/F5/E1115'), run = join(here, 'run');
+const sha = b => createHash('sha256').update(b).digest('hex');
+const read = p => Uint8Array.from(readFileSync(p));
+const json = p => JSON.parse(readFileSync(p, 'utf8'));
+const same = (a,b) => Buffer.from(encodeBytes(a)).equals(Buffer.from(encodeBytes(b)));
+const number = x => Number.isNaN(x) ? { numberKind:'NaN' } : Object.is(x,-0) ? {numberKind:'negative-zero'} : x === Infinity ? {numberKind:'positive-infinity'} : x === -Infinity ? {numberKind:'negative-infinity'} : x;
+const manifest = json(join(run,'artifact-manifest.json'));
+const artifactChecks = manifest.artifacts.map(a => { const b = read(join(run,a.path)); return {path:a.path,bytes:b.length,sha256:sha(b),verified:b.length===a.bytes&&sha(b)===a.sha256}; });
+if (artifactChecks.some(x=>!x.verified)) throw Error('retained artifact identity mismatch; no producer rerun');
+const trace = decodeBytes(read(join(run,'value-trace.json')));
+const sidecar = decodeBytes(read(join(run,'timing-sidecar.json')), {maxBytes:4194304});
+const oracles = json(join(base,'discovery-cycle05/F1/E1103/proposed-oracles.json'));
+const policy = json(join(base,'discovery-cycle05/numeric-comparison-freeze.json'));
+const tolerance = 1e-9, comparisons = [];
+function finiteCheck(label, actual, expected) {
+  const residual = Number.isFinite(actual)&&Number.isFinite(expected) ? actual-expected : null;
+  comparisons.push({label,actual:number(actual),expected:number(expected),residual,absoluteTolerance:tolerance,match:residual!==null&&Math.abs(residual)<=tolerance});
+}
+function exactCheck(label,actual,expected) { comparisons.push({label,kind:'exact',match:same(actual,expected)}); }
+function listCheck(label,actual,expected) { actual.forEach((v,i)=>finiteCheck(`${label}[${i}]`,v,expected[i])); exactCheck(`${label}.length`,actual.length,expected.length); }
+const ids = ['intact','gap2','gap6','largeBrightEllipse','organicCapsule','normalOffsetPlus6','maskedGap6','allHidden'];
+const byCase = new Map(ids.map(id=>[id,trace.queryTrace.filter(r=>r.comparisonId===id)]));
+const value = (id,q) => byCase.get(id).find(r=>trace.plannedQueries[r.planIndex].query===`fn.q.path.${q}`).nativeAnswer.value;
+const summaries = ids.map(id => {
+  const rows=byCase.get(id), p=value(id,'profile'), pair=value(id,'edgePair'), c=value(id,'stationContrast'), l=value(id,'loss');
+  const entries=sidecar.calculationLog.filter(r=>r.comparisonId===id);
+  const invalidFiniteLeft=c.leftLum.flatMap((v,i)=>!c.okLeft[i]&&Number.isFinite(v)?[i]:[]);
+  const invalidFiniteRight=c.rightLum.flatMap((v,i)=>!c.okRight[i]&&Number.isFinite(v)?[i]:[]);
+  const nanLeft=c.leftLum.flatMap((v,i)=>Number.isNaN(v)?[i]:[]),nanRight=c.rightLum.flatMap((v,i)=>Number.isNaN(v)?[i]:[]);
+  exactCheck(`${id}.completionSequence`,entries.map(r=>r.nativeEntry.seq),[1,0,2,3,4]);
+  exactCheck(`${id}.queryNames`,rows.map(r=>trace.plannedQueries[r.planIndex].query),['fn.q.path.profile','fn.q.path.edgePair','fn.q.path.stationContrast','fn.q.path.loss']);
+  exactCheck(`${id}.allCompleted`,rows.map(r=>r.state),['COMPLETED','COMPLETED','COMPLETED','COMPLETED']);
+  exactCheck(`${id}.corridorConstructors`,[l.corridor.rgbLevel.constructor.name,l.corridor.hiddenCenter.constructor.name],['Uint8Array','Uint8Array']);
+  return {id,queries:rows.length,states:rows.map(r=>r.state),profile:{stationsCount:p.stationsCount,offsetsPx:p.offsetsPx,valueCount:p.profLum.length,sourceNulls:p.profLum.filter(x=>x===null).length,plateauAtOffset0:p.profLum[120],okCountMinimum:Math.min(...p.okCount),okCountMaximum:Math.max(...p.okCount)},edgePair:pair,contrast:{leftLum:c.leftLum.map(number),rightLum:c.rightLum.map(number),okLeft:c.okLeft,okRight:c.okRight,invalidFiniteLeft,invalidFiniteRight,nanLeft,nanRight},loss:{edge:l.edge,overlay:l.overlay,agreementCounts:l.agreementCounts,stations:l.stations,corridor:{widthPx:l.corridor.widthPx,heightPx:l.corridor.heightPx,rgbConstructor:l.corridor.rgbLevel.constructor.name,rgbLength:l.corridor.rgbLevel.length,hiddenConstructor:l.corridor.hiddenCenter.constructor.name,hiddenLength:l.corridor.hiddenCenter.length}},completionSequence:entries.map(r=>r.nativeEntry.seq),queryEntryCache:entries.filter(r=>r.nativeEntry.calculation.startsWith('fn.q.path.')).map(r=>({seq:r.nativeEntry.seq,key:r.nativeEntry.key,cached:r.nativeEntry.cached,emits:r.nativeEntry.emits})),resolvedPartKeys:rows[0].resolvedIdentity.partKeys};
+});
+for (const id of ['intact','gap2','gap6']) {
+  const o=oracles.conditional_oracles.find(o=>o.id===id),p=value(id,'profile'),c=value(id,'stationContrast'),pair=value(id,'edgePair'),l=value(id,'loss');
+  listCheck(`${id}.leftLum`,c.leftLum,o.leftLum); listCheck(`${id}.rightLum`,c.rightLum,o.rightLum);
+  exactCheck(`${id}.okLeft`,c.okLeft,o.okLeft); exactCheck(`${id}.okRight`,c.okRight,o.okRight);
+  finiteCheck(`${id}.plateau`,p.profLum[120],o.profilePlateauLum); exactCheck(`${id}.profileCounts`,p.okCount,Array(241).fill(16));
+  for(const [k,v] of Object.entries(o.edgePair)) finiteCheck(`${id}.edgePair.${k}`,pair[k],v);
+  listCheck(`${id}.proxyOverlay`,l.stations.overlayFrac,o.proxyOverlayFrac);
+  if(o.historicalTau8DiagnosticOnly)for(const k of ['visibleCount','passCount','longestGapPx'])finiteCheck(`${id}.historicalLoss.${k}`,l.edge[k],o.historicalTau8DiagnosticOnly[k]);
+}
+const offset=value('normalOffsetPlus6','edgePair'),offsetContrast=value('normalOffsetPlus6','stationContrast');
+finiteCheck('normalOffsetPlus6.cPx',offset.cPx,-6.5); finiteCheck('normalOffsetPlus6.wPx',offset.wPx,30);
+listCheck('normalOffsetPlus6.leftLum',offsetContrast.leftLum,Array(16).fill(0)); listCheck('normalOffsetPlus6.rightLum',offsetContrast.rightLum,Array(16).fill(0));
+const masked=value('maskedGap6','stationContrast'),maskedOracle=oracles.conditional_oracles.find(o=>o.id==='gap6_known_mask');
+exactCheck('maskedGap6.okLeft',masked.okLeft,maskedOracle.okLeft); exactCheck('maskedGap6.okRight',masked.okRight,maskedOracle.okRight);
+for(const side of ['leftLum','rightLum'])masked[side].forEach((v,i)=>i===7||i===8?exactCheck(`maskedGap6.${side}[${i}]NaN`,Number.isNaN(v),true):finiteCheck(`maskedGap6.${side}[${i}]`,v,45));
+finiteCheck('maskedGap6.profilePlateau',value('maskedGap6','profile').profLum[120],145);
+finiteCheck('maskedGap6.profileCount',value('maskedGap6','profile').okCount[120],10);
+exactCheck('maskedGap6.edgePairEqualsIntact',value('maskedGap6','edgePair'),value('intact','edgePair'));
+const hidden=value('allHidden','stationContrast'),hp=value('allHidden','profile'),hl=value('allHidden','loss');
+exactCheck('allHidden.profileSourceNulls',hp.profLum,Array(241).fill(null)); exactCheck('allHidden.profileCounts',hp.okCount,Array(241).fill(0));
+exactCheck('allHidden.NaNLeft',hidden.leftLum.map(Number.isNaN),Array(16).fill(true)); exactCheck('allHidden.NaNRight',hidden.rightLum.map(Number.isNaN),Array(16).fill(true));
+exactCheck('allHidden.okLeft',hidden.okLeft,Array(16).fill(0)); exactCheck('allHidden.okRight',hidden.okRight,Array(16).fill(0));
+exactCheck('allHidden.edgeCondition',value('allHidden','edgePair'),{condition:'no edge pair'});
+for(const [k,v]of Object.entries(oracles.conditional_oracles.find(o=>o.id==='full_hidden').lossEdge))exactCheck(`allHidden.loss.${k}`,hl.edge[k],v);
+exactCheck('ellipse.edgeCondition',value('largeBrightEllipse','edgePair'),{condition:'no edge pair'});
+listCheck('ellipse.leftLum',value('largeBrightEllipse','stationContrast').leftLum,Array(16).fill(0));
+listCheck('ellipse.rightLum',value('largeBrightEllipse','stationContrast').rightLum,Array(16).fill(0));
+const capsuleComparisons=byCase.get('intact').map((r,i)=>({query:trace.plannedQueries[r.planIndex].query,exactNativeAnswerEquality:same(r.nativeAnswer,byCase.get('organicCapsule')[i].nativeAnswer)}));
+const fragments=manifest.artifacts.filter(a=>a.kind==='answer'||a.kind==='calculation').map(a=>{const v=decodeBytes(read(join(run,a.path))); const target=a.kind==='answer'?trace.queryTrace[a.planIndex].nativeAnswer:sidecar.calculationLog.find(e=>e.comparisonId===a.comparisonId&&e.captureIndex===a.captureIndex);return{path:a.path,exactDecodedEquality:same(v,target)}});
+const phaseTiming=Object.groupBy(sidecar.intervals,x=>x.phase);
+const timings=Object.fromEntries(Object.entries(phaseTiming).map(([phase,rows])=>[phase,{count:rows.length,sumElapsedMs:rows.reduce((s,x)=>s+x.elapsed,0),minElapsedMs:Math.min(...rows.map(x=>x.elapsed)),maxElapsedMs:Math.max(...rows.map(x=>x.elapsed))}]));
+const output={schema:'E1115-retained-trace-inspection@1',imports:'pure codec only; no recipe/gateway/CV calls',status:trace.status,error:trace.error,counts:trace.counts,requestManifestSha256:trace.requestBinding.manifestSha256,suppliedFileBindings:trace.requestBinding.suppliedFiles,sourceBindings:trace.sourceBinding,inputIntegrity:trace.inputIntegrity,caseSummaries:summaries,analyticalComparisons:{absoluteTolerance:tolerance,total:comparisons.length,matched:comparisons.filter(x=>x.match).length,mismatches:comparisons.filter(x=>!x.match),allResiduals:comparisons},capsuleComparisons,fragmentEquality:{checked:fragments.length,allMatched:fragments.every(x=>x.exactDecodedEquality),checks:fragments},artifactChecks:{checked:artifactChecks.length,allVerified:artifactChecks.every(x=>x.verified),artifacts:artifactChecks,artifactManifest:{bytes:read(join(run,'artifact-manifest.json')).length,sha256:sha(read(join(run,'artifact-manifest.json')))}},timings,timingScope:'Raw query intervals include store instrumentation and codec work; validation/hash/import/snapshot separated; native Calculation durations overlap nested work. Not CV-only, benchmark, resource measurement or speedup evidence.',policyHash:sha(read(join(base,'discovery-cycle05/numeric-comparison-freeze.json'))),runtime:sidecar.runtime};
+console.log(JSON.stringify(output,null,2));

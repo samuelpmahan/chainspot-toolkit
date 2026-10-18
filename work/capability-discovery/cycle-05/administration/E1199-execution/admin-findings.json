@@ -1,0 +1,16 @@
+{
+  "schema": "cycle05-preexecution-admin-review-findings@1",
+  "notExecutedFailures": true,
+  "firstCaptureHelper": "history/capture-package-first.mjs.txt",
+  "firstVerifier": "history/verify-package.py.first.txt",
+  "firstStager": "history/stage-replay.py.first.txt",
+  "findings": [
+    "Root source inspection: phase path collided if same original path changed content. Fixed phase-qualified storage before first execution; one final phase actually executed.",
+    "Root source inspection: raw-sha cache skipped each alias stored identity checks. Intermediate patch checked each record but still lacked new stored blob to raw linkage. No execution of either earlier helper version.",
+    "Final helpers verify every stored path/hash/length, accept only null/zstd codec, cache decompression by (storedSha256,codec), and verify every original hash/length. Strong changed-blob alias counterexample rejected by both helpers (2/2)."
+  ],
+  "finalVerifierSha256": "d7c3cea5fcffc99ba2493eeab460f9a37062e9c432c02d07c92646645e328aa8",
+  "finalStagerSha256": "be37b2cc653db29faf9ac8ee267cd404f4ef565c8821953c1ab22da6954966ac",
+  "CVCalls": 0,
+  "GitMutations": 0
+}

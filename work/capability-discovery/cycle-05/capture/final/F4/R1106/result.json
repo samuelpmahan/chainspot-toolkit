@@ -1,0 +1,60 @@
+{
+  "job_id": "R1106",
+  "worker": "F4",
+  "decision": "accepted",
+  "summary": "Accepted as read-only engineering reconnaissance and a gated seam proposal: all2062 inventory entries and accepted14/6/4 source closures independently rehash, prior1646 paths are unchanged and416 additions are confirmed. This is not implementation, producer, publication or scientific acceptance. If root chooses the actual createPartStore/registerQueries gateway, its separate admission must pin all9 module paths and use fresh isolated stores and immutable snapshots; the packet explicitly leaves that route choice unresolved and does not falsely claim gateway execution.",
+  "reviewedAtUTC": "2026-10-18T14:05:43Z",
+  "reviewedArtifactHashes": {
+    "discovery-cycle05/F6/E1106/result.json": "be06315592c39518125292184bada2b007f45be6d11724a152e69f3742a7789d",
+    "discovery-cycle05/F6/E1106/inventory.json": "d8008a3c9ec96200a317ec78f6bb91149165432d5c94dceb2e3762a4bcef1c8d",
+    "discovery-cycle05/F6/E1106/bounded-seam.md": "5aa2ab1789ec29737dbc5c79f302c83df1b11bf94b1e59bf886b82ac8d8a44a2"
+  },
+  "independentChecks": {
+    "trackedPathsModesTypesGitBlobsByteLengthsSHA256": "2062/2062 PASS against git ls-tree and current file bytes; Git blob SHA1 independently recomputed",
+    "entryDigest": "dcac8f04cf0f07972bcc1f3035f32b2917a7f3641551cb58ad13964207a19dbf",
+    "entryDigestRecipe": "SHA256 UTF8 JSON.stringify-compatible entries in git ls-tree order",
+    "pathSetSha256": "1e08a1f661df24c30865c1cf27ef4bd5e6c396c76dd27e076aa803a10706812a",
+    "pathSetRecipe": "SHA256 UTF8 inventory paths joined LF plus final LF",
+    "prior1646": "all unchanged; git diff prior532fd7406e5b939e6d4d83cf92d12e2267bab11c..HEAD shows exactly416 additions and no modifications/deletions",
+    "acceptedComposition": {"manifestSha256": "5b59dce1c7ae87f962c0305697ed883e423bd504fedce5851fb02242309dcf52", "entries": 14, "result": "PASS"},
+    "acceptedSourcePixels": {"manifestSha256": "d31b7a4312ac1bfc4f76bc96fc278f8acad4f49f4b04283df0faa8e6dce54626", "entries": 6, "result": "PASS"},
+    "acceptedWindowEvidence": {"manifestSha256": "5a135273510f8966af9bd69119a27f284405bc47397d42a13c93554b005b0eb9", "entries": 4, "result": "PASS"},
+    "gatewayStaticClosure": "7 module paths; gateway plus existing PATH_QUERIES closure is9 paths, including two distinct alpha.profile paths with identical bytes",
+    "gitStatusPorcelain": "",
+    "productImports": 0,
+    "queryCalls": 0,
+    "producerCalls": 0,
+    "testsRun": 0,
+    "repositoryWrites": 0,
+    "gitMutations": 0
+  },
+  "gatewayClosure": [
+    {"path": "experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs", "sha256": "122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074"},
+    {"path": "experiments/capability-discovery/probes/root-inventory/source/fg/pxset.mjs", "sha256": "01e68e82741d4af56901b3306a304ca540e8ab0d73a12ba20a0afbe0e788f5d5"},
+    {"path": "experiments/capability-discovery/probes/root-inventory/source/fg/render.mjs", "sha256": "39a24a645c222430464592546eb6bdc1a8b190902ed5708ecd951b0bb639315a"},
+    {"path": "experiments/capability-discovery/probes/root-inventory/source/fg/png.mjs", "sha256": "7668bab9de6a19a2cc6f44e5ac47d6e89373da130764365cf32011187a980241"},
+    {"path": "experiments/capability-discovery/probes/root-inventory/source/fg/alpha/alphaRender.mjs", "sha256": "4d17e1da77b1e5ceb6a4a2609d26c010caa6c43df8392e9599544299d9e1c549"},
+    {"path": "experiments/capability-discovery/probes/root-inventory/source/contracts/alpha.profile@1.mjs", "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f"},
+    {"path": "experiments/capability-discovery/probes/root-inventory/source/fg/canon.mjs", "sha256": "3cc0319f4678eaf8679adcbfaa9db054841417a966c079019b0f72e24ba24406"},
+    {"path": "experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs", "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"},
+    {"path": "experiments/capability-discovery/probes/width/vendor/active/contracts/alpha.profile@1.mjs", "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f"}
+  ],
+  "engineeringFindings": [
+    {"id": "C1", "severity": "admission-boundary", "finding": "The reviewed packet correctly distinguishes a2-module direct-descriptor proposal from unexecuted7-module gateway testimony. Its accepted inventory is not an admission of either route. Root gateway selection must be explicit and pin9 module paths; no protected source edit is needed."},
+    {"id": "C2", "severity": "implementation-constraint", "finding": "registerQueries caches by fn plus JSON.stringify(rawArgs), not referenced byte content; it resolves every top-level string through the Part resolver. Use one fresh store per declared case/pose/width and immutable privately copied inputs; put case/trace IDs in caller metadata, not arbitrary top-level string query arguments. Never mutate raster/mask or cached answer objects between calls."},
+    {"id": "C3", "severity": "trace-constraint", "finding": "The4 public query invocations must be counted separately from all actual store invocations. Constant input producers may run lazily during first resolution and appear as nested instrumentation calls. createPartStore registers extra generic capabilities without executing them. Retain real sequence,parent,calculation,status,emits; do not fabricate a4-total-call store log."},
+    {"id": "C4", "severity": "cache-constraint", "finding": "These registered queries have no outParts, so the general store cache path has key:null and entry.cached:false even when registerQueries returns emits.cached:1. Distinguish those fields; do not infer query-cache misses from entry.cached or synthesize cache-hit timings. Source codeSalt alone does not replace the explicit9-file hash freeze."},
+    {"id": "C5", "severity": "serialization-constraint", "finding": "The custom receipt encoder must run on raw native result objects before any JSON.stringify, fg/canon plain/canonicalJson or renderer normalization. Those generic paths lose NaN/Infinity and typed-constructor identity. Preserve profile's already-native nulls as null, stationContrast raw nonfinite numbers as explicit numeric tags, typed array constructor/length/order and separate side validity."},
+    {"id": "C6", "severity": "scope-constraint", "finding": "Default-OFF must return zero query calls without reading source/image bytes or importing product modules. Enabled preflight must bound raster bytes, stations, width/lateral corridor allocations and declarations, with explicit empty-window behavior. The E1106 packet explicitly defers exact resource constants/error schema to root admission; do not mistake these open contract choices for completed validation."},
+    {"id": "C7", "severity": "meaning-constraint", "finding": "Retain visible denominators and raw mask validity; hidden samples are UNKNOWN, not visible failures. Profile, edgePair, stationContrast and loss share source/pixels and repeat internals; they are not independent scientific evidence. No measured result, runtime count, alpha fit, path identity or calibrated width is established here."}
+  ],
+  "reviewerCheckHistory": [
+    {"attempt": 1, "exitCode": 1, "cause": "Reviewer initially assumed pathSetSha256 was JSON(paths). Independent inventory byte/hash/blob and entryDigest checks already passed before that assumption assertion. No packet defect or source change inferred."},
+    {"attempt": 2, "exitCode": 0, "result": "Correct LF-plus-final-LF path recipe reproduced reported hash; all independent inventory/closure checks completed successfully."}
+  ],
+  "scientificAcceptance": "UNKNOWN; outside review scope",
+  "implementationAdmission": "NOT_GRANTED by this review",
+  "sourceEditsRequested": [],
+  "requiredAmendments": [],
+  "next": "Root chooses and freezes the exact bounded gateway/input/error/serializer contract, then separately admits implementation. F4 returns idle."
+}

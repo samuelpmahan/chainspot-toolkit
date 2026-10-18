@@ -1,0 +1,10 @@
+// Guard only: any attempted vendor import is a test-boundary failure.
+import {appendFileSync} from 'node:fs';
+const log=new URL('./blocked-imports.log',import.meta.url);
+export async function resolve(specifier,context,nextResolve){
+ if(specifier.includes('/probes/')||specifier.includes('../probes/')){
+  appendFileSync(log,JSON.stringify({specifier,parentURL:context.parentURL??null})+'\n');
+  throw Error('E1114_FORBIDDEN_VENDOR_IMPORT');
+ }
+ return nextResolve(specifier,context);
+}

@@ -1,0 +1,77 @@
+// Scratch-only read-only Git exporter, adapted from actual HH8 segmented transport.
+// Requires a later accepted R1199 and root GO; never stages/commits/changes refs or uses network.
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import {mkdir,readFile,writeFile} from 'node:fs/promises';
+import {resolve,join} from 'node:path';
+import assert from 'node:assert/strict';
+const REPO='/workspace/scratch/8528bb251845/chainspot-discovery-lab';
+const BASE='036d3e14416c40266917c51a0fe8d03785b050f3';
+const BASE_TREE='e21271ef77a501d4f41d1c9456ce1d23a87c5add';
+const REMOTE_BASE='b17fdb6e211f886b1a5c01b60d808b73134c4df5';
+const CYCLE='work/capability-discovery/cycle-05/';
+const SOURCE='experiments/capability-discovery/station-evidence/';
+const SOURCES=new Set(['README.md','cli.mjs','cli.test.mjs','codec.mjs','codec.test.mjs','recipe.mjs','recipe.test.mjs']);
+const MANIFEST=CYCLE+'package-manifest.json';
+const MANIFEST_SHA='3569cc5d36ef2318e254e7bcd3b74401a6db167c9595da6caf3171340284010e';
+const SUMS_SHA='f13fc4702ef6e981f4649f08d3d4c29ef0cf7e26e4ffd7cdc76ef5763bf3b65d';
+const PRIOR='/workspace/scratch/8528bb251845/discovery-cycle05/F6/E1106/inventory.json';
+const PRIOR_SHA='d8008a3c9ec96200a317ec78f6bb91149165432d5c94dceb2e3762a4bcef1c8d';
+const [commitArg,outputArg,approvalArg]=process.argv.slice(2);
+if(!commitArg||!outputArg||!approvalArg)throw Error('usage: node prepare-export.mjs ACTUAL_COMMIT NEW_SCRATCH_OUTPUT ROOT_APPROVAL_JSON');
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const blobSha=b=>createHash('sha1').update(`blob ${b.length}\0`).update(b).digest('hex');
+const asciiJson=v=>JSON.stringify(v,null,2).replace(/[^\x00-\x7f]/g,c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0'))+'\n';
+const git=(...a)=>execFileSync('git',a,{cwd:REPO,maxBuffer:64*1024*1024});
+const string=(...a)=>git(...a).toString('utf8').trim();
+const allowed=p=>p.startsWith(CYCLE)||(p.startsWith(SOURCE)&&SOURCES.has(p.slice(SOURCE.length)));
+const approval=JSON.parse(await readFile(approvalArg));
+assert.equal(approval.job_id,'E1200');assert.equal(approval.root_go,true);
+assert.equal(approval.reviewDecision,'accepted');assert.match(approval.reviewSha256,/^[0-9a-f]{64}$/);
+const review=await readFile(approval.reviewPath);assert.equal(sha(review),approval.reviewSha256);
+const parsedReview=JSON.parse(review);assert.equal(parsedReview.job_id,'R1199');assert.equal(parsedReview.decision,'accepted');
+const commit=string('rev-parse',commitArg+'^{commit}');assert.equal(commit,approval.localCommit);
+assert.equal(string('rev-parse','HEAD'),commit);assert.equal(string('status','--porcelain'),'');
+assert.equal(string('symbolic-ref','--short','HEAD'),'codex/capability-discovery-lab');
+assert.equal(string('rev-parse',commit+'^'),BASE);assert.equal(string('rev-list','--parents','-n','1',commit).split(' ').length,2);
+assert.equal(string('rev-parse',BASE+'^{tree}'),BASE_TREE);
+const tree=string('rev-parse',commit+'^{tree}');
+const manifestBytes=git('show',commit+':'+MANIFEST);assert.equal(sha(manifestBytes),MANIFEST_SHA);
+assert.equal(sha(git('show',commit+':'+CYCLE+'SHA256SUMS')),SUMS_SHA);
+const manifest=JSON.parse(manifestBytes);assert.equal(manifest.files.length,392);
+assert.ok(approval.postReviewManifest.startsWith(CYCLE+'post-review/'));
+const postBytes=git('show',commit+':'+approval.postReviewManifest);assert.equal(sha(postBytes),approval.postReviewManifestSha256);
+const post=JSON.parse(postBytes);assert.ok(Array.isArray(post.files)&&post.files.length>0);
+const expected=new Set([...manifest.files.map(f=>f.path),MANIFEST,CYCLE+'SHA256SUMS',...post.files.map(f=>f.path),approval.postReviewManifest]);
+for(const f of [...manifest.files,...post.files]){assert.ok(allowed(f.path));const b=git('show',commit+':'+f.path);assert.equal(b.length,f.bytes,f.path);assert.equal(sha(b),f.sha256,f.path);}
+const priorBytes=await readFile(PRIOR);assert.equal(sha(priorBytes),PRIOR_SHA);
+const prior=JSON.parse(priorBytes);assert.equal(prior.entries.length,2062);
+for(const f of prior.entries){const b=git('show',commit+':'+f.path);assert.equal(b.length,f.bytes,f.path);assert.equal(sha(b),f.sha256,f.path);}
+const rawChanges=git('diff-tree','--no-commit-id','--name-status','-r','-z',BASE,commit).toString('utf8').split('\0');rawChanges.pop();
+const paths=[];for(let i=0;i<rawChanges.length;i+=2){assert.equal(rawChanges[i],'A');const p=rawChanges[i+1];assert.ok(allowed(p),p);paths.push(p);}
+assert.deepEqual([...paths].sort(),[...expected].sort(),'Changed set must exactly equal accepted payload plus separately indexed post-review additions');
+const out=resolve(outputArg);assert.ok(out.startsWith('/workspace/scratch/8528bb251845/discovery-cycle05/')&&!out.startsWith(REPO+'/'));
+await mkdir(out,{recursive:false});
+const segments=[],files=[];let sequence=0;
+const put=async(name,value)=>{const bytes=Buffer.from(asciiJson(value));assert.ok(bytes.length<=60000,'segment budget');await writeFile(join(out,name),bytes,{flag:'wx'});segments.push({path:name,bytes:bytes.length,sha256:sha(bytes)});};
+for(const path of paths.sort()){
+  const [mode,type,oid]=string('ls-tree',commit,'--',path).split(/\s+/);assert.equal(type,'blob');assert.equal(mode,'100644');
+  const bytes=git('cat-file','blob',oid);assert.equal(blobSha(bytes),oid);
+  const identity={path,mode,gitBlobSha1:oid,sha256:sha(bytes),byteLength:bytes.length};
+  let text=null;try{const decoded=new TextDecoder('utf-8',{fatal:true,ignoreBOM:true}).decode(bytes);if(Buffer.from(decoded).equals(bytes))text=Array.from(decoded);}catch{}
+  sequence++;const chunks=[];const rebuilt=[];
+  const count=Math.max(1,Math.ceil((text===null?bytes.length:text.length)/(text===null?36000:4000)));
+  for(let i=0;i<count;i++){
+    const name=`${text===null?'binary':'text'}-${String(sequence).padStart(4,'0')}-${String(i+1).padStart(4,'0')}.json`;
+    if(text===null){const chunk=bytes.subarray(i*36000,Math.min(bytes.length,(i+1)*36000));await put(name,{kind:'binary-base64-segment',...identity,segmentIndex:i+1,segmentCount:count,chunkByteLength:chunk.length,chunkSha256:sha(chunk),base64:chunk.toString('base64')});}
+    else await put(name,{kind:'utf8-text-segment',...identity,segmentIndex:i+1,segmentCount:count,content:text.slice(i*4000,(i+1)*4000).join('')});
+    chunks.push(name);
+    const piece=JSON.parse(await readFile(join(out,name)));rebuilt.push(text===null?Buffer.from(piece.base64,'base64'):Buffer.from(piece.content));
+  }
+  const joined=Buffer.concat(rebuilt);assert.ok(joined.equals(bytes));assert.equal(blobSha(joined),oid);
+  files.push({...identity,encoding:text===null?'binary-base64-segments':'utf8-text-segments',chunks});
+}
+const transport={schema:'cycle05-readonly-git-export@1',job_id:'E1200',repository:'chainspot-discovery-lab',branch:'codex/capability-discovery-lab',localCommit:commit,localParent:BASE,localParentTree:BASE_TREE,localTree:tree,expectedCanonicalRemoteParent:REMOTE_BASE,expectedCanonicalRemoteBaseTree:BASE_TREE,expectedCanonicalRemoteFinalTree:tree,manifestSha256:MANIFEST_SHA,postReviewManifest:{path:approval.postReviewManifest,sha256:approval.postReviewManifestSha256},review:{job_id:'R1199',sha256:approval.reviewSha256,decision:'accepted'},changedPaths:paths,sourceFiles:files,segmentFiles:segments,limits:{segmentJsonBytes:60000,transportIndexBytes:1000000},allReassembledBlobsVerified:true,publication:'Root alone verifies fresh connected refs/base/tree, creates canonical commit on remote parent and nonforce expected-head update. Local and remote metadata/SHAs remain distinct. No fetch/reset/force/push/PR/main/deploy/defaultON or scientific acceptance.'};
+const encoded=Buffer.from(asciiJson(transport));assert.ok(encoded.length<=1000000,'index budget; stop rather than truncate');
+await writeFile(join(out,'transport.json'),encoded,{flag:'wx'});
+console.log(JSON.stringify({localCommit:commit,localTree:tree,changedBlobs:files.length,segments:segments.length,maximumSegmentBytes:Math.max(...segments.map(s=>s.bytes)),indexBytes:encoded.length,indexSha256:sha(encoded),out,prior2062Exact:true,readOnlyGit:true,CVCalls:0,GitMutations:0},null,2));

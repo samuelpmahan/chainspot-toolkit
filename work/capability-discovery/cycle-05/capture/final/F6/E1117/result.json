@@ -1,0 +1,153 @@
+{
+  "schema": "lab-job-result@1",
+  "job_id": "E1117",
+  "worker": "F6",
+  "outcome": "confirmed_reuse",
+  "summary": "The first admitted aggregate Lab regression run passed172/172 Node tests with0failures and exit0, including the42 station-evidence non-CV tests; the first existing Python staging run passed2/2 with exit0. Exact prospective commands, unfiltered raw logs, statuses and hashes are retained. Before/after checks rehash all2062 prior tracked files and all7 frozen new-source files unchanged; HEAD/tree/index/branch were not mutated. No repairs, reruns, full repository suite or scientific32-PATH producer/grid/mining execution occurred. Existing engineering tests may call CV, which is explicitly distinct from scientific producer evidence.",
+  "commands": [
+    {
+      "id": "lab",
+      "command": "node --test --test-reporter=tap experiments/capability-discovery/*.test.mjs experiments/capability-discovery/catalog/*.test.mjs experiments/capability-discovery/probes/*/*.test.mjs experiments/capability-discovery/composition/*.test.mjs experiments/capability-discovery/source-pixels/*.test.mjs experiments/capability-discovery/window-evidence/*.test.mjs experiments/capability-discovery/station-evidence/*.test.mjs",
+      "exitCode": 0,
+      "firstAttempt": true,
+      "counts": {
+        "tests": 172,
+        "pass": 172,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "reporterDurationMs": 2555.417962
+      },
+      "rawLog": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F6/E1117/lab.raw.log",
+        "bytes": 34582,
+        "sha256": "2082146d7f4051c747023fc64792e011fbfdd4d3d0d6e160b086364a79acfa4e"
+      }
+    },
+    {
+      "id": "stager",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 experiments/capability-discovery/source-pixels/stage-png.test.py",
+      "exitCode": 0,
+      "firstAttempt": true,
+      "counts": {
+        "tests": 2,
+        "pass": 2,
+        "fail": 0
+      },
+      "rawLog": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F6/E1117/stager.raw.log",
+        "bytes": 100,
+        "sha256": "30b7db73967acdb055ef826f6af2556d423ce2ebb08c1494e1a654e3b2b89a3a"
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F6/E1117/prospective-commands.json",
+      "bytes": 1630,
+      "sha256": "c9d961d713097b773e647670fc7e6b33e4f02751c77792c29c5a91af8cf24baf"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F6/E1117/before.json",
+      "bytes": 359,
+      "sha256": "75133b927beabb1051b52bc41938c411e495c752514803c70bc1ea8372b598c0"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F6/E1117/after.json",
+      "bytes": 359,
+      "sha256": "75133b927beabb1051b52bc41938c411e495c752514803c70bc1ea8372b598c0"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F6/E1117/executions.json",
+      "bytes": 1753,
+      "sha256": "a9a29536b5fc9d7119c3bbf1170bf4f90facb46c7444fe293ce2f1aac59d0602"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F6/E1117/lab.raw.log",
+      "bytes": 34582,
+      "sha256": "2082146d7f4051c747023fc64792e011fbfdd4d3d0d6e160b086364a79acfa4e"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F6/E1117/stager.raw.log",
+      "bytes": 100,
+      "sha256": "30b7db73967acdb055ef826f6af2556d423ce2ebb08c1494e1a654e3b2b89a3a"
+    }
+  ],
+  "runtime": {
+    "node": "v24.19.0",
+    "python": "3.12.14",
+    "authority": "actual node --version and python3 --version reads after tests",
+    "externalTimeUtilityUsed": false,
+    "CPUOrMemoryMeasured": false
+  },
+  "verification": {
+    "before": {
+      "priorCount": 2062,
+      "priorChanged": [],
+      "sourceCount": 7,
+      "sourceChanged": [],
+      "head": "036d3e14416c40266917c51a0fe8d03785b050f3",
+      "tree": "e21271ef77a501d4f41d1c9456ce1d23a87c5add",
+      "status": "?? experiments/capability-discovery/station-evidence/",
+      "sourceFreezeSha256": "0a2351f595fd72d55af79fccb4532deb1b58125a2c440e37d6276fba5d21da4b"
+    },
+    "after": {
+      "priorCount": 2062,
+      "priorChanged": [],
+      "sourceCount": 7,
+      "sourceChanged": [],
+      "head": "036d3e14416c40266917c51a0fe8d03785b050f3",
+      "tree": "e21271ef77a501d4f41d1c9456ce1d23a87c5add",
+      "status": "?? experiments/capability-discovery/station-evidence/",
+      "sourceFreezeSha256": "0a2351f595fd72d55af79fccb4532deb1b58125a2c440e37d6276fba5d21da4b"
+    },
+    "sourceFreezeSha256": "0a2351f595fd72d55af79fccb4532deb1b58125a2c440e37d6276fba5d21da4b",
+    "priorFilesCheckedEachBoundary": 2062,
+    "newFrozenFilesCheckedEachBoundary": 7,
+    "unchangedAtBothBoundaries": true,
+    "testsExecuted": {
+      "node": 172,
+      "python": 2,
+      "total": 174
+    },
+    "testFailures": 0,
+    "repairs": 0,
+    "reruns": 0,
+    "scientificProducerCallsByE1117": 0,
+    "internalTestCVCalls": "NOT_INSTRUMENTED_OR_COUNTED; existing engineering controls execute some image/CV work; do not claim0 or equate them with32 fixed scientific PATH calls",
+    "fullRepositorySuite": "NOT_RUN; no whole-repository-green claim",
+    "knownBroadFailures": "Historical17 baseline failures preserved, not rerun, repaired, hidden or promoted to green"
+  },
+  "changes": {
+    "sourceEdits": [],
+    "existingTrackedFilesChanged": [],
+    "newFrozenFilesChanged": [],
+    "GitMutations": false,
+    "coordinatorStateWrites": false,
+    "packageCopies": false,
+    "externalWrites": false,
+    "HHOrProtectedPathsTouched": false
+  },
+  "mentalPackagePlanOnly": {
+    "status": "PROPOSAL_ONLY_NOT_COPIED_NOT_EXECUTED",
+    "gates": "Wait root separate package admission and exact F3/F4 producer/figure/review identities; do not infer future acceptance.",
+    "proposedAdditiveScope": [
+      "Existing seven-file station-evidence source freeze remains exact.",
+      "A new cycle05 evidence subtree only, leaving all2062 previous paths/manifests/histories unchanged.",
+      "Bind initial source/API/math/protocol critiques, raw AMEND/addendum history, native receipts/admissions, source freeze/reviews, first engineering test logs, exact fixed producer trace/sidecar/fragments and independent replay/falsifier/figure reviews as actually available.",
+      "Retain exact raw original bytes and failures. Any lossless compression records both original/stored identities; path-only portable companions are separately named and hashed, never replace originals.",
+      "Include fixed synthetic raw-stage/protocol identities sufficient for byte-exact staging; no old scientific grids or original-image extension is silently rerun/admitted.",
+      "Use separate package-manifest/capture-index/verifier and separately admitted staging. Independent audit precedes local branch checkpoint; root alone connected publication with distinct local036d3e1 and canonical remoteb17fdb6 parent identities. No reset/fetch/force/main/PR/deploy/defaultON."
+    ]
+  },
+  "claims": {
+    "promoted": false,
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN",
+    "pathIdentity": "UNKNOWN",
+    "physicalEdgeIdentity": "UNKNOWN",
+    "calibratedWidth": "UNKNOWN"
+  },
+  "next": "Root ingests E1117 and combines the actual pending producer/figure/review packets before a separately bounded package admission. F6 stops with no package copy, source edit or Git commit."
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "cycle05-E1117-prospective-regressions@1",
+  "job_id": "E1117",
+  "worker": "F6",
+  "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+  "authorization": "Root native E1117 bounded aggregate Lab regressions plus stager only; no source/Git mutations or scientific producer rerun",
+  "commands": [
+    {
+      "id": "lab",
+      "command": "node --test --test-reporter=tap experiments/capability-discovery/*.test.mjs experiments/capability-discovery/catalog/*.test.mjs experiments/capability-discovery/probes/*/*.test.mjs experiments/capability-discovery/composition/*.test.mjs experiments/capability-discovery/source-pixels/*.test.mjs experiments/capability-discovery/window-evidence/*.test.mjs experiments/capability-discovery/station-evidence/*.test.mjs",
+      "expectedOnly": {
+        "tests": 172,
+        "authority": "root predicted count, not an observed pass claim"
+      }
+    },
+    {
+      "id": "stager",
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 experiments/capability-discovery/source-pixels/stage-png.test.py",
+      "expectedOnly": {
+        "tests": 2,
+        "authority": "previous accepted test count, current result not yet observed"
+      }
+    }
+  ],
+  "scope": "Existing tests may execute image/CV engineering controls; these are distinct from fixed32 PATH scientific producer. No new grid/mining, full repository suite, image selection or producer executed by this plan.",
+  "preserve": {
+    "priorFiles": 2062,
+    "sourceFiles": 7
+  },
+  "packagePlan": "Mental only until separate package admission; do not copy evidence/source or rewrite original histories."
+}

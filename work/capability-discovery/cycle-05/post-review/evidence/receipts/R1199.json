@@ -1,0 +1,239 @@
+{
+  "schema": "capability-discovery-independent-package-review@1",
+  "job_id": "R1199",
+  "worker": "V1",
+  "decision": "accepted",
+  "summary": "Independent exact-package/provenance/portability engineering audit accepted for manifest3569cc5d36ef2318e254e7bcd3b74401a6db167c9595da6caf3171340284010e:392 listed files/3,202,420 bytes,7 source+385 package,394 total new files including manifest/checksums; prior2062/source7/query9 exact. All462 original bindings/338 stored objects/124 aliases verified including16 zstd; fresh stage restored462 plus2 separately hashed path-only companions. Eight independent strong alias substitutions and one existing-output probe correctly refused exit1. Internal producer/replay/display/test/raw-AMEND bindings rehashed; retained producer/replay trace bytes identical. No CV, producer, renderer, codec import, image decode, historical tests, source/Git/native writes or scientific acceptance. No required amendment.",
+  "reviewedBindings": {
+    "package-manifest.json": "3569cc5d36ef2318e254e7bcd3b74401a6db167c9595da6caf3171340284010e",
+    "SHA256SUMS": "f13fc4702ef6e981f4649f08d3d4c29ef0cf7e26e4ffd7cdc76ef5763bf3b65d",
+    "source-manifest.json": "7b5781252e1d1f2451c2bb49b7a6b56d6991fdcb1516686e5e96c3de43c4013f",
+    "verify-package.py": "d7c3cea5fcffc99ba2493eeab460f9a37062e9c432c02d07c92646645e328aa8",
+    "stage-replay.py": "be37b2cc653db29faf9ac8ee267cd404f4ef565c8821953c1ab22da6954966ac",
+    "administration/capture-index-final.json": "4056daa360defc2ef914e07eca68d537948d35e17bc433c92d7513b91646c708",
+    "E1199/result.json": "0704768fb4a83e34cbaa48206746d4f7b9c4be9ab515da96b6b3dd59b2ac5835",
+    "sourceFreezeSha256": "0a2351f595fd72d55af79fccb4532deb1b58125a2c440e37d6276fba5d21da4b",
+    "F5/E1115/result.json": "edff8f00944ad3fff90d92d1cbd68d5802bba7da39844671e2907c43083c015c",
+    "F3/R1115/result.json": "80b53bf5a8fff677bd14dcc302648df289493fb2e32ea921b4c26ede89ce0b9b",
+    "F4/E1116/result.json": "17539d25e0d4a9c94364b8bbffdccab2e9487f7acbfb11b72b0992daac1a8cdc",
+    "F5/R1116/result.json": "79cf2446f77c87dc9222b08c72deb805ebd5b366a31a00fda538dc35eabd4401",
+    "F6/E1117/result.json": "77785fd8567a81126f3fe25cdd126d2dfc17503aeeb2dd9919ff747f498d48df",
+    "F5/E1115/run/value-trace.json": "76cf61ee3be3cd56faa0fc7274d5a3a5b898fe954dc73571092549487fa11eb2",
+    "F3/R1115/replay-run/value-trace.json": "76cf61ee3be3cd56faa0fc7274d5a3a5b898fe954dc73571092549487fa11eb2"
+  },
+  "counts": {
+    "listed": 392,
+    "payloadBytes": 3202420,
+    "source": 7,
+    "packageListed": 385,
+    "newTotalIncludingManifestChecksums": 394,
+    "originalBindings": 462,
+    "uniqueStored": 338,
+    "aliases": 124,
+    "zstdStored": 16,
+    "omitted": 3,
+    "deferred": 0,
+    "priorTracked": 2062,
+    "queryClosure": 9,
+    "restored": 462,
+    "portableCompanions": 2,
+    "independentNegativeRefusals": 8,
+    "existingOutputRefusals": 1
+  },
+  "checksActuallyRun": {
+    "byteAuditAssertions": 6102,
+    "provenanceLinkageAssertions": 209,
+    "assertionsAreNotScientificTests": true,
+    "payloadSHA256All": true,
+    "sha256sumExitCode": 0,
+    "verifierExitCodes": [
+      0,
+      0,
+      0
+    ],
+    "freshStageExitCode": 0,
+    "completeNewPathSetExact394": true,
+    "postAuditPrior2062Source7Exact": true,
+    "workingTrackedDiffExitCode": 0,
+    "parentHEAD": "036d3e14416c40266917c51a0fe8d03785b050f3",
+    "parentTree": "e21271ef77a501d4f41d1c9456ce1d23a87c5add",
+    "artifactManifestEntriesRehashedPerProducerAndReplay": 74,
+    "producerReplayTraceByteEquality": true,
+    "rootPNGInspectionAndIndependentDisplayReviewBindingsRehashed": true,
+    "capturePointerOnlyFinal": true,
+    "preauditChangedOriginalsOnly": [
+      "work/capability-discovery/cycle-05/README.md",
+      "work/capability-discovery/cycle-05/REPRODUCE.md",
+      "work/capability-discovery/cycle-05/next-packets.json"
+    ],
+    "noBareArchivedTestMjs": true,
+    "omittedSourceMetadataCrossBound": true
+  },
+  "actualCommands": [
+    {
+      "command": "python3 discovery-cycle05/V1/R1199/audit.py",
+      "exitCode": 0,
+      "details": "Includes sha256sum -c, exact verifier, fresh stager, existing-stage refusal and8 isolated strong alias substitutions; actual child argv/status/output hashes in audit-evidence.json."
+    },
+    {
+      "command": "python3 discovery-cycle05/V1/R1199/provenance.py",
+      "exitCode": 0,
+      "details": "209 historical-binding assertions and post-audit verifier exit0; no restored evidence executed."
+    },
+    {
+      "command": "python3 discovery-cycle05/V1/R1199/finalize.py",
+      "details": "Fresh exact394 untracked set, git diff --exit-code HEAD, final verifier and result emission; completion exit is external tool receipt."
+    }
+  ],
+  "negativeExecutions": [
+    {
+      "case": "raw-uncached",
+      "helper": "verify-package.py",
+      "exitCode": 1,
+      "stderr": "Original mismatch: forged-alias\n",
+      "acceptedBadAlias": false
+    },
+    {
+      "case": "raw-uncached",
+      "helper": "stage-replay.py",
+      "exitCode": 1,
+      "stderr": "Original integrity mismatch: forged-alias\n",
+      "acceptedBadAlias": false
+    },
+    {
+      "case": "raw-cached",
+      "helper": "verify-package.py",
+      "exitCode": 1,
+      "stderr": "Original mismatch: forged-alias\n",
+      "acceptedBadAlias": false
+    },
+    {
+      "case": "raw-cached",
+      "helper": "stage-replay.py",
+      "exitCode": 1,
+      "stderr": "Original integrity mismatch: forged-alias\n",
+      "acceptedBadAlias": false
+    },
+    {
+      "case": "zstd-uncached",
+      "helper": "verify-package.py",
+      "exitCode": 1,
+      "stderr": "Original mismatch: forged-alias\n",
+      "acceptedBadAlias": false
+    },
+    {
+      "case": "zstd-uncached",
+      "helper": "stage-replay.py",
+      "exitCode": 1,
+      "stderr": "Original integrity mismatch: forged-alias\n",
+      "acceptedBadAlias": false
+    },
+    {
+      "case": "zstd-cached",
+      "helper": "verify-package.py",
+      "exitCode": 1,
+      "stderr": "Original mismatch: forged-alias\n",
+      "acceptedBadAlias": false
+    },
+    {
+      "case": "zstd-cached",
+      "helper": "stage-replay.py",
+      "exitCode": 1,
+      "stderr": "Original integrity mismatch: forged-alias\n",
+      "acceptedBadAlias": false
+    }
+  ],
+  "existingOutputRefusal": {
+    "exitCode": 1,
+    "stderr": "Fresh directory outside repository required\n",
+    "existingStageBytesUnchanged": true
+  },
+  "actualFailures": {
+    "unexpectedAuditExecutionFailures": [],
+    "expectedRefusals": 9,
+    "forcedZeroExitCodes": 0,
+    "retriesOrRepairs": 0,
+    "readOnlyReconnaissanceDiagnostics": "Exploratory rg/sed/cat requests included nonexistent optional filenames/directories (precreation V1, bad-alias-probe.py, receipts/R1199.json and guessed history names). Their tool-transcript errors were discovery mistakes, not package-verifier failures or scientific/test executions; no nonexistent evidence was fabricated."
+  },
+  "portableCompanions": [
+    {
+      "original": "F5/E1115/manifest.json",
+      "sha256": "3a27691d56bd32cb22c5f522b4114d3eaadc5adebc2a57740439eceff5200ed2",
+      "portable": "discovery-cycle05/F5/E1115/manifest-portable.json",
+      "portableSha256": "dd9080bcc55abd15f76805810df05ed8620f42f6402a62b6bd71bb8a79b8027d"
+    },
+    {
+      "original": "F6/R1104/verify-review.py",
+      "sha256": "ba32a2d32077f2c858199acc6a58b1f1e0c43e53a1ee94815861a8f5b8d73f1d",
+      "portable": "discovery-cycle05/F6/R1104/verify-review-portable.py",
+      "portableSha256": "499b3229f3af6ed502fd071176f966d665209018ec184fa4ce67903418810026"
+    }
+  ],
+  "historicalEvidenceOnly": {
+    "producer": "F5/E1115 reported32PATH+8constants; independent F3/R1115 same count and accepted; exact historical raw/manifests/trace bytes rehashed, not rerun.",
+    "renderer": "F4 trace-only2PNG and F5/R1116 accepted/root original-PNG inspection receipts bound; no image decode/view or HTML-browser visual QA by V1.",
+    "engineeringTests": "Retained172 Node+2 Python aggregate logs and59 adversarial variants rehashed/inspected;42 new NON-CV test sources inspected but not rerun by V1. Historical17 broad-suite failures remain uncleared; no new threshold or scientific tolerance change.",
+    "amendment": "Raw R1105 AMEND and addendum retained. E1105 initial native-finish schema rejection remains root tool-transcript testimony only; E1101 was preflight normalization, not native rejection.",
+    "admin": "Phase-path/cache defects were preexecution source findings; original helper bodies preserved, not misrepresented as failed executions. First verified preaudit candidate and3 document changes retained separately."
+  },
+  "boundaries": {
+    "CVCalls": 0,
+    "producerCalls": 0,
+    "rendererCalls": 0,
+    "codecImports": 0,
+    "imageDecodes": 0,
+    "GitMutations": 0,
+    "nativeWrites": 0,
+    "repoWrites": 0,
+    "testsRun": 0
+  },
+  "falsifiersObserved": [],
+  "requiredAmendments": [],
+  "limitations": [
+    "Acceptance is limited to the exact frozen engineering package and specified alias/cache guards; hashes are not authenticated execution attestation or generic hostile-input/security proof.",
+    "Current recipe remains synthetic8-only, default OFF, all8 cases exposed. Lenard preset is unimplemented;3 original PNG bodies are deliberately omitted and were not fetched, decoded or reconstructed.",
+    "Fresh staging depends on Python/zstd and the complete repository symlink; it does not vendor the entire repository. Original absolute paths remain exact; portable companions are separate identities and scripts do not automatically select a portable manifest.",
+    "Source review and retained test/review records are not a new producer, replay, renderer, test or scientific execution. Capsule collision/masking/UNKNOWN and uncalibrated proxy limitations remain.",
+    "Captured native/registry/receipts are historical, not live authority; H1/H2 were not touched. No new human/scientific/path/edge/physical-width/heldout/production acceptance.",
+    "Independent audit artifacts/current R1199 administration remain outside frozen package. No retroactive insertion into capture or self-approval of F6 source; root owns native ingestion and next admission."
+  ],
+  "promptGate": "EXACT_FROZEN_PACKAGE_ENGINEERING_AUDIT_ACCEPTED_FOR_ROOT_INGESTION_ONLY. F6 remains sole source/Git integration owner. This result does not dispatch commit/push/PR/main/deploy/default-ON or further CV; root must separately admit next work after actual fresh state/ref/source readback.",
+  "scientificAcceptance": "UNKNOWN",
+  "humanAcceptance": "UNKNOWN",
+  "pathIdentity": "UNKNOWN",
+  "physicalEdgeIdentity": "UNKNOWN",
+  "calibratedWidth": "UNKNOWN",
+  "promoted": false,
+  "artifacts": [
+    {
+      "path": "audit.py",
+      "sha256": "a0ea0ed4359211d54c1745ebc3af8aaae90b9f641b8ae175d3f7fd11717399d9",
+      "bytes": 10474
+    },
+    {
+      "path": "audit-evidence.json",
+      "sha256": "062904c8f6a71c6e8cf2c13623cfd382c072f4d213186d6487b1d01c532b3050",
+      "bytes": 511265
+    },
+    {
+      "path": "provenance.py",
+      "sha256": "f36c6ed2e0608494098d4ff193b1da716f520ad917e39499583c3c2187c304b9",
+      "bytes": 7628
+    },
+    {
+      "path": "provenance-evidence.json",
+      "sha256": "af481de0b22a7a9318a93b6ae111d53a6b0a0741534dad77a45530913a183221",
+      "bytes": 24291
+    },
+    {
+      "path": "final-scope-evidence.json",
+      "sha256": "fa2a1d055f2159516ccd0f76682829c85d2ea23d16f2fd4ef10032d3d65a88cb",
+      "bytes": 35466
+    },
+    {
+      "path": "fresh-stage/stage-receipt.json",
+      "sha256": "1f626e5f04a44c7300ea5d195cea2a4599cff02be08a1127eb8e208da000b2dc",
+      "bytes": 116027
+    }
+  ]
+}

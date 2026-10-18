@@ -1,0 +1,42 @@
+{
+  "schema": "capability-discovery-proposed-contract-checks@1",
+  "job": "E1105",
+  "worker": "F3",
+  "status": "PROPOSED_NOT_EXECUTED",
+  "authority": "Engineering contract suggestions only; no scientific or human acceptance",
+  "candidateScope": "Standalone default-OFF observational orchestration of existing PATH_QUERIES",
+  "proposedFixedPlan": {
+    "perComparison": ["fn.q.path.profile"],
+    "perDeclaredWidthInOrder": ["fn.q.path.edgePair", "fn.q.path.stationContrast", "fn.q.path.loss"],
+    "APIInvocationCount": "K + 3*sum(B_i)",
+    "sourceDerivedInternalExpectationsPerComparison": {"profileAt": "1+B", "stationContrastAt": "2B", "samplesAt": "B", "overlayAt": "B", "corridorOf": "B"},
+    "internalCountsAreRuntimeMeasured": false,
+    "invocationMode": "direct-export",
+    "externalRegistryCache": "NOT_USED",
+    "longProtocol": {"stepPx": 1, "expectedStationCount": 16},
+    "lossProfile": null,
+    "lossThreshold": null,
+    "tauLum": 8,
+    "tauMeaning": "Historical source diagnostic only, not a new classifier"
+  },
+  "checks": [
+    {"id":"C01","requirement":"No enabled:true means DISABLED and zero source/CV/API calls; malformed enabled inputs abstain before API execution."},
+    {"id":"C02","requirement":"Strict dense inputs, supported byte containers, exact pixel and mask hashes, frame linkage, unique station IDs, caller-local width bank order, finite safe arguments and approved resource bounds."},
+    {"id":"C03","requirement":"Fresh private raster object and immutable copied RGBA/mask; before/after hashes unchanged; alpha bytes preserved without muting/compositing."},
+    {"id":"C04","requirement":"Verify pinned public API and dependency source bytes before calls; leave old accepted sources and production defaults unchanged."},
+    {"id":"C05","requirement":"Ordered actual invocation records distinguish requested, attempted, completed, condition, exception, disabled, preflight refusal and empty-bank omitted calls."},
+    {"id":"C06","requirement":"Public edgePair recomputation and loss's internal stationContrast/samples/overlay work remain explicit; no claim of shared public-profile injection."},
+    {"id":"C07","requirement":"Retain complete {value,unit} results; left/right raw contrasts plus validity flags; profile arrays/counts; every width row; loss raw typed corridor arrays and source summaries."},
+    {"id":"C08","requirement":"Lossless serialization distinguishes finite values, negative zero, NaN, infinities, source null, missing fields and supported typed-array constructor/length/order."},
+    {"id":"C09","requirement":"Do not reconstruct raw bilateral observations or threshold passes from loss's rounded edgeMinLum; no inference of unexported band counts/means."},
+    {"id":"C10","requirement":"Exactly retained trace bytes and digest bind figure; figure consumes no image/pose/CV inputs and imports no producer module."},
+    {"id":"C11","requirement":"Figure retains both bilateral lanes/validity, all width rows and no-pair/UNKNOWN/masked/null states; finite raw invalid contrasts are not silently erased or passed."},
+    {"id":"C12","requirement":"Any existing source-pixel comparisons retain both crop/source outputs and unchanged1e-9 differences; existing receipt-only group helper still declares CVCalls0."},
+    {"id":"C13","requirement":"Empty width bank preserves no candidate rows without fallback; UNKNOWN-after-execution differs from NOT_EXECUTED; invalid linkage is not normalized."},
+    {"id":"C14","requirement":"Historical tau8 remains labeled diagnostic; profile:null overlay remains white brightness proxy and threshold:null remains unclassified."},
+    {"id":"C15","requirement":"Fixed controls include intact, narrow/wide gap, bright organic, offset, masks, serializer/integrity and short-window structural guard counterexamples; predicted outcomes are distinguished from measurements."},
+    {"id":"C16","requirement":"promoted=false; identity/calibration/width truth UNKNOWN; same pixels and repeated API calls do not become independent confidence."}
+  ],
+  "openImplementationChoices": ["Root/F6 must freeze practical resource caps before implementation/execution.", "Trace schema/serializer representation must be frozen and roundtrip-tested.", "If a registered gateway route is requested instead, its real registry/cache dependency requires separate pinned review."],
+  "notEstablished": ["actual API execution", "candidate implementation correctness", "numerical predictions", "physical continuity or gap length", "semantic path identity", "independent confidence", "scientific acceptance", "human acceptance"]
+}

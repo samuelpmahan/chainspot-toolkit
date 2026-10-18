@@ -1,0 +1,323 @@
+{
+  "job_id": "R1116",
+  "worker": "F5",
+  "decision": "accepted",
+  "summary": "Accepted only exact F4 E1116 trace-only renderer/display bundle. Independently inspected both original1500x1440 PNGs; source review found pure-codec+Node imports only, both raw files hash-verified before decode, no CV/image/recipe/store input. All7 original artifact hashes match, full HTML preblocks recover exact original tagged trace and sidecar bytes, every8case fit/condition/native loss denominator label matches raw data. Independent fresh replay produced byte-identical2SVG+HTML+initialmanifest; wrong-hash replay refused before decode/output directory creation.7 frozen product files and2062 prior files unchanged before/after. This is not acceptance of F5 own underlying producer, scientific/path/width claims or browser HTML visual QA.",
+  "scope": "Exact renderer-only display of independently R1115-accepted original E1115 retained raw values",
+  "binding": {
+    "reviewedResult": {
+      "path": "discovery-cycle05/F4/E1116/result.json",
+      "sha256": "17539d25e0d4a9c94364b8bbffdccab2e9487f7acbfb11b72b0992daac1a8cdc"
+    },
+    "renderer": {
+      "path": "discovery-cycle05/F4/E1116/renderer.mjs",
+      "sha256": "9d22757026e38625b67419e42d37bdc8ad0cbec4b5e7eec01961a8bad20f23c6"
+    },
+    "codecSha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015",
+    "valueTraceSha256": "76cf61ee3be3cd56faa0fc7274d5a3a5b898fe954dc73571092549487fa11eb2",
+    "sidecarSha256": "4a6599406ed17ccd97a3c8e377d0186a0fb8f6fcc064189439870b83b70f24f9",
+    "independentRawReview": {
+      "path": "discovery-cycle05/F3/R1115/result.json",
+      "sha256": "80b53bf5a8fff677bd14dcc302648df289493fb2e32ea921b4c26ede89ce0b9b"
+    },
+    "sourceFreezeSha256": "0a2351f595fd72d55af79fccb4532deb1b58125a2c440e37d6276fba5d21da4b",
+    "rasterizationLogSha256": "34930fd622b7728176d172b580e0d52ea0500502e1c98e113b6313058533303b"
+  },
+  "exactOriginalArtifacts": [
+    {
+      "path": "render-01/page-1.svg",
+      "bytes": 74965,
+      "sha256": "1a14c32017db787ed227261f692755405234f934f27fa58ec17dab8c286c19fd",
+      "verified": true
+    },
+    {
+      "path": "render-01/page-2.svg",
+      "bytes": 91662,
+      "sha256": "05cecafa60bbf3f164c4855bfd6ff84d5ff930902bca5c411bfb7dbe6514c62e",
+      "verified": true
+    },
+    {
+      "path": "render-01/inspection.html",
+      "bytes": 563634,
+      "sha256": "4c32b213f841110f4861d38d029da731aa29583068435c7695440cd81146066e",
+      "verified": true
+    },
+    {
+      "path": "render-01/page-1.png",
+      "bytes": 314238,
+      "sha256": "ca03e3e5032b07b27e93dfcc9bb5be142c41cf0812d8852e5897afcaa36e9bf9",
+      "verified": true
+    },
+    {
+      "path": "render-01/page-2.png",
+      "bytes": 310302,
+      "sha256": "e52cda20ed99945929b6a2aa34ecfe72dfa2d2b9bfdcf499d02853ad78fd48c7",
+      "verified": true
+    },
+    {
+      "path": "render-01/render-manifest.json",
+      "bytes": 1601,
+      "sha256": "dbe2bb15f6fa7e7c3914e022f3b7c3b86a677c4d2e89f4103e1662bdc129378d",
+      "verified": true
+    },
+    {
+      "path": "render-01/render-manifest-final.json",
+      "bytes": 2222,
+      "sha256": "837a26e71af294e105da07a58a2d127a11c1e353c875843a7d49b7ada7c687b9",
+      "verified": true
+    }
+  ],
+  "checksActuallyRun": {
+    "originalPNGVisualInspection": {
+      "method": "view_image detail:original",
+      "pages": 2,
+      "dimensions": [
+        1500,
+        1440
+      ],
+      "findings": "No blocking clipping/overlap; all8fixed cases in order; gap minima/finite fits/capsule equivalence/offset shift/masked shoulders/NaNs/allHidden null denominators and UNKNOWN caveats visible."
+    },
+    "rawAndArtifactHashes": "All7 original artifacts plus raw input/renderer/codec hashes independently checked",
+    "HTMLRawWire": {
+      "blocks": 2,
+      "trace": true,
+      "sidecar": true
+    },
+    "nativeValueLabelChecks": [
+      {
+        "id": "intact",
+        "queryNames": [
+          "fn.q.path.profile",
+          "fn.q.path.edgePair",
+          "fn.q.path.stationContrast",
+          "fn.q.path.loss"
+        ],
+        "fitLabelMatches": true,
+        "nativeLossLabelMatches": true
+      },
+      {
+        "id": "gap2",
+        "queryNames": [
+          "fn.q.path.profile",
+          "fn.q.path.edgePair",
+          "fn.q.path.stationContrast",
+          "fn.q.path.loss"
+        ],
+        "fitLabelMatches": true,
+        "nativeLossLabelMatches": true
+      },
+      {
+        "id": "gap6",
+        "queryNames": [
+          "fn.q.path.profile",
+          "fn.q.path.edgePair",
+          "fn.q.path.stationContrast",
+          "fn.q.path.loss"
+        ],
+        "fitLabelMatches": true,
+        "nativeLossLabelMatches": true
+      },
+      {
+        "id": "largeBrightEllipse",
+        "queryNames": [
+          "fn.q.path.profile",
+          "fn.q.path.edgePair",
+          "fn.q.path.stationContrast",
+          "fn.q.path.loss"
+        ],
+        "fitLabelMatches": true,
+        "nativeLossLabelMatches": true
+      },
+      {
+        "id": "organicCapsule",
+        "queryNames": [
+          "fn.q.path.profile",
+          "fn.q.path.edgePair",
+          "fn.q.path.stationContrast",
+          "fn.q.path.loss"
+        ],
+        "fitLabelMatches": true,
+        "nativeLossLabelMatches": true
+      },
+      {
+        "id": "normalOffsetPlus6",
+        "queryNames": [
+          "fn.q.path.profile",
+          "fn.q.path.edgePair",
+          "fn.q.path.stationContrast",
+          "fn.q.path.loss"
+        ],
+        "fitLabelMatches": true,
+        "nativeLossLabelMatches": true
+      },
+      {
+        "id": "maskedGap6",
+        "queryNames": [
+          "fn.q.path.profile",
+          "fn.q.path.edgePair",
+          "fn.q.path.stationContrast",
+          "fn.q.path.loss"
+        ],
+        "fitLabelMatches": true,
+        "nativeLossLabelMatches": true
+      },
+      {
+        "id": "allHidden",
+        "queryNames": [
+          "fn.q.path.profile",
+          "fn.q.path.edgePair",
+          "fn.q.path.stationContrast",
+          "fn.q.path.loss"
+        ],
+        "fitLabelMatches": true,
+        "nativeLossLabelMatches": true
+      }
+    ],
+    "maskMarkers": [
+      {
+        "page": 1,
+        "finiteInvalidCircles": 0,
+        "validCircles": 128,
+        "NaNLabels": 0,
+        "hasImageTag": false,
+        "hasScriptTag": false
+      },
+      {
+        "page": 2,
+        "finiteInvalidCircles": 8,
+        "validCircles": 84,
+        "NaNLabels": 36,
+        "hasImageTag": false,
+        "hasScriptTag": false
+      }
+    ],
+    "rendererSourceReview": "Only Node fs/crypto/path and pure codec imported; both original bytes hash-verified before either decode; fixed32 query identities/geometry/widths, direct raw value plots and native summary labels; finite invalid points hollow/no invalid connections; complete raw wire XML-escaped in HTML",
+    "freshRendererReplay": {
+      "exitCode": 0,
+      "comparison": {
+        "schema": "R1116-renderer-only-replay-comparison@1",
+        "artifacts": [
+          {
+            "path": "page-1.svg",
+            "bytes": 74965,
+            "sha256": "1a14c32017db787ed227261f692755405234f934f27fa58ec17dab8c286c19fd",
+            "byteExact": true
+          },
+          {
+            "path": "page-2.svg",
+            "bytes": 91662,
+            "sha256": "05cecafa60bbf3f164c4855bfd6ff84d5ff930902bca5c411bfb7dbe6514c62e",
+            "byteExact": true
+          },
+          {
+            "path": "inspection.html",
+            "bytes": 563634,
+            "sha256": "4c32b213f841110f4861d38d029da731aa29583068435c7695440cd81146066e",
+            "byteExact": true
+          },
+          {
+            "path": "render-manifest.json",
+            "bytes": 1601,
+            "sha256": "dbe2bb15f6fa7e7c3914e022f3b7c3b86a677c4d2e89f4103e1662bdc129378d",
+            "byteExact": true
+          }
+        ],
+        "allByteExact": true,
+        "wrongHashOutputDirectoryExists": false,
+        "reviewedPNGDimensions": [
+          {
+            "page": 1,
+            "widthPx": 1500,
+            "heightPx": 1440
+          },
+          {
+            "page": 2,
+            "widthPx": 1500,
+            "heightPx": 1440
+          }
+        ]
+      },
+      "receipt": "replay-process.json",
+      "outputDirectory": "replay",
+      "PNGConversions": 0
+    },
+    "independentWrongHash": {
+      "exitCode": 1,
+      "output": "{\"status\":\"RENDER_INPUT_FAILED\",\"error\":\"input SHA256 mismatch; no decoding/render attempted\"}\n",
+      "outputDirectoryCreated": false,
+      "receipt": "wrong-hash-process.json"
+    },
+    "preservation": {
+      "frozenSourceFilesBefore": 7,
+      "frozenSourceFilesAfter": 7,
+      "allVerifiedBefore": true,
+      "allVerifiedAfter": true,
+      "priorFilesBefore": 2062,
+      "priorFilesAfter": 2062,
+      "priorMismatchesBefore": [],
+      "priorMismatchesAfter": []
+    },
+    "existingFourRendererTests": "Read source and retained original first-run output; NOT rerun by F5"
+  },
+  "converterEvidence": {
+    "actualConverter": "Inkscape1.2.2 (b0a8486541,2022-12-01)",
+    "authority": "Retained original rasterization-log.json; root-approved replacement; not independently re-invoked by F5",
+    "originalConversions": 2,
+    "originalExitCodes": [
+      0,
+      0
+    ],
+    "retainedWarnings": 2,
+    "warning": "GtkRecentManager initialization warnings retained verbatim",
+    "CairoSVG": "unavailable proposal, not actual converter; no install"
+  },
+  "independence": {
+    "rendererAuthor": "F4",
+    "displayReviewer": "F5",
+    "underlyingProducer": "F5",
+    "rawResultReviewer": "F3/R1115",
+    "qualification": "F5 accepts only disjoint renderer/display, not own CV producer or raw scientific validity"
+  },
+  "newExecution": {
+    "rendererPositiveReplays": 1,
+    "rendererWrongHashRefusals": 1,
+    "CVCalls": 0,
+    "producerCalls": 0,
+    "recipeImports": 0,
+    "PartStoreImportsOrCalls": 0,
+    "rendererSourceImageInputs": 0,
+    "PNGVisualInspections": 2,
+    "PNGConversions": 0,
+    "repositoryWrites": 0,
+    "GitOperations": 0,
+    "nativeStateWrites": 0,
+    "browserHTMLVisualInspections": 0
+  },
+  "requiredAmendments": [],
+  "limitations": [
+    "Exact frozen trace-only bundle only, not arbitrary malformed renderer inputs or generic security/resource proof.",
+    "HTML checked as source and exact raw-wire byte preservation; not opened/visually inspected in a browser.",
+    "PNG visual inspection and hash binding do not authenticate historical execution or scientific interpretation.",
+    "Replay covered SVG/HTML/initial manifest; original PNGs were hash-verified/viewed, not independently rerasterized.",
+    "Display rounds axes/coordinates for layout; original exact native values/types remain in retained tagged HTML/trace.",
+    "No scientific/path/physical-edge/calibrated-width/human acceptance, CV recomputation, new measurement or promotion."
+  ],
+  "artifacts": [
+    "result.json",
+    "review.md",
+    "commands.json",
+    "verification-before.json",
+    "verification-after.json",
+    "replay-process.json",
+    "wrong-hash-process.json",
+    "replay-comparison.json",
+    "replay/"
+  ],
+  "promoted": false,
+  "scientificAcceptance": "UNKNOWN",
+  "pathIdentity": "UNKNOWN",
+  "physicalEdgeIdentity": "UNKNOWN",
+  "calibratedWidth": "UNKNOWN",
+  "humanAcceptance": "UNKNOWN",
+  "next": "F6 may use this accepted exact display bundle in separately admitted package freeze; source integration/Git/publication remain root/F6-owned."
+}

@@ -1,0 +1,10 @@
+{
+  "schema": "cycle05-renderer-admission@1",
+  "independentRawReview": {"path": "F3/R1115/result.json", "sha256": "80b53bf5a8fff677bd14dcc302648df289493fb2e32ea921b4c26ede89ce0b9b", "decision": "accepted"},
+  "traceSha256": "76cf61ee3be3cd56faa0fc7274d5a3a5b898fe954dc73571092549487fa11eb2",
+  "sidecarSha256": "4a6599406ed17ccd97a3c8e377d0186a0fb8f6fcc064189439870b83b70f24f9",
+  "rendererSha256": "9d22757026e38625b67419e42d37bdc8ad0cbec4b5e7eec01961a8bad20f23c6",
+  "actualFlow": "Root read the full renderer and actual-flow checkpoint. Verify expected trace/sidecar hashes before decode; consume retained values only; no image/query/CV imports; plot profile/contrast/validity and native loss values, full raw wire in HTML; exclusive new outputs; external CairoSVG rasterization then hash-only finalizer.",
+  "admitted": "Bounded renderer tests, one original-trace rendering, two standard CairoSVG PNG rasterizations, final manifest; root inspects both scientific figures; independent F5 display/trace agreement review follows.",
+  "notAdmitted": "New measurements, query/CV execution, score recomputation, image inputs, threshold changes, scientific/semantic/calibrated-width acceptance or browser visual QA claim"
+}

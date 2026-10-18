@@ -1,0 +1,9 @@
+{
+  "schema": "R1116-prospective-renderer-only-commands@1",
+  "startUtc": "2026-10-18 15:15:47 UTC",
+  "commands": [
+    "node discovery-cycle05/F4/E1116/renderer.mjs --trace /workspace/scratch/8528bb251845/discovery-cycle05/F5/E1115/run/value-trace.json --trace-sha 76cf61ee3be3cd56faa0fc7274d5a3a5b898fe954dc73571092549487fa11eb2 --sidecar /workspace/scratch/8528bb251845/discovery-cycle05/F5/E1115/run/timing-sidecar.json --sidecar-sha 4a6599406ed17ccd97a3c8e377d0186a0fb8f6fcc064189439870b83b70f24f9 --out /workspace/scratch/8528bb251845/discovery-cycle05/F5/R1116/replay",
+    "node discovery-cycle05/F4/E1116/renderer.mjs --trace /workspace/scratch/8528bb251845/discovery-cycle05/F5/E1115/run/value-trace.json --trace-sha 0000000000000000000000000000000000000000000000000000000000000000 --sidecar /workspace/scratch/8528bb251845/discovery-cycle05/F5/E1115/run/timing-sidecar.json --sidecar-sha 4a6599406ed17ccd97a3c8e377d0186a0fb8f6fcc064189439870b83b70f24f9 --out /workspace/scratch/8528bb251845/discovery-cycle05/F5/R1116/wrong-hash-not-created"
+  ],
+  "scope": "trace renderer+pure codec only; no recipe/store/CV/image inputs; new exclusive output destinations"
+}

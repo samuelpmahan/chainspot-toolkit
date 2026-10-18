@@ -1,0 +1,31 @@
+{
+  "job_id": "R1111",
+  "worker": "F4",
+  "decision": "accepted",
+  "summary": "Accepted exact E1111 seven-file synthetic8 engineering implementation after independent source review,42/42 existing NONCV tests,CLI syntax0,and loader-only actual frozen fixture preflight READY8cases/32planned/11filebindings. Source/import guards,private per-case gateway/combined constant,raw codec,completion-order trace,Partkeys,integrity/partial failures and exclusive fragment-first writer match the narrowed contract. All2062 prior bytes and7frozen files rehash unchanged. No positive runStationEvidence/vendor import/PartStore/query/CV producer was executed; separate root producer admission and independent runtime evidence remain required.",
+  "reviewedAtUTC": "2026-10-18T14:51:40Z",
+  "hashBindings": {
+    "sourceFreeze": "0a2351f595fd72d55af79fccb4532deb1b58125a2c440e37d6276fba5d21da4b",
+    "E1111Result": "8312ba5eea6d7ac0269f2b0866f760d5d4085af5836d9236194ed109e71762ab",
+    "E1110Contract": "645cd963d2815d49fbb543ffa4916acd70c545ca345f3b1cf8013b84c337dbb4",
+    "E1110Addendum": "0fe0681961202780332387ac4c340dc5eb0a2dfc08c6db1d2ce5f93f6fa9ab8a",
+    "R1110Result": "c4d877c6bcff74d639d60e019731af2d1cf3bd9c9089c1f7d1857ed7248e9908",
+    "CLI": "4ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c",
+    "loaderOnlyManifest": "5ce9c5e63eb15eef85684cf18e5c0821297d2d52e24f6c4d867e9835944f9679",
+    "loadedRequestManifest": "4fe60de2dc55256f58d1f515d2ec3df3971a362d2116768455d78054ec5423d0"
+  },
+  "commands": [
+    {"command": "node --test --test-reporter=tap experiments/capability-discovery/station-evidence/codec.test.mjs experiments/capability-discovery/station-evidence/recipe.test.mjs experiments/capability-discovery/station-evidence/cli.test.mjs", "exitCode": 0, "tests": 42, "pass": 42, "fail": 0, "cancelled": 0, "skipped": 0},
+    {"command": "node --check experiments/capability-discovery/station-evidence/cli.mjs", "exitCode": 0},
+    {"command": "node --input-type=module stdin: readSyntheticManifest(F4/R1111/loader-only-manifest.json); inspectStationRequest(loaded.request); assertions on READY/32/8/11/exactUint8Array", "exitCode": 0, "result": "READY", "cases": 8, "plannedQueries": 32, "boundFiles": 11, "declaredInputByteSum": 4915200},
+    {"command": "read-only Python hash/length check of7freeze files,2062prior inventory files,6bound evidence files and exact new subtree path set", "exitCode": 0, "result": "all PASS"}
+  ],
+  "preservation": {"frozenFiles": "7/7 PASS", "priorTrackedBytes": "2062/2062 unchanged", "newSubtree": "exact7 frozen paths", "boundEvidence": "6/6 PASS", "sourceWrites": 0, "GitOperations": 0},
+  "executionBoundary": {"existingNONCVTests": 42, "syntaxChecks": 1, "loaderOnlyInspections": 1, "positiveRunStationEvidenceCalls": 0, "vendorImports": 0, "PartStoreCreations": 0, "PATHCalls": 0, "CVCalls": 0, "producerCalls": 0, "imageDecodes": 0, "renders": 0},
+  "harnessHistory": [{"kind": "incidental reviewer read-path failure", "exitCode": 2, "artifact": "read-harness-failure.txt", "implementationFailure": false, "subsequentCorrectRootRead": "PASS", "sourceRepairs": 0}],
+  "independence": {"reviewer": "F4", "coreAuthor": "F6", "CLIWriter": "F5", "authorSelfAcceptance": false, "F3E1114": "separate independent work;not assumed by this result"},
+  "requiredAmendments": [],
+  "limitations": ["No valid enabled measurement path executed", "No observed32PATH/40entry claim", "Vendor-execution/source-mutation failure branches read but not triggered", "Whole repository suite not run;no full green claim", "Renderer and Lenard extension not implemented or accepted", "No scientific/path/physical edge/calibrated width acceptance", "Root separate producer admission required"],
+  "artifacts": ["result.json", "review.md", "loader-only-manifest.json", "read-harness-failure.txt"],
+  "next": "Root reconciles independent reviews and may separately admit exact synthetic8 producer;F4 idle."
+}

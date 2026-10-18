@@ -1,0 +1,30 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { validateTracePair, svgPage, inspectionHTML } from './renderer.mjs';
+
+// NON-CV vectors only. Written before renderer implementation; not yet executed.
+const ids=['intact','gap2','gap6','largeBrightEllipse','organicCapsule','normalOffsetPlus6','maskedGap6','allHidden'];
+function vector() {
+  const names=['profile','edgePair','stationContrast','loss'];
+  const plannedQueries=ids.flatMap((id,i)=>names.map((name,j)=>({planIndex:i*4+j,comparisonId:id,widthPx:j===0?null:30,query:`fn.q.path.${name}`,rawArgs:{originPx:[192,i===5?166:160],phiRad:0,t0Px:-8,t1Px:8,stepPx:1}})));
+  return {trace:{schema:'cycle05-registered-station-trace@1',protocolId:'synthetic8',protocolSha256:'3b7f1d2b166c759997c73f820c433ff653c84114e83c28af62c68ec003967ff5',plannedQueries,queryTrace:plannedQueries.map(p=>({planIndex:p.planIndex,comparisonId:p.comparisonId,state:'NOT_ATTEMPTED',nativeAnswer:null,error:null})),counts:{},claims:{promoted:false,pathIdentity:'UNKNOWN',physicalEdgeIdentity:'UNKNOWN',calibratedWidth:'UNKNOWN',scientificAcceptance:'UNKNOWN',humanAcceptance:'UNKNOWN'}},sidecar:{schema:'cycle05-registered-station-sidecar@1',protocolId:'synthetic8',calculationLog:[]}};
+}
+test('fixed trace order and protocol are required without importing a producer',()=>{
+  const v=vector(); assert.equal(validateTracePair(v.trace,v.sidecar).length,8);
+  v.trace.plannedQueries[0].comparisonId='invented'; assert.throws(()=>validateTracePair(v.trace,v.sidecar));
+});
+test('wrong protocol and reversed query order fail closed',()=>{
+  const v=vector(); v.trace.protocolSha256='0'.repeat(64); assert.throws(()=>validateTracePair(v.trace,v.sidecar));
+  const w=vector(); w.trace.plannedQueries[1].query='fn.q.path.loss'; assert.throws(()=>validateTracePair(w.trace,w.sidecar));
+});
+test('unattempted rows show missing evidence, not zero or accepted-path graphics',()=>{
+  const v=vector(), cases=validateTracePair(v.trace,v.sidecar);
+  const svg=svgPage(cases.slice(0,4),1,{traceSha256:'a'.repeat(64),sidecarSha256:'b'.repeat(64)});
+  assert.ok(svg.includes('NOT_ATTEMPTED')); assert.ok(svg.includes('UNKNOWN'));
+  assert.ok(!svg.includes('<image')); assert.ok(!svg.includes('<script'));
+});
+test('full raw tagged inspection escapes markup and retains original wire',()=>{
+  const html=inspectionHTML('<raw>&\n','<sidecar>',{traceSha256:'a'.repeat(64),sidecarSha256:'b'.repeat(64)});
+  assert.ok(html.includes('&lt;raw&gt;&amp;')); assert.ok(html.includes('&lt;sidecar&gt;'));
+  assert.ok(!html.includes('<raw>'));
+});

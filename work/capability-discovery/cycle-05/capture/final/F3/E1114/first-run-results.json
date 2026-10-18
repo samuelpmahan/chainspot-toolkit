@@ -1,0 +1,1165 @@
+{
+  "schema": "E1114-independent-frozen-vector-run@1",
+  "job_id": "E1114",
+  "worker": "F3",
+  "runtime": "v24.19.0",
+  "groups": 20,
+  "variants": 59,
+  "pass": 59,
+  "fail": 0,
+  "getterVectors": 6,
+  "getterReads": 0,
+  "invocations": {
+    "encodeValue": 26,
+    "decodeValue": 22,
+    "encodeBytes": 9,
+    "decodeBytes": 5,
+    "inspectStationRequest": 12,
+    "runStationEvidence": 12
+  },
+  "blockedVendorImportAttempts": 0,
+  "PATHCalls": 0,
+  "CVCalls": 0,
+  "producerCalls": 0,
+  "positiveEnabledRequests": 0,
+  "before": [
+    {
+      "path": "discovery-cycle05/F3/E1112/vectors.mjs",
+      "expectedSha256": "1631972799ca9d3c4570915b67a489fd97482aeebf281bcacc00b7cdfee31297",
+      "actualSha256": "1631972799ca9d3c4570915b67a489fd97482aeebf281bcacc00b7cdfee31297"
+    },
+    {
+      "path": "discovery-cycle05/F3/E1112/test-plan.md",
+      "expectedSha256": "4dd30f4dc2ef17bb2487893b41b62680c300913597c77bdadfcca6538a6139dc",
+      "actualSha256": "4dd30f4dc2ef17bb2487893b41b62680c300913597c77bdadfcca6538a6139dc"
+    },
+    {
+      "path": "discovery-cycle05/F3/E1112/freeze.json",
+      "expectedSha256": "3c57457abae3c1d80dc5627f9d1e9763f44ba4432bf5d6140496660926bee02f",
+      "actualSha256": "3c57457abae3c1d80dc5627f9d1e9763f44ba4432bf5d6140496660926bee02f"
+    },
+    {
+      "path": "discovery-cycle05/F6/E1111/source-freeze.json",
+      "expectedSha256": "0a2351f595fd72d55af79fccb4532deb1b58125a2c440e37d6276fba5d21da4b",
+      "actualSha256": "0a2351f595fd72d55af79fccb4532deb1b58125a2c440e37d6276fba5d21da4b"
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/README.md",
+      "expectedSha256": "f9ba7778979f7a678369d49554fa5b4758ecf17fafacb155c8faaf7af3a9640c",
+      "actualSha256": "f9ba7778979f7a678369d49554fa5b4758ecf17fafacb155c8faaf7af3a9640c"
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/cli.mjs",
+      "expectedSha256": "4ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c",
+      "actualSha256": "4ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c"
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/cli.test.mjs",
+      "expectedSha256": "74d04d9487f24fdfdeac51fc055d576146eed8bc8403ae9929d671ae04e3d2b8",
+      "actualSha256": "74d04d9487f24fdfdeac51fc055d576146eed8bc8403ae9929d671ae04e3d2b8"
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs",
+      "expectedSha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015",
+      "actualSha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015"
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.test.mjs",
+      "expectedSha256": "de792743c2dc779f5fb7891c950a02e706b3f7618840a6b77862e0ce992c2bd1",
+      "actualSha256": "de792743c2dc779f5fb7891c950a02e706b3f7618840a6b77862e0ce992c2bd1"
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/recipe.mjs",
+      "expectedSha256": "ef7248daf5c83fd014c4a5004aa511e41399492a46be0460fe566ab421383ad3",
+      "actualSha256": "ef7248daf5c83fd014c4a5004aa511e41399492a46be0460fe566ab421383ad3"
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/recipe.test.mjs",
+      "expectedSha256": "dfc8893b079f6f390e090447acc2fd553b2d05930d1fa7c9ee2804017f7c575f",
+      "actualSha256": "dfc8893b079f6f390e090447acc2fd553b2d05930d1fa7c9ee2804017f7c575f"
+    }
+  ],
+  "after": [
+    {
+      "path": "discovery-cycle05/F3/E1112/vectors.mjs",
+      "expectedSha256": "1631972799ca9d3c4570915b67a489fd97482aeebf281bcacc00b7cdfee31297",
+      "actualSha256": "1631972799ca9d3c4570915b67a489fd97482aeebf281bcacc00b7cdfee31297"
+    },
+    {
+      "path": "discovery-cycle05/F3/E1112/test-plan.md",
+      "expectedSha256": "4dd30f4dc2ef17bb2487893b41b62680c300913597c77bdadfcca6538a6139dc",
+      "actualSha256": "4dd30f4dc2ef17bb2487893b41b62680c300913597c77bdadfcca6538a6139dc"
+    },
+    {
+      "path": "discovery-cycle05/F3/E1112/freeze.json",
+      "expectedSha256": "3c57457abae3c1d80dc5627f9d1e9763f44ba4432bf5d6140496660926bee02f",
+      "actualSha256": "3c57457abae3c1d80dc5627f9d1e9763f44ba4432bf5d6140496660926bee02f"
+    },
+    {
+      "path": "discovery-cycle05/F6/E1111/source-freeze.json",
+      "expectedSha256": "0a2351f595fd72d55af79fccb4532deb1b58125a2c440e37d6276fba5d21da4b",
+      "actualSha256": "0a2351f595fd72d55af79fccb4532deb1b58125a2c440e37d6276fba5d21da4b"
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/README.md",
+      "expectedSha256": "f9ba7778979f7a678369d49554fa5b4758ecf17fafacb155c8faaf7af3a9640c",
+      "actualSha256": "f9ba7778979f7a678369d49554fa5b4758ecf17fafacb155c8faaf7af3a9640c"
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/cli.mjs",
+      "expectedSha256": "4ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c",
+      "actualSha256": "4ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c"
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/cli.test.mjs",
+      "expectedSha256": "74d04d9487f24fdfdeac51fc055d576146eed8bc8403ae9929d671ae04e3d2b8",
+      "actualSha256": "74d04d9487f24fdfdeac51fc055d576146eed8bc8403ae9929d671ae04e3d2b8"
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs",
+      "expectedSha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015",
+      "actualSha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015"
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.test.mjs",
+      "expectedSha256": "de792743c2dc779f5fb7891c950a02e706b3f7618840a6b77862e0ce992c2bd1",
+      "actualSha256": "de792743c2dc779f5fb7891c950a02e706b3f7618840a6b77862e0ce992c2bd1"
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/recipe.mjs",
+      "expectedSha256": "ef7248daf5c83fd014c4a5004aa511e41399492a46be0460fe566ab421383ad3",
+      "actualSha256": "ef7248daf5c83fd014c4a5004aa511e41399492a46be0460fe566ab421383ad3"
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/recipe.test.mjs",
+      "expectedSha256": "dfc8893b079f6f390e090447acc2fd553b2d05930d1fa7c9ee2804017f7c575f",
+      "actualSha256": "dfc8893b079f6f390e090447acc2fd553b2d05930d1fa7c9ee2804017f7c575f"
+    }
+  ],
+  "fixtureReadback": [
+    {
+      "path": "discovery-cycle05/F4/E1102/fixtures/intact.rgba",
+      "expectedSha256": "e6648f24c1616297317cb2f6062317ba83ab2c4949e5d4d22568f07b05cf1c7a",
+      "actualSha256": "e6648f24c1616297317cb2f6062317ba83ab2c4949e5d4d22568f07b05cf1c7a",
+      "bytes": 491520
+    },
+    {
+      "path": "discovery-cycle05/F4/E1102/fixtures/gap2.rgba",
+      "expectedSha256": "87c0ad2feaa151e91fcae975ef406127191f1b0f6cb7d5c369c057ed87bebec0",
+      "actualSha256": "87c0ad2feaa151e91fcae975ef406127191f1b0f6cb7d5c369c057ed87bebec0",
+      "bytes": 491520
+    },
+    {
+      "path": "discovery-cycle05/F4/E1102/fixtures/gap6.rgba",
+      "expectedSha256": "103f9e66febf38864142faa6aaa42a38c89a28a3f7625a3f45073a96f51ea42f",
+      "actualSha256": "103f9e66febf38864142faa6aaa42a38c89a28a3f7625a3f45073a96f51ea42f",
+      "bytes": 491520
+    },
+    {
+      "path": "discovery-cycle05/F4/E1102/fixtures/ellipse.rgba",
+      "expectedSha256": "61e2b22c86e374ed554cbc3d9a95be277b9258d578bb7d10aa3fb0257ca34468",
+      "actualSha256": "61e2b22c86e374ed554cbc3d9a95be277b9258d578bb7d10aa3fb0257ca34468",
+      "bytes": 491520
+    },
+    {
+      "path": "discovery-cycle05/F4/E1102/fixtures/capsule.rgba",
+      "expectedSha256": "e0308d74a0b672eeae242c4df4018c343df93ea6a595fb25449fd730bc0e4d72",
+      "actualSha256": "e0308d74a0b672eeae242c4df4018c343df93ea6a595fb25449fd730bc0e4d72",
+      "bytes": 491520
+    },
+    {
+      "path": "discovery-cycle05/F4/E1102/fixtures/clear.mask.u8",
+      "expectedSha256": "6d7bd1fa33ee71b2d2c4fc8062f6c4b09804b84449ff73a687fe7cfd568d0625",
+      "actualSha256": "6d7bd1fa33ee71b2d2c4fc8062f6c4b09804b84449ff73a687fe7cfd568d0625",
+      "bytes": 122880
+    },
+    {
+      "path": "discovery-cycle05/F4/E1102/fixtures/gap6.mask.u8",
+      "expectedSha256": "30207778746e6e497de8196f270dad9227d6cb368968435a748e357d08f58ad0",
+      "actualSha256": "30207778746e6e497de8196f270dad9227d6cb368968435a748e357d08f58ad0",
+      "bytes": 122880
+    },
+    {
+      "path": "discovery-cycle05/F4/E1102/fixtures/allHidden.mask.u8",
+      "expectedSha256": "a32194817413b4fcf784d7579edb733c098ac8fec4d893ec13c78f1f50046bf3",
+      "actualSha256": "a32194817413b4fcf784d7579edb733c098ac8fec4d893ec13c78f1f50046bf3",
+      "bytes": 122880
+    }
+  ],
+  "rows": [
+    {
+      "group": "C01",
+      "variant": "all numeric distinctions",
+      "operation": "roundtrip",
+      "expected": "Object.is each numeric leaf; Number.isNaN for NaN; null distinct; finite doubles unchanged",
+      "pass": true,
+      "checks": [
+        "native-tree roundtrip",
+        "UTF8+LF wire roundtrip"
+      ],
+      "wireBytes": 279,
+      "wireSha256": "e5ca98afafc79cd736d48e16140efcfd0c448e9a3a924e2504fd8651c9ef6ac4"
+    },
+    {
+      "group": "C02",
+      "variant": "corridor and allHidden-like channels",
+      "operation": "roundtrip",
+      "expected": "Exact Uint8Array prototype,length,bytes; raw finite45 retained beside invalid flag0; NaN not null",
+      "pass": true,
+      "checks": [
+        "native-tree roundtrip",
+        "UTF8+LF wire roundtrip"
+      ],
+      "wireBytes": 427,
+      "wireSha256": "fbd7fe4ed6a47379ea76056623b39c6f8343f6c1c56cc4c0e7899c1c6ebc51af"
+    },
+    {
+      "group": "C03",
+      "variant": "native tag lookalikes",
+      "operation": "roundtrip",
+      "expected": "All remain ordinary native arrays/objects; do not decode lookalikes as exceptional scalars or typed arrays",
+      "pass": true,
+      "checks": [
+        "native-tree roundtrip",
+        "UTF8+LF wire roundtrip"
+      ],
+      "wireBytes": 452,
+      "wireSha256": "31f2dfccf63f723715aa6cf246f05f72b61927c3fb432f442a59a21841d2bcc6"
+    },
+    {
+      "group": "C04",
+      "variant": "prototype kind, own __proto__, order",
+      "operation": "roundtrip",
+      "expected": "Object.keys order2,10,z,a,__proto__; null-prototype orderb,__proto__,a; safe own data properties; Object.prototype unchanged",
+      "pass": true,
+      "checks": [
+        "native-tree roundtrip",
+        "UTF8+LF wire roundtrip"
+      ],
+      "wireBytes": 342,
+      "wireSha256": "dcc8eef8782397757b413058078dadc3a381ef4a006fca39454f33091f676c4c"
+    },
+    {
+      "group": "C05",
+      "variant": "shared acyclic subtree",
+      "operation": "roundtrip",
+      "expected": "Both decoded values equal; shared-reference identity is NOT required and must not cause cycle rejection",
+      "pass": true,
+      "checks": [
+        "native-tree roundtrip",
+        "UTF8+LF wire roundtrip"
+      ],
+      "wireBytes": 110,
+      "wireSha256": "8651f81cbc6213287bd5e9ad2c7613056964564a2e9a60508aef4c9908ad72b9"
+    },
+    {
+      "group": "C06",
+      "variant": "hole",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "array has holes or extra keys"
+      }
+    },
+    {
+      "group": "C06",
+      "variant": "extra array key",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "array has holes or extra keys"
+      }
+    },
+    {
+      "group": "C07",
+      "variant": "enumerable getter",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "object properties must be enumerable data"
+      },
+      "getterReads": 0
+    },
+    {
+      "group": "C07",
+      "variant": "nonenumerable getter",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "object properties must be enumerable data"
+      },
+      "getterReads": 0
+    },
+    {
+      "group": "C07",
+      "variant": "array getter",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "array has holes or accessors"
+      },
+      "getterReads": 0
+    },
+    {
+      "group": "C07",
+      "variant": "nonenumerable own data",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "object properties must be enumerable data"
+      }
+    },
+    {
+      "group": "C08",
+      "variant": "own symbol key",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "symbol keys are unsupported"
+      }
+    },
+    {
+      "group": "C08",
+      "variant": "symbol leaf",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "unsupported symbol"
+      }
+    },
+    {
+      "group": "C09",
+      "variant": "Buffer",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "exact Uint8Array required"
+      }
+    },
+    {
+      "group": "C09",
+      "variant": "Float64Array",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "exact Uint8Array required"
+      }
+    },
+    {
+      "group": "C09",
+      "variant": "Uint8 subclass",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "exact Uint8Array required"
+      }
+    },
+    {
+      "group": "C09",
+      "variant": "Uint8 extra own key",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "typed array has extra keys"
+      }
+    },
+    {
+      "group": "C09",
+      "variant": "DataView",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "exact Uint8Array required"
+      }
+    },
+    {
+      "group": "C09",
+      "variant": "custom prototype",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "unsupported object prototype"
+      }
+    },
+    {
+      "group": "C10",
+      "variant": "cycle",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "cycles are unsupported"
+      }
+    },
+    {
+      "group": "C10",
+      "variant": "undefined property",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "unsupported undefined"
+      }
+    },
+    {
+      "group": "C10",
+      "variant": "undefined root",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "unsupported undefined"
+      }
+    },
+    {
+      "group": "C10",
+      "variant": "BigInt",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "unsupported bigint"
+      }
+    },
+    {
+      "group": "C10",
+      "variant": "Date",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "unsupported object prototype"
+      }
+    },
+    {
+      "group": "C10",
+      "variant": "Map",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "unsupported object prototype"
+      }
+    },
+    {
+      "group": "C10",
+      "variant": "function",
+      "operation": "encode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "unsupported function"
+      }
+    },
+    {
+      "group": "C11",
+      "variant": "duplicate encoded object keys",
+      "operation": "decode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "malformed/duplicate object pair"
+      }
+    },
+    {
+      "group": "C11",
+      "variant": "duplicate __proto__ keys",
+      "operation": "decode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "malformed/duplicate object pair"
+      }
+    },
+    {
+      "group": "C12",
+      "variant": "unknown tag",
+      "operation": "decode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "unknown tag, constructor, payload or arity"
+      }
+    },
+    {
+      "group": "C12",
+      "variant": "bad arity",
+      "operation": "decode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "unknown tag, constructor, payload or arity"
+      }
+    },
+    {
+      "group": "C12",
+      "variant": "untagged object",
+      "operation": "decode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "ordinary dense array required"
+      }
+    },
+    {
+      "group": "C12",
+      "variant": "finite NaN payload",
+      "operation": "decode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "malformed numeric tag"
+      }
+    },
+    {
+      "group": "C12",
+      "variant": "finite negative-zero payload",
+      "operation": "decode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "malformed numeric tag"
+      }
+    },
+    {
+      "group": "C12",
+      "variant": "bad proto",
+      "operation": "decode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "unknown tag, constructor, payload or arity"
+      }
+    },
+    {
+      "group": "C12",
+      "variant": "invalid bool",
+      "operation": "decode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "unknown tag, constructor, payload or arity"
+      }
+    },
+    {
+      "group": "C13",
+      "variant": "unknown typed constructor",
+      "operation": "decode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "unknown tag, constructor, payload or arity"
+      }
+    },
+    {
+      "group": "C13",
+      "variant": "length mismatch",
+      "operation": "decode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "invalid typed-array length/bytes"
+      }
+    },
+    {
+      "group": "C13",
+      "variant": "negative length",
+      "operation": "decode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "codec typed-byte budget exceeded"
+      }
+    },
+    {
+      "group": "C13",
+      "variant": "fractional byte",
+      "operation": "decode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "invalid typed-array length/bytes"
+      }
+    },
+    {
+      "group": "C13",
+      "variant": "out of range",
+      "operation": "decode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "invalid typed-array length/bytes"
+      }
+    },
+    {
+      "group": "C13",
+      "variant": "sparse typed byte list",
+      "operation": "decode-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "array has holes or extra keys"
+      }
+    },
+    {
+      "group": "C14",
+      "variant": "depth64",
+      "operation": "encode-resource-reject",
+      "expected": "RESOURCE_ERROR_STOP_NO_TRUNCATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "codec depth/node budget exceeded"
+      }
+    },
+    {
+      "group": "C14",
+      "variant": "500001 null elements",
+      "operation": "encode-resource-reject",
+      "expected": "RESOURCE_ERROR_STOP_NO_TRUNCATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "codec depth/node budget exceeded"
+      }
+    },
+    {
+      "group": "C14",
+      "variant": "1000001 typed bytes",
+      "operation": "encode-resource-reject",
+      "expected": "RESOURCE_ERROR_STOP_NO_TRUNCATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "codec typed-byte budget exceeded"
+      }
+    },
+    {
+      "group": "C14",
+      "variant": "string beyond32MiB",
+      "operation": "encode-resource-reject",
+      "expected": "RESOURCE_ERROR_STOP_NO_TRUNCATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "encoded file byte budget exceeded"
+      }
+    },
+    {
+      "group": "C15",
+      "variant": "encoded depth64",
+      "operation": "decode-resource-reject",
+      "expected": "RESOURCE_ERROR_STOP_NO_TRUNCATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "codec depth/node budget exceeded"
+      }
+    },
+    {
+      "group": "C15",
+      "variant": "declared excessive typed length",
+      "operation": "decode-resource-reject",
+      "expected": "REJECT_EXPLICIT_ERROR_NO_NORMALIZATION",
+      "pass": true,
+      "checks": [],
+      "rejection": {
+        "name": "ValueCodecError",
+        "message": "codec typed-byte budget exceeded"
+      }
+    },
+    {
+      "group": "I16",
+      "variant": "disabled false does not inspect pixels",
+      "operation": "wrapper-preflight-only",
+      "expected": "DISABLED; all import/store/query/source/image counters0",
+      "pass": true,
+      "checks": [
+        "preflight refuses before ready",
+        "zero PATH/captures/snapshots",
+        "sourceBinding null",
+        "no downstream interval"
+      ],
+      "inspection": {
+        "status": "DISABLED",
+        "code": null
+      },
+      "run": {
+        "status": "DISABLED",
+        "code": null,
+        "counts": {
+          "requestedPATH": 0,
+          "attemptedPATH": 0,
+          "completedPATH": 0,
+          "failedPATH": 0,
+          "capturedCalculationEntries": 0,
+          "capturedConstantEntries": 0,
+          "capturedPATHEntries": 0
+        },
+        "sourceBinding": null,
+        "phases": []
+      },
+      "getterReads": 0
+    },
+    {
+      "group": "I16",
+      "variant": "absent enabled does not inspect comparisons",
+      "operation": "wrapper-preflight-only",
+      "expected": "DISABLED; all import/store/query/source/image counters0",
+      "pass": true,
+      "checks": [
+        "preflight refuses before ready",
+        "zero PATH/captures/snapshots",
+        "sourceBinding null",
+        "no downstream interval"
+      ],
+      "inspection": {
+        "status": "DISABLED",
+        "code": null
+      },
+      "run": {
+        "status": "DISABLED",
+        "code": null,
+        "counts": {
+          "requestedPATH": 0,
+          "attemptedPATH": 0,
+          "completedPATH": 0,
+          "failedPATH": 0,
+          "capturedCalculationEntries": 0,
+          "capturedConstantEntries": 0,
+          "capturedPATHEntries": 0
+        },
+        "sourceBinding": null,
+        "phases": []
+      },
+      "getterReads": 0
+    },
+    {
+      "group": "I17",
+      "variant": "enabled string",
+      "operation": "wrapper-preflight-only",
+      "expected": "INVALID_REQUEST; zero downstream operations",
+      "pass": true,
+      "checks": [
+        "preflight refuses before ready",
+        "zero PATH/captures/snapshots",
+        "sourceBinding null",
+        "no downstream interval"
+      ],
+      "inspection": {
+        "status": "NOT_EXECUTED",
+        "code": "INVALID_REQUEST"
+      },
+      "run": {
+        "status": "NOT_EXECUTED",
+        "code": "INVALID_REQUEST",
+        "counts": {
+          "requestedPATH": 0,
+          "attemptedPATH": 0,
+          "completedPATH": 0,
+          "failedPATH": 0,
+          "capturedCalculationEntries": 0,
+          "capturedConstantEntries": 0,
+          "capturedPATHEntries": 0
+        },
+        "sourceBinding": null,
+        "phases": []
+      }
+    },
+    {
+      "group": "I17",
+      "variant": "enabled accessor",
+      "operation": "wrapper-preflight-only",
+      "expected": "INVALID_REQUEST; zero downstream operations",
+      "pass": true,
+      "checks": [
+        "preflight refuses before ready",
+        "zero PATH/captures/snapshots",
+        "sourceBinding null",
+        "no downstream interval"
+      ],
+      "inspection": {
+        "status": "NOT_EXECUTED",
+        "code": "INVALID_REQUEST"
+      },
+      "run": {
+        "status": "NOT_EXECUTED",
+        "code": "INVALID_REQUEST",
+        "counts": {
+          "requestedPATH": 0,
+          "attemptedPATH": 0,
+          "completedPATH": 0,
+          "failedPATH": 0,
+          "capturedCalculationEntries": 0,
+          "capturedConstantEntries": 0,
+          "capturedPATHEntries": 0
+        },
+        "sourceBinding": null,
+        "phases": []
+      },
+      "getterReads": 0
+    },
+    {
+      "group": "I17",
+      "variant": "enabled null",
+      "operation": "wrapper-preflight-only",
+      "expected": "INVALID_REQUEST; zero downstream operations",
+      "pass": true,
+      "checks": [
+        "preflight refuses before ready",
+        "zero PATH/captures/snapshots",
+        "sourceBinding null",
+        "no downstream interval"
+      ],
+      "inspection": {
+        "status": "NOT_EXECUTED",
+        "code": "INVALID_REQUEST"
+      },
+      "run": {
+        "status": "NOT_EXECUTED",
+        "code": "INVALID_REQUEST",
+        "counts": {
+          "requestedPATH": 0,
+          "attemptedPATH": 0,
+          "completedPATH": 0,
+          "failedPATH": 0,
+          "capturedCalculationEntries": 0,
+          "capturedConstantEntries": 0,
+          "capturedPATHEntries": 0
+        },
+        "sourceBinding": null,
+        "phases": []
+      }
+    },
+    {
+      "group": "I18",
+      "variant": "tampered RGB with pinned expected hash",
+      "operation": "wrapper-preflight-only",
+      "expected": "INPUT_HASH_MISMATCH; no source/CV import,store or query",
+      "pass": true,
+      "checks": [
+        "preflight refuses before ready",
+        "zero PATH/captures/snapshots",
+        "sourceBinding null",
+        "no downstream interval"
+      ],
+      "inspection": {
+        "status": "NOT_EXECUTED",
+        "code": "INPUT_HASH_MISMATCH"
+      },
+      "run": {
+        "status": "INTEGRITY_FAILED",
+        "code": "INPUT_HASH_MISMATCH",
+        "counts": {
+          "requestedPATH": 0,
+          "attemptedPATH": 0,
+          "completedPATH": 0,
+          "failedPATH": 0,
+          "capturedCalculationEntries": 0,
+          "capturedConstantEntries": 0,
+          "capturedPATHEntries": 0
+        },
+        "sourceBinding": null,
+        "phases": [
+          "validation"
+        ]
+      }
+    },
+    {
+      "group": "I19",
+      "variant": "binary mask tamper with pinned expected hash",
+      "operation": "wrapper-preflight-only",
+      "expected": "INPUT_HASH_MISMATCH; no source/CV import,store or query",
+      "pass": true,
+      "checks": [
+        "preflight refuses before ready",
+        "zero PATH/captures/snapshots",
+        "sourceBinding null",
+        "no downstream interval"
+      ],
+      "inspection": {
+        "status": "NOT_EXECUTED",
+        "code": "INPUT_HASH_MISMATCH"
+      },
+      "run": {
+        "status": "INTEGRITY_FAILED",
+        "code": "INPUT_HASH_MISMATCH",
+        "counts": {
+          "requestedPATH": 0,
+          "attemptedPATH": 0,
+          "completedPATH": 0,
+          "failedPATH": 0,
+          "capturedCalculationEntries": 0,
+          "capturedConstantEntries": 0,
+          "capturedPATHEntries": 0
+        },
+        "sourceBinding": null,
+        "phases": [
+          "validation"
+        ]
+      }
+    },
+    {
+      "group": "I19",
+      "variant": "protocol identity mismatch",
+      "operation": "wrapper-preflight-only",
+      "expected": "PROTOCOL_MISMATCH; no source/CV import,store or query",
+      "pass": true,
+      "checks": [
+        "preflight refuses before ready",
+        "zero PATH/captures/snapshots",
+        "sourceBinding null",
+        "no downstream interval"
+      ],
+      "inspection": {
+        "status": "NOT_EXECUTED",
+        "code": "PROTOCOL_MISMATCH"
+      },
+      "run": {
+        "status": "NOT_EXECUTED",
+        "code": "PROTOCOL_MISMATCH",
+        "counts": {
+          "requestedPATH": 0,
+          "attemptedPATH": 0,
+          "completedPATH": 0,
+          "failedPATH": 0,
+          "capturedCalculationEntries": 0,
+          "capturedConstantEntries": 0,
+          "capturedPATHEntries": 0
+        },
+        "sourceBinding": null,
+        "phases": [
+          "validation"
+        ]
+      }
+    },
+    {
+      "group": "I20",
+      "variant": "empty widths",
+      "operation": "wrapper-preflight-only",
+      "expected": "INVALID_REQUEST; zero downstream operations",
+      "pass": true,
+      "checks": [
+        "preflight refuses before ready",
+        "zero PATH/captures/snapshots",
+        "sourceBinding null",
+        "no downstream interval"
+      ],
+      "inspection": {
+        "status": "NOT_EXECUTED",
+        "code": "INVALID_REQUEST"
+      },
+      "run": {
+        "status": "NOT_EXECUTED",
+        "code": "INVALID_REQUEST",
+        "counts": {
+          "requestedPATH": 0,
+          "attemptedPATH": 0,
+          "completedPATH": 0,
+          "failedPATH": 0,
+          "capturedCalculationEntries": 0,
+          "capturedConstantEntries": 0,
+          "capturedPATHEntries": 0
+        },
+        "sourceBinding": null,
+        "phases": [
+          "validation"
+        ]
+      }
+    },
+    {
+      "group": "I20",
+      "variant": "input negative zero",
+      "operation": "wrapper-preflight-only",
+      "expected": "INVALID_REQUEST; zero downstream operations",
+      "pass": true,
+      "checks": [
+        "preflight refuses before ready",
+        "zero PATH/captures/snapshots",
+        "sourceBinding null",
+        "no downstream interval"
+      ],
+      "inspection": {
+        "status": "NOT_EXECUTED",
+        "code": "INVALID_REQUEST"
+      },
+      "run": {
+        "status": "NOT_EXECUTED",
+        "code": "INVALID_REQUEST",
+        "counts": {
+          "requestedPATH": 0,
+          "attemptedPATH": 0,
+          "completedPATH": 0,
+          "failedPATH": 0,
+          "capturedCalculationEntries": 0,
+          "capturedConstantEntries": 0,
+          "capturedPATHEntries": 0
+        },
+        "sourceBinding": null,
+        "phases": [
+          "validation"
+        ]
+      }
+    },
+    {
+      "group": "I20",
+      "variant": "unknown own key",
+      "operation": "wrapper-preflight-only",
+      "expected": "INVALID_REQUEST; zero downstream operations",
+      "pass": true,
+      "checks": [
+        "preflight refuses before ready",
+        "zero PATH/captures/snapshots",
+        "sourceBinding null",
+        "no downstream interval"
+      ],
+      "inspection": {
+        "status": "NOT_EXECUTED",
+        "code": "INVALID_REQUEST"
+      },
+      "run": {
+        "status": "NOT_EXECUTED",
+        "code": "INVALID_REQUEST",
+        "counts": {
+          "requestedPATH": 0,
+          "attemptedPATH": 0,
+          "completedPATH": 0,
+          "failedPATH": 0,
+          "capturedCalculationEntries": 0,
+          "capturedConstantEntries": 0,
+          "capturedPATHEntries": 0
+        },
+        "sourceBinding": null,
+        "phases": [
+          "validation"
+        ]
+      }
+    },
+    {
+      "group": "I20",
+      "variant": "dimension exceeds cap and preset",
+      "operation": "wrapper-preflight-only",
+      "expected": "INVALID_REQUEST or RESOURCE_LIMIT (priority not specified); zero downstream operations",
+      "pass": true,
+      "checks": [
+        "preflight refuses before ready",
+        "zero PATH/captures/snapshots",
+        "sourceBinding null",
+        "no downstream interval"
+      ],
+      "inspection": {
+        "status": "NOT_EXECUTED",
+        "code": "INVALID_REQUEST"
+      },
+      "run": {
+        "status": "NOT_EXECUTED",
+        "code": "INVALID_REQUEST",
+        "counts": {
+          "requestedPATH": 0,
+          "attemptedPATH": 0,
+          "completedPATH": 0,
+          "failedPATH": 0,
+          "capturedCalculationEntries": 0,
+          "capturedConstantEntries": 0,
+          "capturedPATHEntries": 0
+        },
+        "sourceBinding": null,
+        "phases": [
+          "validation"
+        ]
+      }
+    }
+  ],
+  "boundaries": "Only codec/recipe definition modules imported; recipe dynamic vendor import guarded. No valid request run. No scientific or implementation acceptance."
+}

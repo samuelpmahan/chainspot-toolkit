@@ -1,0 +1,56 @@
+{
+  "schema": "cycle05-render-execution-log/v1",
+  "job_id": "E1116",
+  "worker": "F4",
+  "started": {
+    "current_time": "2026-10-18 15:10:28 UTC"
+  },
+  "renderStarted": {
+    "current_time": "2026-10-18 15:10:37 UTC"
+  },
+  "commands": [
+    {
+      "command": "node --test discovery-cycle05/F4/E1116/renderer.test.mjs",
+      "chunk_id": "4502a0",
+      "wall_time_seconds": 0.037432065,
+      "exit_code": 0,
+      "original_token_count": 113,
+      "output": "✔ fixed trace order and protocol are required without importing a producer (1.613598ms)\n✔ wrong protocol and reversed query order fail closed (0.382321ms)\n✔ unattempted rows show missing evidence, not zero or accepted-path graphics (0.644401ms)\n✔ full raw tagged inspection escapes markup and retains original wire (0.271805ms)\nℹ tests 4\nℹ suites 0\nℹ pass 4\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 94.480376\n"
+    },
+    {
+      "command": "node renderer.mjs --trace ORIGINAL_E1115/value-trace.json --trace-sha 0000000000000000000000000000000000000000000000000000000000000000 --sidecar ORIGINAL_E1115/timing-sidecar.json --sidecar-sha 4a6599406ed17ccd97a3c8e377d0186a0fb8f6fcc064189439870b83b70f24f9 --out rejected-wrong-hash",
+      "chunk_id": "f673dd",
+      "wall_time_seconds": 0.000025077,
+      "exit_code": 1,
+      "original_token_count": 24,
+      "output": "{\"status\":\"RENDER_INPUT_FAILED\",\"error\":\"input SHA256 mismatch; no decoding/render attempted\"}\n"
+    },
+    {
+      "command": "node discovery-cycle05/F4/E1116/renderer.mjs --trace discovery-cycle05/F5/E1115/run/value-trace.json --trace-sha 76cf61ee3be3cd56faa0fc7274d5a3a5b898fe954dc73571092549487fa11eb2 --sidecar discovery-cycle05/F5/E1115/run/timing-sidecar.json --sidecar-sha 4a6599406ed17ccd97a3c8e377d0186a0fb8f6fcc064189439870b83b70f24f9 --out discovery-cycle05/F4/E1116/render-01",
+      "chunk_id": "a0bdaf",
+      "wall_time_seconds": 0.064426359,
+      "exit_code": 0,
+      "original_token_count": 14,
+      "output": "{\"status\":\"SVG_HTML_WRITTEN_PNG_PENDING\",\"artifacts\":3}\n"
+    },
+    {
+      "command": "python -c \"import importlib.util; print(importlib.util.find_spec('cairosvg'))\"",
+      "chunk_id": "81657a",
+      "wall_time_seconds": 0.075442194,
+      "exit_code": 0,
+      "original_token_count": 2,
+      "output": "None\n"
+    },
+    {
+      "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 -c \"import importlib.util; print(importlib.util.find_spec('cairosvg'))\"",
+      "chunk_id": "f11f39",
+      "wall_time_seconds": 0.000024126,
+      "exit_code": 0,
+      "original_token_count": 2,
+      "output": "None\n"
+    }
+  ],
+  "PNGStatus": "BLOCKED awaiting root approval of existing Inkscape alternative;no install or producer rerun",
+  "producerCalls": 0,
+  "CVCalls": 0
+}

@@ -1,0 +1,124 @@
+{
+  "schema": "lab-job-review@1",
+  "job_id": "R1104",
+  "worker": "F6",
+  "decision": "accepted",
+  "summary": "Accepted exact E1104 Lenard5 premeasurement protocol for bounded engineering readiness only, with no mandatory amendments. Independent original-image inspection and read-only checks verify all three exact Git PNG/RGBA identities, lossless inspection-only crop, full-original frame/measurement requirement, heading and +6normal pose, all16 full-source support envelopes, literal34/42/50 bank and160-call matrix. The declared mask has a premeasurement reviewer-derived digest; no CV/query/producer/API/test execution or source/Git mutation occurred. All2062 existing tracked files remain unchanged; scientific/semantic/human acceptance remains UNKNOWN and future runner/source review/producer admission is separate.",
+  "subject": {
+    "job_id": "E1104",
+    "worker": "F2",
+    "resultPath": "/workspace/scratch/8528bb251845/discovery-cycle05/F2/E1104/result.json",
+    "resultSha256": "35bdb7b92c70afe5da60979148401d38067c363f53ca6364377b6a74e06a4408",
+    "protocolPath": "/workspace/scratch/8528bb251845/discovery-cycle05/F2/E1104/protocol-proposal.json",
+    "protocolSha256": "cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829"
+  },
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F6/R1104/verify-review.py",
+      "bytes": 7866,
+      "sha256": "ba32a2d32077f2c858199acc6a58b1f1e0c43e53a1ee94815861a8f5b8d73f1d"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F6/R1104/verification.json",
+      "bytes": 9831,
+      "sha256": "0d3270bed2aba3472c3a1c19bc039d6a829929c1b0faeb64f373c4efc95205bd"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F6/R1104/review.md",
+      "bytes": 7232,
+      "sha256": "2068555bd648db766f53aed99ff46a615208aaf2dd308d6143869d2f575310e6"
+    }
+  ],
+  "mandatoryAmendments": [],
+  "verified": {
+    "allOriginalEncodedAndDecodedHashesMatch": true,
+    "allOriginalsMatchGitBlobBytes": true,
+    "originalsVisuallyInspected": 3,
+    "inspectionCropVisuallyInspected": true,
+    "inspectionCropExactPixels": true,
+    "measurementUsesFullOriginalRgba": true,
+    "originalFrame": "Lenard-5.original-source-pixel-centers",
+    "headingAndOffsetCorrect": true,
+    "groupWindowSupportEnvelopes": 16,
+    "allStrictlyInterior": true,
+    "widthsPx": [
+      34,
+      42,
+      50
+    ],
+    "windowsStationCounts": [
+      16,
+      16,
+      16,
+      48
+    ],
+    "logicalPublicQueryInvocations": 160,
+    "queryMatrix": {
+      "profile": 16,
+      "edgePair": 48,
+      "stationContrast": 48,
+      "loss": 48
+    },
+    "operationClosureMatches": true,
+    "maskBinding": {
+      "method": "frozen integer-center predicate, binary Uint8 row-major1290x2796; generated in reviewer memory only",
+      "sha256": "305285b7e2bc9d44dfd572caa8d39030ed1b0c2254c15967fbb9b7bff7fae609",
+      "bytes": 3606840,
+      "ones": 767,
+      "nonzeroBoundsInclusivePx": [
+        765,
+        843,
+        795,
+        969
+      ],
+      "floatingVsExactIntegerPredicateDisagreements": 0,
+      "exactIntegerEquivalent": "abs(24dx-5dy)<=73 AND abs(5dx+24dy)<=1568; dx=x-780,dy=y-906",
+      "scope": "premeasurement visibility bytes only; no raster pixel sampled and no query called"
+    }
+  },
+  "nonblockingCautions": [
+    "Finite fit/contrast is not physical/path/same-edge identity, accepted width, continuity/gap or scientific acceptance.",
+    "Contrast along±2 means neighboring center-window footprints overlap; profile/contrast/loss are not independent observations.",
+    "Bright control nonpath label is impeachable visual caller designation; supplied query heading is matched, not separately measured road orientation.",
+    "Public edgePair internally recomputes profile; loss repeats contrast and adds proxy/corridor; fixed matrix is160 external calls, not192.",
+    "Full-original measurement only; never silently substitute inspection crop or recenter/retune/change widths after output.",
+    "Future admitted producer should match reviewer-derived exact mask bytes digest305285b7e2bc9d44dfd572caa8d39030ed1b0c2254c15967fbb9b7bff7fae609; this is a derived binding, not an edited mask/protocol."
+  ],
+  "acceptanceScope": "Exact premeasurement source/geometry/control declaration engineering review only. Does not approve future code, tests or producer execution.",
+  "independence": {
+    "reviewerDidNotProduceF2GeometryOrStaging": true,
+    "reviewerIsFutureSourceOwner": true,
+    "reviewerCannotSelfReviewFutureImplementation": true,
+    "otherMeasurementReceiptsUsed": false
+  },
+  "verification": {
+    "executed": "read-only artifact/source hashing, git identity/object reads, Pillow decode/crop equality and geometric/mask arithmetic only",
+    "reproductionCommand": "PYTHONDONTWRITEBYTECODE=1 python3 /workspace/scratch/8528bb251845/discovery-cycle05/F6/R1104/verify-review.py",
+    "cvQueryCalls": 0,
+    "producerReruns": 0,
+    "apiExecutions": 0,
+    "testsRun": 0,
+    "productImports": 0,
+    "sourceEdits": 0,
+    "gitMutations": 0,
+    "coordinatorStateMutations": 0,
+    "externalWrites": 0,
+    "currentTrackedFilesRehashed": 2062,
+    "changedTrackedFiles": [],
+    "gitStatusShort": "",
+    "localHead": "036d3e14416c40266917c51a0fe8d03785b050f3",
+    "localTree": "e21271ef77a501d4f41d1c9456ce1d23a87c5add"
+  },
+  "claims": {
+    "pathIdentity": "UNKNOWN",
+    "geometryTruth": "UNKNOWN",
+    "sameEdgeIdentity": "UNKNOWN",
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN",
+    "calibratedWidth": "UNKNOWN",
+    "heldout": false,
+    "independentCourse": false,
+    "promoted": false
+  },
+  "next": "Root alone ingests R1104/native finish and chooses whether to admit the exact separate standalone runner implementation packet. F6 awaits that packet; no source implementation or self-review is authorized by this result."
+}

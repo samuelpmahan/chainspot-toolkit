@@ -1,0 +1,53 @@
+{
+  "schema": "capability-discovery-independent-source-review@1",
+  "job_id": "R1103",
+  "worker": "F3",
+  "decision": "accepted",
+  "summary": "Independent source/algebra and frozen-byte index review accepts F1 E1103 as conditional analysis only. The full gap arrays,45/27/0 contrasts, long scores36/31.5/22.5 and seam center-0.5 follow from the actual F4 protocol. Its full-height Gap6 mask retains10 profile stations at every offset, invalidates t=-3..2 while preserving four raw45 invalid shoulders, and yields NaN at t=-1,0. Historicaltau8 cannot flag Gap2; the frozen capsule shares all admitted local query pixels with intact and remains a semantic false positive. No CV/query/producer execution or scientific/human acceptance occurred.",
+  "scope": "PAPER_SOURCE_AND_BYTE_INDEX_REVIEW_ONLY",
+  "reviewed": {
+    "F1ResultSha256": "66f271ea1ec75f4861582fd3c41338b07276e282da913b3fc2592f8c193c6a35",
+    "F1MathSha256": "662108b57fd605ab45571bd1d4c201c93d7a3b131c0d92e341673ca12b6bd5c8",
+    "F1OraclesSha256": "1c602868ce83d52ab4fd960b955dd1ec0c1583f2420ef19b32327031f403e19a",
+    "F4ProtocolSha256": "3b7f1d2b166c759997c73f820c433ff653c84114e83c28af62c68ec003967ff5",
+    "F4GeneratorSha256": "090cf61def38f85c74db72be01ae89150f7d5c38ea2ba4d289e9fb1b47e29dde",
+    "F4InventorySha256": "c103c508e5cb8668bbc5069620046c3f5b2c3eea05d018af9d17169e308529aa",
+    "pathSpaceSha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"
+  },
+  "verifiedRawFixtureSha256": {
+    "intact.rgba": "e6648f24c1616297317cb2f6062317ba83ab2c4949e5d4d22568f07b05cf1c7a",
+    "gap2.rgba": "87c0ad2feaa151e91fcae975ef406127191f1b0f6cb7d5c369c057ed87bebec0",
+    "gap6.rgba": "103f9e66febf38864142faa6aaa42a38c89a28a3f7625a3f45073a96f51ea42f",
+    "ellipse.rgba": "61e2b22c86e374ed554cbc3d9a95be277b9258d578bb7d10aa3fb0257ca34468",
+    "capsule.rgba": "e0308d74a0b672eeae242c4df4018c343df93ea6a595fb25449fd730bc0e4d72",
+    "clear.mask.u8": "6d7bd1fa33ee71b2d2c4fc8062f6c4b09804b84449ff73a687fe7cfd568d0625",
+    "gap6.mask.u8": "30207778746e6e497de8196f270dad9227d6cb368968435a748e357d08f58ad0",
+    "allHidden.mask.u8": "a32194817413b4fcf784d7579edb733c098ac8fec4d893ec13c78f1f50046bf3"
+  },
+  "actualChecks": {
+    "sourceAndProtocolHashReadback": "MATCHED",
+    "independentRGBAByteMembershipAudit": {"rasters":5,"pixels":614400,"result":"MATCHED_FROZEN_INTEGER_EQUATIONS"},
+    "independentMaskByteAudit": {"masks":3,"bytes":368640,"result":"MATCHED_FROZEN_INTEGER_EQUATIONS"},
+    "independentGapIntervalCountArithmetic": "MATCHED_BOTH_F1_ARRAYS",
+    "manualSmoothingGradientDerivation": "PEAK_0.8_TIMES_PROFILE_EXCESS",
+    "CVCalls": 0,
+    "queryCalls": 0,
+    "producerCalls": 0,
+    "sourceImportsForExecution": 0,
+    "gitOperations": 0,
+    "sourceEdits": 0,
+    "spawns": 0
+  },
+  "nonblockingClarifications": [
+    "Actual full-height Gap6 mask has profile okCount10 everywhere; F1's variable outside/edge counts concern its additional stripe-only-mask alternative.",
+    "Lower-level no-pair/null and profileNaN analytical oracles require explicit mapping to public condition/null encodings, not literal raw-public JSON equality.",
+    "Additional F1 proposed controls and widthSearch commentary are not newly admitted F4 producer calls.",
+    "Freeze numerical comparison tolerance and final orchestration mapping before observing producer output; no tolerance was chosen in this review."
+  ],
+  "blockingAmendments": [],
+  "limitations": ["No empirical CV predictions were tested.","Byte/index audits establish frozen photometry, not measurement behavior.","Accepted mathematical symmetry allows floating-point roundoff and does not promise bit identity.","No independent confidence, semantic path identity, physical continuity, calibrated width, alpha identity, scientific validity or human acceptance follows."],
+  "artifacts": ["review.md","result.json"],
+  "scientificAcceptance": "NOT_ASSERTED",
+  "humanAcceptance": "NOT_ASSERTED",
+  "promoted": false
+}

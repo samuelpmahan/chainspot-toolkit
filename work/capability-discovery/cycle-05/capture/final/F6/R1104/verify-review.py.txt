@@ -1,0 +1,131 @@
+#!/usr/bin/env python3
+"""R1104 read-only PNG/geometry/hash review. No product imports or CV calls."""
+import hashlib
+import io
+import json
+import math
+import struct
+import subprocess
+from pathlib import Path
+import PIL
+from PIL import Image
+
+ROOT = Path("/workspace/scratch/8528bb251845/discovery-cycle05/F2/E1104")
+REPO = Path("/workspace/scratch/8528bb251845/chainspot-discovery-lab")
+sha = lambda b: hashlib.sha256(b).hexdigest()
+git = lambda *a: subprocess.check_output(["git", "-C", str(REPO), *a])
+read_json = lambda p: json.loads(p.read_bytes())
+inv = read_json(ROOT / "inventory.json")
+protocol = read_json(ROOT / "protocol-proposal.json")
+testimony = read_json(ROOT / "testimony.json")
+bindings = {p.name: {"sha256": sha(p.read_bytes()), "bytes": p.stat().st_size}
+            for p in [ROOT / name for name in ["result.json", "inventory.json", "testimony.json", "protocol-proposal.json", "inventory-originals.py", "inspect-crop.py", "freeze-proposal.py"]]}
+assert bindings["result.json"]["sha256"] == "35bdb7b92c70afe5da60979148401d38067c363f53ca6364377b6a74e06a4408"
+assert bindings["protocol-proposal.json"]["sha256"] == "cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829"
+assert protocol["evidenceBindings"]["inventorySha256"] == bindings["inventory.json"]["sha256"]
+assert protocol["evidenceBindings"]["testimonySha256"] == bindings["testimony.json"]["sha256"]
+originals = []
+for r in inv["records"]:
+    encoded = Path(r["originalPngPath"]).read_bytes()
+    blob = git("rev-parse", r["ref"] + ":" + r["path"]).decode().strip()
+    assert blob == r["gitBlob"]
+    assert git("cat-file", "blob", blob) == encoded
+    assert sha(encoded) == r["sha256"] and len(encoded) == r["bytes"]
+    assert encoded[:8] == b"\x89PNG\r\n\x1a\n"
+    ihdr = struct.unpack(">IIBBBBB", encoded[16:29])
+    with Image.open(io.BytesIO(encoded)) as im:
+        assert im.format == "PNG" and im.mode == "RGB" and im.n_frames == 1
+        assert "transparency" not in im.info
+        assert list(im.size) == r["imageDimensionsPx"] == [1290,2796]
+        im.load()
+        rgba = im.convert("RGBA").tobytes()
+        assert len(rgba) == r["fullRgbaBytes"] and sha(rgba) == r["fullRgbaSha256"]
+        assert all(x == 255 for x in rgba[3::4])
+    originals.append({"path":r["originalPngPath"], "gitBlob":blob, "encodedSha256":sha(encoded),
+                      "decodedRgbaSha256":sha(rgba), "ihdr":list(ihdr), "decoder":PIL.__version__,
+                      "sourceMode":"RGB", "appendedAlpha":"all255", "matchesOriginalGitBlob":True})
+crop_info = testimony["inspectionCrop"]
+crop_path = Path(crop_info["path"])
+assert sha(crop_path.read_bytes()) == crop_info["sha256"]
+with Image.open(ROOT/"Lenard-5.original.png") as im, Image.open(crop_path) as crop:
+    expected = im.crop(tuple(crop_info["sourceBoundsHalfOpenPx"]))
+    assert crop.size == (600,400) and crop.mode == expected.mode and crop.tobytes() == expected.tobytes()
+    crop_check = {"path":str(crop_path),"encodedSha256":sha(crop_path.read_bytes()),
+                  "exactIntegerCropPixels":True,"usedForMeasurement":False}
+geom = protocol["geometry"]
+heading = geom["headingConstruction"]
+phi = math.atan2(-5,24)
+u = [24/math.sqrt(601),-5/math.sqrt(601)]
+n = [5/math.sqrt(601),24/math.sqrt(601)]
+assert heading["vectorPx"] == [24,-5] and heading["phiRad"] == phi
+assert heading["unitTangent"] == u and heading["positiveUnitNormal"] == n
+groups = geom["groups"]
+assert groups[0]["originPx"] == [780,906] and groups[1]["originPx"] == [780,740]
+assert groups[2]["originPx"] == [780+6*n[0],906+6*n[1]]
+assert groups[3]["originPx"] == groups[0]["originPx"]
+windows = geom["windows"]
+assert [(w["id"],w["t0Px"],w["t1Px"]) for w in windows] == [("before16",-24,-8),("core16",-8,8),("after16",8,24),("long48",-24,24)]
+assert geom["localWidthBank"]["valuesPx"] == [34,42,50]
+assert protocol["settings"]["stepPx"] == 1
+support = []
+W,H = 1290,2796
+for g in groups:
+    for w in windows:
+        # Geometric envelopes only. Include upper endpoint conservatively and
+        # maximum RGB reach50, contrast along2 and band reach28, profile reach30.
+        sites = []
+        for reach, along in [(50,0),(30,0),(28,2)]:
+            for t in [w["t0Px"]-along,w["t1Px"]+along]:
+                for off in [-reach,reach]:
+                    sites.append([g["originPx"][0]+t*u[0]+off*n[0],
+                                  g["originPx"][1]+t*u[1]+off*n[1]])
+        bounds = [min(p[0] for p in sites),min(p[1] for p in sites),max(p[0] for p in sites),max(p[1] for p in sites)]
+        strict = bounds[0]>1 and bounds[1]>1 and bounds[2]<W-2 and bounds[3]<H-2
+        assert strict
+        support.append({"group":g["id"],"window":w["id"],"stationCount":w["t1Px"]-w["t0Px"],"conservativeFullSourceBoundsPx":bounds,"strictInterior":strict})
+mask = bytearray(W*H)
+floating_disagreements = 0
+xs,ys = [],[]
+for y in range(H):
+    dy=y-906
+    for x in range(W):
+        dx=x-780
+        # Exact integer equivalent of frozen irrational half-open bounds;
+        # no integer dot product lies on +/-3sqrt601 or +/-64sqrt601.
+        integer = abs(24*dx-5*dy)<=73 and abs(5*dx+24*dy)<=1568
+        s=dx*u[0]+dy*u[1]
+        r=dx*n[0]+dy*n[1]
+        floating = -3<=s<3 and -64<=r<64
+        if floating != integer:
+            floating_disagreements += 1
+        if floating:
+            mask[y*W+x]=1
+            xs.append(x);ys.append(y)
+assert floating_disagreements == 0
+mask_check = {"method":"frozen integer-center predicate, binary Uint8 row-major1290x2796; generated in reviewer memory only",
+              "sha256":sha(mask),"bytes":len(mask),"ones":sum(mask),"nonzeroBoundsInclusivePx":[min(xs),min(ys),max(xs),max(ys)],
+              "floatingVsExactIntegerPredicateDisagreements":floating_disagreements,
+              "exactIntegerEquivalent":"abs(24dx-5dy)<=73 AND abs(5dx+24dy)<=1568; dx=x-780,dy=y-906",
+              "scope":"premeasurement visibility bytes only; no raster pixel sampled and no query called"}
+operation_hashes = []
+for path, expected in [(protocol["operationClosure"]["module"], protocol["operationClosure"]["sha256"]),
+                       (protocol["operationClosure"]["alphaContract"]["path"], protocol["operationClosure"]["alphaContract"]["sha256"])]:
+    actual=sha(Path(path).read_bytes())
+    assert actual == expected
+    operation_hashes.append({"path":path,"sha256":actual})
+matrix = protocol["futureExecutionMatrix"]
+assert matrix["logicalPublicQueryInvocations"] == 4*4*(1+3+3+3) == 160
+prior = read_json(Path("/workspace/scratch/8528bb251845/discovery-cycle05/F6/E1106/inventory.json"))
+changed = [e["path"] for e in prior["entries"] if sha((REPO/e["path"]).read_bytes()) != e["sha256"]]
+assert not changed and len(prior["entries"]) == 2062
+output={"schema":"cycle05-R1104-read-only-verification@1","job_id":"R1104","worker":"F6",
+        "bindings":bindings,"originals":originals,"inspectionCrop":crop_check,
+        "heading":{"phiRad":phi,"unitTangent":u,"positiveUnitNormal":n,"offsetOriginMatchesPlus6":True},
+        "support":support,"maskDerivedPremeasurementBinding":mask_check,"exactOperationHashes":operation_hashes,
+        "logicalPublicQueryInvocations":160,"profilePublicCalls":16,"edgePairPublicCalls":48,"stationContrastPublicCalls":48,"lossPublicCalls":48,
+        "currentTrackedFilesRehashed":2062,"priorFilesChanged":changed,
+        "localHead":git("rev-parse","HEAD").decode().strip(),"localTree":git("rev-parse","HEAD^{tree}").decode().strip(),
+        "gitStatusShort":git("status","--short").decode(),
+        "execution":{"cvQueryCalls":0,"productImports":0,"producerReruns":0,"sourceEdits":0,"gitMutations":0},
+        "note":"Read-only PNG decoding/hash checks, crop byte comparison and geometric/mask declaration arithmetic only. No public query, profile/fit/contrast/loss or source algorithm executed."}
+print(json.dumps(output,indent=2))

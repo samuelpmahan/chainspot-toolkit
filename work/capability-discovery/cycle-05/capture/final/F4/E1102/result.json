@@ -1,0 +1,23 @@
+{
+  "job_id": "E1102",
+  "worker": "F4",
+  "outcome": "mixed_change",
+  "summary": "Existing exact PATH_QUERIES source remains reusable unchanged; fresh scratch-only deterministic generator, eight-case protocol, five pixel rasters and three binary masks are frozen with byte hashes. Generator and byte-integrity checks passed; no CV producer was called and no measurement outcome is claimed.",
+  "extractionStatus": "complete",
+  "phase": "frozen-pre-producer",
+  "frozenAtUTC": "2026-10-18T13:58:03Z",
+  "verifiedAtUTC": "2026-10-18T13:59:11Z",
+  "artifacts": {"protocol": "protocol.json", "generator": "generate.py", "inventory": "inventory.json", "geometry": "geometry.canonical.json", "protocolCanonical": "protocol.canonical.json", "verification": "verification.json", "fixtures": "fixtures/"},
+  "hashes": {
+    "sourceSha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+    "protocolFileSha256": "3b7f1d2b166c759997c73f820c433ff653c84114e83c28af62c68ec003967ff5",
+    "protocolCanonicalSha256": "42e4f8a44c39b58782f6050e47a1e5af63c1a8949c207d3aa02d217a07f73f2f",
+    "geometryCanonicalSha256": "919c0b93cdc8e90eaac25edd2da8df23beba55d86f265f6d69473fd4babd7b2c",
+    "generatorSha256": "090cf61def38f85c74db72be01ae89150f7d5c38ea2ba4d289e9fb1b47e29dde",
+    "inventoryFileSha256": "c103c508e5cb8668bbc5069620046c3f5b2c3eea05d018af9d17169e308529aa"
+  },
+  "counts": {"cases": 8, "uniqueRasters": 5, "uniqueMasks": 3, "stations": 16, "cvCalls": 0, "producerCalls": 0},
+  "maskAreasPx": {"clear": {"ones": 0, "zeros": 122880}, "gap6": {"ones": 1920, "zeros": 120960}, "allHidden": {"ones": 122880, "zeros": 0}},
+  "producerAdmission": "BLOCKED pending independent protocol critique and root admission",
+  "boundaries": ["scratch-only artifacts", "source and Git unchanged", "no measurement output inspection", "no post-output tuning", "UNKNOWN path identity and true physical width", "masked UNKNOWN is not visible failure", "historical tau8 diagnostic only"]
+}

@@ -1,0 +1,53 @@
+{
+  "schema": "capability-discovery-source-reconnaissance@1",
+  "packet": "E1101",
+  "worker": "F5",
+  "mode": "READ_ONLY_SOURCE_RECONNAISSANCE_NO_API_EXECUTION",
+  "repository": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+  "localHead": "036d3e14416c40266917c51a0fe8d03785b050f3",
+  "localTree": "e21271ef77a501d4f41d1c9456ce1d23a87c5add",
+  "mainObserved": "37a2dba87d61262f661af70f1a22440736e61efc",
+  "publishedIdentity": {
+    "commit": "b17fdb6e211f886b1a5c01b60d808b73134c4df5",
+    "tree": "e21271ef77a501d4f41d1c9456ce1d23a87c5add",
+    "authority": "root dispatch packet; not independently verified by this worker",
+    "qualification": "git cat-file -t returned missing object locally; no remote fetch or API request attempted"
+  },
+  "platformOriginRef": "49255331791b1245cf0f9cd699816175f94e70f2",
+  "referenceAlgorithmRef": "e3e11fab5de1e4562487472585259435694d88bc",
+  "provenanceAuthority": [
+    "experiments/capability-discovery/probes/width/provenance.json",
+    "experiments/capability-discovery/probes/root-inventory/source-identities.json"
+  ],
+  "verification": "Read bytes only. Recomputed SHA256, byte lengths, and Git blob SHA1 (blob header plus bytes) for each listed module; matched retained provenance. No math module was imported or executed.",
+  "closures": {
+    "pathMath": ["width/vendor/active/ports/s6straight/pathSpace.mjs", "width/vendor/active/contracts/alpha.profile@1.mjs"],
+    "publicStoreGateway": ["root-inventory/source/fg/store.mjs", "root-inventory/source/fg/pxset.mjs", "root-inventory/source/fg/render.mjs", "root-inventory/source/fg/canon.mjs", "root-inventory/source/fg/png.mjs", "root-inventory/source/fg/alpha/alphaRender.mjs", "root-inventory/source/contracts/alpha.profile@1.mjs"],
+    "base": "experiments/capability-discovery/probes/",
+    "physicalModuleCount": 9,
+    "uniqueByteIdentities": 8,
+    "qualification": "Two identical alpha contract copies have distinct module paths. fg/profile.mjs belongs to the historical store/profiler pack, but is not imported by the proposed store+PATH_QUERIES example. No external runtime/package imports occur in these static closures."
+  },
+  "modules": [
+    {"path":"width/vendor/active/ports/s6straight/pathSpace.mjs","sourcePath":"ports/s6straight/pathSpace.mjs","bytes":27838,"sha256":"d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e","gitBlob":"38963d20f7a8b7c7851b3a2abea2e472da8f7716","imports":["../../contracts/alpha.profile@1.mjs"]},
+    {"path":"width/vendor/active/contracts/alpha.profile@1.mjs","sourcePath":"contracts/alpha.profile@1.mjs","bytes":4399,"sha256":"9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f","gitBlob":"6f50530ff8f7d5c613ee739224d475657fcbf647","imports":[]},
+    {"path":"root-inventory/source/fg/store.mjs","sourcePath":"fg/store.mjs","bytes":32442,"sha256":"122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074","gitBlob":"8ec5aec1959af6282d3a3feda37ab534be9f14d2","imports":["./pxset.mjs","./render.mjs","./canon.mjs"]},
+    {"path":"root-inventory/source/fg/pxset.mjs","sourcePath":"fg/pxset.mjs","bytes":9563,"sha256":"01e68e82741d4af56901b3306a304ca540e8ab0d73a12ba20a0afbe0e788f5d5","gitBlob":"60c06995fe06b69ae9d3054c7efe1fa614f6397e","imports":[]},
+    {"path":"root-inventory/source/fg/render.mjs","sourcePath":"fg/render.mjs","bytes":24294,"sha256":"39a24a645c222430464592546eb6bdc1a8b190902ed5708ecd951b0bb639315a","gitBlob":"d45adf1cc2cc69b190e21cdceea28f67bdabc176","imports":["./pxset.mjs","./png.mjs","./alpha/alphaRender.mjs"]},
+    {"path":"root-inventory/source/fg/canon.mjs","sourcePath":"fg/canon.mjs","bytes":5437,"sha256":"3cc0319f4678eaf8679adcbfaa9db054841417a966c079019b0f72e24ba24406","gitBlob":"66758cb065b693ff1f85697c9cecbe9a26aba7e3","imports":[]},
+    {"path":"root-inventory/source/fg/png.mjs","sourcePath":"fg/png.mjs","bytes":5566,"sha256":"7668bab9de6a19a2cc6f44e5ac47d6e89373da130764365cf32011187a980241","gitBlob":"01ae65fff3567149cd5d0bb4659f58dc67495bd2","imports":[]},
+    {"path":"root-inventory/source/fg/alpha/alphaRender.mjs","sourcePath":"fg/alpha/alphaRender.mjs","bytes":14536,"sha256":"4d17e1da77b1e5ceb6a4a2609d26c010caa6c43df8392e9599544299d9e1c549","gitBlob":"3762ce616dc7df511ec06d690c22c0eb45913d16","imports":["../../contracts/alpha.profile@1.mjs","../png.mjs"]},
+    {"path":"root-inventory/source/contracts/alpha.profile@1.mjs","sourcePath":"contracts/alpha.profile@1.mjs","bytes":4399,"sha256":"9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f","gitBlob":"6f50530ff8f7d5c613ee739224d475657fcbf647","imports":[]}
+  ],
+  "preservedObserved": [
+    {"path":"experiments/capability-discovery/catalog/catalog.json","bytes":22978,"sha256":"2da566f83f0a4d9e48cda10886567d0db8f9d23c9fb4e23d32b4cec977f3c53b","operations":16},
+    {"path":"experiments/capability-discovery/catalog/recipes.json","bytes":5726,"sha256":"e3296d43784f2408a3d3201a8b23921794b25aad02d533801a29f5c7d6f37854","recipes":3},
+    {"path":"experiments/capability-discovery/composition/recipe.mjs","bytes":8463,"sha256":"17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6"},
+    {"path":"experiments/capability-discovery/source-pixels/adapter.mjs","bytes":12374,"sha256":"df554fad8576796a7250712e4c50acd26a4698326bcb94758a8bd2277e6c63d6"},
+    {"path":"experiments/capability-discovery/window-evidence/group.mjs","bytes":7708,"sha256":"c8abdc46721e01df64f8ae81318582ee3d639104389c9f5a43b539ef3fbf5e83"}
+  ],
+  "repositoryStatusBefore": "clean",
+  "prohibitedActionsPerformed": [],
+  "apiExecutions": 0,
+  "cvProducerExecutions": 0
+}

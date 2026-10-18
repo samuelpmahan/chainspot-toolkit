@@ -1,0 +1,20 @@
+{
+  "schema": "chainspot.fixture-byte-verification/v1",
+  "job_id": "E1102",
+  "worker": "F4",
+  "verifiedAtUTC": "2026-10-18T13:59:11Z",
+  "scope": "generator and source-pixel byte integrity only; no CV measurements",
+  "exitCode": 0,
+  "deterministicRerun": "PASS",
+  "retainedFilesCompared": 16,
+  "pngRoundTripAndCRC": "5/5 PASS",
+  "rawRGBAHashes": "5/5 PASS",
+  "binaryMaskHashesAndAreas": "3/3 PASS",
+  "protocolFileHash": "PASS",
+  "generatorAssertions": ["491520 bytes per raster", "alpha255 everywhere", "literal binary masks with exact areas", "stripe and gap bright areas", "capsule/intact identical over x182..201 inclusive,y130..190 inclusive"],
+  "repositoryReadback": {"head": "036d3e14416c40266917c51a0fe8d03785b050f3", "tree": "e21271ef77a501d4f41d1c9456ce1d23a87c5add", "gitStatusPorcelain": ""},
+  "producerCalls": 0,
+  "cvCalls": 0,
+  "measurementOutputsInspected": 0,
+  "repairs": []
+}

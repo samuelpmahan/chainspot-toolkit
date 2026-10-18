@@ -1,0 +1,16 @@
+{
+  "schema":"cycle05-E1111-tests-first-source-record@1",
+  "job_id":"E1111",
+  "worker":"F6",
+  "chronology":"All three test files were apply_patch-created and sha256sum-read before codec.mjs or recipe.mjs implementation was created. Tool transcript provides ordering; no independent authenticated timestamp claim.",
+  "initialFiles":[
+    {"path":"experiments/capability-discovery/station-evidence/codec.test.mjs","sha256":"de792743c2dc779f5fb7891c950a02e706b3f7618840a6b77862e0ce992c2bd1"},
+    {"path":"experiments/capability-discovery/station-evidence/recipe.test.mjs","sha256":"dfc8893b079f6f390e090447acc2fd553b2d05930d1fa7c9ee2804017f7c575f"},
+    {"path":"experiments/capability-discovery/station-evidence/cli.test.mjs","sha256":"74d04d9487f24fdfdeac51fc055d576146eed8bc8403ae9929d671ae04e3d2b8"}
+  ],
+  "testsRun":0,
+  "redObserved":false,
+  "greenObserved":false,
+  "reason":"Root admission-E1111 prohibits imports/tests/queries until actual code-written flow checkpoint and separate GO; do not label this as completed red-green TDD.",
+  "initialTestScopes":"Pure codec roundtrip/rejection/resources; default-OFF and preflight refusals; fixed plan and read-only nine-source hashing; disabled artifact writer and overwrite refusal. No valid enabled query run exists in these test sources."
+}

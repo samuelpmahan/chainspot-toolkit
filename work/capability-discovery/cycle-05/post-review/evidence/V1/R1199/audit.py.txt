@@ -1,0 +1,124 @@
+"""Independent R1199 byte/provenance/staging audit. No product imports or CV."""
+from pathlib import Path
+import collections, hashlib, json, os, shutil, subprocess, sys
+
+BASE=Path('/workspace/scratch/8528bb251845')
+ROOT=BASE/'discovery-cycle05/V1/R1199'
+REPO=BASE/'chainspot-discovery-lab'
+PKG=REPO/'work/capability-discovery/cycle-05'
+sha=lambda raw:hashlib.sha256(raw).hexdigest()
+report={'schema':'cycle05-independent-package-byte-audit@1','checks':{},'commands':[],'falsifiers':[]}
+def check(name,value):
+    if not value: raise AssertionError(name)
+    report['checks'][name]=True
+def put(path,data):
+    path.parent.mkdir(parents=True,exist_ok=True)
+    with path.open('xb') as f:f.write(data)
+def dump(path,obj):put(path,(json.dumps(obj,indent=2)+'\n').encode())
+def command(name,argv,cwd=REPO,expected=0):
+    done=subprocess.run(argv,cwd=cwd,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    put(ROOT/(name+'.stdout.log'),done.stdout);put(ROOT/(name+'.stderr.log'),done.stderr)
+    entry={'name':name,'argv':list(map(str,argv)),'cwd':str(cwd),'exitCode':done.returncode,'expected':expected,'stdoutSha256':sha(done.stdout),'stderrSha256':sha(done.stderr)}
+    report['commands'].append(entry)
+    if expected is not None:check(name+' exit code',done.returncode==expected)
+    return done
+def j(path):return json.loads(path.read_bytes())
+manifest=j(PKG/'package-manifest.json');index=j(PKG/'administration/capture-index-final.json')
+report['hashes']={name:sha((PKG/name).read_bytes()) for name in ['package-manifest.json','SHA256SUMS','source-manifest.json','verify-package.py','stage-replay.py','administration/capture-index-final.json']}
+check('assigned manifest',report['hashes']['package-manifest.json']=='3569cc5d36ef2318e254e7bcd3b74401a6db167c9595da6caf3171340284010e')
+check('assigned E1199 result',sha((BASE/'discovery-cycle05/F6/E1199/result.json').read_bytes())=='0704768fb4a83e34cbaa48206746d4f7b9c4be9ab515da96b6b3dd59b2ac5835')
+listed={r['path'] for r in manifest['files']}
+check('unique listed paths',len(listed)==len(manifest['files'])==392)
+for r in manifest['files']:
+    b=(REPO/r['path']).read_bytes();check('payload '+r['path'],len(b)==r['bytes'] and sha(b)==r['sha256'])
+disk={str(p.relative_to(REPO)) for p in PKG.rglob('*') if p.is_file()}
+prefix='work/capability-discovery/cycle-05/'
+check('complete package path set',disk=={p for p in listed if p.startswith(prefix)}|{prefix+'package-manifest.json',prefix+'SHA256SUMS'})
+check('package/source counts',len(disk)==387 and len(listed-disk)==7 and len(listed|disk)==394)
+check('manifest byte total',sum(r['bytes'] for r in manifest['files'])==3202420==manifest['counts']['bytes'])
+command('checksums',['sha256sum','--quiet','-c','work/capability-discovery/cycle-05/SHA256SUMS'])
+command('verifier',['python3',str(PKG/'verify-package.py'),'--phase','final'])
+raws={};stored={};by={r['original']:r for r in index['files']}
+check('unique original paths',len(by)==len(index['files'])==462)
+for r in index['files']:
+    encoded=(PKG/r['path']).read_bytes()
+    check('stored '+r['original'],len(encoded)==r['storedBytes'] and sha(encoded)==r['storedSha256'])
+    key=(r['path'],r['storedSha256'],r.get('codec'))
+    if key not in stored:
+        stored[key]=subprocess.check_output(['zstd','-q','-d','-c',str(PKG/r['path'])]) if r.get('codec')=='zstd' else encoded
+    raw=stored[key]
+    check('raw '+r['original'],len(raw)==r['bytes'] and sha(raw)==r['sha256']);raws[r['original']]=raw
+    if r.get('aliasOf'):
+        anchor=by[r['aliasOf']]
+        check('alias '+r['original'],all(anchor[k]==r[k] for k in ['bytes','sha256','path','storedBytes','storedSha256','codec']))
+    if r['original'].endswith(('.mjs','.py','.sh')) and not r.get('aliasOf'):
+        check('archive suffix '+r['original'],r['path'].endswith(('.txt','.txt.zst')))
+check('alias counts',len(stored)==338 and sum('aliasOf' in r for r in index['files'])==124)
+check('omitted/deferred',len(index['omitted'])==3 and not index['deferred'])
+check('no bare archive tests',not any('.test.mjs' in str(p) and p.name.endswith('.test.mjs') for p in PKG.rglob('*')))
+for r in index['omitted']:
+    check('omitted metadata '+r['original'],all(k in r['source'] for k in ['gitBlob','ref','path','fullRgbaSha256','fullRgbaBytes','decoder','frame']) and r['original'] not in by)
+prior=json.loads(raws['F6/E1106/inventory.json']);freeze=json.loads(raws['F6/E1111/source-freeze.json'])
+check('prior and source freeze identities',sha(raws['F6/E1106/inventory.json'])=='d8008a3c9ec96200a317ec78f6bb91149165432d5c94dceb2e3762a4bcef1c8d' and sha(raws['F6/E1111/source-freeze.json'])=='0a2351f595fd72d55af79fccb4532deb1b58125a2c440e37d6276fba5d21da4b')
+check('prior and freeze counts',len(prior['entries'])==2062 and len(freeze['files'])==7)
+for r in prior['entries']+freeze['files']:
+    raw=(REPO/r['path']).read_bytes();check('unchanged '+r['path'],sha(raw)==r['sha256'] and len(raw)==r['bytes'])
+tree=subprocess.check_output(['git','ls-tree','-rz','HEAD'],cwd=REPO)
+tree_entries={}
+for line in tree.split(b'\0'):
+    if not line:continue
+    header,path=line.split(b'\t',1);mode,kind,blob=header.decode().split();tree_entries[path.decode()]=(mode,kind,blob)
+check('parent tracked exact pathset',set(tree_entries)=={r['path'] for r in prior['entries']})
+for r in prior['entries']:
+    check('parent tree '+r['path'],tree_entries[r['path']]==(r['gitMode'],r['gitType'],r['gitBlob']))
+check('parent HEAD',subprocess.check_output(['git','rev-parse','HEAD'],cwd=REPO).decode().strip()=='036d3e14416c40266917c51a0fe8d03785b050f3')
+sm=j(PKG/'source-manifest.json')
+check('source manifest exact seven',sm['files']==[{k:r[k] for k in ['path','bytes','sha256']} for r in freeze['files']])
+for r in sm['unchangedQueryClosure']:check('query closure '+r['path'],sha((REPO/r['path']).read_bytes())==r['sha256'])
+stage=ROOT/'fresh-stage'
+command('stage',['python3',str(PKG/'stage-replay.py'),'--phase','final','--out',str(stage)])
+receipt=j(stage/'stage-receipt.json');companions=[]
+for r in receipt['files']:
+    raw=(stage/r['staged']).read_bytes();check('staged '+r['original'],raw==raws[r['original']] and sha(raw)==r['sha256'])
+    if 'portable' in r:
+        portable=(stage/r['portable']).read_bytes();expected=raw.decode().replace(str(BASE/'discovery-cycle05'),str(stage/'discovery-cycle05')).replace(str(REPO),str(REPO)).encode()
+        check('portable '+r['original'],portable==expected and sha(portable)==r['portableSha256']);companions.append({'original':r['original'],'sha256':r['sha256'],'portable':r['portable'],'portableSha256':r['portableSha256']})
+check('staging complete',len(receipt['files'])==462 and len(companions)==2)
+check('staging symlink',(stage/'chainspot-discovery-lab').is_symlink() and (stage/'chainspot-discovery-lab').resolve()==REPO)
+check('omitted not restored',all(not (stage/'discovery-cycle05'/r['original']).exists() for r in index['omitted']))
+report['portableCompanions']=companions
+before={str(p.relative_to(stage)):sha(p.read_bytes()) for p in stage.rglob('*') if p.is_file() and not p.is_symlink()}
+existing=command('existing-output-refusal',['python3',str(PKG/'stage-replay.py'),'--phase','final','--out',str(stage)],expected=1)
+check('existing output unchanged',before=={str(p.relative_to(stage)):sha(p.read_bytes()) for p in stage.rglob('*') if p.is_file() and not p.is_symlink()})
+check('existing refusal text',b'Fresh directory outside repository required' in existing.stderr)
+# A/B both are already in cache before forged alias. Also test uncached-B and zstd.
+for codec in [None,'zstd']:
+  for cached in [False,True]:
+    label=('zstd' if codec else 'raw')+('-cached' if cached else '-uncached')
+    mini=ROOT/'negatives'/label/'repo/work/capability-discovery/cycle-05'
+    (mini/'administration').mkdir(parents=True)
+    for helper in ['verify-package.py','stage-replay.py']:put(mini/helper,(PKG/helper).read_bytes())
+    a=b'original A';b=b'different stored B'
+    ea=subprocess.check_output(['zstd','-q','-c'],input=a) if codec else a
+    eb=subprocess.check_output(['zstd','-q','-c'],input=b) if codec else b
+    put(mini/'a',ea);put(mini/'b',eb)
+    def rec(name,raw,encoded):return {'original':name,'path':name,'bytes':len(raw),'sha256':sha(raw),'storedBytes':len(encoded),'storedSha256':sha(encoded),'codec':codec}
+    ra=rec('a',a,ea);rb=rec('b',b,eb)
+    forged={**ra,'original':'forged-alias','path':'b','storedBytes':len(eb),'storedSha256':sha(eb),'aliasOf':'a'}
+    dump(mini/'administration/capture-index-final.json',{'files':[ra]+([rb] if cached else [])+[forged],'omitted':[],'deferred':[]})
+    for helper in ['verify-package.py','stage-replay.py']:
+        argv=['python3',str(mini/helper),'--phase','final']
+        if helper=='stage-replay.py':argv+=['--out',str(ROOT/'negatives'/label/'stage')]
+        name='negative-'+label+'-'+helper
+        done=command(name,argv,expected=1)
+        check(name+' actual alias refusal',b'Original' in done.stderr and b'mismatch: forged-alias' in done.stderr)
+        report['falsifiers'].append({'case':label,'helper':helper,'exitCode':done.returncode,'stderr':done.stderr.decode(),'acceptedBadAlias':False})
+report['counts']={'listed':392,'payloadBytes':3202420,'source':7,'packageListed':385,'newTotalIncludingManifestChecksums':394,'originalBindings':462,'uniqueStored':338,'aliases':124,'zstdStored':sum(k[2]=='zstd' for k in stored),'omitted':3,'deferred':0,'priorTracked':2062,'queryClosure':9,'restored':462,'portableCompanions':2,'independentNegativeRefusals':8,'existingOutputRefusals':1}
+report['boundaries']={'CVCalls':0,'producerCalls':0,'rendererCalls':0,'codecImports':0,'imageDecodes':0,'GitMutations':0,'nativeWrites':0,'repoWrites':0,'testsRun':0}
+report['provenanceBindings']={name:sha(raws[name]) for name in ['F5/E1115/result.json','F3/R1115/result.json','F4/E1116/result.json','F5/R1116/result.json','F6/E1117/result.json']}
+traceNames=[name for name in raws if name.endswith('/value-trace.json')]
+report['valueTraceHashes']={name:sha(raws[name]) for name in traceNames}
+check('producer/replay trace byte equality',raws['F5/E1115/run/value-trace.json']==raws['F3/R1115/replay-run/value-trace.json'])
+report['status']='PASS_BYTE_AND_PORTABILITY_AUDIT_ONLY'
+dump(ROOT/'audit-evidence.json',report)
+print(json.dumps({'status':report['status'],'checks':len(report['checks']),'counts':report['counts'],'hashes':report['hashes'],'provenanceBindings':report['provenanceBindings'],'valueTraceHashes':report['valueTraceHashes']},indent=2))

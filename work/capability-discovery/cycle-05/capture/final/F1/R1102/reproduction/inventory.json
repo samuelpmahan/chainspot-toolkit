@@ -1,0 +1,141 @@
+{
+  "schema": "chainspot.fixture-byte-inventory/v1",
+  "job": "E1102",
+  "worker": "F4",
+  "frozenAtUTC": "2026-10-18T13:58:03Z",
+  "cvExecuted": false,
+  "dimensionsPx": [
+    384,
+    320
+  ],
+  "canonicalization": "UTF-8 JSON sort_keys=true,separators=(',',':'),ensure_ascii=false,no newline",
+  "protocolFileSha256": "3b7f1d2b166c759997c73f820c433ff653c84114e83c28af62c68ec003967ff5",
+  "protocolCanonicalSha256": "42e4f8a44c39b58782f6050e47a1e5af63c1a8949c207d3aa02d217a07f73f2f",
+  "geometryCanonicalSha256": "919c0b93cdc8e90eaac25edd2da8df23beba55d86f265f6d69473fd4babd7b2c",
+  "generatorSha256": "090cf61def38f85c74db72be01ae89150f7d5c38ea2ba4d289e9fb1b47e29dde",
+  "rasters": {
+    "intact": {
+      "rawPath": "fixtures/intact.rgba",
+      "rgbaSha256": "e6648f24c1616297317cb2f6062317ba83ab2c4949e5d4d22568f07b05cf1c7a",
+      "rgbaBytes": 491520,
+      "pngPath": "fixtures/intact.png",
+      "pngSha256": "31118c9358f740600e47dc7e70a92a5c8a18821d9a9d2c4f0a36a4681100808e",
+      "pngBytes": 977,
+      "brightAreaPx": 11520
+    },
+    "gap2": {
+      "rawPath": "fixtures/gap2.rgba",
+      "rgbaSha256": "87c0ad2feaa151e91fcae975ef406127191f1b0f6cb7d5c369c057ed87bebec0",
+      "rgbaBytes": 491520,
+      "pngPath": "fixtures/gap2.png",
+      "pngSha256": "9c6b51b4721d9a38bc4289292875ffc8675f4f672c85fc3d018fa0a7bcaea368",
+      "pngBytes": 1024,
+      "brightAreaPx": 11460
+    },
+    "gap6": {
+      "rawPath": "fixtures/gap6.rgba",
+      "rgbaSha256": "103f9e66febf38864142faa6aaa42a38c89a28a3f7625a3f45073a96f51ea42f",
+      "rgbaBytes": 491520,
+      "pngPath": "fixtures/gap6.png",
+      "pngSha256": "cd22c9c1d57baaa07662ce9d7e4e5dcf763950ddfa8d9b06838298d60c73efab",
+      "pngBytes": 1027,
+      "brightAreaPx": 11340
+    },
+    "ellipse": {
+      "rawPath": "fixtures/ellipse.rgba",
+      "rgbaSha256": "61e2b22c86e374ed554cbc3d9a95be277b9258d578bb7d10aa3fb0257ca34468",
+      "rgbaBytes": 491520,
+      "pngPath": "fixtures/ellipse.png",
+      "pngSha256": "13cd63d388e04d07f995d64731fa1913afdf1dcc3dfc03d5462e13a54c9324cd",
+      "pngBytes": 1339,
+      "brightAreaPx": 21108
+    },
+    "capsule": {
+      "rawPath": "fixtures/capsule.rgba",
+      "rgbaSha256": "e0308d74a0b672eeae242c4df4018c343df93ea6a595fb25449fd730bc0e4d72",
+      "rgbaBytes": 491520,
+      "pngPath": "fixtures/capsule.png",
+      "pngSha256": "ec7e906eb5ceef20f4dbff88b3fd242e43b4f19d4d911d9d0a9962c86cb5e407",
+      "pngBytes": 1055,
+      "brightAreaPx": 4538
+    }
+  },
+  "masks": {
+    "clear": {
+      "path": "fixtures/clear.mask.u8",
+      "sha256": "6d7bd1fa33ee71b2d2c4fc8062f6c4b09804b84449ff73a687fe7cfd568d0625",
+      "bytes": 122880,
+      "ones": 0,
+      "zeros": 122880
+    },
+    "gap6": {
+      "path": "fixtures/gap6.mask.u8",
+      "sha256": "30207778746e6e497de8196f270dad9227d6cb368968435a748e357d08f58ad0",
+      "bytes": 122880,
+      "ones": 1920,
+      "zeros": 120960
+    },
+    "allHidden": {
+      "path": "fixtures/allHidden.mask.u8",
+      "sha256": "a32194817413b4fcf784d7579edb733c098ac8fec4d893ec13c78f1f50046bf3",
+      "bytes": 122880,
+      "ones": 122880,
+      "zeros": 0
+    }
+  },
+  "cases": [
+    {
+      "id": "intact",
+      "raster": "intact",
+      "mask": "clear"
+    },
+    {
+      "id": "gap2",
+      "raster": "gap2",
+      "mask": "clear"
+    },
+    {
+      "id": "gap6",
+      "raster": "gap6",
+      "mask": "clear"
+    },
+    {
+      "id": "largeBrightEllipse",
+      "raster": "ellipse",
+      "mask": "clear"
+    },
+    {
+      "id": "organicCapsule",
+      "raster": "capsule",
+      "mask": "clear"
+    },
+    {
+      "id": "normalOffsetPlus6",
+      "raster": "intact",
+      "mask": "clear",
+      "argumentsOverride": {
+        "originPx": [
+          192,
+          166
+        ]
+      }
+    },
+    {
+      "id": "maskedGap6",
+      "raster": "gap6",
+      "mask": "gap6"
+    },
+    {
+      "id": "allHidden",
+      "raster": "intact",
+      "mask": "allHidden"
+    }
+  ],
+  "checks": {
+    "binaryMaskAreas": "passed",
+    "opaqueRGBA": "passed",
+    "stripeAndGapAreas": "passed",
+    "capsuleNominalFootprintIdentity": "passed",
+    "measurements": "NOT_RUN"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "tests": 2,
+  "pass": 2,
+  "CVCalls": 0,
+  "results": [
+    {
+      "helper": "verify-package.py",
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Original mismatch: forged-alias\n",
+      "counterexample": "path + correct stored hash/length changed to existing B; original hash/length remains A",
+      "refused": true
+    },
+    {
+      "helper": "stage-replay.py",
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Original integrity mismatch: forged-alias\n",
+      "counterexample": "path + correct stored hash/length changed to existing B; original hash/length remains A",
+      "refused": true
+    }
+  ]
+}

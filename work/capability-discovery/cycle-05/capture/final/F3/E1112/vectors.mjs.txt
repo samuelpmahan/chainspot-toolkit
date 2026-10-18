@@ -1,0 +1,97 @@
+// PRE-IMPLEMENTATION FREEZE. Factories only; no product imports, I/O or execution.
+// A later explicitly admitted driver must call each factory and the frozen subject.
+const v = (name, value, expected, audit = null) => ({name, value, expected, audit});
+const reject = 'REJECT_EXPLICIT_ERROR_NO_NORMALIZATION';
+const plain = pairs => Object.fromEntries(pairs);
+const own = (o,k,value) => Object.defineProperty(o,k,{value,enumerable:true,writable:true,configurable:true});
+const getter = (o,k,enumerable=true) => {const audit={getterReads:0};Object.defineProperty(o,k,{enumerable,get(){audit.getterReads++;throw Error('GETTER_MUST_NOT_EXECUTE');}});return {value:o,audit};};
+const nest = n => {let a=null;for(let i=0;i<n;i++)a=[a];return a;};
+const cases = [
+ ['intact','intact','clear'],['gap2','gap2','clear'],['gap6','gap6','clear'],
+ ['largeBrightEllipse','ellipse','clear'],['organicCapsule','capsule','clear'],
+ ['normalOffsetPlus6','intact','clear'],['maskedGap6','gap6','gap6'],['allHidden','intact','allHidden']
+];
+export const fixtureBindings = Object.freeze({
+ protocolPath:'discovery-cycle05/F4/E1102/protocol.json',
+ protocolSha256:'3b7f1d2b166c759997c73f820c433ff653c84114e83c28af62c68ec003967ff5',
+ frame:'cycle05-F4-synthetic384x320-integer-pixel-centers',
+ raster:{intact:'e6648f24c1616297317cb2f6062317ba83ab2c4949e5d4d22568f07b05cf1c7a',gap2:'87c0ad2feaa151e91fcae975ef406127191f1b0f6cb7d5c369c057ed87bebec0',gap6:'103f9e66febf38864142faa6aaa42a38c89a28a3f7625a3f45073a96f51ea42f',ellipse:'61e2b22c86e374ed554cbc3d9a95be277b9258d578bb7d10aa3fb0257ca34468',capsule:'e0308d74a0b672eeae242c4df4018c343df93ea6a595fb25449fd730bc0e4d72'},
+ mask:{clear:'6d7bd1fa33ee71b2d2c4fc8062f6c4b09804b84449ff73a687fe7cfd568d0625',gap6:'30207778746e6e497de8196f270dad9227d6cb368968435a748e357d08f58ad0',allHidden:'a32194817413b4fcf784d7579edb733c098ac8fec4d893ec13c78f1f50046bf3'}
+});
+// fixtures is an injected map of exact retained byte arrays, keyed '<name>.rgba'
+// or '<name>.mask.u8'. No loading, decoding, regeneration or product call occurs here.
+export function syntheticRequest(fixtures) {
+ return {schema:'cycle05-registered-station-request@1',enabled:true,protocolId:'synthetic8',protocolSha256:fixtureBindings.protocolSha256,
+ comparisons:cases.map(([id,imageId,maskId])=>({id,frame:fixtureBindings.frame,imageId,widthPx:384,heightPx:320,
+ rgba:new Uint8Array(fixtures[imageId+'.rgba']),rgbaSha256:fixtureBindings.raster[imageId],
+ mask:{data:new Uint8Array(fixtures[maskId+'.mask.u8']),sha256:fixtureBindings.mask[maskId]},
+ originPx:id==='normalOffsetPlus6'?[192,166]:[192,160],phiRad:0,t0Px:-8,t1Px:8,stepPx:1,widthsPx:[30],
+ provenance:{protocolPath:fixtureBindings.protocolPath,sourceKind:'synthetic-raw',encodedFile:null,decoderTestimony:null}}))};
+}
+const requestVariant = (fixtures,name,mutate,expected) => {const request=syntheticRequest(fixtures);mutate(request);return v(name,request,expected);};
+
+export const groups = [
+ {id:'C01',operation:'roundtrip',build:()=>[v('all numeric distinctions',[0,-0,NaN,Infinity,-Infinity,null,1.25,Number.MIN_VALUE,Number.MAX_VALUE,true,'NaN'],
+ 'Object.is each numeric leaf; Number.isNaN for NaN; null distinct; finite doubles unchanged')]},
+ {id:'C02',operation:'roundtrip',build:()=>[v('corridor and allHidden-like channels',{
+ corridor:{rgbLevel:new Uint8Array([0,100,145,255,1,254]),hiddenCenter:new Uint8Array([0,1])},
+ leftLum:[NaN,45],rightLum:[NaN,45],okLeft:[0,0],okRight:[0,0]},
+ 'Exact Uint8Array prototype,length,bytes; raw finite45 retained beside invalid flag0; NaN not null')]},
+ {id:'C03',operation:'roundtrip',build:()=>[v('native tag lookalikes',[
+ ['number','nan'],['null'],['typed','Uint8Array',2,[0,255]],['object','plain',[]],
+ {tag:'number',value:'nan'}, {numberKind:'nonfinite',value:'NaN'}],
+ 'All remain ordinary native arrays/objects; do not decode lookalikes as exceptional scalars or typed arrays')]},
+ {id:'C04',operation:'roundtrip',build:()=>{
+ const p={};own(p,'z',1);own(p,'10',10);own(p,'2',2);own(p,'a',3);own(p,'__proto__',{polluted:'literal-data'});
+ const n=Object.create(null);own(n,'b',2);own(n,'__proto__','literal');own(n,'a',1);
+ return [v('prototype kind, own __proto__, order',[p,n],
+ 'Object.keys order2,10,z,a,__proto__; null-prototype orderb,__proto__,a; safe own data properties; Object.prototype unchanged')];}},
+ {id:'C05',operation:'roundtrip',build:()=>{const shared={x:1};return [v('shared acyclic subtree',[shared,shared],
+ 'Both decoded values equal; shared-reference identity is NOT required and must not cause cycle rejection')];}},
+ {id:'C06',operation:'encode-reject',build:()=>{const sparse=Array(2);sparse[1]=1;const extra=[1];extra.note=2;return [v('hole',sparse,reject),v('extra array key',extra,reject)];}},
+ {id:'C07',operation:'encode-reject',build:()=>{
+ const a=getter({},'x'),b=getter({},'hidden',false),c=getter([1],'0'),d={};Object.defineProperty(d,'hidden',{value:1});
+ return [v('enumerable getter',a.value,reject,a.audit),v('nonenumerable getter',b.value,reject,b.audit),v('array getter',c.value,reject,c.audit),v('nonenumerable own data',d,reject)];}},
+ {id:'C08',operation:'encode-reject',build:()=>{const keyed={x:1};keyed[Symbol('secret')]=2;return [v('own symbol key',keyed,reject),v('symbol leaf',Symbol('x'),reject)];}},
+ {id:'C09',operation:'encode-reject',build:()=>{
+ class U8Subclass extends Uint8Array {} const decorated=new Uint8Array([1]);decorated.extra=2;
+ return [v('Buffer',Buffer.from([1]),reject),v('Float64Array',new Float64Array([NaN]),reject),v('Uint8 subclass',new U8Subclass([1]),reject),v('Uint8 extra own key',decorated,reject),v('DataView',new DataView(new ArrayBuffer(1)),reject),v('custom prototype',Object.create({x:1}),reject)];}},
+ {id:'C10',operation:'encode-reject',build:()=>{const cycle={};cycle.self=cycle;return [v('cycle',cycle,reject),v('undefined property',{x:undefined},reject),v('undefined root',undefined,reject),v('BigInt',1n,reject),v('Date',new Date(0),reject),v('Map',new Map(),reject),v('function',()=>0,reject)];}},
+ {id:'C11',operation:'decode-reject',build:()=>[v('duplicate encoded object keys',
+ ['object','plain',[['x',['null']],['x',['number','finite',1]]]],reject),v('duplicate __proto__ keys',
+ ['object','plain',[['__proto__',['null']],['__proto__',['null']]]],reject)]},
+ {id:'C12',operation:'decode-reject',build:()=>[
+ v('unknown tag',['mystery'],reject),v('bad arity',['null',0],reject),v('untagged object',{x:1},reject),
+ v('finite NaN payload',['number','finite',NaN],reject),v('finite negative-zero payload',['number','finite',-0],reject),
+ v('bad proto',['object','Object.prototype',[]],reject),v('invalid bool',['boolean',1],reject)]},
+ {id:'C13',operation:'decode-reject',build:()=>[
+ v('unknown typed constructor',['typed','Float64Array',1,[0]],reject),v('length mismatch',['typed','Uint8Array',2,[1]],reject),
+ v('negative length',['typed','Uint8Array',-1,[]],reject),v('fractional byte',['typed','Uint8Array',1,[0.5]],reject),
+ v('out of range',['typed','Uint8Array',1,[256]],reject),v('sparse typed byte list',['typed','Uint8Array',1,Array(1)],reject)]},
+ {id:'C14',operation:'encode-resource-reject',build:()=>[
+ v('depth64',nest(64),'RESOURCE_ERROR_STOP_NO_TRUNCATION'),
+ v('500001 null elements',Array(500001).fill(null),'RESOURCE_ERROR_STOP_NO_TRUNCATION'),
+ v('1000001 typed bytes',new Uint8Array(1000001),'RESOURCE_ERROR_STOP_NO_TRUNCATION'),
+ v('string beyond32MiB','x'.repeat(33554433),'RESOURCE_ERROR_STOP_NO_TRUNCATION')]},
+ {id:'C15',operation:'decode-resource-reject',build:()=>{
+ let depth=['null'];for(let i=0;i<64;i++)depth=['array',[depth]];
+ return [v('encoded depth64',depth,'RESOURCE_ERROR_STOP_NO_TRUNCATION'),
+ v('declared excessive typed length',['typed','Uint8Array',1000001,[]],reject)];}},
+ {id:'I16',operation:'wrapper-preflight-only',build:()=>{
+ const a=getter({enabled:false},'rgba'),b=getter({},'comparisons');
+ return [v('disabled false does not inspect pixels',a.value,'DISABLED; all import/store/query/source/image counters0',a.audit),
+ v('absent enabled does not inspect comparisons',b.value,'DISABLED; all import/store/query/source/image counters0',b.audit)];}},
+ {id:'I17',operation:'wrapper-preflight-only',build:()=>{
+ const a=getter({},'enabled');return [v('enabled string',{enabled:'true'},'INVALID_REQUEST; zero downstream operations'),
+ v('enabled accessor',a.value,'INVALID_REQUEST; zero downstream operations',a.audit),v('enabled null',{enabled:null},'INVALID_REQUEST; zero downstream operations')];}},
+ {id:'I18',operation:'wrapper-preflight-only',needsFixtures:true,build:f=>[
+ requestVariant(f,'tampered RGB with pinned expected hash',r=>{r.comparisons[0].rgba[0]^=1;},'INPUT_HASH_MISMATCH; no source/CV import,store or query') ]},
+ {id:'I19',operation:'wrapper-preflight-only',needsFixtures:true,build:f=>[
+ requestVariant(f,'binary mask tamper with pinned expected hash',r=>{r.comparisons[0].mask.data[0]=1;},'INPUT_HASH_MISMATCH; no source/CV import,store or query'),
+ requestVariant(f,'protocol identity mismatch',r=>{r.protocolSha256='0'.repeat(64);},'PROTOCOL_MISMATCH; no source/CV import,store or query')]},
+ {id:'I20',operation:'wrapper-preflight-only',needsFixtures:true,build:f=>[
+ requestVariant(f,'empty widths',r=>{r.comparisons[0].widthsPx=[];},'INVALID_REQUEST; zero downstream operations'),
+ requestVariant(f,'input negative zero',r=>{r.comparisons[0].phiRad=-0;},'INVALID_REQUEST; zero downstream operations'),
+ requestVariant(f,'unknown own key',r=>{r.comparisons[0].unexpected=1;},'INVALID_REQUEST; zero downstream operations'),
+ requestVariant(f,'dimension exceeds cap and preset',r=>{r.comparisons[0].widthPx=4097;},'INVALID_REQUEST or RESOURCE_LIMIT (priority not specified); zero downstream operations') ]}
+];

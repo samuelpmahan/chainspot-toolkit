@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+"""Read-only Git object extraction/decode inventory. No CV operations."""
+import hashlib
+import io
+import json
+import subprocess
+from pathlib import Path
+import PIL
+from PIL import Image
+
+HERE = Path(__file__).resolve().parent
+REPO = HERE.parents[2] / 'chainspot-discovery-lab'
+REF = '49255331791b1245cf0f9cd699816175f94e70f2'
+sha = lambda b: hashlib.sha256(b).hexdigest()
+git = lambda *args: subprocess.check_output(['git', '-C', str(REPO), *args])
+prior_path = HERE.parents[2] / 'discovery-cycle02/C2/fixture-availability.json'
+prior_bytes = prior_path.read_bytes()
+prior = json.loads(prior_bytes)
+rows = []
+for r in prior['records']:
+    if r['path'] not in [f'specimens/dev/Lenard-{n}.png' for n in (3,4,5)]:
+        continue
+    blob = git('rev-parse', f"{REF}:{r['path']}").decode().strip()
+    encoded = git('cat-file', 'blob', blob)
+    assert blob == r['gitBlob'] and sha(encoded) == r['sha256'] and len(encoded) == r['bytes']
+    target = HERE / (Path(r['path']).stem + '.original.png')
+    with target.open('xb') as out:
+        out.write(encoded)
+    with Image.open(io.BytesIO(encoded)) as image:
+        image.load()
+        source_mode = image.mode
+        rgba = image.convert('RGBA').tobytes()
+        dims = image.size
+    rows.append({**r, 'originalPngPath':str(target), 'sourceRef':REF,
+        'imageDimensionsPx':list(dims), 'fullRgbaSha256':sha(rgba), 'fullRgbaBytes':len(rgba),
+        'frame':Path(r['path']).stem+'.original-source-pixel-centers',
+        'decoder':{'name':'Pillow','version':PIL.__version__,'sourceMode':source_mode,
+            'outputMode':'RGBA','orientation':'stored PNG pixel order; no EXIF transform',
+            'colorTransform':'none; stored RGB channels, no ICC/gamma transform',
+            'alpha':'RGB appends 255; existing RGBA alpha preserved'},
+        'freshness':'New to cycle05 source-pixel proposal; original inventory exposed since E305; no heldout or new-course claim',
+        'cvMeasurementsExecuted':0})
+record = {'schema':'cycle05-fresh-source-original-inventory@1','job_id':'E1104','worker':'F2',
+    'priorInventory':{'path':str(prior_path),'sha256':sha(prior_bytes)},
+    'approvedSourceRepository':str(REPO),'sourceLocalCommit':git('rev-parse','HEAD').decode().strip(),
+    'sourceTree':git('rev-parse','HEAD^{tree}').decode().strip(),
+    'method':'git rev-parse and cat-file only; no checkout/fetch/source mutation',
+    'records':rows,'cvMeasurementsExecuted':0,
+    'scope':'Lenard3-5 are same-course zoom views, not independent courses; prior inventory metadata exposed, pixel inspection newly performed separately'}
+with (HERE / 'inventory.json').open('x') as out:
+    json.dump(record,out,indent=2); out.write('\n')
+print(json.dumps(record,indent=2))

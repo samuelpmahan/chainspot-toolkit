@@ -1,0 +1,18 @@
+{
+  "schema": "cycle05-root-scientific-figure-inspection@1",
+  "method": "Actual view_image calls, original1500x1440 detail, both original render-01 PNGs inspected by root",
+  "figures": [
+    {"path": "F4/E1116/render-01/page-1.png", "sha256": "ca03e3e5032b07b27e93dfcc9bb5be142c41cf0812d8852e5897afcaa36e9bf9", "cases": ["intact", "gap2", "gap6", "largeBrightEllipse"]},
+    {"path": "F4/E1116/render-01/page-2.png", "sha256": "e52cda20ed99945929b6a2aa34ecfe72dfa2d2b9bfdcf499d02853ad78fd48c7", "cases": ["organicCapsule", "normalOffsetPlus6", "maskedGap6", "allHidden"]}
+  ],
+  "observations": [
+    "Finite averaged30px fits remain visible for both gaps; station curves show narrowgap minimum27 and widergap two zero samples, native gap-run2 not physicalgap6.",
+    "Capsule profile/contrast/native summary matches intact; this is retained counterexample, no path acceptance label.",
+    "Offset profile shifts while nominal bilateral contrast iszero; no physical absence inference.",
+    "Masked shoulders are hollow gray with broken evidence connections; central NaNs and separate invalid flags remain, native visible10/16 shown.",
+    "AllHidden has profile missing markers, NaN station labels, invalid flags, visible0/16 and null fractions; no fabricated continuous line or acceptance.",
+    "Both pages show source/trace bindings and UNKNOWN/default-OFF/diagnostic-tau caveats; no unreadable overlap or clipped case identity observed."
+  ],
+  "scope": "Scientific figure visual inspection of retained synthetic values only. Not browser HTML visual QA, human scientific/path/width acceptance, original source-image annotation, backend behavior or deployment.",
+  "independentReview": "F5 still required to check renderer/provenance/CLI agreement; root visual inspection does not self-approve implementation."
+}

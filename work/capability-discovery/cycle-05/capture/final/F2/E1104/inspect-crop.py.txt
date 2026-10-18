@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+"""Lossless original-pixel inspection crop only, not a measured CV input."""
+from pathlib import Path
+from PIL import Image
+HERE = Path(__file__).resolve().parent
+with Image.open(HERE/'Lenard-5.original.png') as image:
+    image.crop((600,650,1200,1050)).save(HERE/'Lenard-5.inspection-crop.png')
+print('Original integer crop x[600,1200), y[650,1050); no resize, resample, enhancement or CV')

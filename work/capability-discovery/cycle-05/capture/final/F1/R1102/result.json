@@ -1,0 +1,51 @@
+{
+  "schema": "capability-discovery-independent-protocol-review@1",
+  "job_id": "R1102",
+  "worker": "F1",
+  "subject_job_id": "E1102",
+  "subject_worker": "F4",
+  "decision": "accepted",
+  "summary": "Accepted exact E1102 frozen protocol/generator/fixture inventory for bounded pre-producer engineering correctness. Independent scratch regeneration reproduced18 files byte-for-byte; every pixel and mask region, every fixture hash and PNG CRC/raw round-trip, complete nominal capsule identity and ellipse-bright sampling footprint, source seam, public argument names and32-call resource budget were checked. No CV or measurement output was run or inspected; root execution admission and scientific/human acceptance remain separate.",
+  "acceptance_scope": "Exact frozen protocol and source-pixel engineering only; not own E1103 mathematical acceptance, runtime measurement confirmation, root execution admission, scientific validation, human acceptance or promotion",
+  "subject_base": "discovery-cycle05/F4/E1102",
+  "hash_bounds": {
+    "protocol.json": "3b7f1d2b166c759997c73f820c433ff653c84114e83c28af62c68ec003967ff5",
+    "generate.py": "090cf61def38f85c74db72be01ae89150f7d5c38ea2ba4d289e9fb1b47e29dde",
+    "inventory.json": "c103c508e5cb8668bbc5069620046c3f5b2c3eea05d018af9d17169e308529aa",
+    "result.json": "1f005165fbc66f696554165bed36882f254089de2d182a2a13e15713934a13ab",
+    "geometry.canonical.json": "919c0b93cdc8e90eaac25edd2da8df23beba55d86f265f6d69473fd4babd7b2c",
+    "protocol.canonical.json": "42e4f8a44c39b58782f6050e47a1e5af63c1a8949c207d3aa02d217a07f73f2f",
+    "pathSpace.mjs": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+    "alpha.profile@1.mjs": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f"
+  },
+  "checks": {
+    "frozenDispatchHashes": "PASS",
+    "exactScratchRegeneration": {"status":"PASS","filesCompared":18,"inventorySha256":"c103c508e5cb8668bbc5069620046c3f5b2c3eea05d018af9d17169e308529aa"},
+    "rasterPixelMembership": {"status":"PASS","rasters":5,"pixelsPerRaster":122880,"alphaEverywhere":255,"grayLevels":[100,145]},
+    "brightCountsPx": {"intact":11520,"gap2":11460,"gap6":11340,"ellipse":21108,"capsule":4538},
+    "allMaskPixelsAndCounts": {"status":"PASS","clearOnes":0,"gap6Ones":1920,"allHiddenOnes":122880,"bytesPerMask":122880},
+    "pngChunkCRCsAndDecodedRawIdentity": "5/5 PASS",
+    "capsuleNominalCompleteFootprint": {"status":"PASS","xInclusive":[182,201],"yInclusive":[130,190],"relation":"identical to intact"},
+    "ellipseNominalCompleteFootprint": {"status":"PASS","xInclusive":[182,201],"yInclusive":[130,190],"relation":"every sampled support pixel bright"},
+    "unionIncludingOffsetPoseInsideSourceGuard": {"status":"PASS","xInclusive":[182,201],"yInclusive":[130,196]},
+    "halfOpenGeometryAndHalfPixelSeam": "PASS; stripe145..174 has midpoint159.5 and caller-origin160; offset moves origin only",
+    "publicQueryAndParameterNames": "PASS; four existing public queries and supported keys, no private/new primitive",
+    "predictionsAndFalsifiers": "PASS as conditional pre-observation qualitative claims; no numerical automated-tolerance acceptance is inferred",
+    "resourceBounds": {"cases":8,"publicQueriesPerCase":4,"publicCalls":32,"stationsPerCase":16,"profileOffsets":241,"samplesPerContrastBand":25,"storedRawRasterBytes":2457600,"storedMaskBytes":368640,"storedPNGBytes":5422},
+    "requiredAmendments": []
+  },
+  "executions": {"fixtureGenerator":1,"sourceOrCVImports":0,"cvCalls":0,"measurementOutputsInspected":0,"git":0,"sourceWrites":0,"workerSpawns":0},
+  "artifacts": {"review":"review.md","reproduction":"reproduction/"},
+  "limitations": [
+    "Root must separately admit producer execution and freeze the runner orchestration/source/dependency/request/output closure.",
+    "Qualitative around/near predictions do not freeze a numerical comparison tolerance; automated tolerance and nonfinite serialization must be declared before measurement, never tuned after data.",
+    "Existing accepted composition does not call stationContrastAt/lossAt; this review does not authorize changing it.",
+    "VisibleCount0 and masked invalid support are not visible failures; zero reported gap is not continuity evidence.",
+    "This is exposed synthetic fixture engineering replay, not independent-course or heldout scientific evaluation.",
+    "No same-edge/path identity, calibrated width, physical scale/gap, alpha renderer identity, real-world generality, promotion or scientific/human acceptance follows.",
+    "No root repository, HH, protected algorithm, platform or Git mutation was performed; F6 remains sole integration owner."
+  ],
+  "scientific_acceptance": "UNKNOWN",
+  "human_acceptance": "UNKNOWN",
+  "promoted": false
+}

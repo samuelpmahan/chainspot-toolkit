@@ -1,0 +1,47 @@
+{
+  "job_id": "E1116",
+  "worker": "F4",
+  "outcome": "mixed_change",
+  "summary": "Authored and executed only a scratch trace-only renderer using the admitted unchanged codec and root-reviewed original E1115 trace/sidecar. Four first-executed renderer tests passed, wrong-hash input refused before decode/output creation, and two1500x1440 SVG/PNG pages plus complete original tagged-wire HTML inspection were produced and hash-bound. Existing Inkscape1.2.2 replaced unavailable CairoSVG under explicit root approval; both conversions/finalizer exited0 with original GTK warnings retained. No sourcepixel/image input, recipe/store/CV/query or producer rerun occurred. Visual inspection found no clipping requiring repair; renderer/bundle acceptance remains for independent F5 review, scientific/path/width claims UNKNOWN.",
+  "status": "TRACE_ONLY_RENDERED_AWAIT_INDEPENDENT_REVIEW",
+  "completedAtUTC": "2026-10-18T15:12:05Z",
+  "admission": {"rawTraceGate": "R1115 finalaccepted per root", "R1115ResultSha256": "80b53bf5a8fff677bd14dcc302648df289493fb2e32ea921b4c26ede89ce0b9b", "rendererCheckpoint": "root read full written flow/code/tests then explicit GO", "rasterizerAmendment": "root explicitly approved existing /usr/bin/inkscape after both Python environments reported CairoSVG unavailable; no installation"},
+  "inputs": {
+    "valueTrace": {"path": "discovery-cycle05/F5/E1115/run/value-trace.json", "sha256": "76cf61ee3be3cd56faa0fc7274d5a3a5b898fe954dc73571092549487fa11eb2"},
+    "sidecar": {"path": "discovery-cycle05/F5/E1115/run/timing-sidecar.json", "sha256": "4a6599406ed17ccd97a3c8e377d0186a0fb8f6fcc064189439870b83b70f24f9"},
+    "codecSha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015",
+    "rendererSha256": "9d22757026e38625b67419e42d37bdc8ad0cbec4b5e7eec01961a8bad20f23c6",
+    "sourceFreezeDeclarationSha256": "0a2351f595fd72d55af79fccb4532deb1b58125a2c440e37d6276fba5d21da4b",
+    "protocolSha256": "3b7f1d2b166c759997c73f820c433ff653c84114e83c28af62c68ec003967ff5"
+  },
+  "artifacts": [
+    {"path": "render-01/page-1.svg", "bytes": 74965, "sha256": "1a14c32017db787ed227261f692755405234f934f27fa58ec17dab8c286c19fd"},
+    {"path": "render-01/page-2.svg", "bytes": 91662, "sha256": "05cecafa60bbf3f164c4855bfd6ff84d5ff930902bca5c411bfb7dbe6514c62e"},
+    {"path": "render-01/inspection.html", "bytes": 563634, "sha256": "4c32b213f841110f4861d38d029da731aa29583068435c7695440cd81146066e"},
+    {"path": "render-01/page-1.png", "bytes": 314238, "widthPx": 1500, "heightPx": 1440, "sha256": "ca03e3e5032b07b27e93dfcc9bb5be142c41cf0812d8852e5897afcaa36e9bf9"},
+    {"path": "render-01/page-2.png", "bytes": 310302, "widthPx": 1500, "heightPx": 1440, "sha256": "e52cda20ed99945929b6a2aa34ecfe72dfa2d2b9bfdcf499d02853ad78fd48c7"},
+    {"path": "render-01/render-manifest.json", "sha256": "dbe2bb15f6fa7e7c3914e022f3b7c3b86a677c4d2e89f4103e1662bdc129378d"},
+    {"path": "render-01/render-manifest-final.json", "sha256": "837a26e71af294e105da07a58a2d127a11c1e353c875843a7d49b7ada7c687b9"}
+  ],
+  "execution": {
+    "rendererTests": {"command": "node --test discovery-cycle05/F4/E1116/renderer.test.mjs", "firstExecution": true, "tests": 4, "pass": 4, "fail": 0, "exitCode": 0, "redObserved": false},
+    "negativeHash": {"exitCode": 1, "status": "RENDER_INPUT_FAILED", "message": "input SHA256 mismatch; no decoding/render attempted", "outputDirectoryCreated": false, "rawOutput": "wrong-hash.stdout.log", "expectedRefusalNotFigureFailure": true},
+    "actualRender": {"exitCode": 0, "cases": 8, "queryRowsConsumed": 32, "SVGPages": 2, "HTMLInspections": 1},
+    "rasterizer": {"name": "Inkscape", "version": "1.2.2 (b0a8486541, 2022-12-01)", "versionExitCode": 0, "conversions": 2, "conversionExitCodes": [0,0], "warnings": "GtkRecentManager initialization warning on each conversion, retained verbatim in rasterization-log.json; not hidden or reclassified as a render failure"},
+    "finalizer": {"exitCode": 0, "status": "SVG_PNG_HTML_HASHED", "artifacts": 5, "initialManifestPreserved": true},
+    "visuallyInspectedPNGs": 2,
+    "displayRepairs": 0,
+    "CVCalls": 0,
+    "producerCalls": 0,
+    "recipeImports": 0,
+    "PartStoreImportsOrCalls": 0,
+    "sourceImageInputs": 0,
+    "repositoryWrites": 0,
+    "GitOperations": 0,
+    "nativeStateWrites": 0
+  },
+  "history": {"actualFlow": "ACTUAL-FLOW.md", "testPlan": "TESTPLAN.md", "firstTestOutput": "first-tests.stdout.log", "stage1Commands": "execution-log-stage1.json", "rasterizerCommandsVersionStartOutputExit": "rasterization-log.json", "converterProposal": "CairoSVG unavailable, not executed; root-approved actual converter was Inkscape", "originalRenderDirectory": "render-01 preserved unchanged;no display source repair"},
+  "limits": ["Outputs visualize retained native values only;axis scaling is display computation", "No CV-derived score/fit/width/pose recomputation or classifier", "Full tagged raw answers/units/metadata/nonfinite/null/typedcorridor accessible in HTML", "Original timing sidecar remains hash-bound; no deterministic-timing claim", "Sourcefreeze label is root-bound declaration,not execution attestation", "F4 cannot accept its own renderer/bundle;independent F5 review pending", "No scientific/path/physicaledge/calibratedwidth/human acceptance or promotion"],
+  "claims": {"promoted": false, "pathIdentity": "UNKNOWN", "physicalEdgeIdentity": "UNKNOWN", "calibratedWidth": "UNKNOWN", "scientificAcceptance": "UNKNOWN", "humanAcceptance": "UNKNOWN"},
+  "next": "Root and independent F5 inspect exact outputs/source/hashmanifest;F4 idle."
+}

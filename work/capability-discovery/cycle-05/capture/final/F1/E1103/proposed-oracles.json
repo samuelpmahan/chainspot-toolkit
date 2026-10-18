@@ -1,0 +1,121 @@
+{
+  "schema": "capability-discovery-proposed-oracles@1",
+  "job_id": "E1103",
+  "worker": "F1",
+  "status": "PROPOSED_CONDITIONAL_SOURCE_DERIVATION_NOT_FROZEN_NOT_EXECUTED",
+  "executions": 0,
+  "source": {
+    "pathSpaceSha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+    "alphaProfileSha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f"
+  },
+  "conditional_inputs": {
+    "rasterPx": [384, 320], "backgroundRgb": [100,100,100], "stripeRgb": [145,145,145],
+    "stripeInclusiveRows": [145,174], "requiredIntactXSupportInclusive": [182,201],
+    "originPx": [192,160], "phiRad": 0, "widthPx": 30,
+    "arange": [-8,8,1], "gapReplacement": "background on every stripe row; outside pixels unchanged",
+    "bandPx": [1,3], "bandStepPx": 0.5, "alongPx": 2,
+    "profileOffsetsPx": [-30,30,0.25],
+    "nonfiniteSerialization": "NOT_YET_FROZEN; raw NaN must be distinguishable from visible zero",
+    "numericalTolerance": "NOT_YET_FROZEN; no observed output available for tuning"
+  },
+  "stationsTPx": [-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7],
+  "derivation": {
+    "localSamplesPerBand": 25,
+    "localLongitudinalOffsetsPx": [-2,-1,0,1,2],
+    "bandOffsetsPx": [1,1.5,2,2.5,3],
+    "validity": "each inside and outside band retains at least13 of25; min retained fraction strictly >0.5",
+    "unmaskedGapFormula": "leftLum=rightLum=45*(1-k(t)/5); k(t)=missing columns among the five integer longitudinal samples",
+    "longPlateauFormula": "100+45*(16-g)/16; g=gap columns inside x184..199",
+    "profileNeed": 8,
+    "rawPointwiseCaveat": "Each contrast is locally averaged, not a single-pixel observation"
+  },
+  "conditional_oracles": [
+    {
+      "id": "intact",
+      "leftLum": [45,45,45,45,45,45,45,45,45,45,45,45,45,45,45,45],
+      "rightLum": [45,45,45,45,45,45,45,45,45,45,45,45,45,45,45,45],
+      "okLeft": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      "okRight": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      "profilePlateauLum": 145, "profileCountEveryOffset": 16,
+      "edgePair": {"lPx": -15.5, "rPx": 14.5, "cPx": -0.5, "wPx": 30, "score": 36, "gl": 36, "gr": 36},
+      "widthSearchFiniteDefault": true,
+      "proxyOverlayFrac": [0.29,0.29,0.29,0.29,0.29,0.29,0.29,0.29,0.29,0.29,0.29,0.29,0.29,0.29,0.29,0.29]
+    },
+    {
+      "id": "gap2", "gapInclusiveColumns": [191,192],
+      "missingColumnCountPerLocalWindow": [0,0,0,0,0,1,2,2,2,2,1,0,0,0,0,0],
+      "leftLum": [45,45,45,45,45,36,27,27,27,27,36,45,45,45,45,45],
+      "rightLum": [45,45,45,45,45,36,27,27,27,27,36,45,45,45,45,45],
+      "okLeft": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      "okRight": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      "profilePlateauLum": 139.375, "profileCountEveryOffset": 16,
+      "edgePair": {"lPx": -15.5, "rPx": 14.5, "cPx": -0.5, "wPx": 30, "score": 31.5, "gl": 31.5, "gr": 31.5},
+      "widthSearchFiniteDefault": true,
+      "proxyOverlayFrac": [0.29,0.29,0.29,0.29,0.29,0.29,0.29,0,0,0.29,0.29,0.29,0.29,0.29,0.29,0.29],
+      "historicalTau8DiagnosticOnly": {"visibleCount":16,"passCount":16,"longestGapPx":0}
+    },
+    {
+      "id": "gap6", "gapInclusiveColumns": [189,194],
+      "missingColumnCountPerLocalWindow": [0,0,0,1,2,3,4,5,5,4,3,2,1,0,0,0],
+      "leftLum": [45,45,45,36,27,18,9,0,0,9,18,27,36,45,45,45],
+      "rightLum": [45,45,45,36,27,18,9,0,0,9,18,27,36,45,45,45],
+      "okLeft": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      "okRight": [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      "profilePlateauLum": 128.125, "profileCountEveryOffset": 16,
+      "edgePair": {"lPx": -15.5, "rPx": 14.5, "cPx": -0.5, "wPx": 30, "score": 22.5, "gl": 22.5, "gr": 22.5},
+      "widthSearchFiniteDefault": true,
+      "proxyOverlayFrac": [0.29,0.29,0.29,0.29,0.29,0,0,0,0,0,0,0.29,0.29,0.29,0.29,0.29],
+      "historicalTau8DiagnosticOnly": {"visibleCount":16,"passCount":14,"longestGapPx":2,"failingTPx":[-1,0]}
+    },
+    {
+      "id": "pose_normal_plus6_intact", "originPx": [192,166],
+      "leftLum": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      "rightLum": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      "validityEveryStation": 1,
+      "edgePairDefaultLatLim12": {"lPx": -21.5, "rPx": 8.5, "cPx": -6.5, "wPx": 30, "score": 36},
+      "widthSearchFiniteDefaultLatLim3": false,
+      "interpretation": "known pose misregistration; not physical absence or universal6px association"
+    },
+    {
+      "id": "gap2_known_mask",
+      "maskCondition": "binary mask covers all gap stripe pixels, or full-height gap columns; otherwise unmasked",
+      "rawContrastEveryStation": 45, "validityEveryStation": 1,
+      "profileInteriorRetainedCount": 14, "profilePlateauLum": 145,
+      "edgePairEqualsIntact": true,
+      "interpretation": "dropped interruption samples are renormalized, not evidence of continuity"
+    },
+    {
+      "id": "gap6_known_mask",
+      "maskCondition": "binary mask covers all gap stripe pixels, or full-height gap columns; otherwise unmasked",
+      "rawLeftLumTagged": [45,45,45,45,45,45,45,"NaN","NaN",45,45,45,45,45,45,45],
+      "rawRightLumTagged": [45,45,45,45,45,45,45,"NaN","NaN",45,45,45,45,45,45,45],
+      "okLeft": [1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1],
+      "okRight": [1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1],
+      "profileInteriorRetainedCount": 10, "profilePlateauLum": 145,
+      "edgePairEqualsIntact": true,
+      "interpretation": "six invalid stations are not visible failures; finite raw45 at four of them does not restore validity"
+    },
+    {
+      "id": "full_hidden", "maskCondition": "binary1 on every sampled support pixel",
+      "rawContrastEveryStationTagged": "NaN", "validityEveryStation": 0,
+      "profileCountEveryOffset": 0, "profileEveryValueTagged": "NaN", "edgePair": null,
+      "lossEdge": {"visibleCount":0,"passCount":0,"passFrac":null,"lossFrac":null,"medianContrastLum":null,"longestGapPx":0,"gapsCount":0},
+      "proxyOverlayEveryStation": null,
+      "interpretation": "zero reported visible gap is missing evidence, not continuous path"
+    }
+  ],
+  "control_oracles_pending_exact_pixels": [
+    {"id":"capsule","conditionalRelation":"if identical on all sampled support, every operation above equals intact despite non-path label","numericOracle":"UNSPECIFIED until bytes, cap extent and positions freeze"},
+    {"id":"bright_organic","conditionalRelation":"same sampled photometry yields same observations without path identity","numericOracle":"UNSPECIFIED until shape bytes and positions freeze"},
+    {"id":"center_only_erasure_counterexample","conditionalRelation":"setting only rows159..161 to100 for all sampled x leaves edge-band contrast45 but center proxy0","status":"additional proposed counterexample, not admitted case"}
+  ],
+  "falsifiers": [
+    "Any raw contrast or validity mismatch under exactly frozen fixture inputs contradicts the local support derivation or reveals a source/input/orchestration mismatch.",
+    "A null long edge pair under the exact unmasked declared gates contradicts the finite pair prediction; do not repair by tuning gates after observation.",
+    "Treating mask-induced invalidity as visible zero or zero longestGapPx as continuity contradicts the source semantics.",
+    "A capsule matching sampled pixels but receiving different numeric output demands an input, state, source or orchestration explanation; labels alone do not enter these functions.",
+    "Treating proxy0.290 as calibrated alpha or agreement of shared-pixel observables as independent evidence exceeds this closure."
+  ],
+  "not_claimed": ["runtime confirmation","frozen protocol","scientific acceptance","human acceptance","physical edge continuity","same-edge identity","path identity","width calibration","physical scale","alpha renderer identity","independent course performance","new detector","production wiring","promotion"],
+  "promoted": false
+}

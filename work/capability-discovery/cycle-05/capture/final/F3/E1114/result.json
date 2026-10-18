@@ -1,0 +1,28 @@
+{
+  "schema":"capability-discovery-independent-engineering-result@1",
+  "job_id":"E1114",
+  "worker":"F3",
+  "outcome":"confirmed_reuse",
+  "status":"BOUNDED_FROZEN_VECTORS_PASSED_FIRST_RUN",
+  "summary":"Executed unchanged E1112 adversarial vectors against exact E1111 seven-file source freeze:20 groups/59 variants met expected outcomes on first run exit0, no repairs/reruns.5 native-tree+wire roundtrips and42 explicit malformed/resource codec refusals passed;12 wrapper variants each inspected and run only as invalid/disabled, retaining zero PATH/capture counts and sourceBindingnull.6 getter sentinels remained0reads; guarded vendor imports attempted0; all source/vector/fixture hashes stable. This confirms only these engineering codec/preflight cases, not whole implementation or scientific acceptance; no positive request/CV/producer execution.",
+  "counts":{"groups":20,"variants":59,"pass":59,"fail":0,"unsupported":0,"roundtripVariants":5,"expectedCodecRefusals":42,"wrapperVariants":12,"getterVectors":6,"getterReads":0,"repairs":0,"reruns":0},
+  "actualSubjectInvocations":{"encodeValue":26,"decodeValue":22,"encodeBytes":9,"decodeBytes":5,"inspectStationRequest":12,"runStationEvidence":12},
+  "execution":{"exitCode":0,"runtime":"v24.19.0","positiveEnabledRequests":0,"forbiddenVendorImportAttempts":0,"PATHCalls":0,"CVCalls":0,"producerCalls":0,"PartStoreCreations":0,"imageDecodes":0,"renders":0,"sourceWrites":0,"GitOperations":0,"nativeWrites":0,"spawns":0},
+  "binding":{"vectorsSha256":"1631972799ca9d3c4570915b67a489fd97482aeebf281bcacc00b7cdfee31297","vectorPlanSha256":"4dd30f4dc2ef17bb2487893b41b62680c300913597c77bdadfcca6538a6139dc","vectorFreezeSha256":"3c57457abae3c1d80dc5627f9d1e9763f44ba4432bf5d6140496660926bee02f","sourceFreezeSha256":"0a2351f595fd72d55af79fccb4532deb1b58125a2c440e37d6276fba5d21da4b","frozenSourceFilesChecked":7,"beforeAfterMatched":true,"fixtureFilesChecked":8,"fixtureBeforeAfterMatched":true},
+  "evidence":[
+    {"path":"first-run.mjs","sha256":"906ee7ea5780bc6eab52280fb979fcc64a3c1511bbd3a76e3378c83c9070c0d9"},
+    {"path":"block-vendor-loader.mjs","sha256":"678729474217ee0cb0c47d409e8997095374ac387e36b66a8a53ba94dc11518e"},
+    {"path":"commands.txt","sha256":"3a2b964da1f10dd219959bac3cc11a2a7a8ecdfb431851493205f8dd5aa7646d"},
+    {"path":"first.stdout.log","sha256":"6181f57f4c1c08a52339e1a2b2e1b9fb67b521454b665c1056341e7141faf0d7"},
+    {"path":"first-run-results.json","sha256":"5112026f426c3526948ee2d350b97aa31921307faae8438b9284b0a5bb370503"}
+  ],
+  "falsifiersObserved":[],
+  "unexpectedFailures":[],
+  "warning":"Node experimental-loader deprecation warning retained verbatim; no guard resolution failure occurred.",
+  "limitations":["Exposed engineering vectors only, not heldout science or exhaustive hostile-input security.","No positive enabled request or registered query/CV execution.","No whole-implementation/renderer acceptance or general cache correctness claim.","No empirical photometric, identity, width, continuity, alpha or independent-confidence result."],
+  "scientificAcceptance":"NOT_ASSERTED",
+  "humanAcceptance":"NOT_ASSERTED",
+  "implementationAcceptance":"NOT_GRANTED_BY_THIS_PACKET",
+  "promoted":false,
+  "artifacts":["first-run.mjs","block-vendor-loader.mjs","commands.txt","first.stdout.log","first-run-results.json","report.md","result.json"]
+}

@@ -1,0 +1,105 @@
+#!/usr/bin/env python3
+"""Generate frozen cycle05 source pixels only. No CV imports or producer calls."""
+import hashlib
+import json
+from pathlib import Path
+import struct
+import zlib
+
+ROOT = Path(__file__).resolve().parent
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def canonical(value):
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+
+
+def png_rgba(width, height, rgba):
+    def chunk(kind, data):
+        return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data) & 0xffffffff)
+    rows = b"".join(b"\0" + rgba[y * width * 4:(y + 1) * width * 4] for y in range(height))
+    return b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 6, 0, 0, 0)) + chunk(b"IDAT", zlib.compress(rows, 9)) + chunk(b"IEND", b"")
+
+
+def make_raster(name, width, height):
+    rgba = bytearray(width * height * 4)
+    bright_count = 0
+    for y in range(height):
+        for x in range(width):
+            if name == "ellipse":
+                # Integer-equivalent ellipse inequality avoids floating boundary variation.
+                bright = (2*x-383)**2 * 140**2 + (2*y-319)**2 * 192**2 <= 192**2 * 140**2
+            elif name == "capsule":
+                dx = max(128-x, 0, x-256)
+                bright = 4*dx*dx + (2*y-319)**2 <= 900
+            else:
+                bright = 145 <= y < 175
+                if name == "gap2" and 191 <= x < 193:
+                    bright = False
+                if name == "gap6" and 189 <= x < 195:
+                    bright = False
+            level = 145 if bright else 100
+            i = 4 * (y * width + x)
+            rgba[i:i+4] = bytes((level, level, level, 255))
+            bright_count += int(bright)
+    return bytes(rgba), bright_count
+
+
+def make_mask(name, width, height):
+    return bytes(int(name == "allHidden" or (name == "gap6" and 189 <= x < 195)) for y in range(height) for x in range(width))
+
+
+def main():
+    protocol_bytes = (ROOT / "protocol.json").read_bytes()
+    protocol = json.loads(protocol_bytes)
+    width, height = protocol["geometry"]["widthPx"], protocol["geometry"]["heightPx"]
+    out = ROOT / "fixtures"
+    out.mkdir(exist_ok=True)
+    inventory = {
+        "schema": "chainspot.fixture-byte-inventory/v1", "job": "E1102", "worker": "F4",
+        "frozenAtUTC": protocol["frozenAtUTC"], "cvExecuted": False,
+        "dimensionsPx": [width, height], "canonicalization": "UTF-8 JSON sort_keys=true,separators=(',',':'),ensure_ascii=false,no newline",
+        "protocolFileSha256": sha(protocol_bytes), "protocolCanonicalSha256": sha(canonical(protocol)),
+        "geometryCanonicalSha256": sha(canonical(protocol["geometry"])),
+        "generatorSha256": sha(Path(__file__).read_bytes()), "rasters": {}, "masks": {}, "cases": protocol["cases"]
+    }
+    rasters = {}
+    for name in ("intact", "gap2", "gap6", "ellipse", "capsule"):
+        rgba, bright = make_raster(name, width, height)
+        assert len(rgba) == 491520 and set(rgba[3::4]) == {255}
+        raw_name, png_name = f"{name}.rgba", f"{name}.png"
+        png = png_rgba(width, height, rgba)
+        (out / raw_name).write_bytes(rgba)
+        (out / png_name).write_bytes(png)
+        inventory["rasters"][name] = {"rawPath": f"fixtures/{raw_name}", "rgbaSha256": sha(rgba), "rgbaBytes": len(rgba), "pngPath": f"fixtures/{png_name}", "pngSha256": sha(png), "pngBytes": len(png), "brightAreaPx": bright}
+        rasters[name] = rgba
+    for name in ("clear", "gap6", "allHidden"):
+        mask = make_mask(name, width, height)
+        assert len(mask) == 122880 and set(mask) <= {0, 1}
+        expected = protocol["geometry"]["masks"][name]
+        assert sum(mask) == expected["ones"] and len(mask)-sum(mask) == expected["zeros"]
+        filename = f"{name}.mask.u8"
+        (out / filename).write_bytes(mask)
+        inventory["masks"][name] = {"path": f"fixtures/{filename}", "sha256": sha(mask), "bytes": len(mask), "ones": sum(mask), "zeros": len(mask)-sum(mask)}
+    assert inventory["rasters"]["intact"]["brightAreaPx"] == 11520
+    assert inventory["rasters"]["gap2"]["brightAreaPx"] == 11460
+    assert inventory["rasters"]["gap6"]["brightAreaPx"] == 11340
+    # Check source-pixel identity over the union of all declared nominal local footprints.
+    # Nominal along support x182..201, profile y130..190; pose+6 is not capsule control.
+    for y in range(130, 191):
+        for x in range(182, 202):
+            i = 4*(y*width+x)
+            assert rasters["capsule"][i:i+4] == rasters["intact"][i:i+4]
+    inventory["checks"] = {"binaryMaskAreas": "passed", "opaqueRGBA": "passed", "stripeAndGapAreas": "passed", "capsuleNominalFootprintIdentity": "passed", "measurements": "NOT_RUN"}
+    geometry_bytes = canonical(protocol["geometry"])
+    (ROOT / "geometry.canonical.json").write_bytes(geometry_bytes)
+    (ROOT / "protocol.canonical.json").write_bytes(canonical(protocol))
+    (ROOT / "inventory.json").write_text(json.dumps(inventory, indent=2) + "\n")
+    print(json.dumps({"inventory": str(ROOT / "inventory.json"), "rasters": len(inventory["rasters"]), "masks": len(inventory["masks"]), "cvExecuted": False, "protocolCanonicalSha256": inventory["protocolCanonicalSha256"]}))
+
+
+if __name__ == "__main__":
+    main()

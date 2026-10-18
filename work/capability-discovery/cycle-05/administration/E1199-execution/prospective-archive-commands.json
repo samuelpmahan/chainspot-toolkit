@@ -1,0 +1,9 @@
+{
+  "scope": "Root approved5338 capture; repaired alias linkage verifier/stager readback. Prospective before first execution. Pure file/hash/zstd only, no CV/product imports.",
+  "commands": [
+    "node /workspace/scratch/8528bb251845/discovery-cycle05/F6/E1199/capture-package.mjs /workspace/scratch/8528bb251845/discovery-cycle05 /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-05 final",
+    "python3 work/capability-discovery/cycle-05/verify-package.py --phase final",
+    "python3 /workspace/scratch/8528bb251845/discovery-cycle05/F6/E1199/alias-negative.py",
+    "python3 work/capability-discovery/cycle-05/stage-replay.py --phase final --out /workspace/scratch/8528bb251845/discovery-cycle05-stage-E1199"
+  ]
+}

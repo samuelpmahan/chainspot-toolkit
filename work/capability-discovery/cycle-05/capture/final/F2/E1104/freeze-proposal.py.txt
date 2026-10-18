@@ -1,0 +1,111 @@
+#!/usr/bin/env python3
+"""Freeze source-pixel testimony/pose protocol. No producer imports or CV calls."""
+import datetime
+import hashlib
+import json
+import math
+from pathlib import Path
+
+HERE=Path(__file__).resolve().parent
+REPO=HERE.parents[2]/'chainspot-discovery-lab'
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+write=lambda name,value:(HERE/name).write_text(json.dumps(value,indent=2)+'\n')
+inventory=json.loads((HERE/'inventory.json').read_text())
+source=next(r for r in inventory['records'] if r['path']=='specimens/dev/Lenard-5.png')
+phi=math.atan2(-5,24)
+norm=math.sqrt(601)
+u=[24/norm,-5/norm]
+n=[5/norm,24/norm]
+origin=[780,906]
+offset=[origin[k]+6*n[k] for k in range(2)]
+testimony={
+ 'schema':'cycle05-original-image-visual-testimony@1','job_id':'E1104','worker':'F2',
+ 'inspectedOriginals':[{'path':r['originalPngPath'],'pngSha256':r['sha256'],'view':'functions.view_image detail=original; original 1290x2796 PNG, display may be scaled'} for r in inventory['records']],
+ 'inspectionCrop':{'path':str(HERE/'Lenard-5.inspection-crop.png'),'sha256':sha(HERE/'Lenard-5.inspection-crop.png'),
+    'sourcePngSha256':source['sha256'],'sourceBoundsHalfOpenPx':[600,650,1200,1050],
+    'transform':'exact integer PIL crop only, no resize/resampling/enhancement; crop coordinate = source minus [600,650]'},
+ 'observations':[
+   'Lenard3 original shows diagonal pale strips, badge labels, basket-like icons/rings, roads and roofs over an aerial photograph.',
+   'Lenard4 original shows several differently oriented pale strips, circular sprite/ring graphics, houses and a curving narrow ground track.',
+   'Lenard5 original and lossless crop show one pale diagonal strip from the left edge toward the right circular graphic. The selected primary center is crop [180,256], left of the black 6 label at about crop [300,240].',
+   'The selected bright non-path control center is crop [180,90] in the broad light road-like feature above that strip. Non-path is a caller adversarial designation, not authenticated human testimony.',
+   'At this display scale the selected primary looks locally straight with textured underlying ground. No actual small physical interruption or guaranteed edge pair is asserted.'
+ ],
+ 'selectionMethod':'visual source testimony only; no output-driven pixel scan, profile, edge fit, contrast, loss, annotation or old receipt was used to select these coordinates',
+ 'identity':'UNKNOWN: neither path identity, physical boundary ownership, nominal width, original renderer/AA, scale nor semantic class is established',
+ 'priorExposure':'Prior inventories and all old regions/results are exposed. Lenard3-5 are zooms of the same Lenard course, never heldout/new-course/independent-course evidence.',
+ 'cvMeasurementsExecuted':0}
+write('testimony.json',testimony)
+
+pathspace=REPO/'experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs'
+alpha=REPO/'experiments/capability-discovery/probes/width/vendor/active/contracts/alpha.profile@1.mjs'
+assert sha(pathspace)=='d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e'
+assert sha(alpha)=='9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f'
+windows=[{'id':'before16','t0Px':-24,'t1Px':-8},{'id':'core16','t0Px':-8,'t1Px':8},{'id':'after16','t0Px':8,'t1Px':24},{'id':'long48','t0Px':-24,'t1Px':24}]
+groups=[
+ {'id':'primary','originPx':origin,'mask':'none','role':'caller-selected pale ribbon-like texture'},
+ {'id':'bright-nonpath','originPx':[780,740],'mask':'none','role':'matched heading/width/windows on bright road-like texture; adversarial semantic specificity control'},
+ {'id':'normal-plus6','originPx':offset,'mask':'none','role':'same pixels and heading, origin translated +6 source px along n'},
+ {'id':'masked-primary','originPx':origin,'mask':'primary-oriented-six-pixel-strip','role':'same original RGBA; only explicit caller visibility mask changes'}]
+protocol={
+ 'schema':'cycle05-source-pixel-pointwise-premeasurement-proposal@1','job_id':'E1104','worker':'F2',
+ 'frozenAtUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+ 'chronologyAuthority':'local clock plus coordinator-observed source/packet ordering; not independently authenticated UTC proof',
+ 'status':'FROZEN_PROPOSAL_ONLY_AWAIT_ROOT_ADMISSION_AND_INDEPENDENT_CRITIQUE_NO_CV',
+ 'question':'On one new caller-declared original zoom region, how do raw same-support per-station bilateral bands/loss relate to an averaged lateral profile/edge pair, and do bright/offset/mask controls preserve ambiguity?',
+ 'source':source,
+ 'sourceBinding':{'pngPath':source['originalPngPath'],'expectedPngSha256':source['sha256'],'expectedFullRgbaSha256':source['fullRgbaSha256'],
+   'raster':'full decoded original RGBA only; widthPx1290,heightPx2796; no crop-based CV; integer source-pixel centers x right/y down, zero-based',
+   'alpha':'source is RGB and decoder appends255; transparency is not reconstructed or inferred',
+   'inspectionRoiOnly':{'xPx':600,'yPx':650,'widthPx':600,'heightPx':400,'notMeasurementInput':True}},
+ 'evidenceBindings':{'inventorySha256':sha(HERE/'inventory.json'),'testimonySha256':sha(HERE/'testimony.json')},
+ 'operationClosure':{'module':str(pathspace),'sha256':sha(pathspace),'alphaContract':{'path':str(alpha),'sha256':sha(alpha)},
+   'publicQueries':['fn.q.path.profile','fn.q.path.edgePair','fn.q.path.stationContrast','fn.q.path.loss'],
+   'existingPrivateOperations':'profileAt, edgePairOf, stationContrastAt, lossAt, samplesAt and overlayAt are existing math, never copy/reimplement',
+   'gateway':'Existing PATH_QUERIES wrappers only; exact future runner/cache/source freeze is separate F6/root authority. No producer module is imported/executed by this packet.',
+   'priorComposition':'5b59 and source-pixel d31b APIs/defaults remain unchanged; this is separately declared future pointwise orchestration, not silent composition reuse'},
+ 'geometry':{'frame':source['frame'],'geometrySource':'F2 E1104 impeachable original-PNG visual testimony; no human accepted annotation; source identity as above',
+   'headingConstruction':{'vectorPx':[24,-5],'lengthPx':norm,'unitTangent':u,'positiveUnitNormal':n,'phiRad':phi},
+   'groups':groups,'windows':windows,'windowSemantics':'All bounds relative to each fixed group origin; arange(t0,t1,1), lower inclusive/upper exclusive; same origin for all windows, no recentering.',
+   'localWidthBank':{'scope':'LOCAL','frame':source['frame'],'valuesPx':[34,42,50],'meaning':'arbitrary caller comparison bank, not fitted/calibrated; all widths retained regardless of fit'},
+   'widthAssociation':'Each query receives the bank width literally. Do not infer/recenter from fitted cPx/wPx; comparison records nominal and fitted width separately.'},
+ 'masks':{'none':None,'primary-oriented-six-pixel-strip':{
+   'widthPx':1290,'heightPx':2796,'encoding':'Uint8Array per full-source pixel row-major, zero elsewhere',
+   'predicate':'For integer source pixel center p=[x,y], d=p-[780,906]; s=dot(d,[24,-5]/sqrt(601)), r=dot(d,[5,24]/sqrt(601)); mask=1 iff -3<=s<3 AND -64<=r<64, else0.',
+   'scope':'Caller synthetic visibility control only, not a detected occluder or physical gap. Original RGBA unchanged. No sprite/ring/autodetected mask.',
+   'maskSampling':'existing bilinear sampler; hidden when interpolated mask>0.01; do not replace with nearest mask or omit partially masked samples'}},
+ 'settings':{'stepPx':1,'profile':{'lat0Px':0,'offsetsPx':[-30,30,0.25],'offsetsCount':241},
+   'edgePair':{'tolPx':2,'latLimPx':12,'minOk':{'count':8,'ofStations':0.2}},
+   'stationContrast':{'bandPx':[1,3],'bandSamplingStepPx':0.5,'alongPx':2,'alongSamplingStepPx':1,'validFractionRule':'strict min(insideFraction,outsideFraction)>0.5 per side'},
+   'loss':{'tauLum':8,'profile':None,'threshold':None,'meaning':'tau8 is historical source diagnostic only; no accepted threshold, no overlay pass/fail without threshold. Missing profile is explicitly WHITE-overlay brightness PROXY, not fitted path alpha.'},
+   'compatibility':'loss uses existing fixed default band[1,3], along2; stationContrast explicit settings equal those defaults; do not mutate EVIDENCE or accepted source'},
+ 'futureExecutionMatrix':{'groups':4,'windowsPerGroup':4,'widthsPerGroupWindow':3,
+   'profileCallsPerGroupWindow':1,'edgePairCallsPerGroupWindow':3,'stationContrastCallsPerGroupWindow':3,'lossCallsPerGroupWindow':3,
+   'logicalPublicQueryInvocations':160,'authority':'Not executed. Root may only release this exact full matrix after independent critique and separate source freeze; any change is a new amended preregistration before measurement.'},
+ 'predictionsAndFalsifiers':[
+   {'id':'raw-v-average','prediction':'A finite averaged pair may coexist with varying bilateral station contrast; no finite fit or localized interruption is guaranteed on this original.',
+    'falsifier':'Retain null/condition pairs and every raw station. If all core contrasts are constant or no fit exists, report that fixed result; do not relocate the region to obtain the synthetic pattern.'},
+   {'id':'bright-control','prediction':'Bright road-like non-path pixels can yield a finite pair and strong bilateral contrast for some declared widths. This is an explicit opportunity to falsify specificity, not a promised false positive.',
+    'falsifier':'Any strong/finite bright result refutes an inference that the same observables alone identify the translucent course path; failure to fit this one control does not establish specificity.'},
+   {'id':'offset-control','prediction':'Under same-edge association, shifting O by+6n predicts candidate cPx shifts by-6px; source profile extent and competing peaks can invalidate that association.',
+    'falsifier':'Compare cPx(offset)-cPx(primary)+6 whenever both finite, retain raw residual with no new acceptance tolerance. Nulls or changed peaks invalidate universal same-pair association; never recenter.'},
+   {'id':'mask-control','prediction':'Explicit central visibility removal reduces valid samples; stationContrast can return nonfinite raw contrasts/invalid flags while the averaged profile can still retain enough valid stations for a fit.',
+    'falsifier':'All masked/partial-mask raw values and flags must remain. loss masked stations end gap runs rather than count as visible failures; visibleCount0 with longestGap0 is UNKNOWN, not continuity.'},
+   {'id':'joint-support','prediction':'Long48 and core16 sample the same lateral offsets but different longitudinal support. Profile, pointwise and loss are dependent transformations of shared source pixels.',
+    'falsifier':'Report support/phase/mask differences explicitly. Neither joint agreement nor additional query count creates independent confidence, physical continuous edges or calibrated width.'}
+ ],
+ 'requiredReceipt':{'raw':'query names, exact argument objects, source and mask byte hashes, operation/runner hashes; all profile profLum/okCount/stationsCount; every edgePair condition or l/r/c/w/score/gl/gr; raw leftLum/rightLum/okLeft/okRight/stationsCount; entire native loss object and proxy metadata',
+   'nonfinite':'Raw stationContrast NaN/Infinity must be explicitly tagged or paired with exact original runtime/nonfinite indexes before JSON serialization; JSON null alone cannot distinguish mathematical nonfinite, missing and masked. Preserve native null/condition and zero without coercion.',
+   'derived':'Only clearly labelled comparison residuals/counts; raw values remain authoritative; no classifier, ranking, Boolean path status or metric of accepted continuity.'},
+ 'stopRules':['No producer/API calls in E1104.','Independent protocol critique and root scoped native packet precede implementation/execution.','No tuning, refitting, widened profiles, changed geometry, post-output width choice or hidden rerun.','If full original bytes/hashes/decoder/mask/operation closure mismatch, preserve refusal and abstain.','Any support/schema failure remains explicit NOT_EXECUTED; never substitute crop or successful row.'],
+ 'acceptance':{'geometryScientificIdentity':'UNKNOWN','pathIdentity':'UNKNOWN','humanAcceptance':'UNKNOWN','promoted':False,'heldout':False,'newCourse':False,'cvMeasurementsExecuted':0},
+ 'skillInfluence':'fusion-verification: shared-pixel dependence is explicit; bright/offset/mask ablations each state what ambiguity they can and cannot remove.'}
+write('protocol-proposal.json',protocol)
+result={'schema':'capability-discovery-extraction-result@1','job_id':'E1104','worker':'F2','outcome':'mixed_change',
+ 'summary':'Verified and staged exact approved Lenard3-5 original PNG/RGBA identities, inspected all three originals and one lossless Lenard5 crop, and froze one caller-source-pixel proposal with primary/bright road-like/+6normal/explicit-mask controls, bank34/42/50, core/flank16 and long48 supports for unchanged PATH_QUERIES profile/edgePair/stationContrast/loss. No CV/producer/API call or source/Git mutation occurred; same-course exposed pixels and all semantic/scientific/human acceptance remain UNKNOWN.',
+ 'scope':'Inventory/testimony/frozen proposal readiness only, not measured capability or scientific acceptance',
+ 'artifacts':{'inventory':{'path':str(HERE/'inventory.json'),'sha256':sha(HERE/'inventory.json')},'testimony':{'path':str(HERE/'testimony.json'),'sha256':sha(HERE/'testimony.json')},'protocol':{'path':str(HERE/'protocol-proposal.json'),'sha256':sha(HERE/'protocol-proposal.json')},'inventoryScriptSha256':sha(HERE/'inventory-originals.py'),'inspectionScriptSha256':sha(HERE/'inspect-crop.py'),'freezeScriptSha256':sha(Path(__file__))},
+ 'counts':{'stagedOriginals':3,'originalImagesInspected':3,'losslessInspectionCrops':1,'proposedRegion':1,'groups':4,'declaredWidths':3,'declaredWindows':4,'producerCalls':0,'cvMeasurements':0,'sourceEdits':0,'gitMutations':0},
+ 'status':'FROZEN_PROPOSAL_ONLY_AWAIT_INDEPENDENT_CRITIQUE_AND_ROOT_RELEASE','geometryScientificIdentity':'UNKNOWN','scientificAcceptance':'UNKNOWN','humanAcceptance':'UNKNOWN','promoted':False,'next':'Root may separately admit independent protocol review; no producer/execution dispatch is implied.'}
+write('result.json',result)
+print(json.dumps(result,indent=2))

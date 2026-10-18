@@ -1,0 +1,160 @@
+/** Trace-only display; imports no recipe, CLI, store, CV, image reader or browser. */
+import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {resolve,join} from 'node:path';
+import {decodeBytes} from '../../../chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs';
+
+const PROTOCOL='3b7f1d2b166c759997c73f820c433ff653c84114e83c28af62c68ec003967ff5';
+const SOURCE_FREEZE='0a2351f595fd72d55af79fccb4532deb1b58125a2c440e37d6276fba5d21da4b';
+const CODEC_SHA='3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015';
+const CODEC_URL=new URL('../../../chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs',import.meta.url);
+const IDS=['intact','gap2','gap6','largeBrightEllipse','organicCapsule','normalOffsetPlus6','maskedGap6','allHidden'];
+const NAMES=['profile','edgePair','stationContrast','loss'];
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const xml=v=>String(v).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+const fail=m=>{throw new Error(m);};
+const need=(v,m)=>{if(!v)fail(m);};
+const finite=v=>typeof v==='number'&&Number.isFinite(v);
+const raw=v=>v===null?'null':v===undefined?'unavailable':Object.is(v,-0)?'-0':String(v);
+const label=v=>finite(v)?Number(v.toPrecision(5)).toString():raw(v);
+const text=(x,y,s,size=13,color='#263342',extra='')=>`<text x="${x}" y="${y}" font-size="${size}" fill="${color}" ${extra}>${xml(s)}</text>`;
+const line=(x1,y1,x2,y2,color='#d4dce5',dash='')=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" ${dash?`stroke-dasharray="${dash}"`:''}/>`;
+
+export function validateTracePair(trace,sidecar){
+  need(trace?.schema==='cycle05-registered-station-trace@1'&&sidecar?.schema==='cycle05-registered-station-sidecar@1','unsupported trace/sidecar schema');
+  need(trace.protocolId==='synthetic8'&&sidecar.protocolId==='synthetic8'&&trace.protocolSha256===PROTOCOL,'wrong frozen protocol');
+  need(Array.isArray(trace.plannedQueries)&&trace.plannedQueries.length===32&&Array.isArray(trace.queryTrace)&&trace.queryTrace.length===32,'expected32 planned/retained rows');
+  need(Array.isArray(sidecar.calculationLog),'missing original Calculation sidecar');
+  for(const k of ['pathIdentity','physicalEdgeIdentity','calibratedWidth','scientificAcceptance','humanAcceptance'])need(trace.claims?.[k]==='UNKNOWN',`claim must remain UNKNOWN: ${k}`);
+  need(trace.claims.promoted===false,'promotion is outside display scope');
+  return IDS.map((id,i)=>{
+    const rows={};
+    for(let j=0;j<4;j++){
+      const n=i*4+j,p=trace.plannedQueries[n],r=trace.queryTrace[n];
+      need(p.planIndex===n&&r.planIndex===n&&p.comparisonId===id&&r.comparisonId===id&&p.query===`fn.q.path.${NAMES[j]}`,'wrong case/query/order');
+      need(p.widthPx===(j===0?null:30),'unadmitted width');
+      const a=p.rawArgs;
+      need(a?.originPx?.[0]===192&&a.originPx[1]===(i===5?166:160)&&a.phiRad===0&&a.t0Px===-8&&a.t1Px===8&&a.stepPx===1,'unexpected retained geometry');
+      need(['NOT_ATTEMPTED','COMPLETED','THREW'].includes(r.state),'unsupported invocation state');
+      if(r.state==='COMPLETED')need(r.nativeAnswer&&typeof r.nativeAnswer.unit==='string'&&Object.hasOwn(r.nativeAnswer,'value'),'completed row lacks native answer');
+      else need(r.nativeAnswer===null,'unexecuted/thrown row cannot invent answer');
+      rows[NAMES[j]]={plan:p,row:r,value:r.nativeAnswer?.value??null};
+    }
+    const p=rows.profile.value,c=rows.stationContrast.value;
+    if(p&&!p.condition){need(Array.isArray(p.profLum)&&p.profLum.length===241&&Array.isArray(p.okCount)&&p.okCount.length===241&&p.stationsCount===16,'unexpected profile shape');need(p.offsetsPx?.[0]===-30&&p.offsetsPx[1]===30&&p.offsetsPx[2]===0.25,'unexpected offset descriptor');}
+    if(c){for(const k of ['leftLum','rightLum','okLeft','okRight'])need(Array.isArray(c[k])&&c[k].length===16,'unexpected bilateral shape');need(c.stationsCount===16&&c.okLeft.every(v=>v===0||v===1)&&c.okRight.every(v=>v===0||v===1),'unexpected station validity/count');}
+    return {id,rows};
+  });
+}
+
+function scale(values,include=[]){
+  // Plot-axis layout only; not a new measurement or acceptance criterion.
+  const all=[...values,...include].filter(finite);let lo=all.length?Math.min(...all):0,hi=all.length?Math.max(...all):1;
+  const pad=hi===lo?Math.max(1,Math.abs(lo)*0.03):(hi-lo)*0.08;lo-=pad;hi+=pad;
+  return {lo,hi,y:(v,top,h)=>top+h-(v-lo)/(hi-lo)*h};
+}
+function axes(x,y,w,h,s,xlabels){
+  let out='';
+  for(let i=0;i<3;i++){const v=s.lo+(s.hi-s.lo)*i/2,yy=s.y(v,y,h);out+=line(x,yy,x+w,yy)+text(x-7,yy+4,label(v),11,'#5a6979','text-anchor="end"');}
+  out+=line(x,y,x,y+h,'#8291a2')+line(x,y+h,x+w,y+h,'#8291a2');
+  for(const [f,l]of xlabels)out+=text(x+f*w,y+h+17,l,11,'#5a6979','text-anchor="middle"');
+  return out;
+}
+function segments(values,valid,x,y){
+  let path='',open=false;
+  values.forEach((v,i)=>{if(finite(v)&&valid(i)){path+=`${open?'L':'M'}${x(i).toFixed(2)},${y(v).toFixed(2)} `;open=true;}else open=false;});return path;
+}
+function profilePanel(c,x,top){
+  const row=c.rows.profile,p=row.value,w=640,h=115,y=top+62;
+  let out=text(x,top+40,'Averaged profile · mean RGB luminance',15);
+  if(!p||p.condition)return out+text(x+20,y+50,row.row.state+(p?.condition?`: ${p.condition}`:''),16,'#68798a');
+  const s=scale(p.profLum),px=i=>x+i/240*w,py=v=>s.y(v,y,h);
+  out+=axes(x,y,w,h,s,[[0,'−30'],[.5,'0'],[1,'+30 normal px']]);
+  out+=`<path d="${segments(p.profLum,i=>p.okCount[i]>0,px,py)}" fill="none" stroke="#246c8d" stroke-width="2"/>`;
+  p.profLum.forEach((v,i)=>{if(!finite(v)||p.okCount[i]===0)out+=text(px(i),y+h-4,'×',11,'#929da9','text-anchor="middle"');});
+  const sy=top+221;out+=text(x,sy-13,'okCount (unmasked station support; all 241 offsets)',11,'#67788a');
+  out+=`<path d="${p.okCount.map((v,i)=>`${i?'L':'M'}${px(i).toFixed(2)},${(sy+16-v/16*16).toFixed(2)}`).join(' ')}" fill="none" stroke="#718395" stroke-width="1.3"/>`;
+  out+=text(x-6,sy+4,'16',10,'#718395','text-anchor="end"')+text(x-6,sy+20,'0',10,'#718395','text-anchor="end"');
+  return out;
+}
+function contrastPanel(c,x,top){
+  const row=c.rows.stationContrast,p=row.value,w=640,h=115,y=top+62;
+  let out=text(x,top+40,'Raw bilateral contrast (lum) · separate flags',15);
+  if(!p)return out+text(x+20,y+50,row.row.state,16,'#68798a');
+  const tau=c.rows.loss.value?.tauLum??c.rows.loss.plan.rawArgs?.tauLum??8;
+  const s=scale([...p.leftLum,...p.rightLum],[0,tau]),px=i=>x+i/15*w,py=v=>s.y(v,y,h);
+  out+=axes(x,y,w,h,s,[[0,'t −8'],[7/15,'−1'],[1,'+7 px']]);
+  out+=line(x,py(tau),x+w,py(tau),'#ab8e48','5 4')+text(x+w-3,py(tau)-5,`tau ${raw(tau)} · historical diagnostic only`,10,'#8a6c2b','text-anchor="end"');
+  for(const [name,flag,color,tag,flagY]of [['leftLum','okLeft','#16749b','L',top+217],['rightLum','okRight','#d16b32','R',top+235]]){
+    out+=`<path d="${segments(p[name],i=>p[flag][i]===1,px,py)}" fill="none" stroke="${color}" stroke-width="2"/>`;
+    p[name].forEach((v,i)=>{
+      if(finite(v))out+=`<circle cx="${px(i)}" cy="${py(v)}" r="${p[flag][i]?3:4}" fill="${p[flag][i]?color:'#ffffff'}" stroke="${p[flag][i]?color:'#9099a3'}" stroke-width="1.7" data-valid="${p[flag][i]}"/>`;
+      else out+=text(px(i),y+h-(tag==='L'?5:18),`${tag} ${raw(v)}`,9,'#7f8994','text-anchor="middle"');
+      out+=`<rect x="${px(i)-6}" y="${flagY-9}" width="12" height="10" fill="${p[flag][i]?color:'#e1e5e9'}" stroke="#a7b0b9" stroke-width=".5"/>`;
+    });
+    out+=text(x-9,flagY,tag,11,color,'text-anchor="end"');
+  }
+  out+=text(x+w,top+253,'filled=valid; hollow gray=finite invalid; no invalid connections',10,'#657587','text-anchor="end"');
+  return out;
+}
+function compactNative(c,top){
+  const fit=c.rows.edgePair.value,loss=c.rows.loss.value,edge=loss?.edge;
+  const fitLabel=!fit?c.rows.edgePair.row.state:fit.condition?`condition: ${fit.condition}`:`l=${raw(fit.lPx)} r=${raw(fit.rPx)} c=${raw(fit.cPx)} w=${raw(fit.wPx)} score=${raw(fit.score)}`;
+  let out=text(48,top+274,`Native edgePair: ${fitLabel}`,11,'#405366');
+  const nativeLoss=!loss?c.rows.loss.row.state:loss.condition?`condition: ${loss.condition}`:`visible=${raw(edge?.visibleCount)}/16 pass=${raw(edge?.passCount)} passFrac=${raw(edge?.passFrac)} lossFrac=${raw(edge?.lossFrac)} longestGapPx=${raw(edge?.longestGapPx)}`;
+  out+=text(795,top+274,`Native loss: ${nativeLoss}`,11,'#405366');
+  return out;
+}
+export function svgPage(cases,page,binding){
+  let out=`<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1440" viewBox="0 0 1500 1440"><rect width="1500" height="1440" fill="#ffffff"/><g font-family="DejaVu Sans,Arial,sans-serif">`;
+  out+=text(30,34,`Synthetic station evidence · page ${page}/2`,24,'#142d43');
+  out+=text(30,58,'Path / physical edge identity / calibrated width / science: UNKNOWN · promoted=false',15,'#6b4757');
+  out+=text(30,80,`Trace ${binding.traceSha256.slice(0,20)}…  sidecar ${binding.sidecarSha256.slice(0,20)}…  source freeze ${SOURCE_FREEZE.slice(0,16)}…`,12,'#5f7082');
+  cases.forEach((c,i)=>{const top=105+i*300;out+=`<rect x="20" y="${top-1}" width="1460" height="291" rx="6" fill="${i%2?'#f6f8fb':'#fbfcfd'}" stroke="#d9e1e9"/>`;out+=text(32,top+18,`${IDS.indexOf(c.id)+1}. ${c.id}`,17,'#203c52');out+=profilePanel(c,48,top)+contrastPanel(c,795,top)+compactNative(c,top);});
+  out+=text(30,1335,'Axes are display-scaled. Plots use retained native values only; no refit, classifier, score recomputation or pose correction.',13);
+  out+=text(30,1357,'Mask/invalid evidence is UNKNOWN, not visible failure. Zero native longestGap with visibleCount=0 is not continuity.',13);
+  out+=text(30,1379,'Loss overlay is WHITE brightness PROXY, not alpha; threshold=null. Tau8 is historical native diagnostic, not acceptance.',13);
+  out+=text(30,1401,'Full exact tagged query answers, typed corridor bytes, units, arguments, metadata and original sidecar: inspection.html.',13);
+  return out+'</g></svg>\n';
+}
+export function inspectionHTML(traceWire,sidecarWire,binding){
+  return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Exact trace-only inspection</title><style>body{font:15px system-ui,sans-serif;max-width:1450px;margin:28px;color:#22364a}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f4f6f8;padding:18px;font:12px monospace}summary{cursor:pointer;padding:12px}h1{font-size:26px}</style><h1>Exact trace-only inspection</h1><p>UNKNOWN: path identity, physical edge identity, calibrated width, scientific and human acceptance. promoted=false. No image, pixel or CV access. Native null, nonfinite tags, Uint8Array type/length/bytes and validity remain in the original tagged wire below.</p><p>Trace SHA256 <code>${binding.traceSha256}</code><br>Sidecar SHA256 <code>${binding.sidecarSha256}</code><br>Codec SHA256 <code>${CODEC_SHA}</code><br>Renderer SHA256 <code>${binding.rendererSha256??'test-vector'}</code></p><p><a href="page-1.svg">Figure1 SVG</a> · <a href="page-2.svg">Figure2 SVG</a>. Historical tau8 is diagnostic only; overlay is WHITE brightness proxy, not alpha. Invalid/masked is UNKNOWN, not visible failure. This inspection includes every native field and typed corridor element, not only plotted summaries.</p><details open><summary>Complete original tagged value trace (all32 query rows and all native answer fields)</summary><pre>${xml(traceWire)}</pre></details><details><summary>Complete original timing/Calculation sidecar (raw completion order)</summary><pre>${xml(sidecarWire)}</pre></details></html>\n`;
+}
+function verifiedInput(path,expected,maxBytes){
+  need(typeof expected==='string'&&/^[0-9a-f]{64}$/.test(expected),'expected lowercaseSHA256 required');
+  const bytes=Uint8Array.from(readFileSync(path));need(bytes.length<=maxBytes,'encoded input too large');need(sha(bytes)===expected,'input SHA256 mismatch; no decoding/render attempted');return bytes;
+}
+export function renderBoundTraces({tracePath,traceSha256,sidecarPath,sidecarSha256,outDir}){
+  // Both original files are hash-verified BEFORE either is parsed/decoded.
+  const traceBytes=verifiedInput(tracePath,traceSha256,33554432),sidecarBytes=verifiedInput(sidecarPath,sidecarSha256,4194304);
+  need(sha(readFileSync(CODEC_URL))===CODEC_SHA,'admitted codec changed');
+  const trace=decodeBytes(traceBytes),sidecar=decodeBytes(sidecarBytes,{maxBytes:4194304}),cases=validateTracePair(trace,sidecar);
+  const binding={tracePath:resolve(tracePath),traceSha256,sidecarPath:resolve(sidecarPath),sidecarSha256,codecSha256:CODEC_SHA,rendererSha256:sha(readFileSync(new URL('./renderer.mjs',import.meta.url))),sourceFreezeSha256:SOURCE_FREEZE,protocolSha256:PROTOCOL};
+  const pages=[svgPage(cases.slice(0,4),1,binding),svgPage(cases.slice(4),2,binding)],html=inspectionHTML(new TextDecoder('utf-8',{fatal:true}).decode(traceBytes),new TextDecoder('utf-8',{fatal:true}).decode(sidecarBytes),binding);
+  const directory=resolve(outDir);mkdirSync(directory);const artifacts=[];
+  const put=(path,content)=>{const bytes=new TextEncoder().encode(content);writeFileSync(join(directory,path),bytes,{flag:'wx'});artifacts.push({path,bytes:bytes.length,sha256:sha(bytes)});};
+  pages.forEach((page,i)=>put(`page-${i+1}.svg`,page));put('inspection.html',html);
+  const manifest={schema:'cycle05-trace-only-render@1',binding,status:'SVG_HTML_WRITTEN_PNG_PENDING',inputs:'exact original encoded trace+sidecar only',artifacts,claims:{promoted:false,pathIdentity:'UNKNOWN',calibratedWidth:'UNKNOWN',scientificAcceptance:'UNKNOWN'},PNG:'external approved SVG rasterization only; not performed by this module'};
+  writeFileSync(join(directory,'render-manifest.json'),JSON.stringify(manifest,null,2)+'\n',{flag:'wx'});return manifest;
+}
+export function finalizePNGs(outDir){
+  const directory=resolve(outDir),original=Uint8Array.from(readFileSync(join(directory,'render-manifest.json'))),m=JSON.parse(new TextDecoder().decode(original));
+  need(m.schema==='cycle05-trace-only-render@1','wrong render manifest');need(m.binding.rendererSha256===sha(readFileSync(new URL('./renderer.mjs',import.meta.url)))&&m.binding.codecSha256===sha(readFileSync(CODEC_URL)),'renderer/codec changed');
+  for(const a of m.artifacts)need(sha(readFileSync(join(directory,a.path)))===a.sha256,'render output changed before finalization');
+  const artifacts=[...m.artifacts];
+  for(let i=1;i<=2;i++){
+    const path=`page-${i}.png`,b=Uint8Array.from(readFileSync(join(directory,path)));
+    need(b[0]===137&&b[1]===80&&b[2]===78&&b[3]===71,'not a PNG output');
+    const view=new DataView(b.buffer,b.byteOffset,b.byteLength);need(view.getUint32(16)===1500&&view.getUint32(20)===1440,'unexpected PNG dimensions');
+    artifacts.push({path,bytes:b.length,sha256:sha(b),derivedFrom:`page-${i}.svg`,derivation:'external approved rasterization; invocation evidence separate'});
+  }
+  const final={...m,status:'SVG_PNG_HTML_HASHED',artifacts,originalManifestSha256:sha(original)};
+  writeFileSync(join(directory,'render-manifest-final.json'),JSON.stringify(final,null,2)+'\n',{flag:'wx'});return final;
+}
+function main(args){
+  if(args.length===2&&args[0]==='--finalize-pngs')return finalizePNGs(args[1]);
+  need(args.length===10,'usage: --trace FILE --trace-sha SHA --sidecar FILE --sidecar-sha SHA --out NEWDIR');
+  const keys=['--trace','--trace-sha','--sidecar','--sidecar-sha','--out'];keys.forEach((k,i)=>need(args[i*2]===k,'fixed arguments required'));
+  return renderBoundTraces({tracePath:args[1],traceSha256:args[3],sidecarPath:args[5],sidecarSha256:args[7],outDir:args[9]});
+}
+if(process.argv[1]&&resolve(process.argv[1])===new URL(import.meta.url).pathname){try{const m=main(process.argv.slice(2));console.log(JSON.stringify({status:m.status,artifacts:m.artifacts.length}));}catch(e){console.error(JSON.stringify({status:'RENDER_INPUT_FAILED',error:String(e.message)}));process.exitCode=1;}}

@@ -1,0 +1,79 @@
+"""Independent linkage checks of restored historical manifests; no evidence execution."""
+from pathlib import Path
+import hashlib,json,re,subprocess
+BASE=Path('/workspace/scratch/8528bb251845')
+ROOT=BASE/'discovery-cycle05/V1/R1199';STAGE=ROOT/'fresh-stage/discovery-cycle05'
+PKG=BASE/'chainspot-discovery-lab/work/capability-discovery/cycle-05'
+sha=lambda b:hashlib.sha256(b).hexdigest()
+checks={}
+def check(name,value):
+    if not value:raise AssertionError(name)
+    checks[name]=True
+def j(path):return json.loads(path.read_bytes())
+def binding(path,record):
+    b=path.read_bytes();check(str(path.relative_to(BASE))+' binding',sha(b)==record['sha256'] and ('bytes' not in record or len(b)==record['bytes']))
+counts={}
+for base in ['F5/E1115/run','F3/R1115/replay-run']:
+    m=j(STAGE/base/'artifact-manifest.json')
+    check(base+' complete artifacts',len(m['artifacts'])==74)
+    for r in m['artifacts']:binding(STAGE/base/r['path'],r)
+    check(base+' answer/calculation counts',sum(r.get('kind')=='answer' for r in m['artifacts'])==32 and sum(r.get('kind')=='calculation' for r in m['artifacts'])==40)
+    counts[base]=len(m['artifacts'])
+producer=j(STAGE/'F5/E1115/result.json')
+for r in producer['bindings']['rawArtifacts']:binding(STAGE/'F5/E1115/run'/r['path'],r)
+binding(STAGE/'F5/E1115'/producer['bindings']['artifactManifest']['path'],producer['bindings']['artifactManifest'])
+for r in producer['bindings']['suppliedFiles']:
+    relative=Path(r['path']).relative_to(BASE/'discovery-cycle05');binding(STAGE/relative,r)
+binding(STAGE/'F6/E1111/source-freeze.json',producer['bindings']['sourceFreeze'])
+binding(STAGE/'F4/R1111/result.json',producer['bindings']['independentReview'])
+review=j(STAGE/'F3/R1115/result.json');rb=review['reviewedBindings']
+for name,key in [('F5/E1115/result.json','E1115ResultSha256'),('F6/E1111/source-freeze.json','sourceFreezeSha256'),('numeric-comparison-freeze.json','numericPolicySha256'),('F5/E1115/manifest.json','manifestSha256'),('F4/E1102/protocol.json','protocolSha256'),('F4/E1102/inventory.json','inventorySha256'),('F5/E1115/run/value-trace.json','originalValueTraceSha256'),('F5/E1115/run/timing-sidecar.json','originalSidecarSha256'),('F5/E1115/run/artifact-manifest.json','originalArtifactManifestSha256'),('F3/R1115/replay-run/value-trace.json','replayValueTraceSha256'),('F3/R1115/replay-run/timing-sidecar.json','replaySidecarSha256'),('F3/R1115/replay-run/artifact-manifest.json','replayArtifactManifestSha256')]:
+    binding(STAGE/name,{'sha256':rb[key]})
+check('independent replay accepted and scoped',review['decision']=='accepted' and review['actualReviewerExecution']['CLIReplays']==1 and review['actualReviewerExecution']['actualPATHCalls']==32 and review['actualReviewerExecution']['lazyConstants']==8 and review['checksActuallyRun']['absoluteTolerance']==1e-9)
+renderer=j(STAGE/'F4/E1116/result.json');display=j(STAGE/'F5/R1116/result.json')
+binding(STAGE/'F4/E1116/result.json',display['binding']['reviewedResult'])
+binding(STAGE/'F3/R1115/result.json',display['binding']['independentRawReview'])
+for r in renderer['artifacts']:binding(STAGE/'F4/E1116'/r['path'],r)
+for r in display['exactOriginalArtifacts']:binding(STAGE/'F4/E1116'/r['path'],r)
+check('display review accepted and scoped',display['decision']=='accepted' and display['newExecution']['CVCalls']==0 and display['newExecution']['browserHTMLVisualInspections']==0)
+inspection=j(STAGE/'root-figure-inspection.json')
+for r in inspection['figures']:binding(STAGE/r['path'],r)
+check('root original figure inspections bound',len(inspection['figures'])==2)
+regression=j(STAGE/'F6/E1117/result.json')
+for r in regression['artifacts']:
+    path=STAGE/Path(r['path']).relative_to(BASE/'discovery-cycle05');binding(path,r)
+for c in regression['commands']:
+    r=c['rawLog'];path=STAGE/Path(r['path']).relative_to(BASE/'discovery-cycle05');binding(path,r)
+lab=(STAGE/'F6/E1117/lab.raw.log').read_text();stager=(STAGE/'F6/E1117/stager.raw.log').read_text()
+check('retained 172 actual Node pass totals',all(s in lab for s in ['# tests 172','# pass 172','# fail 0']))
+check('retained Python 2 actual tests',bool(re.search(r'Ran 2 tests',stager)) and 'OK' in stager)
+adversarial=j(STAGE/'F3/E1114/first-run-results.json')
+check('retained 59 adversarial variants',adversarial['variants']==adversarial['pass']==len(adversarial['rows'])==59 and adversarial['fail']==0 and adversarial['CVCalls']==0)
+for job in ['E1101','E1105']:
+    receipt=j(STAGE/'receipts'/f'{job}.json');binding(STAGE/Path(receipt['rawReceipt']['path']).relative_to('discovery-cycle05'),receipt['rawReceipt'])
+check('raw AMEND retained',j(STAGE/'F2/R1105/result.json')['decision']=='amend')
+check('E1105 rejection testimony not fabricated stderr','Root tool transcript only' in j(STAGE/'receipts/E1105.json')['normalization']['rejectionEvidence'])
+check('E1101 preflight not rejection','No native rejection occurred' in j(STAGE/'receipts/E1101.json')['normalization']['cause'])
+check('producer inspection first failure preserved',j(STAGE/'F5/E1115/inspection-first-failure.json')['exit_code']==1)
+pointer=j(PKG/'administration/capture-index.json')
+check('only final capture actual',pointer['latest']=='final' and len(pointer['phases'])==1 and pointer['phases'][0]['phase']=='final')
+for r in pointer['phases']:binding(PKG/r['path'],r)
+admin=j(PKG/'administration/admin-origin-final.json')
+for r in admin['files']:binding(PKG/r['path'],r)
+old=j(PKG/'administration/preaudit-candidate-1/package-manifest.json')
+new=j(PKG/'package-manifest.json');newby={r['path']:r for r in new['files']}
+changed=[r['path'] for r in old['files'] if r!=newby.get(r['path'])]
+check('preaudit changed only declared docs',set(changed)=={'work/capability-discovery/cycle-05/'+n for n in ['README.md','REPRODUCE.md','next-packets.json']})
+check('preaduit manifest original hash',sha((PKG/'administration/preaudit-candidate-1/package-manifest.json').read_bytes())=='cd642cf07fe03976b5337f8bbce3b91bd48445141e4dc684e62cca8fa8b95253')
+index=j(PKG/'administration/capture-index-final.json');inventory=j(STAGE/'F2/E1104/inventory.json')
+for omission in index['omitted']:
+    original=next(r for r in inventory['records'] if Path(r['originalPngPath']).name==Path(omission['original']).name)
+    check('omitted original source identity '+omission['original'],omission['sha256']==original['sha256'] and omission['bytes']==original['bytes'] and all(omission['source'][k]==original[k] for k in ['ref','path','gitBlob','fullRgbaSha256','fullRgbaBytes','frame','decoder']))
+# Recheck exact closure and entire payload after probes; read-only and CV-free.
+final=subprocess.run(['python3',str(PKG/'verify-package.py'),'--phase','final'],capture_output=True)
+for suffix,raw in [('stdout.log',final.stdout),('stderr.log',final.stderr)]:
+    with (ROOT/('final-verifier.'+suffix)).open('xb') as f:f.write(raw)
+check('post audit verifier exit0',final.returncode==0)
+output={'schema':'cycle05-independent-provenance-linkage@1','status':'PASS_RETAINED_BINDINGS_ONLY','checks':checks,'checkCount':len(checks),'artifactCounts':counts,'preaduitChangedOriginals':changed,'finalVerifierExitCode':final.returncode,'qualifications':['Source/artifact/test/result records are exact historical bytes and linkage; this does not authenticate execution or reperform tests/CV/scientific review.','No codec/product imports, source-image fetch/decode, producer/replay/renderer/test execution or mutable native-state inference.']}
+with (ROOT/'provenance-evidence.json').open('x') as f:json.dump(output,f,indent=2);f.write('\n')
+print(json.dumps({k:v for k,v in output.items() if k!='checks'},indent=2))

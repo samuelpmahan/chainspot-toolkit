@@ -1,0 +1,349 @@
+{
+  "schema": "cycle05-R1104-read-only-verification@1",
+  "job_id": "R1104",
+  "worker": "F6",
+  "bindings": {
+    "result.json": {
+      "sha256": "35bdb7b92c70afe5da60979148401d38067c363f53ca6364377b6a74e06a4408",
+      "bytes": 2298
+    },
+    "inventory.json": {
+      "sha256": "79cde0a32b54a7933d1425e7fe24b162237b5de5113f46058117365cb214c57a",
+      "bytes": 4866
+    },
+    "testimony.json": {
+      "sha256": "2b9962d844ad8c55ef9dda5738519af3f9577ff8da07173762b06f5fbac676c3",
+      "bytes": 2993
+    },
+    "protocol-proposal.json": {
+      "sha256": "cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829",
+      "bytes": 12718
+    },
+    "inventory-originals.py": {
+      "sha256": "befdab77073724e06c20525802231b3dc652a3e611c6feae7a63f67a13aea6f1",
+      "bytes": 2754
+    },
+    "inspect-crop.py": {
+      "sha256": "74c2b5a686f2f3f76d3a7cdfd25a2f3512080688eaf71f956c4c0f32696d881c",
+      "bytes": 416
+    },
+    "freeze-proposal.py": {
+      "sha256": "2e43d94a84e0e3786d21f397d732192e567cee0548d4143881a40ee75b081192",
+      "bytes": 14175
+    }
+  },
+  "originals": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F2/E1104/Lenard-3.original.png",
+      "gitBlob": "de68655cb5f340c0aec4aa320bf7a23a5d3181cc",
+      "encodedSha256": "e19583be03c23a2a3692e5c91b166477d644cf1964e8d39b3f2e4e128ddd7f54",
+      "decodedRgbaSha256": "910cb60cc584ecbaa655b4034564683b54dc8f97632365a9b618af5c6f2cb23c",
+      "ihdr": [
+        1290,
+        2796,
+        8,
+        2,
+        0,
+        0,
+        0
+      ],
+      "decoder": "12.3.0",
+      "sourceMode": "RGB",
+      "appendedAlpha": "all255",
+      "matchesOriginalGitBlob": true
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F2/E1104/Lenard-4.original.png",
+      "gitBlob": "b1b8bd99bef352ffee0cd47897944c4861092e4f",
+      "encodedSha256": "d877c38ea6c602a98af966e20f90bc4ab36e95d9a20c8597333f60e192c12d91",
+      "decodedRgbaSha256": "597ee6face1de6b925ee0b6e455a6ff6baec607397a6f154d327eada41164116",
+      "ihdr": [
+        1290,
+        2796,
+        8,
+        2,
+        0,
+        0,
+        0
+      ],
+      "decoder": "12.3.0",
+      "sourceMode": "RGB",
+      "appendedAlpha": "all255",
+      "matchesOriginalGitBlob": true
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F2/E1104/Lenard-5.original.png",
+      "gitBlob": "78a4345489a5544640859127cd79f5a06bf9f21b",
+      "encodedSha256": "30fa01879840deb0584ffe001fa39779998710010faeae93510dbc7a8a0abe6e",
+      "decodedRgbaSha256": "4379abb30a5b0907aa0e1435b13e19eafe8fdd31ac57c9b8bdff4495a14fdc2a",
+      "ihdr": [
+        1290,
+        2796,
+        8,
+        2,
+        0,
+        0,
+        0
+      ],
+      "decoder": "12.3.0",
+      "sourceMode": "RGB",
+      "appendedAlpha": "all255",
+      "matchesOriginalGitBlob": true
+    }
+  ],
+  "inspectionCrop": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle05/F2/E1104/Lenard-5.inspection-crop.png",
+    "encodedSha256": "fecfff14beff8dcfb42203f2b2c1fabaef2e52374815274c8e1830d5b813cc84",
+    "exactIntegerCropPixels": true,
+    "usedForMeasurement": false
+  },
+  "heading": {
+    "phiRad": -0.20539538918976738,
+    "unitTangent": [
+      0.9789804197376051,
+      -0.20395425411200105
+    ],
+    "positiveUnitNormal": [
+      0.20395425411200105,
+      0.9789804197376051
+    ],
+    "offsetOriginMatchesPlus6": true
+  },
+  "support": [
+    {
+      "group": "primary",
+      "window": "before16",
+      "stationCount": 16,
+      "conservativeFullSourceBoundsPx": [
+        746.3067572206975,
+        858.6826130460158,
+        782.3658693476991,
+        959.8439230855682
+      ],
+      "strictInterior": true
+    },
+    {
+      "group": "primary",
+      "window": "core16",
+      "stationCount": 16,
+      "conservativeFullSourceBoundsPx": [
+        761.9704439364991,
+        855.4193449802237,
+        798.0295560635009,
+        956.5806550197763
+      ],
+      "strictInterior": true
+    },
+    {
+      "group": "primary",
+      "window": "after16",
+      "stationCount": 16,
+      "conservativeFullSourceBoundsPx": [
+        777.6341306523009,
+        852.1560769144318,
+        813.6932427793025,
+        953.3173869539842
+      ],
+      "strictInterior": true
+    },
+    {
+      "group": "primary",
+      "window": "long48",
+      "stationCount": 48,
+      "conservativeFullSourceBoundsPx": [
+        746.3067572206975,
+        852.1560769144318,
+        813.6932427793025,
+        959.8439230855682
+      ],
+      "strictInterior": true
+    },
+    {
+      "group": "bright-nonpath",
+      "window": "before16",
+      "stationCount": 16,
+      "conservativeFullSourceBoundsPx": [
+        746.3067572206975,
+        692.6826130460158,
+        782.3658693476991,
+        793.8439230855682
+      ],
+      "strictInterior": true
+    },
+    {
+      "group": "bright-nonpath",
+      "window": "core16",
+      "stationCount": 16,
+      "conservativeFullSourceBoundsPx": [
+        761.9704439364991,
+        689.4193449802237,
+        798.0295560635009,
+        790.5806550197763
+      ],
+      "strictInterior": true
+    },
+    {
+      "group": "bright-nonpath",
+      "window": "after16",
+      "stationCount": 16,
+      "conservativeFullSourceBoundsPx": [
+        777.6341306523009,
+        686.1560769144318,
+        813.6932427793025,
+        787.3173869539842
+      ],
+      "strictInterior": true
+    },
+    {
+      "group": "bright-nonpath",
+      "window": "long48",
+      "stationCount": 48,
+      "conservativeFullSourceBoundsPx": [
+        746.3067572206975,
+        686.1560769144318,
+        813.6932427793025,
+        793.8439230855682
+      ],
+      "strictInterior": true
+    },
+    {
+      "group": "normal-plus6",
+      "window": "before16",
+      "stationCount": 16,
+      "conservativeFullSourceBoundsPx": [
+        747.5304827453695,
+        864.5564955644414,
+        783.5895948723711,
+        965.7178056039938
+      ],
+      "strictInterior": true
+    },
+    {
+      "group": "normal-plus6",
+      "window": "core16",
+      "stationCount": 16,
+      "conservativeFullSourceBoundsPx": [
+        763.1941694611711,
+        861.2932274986493,
+        799.2532815881729,
+        962.4545375382019
+      ],
+      "strictInterior": true
+    },
+    {
+      "group": "normal-plus6",
+      "window": "after16",
+      "stationCount": 16,
+      "conservativeFullSourceBoundsPx": [
+        778.8578561769729,
+        858.0299594328574,
+        814.9169683039745,
+        959.1912694724098
+      ],
+      "strictInterior": true
+    },
+    {
+      "group": "normal-plus6",
+      "window": "long48",
+      "stationCount": 48,
+      "conservativeFullSourceBoundsPx": [
+        747.5304827453695,
+        858.0299594328574,
+        814.9169683039745,
+        965.7178056039938
+      ],
+      "strictInterior": true
+    },
+    {
+      "group": "masked-primary",
+      "window": "before16",
+      "stationCount": 16,
+      "conservativeFullSourceBoundsPx": [
+        746.3067572206975,
+        858.6826130460158,
+        782.3658693476991,
+        959.8439230855682
+      ],
+      "strictInterior": true
+    },
+    {
+      "group": "masked-primary",
+      "window": "core16",
+      "stationCount": 16,
+      "conservativeFullSourceBoundsPx": [
+        761.9704439364991,
+        855.4193449802237,
+        798.0295560635009,
+        956.5806550197763
+      ],
+      "strictInterior": true
+    },
+    {
+      "group": "masked-primary",
+      "window": "after16",
+      "stationCount": 16,
+      "conservativeFullSourceBoundsPx": [
+        777.6341306523009,
+        852.1560769144318,
+        813.6932427793025,
+        953.3173869539842
+      ],
+      "strictInterior": true
+    },
+    {
+      "group": "masked-primary",
+      "window": "long48",
+      "stationCount": 48,
+      "conservativeFullSourceBoundsPx": [
+        746.3067572206975,
+        852.1560769144318,
+        813.6932427793025,
+        959.8439230855682
+      ],
+      "strictInterior": true
+    }
+  ],
+  "maskDerivedPremeasurementBinding": {
+    "method": "frozen integer-center predicate, binary Uint8 row-major1290x2796; generated in reviewer memory only",
+    "sha256": "305285b7e2bc9d44dfd572caa8d39030ed1b0c2254c15967fbb9b7bff7fae609",
+    "bytes": 3606840,
+    "ones": 767,
+    "nonzeroBoundsInclusivePx": [
+      765,
+      843,
+      795,
+      969
+    ],
+    "floatingVsExactIntegerPredicateDisagreements": 0,
+    "exactIntegerEquivalent": "abs(24dx-5dy)<=73 AND abs(5dx+24dy)<=1568; dx=x-780,dy=y-906",
+    "scope": "premeasurement visibility bytes only; no raster pixel sampled and no query called"
+  },
+  "exactOperationHashes": [
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/contracts/alpha.profile@1.mjs",
+      "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f"
+    }
+  ],
+  "logicalPublicQueryInvocations": 160,
+  "profilePublicCalls": 16,
+  "edgePairPublicCalls": 48,
+  "stationContrastPublicCalls": 48,
+  "lossPublicCalls": 48,
+  "currentTrackedFilesRehashed": 2062,
+  "priorFilesChanged": [],
+  "localHead": "036d3e14416c40266917c51a0fe8d03785b050f3",
+  "localTree": "e21271ef77a501d4f41d1c9456ce1d23a87c5add",
+  "gitStatusShort": "",
+  "execution": {
+    "cvQueryCalls": 0,
+    "productImports": 0,
+    "producerReruns": 0,
+    "sourceEdits": 0,
+    "gitMutations": 0
+  },
+  "note": "Read-only PNG decoding/hash checks, crop byte comparison and geometric/mask declaration arithmetic only. No public query, profile/fit/contrast/loss or source algorithm executed."
+}

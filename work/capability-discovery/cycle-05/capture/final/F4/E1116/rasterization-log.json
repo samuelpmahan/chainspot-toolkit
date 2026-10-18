@@ -1,0 +1,44 @@
+{
+  "schema": "cycle05-render-rasterization-log/v1",
+  "job_id": "E1116",
+  "worker": "F4",
+  "authority": "Root approved existing Inkscape replacement after CairoSVG unavailable;no install",
+  "start": {
+    "current_time": "2026-10-18 15:11:44 UTC"
+  },
+  "versionCommand": {
+    "command": "/usr/bin/inkscape --version",
+    "chunk_id": "1eb1bf",
+    "wall_time_seconds": 0.00002075,
+    "exit_code": 0,
+    "original_token_count": 10,
+    "output": "Inkscape 1.2.2 (b0a8486541, 2022-12-01)\n"
+  },
+  "conversions": [
+    {
+      "command": "/usr/bin/inkscape discovery-cycle05/F4/E1116/render-01/page-1.svg --export-type=png --export-filename=discovery-cycle05/F4/E1116/render-01/page-1.png",
+      "chunk_id": "21c206",
+      "wall_time_seconds": 0.341727924,
+      "exit_code": 0,
+      "original_token_count": 44,
+      "output": "\n** (inkscape:2): WARNING **: 18:11:44.478: Failed to wrap object of type 'GtkRecentManager'. Hint: this error is commonly caused by failing to call a library init() function.\n"
+    },
+    {
+      "command": "/usr/bin/inkscape discovery-cycle05/F4/E1116/render-01/page-2.svg --export-type=png --export-filename=discovery-cycle05/F4/E1116/render-01/page-2.png",
+      "chunk_id": "2dda36",
+      "wall_time_seconds": 0.240665073,
+      "exit_code": 0,
+      "original_token_count": 44,
+      "output": "\n** (inkscape:2): WARNING **: 18:11:44.470: Failed to wrap object of type 'GtkRecentManager'. Hint: this error is commonly caused by failing to call a library init() function.\n"
+    }
+  ],
+  "finalizer": {
+    "command": "node discovery-cycle05/F4/E1116/renderer.mjs --finalize-pngs discovery-cycle05/F4/E1116/render-01",
+    "exit_code": 0,
+    "output": "{\"status\":\"SVG_PNG_HTML_HASHED\",\"artifacts\":5}\n"
+  },
+  "PNGImagesViewed": 2,
+  "displayRepairs": 0,
+  "producerCalls": 0,
+  "CVCalls": 0
+}

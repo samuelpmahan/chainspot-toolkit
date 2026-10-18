@@ -1,0 +1,17 @@
+{
+  "schema": "E1115-prospective-producer-command@1",
+  "job_id": "E1115",
+  "worker": "F5",
+  "command": "node experiments/capability-discovery/station-evidence/cli.mjs run --manifest /workspace/scratch/8528bb251845/discovery-cycle05/F5/E1115/manifest.json --out /workspace/scratch/8528bb251845/discovery-cycle05/F5/E1115/run",
+  "workdir": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+  "startUtc": "2026-10-18 14:55:10 UTC",
+  "manifestSha256": "3a27691d56bd32cb22c5f522b4114d3eaadc5adebc2a57740439eceff5200ed2",
+  "attempt": 1,
+  "producerRunsAdmitted": 1,
+  "expectedOnly": {
+    "PATHQueries": 32,
+    "constantEntries": 8,
+    "CalculationEntries": 40
+  },
+  "failurePolicy": "STOP; no repair/retry/rerun"
+}
