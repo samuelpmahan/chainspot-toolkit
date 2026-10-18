@@ -1,0 +1,21 @@
+// Coordinator bookkeeping after executor loss, not autonomous recovery/dispatch.
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+const p='discovery-cycle06/state.json',bytes=fs.readFileSync(p),s=JSON.parse(bytes);
+if(s.epoch!==15)throw Error('unexpected state counter');
+const agents={G5:'/root/lab6_resume_g5',V1:'/root/lab6_resume_v1',V2:'/root/lab6_resume_v2',G6:'/root/lab6_resume_g6',R1:'/root/lab6_resume_r1',R2:'/root/lab6_resume_r2'};
+const old=[];
+for(const[w,id]of Object.entries({G5:'E1513',V1:'E1515',V2:'E1514'})){
+ if(s.workers[w].job!==id||s.jobs[id].status!=='running')throw Error('unexpected old pin');
+ old.push({worker:w,previousWorker:s.workers[w],job:s.jobs[id]});
+ s.jobs[id]={...s.jobs[id],status:'pending',worker:null,started_at:null,finished_at:null};
+}
+fs.writeFileSync('discovery-cycle06/state.before-recovery-19Z.json',bytes,{flag:'wx'});
+for(const w of Object.keys(agents))s.workers[w]={job:null,agent:null};
+s.jobs.E1516={id:'E1516',kind:'extract',allow_workers:['G6'],status:'pending',worker:null,started_at:null,finished_at:null,subject:'Sole source/Git recovery integration owner; source22 freeze/all2523 old files and minimal future package/nextpolicy readback, NO source edit/test/CV/commit/finalarchive before actual measurements+reviews. Keep source frozen, no giant historical archive.'};
+s.jobs.R1514={id:'R1514',kind:'review',depends_on:'E1514',allow_workers:['R1'],status:'pending',worker:null,started_at:null,finished_at:null,subject:'Independent source-only review of frozen V2 renderer proposal88ad... plus contract; no producer/output-read/import/render yet. Check exact trace authority/order/hashguards/shared-model and negative/UNKNOWN semantics; preserve concrete code findings.'};
+s.events.push({type:'coordinator_executor_loss_requeue',at:new Date().toISOString(),oldPins:old,newActualRegisteredAgents:agents,previousStateSha256:createHash('sha256').update(bytes).digest('hex'),reason:'Only root was live at recovery. Requeue only three unfinished packets; completed evidence retained. Six actual fresh requested Sol6.1/high registered; R1 guarded by E1514, R2 reserve until real producer ready. Not native task completion or autonomous dispatch.'});
+s.service.actualCapacity='Six fresh actual gpt-6.1-sol/high Lab contexts; no HH worker dispatched by this Lab invocation. Only useful ready/guarded work assigned, reserve remains BENCH.';
+fs.writeFileSync(p,JSON.stringify(s,null,2)+'\n');
+fs.writeFileSync('discovery-cycle06/registry-recovery-19Z.json',JSON.stringify({schema:'actual-worker-registry@1',observedAt:new Date().toISOString(),workers:Object.entries(agents).map(([id,agent])=>({id,agent,model:'gpt-6.1-sol',reasoning:'high',actualRegistered:true})),oldRegistryPreserved:true},null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({requeued:old.map(x=>x.job.id),actualContexts:6,guardedReview:'R1514',reserve:'R2'}));

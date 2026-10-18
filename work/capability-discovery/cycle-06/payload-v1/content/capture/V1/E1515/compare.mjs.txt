@@ -1,0 +1,371 @@
+/** E1515 pure output comparator. No top-level I/O; no product/codec imports.
+ * Call only after separate admission. Codec is the hash-verified unchanged
+ * codec namespace supplied by the admitted caller, never loaded here.
+ * Admission contains retained manifest/protocol/attestation bytes and observed
+ * outer process records; image/PNG/mask bodies are never read by this module.
+ * Results contain native raw values (including NaN/-0/Uint8Array): do not
+ * serialize them with ordinary JSON and claim that serialization is lossless.
+ */
+import { createHash } from 'node:crypto';
+import { openSync, closeSync, fstatSync, readSync, lstatSync, readdirSync, constants } from 'node:fs';
+import { resolve, join, dirname, relative, isAbsolute } from 'node:path';
+
+export const POLICY_SHA256='b146b7183e4aab0708792b7f72aa37790113ca8061f34c551ea590f24391027d';
+const CODEC='3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015';
+const PROTOCOL='cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829';
+const ATTESTATION='9f1cb90eed3c74214c9a03029730ea1ab487c48bd86b89cbe3a701eebe923ef1';
+const RGBA='4379abb30a5b0907aa0e1435b13e19eafe8fdd31ac57c9b8bdff4495a14fdc2a';
+const PNG='30fa01879840deb0584ffe001fa39779998710010faeae93510dbc7a8a0abe6e';
+const MASK_SHA='305285b7e2bc9d44dfd572caa8d39030ed1b0c2254c15967fbb9b7bff7fae609';
+const FRAME='Lenard-5.original-source-pixel-centers';
+const RASTER='px.image.cropped', MASK='tk.s6.pathMask';
+const BASE='experiments/capability-discovery/';
+const LENARD=BASE+'lenard5-station-evidence/';
+const STATION=BASE+'station-evidence/';
+const IMPLEMENTATION=[
+ ['recipe.mjs',29160,'4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6'],
+ ['recipe.test.mjs',9638,'0163e8d12298d32e4c825da1ea734b320b672bdef59affbea20ff42cac7fb0a2'],
+ ['README.md',9668,'6a40f91299961893ec7de5096b366f234be46743e7b86036a32e41dda24afaf7'],
+ ['cli.mjs',7213,'a711ab50bc50bd3f69e61656f12002d41d901e19d7db4e8a9b3b5eb188457ffa'],
+ ['cli.test.mjs',8610,'2bc624f45cd47a73f79f864483c89da4794361a6638acec22cf432c816f3ec96']
+];
+const LEGACY=[['codec.mjs',CODEC],['cli.mjs','4ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c'],['recipe.mjs','ef7248daf5c83fd014c4a5004aa511e41399492a46be0460fe566ab421383ad3']];
+const PHYSICAL=[
+ ['width/vendor/active/ports/s6straight/pathSpace.mjs','d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e'],
+ ['width/vendor/active/contracts/alpha.profile@1.mjs','9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f'],
+ ['root-inventory/source/fg/store.mjs','122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074'],
+ ['root-inventory/source/fg/pxset.mjs','01e68e82741d4af56901b3306a304ca540e8ab0d73a12ba20a0afbe0e788f5d5'],
+ ['root-inventory/source/fg/render.mjs','39a24a645c222430464592546eb6bdc1a8b190902ed5708ecd951b0bb639315a'],
+ ['root-inventory/source/fg/canon.mjs','3cc0319f4678eaf8679adcbfaa9db054841417a966c079019b0f72e24ba24406'],
+ ['root-inventory/source/fg/png.mjs','7668bab9de6a19a2cc6f44e5ac47d6e89373da130764365cf32011187a980241'],
+ ['root-inventory/source/fg/alpha/alphaRender.mjs','4d17e1da77b1e5ceb6a4a2609d26c010caa6c43df8392e9599544299d9e1c549'],
+ ['root-inventory/source/contracts/alpha.profile@1.mjs','9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f']
+];
+const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+const ptr=(p,k)=>p+'/'+String(k).replaceAll('~','~0').replaceAll('/','~1');
+function fail(message,pointer='',left=null,right=null) {
+  throw Object.assign(new Error(message),{pointer,left,right});
+}
+function requireThat(ok,message,pointer='',left=null,right=null) { if(!ok) fail(message,pointer,left,right); }
+function finite(v,p='') { requireThat(typeof v==='number'&&Number.isFinite(v)&&v>=0&&!Object.is(v,-0),'finite nonnegative timing number required',p,v); }
+function keys(v,expected,p='') {
+  requireThat(v!==null&&typeof v==='object'&&Object.getPrototypeOf(v)===Object.prototype,'plain object required',p,v);
+  equalTree(Reflect.ownKeys(v),expected,p);
+}
+function length(v,n,p='') { requireThat(Array.isArray(v)&&v.length===n,'fixed array length required',p,v?.length,n); }
+
+/** Exact Object.is leaves, object prototype/key order, dense arrays and typed bytes. */
+export function equalTree(a,b,p='',allowed=new Set(),used=[]) {
+  if(allowed.has(p)) { finite(a,p); finite(b,p); used.push({pointer:p,left:a,right:b}); return; }
+  if(typeof a!=='object'||a===null||typeof b!=='object'||b===null) {
+    requireThat(Object.is(a,b),'exact value differs',p,a,b); return;
+  }
+  const ap=Object.getPrototypeOf(a),bp=Object.getPrototypeOf(b);
+  requireThat(ap===bp,'object/typed constructor differs',p,a,b);
+  requireThat(ap===Object.prototype||ap===null||ap===Array.prototype||ap===Uint8Array.prototype,'unsupported object prototype',p,a,b);
+  const ak=Reflect.ownKeys(a),bk=Reflect.ownKeys(b);
+  requireThat(ak.length===bk.length&&ak.every((k,i)=>typeof k==='string'&&k===bk[i]),'key order/length differs',p,ak,bk);
+  if(ap===Array.prototype)requireThat(ak.length===a.length+1&&bk.length===b.length+1&&Array.from({length:a.length},(_,i)=>String(i)).every((k,i)=>ak[i]===k),'dense undecorated array required',p);
+  if(ap===Uint8Array.prototype)requireThat(ak.length===a.length&&bk.length===b.length&&ak.every((k,i)=>k===String(i)),'undecorated Uint8Array required',p);
+  for(const k of ak) {
+    const ad=Object.getOwnPropertyDescriptor(a,k),bd=Object.getOwnPropertyDescriptor(b,k);
+    requireThat(Object.hasOwn(ad,'value')&&Object.hasOwn(bd,'value')&&ad.enumerable===bd.enumerable,'data property required',ptr(p,k));
+    equalTree(ad.value,bd.value,ptr(p,k),allowed,used);
+  }
+}
+export function verifyBinding(bytes,binding,p='') {
+  requireThat(Object.getPrototypeOf(bytes)===Uint8Array.prototype,'exact Uint8Array bytes required',p);
+  requireThat(Number.isSafeInteger(binding.bytes)&&binding.bytes===bytes.length,'byte length binding differs',p,bytes.length,binding.bytes);
+  const actual=sha(bytes); requireThat(actual===binding.sha256,'SHA256 binding differs',p,actual,binding.sha256);
+  return {bytes:bytes.length,sha256:actual};
+}
+export function fixedDeclarations() {
+  const groups=[['primary',780,906,false],['bright-nonpath',780,740,false],['normal-plus6',781.223725524672,911.8738825184256,false],['masked-primary',780,906,true]];
+  const windows=[['before16',-24,-8],['core16',-8,8],['after16',8,24],['long48',-24,24]];
+  return groups.flatMap(([groupId,x,y,masked])=>windows.map(([windowId,t0Px,t1Px])=>({
+    id:`${groupId}/${windowId}`,groupId,windowId,imageId:'Lenard-5',frame:FRAME,widthPx:1290,heightPx:2796,rgbaSha256:RGBA,
+    mask:masked?{kind:'Uint8Array',bytes:3606840,sha256:MASK_SHA}:null,
+    originPx:[x,y],phiRad:-0.20539538918976738,t0Px,t1Px,stepPx:1,widthsPx:[34,42,50]
+  })));
+}
+export function fixedPlan() {
+  const out=[];
+  for(const c of fixedDeclarations()) {
+    const base=()=>({raster:RASTER,mask:MASK,originPx:[...c.originPx],phiRad:c.phiRad,t0Px:c.t0Px,t1Px:c.t1Px,stepPx:1});
+    const push=(widthPx,query,rawArgs)=>out.push({planIndex:out.length,comparisonId:c.id,groupId:c.groupId,windowId:c.windowId,widthPx,query:'fn.q.path.'+query,rawArgs});
+    push(null,'profile',{...base(),lat0Px:0});
+    for(const widthPx of [34,42,50]) {
+      push(widthPx,'edgePair',{...base(),lat0Px:0,widthPx,tolPx:2,latLimPx:12,minOk:{count:8,ofStations:0.2}});
+      push(widthPx,'stationContrast',{...base(),widthPx,bandPx:[1,3],alongPx:2});
+      push(widthPx,'loss',{...base(),widthPx,profile:null,threshold:null,tauLum:8});
+    }
+  }
+  return out;
+}
+export function validateTiming(sidecar) {
+  length(sidecar.intervals,182,'/intervals'); length(sidecar.calculationLog,176,'/calculationLog');
+  sidecar.intervals.forEach((v,i)=>{
+    const p='/intervals/'+i; for(const k of ['start','end','elapsed']) finite(v[k],ptr(p,k));
+    requireThat(v.end>=v.start&&Object.is(v.elapsed,v.end-v.start),'interval arithmetic differs',p,v);
+    if(i) requireThat(v.start>=sidecar.intervals[i-1].end,'interval order reversed/overlapping',p,v);
+  });
+  sidecar.calculationLog.forEach((v,i)=>{
+    const x=v.nativeEntry.elapsedMs,p='/calculationLog/'+i+'/nativeEntry/elapsedMs'; finite(x,p);
+    requireThat(Object.is(x,Math.round(x*1000)/1000),'native milliseconds not source-rounded',p,x);
+    if(i%11===0) requireThat(x<=sidecar.calculationLog[i+1].nativeEntry.elapsedMs,'nested constant exceeds profile duration',p,x,sidecar.calculationLog[i+1].nativeEntry.elapsedMs);
+  });
+}
+export function validateNativeCaptures(log,plan=fixedPlan()) {
+  length(log,176,'/calculationLog');
+  log.forEach((v,j)=>{
+    const c=Math.floor(j/11),a=j%11,id=plan[10*c].comparisonId,p='/calculationLog/'+j;
+    finite(v?.nativeEntry?.elapsedMs,p+'/nativeEntry/elapsedMs');
+    const constant=a===0;
+    equalTree(v,{comparisonId:id,captureIndex:a,nativeEntry:{
+      seq:constant?1:a===1?0:a,parent:constant?0:null,depth:constant?1:0,
+      calculation:constant?'fn.input.lenard5StationMeasurement':plan[10*c+a-1].query,
+      store:id,caller:constant?'lazy:px.image.cropped':'cycle06-lenard5-station-measurement',site:null,inParts:[],
+      outParts:constant?[RASTER,MASK]:[],elapsedMs:v.nativeEntry.elapsedMs,status:'ok',error:null,
+      emits:constant?null:{computed:1},key:null,cached:false,computedMs:null
+    }},p);
+  });
+}
+export function intervalMetadata() {
+  const out=[{phase:'validation'},{phase:'file-preflight'},{phase:'snapshot',comparisonId:fixedDeclarations()[0].id},
+    {phase:'source-verify-before-import'},{phase:'import'},{phase:'source-verify-after-import'}];
+  const plan=fixedPlan();
+  for(let c=0;c<16;c++) {
+    if(c) out.push({phase:'snapshot',comparisonId:plan[10*c].comparisonId});
+    for(let k=0;k<10;k++) { const q=plan[10*c+k];out.push({phase:'query',comparisonId:q.comparisonId,planIndex:q.planIndex,query:q.query}); }
+  }
+  out.push({phase:'source-verify-after-run'}); return out;
+}
+export function timingPaths() {
+  const set=new Set();
+  for(let i=0;i<182;i++) for(const k of ['start','end','elapsed']) set.add(`/intervals/${i}/${k}`);
+  for(let j=0;j<176;j++) set.add(`/calculationLog/${j}/nativeEntry/elapsedMs`);
+  return set;
+}
+const RESOURCE={declaredComparisonInputByteSum:245265120,canonicalPlaneBytes:18034200,aggregateNativeAnswerTypedBytes:294912,
+  maxComparisonProfileGridVisits:46272,maxComparisonContrastGridVisits:28800,maxLossCorridorRGBBytes:14544,
+  qualification:'source-derived selected allocations/work only; not measured RSS, peak memory or timing',
+  codecCaps:{maxDepth:32,maxNodes:500000,maxTypedBytes:1000000,maxBytes:33554432,sidecarMaxBytes:4194304}};
+const CLAIMS={promoted:false,heldout:false,pathIdentity:'UNKNOWN',physicalEdgeIdentity:'UNKNOWN',calibratedWidth:'UNKNOWN',
+  geometryScientificIdentity:'UNKNOWN',scientificAcceptance:'UNKNOWN',humanAcceptance:'UNKNOWN',continuity:'UNKNOWN',
+  tau8:'historical native diagnostic',overlay:'WHITE brightness proxy, not alpha; threshold:null',
+  dependence:'same exposed image and overlapping supports; not independent confidence',historicalLimit:'synthetic capsule/intact collision retained'};
+
+function readBytes(path,cap) {
+  requireThat(!lstatSync(path).isSymbolicLink(),'symlink input refused',path);
+  const fd=openSync(path,constants.O_RDONLY|constants.O_NONBLOCK|constants.O_NOFOLLOW);
+  try {
+    const s=fstatSync(fd); requireThat(s.isFile()&&Number.isSafeInteger(s.size)&&s.size>=0&&s.size<=cap,'regular bounded file required',path,s.size,cap);
+    const bytes=new Uint8Array(s.size); let position=0;
+    while(position<bytes.length) { const n=readSync(fd,bytes,position,bytes.length-position,position);requireThat(n>0,'file shortened',path);position+=n; }
+    requireThat(readSync(fd,new Uint8Array(1),0,1,position)===0&&fstatSync(fd).size===s.size,'file changed length',path);
+    return bytes;
+  } finally {closeSync(fd);}
+}
+export function parseDocument(bytes) { return JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes)); }
+export function parsePrettyDocument(bytes,p='') {
+  const value=parseDocument(bytes);
+  equalBytes(bytes,new TextEncoder().encode(JSON.stringify(value,null,2)+'\n'),p);
+  return value;
+}
+function boundedPath(v) { requireThat(typeof v==='string'&&v.trim().length>0&&v.length<=4096&&!v.includes('\0'),'bounded path required','',v);return v; }
+function checkSource(sourceRoot,hashes) {
+  requireThat(isAbsolute(sourceRoot)&&resolve(sourceRoot)===sourceRoot,'exact absolute source root required');
+  const bindings=new Map();
+  for(const [path,bytes,sha256] of IMPLEMENTATION) {
+    const full=join(sourceRoot,LENARD,path),raw=readBytes(full,131072);verifyBinding(raw,{bytes,sha256},full);
+    const binding={path:full,bytes:raw.length,sha256:sha(raw)};bindings.set(LENARD+path,binding);hashes.push(binding);
+  }
+  for(const [base,entries] of [[STATION,LEGACY],[BASE+'probes/',PHYSICAL]]) for(const [path,digest] of entries) {
+    const full=join(sourceRoot,base,path),raw=readBytes(full,33554432);
+    requireThat(sha(raw)===digest,'frozen source digest differs',full,sha(raw),digest);
+    const binding={path:full,bytes:raw.length,sha256:digest};bindings.set(base+path,binding);hashes.push(binding);
+  }
+  const closure={verified:true,entries:PHYSICAL.map(([path,digest])=>({path:BASE+'probes/'+path,expectedSha256:digest,actualSha256:digest,error:null}))};
+  const implementation=[...['recipe.mjs','cli.mjs'].map(path=>[LENARD+path,null]),...LEGACY.map(([path,digest])=>[STATION+path,digest])].map(([path,expectedSha256])=>{
+    const b=bindings.get(path);return {path:b.path,expectedSha256,actualSha256:b.sha256,bytes:b.bytes};
+  });
+  return {beforeImport:closure,afterImport:closure,afterRun:closure,implementationBefore:implementation,implementationAfterImport:implementation,
+    implementationAfterRun:implementation,importCaching:'host ESM cache; source hashes do not authenticate execution or defeat concurrent replacement',renderer:null};
+}
+function requestFromAdmission(a,hashes) {
+  requireThat(isAbsolute(a.manifestPath)&&resolve(a.manifestPath)===a.manifestPath,'exact absolute manifest path required');
+  requireThat(a.manifestBytes.length<=8192,'manifest cap exceeded');
+  const disk=parseDocument(a.manifestBytes),diskKeys=['schema','enabled','protocolId','protocolPath','inputAttestationPath'];
+  requireThat(disk!==null&&Object.getPrototypeOf(disk)===Object.prototype&&Object.keys(disk).length===diskKeys.length&&diskKeys.every(k=>Object.hasOwn(disk,k)),'exact admission manifest fields required');
+  equalTree([disk.schema,disk.enabled,disk.protocolId],['cycle06-lenard5-files@1',true,'lenard5-fixed16']);
+  const protocolPath=resolve(dirname(a.manifestPath),boundedPath(disk.protocolPath));
+  const attestationPath=resolve(dirname(a.manifestPath),boundedPath(disk.inputAttestationPath));
+  verifyBinding(a.protocolBytes,{bytes:12718,sha256:PROTOCOL},protocolPath);
+  verifyBinding(a.attestationBytes,{bytes:4252,sha256:ATTESTATION},attestationPath);
+  const at=parseDocument(a.attestationBytes);
+  equalTree([at.schema,at.sourceRef,at.gitBlob,at.protocol.sha256,at.image.width,at.image.height,at.image.frame],
+    ['cycle06-exact-input-attestation@1','49255331791b1245cf0f9cd699816175f94e70f2','78a4345489a5544640859127cd79f5a06bf9f21b',PROTOCOL,1290,2796,FRAME]);
+  const suppliedFiles=[{role:'disk-manifest',path:a.manifestPath,bytes:a.manifestBytes.length,sha256:sha(a.manifestBytes)},
+    {role:'protocol',path:protocolPath,bytes:12718,sha256:PROTOCOL},{role:'input-attestation',path:attestationPath,bytes:4252,sha256:ATTESTATION}];
+  for(const [role,entry,bytes,sha256] of [['png',at.sourcePng,3943106,PNG],['rgba',at.fullRgba,14427360,RGBA],['mask',at.mask,3606840,MASK_SHA]]) {
+    equalTree([entry.bytes,entry.sha256],[bytes,sha256]);
+    suppliedFiles.push({role,path:resolve(dirname(attestationPath),boundedPath(entry.path)),bytes,sha256});
+  }
+  hashes.push(...suppliedFiles.slice(0,3).map(v=>({...v,authority:'retained admission bytes'})));
+  return {protocolId:'lenard5-fixed16',protocolSha256:PROTOCOL,attestationSha256:ATTESTATION,schema:'cycle06-lenard5-request-binding@1',
+    request:{schema:'cycle06-lenard5-request@1',enabled:true,manifestPath:a.manifestPath},comparisons:fixedDeclarations(),suppliedFiles,
+    sourceOriginal:{ref:'49255331791b1245cf0f9cd699816175f94e70f2',path:'specimens/dev/Lenard-5.png',gitBlob:'78a4345489a5544640859127cd79f5a06bf9f21b',frame:FRAME},
+    encodedFileVerification:{verified:true,sha256:PNG,bytes:3943106,meaning:'actual file hash, no in-run PNG decode'},
+    rawStageVerification:{verified:true,sha256:RGBA,bytes:14427360,meaning:'actual raw file hash; correspondence is independently reviewed staging testimony'},
+    decoderTestimony:at.provenance.decoder,stagingImplementation:at.strictDecoder.implementation,
+    maskPolicy:{nullComparisons:12,explicitMaskComparisons:4,maskSha256:MASK_SHA,meaning:'caller synthetic visibility, not detected physical occlusion'},
+    settings:{profile:{lat0Px:0},edgePair:{tolPx:2,latLimPx:12,minOk:{count:8,ofStations:0.2}},stationContrast:{bandPx:[1,3],alongPx:2},loss:{profile:null,threshold:null,tauLum:8}},
+    predictedOnly:{stores:16,PATHQueries:160,constants:16,CalculationEntries:176,perStoreCallbackSeq:[1,0,2,3,4,5,6,7,8,9,10]},resourcePlan:RESOURCE};
+}
+export function validateRun(trace,sidecar,expected) {
+  const plan=fixedPlan(),decl=fixedDeclarations();
+  keys(trace,['schema','protocolId','protocolSha256','status','error','requestBinding','sourceBinding','plannedQueries','queryTrace','counts','inputIntegrity','claims']);
+  equalTree([trace.schema,trace.protocolId,trace.protocolSha256,trace.status,trace.error],['cycle06-lenard5-trace@1','lenard5-fixed16',PROTOCOL,'COMPLETED',null]);
+  equalTree(trace.requestBinding,expected.requestBinding,'/requestBinding');equalTree(trace.sourceBinding,expected.sourceBinding,'/sourceBinding');
+  equalTree(trace.plannedQueries,plan,'/plannedQueries');equalTree(trace.claims,CLAIMS,'/claims');
+  equalTree(trace.counts,{requestedPATH:160,attemptedPATH:160,completedPATH:160,failedPATH:0,capturedCalculationEntries:176,capturedConstantEntries:16,capturedPATHEntries:160},'/counts');
+  keys(sidecar,['schema','protocolId','status','error','runtime','intervals','calculationLog']);
+  equalTree([sidecar.schema,sidecar.protocolId,sidecar.status,sidecar.error],['cycle06-lenard5-sidecar@1','lenard5-fixed16','COMPLETED',null]);
+  equalTree(sidecar.runtime,{node:expected.runtime.node,platform:expected.runtime.platform,arch:expected.runtime.arch,clock:'node:perf_hooks.performance.now',nondeterministic:true},'/runtime');
+  validateNativeCaptures(sidecar.calculationLog,plan);validateTiming(sidecar);
+  intervalMetadata().forEach((m,i)=>{const v=sidecar.intervals[i];equalTree(v,{...m,start:v.start,end:v.end,elapsed:v.elapsed,nondeterministic:true},'/intervals/'+i);});
+  const integrity=trace.inputIntegrity,canonical={rgbaSha256:RGBA,maskSha256:MASK_SHA};
+  keys(integrity,['suppliedPlanes','snapshots','postFiles','request','postErrors'],'/inputIntegrity');
+  equalTree(integrity.suppliedPlanes,{pre:canonical,post:canonical,verified:true},'/inputIntegrity/suppliedPlanes');
+  equalTree(integrity.request,{verified:true,error:null},'/inputIntegrity/request');equalTree(integrity.postErrors,[],'/inputIntegrity/postErrors');
+  equalTree(integrity.postFiles,expected.requestBinding.suppliedFiles.map(v=>({role:v.role,path:v.path,expectedSha256:v.sha256,actualSha256:v.sha256,verified:true,error:null})),'/inputIntegrity/postFiles');
+  length(integrity.snapshots,16,'/inputIntegrity/snapshots');length(trace.queryTrace,160,'/queryTrace');
+  let rasterKey,nullKey,stripKey;
+  decl.forEach((c,i)=>{
+    const s=integrity.snapshots[i],p='/inputIntegrity/snapshots/'+i,hashes={rgbaSha256:RGBA,maskSha256:c.mask===null?null:MASK_SHA};
+    keys(s.partKeys,[RASTER,MASK],p+'/partKeys');
+    for(const key of [RASTER,MASK]) requireThat(typeof s.partKeys[key]==='string'&&s.partKeys[key].length>0,'actual Part key required',p+'/partKeys/'+key,s.partKeys[key]);
+    if(i===0) {rasterKey=s.partKeys[RASTER];nullKey=s.partKeys[MASK];}
+    equalTree(s.partKeys[RASTER],rasterKey,p+'/partKeys/'+RASTER);
+    if(i<12) equalTree(s.partKeys[MASK],nullKey,p+'/partKeys/'+MASK);
+    else {if(i===12)stripKey=s.partKeys[MASK];equalTree(s.partKeys[MASK],stripKey,p+'/partKeys/'+MASK);requireThat(stripKey!==nullKey,'null and strip Part keys must differ',p);}
+    const snapshotId=`lenard5-fixed16/${i}/${c.id}`;
+    equalTree(s,{comparisonId:c.id,snapshotId,pre:hashes,checks:Array.from({length:10},(_,k)=>({planIndex:10*i+k,post:hashes,verified:true})),post:hashes,verified:true,partKeys:s.partKeys,error:null},p);
+    for(let k=0;k<10;k++) {
+      const n=10*i+k,row=trace.queryTrace[n];keys(row,['planIndex','comparisonId','state','resolvedIdentity','nativeAnswer','error'],'/queryTrace/'+n);
+      equalTree(row,{planIndex:n,comparisonId:c.id,state:'COMPLETED',resolvedIdentity:{snapshotId,comparisonId:c.id,frame:FRAME,widthPx:1290,heightPx:2796,
+        rgbaSha256:RGBA,maskKind:c.mask===null?null:'Uint8Array',maskSha256:hashes.maskSha256,partKeys:s.partKeys},nativeAnswer:row.nativeAnswer,error:null},'/queryTrace/'+n);
+    }
+  });
+}
+export function artifactModel() {
+  const plan=fixedPlan();return [
+    ...plan.map(q=>({path:`fragments/answer-${q.planIndex}.json`,kind:'answer',comparisonId:q.comparisonId,planIndex:q.planIndex})),
+    ...Array.from({length:176},(_,j)=>({path:`fragments/calculation-${j}.json`,kind:'calculation',comparisonId:plan[10*Math.floor(j/11)].comparisonId,captureIndex:j%11})),
+    {path:'value-trace.json',kind:'value-trace'},{path:'timing-sidecar.json',kind:'timing-sidecar'}
+  ];
+}
+function inspectDirectory(root) {
+  requireThat(isAbsolute(root)&&resolve(root)===root&&!lstatSync(root).isSymbolicLink()&&lstatSync(root).isDirectory(),'exact absolute nonsymlink output root required',root);
+  const found=[];
+  for(const name of readdirSync(root)) {
+    const path=join(root,name),s=lstatSync(path);requireThat(!s.isSymbolicLink(),'output symlink refused',path);
+    if(name==='fragments'&&s.isDirectory()) for(const child of readdirSync(path)) {requireThat(lstatSync(join(path,child)).isFile()&&!lstatSync(join(path,child)).isSymbolicLink(),'regular fragment required',join(path,child));found.push('fragments/'+child);}
+    else {requireThat(s.isFile(),'unexpected output directory/type',path);found.push(name);}
+  }
+  const allowed=new Set([...artifactModel().map(x=>x.path),'artifact-manifest.json','cli-receipt.json']);
+  requireThat(found.length===allowed.size&&found.every(p=>allowed.has(p)),'extra/missing output artifacts',root,found,[...allowed]);
+}
+function readPackage(root,codec,expected,hashes) {
+  inspectDirectory(root);const raw=new Map(),decoded=new Map(),model=artifactModel();
+  const take=(path,cap)=>{const bytes=readBytes(join(root,path),cap);hashes.push({root,path,bytes:bytes.length,sha256:sha(bytes)});raw.set(path,bytes);return bytes;};
+  const manifestBytes=take('artifact-manifest.json',131072),manifest=parsePrettyDocument(manifestBytes,'artifact-manifest.json');
+  keys(manifest,['schema','status','artifacts','error']);equalTree([manifest.schema,manifest.status,manifest.error],['cycle05-station-artifacts@1','COMPLETED',null]);length(manifest.artifacts,338);
+  model.forEach((m,i)=>{
+    const a=manifest.artifacts[i];equalTree(a,{path:m.path,bytes:a.bytes,sha256:a.sha256,...Object.fromEntries(Object.entries(m).filter(([k])=>k!=='path'))},'/artifacts/'+i);
+    const bytes=take(m.path,m.path==='timing-sidecar.json'||m.kind==='calculation'?4194304:33554432);
+    verifyBinding(bytes,a,m.path);const value=codec.decodeBytes(bytes,m.path==='timing-sidecar.json'||m.kind==='calculation'?{maxBytes:4194304}:{});
+    // Reject alternate wire spellings rather than normalizing them silently.
+    equalTree(bytes,codec.encodeBytes(value,m.path==='timing-sidecar.json'||m.kind==='calculation'?{maxBytes:4194304}:{}),m.path+'/wire');decoded.set(m.path,value);
+  });
+  const trace=decoded.get('value-trace.json'),sidecar=decoded.get('timing-sidecar.json');validateRun(trace,sidecar,expected);
+  for(let i=0;i<160;i++) equalTree(decoded.get(`fragments/answer-${i}.json`),trace.queryTrace[i].nativeAnswer,`fragments/answer-${i}.json`);
+  for(let j=0;j<176;j++) equalTree(decoded.get(`fragments/calculation-${j}.json`),sidecar.calculationLog[j],`fragments/calculation-${j}.json`);
+  const receipt=parsePrettyDocument(take('cli-receipt.json',131072),'cli-receipt.json');
+  const artifactManifest={path:'artifact-manifest.json',bytes:manifestBytes.length,sha256:sha(manifestBytes),schema:'cycle05-station-artifacts@1',status:'COMPLETED'};
+  equalTree(receipt,{schema:'cycle06-lenard5-cli-receipt@1',protocolId:'lenard5-fixed16',requestedManifestPath:expected.requestBinding.request.manifestPath,
+    inputVerificationAuthority:'runner value-trace requestBinding; CLI does not reload or decode inputs',runStatus:'COMPLETED',writerStatus:'COMPLETED',status:'COMPLETED',intendedExitCode:0,
+    artifactManifest,artifacts:model.map(m=>{const b=raw.get(m.path);return {path:m.path,bytes:b.length,sha256:sha(b),matchesManifest:true};}),error:null,bindingError:null,
+    limits:'Legacy cycle05 writer envelope unchanged; exclusive one-shot best-effort retained prefix, not atomic/durable output or execution attestation. Actual exit is outer-process evidence.'},'/cliReceipt');
+  return {root,raw,decoded,trace,sidecar,manifest,receipt};
+}
+function validateOuter(observation,pkg,a,hashes) {
+  requireThat(observation!==null&&typeof observation==='object','independent outer process record required');
+  equalTree(observation.argv,[a.nodeExecutable,join(a.sourceRoot,LENARD,'cli.mjs'),'run','--manifest',a.manifestPath,'--out',pkg.root],'/outer/argv');
+  equalTree(observation.exitCode,0,'/outer/exitCode');
+  requireThat(Object.getPrototypeOf(observation.stdout)===Uint8Array.prototype&&Object.getPrototypeOf(observation.stderr)===Uint8Array.prototype,'raw outer stdout/stderr required');
+  equalTree(observation.stderr,new Uint8Array(),'/outer/stderr');
+  const summary={status:'COMPLETED',intendedExitCode:0,receipt:'cli-receipt.json',artifactManifest:pkg.receipt.artifactManifest};
+  equalTree(observation.stdout,new TextEncoder().encode(JSON.stringify(summary)+'\n'),'/outer/stdout');
+  for(const stream of ['stdout','stderr']) hashes.push({root:pkg.root,path:'outer:'+stream,bytes:observation[stream].length,sha256:sha(observation[stream])});
+  return summary;
+}
+function equalBytes(a,b,p) {requireThat(a.length===b.length&&a.every((v,i)=>v===b[i]),'raw artifact bytes differ',p,{bytes:a.length,sha256:sha(a)},{bytes:b.length,sha256:sha(b)});}
+/** Only entry point that reads files. Never writes, retries, measures or imports.
+ * Admission bytes and outer records must be preserved by the root's independent
+ * packet; this comparator checks their contents, not the honesty of a caller.
+ * Actual chronology/fresh directory reservation remain outer-packet authority.
+ */
+export function comparePackages({leftRoot,rightRoot,policyPath,admission:a,codec}) {
+  const report={schema:'E1515-pure-comparison@1',status:'NOT_COMPARABLE',policySha256:POLICY_SHA256,checks:[],hashes:[],timingLeaves:[],rawTiming:[],firstDifference:null,
+    externalAuthority:'outer packet must independently attest observations, exact runtime, original-before-replay chronology and fresh external output roots; hashes do not authenticate executed code',
+    claims:{scientificAcceptance:'UNKNOWN',humanAcceptance:'UNKNOWN',pathIdentity:'UNKNOWN',continuity:'UNKNOWN',calibratedWidth:'UNKNOWN'}};
+  let stage='admission';
+  const checked=name=>report.checks.push({check:name,status:'PASS'});
+  try {
+    const policy=readBytes(policyPath,32768);verifyBinding(policy,{bytes:14912,sha256:POLICY_SHA256},policyPath);report.hashes.push({path:policyPath,bytes:policy.length,sha256:sha(policy)});
+    // E1512 wording defect is NOT a silently reinterpreted policy PASS.
+    // Root must supply its append-only, reviewed clarification and its separately
+    // admitted digest. This original-policy hash never changes.
+    requireThat(a?.sourceShapeAddendum&&a.sourceShapeAddendum.admitted===true,'root-reviewed source-shape addendum required; original E1512 defect retained');
+    const addendum=a.sourceShapeAddendum;
+    requireThat(typeof addendum.sha256==='string'&&/^[0-9a-f]{64}$/.test(addendum.sha256),'admitted addendum digest required');
+    const addendumBytes=readBytes(addendum.path,32768);verifyBinding(addendumBytes,{bytes:addendum.bytes,sha256:addendum.sha256},addendum.path);
+    report.hashes.push({path:addendum.path,bytes:addendumBytes.length,sha256:sha(addendumBytes),authority:'root-reviewed source-shape clarification; original policy defect retained'});
+    requireThat(codec&&typeof codec.decodeBytes==='function'&&typeof codec.encodeBytes==='function','separately admitted unchanged codec namespace required');
+    requireThat(a&&typeof a.nodeExecutable==='string'&&isAbsolute(a.nodeExecutable),'admitted node executable required');
+    keys(a.runtime,['node','platform','arch']);for(const k of ['node','platform','arch'])requireThat(typeof a.runtime[k]==='string'&&a.runtime[k].length>0,'runtime identity required');
+    requireThat(leftRoot!==rightRoot,'distinct original/replay output roots required');
+    for(const r of [leftRoot,rightRoot]){const rel=relative(a.sourceRoot,r);requireThat(rel.startsWith('..')||isAbsolute(rel),'external output root required',r);}
+    const expected={requestBinding:requestFromAdmission(a,report.hashes),sourceBinding:checkSource(a.sourceRoot,report.hashes),runtime:a.runtime};checked(stage);
+    stage='left independently valid';const left=readPackage(leftRoot,codec,expected,report.hashes);validateOuter(a.outer[0],left,a,report.hashes);checked(stage);
+    report.rawTiming.push({root:leftRoot,intervals:left.sidecar.intervals,calculationLog:left.sidecar.calculationLog});
+    stage='right independently valid';const right=readPackage(rightRoot,codec,expected,report.hashes);validateOuter(a.outer[1],right,a,report.hashes);checked(stage);
+    report.rawTiming.push({root:rightRoot,intervals:right.sidecar.intervals,calculationLog:right.sidecar.calculationLog});
+    stage='value and answer exact bytes/trees';
+    for(const path of ['value-trace.json',...Array.from({length:160},(_,i)=>`fragments/answer-${i}.json`)]) {equalBytes(left.raw.get(path),right.raw.get(path),path);equalTree(left.decoded.get(path),right.decoded.get(path),path);}
+    checked(stage);stage='named timing leaves only';
+    const sideUsed=[];equalTree(left.sidecar,right.sidecar,'',timingPaths(),sideUsed);report.timingLeaves.push(...sideUsed.map(x=>({file:'timing-sidecar.json',...x})));
+    for(let j=0;j<176;j++) {const path=`fragments/calculation-${j}.json`,used=[];equalTree(left.decoded.get(path),right.decoded.get(path),'',new Set(['/nativeEntry/elapsedMs']),used);report.timingLeaves.push(...used.map(x=>({file:path,...x})));}
+    checked(stage);stage='derived manifest receipt stdout bindings';
+    // Both full envelope trees were independently matched to their exact model
+    // and actual raw file bindings above. Only these now-proven dependencies
+    // can differ, not any other metadata or a hash of an unchecked file.
+    const allowedManifest=new Set(),allowedReceipt=new Set(['/artifactManifest/bytes','/artifactManifest/sha256']);
+    artifactModel().forEach((m,i)=>{if(m.kind==='calculation'||m.kind==='timing-sidecar')for(const key of ['bytes','sha256']) {allowedManifest.add(`/artifacts/${i}/${key}`);allowedReceipt.add(`/artifacts/${i}/${key}`);}});
+    const exactDerived=(x,y,p='',allowed)=>{
+      if(allowed.has(p))return;
+      if(x===null||y===null||typeof x!=='object'||typeof y!=='object'){equalTree(x,y,p);return;}
+      equalTree(Reflect.ownKeys(x),Reflect.ownKeys(y),p);for(const k of Reflect.ownKeys(x))exactDerived(x[k],y[k],ptr(p,k),allowed);
+    };
+    exactDerived(left.manifest,right.manifest,'',allowedManifest);exactDerived(left.receipt,right.receipt,'',allowedReceipt);checked(stage);
+    stage='source closure retained after comparison';equalTree(checkSource(a.sourceRoot,[]),expected.sourceBinding);checked(stage);
+    report.status='MATCH_EXCEPT_DECLARED_TIMING';
+  } catch(error) {
+    report.checks.push({check:stage,status:'FAIL'});report.firstDifference={check:stage,message:String(error.message),pointer:error.pointer??'',left:error.left,right:error.right};
+    report.status=stage==='admission'?'NOT_COMPARABLE':'FAIL';
+  }
+  for(const name of ['admission','left independently valid','right independently valid','value and answer exact bytes/trees','named timing leaves only','derived manifest receipt stdout bindings','source closure retained after comparison'])
+    if(!report.checks.some(x=>x.check===name))report.checks.push({check:name,status:'NOT_RUN'});
+  return report;
+}

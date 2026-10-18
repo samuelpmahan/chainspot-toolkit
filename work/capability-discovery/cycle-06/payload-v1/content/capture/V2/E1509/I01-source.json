@@ -1,0 +1,85 @@
+{
+  "id": "I01-source",
+  "status": "PASS",
+  "data": {
+    "code": "INPUT_HASH_MISMATCH",
+    "phase": "file-hash"
+  },
+  "observed": {
+    "events": [
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/fixtures/source.json",
+        "fd": 18
+      },
+      {
+        "op": "fstatSync",
+        "target": 18
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 375
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 0
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      },
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-05/capture/final/F2/E1104/protocol-proposal.json",
+        "fd": 18
+      },
+      {
+        "op": "fstatSync",
+        "target": 18
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 12718
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 0
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      },
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/fixtures/source-attestation.json",
+        "fd": 18
+      },
+      {
+        "op": "fstatSync",
+        "target": 18
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 4252
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 0
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      }
+    ],
+    "peakOpen": 1,
+    "remainingOpen": [],
+    "blockedImports": 0,
+    "productLoadAttempts": 0
+  }
+}

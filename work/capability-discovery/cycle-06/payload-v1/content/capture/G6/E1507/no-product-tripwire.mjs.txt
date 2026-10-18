@@ -1,0 +1,23 @@
+/** Prospective NONCV preload. NOT RUN. Blocks every probe/provider product import. */
+import { registerHooks } from 'node:module';
+let blockedImports = 0;
+const deny = url => {
+  if (typeof url === 'string' && /\/(?:probes|source\/provider)\//.test(url)) {
+    blockedImports++;
+    throw new Error(`NONCV_PRODUCT_IMPORT_BLOCKED: ${url}`);
+  }
+};
+registerHooks({
+  resolve(specifier, context, nextResolve) {
+    const result = nextResolve(specifier,context);
+    deny(result.url);
+    return result;
+  },
+  load(url,context,nextLoad) {
+    deny(url);
+    return nextLoad(url,context);
+  }
+});
+process.on('exit', () => {
+  process.stderr.write(`${JSON.stringify({schema:'cycle06-noncv-import-tripwire@1',blockedImports,meaning:'import blocker only; no source-read or store-call instrumentation claim'})}\n`);
+});

@@ -1,0 +1,14 @@
+// Root source-identity admission, not a producer or scientific acceptance.
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+import {resolve} from 'node:path';
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const bind=(path,expected)=>{const b=fs.readFileSync(path),h=sha(b);if(h!==expected)throw Error('identity mismatch '+path);return {path,bytes:b.length,sha256:h};};
+const proposed=bind('discovery-cycle06/G6/E1511/source-closure-proposed-v1.json','81a176f91138d78126aa16490e9fddfb9409b209a43d5a9499d7cea9f31fe55e');
+const p=JSON.parse(fs.readFileSync(proposed.path));
+const entries=p.entries.map(e=>{const f=resolve('chainspot-discovery-lab',e.path),b=fs.readFileSync(f),mode=(fs.statSync(f).mode&0o111)?'100755':'100644';if(sha(b)!==e.sha256||b.length!==e.bytes||mode!==e.mode)throw Error('closure mismatch '+e.path);return {path:e.path,bytes:e.bytes,mode,sha256:e.sha256};});
+if(entries.length!==22||new Set(entries.map(x=>x.path)).size!==22)throw Error('closure count');
+const reviews=[bind('discovery-cycle06/V1/R1507/result.json','f32b2b5fe8fc7ceb0827c23cb3f04504e11c94cd02217e33993e1d4121aa730e'),bind('discovery-cycle06/V2/E1509/result.json','801cc6754dcc6c8099f89564dde1e07864451ae984b644ed264ce3aa521a6192')];
+for(const r of reviews)if(JSON.parse(fs.readFileSync(r.path)).decision!=='accepted')throw Error('not accepted');
+const admission={schema:'cycle06-root-source-admission@1',at:new Date().toISOString(),status:'ACCEPTED_ENGINEERING_SOURCE_FREEZE_ONLY',defaultEnabled:false,entries,closureContentId:p.closureContentId,proposedManifest:proposed,independentReviews:reviews,limits:['Not a scientific/human/physical-edge/semantic/width acceptance','No production wiring, main landing, release or deployment','Positive producer requires separate native assignment and fixed-command admission','Original G1 absolute input paths and frozen protocol only; no portability bypass','No source changes without retained version and independent re-review'],producerAdmitted:false};
+const bytes=Buffer.from(JSON.stringify(admission,null,2)+'\n');fs.writeFileSync('discovery-cycle06/root-source-admission.json',bytes,{flag:'wx'});console.log(JSON.stringify({path:'discovery-cycle06/root-source-admission.json',sha256:sha(bytes),files:entries.length}));

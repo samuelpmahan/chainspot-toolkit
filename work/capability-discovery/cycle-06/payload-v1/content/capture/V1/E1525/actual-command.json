@@ -1,0 +1,16 @@
+{
+  "schema": "cycle06-E1525-actual-pure-comparison-command@1",
+  "job_id": "E1525",
+  "worker": "V1",
+  "admission": {"path":"discovery-cycle06/E1525-root-comparison-admission.json","sha256":"41d6807b133b649820f043de42355df9840197492cf17d0f4633123dde8e4b50"},
+  "argv": ["/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node","/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1525/compare-once.mjs","--admission-sha256","41d6807b133b649820f043de42355df9840197492cf17d0f4633123dde8e4b50"],
+  "cwd": "/workspace/scratch/8528bb251845",
+  "stdout": "discovery-cycle06/V1/E1525/driver.stdout.log",
+  "stderr": "discovery-cycle06/V1/E1525/driver.stderr.log",
+  "capture": "Exclusive shell noclobber raw stdout/stderr, actual exec exit captured separately",
+  "driverSha256": "7494449c57d12c81575974592882627459015ecf0ec649b4606fff337fea3846",
+  "prospectiveCommandSha256": "2b6b27dadbe4854e5c10b1e36089a15ea0c0d34077a1549bfc771ff5599cfbfa",
+  "maximumComparisonCalls": 1,
+  "productInvocations": 0,
+  "failurePolicy": "Preserve first guard/comparison/serialization failure, stop without corrective retry or normalization"
+}

@@ -1,0 +1,252 @@
+"""E1537 SOURCE-ONLY checkpoint. NOT_RUN; later root admission is required.
+
+Tiny mocked NONCV regressions for R1530 A1/A2. This is NOT a real package,
+USTAR/decompression test, real process, scientific wire, or image fixture.
+The SAME driver/assertions are intended for exact-bound v2 RED and v3 GREEN.
+"""
+import argparse
+import copy
+import hashlib
+import json
+from pathlib import Path
+import subprocess
+import sys
+import types
+import unittest
+from unittest.mock import patch
+
+
+WORKSPACE = Path("/workspace/scratch/8528bb251845")
+SUBJECT_DIR = WORKSPACE / "chainspot-discovery-lab/work/capability-discovery/cycle-06"
+PARTIAL = b"MOCK-ZSTD-PARTIAL\x00\xff\n"
+FAKE_EXECUTABLE = b"E1537 MOCK executable identity; never spawned"
+SUBJECT = None
+RUN_DIR = None
+
+
+def digest(body):
+    return hashlib.sha256(body).hexdigest()
+
+
+def json_body(value):
+    return (json.dumps(value, indent=2) + "\n").encode()
+
+
+def tiny_package(variant=None):
+    """Metadata only: synthetic tar bytes are NEVER interpreted as an archive."""
+    contents = {"b0000": b"tiny-a", "b0001": b"tiny-b"}
+    member_body = b"tiny-member"
+    member = {"name": "fragment.json", "source": "MOCK/original/fragment.json",
+              "bytes": len(member_body), "sha256": digest(member_body), "mode": 0o644}
+    tar_bytes = 1024 + 512 + 512
+    # Placeholder has correct declared length, NOT a USTAR header/body encoding.
+    raw_placeholder = b"M" * tar_bytes
+    objects = [{"id": key, "path": "objects/" + key, "codec": "raw",
+                "source": "MOCK/" + key, "bytes": len(body),
+                "sha256": digest(body), "mode": 0o644}
+               for key, body in contents.items()]
+    archive = {"id": "original", "sourceRoot": "MOCK/original",
+               "path": "archives/original.tar.zstd", "tarBytes": tar_bytes,
+               "members": [member]}
+    aliases = [{"source": obj["source"], "logical": "capture/" + obj["id"],
+                "bytes": obj["bytes"], "sha256": obj["sha256"], "mode": 0o644,
+                "storage": {"blob": obj["id"]}}
+               for obj in objects]
+    aliases.append({"source": member["source"], "logical": "capture/fragment.json",
+                    "bytes": member["bytes"], "sha256": member["sha256"],
+                    "mode": 0o644,
+                    "storage": {"archive": "original", "member": member["name"]}})
+    plan = {"objects": objects, "archives": [archive], "aliases": aliases,
+            "htmlFiles": [], "htmlLinkSets": []}
+    stored_archive = b"MOCK-COMPRESSED-PLACEHOLDER"
+    top_objects = [{**obj, "storedBytes": obj["bytes"], "storedSha256": obj["sha256"]}
+                   for obj in copy.deepcopy(objects)]
+    top_archive = {**copy.deepcopy(archive), "bytes": tar_bytes,
+                   "sha256": digest(raw_placeholder), "codec": "zstd",
+                   "storedBytes": len(stored_archive),
+                   "storedSha256": digest(stored_archive)}
+    if variant == "member-mode":
+        top_archive["members"][0]["mode"] = 0o4755
+    elif variant == "unknown-field":
+        top_objects[0]["unadmittedDescriptor"] = "must refuse"
+    elif variant == "object-order":
+        top_objects.reverse()
+    elif variant is not None:
+        raise AssertionError("unknown driver variant")
+    plan_bytes = json_body(plan)
+    index = {"schema": "cycle06-closed-index@1", "planBinding": {
+        "path": "construction-plan.json", "bytes": len(plan_bytes),
+        "sha256": digest(plan_bytes), "mode": 0o644},
+        "objects": top_objects, "archives": [top_archive]}
+    files = {obj["path"]: contents[obj["id"]] for obj in objects}
+    files.update({archive["path"]: stored_archive,
+                  "construction-plan.json": plan_bytes, "index.json": json_body(index)})
+    rows = [{"path": name, "bytes": len(body), "sha256": digest(body), "mode": 0o644}
+            for name, body in sorted(files.items())]
+    manifest_bytes = json_body({"schema": "cycle06-closed-payload@1", "files": rows})
+    files["package-manifest.json"] = manifest_bytes
+    files["SHA256SUMS"] = ("".join(row["sha256"] + "  " + row["path"] + "\n"
+                                       for row in rows)
+                            + digest(manifest_bytes) + "  package-manifest.json\n").encode()
+    return files, digest(manifest_bytes), raw_placeholder, member_body
+
+
+def verify_tiny(variant=None):
+    """Keep REAL verify/decode_index; mock only unrelated external boundaries."""
+    files, manifest_sha, raw_placeholder, member_body = tiny_package(variant)
+    decode_calls = []
+
+    def read_fixture(root, rel, expected=None, limit=16 * 1024 * 1024):
+        body = files[rel]
+        if len(body) > limit:
+            raise ValueError("fixture read cap")
+        if expected is not None and (len(body) != expected["bytes"]
+                or digest(body) != expected["sha256"] or expected["mode"] != 0o644):
+            raise ValueError("fixture byte/hash/mode binding")
+        return body
+
+    def fake_decode(argv, logs, label, **kwargs):
+        decode_calls.append({"argv": argv, "label": label})
+        return raw_placeholder
+
+    # This seam stands in for previously admitted authority/source preservation,
+    # NOT descriptor consistency. No real340-member/source fixture is fabricated.
+    with patch.object(SUBJECT, "read_file", side_effect=read_fixture), \
+            patch.object(SUBJECT, "inventory", return_value=set(files)), \
+            patch.object(SUBJECT, "check_plan", return_value=None), \
+            patch.object(SUBJECT, "operation", side_effect=fake_decode), \
+            patch.object(SUBJECT, "check_tar", return_value={"fragment.json": member_body}):
+        refusal = None
+        result = None
+        try:
+            result = SUBJECT.verify(WORKSPACE / "MOCK-NO-PACKAGE", manifest_sha,
+                                    WORKSPACE / "MOCK-NO-LOGS")
+        except ValueError as error:
+            refusal = str(error)
+    return refusal, result, decode_calls
+
+
+class FakeExecutable:
+    def read_bytes(self):
+        return FAKE_EXECUTABLE
+
+    def is_symlink(self):
+        return False
+
+    def __str__(self):
+        return "MOCK-NOT-A-REAL-EXECUTABLE"
+
+
+class FakeTimeoutChild:
+    """Engineering process double: zero OS process, writes known tiny stdout."""
+    def __init__(self, argv, **kwargs):
+        self.argv = argv
+        self.stdout_file = kwargs["stdout"]
+        self.returncode = None
+        self.pid = 424242  # Explicit mock PID, never an actual spawned PID.
+
+    def communicate(self, source, timeout):
+        self.stdout_file.write(PARTIAL)
+        self.stdout_file.flush()
+        raise subprocess.TimeoutExpired(self.argv, timeout)
+
+    def poll(self):
+        return self.returncode
+
+    def kill(self):
+        self.returncode = -9  # Mock state only; no signal is sent.
+
+    def wait(self, timeout=None):
+        return self.returncode
+
+
+class Counterexamples(unittest.TestCase):
+    def test_matching_descriptor_control_reaches_mock_decode(self):
+        refusal, result, calls = verify_tiny()
+        self.assertIsNone(refusal, "valid descriptor control was rejected")
+        self.assertEqual(len(calls), 1, "control must reach exactly one MOCK decode")
+        self.assertEqual(result["aliases"], 3)
+
+    def test_index_descriptor_disagreement_refuses_before_mock_decode(self):
+        for variant in ("member-mode", "unknown-field", "object-order"):
+            with self.subTest(variant=variant):
+                refusal, result, calls = verify_tiny(variant)
+                self.assertEqual(calls, [],
+                                 "descriptor gap reached MOCK decompression: " + variant)
+                self.assertIsNotNone(refusal, "unadmitted descriptor accepted: " + variant)
+                self.assertIsNone(result)
+
+    def test_partial_stdout_timeout_receipt_binds_actual_retained_file(self):
+        case = RUN_DIR / "A2-mock-timeout"
+        case.mkdir()
+        logs = case / "operations"
+        logs.mkdir()
+        stdout_path = case / "partial.stdout.raw"
+        original_read_bytes = Path.read_bytes
+
+        def refuse_whole_stdout_load(path):
+            if path == stdout_path:
+                raise AssertionError("failure stdout must be stream-hashed, not read_bytes-loaded")
+            return original_read_bytes(path)
+
+        def stderr_only(root, rel, expected=None, limit=16 * 1024 * 1024):
+            # File-mode/cap guard itself is outside A2; avoids inherited-umask
+            # differences turning the intended behavior assertion into an error.
+            if root != logs or rel != "mock-timeout.stderr.raw":
+                raise AssertionError("unexpected A2 read_file seam")
+            return original_read_bytes(root / rel)
+
+        with patch.object(SUBJECT, "ZSTD", FakeExecutable()), \
+                patch.object(SUBJECT, "ZSTD_SHA", digest(FAKE_EXECUTABLE)), \
+                patch.object(SUBJECT.subprocess, "Popen", side_effect=FakeTimeoutChild) as spawn, \
+                patch.object(SUBJECT, "read_file", side_effect=stderr_only), \
+                patch.object(Path, "read_bytes", refuse_whole_stdout_load):
+            with self.assertRaises(ValueError):
+                SUBJECT.operation(["MOCK-ONLY-NO-OS-SPAWN"], logs, "mock-timeout",
+                                  source=b"tiny input", stored_path=stdout_path)
+            self.assertEqual(spawn.call_count, 1)
+        record = json.loads((logs / "mock-timeout.process.json").read_text())
+        self.assertEqual(stdout_path.stat().st_size, len(PARTIAL))
+        self.assertEqual(record["stdoutPath"], "partial.stdout.raw")
+        self.assertEqual(record["stdoutBytes"], len(PARTIAL),
+                         "receipt misreports nonempty retained MOCK stdout as empty")
+        self.assertEqual(record["stdoutSha256"], digest(PARTIAL))
+        self.assertEqual(record["actualSignal"], 9)  # Explicit fake child state.
+        self.assertIsNotNone(record["error"])
+
+
+def main():
+    global SUBJECT, RUN_DIR
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--subject", type=Path, required=True)
+    parser.add_argument("--subject-sha", required=True)
+    parser.add_argument("--run-dir", type=Path, required=True)
+    args = parser.parse_args()
+    if args.subject.parent != SUBJECT_DIR or args.subject.name not in (
+            "package-closed.v2.py", "package-closed.v3.py"):
+        raise ValueError("only root-bound cycle06 v2/v3 subject allowed")
+    if args.subject.is_symlink() or args.subject.resolve() != args.subject:
+        raise ValueError("noncanonical subject")
+    body = args.subject.read_bytes()
+    if len(body) > 65536 or digest(body) != args.subject_sha:
+        raise ValueError("subject size/hash mismatch before module execution")
+    RUN_DIR = args.run_dir
+    if RUN_DIR.parent != WORKSPACE or not RUN_DIR.name.startswith("discovery-cycle06-Q1-E1537-") \
+            or RUN_DIR.exists() or RUN_DIR.is_symlink() or RUN_DIR.parent.resolve() != WORKSPACE:
+        raise ValueError("new exclusive bounded run directory required")
+    RUN_DIR.mkdir()
+    SUBJECT = types.ModuleType("e1537_root_bound_subject")
+    SUBJECT.__file__ = str(args.subject)
+    # Later admitted module execution only; NOT __main__, no bytecode/repo write.
+    exec(compile(body, str(args.subject), "exec"), SUBJECT.__dict__)
+    print(json.dumps({"scope": "MOCKED_NONCV_COUNTEREXAMPLES",
+                      "subject": str(args.subject), "subjectSha256": digest(body),
+                      "realProcesses": 0, "realArchives": 0, "CV": 0,
+                      "runDirectoryRetained": str(RUN_DIR)}), flush=True)
+    suite = unittest.defaultTestLoader.loadTestsFromTestCase(Counterexamples)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    raise SystemExit(0 if result.wasSuccessful() else 1)
+
+
+if __name__ == "__main__":
+    main()

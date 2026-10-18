@@ -1,0 +1,53 @@
+/** E1526 layout regression. Synthetic retained rows only, no trust reader/codec/CV.
+ * Same assertions run RED against preserved v3, then GREEN against admitted v4.
+ * Named break: adjacent long48 nonfinite glyph boxes overlap and hide station identity.
+ */
+import assert from 'node:assert/strict';
+import test from 'node:test';
+const target=process.env.E1526_RENDERER??'../E1520/renderer-proposal.v3.mjs';
+assert.ok(['../E1520/renderer-proposal.v3.mjs','./renderer-proposal.v4.mjs'].includes(target));
+const actual=await import(new URL(target,import.meta.url));
+const original=await import(new URL('../E1520/renderer-proposal.v3.mjs',import.meta.url));
+const bindings={trace:{sha256:'a'.repeat(64)},sidecar:{sha256:'b'.repeat(64)}};
+function fixture(special=true){
+  const rows=[],profile={planIndex:0},make=(kind,width,value,planIndex)=>({kind,width,value,answer:{unit:'synthetic retained unit',value},state:'COMPLETED',outcome:value===null?{kind:'null',label:'native null'}:value.condition?{kind:'condition',label:`native condition: ${value.condition}`}:{kind:'value',label:'native value'},plan:{planIndex},row:{error:null}});
+  rows.push({...make('profile',null,null,0),plan:profile});
+  for(const width of[34,42,50]){
+    const leftLum=new Array(48).fill(10),rightLum=new Array(48).fill(12),okLeft=new Array(48).fill(1),okRight=new Array(48).fill(1);
+    if(special)for(const [values,flags]of[[leftLum,okLeft],[rightLum,okRight]]){
+      values[20]=null;values[23]=NaN;values[24]=NaN;values[25]=NaN;values[28]=Infinity;values[29]=-Infinity;
+      for(const i of[20,21,22,23,24,25,26,27,28,29])flags[i]=0;
+    }
+    rows.push(make('edgePair',width,{condition:'synthetic no fit'},rows.length));
+    rows.push(make('stationContrast',width,{leftLum,rightLum,okLeft,okRight,stationsCount:48},rows.length));
+    rows.push(make('loss',width,null,rows.length));
+  }
+  return {comparisons:[{id:'masked-primary/long48',group:'masked-primary',window:'long48',origin:[780,906],N:48,t0:-24,t1:24,mask:'caller synthetic strip',rows}]};
+}
+const attrs=text=>Object.fromEntries([...text.matchAll(/([\w-]+)="([^"]*)"/g)].map(m=>[m[1],m[2]]));
+const annotationBoxes=svg=>[...svg.matchAll(/<text\b([^>]*)>([^<]*)<\/text>/g)].filter(m=>attrs(m[1]).fill==='#707b89').map(m=>{const a=attrs(m[1]),size=Number(a['font-size']);return {a,text:m[2],x:Number(a.x),y:Number(a.y),height:size,width:m[2].length*size*0.6};});
+
+test('long48 adjacent NaN annotations do not overlap and retain side token station identity',()=>{
+  const model=fixture(),svg=actual.svgGroup(model,'masked-primary',bindings),boxes=annotationBoxes(svg);
+  assert.ok(boxes.length>0,'nonfinite outcomes must remain visible, not dropped');
+  // Conservative monospace glyph-box check is a synthetic layout falsifier,
+  // not font rasterization or a declaration of complete PNG visual acceptance.
+  for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++){
+    const a=boxes[i],b=boxes[j],sameRow=Math.abs(a.y-b.y)<Math.max(a.height,b.height);
+    assert.ok(!sameRow||a.x+a.width+2<=b.x||b.x+b.width+2<=a.x,`nonfinite text boxes overlap: ${JSON.stringify(a)} / ${JSON.stringify(b)}`);
+  }
+  for(const side of['L','R'])for(const [token,indices]of[['NaN','23,24,25'],['null','20'],['+Infinity','28'],['-Infinity','29']]){
+    const matching=boxes.filter(b=>b.a['data-series']===side&&b.a['data-token']===token&&b.a['data-indices']===indices);
+    assert.equal(matching.length,3,`${side} ${token} station identities must remain explicit in all three banks`);
+    for(const b of matching){assert.ok(b.text.includes(`${side} ${token}`));assert.ok(b.text.includes(indices));assert.ok(b.x>=0&&b.x+b.width<=1680&&b.y>=0&&b.y<=1600);}
+  }
+  assert.equal([...svg.matchAll(/<circle\b[^>]*fill="white"/g)].length,24,'four finite-invalid samples per side/bank stay hollow');
+  const curves=[...svg.matchAll(/<path d="([^"]*)" fill="none" stroke="(?:#176b8a|#bd6027)"/g)];
+  assert.equal(curves.length,6);for(const p of curves)assert.ok((p[1].match(/M/g)??[]).length>=2,'invalid/nonfinite region must disconnect valid curves');
+  assert.equal(actual.csv(actual.displayRecords(model)),original.csv(original.displayRecords(model)),'exact records/CLI CSV tokens must not change');
+  for(const row of model.comparisons[0].rows.filter(r=>r.kind==='stationContrast')){assert.ok(Number.isNaN(row.value.leftLum[23]));assert.equal(row.value.leftLum[20],null);assert.equal(row.value.rightLum[28],Infinity);assert.equal(row.value.rightLum[29],-Infinity);}
+});
+
+test('finite-only long48 SVG stays byte-identical to preserved v3',()=>{
+  const model=fixture(false);assert.equal(actual.svgGroup(model,'masked-primary',bindings),original.svgGroup(model,'masked-primary',bindings));
+});

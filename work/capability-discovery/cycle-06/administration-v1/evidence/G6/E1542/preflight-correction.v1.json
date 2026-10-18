@@ -1,0 +1,39 @@
+{
+  "schema": "cycle06-E1542-preflight-correction@1",
+  "job_id": "E1542",
+  "worker": "G6",
+  "status": "ROOT_AUTHORIZED_NARROW_PREDICATE_CORRECTION_WRAPPER_UNUSED",
+  "firstPreflight": {
+    "toolChunk": "b1119d",
+    "actualExit": 1,
+    "error": "binding mismatch /usr/local/bin/git",
+    "originalPredicate": "All8boundidentities required s.isFile && s.nlink==1 && exactfullmode/bytes/SHA",
+    "failureCause": "Installed /usr/local/bin/git nlink145; erroneous extra single-link runtime predicate, not contract/binary/permission failure",
+    "captureKind": "TOOLTESTIMONY",
+    "originalStdoutStderrOnDisk": false,
+    "rawPreflightStderrInvented": false,
+    "actualWrapperAttempts": 0,
+    "helperAttempts": 0,
+    "oneShotTokenCreated": false
+  },
+  "diagnostic": {
+    "toolChunk": "865f11",
+    "captureKind": "TOOLTESTIMONY",
+    "path": "/usr/local/bin/git",
+    "bytes": 19135768,
+    "mode": 493,
+    "isRegular": true,
+    "isSymlink": false,
+    "nlink": 145,
+    "sha256": "2dae8066ef4d6a926561b4b0eaca7b458d4f5b56bb83760656e6baa7fc3e974f",
+    "notARepeatLaunchOrGuardRetry": true
+  },
+  "rootDirection": "Root fresh-readback confirmed installed runtime nlink was not a reviewed predicate. Explicitly remove ONLY nlink==1 for Python/git/zstd executable identities; keep regular/nosymlink/fullmode/bytes/hash/resolution/absence. Source/plan/packet single-link guard unchanged. Corrected file-only preflight then exactly one still-unused wrapper authorized in same unfinished E1542 pin.",
+  "codeSourceEnvironmentPermissionsAssertionsChanged": false,
+  "preliminaryCounts": {
+    "fileOnlyPreflightFailures": 1,
+    "actualWrapperAttempts": 0,
+    "actualBuilds": 0
+  },
+  "firstActualWrapperFailure": "Terminal, preserve all outputs/token/raw/process records, no retry."
+}

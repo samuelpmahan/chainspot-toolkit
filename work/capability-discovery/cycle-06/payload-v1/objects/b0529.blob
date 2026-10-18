@@ -1,0 +1,79 @@
+test_index_descriptor_disagreement_refuses_before_mock_decode (__main__.Counterexamples.test_index_descriptor_disagreement_refuses_before_mock_decode) ... 
+  test_index_descriptor_disagreement_refuses_before_mock_decode (__main__.Counterexamples.test_index_descriptor_disagreement_refuses_before_mock_decode) (variant='member-mode') ... FAIL
+  test_index_descriptor_disagreement_refuses_before_mock_decode (__main__.Counterexamples.test_index_descriptor_disagreement_refuses_before_mock_decode) (variant='unknown-field') ... FAIL
+  test_index_descriptor_disagreement_refuses_before_mock_decode (__main__.Counterexamples.test_index_descriptor_disagreement_refuses_before_mock_decode) (variant='object-order') ... FAIL
+test_matching_descriptor_control_reaches_mock_decode (__main__.Counterexamples.test_matching_descriptor_control_reaches_mock_decode) ... ok
+test_partial_stdout_timeout_receipt_binds_actual_retained_file (__main__.Counterexamples.test_partial_stdout_timeout_receipt_binds_actual_retained_file) ... FAIL
+
+======================================================================
+FAIL: test_index_descriptor_disagreement_refuses_before_mock_decode (__main__.Counterexamples.test_index_descriptor_disagreement_refuses_before_mock_decode) (variant='member-mode')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/8528bb251845/discovery-cycle06/Q1/E1537/counterexample-driver.v1.py", line 174, in test_index_descriptor_disagreement_refuses_before_mock_decode
+    self.assertEqual(calls, [],
+AssertionError: Lists differ: [{'argv': ['/usr/bin/zstd', '-q', '-d', '-[106 chars]al'}] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+{'argv': ['/usr/bin/zstd', '-q', '-d', '-c', '/workspace/scratch/8528bb251845/MOCK-NO-PACKAGE/archives/original.tar.zstd'], 'label': 'decode-original'}
+
++ []
+- [{'argv': ['/usr/bin/zstd',
+-            '-q',
+-            '-d',
+-            '-c',
+-            '/workspace/scratch/8528bb251845/MOCK-NO-PACKAGE/archives/original.tar.zstd'],
+-   'label': 'decode-original'}] : descriptor gap reached MOCK decompression: member-mode
+
+======================================================================
+FAIL: test_index_descriptor_disagreement_refuses_before_mock_decode (__main__.Counterexamples.test_index_descriptor_disagreement_refuses_before_mock_decode) (variant='unknown-field')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/8528bb251845/discovery-cycle06/Q1/E1537/counterexample-driver.v1.py", line 174, in test_index_descriptor_disagreement_refuses_before_mock_decode
+    self.assertEqual(calls, [],
+AssertionError: Lists differ: [{'argv': ['/usr/bin/zstd', '-q', '-d', '-[106 chars]al'}] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+{'argv': ['/usr/bin/zstd', '-q', '-d', '-c', '/workspace/scratch/8528bb251845/MOCK-NO-PACKAGE/archives/original.tar.zstd'], 'label': 'decode-original'}
+
++ []
+- [{'argv': ['/usr/bin/zstd',
+-            '-q',
+-            '-d',
+-            '-c',
+-            '/workspace/scratch/8528bb251845/MOCK-NO-PACKAGE/archives/original.tar.zstd'],
+-   'label': 'decode-original'}] : descriptor gap reached MOCK decompression: unknown-field
+
+======================================================================
+FAIL: test_index_descriptor_disagreement_refuses_before_mock_decode (__main__.Counterexamples.test_index_descriptor_disagreement_refuses_before_mock_decode) (variant='object-order')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/8528bb251845/discovery-cycle06/Q1/E1537/counterexample-driver.v1.py", line 174, in test_index_descriptor_disagreement_refuses_before_mock_decode
+    self.assertEqual(calls, [],
+AssertionError: Lists differ: [{'argv': ['/usr/bin/zstd', '-q', '-d', '-[106 chars]al'}] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+{'argv': ['/usr/bin/zstd', '-q', '-d', '-c', '/workspace/scratch/8528bb251845/MOCK-NO-PACKAGE/archives/original.tar.zstd'], 'label': 'decode-original'}
+
++ []
+- [{'argv': ['/usr/bin/zstd',
+-            '-q',
+-            '-d',
+-            '-c',
+-            '/workspace/scratch/8528bb251845/MOCK-NO-PACKAGE/archives/original.tar.zstd'],
+-   'label': 'decode-original'}] : descriptor gap reached MOCK decompression: object-order
+
+======================================================================
+FAIL: test_partial_stdout_timeout_receipt_binds_actual_retained_file (__main__.Counterexamples.test_partial_stdout_timeout_receipt_binds_actual_retained_file)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/8528bb251845/discovery-cycle06/Q1/E1537/counterexample-driver.v1.py", line 211, in test_partial_stdout_timeout_receipt_binds_actual_retained_file
+    self.assertEqual(record["stdoutBytes"], len(PARTIAL),
+AssertionError: 0 != 20 : receipt misreports nonempty retained MOCK stdout as empty
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.007s
+
+FAILED (failures=4)

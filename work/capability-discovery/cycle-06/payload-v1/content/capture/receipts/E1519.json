@@ -1,0 +1,57 @@
+{
+  "schema": "capability-discovery-extraction-result@1",
+  "job_id": "E1519",
+  "worker": "V1",
+  "outcome": "mixed_change",
+  "status": "BOUNDED_NONCV_FIRSTPASS_15_OF_15",
+  "summary": "Versioned the two R2/R1515 repairs under E1519 while preserving E1515 originals byte-exact: successful native answer envelope is checked independently before self-tree equality, and external-root containment uses complete parent path components. Added a hand-declared full validateRun positive fixture and narrowly mutated malformed-answer/integrity cases without measured answers or pixels. After the actual-flow/hash checkpoint and explicit root GO, both syntax checks exited0 and the exact fifteen synthetic NONCV tests ran once:15 passed,0 failed,0 skipped. No failure, repair or retry occurred. Complete raw stdout/stderr and observed exit receipts are retained. Exact value/numeric/timing policy and original-policy-defect disclosure are unchanged. No producer-output read, product/codec import, full file-package comparison, CV, replay or original-path red check was performed.",
+  "bindings": [
+    {"path":"discovery-cycle06/V1/E1519/compare.mjs","bytes":33761,"sha256":"359f5e177cf1bb3cf0c65212445086ce9f19374fae279d3f40ffba55f9994acd"},
+    {"path":"discovery-cycle06/V1/E1519/compare.test.mjs","bytes":20406,"sha256":"961fe42bb21690d7ea485ac50a18681f1d64321758815384e60db6caeaa8c3b0"},
+    {"path":"discovery-cycle06/V1/E1519/checkpoint.md","bytes":6920,"sha256":"1df8d477cd9eca2755a28a0b8ea46f2fcca61923e22228a49d5c7adf18d0b53c"},
+    {"path":"discovery-cycle06/V1/E1519/prospective-commands.json","sha256":"e360497fbc271020e40b90192bcb1e92fc7e69a66d69dc5cc989f0f309fa19ff"},
+    {"path":"discovery-cycle06/V1/E1519/execution-receipt.json","bytes":3416,"sha256":"1db617dc4f186ebf5cee2544c96e5a26ef88d74f15eb2ae75437b80e81c2ff00"},
+    {"path":"discovery-cycle06/V1/E1519/tests-first.stdout.txt","bytes":1532,"sha256":"86e188de8717bc6025480aa321c947b8df6269850cf027d01efc919130379e2d"},
+    {"path":"discovery-cycle06/V1/E1519/tests-first.stderr.txt","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+  ],
+  "firstResults": {
+    "syntaxSource": {"exitCode":0,"attempts":1,"stdoutBytes":0,"stderrBytes":0},
+    "syntaxTests": {"exitCode":0,"attempts":1,"stdoutBytes":0,"stderrBytes":0},
+    "syntheticTests": {"exitCode":0,"attempts":1,"tests":15,"pass":15,"fail":0,"skipped":0,"cancelled":0,"todo":0,"reportedDurationMs":242.618936},
+    "firstPass": true,
+    "sourceOrHarnessRepairsAfterExecution": 0,
+    "retries": 0,
+    "rawSyntaxLogs": ["syntax-source.stdout.txt","syntax-source.stderr.txt","syntax-tests.stdout.txt","syntax-tests.stderr.txt"],
+    "allSyntaxLogBytes": 0,
+    "allSyntaxLogSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "reviewedFindings": {
+    "sourceReviewPath": "discovery-cycle06/R2/R1515/result.json",
+    "sourceReviewSha256": "d97409f1094771df6fc9684134ba8a8211990e94c59a5d663c40fe3ae0caac21",
+    "F1": "Require ordinary nonnull nativeAnswer object with own enumerable data value/unit/emits, string unit, exact computed emits before nativeAnswer self-tree comparison. Value payload is untouched, including legitimate native null/condition/nonfinite/negative-zero/Uint8Array.",
+    "F2": "External relative path must be literal parent component, begin parent component plus platform separator, or be absolute; internal '..inside' no longer passes the lexical guard."
+  },
+  "preservedAuthority": {
+    "E1515SourceSha256": "4574213c39e1e075bcc2f7533985d4792db0c72153f2c3a8ae9eb4845f57b318",
+    "E1515TestsSha256": "a3ebf0782bb15ac5706ffa9e08583cc399b08fe8371cfbf63e7a97d08b2c715b",
+    "E1515CheckpointSha256": "1f1144a2d297afd6d9f53393c2bb66e52e48ff367ab4bbefbed7e909b5744320",
+    "E1515ResultSha256": "5c404ade68cb465befd517eb2e7c9ee7f3d61184ce38d6e12ef0477190ca1f83",
+    "originalPolicySha256": "b146b7183e4aab0708792b7f72aa37790113ca8061f34c551ea590f24391027d",
+    "originalPolicyUnchanged": true,
+    "originalPolicyPassedUnchanged": false,
+    "sourceShapeAddendumSha256": "3537cdce221ab424672097ed6d8530afaf94128d66ddb3dc38a8d3490407232b",
+    "sourceShapeAdmissionSha256": "8c6360ba697cebcd798b23deff6b1688cf2010eff1ee6036e452ca1bdde7f8ae",
+    "valueNumericTimingPolicyChanged": false,
+    "producerOutputRead": false
+  },
+  "limits": [
+    "This is successful validator-level engineering coverage, not full file-package integration or actual replay proof.",
+    "The synthetic expected request/source anchors are hand-declared; no input or execution authenticity is established by them.",
+    "Query-specific native measurement schemas and scientific correctness are not inferred from the minimal successful store answer envelope.",
+    "Old-original-path red checks have not run; no red-green proof is claimed.",
+    "Independent R2 re-review and later separately admitted package/replay validation remain deferred.",
+    "Outer packet retains responsibility for codec authentication, actual process/runtime/chronology, fresh external roots and immutable artifacts."
+  ],
+  "NOT_RUN": ["product/recipe/CLI/codec import","producer-output read","source pixel/image/PNG read or decode","comparePackages/full file-package comparison","original-path red validation","producer","replay","CV/PATH/store queries","renderer","helpers","source/Git/native mutation"],
+  "claims": {"promoted":false,"heldout":false,"scientificAcceptance":"UNKNOWN","humanAcceptance":"UNKNOWN","pathIdentity":"UNKNOWN","continuity":"UNKNOWN","calibratedWidth":"UNKNOWN"}
+}

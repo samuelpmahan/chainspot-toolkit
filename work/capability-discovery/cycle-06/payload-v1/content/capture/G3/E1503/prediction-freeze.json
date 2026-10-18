@@ -1,0 +1,103 @@
+{
+  "schema": "cycle06-lenard5-source-predictions@1",
+  "packet": "E1503",
+  "worker": "G3",
+  "status": "FROZEN_SOURCE_ONLY_BEFORE_PRODUCER_OUTCOMES",
+  "frozenAtUtc": "2026-10-18T17:07:29Z",
+  "clockQualification": "Local command clock captured before artifact construction; not authenticated chronology proof. Root message and source-only packet order are additional testimony.",
+  "protocolSha256": "cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829",
+  "sourceHashes": {
+    "recipe.mjs": "ef7248daf5c83fd014c4a5004aa511e41399492a46be0460fe566ab421383ad3",
+    "codec.mjs": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015",
+    "cli.mjs": "4ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c",
+    "pathSpace.mjs": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+    "store.mjs": "122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074"
+  },
+  "assumptions": [
+    "New distinct default-OFF preset exactly follows E1104 geometry, null/synthetic masks, fixed windows and width bank; old synthetic recipe remains byte-frozen.",
+    "16 fresh base:null stores, one per ordered group/window comparison, each with one combined lazy raster+mask constant, and no eager get/has/keyOf calls.",
+    "Order: groups primary, bright-nonpath, normal-plus6, masked-primary; within each, before16, core16, after16, long48; profile once, then edgePair/stationContrast/loss for widths34,42,50.",
+    "Every requested call and callback capture succeeds; any actual failure invalidates complete-run count prediction and must retain partial evidence.",
+    "Native PATH gateway/store/math and codec ceilings remain unchanged; Lenard edgePair receives literal tolPx2, not old synthetic tolPx3."
+  ],
+  "counts": {
+    "groups": 4,
+    "comparisons": 16,
+    "stores": 16,
+    "profile": 16,
+    "edgePair": 48,
+    "stationContrast": 48,
+    "loss": 48,
+    "PATH": 160,
+    "constants": 16,
+    "CalculationEntries": 176,
+    "sumStationsOverComparisons": 384,
+    "perStoreCallbackSeq": [1,0,2,3,4,5,6,7,8,9,10],
+    "perStoreCallbackParent": [0,null,null,null,null,null,null,null,null,null,null],
+    "perStoreCaptureCount": 11
+  },
+  "workBounds": {
+    "profileGridVisitsMaxPerComparison": 46272,
+    "profileGridVisitsAllComparisons": 370176,
+    "contrastGridVisitsMaxPerComparison": 28800,
+    "contrastGridVisitsAllComparisons": 230400,
+    "lossRgbLocationsAndHiddenChecksMaxPerComparison": 12384,
+    "lossRgbLocationsAndHiddenChecksAllComparisons": 99072,
+    "allMaskedAtInvocations": 699648,
+    "maskedGroupPotentialMaskBilinearSamples": 174912,
+    "allRgbChannelBilinearSamples": 297216,
+    "luminancePositionsFor16FreshRasterObjects": 57709440,
+    "notMeasured": true
+  },
+  "corridors": {
+    "widthsPx": [34,42,50],
+    "lateralReachPx": [34,42,50],
+    "lateralRows": [69,85,101],
+    "maxLossN": 48,
+    "maxLossRgbBytes": 14544,
+    "maxLossHiddenCenterBytes": 48,
+    "maxLossTypedBytes": 14592,
+    "maxComparisonTypedBytes": 36864,
+    "aggregateRgbBytes": 293760,
+    "aggregateHiddenCenterBytes": 1152,
+    "aggregateNativeAnswerTypedBytes": 294912,
+    "maxNativeAnswerNodes": {"profile":494,"edgePair":12,"stationContrastN48":202,"lossN48EightReportedGaps":239},
+    "maxNativeAnswersArrayNodes": 21585,
+    "maxNativeAnswerTreeDepth": 6,
+    "nativeAnswersEncodedByteConservativeBound": 3000000,
+    "boundQualification": "Node/encoded bounds apply to the array of160 native answers with current success schemas and returned computed emits, not an unspecified future wrapper. Typed-byte count is exact for complete native loss answers independent of image outcomes."
+  },
+  "rasterAndMask": {
+    "widthPx": 1290,
+    "heightPx": 2796,
+    "pixels": 3606840,
+    "rgbaBytes": 14427360,
+    "syntheticMaskBytes": 3606840,
+    "luminanceFloat64Bytes": 28854720,
+    "privateRgbaPlusLuminanceNullMask": 43282080,
+    "privateRgbaPlusLuminanceSyntheticMask": 46888920,
+    "uniqueSuppliedRgbaPlusSyntheticMask": 18034200,
+    "uniqueSuppliedPlusOneMaskedPrivateSet": 64923120,
+    "declaredComparisonInputByteSum": 245265120,
+    "cumulativePrivateInputCopyBytes": 245265120,
+    "maxPrivateKnownLossTypedWorkingSetBytes": 79536,
+    "workingSetQualification": "Selected explicit allocations only; excludes JS arrays/objects, cache/answer/fragment duplicates, codec transforms, hashing temporaries, module state, allocator overhead and GC timing. Not peak RSS. Declared sum counts references per comparison even when caller buffers alias."
+  },
+  "codecCapsUnchanged": {"maxDepth":32,"maxNodes":500000,"maxTypedBytes":1000000,"maxBytes":33554432,"sidecarMaxBytes":4194304},
+  "falsifiers": [
+    "Any complete receipt other than160PATH+16constants+176callbacks requires explanation; never fill actual counters from these predictions.",
+    "Any first-profile callback seq other than1constant then0profile (fresh store) disproves assumed lazy production/order or records a failure; preserve native seq,parent,depth and callback captureIndex separately.",
+    "Any cached native PATH entry or returned cached emit on a unique request contradicts fresh registration-local answer-map assumption; no benchmark or speedup follows from computed emits.",
+    "Literal null mask must remain null through snapshot/constant/provenance, not become a zero plane. An unresolved mask address must fail rather than mean no mask.",
+    "A complete answer array over1e6 typed bytes contradicts this exact native schema/matrix or contains extra copies; no codec ceiling increase is authorized.",
+    "Long48 width50 loss corridor must be48x101 with14544rgb bytes plus48hiddenCenter bytes. R=25, M=51 or hardcoded width30 corridor bounds are incorrect.",
+    "Protocol tolPx2 changed to3 is a refusal/amendment, not compatible synthetic reuse.",
+    "Mask hides central stations and interrupts gap runs; zero visibleCount with zero longestGap remains UNKNOWN. Public profile nulls must not be represented as original NaN; stationContrast nonfinites must retain codec tags.",
+    "Any wrapper node/byte-budget assurance must be recomputed from its frozen schema; native-answer bound alone is not proof of full-trace bound."
+  ],
+  "chronologyCorrections": [
+    "An early coordinator progress note misstated aggregate typed corridor bytes as294144. A separate immediate correction to294912 was sent before this freeze, any producer outcome, or artifact construction. No numeric result was selected after CV."
+  ],
+  "runtime": {"productImports":0,"vendorImports":0,"positiveProducerCalls":0,"cvExecutions":0,"benchmarks":0,"sourceWrites":0,"gitMutations":0,"nativeMutations":0},
+  "claims": {"pathIdentity":"UNKNOWN","physicalEdgeIdentity":"UNKNOWN","calibratedWidth":"UNKNOWN","scientificAcceptance":"UNKNOWN","humanAcceptance":"UNKNOWN","promoted":false}
+}

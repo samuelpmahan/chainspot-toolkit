@@ -1,0 +1,16 @@
+{
+  "job_id":"E1523","worker":"V2","phase":"BEFORE_FOUR_CONVERSIONS",
+  "cwd":"/workspace/scratch/8528bb251845",
+  "tool":"/usr/bin/inkscape",
+  "dimensions":"Exact1680x1600, source page area; no source SVG/layout/value changes",
+  "outputs_and_capture_paths_absent_before_spawn":true,
+  "stop_policy":"Stop first conversion error; preserve written prefixes, stdout/stderr warnings and actual exit; no fallback/install/retry/overwrite",
+  "commands":[
+    {"group":"primary","input_sha256":"1effeec087014bde8b774e246cd346f7a32832d0b1b0a988b07b24a7e85e09bd","argv":["/usr/bin/inkscape","discovery-cycle06/V2/E1522/display-v1/group-primary.svg","--export-type=png","--export-area-page","--export-width=1680","--export-height=1600","--export-filename=/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1523/group-primary.png"],"stdout_path":"primary.stdout.raw","stderr_path":"primary.stderr.raw","actual_exit":null,"actual_signal":null},
+    {"group":"bright-nonpath","input_sha256":"288969a6e3f319e29b504c74f85d125f3bd8a8fdb153921c7c42e626556d6adc","argv":["/usr/bin/inkscape","discovery-cycle06/V2/E1522/display-v1/group-bright-nonpath.svg","--export-type=png","--export-area-page","--export-width=1680","--export-height=1600","--export-filename=/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1523/group-bright-nonpath.png"],"stdout_path":"bright-nonpath.stdout.raw","stderr_path":"bright-nonpath.stderr.raw","actual_exit":null,"actual_signal":null},
+    {"group":"normal-plus6","input_sha256":"3e777c1fbfc02db62e0548f77e622723f2265e52f7a9b8d0fadd468deef4c2a2","argv":["/usr/bin/inkscape","discovery-cycle06/V2/E1522/display-v1/group-normal-plus6.svg","--export-type=png","--export-area-page","--export-width=1680","--export-height=1600","--export-filename=/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1523/group-normal-plus6.png"],"stdout_path":"normal-plus6.stdout.raw","stderr_path":"normal-plus6.stderr.raw","actual_exit":null,"actual_signal":null},
+    {"group":"masked-primary","input_sha256":"1e0e86bd6a293a8efc02dce0bc77c8020b3010bec06d9f46ea011a0be27aa367","argv":["/usr/bin/inkscape","discovery-cycle06/V2/E1522/display-v1/group-masked-primary.svg","--export-type=png","--export-area-page","--export-width=1680","--export-height=1600","--export-filename=/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1523/group-masked-primary.png"],"stdout_path":"masked-primary.stdout.raw","stderr_path":"masked-primary.stderr.raw","actual_exit":null,"actual_signal":null}
+  ],
+  "visual_scope":"View each actual generated PNG at original resolution and compare labels with existing CSV; author QA only, not independent/scientific/human acceptance",
+  "forbidden":"No renderer rerun/source edit/layout/value recompute/AI image/browser/CV/source-pixel decode/new query or score"
+}

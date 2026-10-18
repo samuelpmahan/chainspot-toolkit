@@ -1,0 +1,50 @@
+{
+  "schema": "cycle06-E1542-outer-wrapper-actual@1",
+  "job_id": "E1542",
+  "worker": "G6",
+  "constructionOriginPath": "discovery-cycle06/G6/E1541",
+  "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+  "prospectiveActualArgvDeclaration": {
+    "path": "discovery-cycle06/G6/E1542/actual-wrapper-command.v1.json",
+    "sha256": "d8dd0d80c3b66d6db68d874aad0685ca8b531a85afbcd121c7a5cd2f24110a0f",
+    "persistedBeforeLaunch": true
+  },
+  "startUTC": "2026-10-18T21:35:08.629635498Z",
+  "endUTC": "2026-10-18T21:35:11.310295710Z",
+  "actualPid": 6,
+  "actualExit": 0,
+  "actualSignal": null,
+  "signalObservation": "Shell wait0/tool10de8e exit0, separate signal not exposed; none invented",
+  "wrapperInvocations": 1,
+  "helperChildSpawns": 1,
+  "stdout": {
+    "path": "discovery-cycle06/G6/E1541/wrapper.stdout.raw",
+    "bytes": 1351,
+    "mode": 420,
+    "sha256": "da92d80f792807ea4cfe8d780842ff9d3058624f6d6f90fc8f72bef10f3214a4"
+  },
+  "stderr": {
+    "path": "discovery-cycle06/G6/E1541/wrapper.stderr.raw",
+    "bytes": 0,
+    "mode": 420,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "originalStreamCapture": "Direct binary shell noclobber, no tee/filter/rewrite; wrapper actual argv and UTC declared/captured before launch; no Python outer framework.",
+  "preliminaryPreflightFailure": {
+    "count": 1,
+    "toolChunk": "b1119d",
+    "captureKind": "TOOLTESTIMONY_NOT_LOCAL_ORIGINAL_STDERR",
+    "diagnosticToolChunk": "865f11",
+    "versionedCorrection": "discovery-cycle06/G6/E1542/preflight-correction.v1.json",
+    "rootExplicitCorrectedGuardAndOneStillUnusedShotGO": true
+  },
+  "correctedPreflight": {
+    "toolChunk": "30e150",
+    "actualExit": 0,
+    "eightBoundIdentitiesMatched": true,
+    "eightFreshOutputAndCapturePathsAbsent": true
+  },
+  "actualBuildFailures": 0,
+  "automaticWrapperRetries": 0,
+  "codeEnvPermissionsAssertionsChanged": false
+}

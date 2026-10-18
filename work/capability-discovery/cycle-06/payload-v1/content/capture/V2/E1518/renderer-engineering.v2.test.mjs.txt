@@ -1,0 +1,78 @@
+/** E1518 synthetic engineering tests: AUTHORED, NOT RUN. No producer/wire/codec/pixels.
+ * Future invocation requires independent source review and separate root GO.
+ * Mutations caught: missing edgePair shape guard, attempted-identity guard, or
+ * shared outcome gating/labels. These are hypothetical fixtures, not observations.
+ */
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import {validate,displayRecords,svgGroup,html} from './renderer-proposal.v2.mjs';
+
+const PROTOCOL='cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829';
+const ATTESTATION='9f1cb90eed3c74214c9a03029730ea1ab487c48bd86b89cbe3a701eebe923ef1';
+const RGBA='4379abb30a5b0907aa0e1435b13e19eafe8fdd31ac57c9b8bdff4495a14fdc2a';
+const MASK='305285b7e2bc9d44dfd572caa8d39030ed1b0c2254c15967fbb9b7bff7fae609';
+const FRAME='Lenard-5.original-source-pixel-centers';
+const GROUPS=[['primary',[780,906]],['bright-nonpath',[780,740]],['normal-plus6',[781.223725524672,911.8738825184256]],['masked-primary',[780,906]]];
+const WINDOWS=[['before16',-24,-8],['core16',-8,8],['after16',8,24],['long48',-24,24]], WIDTHS=[34,42,50];
+const KINDS=['profile','edgePair','stationContrast','loss','edgePair','stationContrast','loss','edgePair','stationContrast','loss'];
+const EDGE_UNIT='px (l, r, c, w: lateral offsets); score, gl, gr: lum/px';
+const UNITS={profile:'lum (mean of R, G, B) per lateral offset (px); ok: unmasked station count',edgePair:EDGE_UNIT,stationContrast:'lum per station (inside band minus outside band), per side',loss:'fractions of visible stations; longest gaps px; contrast lum; overlay fraction'};
+
+// Bounded synthetic declarations only: no public query function is called.
+// Every native value starts null, a supported retained outcome, not a fake fit.
+function fixture(){
+  const comparisons=[],plannedQueries=[],queryTrace=[];
+  for(const [groupId,originPx]of GROUPS)for(const [windowId,t0Px,t1Px]of WINDOWS){
+    const id=`${groupId}/${windowId}`,masked=groupId==='masked-primary';
+    comparisons.push({id,groupId,windowId,imageId:'Lenard-5',frame:FRAME,widthPx:1290,heightPx:2796,rgbaSha256:RGBA,mask:masked?{kind:'Uint8Array',bytes:3606840,sha256:MASK}:null,originPx,phiRad:-0.20539538918976738,t0Px,t1Px,stepPx:1,widthsPx:WIDTHS});
+    for(let j=0;j<10;j++){
+      const planIndex=plannedQueries.length,kind=KINDS[j],widthPx=j===0?null:WIDTHS[Math.floor((j-1)/3)];
+      const base={raster:'px.image.cropped',mask:'tk.s6.pathMask',originPx,phiRad:-0.20539538918976738,t0Px,t1Px,stepPx:1};
+      const extra=kind==='profile'?{lat0Px:0}:kind==='edgePair'?{lat0Px:0,widthPx,tolPx:2,latLimPx:12,minOk:{count:8,ofStations:0.2}}:kind==='stationContrast'?{widthPx,bandPx:[1,3],alongPx:2}:{widthPx,profile:null,threshold:null,tauLum:8};
+      plannedQueries.push({planIndex,comparisonId:id,groupId,windowId,widthPx,query:`fn.q.path.${kind}`,rawArgs:{...base,...extra}});
+      queryTrace.push({planIndex,comparisonId:id,state:'COMPLETED',resolvedIdentity:{comparisonId:id,frame:FRAME,widthPx:1290,heightPx:2796,rgbaSha256:RGBA,maskKind:masked?'Uint8Array':null,maskSha256:masked?MASK:null},nativeAnswer:{unit:UNITS[kind],value:null},error:null});
+    }
+  }
+  const claims={promoted:false,heldout:false};for(const k of['pathIdentity','physicalEdgeIdentity','calibratedWidth','geometryScientificIdentity','scientificAcceptance','humanAcceptance','continuity'])claims[k]='UNKNOWN';
+  const trace={schema:'cycle06-lenard5-trace@1',protocolId:'lenard5-fixed16',protocolSha256:PROTOCOL,claims,requestBinding:{protocolSha256:PROTOCOL,attestationSha256:ATTESTATION,comparisons},plannedQueries,queryTrace,status:'SYNTHETIC_ENGINEERING_ONLY',counts:{requestedPATH:160,attemptedPATH:160,completedPATH:160,failedPATH:0,capturedCalculationEntries:0,capturedConstantEntries:0,capturedPATHEntries:0}};
+  return {trace,sidecar:{schema:'cycle06-lenard5-sidecar@1',protocolId:'lenard5-fixed16',calculationLog:[],intervals:[],status:trace.status}};
+}
+const modelOf=f=>validate(f.trace,f.sidecar);
+
+for(const [name,value]of[['number',17],['empty object',{}],['false',false],['missing fit scalar',{lPx:1,rPx:2,cPx:1.5,wPx:1,score:4,gl:2}],['bad condition',{condition:17}]])test(`refuse malformed edgePair ${name}`,()=>{
+  const f=fixture();f.trace.queryTrace[1].nativeAnswer.value=value;
+  assert.throws(()=>modelOf(f),/edgePair/);
+});
+for(const state of['COMPLETED','THREW'])test(`refuse attempted ${state} with null identity`,()=>{
+  const f=fixture(),row=f.trace.queryTrace[1];row.state=state;row.resolvedIdentity=null;if(state==='THREW')row.nativeAnswer=null;
+  assert.throws(()=>modelOf(f),/resolved identity/);
+});
+test('allow legitimate NOT_ATTEMPTED null identity without inventing an answer',()=>{
+  const f=fixture(),row=f.trace.queryTrace[1];row.state='NOT_ATTEMPTED';row.resolvedIdentity=null;row.nativeAnswer=null;
+  const m=modelOf(f);assert.equal(m.comparisons[0].rows[1].outcome.label,'answer missing: NOT_ATTEMPTED');assert.equal(row.nativeAnswer,null);
+});
+test('retain native fit scalars and extra fields by reference, without finite acceptance',()=>{
+  const f=fixture(),value={lPx:-0,rPx:Infinity,cPx:NaN,wPx:-Infinity,score:7,gl:2,gr:3,extraNativeField:{retained:true}};f.trace.queryTrace[1].nativeAnswer.value=value;
+  const m=modelOf(f),r=m.comparisons[0].rows[1];assert.equal(r.value,value);assert.equal(r.answer,f.trace.queryTrace[1].nativeAnswer);assert.equal(r.value.extraNativeField,value.extraNativeField);assert.equal(r.value.score,7);assert.ok(Object.is(r.value.lPx,-0));assert.ok(Number.isNaN(r.value.cPx));
+  const records=displayRecords(m);assert.equal(records.find(x=>x.planIndex===1&&x.field==='cPx').value,'NaN');assert.equal(records.find(x=>x.planIndex===1&&x.field==='lPx').value,'-0');
+});
+test('completed unencodable missing answer retains its actual state label',()=>{
+  const f=fixture(),row=f.trace.queryTrace[1];row.nativeAnswer=null;row.error={code:'ENCODING_FAILED',message:'synthetic encoding failure'};
+  assert.equal(modelOf(f).comparisons[0].rows[1].outcome.label,'answer missing: COMPLETED / ANSWER_UNAVAILABLE');
+});
+test('native edgePair condition preserves original fields and shared outcome',()=>{
+  const f=fixture(),value={condition:'no edge pair',extraNativeField:{retained:true}};f.trace.queryTrace[1].nativeAnswer.value=value;
+  const r=modelOf(f).comparisons[0].rows[1];assert.equal(r.value,value);assert.equal(r.outcome.label,'native condition: no edge pair');assert.equal(r.value.extraNativeField,value.extraNativeField);
+});
+
+// Display functions run only in a separately authorized future test invocation.
+// No renderTrustedPacket call, filesystem output, trust-packet read or codec decode.
+test('SVG and HTML compact summaries retain null and condition instead of unavailable quantities',()=>{
+  const f=fixture();f.trace.queryTrace[3].nativeAnswer.value={condition:'NO_VISIBLE_SUPPORT'};
+  const m=modelOf(f),records=displayRecords(m),bindings=Object.fromEntries(['rawAcceptance','producerRecord','sourceFreeze','cliReceipt','artifactManifest','trace','sidecar'].map(role=>[role,{path:`/synthetic/${role}`,sha256:'a'.repeat(64)}]));
+  const svg=svgGroup(m,'primary',bindings),report=html(m,records,[],{bindings,artifacts:[],record:{exit:0},manifest:{status:'SYNTHETIC_ONLY'}},'/synthetic/out');
+  for(const text of['Profile native null','Contrast native null','Fit: native null','native condition: NO_VISIBLE_SUPPORT'])assert.ok(svg.includes(text),text);
+  assert.ok(report.includes('native condition: NO_VISIBLE_SUPPORT'));assert.ok(report.includes('native null'));
+  assert.ok(!svg.includes('native c=unavailable'));assert.ok(!svg.includes('passFrac unavailable'));assert.ok(!report.includes('unavailable/16'));
+  assert.equal(records.find(x=>x.planIndex===3&&x.field==='condition').value,'NO_VISIBLE_SUPPORT');
+});

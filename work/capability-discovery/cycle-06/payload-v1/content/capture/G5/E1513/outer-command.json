@@ -1,0 +1,392 @@
+{
+  "schema": "cycle06-E1513-outer-command@1",
+  "job_id": "E1513",
+  "worker": "G5",
+  "argv": [
+    "node",
+    "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/cli.mjs",
+    "run",
+    "--manifest",
+    "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/manifest.v1.json",
+    "--out",
+    "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/producer-v1"
+  ],
+  "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+  "resolvedNode": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+  "nodeVersionObservedBeforeProducer": "v24.19.0",
+  "nodeVersionAuthority": "read-only node --version observation preceding wrapper; no product import",
+  "ambientNonsecret": {
+    "NODE_EXTRA_CA_CERTS": "/usr/local/share/ca-certificates/nebula-dns.crt",
+    "TZ": "Europe/Moscow",
+    "NODE_USE_ENV_PROXY": "1",
+    "LANG": "C.UTF-8",
+    "LC_CTYPE": "C.UTF-8",
+    "NODE_PATH": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules",
+    "LC_ALL": "C.UTF-8"
+  },
+  "environmentMutation": false,
+  "guardedUTC": "2026-10-18T19:00:58.377265Z",
+  "zeroAttemptGuard": {
+    "outputAbsent": true,
+    "stdoutAbsent": true,
+    "stderrAbsent": true,
+    "tokenAbsent": true
+  },
+  "guardBindings": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/root-source-admission.json",
+      "bytes": 6356,
+      "sha256": "6f3f30924749e0104a12e7d5d3d43b45b23569e55de8ffe565111620dd0355b8"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1512/replay-policy.json",
+      "bytes": 14912,
+      "sha256": "b146b7183e4aab0708792b7f72aa37790113ca8061f34c551ea590f24391027d"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/manifest.v1.json",
+      "bytes": 367,
+      "sha256": "4ae5f021bc3c9be8184cdb0627abdacabae9d7c8dcff88a12b404762843bbe9f"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/prospective-command.v1.json",
+      "bytes": 3177,
+      "sha256": "aee1eb7a3788f3392078584d038f45531a7db9410356b9be48a951b3d764302f"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/source-bindings.v1.json",
+      "bytes": 6572,
+      "sha256": "33b341363a56a8ffe4e8fc3e7546358cfdf71aced520145fad07b6dbfbdafcad"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/E1513-root-producer-admission.json",
+      "bytes": 2379,
+      "sha256": "6c0d9a6567e01cfae4d5956614e108ab9e2ec85634d69e75dfbbc1f35b95a4a4"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/E1513-root-ambient-admission.json",
+      "bytes": 1698,
+      "sha256": "465e281fbaf108261239c0e084bb062098be2a0a90499b283a6ccff4de6c588d"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/E1513-root-ambient-addendum-recovery.json",
+      "bytes": 1003,
+      "sha256": "05a57ec694e1d480c29fa4d8a3e24c91be40a0633b1a514d94c989163b9838b8"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/recipe.mjs",
+      "bytes": 29160,
+      "sha256": "4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/recipe.test.mjs",
+      "bytes": 9638,
+      "sha256": "0163e8d12298d32e4c825da1ea734b320b672bdef59affbea20ff42cac7fb0a2"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/README.md",
+      "bytes": 9668,
+      "sha256": "6a40f91299961893ec7de5096b366f234be46743e7b86036a32e41dda24afaf7"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/cli.mjs",
+      "bytes": 7213,
+      "sha256": "a711ab50bc50bd3f69e61656f12002d41d901e19d7db4e8a9b3b5eb188457ffa"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/cli.test.mjs",
+      "bytes": 8610,
+      "sha256": "2bc624f45cd47a73f79f864483c89da4794361a6638acec22cf432c816f3ec96"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/README.md",
+      "bytes": 9900,
+      "sha256": "f9ba7778979f7a678369d49554fa5b4758ecf17fafacb155c8faaf7af3a9640c"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/cli.mjs",
+      "bytes": 9436,
+      "sha256": "4ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/cli.test.mjs",
+      "bytes": 1458,
+      "sha256": "74d04d9487f24fdfdeac51fc055d576146eed8bc8403ae9929d671ae04e3d2b8"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs",
+      "bytes": 7322,
+      "sha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.test.mjs",
+      "bytes": 4624,
+      "sha256": "de792743c2dc779f5fb7891c950a02e706b3f7618840a6b77862e0ce992c2bd1"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/recipe.mjs",
+      "bytes": 25430,
+      "sha256": "ef7248daf5c83fd014c4a5004aa511e41399492a46be0460fe566ab421383ad3"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/recipe.test.mjs",
+      "bytes": 4695,
+      "sha256": "dfc8893b079f6f390e090447acc2fd553b2d05930d1fa7c9ee2804017f7c575f"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+      "bytes": 27838,
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/contracts/alpha.profile@1.mjs",
+      "bytes": 4399,
+      "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs",
+      "bytes": 32442,
+      "sha256": "122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/pxset.mjs",
+      "bytes": 9563,
+      "sha256": "01e68e82741d4af56901b3306a304ca540e8ab0d73a12ba20a0afbe0e788f5d5"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/render.mjs",
+      "bytes": 24294,
+      "sha256": "39a24a645c222430464592546eb6bdc1a8b190902ed5708ecd951b0bb639315a"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/canon.mjs",
+      "bytes": 5437,
+      "sha256": "3cc0319f4678eaf8679adcbfaa9db054841417a966c079019b0f72e24ba24406"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/png.mjs",
+      "bytes": 5566,
+      "sha256": "7668bab9de6a19a2cc6f44e5ac47d6e89373da130764365cf32011187a980241"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/alpha/alphaRender.mjs",
+      "bytes": 14536,
+      "sha256": "4d17e1da77b1e5ceb6a4a2609d26c010caa6c43df8392e9599544299d9e1c549"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/contracts/alpha.profile@1.mjs",
+      "bytes": 4399,
+      "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/stage-png.py",
+      "bytes": 2992,
+      "sha256": "e194f56e2899f516bb79dd8d6c5e4b876440d6f0932bf9d74e0a56c117f06a44"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/V1/R1507/result.json",
+      "bytes": 5067,
+      "sha256": "f32b2b5fe8fc7ceb0827c23cb3f04504e11c94cd02217e33993e1d4121aa730e"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/result.json",
+      "bytes": 8342,
+      "sha256": "801cc6754dcc6c8099f89564dde1e07864451ae984b644ed264ce3aa521a6192"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/recipe.mjs",
+      "bytes": 29160,
+      "sha256": "4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/cli.mjs",
+      "bytes": 7213,
+      "sha256": "a711ab50bc50bd3f69e61656f12002d41d901e19d7db4e8a9b3b5eb188457ffa"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/recipe.test.mjs",
+      "bytes": 9638,
+      "sha256": "0163e8d12298d32e4c825da1ea734b320b672bdef59affbea20ff42cac7fb0a2"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/cli.test.mjs",
+      "bytes": 8610,
+      "sha256": "2bc624f45cd47a73f79f864483c89da4794361a6638acec22cf432c816f3ec96"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/README.md",
+      "bytes": 9668,
+      "sha256": "6a40f91299961893ec7de5096b366f234be46743e7b86036a32e41dda24afaf7"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/README.md",
+      "bytes": 9900,
+      "sha256": "f9ba7778979f7a678369d49554fa5b4758ecf17fafacb155c8faaf7af3a9640c"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/cli.mjs",
+      "bytes": 9436,
+      "sha256": "4ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/cli.test.mjs",
+      "bytes": 1458,
+      "sha256": "74d04d9487f24fdfdeac51fc055d576146eed8bc8403ae9929d671ae04e3d2b8"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs",
+      "bytes": 7322,
+      "sha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.test.mjs",
+      "bytes": 4624,
+      "sha256": "de792743c2dc779f5fb7891c950a02e706b3f7618840a6b77862e0ce992c2bd1"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/recipe.mjs",
+      "bytes": 25430,
+      "sha256": "ef7248daf5c83fd014c4a5004aa511e41399492a46be0460fe566ab421383ad3"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/recipe.test.mjs",
+      "bytes": 4695,
+      "sha256": "dfc8893b079f6f390e090447acc2fd553b2d05930d1fa7c9ee2804017f7c575f"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+      "bytes": 27838,
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/contracts/alpha.profile@1.mjs",
+      "bytes": 4399,
+      "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs",
+      "bytes": 32442,
+      "sha256": "122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/pxset.mjs",
+      "bytes": 9563,
+      "sha256": "01e68e82741d4af56901b3306a304ca540e8ab0d73a12ba20a0afbe0e788f5d5"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/render.mjs",
+      "bytes": 24294,
+      "sha256": "39a24a645c222430464592546eb6bdc1a8b190902ed5708ecd951b0bb639315a"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/canon.mjs",
+      "bytes": 5437,
+      "sha256": "3cc0319f4678eaf8679adcbfaa9db054841417a966c079019b0f72e24ba24406"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/png.mjs",
+      "bytes": 5566,
+      "sha256": "7668bab9de6a19a2cc6f44e5ac47d6e89373da130764365cf32011187a980241"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/alpha/alphaRender.mjs",
+      "bytes": 14536,
+      "sha256": "4d17e1da77b1e5ceb6a4a2609d26c010caa6c43df8392e9599544299d9e1c549"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/contracts/alpha.profile@1.mjs",
+      "bytes": 4399,
+      "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.original.png",
+      "bytes": 3943106,
+      "sha256": "30fa01879840deb0584ffe001fa39779998710010faeae93510dbc7a8a0abe6e"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.full.rgba",
+      "bytes": 14427360,
+      "sha256": "4379abb30a5b0907aa0e1435b13e19eafe8fdd31ac57c9b8bdff4495a14fdc2a"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.primary-oriented-six-pixel-strip.mask.u8",
+      "bytes": 3606840,
+      "sha256": "305285b7e2bc9d44dfd572caa8d39030ed1b0c2254c15967fbb9b7bff7fae609"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-05/capture/final/F2/E1104/protocol-proposal.json",
+      "bytes": 12718,
+      "sha256": "cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/stage-png.py",
+      "bytes": 2992,
+      "sha256": "e194f56e2899f516bb79dd8d6c5e4b876440d6f0932bf9d74e0a56c117f06a44"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/staging-attestation.json",
+      "bytes": 4252,
+      "sha256": "9f1cb90eed3c74214c9a03029730ea1ab487c48bd86b89cbe3a701eebe923ef1"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G6/E1511/source-closure-proposed-v1.json",
+      "bytes": 26908,
+      "sha256": "81a176f91138d78126aa16490e9fddfb9409b209a43d5a9499d7cea9f31fe55e"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/E1513-root-ambient-addendum-recovery.json",
+      "bytes": 1003,
+      "sha256": "05a57ec694e1d480c29fa4d8a3e24c91be40a0633b1a514d94c989163b9838b8"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "bytes": 125989464,
+      "sha256": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12"
+    }
+  ],
+  "wrapperBinding": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1513/one-producer.py",
+    "bytes": 7590,
+    "sha256": "840ccf87e9c9627be3faa041518e16d38f8225f4dd7f5c3c4003d3fdabf633e8"
+  },
+  "actualProcessStartUTC": "2026-10-18T19:00:58.377543Z",
+  "actualProcessEndUTC": "2026-10-18T19:01:01.820482Z",
+  "pid": 5,
+  "actualExitCode": 0,
+  "actualSignal": null,
+  "spawnCount": 1,
+  "rawOutputs": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/producer-v1.stdout.log",
+      "bytes": 276,
+      "sha256": "e5b1977c1df6f3e90c4fa84b4c44127aa37a6f21ec2c312c2c6065084d2b13cf"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/producer-v1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/producer-v1/value-trace.json",
+      "bytes": 2094896,
+      "sha256": "a2333d711ce5e46d5c13b8949c0027d3a67c91e5802b911f6bf62b1b33950d21"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/producer-v1/timing-sidecar.json",
+      "bytes": 181123,
+      "sha256": "2ce4fc7faa1c94f7dff078de7b5e5129c0876764012a82dc7b7691f0afde1fb0"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/producer-v1/artifact-manifest.json",
+      "bytes": 87118,
+      "sha256": "f85df68d1b34ce2464dcec869c023f0bb10a0240cf9f750ca1a0b23e0151064f"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/producer-v1/cli-receipt.json",
+      "bytes": 65951,
+      "sha256": "7d4107dc4bbe8e06e0665f7bbce2ac558f6770a88263024400cd257b987dc37e"
+    }
+  ],
+  "error": null,
+  "outerElapsedSeconds": 3.4429667689983035
+}

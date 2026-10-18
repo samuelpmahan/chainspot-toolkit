@@ -1,0 +1,67 @@
+{
+  "job_id":"E1522",
+  "worker":"V2",
+  "outcome":"mixed_change",
+  "status":"ONE_TRACE_ONLY_RENDER_WRITTEN_NO_PNG_OR_VISUAL_QA",
+  "summary":"Executed exactly one root-admitted real trace-only renderer CLI from the exact independently accepted v3 source and exact root trust packet. Prospective argv/source/packet hashes, NEW output absence and capture-path absence were recorded before spawn. The command exited 0 with no signal, wrote four SVG group pages, one shared CSV, a 16-section HTML report and display manifest; stderr contains only the successful status. CLI stdout and descriptive-table.csv are byte-identical by cmp. All seven output file byte lengths/hashes were independently read back and match the six entries in the renderer manifest plus the separately bound manifest itself. The manifest reports warnings:[]. No failure, patch, retry, extra renderer invocation, query/CV/pixel/PNG action or browser/visual inspection occurred. Original raw inputs remain read-only; the renderer hash-gated its pinned codec and decoded the two admitted original wires. Report values remain descriptive and all scientific/human/identity/continuity claims UNKNOWN. Stop for root review and any separate PNG/visual-QA GO.",
+  "prospective_command":{"path":"prospective-command.v1.json","sha256":"2307b76e56c371f3e5ba748124c2204709b0ce964757777a33d262eaaefa3f38","persisted_and_read_back_before_spawn":true,"output_and_capture_paths_absent_before_spawn":true,"pre_spawn_actual_exit_was_unknown_not_intended_exit":true},
+  "command":{
+    "argv":["node","discovery-cycle06/V2/E1520/renderer-proposal.v3.mjs","--packet","/workspace/scratch/8528bb251845/discovery-cycle06/render-trust-packet.v1.json","--packet-sha","f5e4baf6c9173f39e40f49cab14355d1db5176818f42ba8e81f413c780998ff3","--out","/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1522/display-v1"],
+    "cwd":"/workspace/scratch/8528bb251845",
+    "started_utc":"2026-10-18T19:24:30.435118426Z",
+    "ended_utc":"2026-10-18T19:24:31.629800106Z",
+    "actual_exit":0,"actual_signal":null,"renderer_invocations":1,
+    "stdout":{"path":"renderer.stdout.raw","bytes":1734199,"sha256":"53bdcf7cfe714ff0342549a4bf05d5c791f2f7a2d2e3e6054eddd338c833c5a5"},
+    "stderr":{"path":"renderer.stderr.raw","bytes":68,"sha256":"26b9afc8db1c25295c561cd0abb0262d8f0b2f7d1682459f3a6e7933081dea4e","complete_text":"{\"status\":\"SVG_CSV_HTML_WRITTEN_NO_PNG_OR_VISUAL_QA\",\"artifacts\":6}\n"},
+    "first_real_error":null,
+    "capture_policy":"Prospective distinct filenames, preexistence stop and shell noclobber. No overwrite/tee/retry/cleanup. Source and packet were rehashed unchanged after execution."
+  },
+  "source_and_admission":{
+    "renderer":{"path":"../E1520/renderer-proposal.v3.mjs","sha256":"a5f8ee7b60cdf7d4593bf1658e3ae6415dd0bf50f7cb128af810924dc7a29e2b"},
+    "independent_renderer_review":{"path":"discovery-cycle06/R1/R1520/result.json","sha256":"b98ff8b7c90a78bfbe14dc5abe6c3b01d6b27d7baf05679a7a9ab79295c76e3b","authority":"Root-admitted accepted review after exact 13-case synthetic green; no replay here"},
+    "packet":{"path":"discovery-cycle06/render-trust-packet.v1.json","bytes":1704,"sha256":"f5e4baf6c9173f39e40f49cab14355d1db5176818f42ba8e81f413c780998ff3"},
+    "coordinator_preparation_source":{"path":"discovery-cycle06/prepare-render-trust.mjs","sha256":"941fd08d909231c3b8c195e41926a31495bdfafd8858e61e045fd1850c543233","read":"all source text only; not executed by V2"},
+    "raw_acceptance_projection":{"path":"discovery-cycle06/render-raw-acceptance-envelope.v1.json","bytes":1360,"sha256":"dedcc0da90c2bf781b4670d13aac6656aeb464bbf5009495866d92f6bbfd0fb4","original_review":{"path":"discovery-cycle06/R1/R1513/result.json","bytes":605076,"sha256":"0002f0c25157073eced2c6a4008abbd2a2feca268b863536160ba9069e8441c8"},"meaning":"Exact root-bound projection of the independently accepted original review, not a new review/rewrite/cap increase. Original policy passed unchanged remains false; scientific/human acceptance UNKNOWN."},
+    "producer_record_projection":{"path":"discovery-cycle06/render-producer-record-envelope.v1.json","bytes":1042,"sha256":"0c021a97bc3c7fd4d567b7b889976dbd542af3982b2eff0464ef4f19ce7de99b","original_outer_record":{"path":"discovery-cycle06/G5/E1513/outer-command.json","bytes":18647,"sha256":"0d6711c1a703f440ee228aabbb120dc93fcfb1f6aea5ae4f1aded7c1454959b9"},"meaning":"Observed actual exit0/signal:null of the original single producer process projected to the existing renderer schema; not intendedExitCode, a new process or replacement raw output"},
+    "trace":{"bytes":2094896,"sha256":"a2333d711ce5e46d5c13b8949c0027d3a67c91e5802b911f6bf62b1b33950d21"},
+    "sidecar":{"bytes":181123,"sha256":"2ce4fc7faa1c94f7dff078de7b5e5129c0876764012a82dc7b7691f0afde1fb0"},
+    "codec":{"sha256":"3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015","boundary":"Exact admitted digests/provenance/artifact checks preceded dynamic codec import and both wire decodes; no cap change"}
+  },
+  "outputs":[
+    {"path":"display-v1/descriptive-table.csv","bytes":1734199,"sha256":"53bdcf7cfe714ff0342549a4bf05d5c791f2f7a2d2e3e6054eddd338c833c5a5"},
+    {"path":"display-v1/group-primary.svg","bytes":148224,"sha256":"1effeec087014bde8b774e246cd346f7a32832d0b1b0a988b07b24a7e85e09bd"},
+    {"path":"display-v1/group-bright-nonpath.svg","bytes":148325,"sha256":"288969a6e3f319e29b504c74f85d125f3bd8a8fdb153921c7c42e626556d6adc"},
+    {"path":"display-v1/group-normal-plus6.svg","bytes":148377,"sha256":"3e777c1fbfc02db62e0548f77e622723f2265e52f7a9b8d0fadd468deef4c2a2"},
+    {"path":"display-v1/group-masked-primary.svg","bytes":146142,"sha256":"1e0e86bd6a293a8efc02dce0bc77c8020b3010bec06d9f46ea011a0be27aa367"},
+    {"path":"display-v1/report.html","bytes":2131065,"sha256":"42c4ec22f5a5d97cfd2189149e1a7bd162bd8f0890efba78f260b81f66ca6f4e"},
+    {"path":"display-v1/display-manifest.json","bytes":3947,"sha256":"983136a2262d6ffcd518c1600454a72c08737b488eb7addcdfeb633ff1a1362a"}
+  ],
+  "postchecks":{
+    "stdout_equals_csv":{"method":"cmp of complete byte streams","actual_exit":0,"byte_identical":true},
+    "all_output_hashes_and_sizes_match_manifest":true,
+    "manifest_self_hash_bound_separately":true,
+    "manifest_warnings":[],
+    "html_comparison_sections":16,
+    "svg_pages":4,
+    "each_svg_declared_dimensions":"1680x1600, viewBox 0 0 1680 1600",
+    "csv_physical_line_count":14973,
+    "inspection_mode":"Byte/hash/size comparison, manifest text and bounded markup-token checks only; no browser, PNG or visual inspection"
+  },
+  "execution_counts":{
+    "real_renderer_cli":1,"pinned_codec_runtime_import":1,"original_wire_decodes":2,
+    "svg_files_written":4,"html_files_written":1,"csv_files_written":1,"display_manifests_written":1,
+    "additional_syntax_or_tests":0,"producer_or_query":0,"cv_or_pixel_decode":0,
+    "png_conversion":0,"browser_or_visual_qa":0,"source_mutations":0,"git_actions":0,"native_actions":0,"helper_actions":0,
+    "automatic_patch_or_retry":0
+  },
+  "limits":[
+    "This is an actual trace-only report of admitted existing retained raw answers, not a new producer/CV/scientific experiment or successful independent replay",
+    "Native scalar/null/nonfinite/finite-invalid/condition fields, denominators and counts are quoted descriptively; no new score, ranking, best-width selection, classifier or acceptance threshold",
+    "The coordinator projects two small compatibility envelopes; originals remain authoritative and unchanged. Existing caps and exact original trace/sidecar/artifact digests were not weakened",
+    "Hash-time input identity is not authenticated execution or hostile-filesystem race defense; exclusive prefix-preserving output is not an atomic/durable write claim",
+    "Four SVGs and HTML/CSV exist, but PNG conversion, browser rendering, visual legibility/layout/appearance and human acceptance have not been inspected or established",
+    "Path/physical-edge/continuity/calibrated-width/geometry/scientific/human acceptance remain UNKNOWN; promoted:false, heldout:false",
+    "Root alone finishes native E1522; no source/Git/native/helper actions by this worker"
+  ],
+  "handoff":"Actual one-shot render and byte/hash postchecks complete. Preserve all outputs and raw captures. Stop for root review; no PNG/browser/visual QA or additional real render without a separate GO."
+}

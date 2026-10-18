@@ -1,0 +1,41 @@
+{
+  "schema": "cycle06-independent-stage-prospective@1",
+  "job_id": "R1542",
+  "worker": "A1",
+  "status": "NOT_RUN_EXACT_ONE_STAGE_ROOT_GO_AFTER_PASSED_PREDECODE_GUARDS",
+  "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+  "argv": [
+    "python3.12",
+    "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-06/package-closed.v3.py",
+    "stage",
+    "--package", "/workspace/scratch/8528bb251845/discovery-cycle06-final-E1541-v1",
+    "--manifest-sha", "1d083ffd9f9eb4bd6082c4fe2427ab4a8ccc909144ec92b39c5baa9389c42873",
+    "--receipt-dir", "/workspace/scratch/8528bb251845/discovery-cycle06-verify-A1-R1542-v1",
+    "--out", "/workspace/scratch/8528bb251845/discovery-cycle06-restored-A1-R1542-v1"
+  ],
+  "stdout": "/workspace/scratch/8528bb251845/discovery-cycle06/A1/R1542/stage.stdout.raw",
+  "stderr": "/workspace/scratch/8528bb251845/discovery-cycle06/A1/R1542/stage.stderr.raw",
+  "actualProcess": "/workspace/scratch/8528bb251845/discovery-cycle06/A1/R1542/actual-process.json",
+  "helperSha256": "7b4f94a118e20d6b900938e99f0a24dc71aaeb41411a7c10d2fb4e466a541393",
+  "runtimeSha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+  "zstdSha256": "7c5468b370f7c47eda07281e3437fafc568f95d10420051e3aa522709f9342c5",
+  "predecodeGuards": {
+    "toolChunk": "dbfedd",
+    "exit": 0,
+    "failures": [],
+    "completePackageFilesHashed": 648,
+    "packageBytes": 9351615,
+    "manifestListedFiles": 646,
+    "SHA256SUMSExact": true,
+    "orderedIndexPlanObjectDescriptors": 564,
+    "orderedIndexPlanArchiveDescriptors": 3,
+    "sourceAliasesOpaqueHashLengthFullModeChecked": 1414,
+    "admittedEngineeringProposalDifferences": [],
+    "newOutputAndCapturePathsAbsentIncludingBrokenSymlinks": true,
+    "currentOmittedImageBodiesExcluded": true,
+    "runtimeToolHardlinkCountsNotRestricted": true,
+    "decompressionsBeforeLaunch": 0
+  },
+  "predictionsNotObservations": {"stageInvocations": 1, "zstdDecompressionRecords": 19, "sourceInferredReadOnlyGitLsFiles": 1, "standaloneVerifyInvocations": 0},
+  "capturePolicy": "Persist exact argv before launch; direct original stdout/stderr with shell noclobber, actual PID/start/endUTC/wait exit observed. No tee/filter/rewrite/env/PATH/permission override. First unexpected failure terminal, preserve all prefixes/partials and request new root direction; no retry or additional decode."
+}

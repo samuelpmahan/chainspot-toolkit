@@ -1,0 +1,53 @@
+TAP version 13
+# Subtest: malformed CLI grammar refuses before reserving any destination
+ok 1 - malformed CLI grammar refuses before reserving any destination
+  ---
+  duration_ms: 2.346951
+  type: 'test'
+  ...
+# Subtest: existing output refuses before missing manifest lookup and preserves bytes
+ok 2 - existing output refuses before missing manifest lookup and preserves bytes
+  ---
+  duration_ms: 0.786811
+  type: 'test'
+  ...
+# Subtest: missing manifest persists NOT_EXECUTED with zero attempted calls
+ok 3 - missing manifest persists NOT_EXECUTED with zero attempted calls
+  ---
+  duration_ms: 6.18459
+  type: 'test'
+  ...
+# Subtest: fabricated result retains legacy envelope and exact raw codec output identities
+ok 4 - fabricated result retains legacy envelope and exact raw codec output identities
+  ---
+  duration_ms: 3.56557
+  type: 'test'
+  ...
+# Subtest: fabricated aggregate encode failure retains both fragments and binds failure manifest
+ok 5 - fabricated aggregate encode failure retains both fragments and binds failure manifest
+  ---
+  duration_ms: 1.642985
+  type: 'test'
+  ...
+# Subtest: fabricated mid-output collision keeps written prefix and existing sentinel
+ok 6 - fabricated mid-output collision keeps written prefix and existing sentinel
+  ---
+  duration_ms: 1.497156
+  type: 'test'
+  ...
+# Subtest: receipt wx failure preserves original receipt and does not retry writer
+ok 7 - receipt wx failure preserves original receipt and does not retry writer
+  ---
+  duration_ms: 1.367922
+  type: 'test'
+  ...
+# {"schema":"cycle06-noncv-import-tripwire@1","blockedImports":0,"meaning":"import blocker only; no source-read or store-call instrumentation claim"}
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 120.380117

@@ -1,0 +1,25 @@
+{
+  "schema": "lab-job-review@1",
+  "job_id": "R1507",
+  "worker": "V1",
+  "decision": "accepted",
+  "summary": "Independent source-only review accepts spec compliance and code quality of the exact complete five-file default-OFF fixed Lenard5 additions. All five actual files exactly reconstruct from the67881-byte authoritative diff and before/after hashes match. Independent read/hash/mode verification of all2523 old paths (45942025 bytes) finds zero differences, including seven/nine closures. Fixed file-only160 plan,12 actual null-valued mask Parts plus4 frozen masks, fresh sequential lazy stores, source/input guards, unchanged codec/writer, actual counters/raw fragments/error retention and NEW-output CLI/receipt comply with the admitted design. Existing raw first7+7 NONCV evidence hashes/exits agree; no suite was rerun and no subject/vendor/store/PATH/producer was executed. No mandatory amendment or concrete source counterexample found. V2 adverse/cap/preflight and later root/native sourcefreeze/producer permission remain separate; no scientific or execution-authentication acceptance.",
+  "specCompliance": "accepted",
+  "codeQuality": "accepted",
+  "mandatoryAmendments": [],
+  "findings": [],
+  "reviewPath": "discovery-cycle06/V1/R1507/review.md",
+  "authoritativeDiff": {"path":"discovery-cycle06/full-five-file-review.diff.txt","bytes":67881,"sha256":"dbdc858f35d7926ba9b54fb7cb5189108cdfbbac9d00068d9b0566426c54ec54","reconstructedFiveFilesExactlyMatch":true},
+  "sourceBeforeAfter": [
+    {"path":"experiments/capability-discovery/lenard5-station-evidence/recipe.mjs","bytes":29160,"beforeSha256":"4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6","afterSha256":"4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6"},
+    {"path":"experiments/capability-discovery/lenard5-station-evidence/recipe.test.mjs","bytes":9638,"beforeSha256":"0163e8d12298d32e4c825da1ea734b320b672bdef59affbea20ff42cac7fb0a2","afterSha256":"0163e8d12298d32e4c825da1ea734b320b672bdef59affbea20ff42cac7fb0a2"},
+    {"path":"experiments/capability-discovery/lenard5-station-evidence/README.md","bytes":9668,"beforeSha256":"6a40f91299961893ec7de5096b366f234be46743e7b86036a32e41dda24afaf7","afterSha256":"6a40f91299961893ec7de5096b366f234be46743e7b86036a32e41dda24afaf7"},
+    {"path":"experiments/capability-discovery/lenard5-station-evidence/cli.mjs","bytes":7213,"beforeSha256":"a711ab50bc50bd3f69e61656f12002d41d901e19d7db4e8a9b3b5eb188457ffa","afterSha256":"a711ab50bc50bd3f69e61656f12002d41d901e19d7db4e8a9b3b5eb188457ffa"},
+    {"path":"experiments/capability-discovery/lenard5-station-evidence/cli.test.mjs","bytes":8610,"beforeSha256":"2bc624f45cd47a73f79f864483c89da4794361a6638acec22cf432c816f3ec96","afterSha256":"2bc624f45cd47a73f79f864483c89da4794361a6638acec22cf432c816f3ec96"}
+  ],
+  "preservation": {"baseline":"discovery-cycle06/G6/E1506/base-tracked-inventory.json","baselineSha256":"d89c5447f1605e52d8fc426c70bfd21f283318eff59e639d55f35f621ccd4d73","independentPathsChecked":2523,"bytesChecked":45942025,"differences":[],"sevenStationNinePhysicalPathsIncluded":true,"baselineHead":"be67d44a653c79ca61efae99934e90475a9aba5e","baselineTree":"87dfd9aebb09050d1c56e39d54d9a9920b93341c","freshGitRefAuthentication":false},
+  "existingEvidenceInspection": {"recipeRawTAPSha256":"eaed0dd2449cd67e1653b1a8c1e8e563b064484e33d91ad357d5b28f7c36a841","recipeTests":7,"recipePass":7,"cliRawTAPSha256":"91995c2918382798c7e56ed6d98cc8aab23081cb99bdec045f78b2d3a8a74197","cliTests":7,"cliPass":7,"recordedSyntaxAndTestExits":0,"rawHashesMatchAuthors":true,"independentReruns":0,"zeroBlockedImportsIsNotIndependentFSOrStoreInstrumentation":true},
+  "reviewerActions": {"subjectImports":0,"subjectExecution":0,"tests":0,"vendorStorePATHCVProducer":0,"imageDecode":0,"sourceWrites":0,"gitCommands":0,"nativeCalls":0,"remoteWrites":0,"helperSpawns":0,"writes":"Only assigned discovery-cycle06/V1/R1507 scratch report/result"},
+  "limitations": ["Independent V2 adverse/cap/file-preflight gate remains required; this accepts exact source only.","Runtime query/capture/mutation/encode stop paths were source-reviewed, not executed by V1.","Fixed typed allocation arithmetic is not measured RSS, GC residency, timing or proof of complete wrapper caps.","Reused legacy source verifier uses readFileSync and is not a hostile growing-source-file allocation bound.","Source/input hashes are check-time identities, not executed-code authentication, cross-process snapshots or ESM-cache proof.","Output receipt assumes ordinary self-emitted files, not hostile concurrent replacement; writer is best-effort exclusive retained-prefix, not atomic/durable.","Input PNG-to-RGBA/mask relation relies on separately accepted R1501 staging evidence; V1 performed no decode or scientific acceptance."],
+  "claims": {"promoted":false,"heldout":false,"pathIdentity":"UNKNOWN","physicalEdgeIdentity":"UNKNOWN","continuity":"UNKNOWN","calibratedWidth":"UNKNOWN","geometryScientificIdentity":"UNKNOWN","scientificAcceptance":"UNKNOWN","humanAcceptance":"UNKNOWN"}
+}

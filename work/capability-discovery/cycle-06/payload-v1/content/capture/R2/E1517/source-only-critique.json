@@ -1,0 +1,88 @@
+{
+  "job_id": "E1517",
+  "worker": "R2",
+  "outcome": "insufficient_evidence",
+  "policy_reuse_assessment": "mixed_change",
+  "summary": "SOURCE_ONLY bounded critique: fixed plan/count/order, native-entry, null-Part and exact-value/codec derivations are supported, but frozen E1512 policy has one concrete success-shape contradiction if its per-check error:null wording is read literally. Original policy has not passed unchanged. No producer outputs were inspected and no replay, import, tests, vendor/PATH read or measurement was performed; all physical/scientific/semantic acceptance claims remain UNKNOWN.",
+  "frozen_policy": {
+    "path": "discovery-cycle06/V1/E1512/replay-policy.json",
+    "sha256": "b146b7183e4aab0708792b7f72aa37790113ca8061f34c551ea590f24391027d",
+    "modified": false
+  },
+  "findings": [
+    {
+      "id": "R2-E1517-F1",
+      "kind": "CONCRETE_SOURCE_SHAPE_CONTRADICTION",
+      "policy_pointer": "/exactProvenanceAndIntegrity/4",
+      "policy_line": 97,
+      "policy_quote": "Each snapshot has10 checks in plan order with original hashes, verified:true, post hashes equal pre, error:null",
+      "source_pointer": "chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/recipe.mjs:403-405",
+      "source_quote": "const post = hashPrivate(s),verified = sameHashes(s.pre,post);\n            integrity.checks.push({planIndex:plan.planIndex,post,verified});",
+      "enclosing_record_pointer": "chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/recipe.mjs:314",
+      "enclosing_record_quote": "const record = {comparisonId:id,snapshotId:s.identity.snapshotId,pre:s.pre,checks:[],post:null,verified:null,partKeys:null,error:null};",
+      "counterexample": "For any source-successful comparison, checks[k] is the exact ordered object {planIndex,post,verified}, with post={rgbaSha256,maskSha256}; it has no own error key. A comparator requiring checks[k].error === null, or requiring the own error key, rejects that genuine source shape. Conversely adding error:null would violate exact source keys/order and missing-versus-null equality. The enclosing snapshot record is where error:null belongs.",
+      "minimal_append_only_clarification": "Keep original E1512 bytes/hash frozen. Add a separately versioned, hash-bound source-shape addendum stating: snapshot records retain error:null on success; each checks[k] has exactly ordered keys planIndex,post,verified, with no error or pre field; checks[k].post equals enclosing snapshot.pre and verified is true. Do not add/remove any numeric timing exception or change raw-value equality. Root must explicitly select the interpretation/guard before comparator use; R2 does not change policy automatically."
+    }
+  ],
+  "supported_derivations": [
+    {
+      "claim": "16 comparisons, 160 plans/rows/answer fragments, exact group-window-width-query ordering",
+      "evidence": "recipe.mjs:25-34 defines 4 groups and 4 windows; :120-126 uses group flatMap then windows map; :128-143 pushes one profile and 3 queries per width across widths [34,42,50]. Thus 4*4=16 and 16*(1+3*3)=160. :333-335 allocates rows in plan order; :384-398 executes and encodes each answer sequentially on the success route."
+    },
+    {
+      "claim": "176 callbacks/calculation fragments and callback sequence [1,0,2,3,4,5,6,7,8,9,10] per comparison on the successful frozen route",
+      "evidence": "recipe.mjs:369-383 creates a fresh private store and one lazy constant containing raster then mask; :384-391 issues 10 calls. store.mjs:188-199 resolves raw string arguments in insertion order, so first raster resolution lazily invokes the constant (:285-303), which produces both Parts. Entry seq increments at call entry (:376-383), onCall runs at exit (:386-392), so nested constant seq1 is captured before outer profile seq0; later top-level calls seq2..10. recipe.mjs:371-379 records exactly one fragment/log/counter per callback. This is source-success prediction, not an observed count or proof that vendor computation succeeds."
+    },
+    {
+      "claim": "182 intervals and interval index formulas",
+      "evidence": "recipe.mjs:326-355 creates six initial intervals including first snapshot; :384-391 creates 160 query intervals; :425-431 adds 15 later snapshot intervals; :468 adds one final source verification. 6+160+15+1=182. Query index 11*c+6+k; c>0 snapshot index 11*c+5; final index181. Failure routes are not covered by these success-shape predictions."
+    },
+    {
+      "claim": "338 ordered legacy artifacts, not 338 total directory files",
+      "evidence": "Legacy station-evidence/cli.mjs:99-117 emits 160 answers, then176 calculation fragments, then value-trace and timing-sidecar: 160+176+2=338 manifest artifacts. The manifest itself is written separately (:94-96) and Lenard CLI receipt separately (lenard5 cli.mjs:95); neither is one of those338."
+    },
+    {
+      "claim": "Exact native keys/order; key:null, cached:false, computedMs:null; null mask is a real Part",
+      "evidence": "store.mjs:376-380 defines the exact16 entry keys. Query registration defaults to empty outParts (:188-199,:337); root constant has rootKey (:361-367); key expression (:415) is null for both, excluding store cache-hit branch :432-435. computedMs is only changed in that cache-hit branch. recipe.mjs:267-279 constructs actual null mask and :381-382 registers it in the constant. store writes both Parts (:425) and provenance distinguishes absent Part from existing null-valued Part (:494-501). No pre-run key values should be invented."
+    },
+    {
+      "claim": "Exact object/array order, missing-vs-null, nonfinite/-0 tags and exact Uint8Array are codec-supported",
+      "evidence": "codec.mjs:34-44 uses Reflect.ownKeys and ordered pairs; :47-52 requires exact Uint8Array; :71-92 encodes null, tagged numbers, arrays and object pair order; :108-138 validates tags and reconstructs exact closed value grammar. No generic JSON projection is equivalent."
+    },
+    {
+      "claim": "Timing exclusions are only named leaves; clock formulas are source-derived but are not measurement-science evidence",
+      "evidence": "recipe.mjs:239-247 records start/end and elapsed=end-start in completion order; store.mjs:125-126,:381,:388 records roundMs(now()-started). Finite/nonnegative/monotone clock and nested<=outer checks are native-clock admission guards, not explicit validation performed by producer source. Store reads globalThis.performance whereas wrapper imports performance; unchanged ordinary native clock behavior is assumed. No other concrete contradiction found in this bounded inspection, and no clock execution/probe was done."
+    },
+    {
+      "claim": "Provenance keys must be interpreted per source object, not fabricated from compressed policy prose",
+      "evidence": "recipe.mjs:187-200 fixes six suppliedFiles role order. Legacy verifySourceClosure (:176-183) produces {verified,entries}; each physical entry is exactly path,expectedSha256,actualSha256,error (no bytes or per-entry verified). Lenard runtimeHashes (:249-261) produces five entries path,expectedSha256,actualSha256,bytes (no per-entry error/verified; first two expectedSha256 are null). The compressed policy line94 should not be implemented as requiring every listed field on every entry. This is an ambiguity warning, not a second established contradiction."
+    }
+  ],
+  "other_concrete_contradictions": [],
+  "scope": {
+    "source_text_and_hashes_only": true,
+    "producer_outputs_read": false,
+    "imports_tests_execution": "NOT_RUN",
+    "replay_comparator": "NOT_RUN",
+    "vendor_PATH_read": false,
+    "source_pixels": "NOT_READ",
+    "helpers": "NONE",
+    "writes": "R2/E1517 scratch report only",
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN",
+    "pathIdentity": "UNKNOWN",
+    "continuity": "UNKNOWN",
+    "calibratedWidth": "UNKNOWN"
+  },
+  "full_hashes": {
+    "lenard5_recipe.mjs": "4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6",
+    "lenard5_cli.mjs": "a711ab50bc50bd3f69e61656f12002d41d901e19d7db4e8a9b3b5eb188457ffa",
+    "old_codec.mjs": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015",
+    "unchanged_store.mjs": "122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074",
+    "legacy_writer_cli.mjs": "4ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c",
+    "legacy_source_verifier_recipe.mjs": "ef7248daf5c83fd014c4a5004aa511e41399492a46be0460fe566ab421383ad3",
+    "lenard5_recipe.test.mjs_hash_only_not_executed": "0163e8d12298d32e4c825da1ea734b320b672bdef59affbea20ff42cac7fb0a2",
+    "lenard5_README.md_hash_only": "6a40f91299961893ec7de5096b366f234be46743e7b86036a32e41dda24afaf7",
+    "lenard5_cli.test.mjs_hash_only_not_executed": "2bc624f45cd47a73f79f864483c89da4794361a6638acec22cf432c816f3ec96"
+  }
+}

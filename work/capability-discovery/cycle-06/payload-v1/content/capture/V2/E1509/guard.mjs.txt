@@ -1,0 +1,39 @@
+import fs from 'node:fs';
+import { registerHooks, syncBuiltinESMExports } from 'node:module';
+import { fileURLToPath } from 'node:url';
+const product = value => /\/(?:probes|source\/provider)\//.test(String(value));
+export const guard = { active:false, blocked:[], evaluatedProduct:0, loads:[], events:[], live:new Set(), peak:0 };
+registerHooks({
+  resolve(specifier, context, next) {
+    const result = next(specifier,context);
+    if (product(result.url)) { guard.blocked.push(result.url); throw Error('V2_PRODUCT_IMPORT_BLOCKED'); }
+    return result;
+  },
+  load(url, context, next) {
+    if (product(url)) { guard.evaluatedProduct++; throw Error('V2_PRODUCT_LOAD_BLOCKED'); }
+    guard.loads.push(url); return next(url,context);
+  }
+});
+const original = Object.fromEntries(['openSync','readSync','closeSync','fstatSync','readFileSync','statSync'].map(k=>[k,fs[k]]));
+for (const name of Object.keys(original)) fs[name] = function(...args) {
+  if (!guard.active) return original[name](...args);
+  const event = {op:name,target:typeof args[0]==='number'?args[0]:String(args[0])};
+  guard.events.push(event);
+  try {
+    const result = original[name](...args);
+    if (name==='openSync') { guard.live.add(result); guard.peak=Math.max(guard.peak,guard.live.size); event.fd=result; }
+    if (name==='readSync') event.bytes=result;
+    if (name==='closeSync') guard.live.delete(args[0]);
+    return result;
+  } catch(error) { event.error=error.code??error.message; throw error; }
+};
+syncBuiltinESMExports();
+export function begin() { guard.events=[]; guard.peak=0; guard.active=true; }
+export function end() { guard.active=false; return {events:guard.events,peakOpen:guard.peak,remainingOpen:[...guard.live],blockedImports:guard.blocked.length,productLoadAttempts:guard.evaluatedProduct}; }
+if (process.argv.includes('--selftest')) {
+  const url=new URL('../../../chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs',import.meta.url);
+  let caught=null; try { await import(url); } catch(error) { caught=error.message; }
+  const observed={caught,blocked:guard.blocked,productLoadAttempts:guard.evaluatedProduct,loads:guard.loads};
+  console.log(JSON.stringify(observed));
+  if(caught!=='V2_PRODUCT_IMPORT_BLOCKED'||guard.blocked.length!==1||guard.evaluatedProduct!==0) process.exitCode=1;
+}

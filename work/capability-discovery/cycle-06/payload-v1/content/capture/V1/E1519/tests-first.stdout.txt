@@ -1,0 +1,23 @@
+✔ exact comparison preserves nonfinite, negative zero and typed identity (1.40875ms)
+✔ exact comparison rejects key/order/extra-field changes at first pointer (0.262344ms)
+✔ only explicitly supplied numeric timing leaves can differ (0.776929ms)
+✔ clock validation rejects nonfinite, negative, inconsistent or reversed time (3.269421ms)
+✔ plan uses exact literal local order and fixed geometry (0.839874ms)
+✔ missing native captures cannot satisfy the fixed completion model (0.28573ms)
+✔ raw binding checks both actual digest and actual byte length (0.664139ms)
+✔ manifest and receipt ordinary pretty JSON stays separate from wire codec (0.439712ms)
+✔ native capture order cache metadata and computedMs are not timing exceptions (13.261361ms)
+✔ only the 722 fixed sidecar clock pointers exist and interval metadata follows source order (1.127457ms)
+✔ artifact ordinals and metadata are fixed; null mask is not a zero mask (0.379561ms)
+✔ FULL validateRun hand-declared successful envelope fixture allows null/condition/nonfinite value payloads (23.176162ms)
+✔ FULL validateRun rejects null nativeAnswer, missing own value, bad unit and wrong emits before self equality (69.843806ms)
+✔ FULL validateRun independently exercises counts, request/source binding and exact snapshot-check shape (32.468568ms)
+✔ external-root lexical guard respects complete parent path components (0.510028ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 242.618936

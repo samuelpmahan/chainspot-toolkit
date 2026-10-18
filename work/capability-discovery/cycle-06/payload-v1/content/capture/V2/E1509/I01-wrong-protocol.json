@@ -1,0 +1,62 @@
+{
+  "id": "I01-wrong-protocol",
+  "status": "PASS",
+  "data": {
+    "code": "PROTOCOL_MISMATCH",
+    "phase": "file-hash"
+  },
+  "observed": {
+    "events": [
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/fixtures/wrong-protocol-manifest.json",
+        "fd": 18
+      },
+      {
+        "op": "fstatSync",
+        "target": 18
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 313
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 0
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      },
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/fixtures/wrong-protocol",
+        "fd": 18
+      },
+      {
+        "op": "fstatSync",
+        "target": 18
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 12718
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 0
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      }
+    ],
+    "peakOpen": 1,
+    "remainingOpen": [],
+    "blockedImports": 0,
+    "productLoadAttempts": 0
+  }
+}

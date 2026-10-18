@@ -1,0 +1,75 @@
+{
+  "job_id": "E1514",
+  "worker": "V2",
+  "outcome": "mixed_change",
+  "status": "PREPARATION_ONLY_CONSTRUCTED_NOT_RUN",
+  "summary": "Recovered the existing trace-only renderer preparation receipt after native epoch15 E1514 V2 assignment/start readback. All four existing proposal/checkpoint hashes match the root-supplied values. Read the proposal, contract, actual-flow checkpoint, prospective commands and G5 E1510 raw-reader plan as text only. The renderer remains unreviewed and unexecuted; no current producer output was opened and no capability, test, render, raw acceptance or scientific acceptance is claimed. Only this preparation receipt was added.",
+  "scope": {
+    "scratch_directory": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1514",
+    "authorization": "Recover preparation-only receipt; no execution or proposal modification",
+    "proposal_modified": false,
+    "product_source_modified": false,
+    "git_actions": 0,
+    "native_actions": 0,
+    "helper_actions": 0,
+    "native_finish_owner": "root only"
+  },
+  "verified_existing_artifacts": [
+    {
+      "path": "renderer-proposal.v1.mjs",
+      "sha256": "88adbcc31c1059b4f75da4c88fcf6ee4e1afaf1aaacec8d8e45c2834e2917e87",
+      "matches_root_expected": true
+    },
+    {
+      "path": "renderer-contract.v1.md",
+      "sha256": "97427fa138bcb1f7ad18346636e5a70a3e96b474762e80525521214be8d8ffd0",
+      "matches_root_expected": true
+    },
+    {
+      "path": "ACTUAL-FLOW.v1.md",
+      "sha256": "e639760ae9fbeba9eac35119fe54b55368c62c1e4a174e721f2b32e7a4d6c51e",
+      "matches_root_expected": true
+    },
+    {
+      "path": "prospective-commands.v1.json",
+      "sha256": "5ec38fdedc8964af07c927264571cf0678576f3d7e18bd111ca34e8367d91486",
+      "matches_root_expected": true
+    }
+  ],
+  "additional_plan_read_as_text": "../../G5/E1510/raw-analysis-reader-plan.v1.md",
+  "receipt_recovery": {
+    "result_json_absent_before_write": true,
+    "earlier_failed_write": "Root reported no file was left; the prior write mechanism/outcome was not independently investigated.",
+    "new_files": ["result.json"]
+  },
+  "executions": {
+    "renderer": 0,
+    "renderer_import": 0,
+    "syntax_check": 0,
+    "tests": 0,
+    "codec_import_or_decode": 0,
+    "producer_or_query": 0,
+    "svg_html_csv_generation": 0,
+    "png_decode_or_conversion": 0,
+    "browser_or_visual_qa": 0,
+    "current_producer_output_reads": 0
+  },
+  "source_only_intent_not_verified_behavior": {
+    "future_outputs": "Four 1680x1600 SVG group pages, one shared exact-token CLI/CSV projection, one HTML report with 16 comparison anchors, and an output hash manifest; none exists as an output of this job.",
+    "trust_order": "Externally supplied exact packet and provenance/artifact hashes, including both original wires, before dynamic pinned codec import/decode; no output before decoded validation.",
+    "shared_model": "One retained-row display model is intended to feed CSV/CLI, HTML and SVG consumers.",
+    "scalar_semantics": "Native null, NaN, infinities, -0, finite values and finite-invalid flags remain distinct; no imputation or normalization is authorized.",
+    "counts": "Actual native attempts/completions/captures and retained states must remain observations; fixed16/160/176 expectations must not fill absent outcomes.",
+    "claims": "Path/physical-edge/continuity/calibration/geometry/scientific/human acceptance remain UNKNOWN; promoted:false and heldout:false.",
+    "prohibitions": "No new scores, best-width selection, classifier, query generation, source pixels, product rerun, recipe/store/vendor/PATH imports or scientific acceptance.",
+    "limitations": "Text inspection and matching hashes do not establish syntax, runtime correctness, safety, layout, readability, independent review or raw acceptance. The proposal may contain ordinary defects. Exact hash-time identity is not authenticated execution or raceproof filesystem defense."
+  },
+  "pending_gates": [
+    "Independent R1514 source-only review of the exact proposal/contract/checkpoint/command hashes",
+    "Independent acceptance of the exact raw producer evidence",
+    "Root-issued concrete trusted input packet and externally admitted packet digest",
+    "Separate root execution GO and native execution packet before any syntax/import/test/decode/render action",
+    "Separate later tool admission and actual visual inspection before any PNG or visual-QA claim"
+  ],
+  "handoff": "Ready for independent source-only R1514 review, not ready or authorized to execute. Preserve the four proposal artifacts unchanged. Root alone finishes native E1514; actual render belongs to a separate later packet."
+}

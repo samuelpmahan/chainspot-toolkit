@@ -1,0 +1,173 @@
+{
+  "schema": "capability-discovery-extraction-result@1",
+  "job_id": "E1521",
+  "worker": "V1",
+  "outcome": "mixed_change",
+  "status": "ONE_REPLAY_PROCESS_EXIT0_RAW_RETAINED_COMPARISON_NOT_RUN",
+  "summary": "Under the same E1521 root-admitted extension, executed exactly the approved Python3.12 one-replay wrapper once. All wrapper source/input/manifest/ambient/current-runtime/absence guards passed before its exclusive token and sole child CLI. Wrapper observed exit0; child spawnCount1, PID6, observed exit0, no signal/error. Raw stdout/stderr and four aggregate artifacts were hash-bound without output parsing, and exclusive outer provenance was retained. No warmup, extra query, corrective attempt, source repair, retry, environment mutation, original producer-output read or comparator execution occurred. Provisional construction result.json remains unchanged. Process exit0 is not independent complete-package validation or replay equality; source-predicted PATH/count observations remain unparsed. Original runtime executable byte identity remains NOT_ESTABLISHED; current hash guards replay only. Scientific/human acceptance remains UNKNOWN.",
+  "authorization": {
+    "path": "discovery-cycle06/E1521-root-replay-admission.json",
+    "sha256": "3e7a89a4f5cbe61da87827969ee1f17b8da1403779ba3a7b00956c2aea63e07b",
+    "scope": "ONE_FIXED160_REPLAY",
+    "sameNativePacketExtension": true
+  },
+  "actualWrapperCommand": {
+    "path": "discovery-cycle06/V1/E1521/actual-wrapper-command.json",
+    "sha256": "437b8233b2086633cab9f9d02f41ba5eb88db606ed5c91195a9a4b96d2cf7dab",
+    "argv": [
+      "python3.12",
+      "/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1521/one-replay.py",
+      "--admission-sha256",
+      "3e7a89a4f5cbe61da87827969ee1f17b8da1403779ba3a7b00956c2aea63e07b"
+    ],
+    "observedExec": {
+      "start": {
+        "current_time": "2026-10-18 19:25:46 UTC"
+      },
+      "end": {
+        "current_time": "2026-10-18 19:25:50 UTC"
+      },
+      "result": {
+        "chunk_id": "6060e8",
+        "wall_time_seconds": 3.365741804,
+        "exit_code": 0,
+        "original_token_count": 0,
+        "output": ""
+      }
+    }
+  },
+  "actualChild": {
+    "argv": [
+      "node",
+      "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/cli.mjs",
+      "run",
+      "--manifest",
+      "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/manifest.v1.json",
+      "--out",
+      "/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1521/replay-v1"
+    ],
+    "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "spawnCount": 1,
+    "pid": 6,
+    "actualProcessStartUTC": "2026-10-18T19:25:46.737343Z",
+    "actualProcessEndUTC": "2026-10-18T19:25:50.035924Z",
+    "actualExitCode": 0,
+    "actualSignal": null,
+    "outerElapsedSeconds": 3.2986061479896307,
+    "error": null,
+    "additionalInvocations": 0
+  },
+  "bindings": [
+    {
+      "path": "discovery-cycle06/V1/E1521/one-replay.py",
+      "bytes": 13864,
+      "sha256": "86afd6ee1fbdd6dfb275bd1c5e3b049bcd6f29795cb7a9b227053049241ed6c7"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1521/prospective-command.v1.json",
+      "bytes": 4322,
+      "sha256": "7e33f078980bc84dea4afaefd1d9318d12947d13b002ef2f66999514d501eef9"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1521/outer-command.json",
+      "bytes": 20573,
+      "sha256": "d19895058d309d8f71bb6c9c9e10f41c3794e707652115d6c01fac6aa186ff95"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1521/one-invocation-token.json",
+      "bytes": 790,
+      "sha256": "a964558c655c330ec6c8eaffb427b7de3fe4cf42d110f1df8ca9e97708917bdf"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1521/wrapper-v1.stdout.log",
+      "bytes": 186,
+      "sha256": "715dfd99a24f28a7bf44f3eda7c65e36b1141f25dd7151358c3a8a9bd36e2a47"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1521/wrapper-v1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1521/replay-v1.stdout.log",
+      "bytes": 276,
+      "sha256": "8ee67dc522e1607fe08f2193543aca18b326e4367fb5a8d06fc5dac8fc24205c"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1521/replay-v1.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1521/replay-v1/value-trace.json",
+      "bytes": 2094896,
+      "sha256": "a2333d711ce5e46d5c13b8949c0027d3a67c91e5802b911f6bf62b1b33950d21",
+      "authority": "wrapper raw hash only; no decoding/parsing"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1521/replay-v1/timing-sidecar.json",
+      "bytes": 181105,
+      "sha256": "1917b064d38f22b842dd4d9a611d22364cb482b5a79f27c302d773ec3f429ca9",
+      "authority": "wrapper raw hash only; no decoding/parsing"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1521/replay-v1/artifact-manifest.json",
+      "bytes": 87118,
+      "sha256": "4013729b126a5c6c315fcc49af9e63863b4c6360a339f67f475cb30bb1ddbca1",
+      "authority": "wrapper raw hash only; no decoding/parsing"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1521/replay-v1/cli-receipt.json",
+      "bytes": 65951,
+      "sha256": "150bccc72c32a8e8f11b858873c7174e96d8391ce52c3a4654803ca6a945bfb3",
+      "authority": "wrapper raw hash only; no decoding/parsing"
+    }
+  ],
+  "preservedConstructionReceipt": {
+    "path": "discovery-cycle06/V1/E1521/result.json",
+    "bytes": 4879,
+    "sha256": "772eaf4644dfd378ea2d28a9dbb2b34f090e2164191d96e01a815a7251091f8e",
+    "modified": false
+  },
+  "executionBoundaries": {
+    "wrapperSyntaxOrWarmupBeforeReplay": false,
+    "directPythonProjectImports": false,
+    "innerCLIExecutedFrozenProductRoute": true,
+    "environmentMutation": false,
+    "originalProducerOutputsRead": false,
+    "newNativeAnswerValuesReadOrDecoded": false,
+    "wrapperOutputParsing": false,
+    "comparatorExecution": false,
+    "retryOrRepair": false,
+    "observedDecodedPATHCounts": null,
+    "independentlyValidatedCompletePackage": false,
+    "replayMatch": "NOT_RUN"
+  },
+  "runtimeProvenance": {
+    "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "recordedVersion": "v24.19.0",
+    "currentReplayExecutableBytes": 125989464,
+    "currentReplayExecutableSha256": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12",
+    "originalExecutableByteIdentity": "NOT_ESTABLISHED",
+    "crossRunExecutableAuthenticationClaimed": false
+  },
+  "NOT_RUN": [
+    "original producer-output read",
+    "new native-answer decoding or value inspection",
+    "package validity/codec/fragment comparison",
+    "independent cross-run comparator",
+    "additional replay/query/inspect/warmup/test",
+    "image decode",
+    "renderer",
+    "source/Git/native mutation"
+  ],
+  "claims": {
+    "promoted": false,
+    "heldout": false,
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN",
+    "pathIdentity": "UNKNOWN",
+    "continuity": "UNKNOWN",
+    "calibratedWidth": "UNKNOWN"
+  }
+}

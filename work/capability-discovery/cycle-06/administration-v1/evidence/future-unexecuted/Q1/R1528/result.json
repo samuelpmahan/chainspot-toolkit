@@ -1,0 +1,145 @@
+{
+  "schema": "capability-discovery-source-review@1",
+  "job_id": "R1528",
+  "worker": "Q1",
+  "decision": "amend",
+  "status": "SOURCE_ONLY_FUTURE_PROPOSAL_AMEND_NO_CV_ACCEPTANCE",
+  "summary": "AMEND the exact E1528 future proposal, not its current publication: joint retained cPx/wPx reuse through the existing public stationContrast query is source-consistent, and O'=O+c*n is correct for the frozen lat0=0 frame. Before future implementation/CV, close four ambiguities: exact native fit/condition/error eligibility and raw artifact binding; fresh-store Part registration/provenance rather than literal historical IDs; finite unrounded translation/refined-width semantics without new filtering; and a frozen48-slot trace with source-derived sequential resource/callback/cap/one-shot stop controls. Existing hallwayOf already uses fitted width only, so that is not new. No new query, measurement, native answer decode, causal isolation, scientific/human acceptance or package acceptance is established. Current Lab publication need not wait on this future experiment.",
+  "reviewedProposal": {
+    "path": "discovery-cycle06/V1/E1528/proposal.md",
+    "bytes": 5321,
+    "sha256": "f04146ec0cbd9b3ede22301d703bb9da26770728519fec5031ae0cc04c2330fb",
+    "resultPath": "discovery-cycle06/V1/E1528/result.json",
+    "resultBytes": 8851,
+    "resultSha256": "557e5a7114aa41d127ff88387c749980d7c6840fd7f8b837f9bbdcc4101b6fad",
+    "routingReadbackPath": "discovery-cycle06/V1/E1528/routing-readback.json",
+    "routingReadbackBytes": 13733,
+    "routingReadbackSha256": "e38eb6133c42e1094f88599cd9a6463fea3f57625476ed0351c2b012346fe66d"
+  },
+  "sourceEvidence": [
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+      "bytes": 27838,
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "readSections": "profileAt86-105, edgePairOf108-138, stationContrastAt141-158, public wrapper331-347, constants/units/raster access1-85",
+      "facts": "u=[cos(phi),sin(phi)],n=[-sin(phi),cos(phi)]. profile samples O+t*u+(offset+lat0)*n. edgePair emits lPx,rPx,cPx,wPx,score,gl,gr. stationContrast takes O/phi/stations/width/band/along, not lat0. Its public wrapper emits ordinary leftLum/rightLum/okLeft/okRight arrays and stationsCount; raw NaNs are not converted there."
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs",
+      "bytes": 32442,
+      "sha256": "122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074",
+      "readSections": "registerQueries188-200; createPartStore217-232; address/keys235-280; lazy/get/register285-358; constant/call361-451; provenance494-501",
+      "facts": "registerQueries resolves every string-valued raw argument using this store's get, caches answers in its own Map by fn+JSON.stringify(args), and adds emits:{computed:1} or emits:{cached:1}. base:null creates a fresh root scope. constant registers a lazy named producer; it does not materialize immediately. Same address spellings are valid across independent stores, but do not import historical Part instances, callback sequence identity or provenance. provenance alone does not force missing lazy Parts."
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/recipe.mjs",
+      "bytes": 29160,
+      "sha256": "4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6",
+      "readSections": "fixed identities/groups/windows1-42; bounded file reader82-117; declarations/plans120-143; resourcePlan145-162; sequential registration/query/callback/integrity flow350-435",
+      "facts": "Original fit indices10*c+1+3*b and nominal contrast indices10*c+2+3*b are correct. Raw raster/mask argument strings are px.image.cropped and tk.s6.pathMask, even for a genuine null mask Part. Original recipe is fixed160 and its resource model explicitly assumes16 comparisons, not48 fresh stores."
+    },
+    {
+      "path": "chainspot-discovery-lab/work/capability-discovery/cycle-05/capture/final/F2/E1104/protocol-proposal.json",
+      "bytes": 12718,
+      "sha256": "cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829",
+      "facts": "Accepted original source-pixel geometry has fixed groups/windows/banks34,42,50; lat0=0, tol2/latLim12/minOk8,0.2, band[1,3],along2 and original frame. It explicitly did not authorize fitted recentering; future joint recentering must be separately versioned/admitted, not called unchanged original protocol execution."
+    },
+    {
+      "path": "discovery-cycle06/R1/R1513/result.json",
+      "bytes": 605076,
+      "sha256": "0002f0c25157073eced2c6a4008abbd2a2feca268b863536160ba9069e8441c8",
+      "facts": "Existing accepted independent package testimony and descriptive scalar rows are prior evidence, not a new Q1 decode or exact numeric input source. Four no-pair/44 conditional-fit claim remains a proposal dependency, not newly observed eligibility or calls."
+    },
+    {
+      "path": "discovery-cycle06/G5/E1510/manifest.v1.json",
+      "bytes": 367,
+      "sha256": "4ae5f021bc3c9be8184cdb0627abdacabae9d7c8dcff88a12b404762843bbe9f",
+      "facts": "This is the producer input manifest named ambiguously originalManifestSha256 by E1528; it is NOT the raw artifact manifest. Name both separately in the amended provenance contract."
+    },
+    {
+      "path": "discovery-cycle06/G5/E1510/producer-v1/artifact-manifest.json",
+      "bytes": 87118,
+      "sha256": "f85df68d1b34ce2464dcec869c023f0bb10a0240cf9f750ca1a0b23e0151064f",
+      "facts": "The retained raw artifact manifest is the authority for exact original fit/nominal fragment paths, byte counts and hashes; freeze these identities before any later bounded numeric decode. Q1 did not decode those fragments."
+    }
+  ],
+  "acceptedSourceOnlyPoints": [
+    "The narrow seam is jointly fitted-center/fitted-width contrast on the exposed fixed16x3 cases; width-only reuse is already present in hallwayOf according to exact-tip routing testimony. Q1 did not independently re-query remote branches or infer absent uncommitted work/active ownership.",
+    "For native cPx measured with frozen lat0=0, source coordinates give O'=O+cPx*n=[Ox-cPx*sin(phi),Oy+cPx*cos(phi)]. stationContrast with O' and raw wPx samples around that fitted center. Passing lat0Px would not center the query because the public wrapper never consumes it.",
+    "Use only fn.q.path.stationContrast with the declared exact raw key order and unchanged source units/band/along/station geometry. Do not copy stationContrastAt, call private math, rerun profile/edgePair, search banks, add loss/overlay, or mutate frozen source/defaults.",
+    "Keep all48 controls and candidate slots including legitimate no-pair/invalid support; no winning-bank selection or control regeneration. Maximum48 new queries is an upper bound,44 a conditional prediction,0 observed.",
+    "Primary non-gains and bright-control gains are meaningful exposed in-sample falsifiers. Shared original pixels, fitted geometry and contrast remain dependent; jointly changing c/w does not isolate either causal contribution or establish physical edge/path identity."
+  ],
+  "requiredAmendmentsBeforeFutureImplementationOrCV": [
+    {
+      "id": "R1528-A1",
+      "blockingAmbiguity": "Finite usable pair/unusable fit does not define a closed native-data eligibility and error/condition contract; originalManifestSha256 ambiguously points to input manifest, not raw artifact manifest.",
+      "requiredText": "Bind original input manifest4ae5… separately from raw artifact manifestf85d… and accepted original receipt/source/protocol. Freeze each j slot's original comparison/bank/fit and control planIndex/fragment hash/size plus original declaration/argument identities. Later verify those bytes BEFORE bounded pinned-codec decode. An eligible successful edgePair answer has exact expected outer value/unit/emits, successful original query state with no error, expected edgePair unit, native value keys lPx,rPx,cPx,wPx,score,gl,gr, and explicitly declared finite-number checks with raw wPx>0; do not add a score/residual cutoff. Legitimate exact native {condition:'no edge pair'} with its edgePair unit remains NOT_EXECUTED and preserves the original control. Define numeric-unusable classification/reason explicitly while retaining raw bytes; never conflate it with malformed binding/shape. Unexpected condition/unit/schema, missing fit/control, original query error, wrong index/identity or broken artifact/source binding is an integrity stop, not an ordinary no-fit skip. In particular the wrapper's no-raster condition with unit:'condition' is not the legitimate no-edge-pair case."
+    },
+    {
+      "id": "R1528-A2",
+      "blockingAmbiguity": "Part refs unchanged is ambiguous in a proposed fresh store per eligible slot.",
+      "requiredText": "Say unchanged SEMANTIC inputs and raw address spellings only: each fresh uniquely named base:null store independently registers a new lazy named constant producing px.image.cropped and tk.s6.pathMask from that slot's exact private original RGBA and literal-null-or-exact-mask snapshot, and registers unchanged public PATH_QUERIES. Never reuse historical Part objects/instances, callback sequence IDs or claimed old producer/store provenance. Fresh addresses may have the same string spelling and content keys may legitimately agree; that is not shared execution identity. Record new slot/store/constant producer/caller IDs and actual resulting provenance/part keys. Keep keys null until naturally materialized; no force-read for testimony. Distinguish actual callback order (lazy constant exits before enclosing query) from assigned sequence numbers. No shared or persistent query-answer cache may substitute for the one fresh call."
+    },
+    {
+      "id": "R1528-A3",
+      "blockingAmbiguity": "The numerical guard for native refined c/w and derived origin is not explicit; new literal tolerance checks could silently filter legitimate retained fits.",
+      "requiredText": "Freeze lat0=0 and exact raw source frame and expression/evaluation order for O', with finite cPx,wPx and finite derived origin components, raw positive wPx and unchanged phi/t0/t1/step/band/along. Never round, clamp, recenter again, rescale to crop/display coordinates or reapply a bank selection. Source tol2 and latLim12 gate the DISCRETE candidate pair before parabolic subpixel refinement; raw refined wPx/cPx need not satisfy the same literal bounds. Do not introduce nominalWidth±2 or |cPx|<=12 as an eligibility threshold on refined output. Any source-derived consistency envelope must be declared only as an integrity/resource guard, not tuned scientific acceptance. Keep out-of-bounds/masked sampling as the existing native mask/validity semantics, not a replacement geometric acceptance rule."
+    },
+    {
+      "id": "R1528-A4",
+      "blockingAmbiguity": "Max48/96 and reuse unchanged caps do not yet specify48 planned slots, failure states, per-slot resource accounting and one-shot artifact publication.",
+      "requiredText": "Predeclare all48 slots in j=3*c+b order with eligibility/skip reason, original fit/control bindings, exact derived raw args, attempted/completed/error state and native result/callback identity. Skips do zero new stores/constants/queries and remain visible; integrity/query/codec/output/input mutation failure stops the admitted run, preserving completed/failed/unattempted slots and partial raw artifacts with no retry/fallback. Freeze a new source-derived resource plan for one live private snapshot/store at a time; do not reuse the old16-comparison resource total verbatim or hold48 rasters/caches. Source bands give5 offsets and5 along samples, two sides and inside/outside, i.e.100 sampling visits/station and at most4800 per new48-station call; this is selected work accounting, not measured RSS. Account separately bounded original fragment decode, every new answer/callback/wire and cap on total output. Retain existing bounded typed-plane validation and codec caps unless separately reviewed; never encode whole raster-containing wrappers. Max48 PATH plus48 naturally lazy constants implies at most96 native callbacks on the all-eligible success path, not a promise on every failure path. Reserve a fresh exclusive output and a one-shot future-run token before calls; no hidden rerun, raised caps, retuned geometry or regenerated controls after failure."
+    }
+  ],
+  "futureGuardsNotAdditionalCurrentPublicationBlockers": [
+    "A new versioned default-OFF sibling request/protocol/source freeze and explicit root/G6 file ownership must precede implementation; original fixed160 recipe and original22 source identities remain unchanged. This is a lab reuse experiment, not a production ABFeature promotion or lane takeover.",
+    "After amendments, separately review exact source/argument/cap/stop paths and actual-flow checkpoint. Only a later native-assigned and root-admitted bounded NONCV or enabled query packet may run. Q1's source-only AMEND does not authorize any test/import/helper/codec/CV execution.",
+    "Use actual current R1525 independent acceptance in new status text; E1528's pending-review statement is a historical brief status. Do not overwrite original receipt chronology or claim the source-shape policy was preproducer/blind or passed unchanged.",
+    "The exposed joint seam may falsify a blanket nominal-sampling explanation, but apparent gains do not validate a path or specificity. Bright-nonpath gains, normal-plus6 fit switching/residuals and masked finite-invalid/NaN values must remain visible without epsilon, dropped rows or changed denominator. Do not add an unapproved factorial experiment to claim center-only or width-only causality.",
+    "No original-image execution is portable merely because raw fit/control evidence is packaged. Future run still needs exact external input bodies and unchanged pinned absolute attestation; no remap, regenerated attestation or digest/loader bypass. Current Lab package publication can proceed through its own independent final-audit gates without implementing this future proposal."
+  ],
+  "reviewReasoningLimits": [
+    "Mathematical translation and sampled-work statements are source-derived reasoning only; no query result or numerical eligibility list was computed.",
+    "The exact original public native fit values were NOT decoded or consumed here. R1513 scalar tokens are descriptive testimony, not replacement numeric input.",
+    "Finite/refined geometry does not authenticate a physical edge pair or establish same-edge equivariance; all semantic/scientific/human decisions remain UNKNOWN.",
+    "Q1 did not inspect or approve E1530 package builder or current final package. R1528 amendments apply only to a future proposal, not current Lab publication acceptance."
+  ],
+  "actualActions": {
+    "readOnlySourceAndMetadataInspection": true,
+    "readOnlyHashes": true,
+    "scratchWriteOnly": "discovery-cycle06/Q1/R1528/result.json",
+    "helperExecutions": 0,
+    "tests": 0,
+    "sourceImports": 0,
+    "codecCalls": 0,
+    "nativeWireDecode": 0,
+    "producerReplayComparison": 0,
+    "storeCalls": 0,
+    "PATHQueries": 0,
+    "CV": 0,
+    "imageDecode": 0,
+    "pixelReads": 0,
+    "render": 0,
+    "repositorySourceEdits": 0,
+    "gitOperations": 0,
+    "nativeOperations": 0,
+    "networkCalls": 0,
+    "subagents": 0
+  },
+  "skillInfluence": "fusion-verification keeps raw observations, dependent shared image/geometry support, joint-seam falsification and unsupported causal/physical claims separate; it does not authorize a new factorial/ablation run.",
+  "claims": {
+    "futureProposalAcceptedUnchanged": false,
+    "newQueriesObserved": 0,
+    "conditional44EligibilityObservedByQ1": false,
+    "currentLabPublicationBlockedByThisReview": false,
+    "CVAcceptance": false,
+    "packageAcceptance": false,
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN",
+    "pathIdentity": "UNKNOWN",
+    "physicalEdgeIdentity": "UNKNOWN",
+    "calibratedWidth": "UNKNOWN",
+    "continuity": "UNKNOWN"
+  }
+}

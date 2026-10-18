@@ -1,0 +1,188 @@
+{
+  "schema": "cycle06-one-build-prospective-only@1",
+  "job_id": "E1541",
+  "worker": "G6",
+  "status": "DRAFT_NOT_EXECUTABLE_ROOT_ADMISSION_AND_EXACT_PACKET_PENDING",
+  "proposal": {
+    "source": "chainspot-discovery-lab/work/capability-discovery/cycle-06/final-inputs.proposed.v3.json",
+    "bytes": 1026723,
+    "sha256": "f124af3d041ac7605cabdeedfde73bea1dca4e7c9ad88aff60e7c912d3a0588d",
+    "mode": 420
+  },
+  "acceptedHelper": {
+    "source": "chainspot-discovery-lab/work/capability-discovery/cycle-06/package-closed.v3.py",
+    "bytes": 25471,
+    "sha256": "7b4f94a118e20d6b900938e99f0a24dc71aaeb41411a7c10d2fb4e466a541393",
+    "mode": 420
+  },
+  "acceptedWrapper": {
+    "source": "chainspot-discovery-lab/work/capability-discovery/cycle-06/run-closed-once.v3.py",
+    "bytes": 5458,
+    "sha256": "8b9d7d0ee98a19055381240a24316ab3324ca6f7ad4bcf27503ce690cab7de31",
+    "mode": 420
+  },
+  "independentHelperReview": {
+    "source": "discovery-cycle06/R1/R1536/result.json",
+    "sha256": "678e876f9fc80182ed9a0d94ac02e3e909675ef88cad12dd4f6c8fb68f8202ad"
+  },
+  "runtimeToolPreflight": {
+    "python": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "bytes": 30894944,
+      "mode": 493,
+      "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7"
+    },
+    "zstd": {
+      "path": "/usr/bin/zstd",
+      "bytes": 1022760,
+      "mode": 493,
+      "sha256": "7c5468b370f7c47eda07281e3437fafc568f95d10420051e3aa522709f9342c5"
+    },
+    "git": {
+      "path": "/usr/local/bin/git",
+      "bytes": 19135768,
+      "mode": 493,
+      "sha256": "2dae8066ef4d6a926561b4b0eaca7b458d4f5b56bb83760656e6baa7fc3e974f"
+    },
+    "meaning": "Fresh file hashes observed; no executable/version/helper calls in E1541. Before any separately admitted run, recheck these identities and shell resolution of bare python3.12/git with no PATH/env override. Helper independently enforces zstd hash."
+  },
+  "requiredNewRootFiles": {
+    "admittedPlan": {
+      "source": "chainspot-discovery-lab/work/capability-discovery/cycle-06/final-inputs.root-admitted.v1.json",
+      "bytes": null,
+      "sha256": null,
+      "statusRequired": "ROOT_ADMITTED_FINAL_INPUTS",
+      "notFinalFreezeRequired": false,
+      "authority": "Root must separately fully read proposal/flow and explicitly admit. Preserve this draft unchanged; no claimed root admission exists."
+    },
+    "childAdmission": {
+      "source": "discovery-cycle06/G6/E1541/root-child-admission.v1.json",
+      "bytes": null,
+      "sha256": null,
+      "schema": "cycle06-closed-build-admission@1",
+      "exactKeys": [
+        "schema",
+        "planSha256",
+        "helperSha256",
+        "output",
+        "scope"
+      ],
+      "scope": "ONE_FINAL_ARCHIVE_BUILD"
+    },
+    "wrapperPacket": {
+      "source": "discovery-cycle06/G6/E1541/root-one-build-packet.v1.json",
+      "bytes": null,
+      "sha256": null,
+      "schema": "cycle06-one-build-wrapper@1",
+      "exactBindingsRequired": [
+        "wrapperSha256",
+        "helper(source,bytes,sha256,mode)",
+        "plan(source,bytes,sha256,mode)",
+        "childAdmission(source,bytes,sha256,mode)",
+        "output",
+        "stdout",
+        "stderr",
+        "record",
+        "token"
+      ]
+    }
+  },
+  "output": "/workspace/scratch/8528bb251845/discovery-cycle06-final-E1541-v1",
+  "wrapperArgvTemplate": [
+    "python3.12",
+    "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-06/run-closed-once.v3.py",
+    "--packet",
+    "/workspace/scratch/8528bb251845/discovery-cycle06/G6/E1541/root-one-build-packet.v1.json",
+    "--packet-sha",
+    "ACTUAL_ROOT_PACKET_SHA256_REQUIRED_NOT_YET_KNOWN"
+  ],
+  "wrapperCwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+  "childCaptures": {
+    "stdout": "discovery-cycle06/G6/E1541/build.stdout.raw",
+    "stderr": "discovery-cycle06/G6/E1541/build.stderr.raw",
+    "record": "discovery-cycle06/G6/E1541/build.actual.json",
+    "token": "discovery-cycle06/G6/E1541/build.once.token"
+  },
+  "outerCaptures": {
+    "stdout": "discovery-cycle06/G6/E1541/wrapper.stdout.raw",
+    "stderr": "discovery-cycle06/G6/E1541/wrapper.stderr.raw",
+    "record": "discovery-cycle06/G6/E1541/wrapper.actual.json"
+  },
+  "freshness": [
+    {
+      "path": "discovery-cycle06-final-E1541-v1",
+      "absent": true
+    },
+    {
+      "path": "discovery-cycle06/G6/E1541/root-one-build-packet.v1.json",
+      "absent": true
+    },
+    {
+      "path": "discovery-cycle06/G6/E1541/root-child-admission.v1.json",
+      "absent": true
+    },
+    {
+      "path": "discovery-cycle06/G6/E1541/build.stdout.raw",
+      "absent": true
+    },
+    {
+      "path": "discovery-cycle06/G6/E1541/build.stderr.raw",
+      "absent": true
+    },
+    {
+      "path": "discovery-cycle06/G6/E1541/build.actual.json",
+      "absent": true
+    },
+    {
+      "path": "discovery-cycle06/G6/E1541/build.once.token",
+      "absent": true
+    },
+    {
+      "path": "discovery-cycle06/G6/E1541/wrapper.stdout.raw",
+      "absent": true
+    },
+    {
+      "path": "discovery-cycle06/G6/E1541/wrapper.stderr.raw",
+      "absent": true
+    },
+    {
+      "path": "discovery-cycle06/G6/E1541/wrapper.actual.json",
+      "absent": true
+    },
+    {
+      "path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/final-inputs.root-admitted.v1.json",
+      "absent": true
+    }
+  ],
+  "expectedSuccessfulProcessCounts": {
+    "wrapperPython": 1,
+    "helperPythonChild": 1,
+    "zstdCompression": 19,
+    "zstdDecompression": 19,
+    "readOnlyGitLsFiles": 2,
+    "why": "16 metadata zstd objects+3archives compressed once and decoded once inside build; preservation() at check_plan and postreadback. Counts are prospective all-success flow, not observed. No separate verify/stage invocation in this packet."
+  },
+  "caps": {
+    "planBytes": 2097152,
+    "packetAndChildAdmissionBytesEach": 65536,
+    "helperBytes": 65536,
+    "individualFileOrDecodedObjectBytes": 16777216,
+    "totalLogicalAliasBytes": 134217728,
+    "aliases": 2048,
+    "actualProposedLogicalBodyBytes": 39604086,
+    "actualProposedAliasCount": 1414,
+    "compressionStoredCap": "rawBytes+131072",
+    "canonicalTarBytes": [
+      4584448,
+      4584448,
+      6359040
+    ]
+  },
+  "capturePolicy": "If root later admits exactly one wrapper: prospective actual argv/UTC guard record first; direct original shell noclobber stdout/stderr; wrapper child Popen directs original helper streams and records actual PID/exit/signal/UTC/hashes. No tee/rewrite/retry/cleanup. All partials and first failures retained.",
+  "timeoutLimit": "30s communicate and subsequent decode wait only; decode stdout.read and wrapper wait have no total deadline. No runtime/throughput guarantee.",
+  "rootGOReceivedForThisExecution": false,
+  "executed": false,
+  "firstFailure": "STOP and preserve partial output/token/all raw/process records; no automatic retry/assertion/source/threshold/environment/permission override. New authority packet needed for further execution.",
+  "laterAudit": "Fresh independent A1 actual package/restored-alias roundtrip/audit separately assigned/admitted; current source review/preaudit does not replace it.",
+  "administrationClosure": "This prospective file and eventual root admitted-plan/packets/raw build/audit/admin receipts are outside the closed engineering payload; separately versioned append-only administration index, not cyclic self-admission."
+}

@@ -1,0 +1,95 @@
+{
+  "schema": "E1525-report-metadata-verification@1",
+  "authority": "Read only the already written lossless tagged comparison report; no comparator rerun, product import, or original wire decode",
+  "status": "MATCH_EXCEPT_DECLARED_TIMING",
+  "comparisonStatus": "MATCH_EXCEPT_DECLARED_TIMING",
+  "checks": [
+    {
+      "check": "admission",
+      "status": "PASS"
+    },
+    {
+      "check": "left independently valid",
+      "status": "PASS"
+    },
+    {
+      "check": "right independently valid",
+      "status": "PASS"
+    },
+    {
+      "check": "value and answer exact bytes/trees",
+      "status": "PASS"
+    },
+    {
+      "check": "named timing leaves only",
+      "status": "PASS"
+    },
+    {
+      "check": "derived manifest receipt stdout bindings",
+      "status": "PASS"
+    },
+    {
+      "check": "source closure retained after comparison",
+      "status": "PASS"
+    }
+  ],
+  "allSevenComparatorChecksPass": true,
+  "boundRowsPerRun": {
+    "original": 342,
+    "replay": 342
+  },
+  "boundArtifactFilesPerRun": {
+    "original": 338,
+    "replay": 338
+  },
+  "everyFixedArtifactBoundExactlyOnce": true,
+  "exactNonTimingFiles": 161,
+  "exactNonTimingAnswerFragments": 160,
+  "everyExactNonTimingPairHasSameBytesAndSha256": true,
+  "comparatorActuallyPassedExactByteStage": true,
+  "timingLeafRecords": 898,
+  "timingLeavesActuallyVaried": 898,
+  "sidecarTimingLeavesActuallyVaried": 722,
+  "intervalTimingLeavesActuallyVaried": 546,
+  "sidecarNativeElapsedLeavesActuallyVaried": 176,
+  "calculationFragmentElapsedLeavesActuallyVaried": 176,
+  "sidecarTimingLeaves": 722,
+  "intervalTimingLeaves": 546,
+  "sidecarNativeElapsedLeaves": 176,
+  "calculationFragmentElapsedLeaves": 176,
+  "exactWhitelistPointersEachOnce": true,
+  "retainedRawTimingRuns": [
+    {
+      "root": "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/producer-v1",
+      "intervals": 182,
+      "calculationEntries": 176
+    },
+    {
+      "root": "/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1521/replay-v1",
+      "intervals": 182,
+      "calculationEntries": 176
+    }
+  ],
+  "firstDifference": null,
+  "exactValueTraceBinding": {
+    "original": {
+      "root": "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/producer-v1",
+      "path": "value-trace.json",
+      "bytes": 2094896,
+      "sha256": "a2333d711ce5e46d5c13b8949c0027d3a67c91e5802b911f6bf62b1b33950d21"
+    },
+    "replay": {
+      "root": "/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1521/replay-v1",
+      "path": "value-trace.json",
+      "bytes": 2094896,
+      "sha256": "a2333d711ce5e46d5c13b8949c0027d3a67c91e5802b911f6bf62b1b33950d21"
+    }
+  },
+  "adapterLabels": [
+    "RESOLVED_ARGV_PROJECTION",
+    "RESOLVED_ARGV_PROJECTION"
+  ],
+  "originalPolicyPassedUnchanged": false,
+  "scientificAcceptance": "UNKNOWN",
+  "humanAcceptance": "UNKNOWN"
+}

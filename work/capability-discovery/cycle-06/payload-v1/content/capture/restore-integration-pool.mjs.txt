@@ -1,0 +1,6 @@
+import fs from 'node:fs';
+const p='discovery-cycle06/state.json',s=JSON.parse(fs.readFileSync(p));
+if(s.workers.R2?.job!==null||s.workers.G6)throw Error('expected free R2 and absent G6');
+const old=s.workers.R2;delete s.workers.R2;s.workers.G6={job:null,agent:null};
+s.events.push({type:'coordinator_current_pool_replacement',at:new Date().toISOString(),retiredFreeWorker:{id:'R2',record:old},registeredWorker:{id:'G6',agent:'/root/lab6_package_g6',model:'gpt-6.1-sol',reasoning:'high'},reason:'Fresh source/Git integration successor after previous G6 context absent; four Lab contexts V1/V2/R1/G6 plus two HH fit global six. Completed historical jobs/receipts unchanged.'});
+fs.writeFileSync(p,JSON.stringify(s,null,2)+'\n');console.log(JSON.stringify({workers:Object.keys(s.workers),integrationOwner:'/root/lab6_package_g6'}));

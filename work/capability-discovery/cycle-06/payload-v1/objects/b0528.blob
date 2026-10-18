@@ -1,0 +1,22 @@
+{
+  "schema": "cycle06-Q1-one-red-actual@1",
+  "job_id": "E1539",
+  "worker": "Q1",
+  "prospectiveCommand": "discovery-cycle06/Q1/E1539/prospective-command.json",
+  "prospectiveCommandSha256": "28266c49b076fc880949155bc5b81237915d96d719ba3cd2ffe0072f8722b31d",
+  "actualPythonDriverInvocations": 1,
+  "observerBeforeUTC": "2026-10-18 20:47:18 UTC",
+  "observerAfterUTC": "2026-10-18 20:47:18 UTC",
+  "actualExit": 1,
+  "actualSignal": null,
+  "stdout": {"path": "discovery-cycle06/Q1/E1539/driver.stdout.raw", "bytes": 401, "sha256": "cd9f2c18031ed15eb6f15c8d18a901b9c73863c012ace8796361c4cb24e7e362"},
+  "stderr": {"path": "discovery-cycle06/Q1/E1539/driver.stderr.raw", "bytes": 5248, "sha256": "2aa2735af360d99ec6d55d5588c14ac505dead438752160bafd20370f101739a"},
+  "actualResult": "Ran3tests; FAILED(failures=4); one valid-control pass, three descriptor subcase assertion failures and one partial-stdout assertion failure; no test errors",
+  "behavioralREDObserved": true,
+  "runDirectory": "/workspace/scratch/8528bb251845/discovery-cycle06-Q1-E1537-red-v2-actual",
+  "downstreamRealProcesses": 0,
+  "fakeProcessCount": 1,
+  "mockPidSignal": "PID424242/signal9/TimeoutExpired are fake engineering state, not OS process testimony",
+  "retry": false,
+  "limits": "Coarse observer UTC and prelaunch executable hash are not authenticated execution. Real Python invocation1 is distinct from downstream mocked realProcesses0."
+}

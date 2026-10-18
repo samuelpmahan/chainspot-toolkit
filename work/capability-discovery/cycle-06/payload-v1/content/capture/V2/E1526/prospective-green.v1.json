@@ -1,0 +1,13 @@
+{
+  "job_id":"E1526","worker":"V2","phase":"BEFORE_V4_EXECUTION",
+  "cwd":"/workspace/scratch/8528bb251845",
+  "commands":[
+    {"name":"v4-syntax","argv":["node","--check","discovery-cycle06/V2/E1526/renderer-proposal.v4.mjs"],"stdout":"v4-syntax.stdout.raw","stderr":"v4-syntax.stderr.raw","actual_exit":null},
+    {"name":"inherited-syntax","argv":["node","--check","discovery-cycle06/V2/E1526/renderer-engineering.v4.test.mjs"],"stdout":"inherited-syntax.stdout.raw","stderr":"inherited-syntax.stderr.raw","actual_exit":null},
+    {"name":"layout-green","environment":{"E1526_RENDERER":"./renderer-proposal.v4.mjs"},"argv":["node","--test","discovery-cycle06/V2/E1526/renderer-layout-regression.test.mjs"],"stdout":"green.stdout.raw","stderr":"green.stderr.raw","actual_exit":null},
+    {"name":"inherited-green","argv":["node","--test","discovery-cycle06/V2/E1526/renderer-engineering.v4.test.mjs"],"stdout":"inherited.stdout.raw","stderr":"inherited.stderr.raw","actual_exit":null}
+  ],
+  "capture_policy":"New absent capture paths, noclobber, exact argv/cwd/start/end/observed exit/signal/raw hashes, stop first unexpected failure; never change assertions/thresholds to force pass",
+  "authority":"Synthetic short syntax/tests under bounded E1526 brief, after actual-flow/source/test/diff checkpoint delivered and root GREEN admission",
+  "forbidden":"No original producer outputs or real wire/codec decode, real trace rerender, PNG conversion, product/CV/query/replay/pixels/Git/native/helpers"
+}

@@ -1,0 +1,28 @@
+✖ long48 adjacent NaN annotations do not overlap and retain side token station identity (4.26274ms)
+✔ finite-only long48 SVG stays byte-identical to preserved v3 (1.321046ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 94.185947
+
+✖ failing tests:
+
+test at discovery-cycle06/V2/E1526/renderer-layout-regression.test.mjs:30:1
+✖ long48 adjacent NaN annotations do not overlap and retain side token station identity (4.26274ms)
+  AssertionError [ERR_ASSERTION]: nonfinite text boxes overlap: {"a":{"x":"623.6170212765958","y":"1339","font-size":"7","fill":"#707b89"},"text":"NaN","x":623.6170212765958,"y":1339,"height":7,"width":12.6} / {"a":{"x":"631.3829787234042","y":"1339","font-size":"7","fill":"#707b89"},"text":"NaN","x":631.3829787234042,"y":1339,"height":7,"width":12.6}
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/discovery-cycle06/V2/E1526/renderer-layout-regression.test.mjs:37:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

@@ -1,0 +1,562 @@
+{
+  "schema": "cycle06-independent-input-review@1",
+  "job_id": "R1501",
+  "worker": "G2",
+  "checks": "all passed",
+  "bindings": {
+    "result": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/result.json",
+      "bytes": 6774,
+      "sha256": "c4387714aadd05bec26ef99e5647be37085872a2d1fa57e3cf6bd2c0c1d4ff65"
+    },
+    "attestation": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/staging-attestation.json",
+      "bytes": 4252,
+      "sha256": "9f1cb90eed3c74214c9a03029730ea1ab487c48bd86b89cbe3a701eebe923ef1"
+    },
+    "protocol": {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-05/capture/final/F2/E1104/protocol-proposal.json",
+      "bytes": 12718,
+      "sha256": "cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829"
+    },
+    "stager": {
+      "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/stage-png.py",
+      "bytes": 2992,
+      "sha256": "e194f56e2899f516bb79dd8d6c5e4b876440d6f0932bf9d74e0a56c117f06a44"
+    },
+    "png": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.original.png",
+      "bytes": 3943106,
+      "sha256": "30fa01879840deb0584ffe001fa39779998710010faeae93510dbc7a8a0abe6e"
+    },
+    "rgba": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.full.rgba",
+      "bytes": 14427360,
+      "sha256": "4379abb30a5b0907aa0e1435b13e19eafe8fdd31ac57c9b8bdff4495a14fdc2a"
+    },
+    "mask": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.primary-oriented-six-pixel-strip.mask.u8",
+      "bytes": 3606840,
+      "sha256": "305285b7e2bc9d44dfd572caa8d39030ed1b0c2254c15967fbb9b7bff7fae609"
+    },
+    "crop": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.inspection-crop.png",
+      "bytes": 278079,
+      "sha256": "fecfff14beff8dcfb42203f2b2c1fabaef2e52374815274c8e1830d5b813cc84"
+    },
+    "commands.stage.json": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/commands.stage.json",
+      "bytes": 8185,
+      "sha256": "c2ae7a9e2f187eafa5be7e209176da7d578535314329fb3242d894a0befdf5e1"
+    },
+    "commands.finalize.json": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/commands.finalize.json",
+      "bytes": 2956,
+      "sha256": "f87e76cde78dcd8eb197b55a78e96b9c73a0c929635050eaf24973034d8d8930"
+    },
+    "stagingScript": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/attest-input.py",
+      "bytes": 12876,
+      "sha256": "838a9367b5cdbf6eb2de412a8cf214496beaaafda7d4f75c5fdcd33e7ee70daa"
+    },
+    "visualTestimony": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/visual-testimony.json",
+      "bytes": 2668,
+      "sha256": "a374cf91e7d3016194e54821084082d7d3c37c1b5c64821343dac2318f6334c1"
+    },
+    "snapshot.before": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/snapshot.before.json",
+      "bytes": 657242,
+      "sha256": "98bda4f9babff7d2ddb041f96fa2fd4609eba1892f787cafdfb3e90bce65e1fb"
+    },
+    "snapshot.after-stage": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/snapshot.after-stage.json",
+      "bytes": 657247,
+      "sha256": "a1b091177989006f60dd4628f8c6eab265c6809b401ac2ceb86f88e93e158674"
+    },
+    "snapshot.after-visual": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/snapshot.after-visual.json",
+      "bytes": 657248,
+      "sha256": "49ea15bf628bd331f6af497fb7c43d672462a8d82ccfd5bc9c3d98fabb689ac4"
+    }
+  },
+  "gitObjectRelation": {
+    "refPath": "49255331791b1245cf0f9cd699816175f94e70f2:specimens/dev/Lenard-5.png",
+    "resolvedBlob": "78a4345489a5544640859127cd79f5a06bf9f21b",
+    "contentSha1WithGitHeader": "78a4345489a5544640859127cd79f5a06bf9f21b",
+    "blobPngExactByteEquality": true,
+    "blobBytes": 3943106,
+    "blobSha256": "30fa01879840deb0584ffe001fa39779998710010faeae93510dbc7a8a0abe6e"
+  },
+  "g1CommandReceipts": {
+    "commands": 15,
+    "rawArtifactBindingsVerified": 30,
+    "allRecordedExits": 0,
+    "allRawStderrEmpty": true,
+    "rawBindings": [
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-01.stdout",
+        "bytes": 272,
+        "sha256": "502e08e6c30390d2b7f3dd3379b4dd1da3aab7dd0eaf2aea6ac7f5afe73674e6"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-01.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-02.stdout",
+        "bytes": 82,
+        "sha256": "006959483f0c3c9c103dd315cbd69ac24469681267d4eeaf4d08704171567ba3"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-02.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-03.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-03.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-04.stdout",
+        "bytes": 176852,
+        "sha256": "94af209a381938c18e19b7942793c7206419e56384d76535c75f36fef372f9ca"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-04.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-05.stdout",
+        "bytes": 41,
+        "sha256": "c981ed05e4447029dcfde330111abd4cbb5d4a76e9c73cdd282f90aa3902f253"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-05.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-06.stdout",
+        "bytes": 5,
+        "sha256": "bc103b4a84971ef6459b294a2b98568a2bfb72cded09d4acd1e16366a401f95b"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-06.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.original.png",
+        "bytes": 3943106,
+        "sha256": "30fa01879840deb0584ffe001fa39779998710010faeae93510dbc7a8a0abe6e"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-07.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-08.stdout",
+        "bytes": 272,
+        "sha256": "502e08e6c30390d2b7f3dd3379b4dd1da3aab7dd0eaf2aea6ac7f5afe73674e6"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-08.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-09.stdout",
+        "bytes": 82,
+        "sha256": "006959483f0c3c9c103dd315cbd69ac24469681267d4eeaf4d08704171567ba3"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-09.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-10.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-10.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-11.stdout",
+        "bytes": 176852,
+        "sha256": "94af209a381938c18e19b7942793c7206419e56384d76535c75f36fef372f9ca"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/stage.command-11.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/finalize.command-01.stdout",
+        "bytes": 272,
+        "sha256": "502e08e6c30390d2b7f3dd3379b4dd1da3aab7dd0eaf2aea6ac7f5afe73674e6"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/finalize.command-01.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/finalize.command-02.stdout",
+        "bytes": 82,
+        "sha256": "006959483f0c3c9c103dd315cbd69ac24469681267d4eeaf4d08704171567ba3"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/finalize.command-02.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/finalize.command-03.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/finalize.command-03.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/finalize.command-04.stdout",
+        "bytes": 176852,
+        "sha256": "94af209a381938c18e19b7942793c7206419e56384d76535c75f36fef372f9ca"
+      },
+      {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/finalize.command-04.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "historicalNote": "G1 preliminary exit2 directory-discovery diagnostic is explicitly retained in result.json, outside the 15 successful subprocess commands."
+  },
+  "strictStageReproduction": {
+    "invocations": 1,
+    "args": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.original.png",
+      "expected_sha256": "30fa01879840deb0584ffe001fa39779998710010faeae93510dbc7a8a0abe6e",
+      "image_id": "Lenard-5",
+      "frame": "Lenard-5.original-source-pixel-centers"
+    },
+    "image": {
+      "width": 1290,
+      "height": 2796,
+      "frame": "Lenard-5.original-source-pixel-centers"
+    },
+    "provenance": {
+      "imageId": "Lenard-5",
+      "sourcePngSha256": "30fa01879840deb0584ffe001fa39779998710010faeae93510dbc7a8a0abe6e",
+      "rgbaSha256": "4379abb30a5b0907aa0e1435b13e19eafe8fdd31ac57c9b8bdff4495a14fdc2a",
+      "decoder": {
+        "name": "Pillow",
+        "version": "12.3.0",
+        "outputMode": "RGBA",
+        "sourceMode": "RGB",
+        "orientation": "stored PNG pixel order; no EXIF transform",
+        "colorTransform": "none; stored RGB channels, no ICC/gamma transform",
+        "alpha": "preserved RGBA; RGB appends 255"
+      }
+    },
+    "rgbaBytes": 14427360,
+    "rgbaSha256": "4379abb30a5b0907aa0e1435b13e19eafe8fdd31ac57c9b8bdff4495a14fdc2a",
+    "exactEqualityWithG1FullRgba": true,
+    "allAlpha255": true,
+    "stdout": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/strict-stage.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/strict-stage.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "alphaMetadataTextDifference": "Same semantic decoder declaration; protocol says RGB appends255; existing RGBA alpha preserved, actual strict stager says preserved RGBA; RGB appends255. No pixel/behavior difference."
+  },
+  "maskReproduction": {
+    "generatedInMemoryOnly": true,
+    "bytes": 3606840,
+    "sha256": "305285b7e2bc9d44dfd572caa8d39030ed1b0c2254c15967fbb9b7bff7fae609",
+    "exactEqualityWithG1Mask": true,
+    "ones": 767,
+    "uniqueValues": [
+      0,
+      1
+    ],
+    "boundsInclusivePx": [
+      765,
+      843,
+      795,
+      969
+    ],
+    "floatingVsIntegerDisagreements": 0
+  },
+  "crop": {
+    "pngIdentityChecked": true,
+    "exactEqualityWithOriginalLab5CropPng": true,
+    "redecodedOrVisuallyInspectedHere": false,
+    "claim": "G1 crop-pixel/visual testimony remains attributed; reviewer independently verifies encoded crop identity, not new visual calibration. Crop remains inspection only."
+  },
+  "preservation": {
+    "g1ThreeStoredSnapshotsAgree": true,
+    "g1TrackedCount": 2523,
+    "currentGitBefore": {
+      "refs": "be67d44a653c79ca61efae99934e90475a9aba5e refs/heads/codex/capability-discovery-lab\n37a2dba87d61262f661af70f1a22440736e61efc refs/heads/main\n37a2dba87d61262f661af70f1a22440736e61efc refs/remotes/origin/HEAD\n37a2dba87d61262f661af70f1a22440736e61efc refs/remotes/origin/main\n",
+      "headTree": "be67d44a653c79ca61efae99934e90475a9aba5e\n87dfd9aebb09050d1c56e39d54d9a9920b93341c\n",
+      "status": ""
+    },
+    "currentGitAfter": {
+      "refs": "be67d44a653c79ca61efae99934e90475a9aba5e refs/heads/codex/capability-discovery-lab\n37a2dba87d61262f661af70f1a22440736e61efc refs/heads/main\n37a2dba87d61262f661af70f1a22440736e61efc refs/remotes/origin/HEAD\n37a2dba87d61262f661af70f1a22440736e61efc refs/remotes/origin/main\n",
+      "headTree": "be67d44a653c79ca61efae99934e90475a9aba5e\n87dfd9aebb09050d1c56e39d54d9a9920b93341c\n",
+      "status": ""
+    },
+    "currentGitUnchanged": true,
+    "allReviewedSubjectBindingsUnchanged": true,
+    "all2523CurrentFilesRehashedHere": false
+  },
+  "execution": {
+    "strictDecoderImports": 1,
+    "strictStageCalls": 1,
+    "imageDecodes": 1,
+    "fixedMaskRegenerationsInMemory": 1,
+    "cvCalls": 0,
+    "PATHCalls": 0,
+    "vendorImports": 0,
+    "storeImports": 0,
+    "tests": 0,
+    "sourceEdits": 0,
+    "gitWrites": 0,
+    "nativeWrites": 0,
+    "remoteActions": 0
+  },
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "show-ref"
+      ],
+      "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+      "environmentOverrides": {
+        "GIT_OPTIONAL_LOCKS": "0",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "exit": 0,
+      "rawStdout": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-01.stdout",
+        "bytes": 272,
+        "sha256": "502e08e6c30390d2b7f3dd3379b4dd1da3aab7dd0eaf2aea6ac7f5afe73674e6"
+      },
+      "rawStderr": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-01.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD",
+        "HEAD^{tree}"
+      ],
+      "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+      "environmentOverrides": {
+        "GIT_OPTIONAL_LOCKS": "0",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "exit": 0,
+      "rawStdout": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-02.stdout",
+        "bytes": 82,
+        "sha256": "006959483f0c3c9c103dd315cbd69ac24469681267d4eeaf4d08704171567ba3"
+      },
+      "rawStderr": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-02.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all"
+      ],
+      "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+      "environmentOverrides": {
+        "GIT_OPTIONAL_LOCKS": "0",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "exit": 0,
+      "rawStdout": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-03.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rawStderr": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-03.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "49255331791b1245cf0f9cd699816175f94e70f2:specimens/dev/Lenard-5.png"
+      ],
+      "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+      "environmentOverrides": {
+        "GIT_OPTIONAL_LOCKS": "0",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "exit": 0,
+      "rawStdout": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-04.stdout",
+        "bytes": 41,
+        "sha256": "c981ed05e4447029dcfde330111abd4cbb5d4a76e9c73cdd282f90aa3902f253"
+      },
+      "rawStderr": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-04.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "argv": [
+        "git",
+        "cat-file",
+        "-t",
+        "78a4345489a5544640859127cd79f5a06bf9f21b"
+      ],
+      "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+      "environmentOverrides": {
+        "GIT_OPTIONAL_LOCKS": "0",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "exit": 0,
+      "rawStdout": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-05.stdout",
+        "bytes": 5,
+        "sha256": "bc103b4a84971ef6459b294a2b98568a2bfb72cded09d4acd1e16366a401f95b"
+      },
+      "rawStderr": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-05.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "argv": [
+        "git",
+        "cat-file",
+        "blob",
+        "78a4345489a5544640859127cd79f5a06bf9f21b"
+      ],
+      "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+      "environmentOverrides": {
+        "GIT_OPTIONAL_LOCKS": "0",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "exit": 0,
+      "rawStdout": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-06.stdout",
+        "bytes": 3943106,
+        "sha256": "30fa01879840deb0584ffe001fa39779998710010faeae93510dbc7a8a0abe6e"
+      },
+      "rawStderr": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-06.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "argv": [
+        "git",
+        "show-ref"
+      ],
+      "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+      "environmentOverrides": {
+        "GIT_OPTIONAL_LOCKS": "0",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "exit": 0,
+      "rawStdout": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-07.stdout",
+        "bytes": 272,
+        "sha256": "502e08e6c30390d2b7f3dd3379b4dd1da3aab7dd0eaf2aea6ac7f5afe73674e6"
+      },
+      "rawStderr": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-07.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD",
+        "HEAD^{tree}"
+      ],
+      "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+      "environmentOverrides": {
+        "GIT_OPTIONAL_LOCKS": "0",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "exit": 0,
+      "rawStdout": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-08.stdout",
+        "bytes": 82,
+        "sha256": "006959483f0c3c9c103dd315cbd69ac24469681267d4eeaf4d08704171567ba3"
+      },
+      "rawStderr": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-08.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all"
+      ],
+      "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+      "environmentOverrides": {
+        "GIT_OPTIONAL_LOCKS": "0",
+        "PYTHONDONTWRITEBYTECODE": "1"
+      },
+      "exit": 0,
+      "rawStdout": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-09.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rawStderr": {
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-09.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ]
+}

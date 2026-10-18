@@ -1,0 +1,81 @@
+{
+  "schema": "cycle06-E1543-later-administration-chronology@1",
+  "outsidePayload": true,
+  "events": [
+    {
+      "phase": "payload-copy",
+      "sourceToolChunk": "746ac6",
+      "actualExit": 0,
+      "command": "cp -a --no-clobber",
+      "warning": "cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead",
+      "captureKind": "TOOLTESTIMONY",
+      "opaqueCopyReadback": "648files9351615B/exactbodies/fullmodes/set"
+    },
+    {
+      "phase": "transport-outage",
+      "firstExecError": "exec-server transport disconnected",
+      "secondReadonlyPwdError": "failed to resume exec-server session: recovery timed out after25s",
+      "captureKind": "TOOLTESTIMONY",
+      "rawFailureStderrNotCapturedOrInvented": true,
+      "adminFirstAwaitFailedBeforeAnyWrites": true,
+      "holdExplicit": true
+    },
+    {
+      "phase": "root-same-route-resume",
+      "healthyReadbackReportedUtc": "2026-10-18T21:44:34Z",
+      "stateSavedAs": "discovery-cycle06/state.before-recovery-2144.json",
+      "coordinatorEvent": "coordinatorResumeAuthorized",
+      "nativeE1543PinUnchanged": true,
+      "noNewSolveDispatchWorkerClaim": true,
+      "noContinuousAgentLifeClaim": true
+    },
+    {
+      "phase": "G6-first-resumed-readback",
+      "toolChunk": "116e8b",
+      "observedAtUtc": "2026-10-18T21:46:12.701Z",
+      "source648": true,
+      "copy648": true,
+      "differences": [],
+      "deliveryAndAdminAbsent": true,
+      "scratchOnly": "payload-copy-readback.json",
+      "payloadNotRecopied": true
+    },
+    {
+      "phase": "admin-copies",
+      "toolChunk": "27deda",
+      "actualExit": 0,
+      "files": 47,
+      "warning": "cp -n nonportability repeated; no data/mode normalization"
+    },
+    {
+      "phase": "accepted-R1542-admin-append",
+      "toolChunk": "e4a940",
+      "actualExit": 0,
+      "files": 55,
+      "acceptanceSha256": "44b127ebaa3724ad0fdd7833e8aebd6529a5daec7d887252932da39ddbf99450",
+      "rootSeparateGO": true,
+      "noStageDecodeRerun": true
+    }
+  ],
+  "readOnlyDiscoveryDiagnostics": [
+    {
+      "toolChunk": "96eee5",
+      "message": "actual-process.json not yet present when first read; A1 later explicitly created it post-outage; no missing eventual evidence claim"
+    },
+    {
+      "toolChunk": "f58bd0",
+      "message": "ls receipt-dir/operations path absent because19operationpairs are directly in receipt-dir; no stage/helper/package failure"
+    }
+  ],
+  "skills": {
+    "checkpoint": "Existing authorized preparation then stop at reviewable file/hash/flow checkpoint",
+    "pushBlocked": "Preserve scoped root-connected publication ownership; protocol is not publication authority"
+  },
+  "forbiddenActionsPerformed": {
+    "Git": 0,
+    "helperStageBuildVerify": 0,
+    "zstd": 0,
+    "CVTestsRenderBrowser": 0,
+    "HHPageRouterEdits": 0
+  }
+}

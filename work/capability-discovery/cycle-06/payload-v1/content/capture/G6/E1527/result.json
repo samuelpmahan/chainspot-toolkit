@@ -1,0 +1,124 @@
+{
+  "schema": "capability-discovery-extraction-result@1",
+  "job_id": "E1527",
+  "worker": "G6",
+  "outcome": "mixed_change",
+  "status": "ONE_DRAFT_STAGE_EXIT0_FILE_READBACK_COMPLETE_FINAL_ARCHIVE_PLAN_ONLY",
+  "summary": "Ran exactly one root-admitted reviewed file-only draft-stage helper. Child exited0/signal:null; stdout412bytes/stderr0, original streams/process/UTC retained. Independent file-only readback matched all491 body copies (24,767,016bytes), both draft companions and exact493-file stage set, with zero extras/missing/hash/mode differences. Source22 and prior2523 tracked/index/worktree identities remain unchanged. Authored versioned final archive/alias plan plus separate later-input bindings; no archive, finalfreeze, finalmanifest, packageaudit, Git/checkpoint/export/publication. Later E1525 MATCH author receipt and R1523 visual AMEND are separately bound, not retroactively covered by491 capture. R1525 and accepted visual repair remain explicit gates.",
+  "authority": {
+    "brief": "discovery-cycle06/E1527-brief.txt",
+    "sha256": "9dd0117333ec5b811f68626567dd2bc2b9c291e687ac3f6083edb2442ba0312e",
+    "rootNativeAssignment": "Root reported valid assigned/persisted/readback E1527 at nativeepoch31; root alone owns lifecycle"
+  },
+  "actualProcess": {
+    "schema": "cycle06-E1527-actual-stage-process@1",
+    "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "argv": [
+      "python3.12",
+      "work/capability-discovery/cycle-06/prepare-stage.py",
+      "--workspace",
+      "/workspace/scratch/8528bb251845",
+      "--allowlist",
+      "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-06/evidence-allowlist.v2.draft.json",
+      "--allowlist-sha",
+      "b539c3c18179860fa90e5bcfb2e33e834b460841545bda2edafd01ed30fe456e",
+      "--out",
+      "/workspace/scratch/8528bb251845/discovery-cycle06-stage-E1524-v1"
+    ],
+    "spawnCount": 1,
+    "actualExit": 0,
+    "actualSignal": null,
+    "startUTC": "2026-10-18T19:50:51.627057+00:00",
+    "pid": 6,
+    "error": null,
+    "endUTC": "2026-10-18T19:50:51.918119+00:00",
+    "stdout": {
+      "path": "discovery-cycle06/G6/E1527/stage.stdout.raw",
+      "bytes": 412,
+      "sha256": "56e6116a32432b8183400a693c3c5a156f9fb06324c109b432f66f54fc3beaa3"
+    },
+    "stderr": {
+      "path": "discovery-cycle06/G6/E1527/stage.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "stage": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle06-stage-E1524-v1",
+    "files": 493,
+    "bodyCopies": 491,
+    "bodyBytes": 24767016,
+    "hashModeDifferences": [],
+    "extras": [],
+    "missing": [],
+    "capturedEpoch31IsHistorical": true,
+    "containsLaterE1525OrR1523Records": false,
+    "archivesCreated": 0,
+    "finalManifestCreated": false
+  },
+  "source": {
+    "branch": "codex/capability-discovery-lab",
+    "head": "be67d44a653c79ca61efae99934e90475a9aba5e",
+    "tree": "87dfd9aebb09050d1c56e39d54d9a9920b93341c",
+    "source22Differences": [],
+    "old2523Differences": [],
+    "defaultEnabled": false,
+    "GitMutations": 0,
+    "remoteGitReadbacks": 0
+  },
+  "artifacts": [
+    {
+      "path": "discovery-cycle06/G6/E1527/prospective-command.json",
+      "sha256": "a0c0a9598d5d516e91d2c31cab9ff14a90db87261c83d00deb55fd4de013b507"
+    },
+    {
+      "path": "discovery-cycle06/G6/E1527/actual-process.json",
+      "sha256": "ad36176b77df57d66e7003ec5253355181191f937739a9515f41111180fbde61"
+    },
+    {
+      "path": "discovery-cycle06/G6/E1527/stage-readback.json",
+      "sha256": "1eb6216090a96eb4538edcbac903d7e5f76e6c8c9929fca875c9ec5d79fa69e5"
+    },
+    {
+      "path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/FINAL-ARCHIVE-PLAN.v1.md",
+      "sha256": "3402e72799bde38f85a4fa86b8cda3ddf3de07b3ca308720f1327e0fbe917ac4"
+    },
+    {
+      "path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/final-new-inputs.v1.json",
+      "sha256": "e67e95fd5e3eb6efc9f79a1cd399897963443497259df142feb4d6ace803e52a"
+    }
+  ],
+  "nextGates": [
+    "Independent R1525 review and root reconciliation of actual E1525 MATCH_EXCEPT_DECLARED_TIMING, not original-policy PASS",
+    "Accepted separately versioned visual layout repair/output/conversion plus independent visual review; preserve R1523 AMEND and original figures",
+    "Root exact final builder/checkpoint/allowlist execution GO after those outcomes; currently final builder not authored/run",
+    "All672rawfragments/fourwires and both340-file raw closures, separate bounded counterexamples, exact content aliases, original-path CV-free roundtrip; reject unsafe/stale/extra/missing identities",
+    "Fresh source22/all2523/native/refs preservation and exact immutable manifest plus different-worker packageaudit before Git",
+    "Separate local additive checkpoint and root-owned connected publication route; noPR/main/deploy/defaultON/ABFeature"
+  ],
+  "execution": {
+    "stageHelperInvocations": 1,
+    "stageRetries": 0,
+    "compressionInvocations": 0,
+    "archiveExtractionInvocations": 0,
+    "projectImports": 0,
+    "syntaxOrTests": 0,
+    "producerReplayComparatorQueries": 0,
+    "scientificMetricRecomputation": 0,
+    "GitNativeMutations": 0,
+    "helpers": 0,
+    "HHPageRouterEdits": 0
+  },
+  "claims": {
+    "finalPackageAccepted": false,
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN",
+    "physicalEdgeIdentity": "UNKNOWN",
+    "pathIdentity": "UNKNOWN",
+    "continuity": "UNKNOWN",
+    "calibratedWidth": "UNKNOWN",
+    "selfContainedOriginalImageReplay": false,
+    "portablePinnedAttestation": false
+  },
+  "handoff": "E1527 bounded stage preparation complete. Root may finish this native packet from actual receipt; no further execution/publication authority is inferred. Finalarchive plan remains proposal pending independent comparison and visual repair acceptance."
+}

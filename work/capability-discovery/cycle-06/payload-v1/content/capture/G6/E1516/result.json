@@ -1,0 +1,75 @@
+{
+  "schema": "capability-discovery-extraction-result@1",
+  "job_id": "E1516",
+  "worker": "G6",
+  "outcome": "mixed_change",
+  "status": "PRESERVATION_READBACK_COMPLETE_FUTURE_POLICY_PROPOSED_ONLY",
+  "summary": "Fresh file-only readback matches all 22 admitted source files by bytes/modes/SHA256 against root source freeze and retained E1511 proposal. All 2523 original tracked paths/index blobs/stages/modes and worktree bytes/SHA256/modes/Git-blob digests remain unchanged; original baseline inventory is not rewritten. Added only E1516 scratch preservation receipt and lean future-package/guarded-next-policy proposal. Future package excludes recursive historical archives and large input-body copies, explicitly cannot claim self-contained image replay or portable pinned-attestation execution. No source edit/import/test/CV/producer/render/Git/native/remote action, helper or final manifest/archive occurred. Actual producer/comparator/display outcomes are not certified by E1516; further execution requires root/native admission.",
+  "artifacts": [
+    {
+      "path": "discovery-cycle06/G6/E1516/preservation-readback.json",
+      "bytes": 12192,
+      "sha256": "f8ea304d33ce016cb3782101d6877c55d98afa595a51940f22f5c0a5c756acb5"
+    },
+    {
+      "path": "discovery-cycle06/G6/E1516/lean-package-next-policy-proposal.md",
+      "bytes": 7844,
+      "sha256": "07c5c791a05ba40353f28b9a5a479d3fc55e925ab767f1f73229312a01e2cca0"
+    }
+  ],
+  "source": {
+    "branch": "codex/capability-discovery-lab",
+    "head": "be67d44a653c79ca61efae99934e90475a9aba5e",
+    "tree": "87dfd9aebb09050d1c56e39d54d9a9920b93341c",
+    "admissionSha256": "6f3f30924749e0104a12e7d5d3d43b45b23569e55de8ffe565111620dd0355b8",
+    "proposedClosureSha256": "81a176f91138d78126aa16490e9fddfb9409b209a43d5a9499d7cea9f31fe55e",
+    "closureContentId": "sha256:0b6582e18238a7d9fb75dc82f1150ec424619f3b68142e73b90a8e951f8a2701",
+    "matchingDistinctSourceFiles": 22,
+    "closureBytes": 258620,
+    "newFiveBytes": 64289,
+    "defaultEnabled": false,
+    "remoteReadback": "NOT_RUN; published e1f46601774477ea3987c18909092f314959a2a1 is coordinator context only"
+  },
+  "preservation": {
+    "baselineInventorySha256": "d89c5447f1605e52d8fc426c70bfd21f283318eff59e639d55f35f621ccd4d73",
+    "originalTrackedCount": 2523,
+    "currentTrackedCount": 2523,
+    "pathsIdentical": true,
+    "oldTrackedBodyBytes": 45942025,
+    "differences": [],
+    "originalInventoryRewritten": false,
+    "gitStatus": "?? experiments/capability-discovery/lenard5-station-evidence/\n"
+  },
+  "proposedGuards": [
+    "No final manifest/archive until actual terminal producer/comparator/display outcomes and independent reviews exist and root grants a bounded packaging assignment",
+    "Explicit file allowlist, exact byte/hash/mode verification, no recursive old stages/archives/dependencies or all-2523 duplicate source copy",
+    "Keep raw tagged traces/sidecars/fragments/native answers and timing originals unchanged; no output-informed tolerance, geometry tuning or scientific promotion",
+    "Original PNG/RGBA/mask bodies omitted by default: 21977306 bytes; disclose external dependencies and no self-contained image replay claim",
+    "Pinned absolute-path G1 attestation cannot be relocated/rewritten/remapped or bypassed; any portability amendment needs separately bound version and independent review",
+    "No retry, diagnostic query, ambient clearing, cap increase or autonomous dispatch after a terminal negative or identity mismatch",
+    "Separate source preservation, engineering fixtures, real replay, trace-only rendering, visual inspection, human/scientific acceptance and publication claims",
+    "G6 remains sole source/Git integration owner; source stays frozen; no current commit/push/PR/main/deploy/default-ON authority"
+  ],
+  "execution": {
+    "sourceEdits": 0,
+    "projectModuleImports": 0,
+    "testsRun": 0,
+    "producerCalls": 0,
+    "PATHCalls": 0,
+    "CVCalls": 0,
+    "inputBodyReads": 0,
+    "GitMutations": 0,
+    "remoteGitCalls": 0,
+    "nativeMutations": 0,
+    "archivesCreated": 0,
+    "helpers": 0
+  },
+  "claims": {
+    "finalPackageManifest": false,
+    "portable": false,
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN",
+    "physicalEdgeIdentity": "UNKNOWN",
+    "calibratedWidth": "UNKNOWN"
+  }
+}

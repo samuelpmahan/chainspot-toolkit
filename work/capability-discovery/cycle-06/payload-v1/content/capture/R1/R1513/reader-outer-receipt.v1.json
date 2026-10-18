@@ -1,0 +1,66 @@
+{
+  "schema":"cycle06-R1513-reader-outer-receipt@1",
+  "job_id":"R1513",
+  "worker":"R1",
+  "status":"ONE_APPROVED_RAW_READER_COMPLETED",
+  "authorization":"Root read and accepted exact reader/source-flow/prospective-command checkpoint, then explicitly issued GO for one raw-only invocation.",
+  "cwd":"/workspace/scratch/8528bb251845",
+  "argv":["node","discovery-cycle06/R1/R1513/reader.v1.mjs"],
+  "exactShellCommand":"test ! -e discovery-cycle06/R1/R1513/result.json && test ! -e discovery-cycle06/R1/R1513/reader.stdout.log && test ! -e discovery-cycle06/R1/R1513/reader.stderr.log && node discovery-cycle06/R1/R1513/reader.v1.mjs > discovery-cycle06/R1/R1513/reader.stdout.log 2> discovery-cycle06/R1/R1513/reader.stderr.log",
+  "outputAbsentGuardsPassed":true,
+  "readerInvocationCount":1,
+  "actualObservedExitCode":0,
+  "signalObservation":"The execution tool returned exit_code:0 and did not expose a separate signal field; no signal is inferred or fabricated.",
+  "utcBeforeLaunch":"2026-10-18 19:15:23 UTC",
+  "utcAfterInitialYield":"2026-10-18 19:15:25 UTC",
+  "utcCompletionObserved":"2026-10-18 19:15:32 UTC",
+  "timeAuthority":"UTC tool observations bracketing execution/poll; not exact child-process timestamps or isolated algorithm timing.",
+  "executionToolSessionId":37779,
+  "initialToolChunk":"8e41ad",
+  "completionToolChunk":"b1ff42",
+  "codeCheckpoint":{
+    "reader":{"path":"discovery-cycle06/R1/R1513/reader.v1.mjs","sha256":"7d2967b3a634c8f3433c32bce4e7d9b52d7aa2c9ed5c0508995a6a190f2ac1d7"},
+    "actualFlow":{"path":"discovery-cycle06/R1/R1513/ACTUAL-FLOW.v1.md","sha256":"b825f1c91fa8aa3111fc5627ef84dc0071c4eea0c654c5cc66d24d643328be28"},
+    "prospectiveCommands":{"path":"discovery-cycle06/R1/R1513/prospective-commands.v1.json","sha256":"3d69dbb71041b019972277ca5b86faffa3fb36d6d8b2a9511d5d4f2d9900e92d"}
+  },
+  "outputs":[
+    {"path":"discovery-cycle06/R1/R1513/result.json","bytes":605076,"sha256":"0002f0c25157073eced2c6a4008abbd2a2feca268b863536160ba9069e8441c8"},
+    {"path":"discovery-cycle06/R1/R1513/reader.stdout.log","bytes":131,"sha256":"372b1ae68aed86214c760e366839cb5eaa81a600d7525439eb745371dde50ca5"},
+    {"path":"discovery-cycle06/R1/R1513/reader.stderr.log","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+  ],
+  "observedReview":{
+    "decision":"accepted",
+    "meaning":"Independent raw-package engineering acceptance only; not original E1512 policy passed unchanged, independent query replay or scientific/semantic acceptance.",
+    "completedCheckGroups":10,
+    "comparisons":16,
+    "completedPATH":160,
+    "nativeCaptures":176,
+    "intervals":182,
+    "independentlyBoundManifestArtifacts":338,
+    "fullAnswerFragmentEqualities":160,
+    "fullCalculationFragmentEqualities":176,
+    "nativeNaNsInDecodedTraceAndSidecar":36,
+    "nativeTypedArrays":96,
+    "nativeTypedBytes":294912
+  },
+  "descriptiveNotes":[
+    "All16comparison profiles and all48nominal bank figures, bilateral arrays/flags, native loss denominators/stations and corridor identities are retained in result.json with scalar tokens. Raw original complete objects/fragments remain authoritative, including native scores and gap lists.",
+    "Retained no edge pair conditions: primary/core16 width50; primary/long48 width50; normal-plus6/before16 width50; masked-primary/core16 width50. They are not repaired or excluded.",
+    "Bright-nonpath has native edgePair fits in all12banks while native edge passCount is0 in each. This juxtaposition does not establish specificity or a new classifier verdict.",
+    "Masked-primary/core16 in every bank has per-side contrast valid9/16 and invalid7; the invalid values include4finite-invalid and3NaN. long48 has41/48valid and the same7invalid per side. These are arithmetic descriptions of caller-policy results, not detected occlusion or physical gaps.",
+    "Masked core native edge visibleCount9 and overlay visibleCount7; masked long edge41 and overlay39. Denominators remain distinct. All native overlay threshold values are null, so no overlay pass/fail decision is inferred.",
+    "Offset diagnostic has3NOT_COMPUTABLE rows and9finite residuals. Examples: core16/42=14.1689398269383, after16/34=16.630636621577295, after16/50=6.993907803529474. No tolerance, same-edge identity, correction or calibration acceptance is assigned.",
+    "Producer actual exit0/signalnull/spawn1 and recorded admitted ambient were checked against its hash-bound outer evidence, separately from CLI intendedExitCode. Root source-shape addendum was explicitly postproducer; original policy was not declared passed unchanged."
+  ],
+  "boundaries":{
+    "product_recipe_CLI_store_PATH_vendor_imports":0,
+    "sourcePixelReadsOrDecode":0,
+    "newQueriesOrProducerRuns":0,
+    "independentReplay":0,
+    "render":0,
+    "readerRetryOrRepair":0,
+    "sourceGitNativeWrites":0,
+    "scientificAcceptance":"UNKNOWN",
+    "humanAcceptance":"UNKNOWN"
+  }
+}

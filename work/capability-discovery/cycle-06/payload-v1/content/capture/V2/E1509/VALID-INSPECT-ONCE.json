@@ -1,0 +1,205 @@
+{
+  "id": "VALID-INSPECT-ONCE",
+  "status": "PASS",
+  "data": {
+    "suppliedFiles": [
+      {
+        "role": "disk-manifest",
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/fixtures/exact-G1.json",
+        "bytes": 367,
+        "sha256": "4ae5f021bc3c9be8184cdb0627abdacabae9d7c8dcff88a12b404762843bbe9f"
+      },
+      {
+        "role": "protocol",
+        "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-05/capture/final/F2/E1104/protocol-proposal.json",
+        "bytes": 12718,
+        "sha256": "cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829"
+      },
+      {
+        "role": "input-attestation",
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/staging-attestation.json",
+        "bytes": 4252,
+        "sha256": "9f1cb90eed3c74214c9a03029730ea1ab487c48bd86b89cbe3a701eebe923ef1"
+      },
+      {
+        "role": "png",
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.original.png",
+        "bytes": 3943106,
+        "sha256": "30fa01879840deb0584ffe001fa39779998710010faeae93510dbc7a8a0abe6e"
+      },
+      {
+        "role": "rgba",
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.full.rgba",
+        "bytes": 14427360,
+        "sha256": "4379abb30a5b0907aa0e1435b13e19eafe8fdd31ac57c9b8bdff4495a14fdc2a"
+      },
+      {
+        "role": "mask",
+        "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.primary-oriented-six-pixel-strip.mask.u8",
+        "bytes": 3606840,
+        "sha256": "305285b7e2bc9d44dfd572caa8d39030ed1b0c2254c15967fbb9b7bff7fae609"
+      }
+    ],
+    "maskPolicy": {
+      "nullComparisons": 12,
+      "explicitMaskComparisons": 4,
+      "maskSha256": "305285b7e2bc9d44dfd572caa8d39030ed1b0c2254c15967fbb9b7bff7fae609",
+      "meaning": "caller synthetic visibility, not detected physical occlusion"
+    },
+    "decoderTestimony": {
+      "name": "Pillow",
+      "version": "12.3.0",
+      "outputMode": "RGBA",
+      "sourceMode": "RGB",
+      "orientation": "stored PNG pixel order; no EXIF transform",
+      "colorTransform": "none; stored RGB channels, no ICC/gamma transform",
+      "alpha": "preserved RGBA; RGB appends 255"
+    }
+  },
+  "observed": {
+    "events": [
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/fixtures/exact-G1.json",
+        "fd": 18
+      },
+      {
+        "op": "fstatSync",
+        "target": 18
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 367
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 0
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      },
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-05/capture/final/F2/E1104/protocol-proposal.json",
+        "fd": 18
+      },
+      {
+        "op": "fstatSync",
+        "target": 18
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 12718
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 0
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      },
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/staging-attestation.json",
+        "fd": 18
+      },
+      {
+        "op": "fstatSync",
+        "target": 18
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 4252
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 0
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      },
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.original.png",
+        "fd": 18
+      },
+      {
+        "op": "fstatSync",
+        "target": 18
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 3943106
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 0
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      },
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.full.rgba",
+        "fd": 18
+      },
+      {
+        "op": "fstatSync",
+        "target": 18
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 14427360
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 0
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      },
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.primary-oriented-six-pixel-strip.mask.u8",
+        "fd": 18
+      },
+      {
+        "op": "fstatSync",
+        "target": 18
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 3606840
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 0
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      }
+    ],
+    "peakOpen": 1,
+    "remainingOpen": [],
+    "blockedImports": 0,
+    "productLoadAttempts": 0
+  }
+}

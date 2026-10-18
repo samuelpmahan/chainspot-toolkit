@@ -1,0 +1,71 @@
+{
+  "schema": "capability-discovery-extraction-result@1",
+  "job_id": "E1537",
+  "worker": "Q1",
+  "outcome": "mixed_change",
+  "status": "SOURCE_ONLY_COUNTEREXAMPLE_DRIVER_CHECKPOINT_NOT_RUN",
+  "summary": "Constructed a tiny frozen NONCV unittest driver for the actual R1530 A1/A2 behavior gaps, not a missing repair-function oracle. Existing verify/decode_index/operation paths remain real; only unrelated authority/files/container/process seams are mocked. Valid descriptor control prevents reject-all; mode04755-v-plan0644, unknown extra field and object-order variants must refuse before mocked decompression. A fake child writes tiny known partial stdout then raises TimeoutExpired; real operation receipt must bind the retained file and stream-hash failure stdout. No syntax/import/test/helper/process/archive/CV execution occurred; RED/GREEN remain unobserved. Full source and prospective actual-flow checkpoint supplied; stop pending root exact admission. G6 alone owns any future helper repair.",
+  "driver": {
+    "path": "discovery-cycle06/Q1/E1537/counterexample-driver.v1.py",
+    "bytes": 11826,
+    "lines": 252,
+    "sha256": "87d1fe36b3d9d49a723af6eae0794ec5940f357aa76a5f9c63214cd562b32a2b",
+    "futureSubjectBeforeRepair": {"path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/package-closed.v2.py", "sha256": "3125faca4fd1eb3aedd7301954de97cb60af0e9c79efd25ea71b66ff17cfc59b"},
+    "futureSubjectAfterRepair": "Only root-bound package-closed.v3.py with NEW exact hash; same frozen driver/assertions, fresh run directory; no GREEN packet exists here"
+  },
+  "flow": "discovery-cycle06/Q1/E1537/ACTUAL-FLOW.v1.md",
+  "behaviorCases": [
+    {"case": "Valid descriptor control", "expected": "REAL verify/decode_index returns3aliases and reaches exactly1MOCK decompression"},
+    {"case": "Member index04755 versus plan0644", "expected": "ValueError BEFORE MOCK decompression, not downstream normalization"},
+    {"case": "Unknown extra object descriptor field", "expected": "ValueError BEFORE MOCK decompression"},
+    {"case": "Object list order disagreement", "expected": "ValueError BEFORE MOCK decompression"},
+    {"case": "Known partial stdout plus fake TimeoutExpired", "expected": "REAL operation remains terminal and reports actual retained path/size/SHA256; whole failure stdout read_bytes loading refused"}
+  ],
+  "frozenMockScope": {
+    "A1Real": ["verify", "decode_index", "hash/index/alias control flow", "html_links on empty declared HTML list"],
+    "A1Mocked": ["read_file/inventory tiny in-memory metadata", "check_plan unrelated admitted source/review/Git preflight", "operation observable MOCK decompression", "check_tar trusted tiny member return"],
+    "A2Real": ["operation terminal handling", "real tiny scratch stdout/stderr/process record files", "retained-file path/size/hash assertions"],
+    "A2Mocked": ["fixed executable identity", "Popen fake child/PID/signal", "stderr file mode guard only"],
+    "maxSyntheticTarPlaceholderBytes": 2048,
+    "archiveParsing": false,
+    "sourceImageOrNativeWireFixtures": false
+  },
+  "expectedButNotObserved": {
+    "v2": "Valid control should pass; three descriptor subcases should fail for reaching mocked decompression; partial stdout receipt should fail for reported0bytes/hash(empty)",
+    "v3": "Same driver should pass only after actual helper behavior repairs; no assertion relaxation",
+    "REDObserved": false,
+    "GREENObserved": false
+  },
+  "actualActions": {
+    "scratchSourceAndCheckpointWritesOnly": true,
+    "sourceTextReadbackAndHash": true,
+    "driverExecution": 0,
+    "syntaxChecks": 0,
+    "compileImport": 0,
+    "tests": 0,
+    "helperOperations": 0,
+    "realSubprocesses": 0,
+    "compressionDecompression": 0,
+    "archiveConstructionExtraction": 0,
+    "scientificWireOrImageDecode": 0,
+    "projectImports": 0,
+    "producerReplayQueryCVRender": 0,
+    "repositorySourceWrites": 0,
+    "gitOperations": 0,
+    "nativeOperations": 0,
+    "networkCalls": 0,
+    "subagents": 0
+  },
+  "limits": [
+    "This is a construction checkpoint, not observed test behavior, a real process/codec/container probe, accepted helper repair or final package audit.",
+    "Mocks deliberately isolate existing verifier/operation behavior. Original closed340/340/2 archive counts, source22/2523 preservation and authority remain separately validated production guards, not reimplemented tiny-fixture claims.",
+    "The fake PID424242/signal9/TimeoutExpired are explicit engineering doubles, not testimony of an actual OS process or zstd invocation.",
+    "Later run requires root-bound driver/subject/runtime, fresh run directory and captured actual stdout/stderr/exit. Preserve first failure; no automatic retry, cleanup, cap change, assertion relaxation or source repair.",
+    "TDD/checkpoint skill influence: source-first counterexample construction and stop before execution. Optional writing-good-tests reference was unavailable; main skill read. No broad test discovery/CV invocation is authorized.",
+    "Q1 wrote only discovery-cycle06/Q1/E1537. G6 remains sole repository/helper/Git owner; v2 source untouched and no helper v3 was implemented by Q1."
+  ],
+  "scientificAcceptance": "UNKNOWN",
+  "humanAcceptance": "UNKNOWN",
+  "packageAcceptance": false,
+  "nextGate": "Root full-source/checkpoint review and separate exact bounded RED execution admission; stop now."
+}

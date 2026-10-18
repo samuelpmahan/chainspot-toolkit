@@ -1,0 +1,25 @@
+{
+  "job_id": "E1519",
+  "scope": "Bounded NONCV syntax checks and fifteen synthetic tests, once; stop at unexpected first failure",
+  "approvedSourceSha256": "359f5e177cf1bb3cf0c65212445086ce9f19374fae279d3f40ffba55f9994acd",
+  "approvedTestsSha256": "961fe42bb21690d7ea485ac50a18681f1d64321758815384e60db6caeaa8c3b0",
+  "checkpointSha256": "1df8d477cd9eca2755a28a0b8ea46f2fcca61923e22228a49d5c7adf18d0b53c",
+  "commands": [
+    {
+      "argv": ["node", "--check", "discovery-cycle06/V1/E1519/compare.mjs"],
+      "stdout": "discovery-cycle06/V1/E1519/syntax-source.stdout.txt",
+      "stderr": "discovery-cycle06/V1/E1519/syntax-source.stderr.txt"
+    },
+    {
+      "argv": ["node", "--check", "discovery-cycle06/V1/E1519/compare.test.mjs"],
+      "stdout": "discovery-cycle06/V1/E1519/syntax-tests.stdout.txt",
+      "stderr": "discovery-cycle06/V1/E1519/syntax-tests.stderr.txt"
+    },
+    {
+      "argv": ["node", "--test", "discovery-cycle06/V1/E1519/compare.test.mjs"],
+      "stdout": "discovery-cycle06/V1/E1519/tests-first.stdout.txt",
+      "stderr": "discovery-cycle06/V1/E1519/tests-first.stderr.txt"
+    }
+  ],
+  "excluded": ["producer outputs", "product or codec imports", "file-package comparison", "producer", "replay", "CV/PATH/store queries", "source pixel reads", "original-path red check", "policy/source/Git/native mutations"]
+}

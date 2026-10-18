@@ -1,0 +1,95 @@
+{
+  "id": "O02-manifest-collision",
+  "status": "PASS",
+  "data": {
+    "status": "ENCODING_FAILED",
+    "manifestError": {
+      "code": "OUTPUT_FAILED",
+      "phase": "artifact-manifest",
+      "name": "Error",
+      "message": "EEXIST: file already exists, open '/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/writer-manifest-collision/artifact-manifest.json'"
+    },
+    "oneShot": true,
+    "engineeringOnly": true
+  },
+  "observed": {
+    "events": [
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/writer-manifest-collision/artifact-manifest.json",
+        "fd": 18
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      },
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/writer-manifest-collision/fragments/answer-0.json",
+        "fd": 18
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      },
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/writer-manifest-collision/fragments/answer-1.json",
+        "fd": 18
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      },
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/writer-manifest-collision/artifact-manifest.json",
+        "error": "EEXIST"
+      },
+      {
+        "op": "readFileSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/writer-manifest-collision/fragments/answer-0.json"
+      },
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/writer-manifest-collision/fragments/answer-0.json",
+        "fd": 18
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 44
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      },
+      {
+        "op": "readFileSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/writer-manifest-collision/fragments/answer-1.json"
+      },
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/writer-manifest-collision/fragments/answer-1.json",
+        "fd": 18
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 54
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      },
+      {
+        "op": "readFileSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/writer-manifest-collision/artifact-manifest.json"
+      }
+    ],
+    "peakOpen": 1,
+    "remainingOpen": [],
+    "blockedImports": 0,
+    "productLoadAttempts": 0
+  }
+}

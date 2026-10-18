@@ -1,0 +1,26 @@
+{
+  "schema":"capability-discovery-packet-result@1",
+  "job_id":"E1508",
+  "worker":"G5",
+  "outcome":"mixed_change",
+  "status":"CLI_PAIR_IMPLEMENTED_BOUNDED_NONCV_VERIFIED_HANDED_BACK_FOR_INDEPENDENT_REVIEW_NO_PRODUCER",
+  "summary":"Created only the disjoint new Lenard5 cli.mjs and cli.test.mjs paths, with tests-first construction then root actual-flow review before any execution. CLI validates exact run --manifest FILE --out NEWDIR, reserves the unchanged NEW writer before closed runner invocation, invokes the writer once, preserves its legacy cycle05 envelope and failure prefix, and exclusively appends a cycle06 CLI receipt binding actual emitted manifest/files/status with intended exit only. First admitted two syntax checks exited0 and first seven NONCV CLI tests passed7/7 under the reviewed probes/provider import blocker, blockedImports0; no red observed, repairs or reruns. Tests covered missing-manifest zero attempts and fabricated codec/writer successes/failures, never valid original input/CV/PATH. Transient precheck exec transport outage is retained as infrastructure testimony. Exact two source paths are explicitly handed back to G6 for integration/source freeze; independent G4 review remains required.",
+  "sourceFiles":[
+    {"path":"chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/cli.mjs","sha256":"a711ab50bc50bd3f69e61656f12002d41d901e19d7db4e8a9b3b5eb188457ffa","matchedRootReviewedDigestBeforeAndAfterChecks":true},
+    {"path":"chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/cli.test.mjs","sha256":"2bc624f45cd47a73f79f864483c89da4794361a6638acec22cf432c816f3ec96","matchedRootReviewedDigestBeforeAndAfterChecks":true}
+  ],
+  "evidence":[
+    {"path":"ACTUAL-FLOW.md","sha256":"61c9ee2827d671b06f7e6b8c9757ce69bc221ee9d68c71bc0f53d2070444f6d6"},
+    {"path":"prospective-commands.json","sha256":"5203bd0cad6c76aff4953ebe5bd5c80300d9173d713b0e5d41cb9d673ad1332e"},
+    {"path":"execution-results.json","role":"observed exits/counts/raw log hashes and chronology"},
+    {"path":"../../G6/E1507/no-product-tripwire.mjs","canonicalPath":"discovery-cycle06/G6/E1507/no-product-tripwire.mjs","sha256":"f85100ab3c3b60f0de6201863971353a5ded0bc9043d1b6747c739faa795653e"}
+  ],
+  "verification":{"syntaxChecks":2,"syntaxExitCodes":[0,0],"tests":7,"pass":7,"fail":0,"testExitCode":0,"firstRun":true,"redObserved":false,"repairs":0,"reruns":0,"blockedProductImports":0,"tripwireLimits":"probes/provider module import blocker only; not source-read/store-call instrumentation","wholeRepository":"NOT_RUN; outside scoped admission, no whole-repository green claim"},
+  "executionBoundaries":{"enabledMissingManifestNegativeRunnerCalls":1,"validEnabledProducerCalls":0,"fullOriginalInputRuns":0,"CVCalls":0,"PATHCalls":0,"storeCreations":0,"imageDecodes":0,"renders":0,"gitOperations":0,"nativeCalls":0,"sourceEditsOutsideOwnedTwoPaths":0,"sourcePostCheckEdits":0,"noProductStatementBasis":"reviewed call paths, missing-manifest early refusal, raw zero-attempt trace assertion and armed import blocker; no broader instrumentation claim"},
+  "sourceOwnershipHandback":{"to":"G6","effective":"this result and explicit collaboration handback after admitted checks","paths":["experiments/capability-discovery/lenard5-station-evidence/cli.mjs","experiments/capability-discovery/lenard5-station-evidence/cli.test.mjs"],"G5WillNotEditAgainWithoutFreshExplicitHandoff":true},
+  "preservation":"G5 edited only its two newly admitted source paths plus its scratch evidence. G5 made no old2523/sevenstation/ninequery/Git/native changes; complete baseline byte/mode verification remains G6/root responsibility, not claimed freshly here.",
+  "independentReview":"PENDING; G5 does not self-accept source or enable producer; G4 future source/adversarial review per coordinator",
+  "skillInfluence":"checkpoint enforced root actual-flow review before execution; TDD influenced tests-first construction but no red observed under the explicit no-run gate; verification/materialize constrain this handback to actually observed bounded results and preserve the transport interruption history.",
+  "next":"G6 integrates the exact handed-back CLI pair and independent reviewer checks source/adversarial/preservation evidence before any full freeze; producer still needs separate root/native admission.",
+  "claims":{"promoted":false,"heldout":false,"pathIdentity":"UNKNOWN","physicalEdgeIdentity":"UNKNOWN","calibratedWidth":"UNKNOWN","scientificAcceptance":"UNKNOWN","humanAcceptance":"UNKNOWN"}
+}

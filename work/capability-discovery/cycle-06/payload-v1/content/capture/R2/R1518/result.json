@@ -1,0 +1,70 @@
+{
+  "job_id": "R1518",
+  "worker": "R2",
+  "decision": "amend",
+  "outcome": "mixed_change",
+  "summary": "Independent bounded SOURCE_ONLY review confirms the v2 edgePair shape/raw-reference repair and attempted-identity guard address R1/R1514-F1, and that compact SVG/HTML share the new outcome labels. However, one concrete regression blocks acceptance: nativeOutcome treats a normal successful loss object's literal condition:null as a condition outcome, suppressing its numeric summaries while CSV records retain them. Preserve v2 unchanged; a separately versioned minimal condition-discrimination repair and one normal-loss fixture are required. No renderer import, syntax/test execution, codec/decode, producer-output read, render or visual QA occurred.",
+  "findings": [
+    {
+      "id": "R2-R1518-F1",
+      "severity": "medium",
+      "classification": "NORMAL_NATIVE_LOSS_MISCLASSIFIED_AS_CONDITION",
+      "renderer_pointer": "discovery-cycle06/V2/E1518/renderer-proposal.v2.mjs:32-36",
+      "renderer_quote": "plain(value)&&own(value,'condition')?{kind:'condition',label:`native condition: ${scalar(value.condition)}`}:",
+      "source_pointer": "chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs:312-319",
+      "source_quote": "return {\n    ...base, condition: null, stationsCount: N,",
+      "source_continuation": "That same successful return includes full edge and overlay scalar objects, agreementCounts, station arrays and corridor bytes at lines314-319. condition:null is not absence of a native loss value and is not a nonempty native refusal condition.",
+      "counterexample": "A source-shaped retained successful loss value with condition:null and valid source support/stations/corridor passes v2 validate at109-112. nativeOutcome at35 nevertheless assigns kind:'condition', label:'native condition: null'. displayRecords at131 uses truthiness of v.condition, so it still emits numeric edge/overlay/station records. SVG line168 requires outcome.kind==='value', so suppresses all numeric loss text. HTML line184 also takes the non-value branch and replaces numeric loss columns with 'not applicable'. Thus compact views contradict the valid value/CSV projection. This is a direct source/control-flow derivation, not a generated or observed result.",
+      "requested_minimal_amendment": "Preserve v2 bytes and raw inputs. In a new version distinguish actual nonempty string native conditions from literal condition:null, treating the latter as an ordinary value outcome. Do not alter valid native null values, missing answers, fit scalars, thresholds, units, UNKNOWN claims, raw retention or trust gates. Add exactly one bounded hand-declared full normal-loss value fixture with condition:null, native support/arrays/corridor and illustrative retained scalar values; assert value outcome plus numeric loss summaries in SVG and HTML while exact descriptive records remain unchanged. Existing nonempty condition/null/missing tests should remain. No query, producer or decoder is required to author that fixture."
+    }
+  ],
+  "confirmed_source_repairs": [
+    {
+      "prior_finding": "R1514-F1 edgePair malformed primitives/missing shape",
+      "assessment": "v2 edgePairShape at26-30 explicitly accepts native null, otherwise requires a plain object and either a nonempty string condition or all seven own numeric lPx,rPx,cPx,wPx,score,gl,gr fields. Unsupported number17, false, empty object, missing scalar and nonstring condition are refused in the prepared tests. It imposes no finite/range/scientific acceptance condition. Extra fields and complete original envelope/value references remain retained by rows.push at117-118.",
+      "actual_native_source": "pathSpace.mjs edgePairOf at108-137 can internally return null and returns exactly those seven fit scalars at137. The public PATH_QUERIES edgePair wrapper at340 maps an internal null to {condition:'no edge pair'}; the general q/cond wrapper at332-335 can also produce a string condition envelope. Thus a null display outcome is preserved permissively by contract, not claimed to have been observed or to be the fixed public wrapper's normal no-fit result."
+    },
+    {
+      "prior_finding": "R1514-F1 attempted null resolved identity",
+      "assessment": "v2 at115 requires plain resolvedIdentity for both COMPLETED and THREW; at116 validates any non-null identity against the existing comparison/frame/hash/mask fields. NOT_ATTEMPTED with null remains allowed. Frozen Lenard recipe at385-388 assigns row identity before incrementing attemptedPATH and before the call; at407-408 refreshes it afterward. No missing identity is reconstructed."
+    },
+    {
+      "prior_finding": "R1514-F2 compact missing/null/condition/value divergence",
+      "assessment": "v2 model rows store one outcome descriptor at117-118. Profile/contrast fallbacks and fit/loss SVG labels at163-170, HTML per-query outcomes at183 and compact fit/loss labels at184 use that shared descriptor. Missing answers, completed-but-unencodable answers, literal native null and actual nonempty string conditions are no longer intentionally projected as unavailable numeric quantities. F1 above is the concrete condition:null exception that must be repaired."
+    },
+    {
+      "prior_finding": "Raw scalar/reference retention and unchanged display scope",
+      "assessment": "Fit-reference test at54-57 explicitly retains original envelope, value, extra field, score, -0, NaN and infinities. scalar tokens remain exact; score remains only in original raw authority and is not newly ranked/recomputed. Diff against complete v1 shows bounded validation/label/export changes, no query/pixel/producer path or new scoring rule. Trusted hashes-before-codec-decode, raw read-only links, NEW-directory/exclusive writes, fixed16/160/all banks and UNKNOWN statements remain. This is source inspection, not authenticated execution or visual-legibility proof."
+    }
+  ],
+  "test_scope": {
+    "prepared_cases": 12,
+    "executed_cases": 0,
+    "assessment": "The twelve prepared synthetic cases are appropriately bounded for the earlier malformed edgePair, attempted-null-identity, raw-reference and nonempty-condition/native-null label findings. They are not sufficient for the shared outcome repair as a whole because fixture() initializes every native value to null and the only non-null loss test is a nonempty string condition. No normal full loss value with the source's condition:null is represented. Add the one focused fixture described in F1 rather than expanding to a new output framework.",
+    "boundaries": "Prospective test invocation imports the v2 source and calls pure validation plus in-memory SVG/HTML projectors; it is still rendering and requires separate explicit root authorization. It does not call renderTrustedPacket, codec, filesystem output, producer, pixels or public query functions. Broader trust-boundary/resource/exclusive-output/visual tests remain separately deferred, not claimed by these twelve cases."
+  },
+  "hashes": {
+    "V2/E1518/renderer-proposal.v2.mjs": "620b804e80f16d9f8419ec7a6ab695592689862136c5e9917a67ff9c356e4a4c",
+    "V2/E1518/renderer-engineering.v2.test.mjs": "5ceced183288255c1744673e52e31e8debaef618cbd6c9aad2270858f2cc8022",
+    "V2/E1518/ACTUAL-FLOW.v2.md": "b1cfe6ecab973084f00168f2e49ded674fd0ed7b60199588f4b83623deb72f2a",
+    "V2/E1518/result.json": "b1cce31d82eccca0f20f8ed1afb5319d89e048db535eeee2f6a3158c5ac4a62a",
+    "V2/E1518/prospective-commands.v2.json": "2cc968bcfefe275c828b69fda386ae4d1224ba0e1b6bbcb609091ab0cfc763ae",
+    "V2/E1514/renderer-proposal.v1.mjs": "88adbcc31c1059b4f75da4c88fcf6ee4e1afaf1aaacec8d8e45c2834e2917e87",
+    "R1/R1514/result.json": "8420f2819b9c5ff8e89722f4f9ef41ed32c00a407af9dda1440dd65aad1df783",
+    "frozen_pathSpace.mjs": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+    "frozen_lenard_recipe.mjs": "4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6"
+  },
+  "scope": {
+    "fully_read": ["V2/E1518/renderer-proposal.v2.mjs", "V2/E1518/renderer-engineering.v2.test.mjs", "V2/E1518/ACTUAL-FLOW.v2.md", "V2/E1518/result.json", "V2/E1518/prospective-commands.v2.json", "V2/E1514/renderer-proposal.v1.mjs", "V2/E1514/renderer-contract.v1.md", "R1/R1514/result.json"],
+    "additional_readonly_source": "Only relevant frozen pathSpace edgePairOf/public wrappers/normal loss return text and previously retained Lenard attempted-identity source blocks; no source imported.",
+    "producer_output_reads": 0,
+    "imports_syntax_tests_codec_decode": 0,
+    "render_or_visual_QA": 0,
+    "producer_query_pixel_PNG": 0,
+    "helpers_native_git_or_source_mutations": 0,
+    "only_authored_file": "discovery-cycle06/R2/R1518/result.json",
+    "original_v1_v2_and_raw_inputs_preserved": true
+  },
+  "claims": {"scientificAcceptance":"UNKNOWN","humanAcceptance":"UNKNOWN","pathIdentity":"UNKNOWN","continuity":"UNKNOWN","calibratedWidth":"UNKNOWN"},
+  "handoff": "Root may request the smallest versioned condition-discrimination/normal-loss-fixture amendment and then a separate source checkpoint. This review grants no execution, raw acceptance or real render authority."
+}

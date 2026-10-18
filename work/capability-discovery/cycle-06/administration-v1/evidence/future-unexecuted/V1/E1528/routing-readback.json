@@ -1,0 +1,131 @@
+{
+  "schema": "cycle06-E1528-source-only-routing-readback@1",
+  "job_id": "E1528",
+  "worker": "V1",
+  "recordedUTC": "2026-10-18 19:58:32 UTC",
+  "repository": "samuelpmahan/chainspot-toolkit",
+  "authority": "Live connected GitHub GET branch collection and exact-commit/source reads; no remote mutation, fetch into local Git, product import or execution",
+  "branches": [
+    {
+      "name": "claude/lucid-mendel-dvco6c",
+      "sha": "481d8a56cab3a5f35ad80b72d98a7af0fbd942e8",
+      "githubBranchProtection": false
+    },
+    {
+      "name": "codex/alg-lane-20261018",
+      "sha": "e3e11fab5de1e4562487472585259435694d88bc",
+      "githubBranchProtection": false
+    },
+    {
+      "name": "main",
+      "sha": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "githubBranchProtection": false
+    }
+  ],
+  "routingProtection": "Task ownership/no-edit restrictions apply even though these GitHub branch objects report protected:false.",
+  "exactTipCommitReads": [
+    {
+      "sha": "e3e11fab5de1e4562487472585259435694d88bc",
+      "message": "Two lanes: platform and algorithm, and how the algorithm lane starts\n\ndocs/agents/lanes.md: who owns which files, what each lane must show, the\nalgorithm lane's start sequence (run, read outputs, then ask Sam for goals and\nmotivations), its rules (called shots, identical refactors, impeachable\ntestimony, render to decide), maximal subagents, and a kickoff prompt.\n\nCo-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01EiRF33JBG7FEiMhXczeLaq",
+      "parentShas": [
+        "a3ad0d460eefc6ea0b6e91312a4297c5e076127f"
+      ],
+      "changedPaths": [
+        {
+          "path": "AGENTS.md",
+          "status": "modified",
+          "patch": "@@ -5,7 +5,7 @@ evidence behind them. Every rule here was learned the hard way.\n \n This file is the map; the details are one step away:\n - `node scripts/pxc.mjs explain <topic>` prints a topic page from `docs/agents/`: prototyping, boundary, parts,\n-  calculations, fg, evidence.\n+  calculations, fg, evidence, lanes (two agents: platform and algorithm, who owns what, how the algorithm lane starts).\n - `node scripts/pxc.mjs doctor [file | --attempt id]` shows what is outside the system, with the fix.\n - `node scripts/pxc.mjs scaffold query | calculation | mixin ...` writes the right shape, with a passing test.\n "
+        },
+        {
+          "path": "docs/agents/README.md",
+          "status": "modified",
+          "patch": "@@ -11,3 +11,4 @@ Start with `AGENTS.md` at the repo root. Open a page here only when the task nee\n | `calculations` | add a step that computes something, or measure what it does |\n | `fg` | add a check or property to a stage's FunctionalGuarantee |\n | `evidence` | report a result, render it, judge it, or claim a constant |\n+| `lanes` | work as the platform lane or the algorithm lane, or start the algorithm lane |"
+        },
+        {
+          "path": "docs/agents/lanes.md",
+          "status": "added",
+          "patch": "@@ -0,0 +1,64 @@\n+# Two lanes: platform and algorithm\n+\n+Two agents work the repo at once (Sam, 2026-10-18). They share `AGENTS.md`, `DOCTRINE.md` and the dev scoreboard; they\n+own different files; they coordinate through recorded results, never through each other's code.\n+\n+| lane | owns | must show |\n+|---|---|---|\n+| **platform** (Claude) | `fg/**`, `scripts/**`, `docs/agents/**`, `AGENTS.md`, `CLAUDE.md`, `recipes/**`, `stages/**`, `ports/judge/**`, `ui/**` | identical output on every dev course after any change (`docs/evidence/dev-s1s4/ATTEMPTS`) |\n+| **algorithm** (ChatGPT / Codex) | `impl/**`, `ports/s4recover/**`, `ports/s3assoc/**`, `ports/early/s3FamilyFix.mjs`, `ports/early/s*Assembly.mjs`, `ports/early/basketRecovery.mjs` | the judged delta per course (TP/FN/FP, right/wrong hole), called before the run |\n+\n+A change a lane needs in the other lane's files is a request (a note in the PR or to Sam), not an edit. A file both\n+lanes touch is a design question for Sam.\n+\n+## The algorithm lane: how to start\n+\n+Nothing is understood from the code alone. Run it, read what it wrote, then ask Sam what it is for.\n+\n+1. **Run everything** (`AGENTS.md`, \"Run everything\"). Read the advisory boundary report it prints.\n+2. **Run golden end to end** and read the outputs before any code:\n+   - `node toolkit.mjs neat --recipe recipes/chainspot-s0-s7.json --specimen golden --until 4 --lanes s3-findfamily-structural-fix,s4.basketRecovery`, then the `next` command it prints;\n+   - `node ports/s3assoc/run.mjs --specimen golden --attempt <id>`;\n+   - `node ports/s4recover/run.mjs --specimen golden --attempt <id>`: open `s4recover.flipbook.html` (profile page, Part pages, pose frames), `instrumentation.json`, `cmp.fn.Tee.recover.json`;\n+   - `node ports/judge/judge.mjs --specimen golden --attempt <id>`.\n+3. **Repeat for the other five dev courses**, one subagent per course (see below). Compare with\n+   `docs/evidence/dev-s1s4/scoreboard.md`, the frozen record of S1-S4 on dev (2026-10-18).\n+4. **Then work with Sam on goals and motivations.** `DOCTRINE.md` holds his rulings; `stages/s*.json` holds each\n+   stage's `responsibility`. Ask him what each stage is for and why before proposing a signal. Implement his general\n+   rules as he gives them; no detours he did not ask for.\n+5. **Current frontier** (from the scoreboard): heritage Tee 6 still FN after S4; alex 17/18 tees; northpark unjudged\n+   (no testimony: cross-validate, `docs/evidence/crossval/`); S2 basket FNs (golden 6; lenard 9, 12; heritage 12,\n+   13, 17) are recovered by S4 `basketRecovery`.\n+\n+## Rules the algorithm lane works under\n+\n+- **Call the shot before the run.** For a behaviour change, write the predicted judged delta per course (which\n+  holes change from FN to TP, which stay) before running; grade it after. An uncalled change in the result is not\n+  a foul, it is a finding to investigate (alex Tee 12 fell out of a pose-search refactor and was real).\n+- **A refactor gives identical output on every dev course** before it is claimed.\n+- **Testimony is optional and impeachable.** Sam's marks are often a few px off. A disagreement is a render to\n+  cross-reference by eye, never a verdict against the pipeline.\n+- **Render to decide.** Legible: labelled, coloured by status, with a legend. Sam often sees the differentiator in a\n+  picture.\n+- **Work in the system.** Parts by address from the PxC board; math as store queries (`fn.q.*`); state as an\n+  argument; data conditions recorded, never thrown. `node scripts/pxc.mjs explain boundary|parts|calculations`.\n+- **Numbers carry a unit and a referent** (what, on which course). Candidates are `Basket cX` until proven.\n+\n+## Maximal subagents\n+\n+Use as many parallel readers and runners as the work has independent pieces; keep one orchestrator.\n+\n+- One subagent per dev course for runs, judging and reading outputs; one per stage for reading a stage's code\n+  against its outputs; one per file for inventories.\n+- Subagents are read-only unless the orchestrator assigns a file. Each reports findings with file:line, units and\n+  referents; the orchestrator verifies the top findings itself before acting on them.\n+- Reports go to the user with the render that supports them.\n+\n+## Kickoff prompt (paste to start the lane)\n+\n+> You are the algorithm lane of chainspot-toolkit. Read `AGENTS.md`, then `docs/agents/lanes.md`. Do not change\n+> code yet. Run the test suite, then run golden through S0-S4 plus association, recovery and the judge, and read the\n+> outputs (flipbooks, instrumentation, judge JSON). Fan out one subagent per dev course for the other five courses\n+> and one per stage to read each stage's code against what it produced. Report, with units and referents and\n+> renders, what each stage does on each course and where the results differ from `docs/evidence/dev-s1s4/scoreboard.md`.\n+> Then ask me what each stage is for and why, before proposing anything."
+        }
+      ]
+    },
+    {
+      "sha": "481d8a56cab3a5f35ad80b72d98a7af0fbd942e8",
+      "message": "Retest on the fixed cache: 48 cells, 40 met, 0 unmet, 8 unjudged; S1-S4 same against frozen\n\nThe annotated-course vote for an unjudged course read c.testimony from the judge, which is\nnull for an attempt rebuilt in the same pass, so northpark got no pointer; it now reads the\ntestimony on disk. Northpark S4 greedyOccluded, S5 toolkit, S6 segmentVerify.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01EiRF33JBG7FEiMhXczeLaq",
+      "parentShas": [
+        "49255331791b1245cf0f9cd699816175f94e70f2"
+      ],
+      "changedPaths": [
+        {
+          "path": "docs/evidence/dev-s1s4/ATTEMPTS",
+          "status": "modified",
+          "patch": "@@ -1,6 +1,6 @@\n-golden attempt-1792306767788-40b24f2522b0\n-lenard attempt-1792306826903-ea9465848c32\n-townelake attempt-1792306874326-2c12008e689c\n-heritage attempt-1792306922689-6a279d5412b5\n-alex attempt-1792306972218-d05e873b2a11\n-northpark attempt-1792307026848-dfaafb5184a3\n+golden attempt-1792309490729-fbfaba270265\n+lenard attempt-1792309547329-8e5550ef2093\n+townelake attempt-1792309590822-10405fb51e23\n+heritage attempt-1792309633242-8490594faf21\n+alex attempt-1792309675912-db911383e688\n+northpark attempt-1792309725972-69ca379a73c4"
+        },
+        {
+          "path": "ports/state/matrix.mjs",
+          "status": "modified",
+          "patch": "@@ -29,6 +29,7 @@\n  *                                              docs/evidence references (Sam: \"Reproducibility is the key\"); --retest prunes\n  *                                              automatically once it has finished\n  */\n+import { loadTestimony } from '../judge/testimony.mjs';\n import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from 'node:fs';\n import { spawnSync } from 'node:child_process';\n import { join, resolve } from 'node:path';\n@@ -405,7 +406,8 @@ const run = (root, args, log) => { log(`  $ node ${args.join(' ')}`); const r =\n export function acceptedOnAnnotated(root, courses, attempts, { dir = 's4recover', cmp = 'cmp.fn.Tee.recover.json' } = {}) {\n   const votes = new Map();\n   for (const c of courses) {\n-    if (!c.testimony) continue;\n+    // annotated means the course has testimony on disk (c.testimony comes from the judge, which is null when the attempt was rebuilt this pass)\n+    if (!c.testimony && !loadTestimony(c.course, root)) continue;\n     const out = join(root, 'attempts', 'stages', attempts.get(c.course) ?? c.attempt, 'fork', 'stage-output', dir);\n     const run = existsSync(out) ? readdirSync(out).filter((d) => d.startsWith('run-')).sort().at(-1) : null;\n     const f = run ? join(out, run, cmp) : null;"
+        }
+      ]
+    }
+  ],
+  "sourceReads": [
+    {
+      "ref": "e3e11fab5de1e4562487472585259435694d88bc",
+      "path": "AGENTS.md",
+      "blob": "39d75fbc6c68c7d3ff1066ea3687458addc7468d",
+      "scope": "Full routing/instructions read; source-only brief forbids the run/test/kickoff operations described there"
+    },
+    {
+      "ref": "e3e11fab5de1e4562487472585259435694d88bc",
+      "path": "docs/agents/lanes.md",
+      "scope": "Full64-line new document read from tip commit diff; platform vs S3/S4 algorithm paths, human design authority; no uncommitted or active worker state inferred"
+    },
+    {
+      "ref": "481d8a56cab3a5f35ad80b72d98a7af0fbd942e8",
+      "path": "ports/s6straight/pathSpace.mjs",
+      "blob": "38963d20f7a8b7c7851b3a2abea2e472da8f7716",
+      "localFrozenSourceSha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "sameBlobAsLocalFrozenVendor": true
+    },
+    {
+      "ref": "481d8a56cab3a5f35ad80b72d98a7af0fbd942e8",
+      "path": "ports/s6straight/pathLoss.mjs",
+      "blob": "b1566834248cb372117cb3e92265f9bbf1c81775",
+      "scope": "Full source read; hallwayOf already supplies best.wPx to stationContrast at original origin and separately records best.cPx"
+    },
+    {
+      "ref": "481d8a56cab3a5f35ad80b72d98a7af0fbd942e8",
+      "path": "ports/s6straight/NOTES.md",
+      "blob": "c463febe2a6d23671f7528df644a3b7eb55f25ba",
+      "scope": "Full A/B measurement-vs-stage handoff and query contract read; route is reuse existing public math, not third implementation"
+    }
+  ],
+  "negativeReads": [
+    {
+      "request": "Encoded-slash per-branch GitHub Fetch URLs",
+      "result": "HTTP400 INVALID_ARGUMENT; safe read-only collection GET returned exact branch refs instead",
+      "notPermissionBypass": true
+    },
+    {
+      "ref": "e3e11fab5de1e4562487472585259435694d88bc",
+      "path": "ports/s6straight/pathSpace.mjs",
+      "result": "GitHub404; alg ports directory GET lists ablation/early/judge/late/run-stages/s3assoc/s4recover/s7 and no s6straight",
+      "meaning": "Bounded tree observation, not proof of absent uncommitted work or authority to take over"
+    }
+  ],
+  "nonduplication": "Width-only contrast reuse already exists in Claude hallwayOf; proposed new lab question is jointly fitted-center/fitted-width contrast on the exact frozen16x3 exposed matrix, with no new query/math or production lane change.",
+  "futureRecheck": "Refs/ownership can change. Re-read current refs and obtain root/G6 additive file assignment plus independent critique before any implementation/CV. No algorithm owner or new active lane is assigned here.",
+  "execution": {
+    "CV": 0,
+    "queries": 0,
+    "tests": 0,
+    "sourceImports": 0,
+    "wireDecode": 0,
+    "imageReads": 0,
+    "renders": 0,
+    "sourceEdits": 0,
+    "gitWrites": 0,
+    "remoteWrites": 0,
+    "helpers": 0
+  }
+}

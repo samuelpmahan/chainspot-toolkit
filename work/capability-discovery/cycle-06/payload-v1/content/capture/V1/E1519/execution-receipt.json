@@ -1,0 +1,105 @@
+{
+  "schema": "E1519-bounded-NONCV-command-receipt@1",
+  "job_id": "E1519",
+  "worker": "V1",
+  "sourceSha256": "359f5e177cf1bb3cf0c65212445086ce9f19374fae279d3f40ffba55f9994acd",
+  "testsSha256": "961fe42bb21690d7ea485ac50a18681f1d64321758815384e60db6caeaa8c3b0",
+  "checkpointSha256": "1df8d477cd9eca2755a28a0b8ea46f2fcca61923e22228a49d5c7adf18d0b53c",
+  "prospectiveCommandsSha256": "e360497fbc271020e40b90192bcb1e92fc7e69a66d69dc5cc989f0f309fa19ff",
+  "records": [
+    {
+      "name": "syntax-source",
+      "cmd": "node --check discovery-cycle06/V1/E1519/compare.mjs > discovery-cycle06/V1/E1519/syntax-source.stdout.txt 2> discovery-cycle06/V1/E1519/syntax-source.stderr.txt",
+      "started": {
+        "current_time": "2026-10-18 19:16:26 UTC"
+      },
+      "ended": {
+        "current_time": "2026-10-18 19:16:27 UTC"
+      },
+      "result": {
+        "chunk_id": "1c1082",
+        "wall_time_seconds": 0.00003027,
+        "exit_code": 0,
+        "original_token_count": 0,
+        "output": ""
+      }
+    },
+    {
+      "name": "syntax-tests",
+      "cmd": "node --check discovery-cycle06/V1/E1519/compare.test.mjs > discovery-cycle06/V1/E1519/syntax-tests.stdout.txt 2> discovery-cycle06/V1/E1519/syntax-tests.stderr.txt",
+      "started": {
+        "current_time": "2026-10-18 19:16:27 UTC"
+      },
+      "ended": {
+        "current_time": "2026-10-18 19:16:27 UTC"
+      },
+      "result": {
+        "chunk_id": "49d579",
+        "wall_time_seconds": 0.015009441,
+        "exit_code": 0,
+        "original_token_count": 0,
+        "output": ""
+      }
+    },
+    {
+      "name": "tests-first",
+      "cmd": "node --test discovery-cycle06/V1/E1519/compare.test.mjs > discovery-cycle06/V1/E1519/tests-first.stdout.txt 2> discovery-cycle06/V1/E1519/tests-first.stderr.txt",
+      "started": {
+        "current_time": "2026-10-18 19:16:27 UTC"
+      },
+      "ended": {
+        "current_time": "2026-10-18 19:16:28 UTC"
+      },
+      "result": {
+        "chunk_id": "8b49ae",
+        "wall_time_seconds": 0.23129557,
+        "exit_code": 0,
+        "original_token_count": 0,
+        "output": ""
+      }
+    }
+  ],
+  "firstPass": true,
+  "retries": 0,
+  "repairs": 0,
+  "tests": {
+    "total": 15,
+    "pass": 15,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "todo": 0
+  },
+  "rawLogs": [
+    {
+      "path": "discovery-cycle06/V1/E1519/syntax-source.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1519/syntax-source.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1519/syntax-tests.stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1519/syntax-tests.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1519/tests-first.stdout.txt",
+      "bytes": 1532,
+      "sha256": "86e188de8717bc6025480aa321c947b8df6269850cf027d01efc919130379e2d"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1519/tests-first.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

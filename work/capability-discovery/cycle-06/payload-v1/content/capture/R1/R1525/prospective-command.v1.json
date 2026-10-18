@@ -1,0 +1,11 @@
+{
+  "schema":"R1525-report-provenance-review-command@1",
+  "status":"WRITTEN_NOT_RUN_PENDING_HELPER_CHECKPOINT",
+  "cwd":"/workspace/scratch/8528bb251845",
+  "argv":["node","discovery-cycle06/R1/R1525/report-review.v1.mjs"],
+  "stdout":"discovery-cycle06/R1/R1525/report-review.stdout.raw",
+  "stderr":"discovery-cycle06/R1/R1525/report-review.stderr.raw",
+  "newMetrics":"discovery-cycle06/R1/R1525/report-review.metrics.v1.json",
+  "capture":"After exact helper/actual-flow checkpoint GO, require all three output paths absent and use exclusive raw log capture. Retain observed UTC boundaries/actual exit/hashes. Preserve first failure without repair/retry.",
+  "scope":"One exact existing lossless REPORT decode plus streaming file provenance rehashes. No comparator import/call, no original native-wire decode, no pair tree recompare, no product/CV/query/replay/pixels/tests/render/Git/native/helper delegation."
+}

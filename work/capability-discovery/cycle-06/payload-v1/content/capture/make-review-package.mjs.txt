@@ -1,0 +1,27 @@
+// Coordinator read-only subject packaging for new, deliberately uncommitted files.
+import {readFileSync,writeFileSync} from 'node:fs';
+import {spawnSync,execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import assert from 'node:assert/strict';
+const repo='/workspace/scratch/8528bb251845/chainspot-discovery-lab';
+const prefix='experiments/capability-discovery/lenard5-station-evidence/';
+const expected={
+ 'recipe.mjs':'4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6',
+ 'recipe.test.mjs':'0163e8d12298d32e4c825da1ea734b320b672bdef59affbea20ff42cac7fb0a2',
+ 'README.md':'6a40f91299961893ec7de5096b366f234be46743e7b86036a32e41dda24afaf7',
+ 'cli.mjs':'a711ab50bc50bd3f69e61656f12002d41d901e19d7db4e8a9b3b5eb188457ffa',
+ 'cli.test.mjs':'2bc624f45cd47a73f79f864483c89da4794361a6638acec22cf432c816f3ec96'
+};
+const sha=b=>createHash('sha256').update(b).digest('hex');
+assert.equal(execFileSync('git',['rev-parse','HEAD'],{cwd:repo}).toString().trim(),'be67d44a653c79ca61efae99934e90475a9aba5e');
+assert.equal(execFileSync('git',['diff','--name-only'],{cwd:repo}).toString(),'');
+let out='Cycle06 source review: five NEW untracked additions, old HEAD unchanged. No commit range exists yet; same-commit review-package refusal retained separately. This exact no-index diff is the authoritative complete new-source review package, not a committed diff.\n\n';
+for(const [name,want]of Object.entries(expected)){
+ const path=prefix+name,bytes=readFileSync(repo+'/'+path);assert.equal(sha(bytes),want,path);
+ const r=spawnSync('git',['diff','--no-index','--','/dev/null',path],{cwd:repo,maxBuffer:2000000});
+ assert.equal(r.status,1,'new-file diff status');assert.equal(r.stderr.length,0);
+ out+=`\nSOURCE ${path} bytes=${bytes.length} sha256=${want}\n`+r.stdout.toString();
+}
+const target='/workspace/scratch/8528bb251845/discovery-cycle06/full-five-file-review.diff.txt';
+writeFileSync(target,out,{flag:'wx'});
+console.log(JSON.stringify({path:target,bytes:Buffer.byteLength(out),sha256:sha(Buffer.from(out)),files:5,sourceWrites:0,gitWrites:0}));

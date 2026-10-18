@@ -1,0 +1,58 @@
+{
+  "schema": "capability-discovery-extraction-result@1",
+  "job_id": "E1538",
+  "worker": "Q1",
+  "outcome": "insufficient_evidence",
+  "status": "INSUFFICIENT_EVIDENCE_DRIVER_PREFLIGHT_FAILURE_ZERO_TESTS_NOT_BEHAVIORAL_RED",
+  "summary": "Executed exactly one root-admitted driver command; actual exit1/UTC20:44:56. It stopped at the unchanged driver's run-directory preflight, before helper module execution or any unittest: root supplied discovery-cycle06-Q1-E1538-red-v2, whereas frozen line234 requires the literal discovery-cycle06-Q1-E1537- prefix. Original stdout0B/stderr406B and prospective/actual command records are retained. Actual0test methods/0descriptor subcases/0fake processes/0helper module executions, so expected A1/A2 behavioral RED was NOT observed and G6 repair readiness remains blocked. Root acknowledged caller-argv admission mismatch and requires a new native packet for any differently named run; no retry, path override, prefix weakening, assertion/source change or G6 edit occurred.",
+  "authorityAndAttribution": {
+    "nativePacket": "Root epoch43 E1538 Q1 assigned/started/persisted/readback",
+    "rootAdmittedRunDirectory": "/workspace/scratch/8528bb251845/discovery-cycle06-Q1-E1538-red-v2",
+    "exactFrozenSourceGuard": "RUN_DIR.parent != WORKSPACE or not RUN_DIR.name.startswith('discovery-cycle06-Q1-E1537-') or RUN_DIR.exists() or RUN_DIR.is_symlink() or RUN_DIR.parent.resolve() != WORKSPACE",
+    "guardLocation": "counterexample-driver.v1.py lines233-236",
+    "attribution": "Caller/root admission chose a path outside the literal frozen guard; this is not a missing repair function, failed A1/A2 assertion, rejected native solve or package/CV failure.",
+    "laterRootAcknowledgement": "Root confirmed its admitted path prefix error and instructed finish E1538 as insufficient evidence before any new native assignment. A future unchanged-driver matching-prefix path was mentioned but was NOT executed under E1538.",
+    "epoch42History": "Root-provided coordinator testimony: epoch42 proposed G6 before readiness; root rejected it before start/dispatch and retained erratum plus epoch43 repair. Q1 neither mutated native state nor treats this as solver failure."
+  },
+  "bindings": {
+    "driver": {"path": "discovery-cycle06/Q1/E1537/counterexample-driver.v1.py", "sha256": "87d1fe36b3d9d49a723af6eae0794ec5940f357aa76a5f9c63214cd562b32a2b", "unchangedAfterInvocation": true},
+    "subject": {"path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/package-closed.v2.py", "sha256": "3125faca4fd1eb3aedd7301954de97cb60af0e9c79efd25ea71b66ff17cfc59b", "unchangedAfterInvocation": true, "moduleExecutionReached": false},
+    "runtime": {"configuredName": "python3.12", "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12", "bytes": 30894944, "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7"},
+    "prospectiveCommand": {"path": "discovery-cycle06/Q1/E1538/prospective-command.json", "sha256": "5fc999cead9050f4b8a8f378b58024ec5d0d0a5af2758edad2fa8c8c9bc7973a", "persistedBeforeLaunch": true},
+    "actualCommand": "discovery-cycle06/Q1/E1538/actual-process.json",
+    "stdout": {"path": "discovery-cycle06/Q1/E1538/driver.stdout.raw", "bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    "stderr": {"path": "discovery-cycle06/Q1/E1538/driver.stderr.raw", "bytes": 406, "sha256": "eb888ffc0e41596737ec3c2da19bf880bddd04761e660717554ec3c4fe211c99"}
+  },
+  "actualCounts": {
+    "driverInvocations": 1,
+    "actualExit": 1,
+    "unittestMethodsRun": 0,
+    "validControlPasses": 0,
+    "descriptorSubcaseFailures": 0,
+    "partialStdoutAssertionFailures": 0,
+    "helperModuleExecutions": 0,
+    "fakeChildCreations": 0,
+    "realZstdProcesses": 0,
+    "archiveOperations": 0,
+    "codecNativeWireDecode": 0,
+    "CVProducerReplayQueryRender": 0,
+    "imagePixelReads": 0,
+    "repositorySourceEdits": 0,
+    "gitOperations": 0,
+    "nativeOperations": 0,
+    "retries": 0
+  },
+  "limits": [
+    "Python executed the driver startup/preflight and stdlib imports only. No helper module, mocks, scientific fixtures or test assertion was reached.",
+    "A postfailure readback confirmed the absent run directory, unchanged subject/driver hashes and original stderr traceback. Attempts to inspect nonexistent expected mock artifacts yielded absence; no evidence was created or reconstructed.",
+    "Neither expected descriptor mismatch RED nor partial stdout RED is established. Before-repair G6 eligibility must stay blocked pending a separately admitted actual behavioral run.",
+    "First failure and exact root caller argv remain intact. No change to guard/assertion/source, overwrite, deletion, path bypass, environment/permission workaround or automatic rerun occurred.",
+    "No final package audit, science/human acceptance or repair acceptance follows from a driver preflight exit."
+  ],
+  "behavioralREDObserved": false,
+  "GREENObserved": false,
+  "packageAcceptance": false,
+  "scientificAcceptance": "UNKNOWN",
+  "humanAcceptance": "UNKNOWN",
+  "nextGate": "Stop after this receipt. Root must create a fresh native packet and exact matching-prefix argv admission for any future unchanged-driver run; E1538 authority is consumed."
+}

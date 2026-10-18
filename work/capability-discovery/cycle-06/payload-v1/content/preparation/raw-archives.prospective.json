@@ -1,0 +1,50 @@
+{
+  "schema": "cycle06-prospective-raw-archives@1",
+  "status": "NOT_CREATED_NOT_AUTHORIZED_BY_THIS_PLAN",
+  "packages": [
+    {
+      "name": "original",
+      "sourceRoot": "discovery-cycle06/G5/E1510/producer-v1",
+      "archiveProspective": "original.tar.zstd",
+      "status": "NOT_CREATED",
+      "manifest": {
+        "source": "discovery-cycle06/G5/E1510/producer-v1/artifact-manifest.json",
+        "destination": "artifact-manifest.json",
+        "bytes": 87118,
+        "sha256": "f85df68d1b34ce2464dcec869c023f0bb10a0240cf9f750ca1a0b23e0151064f",
+        "mode": "100644",
+        "role": "manifest"
+      },
+      "manifestArtifactCount": 338,
+      "answerFragments": 160,
+      "calculationFragments": 176,
+      "membership": "Exact manifest.artifacts paths in retained order plus artifact-manifest.json and cli-receipt.json; refuse all extras/missing/symlinks; do not reencode bodies"
+    },
+    {
+      "name": "replay",
+      "sourceRoot": "discovery-cycle06/V1/E1521/replay-v1",
+      "archiveProspective": "replay.tar.zstd",
+      "status": "NOT_CREATED",
+      "manifest": {
+        "source": "discovery-cycle06/V1/E1521/replay-v1/artifact-manifest.json",
+        "destination": "artifact-manifest.json",
+        "bytes": 87118,
+        "sha256": "4013729b126a5c6c315fcc49af9e63863b4c6360a339f67f475cb30bb1ddbca1",
+        "mode": "100644",
+        "role": "manifest"
+      },
+      "manifestArtifactCount": 338,
+      "answerFragments": 160,
+      "calculationFragments": 176,
+      "membership": "Exact manifest.artifacts paths in retained order plus artifact-manifest.json and cli-receipt.json; refuse all extras/missing/symlinks; do not reencode bodies"
+    }
+  ],
+  "totalManifestArtifacts": 676,
+  "totalFragments": 672,
+  "totalAggregateWires": 4,
+  "notes": [
+    "Counts freshly derived from actual two manifests; not intended count substitutions.",
+    "Each prospective archive has original 338 manifest-listed artifacts plus original manifest and CLI receipt (340 files); original bytes and membership/order unchanged.",
+    "No archive or final freeze has occurred. Original raw directories remain authoritative; aliases are path-only byte copies."
+  ]
+}

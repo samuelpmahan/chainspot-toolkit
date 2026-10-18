@@ -1,0 +1,67 @@
+{
+  "schema": "capability-discovery-extraction-result@1",
+  "job_id": "E1544",
+  "worker": "R1",
+  "outcome": "mixed_change",
+  "status": "LEAN_PARAMETERIZED_READONLY_GIT_TRANSPORT_CONSTRUCTED_NOT_RUN_PENDING_ROOT_FULL_SOURCE_REVIEW",
+  "summary": "Constructed147line scratch-only parameterized derivative of the fully read H1/E1806 read-only Git exporter and retained sourceFiles/segmentFiles contract consumed by the two fully read unchanged transport tools. Written guards require immutable40hex commit/tree, actual HEAD/branch/single-parent/local-tree facts, fixed canonical local parentbe67d44a/tree87dfd9ae, exact five lenard5 paths plus cycle06prefix, actual blob modes100644/100755 and byte/SHA256/GitblobSHA1 identity, pinned committed manifest and fresh canonical scratch output outside repo. UTF8 requires fatal decode(ignoreBOM:true) plus exact byte roundtrip; otherwise36000B base64 pieces. Text starts at<=12000codepoints, adaptively splits oversized actual ASCII serialized envelopes before any write, with60000B segment and1000000B index caps. All output uses fresh mkdir and writeFile wx. Full FLOW/checkpoint and proposed call are written. This is unexecuted construction, not syntax/test/export/compatibility validation, Git mutation, source approval or publication.",
+  "authority": {
+    "nativeEpoch": "Root reported epoch53 E1544 selected R1; start persisted/readback before assignment actions",
+    "ownership": "Only discovery-cycle06/R1/E1544 owned/written; G6 remains sole repository/Git-state/source integration owner",
+    "designApproval": "After read-only H1/consumer reconnaissance, brainstorming/MEP paused for short bounded-design approval. Root explicitly approved the derivative and exact1000000B index cap under this same construction assignment before writing.",
+    "executionGate": "Root must fully read exact source/FLOW and pin actual root config/source hash before a separate actual-export admission. No self-approval or publication."
+  },
+  "artifacts": [
+    {"path":"discovery-cycle06/R1/E1544/prepare-export.v1.mjs","lines":147,"bytes":10586,"sha256":"ed7920523765cf7dd64378fd5904e16ba7fc0e98a7fd761b7123b2f5b76e5c87"},
+    {"path":"discovery-cycle06/R1/E1544/FLOW.v1.md","bytes":9193,"sha256":"4a10e8496fb19d780e07db49d2d4aba87242b2dd3f6f1fa879c14e5503459098"}
+  ],
+  "readProvenance": [
+    {"path":"hh-cycle13/H1/E1806/prepare-export-v2.mjs","fullyRead":true,"sha256":"8cbcce1cb8b2229a83432b20b73fc761ab6cdfebb960b09a4c9617ff136dc74e"},
+    {"path":"tools/verify-git-transport.mjs","fullyRead":true,"sha256":"907cfc7e5109ee1ad495e91af9a8afad654d3461223631b34321cb3420760b07"},
+    {"path":"tools/read-transport-piece.mjs","fullyRead":true,"sha256":"c8e9966cd761f3deca44691940dbbbb11d384c464c6da503cd9f2ad6a00a9f39"},
+    {"path":"discovery-cycle06/root-source-admission.json","scope":"Retained exact five path/hash entries read, not source execution or new freeze"},
+    {"path":"discovery-cycle06/source-review-brief.md","scope":"Exact new-five-path/ownership context read"}
+  ],
+  "writtenContract": {
+    "entryPoint": "node /workspace/scratch/8528bb251845/discovery-cycle06/R1/E1544/prepare-export.v1.mjs /absolute/root-reviewed-export-config.json",
+    "rootConfigStatus": "Not created/admitted by this construction. Required fields/manifest shape handling and actual execution order are fully specified in FLOW.v1.md.",
+    "localParent": "be67d44a653c79ca61efae99934e90475a9aba5e",
+    "localParentTree": "87dfd9aebb09050d1c56e39d54d9a9920b93341c",
+    "remoteDistinction": "canonicalRemoteParentReportedOnly remains optional caller-reported null/40hex, separate from actual canonical local ancestry. No inference/authentication/fetch/reset/metadata reconstruction or remote writes.",
+    "completeChangedSet": "NUL-safe diff-tree --name-only --no-renames -r -z against exact parent/commit; all five source paths required, every changed path allowlisted, actual target leaf must be100644/100755 blob. Deleted/symlink/submodule/unrelated targets refuse.",
+    "identity": "Actual immutable cat-file blob bytes, exact byteLength/SHA256/recomputed Git blobSHA1 and actual tree mode; config hashes and committed manifest byte/hash entries checked without changing originals.",
+    "encodings": ["utf8-text-segments with fatal ignoreBOM:true decode+exact UTF8 roundtrip and codepoint-safe text pieces", "binary-base64-segments with36000B chunks except last, perchunk byte/hash; intermediate chunks divisible3 so concatenated base64 remains valid"],
+    "textChunkMaxCodepoints": 12000,
+    "segmentAsciiJsonByteCap": 60000,
+    "indexAsciiJsonByteCap": 1000000,
+    "gitPerCommandBufferCap": 67108864,
+    "configByteCap": 65536,
+    "sizing": "All actual ASCII segment buffers and index are prepared/sized before output directory creation. Oversized text chunks split in bounded passes with updated actual segmentCount, no failed-write retry/cap raise. Unsplittable or binary envelope overcap refuses.",
+    "writePolicy": "Fresh nonrecursive mkdir, existing canonical output parent outside repo, writeFile flagwx only. Failures stop; retain first partial write output without deletion/overwrite/retry.",
+    "consumerCompatibility": "Existing sourceFiles,segmentFiles,identity,kind,segmentIndex/Count,content/base64/chunk fields retained. Source-reviewed against unchanged consumers only; runtime compatibility UNKNOWN until separately admitted actual export and independent verification."
+  },
+  "actualActions": {
+    "scratchConstructionAndFileReadHashOnly": true,
+    "GitCommands": 0,
+    "exporterInvocations": 0,
+    "sourceImportsOrEvaluation": 0,
+    "syntaxChecks": 0,
+    "tests": 0,
+    "compression": 0,
+    "CVProducerReplayQueryRender": 0,
+    "repositorySourceWrites": 0,
+    "nativeOperations": 0,
+    "remoteWrites": 0,
+    "subagents": 0
+  },
+  "limits": [
+    "Construction only. No exporter syntax/runtime/transport/actual-commit check has run and no output transport exists from this exporter.",
+    "Existing verifier separately requires a clean worktree and actual Git/manifest readback later; this exporter does not claim that validation passed.",
+    "Prepared transport buffers are held in memory; per-Git-command64MiB cap is not a total memory/runtime guarantee. No new streaming/timeout/security framework was introduced.",
+    "Hash-time path/HEAD facts do not authenticate hostile concurrent filesystem or Git-state races. Ordinary root-reviewed config/tool/environment authority remains unchanged.",
+    "Root's construction-only packet explicitly holds TDD/tests/syntax until independent full source review and a separate execution admission; no fabricated GREEN.",
+    "No package source rewrites, fetch/reset/checkout/commit/stage/index/ref changes, metadata reconstruction, new authority model, self-approval, final audit/scientific acceptance or publication."
+  ],
+  "claims": {"constructed":true,"executed":false,"runtimeCompatibilityVerified":false,"actualExportExists":false,"independentSourceAcceptance":false,"publicationApproved":false,"scientificAcceptance":"UNKNOWN","humanAcceptance":"UNKNOWN","defaultEnabled":false},
+  "nextGate": "STOP. Root fully reads source ed792052… and FLOW4a10e849… independently, then chooses whether to pin root config and separately admit one actual read-only export. This receipt itself authorizes no execution."
+}

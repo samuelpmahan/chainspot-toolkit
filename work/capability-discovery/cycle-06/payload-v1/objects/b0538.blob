@@ -1,0 +1,96 @@
+{
+  "schema": "capability-discovery-source-behavior-review@1",
+  "job_id": "R1536",
+  "worker": "R1",
+  "decision": "accepted",
+  "outcome": "accepted",
+  "status": "INDEPENDENT_V3_HELPER_ENGINEERING_SOURCE_AND_ONE_FROZEN_MOCKED_CHECK_ACCEPTED_WITH_LIMITS",
+  "summary": "Independently accept the exact minimal helperv3/wrapperv3 engineering amendment within the bounded contract, not a final package/audit/science result. Read all497 helper lines, all103 wrapper lines, all252 frozen driver lines, full v3 FLOW, actual v2/v3 diffs, Q1 R1530 AMEND, actual Q1 E1539 RED, author final E1536 GREEN and preservation evidence. A1 now checks ordered exact index-to-plan noncomputed descriptors and nested member fields before decode_index object read/decode, admitting only named computed fields and separately checking archive zstd/exact tarBytes. A2 now stats and stream-hashes retained stdout even after failure, with explicit null/capture-error on unavailable metadata. D1 accurately qualifies thirty seconds as communicate/subsequent-wait timeout, not total decode-read/wrapper deadline. Exactly one separately admitted independent unchanged-driver run exited0, all3methods passed:3descriptor variants refused before MOCK decode, valid control returned3aliases through1MOCK decode, and retained20B/37cc partial stdout matched the actual helper-written mocked process receipt without whole-file read_bytes. Original AMEND/RED/source-only construction/root preflight history remain preserved. No real archive/zstd/CV, source/Git/native change, retry or final-plan promotion occurred.",
+  "authority": {
+    "nativeEpoch": "Root reported epoch47 R1536 R1 actual assignment/start persisted/readback before task actions; root alone owns native lifecycle",
+    "independence": "R1 is neither G6 helper/wrapper author nor Q1 driver author. Author GREEN was inspected as separate evidence; the single fresh R1 run is independent execution of the unchanged frozen assertions.",
+    "admission": "Root explicitly admitted ONE ordinary short NONCV validation in exact discovery-cycle06-Q1-E1537-green-v3-review after independent full source review; no new probe or real zstd was admitted."
+  },
+  "sourceReview": {
+    "fullyRead": ["package-closed.v3.py497lines", "run-closed-once.v3.py103lines", "counterexample-driver.v1.py252lines", "E1536-ACTUAL-FLOW.v1.md", "helper-v2-v3.diff", "wrapper-v2-v3.diff", "Q1/R1530/result.json", "Q1/E1539/result.json", "G6/E1536/result.json", "G6/E1536/post-green-preservation.json", "G6/E1536/construction-preservation.json", "Q1/E1538/result.json", "author GREEN original stdout/stderr and actual/prospective process records"],
+    "actualDiff": "Fresh diff -u of helperv2/v3 reproduces only the two bounded insertions; fresh wrapper diff changes only fixed helperv2 path to helperv3. diff exit1 is the expected differences-present status, not harness failure. No source edited by R1.",
+    "A1": {
+      "finding": "Accepted source correction. At decode_index entry, both object/archive list lengths match plan lengths; zipped ordered descriptors require exact expected key set plus only named computed keys; computed fields may not shadow plan keys; all noncomputed fields/values, nested member descriptors/full modes/member order equal the admitted plan. Unknown descriptor fields and reordered descriptors therefore refuse. verify retains its earlier root-bound manifest/file hashing and check_plan before reaching this gate; build readback uses the same gate.",
+      "objectComputedFields": ["storedBytes", "storedSha256"],
+      "archiveComputedFields": ["bytes", "sha256", "codec", "storedBytes", "storedSha256"],
+      "computedFactsStillChecked": "Archive codec must be exactlyzstd; archive raw bytes equal admitted tarBytes AND tar_size(admitted members). Later stored-file bytes/hash/full0644 binding, raw size/hash and canonical USTAR member checks remain in inherited decode_index/check_tar. Allowing computed fields does not waive their later validation.",
+      "behaviorActuallyCovered": "Frozen driver's member-mode04755-v-plan0644, unknown-extra-object-field and reversed-object-order variants all refuse before MOCK operation; matching tiny descriptors still reach one MOCK decode and return3aliases.",
+      "limit": "Mock seams replace check_plan/preservation/read_file/inventory/check_tar/operation as declared for A1. Not every source guard/computed-field branch is dynamically covered; real canonical USTAR and full340-member archive are not exercised."
+    },
+    "A2": {
+      "finding": "Accepted source correction. In the existing stored_path branch, actual stdout bytes/hash start as null, stat actual retained file, read64KiB blocks and compare counted bytes to stat size, then record actual count/digest even after prior terminal error. Capture failure preserves null fields plus stdoutCaptureError and makes an otherwise-successful capture unavailable terminal. Existing failure is not erased. No oversized failure read_bytes, deletion/retry or new process framework was added.",
+      "behaviorActuallyCovered": "Actual helper operation control flow under fake Popen TimeoutExpired wrote known20B, retained it, recorded its actual count/hash and failed terminally as expected. Path.read_bytes tripwire prohibits loading this stdout whole; passed.",
+      "limit": "Null/capture-error fallback and cap-exceeded branch are source-reviewed, not separately dynamically probed. Fake timeout/PID/signal are test-double state, not actual OS timeout/signal observations."
+    },
+    "D1": "Accepted documentation qualification:30seconds is compression communicate timeout and decode wait timeout after stdout.read(decoded_limit+1). That read and wrapper wait have no total wall-clock deadline. Known stored hashes/byte caps remain the contract, not runtime guarantees. No generic security/timeout architecture is requested or implied.",
+    "inheritedBoundaries": "Hash-bound plan/reviews/admission, fixed canonical USTAR, direct exact aliases, full source modes, fresh outputs and root-packet one-build wrapper remain source-visible. These are closed known-object/file-at-check-time engineering guards, not authenticated hostile-filesystem or hermetic execution guarantees.",
+    "staleStageText": "Helper/wrapper docstrings and source-only FLOW NOT_RUN wording remain historical construction text; later actual GREEN/R1 process receipts document subsequent admitted executions. No construction history was rewritten."
+  },
+  "independentActualRun": {
+    "prospective": {"path":"discovery-cycle06/R1/R1536/prospective-command.json","sha256":"ee2f5c81ca7310ac3c1acbc638dcc8fbe90df1ac942df34222843e73341431bc","persistedBeforeLaunch":true,"absoluteScratchCapturePaths":true},
+    "actualProcess": {"path":"discovery-cycle06/R1/R1536/actual-process.json","sha256":"0f5a6358d95ec2f72499a7449924105cc3d3e8911804bcf2a98cfeb46b004286"},
+    "runDirectory": "/workspace/scratch/8528bb251845/discovery-cycle06-Q1-E1537-green-v3-review",
+    "guard": "Exact frozen literal E1537 prefix preserved. Immediately before launch,5hash guards matched driver/subject/wrapper/runtime/prospective; run directory/stdout/stderr/actual receipt were absent including symlinks. Direct raw streams with shell noclobber.",
+    "startUTC": "2026-10-18T21:05:54.270198953Z",
+    "endUTC": "2026-10-18T21:05:54.375315839Z",
+    "actualPid": 7,
+    "actualExit": 0,
+    "actualSignal": null,
+    "observation": "Shell wait0/tool exit0; no signal observed. UTC boundaries are shell observations, not throughput/CV timing evidence.",
+    "methodsRun": 3,
+    "methodsPassed": 3,
+    "assertionFailures": 0,
+    "errors": 0,
+    "unittestReportedSeconds": 0.004,
+    "A1RefusalsBeforeMockDecode": ["member-mode", "unknown-field", "object-order"],
+    "validControl": {"returnedAliases":3,"mockDecodeBoundaryVisits":1},
+    "A2": {"actualRetainedBytes":20,"helperRecordedBytes":20,"actualAndHelperRecordedSha256":"37cc0d58a71756811bc88feaa015336780bc3d0a2fc3591f1d9c949aa01b0820","wholeStdoutReadBytesTripwirePassed":true,"fakeChildCreations":1,"fakePid":424242,"fakeSignal":9,"fakePidSignalAreNotActual":true},
+    "originalStreams": [
+      {"path":"discovery-cycle06/R1/R1536/driver.stdout.raw","bytes":403,"sha256":"aaa4f180da2d732df608ddfa88482ccb39f309e50bfe5fd23a32a17d3927b5cd"},
+      {"path":"discovery-cycle06/R1/R1536/driver.stderr.raw","bytes":556,"sha256":"743715333269836ce756c63e967d92777a202141a12492f09e6b8cd36154dc1f"}
+    ],
+    "mockArtifacts": [
+      {"path":"discovery-cycle06-Q1-E1537-green-v3-review/A2-mock-timeout/partial.stdout.raw","bytes":20,"sha256":"37cc0d58a71756811bc88feaa015336780bc3d0a2fc3591f1d9c949aa01b0820"},
+      {"path":"discovery-cycle06-Q1-E1537-green-v3-review/A2-mock-timeout/operations/mock-timeout.process.json","bytes":583,"sha256":"f9234dc1ba738b05a00720e66d993e122947b371e6563ae40f0a57e6d96dcda1"},
+      {"path":"discovery-cycle06-Q1-E1537-green-v3-review/A2-mock-timeout/operations/mock-timeout.stderr.raw","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+    ],
+    "failurePolicy": "No unexpected failure occurred. Exactly one invocation; no retry, cleanup, fallback, assertion/source/prefix/permission/environment changes."
+  },
+  "exactBindings": {
+    "helperV3": {"path":"chainspot-discovery-lab/work/capability-discovery/cycle-06/package-closed.v3.py","bytes":25471,"sha256":"7b4f94a118e20d6b900938e99f0a24dc71aaeb41411a7c10d2fb4e466a541393"},
+    "wrapperV3": {"path":"chainspot-discovery-lab/work/capability-discovery/cycle-06/run-closed-once.v3.py","bytes":5458,"sha256":"8b9d7d0ee98a19055381240a24316ab3324ca6f7ad4bcf27503ce690cab7de31"},
+    "driver": {"path":"discovery-cycle06/Q1/E1537/counterexample-driver.v1.py","bytes":11826,"lines":252,"sha256":"87d1fe36b3d9d49a723af6eae0794ec5940f357aa76a5f9c63214cd562b32a2b"},
+    "runtime": {"path":"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12","bytes":30894944,"sha256":"fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7"},
+    "flow": {"path":"chainspot-discovery-lab/work/capability-discovery/cycle-06/E1536-ACTUAL-FLOW.v1.md","sha256":"ec31982c5f9253f2994a665605860b885b5e79671582897c56c7eaf46f8163e1"},
+    "helperDiff": {"path":"discovery-cycle06/G6/E1536/helper-v2-v3.diff","sha256":"56f1d0b5143a61d1652a65f7b7ca380dd85d4762f84e22d0179d13f8263c3539"},
+    "wrapperDiff": {"path":"discovery-cycle06/G6/E1536/wrapper-v2-v3.diff","sha256":"f3adb4cd0a6ad9cff534fa52711ae254bce23c20f4748b17f0ae8105b2787a55"},
+    "R1530Amend": {"path":"discovery-cycle06/Q1/R1530/result.json","sha256":"dfe3a9c1dfdfa10aacc4a90748f0e406dc512c8c002bd9a89486ab040ab6187b"},
+    "actualRed": {"path":"discovery-cycle06/Q1/E1539/result.json","sha256":"d7a6e7b023b925c65528e218b6b4e77ff3695a3a0f331a1eaa83ac0147cdcdfb"},
+    "authorFinalGreen": {"path":"discovery-cycle06/G6/E1536/result.json","sha256":"2be1c94737d2d692ca26b6d25325bebed3ca75e84b9e4997929884e4d1aa1be6"},
+    "authorPreservation": {"path":"discovery-cycle06/G6/E1536/post-green-preservation.json","sha256":"8c1a50864a2c6575b5cf1685185913ca8cce73ca3daa06436a5469e501676ad6"},
+    "R1PostcheckBindings": {"path":"discovery-cycle06/R1/R1536/postcheck-bindings.json","sha256":"8531c717f1378613306f4526671f7a690cbcf9b9e3d587417948eddec31a9b89"}
+  },
+  "preservation": {
+    "freshNamedArtifactReadback": "postcheck-bindings.json freshly hashes named helper/wrapperv1/v2/v3, unchanged driver/assertions, v3FLOW/diffs, author prospective, history/freeze/inventory,1322-alias draft and R1 prospective/actual receipt. Frozen construction artifact differences are empty; exact full bindings retained there.",
+    "source22AndPrior2523": "G6's bound post-GREEN preservation evidence reports source22/258620B and prior2523/45942025B with empty body/hash/computed-Git-blob/current-full0644-mode differences. R1 read and binds this evidence; did NOT independently rehash all22/2523 bodies or read live Git index/refs. No R1 source writes occurred.",
+    "draft": "final-inputs.proposed.v2.json946321B/b2ba97331f3bdb40af8234a664a720d75e1261da6a9d683ad989491429c85dab remains unchanged/unadmitted, not finalfreeze or promoted by this review.",
+    "chronology": ["R1530 remains historical AMEND; source counterexamples then not executed.","E1538 remains root caller bad-prefix preflight/0tests, insufficient evidence, not behavioral RED.","Epoch42 root readiness proposal rejected before start/dispatch remains coordinator history, not native solver failure.","E1539 remains actual v2 mocked RED:3methods,4assertion failures/0errors with valid control pass; original streams/partial stdout preserved.","G6 source-only construction and later author GREEN are separate retained stages; R1 fresh one-run GREEN does not rewrite either."],
+    "noDeletionOrOverwrite": true
+  },
+  "actualActionCounts": {"pythonDriverInvocations":1,"helperModuleExecutions":1,"mockDecodeBoundaryVisits":1,"fakeChildCreations":1,"driverDownstreamRealProcesses":0,"actualZstd":0,"actualArchiveConstructionParsingExtraction":0,"standaloneSyntaxChecks":0,"newProbeImplementations":0,"scientificProjectImports":0,"scientificWireDecode":0,"imagePixelReads":0,"CVProducerReplayQueryRender":0,"repositorySourceEdits":0,"GitOperations":0,"nativeOperations":0,"automaticRetries":0,"cleanup":0,"subagents":0},
+  "limits": [
+    "Acceptance is exact helper/wrapper engineering source behavior plus this tiny unchanged mocked validation only. No final package exists or is audited/accepted by this result.",
+    "A1 external authority/inventory/read/process/tar seams are intentionally mocked. A2 fakes TimeoutExpired and process state while retaining actual tiny files. No real malformed USTAR/zstd/OS-timeout/full archive/alias roundtrip was tested.",
+    "This review does not refresh full2523/source22 preservation or live Git; their author's exact bound evidence is reused explicitly. R1 named source/history artifacts were independently freshly hashed.",
+    "30seconds is not total decode-read or wrapper runtime. Inherited fixed tool/startup environment and hash-time filesystem identity are not hermetically authenticated or hostile-race guarantees.",
+    "No final plan/root build admission/archive construction/package reconstruction/final audit/Git stage/commit/PR/main/deployment/defaultON authority. Those require separate root gates.",
+    "Scientific/human/path/physical-edge/continuity/calibrated-width claims remain UNKNOWN; independent helper acceptance does not promote those meanings."
+  ],
+  "claims": {"independentHelperEngineeringAccepted":true,"independentMockedGREENObserved":true,"finalPlanPromoted":false,"finalPackageAccepted":false,"packageAuditPerformed":false,"scientificAcceptance":"UNKNOWN","humanAcceptance":"UNKNOWN","pathIdentity":"UNKNOWN","physicalEdgeIdentity":"UNKNOWN","continuity":"UNKNOWN","calibratedWidth":"UNKNOWN","defaultEnabled":false},
+  "handoff": "Accepted bounded exact v3 helper engineering review and ONE independent frozen mocked GREEN. Stop after this review. Root owns reconciliation/native finish and separate final-plan/build/audit admission; no further execution or repository/native action is authorized here."
+}

@@ -1,0 +1,248 @@
+{
+  "schema": "capability-discovery-extraction-result@1",
+  "job_id": "E1507",
+  "worker": "G6",
+  "outcome": "mixed_change",
+  "summary": "Constructed default-OFF fixed Lenard5 file-only recipe, NONCV tests first and README on the three admitted G6 paths; old2523 tracked bytes/modes remain unchanged. Root reviewed exact code-flow/source/hook before admitting precisely two syntax checks and one import-blocked NONCV test invocation. Both syntax checks exited0; first7-test invocation passed7/7, exit0, blockedImports0; raw stdout/stderr/exits retained exactly. No observed red, repairs or reruns. No valid enabled run/full-input inspect/vendor/store/PATH/CV/producer or Git/native mutation occurred. Five current source identities are readback snapshots, not independent source acceptance or source freeze; full wrapper/adverse gate remains separate.",
+  "status": "CONSTRUCTION_AND_SCOPED_NONCV_EVIDENCE_COMPLETE_INDEPENDENT_SOURCE_ADVERSARIAL_GATE_PENDING",
+  "ownedPaths": [
+    "experiments/capability-discovery/lenard5-station-evidence/recipe.mjs",
+    "experiments/capability-discovery/lenard5-station-evidence/recipe.test.mjs",
+    "experiments/capability-discovery/lenard5-station-evidence/README.md"
+  ],
+  "sourceIdentities": [
+    {
+      "path": "experiments/capability-discovery/lenard5-station-evidence/recipe.mjs",
+      "owner": "G6",
+      "bytes": 29160,
+      "sha256": "4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6"
+    },
+    {
+      "path": "experiments/capability-discovery/lenard5-station-evidence/recipe.test.mjs",
+      "owner": "G6",
+      "bytes": 9638,
+      "sha256": "0163e8d12298d32e4c825da1ea734b320b672bdef59affbea20ff42cac7fb0a2"
+    },
+    {
+      "path": "experiments/capability-discovery/lenard5-station-evidence/README.md",
+      "owner": "G6",
+      "bytes": 9668,
+      "sha256": "6a40f91299961893ec7de5096b366f234be46743e7b86036a32e41dda24afaf7"
+    },
+    {
+      "path": "experiments/capability-discovery/lenard5-station-evidence/cli.mjs",
+      "owner": "G5 until explicit handback",
+      "bytes": 7213,
+      "sha256": "a711ab50bc50bd3f69e61656f12002d41d901e19d7db4e8a9b3b5eb188457ffa"
+    },
+    {
+      "path": "experiments/capability-discovery/lenard5-station-evidence/cli.test.mjs",
+      "owner": "G5 until explicit handback",
+      "bytes": 8610,
+      "sha256": "2bc624f45cd47a73f79f864483c89da4794361a6638acec22cf432c816f3ec96"
+    }
+  ],
+  "execution": {
+    "commands": [
+      {
+        "id": "01-recipe-syntax",
+        "argv": [
+          "node",
+          "--check",
+          "experiments/capability-discovery/lenard5-station-evidence/recipe.mjs"
+        ],
+        "environmentOverrides": {},
+        "start": "2026-10-18T17:25:53.356Z",
+        "end": "2026-10-18T17:25:53.423Z",
+        "exit": 0,
+        "signal": null,
+        "error": null,
+        "rawStdout": "01-recipe-syntax.stdout",
+        "rawStderr": "01-recipe-syntax.stderr"
+      },
+      {
+        "id": "02-tests-syntax",
+        "argv": [
+          "node",
+          "--check",
+          "experiments/capability-discovery/lenard5-station-evidence/recipe.test.mjs"
+        ],
+        "environmentOverrides": {},
+        "start": "2026-10-18T17:26:09.025Z",
+        "end": "2026-10-18T17:26:09.088Z",
+        "exit": 0,
+        "signal": null,
+        "error": null,
+        "rawStdout": "02-tests-syntax.stdout",
+        "rawStderr": "02-tests-syntax.stderr"
+      },
+      {
+        "id": "03-noncv-tests",
+        "argv": [
+          "node",
+          "--test",
+          "--test-reporter=tap",
+          "experiments/capability-discovery/lenard5-station-evidence/recipe.test.mjs"
+        ],
+        "environmentOverrides": {
+          "NODE_OPTIONS": "--import=/workspace/scratch/8528bb251845/discovery-cycle06/G6/E1507/no-product-tripwire.mjs"
+        },
+        "start": "2026-10-18T17:26:14.961Z",
+        "end": "2026-10-18T17:26:15.136Z",
+        "exit": 0,
+        "signal": null,
+        "error": null,
+        "rawStdout": "03-noncv-tests.stdout",
+        "rawStderr": "03-noncv-tests.stderr"
+      }
+    ],
+    "syntaxChecks": {
+      "recipeExit": 0,
+      "testExit": 0
+    },
+    "NONCVTests": {
+      "invocations": 1,
+      "tests": 7,
+      "pass": 7,
+      "fail": 0,
+      "exit": 0
+    },
+    "testsFirstConstruction": true,
+    "observedRed": false,
+    "repairs": 0,
+    "reruns": 0,
+    "moduleImportScope": "NONCV tests evaluated new recipe plus existing pure codec/recipe definitions; no product/vendor module evaluated",
+    "tripwire": {
+      "blockedImports": 0,
+      "authority": "TAP comment emitted by test-process preload; import blocker only, not independently instrumented FS/read/store counters"
+    },
+    "validEnabledRunnerCalls": 0,
+    "validFullInputInspects": 0,
+    "vendorImports": 0,
+    "PATHCalls": 0,
+    "CVCalls": 0,
+    "producerCalls": 0,
+    "renders": 0,
+    "GitWrites": 0,
+    "nativeWrites": 0
+  },
+  "tests": {
+    "breaksCovered": [
+      "disabled own-enabled and unrelated getters",
+      "enabled accessor/nonboolean no coercion",
+      "closed shape/caller-buffer and metadata refusal",
+      "detached16 full-frame declarations with12null+4strip",
+      "literal160 public query plan/order/settings",
+      "bounded missing/nonregular/oversize/invalidUTF8 manifest refusal",
+      "closed file manifest/wrong actual protocol refusal"
+    ],
+    "notRun": [
+      "valid exact full-input NONCV inspect",
+      "altered-source disposable stage",
+      "complete wrapper shape/node/encoded/sidecar cap vectors",
+      "positive enabled gateway/store semantics",
+      "runtime query/capture failure injection",
+      "scientific producer/replay",
+      "renderer",
+      "broad repository suite"
+    ],
+    "limitations": "Only seven initial NONCV tests, not full source approval, whole-repository green or verified enabled execution; historical broad-suite failures remain uncleared."
+  },
+  "preservation": {
+    "baselineCompared": 2523,
+    "differences": [],
+    "head": "be67d44a653c79ca61efae99934e90475a9aba5e",
+    "tree": "87dfd9aebb09050d1c56e39d54d9a9920b93341c",
+    "status": "?? experiments/capability-discovery/lenard5-station-evidence/\n",
+    "sevensAndNine": "Exact seven/nine paths are included in unchanged original2523 inventory",
+    "rawBindings": [
+      {
+        "path": "01-recipe-syntax.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exactCapturedBytes": true
+      },
+      {
+        "path": "01-recipe-syntax.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exactCapturedBytes": true
+      },
+      {
+        "path": "02-tests-syntax.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exactCapturedBytes": true
+      },
+      {
+        "path": "02-tests-syntax.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exactCapturedBytes": true
+      },
+      {
+        "path": "03-noncv-tests.stdout",
+        "bytes": 1908,
+        "sha256": "eaed0dd2449cd67e1653b1a8c1e8e563b064484e33d91ad357d5b28f7c36a841",
+        "exactCapturedBytes": true
+      },
+      {
+        "path": "03-noncv-tests.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "exactCapturedBytes": true
+      }
+    ],
+    "allRawFilesEqualCapturedBytes": true
+  },
+  "sourceFreezePlan": {
+    "actualNewSourceFreeze": false,
+    "oldBaselineImmutable": true,
+    "next": "Different reviewer checks exact five paths/API/resource/null/mutation/partial-trace guards and bounded adversarial cap/preflight cases; accepted exact source freeze only after those separate root admissions."
+  },
+  "ownership": {
+    "G6": "recipe.mjs,recipe.test.mjs,README.md and integration/Git, no Git action admitted",
+    "G5": "cli.mjs+cli.test.mjs remain G5-owned until explicit handback; G6 did not edit or execute them"
+  },
+  "artifacts": [
+    "tests-first-construction.json",
+    "ACTUAL-FLOW.md",
+    "checkpoint.json",
+    "source-construction.diff.txt",
+    "construction-readback.json",
+    "no-product-tripwire.mjs",
+    "prospective-noncv-commands.json",
+    "execution-summary.json",
+    "01-recipe-syntax.execution.json",
+    "01-recipe-syntax.stdout",
+    "01-recipe-syntax.stderr",
+    "02-tests-syntax.execution.json",
+    "02-tests-syntax.stdout",
+    "02-tests-syntax.stderr",
+    "03-noncv-tests.execution.json",
+    "03-noncv-tests.stdout",
+    "03-noncv-tests.stderr",
+    "post-noncv-preservation.json"
+  ],
+  "predictedOnly": {
+    "comparisons": 16,
+    "PATH": 160,
+    "constants": 16,
+    "CalculationEntries": 176,
+    "observed": false
+  },
+  "claims": {
+    "promoted": false,
+    "defaultEnabled": false,
+    "heldout": false,
+    "pathIdentity": "UNKNOWN",
+    "physicalEdgeIdentity": "UNKNOWN",
+    "continuity": "UNKNOWN",
+    "calibratedWidth": "UNKNOWN",
+    "geometryScientificIdentity": "UNKNOWN",
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN"
+  },
+  "skillInfluence": "Checkpoint held all execution until root read exact actual flow; tests-first construction obeyed explicit no-run scope without fabricating red. Verification and materialize separate actual bounded test evidence from source-derived predictions and pending independent gates.",
+  "next": "Root may ingest this result and native-finish E1507, then separately admit independent source/adversarial gate. No producer/Git/source-freeze admission follows automatically."
+}

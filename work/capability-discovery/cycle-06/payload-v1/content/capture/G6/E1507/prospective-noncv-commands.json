@@ -1,0 +1,50 @@
+{
+  "schema": "cycle06-G6-prospective-noncv-commands@1",
+  "job_id": "E1507",
+  "worker": "G6",
+  "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+  "rootScopedGO": true,
+  "commands": [
+    {
+      "id": "01-recipe-syntax",
+      "argv": [
+        "node",
+        "--check",
+        "experiments/capability-discovery/lenard5-station-evidence/recipe.mjs"
+      ],
+      "env": {}
+    },
+    {
+      "id": "02-tests-syntax",
+      "argv": [
+        "node",
+        "--check",
+        "experiments/capability-discovery/lenard5-station-evidence/recipe.test.mjs"
+      ],
+      "env": {}
+    },
+    {
+      "id": "03-noncv-tests",
+      "argv": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "experiments/capability-discovery/lenard5-station-evidence/recipe.test.mjs"
+      ],
+      "env": {
+        "NODE_OPTIONS": "--import=/workspace/scratch/8528bb251845/discovery-cycle06/G6/E1507/no-product-tripwire.mjs"
+      }
+    }
+  ],
+  "stopFirstNonzero": true,
+  "noRepairOrRerun": true,
+  "excluded": [
+    "valid enabled run",
+    "valid full-input inspect",
+    "vendor/store/PATH/CV",
+    "Git mutation",
+    "source freeze",
+    "CLI pair execution"
+  ],
+  "capture": "Node builtin spawnSync wrapper retains raw stdout/stderr as separate files and child exit in command record. Wrapper exit is not child exit."
+}

@@ -1,0 +1,24 @@
+{
+  "schema": "cycle06-E1543-admin-source-chronology-qualification@1",
+  "boundOriginalCopies": 107,
+  "frozenManifestAndCopyAllowlistDifferences": [],
+  "currentOriginDifferences": [
+    {
+      "source": "discovery-cycle06/state.json",
+      "capturedPath": "chainspot-discovery-lab/work/capability-discovery/cycle-06/administration-v1/native-current/state.json",
+      "captured": {
+        "bytes": 176193,
+        "sha256": "889f59006f7a2bb3ebc84e0ab6303026aa9720f1adbeacdea9a5031744840187",
+        "mode": 420
+      },
+      "current": {
+        "bytes": 182911,
+        "sha256": "ddc1b005c475f097b21b0cd0411e5f3aae7fefadaf916a22bb1115871f8a5841",
+        "mode": 420
+      },
+      "meaning": "Expected mutable live-state advancement after non-atomic historical capture, not copied-byte mismatch"
+    }
+  ],
+  "inspectionToolPrior": "c40a1c",
+  "scope": "Distinguish historical exact capture from current mutable origin; no recopies/overwrites/payload/doc/adminmanifest changes."
+}

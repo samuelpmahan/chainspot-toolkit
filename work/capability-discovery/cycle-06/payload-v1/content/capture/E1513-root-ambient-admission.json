@@ -1,0 +1,12 @@
+{
+  "schema":"cycle06-root-ambient-admission@1",
+  "job_id":"E1513",
+  "phase":"BEFORE_FIRST_CLI",
+  "disposition":"Admit exact observed configured runtime defaults without mutation or clearing. This is coordinator execution-domain admission, not scientific or runtime authentication.",
+  "node":{"path":"/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node","version":"v24.19.0"},
+  "observedNonempty":{"NODE_PATH":"/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules","NODE_EXTRA_CA_CERTS":"/usr/local/share/ca-certificates/nebula-dns.crt","TZ":"Europe/Moscow","LANG":"C.UTF-8","LC_ALL":"C.UTF-8"},
+  "observedUnset":["NODE_OPTIONS","LD_PRELOAD","LD_LIBRARY_PATH","NODE_V8_COVERAGE","NODE_COMPILE_CACHE","NODE_DISABLE_COMPILE_CACHE","OPENSSL_CONF","NODE_ICU_DATA"],
+  "rationale":"Exact project imports use frozen explicit relative or Node builtin modules; no ambient module preload is present. Configured dependency search path and certificate path are retained, not extracted or repurposed. Fixed numeric geometry/query math and performance clocks do not use timezone/locale date conversion; no network query or absolute-UTC measurement enters values. Outer UTC command timestamps remain explicitly UTC. No source/settings/geometry/threshold change.",
+  "guards":"Record exact observed nonsecret ambient values in outer command evidence. Do not clear or alter them. Unexpected additional preload/flags still stop. Independent replay must re-observe the same domain or abstain; no path/time/number normalization is authorized.",
+  "scope":"One already admitted E1513 command only; no warmup/inspect/test/query or second invocation. Preserve all outcomes."
+}

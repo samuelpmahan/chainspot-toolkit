@@ -1,0 +1,35 @@
+# E1537 bounded NONCV counterexample driver — SOURCE ONLY, NOT_RUN
+
+Written in `counterexample-driver.v1.py`, 252 lines / 11,826 bytes, SHA256 `87d1fe36b3d9d49a723af6eae0794ec5940f357aa76a5f9c63214cd562b32a2b`. The full source is the checkpoint. No syntax check, compile/import, test, driver/helper invocation, process, compression, archive or project/scientific work has run. Expected RED is a prediction, not evidence.
+
+Root requested this bounded design: exercise existing behavior gaps before G6 repair, then use the same frozen driver/assertions after repair. G6 alone owns future helper source. TDD is incomplete until separately admitted actual RED then GREEN; checkpoint requires this pause before either. The TDD skill's optional `writing-good-tests.md` reference could not be retrieved; its main instructions were read. Broad-suite/CV operations are explicitly outside this packet.
+
+## Prospective entry — withheld pending root admission
+
+```text
+python3.12 /workspace/scratch/8528bb251845/discovery-cycle06/Q1/E1537/counterexample-driver.v1.py --subject /workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-06/package-closed.v2.py --subject-sha 3125faca4fd1eb3aedd7301954de97cb60af0e9c79efd25ea71b66ff17cfc59b --run-dir /workspace/scratch/8528bb251845/discovery-cycle06-Q1-E1537-red-NEW
+```
+
+This is NOT an execution request or admitted command. Root must bind this driver, exact subject/runtime, fresh run directory, actual stdout/stderr/exit capture and scope before a run. Future GREEN changes only the admitted subject to exact v3/hash and uses another absent run directory; no assertion relaxation. No v3 hash or executable GREEN packet exists here.
+
+## Written execution order
+
+1. Accept only exact canonical cycle06 `package-closed.v2.py` or `package-closed.v3.py`, require its supplied SHA256 and <=64KiB body, and require a new bounded directly-under-workspace run directory. Execute the bound subject module only after admission, not as `__main__`, with no bytecode/repository write. This future helper module execution imports its stdlib dependencies, not product modules.
+2. Build tiny ordinary in-memory metadata: two six-byte raw objects, one ten-byte member, three aliases, and a 2,048-byte synthetic placeholder. The placeholder is NOT USTAR and is never archive-parsed. Compute internally consistent tiny index/plan/file manifest/SHA256SUMS identities; do not construct a real package or any340-member/scientific fixture.
+3. Call REAL subject `verify()` and REAL `decode_index()`. Mock `read_file` with bounded exact-hash in-memory reads, `inventory` with the known tiny names, and `check_plan` with already-admitted-authority preflight. That stub intentionally excludes original source22/2523/review/Git guards, not the index-plan consistency under test. Mock `operation` as an observable decompression boundary and `check_tar` as a trusted tiny member-return seam. The production descriptor-control flow stays real.
+4. Matching descriptors must return three aliases and reach exactly one MOCK decompression. This prevents a reject-everything repair from passing. Three independent subcases modify only top-level index descriptors: member mode04755 vs plan0644; an unknown extra object field; reversed object order. Each must produce `ValueError` BEFORE the mocked decompression boundary. The v2 prediction is an assertion failure because decompression is reached, not an error from a missing new function.
+5. A2 calls REAL subject `operation()`. Substitute a tiny fake fixed-executable identity and fake `Popen` child. Its `communicate()` writes the known20-byte `MOCK-ZSTD-PARTIAL\x00\xff\n` artifact, flushes, then raises `TimeoutExpired`. Its PID424242 and signal9 are explicit MOCK metadata, never an actual process/signal. The stderr file-read seam is mocked only to keep unrelated inherited-umask mode checks out of this behavior test.
+6. Keep the actual partial stdout file and actual helper-written process JSON in the fresh scratch run directory. Require the real `operation()` failure to remain terminal, one fake spawn, exact stdout path/size/hash equal to retained known bytes, mock signal9 and nonempty failure metadata. Intercept whole-file `Path.read_bytes()` on failure stdout: a repair must stream-hash it, not load a potentially oversized failure body. No oversized body is created.
+7. Run the three named unittest methods (one containing three descriptor subcases), emit the subject binding/mock scope and ordinary assertion output, and exit0 only if all controls/assertions pass. Exit1 on expected v2 RED is not a real zstd failure. No cleanup/retry occurs; the run directory and first failure records remain.
+
+| Check | Real subject path | Mocked boundary | Required behavior |
+|---|---|---|---|
+| Valid descriptor control | verify → decode_index | Authority/files/container/process | Three aliases, one mock decode |
+| Mode / unknown field / order | Same existing path | Same seams | Refuse before mock decode |
+| Partial-stdout timeout | operation | Executable/Popen/stderr guard | Actual retained-file byte/hash receipt |
+
+## Explicit limits / review gate
+
+This is not a complete package validator test: source/review preflight, actual filesystem inventory, USTAR parsing, HTML contents, real zstd and process behavior are intentionally outside the driver. No real archive, subprocess, Git, image input, codec/native wire, query, producer, replay, render or CV runs. The mocks create engineering counterexamples only; they cannot establish real compressor reliability, final manifest acceptance or science. No native lifecycle changes are performed by the driver.
+
+Review the full frozen source and flow. Stop here until root supplies separate exact execution admission. Neither RED nor GREEN has been observed; current v2 and future v3 are not approved by this construction receipt.

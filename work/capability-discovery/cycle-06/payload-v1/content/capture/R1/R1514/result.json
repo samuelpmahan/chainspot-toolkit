@@ -1,0 +1,69 @@
+{
+  "job_id": "R1514",
+  "worker": "R1",
+  "decision": "amend",
+  "summary": "Independent source-only review of the complete unexecuted V2 E1514 proposal. Exact supplied source and recovered receipt hashes match. The hash-before-decode boundary, frozen literal 16/160 plan, raw-wire retention, common CLI/CSV records, fixed banks and UNKNOWN/no-CV scope are present in source. Amend the decoded answer/identity refusal checks and compact native-null/condition labels before later renderer engineering execution. These are static engineering counterexamples, not observations or scientific measurements of any producer result.",
+  "fullsourcehash": "88adbcc31c1059b4f75da4c88fcf6ee4e1afaf1aaacec8d8e45c2834e2917e87",
+  "reviewed_artifacts": [
+    {"path":"discovery-cycle06/V2/E1514/renderer-proposal.v1.mjs","sha256":"88adbcc31c1059b4f75da4c88fcf6ee4e1afaf1aaacec8d8e45c2834e2917e87","read":"all source text"},
+    {"path":"discovery-cycle06/V2/E1514/renderer-contract.v1.md","sha256":"97427fa138bcb1f7ad18346636e5a70a3e96b474762e80525521214be8d8ffd0","read":"all text"},
+    {"path":"discovery-cycle06/V2/E1514/ACTUAL-FLOW.v1.md","sha256":"e639760ae9fbeba9eac35119fe54b55368c62c1e4a174e721f2b32e7a4d6c51e","read":"all text"},
+    {"path":"discovery-cycle06/V2/E1514/prospective-commands.v1.json","sha256":"5ec38fdedc8964af07c927264571cf0678576f3d7e18bd111ca34e8367d91486","read":"all text"},
+    {"path":"discovery-cycle06/V2/E1514/result.json","sha256":"d4ddb283083092068d17946064a958f9f2ac678ee1b29c60cc66ab94f20f3cf3","read":"all text"}
+  ],
+  "supporting_source_read_only": [
+    {"path":"chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/recipe.mjs","sha256":"4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6","read":"all source text; not imported"},
+    {"path":"chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/cli.mjs","sha256":"a711ab50bc50bd3f69e61656f12002d41d901e19d7db4e8a9b3b5eb188457ffa","read":"all source text; not imported"},
+    {"path":"chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs","sha256":"3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015","read":"all source text; not imported"},
+    {"path":"discovery-cycle06/G5/E1510/raw-analysis-reader-plan.v1.md","read":"all text"}
+  ],
+  "findings": [
+    {
+      "id":"R1514-F1",
+      "classification":"specification/refusal-path engineering",
+      "severity":"medium",
+      "location":"renderer-proposal.v1.mjs:93-100,114-116,131",
+      "finding":"The decoded native answer validator has profile/contrast/loss branches but no edgePair value-shape check, and the resolved-identity check is skipped whenever identity is null, including attempted rows.",
+      "concrete_unexecuted_counterexamples":[
+        "In an otherwise contract-bound decoded fixed160 trace, replace a COMPLETED edgePair nativeAnswer with {unit:'px',value:17}. At line93 it has string unit and own value; line94 enters but no edgePair branch exists. Line100 can retain the original correct identity. Validation therefore does not refuse. Lines116/131 then access 17.lPx etc. and emit unavailable values rather than a malformed-value refusal or native scalar17. The same hole accepts value:{} or value:false; false additionally skips line94.",
+        "In an otherwise valid COMPLETED or THREW query row, set resolvedIdentity:null. Line100 skips all identity checks. Frozen recipe source sets resolvedIdentity before incrementing attemptedPATH and before the call, so attempted-with-null is inconsistent with that producer's retained row shape but is not refused. All NOT_ATTEMPTED rows may legitimately retain null; preserve that partial case."
+      ],
+      "requested_amendment":"Add explicit bounded native outcome shape handling for edgePair (supported native null/condition and supported fit object with explicit retained scalar fields), reject unsupported primitives/missing fit shape instead of projecting them as unavailable, and require a valid resolvedIdentity for attempted states while allowing null for unattempted rows. Do not regenerate queries or add scientific acceptance constraints.",
+      "limits":"Hypothetical decoder-valid input counterexamples derived from control flow only; no fixture was authored/run and no current raw result was inspected. The externally trusted raw-acceptance gate remains important, but does not make the claimed decoded-schema refusal checks complete."
+    },
+    {
+      "id":"R1514-F2",
+      "classification":"display-contract/engineering quality",
+      "severity":"medium",
+      "location":"renderer-proposal.v1.mjs:114,131,146-150,165",
+      "finding":"Compact SVG panels do not preserve the native-null/condition distinctions already present in the shared exact records; compact loss summaries omit native conditions.",
+      "concrete_unexecuted_counterexamples":[
+        "A COMPLETED edgePair envelope with native value:null is explicitly admitted by lines93-99. Line114 creates native-value=null in shared CSV records, and line131 says native null in HTML. Line149 instead takes the final branch and produces native c=unavailable w=unavailable px. This is a native-null versus absent-field divergence between consumers of the same model.",
+        "A COMPLETED profile or contrast envelope with value:null yields Profile COMPLETED at line146 or Contrast COMPLETED at line148, without saying native null. A COMPLETED loss value:{condition:'NO_VISIBLE_SUPPORT'} is admitted as a condition and retained by line114, but lines150/165 display unavailable loss quantities and never the retained condition in the compact loss summary. These exact condition strings are illustrative engineering input, not claimed native observations."
+      ],
+      "requested_amendment":"Use a shared explicit outcome label for missing answer, native null, native condition and native value across SVG/HTML summaries, then show numeric fit/loss labels only for the corresponding value shape. Keep exact CSV tokens, raw links, all16 comparisons and all width banks unchanged.",
+      "limits":"Static output-string derivation only. No SVG/HTML/CSV was generated or visually inspected. Exact detailed records/raw links already retain these outcomes; the finding is compact-view inconsistency, not raw-byte loss."
+    }
+  ],
+  "source_observations_not_runtime_verification": {
+    "trusted_input_order":"Packet digest checked before packet parse; all seven explicitly bound role files hashed before provenance JSON parsing, then manifest-listed artifacts hashed, then exact codec hash checked before dynamic import and either wire decode. Packet authenticity/independent-review truth is explicitly coordinator authority, not established cryptographically by this code.",
+    "literal_plan":"All16 declarations and160 planned indices/order/raw arguments match the read frozen recipe source, including12null/4synthetic-mask declarations, original frame, origins, four windows and three nominal widths.",
+    "scalar_and_validity":"scalar distinguishes null, NaN, infinities, -0, finite numbers and unavailable. Contrast finite-invalid values remain hollow/disconnected and validity lanes remain separate. Profile native point nulls are not reconstructed as NaNs. Compact outcome-label exceptions are F2.",
+    "denominators_and_claims":"Loss visible/pass/fraction/gap values are quoted, not recomputed; native threshold:null and zero-visible/gap UNKNOWN language is present. No best-width choice/new native score/classifier/CV/pixel/query runtime route was found in this source. Descriptive offset residual is explicitly bounded and non-accepting.",
+    "common_records":"Persisted CSV and returned CLI table both call csv(records) on the same constructed records; detailed HTML also consumes those records. The four group pages enumerate all four windows and all three nominal widths. No actual output agreement was tested.",
+    "resource_and_output":"Regular-file/max/exact-size/EOF checks, trace32MiB/sidecar4MiB and unchanged codec ceilings are present. Manifest inventory is capped338 with per-artifact32MiB streaming hash. Output content is prepared before NEW mkdir and exclusive writes; failures preserve prefixes without retry/cleanup. These are source properties, not measured peak resource use, successful refusal tests, atomicity or layout proof.",
+    "raw_retention":"Original inputs are opened read-only, never reencoded as originals; report links exact wires/fragments and their inventory/hash identities. Unprojected native score, gaps, emits and corridor bytes remain linked raw authority."
+  },
+  "execution_counts": {
+    "renderer_import":0,"syntax_check":0,"tests":0,"trace_or_sidecar_read":0,"codec_decode":0,
+    "current_producer_output_reads":0,"producer_or_query":0,"render":0,"source_pixel_reads":0,
+    "png_decode":0,"browser_or_visual_qa":0,"helpers":0,"git_actions":0,"native_actions":0
+  },
+  "scope": {
+    "review_mode":"independent scratch source-only; different from V2 author",
+    "proposal_or_product_changes":false,
+    "only_authored_file":"discovery-cycle06/R1/R1514/result.json",
+    "native_finish_owner":"root only"
+  },
+  "handoff":"Preserve the unexecuted v1 proposal. Root should request an explicitly versioned source amendment and source checkpoint review, then separately admit renderer engineering fixtures/render only after exact independent raw acceptance and a concrete trusted packet. This source review grants no syntax/import/test/decode/render/producer authority and no scientific or human acceptance."
+}

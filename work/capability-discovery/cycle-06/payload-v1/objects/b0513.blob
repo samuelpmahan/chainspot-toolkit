@@ -1,0 +1,44 @@
+{
+  "schema": "cycle06-E1536-green-actual-process@1",
+  "job_id": "E1536",
+  "worker": "G6",
+  "cwd": "/workspace/scratch/8528bb251845",
+  "commandDeclaration": "discovery-cycle06/G6/E1536/actual-green-command.json",
+  "declarationSha256": "2a863e44bc6d783ff800f840cdd5e0586339f7f093ec3ac60dea78f2d8447f0a",
+  "startUTC": "2026-10-18T20:59:34.889824908Z",
+  "endUTC": "2026-10-18T20:59:34.990482120Z",
+  "actualPid": 6,
+  "actualExit": 0,
+  "actualSignal": null,
+  "signalObservation": "Shell wait and tool report exit0; separate signal information not exposed and not invented.",
+  "pythonDriverInvocations": 1,
+  "stdout": {
+    "path": "discovery-cycle06/G6/E1536/green.stdout.raw",
+    "bytes": 403,
+    "mode": "0644",
+    "sha256": "643452fb1b42186fae27e72ffbc875e7f84e2c9f7b6362077fd1a46bc69443c9"
+  },
+  "stderr": {
+    "path": "discovery-cycle06/G6/E1536/green.stderr.raw",
+    "bytes": 556,
+    "mode": "0644",
+    "sha256": "31024326ad5f28f1634b116e0fe3f56f35fd9899b3da84e2114f9539d85c2ff1"
+  },
+  "captureLayer": "Direct original binary stdout/stderr via shell noclobber; exact admitted driver argv once. Shell date UTC boundaries and child PID/wait status preserved from exec result chunk bde176.",
+  "runtime": {
+    "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+    "bytes": 30894944,
+    "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7"
+  },
+  "preflight": {
+    "freshHashesMatched": 4,
+    "runDirectoryAndAllCapturePathsAbsent": true,
+    "absoluteRunDirectory": "/workspace/scratch/8528bb251845/discovery-cycle06-Q1-E1537-green-v3-author",
+    "declaredBeforeLaunch": true
+  },
+  "downstreamRealProcesses": 0,
+  "fakeChildPid": 424242,
+  "fakeSignal": 9,
+  "fakePidSignalAreNotActual": true,
+  "retries": 0
+}

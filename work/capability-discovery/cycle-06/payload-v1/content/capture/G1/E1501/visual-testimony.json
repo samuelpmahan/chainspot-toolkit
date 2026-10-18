@@ -1,0 +1,51 @@
+{
+  "schema": "cycle06-exact-original-visual-testimony@1",
+  "job_id": "E1501",
+  "worker": "G1",
+  "originalViewed": true,
+  "cropViewed": true,
+  "inspectionCalls": [
+    {
+      "tool": "view_image",
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.original.png",
+      "detail": "original",
+      "sourcePngSha256": "30fa01879840deb0584ffe001fa39779998710010faeae93510dbc7a8a0abe6e",
+      "dimensionsPx": [1290, 2796]
+    },
+    {
+      "tool": "view_image",
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.inspection-crop.png",
+      "detail": "original",
+      "sourcePngSha256": "fecfff14beff8dcfb42203f2b2c1fabaef2e52374815274c8e1830d5b813cc84",
+      "dimensionsPx": [600, 400]
+    }
+  ],
+  "crop": {
+    "sourceBoundsHalfOpenPx": [600, 650, 1200, 1050],
+    "pixelRelation": "crop[x,y] equals original[x+600,y+650]; exact integer crop pixels checked in staging",
+    "measurementInput": false,
+    "displayOnly": true
+  },
+  "observations": [
+    "The full original is a tall map screenshot titled Lenard L. Woods Park, showing aerial houses/roads/vegetation with pale overlay strips, number badges, white polygon marks, basket-like icons and circular graphics.",
+    "The actual 600x400 crop has a broad light road-like band across its upper portion, a pale diagonal strip below it, a black number6 badge around crop[300,240], and part of a circular icon graphic on the right.",
+    "The frozen primary source[780,906] is crop[180,256], visually on the pale strip left of the number6 badge. The frozen bright control source[780,740] is crop[180,90], visually on the light road-like band above the strip.",
+    "These descriptions confirm only visible placement of the already-frozen declarations; no coordinates were changed, no pixels were scanned to select a better region, and no physical interruption, edge pair or semantic class was measured or established."
+  ],
+  "knownExposed": true,
+  "heldout": false,
+  "sameCourse": true,
+  "limitations": [
+    "The tool display can scale an original-detail image; the exact PNG bytes, full decode and crop pixel relation are independently hash/byte checked.",
+    "Visible labels and source byte identity do not authenticate path identity, physical boundaries, width calibration, alpha, continuity or human/scientific acceptance.",
+    "The crop is inspection only; full original RGBA and original zero-based source-pixel-center coordinates remain the only staged measurement candidate."
+  ],
+  "execution": {
+    "cvCalls": 0,
+    "PATHCalls": 0,
+    "storeCalls": 0,
+    "sourceEdits": 0,
+    "gitWrites": 0,
+    "nativeWrites": 0
+  }
+}

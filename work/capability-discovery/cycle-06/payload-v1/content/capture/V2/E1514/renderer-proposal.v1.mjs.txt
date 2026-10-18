@@ -1,0 +1,189 @@
+/** E1514 proposal: trace-only descriptive display. CONSTRUCTED, NEVER RUN.
+ * Imports Node only until all trusted byte bindings pass; then pure pinned codec.
+ * No recipe/CLI/store/vendor/PATH/pixels/PNG/browser imports or query generation.
+ */
+import {openSync,fstatSync,readSync,closeSync,writeFileSync,mkdirSync,constants} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {resolve,dirname,join,relative} from 'node:path';
+import {fileURLToPath} from 'node:url';
+
+const CODEC_URL=new URL('../../../chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs',import.meta.url);
+const CODEC_SHA='3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015';
+const PROTOCOL='cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829';
+const ATTESTATION='9f1cb90eed3c74214c9a03029730ea1ab487c48bd86b89cbe3a701eebe923ef1';
+const RGBA='4379abb30a5b0907aa0e1435b13e19eafe8fdd31ac57c9b8bdff4495a14fdc2a';
+const MASK='305285b7e2bc9d44dfd572caa8d39030ed1b0c2254c15967fbb9b7bff7fae609';
+const FRAME='Lenard-5.original-source-pixel-centers';
+const GROUPS=[['primary',[780,906]],['bright-nonpath',[780,740]],['normal-plus6',[781.223725524672,911.8738825184256]],['masked-primary',[780,906]]];
+const WINDOWS=[['before16',-24,-8],['core16',-8,8],['after16',8,24],['long48',-24,24]], WIDTHS=[34,42,50];
+const KINDS=['profile','edgePair','stationContrast','loss','edgePair','stationContrast','loss','edgePair','stationContrast','loss'];
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const need=(value,message)=>{if(!value)throw Error(message);};
+const finite=x=>typeof x==='number'&&Number.isFinite(x);
+const own=(v,k)=>Object.hasOwn(v,k);
+const scalar=x=>x===undefined?'unavailable':x===null?'null':typeof x==='number'?(Object.is(x,-0)?'-0':Number.isNaN(x)?'NaN':x===Infinity?'+Infinity':x===-Infinity?'-Infinity':String(x)):String(x);
+const axis=x=>finite(x)?Number(x.toPrecision(5)).toString():scalar(x); // Display labels only; exact CSV tokens are unrounded.
+const esc=x=>scalar(x).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
+const digest=x=>typeof x==='string'&&/^[0-9a-f]{64}$/.test(x);
+function equal(a,b){if(Object.is(a,b))return true;if(a===null||b===null||typeof a!=='object'||typeof b!=='object'||Array.isArray(a)!==Array.isArray(b))return false;const ka=Object.keys(a),kb=Object.keys(b);return ka.length===kb.length&&ka.every(k=>own(b,k)&&equal(a[k],b[k]));}
+function keys(o,expected,label){need(o&&Object.getPrototypeOf(o)===Object.prototype&&equal(Object.keys(o).sort(),[...expected].sort()),`closed ${label} shape required`);}
+
+/** Descriptor-bounded streaming hash. Retain bodies only for explicit small JSON/wires. */
+function readBound(path,maxBytes,expected=null,retain=false,exact=null){
+  let fd;
+  try{fd=openSync(path,constants.O_RDONLY|constants.O_NONBLOCK);const stat=fstatSync(fd),n=stat.size;need(stat.isFile()&&Number.isSafeInteger(n)&&n>=0&&n<=maxBytes&&(exact===null||n===exact),'refused regular-file size');
+    const hash=createHash('sha256'),body=retain?new Uint8Array(n):null,chunk=new Uint8Array(Math.max(1,Math.min(n,65536)));let position=0;
+    while(position<n){const count=readSync(fd,chunk,0,Math.min(chunk.length,n-position),position);need(count>0,'file shortened during read');hash.update(chunk.subarray(0,count));if(body)body.set(chunk.subarray(0,count),position);position+=count;}
+    need(readSync(fd,chunk,0,1,n)===0&&fstatSync(fd).size===n,'file length changed during read');const actual=hash.digest('hex');if(expected!==null)need(digest(expected)&&actual===expected,'trusted input SHA256 mismatch; no decode/output');return {path:resolve(path),bytes:n,sha256:actual,body};
+  }finally{if(fd!==undefined)closeSync(fd);}
+}
+const parse=b=>JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(b));
+const href=(out,path)=>relative(out,path).split('/').map(encodeURIComponent).join('/');
+
+function verifyPacket(packetPath,packetSha){
+  need(digest(packetSha),'externally trusted packet SHA256 required');const packetFile=readBound(packetPath,131072,packetSha,true),p=parse(packetFile.body),base=dirname(packetFile.path);
+  keys(p,['schema','rawAcceptance','producerRecord','sourceFreeze','cliReceipt','artifactManifest','trace','sidecar'],'trust packet');need(p.schema==='cycle06-lenard5-render-trust@1','wrong trust packet schema');
+  const bindings={packet:{path:packetFile.path,bytes:packetFile.bytes,sha256:packetFile.sha256}};
+  for(const role of['rawAcceptance','producerRecord','sourceFreeze','cliReceipt','artifactManifest','trace','sidecar']){
+    const entry=p[role];keys(entry,role==='rawAcceptance'?['path','sha256','jobId','traceSha256','sidecarSha256']:['path','sha256'],role);need(typeof entry.path==='string'&&entry.path.length>0&&entry.path.length<=4096&&!entry.path.includes('\0')&&digest(entry.sha256),'invalid trusted binding');
+    const max=role==='trace'?33554432:role==='sidecar'?4194304:131072;
+    bindings[role]=readBound(resolve(base,entry.path),max,entry.sha256,true);
+  }
+  need(p.rawAcceptance.traceSha256===p.trace.sha256&&p.rawAcceptance.sidecarSha256===p.sidecar.sha256,'trusted acceptance does not bind both wires');
+  const review=parse(bindings.rawAcceptance.body),record=parse(bindings.producerRecord.body),receipt=parse(bindings.cliReceipt.body),manifest=parse(bindings.artifactManifest.body);
+  need(review.decision==='accepted'&&review.job_id===p.rawAcceptance.jobId,'raw acceptance not accepted/exact job');
+  need(Number.isInteger(record.exit)&&record.signal===null,'missing actual producer exit/signal');
+  need(receipt.schema==='cycle06-lenard5-cli-receipt@1'&&receipt.protocolId==='lenard5-fixed16','wrong CLI receipt');
+  need(receipt.artifactManifest?.sha256===p.artifactManifest.sha256&&receipt.artifactManifest.bytes===bindings.artifactManifest.bytes,'receipt/manifest binding mismatch');
+  need(receipt.intendedExitCode===record.exit,'intended/actual producer exit disagreement');
+  need(manifest.schema==='cycle05-station-artifacts@1'&&manifest.status===receipt.writerStatus&&manifest.status===receipt.artifactManifest.status,'legacy manifest/receipt status disagreement');
+  need(Array.isArray(manifest.artifacts)&&manifest.artifacts.length<=338,'unbounded artifact inventory');
+  const directory=dirname(bindings.artifactManifest.path),seen=new Set(),artifacts=[];
+  for(const a of manifest.artifacts){need(a&&typeof a.path==='string'&&/^(?:value-trace\.json|timing-sidecar\.json|fragments\/(?:answer|calculation)-\d+\.json)$/.test(a.path)&&!seen.has(a.path),'unsupported/duplicate artifact path');seen.add(a.path);need(Number.isSafeInteger(a.bytes)&&a.bytes>=0&&digest(a.sha256),'invalid artifact identity');const actual=readBound(join(directory,a.path),33554432,a.sha256,false,a.bytes);artifacts.push({...a,absolutePath:actual.path});}
+  for(const [role,name]of[['trace','value-trace.json'],['sidecar','timing-sidecar.json']]){const a=artifacts.find(x=>x.path===name);need(a&&a.sha256===bindings[role].sha256&&a.bytes===bindings[role].bytes&&resolve(directory,name)===bindings[role].path,'wire absent or not exact manifest artifact');}
+  need(Array.isArray(receipt.artifacts)&&receipt.artifacts.length===artifacts.length,'CLI artifact inventory disagreement');
+  for(const a of artifacts)need(receipt.artifacts.some(x=>x.path===a.path&&x.sha256===a.sha256&&x.bytes===a.bytes&&x.matchesManifest===true),'CLI emitted artifact mismatch');
+  const codec=readBound(fileURLToPath(CODEC_URL),131072,CODEC_SHA,false);
+  return {packet:p,bindings,artifacts,record,receipt,manifest,codec};
+}
+
+/** Read-only comparisons to source-derived literals; never creates/registers queries. */
+function validate(trace,sidecar){
+  need(trace?.schema==='cycle06-lenard5-trace@1'&&sidecar?.schema==='cycle06-lenard5-sidecar@1','wrong new inner schema');need(trace.protocolId==='lenard5-fixed16'&&sidecar.protocolId===trace.protocolId&&trace.protocolSha256===PROTOCOL,'wrong fixed protocol');
+  need(trace.claims?.promoted===false&&trace.claims.heldout===false,'promotion/heldout outside display scope');for(const k of['pathIdentity','physicalEdgeIdentity','calibratedWidth','geometryScientificIdentity','scientificAcceptance','humanAcceptance','continuity'])need(trace.claims[k]==='UNKNOWN',`claim not UNKNOWN: ${k}`);
+  need(trace.requestBinding?.protocolSha256===PROTOCOL&&trace.requestBinding.attestationSha256===ATTESTATION,'wrong retained input protocol/attestation');
+  need(Array.isArray(trace.requestBinding.comparisons)&&trace.requestBinding.comparisons.length===16&&Array.isArray(trace.plannedQueries)&&trace.plannedQueries.length===160&&Array.isArray(trace.queryTrace)&&trace.queryTrace.length===160,'expected fixed16/160 retained rows');
+  need(Array.isArray(sidecar.calculationLog)&&sidecar.calculationLog.length<=176&&Array.isArray(sidecar.intervals),'missing/unbounded native sidecar');
+  const comparisons=[],warnings=[];
+  for(let c=0;c<16;c++){
+    const [group,origin]=GROUPS[Math.floor(c/4)],[window,t0,t1]=WINDOWS[c%4],id=`${group}/${window}`,N=t1-t0,metadata=trace.requestBinding.comparisons[c];
+    const mask=group==='masked-primary'?{kind:'Uint8Array',bytes:3606840,sha256:MASK}:null;
+    need(equal(metadata,{id,groupId:group,windowId:window,imageId:'Lenard-5',frame:FRAME,widthPx:1290,heightPx:2796,rgbaSha256:RGBA,mask,originPx:origin,phiRad:-0.20539538918976738,t0Px:t0,t1Px:t1,stepPx:1,widthsPx:WIDTHS}),'retained comparison declaration differs');
+    const rows=[];
+    for(let j=0;j<10;j++){
+      const index=10*c+j,kind=KINDS[j],width=j===0?null:WIDTHS[Math.floor((j-1)/3)],plan=trace.plannedQueries[index],row=trace.queryTrace[index];
+      need(plan.planIndex===index&&plan.comparisonId===id&&plan.groupId===group&&plan.windowId===window&&plan.widthPx===width&&plan.query===`fn.q.path.${kind}`&&row.planIndex===index&&row.comparisonId===id,'fixed plan/order identity mismatch');
+      const base={raster:'px.image.cropped',mask:'tk.s6.pathMask',originPx:origin,phiRad:-0.20539538918976738,t0Px:t0,t1Px:t1,stepPx:1};
+      const extra=kind==='profile'?{lat0Px:0}:kind==='edgePair'?{lat0Px:0,widthPx:width,tolPx:2,latLimPx:12,minOk:{count:8,ofStations:0.2}}:kind==='stationContrast'?{widthPx:width,bandPx:[1,3],alongPx:2}:{widthPx:width,profile:null,threshold:null,tauLum:8};
+      need(equal(plan.rawArgs,{...base,...extra}),'literal query args differ');
+      need(['NOT_ATTEMPTED','COMPLETED','THREW'].includes(row.state),'unknown row state');
+      if(row.state==='COMPLETED'&&row.nativeAnswer===null)need(row.error?.code==='ENCODING_FAILED','completed absent answer lacks retained encoding error');
+      if(row.state!=='COMPLETED')need(row.nativeAnswer===null,'uncompleted row carries fabricated answer');
+      const answer=row.nativeAnswer;
+      if(answer!==null){need(answer&&typeof answer.unit==='string'&&own(answer,'value'),'malformed native envelope');const v=answer.value;
+        if(v&&!v.condition){
+          if(kind==='profile'){need(equal(v.offsetsPx,[-30,30,0.25])&&v.stationsCount===N,'wrong profile support');for(const k of['profLum','okCount'])need(Array.isArray(v[k])&&v[k].length===241,'wrong profile array dimensions');}
+          if(kind==='stationContrast'){need(v.stationsCount===N,'wrong bilateral support');for(const k of['leftLum','rightLum','okLeft','okRight'])need(Array.isArray(v[k])&&v[k].length===N,'wrong bilateral array dimensions');for(const k of['okLeft','okRight'])need(v[k].every(x=>x===0||x===1),'wrong retained validity type');}
+          if(kind==='loss'){need(v.schema==='nctk-s6-path-loss-profile@1'&&v.stationsCount===N&&v.widthPx===width&&v.stepPx===1&&v.t0Px===t0&&v.t1Px===t1&&v.phiRad===base.phiRad&&equal(v.originPx,origin),'wrong native loss support');for(const k of['tPx','edgeMinLum','overlayFrac'])need(Array.isArray(v.stations?.[k])&&v.stations[k].length===N,'wrong loss station array');need(v.stations.tPx.every((x,i)=>x===t0+i),'loss station coordinates differ');need(v.overlay?.threshold===null&&v.agreementCounts===null,'unexpected overlay decision');const r=v.corridor;need(r&&r.widthPx===N&&r.heightPx===2*width+1&&equal(r.offsetsPx,[-width,width]),'wrong corridor dimensions');need(Object.getPrototypeOf(r.rgbLevel)===Uint8Array.prototype&&r.rgbLevel.length===N*(2*width+1)*3&&Object.getPrototypeOf(r.hiddenCenter)===Uint8Array.prototype&&r.hiddenCenter.length===N,'wrong native corridor bytes');}
+        }
+      }
+      if(row.resolvedIdentity!==null){const i=row.resolvedIdentity;need(i.comparisonId===id&&i.frame===FRAME&&i.widthPx===1290&&i.heightPx===2796&&i.rgbaSha256===RGBA&&i.maskKind===(mask===null?null:'Uint8Array')&&i.maskSha256===(mask===null?null:MASK),'wrong retained resolved identity');}
+      rows.push({plan,row,kind,width,answer,value:answer?.value??null,state:row.state==='COMPLETED'&&answer===null?'COMPLETED / ANSWER_UNAVAILABLE':row.state});
+    }
+    comparisons.push({index:c,id,group,window,origin,N,t0,t1,mask:mask===null?'literal null Part':'caller synthetic strip',rows});
+  }
+  const ids=new Set(comparisons.map(c=>c.id)),captures=new Map();for(const entry of sidecar.calculationLog){need(ids.has(entry.comparisonId)&&Number.isSafeInteger(entry.captureIndex)&&entry.nativeEntry,'unknown capture identity');const next=captures.get(entry.comparisonId)??0;need(entry.captureIndex===next,'capture order/index differs');captures.set(entry.comparisonId,next+1);}
+  const counted={requestedPATH:160,attemptedPATH:trace.queryTrace.filter(r=>r.state!=='NOT_ATTEMPTED').length,completedPATH:trace.queryTrace.filter(r=>r.state==='COMPLETED').length,failedPATH:trace.queryTrace.filter(r=>r.state==='THREW').length,capturedCalculationEntries:sidecar.calculationLog.length,capturedConstantEntries:sidecar.calculationLog.filter(c=>c.nativeEntry.calculation==='fn.input.lenard5StationMeasurement').length,capturedPATHEntries:sidecar.calculationLog.filter(c=>String(c.nativeEntry.calculation).startsWith('fn.q.path.')).length};
+  for(const [k,v]of Object.entries(counted))if(trace.counts?.[k]!==v)warnings.push(`Retained ${k}=${scalar(trace.counts?.[k])}; arithmetic from retained rows/log=${v}. No missing event filled.`);
+  if(trace.status!==sidecar.status)warnings.push('Retained trace/sidecar statuses differ.');
+  return {trace,sidecar,comparisons,warnings,counted};
+}
+
+function displayRecords(model){
+  const records=[],add=(c,r,field,index,value,flag='')=>records.push({comparison:c.id,group:c.group,window:c.window,nominalWidth:r.width,planIndex:r.plan.planIndex,query:r.kind,state:r.state,field,index,value:scalar(value),validity:scalar(flag)});
+  for(const c of model.comparisons)for(const r of c.rows){add(c,r,'row-state','',r.state);if(r.row.error)add(c,r,'row-error','',r.row.error.message);if(r.answer===null)continue;const v=r.value;add(c,r,'unit','',r.answer.unit);if(v===null){add(c,r,'native-value','',null);continue;}if(v.condition){add(c,r,'condition','',v.condition);continue;}
+    if(r.kind==='profile')for(let i=0;i<241;i++){add(c,r,'profLum',i,v.profLum[i],v.okCount[i]);add(c,r,'okCount',i,v.okCount[i]);}
+    if(r.kind==='edgePair')for(const k of['lPx','rPx','cPx','wPx','gl','gr'])add(c,r,k,'',v[k]);
+    if(r.kind==='stationContrast')for(let i=0;i<c.N;i++){add(c,r,'leftLum',i,v.leftLum[i],v.okLeft[i]);add(c,r,'rightLum',i,v.rightLum[i],v.okRight[i]);}
+    if(r.kind==='loss'){
+      for(const k of['visibleCount','passCount','passFrac','lossFrac','longestGapPx','gapsCount','medianContrastLum'])add(c,r,`edge.${k}`,'',v.edge?.[k]);
+      for(const k of['visibleCount','meanOverlayFrac','medianOverlayFrac','passFrac','lossFrac','longestGapPx','gapsCount','noBackgroundCount','threshold'])add(c,r,`overlay.${k}`,'',v.overlay?.[k]);
+      for(let i=0;i<c.N;i++)for(const k of['tPx','edgeMinLum','overlayFrac'])add(c,r,`stations.${k}`,i,v.stations[k][i]);
+      add(c,r,'corridor.rgbLevel.sha256','',sha(v.corridor.rgbLevel));add(c,r,'corridor.hiddenCenter.sha256','',sha(v.corridor.hiddenCenter));add(c,r,'corridor.dimensions','',`${v.corridor.widthPx}x${v.corridor.heightPx}; exact Uint8Array rgb=${v.corridor.rgbLevel.length} hidden=${v.corridor.hiddenCenter.length}; all bytes retained in original wire`);
+    }
+  }
+  return records;
+}
+function residuals(model){const rows=[];for(const [window]of WINDOWS)for(const width of WIDTHS){const get=group=>model.comparisons.find(c=>c.group===group&&c.window===window).rows.find(r=>r.kind==='edgePair'&&r.width===width),a=get('primary'),b=get('normal-plus6'),ok=a.answer&&b.answer&&!a.value?.condition&&!b.value?.condition&&finite(a.value?.cPx)&&finite(b.value?.cPx);rows.push({window,width,primary:scalar(a.value?.cPx),offset:scalar(b.value?.cPx),residual:ok?scalar(b.value.cPx-a.value.cPx+6):'NOT_COMPUTABLE',reason:ok?'descriptive only; no tolerance/same-edge assertion':`${a.state}: ${scalar(a.value?.condition)} / ${b.state}: ${scalar(b.value?.condition)}`});}return rows;}
+const csvCell=x=>'"'+scalar(x).replaceAll('"','""')+'"';
+function csv(records){const fields=['comparison','group','window','nominalWidth','planIndex','query','state','field','index','value','validity'];return fields.join(',')+'\n'+records.map(r=>fields.map(k=>csvCell(r[k])).join(',')).join('\n')+'\n';}
+const table=(heads,rows)=>`<table><thead><tr>${heads.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map(v=>`<td>${esc(v)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+const nativeLabel=r=>r.answer===null?r.state:r.value?.condition?`condition: ${r.value.condition}`:r.value===null?'native null':`l=${scalar(r.value.lPx)} r=${scalar(r.value.rPx)} c=${scalar(r.value.cPx)} w=${scalar(r.value.wPx)}`;
+
+/** Display geometry only. No data smoothing/interpolation or science calculation. */
+function plot(values,valid,x,y,w,h,{title='',profile=false}={}){
+  let out=`<text x="${x}" y="${y-10}" font-size="12">${esc(title)}</text>`;const finiteValues=values.flat().filter(finite);let lo=finiteValues.length?Math.min(...finiteValues):0,hi=finiteValues.length?Math.max(...finiteValues):1;if(lo===hi){lo-=1;hi+=1;}
+  const N=values[0]?.length??0,px=i=>x+(N<2?0:i/(N-1))*w,py=v=>y+h-(v-lo)/(hi-lo)*h,colors=['#176b8a','#bd6027'];
+  out+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="white" stroke="#c3ccd5"/>`;
+  values.forEach((array,s)=>{let path='',open=false;array.forEach((v,i)=>{const good=finite(v)&&valid[s][i];if(good){path+=`${open?'L':'M'}${px(i).toFixed(2)},${py(v).toFixed(2)} `;open=true;}else open=false;});out+=`<path d="${path}" fill="none" stroke="${colors[s]}" stroke-width="1.5"/>`;
+    array.forEach((v,i)=>{if(!profile&&finite(v))out+=`<circle cx="${px(i)}" cy="${py(v)}" r="2.2" stroke="${valid[s][i]?colors[s]:'#7b8490'}" fill="${valid[s][i]?colors[s]:'white'}"/>`;if(!finite(v))out+=`<text x="${px(i)}" y="${y+h-3-s*10}" font-size="7" fill="#707b89">${esc(v)}</text>`;if(!profile)out+=`<rect x="${px(i)-2}" y="${y+h+16+s*9}" width="4" height="6" fill="${valid[s][i]?colors[s]:'#e0e3e8'}"/>`;});
+  });
+  out+=`<text x="${x}" y="${y+h+12}" font-size="9">${profile?'offset -30 to +30 source px':'caller station index; blue L / orange R; validity lanes'}</text><text x="${x}" y="${y+10}" font-size="8">${esc(axis(hi))}</text><text x="${x}" y="${y+h-2}" font-size="8">${esc(axis(lo))}</text>`;return out;
+}
+function svgGroup(model,group,binding){
+  let out=`<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1600" viewBox="0 0 1680 1600"><rect width="1680" height="1600" fill="white"/><g font-family="DejaVu Sans,Arial,sans-serif" fill="#263746"><text x="24" y="30" font-size="22">Lenard5 retained native answers — ${esc(group)}</text><text x="24" y="52" font-size="12">UNKNOWN path / physical edge / continuity / calibrated width / science / human acceptance; promoted=false. No best width.</text><text x="24" y="70" font-size="10">Trace ${binding.trace.sha256.slice(0,20)}… Sidecar ${binding.sidecar.sha256.slice(0,20)}… Retained raw rows only; no pixels or query calls.</text>`;
+  for(const c of model.comparisons.filter(c=>c.group===group)){const top=92+WINDOWS.findIndex(w=>w[0]===c.window)*350;out+=`<rect x="14" y="${top}" width="1650" height="335" fill="#f6f8fa" stroke="#d8e0e7"/><text x="26" y="${top+24}" font-size="17">${esc(c.id)} · origin [${c.origin.map(scalar)}] · t [${c.t0},${c.t1}) · N${c.N} · ${esc(c.mask)}</text>`;
+    const profile=c.rows[0];if(profile.value?.profLum){out+=plot([profile.value.profLum],[profile.value.okCount.map(n=>n>0)],35,top+60,365,140,{title:'Profile mean RGB lum; nulls unfilled',profile:true});out+=`<path d="${profile.value.okCount.map((v,i)=>`${i?'L':'M'}${(35+i/240*365).toFixed(2)},${(top+233-v/c.N*16).toFixed(2)}`).join(' ')}" fill="none" stroke="#718395" stroke-width="1.2"/>`;}else out+=`<text x="35" y="${top+70}" font-size="12">Profile ${esc(profile.value?.condition??profile.state)}</text>`;
+    for(let k=0;k<3;k++){const width=WIDTHS[k],x=445+k*400,r=c.rows.find(r=>r.kind==='stationContrast'&&r.width===width),fit=c.rows.find(r=>r.kind==='edgePair'&&r.width===width),loss=c.rows.find(r=>r.kind==='loss'&&r.width===width),v=loss.value;
+      if(r.value?.leftLum)out+=plot([r.value.leftLum,r.value.rightLum],[r.value.okLeft.map(Boolean),r.value.okRight.map(Boolean)],x,top+60,365,140,{title:`Nominal width ${width} px — bilateral contrast lum`});else out+=`<text x="${x}" y="${top+70}" font-size="12">Contrast ${esc(r.value?.condition??r.state)}</text>`;
+      const fitText=fit.answer===null?fit.state:fit.value?.condition?fit.value.condition:`native c=${axis(fit.value?.cPx)} w=${axis(fit.value?.wPx)} px; exact fit in report/CSV`;
+      out+=`<text x="${x}" y="${top+250}" font-size="10">Fit: ${esc(fitText)}</text><text x="${x}" y="${top+270}" font-size="10">Loss ${esc(loss.state)}: visible ${esc(v?.edge?.visibleCount)} / N${c.N}; pass ${esc(v?.edge?.passCount)}</text><text x="${x}" y="${top+287}" font-size="10">Native passFrac ${esc(axis(v?.edge?.passFrac))}; lossFrac ${esc(axis(v?.edge?.lossFrac))}; gapPx ${esc(axis(v?.edge?.longestGapPx))}</text><text x="${x}" y="${top+304}" font-size="10">visible0/gap0 = UNKNOWN. Overlay threshold ${esc(v?.overlay?.threshold)}; not alpha.</text>`;
+    }
+    out+=`<text x="35" y="${top+249}" font-size="11">Support lane0..${c.N}; stations ${profile.value?.stationsCount??profile.state}</text><text x="35" y="${top+268}" font-size="10">All241 profLum/okCount pairs: report.html / CSV.</text><text x="35" y="${top+286}" font-size="10">Finite-invalid = hollow; null/nonfinite = text;</text><text x="35" y="${top+303}" font-size="10">invalid values disconnected; no imputation.</text>`;
+  }
+  out+=`<text x="24" y="1530" font-size="12">Axes are display-scaled; profile/contrast share pixels and overlapping supports, not independent confidence.</text><text x="24" y="1550" font-size="12">Mask is caller synthetic visibility, not a detected occluder. Tau8 historical diagnostic; WHITE brightness proxy is not alpha.</text><text x="24" y="1570" font-size="12">Exact values/flags/conditions/denominators and raw-wire links: report.html / descriptive-table.csv. No PNG/visual QA claim.</text></g></svg>\n`;return out;
+}
+function html(model,records,residual,bundle,out){
+  const {bindings,artifacts}=bundle,link=role=>`<a href="${esc(href(out,bindings[role].path))}">${esc(role)} exact original</a>`;
+  let body=`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Lenard5 raw trace report</title><style>body{font:14px system-ui,sans-serif;max-width:1500px;margin:24px;color:#263746}table{border-collapse:collapse;margin:12px 0}td,th{padding:5px 8px;border:1px solid #ccd5df;text-align:left;vertical-align:top}th{background:#edf2f6}pre{white-space:pre-wrap;overflow-wrap:anywhere}.warn{color:#9b4532}img{max-width:100%;height:auto}details{margin:12px 0}section{margin-top:32px}code{overflow-wrap:anywhere}</style><h1>Lenard5 retained native answers</h1><p>UNKNOWN: path, physical edge, continuity, calibrated width, geometry, scientific/human acceptance. promoted:false; heldout:false. No width selection, new score, classifier, refit or pixel access.</p><p>Native public profile nulls remain null; finite-invalid, nonfinite and masked-policy labels remain distinct. Mask is caller intervention, not inferred cause. visibleCount0/gap0 is UNKNOWN; threshold:null means no overlay decision. WHITE proxy is not alpha; tau8 historical diagnostic. Shared source pixels/supports are dependent.</p><p>${['rawAcceptance','producerRecord','sourceFreeze','cliReceipt','artifactManifest','trace','sidecar'].map(link).join(' · ')} · <a href="descriptive-table.csv">Shared exact-token CSV</a></p><p>Trace SHA256 <code>${bindings.trace.sha256}</code><br>Sidecar SHA256 <code>${bindings.sidecar.sha256}</code><br>Codec SHA256 <code>${CODEC_SHA}</code></p><h2>Coverage and authority</h2>`;
+  body+=table(['retained status','first error','actual producer exit','writer status'],[[model.trace.status,model.trace.error?.message??null,bundle.record.exit,bundle.manifest.status]]);
+  body+=table(['counter','retained','arithmetic retained rows/log; not filled predictions'],Object.entries(model.counted).map(([k,v])=>[k,model.trace.counts[k],v]));
+  body+=`<p class="warn">${model.warnings.map(esc).join('<br>')||'No retained counter/status mismatch identified by this display validator.'}</p><details><summary>Retained source/input/post-error metadata (quoted authority, not reattested source execution)</summary><pre>${esc(JSON.stringify({sourceBinding:model.trace.sourceBinding,inputIntegrity:model.trace.inputIntegrity},null,2))}</pre></details><h2>Four compact group pages</h2>`;
+  for(const [g]of GROUPS)body+=`<p><a href="group-${g}.svg">${esc(g)} SVG — four windows and all nominal widths</a></p>`;
+  body+=`<h2>All16 comparisons</h2><nav>${model.comparisons.map(c=>`<a href="#c${c.index}">${esc(c.id)}</a>`).join(' · ')}</nav>`;
+  for(const c of model.comparisons){body+=`<section id="c${c.index}"><h3>${esc(c.id)}</h3><p>Frame ${FRAME}; origin [${c.origin.map(scalar)}]; phi -0.20539538918976738; t [${c.t0},${c.t1}), step1, N${c.N}; ${esc(c.mask)}. Original1290×2796; widths34/42/50 retained without selection.</p>`;
+    body+=table(['nominal px','native edgePair state/condition/fit','native edge visible/N','native pass count/fraction','native loss fraction/gap px','native overlay visible/threshold'],WIDTHS.map(w=>{const fit=c.rows.find(r=>r.kind==='edgePair'&&r.width===w),loss=c.rows.find(r=>r.kind==='loss'&&r.width===w),v=loss.value;return[w,nativeLabel(fit),`${scalar(v?.edge?.visibleCount)}/${c.N}`,`${scalar(v?.edge?.passCount)} / ${scalar(v?.edge?.passFrac)}`,`${scalar(v?.edge?.lossFrac)} / ${scalar(v?.edge?.longestGapPx)}`,`${scalar(v?.overlay?.visibleCount)} / ${scalar(v?.overlay?.threshold)}`];}));
+    body+=`<details><summary>All retained display values / validity / states for this comparison (same model as CSV)</summary>${table(['plan','query','nominal','state','field','index','exact scalar token','raw validity/support'],records.filter(r=>r.comparison===c.id).map(r=>[r.planIndex,r.query,r.nominalWidth,r.state,r.field,r.index,r.value,r.validity]))}</details></section>`;
+  }
+  body+=`<h2>Offset diagnostic — descriptive only, no tolerance or same-edge claim</h2>`+table(['window','nominal px','primary cPx','offset cPx','cOffset-cPrimary+6','meaning'],residual.map(r=>[r.window,r.width,r.primary,r.offset,r.residual,r.reason]));
+  body+=`<h2>Native Calculation completion order</h2>`+table(['comparison','captureIndex','native seq','parent','calculation','status','key','cached','emits','elapsedMs'],model.sidecar.calculationLog.map(c=>[c.comparisonId,c.captureIndex,c.nativeEntry.seq,c.nativeEntry.parent,c.nativeEntry.calculation,c.nativeEntry.status,c.nativeEntry.key,c.nativeEntry.cached,JSON.stringify(c.nativeEntry.emits),c.nativeEntry.elapsedMs]));
+  body+=`<details><summary>Complete manifest fragment/output inventory — exact originals are authoritative</summary>`+table(['original artifact','bytes','SHA256'],artifacts.map(a=>[a.path,a.bytes,a.sha256]))+`<ul>${artifacts.map(a=>`<li><a href="${esc(href(out,a.absolutePath))}">${esc(a.path)}</a></li>`).join('')}</ul></details><p>Native score, all gap objects, emits and every corridor byte remain in exact linked original wires/fragments. The CSV/report is a descriptive projection, not a replacement. No browser/HTML/PNG visual QA has been performed by this module.</p></html>\n`;return body;
+}
+
+export async function renderTrustedPacket({packetPath,packetSha256,outDir}){
+  const bundle=verifyPacket(resolve(packetPath),packetSha256);
+  // Every externally trusted wire/provenance/artifact digest has passed before this import/decode.
+  const {decodeBytes}=await import(CODEC_URL),trace=decodeBytes(bundle.bindings.trace.body),sidecar=decodeBytes(bundle.bindings.sidecar.body,{maxBytes:4194304});
+  const model=validate(trace,sidecar),records=displayRecords(model),offset=residuals(model),directory=resolve(outDir);
+  const renderer=readBound(fileURLToPath(import.meta.url),131072,null,false),artifacts=[];
+  // All content prepared from the same model; destination remains absent until input validation passes.
+  const outputs=[['descriptive-table.csv',csv(records)],...GROUPS.map(([g])=>[`group-${g}.svg`,svgGroup(model,g,bundle.bindings)]),['report.html',html(model,records,offset,bundle,directory)]];
+  mkdirSync(directory);
+  for(const [path,content]of outputs){const bytes=new TextEncoder().encode(content);writeFileSync(join(directory,path),bytes,{flag:'wx'});artifacts.push({path,bytes:bytes.length,sha256:sha(bytes)});}
+  const manifest={schema:'cycle06-lenard5-trace-display@1',status:'SVG_CSV_HTML_WRITTEN_NO_PNG_OR_VISUAL_QA',renderer:{path:renderer.path,sha256:renderer.sha256},codec:{path:bundle.codec.path,sha256:CODEC_SHA},bindings:Object.fromEntries(Object.entries(bundle.bindings).map(([k,v])=>[k,{path:v.path,bytes:v.bytes,sha256:v.sha256}])),artifacts,warnings:model.warnings,claims:{promoted:false,heldout:false,pathIdentity:'UNKNOWN',physicalEdgeIdentity:'UNKNOWN',continuity:'UNKNOWN',calibratedWidth:'UNKNOWN',scientificAcceptance:'UNKNOWN',humanAcceptance:'UNKNOWN'},limits:'Trusted hash-time identity, not execution authentication/hostile filesystem defense. Native fields quoted, no measurement/classifier/retry; exclusive retained-prefix output, not atomic/durable. PNG/visualQA require separate admission.'};
+  writeFileSync(join(directory,'display-manifest.json'),JSON.stringify(manifest,null,2)+'\n',{flag:'wx'});
+  // CLI table and persisted CSV consume exactly the same records, not a second extraction.
+  return {manifest,cliTable:csv(records)};
+}
+async function main(args){need(args.length===6&&args[0]==='--packet'&&args[2]==='--packet-sha'&&args[4]==='--out','usage: --packet TRUST.json --packet-sha TRUST_SHA256 --out NEWDIR');const result=await renderTrustedPacket({packetPath:args[1],packetSha256:args[3],outDir:args[5]});process.stdout.write(result.cliTable);process.stderr.write(JSON.stringify({status:result.manifest.status,artifacts:result.manifest.artifacts.length})+'\n');}
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))main(process.argv.slice(2)).catch(error=>{console.error(JSON.stringify({status:'DISPLAY_FAILED_STOP_NO_RETRY',error:String(error?.message??error)}));process.exitCode=1;});

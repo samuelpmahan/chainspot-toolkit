@@ -1,0 +1,19 @@
+{
+  "schema":"cycle06-root-replay-admission@1",
+  "job_id":"E1521",
+  "worker":"V1",
+  "admitted":true,
+  "scope":"ONE_FIXED160_REPLAY",
+  "wrapper":{"path":"/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1521/one-replay.py","bytes":13864,"sha256":"86afd6ee1fbdd6dfb275bd1c5e3b049bcd6f29795cb7a9b227053049241ed6c7"},
+  "prospectiveCommand":{"path":"/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1521/prospective-command.v1.json","bytes":4322,"sha256":"7e33f078980bc84dea4afaefd1d9318d12947d13b002ef2f66999514d501eef9"},
+  "comparatorReview":{"path":"discovery-cycle06/R2/R1519/result.json","bytes":9391,"sha256":"eadfe084b31e7ba48c8333fa332133a2217aff5106f55831597c09e4a041ff97","decision":"accepted"},
+  "node":{"path":"/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node","version":"v24.19.0","bytes":125989464,"sha256":"bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12","binaryHashAuthority":"CURRENT_REPLAY_READBACK_ONLY_NO_ORIGINAL_EXECUTABLE_HASH"},
+  "originalRawAcceptance":{"path":"discovery-cycle06/R1/R1513/result.json","sha256":"0002f0c25157073eced2c6a4008abbd2a2feca268b863536160ba9069e8441c8","decision":"accepted","scope":"independent raw engineering, not scientific acceptance"},
+  "rootCheckpoint":"Root read complete final wrapper and prospective command, confirmed final hashes, same original manifest path/bytes and frozen source/input closure. Execution is a scoped extension of current running E1521 after construction checkpoint; no construction finish or remeasurement has occurred before this admission.",
+  "chronology":"Only original first producer E1513 has run. This admits exactly ONE independent fixed160 replay by different V1 worker who has not read original output values. No warmup, inspect, hidden call, retry, alternative output variant or environment mutation. Original runtime has path/version testimony only, not preproducer executable byte hash.",
+  "policy":"Original b146b7183e4aab0708792b7f72aa37790113ca8061f34c551ea590f24391027d unchanged, original source-shape defect retained; separately reviewed postproducer addendum3537cdce221ab424672097ed6d8530afaf94128d66ddb3dc38a8d3490407232b governs later source shapes only. Exact values and named timing rules unchanged. Actual package comparison requires separately scoped admission after this replay.",
+  "stop":"Any guard failure or first actual replay failure stops and preserves evidence. No corrective attempt, cap increase, query or scientific policy change authorized.",
+  "scientificAcceptance":"UNKNOWN",
+  "humanAcceptance":"UNKNOWN",
+  "promoted":false
+}

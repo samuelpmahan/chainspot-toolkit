@@ -1,0 +1,37 @@
+{
+  "schema": "cycle06-E1521-one-prospective-replay-command@1",
+  "job_id": "E1521",
+  "worker": "V1",
+  "status": "PREPARATION_ONLY_NOT_EXECUTED_SEPARATE_REPLAY_GO_REQUIRED",
+  "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+  "argv": ["node", "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/cli.mjs", "run", "--manifest", "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/manifest.v1.json", "--out", "/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1521/replay-v1"],
+  "outputDirectory": "/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1521/replay-v1",
+  "rawCapture": {
+    "stdout": "/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1521/replay-v1.stdout.log",
+    "stderr": "/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1521/replay-v1.stderr.log"
+  },
+  "outerRecord": "/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1521/outer-command.json",
+  "exclusiveToken": "/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1521/one-invocation-token.json",
+  "manifest": {"path":"discovery-cycle06/G5/E1510/manifest.v1.json","bytes":367,"sha256":"4ae5f021bc3c9be8184cdb0627abdacabae9d7c8dcff88a12b404762843bbe9f"},
+  "sourceFreeze": {"path":"discovery-cycle06/root-source-admission.json","entries":22,"sha256":"6f3f30924749e0104a12e7d5d3d43b45b23569e55de8ffe565111620dd0355b8"},
+  "runtime": {"path":"/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node","version":"v24.19.0","guard":"Separate root replay admission binds CURRENT replay executable bytes/SHA only; no original executable bytehash was captured. Original authority is recorded configured path/version testimony, not cross-run binary identity. Wrapper adds no Node --version subprocess."},
+  "currentRuntimeReadback": {"path":"discovery-cycle06/replay-runtime-current-readback.json","bytes":799,"sha256":"f630de362a143e4bcf550620f8cf24fec0bfea6bf6e9e411e86588cbdbd7a4bc","currentExecutableBytes":125989464,"currentExecutableSha256":"bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12","originalExecutableByteIdentity":"NOT_ESTABLISHED"},
+  "ambient": "Preserve original admitted configured defaults without overrides or clearing, including NODE_USE_ENV_PROXY=1 and LC_CTYPE=C.UTF-8; exact relevant/unset guards before sole Popen.",
+  "wrapperInvocationTemplate": ["python", "/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1521/one-replay.py", "--admission-sha256", "ROOT_TO_BIND_AFTER_ACCEPTED_REVIEW_AND_SEPARATE_GO"],
+  "requiredFutureAdmission": {
+    "path": "discovery-cycle06/E1521-root-replay-admission.json",
+    "schema": "cycle06-root-replay-admission@1",
+    "job_id": "E1521",
+    "worker": "V1",
+    "admitted": true,
+    "scope": "ONE_FIXED160_REPLAY",
+    "wrapper": "Exact path/bytes/SHA256 of one-replay.py",
+    "prospectiveCommand": "Exact path/bytes/SHA256 of this prospective-command.v1.json",
+    "comparatorReview": "Accepted independent review path/bytes/SHA256 and decision accepted",
+    "node": "Configured executable path/version v24.19.0 plus CURRENT replay readback bytes/SHA256 only, supplied by root; binaryHashAuthority must be CURRENT_REPLAY_READBACK_ONLY_NO_ORIGINAL_EXECUTABLE_HASH"
+  },
+  "gates": ["Separate actual root replay GO and exact hash-bound future admission", "Accepted independent comparator review bound by root", "Same original manifest bytes/path, source22 freeze, original G1 input/staging/protocol", "Same configured runtime binary and relevant ambient values; no mutation", "Absent exact replay output, raw stdout/stderr, exclusive token and outer record"],
+  "failurePolicy": "At most one CLI Popen. Any guard refusal stops before token/spawn. After exclusive token reservation no retry, corrective query, output variant or repair. Preserve raw process outputs and partial files, capture actual UTC/pid/exit-or-signal; hash raw outputs without parsing them.",
+  "NOT_RUN": ["wrapper syntax/import/execution", "guard execution/input-body hashing", "product or codec import", "producer-output read", "replay", "CV/PATH/store call", "image decode", "comparator/file-package comparison"],
+  "claims": {"scientificAcceptance":"UNKNOWN","humanAcceptance":"UNKNOWN","pathIdentity":"UNKNOWN","continuity":"UNKNOWN","calibratedWidth":"UNKNOWN"}
+}

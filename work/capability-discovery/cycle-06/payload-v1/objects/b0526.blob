@@ -1,0 +1,34 @@
+{
+  "schema": "cycle06-Q1-E1538-one-red-command@1",
+  "job_id": "E1538",
+  "worker": "Q1",
+  "status": "ROOT_ADMITTED_ONE_RED_PERSISTED_BEFORE_LAUNCH",
+  "admission": "Root native epoch43 assigned/started/readback; exact E1537 driver and full flow accepted for ONE actual RED against unchanged v2. No retry/overwrite/assertion/source change.",
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+    "/workspace/scratch/8528bb251845/discovery-cycle06/Q1/E1537/counterexample-driver.v1.py",
+    "--subject",
+    "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-06/package-closed.v2.py",
+    "--subject-sha",
+    "3125faca4fd1eb3aedd7301954de97cb60af0e9c79efd25ea71b66ff17cfc59b",
+    "--run-dir",
+    "/workspace/scratch/8528bb251845/discovery-cycle06-Q1-E1538-red-v2"
+  ],
+  "cwd": "/workspace/scratch/8528bb251845",
+  "runtime": {
+    "configuredName": "python3.12",
+    "pathFromConfiguredPATH": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+    "bytes": 30894944,
+    "mode": "0755",
+    "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+    "meaning": "Prelaunch executable file identity, not hermetic or authenticated executed-code proof; no environment override"
+  },
+  "driverSha256": "87d1fe36b3d9d49a723af6eae0794ec5940f357aa76a5f9c63214cd562b32a2b",
+  "flowSha256": "8f75fb96ff9eb28abfb1fec0300bdc38b85f12587573affe5efdbb5dc466fde9",
+  "subjectSha256": "3125faca4fd1eb3aedd7301954de97cb60af0e9c79efd25ea71b66ff17cfc59b",
+  "stdout": "/workspace/scratch/8528bb251845/discovery-cycle06/Q1/E1538/driver.stdout.raw",
+  "stderr": "/workspace/scratch/8528bb251845/discovery-cycle06/Q1/E1538/driver.stderr.raw",
+  "outputExclusivity": "Shell strict preflight plus noclobber redirections; driver requires absent bounded run directory",
+  "actualInvocationCountBeforeThisRecord": 0,
+  "limits": "Only tiny mocked NONCV engineering regression; helper module stdlib execution allowed by this GO. ZERO real zstd/archive/CV/project/scientific-wire/image/query/Git/native operations. Fake PID/signal/timeout are doubles."
+}

@@ -1,0 +1,68 @@
+{
+  "schema": "E1525-pure-comparison-outer-exec@1",
+  "job_id": "E1525",
+  "worker": "V1",
+  "approvedDriverSha256": "7494449c57d12c81575974592882627459015ecf0ec649b4606fff337fea3846",
+  "rootAdmissionSha256": "41d6807b133b649820f043de42355df9840197492cf17d0f4633123dde8e4b50",
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1525/compare-once.mjs",
+    "--admission-sha256",
+    "41d6807b133b649820f043de42355df9840197492cf17d0f4633123dde8e4b50"
+  ],
+  "cwd": "/workspace/scratch/8528bb251845",
+  "observedExec": {
+    "start": {
+      "current_time": "2026-10-18 19:35:59 UTC"
+    },
+    "end": {
+      "current_time": "2026-10-18 19:36:09 UTC"
+    },
+    "result": {
+      "chunk_id": "dbab85",
+      "wall_time_seconds": 10.001142779,
+      "session_id": 73895,
+      "original_token_count": 0,
+      "output": ""
+    },
+    "pollResult": {
+      "chunk_id": "204447",
+      "wall_time_seconds": 0.000025807,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    },
+    "pollUTC": {
+      "current_time": "2026-10-18 19:36:20 UTC"
+    }
+  },
+  "actualObservedExitCode": 0,
+  "stdout": {
+    "path": "discovery-cycle06/V1/E1525/driver.stdout.log",
+    "bytes": 431,
+    "sha256": "fedd856a62ec620c3cc1c04ffe5db8298feba5c7a1c350ad923ee19a633fbacb"
+  },
+  "stderr": {
+    "path": "discovery-cycle06/V1/E1525/driver.stderr.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "comparisonInvocations": 1,
+  "productInvocations": 0,
+  "comparisonRetries": 0,
+  "auxiliaryReportVerification": {
+    "firstAttempt": "report-verification-attempt1.json retains exact failed query and combined tool testimony; jq compile exit3, not comparator failure",
+    "rootApprovedCorrection": "Parentheses-only compile correction plus report varied-leaf counts; no comparator or product rerun",
+    "secondAttempt": {
+      "queryFile": "report-verification-attempt2.jq",
+      "result": {
+        "chunk_id": "81d2fc",
+        "wall_time_seconds": 0.68652026,
+        "exit_code": 0,
+        "original_token_count": 714,
+        "output": "{\n  \"schema\": \"E1525-report-metadata-verification@1\",\n  \"authority\": \"Read only the already written lossless tagged comparison report; no comparator rerun, product import, or original wire decode\",\n  \"status\": \"MATCH_EXCEPT_DECLARED_TIMING\",\n  \"comparisonStatus\": \"MATCH_EXCEPT_DECLARED_TIMING\",\n  \"checks\": [\n    {\n      \"check\": \"admission\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"check\": \"left independently valid\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"check\": \"right independently valid\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"check\": \"value and answer exact bytes/trees\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"check\": \"named timing leaves only\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"check\": \"derived manifest receipt stdout bindings\",\n      \"status\": \"PASS\"\n    },\n    {\n      \"check\": \"source closure retained after comparison\",\n      \"status\": \"PASS\"\n    }\n  ],\n  \"allSevenComparatorChecksPass\": true,\n  \"boundRowsPerRun\": {\n    \"original\": 342,\n    \"replay\": 342\n  },\n  \"boundArtifactFilesPerRun\": {\n    \"original\": 338,\n    \"replay\": 338\n  },\n  \"everyFixedArtifactBoundExactlyOnce\": true,\n  \"exactNonTimingFiles\": 161,\n  \"exactNonTimingAnswerFragments\": 160,\n  \"everyExactNonTimingPairHasSameBytesAndSha256\": true,\n  \"comparatorActuallyPassedExactByteStage\": true,\n  \"timingLeafRecords\": 898,\n  \"timingLeavesActuallyVaried\": 898,\n  \"sidecarTimingLeavesActuallyVaried\": 722,\n  \"intervalTimingLeavesActuallyVaried\": 546,\n  \"sidecarNativeElapsedLeavesActuallyVaried\": 176,\n  \"calculationFragmentElapsedLeavesActuallyVaried\": 176,\n  \"sidecarTimingLeaves\": 722,\n  \"intervalTimingLeaves\": 546,\n  \"sidecarNativeElapsedLeaves\": 176,\n  \"calculationFragmentElapsedLeaves\": 176,\n  \"exactWhitelistPointersEachOnce\": true,\n  \"retainedRawTimingRuns\": [\n    {\n      \"root\": \"/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/producer-v1\",\n      \"intervals\": 182,\n      \"calculationEntries\": 176\n    },\n    {\n      \"root\": \"/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1521/replay-v1\",\n      \"intervals\": 182,\n      \"calculationEntries\": 176\n    }\n  ],\n  \"firstDifference\": null,\n  \"exactValueTraceBinding\": {\n    \"original\": {\n      \"root\": \"/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/producer-v1\",\n      \"path\": \"value-trace.json\",\n      \"bytes\": 2094896,\n      \"sha256\": \"a2333d711ce5e46d5c13b8949c0027d3a67c91e5802b911f6bf62b1b33950d21\"\n    },\n    \"replay\": {\n      \"root\": \"/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1521/replay-v1\",\n      \"path\": \"value-trace.json\",\n      \"bytes\": 2094896,\n      \"sha256\": \"a2333d711ce5e46d5c13b8949c0027d3a67c91e5802b911f6bf62b1b33950d21\"\n    }\n  },\n  \"adapterLabels\": [\n    \"RESOLVED_ARGV_PROJECTION\",\n    \"RESOLVED_ARGV_PROJECTION\"\n  ],\n  \"originalPolicyPassedUnchanged\": false,\n  \"scientificAcceptance\": \"UNKNOWN\",\n  \"humanAcceptance\": \"UNKNOWN\"\n}\n"
+      }
+    },
+    "reportFile": "report-verification.json"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "capability-discovery-extraction-result@1",
+  "job_id": "E1512",
+  "worker": "V1",
+  "outcome": "mixed_change",
+  "status": "SOURCE_ONLY_REPLAY_POLICY_FROZEN_BEFORE_PRODUCER_EXECUTION_DEFERRED",
+  "summary": "Predeclared an independent fixed Lenard5 replay policy from the exact frozen five sources and R1507, without reading producer outputs or running any source/input/producer/replay. Entire valueTrace and answer fragments must be byte-exact; sidecar/callback equality permits only explicitly named start/end/elapsed and native elapsedMs numeric leaves, with finite/type/arithmetic/order checks and complete raw timing retention. computedMs/cache/status/metadata/args/provenance/counters/order/native values remain exact. Per-run file/manifest/CLI bindings must independently verify; changed timing-file hashes/lengths are validated dependent consequences, never ignored fields. Source-derived16/160/176/182/338 counts remain predictions. Policy and nonexecutable comparator proposal are frozen now; comparator implementation/execution and one future replay need separate native admission. All five source hashes remain unchanged; no repo/Git/native writes or science acceptance.",
+  "frozenPolicies": [
+    {"path":"discovery-cycle06/V1/E1512/replay-policy.json","bytes":14912,"sha256":"b146b7183e4aab0708792b7f72aa37790113ca8061f34c551ea590f24391027d"},
+    {"path":"discovery-cycle06/V1/E1512/comparator-proposal.md","bytes":6454,"sha256":"77ac01d93638ceed7d8109a474d44318523d3e5c8ae4aeab86da2f20325cb2fb"}
+  ],
+  "policyId": "E1512-V1-fixed16-exact-values-timing-leaves-only-v1",
+  "sourceProvenance": {
+    "read": ["five complete frozen Lenard5 source files","discovery-cycle06/source-review-brief.md","discovery-cycle06/V1/R1507/review.md","discovery-cycle06/V1/R1507/result.json","unchanged store native entry/clock/exit logic","unchanged verifier source metadata"],
+    "beforeAfterExact": true,
+    "hashes": {"recipe.mjs":"4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6","recipe.test.mjs":"0163e8d12298d32e4c825da1ea734b320b672bdef59affbea20ff42cac7fb0a2","README.md":"6a40f91299961893ec7de5096b366f234be46743e7b86036a32e41dda24afaf7","cli.mjs":"a711ab50bc50bd3f69e61656f12002d41d901e19d7db4e8a9b3b5eb188457ffa","cli.test.mjs":"2bc624f45cd47a73f79f864483c89da4794361a6638acec22cf432c816f3ec96"},
+    "noProducerOutputRead": true,
+    "sourceHashIdentityIsNotExecutedCodeAuthentication": true
+  },
+  "scope": "Write only discovery-cycle06/V1/E1512 policy/proposal/result; no executable comparator code. Exact successful-run engineering replay comparison, not scientific tolerance or acceptance.",
+  "NOT_RUN": ["new source import or execution","valid input inspect","producer","replay","comparator implementation","comparator execution/tests","CV/PATH/store call","image decode","renderer","Git/native mutation"],
+  "observedProducerOrReplayCounts": null,
+  "predictionsOnly": {"comparisons":16,"PATH":160,"constantCaptures":16,"allCaptures":176,"wrapperIntervals":182,"legacyArtifacts":338,"observed":false},
+  "limits": ["This policy does not authorize first production or replay.","A future separately admitted pure comparator must be implemented/checked against this frozen policy before actual comparison.","A partial/refused/error run is retained and cannot become successful replay through equal partial outputs, filled rows, repair or hidden warmup/retry.","Actual process exits and raw command chronology need independent outer evidence; intendedExitCode is not observed exit.","No arbitrary timing-name/subtree normalization, scientific tolerance, root-path rewrite or output-informed policy change is allowed."],
+  "claims": {"promoted":false,"heldout":false,"pathIdentity":"UNKNOWN","continuity":"UNKNOWN","calibratedWidth":"UNKNOWN","scientificAcceptance":"UNKNOWN","humanAcceptance":"UNKNOWN"}
+}

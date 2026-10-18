@@ -1,0 +1,186 @@
+{
+  "schema": "capability-discovery-worker-result@1",
+  "job_id": "E1529",
+  "worker": "Q1",
+  "outcome": "mixed_change",
+  "status": "FILE_ONLY_DRAFT_PACKAGE_CONTRACT_PREAUDIT_NOT_FINAL_ACCEPTANCE",
+  "summary": "Independent file-only contract preaudit found all491 current draft allowlist sources byte/hash/Git-mode exact and both original/replay directories at exact340-file membership, with all338 manifest artifacts per run hash/size exact. The new FINAL-ARCHIVE-PLAN.v1 already addresses raw preservation, new evidence, aliases, bounded verification and independent gates, but its executable final builder/verifier is not authored or audited here. Before finalfreeze, bind missing raw-member modes, close alias and archive-header semantics, bound decode before allocation, and make final/admin closure noncircular. Six copied-package falsifiers are proposals only. No archives, extraction, imports, tests, CV, producer, replay, renderer, Git, native mutation or acceptance occurred.",
+  "scope": {
+    "ownedOutputOnly": "discovery-cycle06/Q1/E1529/result.json",
+    "reviewKind": "Independent draft CONTRACT preaudit; neither implementation review acceptance nor final package audit",
+    "instructions": "Root E1529 dispatch read directly; no applicable AGENTS.md found by read-only workspace/repository search. using-superpowers explicitly exempts dispatched subagents. materialize read and used for actual-versus-proposed claim separation.",
+    "repositoryWrites": 0,
+    "gitOperations": 0,
+    "nativeOperations": 0,
+    "subagents": 0
+  },
+  "boundInputs": [
+    {"path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/prepare-stage.py", "bytes": 6180, "sha256": "eeff5dac641d30e61a68b7a5166e0e88c5ba156ecf703cf916f9f3ca4bde0c32"},
+    {"path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/evidence-allowlist.v2.draft.json", "bytes": 149257, "sha256": "b539c3c18179860fa90e5bcfb2e33e834b460841545bda2edafd01ed30fe456e"},
+    {"path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/FINAL-ARCHIVE-PLAN.v1.md", "bytes": 11575, "sha256": "3402e72799bde38f85a4fa86b8cda3ddf3de07b3ca308720f1327e0fbe917ac4"},
+    {"path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/final-new-inputs.v1.json", "bytes": 4051, "sha256": "e67e95fd5e3eb6efc9f79a1cd399897963443497259df142feb4d6ace803e52a"},
+    {"path": "discovery-cycle06/root-source-admission.json", "bytes": 6356, "sha256": "6f3f30924749e0104a12e7d5d3d43b45b23569e55de8ffe565111620dd0355b8"},
+    {"path": "discovery-cycle06/replay-source-shape-addendum.v1.json", "bytes": 3190, "sha256": "3537cdce221ab424672097ed6d8530afaf94128d66ddb3dc38a8d3490407232b"},
+    {"path": "discovery-cycle06/runtime-authority-erratum.v1.json", "bytes": 1640, "sha256": "343eb8ca3861ec18b5dcd08318da2d69fb437afc77b01f31905bc54d7152d140"},
+    {"path": "discovery-cycle06/R1/R1525/result.json", "bytes": 12569, "sha256": "bc50d7a8e7bd1dba985220e959a03ce4ec277cdc6451b1ce8e1cbb2781b5390a"}
+  ],
+  "actualChecks": [
+    {
+      "id": "A1",
+      "method": "Read complete README.md, RESUME.md, REPRODUCE.md, PACKAGE-BUILDER-FLOW.md, prepare-stage.py, FINAL-ARCHIVE-PLAN.v1.md, raw-archives.prospective.json, omissions.draft.json, input-body-omission-addendum.draft.json, preservation-readback.json and final-new-inputs.v1.json using sed/Python stdlib file reads. No helper execution.",
+      "result": "Historical E1524 NOT_RUN/MATCH-not-observed statements are labeled preparation snapshots, while later E1527 plan reports the actual draft-stage exit0 and E1525 author MATCH separately. Preserve rather than rewrite those snapshots. E1527 plan still requires independent comparison and repaired visual acceptance before finalfreeze."
+    },
+    {
+      "id": "A2",
+      "method": "Python3.12 stdlib read_bytes/hashlib.sha256/json/Path.lstat bookkeeping only: read each491 allowlisted source and compare declared size, digest and Git executable-bit mode; inspect destination uniqueness, file-parent conflicts, source link counts and actual POSIX mode.",
+      "result": {"entries": 491, "bodyBytes": 24767016, "byteHashGitModeMismatches": [], "duplicateSourceNames": 0, "duplicateDestinationNames": 0, "destinationFileParentConflicts": [], "multiplyLinkedSources": [], "allCurrentPosixModes": "0644", "source22Count": 22, "source22BodyBytes": 258620, "full2523FreshlyVerifiedByQ1": false}
+    },
+    {
+      "id": "A3",
+      "method": "Read each original JSON manifest as ordinary metadata, inventory its existing raw directory and hash each338 named artifact without wire decoding. No archive creation/extraction or codec call.",
+      "result": {
+        "original": {"manifestSha256": "f85df68d1b34ce2464dcec869c023f0bb10a0240cf9f750ca1a0b23e0151064f", "manifestArtifacts": 338, "answerFragments": 160, "calculationFragments": 176, "aggregateWires": 2, "artifactBodyBytes": 4141398, "totalFilesWithManifestAndReceipt": 340, "total340BodyBytes": 4294467, "extraFiles": [], "missingFiles": [], "artifactSizeHashMismatches": [], "symlinks": [], "hardlinkedFiles": [], "artifactPosixModes": "0644"},
+        "replay": {"manifestSha256": "4013729b126a5c6c315fcc49af9e63863b4c6360a339f67f475cb30bb1ddbca1", "manifestArtifacts": 338, "answerFragments": 160, "calculationFragments": 176, "aggregateWires": 2, "artifactBodyBytes": 4141381, "totalFilesWithManifestAndReceipt": 340, "total340BodyBytes": 4294450, "extraFiles": [], "missingFiles": [], "artifactSizeHashMismatches": [], "symlinks": [], "hardlinkedFiles": [], "artifactPosixModes": "0644"},
+        "combined": {"fragments": 672, "aggregateWires": 4, "physicalFileIdentities": 680},
+        "manifestHasModeFields": false
+      }
+    },
+    {
+      "id": "A4",
+      "method": "Regex-read href/src text in original E1522 HTML and resolve its relative non-anchor paths lexically against capture/V2/E1522/display-v1; compare destination names with the draft allowlist. No browser, render or pixels.",
+      "result": {"distinctRelativeNonAnchorLinks": 348, "absentFrom491DraftDestinations": 340, "meaning": "Expected DRAFT incompleteness: raw-aliases are not original capture paths. The340 absent links are the original raw package members. E1527 original-path restoration proposal is required before a portable inspectable HTML-link claim. This is not evidence of a runtime or rendering failure."}
+    },
+    {
+      "id": "A5",
+      "method": "Inspect allowlist roles and source names; compare declared large-body sizes and later job identifiers, without opening original image inputs.",
+      "result": "No allowlisted entry has original PNG3943106/RGBA14427360/mask3606840 byte size. This narrow size observation is not a content-scanning proof. E1525/E1526/R1523/R1525/E1527/E1528/E1529 each have zero source entries in the491 draft; new versioned final closure remains mandatory. Source-shape addendum and runtime erratum hashes match dispatch bindings."
+    },
+    {
+      "id": "A6",
+      "method": "After root's later status update, hash and JSON-read the R1/R1525 result receipt's identity/status/summary fields only. Did not reproduce its audit or inspect/decode comparison report values.",
+      "result": "R1525 receipt bc50d7a8… now records INDEPENDENT_REPORT_AND_PROVENANCE_REVIEW_ACCEPTED as bounded engineering replay-consistency evidence under original numeric/raw policy plus explicitly POSTPRODUCER source-shape addendum. Its reported audit is R1 testimony, not Q1 rerun. E1527 plan's pending-R1525 text is historical, not current rejection. Root reports E1530 final-builder CONSTRUCTION ONLY and layout tests underway; repaired actual visual acceptance still pending."
+    }
+  ],
+  "contractFindings": [
+    {
+      "id": "Q1-F1",
+      "priority": "FINAL_FREEZE_GUARD",
+      "boundary": "Raw member identities and modes",
+      "evidence": "Both original manifests bind path/bytes/SHA256/kind and provenance fields, but do not contain mode. The final plan promises member modes in a separate membership table; that table is not yet an immutable reviewed artifact. Current artifacts are0644 and have exact340-member directories.",
+      "minimalGuard": "Bind each complete340-member package table, original manifest and receipt hashes, literal root identity and ordered manifest membership before compression. Capture full permitted POSIX regular-file mode by lstat separately; require0644 for current raw members, no special bits or links. Do not treat the helper's any-exec-bit-to100755 Git projection as full POSIX mode verification. Preserve both equal-byte value traces as distinct logical original/replay members."
+    },
+    {
+      "id": "Q1-F2",
+      "priority": "FINAL_BUILDER_CONTRACT_GAP",
+      "boundary": "Tar/zstd parser acceptance and resource bounds",
+      "evidence": "FINAL-ARCHIVE-PLAN.v1 requires unsafe/duplicate/nonregular-header rejection and bounded decode, but leaves exact tar format, extension-header handling, EOF/trailing bytes, zstd concatenation and compressed/decompressed framing policy unspecified. No final verifier exists here.",
+      "minimalGuard": "Choose and bind one accepted tar profile. For these short ASCII paths, direct regular headers can avoid PAX/GNU name overrides and sparse files entirely. Explicitly refuse unsupported extended/global/longname/sparse headers and all links/devices/FIFOs; require one exact logical member set and declared order. Define required EOF/padding and refuse non-padding trailing tar data and unapproved concatenated/skippable zstd frames. Bound compressed input size, streaming expanded tar bytes including headers/padding, member count, names, each member size and total body bytes before allocation or exclusive write; exact body totals alone do not cap malicious metadata."
+    },
+    {
+      "id": "Q1-F3",
+      "priority": "FINAL_BUILDER_CONTRACT_GAP",
+      "boundary": "Alias graph and physical path safety",
+      "evidence": "E1527 proposes exact stored blob/archive-member aliases and independent logical identities. The schema and resolver rules are not authored. The draft stager rejects exact destination duplicates but does not precheck file-versus-parent collisions; none occur in the491 current entries. It accepts regular source hardlinks in code, though none were observed and final plan correctly proposes refusal.",
+      "minimalGuard": "Use a strict schema with only direct content-blob or exact archive-digest/member targets; reject alias-to-alias chains/cycles and unknown fields/types. Validate all destination names and every ancestor, file-parent collisions, reserved companions, NUL/control names and URL/path ambiguity before output creation. Enforce unique destinations and explicit mapping for each original logical identity, even where hashes are equal. Allow intentional many-identities-to-one-blob only through the declared table; verify each reconstructed file separately, exclusive/no symlink/no hardlink, against expected byte/hash/full mode. Preserve current no-hostile-filesystem-race-defense disclaimer."
+    },
+    {
+      "id": "Q1-F4",
+      "priority": "FINAL_FREEZE_GUARD",
+      "boundary": "Discoverability is not merely possession of compressed bytes",
+      "evidence": "Original HTML text names348 relative non-anchor targets;340 are absent from the491 draft path map. E1527 explicitly proposes an original-path stager rather than HTML edits; no executable or roundtrip evidence exists here.",
+      "minimalGuard": "Audit separately the lean stored payload closure and the fresh reconstructed original-path closure. Resolve all local href/src links from each retained HTML file against the reconstructed file set, rejecting escape or unresolved targets; do not follow external/network references. Include raw artifact-manifest and CLI receipt in original paths, all336 fragment paths and two wires, plus referenced root envelopes. Do not claim the raw-aliases draft is a ready original directory. Keep original/updated HTML bodies separately whenever different."
+    },
+    {
+      "id": "Q1-F5",
+      "priority": "FINAL_FREEZE_GUARD",
+      "boundary": "Manifest closure, later receipts and noncircular audit authority",
+      "evidence": "491 draft has none of the listed later job identifiers. final-new-inputs.v1 is a prospective input observation list, not a strict package origin map: it has no destination/mode/role and includes absolute /usr/bin/zstd and /usr/bin/tar observations. Final plan correctly says final manifest excludes itself and later audit/admin append has its own manifest.",
+      "minimalGuard": "Create a new immutable final allowlist with exact destination/source/role/size/hash/mode after required actual outcomes. Classify compressor/runtime executable observations as external dependency attestations, not implicitly shipped payload sources. Pin builder, verifier, every closure document and expected outputs in root admission. Derive exact stored file set from final manifest with only an explicit small companion exclusion list; bind manifest digest in a separately named root receipt. Keep final audit/admin receipts in a separately hash-bound append-only companion manifest. Independently audit both closures and source22/all2523 preservation before any additive checkpoint."
+    },
+    {
+      "id": "Q1-F6",
+      "priority": "CLAIM_BOUNDARY",
+      "boundary": "Chronology, provenance, omission and acceptance",
+      "evidence": "E1524 snapshots contain historical NOT_RUN/no-MATCH claims. E1527 later plan reports author MATCH and R1523 AMEND while leaving independent R1525/visual repair pending. Omission addendum correctly identifies G2 git-06.stdout as the full original PNG despite its extension. Runtime erratum states original prelaunch hash was captured. Root dispatch separately requires preserving the registration history/events TypeError before state write.",
+      "minimalGuard": "Write a fresh current-status entrypoint that explicitly supersedes only status interpretation, never original evidence bytes. Include both old and new outcomes, producer review, replay construction and execution, comparator failures/correction/review including later accepted R1525 bc50d7a8…, defective and repaired visual evidence, source-shape defect plus POSTPRODUCER addendum and independent admission, runtime erratum plus earlier mistakes, and root registration failure/correction as coordinator history rather than solver rejection. Exclude exact input-body identities regardless of suffix including disguised stdout; retain source/blob/hash/decoder/attestation. Keep original-image replay NOT_SELF_CONTAINED and pinned attestation NONPORTABLE. No semantic/scientific/human acceptance or authenticated-execution inference."
+    }
+  ],
+  "minimalFinalAuditChecklistProposedOnly": [
+    "Root binds final allowlist/builder/verifier/membership/alias hashes and fresh exclusive paths after independent comparison plus repaired visual review; Q1 preaudit is not that GO.",
+    "Different auditor verifies exact stored payload set, root-bound final manifest digest and append-only audit/admin closure; no unlisted source/fixture/dependency/input body, no circular self-coverage.",
+    "Verify source22 path/hash/mode identities including both equal-content alpha paths; fresh complete old2523 path/index/blob/stage/mode/body preservation by authorized owner; no source/defaultON changes.",
+    "Independently derive each340-member raw set from original manifest plus receipt; verify336 fragments/two wires per run, all hashes/modes, physical identities/order, strict headers and bounded roundtrip with no normalization of bodies/timings.",
+    "Verify strict direct alias schema, unique safe output destinations/no ancestor collision/no links, independent alias hashes/modes and exact reconstructed HTML local-link closure; originals and superseded display defects remain accessible.",
+    "Reconcile all actual process/first-failure/review/status/provenance records and dependency attestations; distinguish compressed evidence inspection from unavailable external-input enabled replay. Obtain fresh independent package acceptance before any local checkpoint; publication stays separately routed."
+  ],
+  "copiedPackageFalsifiersProposedOnly": [
+    {
+      "id": "P1",
+      "mutation": "In a disposable copied final package, swap original and replay timing-sidecar aliases or point both to the original while leaving both logical names present.",
+      "expectedRefusal": "Exact alias member/hash binding rejects, despite equal-length/count plausibility and equal value-trace bodies. No product/comparator import or invocation.",
+      "execution": "NOT_RUN_PROPOSAL_ONLY"
+    },
+    {
+      "id": "P2",
+      "mutation": "In a disposable copy, delete one calculation fragment and duplicate an answer member under a repeated tar header so apparent header count remains340; separately add an unexpected unlisted member.",
+      "expectedRefusal": "Duplicate path and exact missing/extra membership refusal before reconstruction; a count-only implementation must fail this test.",
+      "execution": "NOT_RUN_PROPOSAL_ONLY"
+    },
+    {
+      "id": "P3",
+      "mutation": "In disposable copied metadata, introduce a destination file-parent collision, an alias-to-alias cycle, or a traversal name; in a copied archive substitute a symlink/hardlink or PAX/GNU path override for an expected regular member.",
+      "expectedRefusal": "Strict schema/path/header preflight rejects before writing any member outside the fresh stage; no unchecked extractall, symlink following or alias recursion.",
+      "execution": "NOT_RUN_PROPOSAL_ONLY"
+    },
+    {
+      "id": "P4",
+      "mutation": "Change one copied raw tar member's mode0644 to04755 or another forbidden permission while keeping its bytes and digest unchanged.",
+      "expectedRefusal": "Bound full-mode/type check rejects; passing by Git executable-bit projection or silently normalizing a mismatching archive is insufficient.",
+      "execution": "NOT_RUN_PROPOSAL_ONLY"
+    },
+    {
+      "id": "P5",
+      "mutation": "Append a second zstd frame/trailing tar data or introduce an oversized declared member/extension header into a disposable copied archive; keep allowed member hashes elsewhere unchanged.",
+      "expectedRefusal": "Framing/expanded metadata/member limits reject before unbounded allocation or extra writes; no CV, codec or original image decode.",
+      "execution": "NOT_RUN_PROPOSAL_ONLY"
+    },
+    {
+      "id": "P6",
+      "mutation": "In a disposable copied payload, omit later independent review/visual AMEND history, add disguised original PNG stdout, or change an HTML raw href target while leaving final/admin origin records unchanged.",
+      "expectedRefusal": "Strict final/admin closure and original output hash/link audit detect missing/extra/changed bytes. The auditor must not infer accepted/current state from old captured native snapshots or a draft stage receipt.",
+      "execution": "NOT_RUN_PROPOSAL_ONLY"
+    }
+  ],
+  "actualExecutionCounters": {
+    "readOnlyShellAndPythonStdlibBookkeeping": true,
+    "scratchResultWrite": true,
+    "projectImports": 0,
+    "helperExecutions": 0,
+    "archiveConstruction": 0,
+    "archiveExtraction": 0,
+    "compressionDecompression": 0,
+    "codecDecode": 0,
+    "tests": 0,
+    "CV": 0,
+    "queries": 0,
+    "producerReplayComparisonRender": 0,
+    "imagePixelsInspected": 0,
+    "networkWrites": 0,
+    "repositoryWrites": 0,
+    "gitOperations": 0,
+    "nativeOperations": 0
+  },
+  "limitations": [
+    "This result describes the exact inspected draft hashes, not any later final builder, archives or evolving outputs. No final package exists or is accepted by Q1.",
+    "Q1 did not fresh-verify full2523 preservation or branch/HEAD/tree/index; preservation-readback is retained testimony, not Q1 current Git evidence.",
+    "Q1 read raw bytes solely for declared hashes; native values were not codec-decoded, compared, recomputed or visually inspected.",
+    "All six falsifier families remain proposals and require later bounded assignment/admission. Their expected refusals are contract requirements, not observed behavior.",
+    "Current byte/mode/link observations are file-at-check-time checks, not hostile-filesystem race defense or authentication of executed code."
+  ],
+  "scientificAcceptance": "UNKNOWN",
+  "humanAcceptance": "UNKNOWN",
+  "finalPackageAcceptance": false,
+  "selfContainedOriginalImageReplay": false,
+  "pinnedAbsoluteAttestationPortable": false,
+  "nextGate": "Return to root/G6 for final-builder contract reconciliation. Separate native admission, concrete checkpoint and exact finalfreeze GO are required before archive/alias execution, followed by a fresh different-worker final package audit."
+}

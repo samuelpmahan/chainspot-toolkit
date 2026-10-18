@@ -1,0 +1,39 @@
+{
+  "id": "I01-protocol-id",
+  "status": "PASS",
+  "data": {
+    "code": "PROTOCOL_MISMATCH",
+    "phase": "manifest"
+  },
+  "observed": {
+    "events": [
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/fixtures/protocol-id.json",
+        "fd": 18
+      },
+      {
+        "op": "fstatSync",
+        "target": 18
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 362
+      },
+      {
+        "op": "readSync",
+        "target": 18,
+        "bytes": 0
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      }
+    ],
+    "peakOpen": 1,
+    "remainingOpen": [],
+    "blockedImports": 0,
+    "productLoadAttempts": 0
+  }
+}

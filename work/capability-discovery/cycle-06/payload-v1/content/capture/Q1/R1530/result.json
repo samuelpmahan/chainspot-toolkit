@@ -1,0 +1,121 @@
+{
+  "schema": "capability-discovery-source-review@1",
+  "job_id": "R1530",
+  "worker": "Q1",
+  "outcome": "amend",
+  "decision": "amend",
+  "status": "INDEPENDENT_SOURCE_ONLY_V2_AMEND_NOT_EXECUTED_NOT_FINAL_AUDIT",
+  "summary": "AMEND exact E1530 helperv2/wrapperv2 construction. Closed source guards correctly separate hash-before-decode, canonical fixed USTAR members, full source modes, direct aliases, draft refusal and exclusive output without project imports or permission workarounds. Two bounded corrections remain: verifier must compare its top-level stored index descriptors against the admitted plan before decoding, because current canonical member-mode checks use only the separate index; compression-failure process metadata must report the actual retained partial stdout file rather than len(body)==0/hash(empty). The thirty-second child wait is not a total decode-read wall-clock bound and must not be described as one. Counterexamples are source reasoning only, not executed failures. Current867220B plan remains draft; no build, syntax check, import, archive, decoder, CV or final package acceptance is authorized or observed.",
+  "reviewedExactInputs": [
+    {"path": "discovery-cycle06/G6/E1530/result.json", "bytes": 6378, "sha256": "e6612417de0113856d14486fa27a15cf503d8a3f8382f859ec1c577edd1a8239"},
+    {"path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/package-closed.v2.py", "bytes": 23546, "sha256": "3125faca4fd1eb3aedd7301954de97cb60af0e9c79efd25ea71b66ff17cfc59b"},
+    {"path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/run-closed-once.v2.py", "bytes": 5458, "sha256": "15003b9a8f2e677dbe2aece6491b0ccb61c01a4726444aa297d29057b8a73347"},
+    {"path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/E1530-ACTUAL-FLOW.v1.md", "bytes": 10991, "sha256": "e7528d392fc1d5074cd9aadcb63e56a26aec2f79677131b08de92d1674ad708f"},
+    {"path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/E1530-ACTUAL-FLOW.v2.md", "bytes": 2597, "sha256": "29e4f45daf38c43bae80a95ed9ae51366cbbdf7b0d89bfcecb9e8e31e609a864"},
+    {"path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/E1530-CONTRACT-CHECKS.v1.md", "bytes": 1740, "sha256": "ec55cebcad636bc6d553100ee6b87009f7869bc6d01ed8e7443ad8299e69f3c7"},
+    {"path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/final-inputs.proposed.v1.json", "bytes": 867220, "sha256": "d02b08d318a1fc311c4a48ef17c28696fb2fa7bfcf03ad60bcb1853b892779dc"},
+    {"path": "discovery-cycle06/G6/E1530/construction-readback.json", "bytes": 2214, "sha256": "ee05259fa51e5d540ecd078c6897d8a6cda6f8c55b36c864c90333a8537f0191"},
+    {"path": "discovery-cycle06/G6/E1530/v2-static-diff.patch", "bytes": 1165, "sha256": "456e210244250ee71b03847e7085043a0de762c6c31244af669e185e15da8ab6"}
+  ],
+  "actualReview": {
+    "fullyRead": ["helperv2 all465 lines", "wrapperv2 all103 lines", "full inherited FLOWv1", "FLOWv2", "v2 static diff", "contract checks and prospective commands", "E1530 construction receipt"],
+    "metadataOnlyPlanReadback": {
+      "method": "Python3.12 stdlib ordinary file hashing and JSON metadata inspection, not helper import or execution",
+      "status": "DRAFT_MISSING_ACCEPTED_REAL_VISUAL_INPUTS",
+      "notFinalFreeze": true,
+      "visualAccepted": false,
+      "visualReview": null,
+      "aliases": 1237,
+      "objects": 429,
+      "archiveMemberCounts": [340, 340, 2],
+      "allObjectAndMemberModes": "0644 (decimal420)",
+      "rawMemberSourceRootMappingDifferences": [],
+      "source22ModeRows": 22,
+      "priorCurrentModes": "default0644, no exceptions; metadata snapshot, not new Q1 full2523 verification"
+    },
+    "notRun": "No helper/wrapper import, syntax check, test, source execution, archive creation, compression/decompression, tar processing, giant scientific input/image/body decode, project module, Git/native operation or package reconstruction."
+  },
+  "sourceConsistentBoundaries": [
+    {
+      "boundary": "Hash before metadata/object decode",
+      "finding": "build main hashes exact plan/admission bytes before JSON decode; check_plan hashes bound reviews/sourceFreeze/priorInventory before decode. V2 build now uses bound original artifact-manifest bytes/hash/full mode before JSON decode. Later verify hashes externally bound package manifest before parsing, checks its exact file inventory/body bindings before index/plan JSON decode, then hashes known stored objects before zstd. This is a known-object contract, not arbitrary malicious zstd parsing."
+    },
+    {
+      "boundary": "Canonical bounded fixed USTAR",
+      "finding": "header emits regular USTAR with explicit bound name/bytes/mode, uid/gid/mtime0 and empty owner names. check_tar compares exact512-byte expected headers in fixed order, member hashes, zero member padding and exactly1024 zero EOF bytes at an exact computed length. No generic tar parser/extractall/PAX/GNU/sparse/link interpretation is wired. The index-plan consistency finding below concerns WHICH admitted descriptor is used, not a need for another archive framework."
+    },
+    {
+      "boundary": "Full source mode and physical identity",
+      "finding": "read_file rejects symlink components, nonregular files, st_nlink!=1 and modes other than0644/0755; expected entries compare full stat.S_IMODE, not only Git executable projection. Raw member modes are separately bound because original raw manifests lack them. Current proposed modes are all0644. Original/replay member.source values actually equal sourceRoot/member.name in this draft. Q1 did not rehash the1237 source bodies or old2523."
+    },
+    {
+      "boundary": "Direct aliases and exclusive paths",
+      "finding": "check_plan permits only exact direct blob or archive/member routes, validates exact alias byte/hash/mode identity against plan targets, unique source/logical names and complete member/object use. Alias chains/cycles are not representable. Lexical path/control/file-parent checks, fresh directly-under-workspace outputs and exclusive writes are present. Stage writes full expected modes and checks its final file set. These are file-at-check-time guards, not hostile concurrent-filesystem defense or atomic/durable commits."
+    },
+    {
+      "boundary": "Execution/authority separation",
+      "finding": "Wrapper fixes helper path and one build argv, binds wrapper/helper/plan/admission and four absent capture/token paths; no shell, arbitrary packet command, project import, hook/permission escalation or environment-clearing workaround is present. Helper subprocesses are fixed /usr/bin/zstd operations and read-only git ls-files; python3.12/git resolution and inherited startup environment are not hermetically authenticated, consistently with the stated limit. Current draft status and absent visual acceptance have explicit pre-output source refusal paths; this refusal was not executed by Q1."
+    }
+  ],
+  "requiredAmendments": [
+    {
+      "id": "R1530-A1",
+      "severity": "CONCRETE_VERIFIER_CONTRACT_GAP",
+      "locations": "verify -> check_plan(index['plan']); decode_index top-level index['objects']+index['archives']; check_tar uses top-level index members; alias readback checks byte/hash but not descriptor equality",
+      "sourceEvidence": "build serializes top-level object/archive descriptions separately from construction-plan.json. verify validates the admitted plan, but never compares those independent top-level descriptions back to that plan. decode_index uses top-level stored object metadata and member mode/name/order/hash; check_tar builds canonical headers from those same top-level member records. An admitted-plan full mode therefore does not currently constrain the actual tar header checked by this path.",
+      "counterexampleProposedNotExecuted": "Consider an internally manifest/hash-consistent author candidate: keep admitted construction plan member.mode0644, but store that member as04755 in the canonical tar and change the corresponding top-level index member.mode to04755, with consistent tar/stored hashes and outer package file manifest. When root supplies that candidate's exact manifest digest, check_plan accepts plan0644, check_tar compares against top-level04755 and accepts its header, alias byte/hash readback still matches, and stage writes plan0644. Thus verifier can mask the container mode mismatch. This is NOT an attack that changes bytes beneath an already frozen root manifest digest: that ordinary tampering remains rejected before decode. It demonstrates the independent verifier lacks the promised plan-to-container structural check.",
+      "smallestRequiredChange": "Before any decode, require exact ORDERED top-level object list/descriptors and archive/member list/descriptors to correspond to index['plan']. Ignore ONLY explicitly named computed fields: object storedBytes/storedSha256; archive raw bytes/raw sha256/codec/storedBytes/storedSha256. Separately validate archive codec is exactlyzstd and raw byte count equals the admitted tarBytes and source-derived tar_size(plan members); do not simply ignore those computed facts. All remaining id/path/source/sourceRoot/codec/body bytes/hash/full mode/member order/descriptors must agree exactly, with no unknown alternative descriptor fields. No general archive parser is needed.",
+      "requiredOutcome": "A future bounded copied-candidate inconsistency must refuse before decompression or reconstruction. Source-only amendment now, actual verification later under fresh admission."
+    },
+    {
+      "id": "R1530-A2",
+      "severity": "CONCRETE_FAILURE_RECEIPT_ACCURACY_GAP",
+      "locations": "operation compression branch and terminal process record stdoutBytes/stdoutSha256",
+      "sourceEvidence": "operation initializes body=b'' and assigns the compression stdout file body only after communicate completes and the post-size cap check passes. If communicate times out, or the output exceeds the post-compression cap, the retained stdout file can already contain bytes while body is still empty. The process record then reports stdoutBytes0 and SHA256(empty) next to the real nonempty stdoutPath. This is a source-derived first-failure metadata inconsistency, not an observed compressor failure.",
+      "smallestRequiredChange": "When a compression stdoutPath exists, stream-hash/stat that actual retained file for actual stdout byte/hash fields even on failure; keep collected/decoded in-memory-body fields separately named if useful. Do not load an oversized failure body to compute its digest, delete it or retry. If capture metadata itself cannot be read, explicitly record unknown/capture failure rather than a zero-byte claim. This correction is confined to honest existing first-failure receipts, not new execution infrastructure.",
+      "requiredOutcome": "Actual stdout path/size/hash must refer to the same retained artifact on success and failure, or be explicitly unavailable; no fake empty-stream identity."
+    }
+  ],
+  "documentationQualification": {
+    "id": "R1530-D1",
+    "finding": "The decode branch calls child.stdout.read(decoded_limit+1) before child.wait(timeout=30), so that read has no thirty-second total wall-clock deadline. The wrapper child.wait likewise has no timeout. Known stored hash and byte limits remain the declared byte boundary, but are not a total-time guarantee.",
+    "requiredWording": "Describe thirty seconds only as the communicate timeout for compression / subsequent wait timeout where actually applied, not a bound on total decode read or wrapper duration. A new timeout architecture is not demanded by this source-only review or needed to pretend this closed known-object verifier parses arbitrary hostile streams.",
+    "notObserved": "No hang or timeout was executed."
+  },
+  "historyAndGates": [
+    "V1 is superseded UNRUN construction. Its manifest JSON decode-before-bound-digest ordering gap is retained in v2-static-diff.patch and FLOWv2; v2 source corrects that exact ordering. No runtime failure, RED/GREEN cycle or v1 execution is invented.",
+    "Current draft867220B/d02b08d3… is not a final admitted plan and cannot be promoted by changing prose. Accepted actual repaired-display visual R1534 plus a NEW root-bound final plan/child admission/wrapper packet and exact source-flow GO remain required. R1525 comparison acceptance and R1526 source-layout acceptance are separate evidence, not that real visual gate.",
+    "A versioned helper amendment/source review must precede any execution. Any later root-admitted one build keeps first output/streams/exit/prefix without retry/cleanup/source/threshold/permission/environment workaround.",
+    "Actual bounded archive/member/alias/original-link roundtrip and a fresh different-worker FINAL package audit of exact frozen manifest are later gates. Q1 source AMEND is not finalfreeze, package acceptance, Git checkpoint or publication authority. G6 remains sole source/Git owner; Q1 changed only its scratch review receipt."
+  ],
+  "actualActions": {
+    "fileOnlyCodeAndMetadataReads": true,
+    "hashAndJSONBookkeepingOnly": true,
+    "scratchWriteOnly": "discovery-cycle06/Q1/R1530/result.json",
+    "helperExecutions": 0,
+    "helperImports": 0,
+    "syntaxChecks": 0,
+    "tests": 0,
+    "compressionDecompression": 0,
+    "archiveConstructionExtraction": 0,
+    "scientificWireDecode": 0,
+    "projectImports": 0,
+    "CVProducerReplayQueryRender": 0,
+    "imagePixelReads": 0,
+    "repositorySourceWrites": 0,
+    "gitOperations": 0,
+    "nativeOperations": 0,
+    "networkCalls": 0,
+    "subagents": 0
+  },
+  "claims": {
+    "v2AcceptedUnchanged": false,
+    "counterexamplesExecuted": false,
+    "draftRefusalObservedAtRuntime": false,
+    "finalPackageAccepted": false,
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN",
+    "originalImageReplaySelfContained": false,
+    "pinnedAttestationPortable": false
+  }
+}

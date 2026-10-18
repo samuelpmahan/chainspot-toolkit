@@ -1,0 +1,50 @@
+// Construction only E1545: reuse cycle05/06 exact blob/index/allowlist checks; Git reads only.
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import {lstatSync, readFileSync, realpathSync, readdirSync} from 'node:fs';
+import {join, isAbsolute} from 'node:path';
+import assert from 'node:assert/strict';
+
+const ROOT='/workspace/scratch/8528bb251845', REPO=ROOT+'/chainspot-discovery-lab';
+const BASE='be67d44a653c79ca61efae99934e90475a9aba5e', TREE='87dfd9aebb09050d1c56e39d54d9a9920b93341c';
+const PREFIX='work/capability-discovery/cycle-06/';
+const FIVE=['README.md','cli.mjs','cli.test.mjs','recipe.mjs','recipe.test.mjs'].map(n=>'experiments/capability-discovery/lenard5-station-evidence/'+n);
+const AUTHORED=[...FIVE,PREFIX+'CURRENT.md',PREFIX+'administration-v2/POST-REVIEW.md',PREFIX+'administration-v2/PRECOMMIT-FLOW.v2.md',PREFIX+'administration-v2/precommit.v2.mjs.txt'];
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const blob=b=>createHash('sha1').update(Buffer.from('blob '+b.length+'\0')).update(b).digest('hex');
+const git=(...a)=>execFileSync('git',a,{cwd:REPO,maxBuffer:64*1024*1024});
+const str=(...a)=>git(...a).toString('utf8').trim();
+const nul=b=>{const s=b.toString('utf8');assert.ok(Buffer.from(s).equals(b));assert.ok(!s||s.endsWith('\0'));return s?s.slice(0,-1).split('\0'):[];};
+const safe=p=>typeof p==='string'&&p&&!p.startsWith('/')&&!/[\\\x00-\x1f\x7f]/.test(p)&&p.split('/').every(x=>x&&x!=='.'&&x!=='..');
+const bytes=p=>{const f=join(REPO,p),s=lstatSync(f);assert.ok(s.isFile()&&s.nlink===1&&realpathSync(f)===f,p);assert.equal(s.mode&0o7777,0o644,p);return readFileSync(f);};
+const json=(path,pin)=>{const b=readFileSync(path);assert.equal(sha(b),pin,path);return JSON.parse(b);};
+const [mode,allowPath,allowSha]=process.argv.slice(2);
+assert.equal(process.argv.length,5);
+assert.ok(['preflight','staged'].includes(mode)&&isAbsolute(allowPath)&&/^[0-9a-f]{64}$/.test(allowSha));
+const allow=json(allowPath,allowSha);assert.equal(allow.schema,'cycle06-final-additions@1');
+assert.equal(allow.parent,BASE);assert.equal(allow.parentTree,TREE);
+const entries=allow.files, wanted=new Map;
+for(const e of entries){assert.ok(safe(e.path)&&(FIVE.includes(e.path)||e.path.startsWith(PREFIX)),e.path);assert.ok(!wanted.has(e.path));assert.equal(e.mode,'100644');wanted.set(e.path,e);}
+assert.ok(FIVE.every(p=>wanted.has(p)));
+const prior=json(ROOT+'/discovery-cycle06/G6/E1506/base-tracked-inventory.json','d89c5447f1605e52d8fc426c70bfd21f283318eff59e639d55f35f621ccd4d73');
+const freeze=json(ROOT+'/discovery-cycle06/root-source-admission.json','6f3f30924749e0104a12e7d5d3d43b45b23569e55de8ffe565111620dd0355b8');
+assert.equal(prior.entries.length,2523);assert.equal(freeze.entries.length,22);
+assert.equal(str('symbolic-ref','--quiet','--short','HEAD'),'codex/capability-discovery-lab');
+assert.equal(str('rev-parse','HEAD'),BASE);assert.equal(str('rev-parse',BASE+'^{tree}'),TREE);
+const index=new Map;
+for(const row of nul(git('ls-files','--stage','-z'))){const tab=row.indexOf('\t');assert.ok(tab>0);const [m,b,s]=row.slice(0,tab).split(' '),p=row.slice(tab+1);assert.ok(!index.has(p));index.set(p,{mode:m,blob:b,stage:s});}
+assert.equal(index.size,2523+(mode==='staged'?entries.length:0));
+for(const e of prior.entries){const x=index.get(e.path);assert.deepEqual(x,{mode:e.mode,blob:e.blob,stage:String(e.stage)},e.path);const b=bytes(e.path);assert.equal(b.length,e.bytes,e.path);assert.equal(sha(b),e.sha256,e.path);assert.equal(blob(b),e.blob,e.path);assert.ok(!wanted.has(e.path));}
+for(const e of freeze.entries){const b=bytes(e.path);assert.equal(b.length,e.bytes,e.path);assert.equal(sha(b),e.sha256,e.path);}
+for(const e of entries){const b=bytes(e.path);assert.equal(b.length,e.bytes,e.path);assert.equal(sha(b),e.sha256,e.path);if(mode==='staged')assert.deepEqual(index.get(e.path),{mode:'100644',blob:blob(b),stage:'0'},e.path);}
+const walk=d=>readdirSync(join(REPO,d),{withFileTypes:true}).flatMap(e=>{const p=d+'/'+e.name;assert.ok(!e.isSymbolicLink());return e.isDirectory()?walk(p):[p];});
+assert.deepEqual(walk(PREFIX.slice(0,-1)).sort(),entries.filter(e=>e.path.startsWith(PREFIX)).map(e=>e.path).sort());
+assert.deepEqual(nul(git('diff','--name-only','-z')),[],'tracked unstaged changes');
+const untracked=nul(git('ls-files','--others','--exclude-standard','-z')).sort();
+assert.deepEqual(untracked,mode==='preflight'?[...wanted.keys()].sort():[],'exact untracked set; ignored/missing additions also refuse');
+const changed=nul(git('diff','--cached','--name-status','--no-renames','-z'));
+assert.equal(changed.length,mode==='staged'?entries.length*2:0,'exact staged change count');
+if(mode==='staged'){const actual=[];for(let i=0;i<changed.length;i+=2){assert.equal(changed[i],'A');actual.push(changed[i+1]);}assert.deepEqual(actual.sort(),[...wanted.keys()].sort());}
+for(const p of AUTHORED){assert.ok(wanted.has(p));assert.ok(!/[ \t]+$/m.test(bytes(p).toString('utf8')),'authored trailing whitespace '+p);}
+if(mode==='staged')git('diff','--cached','--check','--',...AUTHORED);
+console.log(JSON.stringify({schema:'cycle06-precommit-readonly-check@1',mode,parent:BASE,parentTree:TREE,oldTracked:2523,source22:22,additions:entries.length,allBodyHashFullModeIndexChecksPassed:true,authoredWhitespaceFiles:AUTHORED.length,immutableRawWhitespace:'Not normalized; exact bytes/hashes checked, not broad whitespace-cleaned',GitMutations:0,testsCVDecode:0},null,2));

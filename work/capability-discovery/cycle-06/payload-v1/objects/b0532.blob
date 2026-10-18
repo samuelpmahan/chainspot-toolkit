@@ -1,0 +1,86 @@
+{
+  "schema": "capability-discovery-extraction-result@1",
+  "job_id": "E1539",
+  "worker": "Q1",
+  "outcome": "mixed_change",
+  "status": "ACTUAL_EXPECTED_BEHAVIORAL_RED_OBSERVED_UNCHANGED_V2_NO_REPAIR_OR_GREEN",
+  "summary": "Executed exactly one admitted unchanged-driver/v2 command, actual exit1 at20:47:18. Actual unittest output:3methods run, valid descriptor control passed, all3 descriptor variants failed because each reached MOCK decompression instead of predecode refusal, and partial stdout receipt failed0!=20. Total4assertion failures/0errors. Retained known partial stdout is20B/hash37cc0d58… while the actual helper-written MOCK process record reports0B/SHA256(empty), confirming A2 behavior independently of the later un-reached hash assertion. This is genuine mocked NONCV behavioral RED, not missing-function or preflight failure. Actual Python invocation1, helper module execution1, fake child1; real downstream zstd/archive/CV0. Original streams/partial/process records and unchanged driver/subject hashes retained. No retry, cleanup, source/assertion/guard edits, G6 repair, GREEN or package acceptance occurred.",
+  "authority": {
+    "packet": "Root nativeepoch44 E1539 Q1 assigned/started/persisted/readback; one exact command GO",
+    "pathAdmission": "discovery-cycle06/E1539-root-path-admission.txt",
+    "runDirectory": "/workspace/scratch/8528bb251845/discovery-cycle06-Q1-E1537-red-v2-actual",
+    "guardUnchanged": true,
+    "firstFailurePreserved": "Earlier E1538 caller run-directory prefix preflight failure remains separate insufficient-evidence history; this is a new explicit native packet, not an unapproved retry or source-guard bypass."
+  },
+  "bindings": {
+    "driver": {"path": "discovery-cycle06/Q1/E1537/counterexample-driver.v1.py", "sha256": "87d1fe36b3d9d49a723af6eae0794ec5940f357aa76a5f9c63214cd562b32a2b", "unchangedAfterRun": true},
+    "subject": {"path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/package-closed.v2.py", "sha256": "3125faca4fd1eb3aedd7301954de97cb60af0e9c79efd25ea71b66ff17cfc59b", "unchangedAfterRun": true},
+    "runtime": {"path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12", "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7", "bytes": 30894944},
+    "prospective": {"path": "discovery-cycle06/Q1/E1539/prospective-command.json", "sha256": "28266c49b076fc880949155bc5b81237915d96d719ba3cd2ffe0072f8722b31d", "persistedBeforeLaunch": true},
+    "actualProcess": "discovery-cycle06/Q1/E1539/actual-process.json",
+    "stdout": {"path": "discovery-cycle06/Q1/E1539/driver.stdout.raw", "bytes": 401, "sha256": "cd9f2c18031ed15eb6f15c8d18a901b9c73863c012ace8796361c4cb24e7e362"},
+    "stderr": {"path": "discovery-cycle06/Q1/E1539/driver.stderr.raw", "bytes": 5248, "sha256": "2aa2735af360d99ec6d55d5588c14ac505dead438752160bafd20370f101739a"}
+  },
+  "actualTests": {
+    "testMethodsRun": 3,
+    "validControlPasses": 1,
+    "descriptorSubcaseFailures": 3,
+    "partialStdoutAssertionFailures": 1,
+    "totalAssertionFailures": 4,
+    "testErrors": 0,
+    "unittestReportedDurationSeconds": 0.007,
+    "A1": [
+      {"variant": "member-mode", "actual": "Index04755/plan0644 discrepancy reached one MOCK decode; calls==[] assertion failed"},
+      {"variant": "unknown-field", "actual": "Unknown extra top-level object descriptor field reached one MOCK decode; calls==[] assertion failed"},
+      {"variant": "object-order", "actual": "Reversed object order reached one MOCK decode; calls==[] assertion failed"}
+    ],
+    "validControl": "Matching tiny descriptors returned3aliases and reached exactly one MOCK decode",
+    "A2": {
+      "actualFailure": "stdoutBytes assertion0!=20",
+      "helperRecordedBytes": 0,
+      "helperRecordedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retainedActualBytes": 20,
+      "retainedActualSha256": "37cc0d58a71756811bc88feaa015336780bc3d0a2fc3591f1d9c949aa01b0820",
+      "laterHashAssertionReached": false,
+      "actualReadbackIndependentlyConfirmedHashMismatch": true,
+      "fakeChildCreations": 1
+    }
+  },
+  "firstFailureArtifacts": [
+    {"path": "discovery-cycle06-Q1-E1537-red-v2-actual/A2-mock-timeout/partial.stdout.raw", "bytes": 20, "sha256": "37cc0d58a71756811bc88feaa015336780bc3d0a2fc3591f1d9c949aa01b0820"},
+    {"path": "discovery-cycle06-Q1-E1537-red-v2-actual/A2-mock-timeout/operations/mock-timeout.process.json", "bytes": 582, "sha256": "3d48183fa36cd96d932d48c172208fc5edf39d1bf20e70eb0b3e29e354e02728"},
+    {"path": "discovery-cycle06-Q1-E1537-red-v2-actual/A2-mock-timeout/operations/mock-timeout.stderr.raw", "bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+  ],
+  "actualActionCounts": {
+    "pythonDriverInvocations": 1,
+    "helperModuleExecutions": 1,
+    "mockDecodeBoundaryVisitsIncludingValidControl": 4,
+    "fakeProcessCreations": 1,
+    "actualDownstreamProcesses": 0,
+    "actualZstdCompressionDecompression": 0,
+    "actualArchiveConstructionParsingExtraction": 0,
+    "projectImports": 0,
+    "scientificWireDecode": 0,
+    "imagePixelReads": 0,
+    "CVProducerReplayQueryRender": 0,
+    "repositorySourceEdits": 0,
+    "gitOperations": 0,
+    "nativeOperations": 0,
+    "automaticRetries": 0,
+    "cleanup": 0
+  },
+  "limits": [
+    "These are actual assertion failures against real verifier/operation control flow under declared tiny mocked external seams; not actual malformed USTAR, zstd reliability, real OS timeout/signal or complete package preservation tests.",
+    "Raw driver stdout realProcesses0 means downstream processes0; the admitted Python driver process1 actually ran. Fake PID424242/signal9 and thirty-second TimeoutExpired text are test doubles and do not measure elapsed time or process causality.",
+    "Valid control passed, avoiding reject-all; failures are wrong existing behavior, not missing new function, syntax/import error or sourceguard preflight.",
+    "No giant source/image/scientific wire or full340-member fixture was read/decoded/constructed. Existing read_file/inventory/check_plan/check_tar seams are intentionally mocked for A1; unrelated guards are not revalidated by this run.",
+    "TDD checkpoint now has actual RED only. G6 repair eligibility/admission and any later same-driver GREEN remain root-owned separate gates. Q1 cannot self-approve source repair or final package.",
+    "Original first-failure streams and mock files are preserved. No overwrite, cleanup, assertion relaxation, prefix weakening, environment/permission change or retry occurred."
+  ],
+  "behavioralREDObserved": true,
+  "GREENObserved": false,
+  "packageAcceptance": false,
+  "scientificAcceptance": "UNKNOWN",
+  "humanAcceptance": "UNKNOWN",
+  "nextGate": "Stop after this one run and receipt. Root may reconcile actual RED before separately admitting G6's bounded repair; no repair or GREEN authority is implied."
+}

@@ -1,0 +1,81 @@
+{
+  "schema": "capability-discovery-extraction-result@1",
+  "job_id": "E1515",
+  "worker": "V1",
+  "outcome": "mixed_change",
+  "status": "CONSTRUCTION_ONLY_NOT_RUN",
+  "summary": "CONSTRUCTION_ONLY_NOT_RUN: constructed a pure read-only comparator and eleven hand-declared NONCV helper tests under assigned V1/E1515 scratch; preserved the recovered unexecuted partial tests verbatim. Returned the actual-flow/hash checkpoint before any import, syntax check, test, comparator execution or replay. The frozen E1512 policy is unchanged. Its per-query integrity-check error:null wording defect is retained explicitly; successful comparison requires a separately root-admitted source-shape clarification. No producer output was read and no old tests are claimed to have run.",
+  "bindings": [
+    {
+      "path": "discovery-cycle06/V1/E1515/compare.mjs",
+      "bytes": 32786,
+      "sha256": "4574213c39e1e075bcc2f7533985d4792db0c72153f2c3a8ae9eb4845f57b318",
+      "role": "constructed pure comparator source; NOT_RUN"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1515/compare.test.mjs",
+      "bytes": 7730,
+      "sha256": "a3ebf0782bb15ac5706ffa9e08583cc399b08fe8371cfbf63e7a97d08b2c715b",
+      "role": "eleven synthetic NONCV helper tests; NOT_RUN"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1515/checkpoint.md",
+      "bytes": 8252,
+      "sha256": "1f1144a2d297afd6d9f53393c2bb66e52e48ff367ab4bbefbed7e909b5744320",
+      "role": "actual-flow and prospective-command checkpoint"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1512/replay-policy.json",
+      "bytes": 14912,
+      "sha256": "b146b7183e4aab0708792b7f72aa37790113ca8061f34c551ea590f24391027d",
+      "role": "immutable preproducer policy; original defect retained"
+    },
+    {
+      "path": "discovery-cycle06/V1/E1515/compare.test.pre-recovery.mjs",
+      "bytes": 3983,
+      "sha256": "cbf58a901f2b83b39627b3ac3b281c1624e7694963c5de6745aede7809476ff6",
+      "role": "verbatim recovered partial tests; execution unverified and not claimed"
+    }
+  ],
+  "entryPoint": "comparePackages({leftRoot,rightRoot,policyPath,admission,codec})",
+  "constructionOnly": {
+    "producerOutputRead": false,
+    "policyUnchanged": true,
+    "recoveredTestBytesPreserved": true,
+    "sourceShapeDefectRetained": true,
+    "acceptedCodecImportDeferred": true,
+    "fullSyntheticFilePackageIntegrationFixturesWritten": false,
+    "observedProducerOrReplayCounts": null
+  },
+  "NOT_RUN": [
+    "comparator import",
+    "comparator syntax check",
+    "comparator engineering tests",
+    "comparator execution",
+    "accepted codec execution",
+    "valid input inspect or file-body read",
+    "producer output read",
+    "producer",
+    "replay",
+    "CV/PATH/store call",
+    "image or PNG decode",
+    "renderer",
+    "Git/repository-source/native-coordination mutation"
+  ],
+  "deferred": [
+    "Root finish/re-solve and independent R2 source review precede new execution admission.",
+    "Source-shape addendum and independent acceptance remain separate root-admission authority; their abbreviated reported hashes are not substituted for exact bindings here.",
+    "Bounded NONCV syntax/import/test execution requires a new actual packet and explicit GO.",
+    "Actual ONE160 replay and independent comparison require separate later admission; no hidden warmup, retry or replay.",
+    "Outer packet authenticates codec namespace, observed process records/runtime, chronology, fresh external roots and immutable raw artifacts; physical hashes alone do not authenticate executed code."
+  ],
+  "claims": {
+    "promoted": false,
+    "heldout": false,
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN",
+    "pathIdentity": "UNKNOWN",
+    "continuity": "UNKNOWN",
+    "calibratedWidth": "UNKNOWN"
+  }
+}

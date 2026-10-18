@@ -1,0 +1,85 @@
+{
+  "job_id": "R1534",
+  "worker": "R1",
+  "outcome": "accepted",
+  "status": "INDEPENDENT_CHANGED_MASKED_PNG_VISUAL_AND_DISPLAY_DATA_REVIEW_ACCEPTED_WITH_LIMITS",
+  "summary": "Fresh R1 independently checked hashes and actually viewed the new 1680x1600 masked-primary v4 PNG once at requested/forwarded original detail. In all three nominal-width banks, long48 L/R NaN @23,24,25 and core16 L/R NaN @7,8,9 lists are separated and readable at native size; curves, finite-invalid hollows, validity lanes and fit/loss/support captions remain distinct without observed outer-page clipping. Exact generated display checks passed: CSV/stdout/old CSV and whole HTML bytes unchanged, all three other SVGs byte-identical, six manifest artifacts bound, 12 NaN strip nodes match CSV and 48 finite-invalid hollow circles remain. The original R1523 AMEND and old masked PNG remain historical and unchanged; this acceptance concerns the new pinned PNG and explicitly reused three figures, not a rewrite of old review history. Small 8px annotations require original-size inspection. No human/scientific acceptance, source-pixel/CV verification, HTML-browser QA or new exposure is granted.",
+  "authority": {
+    "native_epoch": "Root reported R1534 assignment/start persisted/readback epoch38 to this fresh R1 context before actual task actions; root owns native lifecycle",
+    "independence": "Independent reviewer, not V2 renderer/conversion author; root and author views are not substituted for this view",
+    "scope": "Read-only generated display artifact review; authored review diagnostics/result only within discovery-cycle06/R1/R1534"
+  },
+  "fresh_image_view": {
+    "path": "discovery-cycle06/V2/E1533/group-masked-primary.v4.png",
+    "sha256": "7cae1f6daeb1cbaa790fa51e9e86456e112ae50ced43340e9c5071d0d97c40bd",
+    "bytes": 565326,
+    "width": 1680,
+    "height": 1600,
+    "format": "8-bit RGBA PNG, non-interlaced; file header inspection",
+    "view_tool": "view_image",
+    "requested_detail": "original",
+    "forwarded_detail": "original",
+    "actual_views": 1,
+    "observations": [
+      "All four masked-primary windows before16/core16/after16/long48 and all nominal34/42/50 banks are present with origin780,906, window bounds and caller synthetic-strip identity.",
+      "All three long48 panels show separate pale-strip L NaN @23,24,25 and R NaN @23,24,25 lines. Individual station numbers can be read; no adjacent NaN-glyph collision like the historical R1523 finding was observed.",
+      "All three core16 panels show separated L NaN @7,8,9 and R NaN @7,8,9 lines. The strips do not visibly cover curves or hollow points.",
+      "Finite-invalid hollow circles remain visibly distinct from filled valid points. Bilateral valid paths break across invalid spans instead of connecting through them; validity lanes below the strips remain visible and distinct.",
+      "Curve/strip/validity/caption separation is observable in all six affected panels. Fit, native no-edge-pair condition, loss, visible9/N16 and41/N48 denominators, threshold-null captions and profile support labels remain readable at original size. No outer-page or caption clipping was observed.",
+      "UNKNOWN/no-best-width/dependent-view/caller-mask/WHITE-proxy/threshold-null warnings remain visible. The inherited footer No PNG/visual QA claim describes the earlier renderer stage; conversion and present independent view are documented by separate receipts, not silently fixed in the source."
+    ]
+  },
+  "exact_display_checks": {
+    "complete_byte_equality_checks": 6,
+    "complete_byte_equal_pairs": ["new CSV versus old CSV", "new CSV versus E1531 renderer stdout", "new HTML versus old HTML", "new versus old primary SVG", "new versus old bright-nonpath SVG", "new versus old normal-plus6 SVG"],
+    "manifest_artifacts_hash_and_length_verified": 6,
+    "CSV_data_rows": 14972,
+    "all_CSV_row_states": "COMPLETED",
+    "SVG_nonannotation_texts_unchanged": 139,
+    "SVG_NaN_strip_nodes": 12,
+    "SVG_NaN_strip_font_size_px": 8,
+    "CSV_annotation_correspondence": "All core16 and long48 nominal34/42/50, both sides: exact NaN tokens/indices and invalid flags match corresponding strip data-series/data-token/data-indices/text. Core indices7,8,9; long indices23,24,25.",
+    "finite_invalid_correspondence": "All three banks and both sides: core finite-invalid5,6,10,11 with9valid/16; long finite-invalid21,22,26,27 with41valid/48. SVG contains48white hollow circles. Representation/validity counting only, not a new CV score.",
+    "native_condition_rows": 4,
+    "native_conditions": "primary/core16/50, primary/long48/50, normal-plus6/before16/50, masked-primary/core16/50 retain COMPLETED native condition no edge pair, not null fits/missing/unexecuted answers",
+    "overlay_threshold_null_rows": 48,
+    "HTML_raw_data_links": "Whole HTML is byte-identical to the exact prior independently inspected report, including original raw links and all null/condition labels. Prior R1523 raw-link resolution and exact scalar checks are reused by byte identity, not newly rerun or reattested. No HTML browser view occurred.",
+    "diagnostic_command": "python discovery-cycle06/R1/R1534/review-checks.py",
+    "diagnostic_final_exit": 0,
+    "diagnostic_final_status": "PASS",
+    "diagnostic_history": "First scratch check failed because it expected SVG wording No best width inside HTML. Inspected unchanged HTML wording No width selection; corrected only that scratch assertion. One initial failed and two passing complete check invocations; initial traceback, cause and correction preserved in diagnostics.md. No report/product fix was made."
+  },
+  "explicit_unchanged_three_reuse": [
+    {"group":"primary","SVG_sha256":"1effeec087014bde8b774e246cd346f7a32832d0b1b0a988b07b24a7e85e09bd","PNG_path":"discovery-cycle06/V2/E1523/group-primary.png","PNG_sha256":"cabecab98488e4fa9a69c39afa0d5188c03ec1a91fd09c171ed717571680e492","fresh_PNG_hash_verified":true,"new_conversion":false,"new_view":false},
+    {"group":"bright-nonpath","SVG_sha256":"288969a6e3f319e29b504c74f85d125f3bd8a8fdb153921c7c42e626556d6adc","PNG_path":"discovery-cycle06/V2/E1523/group-bright-nonpath.png","PNG_sha256":"3cc5f5640a030fbe2eb1bab68b501beb462726c9ad5d0b73e4852aa55e090476","fresh_PNG_hash_verified":true,"new_conversion":false,"new_view":false},
+    {"group":"normal-plus6","SVG_sha256":"3e777c1fbfc02db62e0548f77e622723f2265e52f7a9b8d0fadd468deef4c2a2","PNG_path":"discovery-cycle06/V2/E1523/group-normal-plus6.png","PNG_sha256":"e22381ef63a94ea21315efa86eddad330344e71d2686641af65f3880fa510bf2","fresh_PNG_hash_verified":true,"new_conversion":false,"new_view":false}
+  ],
+  "reuse_view_authority": "Historical R1/R1523 actually recorded original-detail views of the exact three unchanged PNGs. This fresh reviewer validates exact identities/reuse evidence but does not claim fresh views of those three or survival of the prior R1 context.",
+  "fresh_provenance_hashes": {
+    "R1/R1523/result.json": "113e9fd1b3dd80db9c0f9a4e2f76e73f14dc38102668a9ff10867910aa0e92da",
+    "V2/E1534/result.json": "8d99e8c55765da7e180cc081cf84249b9b30c64d2bf91cbd9f6122861b7f01d5",
+    "V2/E1533/result.json": "be97df2360bcfd1d8c7bb8f862dd928170fd690ae75f6aedeacc9587661818d5",
+    "V2/E1531/postchecks.v1.json": "21c63eb09d2c13a280ee8feab487f085379e28f4e4dcd2a815ed6172401dd853",
+    "V2/E1531/display-v4/display-manifest.json": "8a45f54b1c4d8cc0d8d4c44cd130a0325f1e814014c368683313397f19acc7ee",
+    "V2/E1531/display-v4/group-masked-primary.svg": "066b275855b3ac6d87e62cfda9da41eeda0781ffd3500e5f4263af8ae860b4b2",
+    "V2/E1531/display-v4/descriptive-table.csv": "53bdcf7cfe714ff0342549a4bf05d5c791f2f7a2d2e3e6054eddd338c833c5a5",
+    "V2/E1531/display-v4/report.html": "42c4ec22f5a5d97cfd2189149e1a7bd162bd8f0890efba78f260b81f66ca6f4e",
+    "V2/E1523/group-masked-primary.png": "6da68ed7beac8e1c83a787b0559ec12fa6e51b36364f37e53b4d7459ebb15ab9",
+    "R1/R1534/review-checks.py": "93a1f3085e7844955923271a5107eab82843a44cf75275538ab0f5728d874712",
+    "R1/R1534/checks.stdout.json": "8b59d8f63618849f32a65cb1a0bbd3a80db447a99820ecee94fed38abe79953f",
+    "R1/R1534/diagnostics.md": "55fb28a33d003520f02b4ec2038d59139116d66a8f92d29f6d2e02df6c35972c"
+  },
+  "preserved_history": "Old masked PNG and original R1523 AMEND were freshly hashed unchanged. This new visual review resolves the specific observed dense-label defect for the new pinned v4 PNG only; it does not alter old artifacts or upgrade historical results.",
+  "execution_counts": {"new_actual_original_detail_PNG_views":1,"other_three_new_views":0,"PNG_conversions":0,"renderer_invocations":0,"complete_review_check_invocations":3,"review_check_initial_failures_preserved":1,"review_check_passing_invocations":2,"raw_wire_or_codec_decode":0,"source_pixel_read_or_decode":0,"CV_query_producer_or_replay":0,"new_scores":0,"HTML_browser_views":0,"Git_actions":0,"native_actions":0,"production_or_source_edits":0,"subagents":0},
+  "remaining_limits": [
+    "8px annotations are small but separated/readable in this original-detail1680x1600 inspection; no thumbnail, accessibility, every-display or human-reader guarantee.",
+    "No HTML browser rendering was inspected; HTML byte identity and prior exact raw-link/data inspection are reused explicitly.",
+    "No original source pixels, raw-wire decode, independent CV measurements, backend replay or new producer run. Data QA concerns the retained descriptive projection, not physical truth.",
+    "Profile/contrast axes are display-scaled; shared source/support dependence is retained. No comparison of curve screen heights as common-scale confidence.",
+    "E1534 preserves one prior admitted conversion and its GtkRecentManager warning; no retry/converter rerun or warning suppression here.",
+    "No human/scientific/path/physical-edge/continuity/calibrated-width/occlusion acceptance, best-width selection, threshold tuning, default-ON promotion, PR/main/deploy or new exposure.",
+    "Root alone reconciles this result and performs native lifecycle finish; G6 remains sole repository/Git owner."
+  ],
+  "claims": {"promoted":false,"heldout":false,"scientificAcceptance":"UNKNOWN","humanAcceptance":"UNKNOWN","pathIdentity":"UNKNOWN","physicalEdgeIdentity":"UNKNOWN","continuity":"UNKNOWN","calibratedWidth":"UNKNOWN"},
+  "handoff": "Accepted bounded independent new masked-v4 PNG visual/data review, with exact unchanged-three reuse and limitations above. Stop: no further conversion/render/source/Git/native action authorized or performed."
+}

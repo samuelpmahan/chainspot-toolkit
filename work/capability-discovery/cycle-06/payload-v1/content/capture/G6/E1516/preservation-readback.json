@@ -1,0 +1,323 @@
+{
+  "schema": "cycle06-G6-E1516-preservation-readback@1",
+  "job_id": "E1516",
+  "worker": "G6",
+  "observedAt": "2026-10-18T19:01:31.375Z",
+  "mode": "verify-only-file-bytes-no-product-execution",
+  "source": {
+    "repository": "chainspot-discovery-lab",
+    "branch": "codex/capability-discovery-lab",
+    "head": "be67d44a653c79ca61efae99934e90475a9aba5e",
+    "tree": "87dfd9aebb09050d1c56e39d54d9a9920b93341c",
+    "gitStatus": "?? experiments/capability-discovery/lenard5-station-evidence/\n",
+    "remoteReadback": "NOT_RUN; published e1f46601774477ea3987c18909092f314959a2a1 is coordinator context only"
+  },
+  "dispatchObserved": {
+    "epoch": 17,
+    "job": {
+      "id": "E1516",
+      "kind": "extract",
+      "allow_workers": [
+        "G6"
+      ],
+      "status": "running",
+      "worker": "G6",
+      "started_at": "2026-10-18T18:57:54.993165+00:00",
+      "finished_at": null,
+      "subject": "Sole source/Git recovery integration owner; source22 freeze/all2523 old files and minimal future package/nextpolicy readback, NO source edit/test/CV/commit/finalarchive before actual measurements+reviews. Keep source frozen, no giant historical archive."
+    },
+    "worker": {
+      "job": "E1516",
+      "agent": "/root/lab6_resume_g6"
+    },
+    "notACausalClaim": true
+  },
+  "baseline": {
+    "inventory": "discovery-cycle06/G6/E1506/base-tracked-inventory.json",
+    "originalCount": 2523,
+    "currentTrackedCount": 2523,
+    "totalOldBytes": 45942025,
+    "pathsIdentical": true,
+    "addedTrackedPaths": [],
+    "differences": [],
+    "checks": "Every baseline path: current index mode/blob/stage plus worktree bytes/SHA256/mode/Git-blob digest; no 2523-entry duplicate copy",
+    "originalInventoryRewritten": false
+  },
+  "sourceClosure": {
+    "closureContentId": "sha256:0b6582e18238a7d9fb75dc82f1150ec424619f3b68142e73b90a8e951f8a2701",
+    "count": 22,
+    "totalBytes": 258620,
+    "newFiveBytes": 64289,
+    "allMatch": true,
+    "entries": [
+      {
+        "path": "experiments/capability-discovery/lenard5-station-evidence/recipe.mjs",
+        "role": "new-lenard5-preset",
+        "bytes": 29160,
+        "mode": "100644",
+        "sha256": "4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/lenard5-station-evidence/recipe.test.mjs",
+        "role": "new-lenard5-preset",
+        "bytes": 9638,
+        "mode": "100644",
+        "sha256": "0163e8d12298d32e4c825da1ea734b320b672bdef59affbea20ff42cac7fb0a2",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/lenard5-station-evidence/README.md",
+        "role": "new-lenard5-preset",
+        "bytes": 9668,
+        "mode": "100644",
+        "sha256": "6a40f91299961893ec7de5096b366f234be46743e7b86036a32e41dda24afaf7",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/lenard5-station-evidence/cli.mjs",
+        "role": "new-lenard5-preset",
+        "bytes": 7213,
+        "mode": "100644",
+        "sha256": "a711ab50bc50bd3f69e61656f12002d41d901e19d7db4e8a9b3b5eb188457ffa",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/lenard5-station-evidence/cli.test.mjs",
+        "role": "new-lenard5-preset",
+        "bytes": 8610,
+        "mode": "100644",
+        "sha256": "2bc624f45cd47a73f79f864483c89da4794361a6638acec22cf432c816f3ec96",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/station-evidence/README.md",
+        "role": "frozen-cycle05-station-evidence",
+        "bytes": 9900,
+        "mode": "100644",
+        "sha256": "f9ba7778979f7a678369d49554fa5b4758ecf17fafacb155c8faaf7af3a9640c",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/station-evidence/cli.mjs",
+        "role": "frozen-cycle05-station-evidence",
+        "bytes": 9436,
+        "mode": "100644",
+        "sha256": "4ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/station-evidence/cli.test.mjs",
+        "role": "frozen-cycle05-station-evidence",
+        "bytes": 1458,
+        "mode": "100644",
+        "sha256": "74d04d9487f24fdfdeac51fc055d576146eed8bc8403ae9929d671ae04e3d2b8",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/station-evidence/codec.mjs",
+        "role": "frozen-cycle05-station-evidence",
+        "bytes": 7322,
+        "mode": "100644",
+        "sha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/station-evidence/codec.test.mjs",
+        "role": "frozen-cycle05-station-evidence",
+        "bytes": 4624,
+        "mode": "100644",
+        "sha256": "de792743c2dc779f5fb7891c950a02e706b3f7618840a6b77862e0ce992c2bd1",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/station-evidence/recipe.mjs",
+        "role": "frozen-cycle05-station-evidence",
+        "bytes": 25430,
+        "mode": "100644",
+        "sha256": "ef7248daf5c83fd014c4a5004aa511e41399492a46be0460fe566ab421383ad3",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/station-evidence/recipe.test.mjs",
+        "role": "frozen-cycle05-station-evidence",
+        "bytes": 4695,
+        "mode": "100644",
+        "sha256": "dfc8893b079f6f390e090447acc2fd553b2d05930d1fa7c9ee2804017f7c575f",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+        "role": "frozen-public-query-closure",
+        "bytes": 27838,
+        "mode": "100644",
+        "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/probes/width/vendor/active/contracts/alpha.profile@1.mjs",
+        "role": "frozen-public-query-closure",
+        "bytes": 4399,
+        "mode": "100644",
+        "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs",
+        "role": "frozen-public-query-closure",
+        "bytes": 32442,
+        "mode": "100644",
+        "sha256": "122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/probes/root-inventory/source/fg/pxset.mjs",
+        "role": "frozen-public-query-closure",
+        "bytes": 9563,
+        "mode": "100644",
+        "sha256": "01e68e82741d4af56901b3306a304ca540e8ab0d73a12ba20a0afbe0e788f5d5",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/probes/root-inventory/source/fg/render.mjs",
+        "role": "frozen-public-query-closure",
+        "bytes": 24294,
+        "mode": "100644",
+        "sha256": "39a24a645c222430464592546eb6bdc1a8b190902ed5708ecd951b0bb639315a",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/probes/root-inventory/source/fg/canon.mjs",
+        "role": "frozen-public-query-closure",
+        "bytes": 5437,
+        "mode": "100644",
+        "sha256": "3cc0319f4678eaf8679adcbfaa9db054841417a966c079019b0f72e24ba24406",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/probes/root-inventory/source/fg/png.mjs",
+        "role": "frozen-public-query-closure",
+        "bytes": 5566,
+        "mode": "100644",
+        "sha256": "7668bab9de6a19a2cc6f44e5ac47d6e89373da130764365cf32011187a980241",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/probes/root-inventory/source/fg/alpha/alphaRender.mjs",
+        "role": "frozen-public-query-closure",
+        "bytes": 14536,
+        "mode": "100644",
+        "sha256": "4d17e1da77b1e5ceb6a4a2609d26c010caa6c43df8392e9599544299d9e1c549",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/probes/root-inventory/source/contracts/alpha.profile@1.mjs",
+        "role": "frozen-public-query-closure",
+        "bytes": 4399,
+        "mode": "100644",
+        "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      },
+      {
+        "path": "experiments/capability-discovery/source-pixels/stage-png.py",
+        "role": "frozen-strict-png-stager",
+        "bytes": 2992,
+        "mode": "100644",
+        "sha256": "e194f56e2899f516bb79dd8d6c5e4b876440d6f0932bf9d74e0a56c117f06a44",
+        "matchesAdmission": true,
+        "matchesProposed": true
+      }
+    ]
+  },
+  "references": [
+    {
+      "path": "discovery-cycle06/root-source-admission.json",
+      "bytes": 6356,
+      "mode": "100644",
+      "sha256": "6f3f30924749e0104a12e7d5d3d43b45b23569e55de8ffe565111620dd0355b8"
+    },
+    {
+      "path": "discovery-cycle06/G6/E1511/source-closure-proposed-v1.json",
+      "bytes": 26908,
+      "mode": "100644",
+      "sha256": "81a176f91138d78126aa16490e9fddfb9409b209a43d5a9499d7cea9f31fe55e"
+    },
+    {
+      "path": "discovery-cycle06/G6/E1506/base-tracked-inventory.json",
+      "bytes": 979374,
+      "mode": "100644",
+      "sha256": "d89c5447f1605e52d8fc426c70bfd21f283318eff59e639d55f35f621ccd4d73"
+    },
+    {
+      "path": "discovery-cycle06/conditional-plan.json",
+      "bytes": 1405,
+      "mode": "100644",
+      "sha256": "f851723422a7a05e851b46a9e7b65a70b54f3c9d9a1936d29435b1f241f7ff85"
+    },
+    {
+      "path": "discovery-cycle06/lenard5-implementation-plan.md",
+      "bytes": 8569,
+      "mode": "100644",
+      "sha256": "a67a0b79b10c77b5c4c17dcfa6f0aca078c01ef478f6024af7b82d60144fdd6a"
+    },
+    {
+      "path": "discovery-cycle06/E1513-root-producer-admission.json",
+      "bytes": 2379,
+      "mode": "100644",
+      "sha256": "6c0d9a6567e01cfae4d5956614e108ab9e2ec85634d69e75dfbbc1f35b95a4a4"
+    },
+    {
+      "path": "discovery-cycle06/E1513-root-ambient-admission.json",
+      "bytes": 1698,
+      "mode": "100644",
+      "sha256": "465e281fbaf108261239c0e084bb062098be2a0a90499b283a6ccff4de6c588d"
+    },
+    {
+      "path": "discovery-cycle06/registry-recovery-19Z.json",
+      "bytes": 1086,
+      "mode": "100644",
+      "sha256": "c77a86ca46c547ed6d7f94e3408bb1292f0fc55ea219c025646c744f78559049"
+    }
+  ],
+  "execution": {
+    "sourceEdits": 0,
+    "projectModuleImports": 0,
+    "testsRun": 0,
+    "producerCalls": 0,
+    "PATHCalls": 0,
+    "CVCalls": 0,
+    "inputBodyReads": 0,
+    "GitMutations": 0,
+    "remoteGitCalls": 0,
+    "nativeMutations": 0,
+    "archivesCreated": 0,
+    "helpers": 0
+  },
+  "limits": [
+    "File identities at readback time, not authenticated execution or protection against concurrent replacement",
+    "Historical root-source-admission producerAdmitted:false remains unedited; separate E1513 admission controls that one producer",
+    "All scientific/physical/semantic/width/human acceptance remains UNKNOWN",
+    "This is a preservation receipt, not a final package manifest"
+  ]
+}

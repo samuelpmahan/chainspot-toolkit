@@ -1,0 +1,54 @@
+{
+  "schema": "cycle06-delivery-next-packets@1",
+  "status": "DRAFT_PREPARATION_NOT_DISPATCH_AUTHORITY",
+  "defaultEnabled": false,
+  "gates": [
+    {
+      "gate": "R1542-final-audit",
+      "status": "ACCEPTED_ENGINEERING_ONLY",
+      "requires": "Actual independent receipt44b127ebaa3724ad0fdd7833e8aebd6529a5daec7d887252932da39ddbf99450/root reconciliation now retained",
+      "permits": "Exact bounded package engineering acceptance; not Git/science/human acceptance"
+    },
+    {
+      "gate": "final-delivery-admin",
+      "requires": "Separate root packet after actual R1542 outcome",
+      "permits": "Append new admin version and final status docs; no changes to648-file payload"
+    },
+    {
+      "gate": "one-local-checkpoint",
+      "requires": "Accepted exact package audit+root explicit Git GO+fresh2523/source22/index/ref exact closure",
+      "permits": "ONE additive codex/capability-discovery-lab commit, new5+cycle06only"
+    },
+    {
+      "gate": "one-export",
+      "requires": "Root fully reads adapted Lab5 exporter source/flow/caps60000segment/1MiBindex and exact actualcommit/pathset",
+      "permits": "ONE immutable read-only Git blob export to fresh scratch; no publication"
+    },
+    {
+      "gate": "connected-publication",
+      "requires": "Separate root route authority+fresh canonical refs/base/tree and exacttransport readback",
+      "permits": "Nonforce own-branch update; noPR/main/deploy/defaultON"
+    }
+  ],
+  "futureScience": {
+    "proposal": "E1528",
+    "review": "R1528",
+    "decision": "amend",
+    "status": "UNEXECUTED_0_NEW_QUERIES_NOT_CURRENT_PUBLICATION_BLOCKER",
+    "seam": "Joint raw fitted-center/fitted-width reuse via existing public stationContrast, not classifier/causal isolation",
+    "requires": [
+      "Close native fit/condition/error+raw artifact binding",
+      "Fresh-store Part/constant/provenance contract, not literal historical instances",
+      "Finite unrounded origin/width semantics without new thresholds",
+      "Frozen48slots/source-derived resource/callback/cap/one-shot stop controls",
+      "New versioned default-OFF sibling/protocol/source ownership/freeze/independent review/explicit query GO"
+    ]
+  },
+  "stopRules": [
+    "Mismatch/firstfailure→preserve/HOLD, no automatic rerun/normalization/cap or threshold increase",
+    "Outage→same-authorized-route healthy readback before scoped resume; no continuous-worker-life claim",
+    "Current helper is workspace/index/source-authority-bound; no freshclone/aftercommit portable verify promise",
+    "Original image bodies/absolute attestation are not reconstructed/remapped",
+    "Scientific/human/physical/path/continuity/calibrated-widthUNKNOWN"
+  ]
+}

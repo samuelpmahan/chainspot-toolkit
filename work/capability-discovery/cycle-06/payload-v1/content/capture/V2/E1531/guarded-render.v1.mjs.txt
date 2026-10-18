@@ -1,0 +1,70 @@
+/** E1531 fixed one-render proposal. CONSTRUCTED ONLY; no execution authorized. */
+import {readFileSync,writeFileSync,openSync,closeSync,lstatSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {spawn} from 'node:child_process';
+const CWD='/workspace/scratch/8528bb251845',BASE=`${CWD}/discovery-cycle06`,HERE=`${BASE}/V2/E1531`;
+const SOURCE=`${BASE}/V2/E1526/renderer-proposal.v4.mjs`,SOURCE_SHA='19be2472803e613b40043d4e2ee0adcfc53e59a27cd9c410eef0601a226a45ef';
+const PACKET=`${BASE}/render-trust-packet.v1.json`,PACKET_SHA='f5e4baf6c9173f39e40f49cab14355d1db5176818f42ba8e81f413c780998ff3';
+const OUT=`${HERE}/display-v4`,OLD=`${BASE}/V2/E1522/display-v1`,PNG=`${BASE}/V2/E1523`;
+const STDOUT=`${HERE}/renderer.stdout.raw`,STDERR=`${HERE}/renderer.stderr.raw`,PRE=`${HERE}/pre-spawn.v1.json`,OUTER=`${HERE}/outer-command.v1.json`,POST=`${HERE}/postchecks.v1.json`;
+const CSV_SHA='53bdcf7cfe714ff0342549a4bf05d5c791f2f7a2d2e3e6054eddd338c833c5a5',HTML_SHA='42c4ec22f5a5d97cfd2189149e1a7bd162bd8f0890efba78f260b81f66ca6f4e';
+const GROUPS=[
+  ['primary','1effeec087014bde8b774e246cd346f7a32832d0b1b0a988b07b24a7e85e09bd','cabecab98488e4fa9a69c39afa0d5188c03ec1a91fd09c171ed717571680e492'],
+  ['bright-nonpath','288969a6e3f319e29b504c74f85d125f3bd8a8fdb153921c7c42e626556d6adc','3cc5f5640a030fbe2eb1bab68b501beb462726c9ad5d0b73e4852aa55e090476'],
+  ['normal-plus6','3e777c1fbfc02db62e0548f77e622723f2265e52f7a9b8d0fadd468deef4c2a2','e22381ef63a94ea21315efa86eddad330344e71d2686641af65f3880fa510bf2'],
+  ['masked-primary','1e0e86bd6a293a8efc02dce0bc77c8020b3010bec06d9f46ea011a0be27aa367',null]
+];
+const sha=b=>createHash('sha256').update(b).digest('hex'),need=(v,m)=>{if(!v)throw Error(m);};
+const absent=p=>{try{lstatSync(p);throw Error(`preexisting target: ${p}`);}catch(e){if(e.code!=='ENOENT')throw e;}};
+const bound=(path,expected=null)=>{const bytes=readFileSync(path),sha256=sha(bytes);if(expected!==null)need(sha256===expected,`hash mismatch: ${path}`);return {path,bytes:bytes.length,sha256,body:bytes};};
+const identity=({path,bytes,sha256})=>({path,bytes,sha256});
+const write=(path,value)=>writeFileSync(path,JSON.stringify(value,null,2)+'\n',{flag:'wx'});
+const args=[SOURCE,'--packet',PACKET,'--packet-sha',PACKET_SHA,'--out',OUT];
+const record={schema:'cycle06-E1531-guarded-render@1',proposal_job_id:'E1531',worker:'V2',cwd:CWD,argv:[process.execPath,...args],spawnAttempts:0,spawnCount:0,actualExitCode:null,actualSignal:null,error:null,status:'NOT_SPAWNED',rawStdout:STDOUT,rawStderr:STDERR};
+let outFd,errFd;
+try{
+  need(process.cwd()===CWD&&process.argv.length===2,'fixed cwd/no-arguments wrapper required');
+  for(const path of[OUT,STDOUT,STDERR,PRE,OUTER,POST])absent(path);
+  const source=bound(SOURCE,SOURCE_SHA),packet=bound(PACKET,PACKET_SHA);
+  record.source=identity(source);record.packet=identity(packet);
+  write(PRE,{...record,output:OUT,outputAbsent:true,captureAndRecordPathsAbsent:true,guardUTC:new Date().toISOString(),authority:'Later exact root GO required; packet digest preserves original role bindings. No independent-review truth established by wrapper.'});
+  outFd=openSync(STDOUT,'wx');errFd=openSync(STDERR,'wx');
+  // Fresh exact source/packet checks directly before this single child invocation.
+  bound(SOURCE,SOURCE_SHA);bound(PACKET,PACKET_SHA);absent(OUT);
+  record.requestUTC=new Date().toISOString();
+  await new Promise((resolve,reject)=>{
+    record.spawnAttempts=1;const child=spawn(process.execPath,args,{cwd:CWD,stdio:['ignore',outFd,errFd]});
+    child.once('spawn',()=>{record.spawnCount=1;record.actualProcessStartUTC=new Date().toISOString();});
+    child.once('error',reject);
+    child.once('exit',(code,signal)=>{record.actualProcessEndUTC=new Date().toISOString();record.actualExitCode=code;record.actualSignal=signal;resolve();});
+  });
+  closeSync(outFd);outFd=undefined;closeSync(errFd);errFd=undefined;
+  record.stdout=identity(bound(STDOUT));record.stderr=identity(bound(STDERR));
+  need(record.actualExitCode===0&&record.actualSignal===null,'renderer failed; preserve first error/raw output and stop');
+  const csv=bound(`${OUT}/descriptive-table.csv`,CSV_SHA),stdout=bound(STDOUT,CSV_SHA),oldCSV=bound(`${OLD}/descriptive-table.csv`,CSV_SHA);
+  need(csv.body.equals(stdout.body)&&csv.body.equals(oldCSV.body),'stdout/new/old CSV byte inequality');
+  const html=bound(`${OUT}/report.html`,HTML_SHA),oldHTML=bound(`${OLD}/report.html`,HTML_SHA);
+  need(html.body.equals(oldHTML.body),'HTML data/raw-link bytes changed at same-depth output path');
+  const manifestFile=bound(`${OUT}/display-manifest.json`),manifest=JSON.parse(manifestFile.body);
+  need(manifest.renderer.sha256===SOURCE_SHA&&manifest.bindings.packet.sha256===PACKET_SHA,'display manifest source/packet mismatch');
+  need(Array.isArray(manifest.artifacts)&&manifest.artifacts.length===6,'expected six projected artifacts plus manifest');
+  const names=['descriptive-table.csv',...GROUPS.map(([g])=>`group-${g}.svg`),'report.html'],outputs=[];
+  for(const name of names){const a=manifest.artifacts.find(a=>a.path===name);need(a,'missing display artifact');const file=bound(`${OUT}/${name}`,a.sha256);need(file.bytes===a.bytes,'display artifact size mismatch');outputs.push(identity(file));}
+  outputs.push(identity(manifestFile));
+  const comparisons=[];
+  for(const [group,oldSVGsha,pngSHA]of GROUPS){
+    const before=bound(`${OLD}/group-${group}.svg`,oldSVGsha),after=bound(`${OUT}/group-${group}.svg`),unchanged=before.body.equals(after.body);
+    need(group==='masked-primary'?!unchanged:unchanged,`unexpected SVG identity outcome: ${group}`);
+    const item={group,oldSVG:identity(before),newSVG:identity(after),byteIdentical:unchanged};
+    if(unchanged)item.reuse={PNG:identity(bound(`${PNG}/group-${group}.png`,pngSHA)),newConversion:false,newView:false,priorIndependentView:'R1/R1523 original-detail view; accepted exact-data/overview, historical full-compact-legibility AMEND remains preserved, not silently upgraded'};
+    else item.nextStep='ONLY masked-primary eligible for one later separately admitted Inkscape conversion and actual original-detail independent view; not performed by this wrapper';
+    comparisons.push(item);
+  }
+  write(POST,{schema:'cycle06-E1531-display-postchecks@1',stdoutNewOldCSVByteIdentical:true,csvSHA256:CSV_SHA,newOldHTMLByteIdentical:true,htmlSHA256:HTML_SHA,htmlMeaning:'Complete same-depth HTML bytes identical, including all data and original raw links',outputs,comparisons,warnings:manifest.warnings,PNGConversions:0,actualImageViews:0,limits:'Byte/identity checks only; no CV/new score/scientific/human/visual acceptance. Prior original figures and AMEND retained.'});
+  record.postchecks=identity(bound(POST));record.status='ONE_TRACE_ONLY_RENDER_AND_IDENTITY_CHECKS_COMPLETE_NO_PNG';
+}catch(error){record.error=String(error?.stack??error);record.status='STOP_PRESERVE_PREFIX_NO_RETRY';process.exitCode=1;}
+finally{
+  if(outFd!==undefined)closeSync(outFd);if(errFd!==undefined)closeSync(errFd);
+  try{write(OUTER,record);}catch(error){console.error(`Outer evidence write refused: ${String(error.message)}`);process.exitCode=1;}
+}
+console.log(JSON.stringify({status:record.status,spawnAttempts:record.spawnAttempts,spawnCount:record.spawnCount,actualExitCode:record.actualExitCode,actualSignal:record.actualSignal,error:record.error}));

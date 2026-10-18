@@ -1,0 +1,85 @@
+{
+  "job_id": "E1520",
+  "worker": "V2",
+  "outcome": "mixed_change",
+  "status": "BOUNDED_SYNTHETIC_ENGINEERING_FIRST_PASS_GREEN_PENDING_INDEPENDENT_REVIEW",
+  "summary": "Constructed the separately versioned v3 nonempty-string native condition discriminator, preserving condition:null as a normal native value, all prior twelve tests, original v2 bytes and raw native references. Added one full hand-declared source-shaped normal-loss engineering fixture, for thirteen cases total, checking value labels, numeric SVG/HTML summaries and exact records/CSV retention. Delivered exact source/test/actual-flow checkpoint before execution. Root then explicitly admitted two syntax checks and one NONCV synthetic test invocation including in-memory SVG/HTML/CSV projectors. Both syntax checks exited 0; the single first-pass test run exited 0 with 13 passed, 0 failed/cancelled/skipped/todo and empty stderr. No red comparator was authored/run, no failure was fabricated, and no code/test/threshold was modified after execution. No producer output, wire/codec decode, real render, CV, pixels, Git, native or helper action occurred. Independent R2 post-green review remains pending; real rendering still requires exact raw acceptance and the later trusted packet/GO.",
+  "authority": {
+    "native_job": "Root reported valid E1520 start/readback epoch23; all lifecycle actions remain root-owned",
+    "construction_go": "Versioned minimal condition discriminant and exactly one full normal-loss fixture; preserve v2",
+    "execution_go": "Root read full v3 diff/fixture/actual-flow and explicitly admitted the exact source/test syntax checks plus 13-case NONCV test invocation including synthetic in-memory projection",
+    "review_source": {"path":"discovery-cycle06/R2/R1518/result.json","sha256":"64012f5868d79b03006970371cab7fc9f2d6ad657dbb5ed533c4422d34d7e041","read":"all text"}
+  },
+  "checkpoint_artifacts": [
+    {"path":"renderer-proposal.v3.mjs","sha256":"a5f8ee7b60cdf7d4593bf1658e3ae6415dd0bf50f7cb128af810924dc7a29e2b"},
+    {"path":"renderer-engineering.v3.test.mjs","sha256":"ab8eeda8a73981381706c9148d21afdeac536c5a690673a312a665b03ad7f627"},
+    {"path":"ACTUAL-FLOW.v3.md","sha256":"9d47eaf1d239d6fa0780eea218a13c02e281fe43b101c7d10e70d414b6cbc586","meaning":"Preserved pre-execution source checkpoint; its NOT RUN status describes checkpoint time, not this subsequent admitted phase"}
+  ],
+  "preserved_originals": [
+    {"path":"../E1518/renderer-proposal.v2.mjs","sha256":"620b804e80f16d9f8419ec7a6ab695592689862136c5e9917a67ff9c356e4a4c","unchanged":true},
+    {"path":"../E1518/renderer-engineering.v2.test.mjs","sha256":"5ceced183288255c1744673e52e31e8debaef618cbd6c9aad2270858f2cc8022","unchanged":true}
+  ],
+  "commands": [
+    {
+      "argv":["node","--check","discovery-cycle06/V2/E1520/renderer-proposal.v3.mjs"],
+      "cwd":"/workspace/scratch/8528bb251845",
+      "started_utc":"2026-10-18T19:16:53.609858764Z",
+      "ended_utc":"2026-10-18T19:16:53.668640886Z",
+      "actual_exit":0,"signal":null,
+      "stdout":{"path":"source-check.stdout.raw","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "stderr":{"path":"source-check.stderr.raw","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+    },
+    {
+      "argv":["node","--check","discovery-cycle06/V2/E1520/renderer-engineering.v3.test.mjs"],
+      "cwd":"/workspace/scratch/8528bb251845",
+      "started_utc":"2026-10-18T19:17:01.419948390Z",
+      "ended_utc":"2026-10-18T19:17:01.482000423Z",
+      "actual_exit":0,"signal":null,
+      "stdout":{"path":"test-check.stdout.raw","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "stderr":{"path":"test-check.stderr.raw","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+    },
+    {
+      "argv":["node","--test","discovery-cycle06/V2/E1520/renderer-engineering.v3.test.mjs"],
+      "cwd":"/workspace/scratch/8528bb251845",
+      "started_utc":"2026-10-18T19:17:09.737372721Z",
+      "ended_utc":"2026-10-18T19:17:09.910578294Z",
+      "actual_exit":0,"signal":null,
+      "stdout":{"path":"synthetic-tests.stdout.raw","bytes":1082,"sha256":"d9f946647ff5d5bea2b875163299578709f5376553c772d8b3ac88406beaabad"},
+      "stderr":{"path":"synthetic-tests.stderr.raw","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+    }
+  ],
+  "capture_policy": "Each command used prospective distinct stdout/stderr filenames, a preexistence stop check and shell noclobber. No overwrite, tee, retry, comparator or output deletion occurred. Actual observed command exit was 0 for each; no signal termination occurred.",
+  "test_result": {
+    "run_type":"FIRST_PASS_SYNTHETIC_ONLY_NOT_RED_GREEN",
+    "invocations":1,"tests":13,"passed":13,"failed":0,"cancelled":0,"skipped":0,"todo":0,
+    "raw_runner_duration_ms":110.266646,
+    "red_runs":0,"old_version_comparator_runs":0,"completed_tdd_cycle":false,
+    "coverage":"Earlier 12 malformed-edgePair/identity/null-condition-label/reference cases plus exactly one normal full loss condition:null value case",
+    "not_covered":"Trusted packet refusal/integration, codec/wire/resource behavior, exclusive real output, full project suite, real producer data, visual layout/legibility or scientific acceptance"
+  },
+  "execution_counts": {
+    "syntax_check":2,"synthetic_test_invocations":1,"synthetic_test_cases":13,"renderer_module_runtime_import":1,
+    "synthetic_validate_calls":13,"synthetic_svg_string_projections":2,"synthetic_html_string_projections":2,"synthetic_csv_string_projections":1,
+    "real_renderTrustedPacket_calls":0,"real_output_directories":0,"real_svg_html_csv_output_files":0,
+    "codec_import_or_decode":0,"trace_or_sidecar_reads":0,"current_producer_output_reads":0,
+    "producer_or_query":0,"source_pixel_reads":0,"png_decode_or_conversion":0,"browser_or_visual_qa":0,
+    "product_modifications":0,"git_actions":0,"native_actions":0,"helper_actions":0
+  },
+  "source_authority_and_units": {
+    "pathSpace_sha256":"d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+    "source_read":"Relevant frozen normal-loss return/corridor/overlay metadata excerpts as text only; no product import",
+    "units":"Native loss fractions of visible stations, gaps px, contrast lum and overlay fraction; fit offsets px and existing score/gl/gr lum/px remain unchanged",
+    "fixture_meaning":"Hand-declared illustrative retained engineering data only. Existing tau8 literal is historical native metadata, not a new threshold. No scalar measurement/score/fit/fraction/gap was recomputed from pixels."
+  },
+  "claims": {"promoted":false,"heldout":false,"pathIdentity":"UNKNOWN","physicalEdgeIdentity":"UNKNOWN","continuity":"UNKNOWN","calibratedWidth":"UNKNOWN","geometryScientificIdentity":"UNKNOWN","scientificAcceptance":"UNKNOWN","humanAcceptance":"UNKNOWN"},
+  "limits": [
+    "Green applies only to the exact admitted bounded synthetic suite and two syntax checks, not a product/full-project test suite",
+    "Source-only earlier AMEND receipts remain authoritative history; a first-pass green result does not prove a red comparison against v2",
+    "Synthetic strings were asserted but no image/browser was visually inspected; no visual-QA/readability claim",
+    "No original producer output or raw wire was opened or decoded; no real trust packet, real render or CV was admitted",
+    "Original raw native fields/references and units remain authority; no new scores/classifier/scientific threshold/value reconstruction",
+    "Native lifecycle finish is root only; this worker did not call native APIs or mutate Git/product source"
+  ],
+  "pending": ["Independent R2 post-green review of exact source/test/raw command evidence", "Exact independent raw acceptance and later concrete trusted packet/root GO before any real render", "Separate tool/PNG/visual inspection scope before visual-QA claims"],
+  "handoff":"Bounded admitted engineering phase complete; stop here for independent post-green review. No additional execution or real rendering is authorized."
+}

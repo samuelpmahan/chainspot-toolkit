@@ -1,0 +1,77 @@
+{
+  "job_id":"E1523","worker":"V2","outcome":"mixed_change",
+  "status":"FOUR_EXACT_PNG_CONVERSIONS_AND_AUTHOR_VIEWS_COMPLETE_WITH_READABILITY_LIMITS",
+  "summary":"Used only existing /usr/bin/inkscape after verifying its current version1.2.2. Four exact admitted E1522 SVGs were converted once each to NEW1680x1600 PNG paths with page area and explicit dimensions; every conversion exited0 with no signal and empty stdout. Each emitted a GtkRecentManager warning, retained in its exact raw stderr rather than suppressed. All four actual PNGs were opened with original-resolution view requests and inspected. Group/window/origin/width-bank/condition/UNKNOWN labels are visible and no outer-page clipping was observed; sampled native fits/conditions/visible denominators/pass/loss/gap/threshold labels agree with existing CSV. Remaining issues: dense masked-long48 NaN text overlaps, small annotation text needs original-size viewing, panel y axes are independently display-scaled, and inherited no-PNG/visual-QA footer wording is preconversion renderer-stage wording. No SVG/value/layout/source edits, renderer rerun, AI image, CV/query/source-pixel decode, codec/producer-output read, browser, Git/native/helper action or independent/human/scientific acceptance occurred. R1 independent visual review remains pending.",
+  "prospective_records":[
+    {"path":"prospective-version.v1.json","sha256":"dc2f5eec8a0a24444a4bdd6058f35bebfe51d472e90d09ea56243a700801e650","persisted_before_spawn":true},
+    {"path":"prospective-conversions.v1.json","sha256":"c64630c005cd98e2942a4c7e38d4955ca05922533ec9ef9cc01b8d9c90080690","persisted_and_hashed_before_conversions":true,"new_output_and_capture_paths":true}
+  ],
+  "tool_version":{
+    "argv":["/usr/bin/inkscape","--version"],"cwd":"/workspace/scratch/8528bb251845",
+    "started_utc":"2026-10-18T19:27:23.772946892Z","ended_utc":"2026-10-18T19:27:23.824390701Z","actual_exit":0,"signal":null,
+    "stdout":{"path":"inkscape-version.stdout.raw","bytes":40,"sha256":"09f993f834813212b64386a0e119d9c28b877e64c59d4e6dd0b58a3e60d52070","text":"Inkscape 1.2.2 (b0a8486541, 2022-12-01)"},
+    "stderr":{"path":"inkscape-version.stderr.raw","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+  },
+  "commands":[
+    {
+      "group":"primary",
+      "argv":["/usr/bin/inkscape","discovery-cycle06/V2/E1522/display-v1/group-primary.svg","--export-type=png","--export-area-page","--export-width=1680","--export-height=1600","--export-filename=/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1523/group-primary.png"],
+      "cwd":"/workspace/scratch/8528bb251845","started_utc":"2026-10-18T19:28:18.480195068Z","ended_utc":"2026-10-18T19:28:18.945958504Z","actual_exit":0,"signal":null,
+      "input":{"path":"../E1522/display-v1/group-primary.svg","sha256":"1effeec087014bde8b774e246cd346f7a32832d0b1b0a988b07b24a7e85e09bd","unchanged_after_conversion":true},
+      "stdout":{"path":"primary.stdout.raw","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "stderr":{"path":"primary.stderr.raw","bytes":176,"sha256":"1d041899335c4c82382830b109afcb6531e8a9973da25500d574c2b500484141"},
+      "output":{"path":"group-primary.png","bytes":566793,"sha256":"cabecab98488e4fa9a69c39afa0d5188c03ec1a91fd09c171ed717571680e492","width":1680,"height":1600,"format":"8-bit RGBA PNG, non-interlaced"}
+    },
+    {
+      "group":"bright-nonpath",
+      "argv":["/usr/bin/inkscape","discovery-cycle06/V2/E1522/display-v1/group-bright-nonpath.svg","--export-type=png","--export-area-page","--export-width=1680","--export-height=1600","--export-filename=/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1523/group-bright-nonpath.png"],
+      "cwd":"/workspace/scratch/8528bb251845","started_utc":"2026-10-18T19:28:19.252982239Z","ended_utc":"2026-10-18T19:28:19.733686660Z","actual_exit":0,"signal":null,
+      "input":{"path":"../E1522/display-v1/group-bright-nonpath.svg","sha256":"288969a6e3f319e29b504c74f85d125f3bd8a8fdb153921c7c42e626556d6adc","unchanged_after_conversion":true},
+      "stdout":{"path":"bright-nonpath.stdout.raw","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "stderr":{"path":"bright-nonpath.stderr.raw","bytes":176,"sha256":"c5cda740203e76239b617202b7e311fd516b6a790d046ab55389304e56b33bd2"},
+      "output":{"path":"group-bright-nonpath.png","bytes":542816,"sha256":"3cc5f5640a030fbe2eb1bab68b501beb462726c9ad5d0b73e4852aa55e090476","width":1680,"height":1600,"format":"8-bit RGBA PNG, non-interlaced"}
+    },
+    {
+      "group":"normal-plus6",
+      "argv":["/usr/bin/inkscape","discovery-cycle06/V2/E1522/display-v1/group-normal-plus6.svg","--export-type=png","--export-area-page","--export-width=1680","--export-height=1600","--export-filename=/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1523/group-normal-plus6.png"],
+      "cwd":"/workspace/scratch/8528bb251845","started_utc":"2026-10-18T19:28:20.068916234Z","ended_utc":"2026-10-18T19:28:20.516583921Z","actual_exit":0,"signal":null,
+      "input":{"path":"../E1522/display-v1/group-normal-plus6.svg","sha256":"3e777c1fbfc02db62e0548f77e622723f2265e52f7a9b8d0fadd468deef4c2a2","unchanged_after_conversion":true},
+      "stdout":{"path":"normal-plus6.stdout.raw","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "stderr":{"path":"normal-plus6.stderr.raw","bytes":176,"sha256":"c3d862fa7d915b1b2880b47cf3d34673320f5720085b526c5246bf89bbfc69c6"},
+      "output":{"path":"group-normal-plus6.png","bytes":558424,"sha256":"e22381ef63a94ea21315efa86eddad330344e71d2686641af65f3880fa510bf2","width":1680,"height":1600,"format":"8-bit RGBA PNG, non-interlaced"}
+    },
+    {
+      "group":"masked-primary",
+      "argv":["/usr/bin/inkscape","discovery-cycle06/V2/E1522/display-v1/group-masked-primary.svg","--export-type=png","--export-area-page","--export-width=1680","--export-height=1600","--export-filename=/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1523/group-masked-primary.png"],
+      "cwd":"/workspace/scratch/8528bb251845","started_utc":"2026-10-18T19:28:20.838371644Z","ended_utc":"2026-10-18T19:28:21.301520462Z","actual_exit":0,"signal":null,
+      "input":{"path":"../E1522/display-v1/group-masked-primary.svg","sha256":"1e0e86bd6a293a8efc02dce0bc77c8020b3010bec06d9f46ea011a0be27aa367","unchanged_after_conversion":true},
+      "stdout":{"path":"masked-primary.stdout.raw","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "stderr":{"path":"masked-primary.stderr.raw","bytes":176,"sha256":"90155367bebf288bee541732be52c9ac46820ef62dbdffffe07202e19f439ccf"},
+      "output":{"path":"group-masked-primary.png","bytes":568210,"sha256":"6da68ed7beac8e1c83a787b0559ec12fa6e51b36364f37e53b4d7459ebb15ab9","width":1680,"height":1600,"format":"8-bit RGBA PNG, non-interlaced"}
+    }
+  ],
+  "warnings":{
+    "count":4,"preserved_unmodified":true,
+    "common_message":"Failed to wrap object of type 'GtkRecentManager'. Hint: this error is commonly caused by failing to call a library init() function.",
+    "meaning":"Each Inkscape conversion emitted this warning but returned exit0 and produced a readable PNG. No suppression/retry/library change was attempted; warning is not treated as scientific/visual acceptance."
+  },
+  "author_visual_inspection":{
+    "actual_files_viewed":4,"requested_detail":"original","actual_dimensions_each":"1680x1600",
+    "independent":false,"human_acceptance":"UNKNOWN",
+    "general":"All four windows and all three nominal-width panels appear per group; headers identify groups/origins/windows and caller-null/caller-strip policies. Top/footer UNKNOWN/no-best-width/dependence/proxy warnings are visible. No outer-edge clipping or missing page block was observed. Small axes/annotations need original-size viewing; this is not exhaustive glyph-level verification.",
+    "primary":"Viewed before/core/after/long windows. Sampled core16 width34 visible16/N16, pass11, passFrac0.688, lossFrac0.313, gap4 match CSV; width50 native 'no edge pair' remains explicit rather than a fake fit.",
+    "bright_nonpath":"Group and origin[780,740] visible; sampled long48 width34 native fit and visible48/N48, pass0, lossFrac1/gap48 match CSV. A control fit is descriptive only, not path identity or specificity.",
+    "normal_plus6":"Full declared offset origin visible without outer clipping. Sampled before16 width50 native 'no edge pair' and visible16/N16, pass0, lossFrac1/gap16 match CSV. No same-edge or recenter claim.",
+    "masked_primary":"Caller synthetic-strip label visible. Core16 width34 hollow finite-invalid points, disconnected NaN labels and pale validity lanes correspond to sampled raw validity0 finite values and NaNs, not invented zeros. Sampled visible9/N16, pass4, passFrac0.444/lossFrac0.556/gap4 and long48 width42 visible41/N48, pass3/passFrac0.073/lossFrac0.927/gap20 match CSV. No physical-occlusion inference.",
+    "remaining_issues":[
+      "Masked-primary long48 NaN text is densely spaced and overlaps, so individual nonfinite labels/station counts are not reliably readable from the compact PNG; exact CSV/HTML/raw records remain authoritative",
+      "Axes/tiny annotations/validity lanes are small at whole-page thumbnail scale; original-size viewing is required, and independent legibility judgment remains pending",
+      "Each panel is independently display-scaled; cross-panel curve height is not a common-scale magnitude comparison, as the footer warns",
+      "Inherited footer says 'No PNG/visual QA claim' from the unchanged renderer stage. This receipt records subsequent actual conversion and limited author inspection; no SVG wording/layout edit was authorized"
+    ],
+    "csv_reference":{"path":"../E1522/display-v1/descriptive-table.csv","sha256":"53bdcf7cfe714ff0342549a4bf05d5c791f2f7a2d2e3e6054eddd338c833c5a5","unchanged":true,"comparison_scope":"Selected fit/condition/native-loss/threshold/invalid-value labels across all four groups; not a full scalar-by-scalar visual audit"}
+  },
+  "execution_counts":{"inkscape_version":1,"svg_to_png_conversions":4,"actual_png_original_detail_views":4,"renderer_reruns":0,"svg_layout_or_value_edits":0,"ai_images":0,"cv_or_query":0,"source_pixel_decodes":0,"codec_or_producer_reads":0,"browser":0,"git_actions":0,"native_actions":0,"helper_actions":0,"retry_or_fallback_or_install":0},
+  "limits":["Author QA only, not independent R1 acceptance or human/scientific acceptance", "Original SVG/CSV/raw authority preserved; no native values/scores/thresholds recomputed", "Generated-report PNGs were viewed; source pixels were never decoded", "Existing native UNKNOWN/no-ranking/no-classifier/dependence/control limitations remain", "Root alone owns native E1523 finish; no further edits/conversions/exposure authorized"],
+  "handoff":"Four actual conversions/views and evidence capture complete. Preserve warnings and readability issues. Stop for separate independent R1 review; do not silently repair layout or claim acceptance."
+}

@@ -1,0 +1,23 @@
+// Coordinator-only byte-bound receipt projections for existing renderer contract.
+// No science values, codecs, queries, pixels, source or original evidence writes.
+import fs from 'node:fs';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+const base=path.resolve('discovery-cycle06'), sha=b=>createHash('sha256').update(b).digest('hex');
+function bound(relative,expected){const p=path.resolve(relative),b=fs.readFileSync(p),h=sha(b);if(h!==expected)throw Error('bound bytes changed '+p);return {path:p,bytes:b.length,sha256:h,value:JSON.parse(b)};}
+function write(name,value){const p=path.join(base,name),b=Buffer.from(JSON.stringify(value,null,2)+'\n');fs.writeFileSync(p,b,{flag:'wx'});return {path:p,bytes:b.length,sha256:sha(b)};}
+const r=bound('discovery-cycle06/R1/R1513/result.json','0002f0c25157073eced2c6a4008abbd2a2feca268b863536160ba9069e8441c8');
+if(r.value.job_id!=='R1513'||r.value.worker!=='R1'||r.value.decision!=='accepted'||r.value.status!=='INDEPENDENT_RAW_PACKAGE_ENGINEERING_ACCEPTED')throw Error('independent review not accepted');
+const o=bound('discovery-cycle06/G5/E1513/outer-command.json','0d6711c1a703f440ee228aabbb120dc93fcfb1f6aea5ae4f1aded7c1454959b9');
+if(o.value.actualExitCode!==0||o.value.actualSignal!==null||o.value.spawnCount!==1||o.value.error!==null)throw Error('outer process not success');
+const stage='discovery-cycle06/G5/E1510/producer-v1/';
+const trace=bound(stage+'value-trace.json','a2333d711ce5e46d5c13b8949c0027d3a67c91e5802b911f6bf62b1b33950d21');
+const sidecar=bound(stage+'timing-sidecar.json','2ce4fc7faa1c94f7dff078de7b5e5129c0876764012a82dc7b7691f0afde1fb0');
+const manifest=bound(stage+'artifact-manifest.json','f85df68d1b34ce2464dcec869c023f0bb10a0240cf9f750ca1a0b23e0151064f');
+const receipt=bound(stage+'cli-receipt.json','7d4107dc4bbe8e06e0665f7bbce2ac558f6770a88263024400cd257b987dc37e');
+const freeze=bound('discovery-cycle06/root-source-admission.json','6f3f30924749e0104a12e7d5d3d43b45b23569e55de8ffe565111620dd0355b8');
+const compact=write('render-raw-acceptance-envelope.v1.json',{schema:'cycle06-render-acceptance-projection@1',job_id:r.value.job_id,worker:r.value.worker,decision:r.value.decision,status:r.value.status,summary:r.value.summary,originalReview:{path:r.path,bytes:r.bytes,sha256:r.sha256},traceSha256:trace.sha256,sidecarSha256:sidecar.sha256,projectionScope:'Coordinator hash-bound projection of independently accepted R1/R1513. Original 605076-byte review remains unchanged; this small separate receipt meets existing 128KiB renderer provenance cap without raising it. No new independent review, measurement or scientific acceptance.',originalPolicyPassedUnchanged:false,scientificAcceptance:'UNKNOWN',humanAcceptance:'UNKNOWN'});
+const record=write('render-producer-record-envelope.v1.json',{schema:'cycle06-render-producer-record-projection@1',exit:o.value.actualExitCode,signal:o.value.actualSignal,spawnCount:o.value.spawnCount,argv:o.value.argv,cwd:o.value.cwd,startUTC:o.value.actualProcessStartUTC,endUTC:o.value.actualProcessEndUTC,originalOuterRecord:{path:o.path,bytes:o.bytes,sha256:o.sha256},projectionScope:'Exact observed actualExitCode/actualSignal projected to renderer contract exit/signal; not CLI intended exit, recreated process output or a replacement raw record.'});
+const simple=x=>({path:x.path,sha256:x.sha256});
+const packet=write('render-trust-packet.v1.json',{schema:'cycle06-lenard5-render-trust@1',rawAcceptance:{...simple(compact),jobId:'R1513',traceSha256:trace.sha256,sidecarSha256:sidecar.sha256},producerRecord:simple(record),sourceFreeze:simple(freeze),cliReceipt:simple(receipt),artifactManifest:simple(manifest),trace:simple(trace),sidecar:simple(sidecar)});
+console.log(JSON.stringify({coordinatorProjectionOnly:true,compact,record,packet,realRenderAuthorized:false}));

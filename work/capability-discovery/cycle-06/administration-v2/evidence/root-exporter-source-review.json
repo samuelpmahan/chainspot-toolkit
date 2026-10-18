@@ -1,0 +1,24 @@
+{
+  "schema": "cycle06-root-exporter-source-review@1",
+  "reviewer": "/root",
+  "author": "/root/lab6_visual_r1",
+  "source": "discovery-cycle06/R1/E1544/prepare-export.v1.mjs",
+  "source_sha256": "ed7920523765cf7dd64378fd5904e16ba7fc0e98a7fd761b7123b2f5b76e5c87",
+  "flow_sha256": "4a10e8496fb19d780e07db49d2d4aba87242b2dd3f6f1fa879c14e5503459098",
+  "decision": "accepted_for_later_exact_config_admission",
+  "scope": "Root fully read all147lines and full FLOW. Read-only actual Git object transport with fixed local parent/tree, exact five new source paths plus cycle06prefix, actual complete changed set, immutable blob bytes/modes/SHA1/SHA256 and pinned payload manifest. Actual runtime compatibility is not yet verified.",
+  "limits": {"segment_ascii_json_bytes": 60000, "index_ascii_json_bytes": 1000000, "text_codepoints": 12000, "binary_raw_bytes": 36000},
+  "cap_qualification": "Earlier delivery-v1 protocol proposed1048576B. This later reviewed exact source uses1000000B matching unchanged independent verifier; no post-failure cap increase. Preserve earlier proposal as history.",
+  "execution": "NOT_RUN. No config or immutable commit/tree exists yet. Separate root exact config/source/hash/absence check and GO required after accepted delivery review and sole-owner local commit. No Git mutation or remote write exists in exporter.",
+  "later_acceptance": "Independent tools/verify-git-transport.mjs must verify all actual Git blobs/modes, every transport piece and accepted646-entry payload manifest before connected publication.",
+  "fresh_reference_context": {
+    "candidate": "e1f46601774477ea3987c18909092f314959a2a1",
+    "main": "37a2dba87d61262f661af70f1a22440736e61efc",
+    "algorithm": "e3e11fab5de1e4562487472585259435694d88bc",
+    "claude_current": "710df88e72eb17f1670e5b89ef047a4efeefab95",
+    "frozen_input_platform_not_current_ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "observation": "Connected refs read-only at22Z. Latest Claude commit inspected: .gitignore adds trajectories/**/*.zip only. Not merged or claimed as Lab work."
+  },
+  "read_only_diagnostic": "Root state summary mistakenly called jobs.filter on jobs object; TypeError before any write. Corrected Object.entries reader succeeded. Tool transcript testimony only, not native/source/test failure.",
+  "release": "Branch-only review checkpoint authorized; no PR/main/defaultON/deployment/scientific/human acceptance."
+}

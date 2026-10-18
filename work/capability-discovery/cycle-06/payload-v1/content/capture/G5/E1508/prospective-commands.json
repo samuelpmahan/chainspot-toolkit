@@ -1,0 +1,16 @@
+{
+  "schema":"cycle06-E1508-prospective-noncv-commands@1",
+  "job_id":"E1508",
+  "worker":"G5",
+  "recordedBeforeChecks":true,
+  "rootCheckpointReviewed":true,
+  "scope":"two syntax checks then seven CLI NONCV tests only; stop on first failure; no repairs/reruns or valid-input producer",
+  "cwd":"/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+  "commands":[
+    {"id":"01-cli-syntax","argv":["node","--import","/workspace/scratch/8528bb251845/discovery-cycle06/G6/E1507/no-product-tripwire.mjs","--check","experiments/capability-discovery/lenard5-station-evidence/cli.mjs"],"stdout":"01-cli-syntax.stdout.log","stderr":"01-cli-syntax.stderr.log"},
+    {"id":"02-test-syntax","argv":["node","--import","/workspace/scratch/8528bb251845/discovery-cycle06/G6/E1507/no-product-tripwire.mjs","--check","experiments/capability-discovery/lenard5-station-evidence/cli.test.mjs"],"stdout":"02-test-syntax.stdout.log","stderr":"02-test-syntax.stderr.log"},
+    {"id":"03-cli-noncv-tests","argv":["node","--import","/workspace/scratch/8528bb251845/discovery-cycle06/G6/E1507/no-product-tripwire.mjs","--test","--test-reporter=tap","experiments/capability-discovery/lenard5-station-evidence/cli.test.mjs"],"stdout":"03-cli-noncv-tests.stdout.log","stderr":"03-cli-noncv-tests.stderr.log"}
+  ],
+  "chronology":"tests-first construction, root code/flow review, recovered hash readback, this prospective record, then admitted executions; no red-before-implementation claim",
+  "tripwireLimits":"import blocker for probes/provider only; no source-read/store-call instrumentation claim"
+}

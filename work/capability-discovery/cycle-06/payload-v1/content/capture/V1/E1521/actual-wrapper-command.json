@@ -1,0 +1,17 @@
+{
+  "schema": "cycle06-E1521-prospective-actual-wrapper-capture@1",
+  "job_id": "E1521",
+  "worker": "V1",
+  "authorization": "Root explicit ONE replay GO under same running E1521 extension",
+  "admission": {"path":"discovery-cycle06/E1521-root-replay-admission.json","sha256":"3e7a89a4f5cbe61da87827969ee1f17b8da1403779ba3a7b00956c2aea63e07b"},
+  "argv": ["python3.12","/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1521/one-replay.py","--admission-sha256","3e7a89a4f5cbe61da87827969ee1f17b8da1403779ba3a7b00956c2aea63e07b"],
+  "cwd": "/workspace/scratch/8528bb251845",
+  "stdout": "discovery-cycle06/V1/E1521/wrapper-v1.stdout.log",
+  "stderr": "discovery-cycle06/V1/E1521/wrapper-v1.stderr.log",
+  "captureMode": "shell noclobber exclusive raw capture; observed exec exit separately retained",
+  "wrapper": {"bytes":13864,"sha256":"86afd6ee1fbdd6dfb275bd1c5e3b049bcd6f29795cb7a9b227053049241ed6c7"},
+  "prospectiveProductCommand": {"bytes":4322,"sha256":"7e33f078980bc84dea4afaefd1d9318d12947d13b002ef2f66999514d501eef9"},
+  "environmentOverrides": null,
+  "maximumAttempts": 1,
+  "failurePolicy": "Stop and preserve first guard refusal/replay error; no auto fix or retry; do not read original outputs or invoke comparator"
+}

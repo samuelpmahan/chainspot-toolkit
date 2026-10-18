@@ -1,0 +1,21 @@
+{
+  "schema":"cycle06-E1508-observed-noncv-executions@1",
+  "job_id":"E1508",
+  "worker":"G5",
+  "prospectiveCommands":"prospective-commands.json",
+  "cwd":"/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+  "chronology":["tests authored first","CLI authored second","root read actual source/flow and granted scoped NONCV GO","G5 recovered source readback matched root digests","ACTUAL-FLOW and prospective command records written","01-cli-syntax exit0","02-test-syntax exit0","03-cli-noncv-tests first execution exit0","full raw logs read and source digests rechecked unchanged","result and explicit source ownership handback"],
+  "executions":[
+    {"id":"01-cli-syntax","observedExitCode":0,"toolChunk":"be94cf","stdout":{"path":"01-cli-syntax.stdout.log","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stderr":{"path":"01-cli-syntax.stderr.log","bytes":148,"sha256":"1793f9713223bfceb552043cded26d935b5a7f5877d89b50b70a46c39a7e39bf"},"tripwire":{"blockedImports":0,"scope":"import blocker only; no source-read or store-call instrumentation"}},
+    {"id":"02-test-syntax","observedExitCode":0,"toolChunk":"782f48","stdout":{"path":"02-test-syntax.stdout.log","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"stderr":{"path":"02-test-syntax.stderr.log","bytes":148,"sha256":"1793f9713223bfceb552043cded26d935b5a7f5877d89b50b70a46c39a7e39bf"},"tripwire":{"blockedImports":0,"scope":"import blocker only; no source-read or store-call instrumentation"}},
+    {"id":"03-cli-noncv-tests","observedExitCode":0,"toolChunk":"98df5c","stdout":{"path":"03-cli-noncv-tests.stdout.log","bytes":1782,"sha256":"91995c2918382798c7e56ed6d98cc8aab23081cb99bdec045f78b2d3a8a74197"},"stderr":{"path":"03-cli-noncv-tests.stderr.log","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},"tests":7,"pass":7,"fail":0,"cancelled":0,"skipped":0,"todo":0,"tripwireReportLocation":"TAP stdout comment emitted by test child","tripwire":{"blockedImports":0,"scope":"import blocker only; no source-read or store-call instrumentation"}}
+  ],
+  "firstExecutedRun":true,
+  "redObserved":false,
+  "repairs":0,
+  "reruns":0,
+  "validEnabledProducerCalls":0,
+  "fullOriginalInputRuns":0,
+  "scopeLimit":"Not a whole-repository green, general hostile-input proof, original-image producer or scientific/human acceptance.",
+  "infrastructureHistory":{"hashOnlyAttempt":"hung without output; functions cell20 terminated; no tests or source writes in that call","retry":"exec_command failed: CreateProcess rejected, exec-server transport disconnected","recovery":"root same-route pwd exit0 then G5 one readback/hashes succeeded","classification":"transient tool transport testimony, not product/source/test failure; successful patches were never reissued"}
+}

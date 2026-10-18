@@ -1,0 +1,121 @@
+{
+  "schema": "cycle06-lenard5-replay-policy@1",
+  "policyId": "E1512-V1-fixed16-exact-values-timing-leaves-only-v1",
+  "status": "PREDECLARED_SOURCE_ONLY_EXECUTION_NOT_ADMITTED",
+  "authority": "Frozen source and independent R1507 source review only; no producer/replay output inspected",
+  "sourceRoot": "chainspot-discovery-lab",
+  "sourceFiles": [
+    {"path":"experiments/capability-discovery/lenard5-station-evidence/recipe.mjs","bytes":29160,"sha256":"4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6"},
+    {"path":"experiments/capability-discovery/lenard5-station-evidence/recipe.test.mjs","bytes":9638,"sha256":"0163e8d12298d32e4c825da1ea734b320b672bdef59affbea20ff42cac7fb0a2"},
+    {"path":"experiments/capability-discovery/lenard5-station-evidence/README.md","bytes":9668,"sha256":"6a40f91299961893ec7de5096b366f234be46743e7b86036a32e41dda24afaf7"},
+    {"path":"experiments/capability-discovery/lenard5-station-evidence/cli.mjs","bytes":7213,"sha256":"a711ab50bc50bd3f69e61656f12002d41d901e19d7db4e8a9b3b5eb188457ffa"},
+    {"path":"experiments/capability-discovery/lenard5-station-evidence/cli.test.mjs","bytes":8610,"sha256":"2bc624f45cd47a73f79f864483c89da4794361a6638acec22cf432c816f3ec96"}
+  ],
+  "codecSha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015",
+  "unchangedStoreSha256": "122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074",
+  "protocolSha256": "cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829",
+  "attestationSha256": "9f1cb90eed3c74214c9a03029730ea1ab487c48bd86b89cbe3a701eebe923ef1",
+  "comparisonDomain": {
+    "sameFrozenSourceRootRequired": true,
+    "sameExactInputManifestPathAndBytesRequired": true,
+    "sameRuntimeNodePlatformArchRequired": true,
+    "freshExternalOutputDirectoryPerAdmittedRunRequired": true,
+    "successfulReplayRequiresBothCompleteAndIndependentlyValid": true,
+    "partialOrRefusedRun": "PRESERVE_STOP_NOT_A_SUCCESSFUL_REPLAY; never fill missing rows or execute a corrective retry",
+    "externalCommandObservation": "Actual exit/argv/stdout/stderr must be preserved and validated by later admitted outer packet; CLI intendedExitCode alone is not observed exit"
+  },
+  "equality": {
+    "valueTrace": "Exact tagged bytes AND recursively exact decoded value tree, including object-key order, array order, missing-vs-null, NaN/nonfinite tags, negative-zero and exact Uint8Array constructor/length/elements; no excluded paths",
+    "answerFragments": "Every raw fragment exact bytes cross-run; exact decoder equality with matching queryTrace.nativeAnswer within each run",
+    "sidecar": "Recursive exact key/type/order/value equality except numeric leaves named in timingLeafWhitelist; verify whitelisted leaf presence/type and constraints before disregarding cross-run numeric value",
+    "calculationFragments": "Decode each fragment; recursively exact equality except its named nativeEntry.elapsedMs leaf; full decoded fragment must equal corresponding raw sidecar.calculationLog entry within its own run",
+    "numberRelation": "Object.is semantics for numeric leaves, with NaN equal only to NaN and -0 distinct from +0; zero numerical/scientific tolerance",
+    "noGenericNormalization": ["No suffix/name matching for time/ms/date", "No subtree deletion", "No JSON stringify projection that collapses NaN/null/-0", "No sorting or set comparison", "No path-root rewriting", "No dropping new/unknown fields", "No output-informed widening of this policy"]
+  },
+  "timingLeafWhitelist": [
+    {"root":"decoded timing-sidecar.json","path":"/intervals/{i}/start","domain":"i=0..181 only after successful-shape validation","type":"finite nonnegative number, not negative-zero"},
+    {"root":"decoded timing-sidecar.json","path":"/intervals/{i}/end","domain":"i=0..181 only after successful-shape validation","type":"finite nonnegative number, not negative-zero"},
+    {"root":"decoded timing-sidecar.json","path":"/intervals/{i}/elapsed","domain":"i=0..181 only after successful-shape validation","type":"finite nonnegative number, not negative-zero"},
+    {"root":"decoded timing-sidecar.json","path":"/calculationLog/{j}/nativeEntry/elapsedMs","domain":"j=0..175 only after successful-shape validation","type":"finite nonnegative source-rounded millisecond number, not negative-zero"},
+    {"root":"decoded fragments/calculation-{j}.json","path":"/nativeEntry/elapsedMs","domain":"j=0..175 with exact manifest ordinal/comparisonId/captureIndex correspondence","type":"same exact raw value as sidecar.calculationLog[j].nativeEntry.elapsedMs in this run"}
+  ],
+  "timingConstraints": [
+    "All interval keys/metadata/nondeterministic:true are exact; every start/end/elapsed exists as the required numeric leaf, never null/string/NaN/Infinity",
+    "For each interval: end>=start; Object.is(elapsed,end-start); for consecutive source-ordered intervals: next.start>=previous.end",
+    "Native elapsedMs is finite>=0 and Object.is(x,Math.round(x*1000)/1000), reflecting unchanged store roundMs, not a scientific tolerance",
+    "Per comparison the nested constant elapsedMs<=outer profile elapsedMs; no assumed total ordering of unrelated elapsed durations",
+    "Do not equate native rounded elapsedMs with the wrapper unrounded elapsed, or infer isolated algorithm cost, speedup, absolute UTC or memory from these clocks",
+    "computedMs is NOT whitelisted: every fixed-route native entry must retain exact null because query outParts are empty and root constant has rootKey; cached remains false",
+    "All raw timing-bearing source files and both raw numeric values remain retained/hash-bound; normalized comparison views are ephemeral/report-only"
+  ],
+  "sourceDerivedSuccessPredictionsNotObservations": {
+    "comparisons": 16,
+    "groupOrder": ["primary","bright-nonpath","normal-plus6","masked-primary"],
+    "windowOrder": ["before16","core16","after16","long48"],
+    "widths": [34,42,50],
+    "planLength": 160,
+    "counts": {"requestedPATH":160,"attemptedPATH":160,"completedPATH":160,"failedPATH":0,"capturedCalculationEntries":176,"capturedConstantEntries":16,"capturedPATHEntries":160},
+    "queryTraceRows": 160,
+    "answerFragments": 160,
+    "calculationEntriesAndFragments": 176,
+    "intervals": 182,
+    "legacyManifestArtifacts": 338,
+    "callbackSeqPerComparison": [1,0,2,3,4,5,6,7,8,9,10],
+    "intervalShape": {
+      "prefixIndices0to5": ["validation","file-preflight","snapshot:comparison0","source-verify-before-import","import","source-verify-after-import"],
+      "queryIntervalIndex": "11*c+6+k for comparison c=0..15 and local plan k=0..9",
+      "snapshotIntervalIndex": "2 when c=0; 11*c+5 when c=1..15",
+      "finalIndex181": "source-verify-after-run"
+    }
+  },
+  "exactPlan": {
+    "comparisonIndex": "c=4*groupIndex+windowIndex; planIndex=10*c+k",
+    "originsByGroup": [[780,906],[780,740],[781.223725524672,911.8738825184256],[780,906]],
+    "windowsByIndex": [[-24,-8],[-8,8],[8,24],[-24,24]],
+    "baseRawArgs": {"raster":"px.image.cropped","mask":"tk.s6.pathMask","originPx":"exact group origin array","phiRad":-0.20539538918976738,"t0Px":"exact window lower","t1Px":"exact window upper","stepPx":1},
+    "localQueries": [
+      {"k":0,"query":"fn.q.path.profile","widthPx":null,"additionalRawArgs":{"lat0Px":0}},
+      {"k":"1,4,7","query":"fn.q.path.edgePair","widthPx":"34,42,50 respectively","additionalRawArgs":{"lat0Px":0,"widthPx":"literal associated bank width","tolPx":2,"latLimPx":12,"minOk":{"count":8,"ofStations":0.2}}},
+      {"k":"2,5,8","query":"fn.q.path.stationContrast","widthPx":"34,42,50 respectively","additionalRawArgs":{"widthPx":"literal associated bank width","bandPx":[1,3],"alongPx":2}},
+      {"k":"3,6,9","query":"fn.q.path.loss","widthPx":"34,42,50 respectively","additionalRawArgs":{"widthPx":"literal associated bank width","profile":null,"threshold":null,"tauLum":8}}
+    ],
+    "rawArgumentEvidence": "Exact plannedQueries.rawArgs are retained and compared; native onCall entry schema has no raw args/result fields, so do not fabricate them. Native answer is queryTrace.nativeAnswer plus exact answer fragment. No producer call is added to obtain missing instrumentation."
+  },
+  "exactNativeEntry": {
+    "keysInSourceOrder": ["seq","parent","depth","calculation","store","caller","site","inParts","outParts","elapsedMs","status","error","emits","key","cached","computedMs"],
+    "captureWrapperKeys": ["comparisonId","captureIndex","nativeEntry"],
+    "perComparison": "11 captures; global j=11*c+captureIndex; exact captureIndex0..10; never sort by seq",
+    "constantCapture0": {"seq":1,"parent":0,"depth":1,"calculation":"fn.input.lenard5StationMeasurement","store":"comparisonId","caller":"lazy:px.image.cropped","site":null,"inParts":[],"outParts":["px.image.cropped","tk.s6.pathMask"],"status":"ok","error":null,"emits":null,"key":null,"cached":false,"computedMs":null},
+    "profileCapture1": {"seq":0,"parent":null,"depth":0,"calculation":"fn.q.path.profile","store":"comparisonId","caller":"cycle06-lenard5-station-measurement","site":null,"inParts":[],"outParts":[],"status":"ok","error":null,"emits":{"computed":1},"key":null,"cached":false,"computedMs":null},
+    "laterCaptures": "For captureIndex a=2..10: seq=a, parent:null, depth:0, calculation=plannedQueries[10*c+a-1].query; other fields equal profile capture except calculation; elapsedMs is the only numeric whitelist leaf"
+  },
+  "exactProvenanceAndIntegrity": [
+    "All requestBinding fields exact, including manifest path/hash/bytes, six suppliedFiles in source order, protocol/attestation/image/mask/decoder/staging identities, comparisons/settings/predictedOnly/resourcePlan strings and caps",
+    "All sourceBinding fields exact: nine physical entries in source order at beforeImport/afterImport/afterRun, five implementation entries at Before/AfterImport/AfterRun, expected/actual hashes/bytes/paths/errors, importCaching text and renderer:null; require each verified:true and expected digests matched",
+    "Snapshots in comparison order; snapshotId lenard5-fixed16/{c}/{comparisonId}; full1290x2796 frame;12 null maskKind/hash and4 Uint8Array/strip hashes; no all-zero substitutes",
+    "In successful traces every resolvedIdentity has the actual two Part keys; require exact equality across runs and with that snapshot's final partKeys; raster key same across16, null-mask key same across12, strip-mask key same across4, null and strip keys distinct; no invented pre-run key values",
+    "Each snapshot has10 checks in plan order with original hashes, verified:true, post hashes equal pre, error:null; supplied canonical verified:true; six postFiles exact role/path/hash correspondence, verified:true,error:null; request verified:true,error:null; postErrors:[]",
+    "All queryTrace rows COMPLETED,error:null with exact planIndex/comparisonId/resolvedIdentity/nativeAnswer; all claims/source/request/resource metadata exact; status COMPLETED,error:null on valueTrace and sidecar",
+    "All native raw values and metadata are exact, including arrays/field order, fit or condition/null, validity flags, every profile/contrast/loss field, unit/emits, complete typed RGB/hiddenCenter corridors and all nonfinite/-0 tags; no scientific tolerance or classifier"
+  ],
+  "artifactBindingProtocol": {
+    "principle": "No digest/length is a timing whitelist leaf. Independently verify every emitted file against its own manifest/receipt before comparison. Derived bindings may differ ONLY when the referenced raw file has already passed the named-leaf comparator; these are verified consequences, never ignored data.",
+    "legacyManifest": "Exact cycle05-station-artifacts@1 schema,status,error,ordered338 artifacts and all metadata/path/kind/comparisonId/planIndex/captureIndex; each actual byte length/SHA256 must match; artifact paths unique and restricted to fixed ordinal set",
+    "byteExactCrossRunBindings": ["value-trace.json", "fragments/answer-0.json through answer-159.json"],
+    "timingBearingCrossRunBindings": ["timing-sidecar.json", "fragments/calculation-0.json through calculation-175.json"],
+    "derivedFields": ["legacyManifest.artifacts[a].bytes and .sha256 only for timing-bearing referenced files", "cliReceipt.artifacts[a].bytes and .sha256 for those same files", "cliReceipt.artifactManifest.bytes and .sha256 for the independently verified exact legacy manifest"],
+    "cliReceipt": "Other fields/keys/order exact; require cycle06-lenard5-cli-receipt@1, same requestedManifestPath, COMPLETED run/writer/status,intendedExitCode0,error:null,bindingError:null, all matchesManifest:true; its own raw bytes/hash remain externally retained",
+    "terminalStdout": "If later packet uses CLI: preserve exact stdout bytes; parse its one JSON summary and require exact status/intendedExitCode/receipt path/schema/manifest status plus equality to that run's receipt artifactManifest binding. Do not blanket-ignore stdout or an unknown error; successful stderr must be empty unless explicitly predeclared outer instrumentation is separately scoped.",
+    "noExtraArtifacts": true
+  },
+  "laterComparatorProposal": [
+    "1. Separately admit and hash a pure comparator driver plus explicit input artifact roots; do not import Lenard recipe/CLI, query store/PATH, decode image, or remeasure to compare.",
+    "2. Keep input artifacts immutable. Verify frozen source/codec identities and independently bound raw file lengths/hashes before decoding each root with unchanged codec limits; preserve all raw bytes.",
+    "3. Independently validate each success package against this source-derived schema/plan/order/counters/integrity/native-entry/interval model. A matching pair of malformed packages is not a pass.",
+    "4. Verify within-run fragment-to-trace/sidecar equality and all envelopes/receipt hashes; then compare exact value/answer bytes and exact non-timing trees, permitting only named numeric timing leaves after constraints pass.",
+    "5. Report per-check PASS/FAIL/NOT_RUN, first differing JSON pointer/file/ordinal plus both raw hash-bound values, all compared hashes, exact whitelist paths used and retained raw timing records. Any unlisted difference fails; no repair/rerun/tolerance tuning.",
+    "6. Overall MATCH_EXCEPT_DECLARED_TIMING only when both complete independently valid packages and all comparisons pass. Otherwise FAIL or NOT_COMPARABLE; do not promote scientific/human/path identity."
+  ],
+  "execution": {"newSourceImports":"NOT_RUN","producer":"NOT_RUN","replay":"NOT_RUN","comparatorImplementation":"NOT_WRITTEN","comparatorTests":"NOT_RUN","validInputInspect":"NOT_RUN","CV":"NOT_RUN","imageDecode":"NOT_RUN","gitOrNativeWrites":"NOT_RUN"},
+  "claims": {"observedCounts":false,"scienceTolerance":null,"promoted":false,"heldout":false,"scientificAcceptance":"UNKNOWN","humanAcceptance":"UNKNOWN","pathIdentity":"UNKNOWN","continuity":"UNKNOWN","calibratedWidth":"UNKNOWN"}
+}

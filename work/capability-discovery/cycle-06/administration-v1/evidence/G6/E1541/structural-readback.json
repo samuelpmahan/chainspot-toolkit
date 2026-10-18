@@ -1,0 +1,72 @@
+{
+  "schema": "cycle06-E1541-file-only-structural-readback@1",
+  "observedAtUtc": "2026-10-18T21:21:39.110Z",
+  "objects": 564,
+  "objectSourceDifferences": [],
+  "aliasRouteDifferences": [],
+  "requiredEvidenceCount": 114,
+  "requiredEvidenceDifferences": [],
+  "allObjectsUsed": true,
+  "all682PhysicalMembersUsed": true,
+  "storedPathCollisions": [],
+  "manifestMemberMetadataDifferences": [],
+  "rawManifests": [
+    {
+      "id": "original",
+      "manifestListedArtifacts": 338,
+      "answerFragments": 160,
+      "calculationFragments": 176,
+      "aggregateWires": [
+        "value-trace.json",
+        "timing-sidecar.json"
+      ],
+      "extraMembers": [
+        "artifact-manifest.json",
+        "cli-receipt.json"
+      ]
+    },
+    {
+      "id": "replay",
+      "manifestListedArtifacts": 338,
+      "answerFragments": 160,
+      "calculationFragments": 176,
+      "aggregateWires": [
+        "value-trace.json",
+        "timing-sidecar.json"
+      ],
+      "extraMembers": [
+        "artifact-manifest.json",
+        "cli-receipt.json"
+      ]
+    }
+  ],
+  "runtimes": [
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "bytes": 30894944,
+      "mode": 493,
+      "symlink": false,
+      "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7"
+    },
+    {
+      "path": "/usr/bin/zstd",
+      "bytes": 1022760,
+      "mode": 493,
+      "symlink": false,
+      "sha256": "7c5468b370f7c47eda07281e3437fafc568f95d10420051e3aa522709f9342c5"
+    },
+    {
+      "path": "/usr/local/bin/git",
+      "bytes": 19135768,
+      "mode": 493,
+      "symlink": false,
+      "sha256": "2dae8066ef4d6a926561b4b0eaca7b458d4f5b56bb83760656e6baa7fc3e974f"
+    }
+  ],
+  "guardValues": {
+    "MAX_FILE": 16777216,
+    "MAX_TOTAL": 134217728,
+    "MAX_ALIASES": 2048
+  },
+  "scope": "Read-only independent Node file/metadata bookkeeping; no helper import, Python/test/Git/zstd/archive execution, no scientific wire numeric decode."
+}

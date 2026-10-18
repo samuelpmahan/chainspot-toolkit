@@ -1,0 +1,16 @@
+{
+  "schema": "cycle06-E1518-prospective-display-commands@2",
+  "status": "CONSTRUCTED_NOT_RUN_PENDING_INDEPENDENT_SOURCE_REVIEW_AND_SEPARATE_ROOT_GO",
+  "cwd": "/workspace/scratch/8528bb251845",
+  "syntaxArgvAfterSeparateGO": ["node", "--check", "discovery-cycle06/V2/E1518/renderer-proposal.v2.mjs"],
+  "testSyntaxArgvAfterSeparateGO": ["node", "--check", "discovery-cycle06/V2/E1518/renderer-engineering.v2.test.mjs"],
+  "syntheticEngineeringArgvAfterSeparateGO": ["node", "--test", "discovery-cycle06/V2/E1518/renderer-engineering.v2.test.mjs"],
+  "syntheticBoundary": "Synthetic in-memory retained-value fixtures only. Imports the v2 module, then calls pure validation/display projection exports; this includes in-memory SVG/HTML string generation, so root must explicitly authorize it. No renderTrustedPacket call, codec import/decode, producer/wire/pixel reads, filesystem output or product queries.",
+  "realRenderArgvTemplateNotAuthorized": ["node", "discovery-cycle06/V2/E1518/renderer-proposal.v2.mjs", "--packet", "ROOT_ADMITTED_TRUST_PACKET.json", "--packet-sha", "ROOT_ADMITTED_PACKET_SHA256", "--out", "NEW_ROOT_ADMITTED_DISPLAY_DIRECTORY"],
+  "concreteRenderPacket": null,
+  "independentRawAcceptance": null,
+  "concreteOutputDirectory": null,
+  "captureRequiredBeforeFutureExecution": "Exact source/test/command hashes, argv/cwd/start/end, actual exit/signal and raw stdout/stderr hashes. Stop first failure; preserve evidence; no hidden retry.",
+  "forbiddenNow": ["syntax check", "module import", "test execution", "current producer output read", "codec decode", "SVG/HTML/CSV render", "producer/query execution", "PNG/pixel access", "product/Git/native/helper action"],
+  "realRenderGates": ["independent exact source review", "independent raw acceptance", "root-admitted exact trusted packet/hash", "separate native execution packet and root GO"]
+}

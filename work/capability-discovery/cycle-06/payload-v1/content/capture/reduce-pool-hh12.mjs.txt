@@ -1,0 +1,6 @@
+import fs from 'node:fs';
+const p='discovery-cycle06/state.json',s=JSON.parse(fs.readFileSync(p));
+const retired={};for(const id of ['G5','G6']){if(s.workers[id]?.job!==null)throw Error('not free '+id);retired[id]=s.workers[id];delete s.workers[id];}
+s.events.push({type:'coordinator_current_pool_reduction',at:new Date().toISOString(),retiredFreeWorkers:retired,reason:'Two fresh actual cheap HH contexts registered; current Lab pool is V1/V2/R1/R2 within global six slots. Completed historical jobs preserved. G6 remains eventual sole Lab integration owner but has no active execution job; re-register capacity before later dispatch.'});
+fs.writeFileSync(p,JSON.stringify(s,null,2)+'\n');
+console.log(JSON.stringify({currentWorkers:Object.keys(s.workers),retiredFreeWorkers:Object.keys(retired)}));

@@ -1,0 +1,21 @@
+{
+  "id": "I01-missing",
+  "status": "PASS",
+  "data": {
+    "code": "INPUT_READ_FAILED",
+    "phase": "file-read"
+  },
+  "observed": {
+    "events": [
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/fixtures/missing",
+        "error": "ENOENT"
+      }
+    ],
+    "peakOpen": 0,
+    "remainingOpen": [],
+    "blockedImports": 0,
+    "productLoadAttempts": 0
+  }
+}

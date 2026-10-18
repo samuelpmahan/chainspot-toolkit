@@ -1,0 +1,95 @@
+{
+  "job_id": "R1517",
+  "worker": "R1",
+  "decision": "accepted",
+  "summary": "Independent source-only review accepts the exact root-authored source-shape addendum as an append-only correction/clarification for later explicitly admitted comparator use. Its snapshot-check and two provenance-entry shapes match frozen source text. It preserves exact own keys/order, missing-versus-null, all native/raw equality and the original numeric timing-leaf policy. It explicitly discloses post-producer authorship and does not claim that the original E1512 policy passed unchanged. This accepts the addendum's engineering interpretation only, not a producer result, comparator implementation/execution, replay match or scientific/human acceptance.",
+  "hashes": {
+    "addendum": {
+      "path": "discovery-cycle06/replay-source-shape-addendum.v1.json",
+      "sha256": "3537cdce221ab424672097ed6d8530afaf94128d66ddb3dc38a8d3490407232b"
+    },
+    "frozen_original_policy": {
+      "path": "discovery-cycle06/V1/E1512/replay-policy.json",
+      "sha256": "b146b7183e4aab0708792b7f72aa37790113ca8061f34c551ea590f24391027d"
+    },
+    "frozen_original_proposal": {
+      "path": "discovery-cycle06/V1/E1512/comparator-proposal.md",
+      "sha256": "77ac01d93638ceed7d8109a474d44318523d3e5c8ae4aeab86da2f20325cb2fb"
+    },
+    "frozen_original_receipt": {
+      "path": "discovery-cycle06/V1/E1512/result.json",
+      "sha256": "3e81d7123f5a929f52139495bba2a777648cdde8b74741678fe1d6a1fed121ab"
+    },
+    "independent_finding": {
+      "path": "discovery-cycle06/R2/E1517/source-only-critique.json",
+      "sha256": "f9b753228a6049947d6f7f37cb79f04a3f6f82733eccc57ef0ad56c408600fc1"
+    },
+    "lenard5_recipe_source": {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/recipe.mjs",
+      "sha256": "4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6"
+    },
+    "legacy_source_verifier": {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/recipe.mjs",
+      "sha256": "ef7248daf5c83fd014c4a5004aa511e41399492a46be0460fe566ab421383ad3"
+    }
+  },
+  "review_checks": [
+    {
+      "check": "Snapshot checks versus enclosing error",
+      "source_evidence": "Lenard recipe line314 creates the enclosing snapshot record with ordered comparisonId,snapshotId,pre,checks,post,verified,partKeys,error and error:null. Lines404-405 append checks as exactly planIndex,post,verified. hashPrivate at line282 returns ordered rgbaSha256,maskSha256. Lines416-421 assign post/verified and only assign the enclosing error on an integrity failure.",
+      "assessment": "Addendum clarification /exactProvenanceAndIntegrity/4 matches the successful source shape: ten ordered checks, each post equal to enclosing pre and verified:true, no per-check error/pre field; enclosing error remains null. Missing is not null and no trace repair/injected keys is authorized. R2-E1517-F1 is a concrete literal-policy/source contradiction and remains disclosed."
+    },
+    {
+      "check": "Physical source closure exact keys and success nulls",
+      "source_evidence": "Legacy recipe SOURCE_MODULES has nine ordered entries. verifySourceClosure at lines176-183 returns ordered verified,entries; entry initialization at line178 is ordered path,expectedSha256,actualSha256,error. Successful reads assign actualSha256 without adding keys; error remains null.",
+      "assessment": "Addendum /exactProvenanceAndIntegrity/1 correctly requires that exact physical-entry shape, matching expected/actual hashes and null errors, rather than inventing bytes or per-entry verified fields. Closure-level verified remains required by original success policy."
+    },
+    {
+      "check": "Runtime implementation entry shape and literal null expected hashes",
+      "source_evidence": "Lenard recipe lines249-261 build five runtime entries: recipe.mjs and cli.mjs with expectedSha256:null, followed by the three pinned LEGACY_RUNTIME sources. Each returned entry is exactly ordered path,expectedSha256,actualSha256,bytes; there is no error or per-entry verified field. The three legacy expected digests are enforced at lines258-259. before/after use is source-bound at lines343-355 and468-472.",
+      "assessment": "Addendum correctly retains first-two literal null values and requires their actual hashes against independent frozen source admission; it does not substitute null for verification. Paths/bytes and all entries remain exact across stages/runs. No fake per-entry error/verified field is introduced."
+    },
+    {
+      "check": "Unchanged numeric/raw/timing domain",
+      "source_evidence": "Read the complete original replay-policy.json and comparator-proposal.md against the complete addendum. Original policy permits only named interval start/end/elapsed and native elapsedMs numeric leaves after its clock constraints, while requiring exact value-trace/answer-fragment bytes and all other native keys/order/types/values; dependent timing-file bindings still require per-run verification.",
+      "assessment": "The addendum modifies neither the numeric whitelist nor clock formulas/constraints, native value equality, byte equality, typed-array/nonfinite/-0/null handling, successful counts/order, raw retention, artifact identity checks or scientific-tolerance prohibition. It narrows ambiguous prose to source object shapes; it is not authority to normalize or mutate either retained run."
+    },
+    {
+      "check": "Chronology and authorization",
+      "source_evidence": "Addendum timingAndDisclosure says written AFTER the sole producer completed, explicitly not a preproducer policy; acceptance requires independent review and a separate root admission, retaining the original defect and forbidding retroactive original-policy acceptance.",
+      "assessment": "Disclosure is adequate and explicit. The timing statement is read as supplied coordinator testimony, not independently verified producer chronology; no producer outputs or command records were opened by this review. Later reports must identify original policy plus this exact separately admitted addendum and retain the original-policy defect."
+    }
+  ],
+  "findings_requiring_amendment": [],
+  "independence_and_scope": {
+    "did_not_author_addendum_or_E1517": true,
+    "read_fully": [
+      "replay-source-shape-addendum.v1.json",
+      "R2/E1517/source-only-critique.json",
+      "V1/E1512/replay-policy.json",
+      "V1/E1512/comparator-proposal.md",
+      "V1/E1512/result.json"
+    ],
+    "source_text_compared": "Exact relevant frozen Lenard recipe snapshot/runtime/integrity/error/timing blocks and legacy verifier/source-module declarations; source hashes independently recomputed. No module imported.",
+    "producer_output_reads": 0,
+    "imports": 0,
+    "tests_or_syntax_checks": 0,
+    "trace_decodes": 0,
+    "producer_or_replay_or_comparator_execution": 0,
+    "source_pixel_reads": 0,
+    "helpers": 0,
+    "source_or_native_or_git_mutations": 0,
+    "only_authored_file": "discovery-cycle06/R1/R1517/result.json",
+    "native_finish_owner": "root only"
+  },
+  "claims": {
+    "original_policy_passed_unchanged": false,
+    "producer_or_replay_acceptance": "NOT_ASSESSED",
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN",
+    "pathIdentity": "UNKNOWN",
+    "continuity": "UNKNOWN",
+    "calibratedWidth": "UNKNOWN"
+  },
+  "handoff": "Root may separately admit this exact addendum for a later bounded comparator packet. Preserve original E1512 policy bytes/hash and report its source-shape defect. This review authorizes no source execution, producer/replay/comparator tests or data reads and establishes no measured outcome."
+}

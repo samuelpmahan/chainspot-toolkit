@@ -1,0 +1,43 @@
+// Independent file-only proposal check. No project imports, execution or wire decode.
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import assert from 'node:assert/strict';
+const root='/workspace/scratch/8528bb251845';
+const rel='chainspot-discovery-lab/work/capability-discovery/cycle-06/final-inputs.proposed.v3.json';
+const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
+const raw=fs.readFileSync(path.join(root,rel));
+assert.equal(raw.length,1026723);assert.equal(hash(raw),'f124af3d041ac7605cabdeedfde73bea1dca4e7c9ad88aff60e7c912d3a0588d');
+const p=JSON.parse(raw),old=JSON.parse(fs.readFileSync(path.join(root,rel.replace('.v3.','.v2.'))));
+assert.equal(p.status,'DRAFT_ACCEPTED_HELPER_BOUND_FINAL_INPUTS_PENDING_ROOT_ADMISSION');assert.equal(p.notFinalFreeze,true);
+assert.equal(p.aliases.length,1414);assert.equal(p.objects.length,564);
+const aliases=new Map(p.aliases.map(a=>[a.logical,a]));assert.equal(aliases.size,1414);
+assert.equal(new Set(p.aliases.map(a=>a.source)).size,1414);
+for(const a of old.aliases)assert.deepEqual(aliases.get(a.logical),a,'prior alias descriptor');
+function bound(e){
+  assert.ok(typeof e.source==='string'&&!e.source.startsWith('/')&&!e.source.split('/').some(x=>['','..','.'].includes(x)));
+  const file=path.join(root,e.source),st=fs.lstatSync(file);assert.ok(st.isFile()&&!st.isSymbolicLink());assert.equal(st.nlink,1);
+  assert.equal(st.size,e.bytes);assert.equal(st.mode&0o7777,e.mode);
+  const b=fs.readFileSync(file);assert.equal(hash(b),e.sha256,e.source);return b;
+}
+for(const a of p.aliases)bound(a);
+const objects=new Map(p.objects.map(o=>[o.id,o]));assert.equal(objects.size,564);
+for(const o of p.objects)bound(o);
+const members=new Map();
+for(const ar of p.archives){
+  for(const m of ar.members){const k=ar.id+'/'+m.name;assert.ok(!members.has(k));members.set(k,m);bound(m);}
+  assert.equal(ar.tarBytes,1024+ar.members.reduce((n,m)=>n+512+512*Math.ceil(m.bytes/512),0));
+}
+assert.deepEqual(p.archives.map(a=>a.members.length),[340,340,2]);assert.equal(members.size,682);
+const used=new Set();let blobRoutes=0,memberRoutes=0;
+for(const a of p.aliases){const s=a.storage;let target;
+  if(Object.keys(s).join(',')==='blob'){target=objects.get(s.blob);blobRoutes++;}
+  else{assert.deepEqual(Object.keys(s),['archive','member']);const k=s.archive+'/'+s.member;target=members.get(k);assert.ok(!used.has(k));used.add(k);assert.equal(a.source,target.source);memberRoutes++;}
+  assert.ok(target);for(const k of ['bytes','sha256','mode'])assert.equal(a[k],target[k]);
+}
+assert.equal(used.size,682);
+for(const e of p.requiredEvidence){bound(e);assert.ok(p.aliases.some(a=>a.source===e.source&&a.sha256===e.sha256&&a.bytes===e.bytes&&a.mode===e.mode));}
+for(const k of ['comparisonReview','visualReview','helperReview'])assert.equal(JSON.parse(bound(p.authority[k])).decision,'accepted');
+bound(p.executionCandidate.acceptedHelper);bound(p.executionCandidate.acceptedWrapper);
+for(const set of p.htmlLinkSets){assert.ok(aliases.has(set.html));for(const target of set.targets)assert.ok(aliases.has(target));assert.equal(new Set(set.targets).size,348);}
+console.log(JSON.stringify({verifiedProposal:true,planSha256:hash(raw),aliases:p.aliases.length,priorDescriptorsUnchanged:old.aliases.length,newAliases:p.aliases.length-old.aliases.length,objects:p.objects.length,blobRoutes,memberRoutes,requiredEvidence:p.requiredEvidence.length,archiveMembers:p.archives.map(a=>a.members.length),logicalBytes:p.aliases.reduce((n,a)=>n+a.bytes,0),realArchiveOrCVExecutions:0,rootAdmission:false}));

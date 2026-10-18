@@ -1,0 +1,29 @@
+{
+  "job_id":"E1531","worker":"V2","status":"CONSTRUCTION_ONLY_NO_EXECUTION_ADMISSION",
+  "cwd":"/workspace/scratch/8528bb251845",
+  "wrapper":{"path":"discovery-cycle06/V2/E1531/guarded-render.v1.mjs","meaning":"Fixed one-render guard plus byte-identity postchecks, not a generic workflow or product/CV runner"},
+  "future_syntax_argv":["node","--check","discovery-cycle06/V2/E1531/guarded-render.v1.mjs"],
+  "future_wrapper_argv":["node","discovery-cycle06/V2/E1531/guarded-render.v1.mjs"],
+  "future_child_argv":["CURRENT_NODE_EXECUTABLE","/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1526/renderer-proposal.v4.mjs","--packet","/workspace/scratch/8528bb251845/discovery-cycle06/render-trust-packet.v1.json","--packet-sha","f5e4baf6c9173f39e40f49cab14355d1db5176818f42ba8e81f413c780998ff3","--out","/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1531/display-v4"],
+  "renderer_sha256":"19be2472803e613b40043d4e2ee0adcfc53e59a27cd9c410eef0601a226a45ef",
+  "packet_sha256":"f5e4baf6c9173f39e40f49cab14355d1db5176818f42ba8e81f413c780998ff3",
+  "planned_paths":{
+    "exclusive_new_output":"/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1531/display-v4",
+    "external_wrapper_stdout":"/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1531/guard.stdout.raw",
+    "external_wrapper_stderr":"/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1531/guard.stderr.raw",
+    "renderer_stdout":"/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1531/renderer.stdout.raw",
+    "renderer_stderr":"/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1531/renderer.stderr.raw",
+    "pre_spawn_record":"/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1531/pre-spawn.v1.json",
+    "actual_outer_record":"/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1531/outer-command.v1.json",
+    "identity_postchecks":"/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1531/postchecks.v1.json"
+  },
+  "currently_absent":"All planned runtime paths checked absent during construction; future root/wrapper must check fresh again before invocation",
+  "future_outer_capture":"Root must verify exact wrapper/source/packet hashes and external-stream absence, capture actual argv/cwd/start/end/exit/signal/raw stdout/stderr hashes without overwriting; wrapper separately reserves inner streams wx and records actual child event exit/signal",
+  "independent_v4_review":{"path":"discovery-cycle06/R1/R1526/result.json","sha256":"59814708483a7efbf9d0d807ce6b3ce1559fa1e588601cfa8852585f183b45cb","decision":"accepted","scope":"Exact v4 source/synthetic geometry only, independent15green. Actual R1523 visual AMEND remains unresolved; wrapper unexecuted/unreviewed."},
+  "execution_gate":"Root fully reads exact wrapper/actual-flow/prospective, then provides a later exact native execution GO. Prior accepted v4 source review does not grant this wrapper execution or actual visual acceptance.",
+  "postcheck_plan":"One actual renderer only; complete stdout/new/old CSV byte identity at53bdcf7c...; complete HTML byte identity42c4ec22... at same depth, including data/raw links; verify six output manifest entries plus manifest itself; compare every SVG. Require primary/bright/normal byte-identical and masked changed.",
+  "reuse_plan":"If first three SVGs are byte-identical, hash-bind their exact prior E1523 PNGs and prior R1/R1523 independent original-detail views; mark newConversion:false/newView:false and retain AMEND history. Do not reconvert unchanged three.",
+  "later_masked_only":"Only changed masked SVG eligible for ONE later separate native Inkscape conversion and actual original-detail independent view; no conversion command is executed or admitted here.",
+  "actual_exit":null,"actual_signal":null,"spawn_count":0,
+  "forbidden_now":"No syntax/import/test/codec/real render/PNG/CV/query/replay/source-pixel/new-score/default/source/Git/native/helper action"
+}

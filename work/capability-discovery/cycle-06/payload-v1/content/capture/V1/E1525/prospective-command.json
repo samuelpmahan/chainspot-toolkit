@@ -1,0 +1,38 @@
+{
+  "schema": "cycle06-E1525-pure-comparison-command@1",
+  "job_id": "E1525",
+  "worker": "V1",
+  "status": "CONSTRUCTION_ONLY_NOT_RUN_ROOT_FLOW_HASH_GO_REQUIRED",
+  "cwd": "/workspace/scratch/8528bb251845",
+  "argvTemplate": ["/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node","/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1525/compare-once.mjs","--admission-sha256","ROOT_TO_BIND_AFTER_FLOW_HASH_REVIEW"],
+  "stdout": "discovery-cycle06/V1/E1525/driver.stdout.log",
+  "stderr": "discovery-cycle06/V1/E1525/driver.stderr.log",
+  "capture": "Future root-authorized outer command uses exclusive noclobber raw stdout/stderr and records actual observed exit; no warmup/syntax/test/product subprocess.",
+  "driver": {"path":"/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1525/compare-once.mjs","bytes":16007,"sha256":"7494449c57d12c81575974592882627459015ecf0ec649b4606fff337fea3846"},
+  "comparator": {"path":"discovery-cycle06/V1/E1519/compare.mjs","bytes":33761,"sha256":"359f5e177cf1bb3cf0c65212445086ce9f19374fae279d3f40ffba55f9994acd","calls":1},
+  "codec": {"path":"chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs","bytes":7322,"sha256":"3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015","caps":"unchanged defaults; no original artifact wire modifications"},
+  "packages": {"original":"/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/producer-v1","replay":"/workspace/scratch/8528bb251845/discovery-cycle06/V1/E1521/replay-v1"},
+  "argvAdapter": {
+    "label": "RESOLVED_ARGV_PROJECTION",
+    "beforeProjection": "Verify BOTH hash-bound raw outer argv arrays equal full exact frozen literal-node command, with only output root differing, and BOTH raw resolvedNode equal configured absolute Node. No projection occurs on any mismatch.",
+    "projection": "[raw.resolvedNode,...raw.argv.slice(1)] supplied only to comparator observation.argv; raw actualExitCode -> exitCode, raw bound Uint8Array stdout/stderr.",
+    "retention": "Full unmodified raw outer records, raw argv/bindings, adapter guards and labelled projected argv remain in full report authority. This is an API boundary adapter, not raw-record replacement or numeric/timing policy exception."
+  },
+  "requiredFutureAdmission": {
+    "path": "discovery-cycle06/E1525-root-comparison-admission.json",
+    "schema": "cycle06-root-comparison-admission@1",
+    "job_id": "E1525",
+    "worker": "V1",
+    "admitted": true,
+    "scope": "ONE_READONLY_PAIR_COMPARISON",
+    "driver": "Absolute path/bytes/SHA256 matching above",
+    "prospectiveCommand": "Absolute path/bytes/SHA256 of this file",
+    "runtimeProvenanceDisposition": "ACKNOWLEDGE_BOUND_ERRATUM_NO_EXECUTED_CODE_AUTHENTICATION"
+  },
+  "runtimeErratum": {"path":"discovery-cycle06/runtime-authority-erratum.v1.json","bytes":1640,"sha256":"343eb8ca3861ec18b5dcd08318da2d69fb437afc77b01f31905bc54d7152d140","meaning":"Original/replay recorded prelaunch file hashes agree; prior mistaken no-original-hash statements preserved, not execution authentication."},
+  "outputs": ["one-comparison-token.json","comparison-report.tagged.json OR comparison-report.v8","report-serialization.json","driver-result.json"],
+  "reportSerialization": "Try unchanged pinned codec/default caps and exact round-trip; if unsupported (including own undefined failure values), preserve full report in explicit E1525-V8-REPORT+NULLPROTO@1 with prototype side table and verified round-trip. Never coerce undefined/null/nonfinite/signed-zero/typed values. Serialization receipt records format/bytes/hash and any codec failure. Original wires unchanged.",
+  "exit": "0 only overall MATCH_EXCEPT_DECLARED_TIMING; otherwise1. This is engineering replay consistency only, not scientific or human acceptance.",
+  "prohibited": ["new producer/replay/CV/PATH/store query","product or recipe/CLI import","warmup/inspect/test/syntax run before root admission","new scientific/numeric/timing tolerance","raw argv replacement","original/replay wire writes","automatic retry or policy widening"],
+  "claims": {"scientificAcceptance":"UNKNOWN","humanAcceptance":"UNKNOWN","pathIdentity":"UNKNOWN","continuity":"UNKNOWN","calibratedWidth":"UNKNOWN"}
+}

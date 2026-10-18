@@ -1,0 +1,23 @@
+--- package-closed.v1.py
++++ package-closed.v2.py
+@@ -356,7 +356,8 @@
+         expected = {m["name"] for m in archive["members"]}
+         if inventory(root) != expected:
+             raise ValueError("raw directory exact340 set mismatch")
+-        manifest = json.loads(read_file(root, "artifact-manifest.json"))
++        manifest_binding = next(m for m in archive["members"] if m["name"] == "artifact-manifest.json")
++        manifest = json.loads(read_file(root, "artifact-manifest.json", manifest_binding))
+         if len(manifest["artifacts"]) != 338 or [m["name"] for m in archive["members"][:338]] != [m["path"] for m in manifest["artifacts"]]:
+             raise ValueError("manifest exact338 order mismatch")
+         for row, bound in zip(manifest["artifacts"], archive["members"]):
+--- run-closed-once.v1.py
++++ run-closed-once.v2.py
+@@ -9,7 +9,7 @@
+ 
+ ROOT = Path("/workspace/scratch/8528bb251845")
+ REPO = ROOT / "chainspot-discovery-lab"
+-HELPER = "chainspot-discovery-lab/work/capability-discovery/cycle-06/package-closed.v1.py"
++HELPER = "chainspot-discovery-lab/work/capability-discovery/cycle-06/package-closed.v2.py"
+ 
+ 
+ def bound(entry, cap):

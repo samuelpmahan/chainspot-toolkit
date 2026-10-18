@@ -1,0 +1,17 @@
+{
+  "schema": "cycle06-source-shape-oracle-addendum@1",
+  "status": "PROPOSED_PENDING_INDEPENDENT_REVIEW",
+  "originalPolicy": {"path":"V1/E1512/replay-policy.json","sha256":"b146b7183e4aab0708792b7f72aa37790113ca8061f34c551ea590f24391027d","modified":false},
+  "finding": {"path":"R2/E1517/source-only-critique.json","sha256":"f9b753228a6049947d6f7f37cb79f04a3f6f82733eccc57ef0ad56c408600fc1","id":"R2-E1517-F1"},
+  "sourceRecipeSha256": "4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6",
+  "sourceLegacyVerifierSha256": "ef7248daf5c83fd014c4a5004aa511e41399492a46be0460fe566ab421383ad3",
+  "timingAndDisclosure": "Written AFTER the sole producer completed. The independent finding was derived from source text only, without producer-output inspection by R2 or comparator author V1. This is not a preproducer policy and does not establish that the original policy passed unchanged.",
+  "clarifications": [
+    {"pointer":"/exactProvenanceAndIntegrity/4","source":"recipe.mjs:314,403-405","rule":"Each successful enclosing snapshot has error:null. Each checks[k] has exactly ordered own keys planIndex,post,verified; no error or pre key. post has exactly ordered rgbaSha256,maskSha256, equals enclosing snapshot.pre, and verified is true. Ten checks retain exact plan order. Missing is not null; never inject a key into a trace."},
+    {"pointer":"/exactProvenanceAndIntegrity/1","source":"legacy recipe.mjs:176-183; Lenard recipe.mjs:249-261","rule":"Compressed provenance prose is interpreted by the exact source object type, not by fabricating every listed field on every entry. Each physical source closure has ordered verified,entries; its nine entries have exactly ordered path,expectedSha256,actualSha256,error, expected equals actual and error:null. Each implementation list has five entries with exactly ordered path,expectedSha256,actualSha256,bytes; no error or per-entry verified field. First two expectedSha256 are literal null as source emits; their actual hashes are checked against the independently frozen source admission. Remaining three expected digests match actual. Every byte count and path remains exact and independently bound. Across before/after stages and across runs all these entries remain exact."}
+  ],
+  "unchanged": ["All frozen source and input bytes", "Exact value-trace and answer-fragment bytes", "Object keys/order and missing-versus-null equality", "All native values including NaN, infinities, negative zero, typed arrays and null", "Only the original explicitly named numeric timing leaves may vary after original clock checks", "All artifact hashes and sizes verified per run; only originally declared derived timing bindings may differ", "All original counts, ordering, schema and integrity guards", "No CV, classifier, threshold, weights, calibration, scientific tolerance, source or renderer execution authorized by this file"],
+  "acceptance": "Requires independent source-only review and a separate root admission before comparator use. Original policy defect is retained and must be reported with any result. No retroactive original-policy acceptance.",
+  "scientificAcceptance": "UNKNOWN",
+  "humanAcceptance": "UNKNOWN"
+}

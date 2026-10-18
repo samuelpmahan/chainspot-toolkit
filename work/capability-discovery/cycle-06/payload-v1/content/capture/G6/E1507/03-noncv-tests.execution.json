@@ -1,0 +1,19 @@
+{
+  "id": "03-noncv-tests",
+  "argv": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "experiments/capability-discovery/lenard5-station-evidence/recipe.test.mjs"
+  ],
+  "environmentOverrides": {
+    "NODE_OPTIONS": "--import=/workspace/scratch/8528bb251845/discovery-cycle06/G6/E1507/no-product-tripwire.mjs"
+  },
+  "start": "2026-10-18T17:26:14.961Z",
+  "end": "2026-10-18T17:26:15.136Z",
+  "exit": 0,
+  "signal": null,
+  "error": null,
+  "stdout": "TAP version 13\n# Subtest: missing/false own enabled is disabled without inspecting unrelated getters\nok 1 - missing/false own enabled is disabled without inspecting unrelated getters\n  ---\n  duration_ms: 2.261472\n  type: 'test'\n  ...\n# Subtest: enabled accessor and nonboolean enabled refuse without evaluating getters\nok 2 - enabled accessor and nonboolean enabled refuse without evaluating getters\n  ---\n  duration_ms: 0.465779\n  type: 'test'\n  ...\n# Subtest: closed request rejects caller buffers, hidden/symbol/accessor/custom shapes before file reads\nok 3 - closed request rejects caller buffers, hidden/symbol/accessor/custom shapes before file reads\n  ---\n  duration_ms: 0.925659\n  type: 'test'\n  ...\n# Subtest: declarations retain16 full-frame comparisons with12 null and4 strip masks\nok 4 - declarations retain16 full-frame comparisons with12 null and4 strip masks\n  ---\n  duration_ms: 0.671407\n  type: 'test'\n  ...\n# Subtest: fixed plan emits160 literal public requests in frozen order without extra operations\nok 5 - fixed plan emits160 literal public requests in frozen order without extra operations\n  ---\n  duration_ms: 1.777887\n  type: 'test'\n  ...\n# Subtest: file preflight refuses missing/nonregular/oversize/invalidUTF8 manifests without a query\nok 6 - file preflight refuses missing/nonregular/oversize/invalidUTF8 manifests without a query\n  ---\n  duration_ms: 1.87336\n  type: 'test'\n  ...\n# Subtest: closed file manifest and actual protocol bytes are checked before attestation or pixels\nok 7 - closed file manifest and actual protocol bytes are checked before attestation or pixels\n  ---\n  duration_ms: 1.572849\n  type: 'test'\n  ...\n# {\"schema\":\"cycle06-noncv-import-tripwire@1\",\"blockedImports\":0,\"meaning\":\"import blocker only; no source-read or store-call instrumentation claim\"}\n1..7\n# tests 7\n# suites 0\n# pass 7\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 104.22009\n",
+  "stderr": ""
+}

@@ -1,0 +1,48 @@
+--- chainspot-discovery-lab/work/capability-discovery/cycle-06/package-closed.v2.py	2026-10-18 23:16:42.216278094 +0300
++++ chainspot-discovery-lab/work/capability-discovery/cycle-06/package-closed.v3.py	2026-10-18 23:51:44.023086133 +0300
+@@ -176,6 +176,23 @@
+                   stdoutBytes=len(body), stdoutSha256=sha(body))
+     if stored_path is not None:
+         record["stdoutPath"] = str(stored_path.relative_to(logs.parent))
++        record["stdoutBytes"] = record["stdoutSha256"] = None
++        try:
++            actual_size = stored_path.stat().st_size
++            actual_digest = hashlib.sha256()
++            counted = 0
++            with stored_path.open("rb") as stream:
++                for block in iter(lambda: stream.read(65536), b""):
++                    counted += len(block)
++                    actual_digest.update(block)
++            if counted != actual_size:
++                raise ValueError("retained stdout size changed during capture")
++            record.update(stdoutBytes=counted, stdoutSha256=actual_digest.hexdigest())
++        except BaseException as capture_error:
++            record["stdoutCaptureError"] = str(capture_error)
++            if failure is None:
++                failure = "compression stdout capture unavailable"
++                record["error"] = failure
+     error = read_file(logs, stderr_path.name)
+     record["stderr"] = {"path": stderr_path.name, "bytes": len(error), "sha256": sha(error)}
+     put(logs, label + ".process.json", encoded(record))
+@@ -322,6 +339,21 @@
+ 
+ 
+ def decode_index(package, index, logs):
++    plan = index["plan"]
++    object_computed = {"storedBytes", "storedSha256"}
++    archive_computed = {"bytes", "sha256", "codec", "storedBytes", "storedSha256"}
++    for key, computed in (("objects", object_computed), ("archives", archive_computed)):
++        if len(index[key]) != len(plan[key]):
++            raise ValueError("index/plan descriptor count mismatch: " + key)
++        for actual, expected in zip(index[key], plan[key]):
++            if set(actual) != set(expected) | computed or any(k in expected for k in computed):
++                raise ValueError("index/plan descriptor fields mismatch: " + key)
++            if {k: v for k, v in actual.items() if k not in computed} != expected:
++                raise ValueError("index/plan ordered descriptor mismatch: " + key)
++            if key == "archives" and (actual["codec"] != "zstd"
++                    or actual["bytes"] != expected["tarBytes"]
++                    or actual["bytes"] != tar_size(expected["members"])):
++                raise ValueError("archive codec/computed size disagrees with plan")
+     bodies = {}
+     archives = {}
+     for obj in index["objects"] + index["archives"]:

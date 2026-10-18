@@ -1,0 +1,23 @@
+✔ refuse malformed edgePair number (2.658031ms)
+✔ refuse malformed edgePair empty object (0.315651ms)
+✔ refuse malformed edgePair false (0.95099ms)
+✔ refuse malformed edgePair missing fit scalar (0.258516ms)
+✔ refuse malformed edgePair bad condition (0.239168ms)
+✔ refuse attempted COMPLETED with null identity (0.297294ms)
+✔ refuse attempted THREW with null identity (0.389642ms)
+✔ allow legitimate NOT_ATTEMPTED null identity without inventing an answer (2.446765ms)
+✔ retain native fit scalars and extra fields by reference, without finite acceptance (1.409214ms)
+✔ completed unencodable missing answer retains its actual state label (0.773335ms)
+✔ native edgePair condition preserves original fields and shared outcome (0.695849ms)
+✔ SVG and HTML compact summaries retain null and condition instead of unavailable quantities (5.430722ms)
+✔ normal loss condition:null stays a value with numeric SVG HTML and exact records (5.818011ms)
+✔ long48 adjacent NaN annotations do not overlap and retain side token station identity (9.636283ms)
+✔ finite-only long48 SVG stays byte-identical to preserved v3 (1.704125ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 113.80259

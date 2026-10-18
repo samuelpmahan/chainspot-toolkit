@@ -1,0 +1,98 @@
+{
+  "schema": "cycle06-lenard5-trace-display@1",
+  "status": "SVG_CSV_HTML_WRITTEN_NO_PNG_OR_VISUAL_QA",
+  "renderer": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1526/renderer-proposal.v4.mjs",
+    "sha256": "19be2472803e613b40043d4e2ee0adcfc53e59a27cd9c410eef0601a226a45ef"
+  },
+  "codec": {
+    "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs",
+    "sha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015"
+  },
+  "bindings": {
+    "packet": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/render-trust-packet.v1.json",
+      "bytes": 1704,
+      "sha256": "f5e4baf6c9173f39e40f49cab14355d1db5176818f42ba8e81f413c780998ff3"
+    },
+    "rawAcceptance": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/render-raw-acceptance-envelope.v1.json",
+      "bytes": 1360,
+      "sha256": "dedcc0da90c2bf781b4670d13aac6656aeb464bbf5009495866d92f6bbfd0fb4"
+    },
+    "producerRecord": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/render-producer-record-envelope.v1.json",
+      "bytes": 1042,
+      "sha256": "0c021a97bc3c7fd4d567b7b889976dbd542af3982b2eff0464ef4f19ce7de99b"
+    },
+    "sourceFreeze": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/root-source-admission.json",
+      "bytes": 6356,
+      "sha256": "6f3f30924749e0104a12e7d5d3d43b45b23569e55de8ffe565111620dd0355b8"
+    },
+    "cliReceipt": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/producer-v1/cli-receipt.json",
+      "bytes": 65951,
+      "sha256": "7d4107dc4bbe8e06e0665f7bbce2ac558f6770a88263024400cd257b987dc37e"
+    },
+    "artifactManifest": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/producer-v1/artifact-manifest.json",
+      "bytes": 87118,
+      "sha256": "f85df68d1b34ce2464dcec869c023f0bb10a0240cf9f750ca1a0b23e0151064f"
+    },
+    "trace": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/producer-v1/value-trace.json",
+      "bytes": 2094896,
+      "sha256": "a2333d711ce5e46d5c13b8949c0027d3a67c91e5802b911f6bf62b1b33950d21"
+    },
+    "sidecar": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/producer-v1/timing-sidecar.json",
+      "bytes": 181123,
+      "sha256": "2ce4fc7faa1c94f7dff078de7b5e5129c0876764012a82dc7b7691f0afde1fb0"
+    }
+  },
+  "artifacts": [
+    {
+      "path": "descriptive-table.csv",
+      "bytes": 1734199,
+      "sha256": "53bdcf7cfe714ff0342549a4bf05d5c791f2f7a2d2e3e6054eddd338c833c5a5"
+    },
+    {
+      "path": "group-primary.svg",
+      "bytes": 148224,
+      "sha256": "1effeec087014bde8b774e246cd346f7a32832d0b1b0a988b07b24a7e85e09bd"
+    },
+    {
+      "path": "group-bright-nonpath.svg",
+      "bytes": 148325,
+      "sha256": "288969a6e3f319e29b504c74f85d125f3bd8a8fdb153921c7c42e626556d6adc"
+    },
+    {
+      "path": "group-normal-plus6.svg",
+      "bytes": 148377,
+      "sha256": "3e777c1fbfc02db62e0548f77e622723f2265e52f7a9b8d0fadd468deef4c2a2"
+    },
+    {
+      "path": "group-masked-primary.svg",
+      "bytes": 146279,
+      "sha256": "066b275855b3ac6d87e62cfda9da41eeda0781ffd3500e5f4263af8ae860b4b2"
+    },
+    {
+      "path": "report.html",
+      "bytes": 2131065,
+      "sha256": "42c4ec22f5a5d97cfd2189149e1a7bd162bd8f0890efba78f260b81f66ca6f4e"
+    }
+  ],
+  "warnings": [],
+  "claims": {
+    "promoted": false,
+    "heldout": false,
+    "pathIdentity": "UNKNOWN",
+    "physicalEdgeIdentity": "UNKNOWN",
+    "continuity": "UNKNOWN",
+    "calibratedWidth": "UNKNOWN",
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN"
+  },
+  "limits": "Trusted hash-time identity, not execution authentication/hostile filesystem defense. Native fields quoted, no measurement/classifier/retry; exclusive retained-prefix output, not atomic/durable. PNG/visualQA require separate admission."
+}

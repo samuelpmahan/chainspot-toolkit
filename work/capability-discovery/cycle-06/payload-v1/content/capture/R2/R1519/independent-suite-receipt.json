@@ -1,0 +1,28 @@
+{
+  "job_id": "R1519",
+  "worker": "R2",
+  "command": [
+    "node",
+    "--test",
+    "discovery-cycle06/V1/E1519/compare.test.mjs"
+  ],
+  "cwd": "/workspace/scratch/8528bb251845",
+  "started": {
+    "current_time": "2026-10-18 19:19:31 UTC"
+  },
+  "ended": {
+    "current_time": "2026-10-18 19:19:32 UTC"
+  },
+  "result": {
+    "chunk_id": "91599e",
+    "wall_time_seconds": 0.268335233,
+    "exit_code": 0,
+    "original_token_count": 383,
+    "output": "✔ exact comparison preserves nonfinite, negative zero and typed identity (1.400421ms)\n✔ exact comparison rejects key/order/extra-field changes at first pointer (1.610312ms)\n✔ only explicitly supplied numeric timing leaves can differ (0.866075ms)\n✔ clock validation rejects nonfinite, negative, inconsistent or reversed time (14.123787ms)\n✔ plan uses exact literal local order and fixed geometry (0.918544ms)\n✔ missing native captures cannot satisfy the fixed completion model (0.347424ms)\n✔ raw binding checks both actual digest and actual byte length (0.937123ms)\n✔ manifest and receipt ordinary pretty JSON stays separate from wire codec (0.61028ms)\n✔ native capture order cache metadata and computedMs are not timing exceptions (8.811029ms)\n✔ only the 722 fixed sidecar clock pointers exist and interval metadata follows source order (0.890893ms)\n✔ artifact ordinals and metadata are fixed; null mask is not a zero mask (0.446693ms)\n✔ FULL validateRun hand-declared successful envelope fixture allows null/condition/nonfinite value payloads (20.597423ms)\n✔ FULL validateRun rejects null nativeAnswer, missing own value, bad unit and wrong emits before self equality (64.831028ms)\n✔ FULL validateRun independently exercises counts, request/source binding and exact snapshot-check shape (35.543021ms)\n✔ external-root lexical guard respects complete parent path components (0.672883ms)\nℹ tests 15\nℹ suites 0\nℹ pass 15\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 277.74755\n"
+  },
+  "stream_capture": "exec_command supplies combined output; this independent receipt does not separately attest stderr",
+  "invocations": 1,
+  "retries": 0,
+  "repairs": 0,
+  "scope": "Synthetic NONCV helper/validateRun tests only, no comparePackages/codec/product/producer/replay."
+}

@@ -1,0 +1,58 @@
+{
+  "schema": "cycle06-separate-administration-index@1",
+  "job_id": "E1541",
+  "worker": "G6",
+  "status": "CONSTRUCTION_CHECKPOINT_OUTSIDE_CLOSED_ENGINEERING_PAYLOAD",
+  "entries": [
+    {
+      "path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/final-inputs.proposed.v3.json",
+      "bytes": 1026723,
+      "sha256": "f124af3d041ac7605cabdeedfde73bea1dca4e7c9ad88aff60e7c912d3a0588d",
+      "mode": 420
+    },
+    {
+      "path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/E1541-PLAN-FLOW.v1.md",
+      "bytes": 11904,
+      "sha256": "5a517c658584080874d31747a272f26bb37ae69477b4104de29497efbb403362",
+      "mode": 420
+    },
+    {
+      "path": "discovery-cycle06/G6/E1541/one-build.prospective.v1.json",
+      "bytes": 7491,
+      "sha256": "edbb46dcdbd50f6225b1868ce2de770ea6ab883430d860b4498d5febaf1081d2",
+      "mode": 420
+    },
+    {
+      "path": "discovery-cycle06/G6/E1541/plan-readback.json",
+      "bytes": 7545,
+      "sha256": "5636dd433f5dd7cb1bf1deca984bbfd336e31a1fa54eaeb5a484a0bbde0b5ed9",
+      "mode": 420
+    },
+    {
+      "path": "discovery-cycle06/G6/E1541/structural-readback.json",
+      "bytes": 2007,
+      "sha256": "37d6e7bad5358d8cf20faf19a82b8f61ab4b5bfca9320330a58c4ed43670feb9",
+      "mode": 420
+    },
+    {
+      "path": "discovery-cycle06/G6/E1541/result.json",
+      "bytes": 15428,
+      "sha256": "b0b3b9ac27208f4fb48f4c35d99853c8b04c7065fc32259ca2e9b134a3ffdcf4",
+      "mode": 420
+    }
+  ],
+  "selfExcluded": true,
+  "notInEngineeringPayload": true,
+  "rootAdmissionClaimed": false,
+  "futureEntriesNotYetObserved": [
+    "root-admitted-plan",
+    "root-wrapper-packet",
+    "root-child-admission",
+    "wrapper-and-build-original-streams-actual-process-token",
+    "actual-payload-manifest-and-stored-hashes",
+    "fresh-independent-A1-restored-roundtrip-and-final-audit",
+    "E1541-native-finish-and-later-native-admin",
+    "separately-authorized-Git-checkpoint-publication"
+  ],
+  "appendPolicy": "New immutable index version after actual files exist. Do not mutate admitted engineering payload/old index, hash self, or infer future acceptance. E1541 result references index path without its hash, so there is no circular content identity."
+}

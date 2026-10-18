@@ -1,0 +1,39 @@
+--- discovery-cycle06/V2/E1520/renderer-proposal.v3.mjs	2026-10-18 22:14:29.231208233 +0300
++++ discovery-cycle06/V2/E1526/renderer-proposal.v4.mjs	2026-10-18 22:53:24.491992367 +0300
+@@ -1,4 +1,4 @@
+-/** E1520 v3 proposal: bounded condition:null outcome repair. CONSTRUCTED, NEVER RUN.
++/** E1526 v4 proposal: bounded nonfinite annotation-strip layout repair.
+  * Imports Node only until all trusted byte bindings pass; then pure pinned codec.
+  * No recipe/CLI/store/vendor/PATH/pixels/PNG/browser imports or query generation.
+  */
+@@ -148,14 +148,27 @@
+ const nativeLabel=r=>r.outcome.kind!=='value'?r.outcome.label:`${r.outcome.label}: l=${scalar(r.value.lPx)} r=${scalar(r.value.rPx)} c=${scalar(r.value.cPx)} w=${scalar(r.value.wPx)}`;
+ 
+ /** Display geometry only. No data smoothing/interpolation or science calculation. */
++function nonfiniteAnnotations(values,w){
++  const lines=[],limit=Math.max(1,Math.floor((w-12)/5)); //8px monospace display budget, not a data threshold.
++  values.forEach((array,s)=>{const series=s===0?'L':'R',groups=new Map();
++    array.forEach((v,i)=>{if(!finite(v)){const token=scalar(v);if(!groups.has(token))groups.set(token,[]);groups.get(token).push(i);}});
++    for(const [token,indices]of groups){let chunk=[];const add=()=>{if(chunk.length){const list=chunk.join(',');lines.push({series,token,indices:list,text:`${series} ${token} @${list}`});}};
++      for(const i of indices){if(chunk.length&&`${series} ${token} @${[...chunk,i].join(',')}`.length>limit){add();chunk=[];}chunk.push(i);}add();
++    }
++  });return lines;
++}
+ function plot(values,valid,x,y,w,h,{title='',profile=false}={}){
+   let out=`<text x="${x}" y="${y-10}" font-size="12">${esc(title)}</text>`;const finiteValues=values.flat().filter(finite);let lo=finiteValues.length?Math.min(...finiteValues):0,hi=finiteValues.length?Math.max(...finiteValues):1;if(lo===hi){lo-=1;hi+=1;}
+-  const N=values[0]?.length??0,px=i=>x+(N<2?0:i/(N-1))*w,py=v=>y+h-(v-lo)/(hi-lo)*h,colors=['#176b8a','#bd6027'];
++  const annotations=profile?[]:nonfiniteAnnotations(values,w),plotHeight=h-(annotations.length?annotations.length*10+6:0);
++  const N=values[0]?.length??0,px=i=>x+(N<2?0:i/(N-1))*w,py=v=>y+plotHeight-(v-lo)/(hi-lo)*plotHeight,colors=['#176b8a','#bd6027'];
+   out+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="white" stroke="#c3ccd5"/>`;
+   values.forEach((array,s)=>{let path='',open=false;array.forEach((v,i)=>{const good=finite(v)&&valid[s][i];if(good){path+=`${open?'L':'M'}${px(i).toFixed(2)},${py(v).toFixed(2)} `;open=true;}else open=false;});out+=`<path d="${path}" fill="none" stroke="${colors[s]}" stroke-width="1.5"/>`;
+-    array.forEach((v,i)=>{if(!profile&&finite(v))out+=`<circle cx="${px(i)}" cy="${py(v)}" r="2.2" stroke="${valid[s][i]?colors[s]:'#7b8490'}" fill="${valid[s][i]?colors[s]:'white'}"/>`;if(!finite(v))out+=`<text x="${px(i)}" y="${y+h-3-s*10}" font-size="7" fill="#707b89">${esc(v)}</text>`;if(!profile)out+=`<rect x="${px(i)-2}" y="${y+h+16+s*9}" width="4" height="6" fill="${valid[s][i]?colors[s]:'#e0e3e8'}"/>`;});
++    array.forEach((v,i)=>{if(!profile&&finite(v))out+=`<circle cx="${px(i)}" cy="${py(v)}" r="2.2" stroke="${valid[s][i]?colors[s]:'#7b8490'}" fill="${valid[s][i]?colors[s]:'white'}"/>`;if(profile&&!finite(v))out+=`<text x="${px(i)}" y="${y+h-3-s*10}" font-size="7" fill="#707b89">${esc(v)}</text>`;if(!profile)out+=`<rect x="${px(i)-2}" y="${y+h+16+s*9}" width="4" height="6" fill="${valid[s][i]?colors[s]:'#e0e3e8'}"/>`;});
+   });
+-  out+=`<text x="${x}" y="${y+h+12}" font-size="9">${profile?'offset -30 to +30 source px':'caller station index; blue L / orange R; validity lanes'}</text><text x="${x}" y="${y+10}" font-size="8">${esc(axis(hi))}</text><text x="${x}" y="${y+h-2}" font-size="8">${esc(axis(lo))}</text>`;return out;
++  if(annotations.length){out+=`<rect x="${x}" y="${y+plotHeight+4}" width="${w}" height="${h-plotHeight-4}" fill="#fffaf0"/><line x1="${x}" y1="${y+plotHeight+4}" x2="${x+w}" y2="${y+plotHeight+4}" stroke="#d8e0e7"/>`;
++    annotations.forEach((a,i)=>{out+=`<text x="${x+6}" y="${y+plotHeight+12+i*10}" font-family="DejaVu Sans Mono,monospace" font-size="8" fill="#707b89" data-series="${a.series}" data-token="${esc(a.token)}" data-indices="${a.indices}">${esc(a.text)}</text>`;});
++  }
++  out+=`<text x="${x}" y="${y+h+12}" font-size="9">${profile?'offset -30 to +30 source px':'caller station index; blue L / orange R; validity lanes'}</text><text x="${x}" y="${y+10}" font-size="8">${esc(axis(hi))}</text><text x="${x}" y="${y+plotHeight-2}" font-size="8">${esc(axis(lo))}</text>`;return out;
+ }
+ function svgGroup(model,group,binding){
+   let out=`<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1600" viewBox="0 0 1680 1600"><rect width="1680" height="1600" fill="white"/><g font-family="DejaVu Sans,Arial,sans-serif" fill="#263746"><text x="24" y="30" font-size="22">Lenard5 retained native answers — ${esc(group)}</text><text x="24" y="52" font-size="12">UNKNOWN path / physical edge / continuity / calibrated width / science / human acceptance; promoted=false. No best width.</text><text x="24" y="70" font-size="10">Trace ${binding.trace.sha256.slice(0,20)}… Sidecar ${binding.sidecar.sha256.slice(0,20)}… Retained raw rows only; no pixels or query calls.</text>`;

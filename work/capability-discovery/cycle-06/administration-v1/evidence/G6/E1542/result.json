@@ -1,0 +1,327 @@
+{
+  "schema": "capability-discovery-extraction-result@1",
+  "job_id": "E1542",
+  "worker": "G6",
+  "outcome": "mixed_change",
+  "status": "ONE_ROOT_ADMITTED_BUILD_EXIT0_INTERNAL_BYTE_VERIFIED_INDEPENDENT_PHYSICAL_ROUNDTRIP_AUDIT_PENDING",
+  "summary": "Phase1 mechanically created root-admitted plan570db7 with only five authority path changes and all11 engineering keys identical to proposal f124af. Phase2 executed exactly one explicit root-admitted wrapper266a0d using accepted wrapper8b9d7/helper7b4f94/Pythonfa674/zstd7c546. Wrapper and its one helper build child exited0; output648files/9,351,615B, package-manifest1d083ffd. Actual38zstd operation process records19compress+19decode all exit0/noerror/emptystderr. Helper internally checked canonical340/340/2 archives, index↔plan descriptors, all1414 aliases in memory and HTML350/348 closure; no standalone verify/stage or physical restored tree was run. File-only actual stored manifest/body/fullmode/set/SHA256SUMS and fresh source22/all2523 body/hash/computed Gitblob/current0644 preservation differences are empty. First inline preflight failed due my unrequested runtime nlink1 predicate on unchanged Git nlink145; preserved as TOOLTESTIMONY and narrowly corrected only after explicit root direction, before any wrapper launch. This was one actual wrapper attempt, no retry or permission/source/env/assertion change. E1541 path names are construction origin, actual execution native jobE1542. Built author evidence is NOT independent package/science acceptance.",
+  "authority": {
+    "nativePacket": "Same actual nativeepoch50 assigned/started/persisted/readback E1542G6 remained pinned across Phase1/2; no self-finish/newworker/freecapacity",
+    "rootInputAdmission": true,
+    "rootExecutionGO": true,
+    "plan": {
+      "path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/final-inputs.root-admitted.v1.json",
+      "bytes": 1027172,
+      "mode": 420,
+      "sha256": "570db7f7563c27041ad215e61625753f98f6f7b01e607f706adae117d7bbc5a1"
+    },
+    "childAdmission": {
+      "path": "discovery-cycle06/G6/E1541/root-child-admission.v1.json",
+      "bytes": 339,
+      "mode": 420,
+      "sha256": "04170a37ea38ac4f6e35f4b2f3daba294a950abf8f0641fb7d32efb67f1c8257"
+    },
+    "wrapperPacket": {
+      "path": "discovery-cycle06/G6/E1541/root-one-build-packet.v1.json",
+      "bytes": 1147,
+      "mode": 420,
+      "sha256": "266a0dfda05a298e88e7732d078ec12aef2463af79c2afa8af60e396781c979e"
+    },
+    "independentInputPlanReview": {
+      "source": "discovery-cycle06/A1/R1541/result.json",
+      "sha256": "32597ec1b6e0d7f3c9e2a30e096c7fde7744ddbd0e5876400f92fb70199c8087",
+      "decision": "accepted"
+    },
+    "sourceReview": {
+      "source": "discovery-cycle06/R1/R1536/result.json",
+      "sha256": "678e876f9fc80182ed9a0d94ac02e3e909675ef88cad12dd4f6c8fb68f8202ad",
+      "decision": "accepted",
+      "scope": "Helper engineering source and mocked behavior only"
+    }
+  },
+  "phase1": {
+    "diff": "discovery-cycle06/G6/E1542/proposal-admitted.diff.txt",
+    "readback": "discovery-cycle06/G6/E1542/readback.json",
+    "engineeringKeysCompared": 11,
+    "engineeringDifferences": [],
+    "changedAuthorityPaths": [
+      "status",
+      "notFinalFreeze",
+      "authority.missing",
+      "executionCandidate.rootAdmissionExists",
+      "rootAdmission"
+    ],
+    "proposalUnchangedSha256": "f124af3d041ac7605cabdeedfde73bea1dca4e7c9ad88aff60e7c912d3a0588d",
+    "selfOrR1541Aliased": false
+  },
+  "actualWrapper": {
+    "schema": "cycle06-E1542-outer-wrapper-actual@1",
+    "job_id": "E1542",
+    "worker": "G6",
+    "constructionOriginPath": "discovery-cycle06/G6/E1541",
+    "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "prospectiveActualArgvDeclaration": {
+      "path": "discovery-cycle06/G6/E1542/actual-wrapper-command.v1.json",
+      "sha256": "d8dd0d80c3b66d6db68d874aad0685ca8b531a85afbcd121c7a5cd2f24110a0f",
+      "persistedBeforeLaunch": true
+    },
+    "startUTC": "2026-10-18T21:35:08.629635498Z",
+    "endUTC": "2026-10-18T21:35:11.310295710Z",
+    "actualPid": 6,
+    "actualExit": 0,
+    "actualSignal": null,
+    "signalObservation": "Shell wait0/tool10de8e exit0, separate signal not exposed; none invented",
+    "wrapperInvocations": 1,
+    "helperChildSpawns": 1,
+    "stdout": {
+      "path": "discovery-cycle06/G6/E1541/wrapper.stdout.raw",
+      "bytes": 1351,
+      "mode": 420,
+      "sha256": "da92d80f792807ea4cfe8d780842ff9d3058624f6d6f90fc8f72bef10f3214a4"
+    },
+    "stderr": {
+      "path": "discovery-cycle06/G6/E1541/wrapper.stderr.raw",
+      "bytes": 0,
+      "mode": 420,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "originalStreamCapture": "Direct binary shell noclobber, no tee/filter/rewrite; wrapper actual argv and UTC declared/captured before launch; no Python outer framework.",
+    "preliminaryPreflightFailure": {
+      "count": 1,
+      "toolChunk": "b1119d",
+      "captureKind": "TOOLTESTIMONY_NOT_LOCAL_ORIGINAL_STDERR",
+      "diagnosticToolChunk": "865f11",
+      "versionedCorrection": "discovery-cycle06/G6/E1542/preflight-correction.v1.json",
+      "rootExplicitCorrectedGuardAndOneStillUnusedShotGO": true
+    },
+    "correctedPreflight": {
+      "toolChunk": "30e150",
+      "actualExit": 0,
+      "eightBoundIdentitiesMatched": true,
+      "eightFreshOutputAndCapturePathsAbsent": true
+    },
+    "actualBuildFailures": 0,
+    "automaticWrapperRetries": 0,
+    "codeEnvPermissionsAssertionsChanged": false
+  },
+  "actualHelper": {
+    "record": {
+      "path": "discovery-cycle06/G6/E1541/build.actual.json",
+      "bytes": 1351,
+      "mode": 420,
+      "sha256": "da92d80f792807ea4cfe8d780842ff9d3058624f6d6f90fc8f72bef10f3214a4"
+    },
+    "spawnCount": 1,
+    "pid": 7,
+    "startUTC": "2026-10-18T21:35:08.663994+00:00",
+    "endUTC": "2026-10-18T21:35:11.301817+00:00",
+    "actualExit": 0,
+    "actualSignal": null,
+    "error": null,
+    "stdout": {
+      "path": "discovery-cycle06/G6/E1541/build.stdout.raw",
+      "bytes": 193,
+      "mode": 420,
+      "sha256": "094e4ee53ac1ee9fdee0f6b417def41f5bf6867bb9875dc3714404a7a7f77ece"
+    },
+    "stderr": {
+      "path": "discovery-cycle06/G6/E1541/build.stderr.raw",
+      "bytes": 0,
+      "mode": 420,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "onceToken": {
+      "path": "discovery-cycle06/G6/E1541/build.once.token",
+      "bytes": 676,
+      "mode": 420,
+      "sha256": "611a19b4cb6de1864fe32e5599aad8093ca16b745586406344eccd3804ef7211"
+    },
+    "reportedStatus": "BUILT_BYTE_VERIFIED_NOT_INDEPENDENTLY_ACCEPTED"
+  },
+  "output": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle06-final-E1541-v1",
+    "constructionOriginE1541ActualExecutionE1542": true,
+    "actualFiles": 648,
+    "actualFileBytes": 9351615,
+    "manifestListedFiles": 646,
+    "manifest": {
+      "path": "discovery-cycle06-final-E1541-v1/package-manifest.json",
+      "bytes": 128377,
+      "mode": 420,
+      "sha256": "1d083ffd9f9eb4bd6082c4fe2427ab4a8ccc909144ec92b39c5baa9389c42873"
+    },
+    "SHA256SUMS": {
+      "path": "discovery-cycle06-final-E1541-v1/SHA256SUMS",
+      "bytes": 70342,
+      "mode": 420,
+      "sha256": "6576482aa6736313b643ff32f9461cb0586bead1185cffb6f41d8db8548d862a"
+    },
+    "index": {
+      "path": "discovery-cycle06-final-E1541-v1/index.json",
+      "bytes": 442833,
+      "mode": 420,
+      "sha256": "de33215a85e73f4779bfe2692b1d37fdcc0d0616f37d2251b370c36549551ced"
+    },
+    "constructionPlan": {
+      "path": "discovery-cycle06-final-E1541-v1/construction-plan.json",
+      "bytes": 1027172,
+      "mode": 420,
+      "sha256": "570db7f7563c27041ad215e61625753f98f6f7b01e607f706adae117d7bbc5a1"
+    },
+    "toolSource": {
+      "path": "discovery-cycle06-final-E1541-v1/tool-source.py.txt",
+      "bytes": 25471,
+      "mode": 420,
+      "sha256": "7b4f94a118e20d6b900938e99f0a24dc71aaeb41411a7c10d2fb4e466a541393"
+    },
+    "contentObjects": 564,
+    "rawObjects": 548,
+    "zstdMetadataObjects": 16,
+    "archives": [
+      {
+        "id": "original",
+        "path": "archives/original.tar.zstd",
+        "members": 340,
+        "rawTarBytes": 4584448,
+        "rawTarSha256": "a601e11e407d915301e39a54a720eee694307122d8f2fa03dac0fe9929b398da",
+        "stored": {
+          "path": "discovery-cycle06-final-E1541-v1/archives/original.tar.zstd",
+          "bytes": 227768,
+          "mode": 420,
+          "sha256": "80a078eecf13ce6d809bb0e1091df06b497b42eb8012c4e7ae1cfb71c796ee83"
+        },
+        "indexStoredBytes": 227768,
+        "indexStoredSha256": "80a078eecf13ce6d809bb0e1091df06b497b42eb8012c4e7ae1cfb71c796ee83"
+      },
+      {
+        "id": "replay",
+        "path": "archives/replay.tar.zstd",
+        "members": 340,
+        "rawTarBytes": 4584448,
+        "rawTarSha256": "95cf25468d8b022d63079cc679dd2cbec6cc043dc086d6741674322cb26e215f",
+        "stored": {
+          "path": "discovery-cycle06-final-E1541-v1/archives/replay.tar.zstd",
+          "bytes": 227495,
+          "mode": 420,
+          "sha256": "15eb2ff8104588d44ee4789aea4a8f1a187bcd8cd40b9b9133e04d6fb507f910"
+        },
+        "indexStoredBytes": 227495,
+        "indexStoredSha256": "15eb2ff8104588d44ee4789aea4a8f1a187bcd8cd40b9b9133e04d6fb507f910"
+      },
+      {
+        "id": "counterexamples",
+        "path": "archives/counterexamples.tar.zstd",
+        "members": 2,
+        "rawTarBytes": 6359040,
+        "rawTarSha256": "8c57eba4ae21cfec5ea84f658e1d4ee0f4945137379de5671f7c3cd95899ce2d",
+        "stored": {
+          "path": "discovery-cycle06-final-E1541-v1/archives/counterexamples.tar.zstd",
+          "bytes": 17587,
+          "mode": 420,
+          "sha256": "5a403ad27a98ae23635fbe7a7b79a3b0b7466dc421c9f2fe023c195605a51035"
+        },
+        "indexStoredBytes": 17587,
+        "indexStoredSha256": "5a403ad27a98ae23635fbe7a7b79a3b0b7466dc421c9f2fe023c195605a51035"
+      }
+    ]
+  },
+  "actualActionCounts": {
+    "outerWrapperPythonInvocations": 1,
+    "helperBuildPythonChildSpawns": 1,
+    "actualWrapperFailures": 0,
+    "preliminaryInlineFileOnlyPreflightFailures": 1,
+    "rootAuthorizedCorrectedReadOnlyPreflightPasses": 1,
+    "zstdCompressionProcessRecords": 19,
+    "zstdDecompressionProcessRecords": 19,
+    "zstdProcessRecords": 38,
+    "zstdOperationFiles": 76,
+    "zstdProcessRecordsAllExit0NoSignalErrorStderr": true,
+    "readOnlyGitLsFilesCalls": 2,
+    "readOnlyGitObservation": "Source-derived from successful exact helper control flow through preservation twice; no separately logged Git PID/stream count is invented",
+    "standaloneHelperVerifyOrStage": 0,
+    "physicalAliasRestorations": 0,
+    "extraHelperSyntaxTests": 0,
+    "scientificProjectImports": 0,
+    "scientificWireNumericDecode": 0,
+    "CVProducerReplayComparatorQueryRender": 0,
+    "GitMutations": 0,
+    "nativeMutations": 0,
+    "automaticWrapperRetries": 0,
+    "cleanup": 0,
+    "HHPageRouterEdits": 0,
+    "subagents": 0
+  },
+  "readback": {
+    "receipt": "discovery-cycle06/G6/E1542/actual-build-readback.json",
+    "manifestBodyModeDifferences": [],
+    "exactStoredSetDifferences": [],
+    "SHA256SUMSTextExact": true,
+    "source22": {
+      "count": 22,
+      "bytes": 258620,
+      "differences": []
+    },
+    "prior2523": {
+      "count": 2523,
+      "bytes": 45942025,
+      "bodyHashComputedGitBlobCurrent0644Differences": []
+    },
+    "modeScope": "Full current0644 versus captured mode contract; original historical baseline Git executable projection. File readback does not independently observe live index/refs. Successful helper included its read-only exact index path/mode/blob/stage checks twice.",
+    "operations": "38 exact actual per-operation PID/argv/UTC/exit/signal/stdout identity/stderr bindings retained in output operations and actual-build-readback; this receipt does not replace originals.",
+    "noAddedVerificationDecode": true
+  },
+  "firstFailureChronology": {
+    "fileOnlyPreflight": {
+      "toolChunk": "b1119d",
+      "actualExit": 1,
+      "captureKind": "TOOLTESTIMONY",
+      "rawOriginalFilesWereNotCaptured": true,
+      "originalLocalStderrNotInvented": true,
+      "cause": "Author added runtime single-link guard not in reviewed root/tool contract; unchanged regularGit19135768B0755/SHA2dae8066 has145hardlinks",
+      "actualWrapperAttemptsAtThatPoint": 0
+    },
+    "diagnostic": {
+      "toolChunk": "865f11",
+      "captureKind": "TOOLTESTIMONY",
+      "unchangedGitIdentity": true,
+      "nlink": 145
+    },
+    "correction": {
+      "path": "discovery-cycle06/G6/E1542/preflight-correction.v1.json",
+      "bytes": 1791,
+      "mode": 420,
+      "sha256": "1c7e3bccbd93c7f103aa9d2f0fd0f348edca6b75b7a156271ba9c38cfa6efa89"
+    },
+    "rootExplicitAuthorization": "Remove ONLY nlink==1 for installed Python/git/zstd executables; source/helper/wrapper/plan/packet single-link guard retained; no permission/environment/source changes. Same unused one-shot separately reconfirmed.",
+    "correctedPreflightToolChunk": "30e150",
+    "actualWrapperToolChunk": "10de8e",
+    "actualWrapperAttemptCount": 1,
+    "actualWrapperRetry": false
+  },
+  "limits": [
+    "Successful build performs exact known-byte archive/internal alias/link checks, not independent package acceptance. Fresh different-worker A1 physical roundtrip/audit remains separately gated.",
+    "The helper internally materialized1414 aliases in memory only. No physical alias tree or STAGE-RECEIPT was produced. No browser rendering or new scientific producer/replay/comparator run occurred.",
+    "Zstd38 actual records support19compression+19decode observations. Git2 is successful-source-control-flow inference, not separately authenticated child telemetry. UTC brackets are process observations, not runtime/throughput/CV timing guarantees.",
+    "Root admitted exact engineering closure only; defaultOFF/no science/calibration/classifier/tolerance claims. All prior AMENDs, bad-prefix/RED, source-only construction, visual correction and Node erratum chronology remain unchanged inside admitted inputs.",
+    "Original input giant PNG/RGBA/mask/crop bodies and disguised PNG stdout remain omitted; this package is not self-contained original-image enabled replay or portable pinned attestation.",
+    "E1541 construction checkpoint and its old administration index are unchanged. Root plans/packets/actual build/this E1542 receipt remain later administrative evidence outside the engineering payload; no circular self-admission or retroactive payload extension.",
+    "No total decode-read/wrapper deadline or hostile-filesystem/authenticated execution/atomic durability guarantee."
+  ],
+  "claims": {
+    "engineeringInputClosureRootAdmitted": true,
+    "actualPackageBuilt": true,
+    "authorInternalByteChecksPassed": true,
+    "physicalRoundtripExecuted": false,
+    "independentFinalPackageAccepted": false,
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN",
+    "physicalEdgeIdentity": "UNKNOWN",
+    "pathIdentity": "UNKNOWN",
+    "continuity": "UNKNOWN",
+    "calibratedWidth": "UNKNOWN",
+    "selfContainedOriginalImageReplay": false,
+    "portablePinnedAttestation": false,
+    "defaultEnabled": false
+  },
+  "nextGate": "STOP after this actual result. Root reconciliation/native finish and separately admitted different-worker A1 physical alias roundtrip/final package audit. No further helper/verify/stage/falsifier/recompute/Git/publication authorization inferred."
+}

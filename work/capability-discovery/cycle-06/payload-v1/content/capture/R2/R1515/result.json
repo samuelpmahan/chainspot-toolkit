@@ -1,0 +1,80 @@
+{
+  "job_id": "R1515",
+  "worker": "R2",
+  "decision": "amend",
+  "outcome": "mixed_change",
+  "summary": "SOURCE_ONLY full comparator/test/checkpoint/result review requires amendment before comparison admission. One high-priority independent-validity gap admits matching malformed native answers because nativeAnswer is compared with itself; one narrower path guard incorrectly classifies an internal '..name' directory as external. Most exact source-shape, codec separation, timing and artifact-binding logic matches the frozen policy plus separately admitted source-shape addendum. Eleven helper tests are not validateRun or file-package integration proof. Original comparator, tests, policy and source were not modified or executed; no producer outputs were read.",
+  "findings": [
+    {
+      "id": "R2-R1515-F1",
+      "severity": "high",
+      "category": "MATCHING_MALFORMED_SUCCESS_PACKAGE_ACCEPTANCE",
+      "code_pointer": "discovery-cycle06/V1/E1515/compare.mjs:255-257,291-293",
+      "code_quote": "nativeAnswer:row.nativeAnswer,error:null",
+      "supporting_code_quote": "for(let i=0;i<160;i++) equalTree(decoded.get(`fragments/answer-${i}.json`),trace.queryTrace[i].nativeAnswer,`fragments/answer-${i}.json`);",
+      "frozen_source_pointer": "chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs:195-198",
+      "frozen_source_quote": "const ans = q(resolved, args);\n      if (!ans || !('value' in ans) || typeof ans.unit !== 'string') throw new PartStoreError(`${fn} must answer { value, unit }`);\n      answers.set(key, ans);\n      return { ...ans, emits: { computed: 1 } };",
+      "policy_pointer": "/laterComparatorProposal/2 and comparator-proposal.md:23-27",
+      "counterexample": "Take any otherwise model-conforming synthetic success package, replace every queryTrace[n].nativeAnswer with literal null and every corresponding answer fragment with canonical tagged null, then recompute that package's manifest/receipt/stdout bindings. validateRun's expected nativeAnswer is the same null, fragment-to-row equality passes, codec canonicality passes, and a second identical malformed package passes cross-run answer equality. Nothing in validateRun checks a successful native answer envelope or its consistency with the expected computed emits. Yet the frozen registerQueries route cannot successfully return null: it requires value plus a string unit, then returns an object with emits:{computed:1}. This is a source-only control-flow counterexample; no package was built or run.",
+      "requested_amendment": "Independently validate each native answer against at least the source-known successful answer envelope and exact computed emit channel before using it as an expected value. Preserve every native measurement value exactly, including legitimate null/condition inside value. Do not ban native null measurement fields or invent measured values. Add a hand-declared full validateRun success fixture and a nativeAnswer=null mutation rejection test; also reject missing value, non-string unit and incorrect emits. Root may decide whether more query-specific source-schema evidence is required before full package admission."
+    },
+    {
+      "id": "R2-R1515-F2",
+      "severity": "medium",
+      "category": "EXTERNAL_OUTPUT_ROOT_GUARD",
+      "code_pointer": "discovery-cycle06/V1/E1515/compare.mjs:339",
+      "code_quote": "const rel=relative(a.sourceRoot,r);requireThat(rel.startsWith('..')||isAbsolute(rel),'external output root required',r);",
+      "counterexample": "For an absolute sourceRoot /repo and absolute output root /repo/..inside/original, path.relative is '..inside/original'. That string starts with '..', so the comparator accepts it as external even though it is lexically inside /repo. This requires no symlink, alias or unusual filesystem behavior. inspectDirectory does not independently enforce exclusion from the source root.",
+      "requested_amendment": "Use a path-component-aware containment decision: only relative '..' or a relative path beginning with '..' followed by the platform path separator, or an absolute relative result, is outside. Reject internal names starting '..' just as other internal descendants. Add a focused lexical test for '..inside/original' versus '../sibling/original'. No new production run is needed."
+    }
+  ],
+  "smallest_meaningful_missing_engineering_check": {
+    "check": "Hand-declared full validateRun fixture with one positive source-shape case and narrowly mutated malformed cases",
+    "why": "compare.test.mjs imports and tests helper functions but never imports/calls validateRun or comparePackages. Its only matching-malformed test passes [] to validateNativeCaptures; it cannot expose F1 in the actual source-success-model validator. nativeFixture mirrors the native validator but does not exercise trace/inputIntegrity/request/source binding or answer envelopes. This targeted fixture is smaller than a new generic integration framework and contains no measured answers or source pixel data.",
+    "next_separate_check": "A later explicitly admitted synthetic full file-package check should demonstrate ordinary pretty JSON manifest/receipt parsing, tagged wire artifacts, within-run/hash/outer binding and reject a matching malformed pair. The eleven current helper tests alone must not be called integration proof. No such test was written or executed by R2."
+  },
+  "reviewed_supported_areas": [
+    "fixedDeclarations/fixedPlan and artifactModel preserve frozen literal group/window/bank/query order, 16 comparisons,160 plans,176 callback metadata/fragments and338 ordered manifest artifacts; metadata ordering agrees with legacy writer.",
+    "validateNativeCaptures preserves capture wrapper and16 native entry keys, callback order [1,0,2..10], parent/depth/caller/cache/computedMs/null details. Native elapsed is the only exempt native entry leaf.",
+    "validateTiming plus intervalMetadata enforce182 exact source-ordered interval metadata records, finite nonnegative nonnegative-zero clocks, exact elapsed=end-start, interval ordering, source rounding and nested constant<=profile. timingPaths contains exactly722 sidecar leaves, plus the176 independently scoped calculation-fragment elapsed leaves.",
+    "validateRun snapshot check objects correctly use exactly planIndex,post,verified with no error/pre; snapshot error:null remains exact. sourceBinding model correctly separates nine physical entry shapes from five implementation entry shapes, retaining first-two null expected hashes. This follows the separately admitted addendum, not an unchanged pass of defective original policy wording.",
+    "equalTree preserves Object.is numbers, object prototype/key order, dense undecorated arrays and exact Uint8Array identity/elements. No generic JSON projection, timing-name matching or sorting normalizes native wire values.",
+    "readPackage parses ordinary writer manifest/receipt with parsePrettyDocument rather than the tagged codec, binds all338 actual files before decoding, re-encodes to demand canonical wire bytes, checks within-run fragment correspondence and source-known metadata. Per-file caps use32MiB general wire,4MiB sidecar/calculation,128KiB envelope documents; unchanged codec limits remain delegated to the explicitly supplied unchanged codec namespace.",
+    "Cross-run value-trace and answer fragments are byte-exact and tree-exact. Timing files are compared before only their verified derived length/hash envelope dependencies may differ. Receipt and exact one-line stdout/empty stderr are independently modeled per run.",
+    "No top-level filesystem reads or product/recipe/CLI/codec imports are present in comparator source. comparePackages is read-only and catches failures into explicit stage FAIL/NOT_COMPARABLE with remaining stages NOT_RUN. Authenticating supplied codec namespace, outer observations/runtime and fresh/immutable chronological execution remains an explicitly disclosed root-admission responsibility, not something this source-only review proves."
+  ],
+  "policy_authority": {
+    "original_policy_modified": false,
+    "original_policy_passed_unchanged": false,
+    "source_shape_interpretation": "Accept only the exact separately hash-bound admitted addendum reviewed by R1/R1517; its own status remains PROPOSED_PENDING_INDEPENDENT_REVIEW while the separate admission records acceptance.",
+    "numeric_value_timing_policy_changed_by_review": false,
+    "no_output_informed_tolerance_widening": true
+  },
+  "full_hashes": {
+    "V1/E1515/compare.mjs": "4574213c39e1e075bcc2f7533985d4792db0c72153f2c3a8ae9eb4845f57b318",
+    "V1/E1515/compare.test.mjs": "a3ebf0782bb15ac5706ffa9e08583cc399b08fe8371cfbf63e7a97d08b2c715b",
+    "V1/E1515/checkpoint.md": "1f1144a2d297afd6d9f53393c2bb66e52e48ff367ab4bbefbed7e909b5744320",
+    "V1/E1515/result.json": "5c404ade68cb465befd517eb2e7c9ee7f3d61184ce38d6e12ef0477190ca1f83",
+    "V1/E1512/replay-policy.json": "b146b7183e4aab0708792b7f72aa37790113ca8061f34c551ea590f24391027d",
+    "V1/E1512/comparator-proposal.md": "77ac01d93638ceed7d8109a474d44318523d3e5c8ae4aeab86da2f20325cb2fb",
+    "replay-source-shape-addendum.v1.json": "3537cdce221ab424672097ed6d8530afaf94128d66ddb3dc38a8d3490407232b",
+    "replay-source-shape-admission.v1.json": "8c6360ba697cebcd798b23deff6b1688cf2010eff1ee6036e452ca1bdde7f8ae",
+    "R1/R1517/result.json": "9d2d371586c858347acc4b5bd033a51d7860102e29a401e19dc577d8ede022e6",
+    "frozen_lenard_recipe": "4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6",
+    "frozen_lenard_cli": "a711ab50bc50bd3f69e61656f12002d41d901e19d7db4e8a9b3b5eb188457ffa",
+    "frozen_store": "122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074",
+    "frozen_codec": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015"
+  },
+  "scope": {
+    "fully_read_current_files": ["V1/E1515/compare.mjs", "V1/E1515/compare.test.mjs", "V1/E1515/checkpoint.md", "V1/E1515/result.json", "V1/E1512/comparator-proposal.md", "replay-source-shape-addendum.v1.json", "replay-source-shape-admission.v1.json", "R1/R1517/result.json"],
+    "frozen_policy_and_relevant_source": "Complete E1512 policy read during preceding E1517 source-only critique; exact source schema/store/codec/legacy writer blocks retained and source-reviewed; current R1515 reread store answer wrapper text. No vendor/PATH source inspected.",
+    "producer_output_reads": 0,
+    "imports_syntax_tests_codec_or_comparator_execution": 0,
+    "producer_replay_or_CV": 0,
+    "source_pixel_reads": 0,
+    "helpers": 0,
+    "source_git_native_mutations": 0,
+    "only_authored_file": "discovery-cycle06/R2/R1515/result.json"
+  },
+  "claims": {"scientificAcceptance":"UNKNOWN","humanAcceptance":"UNKNOWN","pathIdentity":"UNKNOWN","continuity":"UNKNOWN","calibratedWidth":"UNKNOWN"}
+}

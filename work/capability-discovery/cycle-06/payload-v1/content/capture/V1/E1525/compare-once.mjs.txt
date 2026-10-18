@@ -1,0 +1,186 @@
+/** E1525 pure pair-reader driver. CONSTRUCTION ONLY until exact root GO.
+ * Imports only Node builtins statically. Dynamic imports are limited to the
+ * hash-pinned accepted comparator and unchanged pure codec, after admission.
+ * No product/CLI/store/PATH import, subprocess, warmup, query or retry exists.
+ */
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { openSync, fstatSync, readSync, closeSync, lstatSync, writeFileSync, constants } from 'node:fs';
+import { join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { serialize, deserialize } from 'node:v8';
+
+const ROOT='/workspace/scratch/8528bb251845',HERE=ROOT+'/discovery-cycle06/V1/E1525',LAB=ROOT+'/chainspot-discovery-lab';
+const NODE='/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node';
+const DRIVER=HERE+'/compare-once.mjs',COMMAND=HERE+'/prospective-command.json';
+const ROOT_ADMISSION=ROOT+'/discovery-cycle06/E1525-root-comparison-admission.json';
+const COMPARATOR=ROOT+'/discovery-cycle06/V1/E1519/compare.mjs';
+const CODEC=LAB+'/experiments/capability-discovery/station-evidence/codec.mjs';
+const MANIFEST=ROOT+'/discovery-cycle06/G5/E1510/manifest.v1.json';
+const LEFT=ROOT+'/discovery-cycle06/G5/E1510/producer-v1',RIGHT=ROOT+'/discovery-cycle06/V1/E1521/replay-v1';
+const POLICY=ROOT+'/discovery-cycle06/V1/E1512/replay-policy.json';
+const PROTOCOL=LAB+'/work/capability-discovery/cycle-05/capture/final/F2/E1104/protocol-proposal.json';
+const ATTESTATION=ROOT+'/discovery-cycle06/G1/E1501/staging-attestation.json';
+const ADDENDUM=ROOT+'/discovery-cycle06/replay-source-shape-addendum.v1.json';
+const TOKEN=HERE+'/one-comparison-token.json',SERIALIZATION=HERE+'/report-serialization.json',RESULT=HERE+'/driver-result.json';
+const TAGGED=HERE+'/comparison-report.tagged.json',V8=HERE+'/comparison-report.v8';
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const utc=()=>new Date().toISOString();
+const json=b=>JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(b));
+const saveJSON=(path,v)=>writeFileSync(path,JSON.stringify(v,null,2)+'\n',{flag:'wx'});
+const present=p=>{try{lstatSync(p);return true;}catch(e){if(e.code==='ENOENT')return false;throw e;}};
+
+function readBound(path,expected,size,records,cap=33554432) {
+  const fd=openSync(path,constants.O_RDONLY|constants.O_NONBLOCK);
+  let raw;
+  try {
+    const s=fstatSync(fd);assert(s.isFile()&&Number.isSafeInteger(s.size)&&s.size>=0&&s.size<=cap,'regular bounded file required: '+path);
+    if(size!==null)assert.equal(s.size,size,'byte count: '+path);
+    raw=new Uint8Array(s.size);let offset=0;
+    while(offset<raw.length){const n=readSync(fd,raw,offset,raw.length-offset,offset);assert(n>0,'short file: '+path);offset+=n;}
+    assert.equal(readSync(fd,new Uint8Array(1),0,1,offset),0,'grown file: '+path);assert.equal(fstatSync(fd).size,s.size,'changed length: '+path);
+  } finally {closeSync(fd);}
+  const binding={path,bytes:raw.length,sha256:sha(raw)};
+  if(expected!==null)assert.equal(binding.sha256,expected,'SHA256: '+path);
+  records.push(binding);return raw;
+}
+
+// V8 supports undefined/NaN/-0/Uint8Array, but does not promise null-prototype
+// object preservation. Carry an explicit prototype side table and verify a
+// reconstructed round trip before calling this report format lossless.
+function packV8(report,reviewed) {
+  const nullPrototypePaths=[];
+  const visit=(v,path)=>{
+    if(v===null||typeof v!=='object'||v instanceof Uint8Array)return;
+    if(Object.getPrototypeOf(v)===null)nullPrototypePaths.push(path);
+    for(const key of Object.keys(v))visit(v[key],[...path,key]);
+  };
+  visit(report,[]);
+  const envelope={format:'E1525-V8-REPORT+NULLPROTO@1',nullPrototypePaths,report};
+  const bytes=serialize(envelope),copy=deserialize(bytes);
+  for(const path of copy.nullPrototypePaths){let v=copy.report;for(const key of path)v=v[key];Object.setPrototypeOf(v,null);}
+  if(reviewed)reviewed.equalTree(report,copy.report);else assert.deepStrictEqual(copy.report,report);
+  return new Uint8Array(bytes);
+}
+
+async function main() {
+  // Refuse collisions before any package read/import/compare; no rerun variant.
+  for(const path of [TOKEN,SERIALIZATION,RESULT,TAGGED,V8])assert(!present(path),'preexisting report/token path: '+path);
+  const report={schema:'E1525-independent-replay-comparison@1',status:'NOT_COMPARABLE',startedUTC:utc(),endedUTC:null,
+    authority:{driverInvocation:[process.execPath,...process.argv.slice(1)],driverRuntime:{node:process.version,platform:process.platform,arch:process.arch},
+      bindings:[],rawOuterRecords:[],argvAdapter:[],originalPolicyPassedUnchanged:false,
+      runtimeProvenance:'Append-only bound erratum corrects root no-original-hash claim; both recorded prelaunch executable file hashes agree. Original records stay unchanged; no executed-code authentication is claimed.'},
+    comparison:null,error:null,claims:{scientificAcceptance:'UNKNOWN',humanAcceptance:'UNKNOWN',pathIdentity:'UNKNOWN',continuity:'UNKNOWN',calibratedWidth:'UNKNOWN'}};
+  let codec=null,reviewed=null,comparisonCalls=0,stage='root admission';
+  const take=(path,digest,size=null,cap=33554432)=>readBound(path,digest,size,report.authority.bindings,cap);
+  try {
+    assert.equal(process.argv.length,4);assert.equal(process.argv[2],'--admission-sha256');assert.match(process.argv[3],/^[0-9a-f]{64}$/);
+    assert.equal(process.execPath,NODE);assert.equal(process.version,'v24.19.0');
+    const admission=json(take(ROOT_ADMISSION,process.argv[3],null,131072));
+    assert.deepStrictEqual([admission.schema,admission.job_id,admission.worker,admission.admitted,admission.scope],
+      ['cycle06-root-comparison-admission@1','E1525','V1',true,'ONE_READONLY_PAIR_COMPARISON']);
+    assert.equal(admission.driver.path,DRIVER);take(DRIVER,admission.driver.sha256,admission.driver.bytes,131072);
+    assert.equal(admission.prospectiveCommand.path,COMMAND);take(COMMAND,admission.prospectiveCommand.sha256,admission.prospectiveCommand.bytes,131072);
+    assert.equal(admission.runtimeProvenanceDisposition,'ACKNOWLEDGE_BOUND_ERRATUM_NO_EXECUTED_CODE_AUTHENTICATION');
+    const comparatorBytes=take(COMPARATOR,'359f5e177cf1bb3cf0c65212445086ce9f19374fae279d3f40ffba55f9994acd',33761,131072);
+    const codecBytes=take(CODEC,'3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015',7322,131072);
+    take(ROOT+'/discovery-cycle06/R2/R1519/result.json','eadfe084b31e7ba48c8333fa332133a2217aff5106f55831597c09e4a041ff97',9391,131072);
+    const source=json(take(ROOT+'/discovery-cycle06/root-source-admission.json','6f3f30924749e0104a12e7d5d3d43b45b23569e55de8ffe565111620dd0355b8',6356,131072));
+    assert.equal(source.entries.length,22);for(const e of source.entries)take(join(LAB,e.path),e.sha256,e.bytes);
+    take(POLICY,'b146b7183e4aab0708792b7f72aa37790113ca8061f34c551ea590f24391027d',14912,32768);
+    const addendumBytes=take(ADDENDUM,'3537cdce221ab424672097ed6d8530afaf94128d66ddb3dc38a8d3490407232b',3190,32768);
+    const shapeAdmission=json(take(ROOT+'/discovery-cycle06/replay-source-shape-admission.v1.json','8c6360ba697cebcd798b23deff6b1688cf2010eff1ee6036e452ca1bdde7f8ae',1032,32768));
+    assert.equal(shapeAdmission.admitted,true);assert.equal(shapeAdmission.originalPolicy.passedUnchanged,false);
+    const manifestBytes=take(MANIFEST,'4ae5f021bc3c9be8184cdb0627abdacabae9d7c8dcff88a12b404762843bbe9f',367,8192);
+    const protocolBytes=take(PROTOCOL,'cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829',12718,131072);
+    const attestationBytes=take(ATTESTATION,'9f1cb90eed3c74214c9a03029730ea1ab487c48bd86b89cbe3a701eebe923ef1',4252,131072);
+    const disk=json(manifestBytes);assert.equal(resolve(disk.protocolPath),PROTOCOL);assert.equal(resolve(disk.inputAttestationPath),ATTESTATION);
+    const ambient=json(take(ROOT+'/discovery-cycle06/E1513-root-ambient-admission.json','465e281fbaf108261239c0e084bb062098be2a0a90499b283a6ccff4de6c588d',1698,131072));
+    const ambientAdd=json(take(ROOT+'/discovery-cycle06/E1513-root-ambient-addendum-recovery.json','05a57ec694e1d480c29fa4d8a3e24c91be40a0633b1a514d94c989163b9838b8',1003,131072));
+    const currentRuntime=json(take(ROOT+'/discovery-cycle06/replay-runtime-current-readback.json','f630de362a143e4bcf550620f8cf24fec0bfea6bf6e9e411e86588cbdbd7a4bc',799,131072));
+    report.authority.currentOnlyRuntimeRecord=currentRuntime;
+    report.authority.runtimeErratum=json(take(ROOT+'/discovery-cycle06/runtime-authority-erratum.v1.json','343eb8ca3861ec18b5dcd08318da2d69fb437afc77b01f31905bc54d7152d140',1640,131072));
+    const oldCommand=json(take(ROOT+'/discovery-cycle06/G5/E1510/prospective-command.v1.json','aee1eb7a3788f3392078584d038f45531a7db9410356b9be48a951b3d764302f',3177,131072));
+    const replayCommand=json(take(ROOT+'/discovery-cycle06/V1/E1521/prospective-command.v1.json','7e33f078980bc84dea4afaefd1d9318d12947d13b002ef2f66999514d501eef9',4322,131072));
+    const configs=[
+      {root:LEFT,path:ROOT+'/discovery-cycle06/G5/E1513/outer-command.json',bytes:18647,sha256:'0d6711c1a703f440ee228aabbb120dc93fcfb1f6aea5ae4f1aded7c1454959b9',command:oldCommand,job:'E1513'},
+      {root:RIGHT,path:ROOT+'/discovery-cycle06/V1/E1521/outer-command.json',bytes:20573,sha256:'d19895058d309d8f71bb6c9c9e10f41c3794e707652115d6c01fac6aa186ff95',command:replayCommand,job:'E1521'}
+    ];
+    stage='literal raw argv and resolution adapter guards';
+    const rawInputs=[];
+    for(const c of configs) {
+      const raw=json(take(c.path,c.sha256,c.bytes,131072));report.authority.rawOuterRecords.push({binding:{path:c.path,bytes:c.bytes,sha256:c.sha256},record:raw});
+      const literal=['node',LAB+'/experiments/capability-discovery/lenard5-station-evidence/cli.mjs','run','--manifest',MANIFEST,'--out',c.root];
+      assert.deepStrictEqual(raw.argv,literal,'full literal raw argv mismatch');assert.deepStrictEqual(c.command.argv,literal,'frozen prospective argv mismatch');
+      assert.equal(raw.cwd,LAB);assert.equal(c.command.cwd,LAB);assert.equal(raw.resolvedNode,NODE,'raw recorded executable resolution mismatch');
+      assert.equal(raw.job_id,c.job);assert.equal(raw.spawnCount,1);assert.equal(raw.actualExitCode,0);assert.equal(raw.actualSignal,null);assert.equal(raw.error,null);
+      assert.equal(raw.environmentMutation,false);assert.deepStrictEqual(raw.ambientNonsecret,{...ambient.observedNonempty,...ambientAdd.admittedUnchanged});
+      const executable=raw.guardBindings.filter(x=>x.path===NODE);assert.equal(executable.length,1);
+      assert.deepStrictEqual(executable[0],{path:NODE,bytes:125989464,sha256:'bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12'});
+      assert.equal(c.job==='E1513'?raw.nodeVersionObservedBeforeProducer:raw.nodeVersion,'v24.19.0');
+      for(const k of ['outputAbsent','stdoutAbsent','stderrAbsent','tokenAbsent'])assert.equal(raw.zeroAttemptGuard[k],true);
+      const stdoutPath=c.root+'.stdout.log',stderrPath=c.root+'.stderr.log';
+      const boundStream=path=>{const e=raw.rawOutputs.filter(x=>x.path===path);assert.equal(e.length,1);return take(path,e[0].sha256,e[0].bytes);};
+      const stdout=boundStream(stdoutPath),stderr=boundStream(stderrPath);
+      for(const file of ['value-trace.json','timing-sidecar.json','artifact-manifest.json','cli-receipt.json']){
+        const e=raw.rawOutputs.filter(x=>x.path===c.root+'/'+file);assert.equal(e.length,1);take(e[0].path,e[0].sha256,e[0].bytes);
+      }
+      // Only after BOTH per-record literal/resolution checks is this separately
+      // labelled projection eligible for the comparator's absolute-argv API.
+      rawInputs.push({raw,stdout,stderr});
+    }
+    const [old,replay]=rawInputs;
+    assert(Number.isFinite(Date.parse(old.raw.actualProcessEndUTC))&&Number.isFinite(Date.parse(replay.raw.actualProcessStartUTC)));
+    assert(Date.parse(old.raw.actualProcessEndUTC)<Date.parse(replay.raw.actualProcessStartUTC),'original must precede replay');
+    const outer=rawInputs.map(({raw,stdout,stderr},i)=>{
+      const projected=[raw.resolvedNode,...raw.argv.slice(1)];
+      report.authority.argvAdapter.push({label:'RESOLVED_ARGV_PROJECTION',rawOuterBinding:report.authority.rawOuterRecords[i].binding,
+        rawArgv:raw.argv,rawResolvedNode:raw.resolvedNode,guards:{fullLiteralArgvExact:true,recordedResolutionExact:true,onlyOutDifference:true},
+        projectedArgv:projected,mapping:'actualExitCode -> exitCode; raw stdout/stderr bound before projection; original record unchanged'});
+      return {argv:projected,exitCode:raw.actualExitCode,stdout,stderr};
+    });
+    stage='hash-pinned pure imports';
+    reviewed=await import(pathToFileURL(COMPARATOR).href);codec=await import(pathToFileURL(CODEC).href);
+    assert.equal(sha(take(COMPARATOR,null,comparatorBytes.length,131072)),sha(comparatorBytes));assert.equal(sha(take(CODEC,null,codecBytes.length,131072)),sha(codecBytes));
+    stage='one pure package comparison';
+    saveJSON(TOKEN,{job_id:'E1525',worker:'V1',reservedUTC:utc(),maximumComparisons:1,productInvocations:0,rootAdmissionSha256:process.argv[3]});
+    comparisonCalls++;
+    report.comparison=reviewed.comparePackages({leftRoot:LEFT,rightRoot:RIGHT,policyPath:POLICY,codec,admission:{
+      sourceRoot:LAB,manifestPath:MANIFEST,manifestBytes,protocolBytes,attestationBytes,nodeExecutable:NODE,
+      runtime:{node:process.version,platform:process.platform,arch:process.arch},outer,
+      sourceShapeAddendum:{path:ADDENDUM,bytes:addendumBytes.length,sha256:sha(addendumBytes),admitted:true}}});
+    report.status=report.comparison.status;
+    if(report.status==='MATCH_EXCEPT_DECLARED_TIMING') {
+      stage='comparator-read hashes against raw outer bindings';
+      rawInputs.forEach(({raw},i)=>{
+        for(const file of ['value-trace.json','timing-sidecar.json','artifact-manifest.json','cli-receipt.json']) {
+          const expected=raw.rawOutputs.find(x=>x.path===configs[i].root+'/'+file);
+          const actual=report.comparison.hashes.filter(x=>x.root===configs[i].root&&x.path===file);assert.equal(actual.length,1);
+          assert.deepStrictEqual({path:expected.path,bytes:actual[0].bytes,sha256:actual[0].sha256},expected);
+        }
+      });
+    }
+  } catch(error) {
+    report.status=comparisonCalls?'FAIL':'NOT_COMPARABLE';
+    report.error={stage,name:String(error.name),message:String(error.message),left:Object.hasOwn(error,'left')?error.left:error.actual,right:Object.hasOwn(error,'right')?error.right:error.expected};
+  }
+  report.endedUTC=utc();report.authority.comparisonCalls=comparisonCalls;report.authority.productInvocations=0;
+  let raw,format,path,codecFailure=null;
+  try {
+    assert(codec,'codec not imported before guard failure');raw=codec.encodeBytes(report);
+    reviewed.equalTree(report,codec.decodeBytes(raw));format='UNCHANGED_PINNED_TAGGED_CODEC';path=TAGGED;
+  } catch(error) {
+    codecFailure={name:String(error.name),message:String(error.message)};
+    raw=packV8(report,reviewed);format='E1525-V8-REPORT+NULLPROTO@1';path=V8;
+  }
+  writeFileSync(path,raw,{flag:'wx'});
+  const reportBinding={path,bytes:raw.length,sha256:sha(raw)};
+  saveJSON(SERIALIZATION,{schema:'E1525-report-serialization@1',format,reportBinding,codecFailure,originalReportValuesCoerced:false,
+    v8DecodeInstructions:format.startsWith('E1525-V8')?'deserialize envelope; for each nullPrototypePaths key-array resolve from envelope.report and set prototype null; use envelope.report. Undefined/NaN/-0/Uint8Array retained.':null});
+  const summary={job_id:'E1525',worker:'V1',status:report.status,comparisonCalls,productInvocations:0,report:reportBinding,format,error:report.error?{stage:report.error.stage,name:report.error.name,message:report.error.message}:null,
+    scientificAcceptance:'UNKNOWN',humanAcceptance:'UNKNOWN'};
+  saveJSON(RESULT,summary);process.stdout.write(JSON.stringify(summary)+'\n');
+  process.exitCode=report.status==='MATCH_EXCEPT_DECLARED_TIMING'?0:1;
+}
+
+if(process.argv[1]&&resolve(process.argv[1])===DRIVER)await main();

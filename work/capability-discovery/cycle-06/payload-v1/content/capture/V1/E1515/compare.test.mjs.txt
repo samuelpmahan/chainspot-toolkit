@@ -1,0 +1,121 @@
+// ENGINEERING ONLY. Independently hand-declared trees/metadata, never CV answers.
+// Authored before compare.mjs. NOT RUN before root's actual-flow checkpoint.
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { equalTree, validateTiming, validateNativeCaptures, fixedPlan, verifyBinding,
+  intervalMetadata, timingPaths, parsePrettyDocument, artifactModel, fixedDeclarations } from './compare.mjs';
+import { createHash } from 'node:crypto';
+
+// Break: JSON projection collapses NaN/null, -0/+0 or typed constructors.
+test('exact comparison preserves nonfinite, negative zero and typed identity', () => {
+  equalTree({a:NaN,b:-0,c:Uint8Array.of(0,255)}, {a:NaN,b:-0,c:Uint8Array.of(0,255)});
+  for (const [a,b] of [[NaN,null],[-0,0],[Infinity,-Infinity],[Uint8Array.of(1),[1]]]) {
+    assert.throws(() => equalTree(a,b), error => error.pointer === '');
+  }
+});
+// Break: sorting/dropping unknown keys or reordering arrays hides differences.
+test('exact comparison rejects key/order/extra-field changes at first pointer', () => {
+  assert.throws(() => equalTree({a:1,b:2},{b:2,a:1}), /key order/);
+  assert.throws(() => equalTree({a:[1,2]},{a:[2,1]}), e => e.pointer === '/a/0');
+  assert.throws(() => equalTree({a:1},{a:1,elapsed:4}), /key order/);
+});
+// Break: time-name regex or subtree deletion exempts arbitrary semantic fields.
+test('only explicitly supplied numeric timing leaves can differ', () => {
+  const timingLeaves=[];
+  equalTree({elapsed:1,value:2},{elapsed:3,value:2},'',new Set(['/elapsed']),timingLeaves);
+  assert.deepEqual(timingLeaves,[{pointer:'/elapsed',left:1,right:3}]);
+  assert.throws(() => equalTree({elapsed:1},{elapsed:'3'},'',new Set(['/elapsed'])), /finite/);
+  assert.throws(() => equalTree({value:{elapsedMs:1}},{value:{elapsedMs:2}}), e => e.pointer === '/value/elapsedMs');
+});
+
+function clockFixture() {
+  // Independent arithmetic: source shape182, sequential [2i,2i+1], elapsed1.
+  return {
+    intervals:Array.from({length:182},(_,i) => ({start:i*2,end:i*2+1,elapsed:1})),
+    calculationLog:Array.from({length:176},(_,i) => ({nativeEntry:{elapsedMs:i%11===0?0.001:0.002}}))
+  };
+}
+// Break: whitelisted numeric leaves skip finite/arithmetic/ordering checks.
+test('clock validation rejects nonfinite, negative, inconsistent or reversed time', () => {
+  validateTiming(clockFixture());
+  for (const change of [s=>s.intervals[0].start=NaN,s=>s.intervals[0].elapsed=-0,
+    s=>s.intervals[0].elapsed=2,s=>s.intervals[1].start=0,
+    s=>s.calculationLog[0].nativeEntry.elapsedMs=0.0015,
+    s=>s.calculationLog[0].nativeEntry.elapsedMs=0.003]) {
+    const s=clockFixture(); change(s); assert.throws(() => validateTiming(s));
+  }
+});
+// Break: wrong fixed order/settings, extra profile width or moved window.
+test('plan uses exact literal local order and fixed geometry', () => {
+  const p=fixedPlan(); assert.equal(p.length,160);
+  assert.deepEqual(p.slice(0,4).map(x=>[x.query,x.widthPx]),[
+    ['fn.q.path.profile',null],['fn.q.path.edgePair',34],['fn.q.path.stationContrast',34],['fn.q.path.loss',34]
+  ]);
+  assert.deepEqual(p[159].rawArgs,{raster:'px.image.cropped',mask:'tk.s6.pathMask',originPx:[780,906],phiRad:-0.20539538918976738,t0Px:-24,t1Px:24,stepPx:1,widthPx:50,profile:null,threshold:null,tauLum:8});
+  assert.deepEqual(p[80].rawArgs.originPx,[781.223725524672,911.8738825184256]);
+});
+// Break: a matching malformed empty package is accepted as a completed replay.
+test('missing native captures cannot satisfy the fixed completion model', () => {
+  assert.throws(() => validateNativeCaptures([],fixedPlan()), /length/);
+});
+// Break: digest declaration is trusted without binding actual bytes and length.
+test('raw binding checks both actual digest and actual byte length', () => {
+  const bytes=Uint8Array.of(1,2,3),sha256=createHash('sha256').update(bytes).digest('hex');
+  verifyBinding(bytes,{bytes:3,sha256},'fixture');
+  assert.throws(() => verifyBinding(bytes,{bytes:4,sha256},'fixture'));
+  assert.throws(() => verifyBinding(bytes,{bytes:3,sha256:'0'.repeat(64)},'fixture'));
+});
+
+// Ordinary writer documents are NOT tagged wire roots. Reject alternate or
+// duplicate-key serializations instead of erasing extra raw metadata bytes.
+test('manifest and receipt ordinary pretty JSON stays separate from wire codec', () => {
+  const value={schema:'engineering-only',status:'COMPLETED',artifacts:[],error:null};
+  const raw=new TextEncoder().encode(JSON.stringify(value,null,2)+'\n');
+  assert.deepEqual(parsePrettyDocument(raw),value);
+  assert.throws(()=>parsePrettyDocument(new TextEncoder().encode('{"a":1,"a":1}\n')));
+  assert.throws(()=>parsePrettyDocument(new TextEncoder().encode(JSON.stringify(value)+'\n')));
+});
+
+// Independent explicit callback construction; contains no measured answers.
+function nativeFixture() {
+  const p=fixedPlan();
+  return Array.from({length:176},(_,j)=>{
+    const c=Math.floor(j/11),a=j%11,id=p[c*10].comparisonId,constant=a===0;
+    return {comparisonId:id,captureIndex:a,nativeEntry:{
+      seq:constant?1:a===1?0:a,parent:constant?0:null,depth:constant?1:0,
+      calculation:constant?'fn.input.lenard5StationMeasurement':p[c*10+a-1].query,
+      store:id,caller:constant?'lazy:px.image.cropped':'cycle06-lenard5-station-measurement',
+      site:null,inParts:[],outParts:constant?['px.image.cropped','tk.s6.pathMask']:[],
+      elapsedMs:constant?0.001:0.002,status:'ok',error:null,emits:constant?null:{computed:1},
+      key:null,cached:false,computedMs:null
+    }};
+  });
+}
+test('native capture order cache metadata and computedMs are not timing exceptions',()=>{
+  validateNativeCaptures(nativeFixture());
+  for(const mutate of [
+    x=>[x[0],x[1]]=[x[1],x[0]],x=>x[1].nativeEntry.computedMs=0,
+    x=>x[1].nativeEntry.cached=true,x=>x[0].nativeEntry.parent=null,
+    x=>x[1].nativeEntry.rawArgs={},x=>x[1].nativeEntry.emits.computed=2,
+    x=>x[1].captureIndex=0,x=>x[11].comparisonId=x[0].comparisonId,
+    x=>x[1].nativeEntry.elapsedMs=Infinity
+  ]) {const x=nativeFixture();mutate(x);assert.throws(()=>validateNativeCaptures(x));}
+});
+test('only the 722 fixed sidecar clock pointers exist and interval metadata follows source order',()=>{
+  const paths=timingPaths();assert.equal(paths.size,722);
+  assert(paths.has('/intervals/181/elapsed'));assert(paths.has('/calculationLog/175/nativeEntry/elapsedMs'));
+  assert(!paths.has('/intervals/182/start'));assert(!paths.has('/calculationLog/0/nativeEntry/computedMs'));
+  const intervals=intervalMetadata();assert.equal(intervals.length,182);
+  assert.deepEqual(intervals.slice(0,6).map(x=>x.phase),['validation','file-preflight','snapshot','source-verify-before-import','import','source-verify-after-import']);
+  assert.deepEqual(intervals[17],{phase:'query',comparisonId:'primary/core16',planIndex:10,query:'fn.q.path.profile'});
+  assert.deepEqual(intervals[181],{phase:'source-verify-after-run'});
+});
+test('artifact ordinals and metadata are fixed; null mask is not a zero mask',()=>{
+  const model=artifactModel();assert.equal(model.length,338);
+  assert.deepEqual(model[159],{path:'fragments/answer-159.json',kind:'answer',comparisonId:'masked-primary/long48',planIndex:159});
+  assert.deepEqual(model[160],{path:'fragments/calculation-0.json',kind:'calculation',comparisonId:'primary/before16',captureIndex:0});
+  assert.deepEqual(model[335],{path:'fragments/calculation-175.json',kind:'calculation',comparisonId:'masked-primary/long48',captureIndex:10});
+  assert.deepEqual(model.slice(336).map(x=>x.path),['value-trace.json','timing-sidecar.json']);
+  const declarations=fixedDeclarations();assert.equal(declarations.filter(x=>x.mask===null).length,12);
+  assert.equal(declarations.filter(x=>x.mask?.kind==='Uint8Array').length,4);
+});

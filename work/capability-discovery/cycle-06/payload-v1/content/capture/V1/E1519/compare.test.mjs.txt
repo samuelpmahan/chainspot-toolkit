@@ -1,0 +1,259 @@
+// ENGINEERING ONLY. Independently hand-declared trees/metadata, never CV answers.
+// Authored before compare.mjs. NOT RUN before root's actual-flow checkpoint.
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as comparator from './compare.mjs';
+const { equalTree, validateTiming, validateNativeCaptures, fixedPlan, verifyBinding,
+  intervalMetadata, timingPaths, parsePrettyDocument, artifactModel, fixedDeclarations, validateRun }=comparator;
+import { createHash } from 'node:crypto';
+
+// Break: JSON projection collapses NaN/null, -0/+0 or typed constructors.
+test('exact comparison preserves nonfinite, negative zero and typed identity', () => {
+  equalTree({a:NaN,b:-0,c:Uint8Array.of(0,255)}, {a:NaN,b:-0,c:Uint8Array.of(0,255)});
+  for (const [a,b] of [[NaN,null],[-0,0],[Infinity,-Infinity],[Uint8Array.of(1),[1]]]) {
+    assert.throws(() => equalTree(a,b), error => error.pointer === '');
+  }
+});
+// Break: sorting/dropping unknown keys or reordering arrays hides differences.
+test('exact comparison rejects key/order/extra-field changes at first pointer', () => {
+  assert.throws(() => equalTree({a:1,b:2},{b:2,a:1}), /key order/);
+  assert.throws(() => equalTree({a:[1,2]},{a:[2,1]}), e => e.pointer === '/a/0');
+  assert.throws(() => equalTree({a:1},{a:1,elapsed:4}), /key order/);
+});
+// Break: time-name regex or subtree deletion exempts arbitrary semantic fields.
+test('only explicitly supplied numeric timing leaves can differ', () => {
+  const timingLeaves=[];
+  equalTree({elapsed:1,value:2},{elapsed:3,value:2},'',new Set(['/elapsed']),timingLeaves);
+  assert.deepEqual(timingLeaves,[{pointer:'/elapsed',left:1,right:3}]);
+  assert.throws(() => equalTree({elapsed:1},{elapsed:'3'},'',new Set(['/elapsed'])), /finite/);
+  assert.throws(() => equalTree({value:{elapsedMs:1}},{value:{elapsedMs:2}}), e => e.pointer === '/value/elapsedMs');
+});
+
+function clockFixture() {
+  // Independent arithmetic: source shape182, sequential [2i,2i+1], elapsed1.
+  return {
+    intervals:Array.from({length:182},(_,i) => ({start:i*2,end:i*2+1,elapsed:1})),
+    calculationLog:Array.from({length:176},(_,i) => ({nativeEntry:{elapsedMs:i%11===0?0.001:0.002}}))
+  };
+}
+// Break: whitelisted numeric leaves skip finite/arithmetic/ordering checks.
+test('clock validation rejects nonfinite, negative, inconsistent or reversed time', () => {
+  validateTiming(clockFixture());
+  for (const change of [s=>s.intervals[0].start=NaN,s=>s.intervals[0].elapsed=-0,
+    s=>s.intervals[0].elapsed=2,s=>s.intervals[1].start=0,
+    s=>s.calculationLog[0].nativeEntry.elapsedMs=0.0015,
+    s=>s.calculationLog[0].nativeEntry.elapsedMs=0.003]) {
+    const s=clockFixture(); change(s); assert.throws(() => validateTiming(s));
+  }
+});
+// Break: wrong fixed order/settings, extra profile width or moved window.
+test('plan uses exact literal local order and fixed geometry', () => {
+  const p=fixedPlan(); assert.equal(p.length,160);
+  assert.deepEqual(p.slice(0,4).map(x=>[x.query,x.widthPx]),[
+    ['fn.q.path.profile',null],['fn.q.path.edgePair',34],['fn.q.path.stationContrast',34],['fn.q.path.loss',34]
+  ]);
+  assert.deepEqual(p[159].rawArgs,{raster:'px.image.cropped',mask:'tk.s6.pathMask',originPx:[780,906],phiRad:-0.20539538918976738,t0Px:-24,t1Px:24,stepPx:1,widthPx:50,profile:null,threshold:null,tauLum:8});
+  assert.deepEqual(p[80].rawArgs.originPx,[781.223725524672,911.8738825184256]);
+});
+// Break: a matching malformed empty package is accepted as a completed replay.
+test('missing native captures cannot satisfy the fixed completion model', () => {
+  assert.throws(() => validateNativeCaptures([],fixedPlan()), /length/);
+});
+// Break: digest declaration is trusted without binding actual bytes and length.
+test('raw binding checks both actual digest and actual byte length', () => {
+  const bytes=Uint8Array.of(1,2,3),sha256=createHash('sha256').update(bytes).digest('hex');
+  verifyBinding(bytes,{bytes:3,sha256},'fixture');
+  assert.throws(() => verifyBinding(bytes,{bytes:4,sha256},'fixture'));
+  assert.throws(() => verifyBinding(bytes,{bytes:3,sha256:'0'.repeat(64)},'fixture'));
+});
+
+// Ordinary writer documents are NOT tagged wire roots. Reject alternate or
+// duplicate-key serializations instead of erasing extra raw metadata bytes.
+test('manifest and receipt ordinary pretty JSON stays separate from wire codec', () => {
+  const value={schema:'engineering-only',status:'COMPLETED',artifacts:[],error:null};
+  const raw=new TextEncoder().encode(JSON.stringify(value,null,2)+'\n');
+  assert.deepEqual(parsePrettyDocument(raw),value);
+  assert.throws(()=>parsePrettyDocument(new TextEncoder().encode('{"a":1,"a":1}\n')));
+  assert.throws(()=>parsePrettyDocument(new TextEncoder().encode(JSON.stringify(value)+'\n')));
+});
+
+// Independent explicit callback construction; contains no measured answers.
+function nativeFixture() {
+  const p=fixedPlan();
+  return Array.from({length:176},(_,j)=>{
+    const c=Math.floor(j/11),a=j%11,id=p[c*10].comparisonId,constant=a===0;
+    return {comparisonId:id,captureIndex:a,nativeEntry:{
+      seq:constant?1:a===1?0:a,parent:constant?0:null,depth:constant?1:0,
+      calculation:constant?'fn.input.lenard5StationMeasurement':p[c*10+a-1].query,
+      store:id,caller:constant?'lazy:px.image.cropped':'cycle06-lenard5-station-measurement',
+      site:null,inParts:[],outParts:constant?['px.image.cropped','tk.s6.pathMask']:[],
+      elapsedMs:constant?0.001:0.002,status:'ok',error:null,emits:constant?null:{computed:1},
+      key:null,cached:false,computedMs:null
+    }};
+  });
+}
+test('native capture order cache metadata and computedMs are not timing exceptions',()=>{
+  validateNativeCaptures(nativeFixture());
+  for(const mutate of [
+    x=>[x[0],x[1]]=[x[1],x[0]],x=>x[1].nativeEntry.computedMs=0,
+    x=>x[1].nativeEntry.cached=true,x=>x[0].nativeEntry.parent=null,
+    x=>x[1].nativeEntry.rawArgs={},x=>x[1].nativeEntry.emits.computed=2,
+    x=>x[1].captureIndex=0,x=>x[11].comparisonId=x[0].comparisonId,
+    x=>x[1].nativeEntry.elapsedMs=Infinity
+  ]) {const x=nativeFixture();mutate(x);assert.throws(()=>validateNativeCaptures(x));}
+});
+test('only the 722 fixed sidecar clock pointers exist and interval metadata follows source order',()=>{
+  const paths=timingPaths();assert.equal(paths.size,722);
+  assert(paths.has('/intervals/181/elapsed'));assert(paths.has('/calculationLog/175/nativeEntry/elapsedMs'));
+  assert(!paths.has('/intervals/182/start'));assert(!paths.has('/calculationLog/0/nativeEntry/computedMs'));
+  const intervals=intervalMetadata();assert.equal(intervals.length,182);
+  assert.deepEqual(intervals.slice(0,6).map(x=>x.phase),['validation','file-preflight','snapshot','source-verify-before-import','import','source-verify-after-import']);
+  assert.deepEqual(intervals[17],{phase:'query',comparisonId:'primary/core16',planIndex:10,query:'fn.q.path.profile'});
+  assert.deepEqual(intervals[181],{phase:'source-verify-after-run'});
+});
+test('artifact ordinals and metadata are fixed; null mask is not a zero mask',()=>{
+  const model=artifactModel();assert.equal(model.length,338);
+  assert.deepEqual(model[159],{path:'fragments/answer-159.json',kind:'answer',comparisonId:'masked-primary/long48',planIndex:159});
+  assert.deepEqual(model[160],{path:'fragments/calculation-0.json',kind:'calculation',comparisonId:'primary/before16',captureIndex:0});
+  assert.deepEqual(model[335],{path:'fragments/calculation-175.json',kind:'calculation',comparisonId:'masked-primary/long48',captureIndex:10});
+  assert.deepEqual(model.slice(336).map(x=>x.path),['value-trace.json','timing-sidecar.json']);
+  const declarations=fixedDeclarations();assert.equal(declarations.filter(x=>x.mask===null).length,12);
+  assert.equal(declarations.filter(x=>x.mask?.kind==='Uint8Array').length,4);
+});
+
+// E1519 FULL validateRun tree fixture. All metadata/keys/clocks below are
+// hand-declared engineering evidence, not observations or measured answers.
+// The synthetic anchor objects are passed directly to validateRun; no file
+// package, source authentication, attestation or query-specific math is proven.
+function completeRunFixture() {
+  const protocol='cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829';
+  const attestation='9f1cb90eed3c74214c9a03029730ea1ab487c48bd86b89cbe3a701eebe923ef1';
+  const rgba='4379abb30a5b0907aa0e1435b13e19eafe8fdd31ac57c9b8bdff4495a14fdc2a';
+  const mask='305285b7e2bc9d44dfd572caa8d39030ed1b0c2254c15967fbb9b7bff7fae609';
+  const frame='Lenard-5.original-source-pixel-centers',raster='px.image.cropped',maskPart='tk.s6.pathMask';
+  const groups=[['primary',780,906,false],['bright-nonpath',780,740,false],['normal-plus6',781.223725524672,911.8738825184256,false],['masked-primary',780,906,true]];
+  const windows=[['before16',-24,-8],['core16',-8,8],['after16',8,24],['long48',-24,24]];
+  const declarations=groups.flatMap(([groupId,x,y,masked])=>windows.map(([windowId,t0Px,t1Px])=>({
+    id:groupId+'/'+windowId,groupId,windowId,imageId:'Lenard-5',frame,widthPx:1290,heightPx:2796,rgbaSha256:rgba,
+    mask:masked?{kind:'Uint8Array',bytes:3606840,sha256:mask}:null,originPx:[x,y],phiRad:-0.20539538918976738,t0Px,t1Px,stepPx:1,widthsPx:[34,42,50]
+  })));
+  const plans=[];
+  for(const d of declarations) {
+    const base=()=>({raster,mask:maskPart,originPx:[...d.originPx],phiRad:d.phiRad,t0Px:d.t0Px,t1Px:d.t1Px,stepPx:1});
+    const push=(widthPx,name,args)=>plans.push({planIndex:plans.length,comparisonId:d.id,groupId:d.groupId,windowId:d.windowId,widthPx,query:'fn.q.path.'+name,rawArgs:args});
+    push(null,'profile',{...base(),lat0Px:0});
+    for(const widthPx of [34,42,50]) {
+      push(widthPx,'edgePair',{...base(),lat0Px:0,widthPx,tolPx:2,latLimPx:12,minOk:{count:8,ofStations:0.2}});
+      push(widthPx,'stationContrast',{...base(),widthPx,bandPx:[1,3],alongPx:2});
+      push(widthPx,'loss',{...base(),widthPx,profile:null,threshold:null,tauLum:8});
+    }
+  }
+  const file=(role,path,bytes,sha256)=>({role,path:'/NONCV-fixture/'+path,bytes,sha256});
+  const suppliedFiles=[file('disk-manifest','manifest.json',100,'a'.repeat(64)),file('protocol','protocol.json',12718,protocol),
+    file('input-attestation','attestation.json',4252,attestation),file('png','never-read.png',3943106,'30fa01879840deb0584ffe001fa39779998710010faeae93510dbc7a8a0abe6e'),
+    file('rgba','never-read.rgba',14427360,rgba),file('mask','never-read.mask',3606840,mask)];
+  const requestBinding={protocolId:'lenard5-fixed16',protocolSha256:protocol,attestationSha256:attestation,schema:'cycle06-lenard5-request-binding@1',
+    request:{schema:'cycle06-lenard5-request@1',enabled:true,manifestPath:'/NONCV-fixture/manifest.json'},comparisons:declarations,suppliedFiles,
+    sourceOriginal:{ref:'49255331791b1245cf0f9cd699816175f94e70f2',path:'specimens/dev/Lenard-5.png',gitBlob:'78a4345489a5544640859127cd79f5a06bf9f21b',frame},
+    encodedFileVerification:{verified:true,sha256:suppliedFiles[3].sha256,bytes:3943106,meaning:'actual file hash, no in-run PNG decode'},
+    rawStageVerification:{verified:true,sha256:rgba,bytes:14427360,meaning:'actual raw file hash; correspondence is independently reviewed staging testimony'},
+    decoderTestimony:{fixture:'hand-declared NONCV anchor; not an actual attestation'},stagingImplementation:{fixture:'no decoder called'},
+    maskPolicy:{nullComparisons:12,explicitMaskComparisons:4,maskSha256:mask,meaning:'caller synthetic visibility, not detected physical occlusion'},
+    settings:{profile:{lat0Px:0},edgePair:{tolPx:2,latLimPx:12,minOk:{count:8,ofStations:0.2}},stationContrast:{bandPx:[1,3],alongPx:2},loss:{profile:null,threshold:null,tauLum:8}},
+    predictedOnly:{stores:16,PATHQueries:160,constants:16,CalculationEntries:176,perStoreCallbackSeq:[1,0,2,3,4,5,6,7,8,9,10]},
+    resourcePlan:{declaredComparisonInputByteSum:245265120,canonicalPlaneBytes:18034200,aggregateNativeAnswerTypedBytes:294912,maxComparisonProfileGridVisits:46272,
+      maxComparisonContrastGridVisits:28800,maxLossCorridorRGBBytes:14544,qualification:'source-derived selected allocations/work only; not measured RSS, peak memory or timing',
+      codecCaps:{maxDepth:32,maxNodes:500000,maxTypedBytes:1000000,maxBytes:33554432,sidecarMaxBytes:4194304}}};
+  const physical=[
+    ['width/vendor/active/ports/s6straight/pathSpace.mjs','d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e'],
+    ['width/vendor/active/contracts/alpha.profile@1.mjs','9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f'],
+    ['root-inventory/source/fg/store.mjs','122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074'],
+    ['root-inventory/source/fg/pxset.mjs','01e68e82741d4af56901b3306a304ca540e8ab0d73a12ba20a0afbe0e788f5d5'],
+    ['root-inventory/source/fg/render.mjs','39a24a645c222430464592546eb6bdc1a8b190902ed5708ecd951b0bb639315a'],
+    ['root-inventory/source/fg/canon.mjs','3cc0319f4678eaf8679adcbfaa9db054841417a966c079019b0f72e24ba24406'],
+    ['root-inventory/source/fg/png.mjs','7668bab9de6a19a2cc6f44e5ac47d6e89373da130764365cf32011187a980241'],
+    ['root-inventory/source/fg/alpha/alphaRender.mjs','4d17e1da77b1e5ceb6a4a2609d26c010caa6c43df8392e9599544299d9e1c549'],
+    ['root-inventory/source/contracts/alpha.profile@1.mjs','9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f']];
+  const closure=()=>({verified:true,entries:physical.map(([path,digest])=>({path:'experiments/capability-discovery/probes/'+path,expectedSha256:digest,actualSha256:digest,error:null}))});
+  const implementation=()=>[
+    ['lenard5-station-evidence/recipe.mjs',null,'4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6',29160],
+    ['lenard5-station-evidence/cli.mjs',null,'a711ab50bc50bd3f69e61656f12002d41d901e19d7db4e8a9b3b5eb188457ffa',7213],
+    ['station-evidence/codec.mjs','3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015','3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015',7322],
+    ['station-evidence/cli.mjs','4ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c','4ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c',9436],
+    ['station-evidence/recipe.mjs','ef7248daf5c83fd014c4a5004aa511e41399492a46be0460fe566ab421383ad3','ef7248daf5c83fd014c4a5004aa511e41399492a46be0460fe566ab421383ad3',25430]
+  ].map(([path,expectedSha256,actualSha256,bytes])=>({path:'/NONCV-fixture/source/experiments/capability-discovery/'+path,expectedSha256,actualSha256,bytes}));
+  const sourceBinding={beforeImport:closure(),afterImport:closure(),afterRun:closure(),implementationBefore:implementation(),implementationAfterImport:implementation(),implementationAfterRun:implementation(),
+    importCaching:'host ESM cache; source hashes do not authenticate execution or defeat concurrent replacement',renderer:null};
+  const runtime={node:'v0.0.0-NONCV-fixture',platform:'fixture-platform',arch:'fixture-arch'};
+  const expected={requestBinding,sourceBinding,runtime};
+  const snapshots=declarations.map((d,c)=>{
+    const hashes={rgbaSha256:rgba,maskSha256:d.mask===null?null:mask};
+    return {comparisonId:d.id,snapshotId:`lenard5-fixed16/${c}/${d.id}`,pre:hashes,
+      checks:Array.from({length:10},(_,k)=>({planIndex:10*c+k,post:{...hashes},verified:true})),post:{...hashes},verified:true,
+      partKeys:{[raster]:'NONCV-raster-key',[maskPart]:c<12?'NONCV-null-mask-key':'NONCV-strip-mask-key'},error:null};
+  });
+  const queryTrace=plans.map((p,n)=>{
+    const c=Math.floor(n/10),s=snapshots[c];return {planIndex:n,comparisonId:p.comparisonId,state:'COMPLETED',
+      resolvedIdentity:{snapshotId:s.snapshotId,comparisonId:p.comparisonId,frame,widthPx:1290,heightPx:2796,rgbaSha256:rgba,
+        maskKind:c<12?null:'Uint8Array',maskSha256:c<12?null:mask,partKeys:{...s.partKeys}},
+      nativeAnswer:{value:null,unit:'NONCV-envelope-only',emits:{computed:1}},error:null};
+  });
+  const trace={schema:'cycle06-lenard5-trace@1',protocolId:'lenard5-fixed16',protocolSha256:protocol,status:'COMPLETED',error:null,
+    requestBinding:structuredClone(requestBinding),sourceBinding:structuredClone(sourceBinding),plannedQueries:plans,queryTrace,
+    counts:{requestedPATH:160,attemptedPATH:160,completedPATH:160,failedPATH:0,capturedCalculationEntries:176,capturedConstantEntries:16,capturedPATHEntries:160},
+    inputIntegrity:{suppliedPlanes:{pre:{rgbaSha256:rgba,maskSha256:mask},post:{rgbaSha256:rgba,maskSha256:mask},verified:true},snapshots,
+      postFiles:suppliedFiles.map(f=>({role:f.role,path:f.path,expectedSha256:f.sha256,actualSha256:f.sha256,verified:true,error:null})),request:{verified:true,error:null},postErrors:[]},
+    claims:{promoted:false,heldout:false,pathIdentity:'UNKNOWN',physicalEdgeIdentity:'UNKNOWN',calibratedWidth:'UNKNOWN',geometryScientificIdentity:'UNKNOWN',
+      scientificAcceptance:'UNKNOWN',humanAcceptance:'UNKNOWN',continuity:'UNKNOWN',tau8:'historical native diagnostic',overlay:'WHITE brightness proxy, not alpha; threshold:null',
+      dependence:'same exposed image and overlapping supports; not independent confidence',historicalLimit:'synthetic capsule/intact collision retained'}};
+  const metadata=[{phase:'validation'},{phase:'file-preflight'},{phase:'snapshot',comparisonId:declarations[0].id},
+    {phase:'source-verify-before-import'},{phase:'import'},{phase:'source-verify-after-import'}];
+  declarations.forEach((d,c)=>{
+    if(c)metadata.push({phase:'snapshot',comparisonId:d.id});
+    for(let k=0;k<10;k++){const p=plans[10*c+k];metadata.push({phase:'query',comparisonId:d.id,planIndex:p.planIndex,query:p.query});}
+  });metadata.push({phase:'source-verify-after-run'});
+  const sidecar={schema:'cycle06-lenard5-sidecar@1',protocolId:'lenard5-fixed16',status:'COMPLETED',error:null,
+    runtime:{...runtime,clock:'node:perf_hooks.performance.now',nondeterministic:true},
+    intervals:metadata.map((m,i)=>({...m,start:2*i,end:2*i+1,elapsed:1,nondeterministic:true})),calculationLog:nativeFixture()};
+  return {trace,sidecar,expected};
+}
+
+test('FULL validateRun hand-declared successful envelope fixture allows null/condition/nonfinite value payloads',()=>{
+  const f=completeRunFixture();
+  const payloads=[null,{condition:'NONCV-fixture',fit:null},NaN,Infinity,-Infinity,-0,Uint8Array.of(0,255)];
+  payloads.forEach((value,i)=>{f.trace.queryTrace[i].nativeAnswer.value=value;});
+  validateRun(f.trace,f.sidecar,f.expected);
+  assert(Object.is(f.trace.queryTrace[5].nativeAnswer.value,-0));
+  assert(Number.isNaN(f.trace.queryTrace[2].nativeAnswer.value));
+});
+test('FULL validateRun rejects null nativeAnswer, missing own value, bad unit and wrong emits before self equality',()=>{
+  const mutations=[
+    ()=>null,
+    ()=>({unit:'NONCV-envelope-only',emits:{computed:1}}),
+    ()=>({value:null,unit:0,emits:{computed:1}}),
+    ()=>({value:null,unit:'NONCV-envelope-only',emits:{computed:0}}),
+    ()=>({value:null,unit:'NONCV-envelope-only',emits:{cached:1}}),
+    ()=>({value:null,unit:'NONCV-envelope-only'}),
+    ()=>Object.assign(Object.create({value:null}),{unit:'NONCV-envelope-only',emits:{computed:1}})
+  ];
+  for(const mutate of mutations){const f=completeRunFixture();f.trace.queryTrace[0].nativeAnswer=mutate();
+    assert.throws(()=>validateRun(f.trace,f.sidecar,f.expected),e=>e.pointer.startsWith('/queryTrace/0/nativeAnswer'));
+  }
+});
+test('FULL validateRun independently exercises counts, request/source binding and exact snapshot-check shape',()=>{
+  for(const mutate of [
+    f=>f.trace.counts.completedPATH=159,
+    f=>f.trace.requestBinding.request.manifestPath='/NONCV-fixture/changed.json',
+    f=>f.trace.sourceBinding.beforeImport.entries[0].actualSha256='0'.repeat(64),
+    f=>f.trace.inputIntegrity.snapshots[0].checks[0].error=null,
+    f=>f.trace.inputIntegrity.snapshots[0].error='not-null',
+    f=>f.trace.queryTrace[0].resolvedIdentity.partKeys['tk.s6.pathMask']='wrong-key'
+  ]){const f=completeRunFixture();mutate(f);assert.throws(()=>validateRun(f.trace,f.sidecar,f.expected));}
+});
+test('external-root lexical guard respects complete parent path components',()=>{
+  assert.equal(typeof comparator.isExternalRoot,'function');
+  for(const inside of ['/repo','/repo/ordinary/original','/repo/..inside/original','/repo/.../original'])
+    assert.equal(comparator.isExternalRoot('/repo',inside),false,inside);
+  for(const outside of ['/','/sibling/original','/repo-sibling/original'])
+    assert.equal(comparator.isExternalRoot('/repo',outside),true,outside);
+});

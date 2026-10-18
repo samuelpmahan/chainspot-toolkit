@@ -1,0 +1,13 @@
+{
+  "job_id":"E1526","worker":"V2","phase":"BEFORE_RED",
+  "cwd":"/workspace/scratch/8528bb251845",
+  "environment":{"E1526_RENDERER":"../E1520/renderer-proposal.v3.mjs"},
+  "syntax_argv":["node","--check","discovery-cycle06/V2/E1526/renderer-layout-regression.test.mjs"],
+  "red_argv":["node","--test","discovery-cycle06/V2/E1526/renderer-layout-regression.test.mjs"],
+  "source_under_test_sha256":"a5f8ee7b60cdf7d4593bf1658e3ae6415dd0bf50f7cb128af810924dc7a29e2b",
+  "expected_red":"Actual emitted adjacent long48 NaN text boxes overlap; assertion failure, not an import/syntax/runtime error",
+  "syntax_stdout":"red-syntax.stdout.raw","syntax_stderr":"red-syntax.stderr.raw",
+  "red_stdout":"red.stdout.raw","red_stderr":"red.stderr.raw",
+  "actual_exit":null,"signal":null,
+  "stop_policy":"If RED is not the expected overlap assertion, preserve evidence and report; do not invent failure/change thresholds. No v4 implementation before meaningful RED. No real trace rerender/conversion."
+}

@@ -1,0 +1,75 @@
+{
+  "job_id": "R1519",
+  "worker": "R2",
+  "decision": "accepted",
+  "outcome": "confirmed_reuse",
+  "summary": "Independent review accepts the exact E1519 bounded repair of both R2/R1515 findings. Each native answer receives a source-known successful-envelope precheck before self-tree equality, and external-root containment is now parent-component-aware. The added hand-declared full validateRun positive fixture and narrow mutants contain no measured data and are accurately described as validator-level, not file-package integration. R2 prospectively captured and ran the exact fifteen-test NONCV suite once on the reviewed hashes:15 passed,0 failed/skipped,exit0, no retry/repair. Original E1515 source/tests and E1512 policy remain unchanged. This accepts the engineering repair, not actual retained packages, replay or scientific/human acceptance.",
+  "review_checks": [
+    {
+      "finding": "R2-R1515-F1",
+      "decision": "addressed",
+      "pointer": "V1/E1519/compare.mjs:230-240,270-274",
+      "evidence": "validateNativeAnswer now requires a nonnull ordinary object; own enumerable data fields value,unit,emits; a string unit; and exact emits:{computed:1}. validateRun calls it at272 before nativeAnswer is used as its own expected value at274. Literal null nativeAnswer and missing/wrong/inherited envelope fields can no longer pass that validator path. The rule follows frozen store registerQueries195-198; it does not guess query-specific measurement values.",
+      "preservation": "value payload is neither transformed nor range/finite-constrained; native null, condition objects, NaN, infinities,-0 and Uint8Array remain data. Extra envelope fields remain present and participate in existing canonical-wire, within-run and cross-run exact equality. All timing and byte-comparison code is unchanged."
+    },
+    {
+      "finding": "R2-R1515-F2",
+      "decision": "addressed",
+      "pointer": "V1/E1519/compare.mjs:177-180,355-356",
+      "evidence": "isExternalRoot returns true only for rel==='..', rel.startsWith('..'+sep), or isAbsolute(rel); comparePackages uses this helper in its admission guard. The actual '/repo/..inside/original' and '/repo/.../original' counterexamples now return false. Existing downstream absolute-root/nonsymlink guards remain. This is lexical containment, not an expanded claim of hostile ancestor-symlink or filesystem authentication."
+    },
+    {
+      "finding": "Smallest missing engineering check",
+      "decision": "addressed at validator level",
+      "pointer": "V1/E1519/compare.test.mjs:124-259",
+      "evidence": "completeRunFixture hand-declares16 comparisons,160 rows/plans,16 snapshots with10 exact checks each,176 captures,182 intervals and request/source/runtime expectations. Actual validateRun is called by positive test221-228 and malformed-answer mutations229-242; additional mutations243-252 check counts/anchors/check-key shape/snapshot error/resolved keys. Lexical cases253-259 exercise actual isExternalRoot. Fixture labels and comments explicitly disclaim source/input authentication and query-specific math; artificial paths are never opened. nativeFixture uses fixedPlan only for callback metadata, not measurement generation."
+    },
+    {
+      "finding": "Frozen authority and prior source-shape defect",
+      "decision": "preserved",
+      "pointer": "V1/E1519/compare.mjs:343-351; checkpoint.md:14-18; result.json:34-45",
+      "evidence": "Original policy remains b146b7183e4aab0708792b7f72aa37790113ca8061f34c551ea590f24391027d and is not claimed to pass unchanged. Code retains the separately root-admitted, raw hash-bound source-shape addendum gate and defect disclosure. The admitted addendum is post-producer source-shape clarification, not numeric/value/timing widening. Raw exact values and original timing whitelist/constraints are unchanged. Root remains responsible for supplying the exact admitted addendum and authenticated codec/outer evidence."
+    },
+    {
+      "finding": "Versioned scope and retained execution evidence",
+      "decision": "consistent",
+      "evidence": "Diff against E1515 is limited to module/report version, sep import, component-aware helper/use and minimal answer-envelope validator/use. Complete current source/tests/checkpoint/result/prospective command/receipt/raw first-pass text were inspected. Construction checkpoint's NOT_RUN state is historical; the later result and execution receipt explicitly record the subsequently admitted syntax checks and first15-test pass. First-pass stdout reports15 pass0fail and its raw hash matches the receipt. Four syntax logs and first-pass stderr are independently hash-verified empty. No full integration or original-path red-green result is implied."
+    }
+  ],
+  "findings_requiring_amendment": [],
+  "actual_test_counts": {
+    "V1_retained_first_pass": {"suite_invocations":1,"tests":15,"pass":15,"fail":0,"skipped":0,"cancelled":0,"todo":0,"observed_exit_code_in_retained_receipt":0,"reported_duration_ms":242.618936,"authority":"Retained raw stdout and command receipt, not R2's direct invocation"},
+    "R2_independent": {"suite_invocations":1,"tests":15,"pass":15,"fail":0,"skipped":0,"cancelled":0,"todo":0,"actual_exit_code":0,"reported_duration_ms":277.74755,"started_utc":"2026-10-18 19:19:31 UTC","ended_utc":"2026-10-18 19:19:32 UTC","retries":0,"repairs":0,"syntax_only_commands":0,"capture":"Raw combined exec_command output and actual exit retained in independent-suite-receipt.json; independent stderr is not separately attested"},
+    "command": ["node","--test","discovery-cycle06/V1/E1519/compare.test.mjs"],
+    "cwd": "/workspace/scratch/8528bb251845"
+  },
+  "limitations": [
+    "Minimal successful store-envelope checking is intentionally not validation of each query-specific measurement payload schema or scientific correctness. No measured answer was created, guessed or inspected.",
+    "Hand-declared expected request/source anchors exercise equality/refusal logic, not authentic retained input/source provenance. The synthetic Part keys/runtime strings are engineering placeholders, not observed physical identities.",
+    "No comparePackages invocation or complete file-package integration test occurred. Ordinary manifest/receipt, tagged codec, artifact/hash/outer binding and actual package interactions remain source-reviewed/deferred, not runtime-proven by these15 tests.",
+    "No old-original-path red test was run; no complete red-green mutation proof is claimed. E1515 originals remain preserved.",
+    "No producer outputs, codec/product imports, producer/replay/CV/PATH/store operations, pixels, image decode, rendering or visual QA occurred. Acceptance is engineering repair only.",
+    "Root's later admitted packet must still authenticate the codec namespace, exact retained outer/runtime evidence, source-shape authority, chronology, fresh external roots and immutable raw files before any actual package comparison."
+  ],
+  "full_hashes": {
+    "V1/E1519/compare.mjs": "359f5e177cf1bb3cf0c65212445086ce9f19374fae279d3f40ffba55f9994acd",
+    "V1/E1519/compare.test.mjs": "961fe42bb21690d7ea485ac50a18681f1d64321758815384e60db6caeaa8c3b0",
+    "V1/E1519/checkpoint.md": "1df8d477cd9eca2755a28a0b8ea46f2fcca61923e22228a49d5c7adf18d0b53c",
+    "V1/E1519/result.json": "c45a48834d68659266212fe37d84324160df336400d50066bb6f8851b3914466",
+    "V1/E1519/prospective-commands.json": "e360497fbc271020e40b90192bcb1e92fc7e69a66d69dc5cc989f0f309fa19ff",
+    "V1/E1519/execution-receipt.json": "1db617dc4f186ebf5cee2544c96e5a26ef88d74f15eb2ae75437b80e81c2ff00",
+    "V1/E1519/tests-first.stdout.txt": "86e188de8717bc6025480aa321c947b8df6269850cf027d01efc919130379e2d",
+    "V1/E1519/tests-first.stderr.txt_and_four_empty_syntax_logs": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "R2/R1519/prospective-independent-suite.json": "70a690184332fa04efe23f080ca8340150470ddf95942395a54c4af4fc0ade23",
+    "R2/R1519/independent-suite-receipt.json": "18619fa7b4f8be15f7f471ce4f6282557a50011d3b423b403a5884daddc715fd",
+    "V1/E1515/compare.mjs": "4574213c39e1e075bcc2f7533985d4792db0c72153f2c3a8ae9eb4845f57b318",
+    "V1/E1515/compare.test.mjs": "a3ebf0782bb15ac5706ffa9e08583cc399b08fe8371cfbf63e7a97d08b2c715b",
+    "R2/R1515/result.json": "d97409f1094771df6fc9684134ba8a8211990e94c59a5d663c40fe3ae0caac21",
+    "V1/E1512/replay-policy.json": "b146b7183e4aab0708792b7f72aa37790113ca8061f34c551ea590f24391027d",
+    "replay-source-shape-addendum.v1.json": "3537cdce221ab424672097ed6d8530afaf94128d66ddb3dc38a8d3490407232b",
+    "replay-source-shape-admission.v1.json": "8c6360ba697cebcd798b23deff6b1688cf2010eff1ee6036e452ca1bdde7f8ae"
+  },
+  "scope": {"producer_output_reads":0,"comparePackages_or_replay":0,"codec_or_product_imports":0,"source_pixels_or_render":0,"helpers_git_native_source_mutations":0,"only_authored_directory":"discovery-cycle06/R2/R1519","exact_reviewed_source_and_tests_postrun_hashes_unchanged":true},
+  "claims": {"original_policy_passed_unchanged":false,"scientificAcceptance":"UNKNOWN","humanAcceptance":"UNKNOWN","pathIdentity":"UNKNOWN","continuity":"UNKNOWN","calibratedWidth":"UNKNOWN"},
+  "handoff": "Root may accept this exact bounded repair and its validator-level evidence for a separately admitted next stage. This report does not itself authorize producer output reads, full package comparison, replay or rendering."
+}

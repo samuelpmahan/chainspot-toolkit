@@ -1,0 +1,20 @@
+{
+  "job_id":"E1522",
+  "worker":"V2",
+  "phase":"BEFORE_SPAWN",
+  "scope":"ONE real trace-only renderer CLI; no CV, pixels, producer/query rerun, new scores, PNG or visual QA",
+  "argv":["node","discovery-cycle06/V2/E1520/renderer-proposal.v3.mjs","--packet","/workspace/scratch/8528bb251845/discovery-cycle06/render-trust-packet.v1.json","--packet-sha","f5e4baf6c9173f39e40f49cab14355d1db5176818f42ba8e81f413c780998ff3","--out","/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1522/display-v1"],
+  "cwd":"/workspace/scratch/8528bb251845",
+  "renderer":{"path":"../E1520/renderer-proposal.v3.mjs","sha256":"a5f8ee7b60cdf7d4593bf1658e3ae6415dd0bf50f7cb128af810924dc7a29e2b","verified_before_spawn":true},
+  "packet":{"path":"/workspace/scratch/8528bb251845/discovery-cycle06/render-trust-packet.v1.json","sha256":"f5e4baf6c9173f39e40f49cab14355d1db5176818f42ba8e81f413c780998ff3","verified_before_spawn":true},
+  "output_directory":"/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1522/display-v1",
+  "output_absent_before_spawn":true,
+  "stdout_path":"/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1522/renderer.stdout.raw",
+  "stderr_path":"/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1522/renderer.stderr.raw",
+  "capture_paths_absent_before_spawn":true,
+  "actual_exit":null,
+  "actual_signal":null,
+  "actual_exit_status":"NOT_YET_SPAWNED_NOT_AN_INTENDED_EXIT",
+  "stop_policy":"One invocation only; stop first failure, preserve raw errors and written prefixes, no automatic patch/retry/cleanup/overwrite",
+  "after_success_only":"Byte-compare CLI stdout against descriptive-table.csv and hash all actual display outputs; no PNG/browser/visual QA"
+}

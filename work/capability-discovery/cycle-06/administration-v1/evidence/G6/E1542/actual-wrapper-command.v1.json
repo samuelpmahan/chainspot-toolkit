@@ -1,0 +1,29 @@
+{
+  "schema": "cycle06-E1542-actual-wrapper-command@1",
+  "status": "DECLARED_BEFORE_LAUNCH",
+  "declaredAfterPreflightUTC": "2026-10-18T21:34:36.243Z",
+  "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+  "argv": [
+    "python3.12",
+    "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-06/run-closed-once.v3.py",
+    "--packet",
+    "/workspace/scratch/8528bb251845/discovery-cycle06/G6/E1541/root-one-build-packet.v1.json",
+    "--packet-sha",
+    "266a0dfda05a298e88e7732d078ec12aef2463af79c2afa8af60e396781c979e"
+  ],
+  "outerStdout": "discovery-cycle06/G6/E1541/wrapper.stdout.raw",
+  "outerStderr": "discovery-cycle06/G6/E1541/wrapper.stderr.raw",
+  "outerActualRecord": "discovery-cycle06/G6/E1541/wrapper.actual.json",
+  "correctedPreflight": {
+    "toolChunk": "30e150",
+    "actualExit": 0,
+    "eightFreshBindingsMatched": true,
+    "eightOutputAndCapturePathsAbsent": true,
+    "sourcePacketNlinkOneRetained": true,
+    "installedRuntimeNlinkNotRequired": true
+  },
+  "firstPreflightPreserved": "discovery-cycle06/G6/E1542/preflight-correction.v1.json",
+  "scope": "Exactly one wrapper; exactly one helper build child; child captures/output paths use reviewed E1541 construction-origin names but actual native execution job is E1542",
+  "capture": "Shell noclobber direct original binary stdout/stderr; actual child PID/wait exit/UTC preserved; no Python outer framework.",
+  "executionApproval": "Root PHASE2 explicitGO, sameunfinished E1542; no source/env/PATH/permission/assertion changes, no retries."
+}

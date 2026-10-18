@@ -1,0 +1,161 @@
+{
+  "schema": "lab-job-review@1",
+  "job_id": "R1501",
+  "worker": "G2",
+  "decision": "accepted",
+  "summary": "Accepted G1 E1501's exact input staging relation after independent byte/Git-object checks and one explicitly admitted strict original-PNG decode reproduction. The source ref:path resolves the declared Git blob and its bytes equal G1's PNG; the unchanged strict Pillow12.3.0 stage reproduces the entire14427360-byte RGBA exactly, with appended alpha255. An independent in-memory evaluation of the frozen visibility predicate exactly equals G1's3606840-byte binary mask with767 ones. All pinned subjects and15 G1 command receipts/30 raw bindings verify, and own before/after Git refs, HEAD/tree and clean status agree. First review execution exited0; no rerun/repair occurred. This accepts encoded/decoded/mask input provenance only, not scientific geometry, visual/path identity, future implementation, producer or release.",
+  "subject": {
+    "job_id": "E1501",
+    "worker": "G1",
+    "resultPath": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/result.json",
+    "resultSha256": "c4387714aadd05bec26ef99e5647be37085872a2d1fa57e3cf6bd2c0c1d4ff65",
+    "attestationPath": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/staging-attestation.json",
+    "attestationSha256": "9f1cb90eed3c74214c9a03029730ea1ab487c48bd86b89cbe3a701eebe923ef1",
+    "protocolPath": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-05/capture/final/F2/E1104/protocol-proposal.json",
+    "protocolSha256": "cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829",
+    "protocolDisposition": "Exact existing accepted protocol preserved; this task reviews input relations rather than repeating or changing its geometry/protocol critique."
+  },
+  "verifiedByteBindings": {
+    "sourceRefPath": "49255331791b1245cf0f9cd699816175f94e70f2:specimens/dev/Lenard-5.png",
+    "gitBlob": "78a4345489a5544640859127cd79f5a06bf9f21b",
+    "gitHeaderPlusContentSha1": "78a4345489a5544640859127cd79f5a06bf9f21b",
+    "blobPngExactByteEquality": true,
+    "sourcePng": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.original.png",
+      "bytes": 3943106,
+      "sha256": "30fa01879840deb0584ffe001fa39779998710010faeae93510dbc7a8a0abe6e"
+    },
+    "fullRgba": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.full.rgba",
+      "bytes": 14427360,
+      "sha256": "4379abb30a5b0907aa0e1435b13e19eafe8fdd31ac57c9b8bdff4495a14fdc2a",
+      "independentStrictDecodeExactByteEquality": true,
+      "dimensionsPx": [1290,2796],
+      "frame": "Lenard-5.original-source-pixel-centers",
+      "allAlpha255": true
+    },
+    "visibilityMask": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.primary-oriented-six-pixel-strip.mask.u8",
+      "bytes": 3606840,
+      "sha256": "305285b7e2bc9d44dfd572caa8d39030ed1b0c2254c15967fbb9b7bff7fae609",
+      "independentFrozenPredicateExactByteEquality": true,
+      "ones": 767,
+      "uniqueValues": [0,1],
+      "nonzeroBoundsInclusivePx": [765,843,795,969],
+      "floatingVsIntegerPredicateDisagreements": 0,
+      "generationScope": "In reviewer memory only; no mask file changed or extra measurement/geometry chosen."
+    },
+    "inspectionCrop": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.inspection-crop.png",
+      "bytes": 278079,
+      "sha256": "fecfff14beff8dcfb42203f2b2c1fabaef2e52374815274c8e1830d5b813cc84",
+      "exactByteEqualityWithPreservedLab5CropPng": true,
+      "independentCropDecodeOrVisualReviewHere": false,
+      "measurementInput": false
+    }
+  },
+  "strictDecoder": {
+    "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/source-pixels/stage-png.py",
+    "bytes": 2992,
+    "sha256": "e194f56e2899f516bb79dd8d6c5e4b876440d6f0932bf9d74e0a56c117f06a44",
+    "imports": 1,
+    "stageCalls": 1,
+    "actualDecoder": {
+      "name": "Pillow",
+      "version": "12.3.0",
+      "outputMode": "RGBA",
+      "sourceMode": "RGB",
+      "orientation": "stored PNG pixel order; no EXIF transform",
+      "colorTransform": "none; stored RGB channels, no ICC/gamma transform",
+      "alpha": "preserved RGBA; RGB appends 255"
+    },
+    "actualDecoderExactlyEqualsG1Attestation": true,
+    "nonmaterialMetadataNote": "The frozen protocol's alpha sentence is 'RGB appends 255; existing RGBA alpha preserved'; the strict stager's actual sentence is 'preserved RGBA; RGB appends 255'. These are semantically equivalent for the verified native RGB input, not literally identical metadata strings. Both attributed objects are preserved; no testimony is silently rewritten or decoder/calibration inferred. No protocol amendment is required."
+  },
+  "commandsAndRawExit": {
+    "reproductionCommand": "PYTHONDONTWRITEBYTECODE=1 python3 /workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/review-input.py",
+    "rootReadExactScriptAndApprovedBeforeExecution": true,
+    "actualReviewExecutions": 1,
+    "firstAndOnlyExit": 0,
+    "reviewRawStdout": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/review.stdout",
+      "bytes": 437,
+      "sha256": "ee755e232c7467e14ecc007d39dbe82b8fe16a015283a661e8d4cf885429b3f3"
+    },
+    "reviewRawStderr": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/review.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "g1RecordedSubprocessCommandsVerified": 15,
+    "g1RawBindingsVerified": 30,
+    "g1RecordedSubprocessExits": "All0 with exact raw stdout/stderr bindings; historical preliminary exit2 absent-directory discovery is retained and separately labeled in G1 result, not hidden.",
+    "ownGitReadCommands": 9,
+    "ownGitReadCommandExits": "All0, exact argv/environment/cwd/exit and raw stdout/stderr retained in git-commands.json.",
+    "strictStageStdoutAndStderr": "Both empty; their exact bindings are retained in verification.json.",
+    "noHiddenRerunOrRepair": true
+  },
+  "preservation": {
+    "reviewedSubjectBindingsRehashedAfterWork": true,
+    "reviewedSubjectBindingsUnchanged": true,
+    "g1ThreeStoredSnapshotsAgree": true,
+    "g1StoredTrackedCount": 2523,
+    "all2523CurrentFilesRehashedByReviewer": false,
+    "ownBeforeAfterRefsHeadTreeAndStatusEqual": true,
+    "head": "be67d44a653c79ca61efae99934e90475a9aba5e",
+    "tree": "87dfd9aebb09050d1c56e39d54d9a9920b93341c",
+    "statusBefore": "",
+    "statusAfter": "",
+    "writes": "Only discovery-cycle06/G2/R1501 scratch artifacts; G1/source/repository/Git/native/remote bytes were not written."
+  },
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/review-input.py",
+      "bytes": 13887,
+      "sha256": "84af4c84e61e32622ed1bdcb7395f6173832b2d6c8d41c2bb4de653f7ed48e52"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/verification.json",
+      "bytes": 22307,
+      "sha256": "1a353c65ff193996a81c82298cda684d6e323054578c9e9e803ff8a2efca9aff"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/command.json",
+      "bytes": 769,
+      "sha256": "fdf4047a9d7c35aaa8058896c59617b4c23f9929054dcce9e03ffa772262552c"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle06/G2/R1501/git-commands.json",
+      "bytes": 6563,
+      "sha256": "6bddff7640c22f3939b6374f761ee4a92f685f2dd70de48a5733354c378f94dc"
+    }
+  ],
+  "mandatoryAmendments": [],
+  "independence": "G2 did not stage G1's original bodies or produce its input testimony. Own Git-object byte checks, one admitted strict-stage reproduction and in-memory mask evaluation determine this review; G1 testimony alone was not accepted as proof. G2's earlier protocol critique remains a distinct task.",
+  "claimLimits": {
+    "established": "Exact original encoded content, full-frame decoded RGBA, decoder semantics, mask bytes and local read-only Git object relation.",
+    "notEstablished": "Scientific geometry truth, authenticated semantic classes, same-edge/path identity, physical width/continuity/gap/occlusion, alpha calibration, visual acceptance, heldout accuracy, future implementation correctness, producer result or release.",
+    "geometryChanged": false,
+    "knownExposed": true,
+    "heldout": false,
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN",
+    "visualAcceptance": "UNKNOWN",
+    "promoted": false
+  },
+  "execution": {
+    "imageDecodes": 1,
+    "strictStageCalls": 1,
+    "fixedMaskRegenerationsInMemory": 1,
+    "cvCalls": 0,
+    "PATHCalls": 0,
+    "vendorImports": 0,
+    "storeImports": 0,
+    "testsRun": 0,
+    "sourceEdits": 0,
+    "gitWrites": 0,
+    "nativeWrites": 0,
+    "remoteActions": 0
+  },
+  "next": "Root may ingest this independent input-relation acceptance. Implementation/source review and separately admitted fixed producer remain separate gates; no new geometry, calibration, scientific acceptance or release is implied."
+}

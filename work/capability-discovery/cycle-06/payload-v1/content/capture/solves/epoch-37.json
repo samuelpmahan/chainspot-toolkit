@@ -1,0 +1,109 @@
+{
+  "epoch": 37,
+  "at": "2026-10-18T20:12:39.840489+00:00",
+  "ready_jobs": [
+    "E1534"
+  ],
+  "pinned_workers": [
+    "G6"
+  ],
+  "assignments": {
+    "G6": "E1530",
+    "V2": "E1534",
+    "R1": "BENCH",
+    "Q1": "BENCH"
+  },
+  "dispatch": {
+    "V2": "E1534"
+  },
+  "native_seconds": 0.0051429550076136366,
+  "native_constraints": {
+    "solved": true,
+    "brokenVal": 0,
+    "brokenCount": 0,
+    "constraints": [
+      {
+        "name": "independent_review",
+        "desc": "avoidAssignmentsSpec: Avoid 4 assignments on scope packets",
+        "value": 0
+      },
+      {
+        "name": "pin_in_flight",
+        "desc": "avoidMovingSpec: Avoid moving 1 objects",
+        "value": 0
+      },
+      {
+        "name": "ready_packet_capacity",
+        "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+        "value": 0
+      }
+    ]
+  },
+  "independent_capacity_check": true,
+  "independent_eligibility_check": true,
+  "exact_score": 100,
+  "native_score": 100,
+  "caps": {
+    "E1512": 0,
+    "E1510": 0,
+    "E1511": 0,
+    "R1507": 0,
+    "E1509": 0,
+    "E1507": 0,
+    "E1508": 0,
+    "R1501": 0,
+    "E1501": 0,
+    "E1502": 0,
+    "E1503": 0,
+    "E1504": 0,
+    "E1505": 0,
+    "E1506": 0,
+    "E1514": 0,
+    "E1513": 0,
+    "E1515": 0,
+    "E1516": 0,
+    "R1514": 0,
+    "E1517": 0,
+    "R1517": 0,
+    "E1518": 0,
+    "R1515": 0,
+    "R1513": 0,
+    "E1519": 0,
+    "R1518": 0,
+    "E1520": 0,
+    "R1519": 0,
+    "E1521": 0,
+    "R1520": 0,
+    "E1522": 0,
+    "E1523": 0,
+    "E1524": 0,
+    "E1525": 0,
+    "R1523": 0,
+    "E1526": 0,
+    "R1525": 0,
+    "E1527": 0,
+    "E1528": 0,
+    "E1529": 0,
+    "E1530": 1,
+    "R1526": 0,
+    "E1531": 0,
+    "R1528": 0,
+    "E1533": 0,
+    "E1534": 1,
+    "BENCH": 4
+  },
+  "eligible": {
+    "E1534": [
+      "V2"
+    ]
+  },
+  "weights": {
+    "E1534": 100
+  },
+  "agent_by_worker": {
+    "V2": null,
+    "R1": null,
+    "G6": "/root/lab6_package_g6",
+    "Q1": null
+  }
+}

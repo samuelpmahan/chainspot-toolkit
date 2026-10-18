@@ -1,0 +1,40 @@
+{
+  "id": "O02-fragment-collision",
+  "status": "PASS",
+  "data": {
+    "status": "OUTPUT_FAILED",
+    "manifestError": null,
+    "oneShot": true,
+    "engineeringOnly": true
+  },
+  "observed": {
+    "events": [
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/writer-fragment-collision/fragments/answer-1.json",
+        "fd": 18
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      },
+      {
+        "op": "openSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/writer-fragment-collision/artifact-manifest.json",
+        "fd": 18
+      },
+      {
+        "op": "closeSync",
+        "target": 18
+      },
+      {
+        "op": "readFileSync",
+        "target": "/workspace/scratch/8528bb251845/discovery-cycle06/V2/E1509/writer-fragment-collision/fragments/answer-1.json"
+      }
+    ],
+    "peakOpen": 1,
+    "remainingOpen": [],
+    "blockedImports": 0,
+    "productLoadAttempts": 0
+  }
+}

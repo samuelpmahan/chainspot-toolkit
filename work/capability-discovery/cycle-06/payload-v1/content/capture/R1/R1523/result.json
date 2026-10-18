@@ -1,0 +1,106 @@
+{
+  "job_id":"R1523",
+  "worker":"R1",
+  "decision":"amend",
+  "status":"EXACT_DISPLAY_DATA_VERIFIED_COMPACT_NONFINITE_READABILITY_AMEND",
+  "summary":"Independently viewed all four actual1680x1600 PNGs at requested original detail. The16windows/48nominal banks, identities, native conditions and summary values are readable as an overview; exact SVG/CSV/HTML/display-manifest agreement with the separately accepted R1513 figures passed. However, masked-primary/long48 NaN labels overlap in all three width panels, preventing reliable individual nonfinite station/count reading from the PNG. This warrants AMEND for complete compact station-level legibility, not a rejection of the accepted raw evidence or the exact descriptive tables. Root may explicitly decide that the existing overview plus exact tables is sufficient under a bounded limitation; this reviewer does not silently grant that policy exception, human acceptance or scientific acceptance.",
+  "subdispositions":{
+    "exact_display_projection":"accepted within checks below",
+    "group_window_bank_overview":"readable at original size",
+    "complete_compact_station_nonfinite_legibility":"amend",
+    "raw_package_acceptance":"prior separate R1513 accepted; not rerun",
+    "human_or_scientific_acceptance":"UNKNOWN"
+  },
+  "images_actually_viewed":[
+    {"path":"discovery-cycle06/V2/E1523/group-primary.png","sha256":"cabecab98488e4fa9a69c39afa0d5188c03ec1a91fd09c171ed717571680e492","width":1680,"height":1600,"view_tool":"view_image","requested_detail":"original","views":1,"observation":"All4windows/3banks visible. Explicit native no edge pair at core16/50 and long48/50; no outer page clipping observed. Core34 loss visible16/N16,pass11,passFrac0.688,lossFrac0.313,gap4 is readable."},
+    {"path":"discovery-cycle06/V2/E1523/group-bright-nonpath.png","sha256":"3cc5f5640a030fbe2eb1bab68b501beb462726c9ad5d0b73e4852aa55e090476","width":1680,"height":1600,"view_tool":"view_image","requested_detail":"original","views":1,"observation":"All4windows/3banks visible at declared origin780,740. All12finite native fits coexist with native edge pass0; no specificity/path-identity verdict is implied. No missing bank/outer-page clipping observed."},
+    {"path":"discovery-cycle06/V2/E1523/group-normal-plus6.png","sha256":"e22381ef63a94ea21315efa86eddad330344e71d2686641af65f3880fa510bf2","width":1680,"height":1600,"view_tool":"view_image","requested_detail":"original","views":1,"observation":"Full offset origin text, all4windows/3banks visible. before16/50 explicitly says native condition:no edge pair rather than null fit/unexecuted. Native fit changes and pass0 are shown without recenter/same-edge assertion."},
+    {"path":"discovery-cycle06/V2/E1523/group-masked-primary.png","sha256":"6da68ed7beac8e1c83a787b0559ec12fa6e51b36364f37e53b4d7459ebb15ab9","width":1680,"height":1600,"view_tool":"view_image","requested_detail":"original","views":1,"observation":"Caller synthetic-strip label, core finite-invalid hollow points, broken valid paths and pale validity lanes are visible. Core NaN rows are separated; long48 adjacent NaN glyphs overlap in every bank. Summary loss denominators remain readable. No outer-page clipping observed."}
+  ],
+  "independent_exact_checks":{
+    "CLI_stdout_equals_CSV":{"method":"complete cmp byte comparison","actual_exit":0,"bytes_each":1734199,"sha256_each":"53bdcf7cfe714ff0342549a4bf05d5c791f2f7a2d2e3e6054eddd338c833c5a5"},
+    "csv_data_rows":14972,
+    "exact_scalar_and_validity_checks_against_R1513":14604,
+    "scope_of_scalar_checks":"All16profiles241profLum/okCount pairs, all48fit or condition rows, bilateral values/flags, native edge/overlay scalars and station arrays, corridor byte hashes; comparison by exact retained string tokens, not recomputed measurements.",
+    "all_comparisons_and_banks_checked":16,
+    "banks_each":3,
+    "exact_HTML_bank_summary_rows_checked":48,
+    "SVG_numeric_fit_loss_summary_labels_checked":"All48banks against accepted R1513 values with renderer-declared5significant-digit display labels; exact CSV tokens remain unrounded",
+    "manifest_artifact_hashes_and_lengths_verified":6,
+    "HTML_comparison_sections":16,
+    "raw_artifact_links_verified_exist":338,
+    "raw_link_check_scope":"HTML decoded relative hrefs resolve to exact original160answer/176calculation fragments and both original aggregate paths; existence checked without opening/decoding those original wires.",
+    "actual_row_states":{"COMPLETED":160},
+    "missing_or_unexecuted_answer_rows":0,
+    "native_null_answer_rows":0,
+    "native_condition_rows":4,
+    "native_condition_null_labels":0,
+    "CSV_new_score_fields":0,
+    "SVG_dimensions_each":"1680x1600; viewBox0 0 1680 1600",
+    "scope_claims":"Manifest promoted:false/heldout:false and UNKNOWN path/physical edge/continuity/calibrated width/scientific/human claims; visible page UNKNOWN/no best width/caller-mask/dependence/WHITE-proxy warnings retained.",
+    "diagnostic_tools":"Read-only Python stdlib CSV/XML/HTML/JSON checks, cmp, file and SHA256; no renderer/codec/product import or rerun. Commands completed exit0; tool chunks cac127,2c9694,4901e4."
+  },
+  "all16_sampled_comparisons":[
+    {"comparison":"primary/before16","banks_checked":[34,42,50],"edge_visible_each":"16","overlay_visible_each":"16"},
+    {"comparison":"primary/core16","banks_checked":[34,42,50],"edge_visible_each":"16","overlay_visible_each":"16","no_edge_pair":[50]},
+    {"comparison":"primary/after16","banks_checked":[34,42,50],"edge_visible_each":"16","overlay_visible_each":"16"},
+    {"comparison":"primary/long48","banks_checked":[34,42,50],"edge_visible_each":"48","overlay_visible_each":"48","no_edge_pair":[50]},
+    {"comparison":"bright-nonpath/before16","banks_checked":[34,42,50],"edge_visible_each":"16","overlay_visible_each":"16","native_pass_each":"0"},
+    {"comparison":"bright-nonpath/core16","banks_checked":[34,42,50],"edge_visible_each":"16","overlay_visible_each":"16","native_pass_each":"0"},
+    {"comparison":"bright-nonpath/after16","banks_checked":[34,42,50],"edge_visible_each":"16","overlay_visible_each":"16","native_pass_each":"0"},
+    {"comparison":"bright-nonpath/long48","banks_checked":[34,42,50],"edge_visible_each":"48","overlay_visible_each":"48","native_pass_each":"0"},
+    {"comparison":"normal-plus6/before16","banks_checked":[34,42,50],"edge_visible_each":"16","overlay_visible_each":"16","no_edge_pair":[50]},
+    {"comparison":"normal-plus6/core16","banks_checked":[34,42,50],"edge_visible_each":"16","overlay_visible_each":"16"},
+    {"comparison":"normal-plus6/after16","banks_checked":[34,42,50],"edge_visible_each":"16","overlay_visible_each":"16"},
+    {"comparison":"normal-plus6/long48","banks_checked":[34,42,50],"edge_visible_each":"48","overlay_visible_each":"48"},
+    {"comparison":"masked-primary/before16","banks_checked":[34,42,50],"edge_visible_each":"16","overlay_visible_each":"16"},
+    {"comparison":"masked-primary/core16","banks_checked":[34,42,50],"edge_visible_each":"9","overlay_visible_each":"7","no_edge_pair":[50]},
+    {"comparison":"masked-primary/after16","banks_checked":[34,42,50],"edge_visible_each":"16","overlay_visible_each":"16"},
+    {"comparison":"masked-primary/long48","banks_checked":[34,42,50],"edge_visible_each":"41","overlay_visible_each":"39"}
+  ],
+  "retained_semantics":{
+    "native_no_edge_pair":"Four exact conditions: primary/core16/50,primary/long48/50,normal-plus6/before16/50,masked-primary/core16/50. They are displayed explicitly as native condition:no edge pair. All underlying calls are COMPLETED, not native null fits, missing answers or unexecuted calls.",
+    "bright_control":"All12native edgePair fits are finite and every native edge passCount is0. This is preserved juxtaposition, not classifier/specificity/scientific acceptance.",
+    "mask_core_per_bank_per_side":"9valid/16;7invalid=4finite-invalid+3NaN. Finite-invalid station indices5,6,10,11 remain hollow; NaN indices7,8,9 are text/disconnected, not zeros.",
+    "mask_long_per_bank_per_side":"41valid/48;7invalid=4finite-invalid+3NaN. Finite-invalid indices21,22,26,27 remain hollow; NaN indices23,24,25 remain exact in CSV but overlap visually in compact PNG.",
+    "SVG_mask_markers":"48hollow finite-invalid circles and36NaN labels total across core/long, both sides and all three widths, matching retained validity data. This is representation counting, not a new CV metric.",
+    "denominators":"Masked core edge visible9 versus overlay7; masked long edge41 versus overlay39. HTML/CSV preserve separate native denominators. All48overlay thresholds are null, so no overlay pass/fail is claimed. Gap0 with visible0 would remain UNKNOWN; no new continuity inference.",
+    "offset":"Exact existing descriptive residual table retained; no new residual/score/threshold/tuning/recentering or same-edge/calibration decision computed by this QA."
+  },
+  "concrete_issues":[
+    {
+      "id":"R1523-F1",
+      "severity":"medium",
+      "classification":"compact PNG station-label readability",
+      "location":"group-masked-primary.png, long48 bottom window, nominal34/42/50 bilateral panels, adjacent NaN labels near the panel baseline",
+      "observed":"At original1680x1600 viewing the NaN glyphs for station indices23,24,25 overlap horizontally within each side's row in all three banks. The two sides remain in separate rows, but an unaided viewer cannot reliably distinguish/count all3labels per side from this image alone. Core16 has more horizontal space and does not have the same adjacent-label crowding.",
+      "impact":"Exact nonfinite values,flags and station identities are not lost: CSV/HTML/raw links preserve them and all comparison checks passed. The compact PNG nevertheless does not independently satisfy complete per-station nonfinite legibility. Exact-table availability does not erase that visual defect.",
+      "bounded_followup":"If root requires complete station-level compact readability, separately admit a versioned layout-only remedy such as spaced/staggered nonfinite markers plus an explicit L:3NaN/R:3NaN annotation or a readable station strip. Preserve all native values/validity/axes identity/width banks/raw authority, and review new output separately. No remedy, renderer rerun or policy exception is authorized/performed here."
+    },
+    {
+      "id":"R1523-L1",
+      "severity":"low",
+      "classification":"stage wording and viewing limitations",
+      "observed":"Footer retains No PNG/visual QA claim from preconversion renderer stage; actual conversion/limited author and independent inspection are documented in later receipts. Small annotations require original-size viewing, and individual y ranges are display-scaled rather than a common magnitude axis.",
+      "impact":"Not a raw-value or scientific-claim alteration. Read receipts with the figures; do not interpret thumbnail legibility or cross-panel curve heights as independent quantitative evidence. A future separately scoped labeling/layout revision could clarify stage wording."
+    }
+  ],
+  "supporting_hashes":{
+    "R1/R1513/result.json":"0002f0c25157073eced2c6a4008abbd2a2feca268b863536160ba9069e8441c8",
+    "V2/E1522/result.json":"4115a54ab0f8269bac6808e840be9b9534a998083a2c69c57ccedb37d5baa236",
+    "V2/E1523/result.json":"d81e9033b272d40b00a89934c25fc4fb5af226c6d164aa63070707193761bb41",
+    "display-v1/display-manifest.json":"983136a2262d6ffcd518c1600454a72c08737b488eb7addcdfeb633ff1a1362a",
+    "display-v1/descriptive-table.csv":"53bdcf7cfe714ff0342549a4bf05d5c791f2f7a2d2e3e6054eddd338c833c5a5",
+    "display-v1/report.html":"42c4ec22f5a5d97cfd2189149e1a7bd162bd8f0890efba78f260b81f66ca6f4e",
+    "display-v1/group-primary.svg":"1effeec087014bde8b774e246cd346f7a32832d0b1b0a988b07b24a7e85e09bd",
+    "display-v1/group-bright-nonpath.svg":"288969a6e3f319e29b504c74f85d125f3bd8a8fdb153921c7c42e626556d6adc",
+    "display-v1/group-normal-plus6.svg":"3e777c1fbfc02db62e0548f77e622723f2265e52f7a9b8d0fadd468deef4c2a2",
+    "display-v1/group-masked-primary.svg":"1e0e86bd6a293a8efc02dce0bc77c8020b3010bec06d9f46ea011a0be27aa367",
+    "manifest_trace_binding":"a2333d711ce5e46d5c13b8949c0027d3a67c91e5802b911f6bf62b1b33950d21",
+    "manifest_sidecar_binding":"2ce4fc7faa1c94f7dff078de7b5e5129c0876764012a82dc7b7691f0afde1fb0"
+  },
+  "execution_scope":{"actual_original_detail_PNG_views":4,"read_only_display_diagnostic_invocations":4,"diagnostic_count_meaning":"One cmp/file command, two Python display/accepted-review comparisons and one jq retained-validity-index inspection; routine inventory/read/hash commands additional.","renderer_reruns":0,"codec_or_original_wire_decode":0,"source_pixel_decode_or_reads":0,"new_CV_queries_producer_or_replay":0,"browser":0,"helpers":0,"source_Git_native_mutations":0,"raw_original_modifications":0,"only_authored_file":"discovery-cycle06/R1/R1523/result.json"},
+  "remaining_limits":["Original PNG/SVG/CSV/HTML/raw evidence remains unchanged; no automatic visual repair or conversion performed.","Exact display verification does not redo backend validation, original pixel correspondence or independent160query replay.","No human/scientific/path/physical-edge/calibration/continuity/occlusion acceptance or policy sufficiency is granted.","The report remains a descriptive dependent-view projection of one producer; native scores are not newly exposed/ranked/recomputed.","Root alone decides any explicit limited-overview policy exception or separately scoped layout amendment and native lifecycle finish."],
+  "claims":{"promoted":false,"heldout":false,"scientificAcceptance":"UNKNOWN","humanAcceptance":"UNKNOWN","pathIdentity":"UNKNOWN","physicalEdgeIdentity":"UNKNOWN","continuity":"UNKNOWN","calibratedWidth":"UNKNOWN"},
+  "handoff":"Exact display data accepted within checks; visual AMEND for dense masked-long48 nonfinite labels. Preserve this honest distinction. Stop: no source/layout edits, renderer rerun, producer/replay or new exposure authorized by this receipt."
+}

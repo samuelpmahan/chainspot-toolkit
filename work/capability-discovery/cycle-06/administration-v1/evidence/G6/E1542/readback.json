@@ -1,0 +1,87 @@
+{
+  "schema": "cycle06-E1542-admitted-plan-readback@1",
+  "artifacts": [
+    {
+      "source": "chainspot-discovery-lab/work/capability-discovery/cycle-06/final-inputs.proposed.v3.json",
+      "bytes": 1026723,
+      "mode": 420,
+      "sha256": "f124af3d041ac7605cabdeedfde73bea1dca4e7c9ad88aff60e7c912d3a0588d"
+    },
+    {
+      "source": "chainspot-discovery-lab/work/capability-discovery/cycle-06/final-inputs.root-admitted.v1.json",
+      "bytes": 1027172,
+      "mode": 420,
+      "sha256": "570db7f7563c27041ad215e61625753f98f6f7b01e607f706adae117d7bbc5a1"
+    }
+  ],
+  "engineeringKeysCompared": [
+    "archives",
+    "objects",
+    "aliases",
+    "sourceFreeze",
+    "priorInventory",
+    "source22Modes",
+    "priorCurrentModes",
+    "requiredEvidence",
+    "htmlFiles",
+    "htmlLinkSets",
+    "limits"
+  ],
+  "engineeringKeyDifferences": [],
+  "changes": [
+    {
+      "path": "status",
+      "before": "DRAFT_ACCEPTED_HELPER_BOUND_FINAL_INPUTS_PENDING_ROOT_ADMISSION",
+      "after": "ROOT_ADMITTED_FINAL_INPUTS"
+    },
+    {
+      "path": "notFinalFreeze",
+      "before": true,
+      "after": false
+    },
+    {
+      "path": "authority.missing",
+      "before": [
+        "Separate root exact final-input admission/new immutable admitted-plan identity after this full proposal is read",
+        "Separate exact root wrapper packet and child admission binding actual admitted-plan bytes/hash/output",
+        "One actual admitted build and fresh different-worker final package restore/audit; later Git/publication separate"
+      ],
+      "after": [
+        "Separate exact root wrapper packet and child admission binding actual admitted-plan bytes/hash/output",
+        "One actual admitted build and fresh different-worker final package restore/audit; later Git/publication separate"
+      ]
+    },
+    {
+      "path": "executionCandidate.rootAdmissionExists",
+      "before": false,
+      "after": true
+    },
+    {
+      "path": "rootAdmission",
+      "before": null,
+      "after": {
+        "coordinator": "/root",
+        "scope": "ONE_FINAL_ARCHIVE_BUILD",
+        "proposalSource": "chainspot-discovery-lab/work/capability-discovery/cycle-06/final-inputs.proposed.v3.json",
+        "proposalSha256": "f124af3d041ac7605cabdeedfde73bea1dca4e7c9ad88aff60e7c912d3a0588d",
+        "independentPlanReviewSource": "discovery-cycle06/A1/R1541/result.json",
+        "independentPlanReviewSha256": "32597ec1b6e0d7f3c9e2a30e096c7fde7744ddbd0e5876400f92fb70199c8087",
+        "inputClosureAdmitted": true,
+        "executionStatus": "NOT_RUN_PENDING_ROOT_PACKET_GO",
+        "scientificAcceptance": "UNKNOWN"
+      }
+    }
+  ],
+  "aliases": 1414,
+  "objects": 564,
+  "requiredEvidence": 114,
+  "archiveMembers": [
+    340,
+    340,
+    2
+  ],
+  "admittedFileAliased": false,
+  "R1541Aliased": false,
+  "executionStatus": "NOT_RUN_PENDING_ROOT_PACKET_GO",
+  "executionPerformed": false
+}
