@@ -748,6 +748,14 @@ export function occluderSearch(ctx, bi, { hallwayTest = true, keepCenters = fals
   return { regions, distanceRangePx: range.map(r3), hallway: ctx.hallway, evaluatedPoses: evaluated };
 }
 
+// The area a badge's search reads: its candidate disk plus a margin of 3 template radii (pose reach and refinement drift).
+function searchBox(ctx, badge) {
+  const R = ctx.searchRadiusPx + 3 * Math.hypot(ctx.tpl.halfLengthOutPx + RULES.outsideRingPx + 1, ctx.tpl.halfWidthOutPx + RULES.outsideRingPx + 1), [x, y] = badge.plateCenter;
+  return [x - R, y - R, x + R, y + R];
+}
+const pxBox = (px, W) => { let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity; for (const i of px) { const x = i % W, y = (i / W) | 0; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; } return [x0, y0, x1, y1]; };
+const boxesMeet = (a, b) => a[0] <= b[2] && b[0] <= a[2] && a[1] <= b[3] && b[1] <= a[3];
+
 export function greedyRecover(ctx, { badgeRay = true } = {}) {
   const N = ctx.badges.length;
   if (!ctx.tpl) {
@@ -760,18 +768,23 @@ export function greedyRecover(ctx, { badgeRay = true } = {}) {
   const need = Math.max(0, N - ctx.tees.length);
   const recovered = [], log = [];
   let rounds = 0, evaluatedPoses = 0;
+  const cache = new Map(); let reusedSearches = 0;
   while (pending.size && recovered.length < need) {
     rounds++;
     let pick = null;
     for (const bi of [...pending].sort((a, b) => a - b)) {
-      const r = searchBadge(ctx, ctx.badges[bi], { badgeRay });
-      evaluatedPoses += r.evaluatedPoses;
+      // Same question, same answer: a badge's search is reused across rounds unless a newly owned pad lies in its area.
+      const hit = cache.get(bi), r = hit ? hit.r : searchBadge(ctx, ctx.badges[bi], { badgeRay });
+      if (!hit) cache.set(bi, { r, box: searchBox(ctx, ctx.badges[bi]) }); else reusedSearches++;
+      if (!hit) evaluatedPoses += r.evaluatedPoses;
       log.push({ round: rounds, badge: bi, label: ctx.badges[bi].label, candidateCenters: r.candidateCenters, seedsInDisk: r.seedsInDisk, best: r.best ? { center: r.best.center, angleDeg: r3(r.best.angleRad * DEG), score: r.best.score, accepted: r.best.accepted, fromSeed: r.best.seed ?? null } : null });
       if (r.best?.accepted && (!pick || r.best.score > pick.best.score)) pick = { bi, best: r.best };
     }
     if (!pick) break;
     const full = evaluatePose(ctx, pick.best.center[0], pick.best.center[1], pick.best.angleRad, { collect: true });
     for (const i of full.px.pad) ownPx(ctx, i);
+    const pb = pxBox(full.px.pad.filter((i) => i >= 0), ctx.W);
+    for (const [b, e] of cache) if (boxesMeet(e.box, pb)) cache.delete(b);
     recovered.push(recoveredTee(ctx, pick.bi, full, { round: rounds, fromSeed: pick.best.seed ?? null, rule: badgeRay ? 'greedy occluded template, badge-ray constrained' : 'greedy occluded template, free angle (ablation)' }));
     pending.delete(pick.bi);
   }
@@ -796,7 +809,7 @@ export function greedyRecover(ctx, { badgeRay = true } = {}) {
     const reason = recovered.length >= need ? `stopped at cardinality N = ${N} badges` : !o ? 'no accepted pose' : o.regions.length ? `occluder search: ${o.regions.length} occluders fit (${o.regions.map((r) => r.occluder).join(', ')})` : 'no accepted pose; no occluder can hide it';
     return { badgeIndex: bi, hole: ctx.badges[bi].label, lastBest: last?.best ?? null, hidden: o ?? null, reason };
   });
-  return { recovered, missed, need, rounds, evaluatedPoses, log };
+  return { recovered, missed, need, rounds, evaluatedPoses, reusedSearches, log };
 }
 
 export function recoveredTee(ctx, bi, e, extra = {}) {
