@@ -21,7 +21,7 @@ import { join } from 'node:path';
 import { deserialize } from 'node:v8';
 import { deflateSync } from 'node:zlib';
 import { cropWindow } from '../../fg/png.mjs';
-import { CELLS, s4Accepted, recoveredHoles } from './matrix.mjs';
+import { CELLS, s4Accepted, s5Accepted, recoveredHoles } from './matrix.mjs';
 
 export const NEAR_MISS_PX = 3;          // a presentation tag, not a rule: errors above it are worth a look (mark or result?)
 export const SPARSE_VISIBLE = 0.25;     // a recovery with less of its frame visible than this is listed first for a look: it rests on less evidence, which is not a verdict
@@ -29,7 +29,7 @@ export const MOVED_PX = 0.5;            // against frozen: a center that moved m
 export const CROP = Object.freeze({ sizePx: 64, display: 4.5, wideSizePx: 112, wideDisplay: 2.6 });
 export const COLORS = Object.freeze({
   TP: '#3fb950', recoveredTP: '#58a6ff', FN: '#f85149', FP: '#d29922', recoveredFP: '#d29922', unjudged: '#8b949e', recovered: '#58a6ff',
-  right: '#3fb950', wrong: '#f85149', none: '#f85149', duplicate: '#d29922', expected: '#ffe11a', pipeline: '#ff7bd6', frozen: '#c8c8c8',
+  right: '#3fb950', wrong: '#f85149', none: '#f85149', duplicate: '#d29922', unpaired: '#d29922', expected: '#ffe11a', pipeline: '#ff7bd6', frozen: '#c8c8c8',
   status: { met: '#238636', unmet: '#da3633', unjudged: '#6e7681', missing: '#8957e5', stale: '#bb8009' }
 });
 export const LEGEND = [
@@ -39,6 +39,7 @@ export const LEGEND = [
   ['rect', COLORS.TP, 'the pipeline\'s object (bbox): green TP, orange FP / duplicate, grey unjudged'],
   ['poly', COLORS.recovered, 'an S4 recovered pad (corners), with its ray to the badge it was recovered for'],
   ['line', COLORS.right, 'association: solid line to the badge chosen (green right, red wrong), dashed to the true badge'],
+  ['line', COLORS.unjudged, 'S5 pair: the ray from the tee to the plate centre of the badge it pairs with (green right, red wrong, grey unjudged), dashed yellow to its own hole\'s badge when wrong; orange box: a badge no tee pairs with'],
   ['dashed', COLORS.frozen, 'the frozen state (before), when a row changed against frozen.json'],
   ['tag', '#f0883e', `near miss: error above ${NEAR_MISS_PX} px; visible N%: how much of a recovered pad's frame is visible (its evidence), contradicting M%: visible frame px that do not look like frame (a translucent ring across the pad does this)`]
 ];
@@ -84,6 +85,28 @@ export function cellRows(cell, course) {
         reason: a.verdict === 'none' ? 'no badge associated' : a.verdict === 'wrong' ? `said Badge ${a.said}, is Tee ${a.hole}` : a.said != null ? `to Badge ${a.said}` : null,
         numbers: a.best ? { badge: a.said, zPx: a.best.z, lateralPx: a.best.latPx, residualDeg: a.best.resDeg, distancePx: a.best.distPx } : { badge: a.said ?? undefined } });
     });
+    return rows;
+  }
+
+  if (cell.key === 'S5pairs') {
+    // every tee after S4 (S3 observed + S4 recovered) and the badge it pairs with, from the accepted pairing variant
+    const v = J?.S5pairs?.variants?.[s5Accepted(course)] ?? null;
+    const src = judged && v ? v.rows : (O.pairs ?? []).map((p) => ({ hole: null, name: p.name, origin: p.origin, point: p.center, said: p.said, saidCenter: p.plateCenter, truthCenter: null, verdict: 'unjudged', teeErrorPx: null, residualDeg: p.residualDeg, signedPerpPx: p.signedPerpPx }));
+    src.forEach((a, i) => {
+      const color = COLORS[a.verdict] ?? COLORS.unjudged, name = a.name ?? `Tee #${i}`, marks = [cross(a.point, color, name)];
+      if (a.saidCenter) { marks.push(line(a.point, a.saidCenter, color, 0)); marks.push(cross(a.saidCenter, color, `Badge ${a.said}`)); }
+      if (a.verdict === 'wrong' && a.truthCenter) { marks.push(line(a.point, a.truthCenter, COLORS.expected, 6)); marks.push(cross(a.truthCenter, COLORS.expected, `Badge ${a.hole} (own hole)`)); }
+      if (a.verdict === 'none') marks.push(ring(a.point, 8, COLORS.none));
+      push({ hole: a.hole, name, verdict: a.verdict, center: a.point, marks, wide: true,
+        reason: a.verdict === 'none' ? `paired with no badge (is Tee ${a.hole})` : a.verdict === 'wrong' ? `pairs with Badge ${a.said}, is Tee ${a.hole}` : a.said != null ? `${a.origin ?? ''} to Badge ${a.said}, axis residual ${a.residualDeg} deg`.trim() : 'paired with no badge',
+        numbers: { badge: a.said ?? undefined, residualDeg: a.residualDeg ?? undefined, signedPerpPx: a.signedPerpPx ?? undefined, teeErrorPx: a.teeErrorPx ?? undefined, matchWithinPx: 8 } });
+    });
+    const plate = new Map((O.pairBadges ?? []).map((b) => [String(b.label), b.plateCenter]));
+    const unpaired = judged && v ? v.unmatchedBadges.map((b) => b.replace(/^Badge /, '')) : (O.unpairedBadges ?? []);
+    for (const b of unpaired) {
+      const c = plate.get(String(b)) ?? null;
+      push({ hole: null, name: `Badge ${b} (unpaired)`, verdict: 'unpaired', center: c, marks: c ? [rect([c[0] - 14, c[1] - 11, 28, 22], COLORS.unpaired, `Badge ${b}: no tee`)] : [], reason: 'no tee pairs with this badge' });
+    }
     return rows;
   }
 
@@ -188,7 +211,7 @@ export function attention(courses) {
     k.rows.forEach((r, ri) => {
       const at = { course: c.course, cell: k.key, name: r.name, hole: r.hole, link: link(c, k, ri) };
       if (r.verdict === 'FN' && !r.recoveredByS4) items.push({ rank: 1, why: `FN${r.reason ? `: ${r.reason}` : ''}`, ...at });
-      else if (/FP|wrong|none/.test(r.verdict)) items.push({ rank: 2, why: `${r.verdict}${r.reason ? `: ${r.reason}` : ''}`, ...at });
+      else if (/FP|wrong|none|unpaired/.test(r.verdict)) items.push({ rank: 2, why: `${r.verdict}${r.reason ? `: ${r.reason}` : ''}`, ...at });
       if (r.vsFrozen && r.vsFrozen !== 'same') items.push({ rank: 3, why: `changed vs frozen: ${r.vsFrozen}`, ...at });
       if (r.weak) items.push({ rank: 4, visible: r.numbers?.visibleFrameFrac ?? 0, why: `recovered from ${Math.round((r.numbers?.visibleFrameFrac ?? 0) * 100)}% visible frame${r.numbers?.contradictingFrac ? `, ${Math.round(r.numbers.contradictingFrac * 100)}% of it contradicting` : ''}: a look, not a verdict`, ...at });
       if (c.testimony === 'none' && r.verdict === 'recovered') items.push({ rank: 5, why: `recovered without testimony: judge by eye (${r.reason ?? ''})`, ...at });
@@ -219,7 +242,7 @@ export function inspectorData(matrix, inputs, { root, frozen = null }) {
         const crop = raster && r.center ? cropWindow(raster, { cx: r.center[0], cy: r.center[1], size, deflate: (raw) => deflateSync(raw) }) : null;
         return { ...r, crop: crop ? { png: crop.png, x0: crop.origin[0], y0: crop.origin[1], size, display } : null };
       });
-      const summary = { rows: rows.length, FN: rows.filter((r) => r.verdict === 'FN').length, FP: rows.filter((r) => /FP|wrong|none/.test(r.verdict)).length,
+      const summary = { rows: rows.length, FN: rows.filter((r) => r.verdict === 'FN').length, FP: rows.filter((r) => /FP|wrong|none|unpaired/.test(r.verdict)).length,
         recovered: rows.filter((r) => /recovered/.test(r.verdict) || /^S4 /.test(r.name ?? '')).length, near: rows.filter((r) => r.near).length, weak: rows.filter((r) => r.weak).length,
         changed: rows.filter((r) => r.vsFrozen && r.vsFrozen !== 'same').length + gone.length };
       cells.push({ key: cell.key, what: cell.what, status: m?.status, result: m?.result, expected: m?.expected, freshness: m?.freshness, changedPaths: m?.changedPaths ?? [], vsFrozen: m?.vsFrozen, goal: m?.goal,
@@ -286,7 +309,7 @@ function render(){writeHash();grid();cellpanel();detail();}
 function grid(){let h='<table><tr><th>course</th>'+D.cells.map((c)=>'<th>'+esc(c.key)+'<br><small>'+esc(c.what)+'</small></th>').join('')+'</tr>';
 D.courses.forEach((c,ci)=>{h+='<tr><th>'+esc(c.course)+'<br><small>N = '+c.N+' &middot; testimony: '+esc(c.testimony)+'</small></th>';c.cells.forEach((k,ki)=>{const s=k.summary;h+='<td class="cell'+(sel.ci===ci&&sel.ki===ki?' sel':'')+'" data-ci="'+ci+'" data-ki="'+ki+'">'+st(k.status)+' <small>'+esc(k.freshness)+'</small>'+(s.changed?' <span class="chip" style="color:#bb8009">'+s.changed+' changed</span>':(D.frozenAt&&k.vsFrozen?' <span class="chip">'+esc(k.vsFrozen==='same'?'same':'cell '+k.vsFrozen)+'</span>':''))+'<br>'+esc(k.result||'-')+'<br><small>'+s.rows+' objects'+(s.FN?', <b style="color:#f85149">'+s.FN+' FN</b>':'')+(s.FP?', <b style="color:#d29922">'+s.FP+' FP/wrong</b>':'')+(s.recovered?', <b style="color:#58a6ff">'+s.recovered+' recovered</b>':'')+(s.near?', <b class="near">'+s.near+' near</b>':'')+(s.weak?', <b class="near">'+s.weak+' sparse</b>':'')+'</small></td>';});h+='</tr>';});
 $('#grid').innerHTML=h+'</table>';document.querySelectorAll('td.cell').forEach((td)=>td.onclick=()=>{sel={ci:+td.dataset.ci,ki:+td.dataset.ki,ri:null,filter:sel.filter};render();});}
-const show=(r)=>sel.filter==='all'||(sel.filter==='miss'&&/FN|FP|wrong|none/.test(r.verdict))||(sel.filter==='rec'&&(/recovered/.test(r.verdict)||/^S4 /.test(r.name||'')))||(sel.filter==='near'&&r.near)||(sel.filter==='weak'&&r.weak)||(sel.filter==='changed'&&r.vsFrozen&&r.vsFrozen!=='same');
+const show=(r)=>sel.filter==='all'||(sel.filter==='miss'&&/FN|FP|wrong|none|unpaired/.test(r.verdict))||(sel.filter==='rec'&&(/recovered/.test(r.verdict)||/^S4 /.test(r.name||'')))||(sel.filter==='near'&&r.near)||(sel.filter==='weak'&&r.weak)||(sel.filter==='changed'&&r.vsFrozen&&r.vsFrozen!=='same');
 function cellpanel(){if(sel.ci==null){$('#cellpanel').innerHTML='<small>Pick a cell above.</small>';return;}const c=D.courses[sel.ci],k=c.cells[sel.ki];
 let h='<h3>'+esc(c.course)+' &middot; '+esc(k.key)+' '+esc(k.what)+' '+st(k.status)+'</h3><div><b>expected:</b> '+esc(k.expected)+'<br><b>result:</b> '+esc(k.result||'-')+'<br><small>goal: '+esc(k.goal)+'</small>';
 if(k.freshness==='STALE')h+='<br><b class="near">stale:</b> <span class="num">'+esc(k.changedPaths.slice(0,8).join(', '))+(k.changedPaths.length>8?' ... ('+k.changedPaths.length+' paths)':'')+'</span>';

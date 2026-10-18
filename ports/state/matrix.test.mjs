@@ -5,21 +5,24 @@ import { createPartStore } from '../../fg/store.mjs';
 import { renderValue } from '../../fg/render.mjs';
 
 const cell = (key) => CELLS.find((c) => c.key === key);
-const fresh = { recipe: { state: 'VERIFIED', changed: [] }, s3assoc: { state: 'VERIFIED', changed: [] }, s4recover: { state: 'VERIFIED', changed: [] } };
+const fresh = { recipe: { state: 'VERIFIED', changed: [] }, s3assoc: { state: 'VERIFIED', changed: [] }, s4recover: { state: 'VERIFIED', changed: [] }, s5pair: { state: 'VERIFIED', changed: [] } };
 const complete = { annotatedHoles: Array.from({ length: 18 }, (_, i) => i + 1), complete: true };
 const partial = { annotatedHoles: [6, 13, 16], complete: false };
-const outputs = { early: true, s3fix: true, s3assoc: true, basketBridge: true, s4recover: true };
+const outputs = { early: true, s3fix: true, s3assoc: true, basketBridge: true, s4recover: true, s5pair: true };
 const judged = (TP, FN, FP, extra = {}) => ({ TP, FN, FP, found: TP + FP, tp: [], fn: [], fp: [], ...extra });
+const pairs = (right, wrong, none, unjudged, unmatchedBadges) => ({ tees: right + wrong + none + unjudged, right, wrong, none, unjudged, unmatchedBadges, holesWithNoTee: [], laneNotRun: null, rows: [] });
 
 const course = (name, testimony, judgement, freshness = fresh, over = {}) => ({
   course: name, attempt: `attempt-${name}`, request: null, testimony, N: 18,
-  counts: { badges: 18, baskets: 17, tees: 15, associated: 15, s4baskets: 1, s4tees: 3 }, judgement, outputs, freshness,
-  s4: { accepted: 'greedyOccluded', timingsMs: { greedyOccluded: { ms: 368.2 }, pinned: { ms: 1.1 } }, recoveredCount: { greedyOccluded: 3, pinned: 3 } }, ...over
+  counts: { badges: 18, baskets: 17, tees: 15, associated: 15, s4baskets: 1, s4tees: 3, paired: 18 }, judgement, outputs, freshness,
+  s4: { accepted: 'greedyOccluded', timingsMs: { greedyOccluded: { ms: 368.2 }, pinned: { ms: 1.1 } }, recoveredCount: { greedyOccluded: 3, pinned: 3 } },
+  s5: { accepted: 'toolkit', timingsMs: { pinned: { ms: 2.3 }, toolkit: { ms: 0.6 } }, pairedCount: { pinned: 17, toolkit: 18 }, laneNotRun: { pinned: null, toolkit: null } }, ...over
 });
 const golden = course('golden', complete, {
   S1: { found: 18, labelsMissing: [], duplicates: [] }, S2: judged(17, 1, 0), S3: judged(15, 3, 0),
   S3association: { associatedCorrectly: 15, associatedIncorrectly: 0, notAssociated: 0 },
-  S4baskets: judged(18, 0, 0, { recovered: 1 }), S4tees: { branches: { greedyOccluded: judged(18, 0, 0, { recovered: 3, recoveredForHoleCorrectly: 3 }), pinned: judged(17, 1, 0, { recovered: 3, recoveredForHoleCorrectly: 2 }) } }
+  S4baskets: judged(18, 0, 0, { recovered: 1 }), S4tees: { branches: { greedyOccluded: judged(18, 0, 0, { recovered: 3, recoveredForHoleCorrectly: 3 }), pinned: judged(17, 1, 0, { recovered: 3, recoveredForHoleCorrectly: 2 }) } },
+  S5pairs: { accepted: 'toolkit', variants: { toolkit: pairs(18, 0, 0, 0, []), pinned: pairs(17, 0, 0, 3, ['Badge 3']) } }
 });
 
 test('the status rule as written: stale > missing > unjudged > met / unmet', () => {
@@ -45,6 +48,12 @@ test('the status rule as written: stale > missing > unjudged > met / unmet', () 
   assert.equal(statusOf(cell('S4tees'), golden, golden.judgement.S4tees.branches.greedyOccluded, stale), 'stale');
   assert.equal(statusOf(cell('S2'), golden, golden.judgement.S2, stale), 'unmet', 'an S4 code change does not stale S2');
   assert.equal(statusOf(cell('S2'), golden, golden.judgement.S2, { ...fresh, recipe: { state: 'STALE', changed: ['fg/pxset.mjs'] } }), 'stale', 'a recipe change stales every cell');
+  // S5 pairs: met when every judged tee pairs with its own hole's badge and none is unpaired
+  assert.equal(statusOf(cell('S5pairs'), golden, golden.judgement.S5pairs.variants.toolkit, fresh), 'met');
+  assert.equal(statusOf(cell('S5pairs'), golden, pairs(17, 1, 0, 0, []), fresh), 'unmet', 'a tee paired with another hole\'s badge');
+  assert.equal(statusOf(cell('S5pairs'), golden, pairs(17, 0, 1, 0, []), fresh), 'unmet', 'a judged tee paired with no badge');
+  assert.equal(statusOf(cell('S5pairs'), golden, golden.judgement.S5pairs.variants.toolkit, { ...fresh, s5pair: { state: 'STALE', changed: ['impl/fn.Tee.pairBadge/toolkit.mjs'] } }), 'stale');
+  assert.equal(statusOf(cell('S4tees'), golden, golden.judgement.S4tees.branches.greedyOccluded, { ...fresh, s5pair: { state: 'STALE', changed: ['ports/s5pair/run.mjs'] } }), 'met', 'an S5 code change does not stale S4');
 });
 
 test('the matrix: one row per stage x course, emits, units, markdown, frozen comparison', () => {
@@ -52,7 +61,7 @@ test('the matrix: one row per stage x course, emits, units, markdown, frozen com
   const inputs = { declarations: { S1: { responsibility: 'badges' }, S2: { responsibility: 'baskets' }, S3: { responsibility: 'tees' }, S4: { responsibility: 'recover' } }, courses: [golden, northpark] };
   const m = matrixRows(inputs);
   assert.equal(m.rows.length, 2 * CELLS.length);
-  assert.deepEqual(m.emits, { cells: 12, met: 4, unmet: 2, unjudged: 6, missing: 0, stale: 0 }, 'no S4 rows in this fixture, so the S2 and S3 FNs stay unmet');
+  assert.deepEqual(m.emits, { cells: 14, met: 5, unmet: 2, unjudged: 7, missing: 0, stale: 0 }, 'no S4 rows in this fixture, so the S2 and S3 FNs stay unmet');
   assert.ok(Object.keys(m.units).includes('stale'));
   const np = m.rows.find((r) => r.course === 'northpark' && r.key === 'S4tees');
   assert.equal(np.status, 'unjudged'); assert.equal(np.freshness, 'UNVERIFIED'); assert.equal(np.result, '18 of N = 18');
@@ -61,12 +70,19 @@ test('the matrix: one row per stage x course, emits, units, markdown, frozen com
   // every variant rides along, the pointer marked, standalone ms beside the judged result; the unjudged course shows its count closure per variant
   assert.deepEqual(g4.variants, [{ name: 'greedyOccluded', judged: '18/0/0 TP/FN/FP (+3 recovered, 3 right hole)', standaloneMs: 368.2, accepted: true }, { name: 'pinned', judged: '17/1/0 TP/FN/FP (+3 recovered, 2 right hole)', standaloneMs: 1.1, accepted: false }]);
   assert.deepEqual(np.variants.map((v) => v.judged), ['18 of N = 18', '18 of N = 18']);
-  assert.ok(!('variants' in m.rows.find((r) => r.course === 'golden' && r.key === 'S3')), 'only the S4 tee cell has variants');
+  assert.ok(!('variants' in m.rows.find((r) => r.course === 'golden' && r.key === 'S3')), 'only the S4 tee and S5 pair cells have variants');
+  // the S5 row: the accepted variant's judged result, every variant beside it with standalone ms, the pointer marked
+  const g5 = m.rows.find((r) => r.course === 'golden' && r.key === 'S5pairs');
+  assert.equal(g5.status, 'met'); assert.equal(g5.result, '18 right / 0 wrong / 0 none; 0 unmatched badges');
+  assert.deepEqual(g5.variants, [{ name: 'pinned', judged: '17 right / 0 wrong / 0 none (+3 unjudged); 1 unmatched badge', standaloneMs: 2.3, accepted: false }, { name: 'toolkit', judged: '18 right / 0 wrong / 0 none; 0 unmatched badges', standaloneMs: 0.6, accepted: true }]);
+  const np5 = m.rows.find((r) => r.course === 'northpark' && r.key === 'S5pairs');
+  assert.equal(np5.status, 'unjudged'); assert.equal(np5.result, '18 of N = 18'); assert.deepEqual(np5.variants.map((v) => v.judged), ['17 of N = 18 paired', '18 of N = 18 paired']);
+  assert.match(matrixMarkdown(m), /S5 pairing variants per course[^\n]*\n- golden: pinned 17 right \/ 0 wrong \/ 0 none \(\+3 unjudged\); 1 unmatched badge 2 ms; → toolkit 18 right/);
   assert.match(matrixMarkdown(m), /- golden: → greedyOccluded 18\/0\/0 TP\/FN\/FP \(\+3 recovered, 3 right hole\) 368 ms; pinned 17\/1\/0 TP\/FN\/FP \(\+3 recovered, 2 right hole\) 1 ms/);
   // no pointer (an unjudged course with nothing accepted elsewhere): the S4 cell is missing, not guessed
   assert.equal(matrixRows({ ...inputs, courses: [{ ...northpark, s4: { ...northpark.s4, accepted: null } }] }).rows.find((r) => r.key === 'S4tees').status, 'unjudged');
   const md = matrixMarkdown(m);
-  assert.match(md, /\| golden \| S2 baskets \| baskets within 12 px of all 18 holes, or recovered by S4 \(occlusion is expected\) \|/); assert.match(md, /12 cells: 4 met, 2 unmet, 6 unjudged/);
+  assert.match(md, /\| golden \| S2 baskets \| baskets within 12 px of all 18 holes, or recovered by S4 \(occlusion is expected\) \|/); assert.match(md, /14 cells: 5 met, 2 unmet, 7 unjudged/);
   // against a frozen record: same, changed, new
   const frozen = { rows: m.rows.filter((r) => r.course === 'golden').map((r) => ({ ...r, result: r.key === 'S2' ? '16/2/0 TP/FN/FP' : r.result })) };
   const again = matrixRows(inputs, frozen);

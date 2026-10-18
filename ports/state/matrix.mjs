@@ -47,6 +47,8 @@ export const MATRIX_PART = 'tk.state.matrix';
 export const MATRIX_CALCULATION = 'fn.tk.state.matrix';
 /** The S4 tee variant a course ships: the pointer the runner set by its stated rule (cmp.fn.Tee.recover.json accepted), never a constant here. */
 export const s4Accepted = (course) => course.s4?.accepted ?? null;
+/** The S5 pairing variant a course ships: the pointer its runner set by its stated rule (cmp.fn.Tee.pairBadge.json accepted). */
+export const s5Accepted = (course) => course.s5?.accepted ?? null;
 
 /** The cells of a course, in stage order, and which closures each was computed with. */
 export const CELLS = Object.freeze([
@@ -55,12 +57,15 @@ export const CELLS = Object.freeze([
   { key: 'S3', stage: 'S3', what: 'tees', closures: ['recipe'] },
   { key: 'S3association', stage: 'S3', what: 'tee to badge', closures: ['recipe', 's3assoc'] },
   { key: 'S4baskets', stage: 'S4', what: 'baskets after recovery', closures: ['recipe'] },
-  { key: 'S4tees', stage: 'S4', what: 'tees after recovery (accepted variant)', closures: ['recipe', 's4recover'] }
+  { key: 'S4tees', stage: 'S4', what: 'tees after recovery (accepted variant)', closures: ['recipe', 's4recover'] },
+  { key: 'S5pairs', stage: 'S5', what: 'tee to badge after recovery (accepted variant)', closures: ['recipe', 's5pair'] }
 ]);
 /** The steps outside the recipe, and the files each runs from (the recipe closure already covers fg/ and ports/early). */
 export const POST_RECIPE_CLOSURES = Object.freeze({
   s3assoc: ['ports/s3assoc'],
-  s4recover: ['ports/s4recover', 'impl/fn.Tee.recover', 'contracts/tee.pose@1.mjs']
+  s4recover: ['ports/s4recover', 'impl/fn.Tee.recover', 'contracts/tee.pose@1.mjs'],
+  // the S5 runner and its implementations, plus what they import outside them (the plate centres are S4's Calculation)
+  s5pair: ['ports/s5pair', 'impl/fn.Tee.pairBadge', 'fg/queries/pair.mjs', 'ports/s4recover/teeRecover.mjs', 'ports/s4recover/poseSpace.mjs', 'ports/judge/testimony.mjs']
 });
 export const UNITS = Object.freeze({
   cells: 'count (stage x course cells)', stale: 'count (cells)', unmet: 'count (cells)', unjudged: 'count (cells)', missing: 'count (cells)', met: 'count (cells)'
@@ -83,6 +88,7 @@ export function statusOf(cell, course, result, freshness) {
   if (!course.testimony) return 'unjudged';
   if (cell.key === 'S1') return result.labelsMissing.length === 0 && result.duplicates.length === 0 ? 'met' : 'unmet';
   if (cell.key === 'S3association') return result.associatedIncorrectly === 0 && result.notAssociated === 0 ? 'met' : 'unmet';
+  if (cell.key === 'S5pairs') return result.wrong === 0 && result.none === 0 ? 'met' : 'unmet';   // every judged tee pairs with its own badge; none unpaired
   const fn = cell.key === 'S2' || cell.key === 'S3' ? (result.rows ? unrecoveredFn(cell, course, result).length : result.FN) : result.FN;
   return fn === 0 && (!course.testimony.complete || result.FP === 0) ? 'met' : 'unmet';
 }
@@ -90,7 +96,7 @@ export function statusOf(cell, course, result, freshness) {
 const judgedOf = (course, key) => {
   const s = course.judgement?.[key];
   if (!s) return null;
-  return key === 'S4tees' ? (s.branches?.[s4Accepted(course)] ?? null) : s;
+  return key === 'S4tees' ? (s.branches?.[s4Accepted(course)] ?? null) : key === 'S5pairs' ? (s.variants?.[s5Accepted(course)] ?? null) : s;
 };
 const holes = (t) => (t.complete ? `all ${t.annotatedHoles.length} holes` : `holes ${t.annotatedHoles.join(', ')}`);
 const fpOf = (course, r) => (course.testimony.complete ? r.FP : '-');
@@ -100,6 +106,7 @@ function expectedOf(cell, course) {
   if (!t) return `N = ${course.N} badges (no testimony: count closure only)`;
   if (cell.key === 'S1') return `badge labels for ${holes(t)}`;
   if (cell.key === 'S3association') return `every judged tee associated to its own badge (${holes(t)})`;
+  if (cell.key === 'S5pairs') return `every judged tee (S3 + S4) paired with its own hole's badge, none unpaired (${holes(t)}; tee within 8 px)`;
   const orS4 = cell.key === 'S2' || cell.key === 'S3' ? ', or recovered by S4 (occlusion is expected)' : '';
   return `${cell.what} within ${cell.what.startsWith('baskets') ? 12 : 8} px of ${holes(t)}${orS4}`;
 }
@@ -107,12 +114,13 @@ function expectedOf(cell, course) {
 function resultOf(cell, course, r) {
   const c = course.counts;
   if (!course.testimony) {
-    const found = { S1: c.badges, S2: c.baskets, S3: c.tees, S3association: c.associated, S4baskets: c.baskets + c.s4baskets, S4tees: c.tees + c.s4tees }[cell.key];
+    const found = { S1: c.badges, S2: c.baskets, S3: c.tees, S3association: c.associated, S4baskets: c.baskets + c.s4baskets, S4tees: c.tees + c.s4tees, S5pairs: c.paired }[cell.key];
     return found == null ? null : `${found} of N = ${course.N}`;
   }
   if (!r) return null;
   if (cell.key === 'S1') return `${r.found} found; missing ${r.labelsMissing.length}, duplicates ${r.duplicates.length}`;
   if (cell.key === 'S3association') return `${r.associatedCorrectly} right / ${r.associatedIncorrectly} wrong / ${r.notAssociated} none`;
+  if (cell.key === 'S5pairs') return s5Judged(r);
   const rec = r.recovered != null ? ` (+${r.recovered} recovered${r.recoveredForHoleCorrectly != null ? `, ${r.recoveredForHoleCorrectly} right hole` : ''})` : '';
   const left = (cell.key === 'S2' || cell.key === 'S3') && r.rows && r.FN ? (() => { const u = unrecoveredFn(cell, course, r); return u.length ? ` (${u.length} FN not recovered by S4: ${u.map((h) => `${cell.key === 'S2' ? 'Basket' : 'Tee'} ${h}`).join(', ')})` : ` (${r.FN} FN recovered by S4)`; })() : '';
   return `${r.TP}/${r.FN}/${fpOf(course, r)} TP/FN/FP${rec}${left}`;
@@ -120,7 +128,7 @@ function resultOf(cell, course, r) {
 
 function presentOf(cell, course) {
   const o = course.outputs;
-  return { S1: o.early, S2: o.early, S3: o.s3fix, S3association: o.s3assoc, S4baskets: o.basketBridge, S4tees: o.s4recover }[cell.key];
+  return { S1: o.early, S2: o.early, S3: o.s3fix, S3association: o.s3assoc, S4baskets: o.basketBridge, S4tees: o.s4recover, S5pairs: o.s5pair }[cell.key];
 }
 
 function freshnessOf(cell, course) {
@@ -151,7 +159,8 @@ export function matrixRows(inputs, frozen = null) {
       freshness: freshness.state, changedPaths: freshness.changed,
       vsFrozen: !frozen ? null : !f ? 'new' : f.result === result && (status === f.status || status === 'stale') ? 'same' : `changed (was ${f.status}: ${f.result})`,
       attempt: course.attempt,
-      ...(cell.key === 'S4tees' && present ? { variants: variantsOf(course) } : {})
+      ...(cell.key === 'S4tees' && present ? { variants: variantsOf(course) } : {}),
+      ...(cell.key === 'S5pairs' && present ? { variants: pairVariantsOf(course) } : {})
     });
   }
   const count = (s) => rows.filter((r) => r.status === s).length;
@@ -172,6 +181,18 @@ export function variantsOf(course) {
     return { name, judged, standaloneMs: s4.timingsMs?.[name]?.ms ?? null, accepted: s4.accepted === name };
   });
 }
+/** S5's judged text: right / wrong / none (unjudged and unmatched badges beside it), the same for the cell and each variant. */
+export const s5Judged = (r) => `${r.right} right / ${r.wrong} wrong / ${r.none} none${r.unjudged ? ` (+${r.unjudged} unjudged)` : ''}; ${r.unmatchedBadges.length} unmatched badge${r.unmatchedBadges.length === 1 ? '' : 's'}${r.laneNotRun ? ` (${r.laneNotRun})` : ''}`;
+/** Every S5 pairing variant of a course, side by side, as variantsOf does for S4. */
+export function pairVariantsOf(course) {
+  const s5 = course.s5; if (!s5) return [];
+  const names = Object.keys(s5.timingsMs ?? s5.variants ?? {}).sort();
+  return names.map((name) => {
+    const j = course.judgement?.S5pairs?.variants?.[name] ?? null;
+    const judged = course.testimony && j ? s5Judged(j) : s5.pairedCount?.[name] != null ? `${s5.pairedCount[name]} of N = ${course.N} paired${s5.laneNotRun?.[name] ? ` (${s5.laneNotRun[name]})` : ''}` : null;
+    return { name, judged, standaloneMs: s5.timingsMs?.[name]?.ms ?? null, accepted: s5.accepted === name };
+  });
+}
 export const variantsText = (variants) => variants.map((v) => `${v.accepted ? '→ ' : ''}${v.name} ${v.judged ?? '-'}${v.standaloneMs != null ? ` ${Math.round(v.standaloneMs)} ms` : ''}`).join('; ');
 
 /** The matrix as a markdown table (the legible render of the ledger). */
@@ -182,8 +203,10 @@ export function matrixMarkdown(m) {
     L.push(`| ${r.course} | ${r.key} ${r.what} | ${r.expected} | ${r.result ?? '-'} | **${r.status}** | ${fresh}${r.vsFrozen ? ` | ${r.vsFrozen}` : ''} |`);
   }
   const e = m.emits;
-  const frontier = m.rows.filter((r) => r.variants?.length);
+  const frontier = m.rows.filter((r) => r.key === 'S4tees' && r.variants?.length);
   if (frontier.length) L.push('', 'S4 tee variants per course (→ the pointer; ms = standalone, a cache hit charged what it cost to compute; by the rule in cmp.fn.Tee.recover.json):', ...frontier.map((r) => `- ${r.course}: ${variantsText(r.variants)}`));
+  const pairs = m.rows.filter((r) => r.key === 'S5pairs' && r.variants?.length);
+  if (pairs.length) L.push('', 'S5 pairing variants per course (→ the pointer; ms = standalone; by the rule in cmp.fn.Tee.pairBadge.json):', ...pairs.map((r) => `- ${r.course}: ${variantsText(r.variants)}`));
   L.push('', `${e.cells} cells: ${e.met} met, ${e.unmet} unmet, ${e.unjudged} unjudged, ${e.missing} missing, ${e.stale} stale.`);
   const goals = new Map(m.rows.map((r) => [r.stage, r.goal]));
   L.push('', 'Goals (stages/*.json responsibility):', ...[...goals].map(([s, g]) => `- ${s}: ${g}`));
@@ -251,14 +274,15 @@ export async function loadCourse(root, course, attempt) {
   const forkRoot = join(root, 'attempts', 'stages', attempt, 'fork'), out = join(forkRoot, 'stage-output'), A = join(out, 'early', 'artifacts');
   const snap = join(out, 'early', 's3.pxc.bin');
   const outputs = { early: existsSync(snap), s3fix: existsSync(join(A, 's3fix', 'px.tees.refined.json')), s3assoc: existsSync(join(out, 's3assoc', 'px.tees.association.json')),
-    basketBridge: existsSync(join(out, 'basket-bridge', 'basket-recovery.part.json')), s4recover: existsSync(join(out, 's4recover')) && readdirSync(join(out, 's4recover')).some((d) => d.startsWith('run-')) };
+    basketBridge: existsSync(join(out, 'basket-bridge', 'basket-recovery.part.json')), s4recover: existsSync(join(out, 's4recover')) && readdirSync(join(out, 's4recover')).some((d) => d.startsWith('run-')),
+    s5pair: existsSync(join(out, 's5pair')) && readdirSync(join(out, 's5pair')).some((d) => d.startsWith('run-')) };
   const request = existsSync(join(out, 'summary.json')) ? readJson(join(out, 'summary.json')).request : null;
   const board = outputs.early ? new Map(deserialize(readFileSync(snap))) : new Map();
   const N = board.get('px.badges')?.length ?? null;
   const counts = { badges: N, baskets: board.get('px.baskets')?.length ?? null, tees: outputs.s3fix ? readJson(join(A, 's3fix', 'px.tees.refined.json')).tees.length : null,
     associated: outputs.s3assoc ? readJson(join(out, 's3assoc', 'px.tees.association.json')).rows.filter((r) => r.best).length : null,
     s4baskets: outputs.basketBridge ? (readJson(join(out, 'basket-bridge', 'basket-recovery.part.json')).comparisons?.accepted ?? []).filter((d) => d.classification !== 'existing-s2-exact').length : null,
-    s4tees: null };
+    s4tees: null, paired: null };
   // the S4 fork-join's own record: every variant, its standalone cost, and the pointer the runner set by its stated rule
   const s4run = outputs.s4recover ? readdirSync(join(out, 's4recover')).filter((d) => d.startsWith('run-')).sort().at(-1) : null;
   const cmpFile = s4run ? join(out, 's4recover', s4run, 'cmp.fn.Tee.recover.json') : null;
@@ -269,6 +293,17 @@ export async function loadCourse(root, course, attempt) {
     timingsMs: cmp.timingsMs ?? Object.fromEntries(Object.entries(cmp.elapsedMs ?? {}).map(([n, ms]) => [n, { ms, calls: null, cacheHits: null }])),
     recoveredCount: Object.fromEntries(names.map((n) => [n, existsSync(variantDir(n)) ? (readJson(variantDir(n)).recovered ?? []).length : null])) } : null;
   if (s4?.accepted) counts.s4tees = s4.recoveredCount[s4.accepted] ?? null;
+  // the S5 fork-join's own record, the same way: every variant, its standalone cost, the pointer by its stated rule
+  const s5run = outputs.s5pair ? readdirSync(join(out, 's5pair')).filter((d) => d.startsWith('run-')).sort().at(-1) : null;
+  const cmp5File = s5run ? join(out, 's5pair', s5run, 'cmp.fn.Tee.pairBadge.json') : null;
+  const cmp5 = cmp5File && existsSync(cmp5File) ? readJson(cmp5File) : null;
+  const pairsFile = (name) => join(out, 's5pair', s5run, 'artifacts', 'fn.Tee.pairBadge', name, 'pairs.json');
+  const names5 = cmp5 ? (cmp5.implementations ?? Object.keys(cmp5.timingsMs ?? {})) : [];
+  const pairDocs = Object.fromEntries(names5.map((n) => [n, existsSync(pairsFile(n)) ? readJson(pairsFile(n)) : null]));
+  const s5 = cmp5 ? { accepted: cmp5.accepted ?? null, rule: cmp5.acceptRule ?? null, decidedBy: cmp5.acceptedBy ?? null, variants: cmp5.variants ?? null, timingsMs: cmp5.timingsMs ?? {},
+    pairedCount: Object.fromEntries(names5.map((n) => [n, pairDocs[n] ? (pairDocs[n].pairs ?? []).filter((p) => p.badge != null).length : null])),
+    laneNotRun: Object.fromEntries(names5.map((n) => [n, pairDocs[n]?.laneNotRun ?? null])) } : null;
+  if (s5?.accepted) counts.paired = s5.pairedCount[s5.accepted] ?? null;
   let judgement = null, testimony = null;
   if (outputs.early) {
     try { const j = judgeAttempt({ specimen: course, attempt, root }); testimony = j.testimony; judgement = j.stages ?? null; } catch (error) { judgement = null; }
@@ -282,16 +317,20 @@ export async function loadCourse(root, course, attempt) {
     association: outputs.s3assoc ? readJson(join(out, 's3assoc', 'px.tees.association.json')).rows.map((r) => ({ center: r.center, said: r.best ? Number(r.best.badge) : null })) : [],
     s4baskets: outputs.basketBridge ? (readJson(join(out, 'basket-bridge', 'basket-recovery.part.json')).comparisons?.accepted ?? []).filter((d) => d.classification !== 'existing-s2-exact').map((d) => ({ bbox: d.semanticBbox, tier: d.tier })) : [],
     s4tees: (recovered?.recovered ?? []).map((t) => ({ center: t.center, corners: t.corners ?? null, forHole: t.hole, rule: t.rule, confidence: t.confidence ?? null, visibleFrameFrac: t.evidence?.visibleFrameFrac ?? null })),
-    s4missed: (recovered?.missed ?? []).map((m) => ({ hole: m.hole, reason: m.reason }))
+    s4missed: (recovered?.missed ?? []).map((m) => ({ hole: m.hole, reason: m.reason })),
+    // S5: every tee of the accepted pairing variant, the badge it pairs with and that badge's plate centre (the ray's end)
+    pairs: (s5?.accepted ? pairDocs[s5.accepted]?.pairs ?? [] : []).map((p) => ({ name: p.tee, origin: p.origin, center: p.center, said: p.badge != null ? Number(p.badge) : null, plateCenter: p.plateCenter ?? null, residualDeg: p.angleResidualDeg ?? null, signedPerpPx: p.signedPerpPx ?? null })),
+    pairBadges: s5?.accepted ? (pairDocs[s5.accepted]?.badges ?? []) : [],
+    unpairedBadges: s5?.accepted ? (pairDocs[s5.accepted]?.unmatchedBadges ?? []) : []
   };
-  const paths = { out, snap, forkRoot, s4run: s4run ? join(out, 's4recover', s4run) : null };
+  const paths = { out, snap, forkRoot, s4run: s4run ? join(out, 's4recover', s4run) : null, s5run: s5run ? join(out, 's5pair', s5run) : null };
   const freshness = { ...(request ? { recipe: await recipeFreshness(root, forkRoot, request) } : { recipe: { state: 'UNKNOWN', changed: [] } }), ...(await postRecipeFreshness(root, out)) };
-  return { course, attempt, request, testimony, N, counts, judgement, outputs, freshness, objects, paths, s4 };
+  return { course, attempt, request, testimony, N, counts, judgement, outputs, freshness, objects, paths, s4, s5 };
 }
 
 export async function loadStateInputs(root = ROOT, attempts = readAttempts(root)) {
   const declarations = {};
-  for (const n of [1, 2, 3, 4]) { const p = join(root, 'stages', `s${n}.json`); if (existsSync(p)) declarations[`S${n}`] = { responsibility: readJson(p).responsibility }; }
+  for (const n of [1, 2, 3, 4, 5]) { const p = join(root, 'stages', `s${n}.json`); if (existsSync(p)) declarations[`S${n}`] = { responsibility: readJson(p).responsibility }; }
   const courses = [];
   for (const [course, attempt] of attempts) courses.push(await loadCourse(root, course, attempt));
   return { declarations, courses };
@@ -337,14 +376,14 @@ export async function freeze(root, matrix, inputs) {
 const DEV_REQUEST = Object.freeze({ recipe: 'recipes/chainspot-s0-s7.json', until: 4, lanes: ['s3-findfamily-structural-fix', 's4.basketRecovery'] });
 const run = (root, args, log) => { log(`  $ node ${args.join(' ')}`); const r = spawnSync('node', args, { cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }); if (r.status !== 0) throw new Error(`${args[0]} failed (${r.status}): ${(r.stderr || r.stdout).slice(-2000)}`); return r.stdout; };
 
-/** The variant most of the annotated courses accepted in their latest S4 run (ties: alphabetical), or null when none has a pointer. */
-export function acceptedOnAnnotated(root, courses, attempts) {
+/** The variant most of the annotated courses accepted in their latest run of a fork-join (default S4; ties: alphabetical), or null when none has a pointer. */
+export function acceptedOnAnnotated(root, courses, attempts, { dir = 's4recover', cmp = 'cmp.fn.Tee.recover.json' } = {}) {
   const votes = new Map();
   for (const c of courses) {
     if (!c.testimony) continue;
-    const out = join(root, 'attempts', 'stages', attempts.get(c.course) ?? c.attempt, 'fork', 'stage-output', 's4recover');
+    const out = join(root, 'attempts', 'stages', attempts.get(c.course) ?? c.attempt, 'fork', 'stage-output', dir);
     const run = existsSync(out) ? readdirSync(out).filter((d) => d.startsWith('run-')).sort().at(-1) : null;
-    const f = run ? join(out, run, 'cmp.fn.Tee.recover.json') : null;
+    const f = run ? join(out, run, cmp) : null;
     const accepted = f && existsSync(f) ? readJson(f).accepted : null;
     if (accepted) votes.set(accepted, (votes.get(accepted) ?? 0) + 1);
   }
@@ -371,11 +410,18 @@ export async function retest(root, inputs, { all = false, only = null, log = () 
     const closures = existsSync(join(out, 'state', 'closures.json')) ? readJson(join(out, 'state', 'closures.json')) : {};
     const record = async (k) => { closures[k] = { ...(await closureSnapshot(root, POST_RECIPE_CLOSURES[k])), at: new Date().toISOString() }; mkdirSync(join(out, 'state'), { recursive: true }); writeFileSync(join(out, 'state', 'closures.json'), JSON.stringify(closures, null, 1) + '\n'); };
     if (redoRecipe || needs(c, 's3assoc') || !c.outputs.s3assoc) { log(`${c.course}: S3 association`); run(root, ['ports/s3assoc/run.mjs', '--specimen', c.course, '--attempt', attempt], log); await record('s3assoc'); }
-    if (redoRecipe || needs(c, 's4recover') || !c.outputs.s4recover) {
+    const redoS4 = redoRecipe || needs(c, 's4recover') || !c.outputs.s4recover;
+    if (redoS4) {
       // a course without testimony ships the variant the annotated courses accepted (their latest runs, this pass or before)
       const elsewhere = c.testimony ? null : acceptedOnAnnotated(root, inputs.courses, attempts);
       log(`${c.course}: S4 tee recovery${elsewhere ? ` (pointer from the annotated courses: ${elsewhere})` : ''}`);
       run(root, ['ports/s4recover/run.mjs', '--specimen', c.course, '--attempt', attempt, ...(elsewhere ? ['--accept', elsewhere] : [])], log); await record('s4recover');
+    }
+    // S5 pairs what S4 recovered: it re-runs after S4 does, or when its own closure changed; same --accept handling as S4
+    if (redoS4 || needs(c, 's5pair') || !c.outputs.s5pair) {
+      const elsewhere = c.testimony ? null : acceptedOnAnnotated(root, inputs.courses, attempts, { dir: 's5pair', cmp: 'cmp.fn.Tee.pairBadge.json' });
+      log(`${c.course}: S5 tee-badge pairs${elsewhere ? ` (pointer from the annotated courses: ${elsewhere})` : ''}`);
+      run(root, ['ports/s5pair/run.mjs', '--specimen', c.course, '--attempt', attempt, ...(elsewhere ? ['--accept', elsewhere] : [])], log); await record('s5pair');
     }
   }
   writeFileSync(join(root, ATTEMPTS_FILE), [...attempts].map(([c, a]) => `${c} ${a}`).join('\n') + '\n');
