@@ -12,7 +12,8 @@ def text(d, xy, s, font, fill):
         for dy in (-1, 0, 1): d.text((xy[0] + dx, xy[1] + dy), s, font=font, fill=(0, 0, 0))
     d.text(xy, s, font=font, fill=fill)
 for c in sys.argv[1:]:
-    D = json.load(open(f'{SP}/comps-{c}.json')); out = f'{TK}/attempts/stages/{ATT[c]}/fork/stage-output'
+    D = json.load(open(os.path.join(HERE, f'comps-{c}.json')))   # node adjacent.mjs <course> <attempt> comps-<course>.json
+    out = f'{TK}/attempts/stages/{ATT[c]}/fork/stage-output'; out = f'{TK}/attempts/stages/{ATT[c]}/fork/stage-output'
     raw = np.fromfile(f'{out}/early/artifacts/s1/badgePx.rgba.bin', dtype=np.uint8); H = raw.size // 4 // 1290; rgb = raw.reshape(H, 1290, 4)[..., :3]
     run = sorted(glob.glob(f'{out}/s4recover/run-*'))[-1]
     rec = json.load(open(f'{run}/artifacts/fn.Tee.recover/greedyOccluded/recovered.json'))['recovered']
