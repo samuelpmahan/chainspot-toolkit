@@ -145,8 +145,9 @@ export function renderAlphaProfile(address, v, dims = null) {
 export function contactSheet(v, raster, { title = 'alpha profile', deflate } = {}) {
   const W = 1100, rows = fitted(v), a = v.fit?.anchors ?? {};
   const cropSize = v.r1Px ? Math.min(240, Math.ceil(4.4 * v.r1Px)) : 0, segSize = a.segment ? Math.min(240, Math.ceil(Math.hypot(a.segment.b[0] - a.segment.a[0], a.segment.b[1] - a.segment.a[1]) + 2 * a.segment.widthPx)) : 0;
-  const cropScale = Math.max(1, Math.floor(240 / Math.max(cropSize, segSize, 1)));
-  const H = 60 + Math.max(1, OVERLAY_CLASSES.length) * 78 + 40 + (cropSize || segSize ? Math.max(cropSize, segSize) * cropScale + 60 : 0) + 230;
+  const scaleOf = (n) => Math.max(1, Math.min(3, Math.floor(240 / Math.max(n, 1))));
+  const cropScale = scaleOf(cropSize), segScale = scaleOf(segSize), cropH = Math.max(cropSize * cropScale, segSize * segScale);
+  const H = 60 + Math.max(1, OVERLAY_CLASSES.length) * 78 + 40 + (cropH ? cropH + 60 : 0) + 230;
   const cv = canvas(W, H, [250, 250, 250]);
   let y = 12;
   text(cv, 12, y, `${title}  R1 ${v.r1Px} PX (FROM THE RINGS)`, { scale: 2 }); y += 26;
@@ -168,13 +169,14 @@ export function contactSheet(v, raster, { title = 'alpha profile', deflate } = {
   if (raster && (a.basket || a.segment)) {
     let x = 12;
     const place = (cr, label1, label2) => {
-      text(cv, x, y, label1, { scale: 1 }); blit(cv, cr.orig, x, y + 12); text(cv, x + cr.orig.width + 8, y, label2, { scale: 1 }); blit(cv, cr.un, x + cr.orig.width + 8, y + 12);
-      x += 2 * cr.orig.width + 28;
+      const cw = Math.max(cr.orig.width, textWidth(label1, 1), textWidth(label2, 1)) + 10;
+      text(cv, x, y, label1, { scale: 1 }); blit(cv, cr.orig, x, y + 12); text(cv, x + cw, y, label2, { scale: 1 }); blit(cv, cr.un, x + cw, y + 12);
+      x += 2 * cw + 18;
     };
  if (a.basket && v.r1Px) place(crops(raster, v, a.basket.centre, cropSize, cropScale, a.basket.spritesInWindow), `${a.basket.name} ORIGINAL`, 'UNMIXED: C1, C2 FILLS OUT');
-    if (a.segment && x + 2 * segSize * cropScale + 20 <= W) place(crops(raster, v, [(a.segment.a[0] + a.segment.b[0]) / 2, (a.segment.a[1] + a.segment.b[1]) / 2], segSize, cropScale, a.segment.spritesInWindow), `${a.segment.name} ORIGINAL`.slice(0, 40), 'UNMIXED: PATH OUT');
-    y += Math.max(cropSize, segSize) * cropScale + 30;
-    text(cv, 12, y - 12, `CROPS X${cropScale}; RING STROKES AND THEIR AA BAND ARE LEFT AS DRAWN (NOT FITTED); OPAQUE SPRITES UNTOUCHED`, { scale: 1, col: [90, 90, 90] });
+    if (a.segment && x + 2 * segSize * segScale + 20 <= W) place(crops(raster, v, [(a.segment.a[0] + a.segment.b[0]) / 2, (a.segment.a[1] + a.segment.b[1]) / 2], segSize, segScale, a.segment.spritesInWindow), `${a.segment.name} ORIGINAL`.slice(0, 40), 'UNMIXED: PATH OUT');
+    y += cropH + 30;
+    text(cv, 12, y - 12, `CROPS X${cropScale} (BASKET), X${segScale} (SEGMENT); RING STROKES AND THEIR AA BAND ARE LEFT AS DRAWN (NOT FITTED); OPAQUE SPRITES UNTOUCHED`, { scale: 1, col: [90, 90, 90] });
   }
   y += 8;
   text(cv, 12, y, 'RESIDUAL PER PAIR (RGB LEVELS), SHARE OF PAIRS PER 1-LEVEL BIN', { scale: 1 });
