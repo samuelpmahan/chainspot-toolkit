@@ -161,7 +161,7 @@ export function measurePairs(q, { pairs, hallway, profile, testimony }) {
   const alphaOk = hasOverlay(profile, 'path');
   const alpha = alphaOk
     ? { condition: 'alpha profile', mode: 'profile', pathAlphaFrac: profile.overlays.path.alpha, overlayRgbLevel: profile.overlays.path.rgb, fitOn: profile.overlays.path.fitOn ?? null }
-    : { condition: 'no alpha profile', mode: 'proxy', reason: profile?.reason ?? 'tk.s7.alphaProfile has no fitted path overlay', proxy: space.PROXY_OVERLAY.rule };
+    : { condition: 'no alpha profile', mode: 'proxy', reason: profile?.reason ?? (profile?.overlays?.path?.reason ? `path ${profile.overlays.path.status ?? 'not fitted'}: ${profile.overlays.path.reason}` : 'tk.s7.alphaProfile has no fitted path overlay'), proxy: space.PROXY_OVERLAY.rule };
   const W = hallway?.widthPx ?? null;
   const corridor = { widthPx: W, rule: W ? 'W = tk.s6.hallway widthPx (teebadge.py, LOCAL: this image\'s own tee -> badge segments)' : 'no corridor width (tk.s6.hallway has none): nothing measured' };
   const base = { schema: 'nctk-s6-path-loss@1', alpha, corridor, edgeTest: { tauLum: EVIDENCE.tauLum, rule: 'min-side station contrast > 8 lum (docs/evidence/s7edge: golden 80% on-ribbon vs 1% off-ribbon stations)' } };
