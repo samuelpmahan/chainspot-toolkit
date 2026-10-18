@@ -81,7 +81,13 @@ export const RULES = Object.freeze({
   maxContradictionFrac: 0.35,  // negative / (positive + negative) evidence px
   refineTop: 8,
   basketFringePx: 2,           // S2/S4 basket px dilated by this (Euclidean px): the black-outline AA seam S2 does not own
-  seedFailedTestsAllowed: Object.freeze(['fitted-size', 'border-complete', 'band-coverage'])
+  seedFailedTestsAllowed: Object.freeze(['fitted-size', 'border-complete', 'band-coverage']),
+  // occluder search (Sam: S4 is occlusion-aware by default; assume the sought sprite is occluded, entail it)
+  hiddenDistMargin: 0.1,       // tee->badge distance range = this course's S3 range widened by this fraction each way
+  hiddenMinFrac: 0.5,          // the occluding sprites must hide at least this fraction of the pad's template px
+  hiddenMaxNegativeFrac: 0.02, // visible px contradicting the pad (wrong class, white just outside) / template px
+  hallwayMinStepLum: 12,       // tee->badge edge step; dev: real segments median 27-44 lum, other-badge impostors max 9.7
+  hallwaySubsamplePx: 3        // feasible hidden centres are hallway-tested on this grid
 });
 
 const DEG = 180 / Math.PI;
@@ -316,8 +322,14 @@ export function createRecoveryContext(inputs) {
   const occ = buildOccluders(raster, inputs, tpl);
   const assignment = assignTeesToBadges(inputs.tees, inputs.badges);
   const maxAssignedPx = assignment.length ? Math.max(...assignment.map((a) => a.distancePx)) : 8 * tpl.lengthPx;
+  // Opaque sprites by name: where a fully hidden pad can be (occluder search).
+  const sprites = [
+    ...(inputs.baskets ?? []).filter((b) => b.bbox).map((b, i) => ({ kind: 'basket', name: `S2 basket ${b.label ?? i}`, bbox: b.bbox })),
+    ...(inputs.recoveredBasketBoxes ?? []).map((bb, i) => ({ kind: 'basket', name: `S4 basket ${i}`, bbox: bb })),
+    ...inputs.badges.map((b) => ({ kind: 'badge', name: `Badge ${b.label}`, label: b.label, bbox: b.bbox }))
+  ];
   return {
-    W: raster.widthPx, H: raster.heightPx, raster, tpl, cls, occ, owned: new Uint8Array(raster.widthPx * raster.heightPx),
+    W: raster.widthPx, H: raster.heightPx, raster, tpl, cls, occ, owned: new Uint8Array(raster.widthPx * raster.heightPx), sprites,
     badges: inputs.badges, tees: inputs.tees, assignment, seeds: inputs.seeds ?? [],
     searchRadiusPx: r3(RULES.searchRadiusFactor * maxAssignedPx),
     searchRule: `centers within ${RULES.searchRadiusFactor} x the largest S3 tee-badge distance (${r3(maxAssignedPx)} px) of the badge plate center, whose frame core holds >= 1 unoccluded frame-white px`
@@ -469,6 +481,90 @@ export function searchBadge(ctx, badge, { badgeRay = true } = {}) {
  * the rest against the new ownership, and stop when the tee count reaches
  * the badge cardinality N or no pending badge has an accepted pose.
  */
+const OPAQUE = new Set(['badge', 'mute', 'basket', 'basketFringe', 'recoveredBasket']);
+const lumAt = (raster, x, y) => lumBilinear(raster, x, y);
+/**
+ * The tee->badge segment is straight hallway (Sam: the badge precedes the first bend). The hallway is a translucent band
+ * brighter than the terrain under it, with an edge on each side at half the image's hallway width W (LOCAL: learned
+ * from this image's own S3 tee->badge segments, learnHallwayWidth). Evidence for a segment: at stations every 2 px from
+ * the pad's front edge to the badge plate's edge, the step (mean luminance just inside an edge) - (just outside it), on
+ * each side; the segment's edge step is the median over stations of the weaker side. Stations touching an opaque
+ * sprite are skipped (hidden: no evidence either way).
+ */
+export function hallwayStep(ctx, center, plate, W) {
+  const { raster, occ, tpl } = ctx, Wd = raster.widthPx, Hd = raster.heightPx;
+  const dx = plate[0] - center[0], dy = plate[1] - center[1], D = Math.hypot(dx, dy), ux = dx / D, uy = dy / D, nx = -uy, ny = ux;
+  const hidden = (x, y) => { const X = Math.round(x), Y = Math.round(y); if (X < 0 || Y < 0 || X >= Wd || Y >= Hd) return true; const o = occ[Y * Wd + X]; return !!o && OPAQUE.has(OCC_NAMES[o]); };
+  const steps = [];
+  for (let t = tpl.halfLengthOutPx + 3; t <= D - 26; t += 2) {
+    const cx = center[0] + ux * t, cy = center[1] + uy * t, side = [];
+    for (const sg of [1, -1]) {
+      const inn = [], out = [];
+      for (let l = W / 2 - 5; l <= W / 2 - 1.5; l += 0.5) { const x = cx + sg * nx * l, y = cy + sg * ny * l; if (!hidden(x, y)) inn.push(lumAt(raster, x, y)); }
+      for (let l = W / 2 + 1.5; l <= W / 2 + 5; l += 0.5) { const x = cx + sg * nx * l, y = cy + sg * ny * l; if (!hidden(x, y)) out.push(lumAt(raster, x, y)); }
+      if (inn.length >= 4 && out.length >= 4) side.push(inn.reduce((a, b) => a + b, 0) / inn.length - out.reduce((a, b) => a + b, 0) / out.length);
+    }
+    if (side.length === 2) steps.push(Math.min(...side));
+  }
+  return { stepLum: steps.length ? r3(quantile(steps, 0.5)) : null, stations: steps.length };
+}
+
+/** Hallway width (px) of this image: per S3 tee->badge segment the W in [0.5, 4] x pad width maximising the edge step; median. */
+export function learnHallwayWidth(ctx) {
+  const per = [];
+  for (const a of ctx.assignment) {
+    const t = ctx.tees[a.tee], b = ctx.badges[a.badge]; let best = null;
+    for (let W = Math.max(8, 0.5 * ctx.tpl.widthPx); W <= 4 * ctx.tpl.widthPx; W += 0.5) {
+      const h = hallwayStep(ctx, t.center, b.plateCenter, W);
+      if (h.stepLum != null && h.stations >= 4 && (!best || h.stepLum > best.stepLum)) best = { W, stepLum: h.stepLum };
+    }
+    if (best) per.push(best.W);
+  }
+  return per.length ? { widthPx: quantile(per, 0.5), fromSegments: per.length, spreadPx: [quantile(per, 0.25), quantile(per, 0.75)] } : null;
+}
+
+/**
+ * Occluder search for a badge with no visible pad: under every opaque sprite whose distance to the badge lies in this
+ * course's tee->badge range, every centre (1 px grid over the sprite bbox +- the pad half-width) with its axis on the
+ * badge ray is feasible when opaque sprites hide >= hiddenMinFrac of the pad and the visible rest contradicts it in
+ * <= hiddenMaxNegativeFrac of its px. The feasible centres are the possible range of the hidden pad.
+ */
+export function occluderSearch(ctx, bi, { hallwayTest = true, keepCenters = false } = {}) {
+  const badge = ctx.badges[bi], plate = badge.plateCenter, tpl = ctx.tpl;
+  ctx.hallway ??= learnHallwayWidth(ctx);
+  const Wh = hallwayTest ? ctx.hallway?.widthPx ?? null : null;
+  const dists = ctx.assignment.map((a) => a.distancePx);
+  const range = dists.length ? [Math.min(...dists) * (1 - RULES.hiddenDistMargin), Math.max(...dists) * (1 + RULES.hiddenDistMargin)] : [0, Infinity];
+  const m = Math.ceil(tpl.halfWidthOutPx), regions = [];
+  let evaluated = 0;
+  for (const sp of ctx.sprites) {
+    if (sp.kind === 'badge' && String(sp.label) === String(badge.label)) continue;
+    const [x, y, w, h] = sp.bbox, feas = [];
+    for (let cy = Math.floor(y - m); cy <= Math.ceil(y + h + m); cy++) for (let cx = Math.floor(x - m); cx <= Math.ceil(x + w + m); cx++) {
+      const d = Math.hypot(plate[0] - cx, plate[1] - cy);
+      if (d < range[0] || d > range[1]) continue;
+      const th = Math.atan2(plate[1] - cy, plate[0] - cx), e = evaluatePose(ctx, cx, cy, th); evaluated++;
+      const ev = e.evidence, total = ev.templateFramePx + ev.templateInteriorPx;
+      const hidden = Object.entries(ev.occludedBy).filter(([k]) => OPAQUE.has(k)).reduce((n, [, v]) => n + v, 0);
+      const neg = ev.negativeFramePx + ev.negativeInteriorPx + RULES.outsideWhiteWeight * ev.outsideWhitePx;
+      if (!(total && hidden >= RULES.hiddenMinFrac * total && neg <= RULES.hiddenMaxNegativeFrac * total)) continue;
+      // the tee->badge segment must be hallway (subsampled grid; unknown width = no hallway test, recorded)
+      let step = null;
+      if (Wh && (cx % RULES.hallwaySubsamplePx || cy % RULES.hallwaySubsamplePx)) continue;
+      if (Wh) { step = hallwayStep(ctx, [cx, cy], plate, Wh).stepLum; if (step == null || step < RULES.hallwayMinStepLum) continue; }
+      feas.push({ cx, cy, th, hiddenFrac: hidden / total, visible: ev.visibleFramePx + ev.visibleInteriorPx, step });
+    }
+    if (!feas.length) continue;
+    const cx = feas.reduce((n, f) => n + f.cx, 0) / feas.length, cy = feas.reduce((n, f) => n + f.cy, 0) / feas.length;
+    const xs = feas.map((f) => f.cx), ys = feas.map((f) => f.cy);
+    regions.push({ occluder: sp.name, feasibleCenters: feas.length, centroid: [r3(cx), r3(cy)], extentPx: [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)],
+      distanceToBadgePx: r3(Math.hypot(plate[0] - cx, plate[1] - cy)), maxVisiblePadPx: Math.max(...feas.map((f) => f.visible)),
+      hallwayStepLum: Wh ? r3(quantile(feas.map((f) => f.step), 0.5)) : null, bbox: sp.bbox,
+      ...(keepCenters ? { centers: feas.map((f) => [f.cx, f.cy]) } : {}) });
+  }
+  return { regions, distanceRangePx: range.map(r3), hallway: ctx.hallway, evaluatedPoses: evaluated };
+}
+
 export function greedyRecover(ctx, { badgeRay = true } = {}) {
   const N = ctx.badges.length;
   if (!ctx.tpl) {
@@ -496,9 +592,22 @@ export function greedyRecover(ctx, { badgeRay = true } = {}) {
     recovered.push(recoveredTee(ctx, pick.bi, full, { round: rounds, fromSeed: pick.best.seed ?? null, rule: badgeRay ? 'greedy occluded template, badge-ray constrained' : 'greedy occluded template, free angle (ablation)' }));
     pending.delete(pick.bi);
   }
+  // Fast pass done; what is still missing is assumed occluded: search the occluders (entailment, not visibility).
+  const hiddenSearch = {};
+  for (const bi of [...pending].sort((a, b) => a - b)) {
+    if (recovered.length >= need) break;
+    const o = occluderSearch(ctx, bi); evaluatedPoses += o.evaluatedPoses; hiddenSearch[ctx.badges[bi].label] = o;
+    if (o.regions.length !== 1) continue;   // none, or more than one occluder fits: recorded, not guessed
+    const g = o.regions[0], plate = ctx.badges[bi].plateCenter, th = Math.atan2(plate[1] - g.centroid[1], plate[0] - g.centroid[0]);
+    const full = evaluatePose(ctx, g.centroid[0], g.centroid[1], th, { collect: true });
+    for (const i of full.px.pad) if (i >= 0) ctx.owned[i] = OCC.recoveredTee;
+    recovered.push(recoveredTee(ctx, bi, full, { rule: `occluder search: hidden under ${g.occluder}`, hidden: g, accepted: true }));
+    pending.delete(bi);
+  }
   const missed = [...pending].sort((a, b) => a - b).map((bi) => {
-    const last = [...log].reverse().find((l) => l.badge === bi);
-    return { badgeIndex: bi, hole: ctx.badges[bi].label, lastBest: last?.best ?? null, reason: recovered.length >= need ? `stopped at cardinality N = ${N} badges` : 'no accepted pose' };
+    const last = [...log].reverse().find((l) => l.badge === bi), o = hiddenSearch[ctx.badges[bi].label];
+    const reason = recovered.length >= need ? `stopped at cardinality N = ${N} badges` : !o ? 'no accepted pose' : o.regions.length ? `occluder search: ${o.regions.length} occluders fit (${o.regions.map((r) => r.occluder).join(', ')})` : 'no accepted pose; no occluder can hide it';
+    return { badgeIndex: bi, hole: ctx.badges[bi].label, lastBest: last?.best ?? null, hidden: o ?? null, reason };
   });
   return { recovered, missed, need, rounds, evaluatedPoses, log };
 }
