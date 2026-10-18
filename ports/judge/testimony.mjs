@@ -14,7 +14,9 @@ export const TESTIMONY_DY = Object.freeze({ golden: 4, lenard: 2, townelake: 1, 
 export function loadTestimony(specimen, root = ROOT) {
   const dir = join(root, 'testimony', specimen);
   if (!existsSync(dir)) return null;
-  const file = readdirSync(dir).find((f) => f.endsWith('.annotation.json'));
+  // a corrected annotation is a new file beside the original (never an edit); the latest correction is the testimony
+  const files = readdirSync(dir).filter((f) => f.endsWith('.annotation.json')).sort();
+  const file = files.filter((f) => f.includes('.corrected-')).at(-1) ?? files[0];
   if (!file) return null;
   const a = JSON.parse(readFileSync(join(dir, file), 'utf8')), dy = TESTIMONY_DY[specimen];
   const mapFile = join(dir, 'hole-numbers.json');

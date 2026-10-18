@@ -276,7 +276,8 @@ async function recipeFreshness(root, forkRoot, request) {
     const reach = new Set([...reachableModules(root, runEntries(root)), ...reachableModules(forkRoot, runEntries(forkRoot))]);
     // impl/ and contracts/ are discovered by readdir; an impl/ slot a post-recipe step owns (impl/fn.Tee.recover, impl/fn.Hole.straight) is that step's closure, not the recipe's
     const postOwned = (p) => Object.values(POST_RECIPE_CLOSURES).flat().some((q) => q.startsWith('impl/') && (p === q || p.startsWith(`${q}/`)));
-    const relevant = (p) => !postOwned(p) && (!isCode(p) || reach.has(p) || p.startsWith('impl/') || p.startsWith('contracts/'));
+    // testimony feeds the judge when the state is derived, never the run: a corrected annotation re-judges, it does not stale
+    const relevant = (p) => !postOwned(p) && !p.startsWith('testimony/') && (!isCode(p) || reach.has(p) || p.startsWith('impl/') || p.startsWith('contracts/'));
     const files = st.files.filter((f) => relevant(f.path));
     const forkFiles = await snapshotPaths(forkRoot, files.map((f) => f.path).filter((p) => existsSync(join(forkRoot, p))));
     const changed = differences(forkFiles, files).map((d) => d.path);

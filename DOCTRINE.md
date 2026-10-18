@@ -75,7 +75,7 @@ right and the repo is behind. Every number carries a unit.
 | S3 | visible tees, **precision only**; recall is S4's. Initial association (Sam, 2026-10-17): each unoccluded pad pairs with at most 2 badges, one obviously better; continuing its axis to a BasketPoint starts S5's straight-hole matching before recovery (`ports/s3assoc/`) | Sam's tee points, hole numbers |
 | S4 | recover tees and baskets until counts match badge cardinality N; occlusion-aware by default: assume the sought sprite is occluded; entail from what must be true | Sam's points |
 | S5 | a tee's **long axis points directly at its badge**; residual indicts the tee fit | hole n's tee pairs with badge n |
-| S6 | straight holes are the trivial case: objective path loss along tee to basket; learn the course-local path transparency profile there | straight-hole residual |
+| S6 | straight holes are the trivial case: objective path loss along tee to basket; learn the course-local path transparency profile there. Heritage hole 8 is straight (Sam, 2026-10-18, from the S6 render: his mark's bend sat 2.67 px off the 272 px line); the corrected annotation is a new file | straight-hole residual |
 | S7 | find the path signal and ride it; all holes resolve tee to badge to basket, trace stays in the ribbon; perfection = bend points on the centreline. Known endpoints first (Sam, 2026-10-18): the ABFeature era paired every badge with every basket endpoint, scored the pairs and assigned them one-to-one, which is what let it assume known endpoints and work backwards from the basket. The hallway tracker prototypes (`docs/evidence/s7edge`, `s7main`: 16/18 on golden, lenard, townelake) graduate before any new signal | Sam's bends |
 
 ## Points and identity
