@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { deserialize } from 'node:v8';
 import { join } from 'node:path';
-import { pxList, pxLabel, labelBoxes, forEach, intersectCount } from './pxset.mjs';
+import { pxList, pxLabel, labelBoxes, forEach, intersectCount, ownedPx, pixelListsOf, count } from './pxset.mjs';
 import { pxsetProperties } from './pxset.test.mjs';
 
 const ROOT = join(import.meta.dirname, '..');
@@ -27,6 +27,12 @@ for (const [course, attempt] of ATTEMPTS) {
       const set = pxList(W, H, b.px); let inPlane = 0; forEach(set, (i) => { if (bright.labels[i]) inPlane++; });
       const viaQueries = [...new Set([...b.px].map((i) => bright.labels[i]).filter(Boolean))].reduce((n, l) => n + intersectCount(set, pxLabel(W, H, bright.labels, l, boxes.get(l))), 0);
       assert.equal(viaQueries, inPlane, `Badge ${b.label}`);
+    }
+    // what a Part owns is inferred from its structure: a basket's shell is inside its px; a badge also owns its mute ring
+    for (const k of pxc.get('px.baskets')) assert.equal(count(ownedPx(W, H, k)), k.px.length, `basket ${k.label ?? ''}: shell px are basket px`);
+    for (const b of pxc.get('px.badges')) {
+      const all = new Set(pixelListsOf(b).flatMap((l) => [...l.px]));
+      assert.equal(count(ownedPx(W, H, b)), all.size, `Badge ${b.label} owns px and has.mute.px`);
     }
     assert.ok(checked > 0);
   });

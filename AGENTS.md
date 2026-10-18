@@ -24,6 +24,8 @@ output.
   - Renders: `fn.q.part.render` (`fg/render.mjs`).
   New pixel math becomes an operation or query there (`scaffold query <family>`), matching on the union of Part
   kinds and backings.
+- **A Part owns its whole tree:** its px and every pixel list in its own Parts (`has.*`). Infer ownership from the
+  structure (`ownedPx`, or the reference `px.baskets#3`); never pick fields by hand.
 - **Backings are the store's business.** A list, a label of a shared plane, or a byte array can change behind the
   boundary without anything outside changing.
 - **A derived view is its own Calculation with its own address** (`tk.*`). Never put a reshaped copy at an existing
@@ -61,6 +63,8 @@ output.
 
 - Every number carries a unit AND a referent: what it measures, on which course or image.
 - Name candidates Excel-style (`Basket cX`) until identity is proven, then `Basket 4`. Never invent hole labels.
+- Testimony is optional and impeachable: hand marks are often a few px off. A disagreement with it is settled by
+  rendering both and cross-referencing by eye, never by treating testimony as ground truth.
 - Judges report agreement with Sam's testimony, never acceptance.
   - Use one match rule per kind: tee 8 px, basket 12 px.
   - Calibrate ground-truth-free cross-validation on annotated courses before trusting it on unannotated ones.

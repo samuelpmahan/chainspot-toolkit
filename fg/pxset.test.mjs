@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { pxList, pxLabel, count, bbox, has, intersectCount, ownerPlane, forEach } from './pxset.mjs';
+import { pxList, pxLabel, count, bbox, has, intersectCount, ownerPlane, forEach, ownedPx, pixelListsOf, resolvePxSet } from './pxset.mjs';
 import { createPartStore } from './store.mjs';
 
 // The same pixels in every backing must give the same answers: the property that lets a backing change behind the PxC.
@@ -39,4 +39,16 @@ test('the store answers pxset queries by Part address, cached, unitful, profiled
   assert.equal(q('render', { a: 'px.badges#0' }).value.kind, 'pxset');
   const prof = store.calls().filter((e) => e.calculation.startsWith('fn.q.pxset.'));
   assert.equal(prof.length, 5);
+});
+
+test('a Part owns every pixel list in its tree, inferred from its structure, never picked by field', () => {
+  const W = 10, H = 10;
+  const basket = { bbox: [0, 0, 3, 3], whitePx: 3, blackPx: 2, px: Uint32Array.of(1, 2, 3, 11, 12), has: { findShellFamily: { blackPx: Uint32Array.of(11, 12) } } };
+  const badge = { label: '4', px: Uint32Array.of(50, 51), has: { mute: { radiusPx: 2, px: Uint32Array.of(51, 52, 60) }, findPx: { parts: [{ bbox: [0, 5, 2, 1] }] } } };
+  assert.deepEqual(pixelListsOf(basket).map((l) => l.path), ['px', 'has.findShellFamily.blackPx'], 'whitePx / blackPx counts are numbers, not pixel sets');
+  assert.equal(count(ownedPx(W, H, basket)), 5, 'the shell is a subset of the basket');
+  assert.deepEqual([...ownedPx(W, H, badge).px], [50, 51, 52, 60], 'a badge owns its mute ring');
+  const get = (a) => ({ 'px.badges': [badge] })[a], dims = () => ({ widthPx: W, heightPx: H });
+  assert.equal(count(resolvePxSet(get, 'px.badges#0', dims)), 4, 'a Part reference resolves to what the Part owns');
+  assert.equal(count(resolvePxSet(get, 'px.badges#0.has.mute.px', dims)), 3, 'a path inside it names one list');
 });

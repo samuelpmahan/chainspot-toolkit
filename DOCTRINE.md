@@ -130,6 +130,36 @@ right and the repo is behind. Every number carries a unit.
   first need. Declaring it on a caller resolves it eagerly (golden paid
   254 ms for a hallway it never used).
 
+- **A Part owns its whole tree** (Sam, 2026-10-18: "That's why a Part
+  contains its own Parts and Calculations, and why Calculations contain
+  their inParts, executable, and outParts"). What a Part owns is inferred
+  from its structure, never picked field by field per consumer: every
+  pixel list anywhere in it (`ownedPx`, `fg/pxset.mjs`). On every dev
+  course a basket's shell (`has.findShellFamily.blackPx`) is a subset of
+  its px (98 of 98 baskets), and a badge also owns its mute ring
+  (`has.mute.px`). The artifact JSON reshapes the same Part with different
+  field names, which is how two consumers came to pick fields by hand.
+- **Interface vs TypedInterface; delegates are FGs** (Sam, 2026-10-18).
+  An address list is an Interface; a TypedInterface also says what kind
+  of Part sits at each address. A slot is a C#-style delegate: a typed
+  signature (typed inParts -> typed outParts) plus its contract, declared
+  as an FG; any implementation with that signature plugs in. Because a
+  Calculation carries its inParts, its executable and its outParts,
+  (executable hash, inPart hashes) keys its outParts: dependency-aware
+  cache invalidation. The whole closure compiles, so it is checkable
+  statically, before anything runs.
+- **ComparableForkJoin defines its contract and comparison as FGs**, with
+  or without defaults (Sam, 2026-10-18). Then anything can be tested and
+  compared, and testable implementations accumulate side by side instead
+  of being forced into branches or hidden. Recipes (Bazel-like) make
+  artifacts ephemeral: the ReproducibleRecipe is the actual artifact.
+- **Testimony is optional and impeachable** (Sam, 2026-10-18). Hand marks
+  are often a few px off, and "known" tee poses are often a little wrong.
+  Testimony is one signal among others, never ground truth; a
+  disagreement with it is a question settled by visual cross-referencing
+  (render both), not a verdict against the pipeline. Every run must work
+  without it.
+
 - FGs are functional: Composition -> Composition. Mixins, flow combinators
   (ComparableForkJoin, AblationForkJoin), tests and forced renders are all
   FGs. Parallel implementations, compared directly, are the priority.

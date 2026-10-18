@@ -1,19 +1,21 @@
 // node adjacent.mjs <course> <attempt> <out.json>   (docs/evidence/occluders)
-// "Bright components adjacent to known occluders" (Sam): S1 bright components that touch an opaque Part (S1 badge px +
-// mute, S2 basket px + shell, within 2 px) and are mostly owned by no Part. Writes them per course for rendering.
+// "Bright components adjacent to known occluders" (Sam): S1 bright components that touch an opaque Part (S1 badge, S2
+// basket, within 2 px) and are mostly owned by no Part. What a Part owns is inferred from its structure (ownedPx in
+// fg/pxset.mjs), never picked by field. Writes them per course for rendering.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { deserialize } from 'node:v8';
+import { ownedPx } from '../../../fg/pxset.mjs';
 const [course, attempt, outFile] = process.argv.slice(2);
 const out = `/home/user/chainspot-toolkit/attempts/stages/${attempt}/fork/stage-output`, A = `${out}/early/artifacts`;
-const f = new Map(deserialize(readFileSync(`${out}/early/s3.pxc.bin`))).get('px.components').bright;
+const board = new Map(deserialize(readFileSync(`${out}/early/s3.pxc.bin`))), f = board.get('px.components').bright;
 const W = f.mask.width, H = f.mask.height, labels = f.labels;
-const badges = JSON.parse(readFileSync(`${A}/s1/px.badges.json`, 'utf8')).badges, baskets = JSON.parse(readFileSync(`${A}/s2/px.baskets.json`, 'utf8')).baskets;
-const tees = JSON.parse(readFileSync(`${A}/s3fix/px.tees.refined.json`, 'utf8')).tees;
+const badges = board.get('px.badges'), baskets = board.get('px.baskets');
+const tees = JSON.parse(readFileSync(`${A}/s3fix/px.tees.refined.json`, 'utf8')).tees;   // a lane Part: not on the board yet
 const owner = new Int32Array(W * H).fill(-1), names = [];
-const own = (name, px) => { const k = names.push(name) - 1; for (const p of px) owner[p] = k; };
-badges.forEach((b) => own(`Badge ${b.label}`, [...b.px, ...(b.mute?.px ?? [])]));
-baskets.forEach((k, i) => own(`S2 basket ${i}`, [...k.px, ...(k.shell?.blackPx ?? [])]));
-tees.forEach((t, i) => own(`S3 tee ${i}`, t.px));
+const own = (name, part) => { const k = names.push(name) - 1; for (const p of ownedPx(W, H, part).px) owner[p] = k; };
+badges.forEach((b) => own(`Badge ${b.label}`, b));
+baskets.forEach((k, i) => own(`S2 basket ${i}`, k));
+tees.forEach((t, i) => own(`S3 tee ${i}`, t));
 const isOcc = (k) => k >= 0 && !names[k].startsWith('S3 tee');
 const area = new Map(), unowned = new Map(), touches = new Map();
 for (let i = 0; i < W * H; i++) {

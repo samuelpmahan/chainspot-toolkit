@@ -97,7 +97,7 @@ export const RULES = Object.freeze({
 
 import { nameCandidates } from '../../fg/names.mjs';
 import { greedyLoop, localQueries } from './poseSpace.mjs';
-import { pxList, componentStats, ownerPlane } from '../../fg/pxset.mjs';
+import { ownedPx, componentStats, ownerPlane } from '../../fg/pxset.mjs';
 import { basketPoint } from '../../fg/s2/fg.s2.basketInvariants.observe.fg.mjs';
 
 const DEG = 180 / Math.PI;
@@ -925,10 +925,11 @@ export const S4_CALCULATIONS = Object.freeze([
 export function unownedBrightComponents(bright, badges, baskets, tees, { touchPx = 2, minUnownedFrac = 0.5 } = {}) {
   // pixel-set math lives in fg/pxset.mjs; this only names the owners and composes the two operations
   const W = bright.mask.width, H = bright.mask.height, names = [], sets = [];
-  const own = (name, px) => { names.push(name); sets.push(pxList(W, H, px)); };
-  badges.forEach((b) => own(`Badge ${b.label}`, [...b.px, ...(b.has?.mute?.px ?? [])]));
-  baskets.forEach((k, i) => own(`basket ${i}`, k.px));
-  tees.forEach((t, i) => own(`tee ${i}`, t.px ?? []));
+  // what each Part owns is inferred from its structure (ownedPx: its px and its own Parts' px), never picked by field
+  const own = (name, part) => { names.push(name); sets.push(ownedPx(W, H, part)); };
+  badges.forEach((b) => own(`Badge ${b.label}`, b));
+  baskets.forEach((k, i) => own(`basket ${i}`, k));
+  tees.forEach((t, i) => own(`tee ${i}`, t));
   const { plane: owner } = ownerPlane(W, H, sets, { overlap: 'last' });   // later Parts keep contested px (S1, S2, S3 order)
   const opaque = (k) => !names[k - 1].startsWith('tee ');
   return componentStats(W, H, bright.labels, owner, { touchPx, touches: opaque }).map((c) => ({

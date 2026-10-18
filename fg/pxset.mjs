@@ -84,6 +84,29 @@ export const renderPart = (set, { address, label = null } = {}) => {
   return { address, kind: 'pxset', data: { width: set.W, height: set.H, px, label, count: px.length, bbox: bbox(set) } };   // fg/flipbook.mjs pxset shape
 };
 
+/**
+ * What a Part owns, inferred from its structure, never picked field by field: a Part contains its own Parts (under
+ * `has`, keyed by the Calculation that produced them), so it owns every pixel list anywhere in its tree, i.e. `px` or a
+ * field ending in `Px` holding raster indices. A basket owns its px (its shell's blackPx is a subset of them); a badge
+ * owns its px and its mute ring (has.mute.px). A count such as whitePx is a number, not a list, and is not a pixel set.
+ */
+export const isPixelList = (v) => (v instanceof Uint32Array || v instanceof Int32Array || (Array.isArray(v) && v.length > 0 && Number.isInteger(v[0])));
+export function pixelListsOf(part, path = '', out = []) {
+  if (!part || typeof part !== 'object' || ArrayBuffer.isView(part) || isPxSet(part)) return out;
+  for (const [k, v] of Object.entries(part)) {
+    const at = path ? `${path}.${k}` : k;
+    if ((k === 'px' || k.endsWith('Px')) && isPixelList(v)) out.push({ path: at, px: v });
+    else if (v && typeof v === 'object') pixelListsOf(v, at, out);
+  }
+  return out;
+}
+export function ownedPx(W, H, part) {
+  const lists = pixelListsOf(part);
+  if (lists.length === 1) return pxList(W, H, lists[0].px);
+  const all = new Set(); for (const { px } of lists) for (const i of px) all.add(i);
+  return pxList(W, H, Uint32Array.from(all).sort());
+}
+
 export const PXSET_UNITS = Object.freeze({ count: 'px', bbox: 'px [x, y, width, height]', intersect: 'px', overlap: 'px' });
 
 /**
@@ -99,8 +122,9 @@ export const PXSET_QUERIES = Object.freeze({
 
 /**
  * Resolve a query argument to a PixelSet by the shape of the Part behind it (one rule, here): `address` holding a
- * PixelSet; `address#i` = item i of a list of objects carrying `px`; `address#bright:L` / `address#dark:L` = label L of
- * a components Part ({ bright: { mask: { width, height }, labels } }). dims: { widthPx, heightPx } of the raster.
+ * PixelSet; `address#i` = every pixel Part i of a list owns (ownedPx: its px and its own Parts' px);
+ * `address#i.path` = one pixel list inside it (`px.badges#3.has.mute.px`); `address#bright:L` / `address#dark:L` =
+ * label L of a components Part ({ bright: { mask: { width, height }, labels } }). dims: { widthPx, heightPx }.
  */
 const BOXES = new WeakMap();   // label plane -> its label boxes, computed once per plane
 export function resolvePxSet(get, ref, dims) {
@@ -112,7 +136,13 @@ export function resolvePxSet(get, ref, dims) {
     const boxes = BOXES.get(f.labels) ?? BOXES.set(f.labels, labelBoxes(f.mask.width, f.mask.height, f.labels)).get(f.labels);
     return pxLabel(f.mask.width, f.mask.height, f.labels, Number(label), boxes.get(Number(label)) ?? null);
   }
-  if (key !== null && Array.isArray(v) && v[Number(key)]?.px) return pxList(dims().widthPx, dims().heightPx, v[Number(key)].px);
+  const [item, ...path] = key === null ? [] : key.split('.');
+  if (key !== null && Array.isArray(v) && /^\d+$/.test(item) && v[Number(item)]) {
+    const { widthPx: W, heightPx: H } = dims(), part = v[Number(item)];
+    if (!path.length) return ownedPx(W, H, part);
+    const list = path.reduce((o, k) => o?.[k], part);
+    if (isPixelList(list)) return pxList(W, H, list);
+  }
   throw new Error(`pxset: '${ref}' does not resolve to a PixelSet`);
 }
 
