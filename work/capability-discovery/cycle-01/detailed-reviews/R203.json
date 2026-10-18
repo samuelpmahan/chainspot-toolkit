@@ -1,0 +1,158 @@
+{
+  "job_id": "R203",
+  "worker": "W6",
+  "decision": "amend",
+  "summary": "Exact17-file integrated catalog matches W4 manifest; six tests, validator, Node synthetic exact-source helpers and Python edge AST probe pass. R101 hidden-rail/width-default corrections independently confirmed. Require narrow input/metadata hardening before treating catalog guards as reliable validation: positive distinct widths, substantive resolvable guard contracts, and package-contained source paths. Recipes remain declarative; no production or scientific acceptance inferred.",
+  "exactHashes": {
+    "integration-manifest.json": "ac1e74783fed797c98cb4bb177364d70f784e5dc6e633004e22bf72dbb7d6605",
+    "result.json": "b4196497752303b66cb6bcc16a0b6235e40125d1e1f5e193bb0b4c12b16b3f33",
+    "catalog.json": "0c3727a0b2b707faad599931fe09122393849b186e4ce3cc91034678101d9ded",
+    "recipes.json": "f889ab9edc2900721ba62fa05fe0ae802cb034657c0edb4842fd0a1d76e5a22d",
+    "guards.mjs": "53b9c8e2e01e1cc85ec680bde869d4327265916411326b183cf2a569e1536358",
+    "validate.mjs": "6a3f12610dbfddb2b29a66b3c53c7a9ef735ab3f655e3af70da8b2402349b6bc",
+    "probes/cheap.mjs": "0e748d68d22d6b6e74cd0e35602ae2a4814861051cf6d58f48ecb23ad698da16",
+    "probes/edge.py": "a7a977d335e2a541698c04b91c22d1c901f04553746159b4183bd2b4a80dc4d1"
+  },
+  "integration": "Integrated experiments/capability-discovery/catalog present and all17 manifest hashes match independently reviewed scratch source; integration-check.json.",
+  "actualVerification": {
+    "testCommand": "node --test package/catalog.test.mjs",
+    "passed": 6,
+    "failed": 0,
+    "validator": "PASS sources9 operations16 capabilities5 recipes3",
+    "cheapSourceProbe": "PASS",
+    "pythonEdgeASTProbe": "PASS width40.25px center-0.25px zeroVisibilityNone",
+    "sourceBindings": [
+      {
+        "id": "provider-ribbon",
+        "ref": "37a2dba87d61262f661af70f1a22440736e61efc",
+        "sha256": "b2bac13005c815cbbd0b854dc2ed16db4d6dcea6ceed3cbea4c70cd2745045bb",
+        "gitBlob": "f74fda826701b534c131ffd6fa2b7e1a152a4a67",
+        "independentGitSourceAvailable": true,
+        "independentGitSourceEqual": true
+      },
+      {
+        "id": "provider-routing",
+        "ref": "37a2dba87d61262f661af70f1a22440736e61efc",
+        "sha256": "718c025e8db224198c553b09c1657d4494731bec90654487345a613268c0d1e1",
+        "gitBlob": "9579d63a7ffc209d604251ae2b7f78ba0dd9f13b",
+        "independentGitSourceAvailable": true,
+        "independentGitSourceEqual": true
+      },
+      {
+        "id": "provider-assignment",
+        "ref": "37a2dba87d61262f661af70f1a22440736e61efc",
+        "sha256": "2f56a606fce6543ca96bcd1a1b2300af4e2ce0c29f2c27fd9378bc76f065946e",
+        "gitBlob": "2f362b7abb231d2234f0ee81741f0c091b2c0095",
+        "independentGitSourceAvailable": true,
+        "independentGitSourceEqual": true
+      },
+      {
+        "id": "provider-scoring",
+        "ref": "37a2dba87d61262f661af70f1a22440736e61efc",
+        "sha256": "d0d23d68d408806076b34b40f3c8140fc9a06e663c7ceafccfdfde8c79a22d22",
+        "gitBlob": "255d9ac4518c4d34a607776c2bd5c7e9946f246f",
+        "independentGitSourceAvailable": true,
+        "independentGitSourceEqual": true
+      },
+      {
+        "id": "provider-sensor",
+        "ref": "37a2dba87d61262f661af70f1a22440736e61efc",
+        "sha256": "b28a966f068f65d1087507e6220dd172b45ffcc48ac4c3caa6f8443618fc3904",
+        "gitBlob": "fbb2181a10ed7ae82d546e6bd7fcc7976eaca379",
+        "independentGitSourceAvailable": true,
+        "independentGitSourceEqual": true
+      },
+      {
+        "id": "hallway-track",
+        "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+        "sha256": "83a1e85c032669c383845d9c3dd98ae9559f2d67457ffa63d3354d0707622bc6",
+        "gitBlob": "919bb6370228b1bd2e899b0565bfda41998eca4b",
+        "independentGitSourceAvailable": true,
+        "independentGitSourceEqual": true
+      },
+      {
+        "id": "hallway-follow",
+        "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+        "sha256": "7c8cde7b7a7858ab37a6daec0ad49be645711928f027915f86fd822db1a2c3d8",
+        "gitBlob": "35fbccce531550cd5b2574ae3db78529ecc71ca5",
+        "independentGitSourceAvailable": true,
+        "independentGitSourceEqual": true
+      },
+      {
+        "id": "hallway-contrast",
+        "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+        "sha256": "95fb656af4ee017ff3338c6f1d8ef8d1fac2c642d1a58b9ac67c3d482899af2a",
+        "gitBlob": "7c82b0370242bc18ed4e3d3c8ec06de53ffb9ee6",
+        "independentGitSourceAvailable": true,
+        "independentGitSourceEqual": true
+      },
+      {
+        "id": "dev72-fourlane",
+        "ref": "ef2a4fc2dc4720d3647f705464342f119d5a39a5",
+        "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+        "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+        "independentGitSourceAvailable": false,
+        "independentGitSourceEqual": null
+      }
+    ],
+    "copyFiles": 17
+  },
+  "R101Confirmed": {
+    "railScore": null,
+    "innerScore": 1,
+    "combinedScore": 1,
+    "railStatus": "UNKNOWN",
+    "trackerCombinedSteps": 4,
+    "allHiddenRawWidth": 30,
+    "allHiddenGuard": "UNKNOWN width null",
+    "emptyRawWidth": 40,
+    "emptyGuard": "UNKNOWN width null",
+    "note": "Tracker consumption of combined/interior-only evidence confirmed; no rail identity inferred."
+  },
+  "requiredAmendments": [
+    {
+      "id": "positive-distinct-width-evidence",
+      "finding": "widthEvidence supports synthetic widthPx=-40 and duplicate width40 conflicting rows as EVIDENCE_SUPPORTED. Neither is a valid separated positive-width hypothesis.",
+      "requirement": "Require positive finite widths, distinct unambiguous candidate widths, finite nonnegative integer segment/candidate/visible sample counts, and counts consistent with rows. Add adversarial negative/duplicate/nonfinite/fractional cases; preserve hidden/tied/missing UNKNOWN."
+    },
+    {
+      "id": "substantive-resolvable-guard-metadata",
+      "finding": "validateCatalog accepts candidate_pools_available contract={} and a width guard module missing.mjs#pretend. Existing check only Boolean(contract), so named guarded recipe metadata can silently lose its contract.",
+      "requirement": "For each guard require declared recognized contract shape: nonempty predicate/requirements and valid local module export or known external contract when referenced. Keep recipes declarative; no arbitrary expression execution or invented candidate completeness proof."
+    },
+    {
+      "id": "portable-source-containment",
+      "finding": "Changing source.file to an absolute same-content path outside package still validates PASS. Source bytes are hash-verified, but package-contained portability is not checked.",
+      "requirement": "Require safe package-relative source file paths and real containment; reject absolute paths, traversal and escaping symlinks before reads. Preserve source exact-byte identities."
+    }
+  ],
+  "scopeFindings": [
+    "Catalog callable symbols, source coordinate frames, units and input/output contracts are explicit; executed-source helpers match documented frames, routing scale2/yOffset100, source-native costs and candidate IDs.",
+    "No arbitrary new3bend weight or CV algorithm introduced; source-native defaults preserved, px-scale defaults explicitly not zoom-global.",
+    "Recipes do not execute candidate-availability or independent-review workflow. Candidate pools availability is caller contract, never endpoint completeness; independent human acceptance belongs to W3 planner/coordinator and Sam, not this catalog.",
+    "Injected operation acceptance=accepted is correctly rejected by validator. Missing external adapter source dependency is correctly rejected."
+  ],
+  "evidence": [
+    "tests.tap",
+    "validation.json",
+    "cheap-probe.json",
+    "edge-probe.json",
+    "source-checks.json",
+    "integration-check.json",
+    "adversarial.mjs",
+    "adversarial-observations.json",
+    "path-observation.json"
+  ],
+  "limitations": [
+    "Eight toolkit snapshot origins independently matched exact git ref bytes. Dev72 ref unavailable in toolkit objects; SHA256+Git blob independently recomputed match manifest, original upstream not freshly retrieved.",
+    "Full scoring, edge profile/fit/refine and course replay not executed; source-symbol coverage is accurately distinguished.",
+    "All mutations/probes synthetic; no real image width confidence, heldout course evaluation, performance, endpoint geometry or acceptance evidence."
+  ],
+  "actions": {
+    "repoEdits": false,
+    "sourceEdits": false,
+    "GitEdits": false,
+    "sealedAccess": false
+  },
+  "next": "Root/W3 owner repairs these structural guards/validator without new CV; W6 reruns independently against changed exact hashes. No self acceptance."
+}

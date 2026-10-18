@@ -1,0 +1,438 @@
+{
+  "job_id": "E209",
+  "worker": "W4",
+  "outcome": "mixed_change",
+  "summary": "Verified W3 already-written catalog schema/containment repair in an isolated17-file exact snapshot. No duplicate implementation or repo/Git edits. Original6plus13newtests pass, validator and both exact-source probes pass, and25 independent old/new negative controls reject or returnUNKNOWN. Originalauthor verification is not acceptance; W2/W5 retain finalR207. README changed during review, so findings bind only recorded snapshot pending postfreeze review.",
+  "mode": "repair_verification_not_implementation",
+  "repairOf": "R203",
+  "implementationOwner": "W3",
+  "testedSnapshot": {
+    "source": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/catalog",
+    "isolatedPackage": "/workspace/scratch/8528bb251845/discovery-swarm/W4/pass4/E209/package",
+    "files": [
+      {
+        "path": "README.md",
+        "sha256": "69c96d0d575c5ab46e3b41693abc2f833152b34b2c57cecf1b1974d7a7c12288",
+        "bytes": 2053
+      },
+      {
+        "path": "catalog.json",
+        "sha256": "2da566f83f0a4d9e48cda10886567d0db8f9d23c9fb4e23d32b4cec977f3c53b",
+        "bytes": 22978
+      },
+      {
+        "path": "catalog.test.mjs",
+        "sha256": "f9ee6bdab2c7918cd4146528fed65ce26c4b66e5e8ebfd6b291583dc30edbb98",
+        "bytes": 4875
+      },
+      {
+        "path": "guards.mjs",
+        "sha256": "d3aba357de4cd8f11f0cdc9c7ce5c6dfcdb9007b28d87e00b274bd8caf144011",
+        "bytes": 1977
+      },
+      {
+        "path": "probes/cheap.mjs",
+        "sha256": "0e748d68d22d6b6e74cd0e35602ae2a4814861051cf6d58f48ecb23ad698da16",
+        "bytes": 5227
+      },
+      {
+        "path": "probes/edge.py",
+        "sha256": "a7a977d335e2a541698c04b91c22d1c901f04553746159b4183bd2b4a80dc4d1",
+        "bytes": 1170
+      },
+      {
+        "path": "recipes.json",
+        "sha256": "e3296d43784f2408a3d3201a8b23921794b25aad02d533801a29f5c7d6f37854",
+        "bytes": 5726
+      },
+      {
+        "path": "sources/dev72-fourLaneRibbon.ts",
+        "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+        "bytes": 19522
+      },
+      {
+        "path": "sources/hallway-contrast.py",
+        "sha256": "95fb656af4ee017ff3338c6f1d8ef8d1fac2c642d1a58b9ac67c3d482899af2a",
+        "bytes": 1259
+      },
+      {
+        "path": "sources/hallway-follow.py",
+        "sha256": "7c8cde7b7a7858ab37a6daec0ad49be645711928f027915f86fd822db1a2c3d8",
+        "bytes": 6222
+      },
+      {
+        "path": "sources/hallway-track.py",
+        "sha256": "83a1e85c032669c383845d9c3dd98ae9559f2d67457ffa63d3354d0707622bc6",
+        "bytes": 6161
+      },
+      {
+        "path": "sources/provider-assignment.ts",
+        "sha256": "2f56a606fce6543ca96bcd1a1b2300af4e2ce0c29f2c27fd9378bc76f065946e",
+        "bytes": 12475
+      },
+      {
+        "path": "sources/provider-ribbon.ts",
+        "sha256": "b2bac13005c815cbbd0b854dc2ed16db4d6dcea6ceed3cbea4c70cd2745045bb",
+        "bytes": 13741
+      },
+      {
+        "path": "sources/provider-routing.ts",
+        "sha256": "718c025e8db224198c553b09c1657d4494731bec90654487345a613268c0d1e1",
+        "bytes": 5183
+      },
+      {
+        "path": "sources/provider-scoring.ts",
+        "sha256": "d0d23d68d408806076b34b40f3c8140fc9a06e663c7ceafccfdfde8c79a22d22",
+        "bytes": 17257
+      },
+      {
+        "path": "sources/provider-sensor.ts",
+        "sha256": "b28a966f068f65d1087507e6220dd172b45ffcc48ac4c3caa6f8443618fc3904",
+        "bytes": 9650
+      },
+      {
+        "path": "validate.mjs",
+        "sha256": "c6547b2d33022176f73656e02669cc395f0650521126ef8e01e260b1388c6411",
+        "bytes": 7304
+      }
+    ],
+    "pathHashListSha256": "0400d120a0c98f76671dff88dc3df46c9d2728ff3ab8e74cf5f072318d7c0039",
+    "artifact": "snapshot.json"
+  },
+  "actualVerification": [
+    {
+      "command": "node validate.mjs",
+      "status": "PASS",
+      "artifact": "validation.json",
+      "counts": {
+        "sources": 9,
+        "operations": 16,
+        "capabilities": 5,
+        "recipes": 3
+      }
+    },
+    {
+      "command": "TMPDIR=<owned-E209-tmp> node --test catalog.test.mjs",
+      "status": "PASS",
+      "passed": 19,
+      "failed": 0,
+      "originalTests": 6,
+      "newRepairTests": 13,
+      "artifact": "catalog-tests.tap"
+    },
+    {
+      "command": "node probes/cheap.mjs",
+      "status": "PASS",
+      "artifact": "cheap-probe.json",
+      "scope": "Exact source synthetic support/cost,routing,calibration,sensor/transit,interior-only combined tracker consumption and assignment helpers only."
+    },
+    {
+      "command": "python probes/edge.py",
+      "status": "PASS",
+      "artifact": "edge-probe.json",
+      "scope": "Exact AST edge_pair on synthetic40px profile; no historical Course loader/corpus."
+    },
+    {
+      "command": "node negative-verification.mjs",
+      "status": "PASS",
+      "artifact": "negative-results.json",
+      "negativeCases": 25,
+      "positiveControl": {
+        "status": "EVIDENCE_SUPPORTED",
+        "widthPx": 40,
+        "visibleSamples": 5,
+        "scoreSeparation": 0.8,
+        "acceptance": "not_assessed"
+      }
+    }
+  ],
+  "actualCases": [
+    {
+      "name": "R203 negative width",
+      "status": "UNKNOWN",
+      "reason": "positive distinct unambiguous candidate widths required"
+    },
+    {
+      "name": "R203 duplicate conflicting width",
+      "status": "UNKNOWN",
+      "reason": "positive distinct unambiguous candidate widths required"
+    },
+    {
+      "name": "zero candidate width",
+      "status": "UNKNOWN",
+      "reason": "positive distinct unambiguous candidate widths required"
+    },
+    {
+      "name": "nonfinite candidate width",
+      "status": "UNKNOWN",
+      "reason": "positive distinct unambiguous candidate widths required"
+    },
+    {
+      "name": "fractional segment count",
+      "status": "UNKNOWN",
+      "reason": "nonempty segments and width bank required"
+    },
+    {
+      "name": "nonfinite segment count",
+      "status": "UNKNOWN",
+      "reason": "nonempty segments and width bank required"
+    },
+    {
+      "name": "candidate count differs rows",
+      "status": "UNKNOWN",
+      "reason": "score separation needs competing width rows"
+    },
+    {
+      "name": "invalid visibleSamples -1",
+      "status": "UNKNOWN",
+      "reason": "one or more candidate widths has no finite visible evidence"
+    },
+    {
+      "name": "invalid visibleSamples 0.5",
+      "status": "UNKNOWN",
+      "reason": "one or more candidate widths has no finite visible evidence"
+    },
+    {
+      "name": "invalid visibleSamples Infinity",
+      "status": "UNKNOWN",
+      "reason": "one or more candidate widths has no finite visible evidence"
+    },
+    {
+      "name": "invalid visibleSamples NaN",
+      "status": "UNKNOWN",
+      "reason": "one or more candidate widths has no finite visible evidence"
+    },
+    {
+      "name": "all hidden numeric fallback",
+      "status": "UNKNOWN",
+      "reason": "one or more candidate widths has no finite visible evidence"
+    },
+    {
+      "name": "empty numeric fallback",
+      "status": "UNKNOWN",
+      "reason": "nonempty segments and width bank required"
+    },
+    {
+      "name": "tied distinct scores",
+      "status": "UNKNOWN",
+      "reason": "positive, strictly separated best score required"
+    },
+    {
+      "name": "R203 empty guard contract",
+      "status": "FAIL",
+      "errors": [
+        "candidate_pools_available: substantive requirements or predicate required",
+        "candidate_pools_available: known external contract required"
+      ]
+    },
+    {
+      "name": "R203 unresolved local guard module",
+      "status": "FAIL",
+      "errors": [
+        "width_evidence_separated: recognized local module export required"
+      ]
+    },
+    {
+      "name": "R203 absolute same-content source file",
+      "status": "FAIL",
+      "errors": [
+        "provider-ribbon: source unavailable or unsafe: unsafe package-relative path",
+        "support.field: callable source unavailable: unsafe package-relative path",
+        "support.cost: callable source unavailable: unsafe package-relative path"
+      ]
+    },
+    {
+      "name": "R203 outside-package same-content relative traversal",
+      "status": "FAIL",
+      "errors": [
+        "provider-ribbon: source unavailable or unsafe: unsafe package-relative path",
+        "support.field: callable source unavailable: unsafe package-relative path",
+        "support.cost: callable source unavailable: unsafe package-relative path"
+      ]
+    },
+    {
+      "name": "unresolved source file",
+      "status": "FAIL",
+      "errors": [
+        "provider-ribbon: source unavailable or unsafe: ENOENT: no such file or directory, lstat '/workspace/scratch/8528bb251845/discovery-swarm/W4/pass4/E209/package/sources/missing.ts'",
+        "support.field: callable source unavailable: ENOENT: no such file or directory, lstat '/workspace/scratch/8528bb251845/discovery-swarm/W4/pass4/E209/package/sources/missing.ts'",
+        "support.cost: callable source unavailable: ENOENT: no such file or directory, lstat '/workspace/scratch/8528bb251845/discovery-swarm/W4/pass4/E209/package/sources/missing.ts'"
+      ]
+    },
+    {
+      "name": "empty requirements",
+      "status": "FAIL",
+      "errors": [
+        "width_evidence_separated: substantive requirements or predicate required"
+      ]
+    },
+    {
+      "name": "unknown external guard contract",
+      "status": "FAIL",
+      "errors": [
+        "adapter_available: known external contract required"
+      ]
+    },
+    {
+      "name": "missing guard export reference",
+      "status": "FAIL",
+      "errors": [
+        "rail_observed: recognized local module export required"
+      ]
+    },
+    {
+      "name": "accepted operation claim",
+      "status": "FAIL",
+      "errors": [
+        "support.field: accepted claim forbidden"
+      ]
+    },
+    {
+      "name": "missing candidate-pool external contract",
+      "status": "FAIL",
+      "errors": [
+        "candidate_pools_available: known external contract required"
+      ]
+    },
+    {
+      "name": "R203 escaping same-content source symlink",
+      "status": "FAIL",
+      "errors": [
+        "provider-ribbon: source unavailable or unsafe: path escapes package root",
+        "support.field: callable source unavailable: path escapes package root",
+        "support.cost: callable source unavailable: path escapes package root"
+      ]
+    }
+  ],
+  "R203RepairVerified": [
+    {
+      "id": "positive-distinct-width-evidence",
+      "result": "Negative,zero,nonfinite and duplicate-conflict widths UNKNOWN; fractional/nonfinite sample counts and row-count mismatch UNKNOWN; positive distinct separated40px control remains EVIDENCE_SUPPORTED, acceptance not_assessed."
+    },
+    {
+      "id": "substantive-resolvable-guard-metadata",
+      "result": "Empty candidate-pool contract, empty requirements, unresolved/wrong local module/export, missing/unknown external contracts and accepted operation claims all fail validator."
+    },
+    {
+      "id": "portable-source-containment",
+      "result": "Absolute same-content source paths, traversal to same-content outside source, nonexistent source and escaping same-content symlink all fail before trusting reads."
+    }
+  ],
+  "sourceIntegrity": {
+    "allNineSourceBindingsUnchanged": true,
+    "checks": [
+      {
+        "id": "provider-ribbon",
+        "file": "sources/provider-ribbon.ts",
+        "sha256": "b2bac13005c815cbbd0b854dc2ed16db4d6dcea6ceed3cbea4c70cd2745045bb",
+        "gitBlob": "f74fda826701b534c131ffd6fa2b7e1a152a4a67",
+        "matchesPinnedIdentity": true,
+        "unchangedFromOriginalE203": true,
+        "matchesIndependentExactGit": true
+      },
+      {
+        "id": "provider-routing",
+        "file": "sources/provider-routing.ts",
+        "sha256": "718c025e8db224198c553b09c1657d4494731bec90654487345a613268c0d1e1",
+        "gitBlob": "9579d63a7ffc209d604251ae2b7f78ba0dd9f13b",
+        "matchesPinnedIdentity": true,
+        "unchangedFromOriginalE203": true,
+        "matchesIndependentExactGit": true
+      },
+      {
+        "id": "provider-assignment",
+        "file": "sources/provider-assignment.ts",
+        "sha256": "2f56a606fce6543ca96bcd1a1b2300af4e2ce0c29f2c27fd9378bc76f065946e",
+        "gitBlob": "2f362b7abb231d2234f0ee81741f0c091b2c0095",
+        "matchesPinnedIdentity": true,
+        "unchangedFromOriginalE203": true,
+        "matchesIndependentExactGit": true
+      },
+      {
+        "id": "provider-scoring",
+        "file": "sources/provider-scoring.ts",
+        "sha256": "d0d23d68d408806076b34b40f3c8140fc9a06e663c7ceafccfdfde8c79a22d22",
+        "gitBlob": "255d9ac4518c4d34a607776c2bd5c7e9946f246f",
+        "matchesPinnedIdentity": true,
+        "unchangedFromOriginalE203": true,
+        "matchesIndependentExactGit": true
+      },
+      {
+        "id": "provider-sensor",
+        "file": "sources/provider-sensor.ts",
+        "sha256": "b28a966f068f65d1087507e6220dd172b45ffcc48ac4c3caa6f8443618fc3904",
+        "gitBlob": "fbb2181a10ed7ae82d546e6bd7fcc7976eaca379",
+        "matchesPinnedIdentity": true,
+        "unchangedFromOriginalE203": true,
+        "matchesIndependentExactGit": true
+      },
+      {
+        "id": "hallway-track",
+        "file": "sources/hallway-track.py",
+        "sha256": "83a1e85c032669c383845d9c3dd98ae9559f2d67457ffa63d3354d0707622bc6",
+        "gitBlob": "919bb6370228b1bd2e899b0565bfda41998eca4b",
+        "matchesPinnedIdentity": true,
+        "unchangedFromOriginalE203": true,
+        "matchesIndependentExactGit": true
+      },
+      {
+        "id": "hallway-follow",
+        "file": "sources/hallway-follow.py",
+        "sha256": "7c8cde7b7a7858ab37a6daec0ad49be645711928f027915f86fd822db1a2c3d8",
+        "gitBlob": "35fbccce531550cd5b2574ae3db78529ecc71ca5",
+        "matchesPinnedIdentity": true,
+        "unchangedFromOriginalE203": true,
+        "matchesIndependentExactGit": true
+      },
+      {
+        "id": "hallway-contrast",
+        "file": "sources/hallway-contrast.py",
+        "sha256": "95fb656af4ee017ff3338c6f1d8ef8d1fac2c642d1a58b9ac67c3d482899af2a",
+        "gitBlob": "7c82b0370242bc18ed4e3d3c8ec06de53ffb9ee6",
+        "matchesPinnedIdentity": true,
+        "unchangedFromOriginalE203": true,
+        "matchesIndependentExactGit": true
+      },
+      {
+        "id": "dev72-fourlane",
+        "file": "sources/dev72-fourLaneRibbon.ts",
+        "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+        "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+        "matchesPinnedIdentity": true,
+        "unchangedFromOriginalE203": true,
+        "matchesIndependentExactGit": null
+      }
+    ],
+    "independentGitOriginsMatched": 8,
+    "dev72Origin": "Not in toolkit objects; exactSHA256 andgitBlob recomputed, source bytes unchanged from originalE203 fetched checkpoint.",
+    "scope": "No CV implementation,source-native default,coordinate frame,recipe acceptance or geometry claim changed."
+  },
+  "concurrentChange": {
+    "snapshotStableAgainstCurrentRepo": false,
+    "changes": [
+      {
+        "path": "README.md",
+        "snapshotSha256": "69c96d0d575c5ab46e3b41693abc2f833152b34b2c57cecf1b1974d7a7c12288",
+        "currentSha256": "4ed858b07175440a3d31f7ebdc10f8c2ac6859d043bdf2bb28a618e4724f405d"
+      }
+    ],
+    "onlyREADMEChangedDuringMeasurement": true,
+    "ownerAcknowledgment": "W3 says README latest4ed858b0 documents R203 initialAMEND/revision2; no further catalog code/tests planned; repair-E207.json and refreshed integration manifest planned before freeze.",
+    "postFreezeRecheckRequired": true,
+    "reviewBinding": "Do not apply these results as acceptance of a later inventory. W2/W5 finalR207 must bind exact frozen files, including new receipt/manifest and README."
+  },
+  "ownership": {
+    "repoEdits": false,
+    "gitEdits": false,
+    "originalCVAuthor": "W4",
+    "repairAuthor": "W3",
+    "thisTask": "verification only",
+    "independentFinalReview": "W2/W5 R207",
+    "selfAcceptance": false,
+    "productionFix": false,
+    "sealedAccess": false,
+    "scientificAcceptance": false,
+    "humanAcceptance": false
+  },
+  "next": "Return to root/W3; final independent reviewers recheck frozen current inventory."
+}

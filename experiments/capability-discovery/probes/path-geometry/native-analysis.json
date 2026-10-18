@@ -1,0 +1,777 @@
+{
+  "schema": "native-trace-geometry-analysis@1",
+  "analyses": [
+    {
+      "input": {
+        "path": "/workspace/scratch/8528bb251845/discovery-swarm/W2/baseline-native.json",
+        "sha256": "bf0ca6a66866c53fe9ad58b55a231e4beb483b66189a5a7ffc46701031cb8ac1",
+        "source": {
+          "path": "artifacts/replay/source/IMG_5641.jpg",
+          "sha256": "e6616738640eee1d05d8cc2b59dd657f24b4a5a01dc2f68571b7e44c6f372b8a",
+          "bytesLength": 627609,
+          "frame": {
+            "name": "original-jpeg-pixels",
+            "widthPx": 1290,
+            "heightPx": 2091,
+            "canonicalToSource": [
+              0,
+              4
+            ],
+            "canonicalRgbaSha256": "cadc67b69fa6430ade488d16415f36068cead4262572b04c63c25ceafa254455",
+            "sourceSha256": "e6616738640eee1d05d8cc2b59dd657f24b4a5a01dc2f68571b7e44c6f372b8a"
+          }
+        },
+        "paramsHash": "5d94617898aeee251a389615146de46cc905f2ab340e575699e2779b47fbc3c9",
+        "compiledRibbonSha256": "25635c2682a1f5ee3d3253207dcf6ba930ad23f968ac0bd316de1103391b8bc3",
+        "compiledTracerSha256": "14f6147fbf98a57ff624acc86ef34cb9cbe2ae9e6d9d4537eb7111e7d49a12ed",
+        "headingSource": "legacy teeLeg final approach"
+      },
+      "outcomes": [
+        {
+          "variant": "baseline",
+          "variantIdentitySha256": "bae3a73996c8cfbc4be5da6063d8755a9466884f6042d118bb553fb2868f9d95",
+          "nativeOutcome": "unknown",
+          "nativeReason": "petered-out",
+          "nativeReportedLengthPx": 27.75,
+          "nativeReportedTurningPhases": 0,
+          "geometry": {
+            "schema": "path-geometry@1",
+            "frame": "IMG_5641 canonical raster px; canonicalToSource=[0,4]",
+            "units": {
+              "length": "px in named frame",
+              "angle": "radians; sign follows supplied x/y axes",
+              "normalized": "same-image full ribbon widths"
+            },
+            "vertexCount": 4,
+            "lengthPx": 27.749999999999986,
+            "runDefinition": "each consecutive supplied segment; no automatic physical-bend segmentation",
+            "segments": [
+              {
+                "fromVertex": 0,
+                "toVertex": 1,
+                "lengthPx": 9.249999999999995,
+                "unitTangent": [
+                  0.7071067811865506,
+                  -0.7071067811865445
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999986
+              },
+              {
+                "fromVertex": 1,
+                "toVertex": 2,
+                "lengthPx": 9.249999999999995,
+                "unitTangent": [
+                  0.7071067811865506,
+                  -0.7071067811865445
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999986
+              },
+              {
+                "fromVertex": 2,
+                "toVertex": 3,
+                "lengthPx": 9.249999999999995,
+                "unitTangent": [
+                  0.7071067811865506,
+                  -0.7071067811865445
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999986
+              }
+            ],
+            "turns": [
+              {
+                "vertex": 1,
+                "pointPx": [
+                  449.95880495286633,
+                  972.0411950471337
+                ],
+                "distanceAlongPx": 9.249999999999995,
+                "signedRadians": 0,
+                "absoluteRadians": 0
+              },
+              {
+                "vertex": 2,
+                "pointPx": [
+                  456.4995426788419,
+                  965.5004573211581
+                ],
+                "distanceAlongPx": 18.49999999999999,
+                "signedRadians": 0,
+                "absoluteRadians": 0
+              }
+            ],
+            "normalizedLength": {
+              "status": "observed",
+              "value": 0.7499999999999996,
+              "provenance": "native receipt configured corridorWidthPx; not demonstrated per-image learned width"
+            },
+            "supportEvidence": {
+              "status": "observed",
+              "supportedSamples": 4,
+              "observedSamples": 4,
+              "totalVertices": 4,
+              "unknownSamples": 0,
+              "observedFraction": 1,
+              "supportedFractionOfObserved": 1,
+              "threshold": 0.5,
+              "provenance": "native receipt field support sampled at exact trace vertices; includes own-badge patch/waiver region",
+              "confidence": "uncalibrated sample fraction; not probability of path identity",
+              "weighting": "one vote per supplied vertex; not arc-length weighted; no interpolation"
+            },
+            "centerline": {
+              "status": "UNKNOWN",
+              "reason": "No paired edges supplied; support and heading cannot establish midpoint offset"
+            },
+            "interpretation": "posthoc measurements only; no endpoint ownership, ranking score or human acceptance"
+          }
+        },
+        {
+          "variant": "width40",
+          "variantIdentitySha256": "9051e3104a38b876a9d4fae164717dd73a2dd03ef9f759e5ebf3de9619fc4bd6",
+          "nativeOutcome": "unknown",
+          "nativeReason": "petered-out",
+          "nativeReportedLengthPx": 27.75,
+          "nativeReportedTurningPhases": 0,
+          "geometry": {
+            "schema": "path-geometry@1",
+            "frame": "IMG_5641 canonical raster px; canonicalToSource=[0,4]",
+            "units": {
+              "length": "px in named frame",
+              "angle": "radians; sign follows supplied x/y axes",
+              "normalized": "same-image full ribbon widths"
+            },
+            "vertexCount": 4,
+            "lengthPx": 27.749999999999986,
+            "runDefinition": "each consecutive supplied segment; no automatic physical-bend segmentation",
+            "segments": [
+              {
+                "fromVertex": 0,
+                "toVertex": 1,
+                "lengthPx": 9.249999999999995,
+                "unitTangent": [
+                  0.7071067811865506,
+                  -0.7071067811865445
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999986
+              },
+              {
+                "fromVertex": 1,
+                "toVertex": 2,
+                "lengthPx": 9.249999999999995,
+                "unitTangent": [
+                  0.7071067811865506,
+                  -0.7071067811865445
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999986
+              },
+              {
+                "fromVertex": 2,
+                "toVertex": 3,
+                "lengthPx": 9.249999999999995,
+                "unitTangent": [
+                  0.7071067811865506,
+                  -0.7071067811865445
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999986
+              }
+            ],
+            "turns": [
+              {
+                "vertex": 1,
+                "pointPx": [
+                  449.95880495286633,
+                  972.0411950471337
+                ],
+                "distanceAlongPx": 9.249999999999995,
+                "signedRadians": 0,
+                "absoluteRadians": 0
+              },
+              {
+                "vertex": 2,
+                "pointPx": [
+                  456.4995426788419,
+                  965.5004573211581
+                ],
+                "distanceAlongPx": 18.49999999999999,
+                "signedRadians": 0,
+                "absoluteRadians": 0
+              }
+            ],
+            "normalizedLength": {
+              "status": "observed",
+              "value": 0.7499999999999996,
+              "provenance": "native receipt configured corridorWidthPx; not demonstrated per-image learned width"
+            },
+            "supportEvidence": {
+              "status": "observed",
+              "supportedSamples": 4,
+              "observedSamples": 4,
+              "totalVertices": 4,
+              "unknownSamples": 0,
+              "observedFraction": 1,
+              "supportedFractionOfObserved": 1,
+              "threshold": 0.5,
+              "provenance": "native receipt field support sampled at exact trace vertices; includes own-badge patch/waiver region",
+              "confidence": "uncalibrated sample fraction; not probability of path identity",
+              "weighting": "one vote per supplied vertex; not arc-length weighted; no interpolation"
+            },
+            "centerline": {
+              "status": "UNKNOWN",
+              "reason": "No paired edges supplied; support and heading cannot establish midpoint offset"
+            },
+            "interpretation": "posthoc measurements only; no endpoint ownership, ranking score or human acceptance"
+          }
+        },
+        {
+          "variant": "width50",
+          "variantIdentitySha256": "75fbce070ca06c505560d94792e426eda33e7c5425feb09e92adb2e9a20866bd",
+          "nativeOutcome": "unknown",
+          "nativeReason": "petered-out",
+          "nativeReportedLengthPx": 37,
+          "nativeReportedTurningPhases": 1,
+          "geometry": {
+            "schema": "path-geometry@1",
+            "frame": "IMG_5641 canonical raster px; canonicalToSource=[0,4]",
+            "units": {
+              "length": "px in named frame",
+              "angle": "radians; sign follows supplied x/y axes",
+              "normalized": "same-image full ribbon widths"
+            },
+            "vertexCount": 5,
+            "lengthPx": 36.99999999999998,
+            "runDefinition": "each consecutive supplied segment; no automatic physical-bend segmentation",
+            "segments": [
+              {
+                "fromVertex": 0,
+                "toVertex": 1,
+                "lengthPx": 9.249999999999995,
+                "unitTangent": [
+                  0.7071067811865506,
+                  -0.7071067811865445
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999986
+              },
+              {
+                "fromVertex": 1,
+                "toVertex": 2,
+                "lengthPx": 9.249999999999995,
+                "unitTangent": [
+                  0.7071067811865506,
+                  -0.7071067811865445
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999986
+              },
+              {
+                "fromVertex": 2,
+                "toVertex": 3,
+                "lengthPx": 9.249999999999995,
+                "unitTangent": [
+                  0.7071067811865506,
+                  -0.7071067811865445
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999986
+              },
+              {
+                "fromVertex": 3,
+                "toVertex": 4,
+                "lengthPx": 9.249999999999995,
+                "unitTangent": [
+                  0.7071067811865506,
+                  -0.7071067811865445
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999986
+              }
+            ],
+            "turns": [
+              {
+                "vertex": 1,
+                "pointPx": [
+                  449.95880495286633,
+                  972.0411950471337
+                ],
+                "distanceAlongPx": 9.249999999999995,
+                "signedRadians": 0,
+                "absoluteRadians": 0
+              },
+              {
+                "vertex": 2,
+                "pointPx": [
+                  456.4995426788419,
+                  965.5004573211581
+                ],
+                "distanceAlongPx": 18.49999999999999,
+                "signedRadians": 0,
+                "absoluteRadians": 0
+              },
+              {
+                "vertex": 3,
+                "pointPx": [
+                  463.0402804048175,
+                  958.9597195951826
+                ],
+                "distanceAlongPx": 27.749999999999986,
+                "signedRadians": 0,
+                "absoluteRadians": 0
+              }
+            ],
+            "normalizedLength": {
+              "status": "observed",
+              "value": 0.9999999999999994,
+              "provenance": "native receipt configured corridorWidthPx; not demonstrated per-image learned width"
+            },
+            "supportEvidence": {
+              "status": "observed",
+              "supportedSamples": 4,
+              "observedSamples": 5,
+              "totalVertices": 5,
+              "unknownSamples": 0,
+              "observedFraction": 1,
+              "supportedFractionOfObserved": 0.8,
+              "threshold": 0.5,
+              "provenance": "native receipt field support sampled at exact trace vertices; includes own-badge patch/waiver region",
+              "confidence": "uncalibrated sample fraction; not probability of path identity",
+              "weighting": "one vote per supplied vertex; not arc-length weighted; no interpolation"
+            },
+            "centerline": {
+              "status": "UNKNOWN",
+              "reason": "No paired edges supplied; support and heading cannot establish midpoint offset"
+            },
+            "interpretation": "posthoc measurements only; no endpoint ownership, ranking score or human acceptance"
+          }
+        },
+        {
+          "variant": "width55",
+          "variantIdentitySha256": "68310a220938d9372a11c8f0f5db75bd15e1b840d6d5149bdd4913866b052ddb",
+          "nativeOutcome": "unknown",
+          "nativeReason": "petered-out",
+          "nativeReportedLengthPx": 37,
+          "nativeReportedTurningPhases": 1,
+          "geometry": {
+            "schema": "path-geometry@1",
+            "frame": "IMG_5641 canonical raster px; canonicalToSource=[0,4]",
+            "units": {
+              "length": "px in named frame",
+              "angle": "radians; sign follows supplied x/y axes",
+              "normalized": "same-image full ribbon widths"
+            },
+            "vertexCount": 5,
+            "lengthPx": 36.99999999999998,
+            "runDefinition": "each consecutive supplied segment; no automatic physical-bend segmentation",
+            "segments": [
+              {
+                "fromVertex": 0,
+                "toVertex": 1,
+                "lengthPx": 9.249999999999995,
+                "unitTangent": [
+                  0.7071067811865506,
+                  -0.7071067811865445
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999986
+              },
+              {
+                "fromVertex": 1,
+                "toVertex": 2,
+                "lengthPx": 9.249999999999995,
+                "unitTangent": [
+                  0.7071067811865506,
+                  -0.7071067811865445
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999986
+              },
+              {
+                "fromVertex": 2,
+                "toVertex": 3,
+                "lengthPx": 9.249999999999995,
+                "unitTangent": [
+                  0.7071067811865506,
+                  -0.7071067811865445
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999986
+              },
+              {
+                "fromVertex": 3,
+                "toVertex": 4,
+                "lengthPx": 9.249999999999995,
+                "unitTangent": [
+                  0.7071067811865506,
+                  -0.7071067811865445
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999986
+              }
+            ],
+            "turns": [
+              {
+                "vertex": 1,
+                "pointPx": [
+                  449.95880495286633,
+                  972.0411950471337
+                ],
+                "distanceAlongPx": 9.249999999999995,
+                "signedRadians": 0,
+                "absoluteRadians": 0
+              },
+              {
+                "vertex": 2,
+                "pointPx": [
+                  456.4995426788419,
+                  965.5004573211581
+                ],
+                "distanceAlongPx": 18.49999999999999,
+                "signedRadians": 0,
+                "absoluteRadians": 0
+              },
+              {
+                "vertex": 3,
+                "pointPx": [
+                  463.0402804048175,
+                  958.9597195951826
+                ],
+                "distanceAlongPx": 27.749999999999986,
+                "signedRadians": 0,
+                "absoluteRadians": 0
+              }
+            ],
+            "normalizedLength": {
+              "status": "observed",
+              "value": 0.9999999999999994,
+              "provenance": "native receipt configured corridorWidthPx; not demonstrated per-image learned width"
+            },
+            "supportEvidence": {
+              "status": "observed",
+              "supportedSamples": 5,
+              "observedSamples": 5,
+              "totalVertices": 5,
+              "unknownSamples": 0,
+              "observedFraction": 1,
+              "supportedFractionOfObserved": 1,
+              "threshold": 0.5,
+              "provenance": "native receipt field support sampled at exact trace vertices; includes own-badge patch/waiver region",
+              "confidence": "uncalibrated sample fraction; not probability of path identity",
+              "weighting": "one vote per supplied vertex; not arc-length weighted; no interpolation"
+            },
+            "centerline": {
+              "status": "UNKNOWN",
+              "reason": "No paired edges supplied; support and heading cannot establish midpoint offset"
+            },
+            "interpretation": "posthoc measurements only; no endpoint ownership, ranking score or human acceptance"
+          }
+        },
+        {
+          "variant": "baselinePlus50And55",
+          "variantIdentitySha256": "57eddaac2385dbeaee1a93b579e9f7e206d1b9bc27d345ce17e1781c6624b1a4",
+          "nativeOutcome": "unknown",
+          "nativeReason": "petered-out",
+          "nativeReportedLengthPx": 27.75,
+          "nativeReportedTurningPhases": 0,
+          "geometry": {
+            "schema": "path-geometry@1",
+            "frame": "IMG_5641 canonical raster px; canonicalToSource=[0,4]",
+            "units": {
+              "length": "px in named frame",
+              "angle": "radians; sign follows supplied x/y axes",
+              "normalized": "same-image full ribbon widths"
+            },
+            "vertexCount": 4,
+            "lengthPx": 27.749999999999986,
+            "runDefinition": "each consecutive supplied segment; no automatic physical-bend segmentation",
+            "segments": [
+              {
+                "fromVertex": 0,
+                "toVertex": 1,
+                "lengthPx": 9.249999999999995,
+                "unitTangent": [
+                  0.7071067811865506,
+                  -0.7071067811865445
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999986
+              },
+              {
+                "fromVertex": 1,
+                "toVertex": 2,
+                "lengthPx": 9.249999999999995,
+                "unitTangent": [
+                  0.7071067811865506,
+                  -0.7071067811865445
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999986
+              },
+              {
+                "fromVertex": 2,
+                "toVertex": 3,
+                "lengthPx": 9.249999999999995,
+                "unitTangent": [
+                  0.7071067811865506,
+                  -0.7071067811865445
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999986
+              }
+            ],
+            "turns": [
+              {
+                "vertex": 1,
+                "pointPx": [
+                  449.95880495286633,
+                  972.0411950471337
+                ],
+                "distanceAlongPx": 9.249999999999995,
+                "signedRadians": 0,
+                "absoluteRadians": 0
+              },
+              {
+                "vertex": 2,
+                "pointPx": [
+                  456.4995426788419,
+                  965.5004573211581
+                ],
+                "distanceAlongPx": 18.49999999999999,
+                "signedRadians": 0,
+                "absoluteRadians": 0
+              }
+            ],
+            "normalizedLength": {
+              "status": "observed",
+              "value": 0.7499999999999996,
+              "provenance": "native receipt configured corridorWidthPx; not demonstrated per-image learned width"
+            },
+            "supportEvidence": {
+              "status": "observed",
+              "supportedSamples": 4,
+              "observedSamples": 4,
+              "totalVertices": 4,
+              "unknownSamples": 0,
+              "observedFraction": 1,
+              "supportedFractionOfObserved": 1,
+              "threshold": 0.5,
+              "provenance": "native receipt field support sampled at exact trace vertices; includes own-badge patch/waiver region",
+              "confidence": "uncalibrated sample fraction; not probability of path identity",
+              "weighting": "one vote per supplied vertex; not arc-length weighted; no interpolation"
+            },
+            "centerline": {
+              "status": "UNKNOWN",
+              "reason": "No paired edges supplied; support and heading cannot establish midpoint offset"
+            },
+            "interpretation": "posthoc measurements only; no endpoint ownership, ranking score or human acceptance"
+          }
+        }
+      ],
+      "caveats": [
+        "No paired edges published in this receipt, so centerline offset is UNKNOWN.",
+        "Configured width37px is only a denominator, not a local-width calibration result.",
+        "Native turning phases and posthoc vertex turns have different definitions.",
+        "Support fraction includes own-badge samples and is not calibrated confidence.",
+        "Unknown native outcome remains unknown; greater length cannot establish endpoint ownership."
+      ]
+    },
+    {
+      "input": {
+        "path": "/workspace/scratch/8528bb251845/discovery-swarm/W2/heading-native.json",
+        "sha256": "1b9fd087d8532f7dfd0c06e25f212733de24e8c5e6fde5db1ae5fa037b8c6160",
+        "source": {
+          "path": "artifacts/replay/source/IMG_5641.jpg",
+          "sha256": "e6616738640eee1d05d8cc2b59dd657f24b4a5a01dc2f68571b7e44c6f372b8a",
+          "bytesLength": 627609,
+          "frame": {
+            "name": "original-jpeg-pixels",
+            "widthPx": 1290,
+            "heightPx": 2091,
+            "canonicalToSource": [
+              0,
+              4
+            ],
+            "canonicalRgbaSha256": "cadc67b69fa6430ade488d16415f36068cead4262572b04c63c25ceafa254455",
+            "sourceSha256": "e6616738640eee1d05d8cc2b59dd657f24b4a5a01dc2f68571b7e44c6f372b8a"
+          }
+        },
+        "paramsHash": "5d94617898aeee251a389615146de46cc905f2ab340e575699e2779b47fbc3c9",
+        "compiledRibbonSha256": "25635c2682a1f5ee3d3253207dcf6ba930ad23f968ac0bd316de1103391b8bc3",
+        "compiledTracerSha256": "14f6147fbf98a57ff624acc86ef34cb9cbe2ae9e6d9d4537eb7111e7d49a12ed",
+        "headingSource": "sealed S6 two-ray row, fixed S5 visible-tee axis u toward badge; geometry hint only"
+      },
+      "outcomes": [
+        {
+          "variant": "baseline",
+          "variantIdentitySha256": "ecdd8df98b516579467c07196121405138b56044579834a3d94cec0fdbdbe521",
+          "nativeOutcome": "unknown",
+          "nativeReason": "petered-out",
+          "nativeReportedLengthPx": 64.75,
+          "nativeReportedTurningPhases": 1,
+          "geometry": {
+            "schema": "path-geometry@1",
+            "frame": "IMG_5641 canonical raster px; canonicalToSource=[0,4]",
+            "units": {
+              "length": "px in named frame",
+              "angle": "radians; sign follows supplied x/y axes",
+              "normalized": "same-image full ribbon widths"
+            },
+            "vertexCount": 8,
+            "lengthPx": 64.74999999999994,
+            "runDefinition": "each consecutive supplied segment; no automatic physical-bend segmentation",
+            "segments": [
+              {
+                "fromVertex": 0,
+                "toVertex": 1,
+                "lengthPx": 9.249999999999986,
+                "unitTangent": [
+                  0.9988529936399649,
+                  0.04788211666666676
+                ],
+                "lengthInFullRibbonWidths": 0.2499999999999996
+              },
+              {
+                "fromVertex": 1,
+                "toVertex": 2,
+                "lengthPx": 9.249999999999986,
+                "unitTangent": [
+                  0.9988529936399649,
+                  0.04788211666666676
+                ],
+                "lengthInFullRibbonWidths": 0.2499999999999996
+              },
+              {
+                "fromVertex": 2,
+                "toVertex": 3,
+                "lengthPx": 9.249999999999986,
+                "unitTangent": [
+                  0.9988529936399649,
+                  0.04788211666666676
+                ],
+                "lengthInFullRibbonWidths": 0.2499999999999996
+              },
+              {
+                "fromVertex": 3,
+                "toVertex": 4,
+                "lengthPx": 9.24999999999999,
+                "unitTangent": [
+                  0.9327790463483926,
+                  -0.36044867969432687
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999972
+              },
+              {
+                "fromVertex": 4,
+                "toVertex": 5,
+                "lengthPx": 9.250000000000002,
+                "unitTangent": [
+                  0.7596814685718121,
+                  -0.6502953685123207
+                ],
+                "lengthInFullRibbonWidths": 0.25000000000000006
+              },
+              {
+                "fromVertex": 5,
+                "toVertex": 6,
+                "lengthPx": 9.249999999999975,
+                "unitTangent": [
+                  0.8163197053226345,
+                  -0.5776003278236317
+                ],
+                "lengthInFullRibbonWidths": 0.24999999999999933
+              },
+              {
+                "fromVertex": 6,
+                "toVertex": 7,
+                "lengthPx": 9.250000000000036,
+                "unitTangent": [
+                  0.842066920261634,
+                  -0.5393730636591774
+                ],
+                "lengthInFullRibbonWidths": 0.25000000000000094
+              }
+            ],
+            "turns": [
+              {
+                "vertex": 1,
+                "pointPx": [
+                  452.6574574180604,
+                  979.0248423522759
+                ],
+                "distanceAlongPx": 9.249999999999986,
+                "signedRadians": 0,
+                "absoluteRadians": 0
+              },
+              {
+                "vertex": 2,
+                "pointPx": [
+                  461.89684760923006,
+                  979.4677519314425
+                ],
+                "distanceAlongPx": 18.49999999999997,
+                "signedRadians": 0,
+                "absoluteRadians": 0
+              },
+              {
+                "vertex": 3,
+                "pointPx": [
+                  471.1362378003997,
+                  979.9106615106092
+                ],
+                "distanceAlongPx": 27.749999999999957,
+                "signedRadians": -0.41664929476795504,
+                "absoluteRadians": 0.41664929476795504
+              },
+              {
+                "vertex": 4,
+                "pointPx": [
+                  479.76444397912235,
+                  976.5765112234367
+                ],
+                "distanceAlongPx": 36.99999999999994,
+                "signedRadians": -0.33922431512383694,
+                "absoluteRadians": 0.33922431512383694
+              },
+              {
+                "vertex": 5,
+                "pointPx": [
+                  486.7914975634116,
+                  970.5612790646977
+                ],
+                "distanceAlongPx": 46.24999999999994,
+                "signedRadians": 0.09218717791781265,
+                "absoluteRadians": 0.09218717791781265
+              },
+              {
+                "vertex": 6,
+                "pointPx": [
+                  494.34245483764596,
+                  965.2184760323291
+                ],
+                "distanceAlongPx": 55.499999999999915,
+                "signedRadians": 0.04609358895890421,
+                "absoluteRadians": 0.04609358895890421
+              }
+            ],
+            "normalizedLength": {
+              "status": "observed",
+              "value": 1.749999999999999,
+              "provenance": "native receipt configured corridorWidthPx; not demonstrated per-image learned width"
+            },
+            "supportEvidence": {
+              "status": "observed",
+              "supportedSamples": 8,
+              "observedSamples": 8,
+              "totalVertices": 8,
+              "unknownSamples": 0,
+              "observedFraction": 1,
+              "supportedFractionOfObserved": 1,
+              "threshold": 0.5,
+              "provenance": "native receipt field support sampled at exact trace vertices; includes own-badge patch/waiver region",
+              "confidence": "uncalibrated sample fraction; not probability of path identity",
+              "weighting": "one vote per supplied vertex; not arc-length weighted; no interpolation"
+            },
+            "centerline": {
+              "status": "UNKNOWN",
+              "reason": "No paired edges supplied; support and heading cannot establish midpoint offset"
+            },
+            "interpretation": "posthoc measurements only; no endpoint ownership, ranking score or human acceptance"
+          }
+        }
+      ],
+      "caveats": [
+        "No paired edges published in this receipt, so centerline offset is UNKNOWN.",
+        "Configured width37px is only a denominator, not a local-width calibration result.",
+        "Native turning phases and posthoc vertex turns have different definitions.",
+        "Support fraction includes own-badge samples and is not calibrated confidence.",
+        "Unknown native outcome remains unknown; greater length cannot establish endpoint ownership."
+      ]
+    }
+  ]
+}

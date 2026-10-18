@@ -1,0 +1,642 @@
+✔ all exact bytes, operation dependencies and guarded branches validate (9.526348ms)
+✔ missing operation/source dependencies and accepted claims fail closed (1.750271ms)
+✔ missing fallback target is rejected (1.683861ms)
+✔ numeric width defaults, JSON null, tied evidence and missing candidates are UNKNOWN (0.329896ms)
+✔ separated visible width evidence remains bounded evidence (0.348094ms)
+✔ unknown rails with observed interior do not imply combined UNKNOWN (0.191759ms)
+✖ catalog width -40 must be a positive finite hypothesis (1.339443ms)
+✖ catalog width 0 must be a positive finite hypothesis (0.321834ms)
+✔ catalog width NaN must be a positive finite hypothesis (0.251778ms)
+✔ catalog width Infinity must be a positive finite hypothesis (0.443627ms)
+✔ catalog repeated width cannot create distinct candidate separation (1) (0.155984ms)
+✖ catalog repeated width cannot create distinct candidate separation (0.2) (0.159961ms)
+✖ catalog sample/bank counts are finite integers and match rows {"segmentCount":0.5,"candidateCount":2} (0.177977ms)
+✖ catalog sample/bank counts are finite integers and match rows {"segmentCount":1,"candidateCount":2.5} (0.123686ms)
+✖ catalog sample/bank counts are finite integers and match rows {"segmentCount":null,"candidateCount":2} (2.808231ms)
+✖ catalog sample/bank counts are finite integers and match rows {"segmentCount":1,"candidateCount":3} (0.238268ms)
+✖ guard contracts cannot be empty, unresolved, or depend on absent external adapters (3.85865ms)
+✖ absolute and traversal source file paths cannot read same bytes outside package (4.745923ms)
+✔ current unknown observation enables falsifier, blocks package, enables boundary repair (102.304403ms)
+✔ changed receipt bytes fail closed (59.238378ms)
+✔ source mismatch invalidates whole recommendation (60.921688ms)
+✔ live producer suppresses duplicate refresh (62.983272ms)
+✔ review excludes aliases of producing principal (61.826313ms)
+✔ expired lease still needs coordinator reconciliation (63.688867ms)
+✔ dispatch-boundary revision mismatch invalidates plan (61.684579ms)
+✔ native accepted review and claimed accepted state cannot mint human authority (63.972919ms)
+✔ duplicate receipts and unknown guard ops invalidate policy/state (67.320866ms)
+✔ completed task is terminal rather than redispatched (59.275343ms)
+✔ unsafe artifact path and symlink escape never authorize evidence (62.483726ms)
+✔ stale coordinator snapshot cannot authorize dispatch (63.386993ms)
+✔ package requires independently verified review bytes and trusted scoped Sam decision (65.446404ms)
+✔ independent accepted review alone never mints human acceptance (65.669825ms)
+✔ human acceptance rejects wrong issuer (64.677754ms)
+✔ human acceptance rejects wrong principal (59.448484ms)
+✔ human acceptance rejects wrong scope (64.56217ms)
+✔ human acceptance rejects wrong source (79.701225ms)
+✔ human acceptance rejects wrong claim (82.814042ms)
+✔ human acceptance rejects wrong bundle (77.145012ms)
+✔ human acceptance rejects wrong bundleHash (62.425028ms)
+✔ changed independent review bytes cannot authorize package (83.911638ms)
+✔ review source, bundle and protocol bindings fail closed (74.708465ms)
+✔ dispatch recheck detects artifact changes despite unchanged state revision (8.022408ms)
+✔ a supported bundle with missing producer identities cannot be independently reviewed (69.674299ms)
+✔ actual artifact symlink outside allowed root cannot authorize evidence (63.745372ms)
+✔ dependency cycle is rejected before native recommendation (66.518596ms)
+✔ unknown operation independently rejects eval even without duplicate records (64.930217ms)
+✖ two available aliases for one principal cannot double native capacity (78.309472ms)
+✔ unavailable historical aliases do not add capacity or invalidate independent principal exclusions (75.709404ms)
+✔ complete independently pinned fixture inventory passes only scoped coverage, never scientific acceptance (2.202491ms)
+✔ caller complete boolean, observed subset, or no authoritative anchor never proves completeness (2.070452ms)
+✔ legacy receipt without root-key material is unsupported even if a completeness boolean is supplied (0.25949ms)
+✔ missing and incomplete enumeration cannot cover authoritative query-readable roots (0.586061ms)
+✔ changed pixel key, extra roots, duplicates, and wrong issuer fail closed (1.206373ms)
+✔ source/request/code binding changes or artifact bytes changing after pin fail (0.616547ms)
+✔ root material must actually hash full rows and cache key must bind that material (0.449876ms)
+✔ actual adapter and incomplete keys reproduce stale6; complete enumeration and controls produce27 (15.903333ms)
+✖ digest arrays cannot pass source binding even when consistently repinned (1.159473ms)
+✖ shared aliased digest arrays cannot pass root key schemas (0.431408ms)
+✖ object issuer cannot become authority through reference equality (0.349846ms)
+✖ object scope cannot become authority through reference equality (1.147074ms)
+✖ object authorityPolicyId cannot become authority through reference equality (0.287422ms)
+✖ malformed root material "roots" classifies fail without throwing (0.215183ms)
+✖ malformed root material [] classifies fail without throwing (0.277477ms)
+✖ malformed root material 42 classifies fail without throwing (0.13293ms)
+✖ malformed root material true classifies fail without throwing (0.141223ms)
+✖ malformed wrapper, rows and input pair shapes never authorize reuse or escape classification (0.209595ms)
+✔ width eligibility stays bounded comparison evidence (1.281396ms)
+✖ invalid spread -1 cannot authorize width comparison (0.888005ms)
+✔ invalid spread NaN cannot authorize width comparison (0.129245ms)
+✔ invalid spread Infinity cannot authorize width comparison (0.081593ms)
+✔ invalid spread -Infinity cannot authorize width comparison (0.078268ms)
+✔ duplicate width identity with score 1 cannot manufacture a rival (0.156335ms)
+✖ duplicate width identity with score 0.2 cannot manufacture a rival (0.165578ms)
+✔ candidate width -40 must be finite positive (0.665901ms)
+✔ candidate width 0 must be finite positive (0.342384ms)
+✔ candidate width NaN must be finite positive (0.461303ms)
+✔ candidate width Infinity must be finite positive (0.245929ms)
+✖ missing or nonfinite paired rail undefined stays UNKNOWN (0.309796ms)
+✔ missing or nonfinite paired rail null stays UNKNOWN (0.099419ms)
+✖ missing or nonfinite paired rail NaN stays UNKNOWN (0.165099ms)
+✖ missing or nonfinite paired rail Infinity stays UNKNOWN (0.154943ms)
+✖ missing or nonfinite paired rail 1 stays UNKNOWN (0.195133ms)
+✔ both present finite rails remain observed channels without positive evidence claim (0.117647ms)
+ℹ tests 83
+ℹ suites 0
+ℹ pass 57
+ℹ fail 26
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2098.614832
+
+✖ failing tests:
+
+test at experiments/capability-discovery/catalog/catalog.test.mjs:10:41
+✖ catalog width -40 must be a positive finite hypothesis (1.339443ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'EVIDENCE_SUPPORTED'
+  - 'UNKNOWN'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/catalog/catalog.test.mjs:10:119)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'EVIDENCE_SUPPORTED',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/catalog/catalog.test.mjs:10:41
+✖ catalog width 0 must be a positive finite hypothesis (0.321834ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'EVIDENCE_SUPPORTED'
+  - 'UNKNOWN'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/catalog/catalog.test.mjs:10:119)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'EVIDENCE_SUPPORTED',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/catalog/catalog.test.mjs:11:27
+✖ catalog repeated width cannot create distinct candidate separation (0.2) (0.159961ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'EVIDENCE_SUPPORTED'
+  - 'UNKNOWN'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/catalog/catalog.test.mjs:11:123)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'EVIDENCE_SUPPORTED',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/catalog/catalog.test.mjs:12:169
+✖ catalog sample/bank counts are finite integers and match rows {"segmentCount":0.5,"candidateCount":2} (0.177977ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'EVIDENCE_SUPPORTED'
+  - 'UNKNOWN'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/catalog/catalog.test.mjs:12:275)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'EVIDENCE_SUPPORTED',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/catalog/catalog.test.mjs:12:169
+✖ catalog sample/bank counts are finite integers and match rows {"segmentCount":1,"candidateCount":2.5} (0.123686ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'EVIDENCE_SUPPORTED'
+  - 'UNKNOWN'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/catalog/catalog.test.mjs:12:275)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'EVIDENCE_SUPPORTED',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/catalog/catalog.test.mjs:12:169
+✖ catalog sample/bank counts are finite integers and match rows {"segmentCount":null,"candidateCount":2} (2.808231ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'EVIDENCE_SUPPORTED'
+  - 'UNKNOWN'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/catalog/catalog.test.mjs:12:275)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'EVIDENCE_SUPPORTED',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/catalog/catalog.test.mjs:12:169
+✖ catalog sample/bank counts are finite integers and match rows {"segmentCount":1,"candidateCount":3} (0.238268ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'EVIDENCE_SUPPORTED'
+  - 'UNKNOWN'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/catalog/catalog.test.mjs:12:275)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'EVIDENCE_SUPPORTED',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/catalog/catalog.test.mjs:13:1
+✖ guard contracts cannot be empty, unresolved, or depend on absent external adapters (3.85865ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'PASS' !== 'FAIL'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/catalog/catalog.test.mjs:13:473)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'PASS',
+    expected: 'FAIL',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/catalog/catalog.test.mjs:14:1
+✖ absolute and traversal source file paths cannot read same bytes outside package (4.745923ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'PASS' !== 'FAIL'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/catalog/catalog.test.mjs:14:280)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'PASS',
+    expected: 'FAIL',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/plan.test.mjs:49:1
+✖ two available aliases for one principal cannot double native capacity (78.309472ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'ready' !== 'invalid'
+  
+      at file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/plan.test.mjs:49:172
+      at check (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/plan.test.mjs:18:157)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'ready',
+    expected: 'invalid',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:66:1
+✖ digest arrays cannot pass source binding even when consistently repinned (1.159473ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'pass' !== 'fail'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:66:153)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'pass',
+    expected: 'fail',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:67:1
+✖ shared aliased digest arrays cannot pass root key schemas (0.431408ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'pass' !== 'fail'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:67:198)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'pass',
+    expected: 'fail',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:68:59
+✖ object issuer cannot become authority through reference equality (0.349846ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'pass' !== 'fail'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:68:260)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'pass',
+    expected: 'fail',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:68:59
+✖ object scope cannot become authority through reference equality (1.147074ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'pass' !== 'fail'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:68:260)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'pass',
+    expected: 'fail',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:68:59
+✖ object authorityPolicyId cannot become authority through reference equality (0.287422ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'pass' !== 'fail'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:68:260)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'pass',
+    expected: 'fail',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:69:44
+✖ malformed root material "roots" classifies fail without throwing (0.215183ms)
+  TypeError: Cannot use 'in' operator to search for 'roots' in roots
+      at assessRootInventory (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/root-inventory.mjs:30:50)
+      at assess (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:21:21)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:69:228)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:69:44
+✖ malformed root material [] classifies fail without throwing (0.277477ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'unsupported'
+  - 'fail'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:69:222)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'unsupported',
+    expected: 'fail',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:69:44
+✖ malformed root material 42 classifies fail without throwing (0.13293ms)
+  TypeError: Cannot use 'in' operator to search for 'roots' in 42
+      at assessRootInventory (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/root-inventory.mjs:30:50)
+      at assess (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:21:21)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:69:228)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:69:44
+✖ malformed root material true classifies fail without throwing (0.141223ms)
+  TypeError: Cannot use 'in' operator to search for 'roots' in true
+      at assessRootInventory (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/root-inventory.mjs:30:50)
+      at assess (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:21:21)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:69:228)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:70:1
+✖ malformed wrapper, rows and input pair shapes never authorize reuse or escape classification (0.209595ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'unsupported'
+  - 'fail'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/root-inventory.test.mjs:70:113)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'unsupported',
+    expected: 'fail',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/probes/width/recipe.test.mjs:6:49
+✖ invalid spread -1 cannot authorize width comparison (0.888005ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'ELIGIBLE_FOR_COMPARISON'
+  - 'UNKNOWN'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/recipe.test.mjs:6:180)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'ELIGIBLE_FOR_COMPARISON',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/probes/width/recipe.test.mjs:7:36
+✖ duplicate width identity with score 0.2 cannot manufacture a rival (0.165578ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'ELIGIBLE_FOR_COMPARISON'
+  - 'UNKNOWN'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/recipe.test.mjs:7:271)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'ELIGIBLE_FOR_COMPARISON',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/probes/width/recipe.test.mjs:9:54
+✖ missing or nonfinite paired rail undefined stays UNKNOWN (0.309796ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'OBSERVED_CHANNELS'
+  - 'UNKNOWN'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/recipe.test.mjs:9:254)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'OBSERVED_CHANNELS',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/probes/width/recipe.test.mjs:9:54
+✖ missing or nonfinite paired rail NaN stays UNKNOWN (0.165099ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'OBSERVED_CHANNELS'
+  - 'UNKNOWN'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/recipe.test.mjs:9:254)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'OBSERVED_CHANNELS',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/probes/width/recipe.test.mjs:9:54
+✖ missing or nonfinite paired rail Infinity stays UNKNOWN (0.154943ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'OBSERVED_CHANNELS'
+  - 'UNKNOWN'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/recipe.test.mjs:9:254)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'OBSERVED_CHANNELS',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/probes/width/recipe.test.mjs:9:54
+✖ missing or nonfinite paired rail 1 stays UNKNOWN (0.195133ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'OBSERVED_CHANNELS'
+  - 'UNKNOWN'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/width/recipe.test.mjs:9:254)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'OBSERVED_CHANNELS',
+    expected: 'UNKNOWN',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

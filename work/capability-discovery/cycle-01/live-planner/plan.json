@@ -1,0 +1,154 @@
+{
+  "schema": "discovery-plan@1",
+  "status": "ready",
+  "policyHash": "cc26d6b58e040038e148b4c176d4b5a733148947a109ea2d12615d40a6edf9fd",
+  "stateHash": "eaa303393e0bb8836e10df5f42beb06457a18037182e940833f005daeb563aec",
+  "stateRevision": 8,
+  "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc/lab@1a8708fa180813c1e1844873532fdf922a6b6f73558dd5a3983898a23c915939",
+  "tasks": [
+    {
+      "id": "R201",
+      "action": "validate",
+      "commandId": "review-planner",
+      "status": "ready",
+      "reasons": [],
+      "eligibleWorkers": [
+        "W6",
+        "W5",
+        "W4",
+        "W1",
+        "W2"
+      ],
+      "bundleHash": "4d7146bf3f780f35303ec63af1e5b0863bce59834182685e06e074d43a792010"
+    },
+    {
+      "id": "R207",
+      "action": "validate",
+      "commandId": "review-repairs",
+      "status": "ready",
+      "reasons": [],
+      "eligibleWorkers": [
+        "W5",
+        "W2"
+      ],
+      "bundleHash": "6953c9ce5e95775cdcc647d1a1bd566dff84dda979fb12bf802019c0966d71bc"
+    },
+    {
+      "id": "retain",
+      "action": "package",
+      "commandId": "retain",
+      "status": "blocked",
+      "reasons": [
+        "dependency:R207",
+        "independent-validation-missing",
+        "human-acceptance-missing",
+        "claim-not-accepted"
+      ],
+      "eligibleWorkers": [
+        "W6",
+        "W5",
+        "W4",
+        "W3",
+        "W1",
+        "W2"
+      ],
+      "bundleHash": "6953c9ce5e95775cdcc647d1a1bd566dff84dda979fb12bf802019c0966d71bc"
+    }
+  ],
+  "bundles": {
+    "planner": {
+      "status": "current",
+      "bindingHash": "4d7146bf3f780f35303ec63af1e5b0863bce59834182685e06e074d43a792010",
+      "files": [
+        {
+          "path": "experiments/capability-discovery/plan.mjs",
+          "sha256": "afc32f44bf79b345a52c8d0c621efd4cb49ea337338d5aa85d3630b28208ed92"
+        },
+        {
+          "path": "experiments/capability-discovery/plan.test.mjs",
+          "sha256": "5a613f9d95edb9c1a290eec3e2a0bc921612dfdab8722adc649713d10ff60552"
+        }
+      ],
+      "reasons": []
+    },
+    "repairs": {
+      "status": "current",
+      "bindingHash": "6953c9ce5e95775cdcc647d1a1bd566dff84dda979fb12bf802019c0966d71bc",
+      "files": [
+        {
+          "path": "experiments/capability-discovery/integration-manifest.json",
+          "sha256": "1a8708fa180813c1e1844873532fdf922a6b6f73558dd5a3983898a23c915939"
+        },
+        {
+          "path": "experiments/capability-discovery/probes/width/recipe.mjs",
+          "sha256": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0"
+        },
+        {
+          "path": "experiments/capability-discovery/probes/root-inventory/root-inventory.mjs",
+          "sha256": "8f7983baf35dd03f76ef2110373806cfe336da5880bab9388a446c2bd68287dc"
+        },
+        {
+          "path": "experiments/capability-discovery/catalog/guards.mjs",
+          "sha256": "d3aba357de4cd8f11f0cdc9c7ce5c6dfcdb9007b28d87e00b274bd8caf144011"
+        },
+        {
+          "path": "experiments/capability-discovery/catalog/validate.mjs",
+          "sha256": "c6547b2d33022176f73656e02669cc395f0650521126ef8e01e260b1388c6411"
+        }
+      ],
+      "reasons": []
+    }
+  },
+  "nativeSpec": {
+    "schema": "chainspot.rebalancer-spec/v1",
+    "service": {
+      "name": "capability-discovery",
+      "scope": "revision-8"
+    },
+    "workers": [
+      "W6",
+      "W5",
+      "W4",
+      "W3",
+      "W1",
+      "W2"
+    ],
+    "review_policy": {
+      "enabled": false
+    },
+    "jobs": [
+      {
+        "id": "R201",
+        "kind": "extract",
+        "semantic_kind": "review",
+        "allow_workers": [
+          "W6",
+          "W5",
+          "W4",
+          "W1",
+          "W2"
+        ],
+        "subject": "review-planner; policy cc26d6b58e040038e148b4c176d4b5a733148947a109ea2d12615d40a6edf9fd; state eaa303393e0bb8836e10df5f42beb06457a18037182e940833f005daeb563aec; bundle 4d7146bf3f780f35303ec63af1e5b0863bce59834182685e06e074d43a792010"
+      },
+      {
+        "id": "R207",
+        "kind": "extract",
+        "semantic_kind": "review",
+        "allow_workers": [
+          "W5",
+          "W2"
+        ],
+        "subject": "review-repairs; policy cc26d6b58e040038e148b4c176d4b5a733148947a109ea2d12615d40a6edf9fd; state eaa303393e0bb8836e10df5f42beb06457a18037182e940833f005daeb563aec; bundle 6953c9ce5e95775cdcc647d1a1bd566dff84dda979fb12bf802019c0966d71bc"
+      }
+    ]
+  },
+  "coordinatorOnly": [
+    "atomic reservation/CAS",
+    "actual agent spawn or followup",
+    "native start/finish",
+    "authenticated human acceptance ingestion"
+  ],
+  "errors": [],
+  "proofFiles": [],
+  "evidenceHash": "1397e8903fbe12cdd259177229b08b96f7df5974902a1e7801ad03f0c8611eac"
+}

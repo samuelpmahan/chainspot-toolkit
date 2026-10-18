@@ -1,0 +1,189 @@
+{
+  "job_id": "R207",
+  "worker": "W5",
+  "decision": "accepted",
+  "summary": "Accepted the repaired experimental width, catalog and root-inventory leaf contracts at frozen manifest1a8708fa\u2026 after independent exact snapshot tests and prior-failure reproductions. All90 frozen files/manifest stayed unchanged during review; all34 immutable CV source/evidence files still match E201. This does not accept planner capacity, packaging, scientific claims, endpoint geometry or human acceptance.",
+  "reviewScope": {
+    "included": [
+      "R202 width negative/malformed spread, duplicate/conflicting width identities, finite paired-rail schema",
+      "R203 positive/distinct width evidence and valid counts, substantive recognized guard modules/external contracts, package path containment",
+      "R206 primitive digest/root-key and authority schemas, classified malformed keyMaterial handling"
+    ],
+    "excluded": [
+      "Planner capacity/principal occupancy (R201 AMEND pending and E211 repair forthcoming)",
+      "W5-authored path descriptor, unchanged",
+      "Production CV/default changes, real-image width confidence, cache defect production fix",
+      "Publishing/packaging/retention and Sam human acceptance"
+    ]
+  },
+  "independence": {
+    "reviewer": "W5",
+    "leafProducingPrincipals": [
+      "W1",
+      "W3",
+      "W4",
+      "W6"
+    ],
+    "reviewerWasLeafProducer": false,
+    "maintainerInputs": [
+      {
+        "job": "E208",
+        "path": "/workspace/scratch/8528bb251845/discovery-swarm/W1/pass4/E208/result.json",
+        "sha256": "83b959b87701d680b72298054a0428fdd5ecdc5777ec8c98f4c08132313ae9a6",
+        "role": "maintainer verification input only; not independent acceptance"
+      },
+      {
+        "job": "E209",
+        "path": "/workspace/scratch/8528bb251845/discovery-swarm/W4/pass4/E209/result.json",
+        "sha256": "210eadc83440a9f1562bea6cdf07c271aaf2537f796fe3f4e022a2198552326f",
+        "role": "maintainer verification input only; not independent acceptance"
+      },
+      {
+        "job": "E210",
+        "path": "/workspace/scratch/8528bb251845/discovery-swarm/W6/pass4/E210/result.json",
+        "sha256": "acaed4c0adea1b4a8fda9141f82ddaf4a4bddb7af3f8c119f97d5aaa8ff6dab7",
+        "role": "maintainer verification input only; not independent acceptance"
+      }
+    ],
+    "note": "I independently extracted frozen bytes and reran probes; maintainer reports did not authorize acceptance."
+  },
+  "sourceBinding": {
+    "integrationManifestSha256": "1a8708fa180813c1e1844873532fdf922a6b6f73558dd5a3983898a23c915939",
+    "manifestFiles": 90,
+    "sourceFreezePath": "/workspace/scratch/8528bb251845/discovery-swarm/W3/pass3/E207-source-freeze.json",
+    "sourceFreezeSha256": "a031b070f344b74e6bcbc4cb557c3d992abd8a56b961b7dc37fa1a44b8967c9c",
+    "leafCodeAndContractHashes": [
+      {
+        "path": "probes/width/recipe.mjs",
+        "sha256": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0"
+      },
+      {
+        "path": "probes/width/recipe.test.mjs",
+        "sha256": "a9e832d91382f85ca6eda5c84792ecd3db238d27894776a31061a21dc8ca612b"
+      },
+      {
+        "path": "probes/root-inventory/root-inventory.mjs",
+        "sha256": "8f7983baf35dd03f76ef2110373806cfe336da5880bab9388a446c2bd68287dc"
+      },
+      {
+        "path": "probes/root-inventory/root-inventory.test.mjs",
+        "sha256": "8623443a449c8ab90f5dbc882070d19608f5a04cdf1f9c1da8bc1b543e369fbf"
+      },
+      {
+        "path": "catalog/guards.mjs",
+        "sha256": "d3aba357de4cd8f11f0cdc9c7ce5c6dfcdb9007b28d87e00b274bd8caf144011"
+      },
+      {
+        "path": "catalog/validate.mjs",
+        "sha256": "c6547b2d33022176f73656e02669cc395f0650521126ef8e01e260b1388c6411"
+      },
+      {
+        "path": "catalog/catalog.test.mjs",
+        "sha256": "f9ee6bdab2c7918cd4146528fed65ce26c4b66e5e8ebfd6b291583dc30edbb98"
+      },
+      {
+        "path": "catalog/catalog.json",
+        "sha256": "2da566f83f0a4d9e48cda10886567d0db8f9d23c9fb4e23d32b4cec977f3c53b"
+      },
+      {
+        "path": "catalog/recipes.json",
+        "sha256": "e3296d43784f2408a3d3201a8b23921794b25aad02d533801a29f5c7d6f37854"
+      }
+    ],
+    "before": "before.json",
+    "after": "after.json",
+    "all90FrozenFilesUnchanged": true,
+    "manifestUnchangedDuringReview": true,
+    "immutableCVSourceEvidenceCount": 34,
+    "immutableAllMatchPriorE201": true,
+    "immutableComparison": "immutable34.json",
+    "comparisonBasis": "W3/pass3/candidate-files.json; six exact prefixes: width/vendor,root-inventory/source,root-inventory/source-evidence,catalog/sources,evidence/replay,examples/artifacts"
+  },
+  "executedChecks": [
+    {
+      "command": "TMPDIR=<R207/tmp> node --test plan.test.mjs probes/width/recipe.test.mjs probes/root-inventory/root-inventory.test.mjs catalog/catalog.test.mjs",
+      "directory": "snapshot",
+      "exitCode": 0,
+      "tests": 85,
+      "passed": 85,
+      "failed": 0,
+      "breakdown": {
+        "planner": 30,
+        "width": 17,
+        "rootInventory": 19,
+        "catalog": 19
+      },
+      "scope": "55 leaf tests accepted;30 planner tests executed but do not resolve known R201 occupancy hole",
+      "evidence": "focused-tests.tap"
+    },
+    {
+      "command": "node probes/width/probe.mjs --out <R207/width14.json>",
+      "directory": "snapshot",
+      "exitCode": 0,
+      "cases": 14,
+      "sourceIdentitiesChecked": 4,
+      "evidence": "width14.json"
+    },
+    {
+      "command": "node independent.mjs",
+      "exitCode": 0,
+      "assertions": 59,
+      "caseGroups": 9,
+      "evidence": "independent-results.json"
+    },
+    {
+      "command": "node catalog/validate.mjs",
+      "directory": "snapshot",
+      "exitCode": 0,
+      "status": "PASS",
+      "sources": 9,
+      "operations": 16,
+      "capabilities": 5,
+      "recipes": 3,
+      "evidence": "catalog-validation.json"
+    },
+    {
+      "command": "node catalog/probes/cheap.mjs",
+      "directory": "snapshot",
+      "exitCode": 0,
+      "status": "PASS",
+      "evidence": "catalog-cheap.json"
+    },
+    {
+      "command": "python catalog/probes/edge.py",
+      "directory": "snapshot",
+      "exitCode": 0,
+      "status": "PASS",
+      "evidence": "catalog-edge.json"
+    },
+    {
+      "command": "node probes/root-inventory/falsifier.mjs",
+      "directory": "snapshot",
+      "exitCode": 0,
+      "evidence": "root-falsifier.json",
+      "scope": "Original narrow stale6-versus27 defect/control remains reproduced; not current course-result poisoning"
+    }
+  ],
+  "independentFindings": {
+    "width": "Negative/nonfinite/string/null spread remains UNKNOWN; duplicate same/conflicting identities cannot manufacture rival; missing/null/string/array/nonfinite paired rails stay UNKNOWN. Finite zero rail remains observed channel without positive evidence claim.",
+    "catalog": "Negative/duplicate widths and invalid counts remain UNKNOWN. Empty candidate guard, absent module, empty requirements and missing external candidate contract fail. Absolute/traversal paths and a same-byte source symlink escaping copied package fail validation. Static predicate text is not executed.",
+    "rootInventory": "Consistently repinned digest arrays, aliased array root keys and object authority fields fail schema; string/array/number/bool keyMaterial classifies fail without throwing. Missing material stays unsupported; missing independent anchor stays unknown. Valid fixture passes bounded inventory consistency and explicitly scientificAcceptance=false."
+  },
+  "limitations": [
+    "Guard outcomes validate declared synthetic evidence, not external authority truth, full query-readable closure, real endpoint identity or human acceptance.",
+    "Catalog recipes are static declarations, not proof candidate pools are complete or arbitrary workflow predicates executed.",
+    "Width policies remain caller-supplied synthetic thresholds; no calibrated scientific width-confidence result.",
+    "Root guard does not repair production store inventory semantics or establish current cross-course cache poisoning.",
+    "Known R201 active-principal alias occupancy failure is explicitly unresolved by this leaf review; current30passing planner tests are not acceptance.",
+    "Retained initial AMEND history remains authoritative for old code; this acceptance binds only exact repaired leaf bytes listed above."
+  ],
+  "actions": {
+    "sourceRepoEdits": false,
+    "snapshotEdits": false,
+    "ownFixes": false,
+    "reviewWritesOnly": "W5/pass4/R207",
+    "fullReplay": false,
+    "sealedData": false
+  },
+  "next": "Root may bind this leaf-only review to unchanged leaf hashes after a later core-only E211 manifest update. Do not infer final bundle acceptance before independent R211/R201 resolution."
+}

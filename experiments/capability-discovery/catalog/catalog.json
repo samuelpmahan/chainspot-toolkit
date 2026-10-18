@@ -1,0 +1,543 @@
+{
+  "schema": "source-bound-capability-catalog@1",
+  "job_id": "E203",
+  "status": "experimental_evidence_only",
+  "providerProvenance": "5433854c72b1dc5aa420934d91e16458c2abe09f",
+  "sources": [
+    {
+      "id": "provider-ribbon",
+      "repository": "samuelpmahan/chainspot-toolkit",
+      "ref": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/ribbon.ts",
+      "file": "sources/provider-ribbon.ts",
+      "gitBlob": "f74fda826701b534c131ffd6fa2b7e1a152a4a67",
+      "sha256": "b2bac13005c815cbbd0b854dc2ed16db4d6dcea6ceed3cbea4c70cd2745045bb"
+    },
+    {
+      "id": "provider-routing",
+      "repository": "samuelpmahan/chainspot-toolkit",
+      "ref": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/routing.ts",
+      "file": "sources/provider-routing.ts",
+      "gitBlob": "9579d63a7ffc209d604251ae2b7f78ba0dd9f13b",
+      "sha256": "718c025e8db224198c553b09c1657d4494731bec90654487345a613268c0d1e1"
+    },
+    {
+      "id": "provider-assignment",
+      "repository": "samuelpmahan/chainspot-toolkit",
+      "ref": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/assignment.ts",
+      "file": "sources/provider-assignment.ts",
+      "gitBlob": "2f362b7abb231d2234f0ee81741f0c091b2c0095",
+      "sha256": "2f56a606fce6543ca96bcd1a1b2300af4e2ce0c29f2c27fd9378bc76f065946e"
+    },
+    {
+      "id": "provider-scoring",
+      "repository": "samuelpmahan/chainspot-toolkit",
+      "ref": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/scoring.ts",
+      "file": "sources/provider-scoring.ts",
+      "gitBlob": "255d9ac4518c4d34a607776c2bd5c7e9946f246f",
+      "sha256": "d0d23d68d408806076b34b40f3c8140fc9a06e663c7ceafccfdfde8c79a22d22"
+    },
+    {
+      "id": "provider-sensor",
+      "repository": "samuelpmahan/chainspot-toolkit",
+      "ref": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/features/st.fourLaneSensor.ts",
+      "file": "sources/provider-sensor.ts",
+      "gitBlob": "fbb2181a10ed7ae82d546e6bd7fcc7976eaca379",
+      "sha256": "b28a966f068f65d1087507e6220dd172b45ffcc48ac4c3caa6f8443618fc3904"
+    },
+    {
+      "id": "hallway-track",
+      "repository": "samuelpmahan/chainspot-toolkit",
+      "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "path": "docs/evidence/s7main/track.py",
+      "file": "sources/hallway-track.py",
+      "gitBlob": "919bb6370228b1bd2e899b0565bfda41998eca4b",
+      "sha256": "83a1e85c032669c383845d9c3dd98ae9559f2d67457ffa63d3354d0707622bc6"
+    },
+    {
+      "id": "hallway-follow",
+      "repository": "samuelpmahan/chainspot-toolkit",
+      "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "path": "docs/evidence/s7main/follow.py",
+      "file": "sources/hallway-follow.py",
+      "gitBlob": "35fbccce531550cd5b2574ae3db78529ecc71ca5",
+      "sha256": "7c8cde7b7a7858ab37a6daec0ad49be645711928f027915f86fd822db1a2c3d8"
+    },
+    {
+      "id": "hallway-contrast",
+      "repository": "samuelpmahan/chainspot-toolkit",
+      "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "path": "docs/evidence/s7main/contrast.py",
+      "file": "sources/hallway-contrast.py",
+      "gitBlob": "7c82b0370242bc18ed4e3d3c8ec06de53ffb9ee6",
+      "sha256": "95fb656af4ee017ff3338c6f1d8ef8d1fac2c642d1a58b9ac67c3d482899af2a"
+    },
+    {
+      "id": "dev72-fourlane",
+      "repository": "samuelpmahan/ChainSpot",
+      "ref": "ef2a4fc2dc4720d3647f705464342f119d5a39a5",
+      "path": "src/lib/nuthing/fourLaneRibbon.ts",
+      "file": "sources/dev72-fourLaneRibbon.ts",
+      "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689"
+    }
+  ],
+  "sourceDependencies": {
+    "provider-routing": [
+      "provider-ribbon"
+    ],
+    "provider-assignment": [
+      "provider-routing",
+      "provider-ribbon",
+      "provider-scoring"
+    ],
+    "hallway-follow": [
+      "hallway-track",
+      "hallway-contrast"
+    ],
+    "hallway-track": [
+      "external:CourseAdapter"
+    ],
+    "hallway-contrast": [
+      "external:CourseAdapter"
+    ]
+  },
+  "externalContracts": {
+    "external:CourseAdapter": {
+      "required": [
+        "lum",
+        "MASK",
+        "W",
+        "H"
+      ],
+      "optionalForTrace": [
+        "bp"
+      ],
+      "sample": "scipy.ndimage.map_coordinates order1 mode nearest",
+      "status": "caller_must_supply; historical Course loader not portable"
+    },
+    "external:CandidatePools": {
+      "required": [
+        "badges",
+        "candidatePools"
+      ],
+      "status": "caller_must_supply; availability only, endpoint completeness never established"
+    }
+  },
+  "operations": [
+    {
+      "id": "support.field",
+      "source": "provider-ribbon",
+      "callableAddress": "ribbon.ts#computeRibbonSupport",
+      "signature": "computeRibbonSupport(image:RgbaImage, parameters:CorridorParams, knobs:RibbonKnobs=DEFAULT_RIBBON_KNOBS):SupportFieldEvidence",
+      "consumes": [
+        "RGBA image",
+        "fieldScale",
+        "widthsSrc",
+        "orientations",
+        "ribbon knobs"
+      ],
+      "produces": [
+        "support[0..1]",
+        "bestTheta radians",
+        "field width,height,scale"
+      ],
+      "coordinateFrame": "Field cell(x,y) -> source(x*scale,y*scale); alpha is ignored by RGB evidence.",
+      "probe": "node-cheap",
+      "limits": "Fixed default width banks are not measured widths; scalar max over orientation does not identify rail family.",
+      "acceptance": "not_assessed",
+      "probeCoverage": "executed_synthetic",
+      "nextFalsifier": "Compare paired support and oriented channels on same-width pavement/parallel-ribbon distractors at several zoom scales."
+    },
+    {
+      "id": "support.cost",
+      "source": "provider-ribbon",
+      "callableAddress": "ribbon.ts#buildSupportCost",
+      "signature": "buildSupportCost(field:SupportFieldEvidence, knobs:RibbonKnobs=DEFAULT_RIBBON_KNOBS):Float32Array",
+      "consumes": [
+        "support field",
+        "knobs.costMultiplier"
+      ],
+      "produces": [
+        "cost=1+costMultiplier*(1-support)^2"
+      ],
+      "coordinateFrame": "Dimensionless cost indexed by field cells.",
+      "probe": "node-cheap",
+      "limits": "Finite off-path cost permits unsupported terrain crossings.",
+      "acceptance": "not_assessed",
+      "probeCoverage": "executed_synthetic",
+      "nextFalsifier": "Compare paired support and oriented channels on same-width pavement/parallel-ribbon distractors at several zoom scales."
+    },
+    {
+      "id": "routing.legs",
+      "source": "provider-routing",
+      "callableAddress": "routing.ts#routeBadgeLegs",
+      "signature": "routeBadgeLegs(field, badge:RoutePoint, tees:RoutePoint[], baskets:RoutePoint[], yOffsetPx:number, ribbonKnobs=DEFAULT_RIBBON_KNOBS, routingKnobs=DEFAULT_ROUTING_KNOBS):{tees:LegEvidence[],baskets:LegEvidence[]}",
+      "consumes": [
+        "support field",
+        "badge seed",
+        "candidate tee/basket IDs and xPx,yPx",
+        "viewport yOffsetPx"
+      ],
+      "produces": [
+        "candidate paths",
+        "geodesic cost*field-cell distance",
+        "reachable"
+      ],
+      "coordinateFrame": "Inputs/returned paths in global source px; seed/goals subtract yOffset; field coords rounded/clamped; output adds yOffset.",
+      "probe": "node-cheap",
+      "limits": "Reachability is not hallway ownership. Half-cell quantization before clipping. Validate ring*quantum>(1+costMultiplier)*sqrt(2). Random oracle agreement is empirical; production seed clamp changes cost.",
+      "acceptance": "not_assessed",
+      "probeCoverage": "executed_synthetic",
+      "nextFalsifier": "Perturb candidate endpoints; compare cold/warm paths and an exact oracle using identical production seed clamp and knob invariants."
+    },
+    {
+      "id": "sensor.crossSection",
+      "source": "dev72-fourlane",
+      "callableAddress": "fourLaneRibbon.ts#observeFourLaneCrossSection",
+      "signature": "observeFourLaneCrossSection(image:RgbaImage,state:FourLaneState,occluders:FourLaneOccluder[]=[],inputOptions:FourLaneOptions={}):FourLaneObservation",
+      "consumes": [
+        "RGBA image",
+        "xPx,yPx,headingRad,corridorWidthPx",
+        "occluder bboxes",
+        "options"
+      ],
+      "produces": [
+        "railScore nullable",
+        "innerScore nullable",
+        "combined score nullable",
+        "railMode and lane occlusion flags"
+      ],
+      "coordinateFrame": "Source-image pixels; caller must transform cropped/global raster, bboxes and poses into the same frame. Heading radians.",
+      "probe": "node-cheap",
+      "limits": "Both rails hidden means railScore UNKNOWN; visible interior can still yield combined score1. Tracker consumes combined score. Tangent means do not prove contiguous rail runs or rail identity.",
+      "acceptance": "not_assessed",
+      "probeCoverage": "executed_synthetic",
+      "nextFalsifier": "Hide both rails while retaining interior; check channel separation, then challenge with same-width crossing ribbon."
+    },
+    {
+      "id": "width.learn",
+      "source": "dev72-fourlane",
+      "callableAddress": "fourLaneRibbon.ts#estimateFourLaneCorridorWidth",
+      "signature": "estimateFourLaneCorridorWidth(image,segments:TeeBadgeSegment[],occluders=[],candidateWidthsPx=[24,30,32,36,40,48,56,64],inputOptions={}):FourLaneWidthEstimate",
+      "consumes": [
+        "candidate trusted straight Tee->Badge segments",
+        "course raster",
+        "candidate width list",
+        "occluders"
+      ],
+      "produces": [
+        "numeric widthPx",
+        "rows(widthPx,meanScore,visibleSamples)"
+      ],
+      "coordinateFrame": "Source-image pixels; caller must transform cropped/global raster, bboxes and poses into the same frame. Heading radians.",
+      "probe": "node-cheap",
+      "limits": "Raw numeric fallback is not measurement: all-hidden30/40/50 returns30 with0visible; empty widths/segments returns40. Caller must gate visible counts, finite scores and strict positive score separation; preserve UNKNOWN.",
+      "acceptance": "not_assessed",
+      "probeCoverage": "executed_synthetic",
+      "nextFalsifier": "Mask or tie every candidate width; require UNKNOWN. Then perturb incoming Tee->Badge segments and inspect score separation."
+    },
+    {
+      "id": "tracker.seed",
+      "source": "dev72-fourlane",
+      "callableAddress": "fourLaneRibbon.ts#seedFourLaneState",
+      "signature": "seedFourLaneState(tee:FourLanePoint,badge:FourLanePoint,corridorWidthPx:number):FourLaneState",
+      "consumes": [
+        "candidate incoming tee/badge pairing",
+        "width"
+      ],
+      "produces": [
+        "badge-centered oriented state"
+      ],
+      "coordinateFrame": "Source-image pixels; caller must transform cropped/global raster, bboxes and poses into the same frame. Heading radians.",
+      "probe": "node-cheap",
+      "limits": "Incoming pairing is a hypothesis; seed function does not verify it.",
+      "acceptance": "not_assessed",
+      "probeCoverage": "executed_synthetic",
+      "nextFalsifier": "Perturb seed pose within detector uncertainty; render whether deterministic transit or combined interior support follows the wrong ribbon."
+    },
+    {
+      "id": "tracker.exit",
+      "source": "dev72-fourlane",
+      "callableAddress": "fourLaneRibbon.ts#deterministicOccluderExitDistancePx",
+      "signature": "deterministicOccluderExitDistancePx(state,occluder):number",
+      "consumes": [
+        "oriented state",
+        "known starting occluder bbox"
+      ],
+      "produces": [
+        "forward center-exit distancePx"
+      ],
+      "coordinateFrame": "Source-image pixels; caller must transform cropped/global raster, bboxes and poses into the same frame. Heading radians.",
+      "probe": "node-cheap",
+      "limits": "Geometry-only propagation assumes frozen incoming heading; it does not infer hidden path.",
+      "acceptance": "not_assessed",
+      "probeCoverage": "executed_synthetic",
+      "nextFalsifier": "Perturb seed pose within detector uncertainty; render whether deterministic transit or combined interior support follows the wrong ribbon."
+    },
+    {
+      "id": "tracker.follow",
+      "source": "dev72-fourlane",
+      "callableAddress": "fourLaneRibbon.ts#trackFourLaneRibbon",
+      "signature": "trackFourLaneRibbon(image,start:FourLaneState,occluders=[],inputOptions={}):FourLaneTrackResult",
+      "consumes": [
+        "candidate seed",
+        "evidence-supported local width",
+        "raster/occluders/options"
+      ],
+      "produces": [
+        "points",
+        "steps with rail/interior/combined observations",
+        "stopReason"
+      ],
+      "coordinateFrame": "Source-image pixels; caller must transform cropped/global raster, bboxes and poses into the same frame. Heading radians.",
+      "probe": "node-cheap",
+      "limits": "Uses combined observation, including interior-only support. No basket attribution, lateral recenter, rail identity or endpoint correctness guarantee. Prototype px defaults are not zoom-global.",
+      "acceptance": "not_assessed",
+      "probeCoverage": "executed_synthetic",
+      "nextFalsifier": "Perturb seed pose within detector uncertainty; render whether deterministic transit or combined interior support follows the wrong ribbon."
+    },
+    {
+      "id": "edge.profile",
+      "source": "hallway-track",
+      "callableAddress": "track.py#profile",
+      "signature": "profile(C,O,phi,t0,t1,lat0=0.0,step=1.0)->(prof,ok,nT)",
+      "consumes": [
+        "Course-like lum/MASK,W,H",
+        "candidate leg origin/heading/station span"
+      ],
+      "produces": [
+        "lateral mean luminance profile",
+        "visible counts",
+        "station count"
+      ],
+      "coordinateFrame": "Source-image pixels; caller must transform cropped/global raster, bboxes and poses into the same frame. Heading radians.",
+      "probe": "python-edge",
+      "limits": "Requires explicit portable raster/mask adapter and sampler; masked stations are neutral.",
+      "acceptance": "not_assessed",
+      "probeCoverage": "source_symbol_checked_only",
+      "nextFalsifier": "Mask the future leg or place close bends; compare fitted centerline residuals without trusting fixed endpoints."
+    },
+    {
+      "id": "edge.pair",
+      "source": "hallway-track",
+      "callableAddress": "track.py#edge_pair",
+      "signature": "edge_pair(prof,ok,nT,Wexp,tolW=3.0,lat_lim=12.0)->dict|None",
+      "consumes": [
+        "lateral luminance profile",
+        "visible counts",
+        "station count",
+        "expected local width"
+      ],
+      "produces": [
+        "l,r,c,w,score,gl,gr or None"
+      ],
+      "coordinateFrame": "Lateral OFFS=-30..30 at.25 source px; rising-left/falling-right gradient pair.",
+      "probe": "python-edge",
+      "limits": "Needs width/center bounds and enough visible evidence; no direct complete-course adapter is portable.",
+      "acceptance": "not_assessed",
+      "probeCoverage": "executed_synthetic",
+      "nextFalsifier": "Mask the future leg or place close bends; compare fitted centerline residuals without trusting fixed endpoints."
+    },
+    {
+      "id": "edge.fit",
+      "source": "hallway-track",
+      "callableAddress": "track.py#fit_free",
+      "signature": "fit_free(C,O,phi0,t0,t1,Wexp,span=3.0,dstep=.25,tolW=3.0,lat_lim=12.0)->dict|None",
+      "consumes": [
+        "Course-like lum/MASK,W,H",
+        "candidate leg origin/angle/span",
+        "expected width"
+      ],
+      "produces": [
+        "best masked edge pair and angle"
+      ],
+      "coordinateFrame": "Source-image pixels; caller must transform cropped/global raster, bboxes and poses into the same frame. Heading radians.",
+      "probe": "python-edge",
+      "limits": "Original Course imports hardcoded historical paths/DELTA; supply adapter explicitly. No original Course loader is executed by catalog probes.",
+      "acceptance": "not_assessed",
+      "probeCoverage": "source_symbol_checked_only",
+      "nextFalsifier": "Mask the future leg or place close bends; compare fitted centerline residuals without trusting fixed endpoints."
+    },
+    {
+      "id": "edge.refine",
+      "source": "hallway-follow",
+      "callableAddress": "follow.py#refine",
+      "signature": "refine(C,verts,W)->(newVerts,lines)",
+      "consumes": [
+        "candidate polyline",
+        "local width",
+        "Course-like raster/mask"
+      ],
+      "produces": [
+        "refitted leg lines",
+        "inner line-intersection vertices; endpoints fixed"
+      ],
+      "coordinateFrame": "Source-image pixels; caller must transform cropped/global raster, bboxes and poses into the same frame. Heading radians.",
+      "probe": "python-edge",
+      "limits": "Full trace uses global TEES; not exported as a production stage. Hidden future legs/close bends are known failures.",
+      "acceptance": "not_assessed",
+      "probeCoverage": "source_symbol_checked_only",
+      "nextFalsifier": "Mask the future leg or place close bends; compare fitted centerline residuals without trusting fixed endpoints."
+    },
+    {
+      "id": "matching.rawPairs",
+      "source": "provider-assignment",
+      "callableAddress": "assignment.ts#rerouteRawPairs",
+      "signature": "rerouteRawPairs(measurement,tees,ribbonKnobs,routingKnobs,scoringKnobs):RawPairEvidence[]",
+      "consumes": [
+        "measurement badges/baskets/field",
+        "candidate tees",
+        "knobs"
+      ],
+      "produces": [
+        "badge*tee*basket raw evidence"
+      ],
+      "coordinateFrame": "Source global pixels; measurement.viewport.topPx is routed yOffset; baskets use tipXPx/tipYPx.",
+      "probe": "node-cheap",
+      "limits": "Cartesian candidate construction does not recover missing true endpoints.",
+      "acceptance": "not_assessed",
+      "probeCoverage": "source_symbol_checked_only",
+      "nextFalsifier": "Remove the true endpoint or add a higher-scoring distractor; confirm complete-looking assignment is only a hypothesis with alternatives."
+    },
+    {
+      "id": "matching.score",
+      "source": "provider-assignment",
+      "callableAddress": "assignment.ts#scoreRawPairs",
+      "signature": "scoreRawPairs(measurement,tees,rawPairs,zfitKnobs=DEFAULT_ZFIT_KNOBS,scoringKnobs=DEFAULT_SCORING_KNOBS):ScoredPairEvidence[]",
+      "consumes": [
+        "raw pairs",
+        "measurement",
+        "candidate endpoints",
+        "knobs"
+      ],
+      "produces": [
+        "scored candidate pairs with factors"
+      ],
+      "coordinateFrame": "Same source frame as measurement.",
+      "probe": "node-cheap",
+      "limits": "Scoring weights are existing source defaults; catalog invents none. No corpus scoring replay performed here.",
+      "acceptance": "not_assessed",
+      "probeCoverage": "source_symbol_checked_only",
+      "nextFalsifier": "Remove the true endpoint or add a higher-scoring distractor; confirm complete-looking assignment is only a hypothesis with alternatives."
+    },
+    {
+      "id": "matching.rank",
+      "source": "provider-assignment",
+      "callableAddress": "assignment.ts#rankPairsByBadge",
+      "signature": "rankPairsByBadge(scoredPairs):Map<string,ScoredPairEvidence[]>",
+      "consumes": [
+        "scored pairs"
+      ],
+      "produces": [
+        "per-badge ordered pairs"
+      ],
+      "coordinateFrame": "Identity-bearing candidate IDs; scores are source-native.",
+      "probe": "node-cheap",
+      "limits": "Rank does not establish true endpoint identity.",
+      "acceptance": "not_assessed",
+      "probeCoverage": "executed_synthetic",
+      "nextFalsifier": "Remove the true endpoint or add a higher-scoring distractor; confirm complete-looking assignment is only a hypothesis with alternatives."
+    },
+    {
+      "id": "matching.select",
+      "source": "provider-assignment",
+      "callableAddress": "assignment.ts#selectAssignments",
+      "signature": "selectAssignments(rescoredByBadge,knobs=DEFAULT_SEARCH_KNOBS):Map<string,ScoredPairEvidence|null>",
+      "consumes": [
+        "per-badge ranked pairs",
+        "existing source search knobs"
+      ],
+      "produces": [
+        "one-to-one tee/basket picks or null"
+      ],
+      "coordinateFrame": "Candidate IDs; no coordinate transform.",
+      "probe": "node-cheap",
+      "limits": "Three starts plus bounded exchange heuristic; not proven global3D optimum and cannot certify missing endpoints.",
+      "acceptance": "not_assessed",
+      "probeCoverage": "executed_synthetic",
+      "nextFalsifier": "Remove the true endpoint or add a higher-scoring distractor; confirm complete-looking assignment is only a hypothesis with alternatives."
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "paired-support-routing",
+      "operations": [
+        "support.field",
+        "support.cost",
+        "routing.legs"
+      ]
+    },
+    {
+      "id": "oriented-four-lane-observation",
+      "operations": [
+        "sensor.crossSection"
+      ]
+    },
+    {
+      "id": "width-and-local-tracking",
+      "operations": [
+        "width.learn",
+        "tracker.seed",
+        "tracker.exit",
+        "tracker.follow"
+      ]
+    },
+    {
+      "id": "masked-edge-refinement",
+      "operations": [
+        "edge.profile",
+        "edge.pair",
+        "edge.fit",
+        "edge.refine"
+      ]
+    },
+    {
+      "id": "candidate-matching",
+      "operations": [
+        "matching.rawPairs",
+        "matching.score",
+        "matching.rank",
+        "matching.select"
+      ]
+    }
+  ],
+  "reviewRepair": {
+    "review": "R101",
+    "decision": "amend",
+    "resolved": [
+      "Rail/interior/combined evidence recorded separately; railScore UNKNOWN does not imply combined UNKNOWN.",
+      "Width raw fallback cannot pass gate without visible evidence and strict score separation.",
+      "Historical Dev72 first-basket and toolkit basket-containment metrics are not compared.",
+      "Random Dijkstra agreement is bounded empirical evidence; production clamp must match oracle."
+    ]
+  },
+  "probeDefinitions": [
+    {
+      "id": "node-cheap",
+      "command": [
+        "node",
+        "probes/cheap.mjs"
+      ],
+      "scope": "Exact-source functions under synthetic raster; routing/calibration/sensor/transit and assignment helper only"
+    },
+    {
+      "id": "python-edge",
+      "command": [
+        "python",
+        "probes/edge.py"
+      ],
+      "scope": "AST-selected exact edge_pair on synthetic profile; no Course filesystem side effects"
+    }
+  ],
+  "globalLimits": [
+    "No geometry or human acceptance claimed.",
+    "Endpoints remain candidates; missing true endpoints require caller recovery or unresolved.",
+    "No full native replay, heldout validation, performance claim, or corpus access."
+  ],
+  "validationVersion": 2
+}

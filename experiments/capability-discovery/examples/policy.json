@@ -1,0 +1,104 @@
+{
+  "schema": "discovery-policy@1",
+  "source": "chainspot-discovery@37a2dba87d61262f661af70f1a22440736e61efc+provider5433854+active4925533",
+  "maxStateAgeMs": 60000,
+  "commandIds": [
+    "unknown-arrival-falsifier",
+    "source-boundary-repair",
+    "independent-validation",
+    "package-capability",
+    "refresh-replay"
+  ],
+  "authorities": [
+    {
+      "issuer": "trusted-user-channel",
+      "principal": "Sam",
+      "scope": "retain"
+    }
+  ],
+  "trustedHumanDecisionHashes": [],
+  "protocols": [
+    {
+      "id": "arrival-validation@1",
+      "sha256": "136fc2794641907757e4ef41cd8c5b8a9417a7b37ebbe0922c04238aabebbcc3"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "falsify-arrival",
+      "action": "falsify",
+      "commandId": "unknown-arrival-falsifier",
+      "needs": [],
+      "guards": [
+        {
+          "op": "claimState",
+          "claim": "arrival",
+          "is": "unknown"
+        },
+        {
+          "op": "evidenceStatus",
+          "bundle": "native-replay",
+          "is": "current"
+        }
+      ]
+    },
+    {
+      "id": "repair-source-boundary",
+      "action": "repair",
+      "commandId": "source-boundary-repair",
+      "needs": [],
+      "guards": [
+        {
+          "op": "taskOutcome",
+          "task": "root-check",
+          "is": "failed"
+        },
+        {
+          "op": "evidenceStatus",
+          "bundle": "root-observation",
+          "is": "current"
+        }
+      ]
+    },
+    {
+      "id": "validate-arrival",
+      "action": "validate",
+      "commandId": "independent-validation",
+      "needs": [],
+      "bundle": "native-replay",
+      "guards": [
+        {
+          "op": "claimState",
+          "claim": "arrival",
+          "is": "supported"
+        },
+        {
+          "op": "evidenceStatus",
+          "bundle": "native-replay",
+          "is": "current"
+        }
+      ]
+    },
+    {
+      "id": "package-arrival",
+      "action": "package",
+      "commandId": "package-capability",
+      "needs": [
+        "validate-arrival"
+      ],
+      "bundle": "native-replay",
+      "claim": "arrival",
+      "protocol": "arrival-validation@1",
+      "guards": []
+    },
+    {
+      "id": "refresh-replay",
+      "action": "refresh",
+      "commandId": "refresh-replay",
+      "needs": [],
+      "bundle": "native-replay",
+      "producerTask": "replay",
+      "guards": []
+    }
+  ]
+}

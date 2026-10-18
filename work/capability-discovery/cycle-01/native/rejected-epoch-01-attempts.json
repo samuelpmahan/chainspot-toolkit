@@ -1,0 +1,21 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "exit_code": 2,
+      "dispatchExecuted": false,
+      "outputRetained": false,
+      "reason": "not independently recoverable from first Python CalledProcessError; same deterministic inputs as next attempt, but reason/score not asserted"
+    },
+    {
+      "attempt": 2,
+      "exit_code": 2,
+      "reason": "nonoptimal_native_score",
+      "nativeScore": 1000,
+      "exactScore": 1200,
+      "dispatchExecuted": false,
+      "output": "epoch-01.log"
+    }
+  ],
+  "repair": "Reverse worker input order only, identical objective/eligibility/capacity/seed/pinned wrapper and exact-score acceptance; epoch-01-repair.log and solves/epoch-01.json retain native exact1200/zero broken."
+}

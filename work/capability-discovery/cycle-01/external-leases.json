@@ -1,0 +1,62 @@
+{
+  "schema": "discovery-external-leases@1",
+  "sourceStateSha256": "2f0c2de41e5b788964affad208b01d660193bec58c98697a364ddbeeeaa661cf",
+  "events": [
+    {
+      "type": "external_lease",
+      "worker": "W1",
+      "source": "hh-cycle02/state.json",
+      "job": "E202",
+      "reason": "Actual HH packet active; remove from discovery solver capacity until release, preserve independent-review author IDs."
+    },
+    {
+      "type": "external_lease",
+      "worker": "W2",
+      "job": "hh-cycle02:E203",
+      "reason": "Actually free after R204 completed; independent HH frozen-source review. No native slot counted in both project states."
+    },
+    {
+      "type": "external_lease_released",
+      "worker": "W1",
+      "source": "hh-cycle02/state.json",
+      "basis": "HH E202completed; no active task, preserves sharedsourceowner-onlycommitboundary."
+    },
+    {
+      "type": "external_lease_released",
+      "worker": "W2",
+      "source": "hh-cycle02/state.json",
+      "basis": "HH E203 independent reviewcompleted withacceptedboundeddecision; returnsdiscoveryeligibility."
+    }
+  ],
+  "HHstateSha256": "f1b0c2a94abeb8939d6cc90f7fc121652fc0ba416d1de9a1b75f7253ffdfd880",
+  "HHworkerJobs": {
+    "E202": {
+      "id": "E202",
+      "kind": "extract",
+      "subject": "Reject nonempty unsupported synthetic wishlist URLs explicitly before profile create/edit; preserve drafts and ownership/geography/fixture data. Source-owned bounded PageRouter correction with red/green regressions and canonical build.",
+      "allow_workers": [
+        "W1"
+      ],
+      "status": "done",
+      "worker": "W1",
+      "started_at": "2026-10-18T08:13:48.495875+00:00",
+      "finished_at": "2026-10-18T08:23:25.069665+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle02/receipts/E202.json"
+    },
+    "E203": {
+      "id": "E203",
+      "kind": "extract",
+      "semantic_kind": "review",
+      "subject": "Independent read-only review of final five-file frozen HH wishlist candidate while owner canonical build runs; cannot accept own code, preserve fixture/backend distinction.",
+      "allow_workers": [
+        "W2"
+      ],
+      "status": "done",
+      "worker": "W2",
+      "started_at": "2026-10-18T08:21:31.532366+00:00",
+      "finished_at": "2026-10-18T08:24:31.680492+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle02/receipts/E203.json"
+    }
+  },
+  "scope": "Historical actual cross-project leases only. W1/W2 were removed from discovery while on HH; these HH jobs are now done. No HH source, PageRouter, publication or PR changes performed here."
+}

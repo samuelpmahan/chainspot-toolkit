@@ -1,0 +1,153 @@
+{
+  "schema": "discovery-state@1",
+  "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc/lab@1a8708fa180813c1e1844873532fdf922a6b6f73558dd5a3983898a23c915939",
+  "revision": 8,
+  "observedAt": "2026-10-18T08:30:17.071104+00:00",
+  "workers": [
+    {
+      "id": "W6",
+      "principal": "root.discovery_w6",
+      "agent": "/root/discovery_w6",
+      "available": true
+    },
+    {
+      "id": "W5",
+      "principal": "root.discovery_w5",
+      "agent": "/root/discovery_w5",
+      "available": true
+    },
+    {
+      "id": "W4",
+      "principal": "root.discovery_w4",
+      "agent": "/root/discovery_w4",
+      "available": true
+    },
+    {
+      "id": "W3",
+      "principal": "root.discovery_w3",
+      "agent": "/root/discovery_w3",
+      "available": true
+    },
+    {
+      "id": "W1",
+      "principal": "root.discovery_w1",
+      "agent": "/root/discovery_w1",
+      "available": true
+    },
+    {
+      "id": "W2",
+      "principal": "root.discovery_w2",
+      "agent": "/root/discovery_w2",
+      "available": true
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "E207",
+      "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc/lab@1a8708fa180813c1e1844873532fdf922a6b6f73558dd5a3983898a23c915939",
+      "status": "done",
+      "outcome": "passed",
+      "bookkeepingOutcome": "mixed_change",
+      "evidence": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E207.json"
+    },
+    {
+      "id": "E208",
+      "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc/lab@1a8708fa180813c1e1844873532fdf922a6b6f73558dd5a3983898a23c915939",
+      "status": "done",
+      "outcome": "passed",
+      "bookkeepingOutcome": "mixed_change",
+      "evidence": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E208.json"
+    },
+    {
+      "id": "E209",
+      "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc/lab@1a8708fa180813c1e1844873532fdf922a6b6f73558dd5a3983898a23c915939",
+      "status": "done",
+      "outcome": "passed",
+      "bookkeepingOutcome": "mixed_change",
+      "evidence": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E209.json"
+    },
+    {
+      "id": "E210",
+      "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc/lab@1a8708fa180813c1e1844873532fdf922a6b6f73558dd5a3983898a23c915939",
+      "status": "done",
+      "outcome": "passed",
+      "bookkeepingOutcome": "mixed_change",
+      "evidence": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E210.json"
+    }
+  ],
+  "claims": [
+    {
+      "id": "retention",
+      "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc/lab@1a8708fa180813c1e1844873532fdf922a6b6f73558dd5a3983898a23c915939",
+      "state": "unknown"
+    }
+  ],
+  "bundles": [
+    {
+      "id": "planner",
+      "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc/lab@1a8708fa180813c1e1844873532fdf922a6b6f73558dd5a3983898a23c915939",
+      "files": [
+        {
+          "path": "experiments/capability-discovery/plan.mjs",
+          "sha256": "afc32f44bf79b345a52c8d0c621efd4cb49ea337338d5aa85d3630b28208ed92"
+        },
+        {
+          "path": "experiments/capability-discovery/plan.test.mjs",
+          "sha256": "5a613f9d95edb9c1a290eec3e2a0bc921612dfdab8722adc649713d10ff60552"
+        }
+      ],
+      "producers": [
+        {
+          "worker": "W3",
+          "principal": "root.discovery_w3"
+        }
+      ]
+    },
+    {
+      "id": "repairs",
+      "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc/lab@1a8708fa180813c1e1844873532fdf922a6b6f73558dd5a3983898a23c915939",
+      "files": [
+        {
+          "path": "experiments/capability-discovery/integration-manifest.json",
+          "sha256": "1a8708fa180813c1e1844873532fdf922a6b6f73558dd5a3983898a23c915939"
+        },
+        {
+          "path": "experiments/capability-discovery/probes/width/recipe.mjs",
+          "sha256": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0"
+        },
+        {
+          "path": "experiments/capability-discovery/probes/root-inventory/root-inventory.mjs",
+          "sha256": "8f7983baf35dd03f76ef2110373806cfe336da5880bab9388a446c2bd68287dc"
+        },
+        {
+          "path": "experiments/capability-discovery/catalog/guards.mjs",
+          "sha256": "d3aba357de4cd8f11f0cdc9c7ce5c6dfcdb9007b28d87e00b274bd8caf144011"
+        },
+        {
+          "path": "experiments/capability-discovery/catalog/validate.mjs",
+          "sha256": "c6547b2d33022176f73656e02669cc395f0650521126ef8e01e260b1388c6411"
+        }
+      ],
+      "producers": [
+        {
+          "worker": "W1",
+          "principal": "root.discovery_w1"
+        },
+        {
+          "worker": "W3",
+          "principal": "root.discovery_w3"
+        },
+        {
+          "worker": "W4",
+          "principal": "root.discovery_w4"
+        },
+        {
+          "worker": "W6",
+          "principal": "root.discovery_w6"
+        }
+      ]
+    }
+  ],
+  "reviews": [],
+  "humanDecisions": []
+}

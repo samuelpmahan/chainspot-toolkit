@@ -1,0 +1,90 @@
+{
+  "savedPlanExactlyReproduced": true,
+  "stateRevision": 10,
+  "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc/lab@f040ac94649369a3a964ec8e4ea6b8948cc8bbfd56586507ce97a68f66c9ce4d",
+  "sourceBundleStates": {
+    "core": {
+      "status": "current",
+      "bindingHash": "3e5a30be2afe9fd27f5b89e5da45bad226abe9f7b650beafd742d59d1b1a75f6",
+      "files": [
+        {
+          "path": "experiments/capability-discovery/plan.mjs",
+          "sha256": "47b4384252c955ca758a50a0c0e48287d2b461521bae38fb5dbdea6b5873b8b9"
+        },
+        {
+          "path": "experiments/capability-discovery/plan.test.mjs",
+          "sha256": "9cbc7b8a555d25fff4d48064c19cc6853a704057dd528ca94219c91e21edcc99"
+        },
+        {
+          "path": "experiments/capability-discovery/integration-manifest.json",
+          "sha256": "f040ac94649369a3a964ec8e4ea6b8948cc8bbfd56586507ce97a68f66c9ce4d"
+        }
+      ],
+      "reasons": []
+    }
+  },
+  "review": {
+    "id": "R211",
+    "action": "validate",
+    "commandId": "review-occupied-principal-repair",
+    "status": "ready",
+    "reasons": [],
+    "eligibleWorkers": [
+      "W6",
+      "W5",
+      "W4",
+      "W1",
+      "W2"
+    ],
+    "bundleHash": "3e5a30be2afe9fd27f5b89e5da45bad226abe9f7b650beafd742d59d1b1a75f6"
+  },
+  "retain": {
+    "id": "retain",
+    "action": "package",
+    "commandId": "retain",
+    "status": "blocked",
+    "reasons": [
+      "dependency:R211",
+      "independent-validation-missing",
+      "human-acceptance-missing",
+      "claim-not-accepted"
+    ],
+    "eligibleWorkers": [
+      "W6",
+      "W5",
+      "W4",
+      "W1",
+      "W2"
+    ],
+    "bundleHash": "3e5a30be2afe9fd27f5b89e5da45bad226abe9f7b650beafd742d59d1b1a75f6"
+  },
+  "freeWorkers": [
+    "W6",
+    "W5",
+    "W4",
+    "W1",
+    "W2"
+  ],
+  "distinctFreePrincipals": 5,
+  "W3ExplicitAdminReservation": {
+    "id": "W3",
+    "principal": "root.discovery_w3",
+    "agent": "/root/discovery_w3",
+    "available": false,
+    "lease": {
+      "taskId": "checkpoint-administration",
+      "reason": "reserved owner after technicalpacketcomplete; coordinator releases aftercommit"
+    }
+  },
+  "checkDispatchAtFrozenBoundaryAllowed": true,
+  "native": {
+    "epoch": 10,
+    "dispatch": {
+      "W2": "R211"
+    },
+    "exactScore": 200,
+    "nativeScore": 200,
+    "brokenConstraints": 0
+  },
+  "limits": "Actual coordinator used sequential reservation/native acknowledgements. Helper recheck is not an atomic CAS service or daemon. Epoch08 W3 administrative occupancy clarification is preserved; no claim all six were idle."
+}

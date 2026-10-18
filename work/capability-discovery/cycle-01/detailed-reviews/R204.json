@@ -1,0 +1,174 @@
+{
+  "schema": "capability-discovery-review@1",
+  "job_id": "R204",
+  "worker": "W2",
+  "subject": {
+    "worker": "W5",
+    "job_id": "E204",
+    "pack": "/workspace/scratch/8528bb251845/discovery-swarm/W5/pass3"
+  },
+  "decision": "accepted",
+  "scope": "Posthoc descriptor of caller-supplied geometry and samples; no producer authenticity, physical path identity, endpoint ownership, calibrated confidence or acceptance",
+  "summary": "Accepted bounded descriptor and native receipt adapter. Seven supplied tests and 93 independent assertions pass; all 12 source blobs and the cited R103 review hash verify. Rigid rotation preserves lengths and signed turns. Reflection negates signed turns; reversed traversal reverses and negates the original turn sequence, apart from the documented ambiguous sign of an exact U-turn. Scaling points and corresponding full widths preserves dimensionless lengths. Zero-valued observed support remains observed with zero supported fraction; all-null support is UNKNOWN; eight malformed support cases reject. Missing/unilateral/degenerate edge pairs cannot establish centerline offsets. Actual W2 receipts recompute 27.75 and 64.75 px within floating-point tolerance and normalize to 0.75 and 1.75 configured corridor widths. This denominator is not calibrated hallway width. Native unknown remains unknown, despite all retained vertex samples exceeding threshold. Caller-supplied metadata remains a trust boundary: the adapter echoes reported counts/source claims separately from recomputed geometry, while countTurns trusts supplied descriptor rows. No acceptance laundering was found under the declared contract.",
+  "validation": {
+    "suppliedTests": {
+      "command": "node --test pack/path-geometry.test.mjs",
+      "exitCode": 0,
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "log": "tests.log"
+    },
+    "independentProbes": {
+      "command": "node independent-probes.mjs",
+      "exitCode": 0,
+      "assertions": 93,
+      "passed": true,
+      "source": "independent-probes.mjs",
+      "output": "independent-results.json"
+    },
+    "nativeAdapter": {
+      "command": "node pack/analyze-native.mjs ../../baseline-native.json ../../heading-native.json",
+      "exitCode": 0,
+      "output": "native-analysis.json",
+      "fullCVExecuted": false
+    },
+    "sourceEvidence": {
+      "sourceCount": 12,
+      "allSourceHashesMatch": true,
+      "R103HashMatch": true,
+      "output": "source-identity-check.json"
+    }
+  },
+  "signedTurnTransform": {
+    "properRotation": "signedRadians unchanged",
+    "reflection": "signedRadians negated because the determinant changes sign while dot products are preserved",
+    "reversedPath": "new turn at each corresponding vertex is negative of the old turn, visited in reverse order; reverse widths with their segments",
+    "screenFrame": "The named canonical frame has y increasing down, so positive cross-product turns appear clockwise on screen.",
+    "exactUTurn": "Absolute angle pi is meaningful; sign may depend on signed zero/roundoff and is not asserted."
+  },
+  "nativeEvidence": [
+    {
+      "inputSha256": "bf0ca6a66866c53fe9ad58b55a231e4beb483b66189a5a7ffc46701031cb8ac1",
+      "nativeOutcome": "unknown",
+      "nativeReportedLengthPx": 27.75,
+      "computedLengthPx": 27.749999999999986,
+      "normalizedLength": {
+        "status": "observed",
+        "value": 0.7499999999999996,
+        "provenance": "native receipt configured corridorWidthPx; not demonstrated per-image learned width"
+      },
+      "support": {
+        "status": "observed",
+        "supportedSamples": 4,
+        "observedSamples": 4,
+        "totalVertices": 4,
+        "unknownSamples": 0,
+        "observedFraction": 1,
+        "supportedFractionOfObserved": 1,
+        "threshold": 0.5,
+        "provenance": "native receipt field support sampled at exact trace vertices; includes own-badge patch/waiver region",
+        "confidence": "uncalibrated sample fraction; not probability of path identity",
+        "weighting": "one vote per supplied vertex; not arc-length weighted; no interpolation"
+      },
+      "centerline": {
+        "status": "UNKNOWN",
+        "reason": "No paired edges supplied; support and heading cannot establish midpoint offset"
+      },
+      "vertexTurnCount": 2,
+      "nativeReportedTurningPhases": 0
+    },
+    {
+      "inputSha256": "1b9fd087d8532f7dfd0c06e25f212733de24e8c5e6fde5db1ae5fa037b8c6160",
+      "nativeOutcome": "unknown",
+      "nativeReportedLengthPx": 64.75,
+      "computedLengthPx": 64.74999999999994,
+      "normalizedLength": {
+        "status": "observed",
+        "value": 1.749999999999999,
+        "provenance": "native receipt configured corridorWidthPx; not demonstrated per-image learned width"
+      },
+      "support": {
+        "status": "observed",
+        "supportedSamples": 8,
+        "observedSamples": 8,
+        "totalVertices": 8,
+        "unknownSamples": 0,
+        "observedFraction": 1,
+        "supportedFractionOfObserved": 1,
+        "threshold": 0.5,
+        "provenance": "native receipt field support sampled at exact trace vertices; includes own-badge patch/waiver region",
+        "confidence": "uncalibrated sample fraction; not probability of path identity",
+        "weighting": "one vote per supplied vertex; not arc-length weighted; no interpolation"
+      },
+      "centerline": {
+        "status": "UNKNOWN",
+        "reason": "No paired edges supplied; support and heading cannot establish midpoint offset"
+      },
+      "vertexTurnCount": 6,
+      "nativeReportedTurningPhases": 1
+    }
+  ],
+  "trustBoundaries": [
+    {
+      "field": "analyze-native nativeReportedLengthPx/nativeReportedTurningPhases/input.source",
+      "observation": "Tampered receipt reporting length 999, phases 888 and a fake source hash is accepted as supplied testimony. Computed length stays 27.75 px and outcome stays unknown.",
+      "meaning": "File SHA records exact input bytes; it does not authenticate declared source or native execution. Reported and computed fields must remain distinct."
+    },
+    {
+      "field": "countTurns(descriptor)",
+      "observation": "Caller-injected turn rows can be counted when a predicate returns true.",
+      "meaning": "Counts describe the supplied rows under the explicit predicate; they do not independently validate that turns were derived from trusted points."
+    },
+    {
+      "field": "pairedEdges",
+      "observation": "Both finite distinct edge coordinates are required. Their cross-section association/orientation and membership in a physical ribbon are caller testimony.",
+      "meaning": "Observed midpoint geometry is not an authenticated physical centerline."
+    }
+  ],
+  "sourcefilehashes": [
+    {
+      "path": "pack/README.md",
+      "original": "/workspace/scratch/8528bb251845/discovery-swarm/W5/pass3/README.md",
+      "sha256": "d1854e2fa3213ea60dc4ce4642d5c79d149950b916a5b54027434f73729d150e",
+      "originalSha256": "d1854e2fa3213ea60dc4ce4642d5c79d149950b916a5b54027434f73729d150e"
+    },
+    {
+      "path": "pack/analyze-native.mjs",
+      "original": "/workspace/scratch/8528bb251845/discovery-swarm/W5/pass3/analyze-native.mjs",
+      "sha256": "6a1c84bf7693b8d5136ce55bf927166746ef541ce314b6180eed8d32999af3cb",
+      "originalSha256": "6a1c84bf7693b8d5136ce55bf927166746ef541ce314b6180eed8d32999af3cb"
+    },
+    {
+      "path": "pack/path-geometry.mjs",
+      "original": "/workspace/scratch/8528bb251845/discovery-swarm/W5/pass3/path-geometry.mjs",
+      "sha256": "ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34",
+      "originalSha256": "ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34"
+    },
+    {
+      "path": "pack/path-geometry.test.mjs",
+      "original": "/workspace/scratch/8528bb251845/discovery-swarm/W5/pass3/path-geometry.test.mjs",
+      "sha256": "8c8be29b7d581346aa9ad88be30dfe3a455fcfeb89782895caa75ed6ed685fc6",
+      "originalSha256": "8c8be29b7d581346aa9ad88be30dfe3a455fcfeb89782895caa75ed6ed685fc6"
+    },
+    {
+      "path": "pack/source-evidence.json",
+      "original": "/workspace/scratch/8528bb251845/discovery-swarm/W5/pass3/source-evidence.json",
+      "sha256": "82f956dffffa03c361e180bf80eeb1f3cd464bbcb82ff667e2fa417d678d1e24",
+      "originalSha256": "82f956dffffa03c361e180bf80eeb1f3cd464bbcb82ff667e2fa417d678d1e24"
+    }
+  ],
+  "evidenceFiles": [
+    "review.json",
+    "tests.log",
+    "independent-probes.mjs",
+    "independent-results.json",
+    "native-analysis.json",
+    "source-identity-check.json",
+    "tampered-native-metadata.json"
+  ],
+  "productionEdits": false,
+  "gitEdits": false,
+  "sealedCorpusAccessed": false,
+  "fullNativeCVReplay": false
+}

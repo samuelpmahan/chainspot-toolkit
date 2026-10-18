@@ -1,0 +1,84 @@
+{
+  "schema": "capability-discovery-review@1",
+  "job_id": "R211",
+  "worker": "W2",
+  "decision": "accepted",
+  "summary": "Accepted core-only principal occupancy repair. All 33 planner tests pass. My original active-alias and expired-lease-alias falsifiers now exclude the occupied principal; the same 29-probe fixture retains inactive historical aliases, duplicate-free-principal rejection and producer self-review exclusion. Nine R207-accepted leaf files remain byte-identical to the prior freeze. The fresh live plan reproduces exactly with five distinct free principals and W3 explicitly reserved for checkpoint administration. Retention remains blocked; native epoch10 assigns W2 R211 with exact/native score200/200 and zero broken constraints.",
+  "scope": "Core capacity guard and its bounded regression evidence only; no scientific, geometry, packaging, retention or human acceptance",
+  "source": {
+    "freeze": "/workspace/scratch/8528bb251845/discovery-swarm/W3/pass4/E211/source-freeze.json",
+    "manifestSha256": "f040ac94649369a3a964ec8e4ea6b8948cc8bbfd56586507ce97a68f66c9ce4d",
+    "planSha256": "47b4384252c955ca758a50a0c0e48287d2b461521bae38fb5dbdea6b5873b8b9",
+    "testSha256": "9cbc7b8a555d25fff4d48064c19cc6853a704057dd528ca94219c91e21edcc99",
+    "readmeSha256": "a09c46ef4669ced57140f788a5440e8e96cd89faf03b322e1344b9b0cc0456ef",
+    "allFrozenHashesMatch": true,
+    "all9AcceptedLeafHashesUnchanged": true,
+    "R207ReviewSha256": "1b11f2f9ce353b5a035fe3dbd6a5ea8687937e57c9951f05e2c525ce0357e556",
+    "evidence": "hash-check.json"
+  },
+  "checks": [
+    {
+      "command": "node --test experiments/capability-discovery/plan.test.mjs",
+      "exitCode": 0,
+      "tests": 33,
+      "passed": 33,
+      "failed": 0,
+      "log": "planner-tests.log"
+    },
+    {
+      "command": "node recheck-original-probes.mjs",
+      "exitCode": 0,
+      "probes": 29,
+      "changeFromOriginal": "Only the two original alias-inclusion assertions changed to exclusion and the output result label changed.",
+      "originalSHA256": "707f4a70a3dfd9705c41b65a00ee134a0270fd2afb163fabb25678c64e155e0c",
+      "recheckSHA256": "94fc7c9f2307a667cd470042e7aae268a95c7721272e238519866e3ed4b60e9e",
+      "results": "independent-results.json"
+    },
+    {
+      "command": "node live-check.mjs",
+      "exitCode": 0,
+      "savedPlanExactlyReproduced": true,
+      "freeWorkers": [
+        "W6",
+        "W5",
+        "W4",
+        "W1",
+        "W2"
+      ],
+      "distinctFreePrincipals": 5,
+      "W3Reserved": true,
+      "retain": "blocked",
+      "checkDispatchAtFrozenBoundary": true,
+      "native": {
+        "epoch": 10,
+        "dispatch": {
+          "W2": "R211"
+        },
+        "exactScore": 200,
+        "nativeScore": 200,
+        "brokenConstraints": 0
+      },
+      "results": "live-check-results.json"
+    }
+  ],
+  "limits": [
+    "Read-only review; no source or Git edits.",
+    "No broad leaf suite repeated; prior accepted leaf bytes were independently rehashed.",
+    "Policy and snapshot remain trusted coordinator inputs.",
+    "Single coordinator sequential reservations and native acknowledgements are evidenced; no implemented atomic CAS service or authentication daemon is claimed.",
+    "Epoch08 W3 admin-occupancy clarification is preserved; prior valid W2/W5 assignments do not imply all six workers were idle.",
+    "Native unknown outcomes, scientific retention and human acceptance remain unknown."
+  ],
+  "evidenceFiles": [
+    "review.json",
+    "hash-check.json",
+    "planner-tests.log",
+    "recheck-original-probes.mjs",
+    "independent-results.json",
+    "live-check.mjs",
+    "live-check-results.json",
+    "plan.mjs.diff",
+    "plan.test.mjs.diff",
+    "README.md.diff"
+  ]
+}

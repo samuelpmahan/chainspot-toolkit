@@ -1,0 +1,13 @@
+{
+  "name": "chainspot-capability-width-negative-probes",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "test": "node probe.mjs --out receipts/actual.json"
+  },
+  "description": "Portable bounded width/offset synthetic negatives; no CV integration or promotion."
+}

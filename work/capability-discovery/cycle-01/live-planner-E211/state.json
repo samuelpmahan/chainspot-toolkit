@@ -1,0 +1,93 @@
+{
+  "schema": "discovery-state@1",
+  "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc/lab@f040ac94649369a3a964ec8e4ea6b8948cc8bbfd56586507ce97a68f66c9ce4d",
+  "revision": 10,
+  "observedAt": "2026-10-18T08:39:00.956308+00:00",
+  "workers": [
+    {
+      "id": "W6",
+      "principal": "root.discovery_w6",
+      "agent": "/root/discovery_w6",
+      "available": true
+    },
+    {
+      "id": "W5",
+      "principal": "root.discovery_w5",
+      "agent": "/root/discovery_w5",
+      "available": true
+    },
+    {
+      "id": "W4",
+      "principal": "root.discovery_w4",
+      "agent": "/root/discovery_w4",
+      "available": true
+    },
+    {
+      "id": "W1",
+      "principal": "root.discovery_w1",
+      "agent": "/root/discovery_w1",
+      "available": true
+    },
+    {
+      "id": "W2",
+      "principal": "root.discovery_w2",
+      "agent": "/root/discovery_w2",
+      "available": true
+    },
+    {
+      "id": "W3",
+      "principal": "root.discovery_w3",
+      "agent": "/root/discovery_w3",
+      "available": false,
+      "lease": {
+        "taskId": "checkpoint-administration",
+        "reason": "reserved owner after technicalpacketcomplete; coordinator releases aftercommit"
+      }
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "E211",
+      "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc/lab@f040ac94649369a3a964ec8e4ea6b8948cc8bbfd56586507ce97a68f66c9ce4d",
+      "status": "done",
+      "outcome": "passed",
+      "bookkeepingOutcome": "mixed_change",
+      "evidence": "/workspace/scratch/8528bb251845/discovery-swarm/W3/pass4/E211/result.json"
+    }
+  ],
+  "claims": [
+    {
+      "id": "retention",
+      "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc/lab@f040ac94649369a3a964ec8e4ea6b8948cc8bbfd56586507ce97a68f66c9ce4d",
+      "state": "unknown"
+    }
+  ],
+  "bundles": [
+    {
+      "id": "core",
+      "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc/lab@f040ac94649369a3a964ec8e4ea6b8948cc8bbfd56586507ce97a68f66c9ce4d",
+      "files": [
+        {
+          "path": "experiments/capability-discovery/plan.mjs",
+          "sha256": "47b4384252c955ca758a50a0c0e48287d2b461521bae38fb5dbdea6b5873b8b9"
+        },
+        {
+          "path": "experiments/capability-discovery/plan.test.mjs",
+          "sha256": "9cbc7b8a555d25fff4d48064c19cc6853a704057dd528ca94219c91e21edcc99"
+        },
+        {
+          "path": "experiments/capability-discovery/integration-manifest.json",
+          "sha256": "f040ac94649369a3a964ec8e4ea6b8948cc8bbfd56586507ce97a68f66c9ce4d"
+        }
+      ],
+      "producers": [
+        {
+          "worker": "W3",
+          "principal": "root.discovery_w3"
+        }
+      ]
+    }
+  ],
+  "reviews": [],
+  "humanDecisions": []
+}

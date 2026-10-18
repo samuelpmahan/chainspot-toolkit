@@ -1,0 +1,75 @@
+{
+  "schema": "discovery-policy@1",
+  "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc/lab@1a8708fa180813c1e1844873532fdf922a6b6f73558dd5a3983898a23c915939",
+  "maxStateAgeMs": 600000,
+  "commandIds": [
+    "review-planner",
+    "review-repairs",
+    "retain"
+  ],
+  "protocols": [
+    {
+      "id": "technical-review@1",
+      "sha256": "2e6ae6e94b927c41678ce569ec779dc029ef6cfb75e76f71cf8791d90c72d1de"
+    }
+  ],
+  "authorities": [],
+  "trustedHumanDecisionHashes": [],
+  "tasks": [
+    {
+      "id": "R201",
+      "action": "validate",
+      "commandId": "review-planner",
+      "bundle": "planner",
+      "needs": [],
+      "guards": [
+        {
+          "op": "taskOutcome",
+          "task": "E207",
+          "is": "passed"
+        }
+      ]
+    },
+    {
+      "id": "R207",
+      "action": "validate",
+      "commandId": "review-repairs",
+      "bundle": "repairs",
+      "needs": [],
+      "guards": [
+        {
+          "op": "taskOutcome",
+          "task": "E207",
+          "is": "passed"
+        },
+        {
+          "op": "taskOutcome",
+          "task": "E208",
+          "is": "passed"
+        },
+        {
+          "op": "taskOutcome",
+          "task": "E209",
+          "is": "passed"
+        },
+        {
+          "op": "taskOutcome",
+          "task": "E210",
+          "is": "passed"
+        }
+      ]
+    },
+    {
+      "id": "retain",
+      "action": "package",
+      "commandId": "retain",
+      "bundle": "repairs",
+      "claim": "retention",
+      "protocol": "technical-review@1",
+      "needs": [
+        "R207"
+      ],
+      "guards": []
+    }
+  ]
+}

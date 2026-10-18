@@ -1,0 +1,114 @@
+{
+  "job_id": "E204",
+  "worker": "W5",
+  "outcome": "mixed_change",
+  "summary": "Implemented isolated portable posthoc path descriptor and tests; added receipt-only W2 trace example. No native CV/routing/default changes or ownership claims. Geometry and unknown evidence remain explicit.",
+  "verdict": "PASS bounded implementation/tests; physical bend segmentation and confidence calibration remain unresolved",
+  "files": [
+    {
+      "path": "path-geometry.mjs",
+      "sha256": "ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34"
+    },
+    {
+      "path": "path-geometry.test.mjs",
+      "sha256": "8c8be29b7d581346aa9ad88be30dfe3a455fcfeb89782895caa75ed6ed685fc6"
+    },
+    {
+      "path": "analyze-native.mjs",
+      "sha256": "6a1c84bf7693b8d5136ce55bf927166746ef541ce314b6180eed8d32999af3cb"
+    },
+    {
+      "path": "README.md",
+      "sha256": "d1854e2fa3213ea60dc4ce4642d5c79d149950b916a5b54027434f73729d150e"
+    },
+    {
+      "path": "source-evidence.json",
+      "sha256": "82f956dffffa03c361e180bf80eeb1f3cd464bbcb82ff667e2fa417d678d1e24"
+    },
+    {
+      "path": "test-output.txt",
+      "sha256": "a89deab3a45a44501c1b615e6aae8bff888ab5888efcaf024e56d691ad307838"
+    },
+    {
+      "path": "native-analysis.json",
+      "sha256": "b724e719380000fc53fc8102c89d698e7a70ae1b435bd96b16961f9cf33b7eef"
+    }
+  ],
+  "integration": {
+    "owner": "W3",
+    "destination": "experiments/capability-discovery/probes/path-geometry",
+    "portableFiles": [
+      "path-geometry.mjs",
+      "path-geometry.test.mjs",
+      "analyze-native.mjs",
+      "README.md",
+      "source-evidence.json",
+      "test-output.txt",
+      "native-analysis.json"
+    ],
+    "command": "node --test path-geometry.test.mjs",
+    "exampleCommand": "node analyze-native.mjs /path/to/baseline-native.json /path/to/heading-native.json",
+    "externalRuntimeDependencies": []
+  },
+  "validation": {
+    "command": "node --test path-geometry.test.mjs",
+    "exitCode": 0,
+    "tests": 7,
+    "pass": 7,
+    "fail": 0,
+    "evidence": "test-output.txt",
+    "coverage": [
+      "straight/six-turn discrimination and caller-defined counts",
+      "translation/rotation invariance of lengths/angles/normalized runs",
+      "uniform scale invariance with varying local full widths",
+      "paired-edge offset invariance and missing-pair UNKNOWN",
+      "support observed coverage versus unknown and uncalibrated fraction",
+      "collinear vertices and U-turns kept unsimplified",
+      "duplicate/degenerate/nonfinite/missing referent/mismatched width/bad support/overflow rejection"
+    ]
+  },
+  "nativeExample": {
+    "inputs": [
+      "/workspace/scratch/8528bb251845/discovery-swarm/W2/baseline-native.json",
+      "/workspace/scratch/8528bb251845/discovery-swarm/W2/heading-native.json"
+    ],
+    "analysis": "native-analysis.json",
+    "sourceSha256": "e6616738640eee1d05d8cc2b59dd657f24b4a5a01dc2f68571b7e44c6f372b8a",
+    "canonicalToSource": [
+      0,
+      4
+    ],
+    "baselineConfiguredWidthPx": 37,
+    "baselineLengthCanonicalPx": 27.749999999999986,
+    "headingLengthCanonicalPx": 64.74999999999994,
+    "nativeOutcomeBoth": "unknown",
+    "pairedEdges": "absent; centerline UNKNOWN",
+    "observation": "Both baseline variants have all recorded vertex samples at or above supportTau yet native outcome unknown. Sample support fraction1 is not evidence of arrival."
+  },
+  "sourceEvidence": "source-evidence.json",
+  "contracts": {
+    "runs": "one consecutive supplied segment; no inferred physical segmentation or default noise tolerance",
+    "turns": "every interior supplied vertex; signed radians, point and distance along path",
+    "width": "optional positive full widths in same named image frame, scalar or per segment; provenance mandatory",
+    "centerline": "only supplied bilateral edge-pair midpoints; UNKNOWN otherwise",
+    "supportConfidence": "caller threshold; observed fraction and supported/observed equal-weight vertex samples; explicitly uncalibrated",
+    "sharpCount": "explicit caller-named boolean predicate required; no default",
+    "scoring": "no weights, exponential base or universal3bend penalty"
+  },
+  "limitations": [
+    "Native configured37px denominator is not demonstrated per-image learned width.",
+    "Grid-polyline turns need not be physical bends; rotation/scale checks are numerical within declared test tolerance.",
+    "Paired-edge association/orientation remains caller evidence; descriptor does not verify ribbon identity.",
+    "No calibrated statistical confidence or arc-length support coverage.",
+    "R103 existence tie is preserved with its dense-alignment counterexample; neither implies universal immunity to bends."
+  ],
+  "constraints": {
+    "ownedScratchOnly": true,
+    "repoGitEdits": false,
+    "fullReplay": false,
+    "defaultOrAAChanges": false,
+    "endpointOwnershipClaims": false,
+    "humanAcceptanceClaims": false
+  },
+  "next": "W3 integrate bounded pack; PASS4 independent review."
+}

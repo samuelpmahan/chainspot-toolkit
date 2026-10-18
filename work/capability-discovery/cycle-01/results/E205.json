@@ -1,0 +1,103 @@
+{
+  "schema": "capability-discovery-result@1",
+  "job_id": "E205",
+  "worker": "W2",
+  "pass": 3,
+  "outcome": "mixed_change",
+  "summary": "Portable deterministic before/after trace figure delivered. Heading changes retained trace from 27.75 px / 0 bend phases to 64.75 px / 1 phase; both remain unknown/petered-out, with no endpoint arrival or ownership established.",
+  "artifacts": {
+    "portablePack": "E205-fresh-trace-renderer.zip",
+    "portableDirectory": "portable/",
+    "renderer": "portable/render_trace_comparison.py",
+    "inputs": [
+      "portable/input/baseline-native.json",
+      "portable/input/heading-native.json"
+    ],
+    "figures": [
+      {
+        "path": "baseline-vs-heading.png",
+        "sha256": "339aa25baba2bfc8931ce3287c3ba45b7f41c068dccd4ec681492c650446fda4",
+        "bytes": 338331
+      },
+      {
+        "path": "baseline-vs-heading.svg",
+        "sha256": "57ae6b9df864d9fd0a7f1f6c0bec6f1f95f95b06aef14160c18e75f20019ff41",
+        "bytes": 195465
+      }
+    ],
+    "renderReceipt": "portable/output/render-receipt.json",
+    "determinismCheck": "portable/determinism-check.json",
+    "manifest": "portable/manifest.json"
+  },
+  "portablePackSha256": "09ffb477be98a0e7e7a4fffb2373db32571c7cb4a11ab6d692d6a9f6156dcbfe",
+  "coordinates": {
+    "traceFrame": "native canonical",
+    "displayFrame": "original JPEG source pixels",
+    "canonicalToSource": [
+      0,
+      4
+    ],
+    "yOffsetPx": 4,
+    "transformAuthority": "source.frame.canonicalToSource in both exact native receipts",
+    "badgeAnchorSourceMatch": true,
+    "sourceCropXYXY": [
+      370,
+      920,
+      550,
+      1050
+    ],
+    "pixelDisplay": "nearest; source pixel centers at integer coordinates"
+  },
+  "source": {
+    "sha256": "e6616738640eee1d05d8cc2b59dd657f24b4a5a01dc2f68571b7e44c6f372b8a",
+    "widthPx": 1290,
+    "heightPx": 2091,
+    "logicalPath": "source/provider/artifacts/replay/source/IMG_5641.jpg",
+    "gitRef": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "gitBlob": "ffdd790992dbb0f971e72204c440c0e4c4559216"
+  },
+  "nativeRuns": [
+    {
+      "name": "baseline",
+      "input": "baseline-native.json",
+      "sha256": "bf0ca6a66866c53fe9ad58b55a231e4beb483b66189a5a7ffc46701031cb8ac1",
+      "variantIdentitySha256": "bae3a73996c8cfbc4be5da6063d8755a9466884f6042d118bb553fb2868f9d95",
+      "headingRad": -0.7853981633974483,
+      "lengthPx": 27.75,
+      "bendPhases": 0,
+      "status": "unknown",
+      "reason": "petered-out"
+    },
+    {
+      "name": "heading",
+      "input": "heading-native.json",
+      "sha256": "1b9fd087d8532f7dfd0c06e25f212733de24e8c5e6fde5db1ae5fa037b8c6160",
+      "variantIdentitySha256": "ecdd8df98b516579467c07196121405138b56044579834a3d94cec0fdbdbe521",
+      "headingRad": 0.047900432100886965,
+      "lengthPx": 64.75,
+      "bendPhases": 1,
+      "status": "unknown",
+      "reason": "petered-out"
+    }
+  ],
+  "renderVerification": {
+    "inspectedWith": "view_image",
+    "visualObservation": "Matched source crops are legible. Both traces start over the model badge displaying 7. The blue baseline goes diagonally up-right and ends near the model bbox upper-right; the orange heading trace goes right before curving up-right. Start/unknown-stop symbols, source axes, metric table, model-bbox legend and UNKNOWN acceptance statement are readable. This is rendering inspection, not route or human geometry acceptance.",
+    "deterministicPNG": true,
+    "deterministicSVG": true,
+    "check": "Two fresh plot invocations yielded identical PNG and SVG SHA-256 values. No CV rerun.",
+    "portableDirectoryExecuted": true,
+    "portableFiguresMatch": true
+  },
+  "limitations": [
+    "Original JPEG supplied separately by path; source blob and SHA are provided.",
+    "Pillow source display is not asserted byte-identical to native canonical RGBA.",
+    "Metrics use native contiguous turning phases; no physical bend count is inferred.",
+    "Native probe emits no active cache root key; no root-fix verification is claimed.",
+    "Human geometry acceptance, basket ownership and endpoint arrival remain UNKNOWN."
+  ],
+  "productionEdits": false,
+  "gitEdits": false,
+  "fullNativeCVRerun": false,
+  "soleIntegrationOwner": "W3"
+}

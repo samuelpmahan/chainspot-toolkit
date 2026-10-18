@@ -1,0 +1,164 @@
+{
+  "schema": "capability-discovery-verification@1",
+  "job_id": "E208",
+  "worker": "W1",
+  "outcome": "mixed_change",
+  "summary": "Read-only verification of W3 width-guard repair. Original R202 failures blocked;17 leaf tests and14 unchanged portable cases pass. Independent negative-spread/duplicate-width/missing-nonfinite-rail comparisons show0 current mismatches. No duplicate implementation or ChainSpot mutations.",
+  "scopeAdaptation": "W3 already implemented leaf fixes; E208 performs copied-source verification only. HH administrative checkpoint completed first, then this review started.",
+  "reviewedSourceHashes": [
+    {
+      "repoPath": "experiments/capability-discovery/probes/width/README.md",
+      "sha256Before": "9e47d99ee0d5691ed98b335053d4a8f989ccd3d7d33d2190649510a4a87897cb",
+      "sha256After": "9e47d99ee0d5691ed98b335053d4a8f989ccd3d7d33d2190649510a4a87897cb",
+      "unchangedDuringReview": true,
+      "changeScope": "none"
+    },
+    {
+      "repoPath": "experiments/capability-discovery/probes/width/experiment.recipe.json",
+      "sha256Before": "2fb1f68b0dfc921f56d88078103856ddf8ccabbeab48fa1eaaa5a51b30805921",
+      "sha256After": "2fb1f68b0dfc921f56d88078103856ddf8ccabbeab48fa1eaaa5a51b30805921",
+      "unchangedDuringReview": true,
+      "changeScope": "none"
+    },
+    {
+      "repoPath": "experiments/capability-discovery/probes/width/experiments/capability-discovery/probes/width/receipts/repair-E207.json",
+      "sha256Before": "d9c5404bba151ae7bc63dab138b2a41c39f4a552a34c7d482c980c8f8c512354",
+      "sha256After": null,
+      "unchangedDuringReview": false,
+      "changeScope": "non-code generated receipt cleanup by integration owner"
+    },
+    {
+      "repoPath": "experiments/capability-discovery/probes/width/package.json",
+      "sha256Before": "08b9bdd9db33db454c2fb658acb3c95ef9b9093b86f0e119507e0d343eba9fb5",
+      "sha256After": "08b9bdd9db33db454c2fb658acb3c95ef9b9093b86f0e119507e0d343eba9fb5",
+      "unchangedDuringReview": true,
+      "changeScope": "none"
+    },
+    {
+      "repoPath": "experiments/capability-discovery/probes/width/probe.mjs",
+      "sha256Before": "864b56f086742aa3591e126f788fd347228bf70f4b6301f56ead5ffa6d1819ef",
+      "sha256After": "864b56f086742aa3591e126f788fd347228bf70f4b6301f56ead5ffa6d1819ef",
+      "unchangedDuringReview": true,
+      "changeScope": "none"
+    },
+    {
+      "repoPath": "experiments/capability-discovery/probes/width/provenance.json",
+      "sha256Before": "0f3de094060d64f7614be6a8fa5023180e75070d33153976bdf318a734fdffaf",
+      "sha256After": "0f3de094060d64f7614be6a8fa5023180e75070d33153976bdf318a734fdffaf",
+      "unchangedDuringReview": true,
+      "changeScope": "none"
+    },
+    {
+      "repoPath": "experiments/capability-discovery/probes/width/receipts/actual.json",
+      "sha256Before": "88a1ac19ff33043836e00cbfcb15aca8be364c461b0631e295300f39adb967de",
+      "sha256After": "88a1ac19ff33043836e00cbfcb15aca8be364c461b0631e295300f39adb967de",
+      "unchangedDuringReview": true,
+      "changeScope": "none"
+    },
+    {
+      "repoPath": "experiments/capability-discovery/probes/width/recipe.mjs",
+      "sha256Before": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0",
+      "sha256After": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0",
+      "unchangedDuringReview": true,
+      "changeScope": "none"
+    },
+    {
+      "repoPath": "experiments/capability-discovery/probes/width/recipe.test.mjs",
+      "sha256Before": "a9e832d91382f85ca6eda5c84792ecd3db238d27894776a31061a21dc8ca612b",
+      "sha256After": "a9e832d91382f85ca6eda5c84792ecd3db238d27894776a31061a21dc8ca612b",
+      "unchangedDuringReview": true,
+      "changeScope": "none"
+    },
+    {
+      "repoPath": "experiments/capability-discovery/probes/width/vendor/active/contracts/alpha.profile@1.mjs",
+      "sha256Before": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+      "sha256After": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+      "unchangedDuringReview": true,
+      "changeScope": "none"
+    },
+    {
+      "repoPath": "experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+      "sha256Before": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "sha256After": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "unchangedDuringReview": true,
+      "changeScope": "none"
+    },
+    {
+      "repoPath": "experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts",
+      "sha256Before": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+      "sha256After": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+      "unchangedDuringReview": true,
+      "changeScope": "none"
+    },
+    {
+      "repoPath": "experiments/capability-discovery/probes/width/vendor/provider/fourLaneSensor.cjs",
+      "sha256Before": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624",
+      "sha256After": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624",
+      "unchangedDuringReview": true,
+      "changeScope": "none"
+    }
+  ],
+  "exactReviewedKeyFiles": {
+    "experiments/capability-discovery/probes/width/recipe.mjs": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0",
+    "experiments/capability-discovery/probes/width/recipe.test.mjs": "a9e832d91382f85ca6eda5c84792ecd3db238d27894776a31061a21dc8ca612b",
+    "experiments/capability-discovery/probes/width/probe.mjs": "864b56f086742aa3591e126f788fd347228bf70f4b6301f56ead5ffa6d1819ef"
+  },
+  "tests": {
+    "leafNodeTests": {
+      "passed": 17,
+      "failed": 0,
+      "command": "node --test recipe.test.mjs (own copied package)",
+      "log": "recipe-tests.log"
+    },
+    "portableNegativePack": {
+      "cases": 14,
+      "passed": true,
+      "originalCaseBodiesExact": true,
+      "sourceHashBlobChecks": 4,
+      "command": "node probe.mjs --out receipts/e208.json (own copied package)",
+      "receipt": "package/receipts/e208.json"
+    },
+    "originalR202Adversarial": {
+      "cases": 7,
+      "currentMismatches": 0,
+      "output": "r202-reproduction.json"
+    },
+    "independentBeforeAfter": {
+      "negativeCases": 8,
+      "controls": 2,
+      "priorMismatches": 7,
+      "currentMismatches": 0,
+      "output": "independent-repro.json"
+    }
+  },
+  "findings": [
+    "Negative finite width IQR now UNKNOWN as are NaN/infinite spreads.",
+    "Duplicate candidate width rows cannot manufacture distinct candidate separation.",
+    "Missing, undefined, NaN or infinite paired rail fields UNKNOWN; finite zero channels remain observed channels without positive evidence claim.",
+    "Valid declared confidence fixture remains ELIGIBLE_FOR_COMPARISON with promoted false;14 existing portable cases unchanged."
+  ],
+  "boundaries": {
+    "sourceGitEdits": false,
+    "patchPackInvented": false,
+    "allSharedExecutableSourceFilesUnchangedDuringVerification": true,
+    "nonCodeConcurrentChange": "Integration owner removed transient nested generated repair receipt; recorded before/after, no executable-source drift.",
+    "productionCVOrAAPromotion": false,
+    "imageAccuracyMeasured": false,
+    "finalIndependentReview": "W2/W5 R207 required; initial guard author W1 verification does not self-accept science or replace that review"
+  },
+  "evidencePaths": [
+    "/workspace/scratch/8528bb251845/discovery-swarm/W1/pass4/E208/independent-repro.mjs",
+    "/workspace/scratch/8528bb251845/discovery-swarm/W1/pass4/E208/independent-repro.json",
+    "/workspace/scratch/8528bb251845/discovery-swarm/W1/pass4/E208/r202-reproduction.json",
+    "/workspace/scratch/8528bb251845/discovery-swarm/W1/pass4/E208/recipe-tests.log",
+    "/workspace/scratch/8528bb251845/discovery-swarm/W1/pass4/E208/portable-probe.log",
+    "/workspace/scratch/8528bb251845/discovery-swarm/W1/pass4/E208/package/receipts/e208.json"
+  ],
+  "HHAdministrativeCheckpoint": {
+    "commit": "a156bae0873ba4207bd48d79359d96103cb74f30",
+    "tree": "598c2d839b39e6dbece16dfbffbdd61407e0d78e",
+    "changedFiles": 39,
+    "publicationPayload": "/workspace/scratch/8528bb251845/hh-cycle02/publication-tree-elements.json",
+    "pushed": false
+  }
+}

@@ -1,0 +1,41 @@
+✔ current unknown observation enables falsifier, blocks package, enables boundary repair (67.457329ms)
+✔ changed receipt bytes fail closed (59.94418ms)
+✔ source mismatch invalidates whole recommendation (69.32475ms)
+✔ live producer suppresses duplicate refresh (67.381726ms)
+✔ review excludes aliases of producing principal (59.506526ms)
+✔ expired lease still needs coordinator reconciliation (60.393457ms)
+✔ dispatch-boundary revision mismatch invalidates plan (61.656643ms)
+✔ native accepted review and claimed accepted state cannot mint human authority (57.699447ms)
+✔ duplicate receipts and unknown guard ops invalidate policy/state (62.936193ms)
+✔ completed task is terminal rather than redispatched (63.946764ms)
+✔ unsafe artifact path and symlink escape never authorize evidence (60.194756ms)
+✔ stale coordinator snapshot cannot authorize dispatch (60.45149ms)
+✔ package requires independently verified review bytes and trusted scoped Sam decision (68.354057ms)
+✔ independent accepted review alone never mints human acceptance (74.492806ms)
+✔ human acceptance rejects wrong issuer (66.993376ms)
+✔ human acceptance rejects wrong principal (65.806836ms)
+✔ human acceptance rejects wrong scope (60.675492ms)
+✔ human acceptance rejects wrong source (58.821475ms)
+✔ human acceptance rejects wrong claim (61.092429ms)
+✔ human acceptance rejects wrong bundle (61.282657ms)
+✔ human acceptance rejects wrong bundleHash (58.955578ms)
+✔ changed independent review bytes cannot authorize package (68.126232ms)
+✔ review source, bundle and protocol bindings fail closed (67.158198ms)
+✔ dispatch recheck detects artifact changes despite unchanged state revision (5.388052ms)
+✔ a supported bundle with missing producer identities cannot be independently reviewed (66.797448ms)
+✔ actual artifact symlink outside allowed root cannot authorize evidence (57.330268ms)
+✔ dependency cycle is rejected before native recommendation (60.20376ms)
+✔ unknown operation independently rejects eval even without duplicate records (61.553198ms)
+✔ two available aliases for one principal cannot double native capacity (59.481792ms)
+✔ unavailable historical aliases do not add capacity or invalidate independent principal exclusions (64.847711ms)
+✔ occupied principal cannot enter free capacity through alias (active) (61.062644ms)
+✔ occupied principal cannot enter free capacity through alias (expired-lease) (65.21956ms)
+✔ explicitly inactive historical alias does not block a genuinely free principal (79.216875ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2136.382453

@@ -1,0 +1,219 @@
+{
+  "schema": "capability-discovery-review@1",
+  "job_id": "R201",
+  "worker": "W2",
+  "decision": "amend",
+  "summary": "AMEND for one bounded principal-capacity gap. Duplicate free aliases are rejected, but a free alias remains eligible when another worker record for its principal holds an unacknowledged active task or expired lease. Both counterexamples reproduce against frozen plan.mjs. Thirty supplied tests pass, as do typed-guard, source/hash/protocol/human-binding and stale-dispatch negative checks. The actual epoch-08 live registry has six distinct principals and no aliases; its R201/R207 eligibility and 400/400 native assignment remain valid. This finding is future alias occupancy, not observed current double booking.",
+  "source": {
+    "root": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery",
+    "freeze": "/workspace/scratch/8528bb251845/discovery-swarm/W3/pass3/E207-source-freeze.json",
+    "freezeSha256": "a031b070f344b74e6bcbc4cb557c3d992abd8a56b961b7dc37fa1a44b8967c9c",
+    "files": [
+      {
+        "path": "plan.mjs",
+        "sha256": "afc32f44bf79b345a52c8d0c621efd4cb49ea337338d5aa85d3630b28208ed92",
+        "expected": "afc32f44bf79b345a52c8d0c621efd4cb49ea337338d5aa85d3630b28208ed92",
+        "matchesFreeze": true
+      },
+      {
+        "path": "plan.test.mjs",
+        "sha256": "5a613f9d95edb9c1a290eec3e2a0bc921612dfdab8722adc649713d10ff60552",
+        "expected": "5a613f9d95edb9c1a290eec3e2a0bc921612dfdab8722adc649713d10ff60552",
+        "matchesFreeze": true
+      },
+      {
+        "path": "README.md",
+        "sha256": "2e7ada9387e0286bf90773b0815309567ded2d66cc157044dcbf8630c2c9af8e",
+        "expected": "2e7ada9387e0286bf90773b0815309567ded2d66cc157044dcbf8630c2c9af8e",
+        "matchesFreeze": true
+      },
+      {
+        "path": "integration-manifest.json",
+        "sha256": "1a8708fa180813c1e1844873532fdf922a6b6f73558dd5a3983898a23c915939",
+        "expected": "1a8708fa180813c1e1844873532fdf922a6b6f73558dd5a3983898a23c915939",
+        "matchesFreeze": true
+      }
+    ],
+    "frozenCopies": "frozen-source/"
+  },
+  "blockingFinding": {
+    "id": "R201-principal-occupancy-alias",
+    "severity": "bounded-capacity-correctness",
+    "location": "plan.mjs free worker derivation",
+    "cause": "free filters active/lease on each worker record, then checks uniqueness only among those free records; it never excludes a free record whose principal is occupied on a different unavailable record.",
+    "reproductions": [
+      {
+        "name": "unacknowledged active task",
+        "occupied": {
+          "id": "W2",
+          "principal": "p2",
+          "available": false,
+          "active": {
+            "taskId": "busy"
+          }
+        },
+        "alias": {
+          "id": "newAlias",
+          "principal": "p2",
+          "available": true
+        },
+        "observed": "newAlias appears in nativeSpec.workers and review eligibleWorkers",
+        "expected": "p2 contributes no new capacity until coordinator reconciles the active task."
+      },
+      {
+        "name": "expired lease",
+        "occupied": {
+          "id": "W2",
+          "principal": "p2",
+          "available": false,
+          "lease": {
+            "taskId": "old",
+            "expiresAt": "2026-10-17T00:00:00Z"
+          }
+        },
+        "alias": {
+          "id": "newAlias",
+          "principal": "p2",
+          "available": true
+        },
+        "observed": "newAlias appears in nativeSpec.workers",
+        "expected": "Time expiry alone must not free principal p2."
+      }
+    ],
+    "evidence": "independent-results.json capacityCounterexamples",
+    "requiredAmendment": "Derive occupied principals from every active/lease record; prevent those principals from entering free capacity through any alias. Preserve truly inactive historical aliases, duplicate-free-principal rejection and producer/principal self-review exclusion. Add active-alias and expired-lease-alias regressions."
+  },
+  "validation": {
+    "suppliedTests": {
+      "command": "node --test experiments/capability-discovery/plan.test.mjs",
+      "exitCode": 0,
+      "tests": 30,
+      "passed": 30,
+      "failed": 0,
+      "log": "planner-tests.log"
+    },
+    "independent": {
+      "command": "node independent-probes.mjs",
+      "exitCode": 0,
+      "probes": 29,
+      "results": "independent-results.json"
+    },
+    "live": {
+      "command": "node experiments/capability-discovery/plan.mjs --policy discovery-swarm/live-planner/policy.json --state discovery-swarm/live-planner/state.json --artifacts chainspot-discovery-lab --now 2026-10-18T08:30:17.071104+00:00 --expect-revision 8",
+      "note": "Paths in command are summarized relative to workspace; exact absolute invocation retained in tool history.",
+      "exitCode": 0,
+      "report": "live-plan-rerun.json",
+      "savedPlanExactlyReproduced": true,
+      "savedNativeSpecExactlyReproduced": true,
+      "sourceBundles": "planner and repairs freshly rehashed current",
+      "R201Eligible": [
+        "W6",
+        "W5",
+        "W4",
+        "W1",
+        "W2"
+      ],
+      "R207Eligible": [
+        "W5",
+        "W2"
+      ],
+      "retainStatus": "blocked",
+      "retainReasons": [
+        "dependency:R207",
+        "independent-validation-missing",
+        "human-acceptance-missing",
+        "claim-not-accepted"
+      ],
+      "nativeSolve": {
+        "epoch": 8,
+        "dispatch": {
+          "W2": "R201",
+          "W5": "R207"
+        },
+        "nativeScore": 400,
+        "exactScore": 400,
+        "brokenConstraints": 0,
+        "capacity": true,
+        "eligibility": true
+      },
+      "currentDispatchCorroboration": {
+        "job": {
+          "id": "R201",
+          "kind": "review",
+          "depends_on": "E201",
+          "status": "running",
+          "worker": "W2",
+          "started_at": "2026-10-18T08:30:17.331648+00:00",
+          "finished_at": null,
+          "blocked_reason": "Coordinator holds code review until E207 targeted repair freezes source, avoiding review of changing files.",
+          "allow_workers": [
+            "W6",
+            "W5",
+            "W4",
+            "W1",
+            "W2"
+          ],
+          "readiness_binding": {
+            "policyHash": "cc26d6b58e040038e148b4c176d4b5a733148947a109ea2d12615d40a6edf9fd",
+            "stateHash": "eaa303393e0bb8836e10df5f42beb06457a18037182e940833f005daeb563aec",
+            "evidenceHash": "1397e8903fbe12cdd259177229b08b96f7df5974902a1e7801ad03f0c8611eac"
+          }
+        },
+        "worker": {
+          "job": "R201",
+          "agent": "/root/discovery_w2"
+        }
+      },
+      "limits": "Frozen live snapshot replay is not current dispatch permission. Actual native solve/registry and received root task corroborate this dispatch, but this review does not independently authenticate every coordinator API call or all past dispatches."
+    },
+    "dispatchRecheck": {
+      "sameFrozenSnapshotAllowed": true,
+      "afterReservationProjectionAllowed": false,
+      "afterSnapshotExpiryAllowed": false,
+      "changedReceiptSameRevisionAllowed": false
+    }
+  },
+  "passingBoundaries": [
+    "Unavailable inactive historical aliases add no capacity; producer principal aliases remain excluded from independent review.",
+    "Direct active and expired-lease records block their own worker eligibility.",
+    "State source mismatch invalidates; stale bundle source/bytes block use.",
+    "Review protocol/source/bundle mismatches and trusted-human issuer/principal/scope/claim/source/bundle/decision mismatches block package.",
+    "No eval: unknown operations and extra fields invalidate typed guards. Unknown dependencies invalidate; incomplete outcomes block needs.",
+    "Native mixed_change bookkeeping is not treated as technical passed.",
+    "Policy and state are explicitly trusted coordinator inputs; no authentication daemon or autonomous dispatch is claimed."
+  ],
+  "constraints": {
+    "reviewerSourceEdits": false,
+    "reviewerGitEdits": false,
+    "currentEpoch08AssignmentInvalidated": false,
+    "observedCurrentDoubleBooking": false,
+    "humanAcceptance": "UNKNOWN",
+    "scientificRetention": "UNKNOWN"
+  },
+  "evidenceFiles": [
+    {
+      "path": "independent-probes.mjs",
+      "sha256": "707f4a70a3dfd9705c41b65a00ee134a0270fd2afb163fabb25678c64e155e0c"
+    },
+    {
+      "path": "independent-results.json",
+      "sha256": "2547ff15a8d3a3b4a2af6cf9220ebf74e219b446ec916de369d08f53a76df722"
+    },
+    {
+      "path": "live-check.mjs",
+      "sha256": "5e296b7c3b9a0cffb480fc26c8980c7e9a31174a7097ba99ad59609822689aa5"
+    },
+    {
+      "path": "live-check-results.json",
+      "sha256": "a128d0ce446b0d199ad5453e2072af8b04dd820647da26b703ea74d58a88cac1"
+    },
+    {
+      "path": "source-check.json",
+      "sha256": "c95a7c92bbfd3d1bcc8a54ba475d20678cafbdda0da7ea547331bc9f71033921"
+    },
+    {
+      "path": "planner-tests.log",
+      "sha256": "72222d485472deb85010378e86099b6d5cf6a4c41cd6cf85a62a32eb2ce8db08"
+    }
+  ]
+}

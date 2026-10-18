@@ -1,0 +1,108 @@
+{
+  "job_id": "E203",
+  "worker": "W4",
+  "outcome": "mixed_change",
+  "summary": "Portable source-bound metadata/catalog, guarded declarative experiment recipes, evidence-channel/width guards, validation CLI and bounded source-function probes created only in W4/pass3. Recovered five capability groups expose16 actual module operations; no new CV algorithm or production/repo changes.",
+  "repair": {
+    "job_id": "R101",
+    "amendmentResolved": true,
+    "details": [
+      {
+        "finding": "Both rails hidden does not imply total observation abstention.",
+        "resolution": "Catalog separates railScore/innerScore/combined. observationChannels marks rail UNKNOWN, interior/combined OBSERVED on exact-source inner-only counterexample. Recipe tags interior-only evidence; tracker is explicitly documented and probed consuming combined score."
+      },
+      {
+        "finding": "Empty/all-hidden width estimator returns numeric fallback.",
+        "resolution": "widthEvidence requires nonempty input segment/bank, competing rows, positive visible counts, finite scores, and a positive strict winner. Raw hiddenWidth30 and emptyWidth40 map to UNKNOWN; JSON -Infinity->null also maps to UNKNOWN. No learned-width or acceptance claim."
+      },
+      {
+        "finding": "Historical metrics have incompatible populations/criteria and source-native knobs/oracle scope are bounded.",
+        "resolution": "No61/72vs16/18accuracy comparison. Source-native knobs preserved; no invented CV weights. Probe coverage explicitly distinguishes executed helpers from source-only full operations."
+      }
+    ]
+  },
+  "artifacts": {
+    "catalog": "catalog.json",
+    "recipes": "recipes.json",
+    "guardImplementation": "guards.mjs",
+    "validationCLI": "validate.mjs",
+    "tests": "catalog.test.mjs",
+    "actualProbes": [
+      "probes/cheap.mjs",
+      "probes/edge.py"
+    ],
+    "sourceSnapshots": "sources/",
+    "integrationManifest": "integration-manifest.json",
+    "readme": "README.md"
+  },
+  "integration": {
+    "owner": "W3 sole integration owner",
+    "target": "experiments/capability-discovery/catalog",
+    "copy": "Only17 files listed in integration-manifest.json; preserve relative paths. Optionally retain integration-manifest.json as provenance.",
+    "exclude": [
+      "build-catalog.py (scratch-only absolute-path generator)",
+      ".runtime (generated import-specifier mirrors)",
+      "local test-result artifacts"
+    ],
+    "portableCommands": [
+      "node validate.mjs",
+      "node --test catalog.test.mjs",
+      "node probes/cheap.mjs",
+      "python probes/edge.py"
+    ]
+  },
+  "counts": {
+    "exactSourceSnapshots": 9,
+    "actualOperations": 16,
+    "capabilityGroups": 5,
+    "guardedRecipes": 3,
+    "validationTests": 6
+  },
+  "tests": [
+    {
+      "command": "node validate.mjs",
+      "status": "PASS",
+      "evidence": "validation.json",
+      "checks": "Nine exact SHA256/git-blob snapshots, existing operation/source/dependency IDs, callable symbols, input/output frames, probe/falsifier metadata, guarded branch contracts and targets, evidence-only/acceptance restrictions."
+    },
+    {
+      "command": "node --test catalog.test.mjs",
+      "status": "PASS",
+      "passed": 6,
+      "failed": 0,
+      "evidence": "catalog-tests.tap",
+      "checks": "Good source/catalog; reject missing dependency/accepted claim; reject absent fallback target; numeric/default/null/tied width UNKNOWN; finite separated width evidence only; rail UNKNOWN with combined observed."
+    },
+    {
+      "command": "node probes/cheap.mjs",
+      "status": "PASS",
+      "evidence": "cheap-probe.json",
+      "checks": "Source-bound paired support/cost, routing scale+offset, exact R101 inner-only observation and tracker combined consumption, no-evidence width defaults/guards, visible separated width40, occluder transit3steps, assignment helpers preserve distinct candidate IDs."
+    },
+    {
+      "command": "python probes/edge.py",
+      "status": "PASS",
+      "evidence": "edge-probe.json",
+      "checks": "Exact edge_pair AST selected after SHA256 verification: synthetic40px profile yields width40.25px, center-.25px; zero visibility returnsNone. Historical loader not imported."
+    }
+  ],
+  "flowBeforeTests": "Explained validation source/contracts -> evidence guards -> conditional recipe branches -> synthetic exact-source probes before executing tests; updated dataflow so edge.profile and CourseAdapter guard precede edge.pair.",
+  "limitations": [
+    "No full scoring/corpus/native replay, heldout evaluation, performance, geometry or human acceptance.",
+    "Source-only probeCoverage applies to full matching.rawPairs/matching.score and edge.profile/fit/refine; helper execution does not claim full-operation behavior validation.",
+    "Type-only imports erased by Node are not typechecked; full TypeScript compilation not performed.",
+    "CourseAdapter remains caller supplied; full historical trace not portable due hardcoded paths/globalTEES.",
+    "Source snapshots contain existing algorithms; generated import mirrors only adapt module extensions.",
+    "Width guard is conservative evidence bookkeeping, not validation of true hallway width or a replacement CV algorithm.",
+    "Prototype pixel defaults and finite path reachability do not establish zoom-global behavior or endpoint ownership."
+  ],
+  "constraints": {
+    "scratchOnly": true,
+    "repositoryEdits": false,
+    "gitEdits": false,
+    "productionChanges": false,
+    "newCV": false,
+    "corpusAccess": false
+  },
+  "next": "PASS4 independent review."
+}

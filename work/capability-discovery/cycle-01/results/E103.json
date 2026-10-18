@@ -1,0 +1,281 @@
+{
+  "schema": "capability-discovery-worker@1",
+  "worker": "W5",
+  "assignment": "E103",
+  "pass": 1,
+  "verdict": "MAYBE",
+  "probeVerdict": "PASS",
+  "repositoryHeadPinned": "37a2dba87d61262f661af70f1a22440736e61efc",
+  "activeReference": "49255331791b1245cf0f9cd699816175f94e70f2",
+  "providerPinned": "5433854c72b1dc5aa420934d91e16458c2abe09f",
+  "sources": [
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/ribbon.ts",
+      "gitBlob": "f74fda826701b534c131ffd6fa2b7e1a152a4a67",
+      "sha256": "b2bac13005c815cbbd0b854dc2ed16db4d6dcea6ceed3cbea4c70cd2745045bb"
+    },
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/routing.ts",
+      "gitBlob": "9579d63a7ffc209d604251ae2b7f78ba0dd9f13b",
+      "sha256": "718c025e8db224198c553b09c1657d4494731bec90654487345a613268c0d1e1"
+    },
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/scoring.ts",
+      "gitBlob": "255d9ac4518c4d34a607776c2bd5c7e9946f246f",
+      "sha256": "d0d23d68d408806076b34b40f3c8140fc9a06e663c7ceafccfdfde8c79a22d22"
+    },
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/assignment.ts",
+      "gitBlob": "2f362b7abb231d2234f0ee81741f0c091b2c0095",
+      "sha256": "2f56a606fce6543ca96bcd1a1b2300af4e2ce0c29f2c27fd9378bc76f065946e"
+    },
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/measure.ts",
+      "gitBlob": "50e6f0831a1e41947ace78863c30f82d001f44cb",
+      "sha256": "2b6d8abba46580501a51d6b08ee32e3f259664358f7233a1876012057300a7bf"
+    },
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/features/g4.teeBadgeLockMath.ts",
+      "gitBlob": "65e5c500d9a22141560c4741c017df091d2fa442",
+      "sha256": "b9532fa20d351a85b3f264cc8054b2bdd1eb4a91a4a019c7759c4730b2d41141"
+    },
+    {
+      "path": "AGENTS.md",
+      "gitBlob": "08b81e317ebc7d4c806fe06e7aa2c83be233c334",
+      "sha256": "aa90d43cceed1e579a71ef998ac15e6e6972be8c71ee8d82e1285fc60203f456"
+    },
+    {
+      "path": "DOCTRINE.md",
+      "gitBlob": "1256925a36e067b802617c50ea265f1051daf888",
+      "sha256": "2f9a40040aecbe0aecb3bcb5685a2212cd197ccc20be92e55b07938d9987fe08"
+    },
+    {
+      "path": "docs/agents/lanes-s5s7.md",
+      "gitBlob": "ea9345e808150b7359c04289f7cbafbf239bcb81",
+      "sha256": "4bfdad283653e71074407eabcd65a995fbc24cb4fd71597ba88d0b056b71c911"
+    },
+    {
+      "path": "docs/evidence/s7main/teebadge.py",
+      "gitBlob": "be9012fd362065e1bc693dfecb9516dabe65d528",
+      "sha256": "13bd201c97d5dad04a9495c7a175094b02d0863dfc4bbcd93523bd057ade9bce"
+    },
+    {
+      "path": "docs/evidence/s7main/track.py",
+      "gitBlob": "919bb6370228b1bd2e899b0565bfda41998eca4b",
+      "sha256": "83a1e85c032669c383845d9c3dd98ae9559f2d67457ffa63d3354d0707622bc6"
+    },
+    {
+      "path": "docs/evidence/s7main/polyscore.py",
+      "gitBlob": "580bc0b5fe2941ea0671c912cffeaa6fc683f92a",
+      "sha256": "ec4ab602c5a43edc1d0423e253fb1fb606a9352db5efb6cfdabacaf307e66f81"
+    }
+  ],
+  "probe": {
+    "schema": "discovery-feature-falsifier@1",
+    "status": "PASS",
+    "scope": "synthetic pure math; no native full replay, no CV/default edits",
+    "noAlignment": {
+      "straight": {
+        "score": 1.6,
+        "pathLengthPx": 90,
+        "efficiency": 1
+      },
+      "sixBends": {
+        "score": 1.6,
+        "pathLengthPx": 170,
+        "efficiency": 1.8888888888888888
+      }
+    },
+    "nativeAlignment": {
+      "straight": {
+        "score": 1.599999999999996,
+        "pathLengthPx": 90,
+        "efficiency": 1
+      },
+      "sixBends": {
+        "score": 1.5999999999999952,
+        "pathLengthPx": 170,
+        "efficiency": 1.8888888888888888
+      }
+    },
+    "zeroScoreSelection": {
+      "selectedTriples": 1,
+      "interpretation": "legacy assignment alone does not abstain for zero score"
+    },
+    "blankSupportRoute": {
+      "reachable": true,
+      "geodesicCostFieldCells": 276.5999998450279,
+      "pathSampleCount": 61
+    },
+    "scaleInvariantFeatureContract": {
+      "runLengthsInFullRibbonWidths": [
+        0.5,
+        2,
+        1,
+        4,
+        1,
+        2,
+        3.5
+      ],
+      "turnRadians": [
+        1.5707963267948966,
+        -1.5707963267948966,
+        -1.5707963267948966,
+        1.5707963267948966,
+        1.5707963267948966,
+        -1.5707963267948966
+      ],
+      "scaleReferent": "same-image full visible ribbon width; not meter scale"
+    },
+    "edgeContractExample": {
+      "widthPx": 10,
+      "centreOffsetInWidths": 0.2,
+      "referent": "one visible cross-section; endpoints unavailable => UNKNOWN"
+    },
+    "widthResponse": [
+      {
+        "fullWidthSourcePx": 10,
+        "bankFullWidthsSourcePx": [
+          10
+        ],
+        "peakNormalizedSupport": 1,
+        "positiveSupportCells": 4478,
+        "centreSupport": 1
+      },
+      {
+        "fullWidthSourcePx": 30,
+        "bankFullWidthsSourcePx": [
+          10
+        ],
+        "peakNormalizedSupport": 2.46326647967976e-09,
+        "positiveSupportCells": 2903,
+        "centreSupport": 0
+      },
+      {
+        "fullWidthSourcePx": 60,
+        "bankFullWidthsSourcePx": [
+          10
+        ],
+        "peakNormalizedSupport": 2.46326647967976e-09,
+        "positiveSupportCells": 1757,
+        "centreSupport": 0
+      },
+      {
+        "fullWidthSourcePx": 30,
+        "bankFullWidthsSourcePx": [
+          10,
+          30,
+          60
+        ],
+        "peakNormalizedSupport": 1,
+        "positiveSupportCells": 7395,
+        "centreSupport": 1
+      },
+      {
+        "fullWidthSourcePx": 60,
+        "bankFullWidthsSourcePx": [
+          10,
+          30,
+          60
+        ],
+        "peakNormalizedSupport": 1,
+        "positiveSupportCells": 6872,
+        "centreSupport": 1
+      }
+    ],
+    "cautions": [
+      "Sampled path bends are not physical bends: merge collinear runs and set a noise/visibility policy before counting.",
+      "Exponential base beyond three bends is unresolved; this probe chooses none.",
+      "Connected component area cannot separate a wide organic patch from a long narrow valid ribbon.",
+      "Normalized support loses raw edge magnitude and width/orientation alternatives; strongest bank response can belong to a distractor."
+    ]
+  },
+  "sourceFindings": [
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/routing.ts",
+      "lines": "49-105,138-155",
+      "finding": "Finite scalar support cost flood, one predecessor per cell, no heading/bend history; one surviving route per badge-endpoint."
+    },
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/scoring.ts",
+      "lines": "324-383,402-412",
+      "finding": "pathLengthPx and efficiency recorded but absent from score product; local alignment is not total bend count or long-run reward. zfit searches a limited polyline family and rescales score, without replacing emitted raw paths."
+    },
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/ribbon.ts",
+      "lines": "193-257",
+      "finding": "max over orientation and full source-pixel width bank retains support and bestTheta, but discards winning width, runner-up edge pair, raw magnitude and bilateral-edge positions before routing."
+    },
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/assignment.ts",
+      "lines": "75-117,211-336,368-386",
+      "finding": "All available badge\u00d7tee\u00d7basket triples scored; same endpoint route reused for every opposite endpoint. Greedy/local exchanges plus three starts are heuristic, not exact 3-way optimization. Positive evidence abstention is not automatic; alternatives output truncated to three."
+    },
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/features/g4.teeBadgeLockMath.ts",
+      "lines": "486-632",
+      "finding": "Distinct ridge tracer emits UNKNOWN for ambiguous-fork/petered-out/etc.; bendCount counts contiguous turning phases rather than fitted physical bends. Arrival is basket footprint membership before checking support, not identity proof."
+    },
+    {
+      "path": "docs/evidence/s7main/teebadge.py",
+      "lines": "11-35",
+      "finding": "Existing prototype learns median full ribbon width from tee\u2192badge cross profiles; uses raw luminance gradient edge pairs and per-course usable-segment count/IQR. Source has absolute width search 18..59 px; do not call it zoom-global or meter scale."
+    },
+    {
+      "path": "docs/evidence/s7main/track.py",
+      "lines": "15-37,83-110",
+      "finding": "Existing paired-edge fit returns left/right/midpoint/width; bend search penalizes lateral midpoint offset. Prototype can supply centerline evidence without inventing a new intensity signal."
+    }
+  ],
+  "proposedFeatureContract": {
+    "status": "proposal; no constants accepted",
+    "inputs": [
+      "candidate triple and path variants with endpoint provenance/uncertainty",
+      "per-image full visible ribbon width and uncertainty learned from verified/qualified tee\u2192badge segments",
+      "visible cross-section paired edges and ownership/occlusion masks"
+    ],
+    "outputs": [
+      "run lengths divided by same-image full ribbon width",
+      "signed physical turn angles radians after declared segmentation policy; raw grid turns remain separate",
+      "center displacement / full local edge-pair width; bilateral visible fraction; UNKNOWN when edges insufficient",
+      "local transverse width / learned full ribbon width; organic component area / width squared descriptive only",
+      "shape score breakdown separate from endpoint assignment and abstention disposition"
+    ],
+    "unresolved": [
+      "sharp-bend angular definition and noise segmentation",
+      "exponential base after >3 physical bends",
+      "relative weighting and minimum evidence",
+      "retaining alternate routes versus rescore-only limitation"
+    ]
+  },
+  "conditionalNextPackets": [
+    {
+      "id": "W5-P2-centerline-port",
+      "condition": "Existing prototype graduation is in scope",
+      "action": "Compare track.edge_pair and polyscore outputs unchanged on archived prototype rows; preserve masks, edge support count, midpoint and full-width uncertainty; no new signal."
+    },
+    {
+      "id": "W5-P3-route-family",
+      "condition": "W2 native baseline is through S7 and route alternatives measurable",
+      "action": "Synthetic same-endpoint fork: scalar-cheaper wiggly support branch versus slightly weaker straight branch. Verify rescore-only cannot recover discarded path; compare path-family retention or heading-state variant as proposal."
+    },
+    {
+      "id": "W5-P3-width-learning",
+      "condition": "Qualified tee\u2192badge segments exist per image",
+      "action": "Cross-validate local width estimate without testimony dependency; compare frozen broad bank vs per-image width likelihood on dev-only oversized organic patches and true wide/crossing ribbons; abstain when width evidence absent."
+    },
+    {
+      "id": "W5-P3-matching",
+      "condition": "Candidate triple ledger available",
+      "action": "Keep scored alternatives and UNKNOWNs; measure row/endpoint ranking, assignment conflict and S7 trace disagreement separately. A perfect-looking one-to-one assignment is not a correctness claim."
+    }
+  ],
+  "constraints": {
+    "antiAliasMuting": "wait for baseline through S7; untouched",
+    "sealedData": "not read",
+    "activeBranchMutation": false,
+    "fullReplay": false,
+    "commitsPRs": false,
+    "subagents": false
+  }
+}

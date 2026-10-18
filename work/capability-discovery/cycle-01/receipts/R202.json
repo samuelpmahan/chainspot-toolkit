@@ -1,0 +1,197 @@
+{
+  "job_id": "R202",
+  "worker": "W6",
+  "decision": "amend",
+  "summary": "Portable negative-probe pack reproduces all14 authored cases with4 source hash/blob checks and exact relocation receipt equality. Three narrow structural contract amendments required: reject negative width-spread evidence, require distinct candidate widths with unambiguous rows, and keep missing/nonfinite paired rails UNKNOWN. No production/image improvement or calibrated width confidence inferred.",
+  "reviewedIdentities": {
+    "W1ResultSha256": "5a7df706fed85e1797c17638759d7ed12464ff807d338992342608a1978d91c1",
+    "recipeSha256": "8285b9734e41d3838abb4a192218ee434cb2c8a6cbb8a667f14556ab7762ccde",
+    "probeSha256": "864b56f086742aa3591e126f788fd347228bf70f4b6301f56ead5ffa6d1819ef",
+    "metadataSha256": "cb0f38c99e725d5081cfb5ffc0271203f5c970cf03f2ec3180ffa978ee9a46ac",
+    "provenanceSha256": "0f3de094060d64f7614be6a8fa5023180e75070d33153976bdf318a734fdffaf",
+    "archiveSha256": "54c95f4d8f4011d90abfddfa09023b7764dcc33bd102804dd167678254917eb7",
+    "actualReceiptSha256": "88a1ac19ff33043836e00cbfcb15aca8be364c461b0631e295300f39adb967de"
+  },
+  "actualVerification": {
+    "metadataChecks": 11,
+    "sourceChecks": [
+      {
+        "file": "vendor/active/ports/s6straight/pathSpace.mjs",
+        "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+        "gitBlob": "38963d20f7a8b7c7851b3a2abea2e472da8f7716",
+        "independentGitSourceAvailable": true,
+        "independentGitSourceEqual": true
+      },
+      {
+        "file": "vendor/active/contracts/alpha.profile@1.mjs",
+        "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+        "gitBlob": "6f50530ff8f7d5c613ee739224d475657fcbf647",
+        "independentGitSourceAvailable": true,
+        "independentGitSourceEqual": true
+      },
+      {
+        "file": "vendor/provider/fourLaneSensor.cjs",
+        "sha256": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624",
+        "gitBlob": "2167c3539aa33856738e679c75869d6c3395afe8",
+        "independentGitSourceAvailable": true,
+        "independentGitSourceEqual": true
+      },
+      {
+        "file": "vendor/dev72/fourLaneRibbon.ts",
+        "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+        "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+        "independentGitSourceAvailable": false,
+        "independentGitSourceEqual": null
+      }
+    ],
+    "rerunCases": 14,
+    "relocationParsedReceiptEqual": true,
+    "originalReceiptEqual": true,
+    "receiptSha256": "88a1ac19ff33043836e00cbfcb15aca8be364c461b0631e295300f39adb967de"
+  },
+  "acceptedBoundary": [
+    "Existing width/offset mechanisms and negative controls are executed against exact bundled sources, with nominal/raster/fitted width distinctions.",
+    "All-hidden legacy width/fallback does not satisfy guard: width remains null/UNKNOWN. Missing evidence and tied distinct candidates also UNKNOWN.",
+    "ELIGIBLE_FOR_COMPARISON always promoted=false; thresholds are synthetic caller policy, not measured physical confidence or accepted scientific outcome.",
+    "Package portable without network or installed dependencies;14case rerun parsed receipt equals original and relocated receipt."
+  ],
+  "requiredAmendments": [
+    {
+      "id": "nonnegative-spread",
+      "path": "recipe.mjs:12",
+      "finding": "Finite relativeWidthIqr=-1 passes current check and becomes ELIGIBLE_FOR_COMPARISON. A negative dispersion ratio is invalid evidence.",
+      "requirement": "Require finite nonnegative relativeWidthIqr before applying maxRelativeWidthIqr; add negative/NaN/Infinity cases."
+    },
+    {
+      "id": "distinct-unambiguous-candidates",
+      "path": "recipe.mjs:16-20",
+      "finding": "Two rows for width40 with scores1 and0.2 are treated as best/rival and yield separation0.8/ELIGIBLE despite no distinct alternative width. This is malformed/conflicting input; no claim existing estimator emits such conflicting duplicate rows.",
+      "requirement": "Require distinct candidate width identities and reject conflicting duplicates rather than manufacturing separation. Add duplicate-same-score and duplicate-conflicting-score tests."
+    },
+    {
+      "id": "missing-paired-rails",
+      "path": "recipe.mjs:25-27",
+      "finding": "railMode paired with missing fields or NaN rails returns OBSERVED_CHANNELS because only strict null is rejected. It does not set positiveEvidenceClaimed, but status misstates observation availability.",
+      "requirement": "Require finite numeric left/right rail channels, and preserve missing/nonfinite cases as UNKNOWN. Add missing, undefined, NaN, Infinity and single-visible rail tests."
+    }
+  ],
+  "adversarialCases": [
+    {
+      "id": "missing-evidence",
+      "actual": {
+        "status": "UNKNOWN",
+        "widthPx": null,
+        "reasons": [
+          "qualified straight segments and explicit LOCAL frame required"
+        ],
+        "promoted": false
+      },
+      "expectedStatus": "UNKNOWN",
+      "mismatch": false
+    },
+    {
+      "id": "all-hidden",
+      "actual": {
+        "status": "UNKNOWN",
+        "widthPx": null,
+        "reasons": [
+          "at least two supported candidate scores required to assess separation"
+        ],
+        "promoted": false
+      },
+      "expectedStatus": "UNKNOWN",
+      "mismatch": false
+    },
+    {
+      "id": "equal-score-ambiguous",
+      "actual": {
+        "status": "UNKNOWN",
+        "widthPx": null,
+        "reasons": [
+          "weak or inseparable supported candidate scores"
+        ],
+        "promoted": false
+      },
+      "expectedStatus": "UNKNOWN",
+      "mismatch": false
+    },
+    {
+      "id": "negative-relative-width-iqr",
+      "actual": {
+        "status": "ELIGIBLE_FOR_COMPARISON",
+        "widthPx": 40,
+        "separation": 0.8,
+        "promoted": false,
+        "reasons": [
+          "synthetic/recipe eligibility only; no endpoint or real-image acceptance"
+        ]
+      },
+      "expectedStatus": "UNKNOWN",
+      "mismatch": true
+    },
+    {
+      "id": "duplicate-width-conflicting-scores",
+      "actual": {
+        "status": "ELIGIBLE_FOR_COMPARISON",
+        "widthPx": 40,
+        "separation": 0.8,
+        "promoted": false,
+        "reasons": [
+          "synthetic/recipe eligibility only; no endpoint or real-image acceptance"
+        ]
+      },
+      "expectedStatus": "UNKNOWN",
+      "mismatch": true
+    },
+    {
+      "id": "paired-rails-missing-fields",
+      "actual": {
+        "status": "OBSERVED_CHANNELS",
+        "combinedScore": 1,
+        "positiveEvidenceClaimed": false
+      },
+      "expectedStatus": "UNKNOWN",
+      "mismatch": true
+    },
+    {
+      "id": "paired-rails-nan",
+      "actual": {
+        "status": "OBSERVED_CHANNELS",
+        "leftRail": {
+          "numberKind": "nonfinite",
+          "value": "NaN"
+        },
+        "rightRail": {
+          "numberKind": "nonfinite",
+          "value": "NaN"
+        },
+        "combinedScore": 1,
+        "positiveEvidenceClaimed": false
+      },
+      "expectedStatus": "UNKNOWN",
+      "mismatch": true
+    }
+  ],
+  "evidence": {
+    "verification": "verification.json",
+    "repro": "adversarial.mjs",
+    "observations": "adversarial-observations.json",
+    "packageReceipt": "package/receipts/review.json",
+    "relocatedReceipt": "relocated/receipts/review.json",
+    "adversarialScriptSha256": "d5c557bea5518fe645f7c7b7b6915b254c5dcba135f2215d5bd091a888a0cad5",
+    "adversarialObservationSha256": "1d3fb518391ce720a19f63a5f94c25c9422ace02db85c56d585b40a8566591a3"
+  },
+  "limitations": [
+    "Three toolkit source origins independently matched git show exactref bytes. Dev72 original ref unavailable in local toolkit object database: independently recomputed its bundled SHA256+Git blob agrees provenance, but original upstream location not freshly retrieved.",
+    "Guard validates declared evidence fields only; real data/provenance substantiation remains future work, as W1 documents.",
+    "Adversarial malformed inputs are synthetic structural cases, not discoveries about image accuracy or current calibrated confidence."
+  ],
+  "actions": {
+    "sharedEdits": false,
+    "repoEdits": false,
+    "sourceRepairs": false,
+    "fullImageReplay": false,
+    "sealedAccess": false
+  },
+  "next": "Root/W3 designated owner repairs and reruns own updated tests; W6 independently rechecks changed exact package before acceptance. Do not self-accept."
+}

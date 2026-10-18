@@ -1,0 +1,218 @@
+{
+  "schema": "guarded-capability-recipes@1",
+  "terminalStatuses": [
+    "evidence_only",
+    "unknown",
+    "candidate_assignment",
+    "needs_recovery"
+  ],
+  "guards": [
+    "width_evidence_separated",
+    "rail_observed",
+    "interior_only",
+    "combined_unknown",
+    "adapter_available",
+    "candidate_pools_available"
+  ],
+  "recipes": [
+    {
+      "id": "width-conditioned-local-trace",
+      "inputs": [
+        "course raster",
+        "candidate Tee->Badge segments",
+        "candidateWidthsPx",
+        "known occluders"
+      ],
+      "steps": [
+        {
+          "id": "learn",
+          "operations": [
+            "width.learn"
+          ],
+          "next": "gate"
+        },
+        {
+          "id": "gate",
+          "guard": "width_evidence_separated",
+          "whenTrue": "trace",
+          "whenFalse": "fallback"
+        },
+        {
+          "id": "trace",
+          "operations": [
+            "tracker.seed",
+            "tracker.exit",
+            "tracker.follow"
+          ],
+          "next": "channels"
+        },
+        {
+          "id": "channels",
+          "guard": "rail_observed",
+          "whenTrue": "edgecheck",
+          "whenFalse": "interiorcheck"
+        },
+        {
+          "id": "interiorcheck",
+          "guard": "interior_only",
+          "whenTrue": "interiorEvidence",
+          "whenFalse": "unknown"
+        },
+        {
+          "id": "edgecheck",
+          "guard": "adapter_available",
+          "whenTrue": "edgeprofile",
+          "whenFalse": "evidence"
+        },
+        {
+          "id": "interiorEvidence",
+          "terminal": "evidence_only",
+          "note": "Combined tracker evidence may be interior-only; no rail identity assertion."
+        },
+        {
+          "id": "fallback",
+          "operations": [
+            "support.field",
+            "support.cost",
+            "routing.legs"
+          ],
+          "next": "unknown"
+        },
+        {
+          "id": "unknown",
+          "terminal": "unknown",
+          "note": "Retain candidate width bank and raw rows; numeric fallback is not learned width."
+        },
+        {
+          "id": "evidence",
+          "terminal": "evidence_only"
+        },
+        {
+          "id": "edgeprofile",
+          "operations": [
+            "edge.profile",
+            "edge.pair"
+          ],
+          "next": "evidence"
+        }
+      ]
+    },
+    {
+      "id": "candidate-route-match",
+      "inputs": [
+        "measurement",
+        "candidate endpoint pools",
+        "local source knobs"
+      ],
+      "steps": [
+        {
+          "id": "paths",
+          "operations": [
+            "support.field",
+            "support.cost",
+            "routing.legs"
+          ],
+          "next": "pairs"
+        },
+        {
+          "id": "pairs",
+          "operations": [
+            "matching.rawPairs",
+            "matching.score",
+            "matching.rank"
+          ],
+          "next": "coverage"
+        },
+        {
+          "id": "coverage",
+          "guard": "candidate_pools_available",
+          "whenTrue": "select",
+          "whenFalse": "recovery"
+        },
+        {
+          "id": "select",
+          "operations": [
+            "matching.select"
+          ],
+          "next": "candidate"
+        },
+        {
+          "id": "candidate",
+          "terminal": "candidate_assignment",
+          "note": "Hypothesis with alternatives, never accepted parse."
+        },
+        {
+          "id": "recovery",
+          "terminal": "needs_recovery",
+          "note": "Caller must supply endpoint recovery operation; catalog does not invent one."
+        }
+      ]
+    },
+    {
+      "id": "edge-refine-candidate",
+      "inputs": [
+        "candidate polyline",
+        "evidence-supported width",
+        "Course-like adapter"
+      ],
+      "steps": [
+        {
+          "id": "adapter",
+          "guard": "adapter_available",
+          "whenTrue": "fit",
+          "whenFalse": "unknown"
+        },
+        {
+          "id": "fit",
+          "operations": [
+            "edge.fit",
+            "edge.refine"
+          ],
+          "next": "evidence"
+        },
+        {
+          "id": "evidence",
+          "terminal": "evidence_only"
+        },
+        {
+          "id": "unknown",
+          "terminal": "unknown",
+          "note": "Historical Course loader is not portable; do not import its hardcoded paths."
+        }
+      ]
+    }
+  ],
+  "guardContracts": {
+    "width_evidence_separated": {
+      "module": "guards.mjs#widthEvidence",
+      "requires": [
+        "nonempty segments and candidate bank",
+        "finite scored rows with positive visibleSamples",
+        "positive strictly separated winner"
+      ],
+      "failure": "UNKNOWN; no measured-width claim"
+    },
+    "rail_observed": {
+      "module": "guards.mjs#observationChannels",
+      "predicate": "railScore is finite; rail identity remains unproven"
+    },
+    "interior_only": {
+      "module": "guards.mjs#observationChannels",
+      "predicate": "railScore UNKNOWN and innerScore finite; combined may remain finite"
+    },
+    "combined_unknown": {
+      "module": "guards.mjs#observationChannels",
+      "predicate": "combined score is not finite"
+    },
+    "adapter_available": {
+      "externalContract": "external:CourseAdapter",
+      "predicate": "caller supplies same-frame raster/mask adapter and sampler; never imports historical hardcoded loader"
+    },
+    "candidate_pools_available": {
+      "predicate": "caller supplies candidate pools for requested badges; this is availability only, never proof of endpoint completeness",
+      "failure": "needs_recovery",
+      "externalContract": "external:CandidatePools"
+    }
+  },
+  "guardContractVersion": 2
+}

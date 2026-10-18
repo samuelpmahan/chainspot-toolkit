@@ -1,0 +1,80 @@
+{
+  "schema": "chainspot.discovery-review/v1",
+  "job_id": "R105",
+  "worker": "W3",
+  "producerWorker": "W2",
+  "producerJob": "E105",
+  "decision": "accepted",
+  "summary": "Accepted as a fresh, bounded existing baseline/heading native replay after original-fixture recovery. Independently rehashed checkpoint and fork closures, receipt/source/config/executable bindings, recomputed request/variant identities and polyline lengths. Heading delta is +37 px and +1 recorded bend; all six native outcomes remain unknown/petered-out with no basket assignment. This is technical replay evidence, not new route capability, geometry acceptance or cache-root proof.",
+  "independence": {
+    "reviewer": "W3",
+    "producer": "W2",
+    "fullReplayRerun": false,
+    "sourceEdits": false,
+    "gitEdits": false,
+    "writeScope": "W3/pass2/**"
+  },
+  "evidence": {
+    "recomputed": "recomputed.json",
+    "producerResultSha256": "90eeeed7b9b5784e3f70acc15cab2cedb958577211f5c88b33737d92d5d36543",
+    "checkpointId": "f40b4ef741d03967774be3240a573f69971c28b562e0f24934f583bb89caa765",
+    "checkpointFilesVerified": 663,
+    "baselineForkFilesVerified": 643,
+    "headingForkFilesVerified": 647,
+    "nativeReceiptSha256": [
+      "bf0ca6a66866c53fe9ad58b55a231e4beb483b66189a5a7ffc46701031cb8ac1",
+      "1b9fd087d8532f7dfd0c06e25f212733de24e8c5e6fde5db1ae5fa037b8c6160"
+    ],
+    "sourceSha256": "e6616738640eee1d05d8cc2b59dd657f24b4a5a01dc2f68571b7e44c6f372b8a",
+    "headingRowSha256": "1117c583dc87e861d7de237a2d6f86b72041925d3b1d44c42b0534dc68683fc8",
+    "configParamsHash": "5d94617898aeee251a389615146de46cc905f2ab340e575699e2779b47fbc3c9",
+    "sourceBlobGitSha1": "ffdd790992dbb0f971e72204c440c0e4c4559216",
+    "onlyCheckpointDifferenceFromPinnedRepo": [
+      {
+        "path": "source/provider/artifacts/replay/source/IMG_5641.jpg",
+        "repositorySha256": null,
+        "workerSha256": "e6616738640eee1d05d8cc2b59dd657f24b4a5a01dc2f68571b7e44c6f372b8a"
+      }
+    ],
+    "processAndLogMatches": true,
+    "allRequestFingerprintsMatch": true,
+    "allVariantIdentitiesMatch": true
+  },
+  "comparison": {
+    "sourceSha256Equal": true,
+    "canonicalSha256MetadataEqual": true,
+    "paramsHashEqual": true,
+    "baselineFieldSupportHashEqual": true,
+    "baselineFieldThetaHashEqual": true,
+    "baselineFieldSummaryEqual": true,
+    "headingSignedDeltaDeg": 47.74449259623379,
+    "traceLengthDeltaPx": 37,
+    "bendCountDelta": 1,
+    "allNativeOutcomesUnknown": true,
+    "allNativeReasonsPeteredOut": true,
+    "anyNativeBasketId": false,
+    "humanAcceptance": [
+      "UNKNOWN",
+      "UNKNOWN"
+    ]
+  },
+  "requiredAmendments": [],
+  "interpretiveNotes": [
+    "W2 comparison.endpointArrival=false means no arrival event was reported; actual arrival validity remains UNKNOWN, matching W2 verdictScope. Prefer endpointArrivalObserved:false in future adapters.",
+    "Native unknown traces omit basketId; W2 null is an absence normalization. A row id naming basket-10 is an unowned geometry hint, not assigned basket ownership.",
+    "Both field support/theta hashes and complete summaries match across native baseline and heading, and both receipts record baselineExact:true. Those hashes are native testimony bound to source/code, not an independently regenerated field-array check.",
+    "The first ENOENT is an executable fixture-availability failure before CV, preserved as technical failure evidence; it cannot falsify a route hypothesis.",
+    "The original JPEG is the only checkpoint-file difference from the pinned repository, restored byte-for-byte from the stated active-reference Git blob. Target scripts/config/declarations are unchanged."
+  ],
+  "limitations": [
+    "No full CV replay performed in review. Field arrays are not persisted by legacy receipt; cross-receipt support/theta hashes and summaries were compared, not regenerated from raw arrays.",
+    "Canonical RGBA SHA is matching receipt/capture metadata; this review independently hashed JPEG bytes but did not decode/crop pixels.",
+    "Legacy probe does not emit cache root key or a transitive compiled-code identity; current checkpoint closure was separately rehashed.",
+    "No basketId property is emitted on unknown native traced results; W2 summary null is a normalization of absence, not a successful null-valued ownership test."
+  ],
+  "nextEligible": [
+    "Use current unknown replay as the input to a separately preregistered negative-case falsifier, including badge exit and crossing ambiguity.",
+    "A longer trace alone cannot authorize retain; require current independent protocol validation plus separate explicit scoped Sam acceptance.",
+    "Treat initial worker-state acknowledgement gap as historical: root states the initial six starts were acknowledged before PASS1 finish and PASS2 starts are acknowledged immediately."
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "epoch": 2,
+  "at": "2026-10-18T08:08:09.111979+00:00",
+  "ready_jobs": [
+    "E201",
+    "E202",
+    "E203",
+    "E204",
+    "E205",
+    "E206"
+  ],
+  "pinned_workers": [],
+  "assignments": {
+    "W6": "E206",
+    "W2": "E205",
+    "W5": "E204",
+    "W3": "E201",
+    "W1": "E202",
+    "W4": "E203"
+  },
+  "dispatch": {
+    "W6": "E206",
+    "W2": "E205",
+    "W5": "E204",
+    "W3": "E201",
+    "W1": "E202",
+    "W4": "E203"
+  },
+  "native_seconds": 0.005977876997349085,
+  "native_constraints": {
+    "solved": true,
+    "brokenVal": 0,
+    "brokenCount": 0,
+    "constraints": [
+      {
+        "name": "independent_review",
+        "desc": "avoidAssignmentsSpec: Avoid 6 assignments on scope packets",
+        "value": 0
+      },
+      {
+        "name": "pin_in_flight",
+        "desc": "avoidMovingSpec: Avoid moving 0 objects",
+        "value": 0
+      },
+      {
+        "name": "ready_packet_capacity",
+        "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+        "value": 0
+      }
+    ]
+  },
+  "independent_capacity_check": true,
+  "independent_eligibility_check": true,
+  "exact_score": 800,
+  "native_score": 800,
+  "caps": {
+    "E101": 0,
+    "E102": 0,
+    "E103": 0,
+    "E104": 0,
+    "E105": 0,
+    "E106": 0,
+    "R101": 0,
+    "R102": 0,
+    "R103": 0,
+    "R104": 0,
+    "R105": 0,
+    "R106": 0,
+    "E201": 1,
+    "E202": 1,
+    "E203": 1,
+    "E204": 1,
+    "E205": 1,
+    "E206": 1,
+    "R201": 0,
+    "R202": 0,
+    "R203": 0,
+    "R204": 0,
+    "R205": 0,
+    "R206": 0,
+    "BENCH": 6
+  },
+  "eligible": {
+    "E201": [
+      "W3"
+    ],
+    "E202": [
+      "W2",
+      "W1"
+    ],
+    "E203": [
+      "W5",
+      "W4"
+    ],
+    "E204": [
+      "W5",
+      "W1"
+    ],
+    "E205": [
+      "W2"
+    ],
+    "E206": [
+      "W6",
+      "W4"
+    ]
+  },
+  "weights": {
+    "E201": 100,
+    "E202": 100,
+    "E203": 300,
+    "E204": 100,
+    "E205": 100,
+    "E206": 100
+  },
+  "agent_by_worker": {
+    "W6": null,
+    "W5": null,
+    "W4": null,
+    "W3": null,
+    "W2": null,
+    "W1": null
+  }
+}

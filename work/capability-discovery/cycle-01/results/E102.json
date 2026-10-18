@@ -1,0 +1,217 @@
+{
+  "schema": "capability-discovery-result@1",
+  "worker": "W1",
+  "epoch": "00",
+  "pass": "PASS1",
+  "task": "E102",
+  "outcome": "MAYBE",
+  "boundedOutcome": "PASS callable width/edge operations and synthetic width selectivity; FAIL width-only repair of recorded IMG_5641 partial trace; MAYBE tee-to-badge calibration on present real pixels pending held-out segment measurements.",
+  "constraints": {
+    "sourceEdits": false,
+    "gitEdits": false,
+    "fullReplayRun": false,
+    "AAChanged": false,
+    "sealedCorpusAccessed": false,
+    "providerPinReportedByParent": "5433854c72b1dc5aa420934d91e16458c2abe09f",
+    "providerPinLocallyResolvable": false
+  },
+  "sources": [
+    {
+      "id": "S1",
+      "revision": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/ribbon.ts",
+      "sha256": "b2bac13005c815cbbd0b854dc2ed16db4d6dcea6ceed3cbea4c70cd2745045bb",
+      "gitBlob": "f74fda826701b534c131ffd6fa2b7e1a152a4a67"
+    },
+    {
+      "id": "S2",
+      "revision": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/ribbon.js",
+      "sha256": "25635c2682a1f5ee3d3253207dcf6ba930ad23f968ac0bd316de1103391b8bc3",
+      "gitBlob": "7278dd36e165971cf08daba5854db98e4a984bd6"
+    },
+    {
+      "id": "S3",
+      "revision": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/features/st.fourLaneSensor.ts",
+      "sha256": "b28a966f068f65d1087507e6220dd172b45ffcc48ac4c3caa6f8443618fc3904",
+      "gitBlob": "fbb2181a10ed7ae82d546e6bd7fcc7976eaca379"
+    },
+    {
+      "id": "S4",
+      "revision": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/st.fourLaneSensor.js",
+      "sha256": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624",
+      "gitBlob": "2167c3539aa33856738e679c75869d6c3395afe8"
+    },
+    {
+      "id": "S5",
+      "revision": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/features/g4.teeBadgeLockMath.ts",
+      "sha256": "b9532fa20d351a85b3f264cc8054b2bdd1eb4a91a4a019c7759c4730b2d41141",
+      "gitBlob": "65e5c500d9a22141560c4741c017df091d2fa442"
+    },
+    {
+      "id": "S6",
+      "revision": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLockMath.js",
+      "sha256": "14f6147fbf98a57ff624acc86ef34cb9cbe2ae9e6d9d4537eb7111e7d49a12ed",
+      "gitBlob": "3b712771ae86d33530577a957ae52f9b90049081"
+    },
+    {
+      "id": "S7",
+      "revision": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "source/chainspot-teams/s7/width-probe/IMG_5641-badge-9/width-probe.json",
+      "sha256": "bf0ca6a66866c53fe9ad58b55a231e4beb483b66189a5a7ffc46701031cb8ac1",
+      "gitBlob": "ea8447801a885c15a934e44a6a9514a27ac00191"
+    },
+    {
+      "id": "A1",
+      "revision": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "path": "ports/s6straight/pathSpace.mjs",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "gitBlob": "38963d20f7a8b7c7851b3a2abea2e472da8f7716"
+    },
+    {
+      "id": "A2",
+      "revision": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "path": "ports/s6straight/pathLoss.mjs",
+      "sha256": "6564a621624d7f59f959c30a92807ecc1f1efd905e79ec68011f832b85ad1179",
+      "gitBlob": "b1566834248cb372117cb3e92265f9bbf1c81775"
+    },
+    {
+      "id": "A3",
+      "revision": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "path": "docs/evidence/s7main/teebadge.py",
+      "sha256": "13bd201c97d5dad04a9495c7a175094b02d0863dfc4bbcd93523bd057ade9bce",
+      "gitBlob": "be9012fd362065e1bc693dfecb9516dabe65d528"
+    },
+    {
+      "id": "A4",
+      "revision": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "path": "docs/evidence/s7main/track.py",
+      "sha256": "83a1e85c032669c383845d9c3dd98ae9559f2d67457ffa63d3354d0707622bc6",
+      "gitBlob": "919bb6370228b1bd2e899b0565bfda41998eca4b"
+    },
+    {
+      "id": "A5",
+      "revision": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "path": "docs/evidence/s7main/course.py",
+      "sha256": "4a22d0d928a852aeb1da9fc5190ba1544c18a2613a41bc6cbda8fc2cb980a2ef",
+      "gitBlob": "962a26364c273983ba754be51d522de1c1c53913"
+    },
+    {
+      "id": "A6",
+      "revision": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "path": "docs/evidence/s7main/run-golden.log",
+      "sha256": "1885c7c4ffeefc1a95c9f50dca339aa4fe33f08eb1a907612a6b6f99a95b881a",
+      "gitBlob": "130654a3c66bd0b88004e4836cda5a65200af2fb"
+    }
+  ],
+  "operations": [
+    {
+      "sources": [
+        "S1",
+        "S2"
+      ],
+      "call": "computeRibbonSupport(image,parameters,knobs)",
+      "contract": "RGBA raster + fieldScale + orientations + widthsSrc -> support Float32Array and bestTheta Float32Array; keeps MAX score across width/orientation, discards winning width. Paired inward-minus-outward RGB gradients must have positive dot; score=min(norms)*cosine; global positive-score percentile normalization then gamma. buildSupportCost -> 1+costMultiplier*(1-support)^2.",
+      "unitsFrames": "widthsSrc full canonical source px; half-width/scale in support cells; orientation tangent radians modulo pi; support dimensionless relative contrast, not calibrated probability/alpha. Resize dims=floor(image dims/scale); blur sigma support cells.",
+      "limitation": "Cannot infer width posterior or center uncertainty from returned field; changing bank changes global normalization, so normalized support is not pointwise monotone."
+    },
+    {
+      "sources": [
+        "S3",
+        "S4"
+      ],
+      "call": "observeFourLaneCrossSection(image,state,occluders,knobs)",
+      "contract": "Pure point/heading/expected-width sensor; FOUR sampled lanes at [-W/2,-W/6,+W/6,+W/2], dividing three W/3 intervals. Outside guards +/-2W/3; rail differences +/-edgeDeltaPx, inner lift against guards. Score=min(available rail and inner scores); missing/occluded remains null. No heading/width search or ownership.",
+      "unitsFrames": "image px, heading rad, RGB mean levels; normalized lift reference 45 RGB levels is existing default not newly inferred constant.",
+      "limitation": "No separately named three-lane callable found; this actual four-lane operation implements three intervals. Majority blocked samples may drop a rail, requiring railMode review."
+    },
+    {
+      "sources": [
+        "A1",
+        "A2"
+      ],
+      "call": "PATH_QUERIES[fn.q.path.profile|edgePair|width|stationContrast|samples|loss]; hallwayOf(q,{association,badges})",
+      "contract": "Addressed raster px.image.cropped, explicit mask and line origin/heading/stations; profile->edge pair l,r; width=r-l and centre=(l+r)/2; width search best pair. hallwayOf reads straight tee->badge, avoids tee cap/badge, aggregates segment width median/IQR, reports unusable segments.",
+      "unitsFrames": "canonical cropped raster px, profile luminance mean RGB levels, edge gradient lum/px; centre offsets px. Production registration registerPathLoss(store), tk.s6.hallway.",
+      "limitation": "Existing width scan 18..59 px, lateral +/-30 px, center gate 3 px, usable length 25 px are prototype local bounds, not global truths. Width IQR measures segment spread, not independent confidence interval. Source mask dilates sprites 2 px; do not silently adopt/mute AA before S7 baseline."
+    },
+    {
+      "sources": [
+        "S5",
+        "S6"
+      ],
+      "call": "traceBadgeToBasket(input)",
+      "contract": "Steps max(1,corridorWidthPx/4), rotates heading halfway toward bestTheta; half-width side samples detect forks. No lateral move toward edge midpoint. bendCount counts contiguous turning phases above existing 2 deg per step, not polygon bend vertices.",
+      "unitsFrames": "points image/source px with viewportTopPx removed for field indexing; field nearest rounded x/scale,y/scale; theta rad mod pi.",
+      "limitation": "Longer trace does not identify physical endpoint; termination checks supplied basket bbox before support; no >3-bend exponential prior implemented here."
+    }
+  ],
+  "measuredFindings": [
+    {
+      "evidence": "probe-results.json (new actual pure calls)",
+      "finding": "Synthetic 30 px nominal bright stripe on uniform background: four-lane expected W=30 scores 1 centered, 0 at +4 px offset; 60 and 90 px stripes score 0 with W=30. Shows width discrimination under this fixture only, not general organic-blob rejection."
+    },
+    {
+      "evidence": "probe-results.json",
+      "finding": "Active exact widthSearchAt estimates 29 px for nominal 30 px binary stripe (29 occupied rows), center 0; +4 px origin returns null due center gate. Nominal 60 px stripe returns weak truncated 57 px candidate (4.5 lum/px vs 36 for 29 px); 90 px returns null. Search-bound failure can mimic narrower ribbon."
+    },
+    {
+      "evidence": "probe-results.json",
+      "finding": "Uniform supported horizontal field: tracer offsets 0 and +4 px remain exactly at y=80 and y=84 over 45 px, bendCount 0. Following orientation does not center a path."
+    },
+    {
+      "evidence": "S7 existing artifact, not rerun",
+      "finding": "IMG_5641 Badge9/Tee7: baseline bank [24,32,40,48,56,64] ends UNKNOWN petered-out at 27.75 px; single 50/55 px banks reach 37 px and remain UNKNOWN. Added [50,55] bank still 27.75 px. Fixed exit support baseline .47209, width50 .70841, width55 .60277, expanded .49071; tau=.5 unchanged. No endpoint ownership inferred."
+    },
+    {
+      "evidence": "A6 historical log, not rerun",
+      "finding": "golden historical s7main reports local width 41.51 px and agreement 16/18; this log says width came from three-point straight holes, so it is not independent tee->badge width validation. A3 teeBadge.learn exists but provenance must distinguish calibration route."
+    }
+  ],
+  "proposedMath": {
+    "status": "hypotheses, not executed changes",
+    "width": "For each validated straight tee->badge segment fit both visible rails; retain (w,c,heading,residuals,visible count). Course-local width distribution from segment fits; compare held-out segments with candidate width banks before narrowing. Scale only from rings; hallway width never sets px/m.",
+    "centerline": "At a station with independent paired edges, center=(left+right)/2, width=right-left; propagate fit uncertainty, heading error and masks. Nearest field quantization at scale3 is roughly +/-1.5 px per coordinate, orientation bank12 is 15 deg spacing (up to 7.5 deg bin half-width); do not equate these with calibrated uncertainty.",
+    "bendPrior": "long straight runs and few sharp bends remain hypotheses. Any exponential penalty beyond 3 distinct physical bends needs an explicit bend definition and parameter learned/cross-validated; existing per-step bendCount is unsuitable without conversion."
+  },
+  "falsifier": {
+    "experiment": "Calibrate widths on one subset of unoccluded tee->badge segments; predict independent remaining tee->badge and known straight tee->basket rail separations, across full-course and zoom views. Include wide vegetation, crossing ribbons, varying background, shifted tee axes and short/badge-covered segments.",
+    "failure": "Systematic held-out width disagreement exceeding measured rail-fit uncertainty; learned width tracks tee-axis offset/masks; or same-width organic bands score as highly as true ribbons. Synthetic 60px truncation is already a counterexample to trusting any returned edge pair."
+  },
+  "nextPackets": {
+    "ready": [
+      {
+        "id": "E102-width-calibration-ablation",
+        "task": "Same canonical pixel source + fixed endpoints/heading: expose actual paired rail profiles on tee->badge, retain argmax width/raw scores; compare baseline bank, calibrated local bank and original normalization held fixed. Independent reviewer audits held-out widths, fieldScale/frame, masked stations."
+      },
+      {
+        "id": "E102-center-offset-falsifier",
+        "task": "With fixed source stripe/real straight segment compare tracer lateral offset preservation against paired-edge midpoint recentering; report rail residuals and off-center outcomes before any integration."
+      }
+    ],
+    "blocked": [
+      {
+        "id": "E102-provider-narrow-bank",
+        "reason": "Requires real visible straight-segment profiles + held-out evidence; width-only gain has not repaired recorded trace."
+      },
+      {
+        "id": "E102-aa-ablation",
+        "reason": "Active AGENTS requires full S7 baseline before AA suppression."
+      },
+      {
+        "id": "E102-three-bend-penalty",
+        "reason": "Need physical bend definition, prior strength evidence, counterexamples; no invented constants."
+      }
+    ]
+  },
+  "artifactPaths": [
+    "/workspace/scratch/8528bb251845/discovery-swarm/W1/result.json",
+    "/workspace/scratch/8528bb251845/discovery-swarm/W1/probe.mjs",
+    "/workspace/scratch/8528bb251845/discovery-swarm/W1/probe-results.json",
+    "/workspace/scratch/8528bb251845/discovery-swarm/W1/exact-active/ports/s6straight/pathSpace.mjs"
+  ]
+}

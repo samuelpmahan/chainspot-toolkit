@@ -1,0 +1,87 @@
+✔ current unknown observation enables falsifier, blocks package, enables boundary repair (88.811ms)
+✔ changed receipt bytes fail closed (78.312715ms)
+✔ source mismatch invalidates whole recommendation (69.6239ms)
+✔ live producer suppresses duplicate refresh (80.214364ms)
+✔ review excludes aliases of producing principal (80.881819ms)
+✔ expired lease still needs coordinator reconciliation (71.286188ms)
+✔ dispatch-boundary revision mismatch invalidates plan (77.81708ms)
+✔ native accepted review and claimed accepted state cannot mint human authority (70.407148ms)
+✔ duplicate receipts and unknown guard ops invalidate policy/state (62.457764ms)
+✔ completed task is terminal rather than redispatched (74.665107ms)
+✔ unsafe artifact path and symlink escape never authorize evidence (60.74796ms)
+✔ stale coordinator snapshot cannot authorize dispatch (82.980532ms)
+✔ package requires independently verified review bytes and trusted scoped Sam decision (77.834628ms)
+✔ independent accepted review alone never mints human acceptance (64.50602ms)
+✔ human acceptance rejects wrong issuer (67.009587ms)
+✔ human acceptance rejects wrong principal (61.264164ms)
+✔ human acceptance rejects wrong scope (65.173562ms)
+✔ human acceptance rejects wrong source (62.156941ms)
+✔ human acceptance rejects wrong claim (70.712999ms)
+✔ human acceptance rejects wrong bundle (63.530623ms)
+✔ human acceptance rejects wrong bundleHash (68.346048ms)
+✔ changed independent review bytes cannot authorize package (82.431297ms)
+✔ review source, bundle and protocol bindings fail closed (94.933248ms)
+✔ dispatch recheck detects artifact changes despite unchanged state revision (9.761071ms)
+✔ a supported bundle with missing producer identities cannot be independently reviewed (81.990728ms)
+✔ actual artifact symlink outside allowed root cannot authorize evidence (81.114615ms)
+✔ dependency cycle is rejected before native recommendation (78.398164ms)
+✔ unknown operation independently rejects eval even without duplicate records (84.622692ms)
+✔ two available aliases for one principal cannot double native capacity (61.276118ms)
+✔ unavailable historical aliases do not add capacity or invalidate independent principal exclusions (57.870083ms)
+✖ occupied principal cannot enter free capacity through alias (active) (65.266021ms)
+✖ occupied principal cannot enter free capacity through alias (expired-lease) (75.208852ms)
+✔ explicitly inactive historical alias does not block a genuinely free principal (74.540798ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 31
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2447.162366
+
+✖ failing tests:
+
+test at experiments/capability-discovery/plan.test.mjs:51:51
+✖ occupied principal cannot enter free capacity through alias (active) (65.266021ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'W1',
+  +   'newAlias'
+    ]
+  
+      at file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/plan.test.mjs:51:432
+      at check (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/plan.test.mjs:18:157)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'W1', 'newAlias' ],
+    expected: [ 'W1' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/plan.test.mjs:51:51
+✖ occupied principal cannot enter free capacity through alias (expired-lease) (75.208852ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'W1',
+  +   'newAlias'
+    ]
+  
+      at file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/plan.test.mjs:51:432
+      at check (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/plan.test.mjs:18:157)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'W1', 'newAlias' ],
+    expected: [ 'W1' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

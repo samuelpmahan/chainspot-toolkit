@@ -1,0 +1,515 @@
+{
+  "schema": "chainspot.discovery-design-review/v1",
+  "worker": "W3",
+  "job_id": "E106",
+  "pass": "PASS1",
+  "status": "design-only",
+  "sourceCommit": "37a2dba87d61262f661af70f1a22440736e61efc",
+  "activeReference": "49255331791b1245cf0f9cd699816175f94e70f2",
+  "summary": "Add an experimental deterministic readiness planner; native Rebalancer remains an assignment solver, coordinator remains the actual agent dispatcher, and scientific acceptance remains separately evidenced.",
+  "scope": {
+    "futureFiles": [
+      "experiments/capability-discovery/plan.mjs",
+      "experiments/capability-discovery/plan.test.mjs",
+      "experiments/capability-discovery/policy.json",
+      "experiments/capability-discovery/README.md"
+    ],
+    "sourceMutations": false,
+    "gitMutations": false,
+    "noEdits": [
+      "fg/**",
+      "scripts/**",
+      "docs/agents/**",
+      "AGENTS.md",
+      "CLAUDE.md",
+      "recipes/**",
+      "stages/**",
+      "ports/judge/**",
+      "ui/**"
+    ],
+    "restrictions": [
+      "No sealed corpus access",
+      "No PR or publication",
+      "No production defaults changes",
+      "No model identifiers in commits",
+      "No arbitrary eval, shell snippets, JSONPath expressions or autonomous dispatch"
+    ]
+  },
+  "verifiedSourceFacts": [
+    {
+      "path": "README.md; REVIEW.md",
+      "finding": "Replay prints receipt-derived metrics and inventory/graph/lineage; technical execution is distinct from geometry/ownership acceptance. Historical lengths are documentation, not admissible new evidence."
+    },
+    {
+      "path": "models.mjs:79-98,102-122",
+      "finding": "Lineage already separates execution, target fingerprint, evidence freshness and acceptance; duplicate joins/missing hashes can remain UNKNOWN. Planner must reject duplicate IDs rather than silently relying on Map last-write behavior."
+    },
+    {
+      "path": "recipes/compile.mjs:19-67",
+      "finding": "Compiler checks provider base, ordered stages, single Part producers, missing/forward dependencies and unknown lanes; scope is declared Stage boundaries, not complete native inner Calculations."
+    },
+    {
+      "path": "provider-adapter.mjs:26-34",
+      "finding": "Current producer accepts only IMG_5641/badge-9/tee-7 and baseline or heading. No other specimen or generic CV execution can be inferred."
+    },
+    {
+      "path": "probe.py:45-85,118-149,235-266",
+      "finding": "make_state accepts kind=extract only; auto reviews can be disabled. Only native kind=review waits on done and excludes extractor; arbitrary extract dependencies are ignored. finish validates receipt envelope, not scientific validity."
+    },
+    {
+      "path": "probe.py:169-195",
+      "finding": "Native assignment is independently checked for worker-set, capacities, pins, eligibility, native constraint counts and exact maximum score before dispatch recommendation."
+    },
+    {
+      "path": "activeReference:AGENTS.md; DOCTRINE.md; docs/agents/lanes.md",
+      "finding": "State is an argument; testimony is optional/impeachable; judge agreement is not acceptance; protected platform files require requests, and prototypes can live outside them. Active doctrine retires default-OFF lanes, whereas pinned historical compiler requires OFF: planner must not reconcile by editing either system."
+    }
+  ],
+  "actualNativeProbe": {
+    "dependency": "rebalancer==1.0.4",
+    "python": "python3.12",
+    "PYTHONPATH": "/workspace/scratch/8528bb251845/rebalancer-deps",
+    "probePath": "/workspace/scratch/8528bb251845/discovery-swarm/probe.py",
+    "probeSha256": "5f723aabb79bb0b3a826e96ec57d109e0e7b428ca42b7bc3d9b38dbbd1acd84d",
+    "command": "PYTHONPATH=/workspace/scratch/8528bb251845/rebalancer-deps python3.12 /workspace/scratch/8528bb251845/discovery-swarm/probe.py solve --state /workspace/scratch/8528bb251845/discovery-swarm/W3/native-probe/state-snapshot.json --output-dir /workspace/scratch/8528bb251845/discovery-swarm/W3/native-probe/solves",
+    "report": "native-probe/solves/epoch-01.json",
+    "bundle": "native-probe/solves/epoch-01.bundle",
+    "nativeScore": 600,
+    "exactScore": 600,
+    "brokenCount": 0,
+    "dispatchAuthorized": false,
+    "limitation": "Replay of copied scheduling state only. Actual agents were active while shared native worker records remained empty; this proves solver execution, never current worker availability or new scientific support."
+  },
+  "prototype": {
+    "entrypoint": "node experiments/capability-discovery/plan.mjs --policy POLICY --state CURRENT_STATE --artifacts ARTIFACT_ROOT --out PLAN",
+    "inputs": [
+      "Immutable versioned policy with expected source commit, closed command IDs, protocol hashes, task DAG, cycle/time budgets and fixed typed guards",
+      "Fresh shared state revision plus canonical digest, task attempts/outcomes, coordinator-supplied actual worker/agent/lease registry, claim records and immutable receipt index",
+      "Source-bound artifacts read and hashed under an allowlisted root; expected closure fingerprint, input/image/source hashes, recipe/args/tick identity, executable hash and validator protocol are required"
+    ],
+    "outputs": {
+      "schema": "chainspot.discovery-plan/v1",
+      "fields": [
+        "policyHash",
+        "stateRevision",
+        "stateHash",
+        "sourceFingerprint",
+        "taskStatuses[] with ready|blocked|terminal|invalid plus reason codes",
+        "readyTasks",
+        "nativeSpec or null",
+        "producer/reviewer bindings",
+        "consumed receipt hashes",
+        "next wake condition"
+      ],
+      "sideEffects": "Planner reads source/artifacts and writes only its report/spec. No source edits, state advancement, start/finish, agent API or daemon."
+    },
+    "algorithm": [
+      "Validate schema, allowed fields/ops/command IDs, unique IDs, referenced tasks/bundles/protocols, acyclic needs graph, policy hash and pinned source identity before guard evaluation.",
+      "Read one immutable snapshot; reconcile coordinator leases and actual active agents against native state. An unacknowledged active agent blocks capacity rather than being assumed free.",
+      "Rehash artifact bytes, decode receipt schemas and reconstruct full binding. Missing/stale evidence is nonauthorizing; source or identity contradiction is an integrity blocker. A claimed successful validation record must itself have current hashed evidence and the pinned validator protocol.",
+      "For every predefined task evaluate needs plus typed guards against the same fresh global snapshot. Completed task instance is terminal; impossible branch or exhausted budget is terminal with reason; unmet guards/dependencies/capacity are blocked; malformed policy/state is invalid; otherwise ready. A failed attempt may enable a distinct repair task without becoming successful.",
+      "Expand task instances by hash(policy, logical task, exact input bindings, cycle). This allows intentional retries with new inputs while preventing duplicate dispatch of one instance.",
+      "Emit native spec containing only ready tasks and actual free registered worker IDs. Semantic review nodes are explicit extract entries with semantic_kind=review, bundle/protocol bindings and allow_workers excluding every producing worker. Set review_policy.enabled=false; no hidden auto-review duplicates.",
+      "Run the pinned probe init/solve on fresh epoch-local paths only when spec has workers and jobs. Coordinator must validate returned assignment and atomically reserve task+worker using stateHash/lease compare-and-swap, recheck guards, then invoke actual spawn/followup and acknowledge start. Changed state cancels the recommendation and replans.",
+      "After each validated completion, ingest immutable receipt exactly once under the single coordinator writer and immediately rerun from fresh state. Hourly resume uses the same entrypoint plus lease reconciliation; it is a wake trigger, not a continuously running agent claim."
+    ],
+    "persistence": "Immutable receipts/plans plus a single atomic state-pointer writer; recommendation file alone cannot commit scientific state or consume capacity."
+  },
+  "literalSmallJSONSchema": {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Capability guard v1",
+    "oneOf": [
+      {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "op",
+          "task",
+          "is"
+        ],
+        "properties": {
+          "op": {
+            "const": "taskOutcome"
+          },
+          "task": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.-]+$"
+          },
+          "is": {
+            "enum": [
+              "passed",
+              "regressed",
+              "failed",
+              "insufficient"
+            ]
+          }
+        }
+      },
+      {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "op",
+          "claim",
+          "is"
+        ],
+        "properties": {
+          "op": {
+            "const": "claimState"
+          },
+          "claim": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.-]+$"
+          },
+          "is": {
+            "enum": [
+              "unknown",
+              "supported",
+              "regression",
+              "accepted",
+              "refuted"
+            ]
+          }
+        }
+      },
+      {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "op",
+          "bundle",
+          "is"
+        ],
+        "properties": {
+          "op": {
+            "const": "evidenceStatus"
+          },
+          "bundle": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.-]+$"
+          },
+          "is": {
+            "enum": [
+              "current",
+              "missing",
+              "stale",
+              "unvalidated"
+            ]
+          }
+        }
+      },
+      {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "op",
+          "bundle",
+          "protocol"
+        ],
+        "properties": {
+          "op": {
+            "const": "independentReview"
+          },
+          "bundle": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.-]+$"
+          },
+          "protocol": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_.@-]+$"
+          }
+        }
+      }
+    ]
+  },
+  "guardSemantics": {
+    "taskOutcome": "Requires latest current task-instance receipt, terminal technical outcome and validated envelope; older attempt outcomes cannot match.",
+    "claimState": "Requires an explicit scoped claim record; absence is unknown, never supported. accepted requires a separate protocol-bound decision record, never job done.",
+    "evidenceStatus": "Computed by planner from bytes and complete current binding, not trusted from a caller-provided boolean. Freshness is dependency identity, not file mtime or elapsed age alone.",
+    "independentReview": "Requires accepted protocol decision on the exact bundle hash by an actually distinct worker/agent principal; review record and its evidence must be current, valid and unique. Exclude all producers, not merely the last writer.",
+    "combination": "All guards are AND; alternative recipes are separate predefined task nodes. No string expressions or arbitrary code. Unknown/data missing yields blocked; malformed contradictions yield invalid; not_current branches may enable refresh without enabling retain."
+  },
+  "literalExample": {
+    "schema": "chainspot.discovery-policy/v1",
+    "sourceCommit": "37a2dba87d61262f661af70f1a22440736e61efc",
+    "tasks": [
+      {
+        "id": "falsify-s7-unknown",
+        "action": "falsify",
+        "commandId": "s7-unknown-falsifier-v1",
+        "needs": [
+          "replay-s7"
+        ],
+        "guards": [
+          {
+            "op": "claimState",
+            "claim": "s7-arrival",
+            "is": "unknown"
+          },
+          {
+            "op": "evidenceStatus",
+            "bundle": "s7-replay",
+            "is": "current"
+          }
+        ]
+      },
+      {
+        "id": "review-s7-supported",
+        "action": "validate",
+        "commandId": "independent-s7-validation-v1",
+        "needs": [
+          "candidate-s7"
+        ],
+        "guards": [
+          {
+            "op": "claimState",
+            "claim": "s7-arrival",
+            "is": "supported"
+          },
+          {
+            "op": "evidenceStatus",
+            "bundle": "s7-candidate",
+            "is": "current"
+          }
+        ]
+      },
+      {
+        "id": "package-s7",
+        "action": "package",
+        "commandId": "package-retained-capability-v1",
+        "needs": [
+          "review-s7-supported"
+        ],
+        "guards": [
+          {
+            "op": "claimState",
+            "claim": "s7-arrival",
+            "is": "accepted"
+          },
+          {
+            "op": "evidenceStatus",
+            "bundle": "s7-candidate",
+            "is": "current"
+          },
+          {
+            "op": "independentReview",
+            "bundle": "s7-candidate",
+            "protocol": "s7-acceptance@1"
+          }
+        ]
+      }
+    ],
+    "note": "Illustrative excerpt; referenced replay/candidate tasks and command/protocol registry must exist in the complete policy. No example is executable authority."
+  },
+  "nativeReadySpecExample": {
+    "schema": "chainspot.rebalancer-spec/v1",
+    "service": {
+      "name": "discovery-ready-example",
+      "scope": "illustrative-nondispatchable"
+    },
+    "workers": [
+      "W1",
+      "W3"
+    ],
+    "review_policy": {
+      "enabled": false
+    },
+    "jobs": [
+      {
+        "id": "review-s7-supported",
+        "kind": "extract",
+        "semantic_kind": "review",
+        "allow_workers": [
+          "W1",
+          "W3"
+        ],
+        "subject": "Validate exact candidate bundle using protocol s7-acceptance@1; producer W2 excluded."
+      }
+    ],
+    "note": "Only emit this shape if coordinator just proved W1/W3 available; no claim is made that they are currently free. Semantic review uses extract transport; scientific validator must enforce its own richer receipt. Per-job review priority is unavailable in this wrapper; batch priority can use extract_priority or selection order outside it."
+  },
+  "producerInterface": {
+    "worker": "W2",
+    "job": "E105",
+    "targetPaths": [
+      "targets/s7-baseline.json",
+      "targets/s7-heading.json"
+    ],
+    "read": [
+      "W2/replay.json (nctk-replay@1 targets and model joins)",
+      "Actual Attempt JSON linked by lineage",
+      "Each exact native width-probe receipt referenced by Attempt.evidence",
+      "Current checkpoint/request closure and file hashes"
+    ],
+    "checks": [
+      "Require both named target records, unique request/attempt links, successful technical execution and hash-verified current evidence before comparing observations.",
+      "Read variants, native outcomes, trace metrics and headingSource from actual receipt fields; do not hardcode historical path lengths, bend counts or expected improvement.",
+      "Unknown/petered-out remains unknown arrival; a longer trace never proves arrival or basket ownership.",
+      "If W2 is running, missing replay means wait for that lease. If no live producer exists, missing/stale/unvalidated bundle enables refresh. Failed technical replay enables repair; it never proves the route hypothesis false."
+    ],
+    "observationAtReview": "replay.json existed empty while W2 was active; no current W2 metric ingested or claimed."
+  },
+  "transitionTable": [
+    {
+      "current": "unknown + current evidence",
+      "next": "falsify",
+      "guard": "predeclared discriminating protocol; do not invent acceptance threshold post-run"
+    },
+    {
+      "current": "technical regression",
+      "next": "repair",
+      "guard": "same source/request binding and named baseline comparator"
+    },
+    {
+      "current": "supported",
+      "next": "independent validation",
+      "guard": "exact supported bundle; exclude producers"
+    },
+    {
+      "current": "stale/missing/unvalidated evidence",
+      "next": "refresh",
+      "guard": "no live equivalent producer lease; scoped source identity"
+    },
+    {
+      "current": "accepted",
+      "next": "package",
+      "guard": "current independent accepted validation + explicit acceptance record; packaging is not publishing"
+    },
+    {
+      "current": "refuted or cycle budget exhausted",
+      "next": "terminal",
+      "guard": "retain negative result/falsifier record; no retry loop without new bounded policy instance"
+    }
+  ],
+  "acceptanceTests": [
+    {
+      "case": "Unknown current W2 baseline/heading",
+      "expect": "falsifier ready; package blocked; metrics extracted without hardcoded lengths"
+    },
+    {
+      "case": "W2 replay missing while producer lease active",
+      "expect": "blocked wait-running-producer; no duplicate refresh"
+    },
+    {
+      "case": "Missing or stale evidence without live producer",
+      "expect": "refresh ready; validate/package blocked with dependency reasons"
+    },
+    {
+      "case": "Technical success + unknown arrival",
+      "expect": "task done/technical passed; claim unknown; independent acceptance absent"
+    },
+    {
+      "case": "Regression outcome",
+      "expect": "repair ready; success-only dependent blocked"
+    },
+    {
+      "case": "Supported candidate and producer W2 only worker free",
+      "expect": "review blocked no-independent-worker; no native spec"
+    },
+    {
+      "case": "Accepted independent review for old bundle",
+      "expect": "package blocked stale-review-binding"
+    },
+    {
+      "case": "Source/file/args/tick/executable or protocol hash differs",
+      "expect": "old receipt nonauthorizing; integrity contradiction invalid or stale binding refresh, never retain"
+    },
+    {
+      "case": "Two concurrent producers and cross-task dependency",
+      "expect": "needs checks use fresh committed instances; completion of unrelated task does not unlock dependent"
+    },
+    {
+      "case": "Plan generated at revision n, another completion at n+1",
+      "expect": "dispatch CAS rejected; guards recomputed before actual dispatch"
+    },
+    {
+      "case": "Repeated receipt with same id/hash",
+      "expect": "idempotent no second completion; same id/different bytes invalid"
+    },
+    {
+      "case": "Self review under another worker label but same agent principal",
+      "expect": "invalid independent-review identity; exclude all producing principals"
+    },
+    {
+      "case": "Unknown op, arbitrary expression, unknown task ref, duplicate id, dependency cycle, unsafe artifact path/symlink escape",
+      "expect": "invalid before native solve or artifact execution"
+    },
+    {
+      "case": "No jobs ready or no free workers",
+      "expect": "null nativeSpec; blocked reason/wake condition, not make_state([])"
+    },
+    {
+      "case": "Native solver infeasible/nonoptimal/capacity/pin error",
+      "expect": "native failure retained; no dispatch; planner makes no scientific conclusion"
+    },
+    {
+      "case": "Hourly duplicate wake while work running",
+      "expect": "reconcile leases; no duplicate task instance; new plan only"
+    },
+    {
+      "case": "Complete accepted package or exhausted bounded policy",
+      "expect": "terminal; no fake continued loop"
+    }
+  ],
+  "concreteNextTasks": [
+    {
+      "id": "reconcile-live-worker-state",
+      "priority": 1,
+      "kind": "coordinator",
+      "guards": [
+        "read current native state and actual agent registry"
+      ],
+      "result": "Acknowledge all PASS1 starts or record authoritative leases; never derive free workers from empty native fields alone."
+    },
+    {
+      "id": "review-W3-planner-contract",
+      "priority": 2,
+      "kind": "independent-review",
+      "guards": [
+        "W3 result completed",
+        "reviewer not W3"
+      ],
+      "result": "Cross-review typed guards, stale-state CAS and producer adapter; approve bounded experiment file ownership before code."
+    },
+    {
+      "id": "ingest-W2-replay",
+      "priority": 2,
+      "kind": "evidence-refresh",
+      "guards": [
+        "W2 attempt finished or lease expired"
+      ],
+      "result": "Validate actual W2 receipt/Attempt/closure and classify unknown/failed/stale; no historical metric substitution."
+    },
+    {
+      "id": "implement-experimental-planner",
+      "priority": 3,
+      "kind": "implementation",
+      "guards": [
+        "design review accepted",
+        "scoped implementation assigned"
+      ],
+      "result": "Only experiments/capability-discovery/**; pure planner plus fixture tests and pinned probe adapter, no source dispatch service."
+    },
+    {
+      "id": "falsify-producer-observation",
+      "priority": 4,
+      "kind": "scientific-protocol",
+      "guards": [
+        "W2 evidence current",
+        "protocol chosen from competing W1/W4/W5 results",
+        "unknown claim still current"
+      ],
+      "result": "A bounded discriminating recipe with declared negative cases and expected outcomes before run."
+    }
+  ],
+  "failureModes": [
+    "Stale scheduling state can schedule already-active agents; coordinator registry reconciliation is mandatory.",
+    "A native done receipt is only task bookkeeping, and auto review accepted is not a geometry/ownership verdict.",
+    "Two simultaneous writers can overwrite atomic-renamed state files despite each write being atomic; use a single writer/lock plus CAS.",
+    "Any source-bound receipt must be rehashed and validated; claimed validation booleans are not authority.",
+    "Duplicate IDs, reused receipt paths or aliased producer identities can fabricate independence unless checked before joins.",
+    "Tasks chosen in advance may be obsolete at completion; reevaluate entire predefined task set from the new global state each time.",
+    "Scheduled hourly wake does not guarantee uninterrupted agent availability; report actual last completed cycle and blocked reason."
+  ],
+  "outcome": "mixed_change"
+}

@@ -1,0 +1,82 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "capability-discovery-prototype",
+    "scope": "pass-3-reviewed-prototypes",
+    "source": "37a2dba87d61262f661af70f1a22440736e61efc",
+    "scopeGuard": "Scratch/prototype only. E201 sole shared source and Git owner. Other packets have disjoint scratch paths and integration handoff."
+  },
+  "workers": [
+    "W1",
+    "W2",
+    "W3",
+    "W4",
+    "W5",
+    "W6"
+  ],
+  "policy": {
+    "extract_priority": 100,
+    "review_priority": 200,
+    "repair_priority": 300
+  },
+  "review_policy": {
+    "enabled": true,
+    "review_prefix": "R",
+    "reviewer_must_differ_from_extractor": true
+  },
+  "jobs": [
+    {
+      "id": "E201",
+      "kind": "extract",
+      "allow_workers": [
+        "W3"
+      ],
+      "subject": "Implement isolated deterministic conditional readiness planner and tests; sole integration/Git owner for experiments/capability-discovery. Requires R106 authority amendment resolved."
+    },
+    {
+      "id": "E202",
+      "kind": "extract",
+      "allow_workers": [
+        "W1",
+        "W2"
+      ],
+      "subject": "Package portable source-bound width/offset negative probes and composable recipe contract; no CV defaults/integration. Requires accepted R102."
+    },
+    {
+      "id": "E203",
+      "kind": "extract",
+      "allow_workers": [
+        "W4",
+        "W5"
+      ],
+      "subject": "Repair reviewed catalog caveats: hidden rails may retain interior score; empty/hidden width estimates must abstain. Build source-bound operation catalog and guarded recipes from R101 amend plus accepted R102/R103.",
+      "repair_of": "E101"
+    },
+    {
+      "id": "E204",
+      "kind": "extract",
+      "allow_workers": [
+        "W1",
+        "W5"
+      ],
+      "subject": "Implement isolated posthoc path geometry descriptor and invariance/negative tests, no invented scoring constants or CV behavior changes. Requires accepted R103."
+    },
+    {
+      "id": "E205",
+      "kind": "extract",
+      "allow_workers": [
+        "W2"
+      ],
+      "subject": "Produce portable fresh-trace comparison figure/report with hash-verified canonical-frame transforms and inspect render; retain unknown/no basket. Requires accepted R105."
+    },
+    {
+      "id": "E206",
+      "kind": "extract",
+      "allow_workers": [
+        "W4",
+        "W6"
+      ],
+      "subject": "Package portable complete-root-inventory guard with actual adapter reproduction and controls; fail closed on absent/incomplete inventory, no platform edits. Requires accepted R104."
+    }
+  ]
+}

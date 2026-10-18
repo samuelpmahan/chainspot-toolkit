@@ -1,0 +1,152 @@
+{
+  "schema": "discovery-plan@1",
+  "status": "ready",
+  "policyHash": "ccb5fade8130bc3ef588d47c632ebccce5bb57a37227e6d685263c44366b9a73",
+  "stateHash": "c33c6d25f7b8d1cff250ed2c185a2b577edc00eecbb87e5a1dca9ec1d90893a6",
+  "stateRevision": 1,
+  "source": "chainspot-discovery@37a2dba87d61262f661af70f1a22440736e61efc+provider5433854+active4925533",
+  "tasks": [
+    {
+      "id": "falsify-arrival",
+      "action": "falsify",
+      "commandId": "unknown-arrival-falsifier",
+      "status": "ready",
+      "reasons": [],
+      "eligibleWorkers": [
+        "A1",
+        "A2"
+      ],
+      "bundleHash": null
+    },
+    {
+      "id": "repair-source-boundary",
+      "action": "repair",
+      "commandId": "source-boundary-repair",
+      "status": "ready",
+      "reasons": [],
+      "eligibleWorkers": [
+        "A1",
+        "A2"
+      ],
+      "bundleHash": null
+    },
+    {
+      "id": "validate-arrival",
+      "action": "validate",
+      "commandId": "independent-validation",
+      "status": "blocked",
+      "reasons": [
+        "guard:claimState:arrival"
+      ],
+      "eligibleWorkers": [
+        "A1",
+        "A2"
+      ],
+      "bundleHash": "dfced3b43f71ae5e5a3655810fb8e507c9effb48dd5ea57623ff70ecdc9f39f0"
+    },
+    {
+      "id": "package-arrival",
+      "action": "package",
+      "commandId": "package-capability",
+      "status": "blocked",
+      "reasons": [
+        "dependency:validate-arrival",
+        "independent-validation-missing",
+        "human-acceptance-missing",
+        "claim-not-accepted"
+      ],
+      "eligibleWorkers": [
+        "A1",
+        "A2"
+      ],
+      "bundleHash": "dfced3b43f71ae5e5a3655810fb8e507c9effb48dd5ea57623ff70ecdc9f39f0"
+    },
+    {
+      "id": "refresh-replay",
+      "action": "refresh",
+      "commandId": "refresh-replay",
+      "status": "blocked",
+      "reasons": [
+        "evidence-already-current"
+      ],
+      "eligibleWorkers": [
+        "A1",
+        "A2"
+      ],
+      "bundleHash": "dfced3b43f71ae5e5a3655810fb8e507c9effb48dd5ea57623ff70ecdc9f39f0"
+    }
+  ],
+  "bundles": {
+    "native-replay": {
+      "status": "current",
+      "bindingHash": "dfced3b43f71ae5e5a3655810fb8e507c9effb48dd5ea57623ff70ecdc9f39f0",
+      "files": [
+        {
+          "path": "artifacts/baseline-native.json",
+          "sha256": "bf0ca6a66866c53fe9ad58b55a231e4beb483b66189a5a7ffc46701031cb8ac1"
+        },
+        {
+          "path": "artifacts/heading-native.json",
+          "sha256": "1b9fd087d8532f7dfd0c06e25f212733de24e8c5e6fde5db1ae5fa037b8c6160"
+        }
+      ],
+      "reasons": []
+    },
+    "root-observation": {
+      "status": "current",
+      "bindingHash": "822fcdcd05e4ac411c994f6624f59de3d91e047f96a63547e5fa73c0cf746954",
+      "files": [
+        {
+          "path": "artifacts/adapter-root-observation.json",
+          "sha256": "b545c4d0d862a92bf59e77567b8e8ca08a18537a7da44fbb03fb5fd40d8d324f"
+        }
+      ],
+      "reasons": []
+    }
+  },
+  "nativeSpec": {
+    "schema": "chainspot.rebalancer-spec/v1",
+    "service": {
+      "name": "capability-discovery",
+      "scope": "revision-1"
+    },
+    "workers": [
+      "A1",
+      "A2"
+    ],
+    "review_policy": {
+      "enabled": false
+    },
+    "jobs": [
+      {
+        "id": "falsify-arrival",
+        "kind": "extract",
+        "semantic_kind": "falsify",
+        "allow_workers": [
+          "A1",
+          "A2"
+        ],
+        "subject": "unknown-arrival-falsifier; policy ccb5fade8130bc3ef588d47c632ebccce5bb57a37227e6d685263c44366b9a73; state c33c6d25f7b8d1cff250ed2c185a2b577edc00eecbb87e5a1dca9ec1d90893a6; bundle none"
+      },
+      {
+        "id": "repair-source-boundary",
+        "kind": "extract",
+        "semantic_kind": "repair",
+        "allow_workers": [
+          "A1",
+          "A2"
+        ],
+        "subject": "source-boundary-repair; policy ccb5fade8130bc3ef588d47c632ebccce5bb57a37227e6d685263c44366b9a73; state c33c6d25f7b8d1cff250ed2c185a2b577edc00eecbb87e5a1dca9ec1d90893a6; bundle none"
+      }
+    ]
+  },
+  "coordinatorOnly": [
+    "atomic reservation/CAS",
+    "actual agent spawn or followup",
+    "native start/finish",
+    "authenticated human acceptance ingestion"
+  ],
+  "errors": [],
+  "proofFiles": [],
+  "evidenceHash": "bf50b19c66d420d2fbab4159e1b9e9bd9b7c3520ea0000fced203ca92a436bd5"
+}

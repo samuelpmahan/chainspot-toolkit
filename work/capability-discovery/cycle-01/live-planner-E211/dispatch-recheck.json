@@ -1,0 +1,111 @@
+{
+  "allowed": true,
+  "reason": "coordinator-reservation-still-required",
+  "current": {
+    "schema": "discovery-plan@1",
+    "status": "ready",
+    "policyHash": "e635bad6f6c282737bb326a8fbab235b98ddaaa5a580ea657f07f20ceb51d940",
+    "stateHash": "03b7ba9e57276993b3d15f06aef1c7389c360d313884347fd914ade51a0fe25d",
+    "stateRevision": 10,
+    "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc/lab@f040ac94649369a3a964ec8e4ea6b8948cc8bbfd56586507ce97a68f66c9ce4d",
+    "tasks": [
+      {
+        "id": "R211",
+        "action": "validate",
+        "commandId": "review-occupied-principal-repair",
+        "status": "ready",
+        "reasons": [],
+        "eligibleWorkers": [
+          "W6",
+          "W5",
+          "W4",
+          "W1",
+          "W2"
+        ],
+        "bundleHash": "3e5a30be2afe9fd27f5b89e5da45bad226abe9f7b650beafd742d59d1b1a75f6"
+      },
+      {
+        "id": "retain",
+        "action": "package",
+        "commandId": "retain",
+        "status": "blocked",
+        "reasons": [
+          "dependency:R211",
+          "independent-validation-missing",
+          "human-acceptance-missing",
+          "claim-not-accepted"
+        ],
+        "eligibleWorkers": [
+          "W6",
+          "W5",
+          "W4",
+          "W1",
+          "W2"
+        ],
+        "bundleHash": "3e5a30be2afe9fd27f5b89e5da45bad226abe9f7b650beafd742d59d1b1a75f6"
+      }
+    ],
+    "bundles": {
+      "core": {
+        "status": "current",
+        "bindingHash": "3e5a30be2afe9fd27f5b89e5da45bad226abe9f7b650beafd742d59d1b1a75f6",
+        "files": [
+          {
+            "path": "experiments/capability-discovery/plan.mjs",
+            "sha256": "47b4384252c955ca758a50a0c0e48287d2b461521bae38fb5dbdea6b5873b8b9"
+          },
+          {
+            "path": "experiments/capability-discovery/plan.test.mjs",
+            "sha256": "9cbc7b8a555d25fff4d48064c19cc6853a704057dd528ca94219c91e21edcc99"
+          },
+          {
+            "path": "experiments/capability-discovery/integration-manifest.json",
+            "sha256": "f040ac94649369a3a964ec8e4ea6b8948cc8bbfd56586507ce97a68f66c9ce4d"
+          }
+        ],
+        "reasons": []
+      }
+    },
+    "nativeSpec": {
+      "schema": "chainspot.rebalancer-spec/v1",
+      "service": {
+        "name": "capability-discovery",
+        "scope": "revision-10"
+      },
+      "workers": [
+        "W6",
+        "W5",
+        "W4",
+        "W1",
+        "W2"
+      ],
+      "review_policy": {
+        "enabled": false
+      },
+      "jobs": [
+        {
+          "id": "R211",
+          "kind": "extract",
+          "semantic_kind": "review",
+          "allow_workers": [
+            "W6",
+            "W5",
+            "W4",
+            "W1",
+            "W2"
+          ],
+          "subject": "review-occupied-principal-repair; policy e635bad6f6c282737bb326a8fbab235b98ddaaa5a580ea657f07f20ceb51d940; state 03b7ba9e57276993b3d15f06aef1c7389c360d313884347fd914ade51a0fe25d; bundle 3e5a30be2afe9fd27f5b89e5da45bad226abe9f7b650beafd742d59d1b1a75f6"
+        }
+      ]
+    },
+    "coordinatorOnly": [
+      "atomic reservation/CAS",
+      "actual agent spawn or followup",
+      "native start/finish",
+      "authenticated human acceptance ingestion"
+    ],
+    "errors": [],
+    "proofFiles": [],
+    "evidenceHash": "da4c9ef84af0164c0749271cee29c165bf12960c47fe1114670bc573e9b721d7"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "capability-discovery",
+    "scope": "revision-8"
+  },
+  "workers": [
+    "W6",
+    "W5",
+    "W4",
+    "W3",
+    "W1",
+    "W2"
+  ],
+  "review_policy": {
+    "enabled": false
+  },
+  "jobs": [
+    {
+      "id": "R201",
+      "kind": "extract",
+      "semantic_kind": "review",
+      "allow_workers": [
+        "W6",
+        "W5",
+        "W4",
+        "W1",
+        "W2"
+      ],
+      "subject": "review-planner; policy cc26d6b58e040038e148b4c176d4b5a733148947a109ea2d12615d40a6edf9fd; state eaa303393e0bb8836e10df5f42beb06457a18037182e940833f005daeb563aec; bundle 4d7146bf3f780f35303ec63af1e5b0863bce59834182685e06e074d43a792010"
+    },
+    {
+      "id": "R207",
+      "kind": "extract",
+      "semantic_kind": "review",
+      "allow_workers": [
+        "W5",
+        "W2"
+      ],
+      "subject": "review-repairs; policy cc26d6b58e040038e148b4c176d4b5a733148947a109ea2d12615d40a6edf9fd; state eaa303393e0bb8836e10df5f42beb06457a18037182e940833f005daeb563aec; bundle 6953c9ce5e95775cdcc647d1a1bd566dff84dda979fb12bf802019c0966d71bc"
+    }
+  ]
+}

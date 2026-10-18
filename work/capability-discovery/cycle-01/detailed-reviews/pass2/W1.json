@@ -1,0 +1,141 @@
+{
+  "job_id": "R103",
+  "worker": "W1",
+  "reviewedAssignment": "E103",
+  "reviewedWorker": "W5",
+  "decision": "accepted",
+  "summary": "Core mechanism claims independently reproduce using compiled provider dist, valid tee tier and one shared field. Accepted only as bounded synthetic/source evidence; no image accuracy or ownership accepted.",
+  "evidence": {
+    "sourceHashAudit": [
+      {
+        "path": "source/provider/packages/alg/src/detectors/threeFactor/ribbon.ts",
+        "sha256Matches": true,
+        "gitBlobMatches": true
+      },
+      {
+        "path": "source/provider/packages/alg/src/detectors/threeFactor/routing.ts",
+        "sha256Matches": true,
+        "gitBlobMatches": true
+      },
+      {
+        "path": "source/provider/packages/alg/src/detectors/threeFactor/scoring.ts",
+        "sha256Matches": true,
+        "gitBlobMatches": true
+      },
+      {
+        "path": "source/provider/packages/alg/src/detectors/threeFactor/assignment.ts",
+        "sha256Matches": true,
+        "gitBlobMatches": true
+      },
+      {
+        "path": "source/provider/packages/alg/src/detectors/threeFactor/measure.ts",
+        "sha256Matches": true,
+        "gitBlobMatches": true
+      },
+      {
+        "path": "source/provider/packages/alg/src/detectors/threeFactor/features/g4.teeBadgeLockMath.ts",
+        "sha256Matches": true,
+        "gitBlobMatches": true
+      },
+      {
+        "path": "AGENTS.md",
+        "sha256Matches": true,
+        "gitBlobMatches": true
+      },
+      {
+        "path": "DOCTRINE.md",
+        "sha256Matches": true,
+        "gitBlobMatches": true
+      },
+      {
+        "path": "docs/agents/lanes-s5s7.md",
+        "sha256Matches": true,
+        "gitBlobMatches": true
+      },
+      {
+        "path": "docs/evidence/s7main/teebadge.py",
+        "sha256Matches": true,
+        "gitBlobMatches": true
+      },
+      {
+        "path": "docs/evidence/s7main/track.py",
+        "sha256Matches": true,
+        "gitBlobMatches": true
+      },
+      {
+        "path": "docs/evidence/s7main/polyscore.py",
+        "sha256Matches": true,
+        "gitBlobMatches": true
+      }
+    ],
+    "allSourceHashesMatch": true,
+    "actualIndependentRun": "/workspace/scratch/8528bb251845/discovery-swarm/W1/pass2/review-probe.mjs",
+    "runOutput": "/workspace/scratch/8528bb251845/discovery-swarm/W1/pass2/review-probe-results.json",
+    "compiledSourceIDs": {
+      "scoring": {
+        "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/source/provider/packages/alg/dist/detectors/threeFactor/scoring.js",
+        "sha256": "c327df5a44723178004ad8f0965f3a67e1f292765681691b6f5b96c556705055"
+      },
+      "routing": {
+        "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/source/provider/packages/alg/dist/detectors/threeFactor/routing.js",
+        "sha256": "193e462e9f4a583f6d65d803c9c8b3cad265bf107faed92df3b737fee17e351d"
+      },
+      "assignment": {
+        "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/source/provider/packages/alg/dist/detectors/threeFactor/assignment.js",
+        "sha256": "9f18504ad128684f2fcf5ea520d36c77892f1a592a7f8815bcf625619f27bff9"
+      }
+    },
+    "sharedFieldScoreTie": {
+      "straight": {
+        "score": 1.599999999999996,
+        "pathLengthPx": 90,
+        "efficiency": 1
+      },
+      "sixBends": {
+        "score": 1.5999999999999952,
+        "pathLengthPx": 170,
+        "efficiency": 1.8888888888888888
+      }
+    },
+    "blankEndToEnd": {
+      "teeReachable": true,
+      "basketReachable": true,
+      "basketGeodesic": 276.5999998450279,
+      "basketSamples": 61,
+      "rawSupportedFraction": 0,
+      "rawFailureReason": null,
+      "score": 0,
+      "selectedTriples": 1
+    }
+  },
+  "qualifications": [
+    {
+      "issue": "Invalid original enum value",
+      "finding": "W5 fixture sets tee.tier=visible; TeeTier contract is ring|component|recovered. Correction to ring and angleRad=0 reproduces score tie and blank singleton selection. Original missing optional fields not accessed in these calls; neither fixture proves whole-pipeline input validity."
+    },
+    {
+      "issue": "Field and sampling confounding",
+      "finding": "W5 populates locally aligned theta separately for candidates, with sparse vertices rather than router-dense points. Independent reproduction uses one union-populated shared field and still ties within 1e-12, so absent explicit total bend/length penalty is robust as an existence claim. It is not a universal claim that bends never lose score."
+    },
+    {
+      "issue": "Counterexample to overgeneralization",
+      "finding": "Same endpoints, all-horizontal theta field, dense 1px path samples and native alignmentPower2: straight1.6 versus six-bend5.92e-17. With alignmentPower0, dense scores both1.6. Alignment can penalize direction mismatch; this is not a separate bend prior."
+    },
+    {
+      "issue": "Blank-support reachability and singleton",
+      "finding": "Independent route->makeRaw->score->rank->select on zero support yields reachable tee/basket, supportedFraction0, raw failureReason null, score0, selectedTriples1. W5 singleton did not need fabricated zero row; end-to-end pure calls confirm mechanism. No later output/claim filtering or separate ridge-tracer behavior implied."
+    },
+    {
+      "issue": "Source identity",
+      "finding": "All12 W5 source SHA256 and blobs match stated main/provider-copy paths or active reference. Independent run records compiled JS hashes instead of trusting stripped TypeScript runtime. Provider pin itself is declared metadata; original provider git object unavailable locally."
+    }
+  ],
+  "scope": {
+    "nativeFullReplay": false,
+    "imageAccuracyMeasured": false,
+    "productionGitEdits": false,
+    "AAChanged": false,
+    "sealedCorpusAccessed": false
+  },
+  "nextPacketRecommendation": "Proceed to same-endpoint alternative-route retention falsifier or held-out local-width calibration; preserve sparse-vs-dense and field provenance in evidence. Do not introduce exponential constants from these probes."
+}

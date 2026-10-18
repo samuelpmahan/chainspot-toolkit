@@ -1,0 +1,98 @@
+{
+  "job_id": "R104",
+  "worker": "W4",
+  "pass": 2,
+  "decision": "accepted",
+  "summary": "Independently reproduced W6's narrow cache-root adapter defect at4925533. The actual S4 runner's {has,get,addresses} base is not enumerated by rootsKey(), so an output-producing calculation whose nested query reads an otherwise undeclared pixel Part can reuse an old result when pixels change and all declared inputs/constants/code/args remain equal. Current multi-course output poisoning remains unproven.",
+  "claimBoundary": {
+    "accepted": "Incomplete provider-root coverage for the concrete addresses-only adapter, demonstrated with persistent/shared Map cache across separate stores using instrumentedStore.",
+    "notEstablished": [
+      "Any current six-course S4 result is wrong or cross-course-poisoned.",
+      "Every S4 calculation is vulnerable; explicit pixel inParts contribute their keys independently.",
+      "Any issue with content hashing itself: changed pixel Part content keys are distinct.",
+      "A numerical result from source alone establishes acceptance or scene geometry."
+    ]
+  },
+  "source": {
+    "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "identities": "source-identities.json",
+    "independentExtraction": "git archive exact active ref fg/ and contracts/ into W4/pass2/source; git show exact files hashed independently; all three audited file identities match W6 source-identities",
+    "facts": [
+      {
+        "path": "fg/store.mjs",
+        "lines": "260-266",
+        "fact": "rootsKey enumerates provider Parts only when typeof b.keys==='function'; it never reads b.addresses."
+      },
+      {
+        "path": "fg/store.mjs",
+        "lines": "415",
+        "fact": "Produced nonconstant call key includes declared input keys and rootsKey only if declared calls nonempty."
+      },
+      {
+        "path": "ports/s4recover/run.mjs",
+        "lines": "58,149-150",
+        "fact": "loadAttemptParts returns frozen {has,get,addresses}, passed unchanged as instrumentedStore base; lane outputs become constant roots."
+      },
+      {
+        "path": "fg/profile.mjs",
+        "lines": "23-25",
+        "fact": "instrumentedStore forwards base unchanged to createPartStore."
+      }
+    ]
+  },
+  "evidence": {
+    "script": "independent-repro.mjs",
+    "observation": "observation.json",
+    "command": "node /workspace/scratch/8528bb251845/discovery-swarm/W4/pass2/independent-repro.mjs",
+    "exitCode": 0,
+    "input": "px.image.cropped={widthPx:1,heightPx:1,rgba:Uint8Array}; pixels[1,2,3,4] -> [9,9,9,9], same constant7 and codeSalt same-closure",
+    "cases": [
+      {
+        "shape": "actual S4 addresses adapter",
+        "first": 10,
+        "changedPixelResult": 10,
+        "expected": 36,
+        "cacheHit": true,
+        "producerKeyChanged": false,
+        "pixelKeyChanged": true
+      },
+      {
+        "shape": "Map",
+        "first": 10,
+        "changedPixelResult": 36,
+        "cacheHit": false,
+        "producerKeyChanged": true
+      },
+      {
+        "shape": "same adapter + keys()",
+        "first": 10,
+        "changedPixelResult": 36,
+        "cacheHit": false,
+        "producerKeyChanged": true
+      },
+      {
+        "shape": "keys() exists but omits pixel root",
+        "first": 10,
+        "changedPixelResult": 10,
+        "expected": 36,
+        "cacheHit": true
+      }
+    ],
+    "controls": [
+      "Identical pixels yield correct cached10.",
+      "Changing unrelated constant7->8 invalidates and produces36, confirming broad constant-root invalidation can incidentally separate existing course runs.",
+      "Explicit inParts:['px.image.cropped'] invalidates and produces36 even with addresses-only adapter.",
+      "Independent default caches per store recompute36; cross-run contamination needs a cache reused across those runs."
+    ]
+  },
+  "guardFixBoundary": {
+    "owner": "Platform fg/** and scripts/** ownership; runner adapter change needs owner allocation. No protected edits performed.",
+    "minimum": "Normalize every supported base inventory representation, including actual addresses adapter, into complete query-readable provider-root keys before allowing persistent cache hits for query-dependent output calculations. If inventory completeness is unsupported or unverified, fail closed on cache reuse for that call or require explicit read dependency declarations.",
+    "counterexampleToWeakGuard": "Merely checking keys() exists, or hashing every listed address, is insufficient: intentionally incomplete keys() in independent control still serves stale10. Contract must guarantee complete inventory; observed query reads can be checked against it or tracked directly.",
+    "regression": "Keep actual adapter and Map controls with same constants/different pixels. Add explicit-input/no-shared-cache/changed-constant controls and cold-versus-warm equality. Mutability/content-key memoization is a separate invariant, not fixed merely by inventory enumeration."
+  },
+  "repositoryEdits": false,
+  "fullReplay": false,
+  "sealedCorpusAccess": false,
+  "next": "Await PASS3 conditional probe assignment."
+}

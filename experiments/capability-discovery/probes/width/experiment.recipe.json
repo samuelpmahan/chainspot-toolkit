@@ -1,0 +1,97 @@
+{
+  "schema": "capability-width-experiment-recipe@1",
+  "id": "width-offset-negative-v2",
+  "purpose": "Compose existing width/rail operations while preventing unsupported numeric width fallback from becoming measured evidence.",
+  "entry": "node probe.mjs --out receipts/actual.json",
+  "runtime": "Node >=24; standard library and bundled exact sources only; no network, Git checkout, dependencies or production writes",
+  "inputs": {
+    "raster": "RGBA plus width/height, canonical image identity and explicit same-image frame; nominal fixture argument and actual occupied rows kept separately",
+    "segments": "Independently qualified straight tee-to-badge segments with endpoint uncertainty; empty, short, covered or ambiguous segments remain conditions",
+    "ownership": "Explicit known-occluder masks/boxes in that same frame; no new AA suppression",
+    "candidateWidths": "Finite positive full ribbon widths in same-image pixels; no meter-scale inference or unqualified default",
+    "confidencePolicy": "Caller-declared minimum qualified segments, bilateral/visible sample counts, mean score, candidate score separation and maximum relative width IQR; no built-in scientific acceptance thresholds",
+    "confidenceEvidence": "Local image scope, independent qualification, bilateral counts, width spread, profile-boundary status and held-out agreement within reported fit uncertainty"
+  },
+  "stages": [
+    {
+      "id": "source-identity",
+      "call": "SHA256 and Git blob verification",
+      "output": "verified source IDs; mismatch stops as integrity failure"
+    },
+    {
+      "id": "raster-accounting",
+      "call": "strict inequality binary stripe fixture",
+      "output": "nominal argument, occupied rows and bilinear edge separation in pixels"
+    },
+    {
+      "id": "paired-edge-fit",
+      "call": "widthSearchAt / fn.q.path.width",
+      "output": "left/right/midpoint/full-width and lum-per-pixel edge strength, or no pair",
+      "eligibility": "record finite search extent and center gate; explicit wider gate is an experiment variant"
+    },
+    {
+      "id": "pose-observation",
+      "call": "observeFourLaneCrossSection",
+      "output": "rail/inner channels, visibility, railMode and combined score",
+      "eligibility": "paired calibration evidence needs both visible rails; combined interior-only score is retained but insufficient"
+    },
+    {
+      "id": "legacy-width-diagnostic",
+      "call": "estimateFourLaneCorridorWidth",
+      "output": "legacy width and all candidate scores/counts with explicit nonfinite tags; never consume numerical fallback alone"
+    },
+    {
+      "id": "confidence-guard",
+      "call": "assessLocalWidth",
+      "output": "UNKNOWN with widthPx null and reason, or ELIGIBLE_FOR_COMPARISON with source width and score separation; promoted false always"
+    },
+    {
+      "id": "comparison",
+      "call": "future owner-supplied frozen baseline versus qualified-width variant",
+      "output": "independent held-out widths, center residuals, source/frame identities and failures",
+      "eligibility": "requires real visible segment evidence; this synthetic pack does not run or claim it"
+    }
+  ],
+  "outputs": [
+    "machine receipt with per-case arguments/results/interpretation and source+code SHA provenance",
+    "explicit nonfinite tags preserve no-evidence -Infinity",
+    "all UNKNOWNs and channel distinctions",
+    "no promoted candidate or changed default"
+  ],
+  "evidenceChecks": [
+    "actual raster rows distinguish nominal argument from fitted width",
+    "near-boundary weak fit stays a counterexample",
+    "default gate rejection is tested against explicit wider gate",
+    "zero fixed-pose sensor score does not imply ribbon absence",
+    "rail UNKNOWN and combined score may coexist",
+    "all-hidden and empty segments never become measured numeric width",
+    "missing policy, tied score, missing bilateral/held-out evidence and boundary ambiguity yield UNKNOWN"
+  ],
+  "UNKNOWN": [
+    "no qualified segment",
+    "no visible bilateral rail evidence",
+    "insufficient supported candidates",
+    "nonfinite score",
+    "unspecified confidence policy",
+    "weak or inseparable scores",
+    "unreported fit uncertainty or held-out comparison",
+    "profile boundary ambiguity",
+    "frame/scope mismatch"
+  ],
+  "boundaries": {
+    "imageAccuracy": "not measured",
+    "endpointOwnership": "not inferred",
+    "meterScale": "rings only; local width never calibrates meters",
+    "defaultCV": "unchanged",
+    "AA": "unchanged; suppression waits full S7 baseline",
+    "promotion": "none",
+    "integration": "owner copies pack; experiments remain separate from production CV"
+  },
+  "contractRevision": 2,
+  "reviewRepair": {
+    "initialReview": "R202",
+    "initialDecision": "amend",
+    "repairPacket": "E207",
+    "status": "authored-regression-fixes-awaiting-independent-review"
+  }
+}

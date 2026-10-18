@@ -1,0 +1,61 @@
+{
+  "schema": "discovery-wrapper-repair@1",
+  "job_id": "E207",
+  "owner": "W3",
+  "contractRevision": 2,
+  "initialReviewDecision": "amend",
+  "independentRecheck": "pending",
+  "scope": "Wrapper/schema metadata changes only. Frozen CV source snapshots and first-pass receipts unchanged. No promotion or scientific acceptance.",
+  "checks": {
+    "nodeTests": 19,
+    "actualAdapter": "stale6/expected27 under incomplete roots; controls unchanged"
+  },
+  "code": [
+    {
+      "path": "root-inventory.mjs",
+      "sha256": "8f7983baf35dd03f76ef2110373806cfe336da5880bab9388a446c2bd68287dc"
+    },
+    {
+      "path": "root-inventory.test.mjs",
+      "sha256": "8623443a449c8ab90f5dbc882070d19608f5a04cdf1f9c1da8bc1b543e369fbf"
+    }
+  ],
+  "unchangedSources": [
+    {
+      "path": "source/contracts/alpha.profile@1.mjs",
+      "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f"
+    },
+    {
+      "path": "source/fg/alpha/alphaRender.mjs",
+      "sha256": "4d17e1da77b1e5ceb6a4a2609d26c010caa6c43df8392e9599544299d9e1c549"
+    },
+    {
+      "path": "source/fg/canon.mjs",
+      "sha256": "3cc0319f4678eaf8679adcbfaa9db054841417a966c079019b0f72e24ba24406"
+    },
+    {
+      "path": "source/fg/png.mjs",
+      "sha256": "7668bab9de6a19a2cc6f44e5ac47d6e89373da130764365cf32011187a980241"
+    },
+    {
+      "path": "source/fg/profile.mjs",
+      "sha256": "bf0247e7cefb883ceccb2337bf9e8fc1099dc1be13ee7b46d1fe47ec29fbcbc8"
+    },
+    {
+      "path": "source/fg/pxset.mjs",
+      "sha256": "01e68e82741d4af56901b3306a304ca540e8ab0d73a12ba20a0afbe0e788f5d5"
+    },
+    {
+      "path": "source/fg/render.mjs",
+      "sha256": "39a24a645c222430464592546eb6bdc1a8b190902ed5708ecd951b0bb639315a"
+    },
+    {
+      "path": "source/fg/store.mjs",
+      "sha256": "122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074"
+    },
+    {
+      "path": "source-evidence/s4-run.mjs",
+      "sha256": "d75b516f1a414adf050e4fd4c740110160d6331d3b6e9092bcfb9e2c90295166"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "schema": "discovery-cycle-reviews@1",
+  "initialAmendments": [
+    "R101",
+    "R202",
+    "R203",
+    "R206",
+    "R201"
+  ],
+  "repairs": [
+    "E203",
+    "E207",
+    "E211"
+  ],
+  "maintainerVerifications": [
+    "E208",
+    "E209",
+    "E210"
+  ],
+  "independentFinal": {
+    "R207": {
+      "worker": "W5",
+      "decision": "accepted",
+      "scope": "nine leaf code/contracts only; no core/retention/packaging acceptance",
+      "artifact": "detailed-reviews/R207.json",
+      "sha256": "1b11f2f9ce353b5a035fe3dbd6a5ea8687937e57c9951f05e2c525ce0357e556"
+    },
+    "R211": {
+      "worker": "W2",
+      "decision": "accepted",
+      "scope": "core principal occupancy correction only; no scientific/human acceptance",
+      "artifact": "detailed-reviews/R211.json",
+      "sha256": "c0d7e1d46cd687b7f529323986297062fcde7ccba76fc121cdef0b40dd8f680b"
+    }
+  },
+  "rebind": "R211 independently verified all9 R207 leaf hashes unchanged; accepted scopes compose technical checkpoint approval only. Raw initial AMEND/accepted reviews remain unchanged."
+}

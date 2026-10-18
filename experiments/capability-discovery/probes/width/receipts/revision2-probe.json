@@ -1,0 +1,566 @@
+{
+  "schema": "width-offset-negative-receipt@1",
+  "job_id": "E202",
+  "outcome": "mixed_change",
+  "tests": {
+    "status": "PASS",
+    "cases": 14
+  },
+  "runtime": {
+    "node": "v24.19.0"
+  },
+  "provenance": [
+    {
+      "file": "vendor/active/ports/s6straight/pathSpace.mjs",
+      "origin": "chainspot-toolkit",
+      "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "sourcePath": "ports/s6straight/pathSpace.mjs",
+      "gitBlob": "38963d20f7a8b7c7851b3a2abea2e472da8f7716",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "adaptation": "path/extension only; content byte-identical",
+      "verified": true
+    },
+    {
+      "file": "vendor/active/contracts/alpha.profile@1.mjs",
+      "origin": "chainspot-toolkit",
+      "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "sourcePath": "contracts/alpha.profile@1.mjs",
+      "gitBlob": "6f50530ff8f7d5c613ee739224d475657fcbf647",
+      "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+      "adaptation": "path/extension only; content byte-identical",
+      "verified": true
+    },
+    {
+      "file": "vendor/provider/fourLaneSensor.cjs",
+      "origin": "chainspot-toolkit",
+      "ref": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "sourcePath": "source/provider/packages/alg/dist/detectors/threeFactor/features/st.fourLaneSensor.js",
+      "gitBlob": "2167c3539aa33856738e679c75869d6c3395afe8",
+      "sha256": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624",
+      "adaptation": "path/extension only; content byte-identical",
+      "verified": true
+    },
+    {
+      "file": "vendor/dev72/fourLaneRibbon.ts",
+      "origin": "samuelpmahan/ChainSpot",
+      "ref": "ef2a4fc2dc4720d3647f705464342f119d5a39a5",
+      "sourcePath": "src/lib/nuthing/fourLaneRibbon.ts",
+      "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+      "adaptation": "none; exact independently fetched source; Node builtin type stripping",
+      "verified": true
+    }
+  ],
+  "code": [
+    {
+      "file": "probe.mjs",
+      "sha256": "864b56f086742aa3591e126f788fd347228bf70f4b6301f56ead5ffa6d1819ef"
+    },
+    {
+      "file": "recipe.mjs",
+      "sha256": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0"
+    },
+    {
+      "file": "experiment.recipe.json",
+      "sha256": "2fb1f68b0dfc921f56d88078103856ddf8ccabbeab48fa1eaaa5a51b30805921"
+    },
+    {
+      "file": "provenance.json",
+      "sha256": "0f3de094060d64f7614be6a8fa5023180e75070d33153976bdf318a734fdffaf"
+    }
+  ],
+  "recipeId": "width-offset-negative-v2",
+  "cases": [
+    {
+      "id": "raster-width-29",
+      "input": {
+        "nominalWidthPx": 29,
+        "rasterWidthPx": 29,
+        "edgeSeparationPx": 29
+      },
+      "result": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "meaning": "strict raster inequality counts occupied rows; nominal argument is not raster width",
+      "units": "same-image source px; RGB mean levels and lum/px where named; scores dimensionless"
+    },
+    {
+      "id": "raster-width-30",
+      "input": {
+        "nominalWidthPx": 30,
+        "rasterWidthPx": 29,
+        "edgeSeparationPx": 29
+      },
+      "result": {
+        "lPx": -14.5,
+        "rPx": 14.5,
+        "cPx": 0,
+        "wPx": 29,
+        "score": 36,
+        "gl": 36,
+        "gr": 36,
+        "wgPx": 29
+      },
+      "meaning": "strict raster inequality counts occupied rows; nominal argument is not raster width",
+      "units": "same-image source px; RGB mean levels and lum/px where named; scores dimensionless"
+    },
+    {
+      "id": "raster-width-59",
+      "input": {
+        "nominalWidthPx": 59,
+        "rasterWidthPx": 59,
+        "edgeSeparationPx": 59
+      },
+      "result": {
+        "lPx": -28.5,
+        "rPx": 28.5,
+        "cPx": 0,
+        "wPx": 57,
+        "score": 4.5,
+        "gl": 4.5,
+        "gr": 4.5,
+        "wgPx": 57
+      },
+      "meaning": "weak near-boundary under-estimate, not a measured physical ribbon width",
+      "units": "same-image source px; RGB mean levels and lum/px where named; scores dimensionless"
+    },
+    {
+      "id": "raster-width-60",
+      "input": {
+        "nominalWidthPx": 60,
+        "rasterWidthPx": 59,
+        "edgeSeparationPx": 59
+      },
+      "result": {
+        "lPx": -28.5,
+        "rPx": 28.5,
+        "cPx": 0,
+        "wPx": 57,
+        "score": 4.5,
+        "gl": 4.5,
+        "gr": 4.5,
+        "wgPx": 57
+      },
+      "meaning": "weak near-boundary under-estimate, not a measured physical ribbon width",
+      "units": "same-image source px; RGB mean levels and lum/px where named; scores dimensionless"
+    },
+    {
+      "id": "raster-width-61",
+      "input": {
+        "nominalWidthPx": 61,
+        "rasterWidthPx": 61,
+        "edgeSeparationPx": 61
+      },
+      "result": null,
+      "meaning": "strict raster inequality counts occupied rows; nominal argument is not raster width",
+      "units": "same-image source px; RGB mean levels and lum/px where named; scores dimensionless"
+    },
+    {
+      "id": "raster-width-62",
+      "input": {
+        "nominalWidthPx": 62,
+        "rasterWidthPx": 61,
+        "edgeSeparationPx": 61
+      },
+      "result": null,
+      "meaning": "strict raster inequality counts occupied rows; nominal argument is not raster width",
+      "units": "same-image source px; RGB mean levels and lum/px where named; scores dimensionless"
+    },
+    {
+      "id": "offset-center-gate",
+      "input": {
+        "nominalWidthPx": 30,
+        "rasterWidthPx": 29,
+        "originOffsetPx": 3.25,
+        "defaultLatLimPx": 3,
+        "explicitLatLimPx": 12
+      },
+      "result": {
+        "defaultFit": null,
+        "widerGateFit": {
+          "lPx": -17.75,
+          "rPx": 11.25,
+          "cPx": -3.25,
+          "wPx": 29,
+          "score": 36,
+          "gl": 36,
+          "gr": 36,
+          "wgPx": 29
+        }
+      },
+      "meaning": "default rejection does not establish ribbon absence; explicit wider gate recovers same rail width",
+      "units": "same-image source px; RGB mean levels and lum/px where named; scores dimensionless"
+    },
+    {
+      "id": "four-lane-offset-0",
+      "input": {
+        "expectedWidthPx": 30,
+        "rasterWidthPx": 29,
+        "offsetPx": 0
+      },
+      "result": {
+        "laneOffsetsPx": [
+          -15,
+          -5,
+          5,
+          15
+        ],
+        "laneWidthPx": 10,
+        "leftRail": 1,
+        "innerLeft": 1,
+        "innerRight": 1,
+        "rightRail": 1,
+        "leftRailOccluded": false,
+        "innerLeftOccluded": false,
+        "innerRightOccluded": false,
+        "rightRailOccluded": false,
+        "railMode": "paired",
+        "railScore": 1,
+        "innerScore": 1,
+        "score": 1
+      },
+      "meaning": "fixed-center score is offset-fragile; zero score is not ribbon absence",
+      "units": "same-image source px; RGB mean levels and lum/px where named; scores dimensionless"
+    },
+    {
+      "id": "four-lane-offset-2",
+      "input": {
+        "expectedWidthPx": 30,
+        "rasterWidthPx": 29,
+        "offsetPx": 2
+      },
+      "result": {
+        "laneOffsetsPx": [
+          -15,
+          -5,
+          5,
+          15
+        ],
+        "laneWidthPx": 10,
+        "leftRail": 1,
+        "innerLeft": 1,
+        "innerRight": 1,
+        "rightRail": 0,
+        "leftRailOccluded": false,
+        "innerLeftOccluded": false,
+        "innerRightOccluded": false,
+        "rightRailOccluded": false,
+        "railMode": "paired",
+        "railScore": 0,
+        "innerScore": 1,
+        "score": 0
+      },
+      "meaning": "fixed-center score is offset-fragile; zero score is not ribbon absence",
+      "units": "same-image source px; RGB mean levels and lum/px where named; scores dimensionless"
+    },
+    {
+      "id": "four-lane-offset-4",
+      "input": {
+        "expectedWidthPx": 30,
+        "rasterWidthPx": 29,
+        "offsetPx": 4
+      },
+      "result": {
+        "laneOffsetsPx": [
+          -15,
+          -5,
+          5,
+          15
+        ],
+        "laneWidthPx": 10,
+        "leftRail": 0,
+        "innerLeft": 1,
+        "innerRight": 1,
+        "rightRail": 0,
+        "leftRailOccluded": false,
+        "innerLeftOccluded": false,
+        "innerRightOccluded": false,
+        "rightRailOccluded": false,
+        "railMode": "paired",
+        "railScore": 0,
+        "innerScore": 1,
+        "score": 0
+      },
+      "meaning": "fixed-center score is offset-fragile; zero score is not ribbon absence",
+      "units": "same-image source px; RGB mean levels and lum/px where named; scores dimensionless"
+    },
+    {
+      "id": "rails-hidden-inner-visible",
+      "input": {
+        "expectedWidthPx": 40,
+        "occluders": [
+          {
+            "bboxX": 60,
+            "bboxY": 54,
+            "bboxW": 40,
+            "bboxH": 12
+          },
+          {
+            "bboxX": 60,
+            "bboxY": 94,
+            "bboxW": 40,
+            "bboxH": 12
+          }
+        ]
+      },
+      "result": {
+        "observation": {
+          "laneOffsetsPx": [
+            -20,
+            -6.666666666666667,
+            6.666666666666667,
+            20
+          ],
+          "laneWidthPx": 13.333333333333334,
+          "leftRail": null,
+          "innerLeft": 1,
+          "innerRight": 1,
+          "rightRail": null,
+          "leftRailOccluded": true,
+          "innerLeftOccluded": false,
+          "innerRightOccluded": false,
+          "rightRailOccluded": true,
+          "railMode": "occluded",
+          "railScore": null,
+          "innerScore": 1,
+          "score": 1
+        },
+        "pairedEvidence": {
+          "status": "UNKNOWN",
+          "reason": "two visible rails required for paired-width evidence",
+          "combinedScore": 1
+        }
+      },
+      "meaning": "rail channel UNKNOWN coexists with combined score1; combined score is insufficient bilateral calibration evidence",
+      "units": "same-image source px; RGB mean levels and lum/px where named; scores dimensionless"
+    },
+    {
+      "id": "all-hidden-width",
+      "input": {
+        "candidateWidthsPx": [
+          30,
+          40,
+          50
+        ],
+        "fixtureOnlyPolicy": {
+          "minQualifiedSegments": 1,
+          "minBilateralSamples": 1,
+          "minVisibleSamples": 1,
+          "minMeanScore": 0,
+          "minScoreSeparation": 0.1,
+          "maxRelativeWidthIqr": 0.1
+        }
+      },
+      "result": {
+        "legacy": {
+          "widthPx": 30,
+          "scores": [
+            {
+              "widthPx": 30,
+              "meanScore": {
+                "numberKind": "nonfinite",
+                "value": "-Infinity"
+              },
+              "visibleSamples": 0
+            },
+            {
+              "widthPx": 40,
+              "meanScore": {
+                "numberKind": "nonfinite",
+                "value": "-Infinity"
+              },
+              "visibleSamples": 0
+            },
+            {
+              "widthPx": 50,
+              "meanScore": {
+                "numberKind": "nonfinite",
+                "value": "-Infinity"
+              },
+              "visibleSamples": 0
+            }
+          ]
+        },
+        "decision": {
+          "status": "UNKNOWN",
+          "widthPx": null,
+          "reasons": [
+            "at least two supported candidate scores required to assess separation"
+          ],
+          "promoted": false
+        },
+        "hiddenObservation": {
+          "laneOffsetsPx": [
+            -20,
+            -6.666666666666667,
+            6.666666666666667,
+            20
+          ],
+          "laneWidthPx": 13.333333333333334,
+          "leftRail": null,
+          "innerLeft": null,
+          "innerRight": null,
+          "rightRail": null,
+          "leftRailOccluded": true,
+          "innerLeftOccluded": true,
+          "innerRightOccluded": true,
+          "rightRailOccluded": true,
+          "railMode": "occluded",
+          "railScore": null,
+          "innerScore": null,
+          "score": null
+        }
+      },
+      "meaning": "legacy numeric return is retained for diagnosis, never promoted to measured local width",
+      "units": "same-image source px; RGB mean levels and lum/px where named; scores dimensionless"
+    },
+    {
+      "id": "empty-segment-fallback",
+      "input": {
+        "candidateWidthsPx": [],
+        "fixtureOnlyPolicy": {
+          "minQualifiedSegments": 1,
+          "minBilateralSamples": 1,
+          "minVisibleSamples": 1,
+          "minMeanScore": 0,
+          "minScoreSeparation": 0.1,
+          "maxRelativeWidthIqr": 0.1
+        }
+      },
+      "result": {
+        "legacy": {
+          "widthPx": 40,
+          "scores": []
+        },
+        "decision": {
+          "status": "UNKNOWN",
+          "widthPx": null,
+          "reasons": [
+            "no candidate score rows; legacy fallback is not evidence"
+          ],
+          "promoted": false
+        },
+        "hiddenObservation": {
+          "laneOffsetsPx": [
+            -20,
+            -6.666666666666667,
+            6.666666666666667,
+            20
+          ],
+          "laneWidthPx": 13.333333333333334,
+          "leftRail": null,
+          "innerLeft": null,
+          "innerRight": null,
+          "rightRail": null,
+          "leftRailOccluded": true,
+          "innerLeftOccluded": true,
+          "innerRightOccluded": true,
+          "rightRailOccluded": true,
+          "railMode": "occluded",
+          "railScore": null,
+          "innerScore": null,
+          "score": null
+        }
+      },
+      "meaning": "legacy numeric return is retained for diagnosis, never promoted to measured local width",
+      "units": "same-image source px; RGB mean levels and lum/px where named; scores dimensionless"
+    },
+    {
+      "id": "recipe-confidence-controls",
+      "input": {
+        "policyStatus": "explicit synthetic fixture policy; not a physical acceptance constant",
+        "policy": {
+          "minQualifiedSegments": 1,
+          "minBilateralSamples": 1,
+          "minVisibleSamples": 1,
+          "minMeanScore": 0,
+          "minScoreSeparation": 0.1,
+          "maxRelativeWidthIqr": 0.1
+        },
+        "evidence": {
+          "frame": "same-canonical-image-pixels",
+          "widthScope": "LOCAL",
+          "segmentQualification": "straight-tee-to-badge-independent",
+          "qualifiedSegments": 1,
+          "bilateralSamples": 1,
+          "profileTouchesLateralBoundary": false,
+          "relativeWidthIqr": 0,
+          "heldOutCheck": "agreement-within-reported-fit-uncertainty"
+        }
+      },
+      "result": {
+        "tied": {
+          "status": "UNKNOWN",
+          "widthPx": null,
+          "reasons": [
+            "weak or inseparable supported candidate scores"
+          ],
+          "promoted": false
+        },
+        "missingPolicy": {
+          "status": "UNKNOWN",
+          "widthPx": null,
+          "reasons": [
+            "explicit confidence policy required; no numerical defaults"
+          ],
+          "promoted": false
+        },
+        "boundary": {
+          "status": "UNKNOWN",
+          "widthPx": null,
+          "reasons": [
+            "profile-boundary ambiguity"
+          ],
+          "promoted": false
+        },
+        "missingBilateral": {
+          "status": "UNKNOWN",
+          "widthPx": null,
+          "reasons": [
+            "insufficient qualified segment/bilateral evidence"
+          ],
+          "promoted": false
+        },
+        "missingHeldOut": {
+          "status": "UNKNOWN",
+          "widthPx": null,
+          "reasons": [
+            "held-out widths not independently checked"
+          ],
+          "promoted": false
+        },
+        "invalidEvidenceCount": {
+          "status": "UNKNOWN",
+          "widthPx": null,
+          "reasons": [
+            "finite nonnegative evidence counts required"
+          ],
+          "promoted": false
+        },
+        "eligibleFixture": {
+          "status": "ELIGIBLE_FOR_COMPARISON",
+          "widthPx": 40,
+          "separation": 0.8,
+          "promoted": false,
+          "reasons": [
+            "synthetic/recipe eligibility only; no endpoint or real-image acceptance"
+          ]
+        }
+      },
+      "meaning": "qualified confidence evidence is required; no policy or weak/tied/hidden/boundary evidence remains UNKNOWN",
+      "units": "same-image source px; RGB mean levels and lum/px where named; scores dimensionless"
+    }
+  ],
+  "boundaries": [
+    "Synthetic mechanisms only; no image accuracy, physical endpoint identity, width promotion, defaults change or AA muting.",
+    "Nominal raster width is reported separately from occupied rows and fitted rail width.",
+    "Confidence fixture thresholds are test inputs; real policies must be declared and cross-validated by their caller."
+  ]
+}

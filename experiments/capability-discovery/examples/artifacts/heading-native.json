@@ -1,0 +1,229 @@
+{
+  "schema": "s7-width-bank-probe@1",
+  "source": {
+    "path": "artifacts/replay/source/IMG_5641.jpg",
+    "sha256": "e6616738640eee1d05d8cc2b59dd657f24b4a5a01dc2f68571b7e44c6f372b8a",
+    "bytesLength": 627609,
+    "frame": {
+      "name": "original-jpeg-pixels",
+      "widthPx": 1290,
+      "heightPx": 2091,
+      "canonicalToSource": [
+        0,
+        4
+      ],
+      "canonicalRgbaSha256": "cadc67b69fa6430ade488d16415f36068cead4262572b04c63c25ceafa254455",
+      "sourceSha256": "e6616738640eee1d05d8cc2b59dd657f24b4a5a01dc2f68571b7e44c6f372b8a"
+    }
+  },
+  "configSha256": "1d590adba57ea96fbc7a8b8d04894a2468d14c3375a70eb960aaaddda98e6491",
+  "paramsHash": "5d94617898aeee251a389615146de46cc905f2ab340e575699e2779b47fbc3c9",
+  "probeScriptSha256": "c16d4ad32d78f094fede013d1fd09f3891be7cdecd1d455fc73aa6a04cdfe41d",
+  "compiledRibbonSha256": "25635c2682a1f5ee3d3253207dcf6ba930ad23f968ac0bd316de1103391b8bc3",
+  "compiledTracerSha256": "14f6147fbf98a57ff624acc86ef34cb9cbe2ae9e6d9d4537eb7111e7d49a12ed",
+  "stem": "IMG_5641",
+  "badgeId": "badge-9",
+  "teeId": "tee-7",
+  "headingRad": 0.047900432100886965,
+  "headingSource": "sealed S6 two-ray row, fixed S5 visible-tee axis u toward badge; geometry hint only",
+  "s5AxisEvidence": {
+    "rowPath": "/workspace/scratch/8528bb251845/discovery-swarm/W2/lab/attempts/attempt-1792310339855-47a644f843ce/fork/source/chainspot-teams/s7/input/IMG_5641-rows.json",
+    "rowFileSha256": "1117c583dc87e861d7de237a2d6f86b72041925d3b1d44c42b0534dc68683fc8",
+    "rowId": "s6ray:tee-7:plus:badge-9:basket-10",
+    "rowStatus": "TWO_RAY_ZERO_BEND_GEOMETRY_CANDIDATE_UNOWNED",
+    "u": [
+      0.9988529936399652,
+      0.04788211666666081
+    ],
+    "headingDeg": 2.74449259623379,
+    "legacyHeadingDeg": -45,
+    "signedDeltaDeg": 47.74449259623379,
+    "badgeCenterSource": [
+      443.41806722689074,
+      982.5819327731092
+    ],
+    "teeCenterSource": [
+      366.9749400536646,
+      982.522767249239
+    ]
+  },
+  "badge": {
+    "label": "7",
+    "bbox": [
+      417,
+      958,
+      54,
+      42
+    ],
+    "center": [
+      443.41806722689074,
+      978.5819327731092
+    ]
+  },
+  "note": "paramsHash identifies the untouched baseline gateway config; each variant has its own identity including widthsSrc and direct calculation JS hashes. Only widthsSrc varies. Each width is full canonical-source pixels sampled at half width / fieldScale 3. Normalization recomputed per bank. SupportTau=.5 and corridorWidthPx=37 remain fixed; no claimed basket on forced reachability. Variant hash does not cover every transitive dependency.",
+  "parameters": {
+    "corridorWidthPx": 37,
+    "fieldScale": 3,
+    "orientations": 12,
+    "widthsSrc": [
+      24,
+      32,
+      40,
+      48,
+      56,
+      64
+    ],
+    "patchBadges": true,
+    "alignmentPower": 2,
+    "worstWindowSrcPx": 90,
+    "supportTau": 0.5
+  },
+  "outcomes": [
+    {
+      "name": "baseline",
+      "widthsSrc": [
+        24,
+        32,
+        40,
+        48,
+        56,
+        64
+      ],
+      "variantIdentitySha256": "ecdd8df98b516579467c07196121405138b56044579834a3d94cec0fdbdbe521",
+      "field": {
+        "width": 430,
+        "height": 694,
+        "scale": 3,
+        "supportSha256": "e0503485b8651ac65c4343a371efe4c4cdbe484c0ce2dc80cda116f20ba0ab57",
+        "thetaSha256": "caa4ce6a7b4d379e47fe59f521b7a565c5ab345b74893a92481b9a6b84f9c7c3",
+        "meanSupport": 0.29834530232069745,
+        "fractionAboveTau": 0.0957107432477716,
+        "nonzeroCells": 298420
+      },
+      "baselineExact": true,
+      "traced": {
+        "outcome": "unknown",
+        "reason": "petered-out",
+        "points": [
+          [
+            443.41806722689074,
+            978.5819327731092
+          ],
+          [
+            452.6574574180604,
+            979.0248423522759
+          ],
+          [
+            461.89684760923006,
+            979.4677519314425
+          ],
+          [
+            471.1362378003997,
+            979.9106615106092
+          ],
+          [
+            479.76444397912235,
+            976.5765112234367
+          ],
+          [
+            486.7914975634116,
+            970.5612790646977
+          ],
+          [
+            494.34245483764596,
+            965.2184760323291
+          ],
+          [
+            502.1315738500661,
+            960.2292751934817
+          ]
+        ],
+        "lengthPx": 64.75,
+        "tunneledSegments": [],
+        "bendCount": 1
+      },
+      "points": [
+        {
+          "point": [
+            443.41806722689074,
+            978.5819327731092
+          ],
+          "support": 0.5,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            452.6574574180604,
+            979.0248423522759
+          ],
+          "support": 0.5,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            461.89684760923006,
+            979.4677519314425
+          ],
+          "support": 0.5,
+          "insideOwnBadge": true
+        },
+        {
+          "point": [
+            471.1362378003997,
+            979.9106615106092
+          ],
+          "support": 0.8500000238418579,
+          "insideOwnBadge": false
+        },
+        {
+          "point": [
+            479.76444397912235,
+            976.5765112234367
+          ],
+          "support": 0.8500000238418579,
+          "insideOwnBadge": false
+        },
+        {
+          "point": [
+            486.7914975634116,
+            970.5612790646977
+          ],
+          "support": 0.8500000238418579,
+          "insideOwnBadge": false
+        },
+        {
+          "point": [
+            494.34245483764596,
+            965.2184760323291
+          ],
+          "support": 0.6686580777168274,
+          "insideOwnBadge": false
+        },
+        {
+          "point": [
+            502.1315738500661,
+            960.2292751934817
+          ],
+          "support": 0.5034722089767456,
+          "insideOwnBadge": false
+        }
+      ],
+      "fixedBaselineExitTrial": {
+        "point": [
+          509.92069286248625,
+          955.2400743546343
+        ],
+        "support": 0.42506906390190125,
+        "insideOwnBadge": false
+      },
+      "nextStraightProbe": {
+        "point": [
+          509.92069286248625,
+          955.2400743546343
+        ],
+        "support": 0.42506906390190125,
+        "insideOwnBadge": false
+      }
+    }
+  ]
+}

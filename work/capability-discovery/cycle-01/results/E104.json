@@ -1,0 +1,32 @@
+{
+  "worker": "W6",
+  "pass": 1,
+  "status": "FAIL",
+  "scope": "Pixel-root cache trust claim at active platform ref; minimal adapter-shaped falsifier, not full S4 replay.",
+  "refs": {
+    "main": "37a2dba87d61262f661af70f1a22440736e61efc",
+    "platform": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "algorithm": "e3e11fab5de1e4562487472585259435694d88bc"
+  },
+  "actualObservations": [
+    "Snapshot-only store+CAS pure tests: 19 passed, 0 failed; new Map-based regression passes.",
+    "fg/store.mjs:260-266 enumerates provider roots only through board.keys(); :415 adds roots only for output-producing calculations with declared calls.",
+    "Actual S4 loadAttemptParts adapter, ports/s4recover/run.mjs:58, exposes has/get/addresses, no keys(). instrumentedStore passes this base unchanged.",
+    "Independent repro: same constants + changed pixel root [1,2,3] -> [9,9,9] gives distinct pixel Part keys but identical producer key, cached=true, result=6 instead of 27. Map/keys control recomputes 27; identical pixels hit; changed constant recomputes 27.",
+    "S4 loads course-specific constants (basket recovery, refined tees/family, late geometry, testimony) at run.mjs:104-107,150. These may incidentally separate existing course runs. No claim that current six-course results are proven poisoned; underlying pixel-root coverage is incomplete."
+  ],
+  "trustBoundary": "Query math may read arbitrary store Parts while declaring no inParts; output cache therefore depends on complete enumerated immutable provider roots, constant roots, and actual code closure. Write-once addresses do not freeze nested objects; baseKeys memoizes object identity, so in-place mutations remain a residual risk. Nonenumerable bases silently omit provider roots.",
+  "minimalGuardProposal": "Before trusting cached query-dependent outputs, require provider address inventory enumerability and verify every listed root key is incorporated. Add actual-adapter changed-pixel/unchanged-constant falsifier alongside Map regression. Freeze/replace base values or independently compare cold/warm outputs under changed pixels. Platform owner owns implementation.",
+  "nativeEvidenceAudit": "Main replay/targets/width-probe/adapter/facts equal active ref. Whole closure fingerprint binds declared files+args+ticks; LocalCI verifies copied bytes and output directory must be absent. Native variant identity explicitly omits transitive dependency coverage. Gate any trace comparison on current source/canonical pixels, config+params, selected row bytes/selector/status, heading, widths and full code closure; re-attest receipt bytes after any change. Longer length, process PASS, or geometry-only row equality never establishes ownership/acceptance. Testimony remains optional/impeachable; annotated-course tuning is not heldout evaluation. No sealed corpus accessed.",
+  "artifacts": [
+    "source-identities.json",
+    "adapter-root-falsifier.mjs",
+    "adapter-root-observation.json",
+    "pure-tests.log"
+  ],
+  "nextEligible": [
+    "PASS2: independently rerun adapter falsifier and challenge constants condition.",
+    "Platform-owner request: enumerable adapter contract/guard, mutation assumptions.",
+    "PASS3: cold/warm active full replay only after explicit ownership allocation; W2 owns native baseline/heading."
+  ]
+}

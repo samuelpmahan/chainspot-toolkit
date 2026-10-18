@@ -1,0 +1,33 @@
+{
+  "schema": "discovery-review-history@1",
+  "reviews": [
+    {
+      "job_id": "R202",
+      "worker": "W6",
+      "initialDecision": "amend",
+      "artifact": "evidence/reviews/R202-initial-amend.json",
+      "sha256": "74ac16b49744e09b5f3982d3595130a83ffac2f793f47c8761c4eee54c58bceb"
+    },
+    {
+      "job_id": "R203",
+      "worker": "W6",
+      "initialDecision": "amend",
+      "artifact": "evidence/reviews/R203-initial-amend.json",
+      "sha256": "40a420aeb377c1645798333b63d61b6206b50c17a48b4d9d8aa4d7c50f94c709"
+    },
+    {
+      "job_id": "R206",
+      "worker": "W4",
+      "initialDecision": "amend",
+      "artifact": "evidence/reviews/R206-initial-amend.json",
+      "sha256": "ad44f787a2f4a7e5f89bd979f44e274fd694b1bb8331a61755e5199dbb378fbb"
+    }
+  ],
+  "capacityFalsifier": {
+    "artifact": "evidence/reviews/coordinator-capacity-initial.json",
+    "sha256": "62cdb3b36346824d5d1ae4bb8942230e5377f00d0630660ec4ac8463aed1a671"
+  },
+  "repairPacket": "E207",
+  "repairStatus": "authored-and-tested-awaiting-independent-review",
+  "scope": "Initial AMEND records are preserved. Authored regression tests are not independent acceptance, scientific acceptance or human acceptance."
+}

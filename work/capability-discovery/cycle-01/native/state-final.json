@@ -1,0 +1,2148 @@
+{
+  "schema": "chainspot.rebalancer-state/v1",
+  "service": {
+    "name": "capability-discovery-swarm",
+    "scope": "pass-1-discovery",
+    "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc",
+    "activeReference": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "capacity": "six actual worker agents plus one root coordinator; maximal independent discovery, production defaults unchanged",
+    "active_execution": false,
+    "technical_packets_complete": true,
+    "checkpoint_administration": "W3 reserved for final source commit; root publishes through authorized connector after exact tree verification. This is separately recorded from technical packet execution."
+  },
+  "workers": {
+    "W6": {
+      "job": null,
+      "agent": null
+    },
+    "W5": {
+      "job": null,
+      "agent": null
+    },
+    "W4": {
+      "job": null,
+      "agent": null
+    },
+    "W1": {
+      "job": null,
+      "agent": null
+    },
+    "W2": {
+      "job": null,
+      "agent": null
+    }
+  },
+  "jobs": {
+    "E101": {
+      "id": "E101",
+      "kind": "extract",
+      "subject": "Mine reusable routing/three-lane/pathwalking operations from historical ChainSpot and current source, with callable contracts and limits.",
+      "status": "done",
+      "worker": "W4",
+      "started_at": "2026-10-18T07:57:54.882125+00:00",
+      "finished_at": "2026-10-18T08:03:22.832564+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E101.json"
+    },
+    "E102": {
+      "id": "E102",
+      "kind": "extract",
+      "subject": "Analyze width/centerline/ribbon operations and derive evidence-grounded candidate tests using tee-to-badge geometry.",
+      "status": "done",
+      "worker": "W1",
+      "started_at": "2026-10-18T07:57:54.597748+00:00",
+      "finished_at": "2026-10-18T08:03:22.553002+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E102.json"
+    },
+    "E103": {
+      "id": "E103",
+      "kind": "extract",
+      "subject": "Analyze route scoring and bend evidence; identify falsifiable hypotheses for straight runs, sharp bends and >3 bend penalties.",
+      "status": "done",
+      "worker": "W5",
+      "started_at": "2026-10-18T07:57:54.975522+00:00",
+      "finished_at": "2026-10-18T08:03:22.937858+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E103.json"
+    },
+    "E104": {
+      "id": "E104",
+      "kind": "extract",
+      "subject": "Audit provenance/cache/evaluation risks and run independent narrow checks of current root-key fix where feasible.",
+      "status": "done",
+      "worker": "W6",
+      "started_at": "2026-10-18T07:57:55.072332+00:00",
+      "finished_at": "2026-10-18T08:03:23.033624+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E104.json"
+    },
+    "E105": {
+      "id": "E105",
+      "kind": "extract",
+      "subject": "Execute pinned baseline/heading native replays once in isolated scratch and mine actual operations/evidence for the lab.",
+      "status": "done",
+      "worker": "W2",
+      "started_at": "2026-10-18T07:57:54.688435+00:00",
+      "finished_at": "2026-10-18T08:03:22.649205+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E105.json"
+    },
+    "E106": {
+      "id": "E106",
+      "kind": "extract",
+      "subject": "Design executable conditional next-state planner and readiness/independent-review contract tied to actual replay evidence.",
+      "status": "done",
+      "worker": "W3",
+      "started_at": "2026-10-18T07:57:54.788998+00:00",
+      "finished_at": "2026-10-18T08:03:22.741188+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E106.json"
+    },
+    "R101": {
+      "id": "R101",
+      "kind": "review",
+      "depends_on": "E101",
+      "status": "done",
+      "worker": "W5",
+      "started_at": "2026-10-18T08:04:39.713154+00:00",
+      "finished_at": "2026-10-18T08:08:08.799329+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/R101.json"
+    },
+    "R102": {
+      "id": "R102",
+      "kind": "review",
+      "depends_on": "E102",
+      "status": "done",
+      "worker": "W2",
+      "started_at": "2026-10-18T08:04:39.203742+00:00",
+      "finished_at": "2026-10-18T08:08:08.529795+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/R102.json"
+    },
+    "R103": {
+      "id": "R103",
+      "kind": "review",
+      "depends_on": "E103",
+      "status": "done",
+      "worker": "W1",
+      "started_at": "2026-10-18T08:04:39.412822+00:00",
+      "finished_at": "2026-10-18T08:08:08.440051+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/R103.json"
+    },
+    "R104": {
+      "id": "R104",
+      "kind": "review",
+      "depends_on": "E104",
+      "status": "done",
+      "worker": "W4",
+      "started_at": "2026-10-18T08:04:39.298315+00:00",
+      "finished_at": "2026-10-18T08:08:08.709950+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/R104.json"
+    },
+    "R105": {
+      "id": "R105",
+      "kind": "review",
+      "depends_on": "E105",
+      "status": "done",
+      "worker": "W3",
+      "started_at": "2026-10-18T08:04:39.532565+00:00",
+      "finished_at": "2026-10-18T08:08:08.617575+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/R105.json"
+    },
+    "R106": {
+      "id": "R106",
+      "kind": "review",
+      "depends_on": "E106",
+      "status": "done",
+      "worker": "W6",
+      "started_at": "2026-10-18T08:04:39.627759+00:00",
+      "finished_at": "2026-10-18T08:08:08.907550+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/R106.json"
+    },
+    "E201": {
+      "id": "E201",
+      "kind": "extract",
+      "allow_workers": [
+        "W3"
+      ],
+      "subject": "Implement isolated deterministic conditional readiness planner and tests; sole integration/Git owner for experiments/capability-discovery. Requires R106 authority amendment resolved.",
+      "status": "done",
+      "worker": "W3",
+      "started_at": "2026-10-18T08:09:50.874567+00:00",
+      "finished_at": "2026-10-18T08:19:26.037087+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E201.json"
+    },
+    "E202": {
+      "id": "E202",
+      "kind": "extract",
+      "allow_workers": [
+        "W1",
+        "W2"
+      ],
+      "subject": "Package portable source-bound width/offset negative probes and composable recipe contract; no CV defaults/integration. Requires accepted R102.",
+      "status": "done",
+      "worker": "W1",
+      "started_at": "2026-10-18T08:09:50.994321+00:00",
+      "finished_at": "2026-10-18T08:13:48.202445+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E202.json"
+    },
+    "E203": {
+      "id": "E203",
+      "kind": "extract",
+      "allow_workers": [
+        "W4",
+        "W5"
+      ],
+      "subject": "Repair reviewed catalog caveats: hidden rails may retain interior score; empty/hidden width estimates must abstain. Build source-bound operation catalog and guarded recipes from R101 amend plus accepted R102/R103.",
+      "repair_of": "E101",
+      "status": "done",
+      "worker": "W4",
+      "started_at": "2026-10-18T08:09:51.105860+00:00",
+      "finished_at": "2026-10-18T08:16:26.915967+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E203.json"
+    },
+    "E204": {
+      "id": "E204",
+      "kind": "extract",
+      "allow_workers": [
+        "W1",
+        "W5"
+      ],
+      "subject": "Implement isolated posthoc path geometry descriptor and invariance/negative tests, no invented scoring constants or CV behavior changes. Requires accepted R103.",
+      "status": "done",
+      "worker": "W5",
+      "started_at": "2026-10-18T08:09:50.769202+00:00",
+      "finished_at": "2026-10-18T08:14:38.049772+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E204.json"
+    },
+    "E205": {
+      "id": "E205",
+      "kind": "extract",
+      "allow_workers": [
+        "W2"
+      ],
+      "subject": "Produce portable fresh-trace comparison figure/report with hash-verified canonical-frame transforms and inspect render; retain unknown/no basket. Requires accepted R105.",
+      "status": "done",
+      "worker": "W2",
+      "started_at": "2026-10-18T08:09:50.669040+00:00",
+      "finished_at": "2026-10-18T08:14:37.963648+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E205.json"
+    },
+    "E206": {
+      "id": "E206",
+      "kind": "extract",
+      "allow_workers": [
+        "W4",
+        "W6"
+      ],
+      "subject": "Package portable complete-root-inventory guard with actual adapter reproduction and controls; fail closed on absent/incomplete inventory, no platform edits. Requires accepted R104.",
+      "status": "done",
+      "worker": "W6",
+      "started_at": "2026-10-18T08:09:50.552316+00:00",
+      "finished_at": "2026-10-18T08:13:48.295674+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E206.json"
+    },
+    "R201": {
+      "id": "R201",
+      "kind": "review",
+      "depends_on": "E201",
+      "status": "done",
+      "worker": "W2",
+      "started_at": "2026-10-18T08:30:17.331648+00:00",
+      "finished_at": "2026-10-18T08:35:26.175525+00:00",
+      "blocked_reason": "Coordinator holds code review until E207 targeted repair freezes source, avoiding review of changing files.",
+      "allow_workers": [
+        "W6",
+        "W5",
+        "W4",
+        "W1",
+        "W2"
+      ],
+      "readiness_binding": {
+        "policyHash": "cc26d6b58e040038e148b4c176d4b5a733148947a109ea2d12615d40a6edf9fd",
+        "stateHash": "eaa303393e0bb8836e10df5f42beb06457a18037182e940833f005daeb563aec",
+        "evidenceHash": "1397e8903fbe12cdd259177229b08b96f7df5974902a1e7801ad03f0c8611eac"
+      },
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/R201.json"
+    },
+    "R202": {
+      "id": "R202",
+      "kind": "review",
+      "depends_on": "E202",
+      "status": "done",
+      "worker": "W6",
+      "started_at": "2026-10-18T08:14:37.846608+00:00",
+      "finished_at": "2026-10-18T08:16:27.037751+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/R202.json"
+    },
+    "R203": {
+      "id": "R203",
+      "kind": "review",
+      "depends_on": "E203",
+      "status": "done",
+      "worker": "W6",
+      "started_at": "2026-10-18T08:16:27.367983+00:00",
+      "finished_at": "2026-10-18T08:21:31.636089+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/R203.json"
+    },
+    "R204": {
+      "id": "R204",
+      "kind": "review",
+      "depends_on": "E204",
+      "status": "done",
+      "worker": "W2",
+      "started_at": "2026-10-18T08:15:17.205845+00:00",
+      "finished_at": "2026-10-18T08:19:26.130175+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/R204.json"
+    },
+    "R205": {
+      "id": "R205",
+      "kind": "review",
+      "depends_on": "E205",
+      "status": "done",
+      "worker": "W5",
+      "started_at": "2026-10-18T08:15:17.340014+00:00",
+      "finished_at": "2026-10-18T08:19:26.220341+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/R205.json"
+    },
+    "R206": {
+      "id": "R206",
+      "kind": "review",
+      "depends_on": "E206",
+      "status": "done",
+      "worker": "W4",
+      "started_at": "2026-10-18T08:16:27.248448+00:00",
+      "finished_at": "2026-10-18T08:19:26.311875+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/R206.json"
+    },
+    "E207": {
+      "id": "E207",
+      "kind": "extract",
+      "subject": "Repair independently reproduced malformed width/paired-rail and catalog/inventory contracts, plus duplicate-free-principal planner capacity; regressioncases preserveUNKNOWN and immutable exactsources. SoleownerW3 sharedexperimentfiles.",
+      "allow_workers": [
+        "W3"
+      ],
+      "repair_of": "E201",
+      "status": "done",
+      "worker": "W3",
+      "started_at": "2026-10-18T08:19:26.502980+00:00",
+      "finished_at": "2026-10-18T08:30:16.732168+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E207.json"
+    },
+    "R207": {
+      "id": "R207",
+      "kind": "review",
+      "depends_on": "E207",
+      "allow_workers": [
+        "W5",
+        "W2"
+      ],
+      "status": "done",
+      "worker": "W5",
+      "started_at": "2026-10-18T08:30:17.418178+00:00",
+      "finished_at": "2026-10-18T08:35:26.262905+00:00",
+      "readiness_binding": {
+        "policyHash": "cc26d6b58e040038e148b4c176d4b5a733148947a109ea2d12615d40a6edf9fd",
+        "stateHash": "eaa303393e0bb8836e10df5f42beb06457a18037182e940833f005daeb563aec",
+        "evidenceHash": "1397e8903fbe12cdd259177229b08b96f7df5974902a1e7801ad03f0c8611eac"
+      },
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/R207.json"
+    },
+    "E208": {
+      "id": "E208",
+      "kind": "extract",
+      "allow_workers": [
+        "W1"
+      ],
+      "repair_of": "E202",
+      "subject": "Verify owner-written repair to width confidence and paired-rail contract per independently observed R202 malformed-input cases in disjoint scratchpack; deliver testedportablepack for ownerintegration. Source work had already been written by W3 before split message; actual packet is readonly isolated repair verification, not duplicate implementation.",
+      "status": "done",
+      "worker": "W1",
+      "started_at": "2026-10-18T08:24:31.968705+00:00",
+      "finished_at": "2026-10-18T08:30:16.834214+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E208.json"
+    },
+    "E209": {
+      "id": "E209",
+      "kind": "extract",
+      "allow_workers": [
+        "W4"
+      ],
+      "repair_of": "E203",
+      "subject": "Verify owner-written repair to catalog guard schema, finitepositiveunambiguouswidth evidence and module/source-path validation per independently observed R203 in scratchpack; deliver ownerintegration. Source work had already been written by W3 before split message; actual packet is readonly isolated repair verification, not duplicate implementation.",
+      "status": "done",
+      "worker": "W4",
+      "started_at": "2026-10-18T08:24:31.865019+00:00",
+      "finished_at": "2026-10-18T08:30:16.945116+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E209.json"
+    },
+    "E210": {
+      "id": "E210",
+      "kind": "extract",
+      "allow_workers": [
+        "W6"
+      ],
+      "repair_of": "E206",
+      "subject": "Verify owner-written repair to root-inventory guard schema/classified errors per independently observed R206 in scratchpack; preserveactualimmutable source and controls, deliverownerintegration. Source work had already been written by W3 before split message; actual packet is readonly isolated repair verification, not duplicate implementation.",
+      "status": "done",
+      "worker": "W6",
+      "started_at": "2026-10-18T08:24:32.059034+00:00",
+      "finished_at": "2026-10-18T08:30:17.055291+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E210.json"
+    },
+    "E211": {
+      "id": "E211",
+      "kind": "extract",
+      "repair_of": "E201",
+      "allow_workers": [
+        "W3"
+      ],
+      "subject": "Repair R201 independently reproduced occupied-principal alias escape in planner only; block any principal with active/unreconciled lease under any alias, preserve inactive history and self-review rules. LeafR207accepted exactsource and remainsunchanged.",
+      "status": "done",
+      "worker": "W3",
+      "started_at": "2026-10-18T08:35:26.454672+00:00",
+      "finished_at": "2026-10-18T08:39:00.939121+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/E211.json"
+    },
+    "R211": {
+      "id": "R211",
+      "kind": "review",
+      "depends_on": "E211",
+      "allow_workers": [
+        "W2"
+      ],
+      "status": "done",
+      "worker": "W2",
+      "started_at": "2026-10-18T08:39:01.601674+00:00",
+      "finished_at": "2026-10-18T08:41:30.738367+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/discovery-swarm/receipts/R211.json"
+    }
+  },
+  "events": [
+    {
+      "type": "solve",
+      "epoch": 0,
+      "at": "2026-10-18T07:55:11.591492+00:00",
+      "ready_jobs": [
+        "E101",
+        "E102",
+        "E103",
+        "E104",
+        "E105",
+        "E106"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "W5": "E103",
+        "W1": "E102",
+        "W6": "E104",
+        "W3": "E106",
+        "W2": "E105",
+        "W4": "E101"
+      },
+      "dispatch": {
+        "W5": "E103",
+        "W1": "E102",
+        "W6": "E104",
+        "W3": "E106",
+        "W2": "E105",
+        "W4": "E101"
+      },
+      "native_seconds": 0.0080277519991796,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 6 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 600,
+      "native_score": 600,
+      "caps": {
+        "E101": 1,
+        "E102": 1,
+        "E103": 1,
+        "E104": 1,
+        "E105": 1,
+        "E106": 1,
+        "R101": 0,
+        "R102": 0,
+        "R103": 0,
+        "R104": 0,
+        "R105": 0,
+        "R106": 0,
+        "BENCH": 6
+      },
+      "eligible": {
+        "E101": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5",
+          "W6"
+        ],
+        "E102": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5",
+          "W6"
+        ],
+        "E103": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5",
+          "W6"
+        ],
+        "E104": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5",
+          "W6"
+        ],
+        "E105": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5",
+          "W6"
+        ],
+        "E106": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "W5",
+          "W6"
+        ]
+      },
+      "weights": {
+        "E101": 100,
+        "E102": 100,
+        "E103": 100,
+        "E104": 100,
+        "E105": 100,
+        "E106": 100
+      },
+      "agent_by_worker": {
+        "W1": null,
+        "W2": null,
+        "W3": null,
+        "W4": null,
+        "W5": null,
+        "W6": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T07:57:54.597748+00:00",
+      "worker": "W1",
+      "job": "E102",
+      "agent": "/root/discovery_w1"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T07:57:54.688435+00:00",
+      "worker": "W2",
+      "job": "E105",
+      "agent": "/root/discovery_w2"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T07:57:54.788998+00:00",
+      "worker": "W3",
+      "job": "E106",
+      "agent": "/root/discovery_w3"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T07:57:54.882125+00:00",
+      "worker": "W4",
+      "job": "E101",
+      "agent": "/root/discovery_w4"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T07:57:54.975522+00:00",
+      "worker": "W5",
+      "job": "E103",
+      "agent": "/root/discovery_w5"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T07:57:55.072332+00:00",
+      "worker": "W6",
+      "job": "E104",
+      "agent": "/root/discovery_w6"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:03:22.553002+00:00",
+      "worker": "W1",
+      "job": "E102"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:03:22.649205+00:00",
+      "worker": "W2",
+      "job": "E105"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:03:22.741188+00:00",
+      "worker": "W3",
+      "job": "E106"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:03:22.832564+00:00",
+      "worker": "W4",
+      "job": "E101"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:03:22.937858+00:00",
+      "worker": "W5",
+      "job": "E103"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:03:23.033624+00:00",
+      "worker": "W6",
+      "job": "E104"
+    },
+    {
+      "type": "input_order_repair",
+      "reason": "Two native local-search attempts scored1000 vs exact1200; both rejected before dispatch. Reverse worker input order, identical feasible assignment set and acceptance."
+    },
+    {
+      "type": "solve",
+      "epoch": 1,
+      "at": "2026-10-18T08:03:56.414862+00:00",
+      "ready_jobs": [
+        "R101",
+        "R102",
+        "R103",
+        "R104",
+        "R105",
+        "R106"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "W2": "R102",
+        "W4": "R104",
+        "W1": "R103",
+        "W3": "R105",
+        "W6": "R106",
+        "W5": "R101"
+      },
+      "dispatch": {
+        "W2": "R102",
+        "W4": "R104",
+        "W1": "R103",
+        "W3": "R105",
+        "W6": "R106",
+        "W5": "R101"
+      },
+      "native_seconds": 0.011229723000724334,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 6 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 1200,
+      "native_score": 1200,
+      "caps": {
+        "E101": 0,
+        "E102": 0,
+        "E103": 0,
+        "E104": 0,
+        "E105": 0,
+        "E106": 0,
+        "R101": 1,
+        "R102": 1,
+        "R103": 1,
+        "R104": 1,
+        "R105": 1,
+        "R106": 1,
+        "BENCH": 6
+      },
+      "eligible": {
+        "R101": [
+          "W6",
+          "W5",
+          "W3",
+          "W2",
+          "W1"
+        ],
+        "R102": [
+          "W6",
+          "W5",
+          "W4",
+          "W3",
+          "W2"
+        ],
+        "R103": [
+          "W6",
+          "W4",
+          "W3",
+          "W2",
+          "W1"
+        ],
+        "R104": [
+          "W5",
+          "W4",
+          "W3",
+          "W2",
+          "W1"
+        ],
+        "R105": [
+          "W6",
+          "W5",
+          "W4",
+          "W3",
+          "W1"
+        ],
+        "R106": [
+          "W6",
+          "W5",
+          "W4",
+          "W2",
+          "W1"
+        ]
+      },
+      "weights": {
+        "R101": 200,
+        "R102": 200,
+        "R103": 200,
+        "R104": 200,
+        "R105": 200,
+        "R106": 200
+      },
+      "agent_by_worker": {
+        "W6": null,
+        "W5": null,
+        "W4": null,
+        "W3": null,
+        "W2": null,
+        "W1": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:04:39.203742+00:00",
+      "worker": "W2",
+      "job": "R102",
+      "agent": "/root/discovery_w2"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:04:39.298315+00:00",
+      "worker": "W4",
+      "job": "R104",
+      "agent": "/root/discovery_w4"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:04:39.412822+00:00",
+      "worker": "W1",
+      "job": "R103",
+      "agent": "/root/discovery_w1"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:04:39.532565+00:00",
+      "worker": "W3",
+      "job": "R105",
+      "agent": "/root/discovery_w3"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:04:39.627759+00:00",
+      "worker": "W6",
+      "job": "R106",
+      "agent": "/root/discovery_w6"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:04:39.713154+00:00",
+      "worker": "W5",
+      "job": "R101",
+      "agent": "/root/discovery_w5"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:08:08.440051+00:00",
+      "worker": "W1",
+      "job": "R103"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:08:08.529795+00:00",
+      "worker": "W2",
+      "job": "R102"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:08:08.617575+00:00",
+      "worker": "W3",
+      "job": "R105"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:08:08.709950+00:00",
+      "worker": "W4",
+      "job": "R104"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:08:08.799329+00:00",
+      "worker": "W5",
+      "job": "R101"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:08:08.907550+00:00",
+      "worker": "W6",
+      "job": "R106"
+    },
+    {
+      "type": "ready_state_transition",
+      "from": "pass2",
+      "to": "pass3",
+      "basis": "All6 independent review packets complete; R101 amend is E203 explicit catalog repair, R106 authority amendment integrated in E201 contract. Native wrapper does not gate arbitrary extraction dependencies; coordinator admitted only current ready packets."
+    },
+    {
+      "type": "solve",
+      "epoch": 2,
+      "at": "2026-10-18T08:08:09.111979+00:00",
+      "ready_jobs": [
+        "E201",
+        "E202",
+        "E203",
+        "E204",
+        "E205",
+        "E206"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "W6": "E206",
+        "W2": "E205",
+        "W5": "E204",
+        "W3": "E201",
+        "W1": "E202",
+        "W4": "E203"
+      },
+      "dispatch": {
+        "W6": "E206",
+        "W2": "E205",
+        "W5": "E204",
+        "W3": "E201",
+        "W1": "E202",
+        "W4": "E203"
+      },
+      "native_seconds": 0.005977876997349085,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 6 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 800,
+      "native_score": 800,
+      "caps": {
+        "E101": 0,
+        "E102": 0,
+        "E103": 0,
+        "E104": 0,
+        "E105": 0,
+        "E106": 0,
+        "R101": 0,
+        "R102": 0,
+        "R103": 0,
+        "R104": 0,
+        "R105": 0,
+        "R106": 0,
+        "E201": 1,
+        "E202": 1,
+        "E203": 1,
+        "E204": 1,
+        "E205": 1,
+        "E206": 1,
+        "R201": 0,
+        "R202": 0,
+        "R203": 0,
+        "R204": 0,
+        "R205": 0,
+        "R206": 0,
+        "BENCH": 6
+      },
+      "eligible": {
+        "E201": [
+          "W3"
+        ],
+        "E202": [
+          "W2",
+          "W1"
+        ],
+        "E203": [
+          "W5",
+          "W4"
+        ],
+        "E204": [
+          "W5",
+          "W1"
+        ],
+        "E205": [
+          "W2"
+        ],
+        "E206": [
+          "W6",
+          "W4"
+        ]
+      },
+      "weights": {
+        "E201": 100,
+        "E202": 100,
+        "E203": 300,
+        "E204": 100,
+        "E205": 100,
+        "E206": 100
+      },
+      "agent_by_worker": {
+        "W6": null,
+        "W5": null,
+        "W4": null,
+        "W3": null,
+        "W2": null,
+        "W1": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:09:50.552316+00:00",
+      "worker": "W6",
+      "job": "E206",
+      "agent": "/root/discovery_w6"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:09:50.669040+00:00",
+      "worker": "W2",
+      "job": "E205",
+      "agent": "/root/discovery_w2"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:09:50.769202+00:00",
+      "worker": "W5",
+      "job": "E204",
+      "agent": "/root/discovery_w5"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:09:50.874567+00:00",
+      "worker": "W3",
+      "job": "E201",
+      "agent": "/root/discovery_w3"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:09:50.994321+00:00",
+      "worker": "W1",
+      "job": "E202",
+      "agent": "/root/discovery_w1"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:09:51.105860+00:00",
+      "worker": "W4",
+      "job": "E203",
+      "agent": "/root/discovery_w4"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:13:48.202445+00:00",
+      "worker": "W1",
+      "job": "E202"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:13:48.295674+00:00",
+      "worker": "W6",
+      "job": "E206"
+    },
+    {
+      "type": "external_lease",
+      "worker": "W1",
+      "source": "hh-cycle02/state.json",
+      "job": "E202",
+      "reason": "Actual HH packet active; remove from discovery solver capacity until release, preserve independent-review author IDs."
+    },
+    {
+      "type": "solve",
+      "epoch": 3,
+      "at": "2026-10-18T08:13:48.599176+00:00",
+      "ready_jobs": [
+        "R202",
+        "R206"
+      ],
+      "pinned_workers": [
+        "W5",
+        "W4",
+        "W3",
+        "W2"
+      ],
+      "assignments": {
+        "W2": "E205",
+        "W3": "E201",
+        "W5": "E204",
+        "W4": "E203",
+        "W6": "R202"
+      },
+      "dispatch": {
+        "W6": "R202"
+      },
+      "native_seconds": 0.004912215001240838,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 5 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 4 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 200,
+      "native_score": 200,
+      "caps": {
+        "E101": 0,
+        "E102": 0,
+        "E103": 0,
+        "E104": 0,
+        "E105": 0,
+        "E106": 0,
+        "R101": 0,
+        "R102": 0,
+        "R103": 0,
+        "R104": 0,
+        "R105": 0,
+        "R106": 0,
+        "E201": 1,
+        "E202": 0,
+        "E203": 1,
+        "E204": 1,
+        "E205": 1,
+        "E206": 0,
+        "R201": 0,
+        "R202": 1,
+        "R203": 0,
+        "R204": 0,
+        "R205": 0,
+        "R206": 1,
+        "BENCH": 5
+      },
+      "eligible": {
+        "R202": [
+          "W6"
+        ],
+        "R206": []
+      },
+      "weights": {
+        "R202": 200,
+        "R206": 200
+      },
+      "agent_by_worker": {
+        "W6": null,
+        "W5": "/root/discovery_w5",
+        "W4": "/root/discovery_w4",
+        "W3": "/root/discovery_w3",
+        "W2": "/root/discovery_w2"
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:14:37.846608+00:00",
+      "worker": "W6",
+      "job": "R202",
+      "agent": "/root/discovery_w6"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:14:37.963648+00:00",
+      "worker": "W2",
+      "job": "E205"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:14:38.049772+00:00",
+      "worker": "W5",
+      "job": "E204"
+    },
+    {
+      "type": "solve",
+      "epoch": 4,
+      "at": "2026-10-18T08:14:38.143083+00:00",
+      "ready_jobs": [
+        "R204",
+        "R205",
+        "R206"
+      ],
+      "pinned_workers": [
+        "W6",
+        "W4",
+        "W3"
+      ],
+      "assignments": {
+        "W2": "R204",
+        "W4": "E203",
+        "W6": "R202",
+        "W5": "R205",
+        "W3": "E201"
+      },
+      "dispatch": {
+        "W2": "R204",
+        "W5": "R205"
+      },
+      "native_seconds": 0.003987121999671217,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 5 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 3 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 400,
+      "native_score": 400,
+      "caps": {
+        "E101": 0,
+        "E102": 0,
+        "E103": 0,
+        "E104": 0,
+        "E105": 0,
+        "E106": 0,
+        "R101": 0,
+        "R102": 0,
+        "R103": 0,
+        "R104": 0,
+        "R105": 0,
+        "R106": 0,
+        "E201": 1,
+        "E202": 0,
+        "E203": 1,
+        "E204": 0,
+        "E205": 0,
+        "E206": 0,
+        "R201": 0,
+        "R202": 1,
+        "R203": 0,
+        "R204": 1,
+        "R205": 1,
+        "R206": 1,
+        "BENCH": 5
+      },
+      "eligible": {
+        "R204": [
+          "W2"
+        ],
+        "R205": [
+          "W5"
+        ],
+        "R206": [
+          "W5",
+          "W2"
+        ]
+      },
+      "weights": {
+        "R204": 200,
+        "R205": 200,
+        "R206": 200
+      },
+      "agent_by_worker": {
+        "W6": "/root/discovery_w6",
+        "W5": null,
+        "W4": "/root/discovery_w4",
+        "W3": "/root/discovery_w3",
+        "W2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:15:17.205845+00:00",
+      "worker": "W2",
+      "job": "R204",
+      "agent": "/root/discovery_w2"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:15:17.340014+00:00",
+      "worker": "W5",
+      "job": "R205",
+      "agent": "/root/discovery_w5"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:16:26.915967+00:00",
+      "worker": "W4",
+      "job": "E203"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:16:27.037751+00:00",
+      "worker": "W6",
+      "job": "R202"
+    },
+    {
+      "type": "solve",
+      "epoch": 5,
+      "at": "2026-10-18T08:16:27.149634+00:00",
+      "ready_jobs": [
+        "R203",
+        "R206"
+      ],
+      "pinned_workers": [
+        "W5",
+        "W3",
+        "W2"
+      ],
+      "assignments": {
+        "W2": "R204",
+        "W4": "R206",
+        "W5": "R205",
+        "W6": "R203",
+        "W3": "E201"
+      },
+      "dispatch": {
+        "W4": "R206",
+        "W6": "R203"
+      },
+      "native_seconds": 0.005043858000135515,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 5 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 3 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 400,
+      "native_score": 400,
+      "caps": {
+        "E101": 0,
+        "E102": 0,
+        "E103": 0,
+        "E104": 0,
+        "E105": 0,
+        "E106": 0,
+        "R101": 0,
+        "R102": 0,
+        "R103": 0,
+        "R104": 0,
+        "R105": 0,
+        "R106": 0,
+        "E201": 1,
+        "E202": 0,
+        "E203": 0,
+        "E204": 0,
+        "E205": 0,
+        "E206": 0,
+        "R201": 0,
+        "R202": 0,
+        "R203": 1,
+        "R204": 1,
+        "R205": 1,
+        "R206": 1,
+        "BENCH": 5
+      },
+      "eligible": {
+        "R203": [
+          "W6"
+        ],
+        "R206": [
+          "W4"
+        ]
+      },
+      "weights": {
+        "R203": 200,
+        "R206": 200
+      },
+      "agent_by_worker": {
+        "W6": null,
+        "W5": "/root/discovery_w5",
+        "W4": null,
+        "W3": "/root/discovery_w3",
+        "W2": "/root/discovery_w2"
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:16:27.248448+00:00",
+      "worker": "W4",
+      "job": "R206",
+      "agent": "/root/discovery_w4"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:16:27.367983+00:00",
+      "worker": "W6",
+      "job": "R203",
+      "agent": "/root/discovery_w6"
+    },
+    {
+      "type": "evidence-clarification",
+      "reason": "First failed solve capture was lost to CalledProcessError; score/reason not directly retained. Second failed solve actually retained native1000/exact1200 rejection. Earlier repair-event wording inferred first reason from deterministic same inputs; do not count it as independently observed score."
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:19:26.037087+00:00",
+      "worker": "W3",
+      "job": "E201"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:19:26.130175+00:00",
+      "worker": "W2",
+      "job": "R204"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:19:26.220341+00:00",
+      "worker": "W5",
+      "job": "R205"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:19:26.311875+00:00",
+      "worker": "W4",
+      "job": "R206"
+    },
+    {
+      "type": "conditional_next_state",
+      "basis": "R202/R206 actual AMEND; rootcapacityfalsifier; catalogR203 pending boundedreview knownamend findings. E207 repairready; R201reviewheld untilsourcefreeze. No arbitrary extractiondependencies left to nativewrapper."
+    },
+    {
+      "type": "solve",
+      "epoch": 6,
+      "at": "2026-10-18T08:19:26.415063+00:00",
+      "ready_jobs": [
+        "E207"
+      ],
+      "pinned_workers": [
+        "W6"
+      ],
+      "assignments": {
+        "W4": "BENCH",
+        "W2": "BENCH",
+        "W5": "BENCH",
+        "W3": "E207",
+        "W6": "R203"
+      },
+      "dispatch": {
+        "W3": "E207"
+      },
+      "native_seconds": 0.0042068509974342305,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 5 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 1 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 300,
+      "native_score": 300,
+      "caps": {
+        "E101": 0,
+        "E102": 0,
+        "E103": 0,
+        "E104": 0,
+        "E105": 0,
+        "E106": 0,
+        "R101": 0,
+        "R102": 0,
+        "R103": 0,
+        "R104": 0,
+        "R105": 0,
+        "R106": 0,
+        "E201": 0,
+        "E202": 0,
+        "E203": 0,
+        "E204": 0,
+        "E205": 0,
+        "E206": 0,
+        "R201": 0,
+        "R202": 0,
+        "R203": 1,
+        "R204": 0,
+        "R205": 0,
+        "R206": 0,
+        "E207": 1,
+        "R207": 0,
+        "BENCH": 5
+      },
+      "eligible": {
+        "E207": [
+          "W3"
+        ]
+      },
+      "weights": {
+        "E207": 300
+      },
+      "agent_by_worker": {
+        "W6": "/root/discovery_w6",
+        "W5": null,
+        "W4": null,
+        "W3": null,
+        "W2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:19:26.502980+00:00",
+      "worker": "W3",
+      "job": "E207",
+      "agent": "/root/discovery_w3"
+    },
+    {
+      "type": "external_lease",
+      "worker": "W2",
+      "job": "hh-cycle02:E203",
+      "reason": "Actually free after R204 completed; independent HH frozen-source review. No native slot counted in both project states."
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:21:31.636089+00:00",
+      "worker": "W6",
+      "job": "R203"
+    },
+    {
+      "type": "external_lease_released",
+      "worker": "W1",
+      "source": "hh-cycle02/state.json",
+      "basis": "HH E202completed; no active task, preserves sharedsourceowner-onlycommitboundary."
+    },
+    {
+      "type": "external_lease_released",
+      "worker": "W2",
+      "source": "hh-cycle02/state.json",
+      "basis": "HH E203 independent reviewcompleted withacceptedboundeddecision; returnsdiscoveryeligibility."
+    },
+    {
+      "type": "split-repair",
+      "parent": "E207",
+      "children": [
+        "E208",
+        "E209",
+        "E210"
+      ],
+      "reason": "Actual free original authors repair disjoint scratchpacks in parallel; W3 sole source/Git owner integrates and repairs planner. R207 independent author exclusions retained."
+    },
+    {
+      "type": "solve",
+      "epoch": 7,
+      "at": "2026-10-18T08:24:31.777646+00:00",
+      "ready_jobs": [
+        "E208",
+        "E209",
+        "E210"
+      ],
+      "pinned_workers": [
+        "W3"
+      ],
+      "assignments": {
+        "W5": "BENCH",
+        "W2": "BENCH",
+        "W3": "E207",
+        "W4": "E209",
+        "W1": "E208",
+        "W6": "E210"
+      },
+      "dispatch": {
+        "W4": "E209",
+        "W1": "E208",
+        "W6": "E210"
+      },
+      "native_seconds": 0.005074766999314306,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 6 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 1 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 900,
+      "native_score": 900,
+      "caps": {
+        "E101": 0,
+        "E102": 0,
+        "E103": 0,
+        "E104": 0,
+        "E105": 0,
+        "E106": 0,
+        "R101": 0,
+        "R102": 0,
+        "R103": 0,
+        "R104": 0,
+        "R105": 0,
+        "R106": 0,
+        "E201": 0,
+        "E202": 0,
+        "E203": 0,
+        "E204": 0,
+        "E205": 0,
+        "E206": 0,
+        "R201": 0,
+        "R202": 0,
+        "R203": 0,
+        "R204": 0,
+        "R205": 0,
+        "R206": 0,
+        "E207": 1,
+        "R207": 0,
+        "E208": 1,
+        "E209": 1,
+        "E210": 1,
+        "BENCH": 6
+      },
+      "eligible": {
+        "E208": [
+          "W1"
+        ],
+        "E209": [
+          "W4"
+        ],
+        "E210": [
+          "W6"
+        ]
+      },
+      "weights": {
+        "E208": 300,
+        "E209": 300,
+        "E210": 300
+      },
+      "agent_by_worker": {
+        "W6": null,
+        "W5": null,
+        "W4": null,
+        "W3": "/root/discovery_w3",
+        "W1": null,
+        "W2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:24:31.865019+00:00",
+      "worker": "W4",
+      "job": "E209",
+      "agent": "/root/discovery_w4"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:24:31.968705+00:00",
+      "worker": "W1",
+      "job": "E208",
+      "agent": "/root/discovery_w1"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:24:32.059034+00:00",
+      "worker": "W6",
+      "job": "E210",
+      "agent": "/root/discovery_w6"
+    },
+    {
+      "type": "work-state-adaptation",
+      "jobs": [
+        "E208",
+        "E209",
+        "E210"
+      ],
+      "basis": "Owner already wrote leaf fixes before split instruction arrived. Preserve native assignments/eligibility but dispatch bounded readonly maintainer verifications in disjoint scratch; final independent review remains W2/W5."
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:30:16.732168+00:00",
+      "worker": "W3",
+      "job": "E207"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:30:16.834214+00:00",
+      "worker": "W1",
+      "job": "E208"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:30:16.945116+00:00",
+      "worker": "W4",
+      "job": "E209"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:30:17.055291+00:00",
+      "worker": "W6",
+      "job": "E210"
+    },
+    {
+      "type": "live-planner-admission",
+      "report": "live-planner/plan.json",
+      "policyHash": "cc26d6b58e040038e148b4c176d4b5a733148947a109ea2d12615d40a6edf9fd",
+      "stateHash": "eaa303393e0bb8836e10df5f42beb06457a18037182e940833f005daeb563aec",
+      "evidenceHash": "1397e8903fbe12cdd259177229b08b96f7df5974902a1e7801ad03f0c8611eac",
+      "admitted": [
+        "R201",
+        "R207"
+      ],
+      "blocked": [
+        "retain"
+      ],
+      "basis": "Actual freshly reconciled worker/principal registry, frozen bytes and technical completions. Pinned native coordinator preserves prior history and onlyadmits generated ready IDs+eligibleworkers."
+    },
+    {
+      "type": "solve",
+      "epoch": 8,
+      "at": "2026-10-18T08:30:17.241481+00:00",
+      "ready_jobs": [
+        "R201",
+        "R207"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "W3": "BENCH",
+        "W6": "BENCH",
+        "W1": "BENCH",
+        "W4": "BENCH",
+        "W2": "R201",
+        "W5": "R207"
+      },
+      "dispatch": {
+        "W2": "R201",
+        "W5": "R207"
+      },
+      "native_seconds": 0.0049061499994422775,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 6 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 400,
+      "native_score": 400,
+      "caps": {
+        "E101": 0,
+        "E102": 0,
+        "E103": 0,
+        "E104": 0,
+        "E105": 0,
+        "E106": 0,
+        "R101": 0,
+        "R102": 0,
+        "R103": 0,
+        "R104": 0,
+        "R105": 0,
+        "R106": 0,
+        "E201": 0,
+        "E202": 0,
+        "E203": 0,
+        "E204": 0,
+        "E205": 0,
+        "E206": 0,
+        "R201": 1,
+        "R202": 0,
+        "R203": 0,
+        "R204": 0,
+        "R205": 0,
+        "R206": 0,
+        "E207": 0,
+        "R207": 1,
+        "E208": 0,
+        "E209": 0,
+        "E210": 0,
+        "BENCH": 6
+      },
+      "eligible": {
+        "R201": [
+          "W6",
+          "W5",
+          "W4",
+          "W1",
+          "W2"
+        ],
+        "R207": [
+          "W5",
+          "W2"
+        ]
+      },
+      "weights": {
+        "R201": 200,
+        "R207": 200
+      },
+      "agent_by_worker": {
+        "W6": null,
+        "W5": null,
+        "W4": null,
+        "W3": null,
+        "W1": null,
+        "W2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:30:17.331648+00:00",
+      "worker": "W2",
+      "job": "R201",
+      "agent": "/root/discovery_w2"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:30:17.418178+00:00",
+      "worker": "W5",
+      "job": "R207",
+      "agent": "/root/discovery_w5"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:35:26.175525+00:00",
+      "worker": "W2",
+      "job": "R201"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:35:26.262905+00:00",
+      "worker": "W5",
+      "job": "R207"
+    },
+    {
+      "type": "conditional-next-state",
+      "observed": "R201amend;R207leafaccepted",
+      "ready": [
+        "E211"
+      ],
+      "basis": "Frozenleafreviewfinished before coremutation. Actualepoch08distinctprincipalassignmentremainsvalid; newguardrepairtargetsfuturealiascapacity."
+    },
+    {
+      "type": "solve",
+      "epoch": 9,
+      "at": "2026-10-18T08:35:26.367977+00:00",
+      "ready_jobs": [
+        "E211"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "W5": "BENCH",
+        "W4": "BENCH",
+        "W2": "BENCH",
+        "W1": "BENCH",
+        "W6": "BENCH",
+        "W3": "E211"
+      },
+      "dispatch": {
+        "W3": "E211"
+      },
+      "native_seconds": 0.007078837999870302,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 6 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 300,
+      "native_score": 300,
+      "caps": {
+        "E101": 0,
+        "E102": 0,
+        "E103": 0,
+        "E104": 0,
+        "E105": 0,
+        "E106": 0,
+        "R101": 0,
+        "R102": 0,
+        "R103": 0,
+        "R104": 0,
+        "R105": 0,
+        "R106": 0,
+        "E201": 0,
+        "E202": 0,
+        "E203": 0,
+        "E204": 0,
+        "E205": 0,
+        "E206": 0,
+        "R201": 0,
+        "R202": 0,
+        "R203": 0,
+        "R204": 0,
+        "R205": 0,
+        "R206": 0,
+        "E207": 0,
+        "R207": 0,
+        "E208": 0,
+        "E209": 0,
+        "E210": 0,
+        "E211": 1,
+        "R211": 0,
+        "BENCH": 6
+      },
+      "eligible": {
+        "E211": [
+          "W3"
+        ]
+      },
+      "weights": {
+        "E211": 300
+      },
+      "agent_by_worker": {
+        "W6": null,
+        "W5": null,
+        "W4": null,
+        "W3": null,
+        "W1": null,
+        "W2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:35:26.454672+00:00",
+      "worker": "W3",
+      "job": "E211",
+      "agent": "/root/discovery_w3"
+    },
+    {
+      "type": "registry-clarification",
+      "report": "live-planner/registry-clarification.json",
+      "reason": "Pre-start planner snapshot marked W3 available after native E207 completed, while W3 was preparing administrative checkpoint docs outside a native packet. Administrative ownership should have been reserved explicitly.",
+      "dispatchStillValid": true
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:39:00.939121+00:00",
+      "worker": "W3",
+      "job": "E211"
+    },
+    {
+      "type": "reserve-administration",
+      "worker": "W3",
+      "reason": "Correct explicit owner reservation after technicalE211complete; exclude from solver capacity until administrativecheckpointcomplete."
+    },
+    {
+      "type": "live-planner-admission",
+      "report": "live-planner-E211/plan.json",
+      "admitted": [
+        "R211"
+      ],
+      "blocked": [
+        "retain"
+      ],
+      "policyHash": "e635bad6f6c282737bb326a8fbab235b98ddaaa5a580ea657f07f20ceb51d940",
+      "stateHash": "03b7ba9e57276993b3d15f06aef1c7389c360d313884347fd914ade51a0fe25d",
+      "evidenceHash": "da4c9ef84af0164c0749271cee29c165bf12960c47fe1114670bc573e9b721d7",
+      "ownerExplicitlyReserved": true
+    },
+    {
+      "type": "solve",
+      "epoch": 10,
+      "at": "2026-10-18T08:39:01.101258+00:00",
+      "ready_jobs": [
+        "R211"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "W5": "BENCH",
+        "W1": "BENCH",
+        "W6": "BENCH",
+        "W4": "BENCH",
+        "W2": "R211"
+      },
+      "dispatch": {
+        "W2": "R211"
+      },
+      "native_seconds": 0.005324535999534419,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 5 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 200,
+      "native_score": 200,
+      "caps": {
+        "E101": 0,
+        "E102": 0,
+        "E103": 0,
+        "E104": 0,
+        "E105": 0,
+        "E106": 0,
+        "R101": 0,
+        "R102": 0,
+        "R103": 0,
+        "R104": 0,
+        "R105": 0,
+        "R106": 0,
+        "E201": 0,
+        "E202": 0,
+        "E203": 0,
+        "E204": 0,
+        "E205": 0,
+        "E206": 0,
+        "R201": 0,
+        "R202": 0,
+        "R203": 0,
+        "R204": 0,
+        "R205": 0,
+        "R206": 0,
+        "E207": 0,
+        "R207": 0,
+        "E208": 0,
+        "E209": 0,
+        "E210": 0,
+        "E211": 0,
+        "R211": 1,
+        "BENCH": 5
+      },
+      "eligible": {
+        "R211": [
+          "W2"
+        ]
+      },
+      "weights": {
+        "R211": 200
+      },
+      "agent_by_worker": {
+        "W6": null,
+        "W5": null,
+        "W4": null,
+        "W1": null,
+        "W2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:39:01.601674+00:00",
+      "worker": "W2",
+      "job": "R211",
+      "agent": "/root/discovery_w2"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:41:30.738367+00:00",
+      "worker": "W2",
+      "job": "R211"
+    },
+    {
+      "type": "technical-cycle-complete",
+      "packets": 31,
+      "acceptedSourceManifest": "f040ac94649369a3a964ec8e4ea6b8948cc8bbfd56586507ce97a68f66c9ce4d",
+      "coreReview": "R211",
+      "leafReview": "R207",
+      "labTests": {
+        "passed": 95,
+        "failed": 0
+      },
+      "retention": "blocked/unknown; no scientific or human acceptance",
+      "publication": "pendingsourceownercommit/rootconnector"
+    }
+  ],
+  "epoch": 11,
+  "policy": {
+    "extract_priority": 100,
+    "review_priority": 200,
+    "repair_priority": 300
+  },
+  "external_workers": {
+    "W3": {
+      "job": "checkpoint-administration",
+      "agent": "/root/discovery_w3",
+      "reserved": true,
+      "basis": "Source/Gitowner reserved for final immutable record/commit; not free for native review dispatch."
+    }
+  }
+}

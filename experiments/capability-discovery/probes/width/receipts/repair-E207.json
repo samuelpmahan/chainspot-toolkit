@@ -1,0 +1,39 @@
+{
+  "schema": "discovery-wrapper-repair@1",
+  "job_id": "E207",
+  "owner": "W3",
+  "contractRevision": 2,
+  "initialReviewDecision": "amend",
+  "independentRecheck": "pending",
+  "checks": {
+    "nodeStructuralTests": 17,
+    "legacyProbeCases": 14,
+    "sourceFilesVerified": 4
+  },
+  "probeReceipt": {
+    "path": "receipts/revision2-probe.json",
+    "sha256": "d9c5404bba151ae7bc63dab138b2a41c39f4a552a34c7d482c980c8f8c512354",
+    "legacyProbeDefinitionJobId": "E202",
+    "actualExecutionPacket": "E207",
+    "note": "Unchanged legacy probe runner labels its definition E202; this repair receipt records the actual E207 execution."
+  },
+  "code": [
+    {
+      "path": "recipe.mjs",
+      "sha256": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0"
+    },
+    {
+      "path": "recipe.test.mjs",
+      "sha256": "a9e832d91382f85ca6eda5c84792ecd3db238d27894776a31061a21dc8ca612b"
+    },
+    {
+      "path": "probe.mjs",
+      "sha256": "864b56f086742aa3591e126f788fd347228bf70f4b6301f56ead5ffa6d1819ef"
+    },
+    {
+      "path": "experiment.recipe.json",
+      "sha256": "2fb1f68b0dfc921f56d88078103856ddf8ccabbeab48fa1eaaa5a51b30805921"
+    }
+  ],
+  "scope": "Structural comparison-only evidence. Promoted remains false; no frozen source edit or image acceptance."
+}

@@ -1,0 +1,32 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "capability-discovery",
+    "scope": "revision-10"
+  },
+  "workers": [
+    "W6",
+    "W5",
+    "W4",
+    "W1",
+    "W2"
+  ],
+  "review_policy": {
+    "enabled": false
+  },
+  "jobs": [
+    {
+      "id": "R211",
+      "kind": "extract",
+      "semantic_kind": "review",
+      "allow_workers": [
+        "W6",
+        "W5",
+        "W4",
+        "W1",
+        "W2"
+      ],
+      "subject": "review-occupied-principal-repair; policy e635bad6f6c282737bb326a8fbab235b98ddaaa5a580ea657f07f20ceb51d940; state 03b7ba9e57276993b3d15f06aef1c7389c360d313884347fd914ade51a0fe25d; bundle 3e5a30be2afe9fd27f5b89e5da45bad226abe9f7b650beafd742d59d1b1a75f6"
+    }
+  ]
+}

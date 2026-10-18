@@ -1,0 +1,135 @@
+{
+  "schema": "capability-review@1",
+  "job_id": "R101",
+  "worker": "W5",
+  "reviewed": "W4/E101",
+  "decision": "amend",
+  "summary": "Recovered operations, exact-source identity and narrow synthetic reruns are supported. Amend combined observation UNKNOWN semantics and guard width calibration when no evidence. Historical metrics remain source-reported, frozen-seed, incomparable to native route parsing. No geometry or human acceptance.",
+  "boundedClaimsAccepted": [
+    "Provider paired-edge support and weighted badge-to-endpoint routing are callable; source frame offset/scale roundtrip confirmed.",
+    "Fetched Dev72 four-lane sensor, deterministic starting-occluder transit, local width estimator and heading tracker are real reusable operations.",
+    "Exact W4 pure sensor and route probes rerun successfully in reviewer-owned directory.",
+    "Historical 61/72 report is accurately quoted and recenter68/72 remains explicitly unpromoted."
+  ],
+  "amendments": [
+    {
+      "priority": "required",
+      "claim": "Zero visible rails -> UNKNOWN",
+      "actual": "Rail channel is UNKNOWN, but combined observation can score1 using visible inner lanes. The tracker consumes combined score. Do not claim total observation abstention from railMode alone.",
+      "source": "fourLaneRibbon.ts:294-318",
+      "probe": "failure-results.json:innerOnly"
+    },
+    {
+      "priority": "required",
+      "claim": "Course-local width calibration produces measured width",
+      "actual": "Only conditional on evidence: all-hidden candidate widths30/40/50 return30 despite zero visible samples; empty candidate/segment input returns40. Gate visible counts and score separation; retain UNKNOWN instead of declaring an unsupported width measured. JSON -Infinity\u2192null must not silently change meaning.",
+      "source": "fourLaneRibbon.ts:499-532",
+      "probe": "failure-results.json:hiddenWidth,noSegments"
+    },
+    {
+      "priority": "scope",
+      "claim": "200 random-field exact Dijkstra comparison",
+      "actual": "Observed agreement, not proof of global exactness. Original2008\u00d78 rerun and reviewer120012\u00d712 deterministic cases agree, seed clamp disabled. Production clamp changes local cost; oracle must match clamp before comparing production geodesics."
+    }
+  ],
+  "sourceIdentities": {
+    "provider": [
+      {
+        "path": "source/provider/packages/alg/src/detectors/threeFactor/routing.ts",
+        "gitBlob": "9579d63a7ffc209d604251ae2b7f78ba0dd9f13b",
+        "sourceSha256": "718c025e8db224198c553b09c1657d4494731bec90654487345a613268c0d1e1",
+        "copiedSha256": "325e9fc4cbf08c28ce9b3e2601a7a23d0e8ef5091ec8f20e00351412637586f1",
+        "exactAfterDocumentedImportAdaptation": true
+      },
+      {
+        "path": "source/provider/packages/alg/src/detectors/threeFactor/ribbon.ts",
+        "gitBlob": "f74fda826701b534c131ffd6fa2b7e1a152a4a67",
+        "sourceSha256": "b2bac13005c815cbbd0b854dc2ed16db4d6dcea6ceed3cbea4c70cd2745045bb",
+        "copiedSha256": "b2bac13005c815cbbd0b854dc2ed16db4d6dcea6ceed3cbea4c70cd2745045bb",
+        "exactAfterDocumentedImportAdaptation": true
+      }
+    ],
+    "dev72": {
+      "ref": "ef2a4fc2dc4720d3647f705464342f119d5a39a5",
+      "path": "src/lib/nuthing/fourLaneRibbon.ts",
+      "fetchedBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+      "copiedBlob": "a46e45c1f5fac2a98688750b8acdb0bf3e7e2851",
+      "difference": "One extra trailing newline in W4 copy; executable content unchanged. Full independent fetch retained in dev72-fetch.json.",
+      "localSha256": "f4ccd9d988adc4cb579a34d7101cf941c17526f606b7dd375ede179a8c0da0ca"
+    },
+    "history": {
+      "ref": "ef2a4fc2dc4720d3647f705464342f119d5a39a5",
+      "path": "scripts/chainspot-lab/badge-disk-ribbon-study.md",
+      "blob": "96d91205fce4ce4733866250c448291aff6e6f00",
+      "evidence": "historical-report.json"
+    }
+  },
+  "evidence": [
+    {
+      "file": "sensor-rerun.json",
+      "status": "PASS",
+      "scope": "Synthetic40px horizontal ribbon; paired/one-sided/fully hidden and transit/width selection only"
+    },
+    {
+      "file": "route-rerun.json",
+      "status": "PASS",
+      "scope": "Original200 deterministic8\u00d78 comparisons; scale2/yOffset100 uniform case"
+    },
+    {
+      "file": "route-stress-results.json",
+      "status": "PASS",
+      "scope": "1200 deterministic12\u00d712 comparisons; empirical numerical agreement only",
+      "worstErrorCostFieldCells": 0
+    },
+    {
+      "file": "failure-results.json",
+      "status": "PASS",
+      "scope": "Constructive counterexamples to blanket UNKNOWN and unsupported-width claims"
+    }
+  ],
+  "scaleCostWidthCaveats": [
+    "Geodesic unit is integrated dimensionless cost times field-cell distance; multiply by field.scale only for corresponding weighted source-pixel quantity, not physical length. Returned path length is separate.",
+    "Endpoints are rounded/clamped to field grid; up to half-cell quantization on each axis before clipping. Returned path endpoints therefore need not equal original subpixel detections.",
+    "DEFAULT_ROUTING_KNOBS ring64\u00d7quantum0.125=8 exceeds max default one-step cost5\u00d7sqrt2\u22487.071; changing costMultiplier requires config invariant validation.",
+    "Provider default full-width bank24..64sourcepx, corridor37px and fieldScale3 are fixed defaults, not a demonstrated per-image learned width.",
+    "Dev72 width candidates, step6px, tangent span4px, edgeDelta2.5px and distance600px are source-pixel prototype defaults; not meter-scale or zoom-global guarantees.",
+    "A long ribbon and a large organic component can share area; transverse width and oriented continuity must be retained separately."
+  ],
+  "historicalComparability": {
+    "population": "Dev72=DashsTrack,HeritagePark,Lenard,TowneLake;18holes each,72total",
+    "assumption": "Tee\u2192Badge ownership already frozen; local tracking seeds trusted by benchmark",
+    "metric": "Reported first-basket behavior at45sourcepx terminal radius",
+    "results": {
+      "v1": {
+        "correct": 61,
+        "wrong": 1,
+        "unresolved": 10
+      },
+      "v2": {
+        "correct": 62,
+        "wrong": 5,
+        "unresolved": 5
+      },
+      "recenterWithLock": {
+        "correct": 68,
+        "wrong": 2,
+        "unresolved": 2,
+        "promoted": false
+      }
+    },
+    "notComparableWithoutRerun": [
+      "Native badge\u2192candidate endpoint routing/assignment",
+      "S7main16/18 course rows under basket+containment criterion",
+      "Bend-centerline error/endpoint identity or complete parsing"
+    ],
+    "reproduction": "Source report independently verified; corpus benchmark not rerun."
+  },
+  "constraints": {
+    "ownedDirectoryOnly": true,
+    "sourceGitEdits": false,
+    "fullReplay": false,
+    "sealedData": false,
+    "performanceConclusions": false
+  },
+  "next": "Await PASS3 assignment."
+}

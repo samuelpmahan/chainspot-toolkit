@@ -1,0 +1,8 @@
+{
+  "schema": "discovery-registry-clarification@1",
+  "historicalPlan": "live-planner/plan.json",
+  "epoch": 8,
+  "issue": "Pre-start planner snapshot marked W3 available after native E207 completed, while W3 was preparing administrative checkpoint docs outside a native packet. Administrative ownership should have been reserved explicitly.",
+  "impact": "R201 and R207 both excluded W3 as a producing principal; actual dispatch W2/R201 and W5/R207 used distinct idle nonproducers and stayed valid. Solver saw6 registered objects, but this record does not claim all6 were actually idle. No overlapping W3 review dispatch occurred.",
+  "repair": "Reserve W3 explicitly for checkpoint administration in the next fresh registry, even after its technical packet completes. Refresh source/lease/task state before any further plan. Preserve raw old snapshot as historical evidence; do not silently rewrite it."
+}

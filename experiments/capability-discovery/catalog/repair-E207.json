@@ -1,0 +1,75 @@
+{
+  "schema": "discovery-wrapper-repair@1",
+  "job_id": "E207",
+  "owner": "W3",
+  "contractRevision": 2,
+  "initialReviewDecision": "amend",
+  "independentRecheck": "pending",
+  "scope": "Wrapper/schema metadata changes only. Frozen CV source snapshots and first-pass receipts unchanged. No promotion or scientific acceptance.",
+  "checks": {
+    "nodeTests": 19,
+    "validator": "PASS",
+    "cheapNode": "PASS",
+    "edgeASTPython": "PASS"
+  },
+  "code": [
+    {
+      "path": "guards.mjs",
+      "sha256": "d3aba357de4cd8f11f0cdc9c7ce5c6dfcdb9007b28d87e00b274bd8caf144011"
+    },
+    {
+      "path": "validate.mjs",
+      "sha256": "c6547b2d33022176f73656e02669cc395f0650521126ef8e01e260b1388c6411"
+    },
+    {
+      "path": "catalog.test.mjs",
+      "sha256": "f9ee6bdab2c7918cd4146528fed65ce26c4b66e5e8ebfd6b291583dc30edbb98"
+    },
+    {
+      "path": "catalog.json",
+      "sha256": "2da566f83f0a4d9e48cda10886567d0db8f9d23c9fb4e23d32b4cec977f3c53b"
+    },
+    {
+      "path": "recipes.json",
+      "sha256": "e3296d43784f2408a3d3201a8b23921794b25aad02d533801a29f5c7d6f37854"
+    }
+  ],
+  "unchangedSources": [
+    {
+      "path": "sources/dev72-fourLaneRibbon.ts",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689"
+    },
+    {
+      "path": "sources/hallway-contrast.py",
+      "sha256": "95fb656af4ee017ff3338c6f1d8ef8d1fac2c642d1a58b9ac67c3d482899af2a"
+    },
+    {
+      "path": "sources/hallway-follow.py",
+      "sha256": "7c8cde7b7a7858ab37a6daec0ad49be645711928f027915f86fd822db1a2c3d8"
+    },
+    {
+      "path": "sources/hallway-track.py",
+      "sha256": "83a1e85c032669c383845d9c3dd98ae9559f2d67457ffa63d3354d0707622bc6"
+    },
+    {
+      "path": "sources/provider-assignment.ts",
+      "sha256": "2f56a606fce6543ca96bcd1a1b2300af4e2ce0c29f2c27fd9378bc76f065946e"
+    },
+    {
+      "path": "sources/provider-ribbon.ts",
+      "sha256": "b2bac13005c815cbbd0b854dc2ed16db4d6dcea6ceed3cbea4c70cd2745045bb"
+    },
+    {
+      "path": "sources/provider-routing.ts",
+      "sha256": "718c025e8db224198c553b09c1657d4494731bec90654487345a613268c0d1e1"
+    },
+    {
+      "path": "sources/provider-scoring.ts",
+      "sha256": "d0d23d68d408806076b34b40f3c8140fc9a06e663c7ceafccfdfde8c79a22d22"
+    },
+    {
+      "path": "sources/provider-sensor.ts",
+      "sha256": "b28a966f068f65d1087507e6220dd172b45ffcc48ac4c3caa6f8443618fc3904"
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "schema": "capability-discovery-review@1",
+  "job_id": "R102",
+  "worker": "W2",
+  "subject": {
+    "worker": "W1",
+    "job": "E102",
+    "artifact": "../W1/result.json"
+  },
+  "decision": "accepted",
+  "summary": "Accepted as bounded callable/synthetic capability evidence and width-only repair failure on IMG_5641. Actual course rail geometry, endpoint arrival and generalized organic-blob rejection remain unknown.",
+  "independentReruns": [
+    {
+      "command": "node probe.mjs > probe.stdout.json",
+      "exitCode": 0,
+      "exactOutputMatchesW1": true
+    },
+    {
+      "command": "node supplemental.mjs > supplemental.stdout.json",
+      "exitCode": 0
+    }
+  ],
+  "findings": [
+    {
+      "claim": "Nominal 30 px stripe width estimate 29 px",
+      "assessment": "Confirmed; fixture strict inequality fills 29 rows, so this is rasterization bookkeeping, not 1 px estimator error."
+    },
+    {
+      "claim": "Sensor width and offset discrimination",
+      "assessment": "Confirmed for these uniform binary fixtures. Centered expected W = 30 returns 1, offset 4 px returns 0; broad 60/90 px returns 0. Supplemental offset 2 px already returns 0 despite valid paired edges; fixed-center score does not establish ribbon absence."
+    },
+    {
+      "claim": "Width-search border counterexample",
+      "assessment": "Confirmed and strengthened. Nominal 59/60 px each fill 59 rows; returned 57 px with 4.5 lum/px weak pair versus 36 lum/px away from the boundary. Nominal 61/62 px each fill 61 rows and return null. Fixed lateral profile extent and end suppression constrain this operation."
+    },
+    {
+      "claim": "Offset rejection",
+      "assessment": "Confirmed default 3 px center gate. At 3.25 px offset default returns null; latLim = 12 recovers 29 px width, 36 lum/px,center \u22123.25 px. No production setting changed."
+    },
+    {
+      "claim": "Orientation tracing does not recenter",
+      "assessment": "Confirmed original pure probe: uniform support/theta field preserves y = 80/y = 84 over 45 px; zero bends. No actual ribbon centering was tested in that uniform field."
+    },
+    {
+      "claim": "Historical width-only partial trace",
+      "assessment": "Confirmed independently by W2 fresh native replay: entire native baseline receipt matches historical receipt; all 5 widths retain identical fields, traces, and variant hashes. Single 50/55 px banks reach 37 px but no basket; expanded bank remains 27.75 px. Additional reach is not repair."
+    }
+  ],
+  "freshReplayCrossCheck": {
+    "reference": "../baseline-native.json",
+    "historical": "../../../chainspot-discovery-lab/source/chainspot-teams/s7/width-probe/IMG_5641-badge-9/width-probe.json",
+    "entireParsedReceiptExact": true,
+    "freshSha256": "bf0ca6a66866c53fe9ad58b55a231e4beb483b66189a5a7ffc46701031cb8ac1",
+    "historicalSha256": "bf0ca6a66866c53fe9ad58b55a231e4beb483b66189a5a7ffc46701031cb8ac1",
+    "variants": [
+      {
+        "name": "baseline",
+        "variantIdentityEqual": true,
+        "traceEqual": true,
+        "fieldEqual": true
+      },
+      {
+        "name": "width40",
+        "variantIdentityEqual": true,
+        "traceEqual": true,
+        "fieldEqual": true
+      },
+      {
+        "name": "width50",
+        "variantIdentityEqual": true,
+        "traceEqual": true,
+        "fieldEqual": true
+      },
+      {
+        "name": "width55",
+        "variantIdentityEqual": true,
+        "traceEqual": true,
+        "fieldEqual": true
+      },
+      {
+        "name": "baselinePlus50And55",
+        "variantIdentityEqual": true,
+        "traceEqual": true,
+        "fieldEqual": true
+      }
+    ],
+    "headingFreshObservation": {
+      "lengthPx": 64.75,
+      "bends": 1,
+      "outcome": "unknown",
+      "reason": "petered-out",
+      "limitation": "Heading substitution also fails endpoint arrival; cannot attribute later progress to width calibration."
+    }
+  },
+  "evidence": [
+    {
+      "path": "probe.mjs",
+      "sha256": "653a5b7f5e217ae8ecfbe554b540db4bd77278ac39731d2460c22f8bef2aa643"
+    },
+    {
+      "path": "probe-results.json",
+      "sha256": "9a48d5b24752f672497a8f5f2dbc3de74ac6c3ebbf8b84937c2f14338eab6bbb"
+    },
+    {
+      "path": "supplemental.mjs",
+      "sha256": "f5c11ab4aa20027aa2703cb668b9d2d4095519c6af349674eab9ebd75f5f8d11"
+    },
+    {
+      "path": "supplemental-results.json",
+      "sha256": "dbe94c01391837a5d32b04327fea5c7172c0c3d1fc4adff953c1407d68d16be0"
+    },
+    {
+      "path": "exact-active/ports/s6straight/pathSpace.mjs",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"
+    }
+  ],
+  "limits": [
+    "No held-out course geometry was measured.",
+    "No claim that any returned edge pair is true physical ribbon evidence.",
+    "No production changes, Git changes, AA changes, sealed corpus access, or duplicate full replay."
+  ],
+  "nextGate": "Real visible straight-segment profiles plus independent held-out widths and center residuals are required before promoting a calibrated width bank."
+}

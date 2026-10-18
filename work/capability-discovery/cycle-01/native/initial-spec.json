@@ -1,0 +1,60 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "capability-discovery-swarm",
+    "scope": "pass-1-discovery",
+    "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc",
+    "activeReference": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "capacity": "six actual worker agents plus one root coordinator; maximal independent discovery, production defaults unchanged"
+  },
+  "workers": [
+    "W1",
+    "W2",
+    "W3",
+    "W4",
+    "W5",
+    "W6"
+  ],
+  "policy": {
+    "extract_priority": 100,
+    "review_priority": 200,
+    "repair_priority": 300
+  },
+  "review_policy": {
+    "enabled": true,
+    "review_prefix": "R",
+    "reviewer_must_differ_from_extractor": true
+  },
+  "jobs": [
+    {
+      "id": "E101",
+      "kind": "extract",
+      "subject": "Mine reusable routing/three-lane/pathwalking operations from historical ChainSpot and current source, with callable contracts and limits."
+    },
+    {
+      "id": "E102",
+      "kind": "extract",
+      "subject": "Analyze width/centerline/ribbon operations and derive evidence-grounded candidate tests using tee-to-badge geometry."
+    },
+    {
+      "id": "E103",
+      "kind": "extract",
+      "subject": "Analyze route scoring and bend evidence; identify falsifiable hypotheses for straight runs, sharp bends and >3 bend penalties."
+    },
+    {
+      "id": "E104",
+      "kind": "extract",
+      "subject": "Audit provenance/cache/evaluation risks and run independent narrow checks of current root-key fix where feasible."
+    },
+    {
+      "id": "E105",
+      "kind": "extract",
+      "subject": "Execute pinned baseline/heading native replays once in isolated scratch and mine actual operations/evidence for the lab."
+    },
+    {
+      "id": "E106",
+      "kind": "extract",
+      "subject": "Design executable conditional next-state planner and readiness/independent-review contract tied to actual replay evidence."
+    }
+  ]
+}

@@ -1,0 +1,148 @@
+✖ the selected checkpoint inventories docs/replay unchanged and a missing file changes state (4.244997ms)
+✔ inventory identifies checkpoint-only files and preserves unknown change state (1.320291ms)
+✔ graph expands recursive dependencies and reports undeclared dependency gaps (7.491163ms)
+✔ graph treats checkpoint file leaves and directories as known terminal dependencies (0.364964ms)
+✔ lineage exposes freshness, request arguments, and acceptance separately (0.396372ms)
+✔ comparison covers exact executable queries without selecting arbitrary winners (1.005692ms)
+✔ an unrelated checkpoint edit does not stale target evidence, but an evidence edit does (0.332476ms)
+✔ acceptance conflicts remain ambiguous and duplicate declarations do not silently choose (0.501749ms)
+✔ a changed target fingerprint does not inherit older execution or human acceptance (0.212357ms)
+✔ an explicit fingerprint resolves same-argument requests when only one request owns it (0.351254ms)
+✔ assembly fuses components onto exactly one declared base (2.250029ms)
+✔ assembly refuses zero bases, two bases, and duplicate names (0.474038ms)
+✔ assembly accounts window residue as the px not owned (0.180479ms)
+✖ the 17 accepted S2 basket Parts re-assemble exactly through the shape (0.44868ms)
+✔ a synthetic badge assembles plate-first and the witness agrees role for role (10.320306ms)
+✔ the assembly refuses opaque badges, ambiguous plates, and ambiguous glyph ownership (5.478799ms)
+✖ the accepted specimen evidence decomposes plate-first for all 18 badges (0.69008ms)
+✔ a synthetic basket assembles body-first and the witness agrees set for set (10.641045ms)
+✔ the assembly refuses opaque baskets, count drift, and misalignment (2.913039ms)
+✖ the accepted specimen evidence decomposes body-first for all 17 baskets (0.734186ms)
+✔ a synthetic tee assembles interior-first and the witness agrees set for set (8.675871ms)
+✔ the assembly refuses holeArea drift, opaque tees, frame drift, and unlisted rings (0.885672ms)
+✖ the accepted specimen evidence supports interior-first assembly for all 18 tees (0.553036ms)
+✔ assignment render embeds verified source and keeps one addressable mark and row per candidate (3.59066ms)
+S5 global assignment contracts passed
+✔ ports/late/behavior/assignment.test.mjs (91.808389ms)
+recovery behavior contracts passed
+✔ ports/late/behavior/contract.test.mjs (105.062784ms)
+singleton target-binding regression PASS
+✔ ports/late/singletonGateway.test.mjs (94.136393ms)
+✔ runs baseline probe and returns captured streams and fork-relative evidence paths (107.019681ms)
+✔ passes the sealed row only for heading mode (77.394645ms)
+✔ rejects missing inputs and paths escaping the fork before execution (6.001646ms)
+✔ rejects symlinked inputs that resolve outside the fork (4.101012ms)
+✔ refuses a pre-existing output directory to prevent stale evidence attribution (2.761192ms)
+✔ literal recipe selects a prefix and leaves lanes OFF unless named (37.217904ms)
+✔ declared Stage graph rejects a missing producer before execution (34.840541ms)
+✖ strict reuse verifies native bytes; changed source and lane give different identities (290.309064ms)
+✔ tidy reports never-run result missing despite unchanged source (1.19244ms)
+✔ the same facts yield distinct native answers and explicit joins (0.4621ms)
+✔ formatting-only serialization differs under crisp but equals under named semantic contract (1.879145ms)
+✔ changing the selected axis is a semantic inequality and changes byte identity (0.312327ms)
+✔ equality contract is explicitly named/versioned and selected row must be unambiguous (0.607197ms)
+✔ whole Part equality detects row facts outside the selected geometry projection (0.289151ms)
+✔ source, status, and finite-axis guards block semantic comparison (0.300699ms)
+✔ writes a portable file with embedded source, receipts, crop canvas, and validated tee outlines (28.465804ms)
+✔ does not draw geometry when its evidence hash or source binding fails (11.949018ms)
+✔ prefix S3 board ends its stage slider at the highest executed stage (5.777204ms)
+ℹ tests 45
+ℹ suites 0
+ℹ pass 39
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 742.913469
+
+✖ failing tests:
+
+test at inventory.test.mjs:8:1
+✖ the selected checkpoint inventories docs/replay unchanged and a missing file changes state (4.244997ms)
+  Error: ENOENT: no such file or directory, open '/workspace/scratch/8528bb251845/discovery-swarm/W3/base-verification/attempts/checkpoint.json'
+      at async open (node:internal/fs/promises:697:25)
+      at async readFile (node:internal/fs/promises:1348:14)
+      at async TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/discovery-swarm/W3/base-verification/inventory.test.mjs:10:28)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/scratch/8528bb251845/discovery-swarm/W3/base-verification/attempts/checkpoint.json'
+  }
+
+test at ports/early/assembly.test.mjs:67:1
+✖ the 17 accepted S2 basket Parts re-assemble exactly through the shape (0.44868ms)
+  Error: ENOENT: no such file or directory, open '/workspace/scratch/8528bb251845/discovery-swarm/W3/base-verification/attempts/stages/attempt-1792188256180-f51916a6db5f/fork/stage-output/early/artifacts/s2/px.baskets.json'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/discovery-swarm/W3/base-verification/ports/early/assembly.test.mjs:70:31)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/scratch/8528bb251845/discovery-swarm/W3/base-verification/attempts/stages/attempt-1792188256180-f51916a6db5f/fork/stage-output/early/artifacts/s2/px.baskets.json'
+  }
+
+test at ports/early/s1BadgeAssembly.test.mjs:113:1
+✖ the accepted specimen evidence decomposes plate-first for all 18 badges (0.69008ms)
+  Error: ENOENT: no such file or directory, open '/workspace/scratch/8528bb251845/discovery-swarm/W3/base-verification/attempts/stages/attempt-1792188256180-f51916a6db5f/fork/stage-output/early/artifacts/s1/px.badges.json'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/discovery-swarm/W3/base-verification/ports/early/s1BadgeAssembly.test.mjs:115:37)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/scratch/8528bb251845/discovery-swarm/W3/base-verification/attempts/stages/attempt-1792188256180-f51916a6db5f/fork/stage-output/early/artifacts/s1/px.badges.json'
+  }
+
+test at ports/early/s2BasketAssembly.test.mjs:101:1
+✖ the accepted specimen evidence decomposes body-first for all 17 baskets (0.734186ms)
+  Error: ENOENT: no such file or directory, open '/workspace/scratch/8528bb251845/discovery-swarm/W3/base-verification/attempts/stages/attempt-1792188256180-f51916a6db5f/fork/stage-output/early/artifacts/s2/px.baskets.json'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/discovery-swarm/W3/base-verification/ports/early/s2BasketAssembly.test.mjs:104:31)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/scratch/8528bb251845/discovery-swarm/W3/base-verification/attempts/stages/attempt-1792188256180-f51916a6db5f/fork/stage-output/early/artifacts/s2/px.baskets.json'
+  }
+
+test at ports/early/s3TeeAssembly.test.mjs:110:1
+✖ the accepted specimen evidence supports interior-first assembly for all 18 tees (0.553036ms)
+  Error: ENOENT: no such file or directory, open '/workspace/scratch/8528bb251845/discovery-swarm/W3/base-verification/attempts/stages/attempt-1792220456308-58f6a9c973af/fork/stage-output/early/artifacts/s3/px.tees.json'
+      at readFileSync (node:fs:484:20)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/discovery-swarm/W3/base-verification/ports/early/s3TeeAssembly.test.mjs:113:34)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/scratch/8528bb251845/discovery-swarm/W3/base-verification/attempts/stages/attempt-1792220456308-58f6a9c973af/fork/stage-output/early/artifacts/s3/px.tees.json'
+  }
+
+test at recipes/stages.test.mjs:36:1
+✖ strict reuse verifies native bytes; changed source and lane give different identities (290.309064ms)
+  Error: Stage source missing from execution closure: source/provider/artifacts/replay/source/IMG_5641.jpg
+      at stageState (file:///workspace/scratch/8528bb251845/discovery-swarm/W3/base-verification/recipes/closure.mjs:27:20)
+      at async TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/discovery-swarm/W3/base-verification/recipes/stages.test.mjs:37:16)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

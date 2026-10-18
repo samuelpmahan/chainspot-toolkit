@@ -1,0 +1,102 @@
+{
+  "schema": "capability-discovery-pass3@1",
+  "job_id": "E202",
+  "worker": "W1",
+  "outcome": "mixed_change",
+  "summary": "Portable source-verified width/offset negative pack and comparison-only recipe guard created. Four exact minimal bundled sources;14 cases pass; relocating package preserves entire parsed receipt. No production changes or actual-image width validation.",
+  "package": {
+    "path": "/workspace/scratch/8528bb251845/discovery-swarm/W1/pass3/width",
+    "archive": "/workspace/scratch/8528bb251845/discovery-swarm/W1/pass3/width-pack.tar.gz",
+    "archiveSha256": "54c95f4d8f4011d90abfddfa09023b7764dcc33bd102804dd167678254917eb7",
+    "ownerCopyDestination": "experiments/capability-discovery/probes/width",
+    "reruncommand": "node probe.mjs --out receipts/actual.json",
+    "node": ">=24",
+    "dependencies": [],
+    "files": 12,
+    "bytes": 102513
+  },
+  "provenance": [
+    {
+      "file": "vendor/active/ports/s6straight/pathSpace.mjs",
+      "origin": "chainspot-toolkit",
+      "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "sourcePath": "ports/s6straight/pathSpace.mjs",
+      "gitBlob": "38963d20f7a8b7c7851b3a2abea2e472da8f7716",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "adaptation": "path/extension only; content byte-identical",
+      "verified": true
+    },
+    {
+      "file": "vendor/active/contracts/alpha.profile@1.mjs",
+      "origin": "chainspot-toolkit",
+      "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "sourcePath": "contracts/alpha.profile@1.mjs",
+      "gitBlob": "6f50530ff8f7d5c613ee739224d475657fcbf647",
+      "sha256": "9d1f316af6af2887e0c59bd7a2b0bc13d3305a817cfb6efffb42c8f3b238396f",
+      "adaptation": "path/extension only; content byte-identical",
+      "verified": true
+    },
+    {
+      "file": "vendor/provider/fourLaneSensor.cjs",
+      "origin": "chainspot-toolkit",
+      "ref": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "sourcePath": "source/provider/packages/alg/dist/detectors/threeFactor/features/st.fourLaneSensor.js",
+      "gitBlob": "2167c3539aa33856738e679c75869d6c3395afe8",
+      "sha256": "7adb21b43da9ae51d0a15ff160d61a5c0318cc94cc7ac520af9b3d80f6fb4624",
+      "adaptation": "path/extension only; content byte-identical",
+      "verified": true
+    },
+    {
+      "file": "vendor/dev72/fourLaneRibbon.ts",
+      "origin": "samuelpmahan/ChainSpot",
+      "ref": "ef2a4fc2dc4720d3647f705464342f119d5a39a5",
+      "sourcePath": "src/lib/nuthing/fourLaneRibbon.ts",
+      "gitBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+      "sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+      "adaptation": "none; exact independently fetched source; Node builtin type stripping",
+      "verified": true
+    }
+  ],
+  "implemented": [
+    "Raster accounting reports nominal width versus occupied rows and bilinear edge separation.",
+    "Near-border nominal59/60 (59 occupied rows) produces weak57px fit;61/62 no fit.",
+    "Offset3.25px rejected at default center3px gate; explicit12px gate recovers29px edge separation at center-3.25px.",
+    "Four-lane fixed-center scores1 at center and0 at offsets2/4 despite same ribbon.",
+    "Rail-channel UNKNOWN with interior score1 is preserved; all-hidden score null.",
+    "Legacy all-hidden width30 and empty fallback40 stay diagnostic; new guard returns UNKNOWN width null.",
+    "Explicit confidence policy, qualified segments, bilateral counts, supported candidate separation, spread, boundary status and held-out check required for ELIGIBLE_FOR_COMPARISON; always promoted false.",
+    "Nonfinite -Infinity scores serialize as explicit tagged objects, not silent null."
+  ],
+  "tests": {
+    "cases": 14,
+    "status": "PASS",
+    "sourceFilesVerified": 4,
+    "relocatedReceiptExact": true,
+    "integrityTamperRejected": true,
+    "flowExplainedBeforeTests": true
+  },
+  "evidencePaths": [
+    "/workspace/scratch/8528bb251845/discovery-swarm/W1/pass3/width/receipts/actual.json",
+    "/workspace/scratch/8528bb251845/discovery-swarm/W1/pass3/verification.json",
+    "/workspace/scratch/8528bb251845/discovery-swarm/W1/pass3/width/experiment.recipe.json",
+    "/workspace/scratch/8528bb251845/discovery-swarm/W1/pass3/width/metadata.json"
+  ],
+  "limitations": [
+    "Real visible segment evidence and independent held-out width uncertainty were not measured.",
+    "Confidence policy numbers in the executable controls are synthetic fixture arguments, not recommended physical thresholds.",
+    "The recipe guard checks declared evidence fields; a future data-producing stage must substantiate those fields with addressed Parts and provenance.",
+    "The recipe is not wired into production; no candidate promotion or CV defaults changed.",
+    "Source comments may contain historical semantics superseded by explicit observed channel distinctions in this recipe."
+  ],
+  "constraints": {
+    "writesOnly": "W1/pass3",
+    "repoGitEdits": false,
+    "AAChanged": false,
+    "sealedCorpus": false,
+    "fullReplay": false
+  },
+  "handoff": {
+    "W3": "notified portable pack ready; W3 sole integration owner",
+    "next": "independent PASS4 review"
+  }
+}

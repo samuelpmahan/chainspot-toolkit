@@ -1,0 +1,1257 @@
+{
+  "schema": "R201-independent-planner-probes@1",
+  "checks": [
+    {
+      "name": "duplicate free principals invalidate",
+      "status": "invalid",
+      "errors": [
+        "duplicate-free-principal"
+      ],
+      "tasks": [],
+      "nativeWorkers": null
+    },
+    {
+      "name": "inactive historical alias adds no capacity",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "independent-validation-missing",
+            "human-acceptance-missing",
+            "claim-not-accepted"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    },
+    {
+      "name": "producer principal excludes available alias",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "blocked",
+          "reasons": [
+            "no-independent-worker"
+          ],
+          "eligibleWorkers": [],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "independent-validation-missing",
+            "human-acceptance-missing",
+            "claim-not-accepted"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    },
+    {
+      "name": "active blocks directly marked free worker",
+      "status": "blocked",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "blocked",
+          "reasons": [
+            "no-independent-worker"
+          ],
+          "eligibleWorkers": [],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "blocked",
+          "reasons": [
+            "no-free-worker"
+          ],
+          "eligibleWorkers": [],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "independent-validation-missing",
+            "human-acceptance-missing",
+            "claim-not-accepted"
+          ],
+          "eligibleWorkers": [],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": null
+    },
+    {
+      "name": "lease blocks directly marked free worker",
+      "status": "blocked",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "blocked",
+          "reasons": [
+            "no-independent-worker"
+          ],
+          "eligibleWorkers": [],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "blocked",
+          "reasons": [
+            "no-free-worker"
+          ],
+          "eligibleWorkers": [],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "independent-validation-missing",
+            "human-acceptance-missing",
+            "claim-not-accepted"
+          ],
+          "eligibleWorkers": [],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": null
+    },
+    {
+      "name": "busy principal exposed through new free alias",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "independent-validation-missing",
+            "human-acceptance-missing",
+            "claim-not-accepted"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    },
+    {
+      "name": "expired lease principal exposed through new free alias",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "independent-validation-missing",
+            "human-acceptance-missing",
+            "claim-not-accepted"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    },
+    {
+      "name": "state source mismatch invalid",
+      "status": "invalid",
+      "errors": [
+        "source-mismatch"
+      ],
+      "tasks": [],
+      "nativeWorkers": null
+    },
+    {
+      "name": "bundle source mismatch stale",
+      "status": "blocked",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "blocked",
+          "reasons": [
+            "evidence-not-current"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "ca6331c052cade2041484b684dc2744e79424f045d42b195a602d1c02aeba111"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "blocked",
+          "reasons": [
+            "guard:evidenceStatus:b"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "evidence-not-current",
+            "independent-validation-missing",
+            "human-acceptance-missing",
+            "claim-not-accepted"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "ca6331c052cade2041484b684dc2744e79424f045d42b195a602d1c02aeba111"
+        }
+      ],
+      "nativeWorkers": null
+    },
+    {
+      "name": "byte mismatch blocks validation",
+      "status": "blocked",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "blocked",
+          "reasons": [
+            "evidence-not-current"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "76f69d8f6673fb528c07af16569a7aae0c0723ab7656876edbef2d9feab53cc8"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "blocked",
+          "reasons": [
+            "guard:evidenceStatus:b"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "evidence-not-current",
+            "independent-validation-missing",
+            "human-acceptance-missing",
+            "claim-not-accepted"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "76f69d8f6673fb528c07af16569a7aae0c0723ab7656876edbef2d9feab53cc8"
+        }
+      ],
+      "nativeWorkers": null
+    },
+    {
+      "name": "eval guard invalid without evaluating expression",
+      "status": "invalid",
+      "errors": [
+        "invalid-guard"
+      ],
+      "tasks": [],
+      "nativeWorkers": null
+    },
+    {
+      "name": "extra guard fields invalid",
+      "status": "invalid",
+      "errors": [
+        "invalid-guard"
+      ],
+      "tasks": [],
+      "nativeWorkers": null
+    },
+    {
+      "name": "unknown dependency invalid",
+      "status": "invalid",
+      "errors": [
+        "unknown-dependency"
+      ],
+      "tasks": [],
+      "nativeWorkers": null
+    },
+    {
+      "name": "dependency outcome gap blocks",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "blocked",
+          "reasons": [
+            "dependency:falsify"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "independent-validation-missing",
+            "human-acceptance-missing",
+            "claim-not-accepted"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    },
+    {
+      "name": "bookkeeping mixed_change is not technical passed",
+      "status": "blocked",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "blocked",
+          "reasons": [
+            "dependency:falsify"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "terminal",
+          "reasons": [
+            "task-completed"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "independent-validation-missing",
+            "human-acceptance-missing",
+            "claim-not-accepted"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": null
+    },
+    {
+      "name": "correct review and preapproved scoped human bytes permit package",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "blocked",
+          "reasons": [
+            "guard:claimState:c"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    },
+    {
+      "name": "review mismatch source",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "blocked",
+          "reasons": [
+            "guard:claimState:c"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "independent-validation-missing"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    },
+    {
+      "name": "review mismatch bundleHash",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "blocked",
+          "reasons": [
+            "guard:claimState:c"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "independent-validation-missing"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    },
+    {
+      "name": "review mismatch protocolHash",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "blocked",
+          "reasons": [
+            "guard:claimState:c"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "independent-validation-missing"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    },
+    {
+      "name": "review mismatch protocol",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "blocked",
+          "reasons": [
+            "guard:claimState:c"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "independent-validation-missing"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    },
+    {
+      "name": "human mismatch source",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "blocked",
+          "reasons": [
+            "guard:claimState:c"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "human-acceptance-missing"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    },
+    {
+      "name": "human mismatch bundleHash",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "blocked",
+          "reasons": [
+            "guard:claimState:c"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "human-acceptance-missing"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    },
+    {
+      "name": "human mismatch claim",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "blocked",
+          "reasons": [
+            "guard:claimState:c"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "human-acceptance-missing"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    },
+    {
+      "name": "human mismatch issuer",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "blocked",
+          "reasons": [
+            "guard:claimState:c"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "human-acceptance-missing"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    },
+    {
+      "name": "human mismatch principal",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "blocked",
+          "reasons": [
+            "guard:claimState:c"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "human-acceptance-missing"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    },
+    {
+      "name": "human mismatch scope",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "blocked",
+          "reasons": [
+            "guard:claimState:c"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "human-acceptance-missing"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    },
+    {
+      "name": "human mismatch decision",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "blocked",
+          "reasons": [
+            "guard:claimState:c"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "human-acceptance-missing"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    },
+    {
+      "name": "untrusted human decision hash blocked",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "blocked",
+          "reasons": [
+            "guard:claimState:c"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "human-acceptance-missing"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    },
+    {
+      "name": "historical producer reviewer alias cannot self-accept",
+      "status": "ready",
+      "errors": [],
+      "tasks": [
+        {
+          "id": "review",
+          "action": "validate",
+          "commandId": "review",
+          "status": "ready",
+          "reasons": [],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "action": "falsify",
+          "commandId": "falsify",
+          "status": "blocked",
+          "reasons": [
+            "guard:claimState:c"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": null
+        },
+        {
+          "id": "retain",
+          "action": "package",
+          "commandId": "retain",
+          "status": "blocked",
+          "reasons": [
+            "independent-validation-missing"
+          ],
+          "eligibleWorkers": [
+            "W1"
+          ],
+          "bundleHash": "c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        }
+      ],
+      "nativeWorkers": [
+        "W1"
+      ]
+    }
+  ],
+  "staleDispatch": {
+    "allowed": false,
+    "reason": "snapshot-changed"
+  },
+  "revisionDispatch": {
+    "allowed": false,
+    "errors": [
+      "dispatch-revision-mismatch"
+    ]
+  },
+  "capacityCounterexamples": {
+    "active": {
+      "schema": "chainspot.rebalancer-spec/v1",
+      "service": {
+        "name": "capability-discovery",
+        "scope": "revision-1"
+      },
+      "workers": [
+        "W1"
+      ],
+      "review_policy": {
+        "enabled": false
+      },
+      "jobs": [
+        {
+          "id": "review",
+          "kind": "extract",
+          "semantic_kind": "review",
+          "allow_workers": [
+            "W1"
+          ],
+          "subject": "review; policy 246a6763eca3a394808c7e731e8cf729f879bd6de88a10d81653343480f10b68; state ee3861e8fe872f5825ff3d26e6ea7566209b4d9e1d9928199e20f6694a5b57fd; bundle c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "kind": "extract",
+          "semantic_kind": "falsify",
+          "allow_workers": [
+            "W1"
+          ],
+          "subject": "falsify; policy 246a6763eca3a394808c7e731e8cf729f879bd6de88a10d81653343480f10b68; state ee3861e8fe872f5825ff3d26e6ea7566209b4d9e1d9928199e20f6694a5b57fd; bundle none"
+        }
+      ]
+    },
+    "expiredLease": {
+      "schema": "chainspot.rebalancer-spec/v1",
+      "service": {
+        "name": "capability-discovery",
+        "scope": "revision-1"
+      },
+      "workers": [
+        "W1"
+      ],
+      "review_policy": {
+        "enabled": false
+      },
+      "jobs": [
+        {
+          "id": "review",
+          "kind": "extract",
+          "semantic_kind": "review",
+          "allow_workers": [
+            "W1"
+          ],
+          "subject": "review; policy 246a6763eca3a394808c7e731e8cf729f879bd6de88a10d81653343480f10b68; state 554efe5ef4a9739125079151e10ce9339060fabfa605cf2637eb2c2639f6657f; bundle c5f9794ba8b9e80ce6407f303d7b9da483eed382c9d0b7c7ce3cc8244484b8df"
+        },
+        {
+          "id": "falsify",
+          "kind": "extract",
+          "semantic_kind": "falsify",
+          "allow_workers": [
+            "W1"
+          ],
+          "subject": "falsify; policy 246a6763eca3a394808c7e731e8cf729f879bd6de88a10d81653343480f10b68; state 554efe5ef4a9739125079151e10ce9339060fabfa605cf2637eb2c2639f6657f; bundle none"
+        }
+      ]
+    }
+  },
+  "trustBoundary": "Policy and observed state are coordinator-supplied trusted inputs; no authentication daemon is claimed."
+}

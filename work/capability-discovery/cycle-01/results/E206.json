@@ -1,0 +1,88 @@
+{
+  "job_id": "E206",
+  "worker": "W6",
+  "outcome": "mixed_change",
+  "summary": "Portable fail-closed root-inventory evidence guard and exact-source adapter falsifier pack completed. Eight tests passed; actual addresses-only and incomplete-keys adapters return stale6 instead of27. Complete inventory controls recompute27. No production cache fix or current cross-course poisoning claimed.",
+  "source": {
+    "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "storeSha256": "122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074",
+    "identities": "source-identities.json",
+    "runtimeSourceFiles": 8,
+    "unchanged": true
+  },
+  "implementation": {
+    "entry": "root-inventory.mjs: assessRootInventory(input, trustAnchor)",
+    "statuses": [
+      "pass",
+      "fail",
+      "unknown",
+      "unsupported"
+    ],
+    "checks": [
+      "Legacy native receipts with no root-key material are unsupported for root proof.",
+      "No independently authoritative inventory anchor gives unknown; caller complete boolean has no authority.",
+      "Compare authoritative readable-root inventory rows and keys to producer-enumerated root rows; missing/incomplete enumeration fails.",
+      "Check issuer/scope/policy, binding digest, immutable document hashes, root digest and producer cache-key material."
+    ],
+    "limits": "Pass establishes consistency with independently pinned authoritative manifest only. Inventory-owner truth/completeness, root immutability and truthful producer execution require external attestation. An observed read subset does not prove complete closure. No actual authoritative platform inventory/producer witness exists in this pack; successful guard cases use explicit synthetic fixtures."
+  },
+  "actualTests": {
+    "command": "node --test root-inventory.test.mjs",
+    "exitCode": 0,
+    "passed": 8,
+    "failed": 0,
+    "log": "tests.log",
+    "falsifierCommand": "node falsifier.mjs",
+    "falsifierExitCode": 0,
+    "observation": "observation.json"
+  },
+  "observations": {
+    "W6": [
+      {
+        "shape": "addresses",
+        "first": 6,
+        "changed": 6,
+        "expected": 27,
+        "cached": true
+      },
+      {
+        "shape": "Map",
+        "first": 6,
+        "changed": 27,
+        "expected": 27,
+        "cached": false
+      },
+      {
+        "shape": "keys",
+        "first": 6,
+        "changed": 27,
+        "expected": 27,
+        "cached": false
+      },
+      {
+        "shape": "incompleteKeys",
+        "first": 6,
+        "changed": 6,
+        "expected": 27,
+        "cached": true
+      }
+    ],
+    "controls": "Same pixels cached correctly; changed constants, explicit pixel inParts, separate caches recompute27.",
+    "W4": "Separate independent prior PASS2 observation stale10 versus36 retained unchanged in evidence/W4-observation.json. Provenance/hash in evidence/W4-provenance.json; not relabeled a W6 run."
+  },
+  "portability": {
+    "node": "22+",
+    "dependencies": "Node standard library plus bundled exact-source static imports; no repository, package install or network",
+    "manifest": "pack-manifest.json",
+    "integrationPath": "experiments/capability-discovery/probes/root-inventory"
+  },
+  "noActions": {
+    "repoEdits": false,
+    "gitEdits": false,
+    "platformFix": false,
+    "sealedCorpus": false,
+    "crossCourseReplay": false,
+    "scientificAcceptance": false
+  },
+  "next": "W3 integrates portable pack. PASS4 independent reviewer should rerun tests/falsifier, tamper manifests/source binding, and challenge authority/completeness assumptions before integration acceptance."
+}

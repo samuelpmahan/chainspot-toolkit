@@ -1,0 +1,62 @@
+{
+  "schema": "E205-portable-pack@1",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "b2a05e4c0025bdb6a3e70b107dc1e2102a9453652274b9a08f3718b61025dc5e",
+      "bytes": 2163
+    },
+    {
+      "path": "determinism-check.json",
+      "sha256": "802e9de39e3af083a448bf185728ee90115ff11ad73d1bd54992db40ed276382",
+      "bytes": 451
+    },
+    {
+      "path": "input/baseline-native.json",
+      "sha256": "bf0ca6a66866c53fe9ad58b55a231e4beb483b66189a5a7ffc46701031cb8ac1",
+      "bytes": 14383
+    },
+    {
+      "path": "input/heading-native.json",
+      "sha256": "1b9fd087d8532f7dfd0c06e25f212733de24e8c5e6fde5db1ae5fa037b8c6160",
+      "bytes": 6365
+    },
+    {
+      "path": "output/baseline-vs-heading.png",
+      "sha256": "339aa25baba2bfc8931ce3287c3ba45b7f41c068dccd4ec681492c650446fda4",
+      "bytes": 338331
+    },
+    {
+      "path": "output/baseline-vs-heading.svg",
+      "sha256": "57ae6b9df864d9fd0a7f1f6c0bec6f1f95f95b06aef14160c18e75f20019ff41",
+      "bytes": 195465
+    },
+    {
+      "path": "output/render-receipt.json",
+      "sha256": "a7b30e8136df71efa7db34a3aad3c4c44ff9cdb7b2bf82b5aef3fd2acc4a122f",
+      "bytes": 2297
+    },
+    {
+      "path": "render_trace_comparison.py",
+      "sha256": "60b2f15acde06dd24e0fdc25ced029951f72547789bff207ebd0b4b4f192449e",
+      "bytes": 9478
+    }
+  ],
+  "sourceInput": {
+    "sha256": "e6616738640eee1d05d8cc2b59dd657f24b4a5a01dc2f68571b7e44c6f372b8a",
+    "widthPx": 1290,
+    "heightPx": 2091,
+    "logicalPath": "source/provider/artifacts/replay/source/IMG_5641.jpg",
+    "gitRef": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "gitBlob": "ffdd790992dbb0f971e72204c440c0e4c4559216"
+  },
+  "requires": [
+    "Python 3",
+    "Pillow",
+    "NumPy",
+    "Matplotlib"
+  ],
+  "containsProviderRepo": false,
+  "containsNodeModules": false,
+  "containsJPEG": false
+}

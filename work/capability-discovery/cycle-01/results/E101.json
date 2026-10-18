@@ -1,0 +1,183 @@
+{
+  "schema": "capability-discovery-lab-pass1-v1",
+  "worker": "W4",
+  "experiment": "E101",
+  "verdict": "PASS",
+  "scope": "Read-only routing/pathwalking/history discovery; no source/git edits, no full replay, no sealed corpus",
+  "references": {
+    "toolkitMain": "37a2dba87d61262f661af70f1a22440736e61efc",
+    "providerPin": "5433854c72b1dc5aa420934d91e16458c2abe09f",
+    "activeReference": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "dev72": {
+      "repository": "samuelpmahan/ChainSpot",
+      "branch": "codex/three-factor-dev72-lab",
+      "head": "ef2a4fc2dc4720d3647f705464342f119d5a39a5",
+      "fourLaneBlob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+      "ribbonBlob": "42e87e909ba7ff614e1b5769690c63e4fe18db48"
+    },
+    "otherBranches": [
+      "codex/chspt-82-3fd72-frozen-parity",
+      "lab/dev-pathfinding"
+    ]
+  },
+  "primitives": [
+    {
+      "id": "W4-P1",
+      "name": "Paired-edge support -> weighted badge-to-candidate leg routing",
+      "verdict": "PASS",
+      "source": {
+        "ref": "37a2dba87d61262f661af70f1a22440736e61efc",
+        "providerPin": "5433854c72b1dc5aa420934d91e16458c2abe09f",
+        "paths": [
+          "source/provider/packages/alg/src/detectors/threeFactor/ribbon.ts",
+          "source/provider/packages/alg/src/detectors/threeFactor/routing.ts"
+        ],
+        "blobs": [
+          "f74fda826701b534c131ffd6fa2b7e1a152a4a67",
+          "9579d63a7ffc209d604251ae2b7f78ba0dd9f13b"
+        ]
+      },
+      "calls": [
+        "computeRibbonSupport",
+        "buildSupportCost",
+        "routeBadgeLegs"
+      ],
+      "consumes": "RGBA image + course-local widths/orientations/fieldScale; badge seed; arrays of tee/basket candidate points; viewport yOffset",
+      "produces": "Normalized paired-edge support, bestTheta, and leg arrays with endpointId/geodesic/path/reachable",
+      "coordinateFrames": "Support raster coordinates map to source pixels by *field.scale. routeBadgeLegs subtracts yOffset for seed/goals and adds it to returned paths. Geodesic is cost*field-cell distance, not source px.",
+      "proven": "8-neighbor weighted routing with edge weight average endpoint costs*Euclidean grid step. Cost=1+4*(1-support)^2. One badge flood serves all candidate endpoints. Pure uniform probe confirms yOffset100 and scale2 produce geodesic5 for10px path. 200 deterministic8x8 random fields vs independent exact Dijkstra gave worst error0 with seed clamp disabled.",
+      "unknown": "Correct biological/scene ownership from cost alone; off-path terrain always finite/reachable, so reachable does not mean true hallway.",
+      "recombine": "Preserve candidate leg costs/paths as matching evidence; pass top competitors into local centerline sensor/refinement.",
+      "falsifier": "Endpoint perturbation/competing same-width ribbon changes owner despite stronger local rail continuity; numerical probe against independent Dijkstra fails or frame roundtrip breaks."
+    },
+    {
+      "id": "W4-P2",
+      "name": "Four-lane occlusion-aware oriented cross-section observation",
+      "verdict": "PASS",
+      "source": {
+        "ref": "ef2a4fc2dc4720d3647f705464342f119d5a39a5",
+        "path": "src/lib/nuthing/fourLaneRibbon.ts",
+        "blob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+        "providerSensorPath": "source/provider/packages/alg/src/detectors/threeFactor/features/st.fourLaneSensor.ts",
+        "providerSensorBlob": "fbb2181a10ed7ae82d546e6bd7fcc7976eaca379"
+      },
+      "calls": [
+        "observeFourLaneCrossSection",
+        "sampleFourLaneBand (provider exported)"
+      ],
+      "consumes": "RGBA image; oriented source-pixel pose(x,y,headingRad,corridorWidthPx); known occluder bboxes; sampling knobs",
+      "produces": "Four offsets[-W/2,-W/6,+W/6,+W/2], paired/one-sided/occluded rail mode, rail/interior scores or null UNKNOWN",
+      "coordinateFrames": "All positions/widths/tangent spans/occluders in same source image px, heading radians; no viewport conversion inside sensor.",
+      "proven": "Synthetic40px ribbon paired score1; left hidden rail null with one-sided visible right score1; fully hidden score null. Sensor averages five tangent samples; majority hidden is UNKNOWN.",
+      "unknown": "Rail identity across crossings; contiguous rail run is not implemented. Provider registers default-OFF sensor without engine tracker/heading search.",
+      "recombine": "Score proposed poses and candidate polylines, retain oriented rail channels rather than scalar max over headings.",
+      "falsifier": "Same-width pavement/parallel ribbon scores as highly; sparse tangent hits imitate continuous rails; wrong width/heading wins against correct centerline."
+    },
+    {
+      "id": "W4-P3",
+      "name": "Course-local width calibration + deterministic badge transit + sustained four-lane tracker",
+      "verdict": "MAYBE",
+      "source": {
+        "ref": "ef2a4fc2dc4720d3647f705464342f119d5a39a5",
+        "path": "src/lib/nuthing/fourLaneRibbon.ts",
+        "blob": "91cfc2b620e11817410d4ce98525d2e4971cc06d"
+      },
+      "calls": [
+        "estimateFourLaneCorridorWidth",
+        "seedFourLaneState",
+        "deterministicOccluderExitDistancePx",
+        "trackFourLaneRibbon"
+      ],
+      "consumes": "Candidate Tee->Badge segments, course image/occluders, width search list, seeded pose",
+      "produces": "Width with candidate scores/visible counts; trace points and per-step state/observation/sustained score/transit flag/stop reason",
+      "coordinateFrames": "Source image px, headings radians, heading deltas degrees, local width px.",
+      "proven": "Pure probe selects40px from30/40/50;10px forward occluder exit plus6px step causes3 fixed-heading6px transit steps. Source holds incoming heading through starting bbox+step, then evaluates[-18,-12,-6,0,6,12,18]deg with3-step min score; UNKNOWN holds zero turn. Historical checkpoint reports V1 correct-first-basket61/72,wrong1,unresolved10 at45px terminal radius.",
+      "unknown": "Full corpus reproduction not run. Seed Tee->Badge accuracy is assumed by historical test. Lateral recenter experiment68/72 correct,2wrong,2unresolved explicitly NOT promoted. Tracker returns no basket attribution.",
+      "recombine": "Run separately per candidate incoming pairing, calibrate width from trusted straight segments, compare resulting trace support against weighted paths before global assignment.",
+      "falsifier": "Perturb candidate tee/badge pose within realistic detector uncertainty; fixed transit exits into wrong parallel ribbon or turn search switches rail family."
+    },
+    {
+      "id": "W4-P4",
+      "name": "Masked hallway edge-pair fitting and polyline refinement",
+      "verdict": "MAYBE",
+      "source": {
+        "ref": "49255331791b1245cf0f9cd699816175f94e70f2",
+        "paths": [
+          "docs/evidence/s7main/contrast.py",
+          "docs/evidence/s7main/track.py",
+          "docs/evidence/s7main/follow.py"
+        ],
+        "blobs": [
+          "7c82b0370242bc18ed4e3d3c8ec06de53ffb9ee6",
+          "919bb6370228b1bd2e899b0565bfda41998eca4b",
+          "35fbccce531550cd5b2574ae3db78529ecc71ca5"
+        ]
+      },
+      "calls": [
+        "station_contrast",
+        "profile",
+        "edge_pair",
+        "fit_free",
+        "run_end",
+        "close_on_bp",
+        "trace",
+        "refine",
+        "residuals"
+      ],
+      "consumes": "Course lum/MASK/BasketPoint candidates; proposed start/heading,width; optionally other tee axes",
+      "produces": "Two signed rail contrasts/visibility; subpixel edge pair(center,width,score); traced/refined polyline and residuals",
+      "coordinateFrames": "Course image px; script loader crop/mask convention must be explicitly adapted at call boundary. Width is course-local. track.OFFS lateral samples -30..30 step.25px.",
+      "proven": "Source handles masked pixels neutral; edge_pair positive-left/negative-right gradients, width and center bounds; refine fits each leg interior then intersects lines with endpoints fixed. Source README reports s7main16/18 Golden/Lenard/TowneLake,5/18 Heritage under end-at-basket and corridor-containment criterion.",
+      "unknown": "Not executed here; historical scripts need Course adapter, dependencies, and removal/threading of follow.TEES global before safe reuse. S7main/s7edge tables differ and cannot be conflated.",
+      "recombine": "Use edge_pair/fit_free/residuals to locally verify/refine candidate traces from P1/P3; endpoint closure stays candidate-conditioned, never establishes endpoint correctness alone.",
+      "falsifier": "Masked70px future leg or closely spaced bends makes bend search lose; perturb endpoint or crop transform and inspect centerline residual."
+    },
+    {
+      "id": "W4-P5",
+      "name": "Three-factor candidate Cartesian-product scoring and one-to-one assignment",
+      "verdict": "PASS",
+      "source": {
+        "ref": "37a2dba87d61262f661af70f1a22440736e61efc",
+        "path": "source/provider/packages/alg/src/detectors/threeFactor/assignment.ts",
+        "blob": "2f362b7abb231d2234f0ee81741f0c091b2c0095"
+      },
+      "calls": [
+        "rerouteRawPairs",
+        "scoreRawPairs",
+        "rankPairsByBadge",
+        "selectAssignments",
+        "assignThreeFactor"
+      ],
+      "consumes": "Measurement badges, tee/basket candidate evidence, support field/raw pair evidence; optional recovered tees",
+      "produces": "Every badge×tee×basket raw/scored pair, per-badge rankings; selected distinct tee/basket assignment and alternatives",
+      "coordinateFrames": "Candidate xPx/yPx in viewport/global source frame; route boundary uses measurement.viewport.topPx. Basket uses tipXPx/tipYPx.",
+      "proven": "Source explicitly loops each badge, each tee, each basket; assignment uses three initial orders, greedy + bounded local/exchange improvements and uniqueness; alternatives retained. Not a proof of globally optimal3D matching.",
+      "unknown": "Whether true endpoints exist among candidates; misdetected endpoints remain a failure source; no end-to-end parsing guarantee.",
+      "recombine": "Keep independent candidate endpoints and add path/rail support to pair evidence; unresolved missing endpoints trigger recovery rather than declaring perfect triples.",
+      "falsifier": "Remove true endpoint or introduce higher-scoring distractor: selected assignment appears complete but wrong; compare withheld/recovered endpoint alternatives."
+    }
+  ],
+  "negativeFindings": [
+    "Exact weightedpathfinding/weightedPathfinding file spelling not found by scoped default search or guessed paths; do not assert recovered module by name. Actual weighted executable operation is routing.ts.",
+    "No distinct three-lane implementation identified in scoped source; four-lane is proven source, three/four naming must not imply equivalence.",
+    "Dev72 ribbon.ts endpoint-discovery/assignment has midpoint-first invariant and greedy ascending residual with uniqueness; do not promote as general imperfect-endpoint parser.",
+    "Provider pin is provenance only in bundled source; provider commit is not a local tree object. Toolkit exact tree and provider blob IDs recorded instead.",
+    "Historical reports, source semantics, and newly executed pure probes are distinct evidence tiers; no claims about active cross-course cache fix."
+  ],
+  "probes": [
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-swarm/W4/probe.mjs",
+      "output": "/workspace/scratch/8528bb251845/discovery-swarm/W4/probe-result.json",
+      "verdict": "PASS",
+      "scope": "Exact fetched Dev72 pure sensor/calibration/transit/straight trace synthetic input"
+    },
+    {
+      "path": "/workspace/scratch/8528bb251845/discovery-swarm/W4/route-probe.mjs",
+      "output": "/workspace/scratch/8528bb251845/discovery-swarm/W4/route-probe-result.json",
+      "verdict": "PASS",
+      "scope": "Pinned provider route source copied with import specifier adaptation; y-offset/scale and2008x8 randomized independent exact Dijkstra comparison"
+    }
+  ],
+  "recommendedRecipe": "Candidate endpoint pools -> paired support flood to all candidates -> preserve badge×tee×basket scores and alternatives -> width-calibrated oriented cross-section/edge-fit evidence on proposed paths -> bounded matching. Use local tracing to support/falsify pairings, never assume endpoints are perfect. All inputs retain image/course/cache provenance.",
+  "nextPass": "Await PASS2 cross-review and PASS3 conditional pure probes."
+}

@@ -1,0 +1,121 @@
+{
+  "schema": "path-geometry-evidence@1",
+  "activeReference": "49255331791b1245cf0f9cd699816175f94e70f2",
+  "providerPin": "5433854c72b1dc5aa420934d91e16458c2abe09f",
+  "E103Sources": [
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/ribbon.ts",
+      "gitBlob": "f74fda826701b534c131ffd6fa2b7e1a152a4a67",
+      "sha256": "b2bac13005c815cbbd0b854dc2ed16db4d6dcea6ceed3cbea4c70cd2745045bb"
+    },
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/routing.ts",
+      "gitBlob": "9579d63a7ffc209d604251ae2b7f78ba0dd9f13b",
+      "sha256": "718c025e8db224198c553b09c1657d4494731bec90654487345a613268c0d1e1"
+    },
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/scoring.ts",
+      "gitBlob": "255d9ac4518c4d34a607776c2bd5c7e9946f246f",
+      "sha256": "d0d23d68d408806076b34b40f3c8140fc9a06e663c7ceafccfdfde8c79a22d22"
+    },
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/assignment.ts",
+      "gitBlob": "2f362b7abb231d2234f0ee81741f0c091b2c0095",
+      "sha256": "2f56a606fce6543ca96bcd1a1b2300af4e2ce0c29f2c27fd9378bc76f065946e"
+    },
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/measure.ts",
+      "gitBlob": "50e6f0831a1e41947ace78863c30f82d001f44cb",
+      "sha256": "2b6d8abba46580501a51d6b08ee32e3f259664358f7233a1876012057300a7bf"
+    },
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/features/g4.teeBadgeLockMath.ts",
+      "gitBlob": "65e5c500d9a22141560c4741c017df091d2fa442",
+      "sha256": "b9532fa20d351a85b3f264cc8054b2bdd1eb4a91a4a019c7759c4730b2d41141"
+    },
+    {
+      "path": "AGENTS.md",
+      "gitBlob": "08b81e317ebc7d4c806fe06e7aa2c83be233c334",
+      "sha256": "aa90d43cceed1e579a71ef998ac15e6e6972be8c71ee8d82e1285fc60203f456"
+    },
+    {
+      "path": "DOCTRINE.md",
+      "gitBlob": "1256925a36e067b802617c50ea265f1051daf888",
+      "sha256": "2f9a40040aecbe0aecb3bcb5685a2212cd197ccc20be92e55b07938d9987fe08"
+    },
+    {
+      "path": "docs/agents/lanes-s5s7.md",
+      "gitBlob": "ea9345e808150b7359c04289f7cbafbf239bcb81",
+      "sha256": "4bfdad283653e71074407eabcd65a995fbc24cb4fd71597ba88d0b056b71c911"
+    },
+    {
+      "path": "docs/evidence/s7main/teebadge.py",
+      "gitBlob": "be9012fd362065e1bc693dfecb9516dabe65d528",
+      "sha256": "13bd201c97d5dad04a9495c7a175094b02d0863dfc4bbcd93523bd057ade9bce"
+    },
+    {
+      "path": "docs/evidence/s7main/track.py",
+      "gitBlob": "919bb6370228b1bd2e899b0565bfda41998eca4b",
+      "sha256": "83a1e85c032669c383845d9c3dd98ae9559f2d67457ffa63d3354d0707622bc6"
+    },
+    {
+      "path": "docs/evidence/s7main/polyscore.py",
+      "gitBlob": "580bc0b5fe2941ea0671c912cffeaa6fc683f92a",
+      "sha256": "ec4ab602c5a43edc1d0423e253fb1fb606a9352db5efb6cfdabacaf307e66f81"
+    }
+  ],
+  "R103": {
+    "path": "/workspace/scratch/8528bb251845/discovery-swarm/W1/pass2/review.json",
+    "sha256": "28cfc5de0c5f89607baf842d614d1f39c542b920c8b7a46df3ec0a7a0e16d508",
+    "decision": "accepted",
+    "sharedFieldScoreTie": {
+      "straight": {
+        "score": 1.599999999999996,
+        "pathLengthPx": 90,
+        "efficiency": 1
+      },
+      "sixBends": {
+        "score": 1.5999999999999952,
+        "pathLengthPx": 170,
+        "efficiency": 1.8888888888888888
+      }
+    },
+    "qualifications": [
+      {
+        "issue": "Invalid original enum value",
+        "finding": "W5 fixture sets tee.tier=visible; TeeTier contract is ring|component|recovered. Correction to ring and angleRad=0 reproduces score tie and blank singleton selection. Original missing optional fields not accessed in these calls; neither fixture proves whole-pipeline input validity."
+      },
+      {
+        "issue": "Field and sampling confounding",
+        "finding": "W5 populates locally aligned theta separately for candidates, with sparse vertices rather than router-dense points. Independent reproduction uses one union-populated shared field and still ties within 1e-12, so absent explicit total bend/length penalty is robust as an existence claim. It is not a universal claim that bends never lose score."
+      },
+      {
+        "issue": "Counterexample to overgeneralization",
+        "finding": "Same endpoints, all-horizontal theta field, dense 1px path samples and native alignmentPower2: straight1.6 versus six-bend5.92e-17. With alignmentPower0, dense scores both1.6. Alignment can penalize direction mismatch; this is not a separate bend prior."
+      },
+      {
+        "issue": "Blank-support reachability and singleton",
+        "finding": "Independent route->makeRaw->score->rank->select on zero support yields reachable tee/basket, supportedFraction0, raw failureReason null, score0, selectedTriples1. W5 singleton did not need fabricated zero row; end-to-end pure calls confirm mechanism. No later output/claim filtering or separate ridge-tracer behavior implied."
+      },
+      {
+        "issue": "Source identity",
+        "finding": "All12 W5 source SHA256 and blobs match stated main/provider-copy paths or active reference. Independent run records compiled JS hashes instead of trusting stripped TypeScript runtime. Provider pin itself is declared metadata; original provider git object unavailable locally."
+      }
+    ],
+    "compiledSourceIDs": {
+      "scoring": {
+        "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/source/provider/packages/alg/dist/detectors/threeFactor/scoring.js",
+        "sha256": "c327df5a44723178004ad8f0965f3a67e1f292765681691b6f5b96c556705055"
+      },
+      "routing": {
+        "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/source/provider/packages/alg/dist/detectors/threeFactor/routing.js",
+        "sha256": "193e462e9f4a583f6d65d803c9c8b3cad265bf107faed92df3b737fee17e351d"
+      },
+      "assignment": {
+        "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/source/provider/packages/alg/dist/detectors/threeFactor/assignment.js",
+        "sha256": "9f18504ad128684f2fcf5ea520d36c77892f1a592a7f8815bcf625619f27bff9"
+      }
+    }
+  },
+  "claimBoundary": "Recorded independent source/probe observations; not recomputed by descriptor or evidence of image accuracy/ownership/acceptance"
+}

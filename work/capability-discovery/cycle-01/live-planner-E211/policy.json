@@ -1,0 +1,39 @@
+{
+  "schema": "discovery-policy@1",
+  "source": "chainspot-toolkit@37a2dba87d61262f661af70f1a22440736e61efc/lab@f040ac94649369a3a964ec8e4ea6b8948cc8bbfd56586507ce97a68f66c9ce4d",
+  "maxStateAgeMs": 600000,
+  "commandIds": [
+    "review-occupied-principal-repair",
+    "retain"
+  ],
+  "authorities": [],
+  "trustedHumanDecisionHashes": [],
+  "tasks": [
+    {
+      "id": "R211",
+      "action": "validate",
+      "commandId": "review-occupied-principal-repair",
+      "bundle": "core",
+      "needs": [],
+      "guards": [
+        {
+          "op": "taskOutcome",
+          "task": "E211",
+          "is": "passed"
+        }
+      ]
+    },
+    {
+      "id": "retain",
+      "action": "package",
+      "commandId": "retain",
+      "bundle": "core",
+      "claim": "retention",
+      "needs": [
+        "R211"
+      ],
+      "protocol": "unratified",
+      "guards": []
+    }
+  ]
+}

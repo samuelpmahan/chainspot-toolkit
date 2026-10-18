@@ -1,0 +1,134 @@
+{
+  "schema": "chainspot.discovery-worker-result/v1",
+  "job_id": "E201",
+  "worker": "W3",
+  "outcome": "mixed_change",
+  "status": "candidate-needs-targeted-amendment",
+  "summary": "Implemented and integrated the bounded read-only planner and all five portable packs under experiments/capability-discovery on codex/capability-discovery-lab. Current experiment tests49/49 pass; full suite88/94 passes with exactly the same6 missing-evidence failures reproduced on untouched main. Native fixture solve score/exact100 with0broken constraints. Independent review found planner duplicate-free-principal capacity and width malformed-input gaps; candidate deliberately remains uncommitted pending assigned repair and re-review. No push/PR or production/default CV edits.",
+  "branch": "codex/capability-discovery-lab",
+  "base": "37a2dba87d61262f661af70f1a22440736e61efc",
+  "scope": "experiments/capability-discovery/** only",
+  "git": {
+    "committed": false,
+    "pushed": false,
+    "PR": false
+  },
+  "implementation": {
+    "entry": "experiments/capability-discovery/plan.mjs",
+    "plannerTests": "experiments/capability-discovery/plan.test.mjs",
+    "plannerFeatures": [
+      "deterministic source/snapshot/revision validation",
+      "fixed typed guard operators and dependency cycles",
+      "fresh file/proof receipt rehashing with safe path containment",
+      "current worker availability/lease gating",
+      "explicit semantic review tasks, native auto reviews disabled",
+      "producer worker/principal exclusion",
+      "trusted Sam issuer/principal/scope/claim/source/bundle acceptance separate from review",
+      "read-only dispatch-boundary recheck; root owns atomic reservation and agent calls"
+    ],
+    "nativeWrapper": {
+      "path": "experiments/capability-discovery/native-probe.py",
+      "sha256": "5f723aabb79bb0b3a826e96ec57d109e0e7b428ca42b7bc3d9b38dbbd1acd84d",
+      "unchanged": true,
+      "dependency": "rebalancer==1.0.4"
+    },
+    "packs": {
+      "width": "probes/width",
+      "rootInventory": "probes/root-inventory",
+      "pathGeometry": "probes/path-geometry",
+      "catalog": "catalog",
+      "traceEvidence": "evidence/replay"
+    },
+    "sourceBoundExample": "examples/{policy,state,provenance}.json and exact receipt files",
+    "noDaemon": true,
+    "noAutomaticDispatch": true
+  },
+  "verification": {
+    "plannerTests": {
+      "pass": 28,
+      "fail": 0,
+      "log": "../planner-tests.log"
+    },
+    "integratedNodeTests": {
+      "pass": 49,
+      "fail": 0
+    },
+    "widthCases": {
+      "pass": 14,
+      "sourceFilesVerified": 4,
+      "receipt": "../width-integrated.json",
+      "reviewStatus": "AMEND malformed-input gaps, not accepted width capability"
+    },
+    "catalog": {
+      "filesHashVerified": 17,
+      "sourceFiles": 9,
+      "moduleOperations": 16,
+      "capabilityGroups": 5,
+      "recipes": 3,
+      "testsPass": 6,
+      "cheapNodeProbe": "PASS",
+      "edgePythonProbe": "PASS"
+    },
+    "rootInventory": {
+      "testsPass": 8,
+      "falsifier": "reproduces stale6/expected27 under actual addresses-only adapter; Map complete enumeration controls correct",
+      "receipt": "../root-integrated.json"
+    },
+    "pathGeometry": {
+      "testsPass": 7,
+      "receipt": "../path-integrated.json"
+    },
+    "renderer": {
+      "rerenderedFromIntegratedPath": true,
+      "sourceHashVerified": true,
+      "pngSha256": "339aa25baba2bfc8931ce3287c3ba45b7f41c068dccd4ec681492c650446fda4",
+      "svgSha256": "57ae6b9df864d9fd0a7f1f6c0bec6f1f95f95b06aef14160c18e75f20019ff41",
+      "matchesWorkerOriginal": true,
+      "receipt": "../figure-integrated/render-receipt.json"
+    },
+    "nativeFixture": {
+      "score": 100,
+      "exactScore": 100,
+      "brokenCount": 0,
+      "report": "native-solves/epoch-00.json",
+      "bundle": "native-solves/epoch-00.bundle",
+      "actualDispatch": false,
+      "scope": "explicit one-free-worker/two-ready-job fixture; no claim of current real availability"
+    },
+    "fullSuite": {
+      "command": "node --test",
+      "pass": 88,
+      "fail": 6,
+      "tests": 94,
+      "log": "full-suite.log",
+      "baselineMain": {
+        "pass": 39,
+        "fail": 6,
+        "tests": 45,
+        "log": "../base-suite.log"
+      },
+      "failureNames": [
+        "the selected checkpoint inventories docs/replay unchanged and a missing file changes state",
+        "the 17 accepted S2 basket Parts re-assemble exactly through the shape",
+        "the accepted specimen evidence decomposes plate-first for all 18 badges",
+        "the accepted specimen evidence decomposes body-first for all 17 baskets",
+        "the accepted specimen evidence supports interior-first assembly for all 18 tees",
+        "strict reuse verifies native bytes; changed source and lane give different identities"
+      ],
+      "cause": "Pinned source extraction lacks saved checkpoint/Attempt fixtures and original JPEG; unchanged main reproduces all6. No production fixture patch applied."
+    },
+    "diffCheck": "PASS"
+  },
+  "pendingIndependentAmendments": [
+    {
+      "source": "root coordinator-capacity-falsifier.json",
+      "issue": "Two available worker aliases sharing one principal can enter native spec as double capacity. Reject duplicate free principals or dedupe explicitly, while permitting historical unavailable aliases."
+    },
+    {
+      "source": "W6/pass4/R202 review/repro",
+      "issue": "Width negative IQR and conflicting duplicate width candidates remain eligible; paired-rail missing/nonfinite fields can be called observed. Repair actual module and meaningful negative cases under assigned E207."
+    }
+  ],
+  "authority": "Tests and reviews do not establish geometry/ownership/human acceptance; all native replay arrivals remain unknown. No claim of retained CV capability.",
+  "inventory": "candidate-files.json"
+}

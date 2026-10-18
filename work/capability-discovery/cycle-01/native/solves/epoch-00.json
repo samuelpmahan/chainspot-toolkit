@@ -1,0 +1,137 @@
+{
+  "epoch": 0,
+  "at": "2026-10-18T07:55:11.591492+00:00",
+  "ready_jobs": [
+    "E101",
+    "E102",
+    "E103",
+    "E104",
+    "E105",
+    "E106"
+  ],
+  "pinned_workers": [],
+  "assignments": {
+    "W5": "E103",
+    "W1": "E102",
+    "W6": "E104",
+    "W3": "E106",
+    "W2": "E105",
+    "W4": "E101"
+  },
+  "dispatch": {
+    "W5": "E103",
+    "W1": "E102",
+    "W6": "E104",
+    "W3": "E106",
+    "W2": "E105",
+    "W4": "E101"
+  },
+  "native_seconds": 0.0080277519991796,
+  "native_constraints": {
+    "solved": true,
+    "brokenVal": 0,
+    "brokenCount": 0,
+    "constraints": [
+      {
+        "name": "independent_review",
+        "desc": "avoidAssignmentsSpec: Avoid 6 assignments on scope packets",
+        "value": 0
+      },
+      {
+        "name": "pin_in_flight",
+        "desc": "avoidMovingSpec: Avoid moving 0 objects",
+        "value": 0
+      },
+      {
+        "name": "ready_packet_capacity",
+        "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+        "value": 0
+      }
+    ]
+  },
+  "independent_capacity_check": true,
+  "independent_eligibility_check": true,
+  "exact_score": 600,
+  "native_score": 600,
+  "caps": {
+    "E101": 1,
+    "E102": 1,
+    "E103": 1,
+    "E104": 1,
+    "E105": 1,
+    "E106": 1,
+    "R101": 0,
+    "R102": 0,
+    "R103": 0,
+    "R104": 0,
+    "R105": 0,
+    "R106": 0,
+    "BENCH": 6
+  },
+  "eligible": {
+    "E101": [
+      "W1",
+      "W2",
+      "W3",
+      "W4",
+      "W5",
+      "W6"
+    ],
+    "E102": [
+      "W1",
+      "W2",
+      "W3",
+      "W4",
+      "W5",
+      "W6"
+    ],
+    "E103": [
+      "W1",
+      "W2",
+      "W3",
+      "W4",
+      "W5",
+      "W6"
+    ],
+    "E104": [
+      "W1",
+      "W2",
+      "W3",
+      "W4",
+      "W5",
+      "W6"
+    ],
+    "E105": [
+      "W1",
+      "W2",
+      "W3",
+      "W4",
+      "W5",
+      "W6"
+    ],
+    "E106": [
+      "W1",
+      "W2",
+      "W3",
+      "W4",
+      "W5",
+      "W6"
+    ]
+  },
+  "weights": {
+    "E101": 100,
+    "E102": 100,
+    "E103": 100,
+    "E104": 100,
+    "E105": 100,
+    "E106": 100
+  },
+  "agent_by_worker": {
+    "W1": null,
+    "W2": null,
+    "W3": null,
+    "W4": null,
+    "W5": null,
+    "W6": null
+  }
+}

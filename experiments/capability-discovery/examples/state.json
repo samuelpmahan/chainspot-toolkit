@@ -1,0 +1,77 @@
+{
+  "schema": "discovery-state@1",
+  "revision": 1,
+  "observedAt": "2026-10-18T12:00:00Z",
+  "source": "chainspot-discovery@37a2dba87d61262f661af70f1a22440736e61efc+provider5433854+active4925533",
+  "workers": [
+    {
+      "id": "W1",
+      "principal": "fixture-agent-1",
+      "available": true
+    },
+    {
+      "id": "W2",
+      "principal": "fixture-agent-2",
+      "available": false,
+      "lease": {
+        "taskId": "replay",
+        "expiresAt": "2026-10-18T12:01:00Z"
+      }
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "root-check",
+      "status": "done",
+      "outcome": "failed",
+      "source": "chainspot-discovery@37a2dba87d61262f661af70f1a22440736e61efc+provider5433854+active4925533"
+    }
+  ],
+  "claims": [
+    {
+      "id": "arrival",
+      "state": "unknown",
+      "source": "chainspot-discovery@37a2dba87d61262f661af70f1a22440736e61efc+provider5433854+active4925533"
+    }
+  ],
+  "bundles": [
+    {
+      "id": "native-replay",
+      "source": "chainspot-discovery@37a2dba87d61262f661af70f1a22440736e61efc+provider5433854+active4925533",
+      "files": [
+        {
+          "path": "artifacts/baseline-native.json",
+          "sha256": "bf0ca6a66866c53fe9ad58b55a231e4beb483b66189a5a7ffc46701031cb8ac1"
+        },
+        {
+          "path": "artifacts/heading-native.json",
+          "sha256": "1b9fd087d8532f7dfd0c06e25f212733de24e8c5e6fde5db1ae5fa037b8c6160"
+        }
+      ],
+      "producers": [
+        {
+          "worker": "W2",
+          "principal": "fixture-agent-2"
+        }
+      ]
+    },
+    {
+      "id": "root-observation",
+      "source": "chainspot-discovery@37a2dba87d61262f661af70f1a22440736e61efc+provider5433854+active4925533",
+      "files": [
+        {
+          "path": "artifacts/adapter-root-observation.json",
+          "sha256": "b545c4d0d862a92bf59e77567b8e8ca08a18537a7da44fbb03fb5fd40d8d324f"
+        }
+      ],
+      "producers": [
+        {
+          "worker": "W6",
+          "principal": "fixture-agent-6"
+        }
+      ]
+    }
+  ],
+  "reviews": [],
+  "humanDecisions": []
+}

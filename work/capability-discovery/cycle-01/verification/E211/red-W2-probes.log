@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok(!r.nativeSpec.workers.includes('newAlias'))
+
+    at file:///workspace/scratch/8528bb251845/discovery-swarm/W3/pass4/E211/independent-regressions.mjs:13:189
+    at probe (file:///workspace/scratch/8528bb251845/discovery-swarm/W3/pass4/E211/independent-regressions.mjs:8:97)
+    at async file:///workspace/scratch/8528bb251845/discovery-swarm/W3/pass4/E211/independent-regressions.mjs:13:16 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

@@ -1,0 +1,47 @@
+{
+  "schema": "discovery-cycle-status@1",
+  "active": false,
+  "technicalPacketsComplete": true,
+  "registeredPackets": 31,
+  "completedPackets": 31,
+  "acceptedNativeSolves": 11,
+  "acceptedEpochs": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "sourceManifestSha256": "f040ac94649369a3a964ec8e4ea6b8948cc8bbfd56586507ce97a68f66c9ce4d",
+  "technicalReviews": {
+    "core": "R211 accepted by W2",
+    "leaf": "R207 accepted by W5, nine leaf hashes unchanged after E211",
+    "initialR201": "AMEND preserved, repaired by E211 and independently accepted R211"
+  },
+  "labTests": {
+    "passed": 95,
+    "failed": 0
+  },
+  "scientificRetention": "unknown/blocked",
+  "humanAcceptance": "not supplied",
+  "checkpointAdministration": {
+    "principal": "root.discovery_w3",
+    "reserved": true,
+    "scope": "local commit and payload preparation; root releases administrative lease after preparation"
+  },
+  "publication": {
+    "status": "pending root-connected GitHub publication of this local branch checkpoint; exact local identity supplied in untracked commit receipt",
+    "branch": "codex/capability-discovery-lab",
+    "remoteCommit": null,
+    "PR": false,
+    "mainMerge": false,
+    "deployment": false
+  },
+  "executionBoundary": "Actual work used one coordinator, sequential native acknowledgements/reservations and real followup tools. No CAS service or daemon."
+}

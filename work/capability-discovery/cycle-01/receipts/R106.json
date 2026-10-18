@@ -1,0 +1,57 @@
+{
+  "job_id": "R106",
+  "worker": "W6",
+  "decision": "accepted",
+  "summary": "Accepted as a bounded design contract, including W3 PASS2 explicit Sam acceptance-authority clarification. Native dependency/receipt gaps independently reproduced; planner implementation and its proposed tests are still outstanding.",
+  "reviewed": {
+    "path": "/workspace/scratch/8528bb251845/discovery-swarm/W3/result.json",
+    "sha256": "689474ab5fcd87ca43d1eb07f53af67f7c0f3a1de3a501bdc4522a9b87c41453",
+    "sourceCommit": "37a2dba87d61262f661af70f1a22440736e61efc",
+    "activeReference": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "acceptanceCases": 17,
+    "implementationPresent": false
+  },
+  "adequateDesign": [
+    "Arbitrary native extract dependencies are gated outside solver by predefined DAG+typed guards, all AND, with invalid schema/unknown references/cycles rejected first.",
+    "Artifact status recomputed from bytes/full closure+args+ticks+source+protocol identity; exact review bundle binding prevents stale receipt reuse.",
+    "Actual agent principal/worker/lease registry reconciled against native bookkeeping; live equivalent producers suppress refresh; single writer + CAS reserves/rechecks before actual spawn/start.",
+    "All producer principals excluded from review; alias worker labels cannot establish independence.",
+    "Native solve must independently pass capacities, pins, worker set, eligibility, native constraints and exact optimal score before dispatch. Technical completion is separate from scientific claim state; longer trace never proves arrival."
+  ],
+  "actualAdversarialEvidence": [
+    "Native synthetic solve dispatched dependent-review while upstream remained pending despite needs/depends_on: confirms W3 wrapper gap and necessity of planner prefilter.",
+    "Native validate_receipt accepted synthetic semantic review extract with decision=accepted and confirmed_reuse outcome: envelope alone cannot authorize claims."
+  ],
+  "operationalFindings": {
+    "ackDelay": "Initial active agents/native-free discrepancy was real at W3 observation, now resolved: all six PASS1 dispatch acknowledgments recorded before first completion.",
+    "nativeOptimality": "Shared rejected-epoch-01-attempts.json records two nonoptimal1000-vs1200 recommendations, dispatchExecuted=false. Current solves/epoch-01.json native_score=exact_score=1200, brokenCount=0. Reordered workers only; preserve this as implementation negative test."
+  },
+  "limitations": "This reviews a design contract, not working planner code. The 17 acceptance cases are authored expectations; none should be described as passing planner tests. Only the two native boundary probes were executed here. No source/Git/shared state edits, no sealed corpus or new scientific replay.",
+  "evidence": [
+    "adversarial-observations.json",
+    "dependency-state.json",
+    "dependency-solve/epoch-00.json",
+    "dependency-solve/epoch-00.bundle",
+    "../../W3/result.json",
+    "../../probe.py",
+    "../../rejected-epoch-01-attempts.json",
+    "../../solves/epoch-01.json",
+    "../../W3/pass2/planner-interface.json"
+  ],
+  "next": "Eligible for bounded experimental planner implementation with original17+authority tests and native nonoptimal rejection fixture. No dispatch, source acceptance, or production enablement conferred. Await PASS3.",
+  "authorClarification": {
+    "from": "W3",
+    "status": "resolved and independently read",
+    "path": "/workspace/scratch/8528bb251845/discovery-swarm/W3/pass2/planner-interface.json",
+    "sha256": "18707910a9728b4ad3da73d2f021c451002debca95932dc8bdbc3d96da2c601a",
+    "text": "claimState accepted requires Sam explicit scoped decision via trusted coordinator input bound claim/source/bundle; worker named Sam or independent protocol review accepted cannot manufacture authority."
+  },
+  "resolvedAmendments": [
+    {
+      "id": "acceptance-authority-binding",
+      "reason": "AGENTS says Sam owns acceptance. Current accepted wording requires separate protocol-bound decision but does not explicitly constrain its issuer; an independent worker decision=accepted must mean protocol review only.",
+      "requirement": "Add versioned decision authority policy with decision kind, exact claim/bundle+source scope, authorized issuer principal, current decision evidence hash, and explicit Sam acceptance reference for humanAcceptance=accepted. Keep technical/protocol accepted separate. Absence, unsupported issuer, scope mismatch, or replayed old decision blocks claim accepted/package.",
+      "additionalCase": "Independent valid review says accepted, all bytes current, but no Sam acceptance: review passes; claim remains supported/unknown; package blocked. A forged human-acceptance field from same reviewer is invalid."
+    }
+  ]
+}

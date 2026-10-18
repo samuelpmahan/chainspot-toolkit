@@ -1,0 +1,155 @@
+{
+  "job_id": "E210",
+  "worker": "W6",
+  "outcome": "mixed_change",
+  "summary": "Verified W3 already-written schema2 root-inventory repair in isolated exact-hashed snapshot, with no duplicate implementation. All19 tests (original8+11 regressions), adapted original13 W4 challenges and actual-adapter falsifier passed. Four formerly passing/throwing malformed cases now classify fail; unknown authority, unsupported legacy and subset failure preserved. This author-maintainer verification is not final independent R207 acceptance.",
+  "scopeAdaptation": "W3 implemented uncommitted repair before split notice. E210 changed to verification only; W6 made no repository/Git/source edits or invented patches.",
+  "snapshot": {
+    "root": "snapshot/",
+    "identities": "snapshot-identities.json",
+    "files": 23,
+    "guardSchema": "root-inventory-guard@2",
+    "rootInventorySha256": "8f7983baf35dd03f76ef2110373806cfe336da5880bab9388a446c2bd68287dc",
+    "testsSha256": "8623443a449c8ab90f5dbc882070d19608f5a04cdf1f9c1da8bc1b543e369fbf",
+    "readmeSha256": "a1b7bb51f29f47b0b2527b0a1e99e8a7049174f37e0a79d18a1999b97f5fbc0d",
+    "sourceRef": "49255331791b1245cf0f9cd699816175f94e70f2",
+    "sourceExactGitChecks": 9,
+    "liveRecheck": "Final W3 freeze refreshed pack-manifest.json and new repair-E207.json metadata only; full tree rehashed, all executable/tests/exact-source hashes match tested snapshot.",
+    "finalMetadataFreeze": {
+      "changedOnly": [
+        "pack-manifest.json",
+        "repair-E207.json"
+      ],
+      "codeAndTestsUnchanged": true,
+      "integrationManifestSha256": "1a8708fa180813c1e1844873532fdf922a6b6f73558dd5a3983898a23c915939"
+    }
+  },
+  "actualRuns": [
+    {
+      "command": "node --test snapshot/root-inventory.test.mjs",
+      "exitCode": 0,
+      "passed": 19,
+      "failed": 0,
+      "artifact": "tests.tap"
+    },
+    {
+      "command": "node R206-regressions.mjs",
+      "exitCode": 0,
+      "passed": 13,
+      "artifact": "R206-regressions.json",
+      "adaptation": "Exact W4 original13 inputs retained; imports moved to isolated snapshot and four repaired expected statuses changed to fail. Challenge original/adapted hashes in challenge-provenance.json."
+    },
+    {
+      "command": "node snapshot/falsifier.mjs",
+      "exitCode": 0,
+      "artifact": "falsifier.json"
+    }
+  ],
+  "repairFindings": [
+    {
+      "case": "baseline consistency",
+      "status": "pass",
+      "reason": "covers-independently-pinned-manifest"
+    },
+    {
+      "case": "caller boolean alone",
+      "status": "unknown",
+      "reason": "no-independently-pinned-authoritative-inventory"
+    },
+    {
+      "case": "legacy material absent",
+      "status": "unsupported",
+      "reason": "legacy-or-missing-root-key-material"
+    },
+    {
+      "case": "unknown authority anchor absent",
+      "status": "unknown",
+      "reason": "no-independently-pinned-authoritative-inventory"
+    },
+    {
+      "case": "producer misses authoritative query-readable pixel root",
+      "status": "fail",
+      "reason": "root-inventory-coverage-or-key-mismatch"
+    },
+    {
+      "case": "nonhex key rejected",
+      "status": "fail",
+      "reason": "malformed-inventory"
+    },
+    {
+      "case": "independently allocated malformed key arrays fail equality",
+      "status": "fail",
+      "reason": "malformed-inventory"
+    },
+    {
+      "case": "aliased malformed key array accepted",
+      "status": "fail",
+      "reason": "malformed-inventory"
+    },
+    {
+      "case": "malformed binding digest array accepted",
+      "status": "fail",
+      "reason": "invalid-source-binding"
+    },
+    {
+      "case": "malformed object issuer accepted",
+      "status": "fail",
+      "reason": "invalid-authority-or-binding-schema"
+    },
+    {
+      "case": "keyMaterial string throws outside result contract",
+      "status": "fail",
+      "reason": "invalid-root-key-material-shape"
+    },
+    {
+      "case": "empty pinned authoritative roots consistency passes",
+      "status": "pass",
+      "reason": "covers-independently-pinned-manifest"
+    },
+    {
+      "case": "both inventories omit query-readable root consistency passes",
+      "status": "pass",
+      "reason": "covers-independently-pinned-manifest"
+    }
+  ],
+  "falsifier": {
+    "actualAddressesAdapter": {
+      "changed": 6,
+      "expected": 27,
+      "cached": true
+    },
+    "incompleteKeys": {
+      "changed": 6,
+      "expected": 27,
+      "cached": true
+    },
+    "MapAndCompleteKeys": "Changed pixels recompute27; identical pixels hit correctly.",
+    "otherControls": "Changed constants, explicit pixel inParts and separate caches recompute27.",
+    "scope": "Synthetic cache-root defect at frozen platform source, no actual current multi-course poisoning proved. Experimental wrapper repair does not change platform cache."
+  },
+  "boundaries": [
+    "Primitive64hex digest/key values and nonempty primitive authority text now enforced; array digest aliases/object principals fail even consistently repinned.",
+    "Malformed keyMaterial string roots/array/number/boolean and malformed wrapper/rows/input pair shapes fail without throwing.",
+    "Caller boolean alone or genuinely absent independent authority remains unknown. Genuinely absent legacy root material remains unsupported. Producer subset missing authoritative pixel root fails.",
+    "Empty or jointly incomplete pinned authority inventories can pass consistency; this remains external authority truth/completeness limitation, not scientific or human truth.",
+    "Initial embedded result/tests/observations remain historical; this E210 receipt is fresh verification for exact schema2 wrapper hashes."
+  ],
+  "evidence": {
+    "verification": "verification.json",
+    "sourceIdentities": "snapshot/source-identities.json",
+    "snapshotIdentities": "snapshot-identities.json",
+    "regressions": "R206-regressions.json",
+    "regressionCodeSha256": "2c31a7acda7b9bd0af2f72c565d32b3164425ebc693a4865229b9f2f8b8fabcc",
+    "regressionArtifactSha256": "6ac96f31262da3038a4d55f7cf5152c005e0c4774c5b479ae8f46e5b31953fdd",
+    "testLogSha256": "6ef5339409dcfabebd710564b4dc8f0bc705117b4e9742c7b084a9ea4f0a100c"
+  },
+  "actions": {
+    "repoEdits": false,
+    "GitEdits": false,
+    "sourceFixes": false,
+    "sealedCorpus": false,
+    "crossCourseReplay": false,
+    "finalIndependentAcceptance": false
+  },
+  "next": "W3/root receive verification. W2/W5 final independent R207 review must use exact frozen repaired hashes; any executable drift invalidates these results until rerun."
+}

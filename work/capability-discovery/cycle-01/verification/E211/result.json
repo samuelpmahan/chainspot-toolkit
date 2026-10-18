@@ -1,0 +1,99 @@
+{
+  "schema": "chainspot.discovery-worker-result/v1",
+  "job_id": "E211",
+  "worker": "W3",
+  "outcome": "mixed_change",
+  "summary": "Core-only principal occupancy repair: active tasks and unreconciled leases occupy the principal across worker aliases, including expired leases. Genuine inactive aliases, duplicate-free-principal rejection and producer self-review exclusion are preserved.33planner tests and29W2-derived independent probes pass after two recorded alias regressions failed before repair.87of90 prior manifest entries and all9accepted R207leaf code/contracts unchanged. Source frozen for R211; no commit or push.",
+  "status": "frozen-for-independent-review",
+  "sourceFreeze": "source-freeze.json",
+  "manifestSha256": "f040ac94649369a3a964ec8e4ea6b8948cc8bbfd56586507ce97a68f66c9ce4d",
+  "sourceHashes": [
+    {
+      "path": "plan.mjs",
+      "sha256": "47b4384252c955ca758a50a0c0e48287d2b461521bae38fb5dbdea6b5873b8b9"
+    },
+    {
+      "path": "plan.test.mjs",
+      "sha256": "9cbc7b8a555d25fff4d48064c19cc6853a704057dd528ca94219c91e21edcc99"
+    },
+    {
+      "path": "README.md",
+      "sha256": "a09c46ef4669ced57140f788a5440e8e96cd89faf03b322e1344b9b0cc0456ef"
+    }
+  ],
+  "changes": {
+    "code": "derive occupiedPrincipals from every active/lease worker record before selecting free IDs",
+    "tests": "two alias occupancy negatives and one explicit inactive historical alias positive",
+    "README": "principal-wide occupancy contract clarified",
+    "metadata": "integration manifest core hashes refreshed; previous exact manifest preserved"
+  },
+  "checks": {
+    "planner": 33,
+    "W2DerivedIndependentProbes": 29,
+    "redRegressionCases": 2,
+    "greenFailures": 0
+  },
+  "logs": {
+    "red": "red-tests.log",
+    "redW2": "red-W2-probes.log",
+    "green": "green-tests.log",
+    "greenW2": "green-W2-probes.log"
+  },
+  "W2ProbeDerivation": {
+    "original": "original-W2-probes.mjs",
+    "originalSha256": "707f4a70a3dfd9705c41b65a00ee134a0270fd2afb163fabb25678c64e155e0c",
+    "derived": "independent-regressions.mjs",
+    "derivedSha256": "fb77f9968e267eb5b050ddc36575a03e88f1404da65c61d7358cafdbebbdba89",
+    "onlyExpectationChanges": "two alias-inclusion assertions changed to exclusion, output label corrected; fixture and remaining original checks retained"
+  },
+  "acceptedLeafHashesPreserved": [
+    {
+      "path": "probes/width/recipe.mjs",
+      "sha256": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0"
+    },
+    {
+      "path": "probes/width/recipe.test.mjs",
+      "sha256": "a9e832d91382f85ca6eda5c84792ecd3db238d27894776a31061a21dc8ca612b"
+    },
+    {
+      "path": "probes/root-inventory/root-inventory.mjs",
+      "sha256": "8f7983baf35dd03f76ef2110373806cfe336da5880bab9388a446c2bd68287dc"
+    },
+    {
+      "path": "probes/root-inventory/root-inventory.test.mjs",
+      "sha256": "8623443a449c8ab90f5dbc882070d19608f5a04cdf1f9c1da8bc1b543e369fbf"
+    },
+    {
+      "path": "catalog/guards.mjs",
+      "sha256": "d3aba357de4cd8f11f0cdc9c7ce5c6dfcdb9007b28d87e00b274bd8caf144011"
+    },
+    {
+      "path": "catalog/validate.mjs",
+      "sha256": "c6547b2d33022176f73656e02669cc395f0650521126ef8e01e260b1388c6411"
+    },
+    {
+      "path": "catalog/catalog.test.mjs",
+      "sha256": "f9ee6bdab2c7918cd4146528fed65ce26c4b66e5e8ebfd6b291583dc30edbb98"
+    },
+    {
+      "path": "catalog/catalog.json",
+      "sha256": "2da566f83f0a4d9e48cda10886567d0db8f9d23c9fb4e23d32b4cec977f3c53b"
+    },
+    {
+      "path": "catalog/recipes.json",
+      "sha256": "e3296d43784f2408a3d3201a8b23921794b25aad02d533801a29f5c7d6f37854"
+    }
+  ],
+  "boundaries": [
+    "R201 initial AMEND is retained; this authored repair does not self-accept core.",
+    "R207 remains leaf-scope accepted only; final R211 nonproducer re-review required.",
+    "No leaf, frozen CV source, model/default behavior, image confidence or human authority changed.",
+    "Actual cycle uses single-coordinator sequential reservations/acknowledgements; no CAS service or daemon implemented.",
+    "No broad full suite repeated for this core-only correction."
+  ],
+  "git": {
+    "committed": false,
+    "pushed": false,
+    "PR": false
+  }
+}
