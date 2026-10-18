@@ -345,6 +345,7 @@ export function createRecoveryContext(inputs) {
   return {
     W: raster.widthPx, H: raster.heightPx, raster, tpl, cls, occ, owned: new Uint8Array(raster.widthPx * raster.heightPx), sprites,
     adjacent: inputs.adjacent ?? null,
+    ev: evidencePlane(cls, occ, raster.widthPx * raster.heightPx),
     badges: inputs.badges, tees: inputs.tees, assignment, seeds: inputs.seeds ?? [],
     searchRadiusPx: r3(RULES.searchRadiusFactor * maxAssignedPx),
     searchRule: `centers within ${RULES.searchRadiusFactor} x the largest S3 tee-badge distance (${r3(maxAssignedPx)} px) of the badge plate center, whose frame core holds >= 1 unoccluded frame-white px`
@@ -353,7 +354,82 @@ export function createRecoveryContext(inputs) {
 
 const emptyOccluded = () => Object.fromEntries([...OCC_NAMES.slice(1), 'tint', 'offRaster'].map((k) => [k, 0]));
 
+/**
+ * One preallocated byte per raster px (Sam: Parts as selectors over preallocated byte arrays): the evidence code a pose
+ * reads there. 0-3 = the px class (nothing covers it); 8 + k = covered by occluder kind k (OCC; a recovered pad owns its
+ * px as OCC.recoveredTee, written in place by ownPx). A pose is then a histogram of (zone, code) over one array.
+ */
+export function evidencePlane(cls, occ, n) {
+  const ev = new Uint8Array(n);
+  for (let i = 0; i < n; i++) ev[i] = occ[i] ? 8 + occ[i] : cls[i];
+  return ev;
+}
+export function ownPx(ctx, i) { ctx.owned[i] = OCC.recoveredTee; ctx.ev[i] = 8 + OCC.recoveredTee; }
+
+const HIST = new Int32Array(4 * 16);   // reused: (zone, evidence code) counts of one pose
+export const STAMP_DEG = 0.25;          // deg: zone stamps are cached per quantized angle (corner shift <= 0.03 px at 15 px)
+/**
+ * The zone of every px around an INTEGER centre depends only on the angle: compute it once per quantized angle and keep
+ * it (offsets per zone, raster-row independent: dx, dy). Every pose at that angle reads the same stamp: the pixel cache
+ * answers "which zone is this px in" once, not once per pose.
+ */
+function stampFor(ctx, angleRad) {
+  ctx.stamps ??= new Map();
+  const q = Math.round((angleRad * 180 / Math.PI) / STAMP_DEG), key = q;
+  let st = ctx.stamps.get(key);
+  if (st) return st;
+  const zones = [[], [], [], []];
+  forTemplatePx(ctx.tpl, 0, 0, q * STAMP_DEG * Math.PI / 180, Infinity, Infinity, (i, zone, x, y) => zones[zone].push(x, y));
+  const r = Math.max(...zones.flatMap((z) => z.map(Math.abs)));
+  st = { zones: zones.map((z) => Int32Array.from(z)), reach: r };
+  ctx.stamps.set(key, st);
+  return st;
+}
+function evaluateStamp(ctx, cx, cy, angleRad) {
+  const { ev, W, H } = ctx, h = HIST; h.fill(0);
+  const st = stampFor(ctx, angleRad), inside = cx - st.reach >= 0 && cy - st.reach >= 0 && cx + st.reach < W && cy + st.reach < H;
+  let offRaster = 0, offFrame = 0, offInterior = 0;
+  for (let zone = 1; zone <= 3; zone++) {
+    const z = st.zones[zone], base = zone * 16;
+    for (let k = 0; k < z.length; k += 2) {
+      const x = cx + z[k], y = cy + z[k + 1];
+      if (!inside && (x < 0 || y < 0 || x >= W || y >= H)) { if (zone === 1) offFrame++; else if (zone === 2) offInterior++; continue; }
+      h[base + ev[y * W + x]]++;
+    }
+  }
+  offRaster = offFrame + offInterior;
+  return { h, offRaster, off: { frame: offFrame, interior: offInterior } };
+}
+function evaluatePoseFast(ctx, cx, cy, angleRad) {
+  const { ev, W, H, tpl } = ctx, h = HIST; h.fill(0);
+  const m = RULES.zoneMarginPx, ring = RULES.outsideRingPx;
+  const Lo = tpl.halfLengthOutPx, Li = tpl.halfLengthInPx, So = tpl.halfWidthOutPx, Si = tpl.halfWidthInPx;
+  const c = Math.cos(angleRad), s = Math.sin(angleRad);
+  const R = Math.hypot(Lo + m + ring, So + m + ring);
+  const x0 = Math.floor(cx - R), x1 = Math.ceil(cx + R), y0 = Math.floor(cy - R), y1 = Math.ceil(cy + R);
+  const LoIn = Lo - m, SoIn = So - m, LiIn = Li - m, SiIn = Si - m, LiOut = Li + m, SiOut = Si + m, LoOut = Lo + m, SoOut = So + m, LoRing = Lo + m + ring, SoRing = So + m + ring;
+  let offRaster = 0;
+  for (let y = y0; y <= y1; y++) {
+    const dy = y - cy, inY = y >= 0 && y < H, row = y * W;
+    for (let x = x0; x <= x1; x++) {
+      const dx = x - cx, a = Math.abs(dx * c + dy * s), b = Math.abs(-dx * s + dy * c);
+      let zone;
+      if (a <= LoIn && b <= SoIn) {
+        if (a <= LiIn && b <= SiIn) zone = 2; else if (a >= LiOut || b >= SiOut) zone = 1; else continue;
+      } else if ((a >= LoOut || b >= SoOut) && a <= LoRing && b <= SoRing) zone = 3; else continue;
+      if (!inY || x < 0 || x >= W) { if (zone !== 3) offRaster++; continue; }
+      h[zone * 16 + ev[row + x]]++;
+    }
+  }
+  // the same counts evaluatePose derives px by px
+  let frameTotal = offRaster ? 0 : 0, interiorTotal = 0;
+  const occluded = emptyOccluded(); occluded.offRaster = offRaster;
+  for (let k = 0; k < 16; k++) { frameTotal += h[16 + k]; interiorTotal += h[32 + k]; }
+  return { h, offRaster, occluded, frameTotal, interiorTotal };
+}
+
 export function evaluatePose(ctx, cx, cy, angleRad, { collect = false } = {}) {
+  if (!collect && ctx.ev) return scorePose(ctx, cx, cy, angleRad);
   const { cls, occ, owned, W, H, tpl } = ctx;
   let frameTotal = 0, interiorTotal = 0, visFrame = 0, visInterior = 0, negFrame = 0, negInterior = 0, outWhite = 0;
   const occluded = emptyOccluded();
@@ -391,6 +467,43 @@ export function evaluatePose(ctx, cx, cy, angleRad, { collect = false } = {}) {
     confidence: r3(Math.max(0, visibleFrameFrac * (1 - contradictionFrac))),
     ...(px ? { px } : {})
   };
+}
+
+function scorePose(ctx, cx, cy, angleRad) {
+  const stamped = Number.isInteger(cx) && Number.isInteger(cy);
+  const r = stamped ? evaluateStamp(ctx, cx, cy, angleRad) : evaluatePoseFast(ctx, cx, cy, angleRad);
+  const { h, offRaster } = r, occluded = emptyOccluded(); occluded.offRaster = offRaster;
+  const at = (zone, code) => h[zone * 16 + code];
+  let frameTotal = offRaster, interiorTotal = 0;   // offRaster px are frame or interior; split them as the slow path does below
+  // the slow path counts off-raster template px into frameTotal / interiorTotal by zone; recount them exactly
+  frameTotal = 0; interiorTotal = 0;
+  for (let k = 0; k < 16; k++) { frameTotal += at(1, k); interiorTotal += at(2, k); }
+  const off = r.off ?? offRasterByZone(ctx, cx, cy, angleRad, offRaster);
+  frameTotal += off.frame; interiorTotal += off.interior;
+  for (let k = 1; k < OCC_NAMES.length; k++) occluded[OCC_NAMES[k]] = at(1, 8 + k) + at(2, 8 + k);
+  occluded.tint = at(1, CLASS.TINT) + at(2, CLASS.TINT);
+  const visFrame = at(1, CLASS.WHITE), negFrame = at(1, CLASS.OTHER) + at(1, CLASS.INTERIOR);
+  const visInterior = at(2, CLASS.INTERIOR), negInterior = at(2, CLASS.OTHER) + at(2, CLASS.WHITE);
+  const outWhite = at(3, CLASS.WHITE);
+  const positive = visFrame + visInterior, negative = negFrame + negInterior;
+  const score = positive - negative - RULES.outsideWhiteWeight * outWhite;
+  const contradictionFrac = positive + negative ? (negative + outWhite * RULES.outsideWhiteWeight) / (positive + negative + outWhite * RULES.outsideWhiteWeight) : 1;
+  const visibleFrameFrac = frameTotal ? visFrame / frameTotal : 0;
+  const accepted = score > 0 && visFrame >= RULES.minVisibleFramePx && visibleFrameFrac >= RULES.minVisibleFrameFrac && contradictionFrac <= RULES.maxContradictionFrac;
+  return {
+    center: [r3(cx), r3(cy)], angleRad: r3(angleRad), score: r3(score), accepted,
+    evidence: { unit: 'px', templateFramePx: frameTotal, templateInteriorPx: interiorTotal, visibleFramePx: visFrame, visibleInteriorPx: visInterior,
+      negativeFramePx: negFrame, negativeInteriorPx: negInterior, outsideWhitePx: outWhite, occludedBy: occluded,
+      visibleFrameFrac: r3(visibleFrameFrac), contradictionFrac: r3(contradictionFrac) },
+    confidence: r3(Math.max(0, visibleFrameFrac * (1 - contradictionFrac)))
+  };
+}
+// Off-raster template px (rare: poses at the image border) split by zone, only when there are any.
+function offRasterByZone(ctx, cx, cy, angleRad, n) {
+  if (!n) return { frame: 0, interior: 0 };
+  let frame = 0, interior = 0;
+  forTemplatePx(ctx.tpl, cx, cy, angleRad, ctx.W, ctx.H, (i, zone) => { if (i < 0 && zone === ZONE.FRAME) frame++; else if (i < 0 && zone === ZONE.INTERIOR) interior++; });
+  return { frame, interior };
 }
 
 // ---------------------------------------------------------------- search
@@ -636,7 +749,7 @@ export function greedyRecover(ctx, { badgeRay = true } = {}) {
     }
     if (!pick) break;
     const full = evaluatePose(ctx, pick.best.center[0], pick.best.center[1], pick.best.angleRad, { collect: true });
-    for (const i of full.px.pad) ctx.owned[i] = OCC.recoveredTee;
+    for (const i of full.px.pad) ownPx(ctx, i);
     recovered.push(recoveredTee(ctx, pick.bi, full, { round: rounds, fromSeed: pick.best.seed ?? null, rule: badgeRay ? 'greedy occluded template, badge-ray constrained' : 'greedy occluded template, free angle (ablation)' }));
     pending.delete(pick.bi);
   }
@@ -652,7 +765,7 @@ export function greedyRecover(ctx, { badgeRay = true } = {}) {
     if (!g) continue;
     const plate = ctx.badges[bi].plateCenter, th = Math.atan2(plate[1] - g.centroid[1], plate[0] - g.centroid[0]);
     const full = evaluatePose(ctx, g.centroid[0], g.centroid[1], th, { collect: true });
-    for (const i of full.px.pad) if (i >= 0) ctx.owned[i] = OCC.recoveredTee;
+    for (const i of full.px.pad) if (i >= 0) ownPx(ctx, i);
     recovered.push(recoveredTee(ctx, bi, full, { rule: `occluder search: hidden under ${g.occluder} (${g.by})`, hidden: g, accepted: true }));
     pending.delete(bi);
   }
