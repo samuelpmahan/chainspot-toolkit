@@ -1,0 +1,55 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { createPartStore, registerQueries } from '/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs';
+
+const source = '/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs';
+const sha = () => createHash('sha256').update(readFileSync(source)).digest('hex');
+assert.equal(sha(), '122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074');
+
+// Proposal exercised privately only. Completeness is an explicit trusted-input condition.
+function enumerableBoard(board) {
+  if (typeof board.keys === 'function') return board;
+  assert(Array.isArray(board.addresses));
+  const addresses = Object.freeze([...board.addresses]);
+  assert.equal(new Set(addresses).size, addresses.length);
+  assert(addresses.every(a => typeof a === 'string' && board.has(a)));
+  return Object.freeze({ has: a => board.has(a), get: a => board.get(a),
+    addresses, keys: () => addresses.values() });
+}
+
+function scenario(shape, direct = false, nuisance = [5, 5, 5]) {
+  const cache = new Map();
+  return [1, 9, 1].map((input, i) => {
+    const values = new Map([['px.review.scalar', input], ['px.review.unrelated', nuisance[i]]]);
+    const loader = Object.freeze({ has: a => values.has(a), get: a => values.get(a),
+      addresses: Object.freeze([...values.keys()]) });
+    const base = shape === 'map' ? values : shape === 'adapter' ? enumerableBoard(loader) : loader;
+    if (shape === 'map') assert.equal(enumerableBoard(values), values);
+    const store = createPartStore({ base, cache });
+    registerQueries(store, { 'fn.q.review.scalar': ({ a }) => ({ value: a, unit: 'scalar' }) });
+    store.register('fn.review.result', { inParts: direct ? ['px.review.scalar'] : [],
+      outParts: ['tk.review.result'], calls: direct ? [] : ['fn.q.review.scalar'],
+      calculate: io => ({ 'tk.review.result': direct ? io.in('px.review.scalar') : io.call('fn.q.review.scalar', { a: 'px.review.scalar' }).value }) });
+    const output = store.get('tk.review.result');
+    return { shape, direct, input, unrelated: nuisance[i], output,
+      rootKey: store.keyOf('px.review.scalar'), resultKey: store.keyOf('tk.review.result'),
+      calls: store.calls().map(({ calculation, key, cached }) => ({ calculation, key, cached })) };
+  });
+}
+const loader = scenario('loader'), map = scenario('map'), adapter = scenario('adapter');
+const direct = scenario('adapter', true, [5, 7, 11]);
+for (const rows of [map, adapter, direct]) {
+  assert.deepEqual(rows.map(r => r.output), [1, 9, 1]);
+  assert.notEqual(rows[0].resultKey, rows[1].resultKey);
+  assert.equal(rows[0].resultKey, rows[2].resultKey);
+  assert.deepEqual(rows.map(r => r.calls[0].cached), [false, false, true]);
+}
+assert.deepEqual(loader.map(r => r.output), [1, 1, 1]);
+assert.notEqual(loader[0].rootKey, loader[1].rootKey);
+assert.equal(loader[0].resultKey, loader[1].resultKey);
+assert.deepEqual(loader.map(r => r.calls[0].cached), [false, true, true]);
+assert.equal(loader[1].calls.length, 1);
+assert.equal(sha(), '122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074');
+console.log(JSON.stringify({ source, sourceSha256: sha(), loader, map, adapter, direct,
+  boundary: 'fresh stores and immutable scalar boards; no live in-place mutation, native loaders, raster, disk CAS or original queries' }, null, 2));

@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import { createPartStore, registerQueries } from '/workspace/scratch/d9fd796f268d/chainspot-87a5f41/fg/store.mjs';
+
+// Scalar toy data only. Exact public loader board shape; no raster or original queries.
+const cache = new Map();
+function read(value, shape) {
+  const pxc = new Map([['px.toy.scalar', value]]);
+  const base = shape === 'map' ? pxc : Object.freeze({
+    has: (a) => pxc.has(a), get: (a) => pxc.get(a), addresses: [...pxc.keys()]
+  });
+  const store = createPartStore({ base, cache });
+  registerQueries(store, { 'fn.q.toy.identity': ({ scalar }) => ({ value: scalar, unit: 'toy scalar' }) });
+  store.register('fn.toy.dependent', {
+    outParts: ['tk.toy.dependent'], calls: ['fn.q.toy.identity'],
+    calculate: (io) => ({ 'tk.toy.dependent': io.call('fn.q.toy.identity', { scalar: 'px.toy.scalar' }).value })
+  });
+  const actual = store.get('tk.toy.dependent');
+  const dependent = store.calls().find((row) => row.calculation === 'fn.toy.dependent');
+  return { shape, input: value, actual, rootKey: store.keyOf('px.toy.scalar'), dependentKey: dependent.key,
+    cached: dependent.cached, queryCalls: store.calls().filter((row) => row.calculation === 'fn.q.toy.identity').length };
+}
+const loader1 = read(1, 'loader'), loader2 = read(9, 'loader');
+const map1 = read(1, 'map'), map2 = read(9, 'map');
+assert.notEqual(loader1.rootKey, loader2.rootKey);
+assert.equal(loader1.dependentKey, loader2.dependentKey);
+assert.equal(loader2.actual, 1);
+assert.equal(loader2.cached, true);
+assert.equal(loader2.queryCalls, 0);
+assert.equal(map1.actual, 1);
+assert.equal(map2.actual, 9);
+assert.notEqual(map1.dependentKey, map2.dependentKey);
+assert.equal(map2.cached, false);
+console.log(JSON.stringify({ publicEntry: ['createPartStore', 'registerQueries', 'store.register', 'store.get'],
+  loader1, loader2, map1, map2, confirmed: 'loader wrapper hides roots from query-calling dependent key' }, null, 2));

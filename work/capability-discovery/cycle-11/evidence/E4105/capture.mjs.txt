@@ -1,0 +1,33 @@
+import { spawnSync } from 'node:child_process';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { performance } from 'node:perf_hooks';
+
+const root = '/workspace/scratch/8528bb251845/chainspot-discovery-lab';
+const out = '/workspace/scratch/afc0d51965a8/lab11/S1/E4105';
+const product = `${root}/experiments/capability-discovery/enumerable-board`;
+const pinPaths = [`${root}/experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs`,
+  `${product}/board.mjs`, `${product}/board.test.mjs`, `${product}/README.md`, `${out}/capture.mjs`];
+const pins = () => pinPaths.map(path => {
+  const bytes = readFileSync(path);
+  return { path, bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') };
+});
+const before = pins();
+const command = [process.execPath, '--test', `${product}/board.test.mjs`];
+const startUtc = new Date().toISOString(), start = performance.now();
+const child = spawnSync(command[0], command.slice(1), { cwd: root });
+const elapsedMs = performance.now() - start, endUtc = new Date().toISOString();
+writeFileSync(`${out}/adapted.stdout.txt`, child.stdout);
+writeFileSync(`${out}/adapted.stderr.txt`, child.stderr);
+const after = pins();
+const execution = {
+  command, cwd: root, startUtc, endUtc, elapsedMs, exit: child.status, signal: child.signal,
+  error: child.error?.message ?? null, stdoutBytes: child.stdout.length, stderrBytes: child.stderr.length,
+  sourcePinsUnchanged: JSON.stringify(before) === JSON.stringify(after), before, after,
+  boundary: 'One adapted bounded scalar test run, direct child Buffer logs. Original baseline.execution.json captures the child stdout/stderr strings via JSON and its exit/time; baseline.stdout.txt and baseline.stderr.txt were reconstructed from that tool result. In particular baseline.stderr.txt has a transcription newline although actual child stderr was empty. Those original files remain unchanged.'
+};
+writeFileSync(`${out}/adapted.execution.json`, JSON.stringify(execution, null, 2) + '\n');
+process.stdout.write(JSON.stringify(execution, null, 2) + '\n');
+process.stdout.write(child.stdout);
+process.stderr.write(child.stderr);
+process.exitCode = child.status ?? 1;

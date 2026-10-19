@@ -1,0 +1,45 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import { createPartStore, registerQueries } from '/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs';
+
+function read(value, shape, cache) {
+  const pxc = new Map([['px.toy.scalar', value], ['px.toy.fixed', 7]]);
+  const board = shape === 'map' ? pxc : Object.freeze({
+    has(a) { return pxc.has(a); }, get(a) { return pxc.get(a); }, addresses: [...pxc.keys()]
+  });
+  const store = createPartStore({ base: board, cache });
+  registerQueries(store, { 'fn.q.toy.identity': ({ scalar }) => ({ value: scalar, unit: 'toy scalar' }) });
+  store.register('fn.toy.dependent', {
+    outParts: ['tk.toy.dependent'], calls: ['fn.q.toy.identity'],
+    calculate: io => ({ 'tk.toy.dependent': io.call('fn.q.toy.identity', { scalar: 'px.toy.scalar' }).value })
+  });
+  store.register('fn.toy.unrelated', {
+    inParts: ['px.toy.fixed'], outParts: ['tk.toy.unrelated'],
+    calculate: io => ({ 'tk.toy.unrelated': io.in('px.toy.fixed') * 2 })
+  });
+  const actual = store.get('tk.toy.dependent'), unrelated = store.get('tk.toy.unrelated');
+  const dependent = store.calls().find(r => r.calculation === 'fn.toy.dependent');
+  const fixed = store.calls().find(r => r.calculation === 'fn.toy.unrelated');
+  return { actual, unrelated, key: dependent.key, cached: dependent.cached === true,
+    unrelatedCached: fixed.cached === true, rootKey: store.keyOf('px.toy.scalar'),
+    queryCalls: store.calls().filter(r => r.calculation === 'fn.q.toy.identity').length };
+}
+
+for (const shape of ['map', 'loader']) test(`${shape}: fresh immutable boards 1 -> 9 -> 1 share cache correctly`, () => {
+  const cache = new Map();
+  const first = read(1, shape, cache), changed = read(9, shape, cache), restored = read(1, shape, cache);
+  console.log(JSON.stringify({ shape, first, changed, restored }));
+  assert.equal(first.actual, 1);
+  assert.equal(changed.actual, 9);
+  assert.equal(restored.actual, 1);
+  assert.notEqual(first.rootKey, changed.rootKey);
+  assert.notEqual(first.key, changed.key);
+  assert.equal(first.key, restored.key);
+  assert.equal(first.cached, false);
+  assert.equal(changed.cached, false);
+  assert.equal(restored.cached, true);
+  assert.equal(restored.queryCalls, 0);
+  assert.equal(changed.unrelated, 14);
+  assert.equal(changed.unrelatedCached, true);
+  assert.equal(restored.unrelatedCached, true);
+});

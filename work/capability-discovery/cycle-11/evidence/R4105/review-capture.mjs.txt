@@ -1,0 +1,61 @@
+import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { performance } from 'node:perf_hooks';
+
+const root = '/workspace/scratch/8528bb251845/chainspot-discovery-lab';
+const product = `${root}/experiments/capability-discovery/enumerable-board`;
+const prior = '/workspace/scratch/afc0d51965a8/lab11/S1/E4105';
+const out = '/workspace/scratch/afc0d51965a8/lab11/S4/R4105';
+const read = path => readFileSync(path, 'utf8');
+const baseline = read(`${prior}/baseline.test.mjs`);
+const adapted = read(`${product}/board.test.mjs`);
+const normalized = adapted.split('// Additional contract checks')[0]
+  .replace("import { createPartStore, registerQueries } from '../probes/root-inventory/source/fg/store.mjs';",
+    `import { createPartStore, registerQueries } from '${root}/experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs';`)
+  .replace("import { enumerableBoard } from './board.mjs';\n", '')
+  .replace("base: shape === 'loader' ? enumerableBoard(board) : board, cache", 'base: board, cache');
+assert.equal(normalized.trimEnd(), baseline.trimEnd(), 'entire original test body unchanged except import/adapter wiring');
+const baselineExecution = JSON.parse(read(`${prior}/baseline.execution.json`));
+assert.equal(baselineExecution.exit, 1);
+assert.equal(baselineExecution.stderr, '');
+assert.match(baselineExecution.stdout, /pass 1/);
+assert.match(baselineExecution.stdout, /fail 1/);
+assert.match(baselineExecution.stdout, /1 !== 9/);
+const rawRows = baselineExecution.stdout.split('\n').filter(line => line.startsWith('{')).map(line => JSON.parse(line));
+const map = rawRows.find(row => row.shape === 'map'), loader = rawRows.find(row => row.shape === 'loader');
+assert.deepEqual([map.first.actual, map.changed.actual, map.restored.actual], [1, 9, 1]);
+assert.deepEqual([loader.first.actual, loader.changed.actual, loader.restored.actual], [1, 1, 1]);
+assert.equal(loader.changed.cached, true);
+assert.equal(loader.changed.queryCalls, 0);
+assert.notEqual(loader.first.rootKey, loader.changed.rootKey);
+assert.equal(loader.first.key, loader.changed.key);
+const paths = [`${product}/board.mjs`, `${product}/board.test.mjs`, `${product}/README.md`,
+  `${root}/experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs`,
+  `${prior}/baseline.test.mjs`, `${prior}/baseline.execution.json`, `${out}/review-capture.mjs`];
+const pins = () => paths.map(path => {
+  const bytes = readFileSync(path);
+  return { path, bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') };
+});
+const before = pins();
+assert.equal(before[0].sha256, '66cc93a4e742fa8ed9b3cfcba94d0d936bf73c907007c21f1e7af59061e62ad5');
+assert.equal(before[1].sha256, '86ea244841fb47feee1fcdfe6d0b1be8b1b194dbf5f7ab11a3e8afde854cd1ef');
+assert.equal(before[2].sha256, '3b27641c11451d286e804aeebb2cbb25938d99356d9e52716c8211c63fd07a7f');
+const command = [process.execPath, '--test', `${product}/board.test.mjs`];
+const startUtc = new Date().toISOString(), start = performance.now();
+const child = spawnSync(command[0], command.slice(1), { cwd: root });
+const elapsedMs = performance.now() - start, endUtc = new Date().toISOString();
+writeFileSync(`${out}/stdout.txt`, child.stdout);
+writeFileSync(`${out}/stderr.txt`, child.stderr);
+const after = pins();
+const execution = { command, cwd: root, startUtc, endUtc, elapsedMs, exit: child.status, signal: child.signal,
+  error: child.error?.message ?? null, stdoutBytes: child.stdout.length, stderrBytes: child.stderr.length,
+  before, after, sourcePinsUnchanged: JSON.stringify(before) === JSON.stringify(after),
+  mechanicalBaselineBodyEquality: true, baselineRawJsonVerified: true,
+  boundary: 'ONE independent same-six-test run. Direct child Buffer logs. No native loader, raster, disk CAS, live mutation, original query, product or Git writes.' };
+writeFileSync(`${out}/execution.json`, JSON.stringify(execution, null, 2) + '\n');
+process.stdout.write(JSON.stringify(execution, null, 2) + '\n');
+process.stdout.write(child.stdout);
+process.stderr.write(child.stderr);
+process.exitCode = child.status ?? 1;

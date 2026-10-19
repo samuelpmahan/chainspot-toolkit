@@ -1,0 +1,45 @@
+{
+  "publicEntry": [
+    "createPartStore",
+    "registerQueries",
+    "store.register",
+    "store.get"
+  ],
+  "loader1": {
+    "shape": "loader",
+    "input": 1,
+    "actual": 1,
+    "rootKey": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "dependentKey": "1aeb3506e53da74fc4e32985c4489a35773ea4cfb30e25c6c77edf0f64e8c3c7",
+    "cached": false,
+    "queryCalls": 1
+  },
+  "loader2": {
+    "shape": "loader",
+    "input": 9,
+    "actual": 1,
+    "rootKey": "19581e27de7ced00ff1ce50b2047e7a567c76b1cbaebabe5ef03f7c3017bb5b7",
+    "dependentKey": "1aeb3506e53da74fc4e32985c4489a35773ea4cfb30e25c6c77edf0f64e8c3c7",
+    "cached": true,
+    "queryCalls": 0
+  },
+  "map1": {
+    "shape": "map",
+    "input": 1,
+    "actual": 1,
+    "rootKey": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "dependentKey": "b1f64a05b3687364ba2703413cd9df882e59541ce3860bf6c26d201070ffdc7f",
+    "cached": false,
+    "queryCalls": 1
+  },
+  "map2": {
+    "shape": "map",
+    "input": 9,
+    "actual": 9,
+    "rootKey": "19581e27de7ced00ff1ce50b2047e7a567c76b1cbaebabe5ef03f7c3017bb5b7",
+    "dependentKey": "0e6055c4c79fa768972583f759499af4d942467df7dc41ea7bbd0adc401e134c",
+    "cached": false,
+    "queryCalls": 1
+  },
+  "confirmed": "loader wrapper hides roots from query-calling dependent key"
+}
