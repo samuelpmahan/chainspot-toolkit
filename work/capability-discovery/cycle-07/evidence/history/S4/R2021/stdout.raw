@@ -1,0 +1,2522 @@
+{
+  "status": "PASS",
+  "summary": {
+    "path": "discovery-cycle07/S4/R2021/inspection-summary.json",
+    "bytes": 2933,
+    "sha256": "7aaa1b94166e2799c56b641c306a167abb7dc5b810eaf6c1cb8c1b1d5f976a2b"
+  },
+  "counts": {
+    "slots": 48,
+    "eligible": 44,
+    "NOT_ATTEMPTED": 44,
+    "NOT_EXECUTED": 4,
+    "NATIVE_NO_EDGE_PAIR": 4,
+    "NUMERIC_UNUSABLE": 0,
+    "NONFINITE_DERIVED_ORIGIN": 0,
+    "malformedConditions": 0,
+    "numericFieldTypeErrors": 0,
+    "originalCallbackErrors": 0,
+    "newPATH": 0,
+    "newStores": 0,
+    "newCV": 0
+  },
+  "controls": {
+    "left": {
+      "valid": 1110,
+      "invalid": 42,
+      "finiteValid": 1110,
+      "finiteInvalid": 24,
+      "NaNValid": 0,
+      "NaNInvalid": 18,
+      "negativeZero": 0,
+      "positiveInfinity": 0,
+      "negativeInfinity": 0
+    },
+    "right": {
+      "valid": 1110,
+      "invalid": 42,
+      "finiteValid": 1110,
+      "finiteInvalid": 24,
+      "NaNValid": 0,
+      "NaNInvalid": 18,
+      "negativeZero": 0,
+      "positiveInfinity": 0,
+      "negativeInfinity": 0
+    },
+    "stationsPerSide": 1152
+  },
+  "artifacts": [
+    {
+      "path": "discovery-cycle07/S4/R2021/rows.wire.json",
+      "bytes": 341991,
+      "sha256": "2652d3681fc1d12d50c50246905790bab1876803e7265be1ad6590bcb2802c8d"
+    },
+    {
+      "path": "discovery-cycle07/S4/R2021/rows.labels.json",
+      "bytes": 275458,
+      "sha256": "eaf163b5e949fd5397553eff449762bcc8478d172b612cb973fe32963d596c4e"
+    }
+  ],
+  "rows": [
+    {
+      "j": 0,
+      "c": 0,
+      "b": 0,
+      "comparisonId": "primary/before16",
+      "nominalBankPx": 34,
+      "fitIndex": 1,
+      "controlIndex": 2,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -14.109557636221224,
+        "rPx": 21.462006447061455,
+        "cPx": 3.6762244054201156,
+        "wPx": 35.57156408328268,
+        "score": 2.3132627678810707,
+        "gl": 10.896457849882609,
+        "gr": 2.3132627678810707
+      },
+      "derivedOriginPx": [
+        780.7497816065558,
+        909.5989517114679
+      ],
+      "derivedWidthPx": 35.57156408328268,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 1,
+      "c": 0,
+      "b": 1,
+      "comparisonId": "primary/before16",
+      "nominalBankPx": 42,
+      "fitIndex": 4,
+      "controlIndex": 5,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -19.82688299555797,
+        "rPx": 21.462006447061455,
+        "cPx": 0.8175617257517427,
+        "wPx": 41.28888944261942,
+        "score": 2.3132627678810707,
+        "gl": 5.366326941545395,
+        "gr": 2.3132627678810707
+      },
+      "derivedOriginPx": [
+        780.1667451919662,
+        906.8003769214379
+      ],
+      "derivedWidthPx": 41.28888944261942,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 2,
+      "c": 0,
+      "b": 2,
+      "comparisonId": "primary/before16",
+      "nominalBankPx": 50,
+      "fitIndex": 7,
+      "controlIndex": 8,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -28.391198627184508,
+        "rPx": 21.462006447061455,
+        "cPx": -3.4645960900615265,
+        "wPx": 49.85320507424596,
+        "score": 0.8709100093639393,
+        "gl": 0.8709100093639393,
+        "gr": 2.3132627678810707
+      },
+      "derivedOriginPx": [
+        779.2933808886521,
+        902.6082282655303
+      ],
+      "derivedWidthPx": 49.85320507424596,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 3,
+      "c": 1,
+      "b": 0,
+      "comparisonId": "primary/core16",
+      "nominalBankPx": 34,
+      "fitIndex": 11,
+      "controlIndex": 12,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -14.613743045844354,
+        "rPx": 20.537116483711788,
+        "cPx": 2.9616867189337173,
+        "wPx": 35.15085952955614,
+        "score": 3.0151354357906257,
+        "gl": 11.682581424609623,
+        "gr": 3.0151354357906257
+      },
+      "derivedOriginPx": [
+        780.6040486056736,
+        908.899433307233
+      ],
+      "derivedWidthPx": 35.15085952955614,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 4,
+      "c": 1,
+      "b": 1,
+      "comparisonId": "primary/core16",
+      "nominalBankPx": 42,
+      "fitIndex": 14,
+      "controlIndex": 15,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -21.72660636539555,
+        "rPx": 20.537116483711788,
+        "cPx": -0.5947449408418812,
+        "wPx": 42.26372284910734,
+        "score": 0.24454505418989925,
+        "gl": 0.24454505418989925,
+        "gr": 3.0151354357906257
+      },
+      "derivedOriginPx": [
+        779.8786992392037,
+        905.4177563481778
+      ],
+      "derivedWidthPx": 42.26372284910734,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 5,
+      "c": 1,
+      "b": 2,
+      "comparisonId": "primary/core16",
+      "nominalBankPx": 50,
+      "fitIndex": 17,
+      "controlIndex": 18,
+      "eligibility": "NOT_EXECUTED",
+      "reason": "NATIVE_NO_EDGE_PAIR",
+      "offendingFields": [],
+      "state": "NOT_EXECUTED",
+      "fit": {
+        "condition": "no edge pair"
+      },
+      "derivedOriginPx": null,
+      "derivedWidthPx": null,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 6,
+      "c": 2,
+      "b": 0,
+      "comparisonId": "primary/after16",
+      "nominalBankPx": 34,
+      "fitIndex": 21,
+      "controlIndex": 22,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -15.587435509196407,
+        "rPx": 16.667803096790614,
+        "cPx": 0.5401837937971035,
+        "wPx": 32.25523860598702,
+        "score": 0.5065255075564323,
+        "gl": 11.57287670256548,
+        "gr": 0.5065255075564323
+      },
+      "derivedOriginPx": [
+        780.1101727827473,
+        906.528829357187
+      ],
+      "derivedWidthPx": 32.25523860598702,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 7,
+      "c": 2,
+      "b": 1,
+      "comparisonId": "primary/after16",
+      "nominalBankPx": 42,
+      "fitIndex": 24,
+      "controlIndex": 25,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -23.00626795935529,
+        "rPx": 20.787109567274452,
+        "cPx": -1.1095791960404195,
+        "wPx": 43.79337752662974,
+        "score": 1.7107294018919106,
+        "gl": 2.049909733222222,
+        "gr": 1.7107294018919106
+      },
+      "derivedOriginPx": [
+        779.7736966026933,
+        904.9137436929283
+      ],
+      "derivedWidthPx": 43.79337752662974,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 8,
+      "c": 2,
+      "b": 2,
+      "comparisonId": "primary/after16",
+      "nominalBankPx": 50,
+      "fitIndex": 27,
+      "controlIndex": 28,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -23.00626795935529,
+        "rPx": 27.853332065605755,
+        "cPx": 2.423532053125232,
+        "wPx": 50.85960002496105,
+        "score": 0.3024730003076854,
+        "gl": 2.049909733222222,
+        "gr": 0.3024730003076854
+      },
+      "derivedOriginPx": [
+        780.4942896722117,
+        908.3725904266161
+      ],
+      "derivedWidthPx": 50.85960002496105,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 9,
+      "c": 3,
+      "b": 0,
+      "comparisonId": "primary/long48",
+      "nominalBankPx": 34,
+      "fitIndex": 31,
+      "controlIndex": 32,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -14.604966339099683,
+        "rPx": 20.78388005016318,
+        "cPx": 3.0894568555317488,
+        "wPx": 35.388846389262866,
+        "score": 2.269027529385511,
+        "gl": 10.578942093743507,
+        "gr": 2.269027529385511
+      },
+      "derivedOriginPx": [
+        780.6301078685811,
+        909.0245177691897
+      ],
+      "derivedWidthPx": 35.388846389262866,
+      "controlStates": {
+        "stationsCount": 48,
+        "left": {
+          "valid": 48,
+          "invalid": 0,
+          "finiteValid": 48,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 48,
+          "invalid": 0,
+          "finiteValid": 48,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 10,
+      "c": 3,
+      "b": 1,
+      "comparisonId": "primary/long48",
+      "nominalBankPx": 42,
+      "fitIndex": 34,
+      "controlIndex": 35,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -22.800836411611712,
+        "rPx": 17.59697443606938,
+        "cPx": -2.6019309877711656,
+        "wPx": 40.39781084768109,
+        "score": 0.8021084671395045,
+        "gl": 0.8021084671395045,
+        "gr": 1.225397812898251
+      },
+      "derivedOriginPx": [
+        779.4693251061383,
+        903.4527605094635
+      ],
+      "derivedWidthPx": 40.39781084768109,
+      "controlStates": {
+        "stationsCount": 48,
+        "left": {
+          "valid": 48,
+          "invalid": 0,
+          "finiteValid": 48,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 48,
+          "invalid": 0,
+          "finiteValid": 48,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 11,
+      "c": 3,
+      "b": 2,
+      "comparisonId": "primary/long48",
+      "nominalBankPx": 50,
+      "fitIndex": 37,
+      "controlIndex": 38,
+      "eligibility": "NOT_EXECUTED",
+      "reason": "NATIVE_NO_EDGE_PAIR",
+      "offendingFields": [],
+      "state": "NOT_EXECUTED",
+      "fit": {
+        "condition": "no edge pair"
+      },
+      "derivedOriginPx": null,
+      "derivedWidthPx": null,
+      "controlStates": {
+        "stationsCount": 48,
+        "left": {
+          "valid": 48,
+          "invalid": 0,
+          "finiteValid": 48,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 48,
+          "invalid": 0,
+          "finiteValid": 48,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 12,
+      "c": 4,
+      "b": 0,
+      "comparisonId": "bright-nonpath/before16",
+      "nominalBankPx": 34,
+      "fitIndex": 41,
+      "controlIndex": 42,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -7.030906412101721,
+        "rPx": 28.418263232628362,
+        "cPx": 10.69367841026332,
+        "wPx": 35.449169644730084,
+        "score": 1.2404433864879252,
+        "gl": 1.2404433864879252,
+        "gr": 7.5919943874770865
+      },
+      "derivedOriginPx": [
+        782.1810212038789,
+        750.4689017786186
+      ],
+      "derivedWidthPx": 35.449169644730084,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 13,
+      "c": 4,
+      "b": 1,
+      "comparisonId": "bright-nonpath/before16",
+      "nominalBankPx": 42,
+      "fitIndex": 44,
+      "controlIndex": 45,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -21.8674895073995,
+        "rPx": 21.803674805608622,
+        "cPx": -0.03190735089543928,
+        "wPx": 43.67116431300812,
+        "score": 0.49166625589174373,
+        "gl": 0.49166625589174373,
+        "gr": 3.4612857125791834
+      },
+      "derivedOriginPx": [
+        779.9934923600474,
+        739.9687633282276
+      ],
+      "derivedWidthPx": 43.67116431300812,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 14,
+      "c": 4,
+      "b": 2,
+      "comparisonId": "bright-nonpath/before16",
+      "nominalBankPx": 50,
+      "fitIndex": 47,
+      "controlIndex": 48,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -27.04313177373017,
+        "rPx": 21.803674805608622,
+        "cPx": -2.619728484060774,
+        "wPx": 48.84680657933879,
+        "score": 3.4612857125791834,
+        "gl": 3.7323089889558787,
+        "gr": 3.4612857125791834
+      },
+      "derivedOriginPx": [
+        779.4656952310575,
+        737.4353371090756
+      ],
+      "derivedWidthPx": 48.84680657933879,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 15,
+      "c": 5,
+      "b": 0,
+      "comparisonId": "bright-nonpath/core16",
+      "nominalBankPx": 34,
+      "fitIndex": 51,
+      "controlIndex": 52,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -21.44078384193524,
+        "rPx": 12.55273028327867,
+        "cPx": -4.444026779328285,
+        "wPx": 33.993514125213906,
+        "score": 0.6292753479581847,
+        "gl": 2.149710730023571,
+        "gr": 0.6292753479581847
+      },
+      "derivedOriginPx": [
+        779.0936218329683,
+        735.6493847982481
+      ],
+      "derivedWidthPx": 33.993514125213906,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 16,
+      "c": 5,
+      "b": 1,
+      "comparisonId": "bright-nonpath/core16",
+      "nominalBankPx": 42,
+      "fitIndex": 54,
+      "controlIndex": 55,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -15.357933615103345,
+        "rPx": 28.383521313739692,
+        "cPx": 6.512793849318173,
+        "wPx": 43.74145492884304,
+        "score": 0.7969581379320516,
+        "gl": 0.7969581379320516,
+        "gr": 2.0327165974640593
+      },
+      "derivedOriginPx": [
+        781.3283120117229,
+        746.37589765627
+      ],
+      "derivedWidthPx": 43.74145492884304,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 17,
+      "c": 5,
+      "b": 2,
+      "comparisonId": "bright-nonpath/core16",
+      "nominalBankPx": 50,
+      "fitIndex": 57,
+      "controlIndex": 58,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -23.914606708051526,
+        "rPx": 24.549089255647008,
+        "cPx": 0.31724127379774103,
+        "wPx": 48.463695963698534,
+        "score": 2.587960005982154,
+        "gl": 2.587960005982154,
+        "gr": 3.693543691963953
+      },
+      "derivedOriginPx": [
+        780.064702707371,
+        740.3105729953807
+      ],
+      "derivedWidthPx": 48.463695963698534,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 18,
+      "c": 6,
+      "b": 0,
+      "comparisonId": "bright-nonpath/after16",
+      "nominalBankPx": 34,
+      "fitIndex": 61,
+      "controlIndex": 62,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -20.733790600842255,
+        "rPx": 12.066706713077798,
+        "cPx": -4.333541943882229,
+        "wPx": 32.800497313920054,
+        "score": 0.3985401230602861,
+        "gl": 3.2252894807054417,
+        "gr": 0.3985401230602861
+      },
+      "derivedOriginPx": [
+        779.1161556851724,
+        735.7575472888277
+      ],
+      "derivedWidthPx": 32.800497313920054,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 19,
+      "c": 6,
+      "b": 1,
+      "comparisonId": "bright-nonpath/after16",
+      "nominalBankPx": 42,
+      "fitIndex": 64,
+      "controlIndex": 65,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -28.414917109435983,
+        "rPx": 12.066706713077798,
+        "cPx": -8.174105198179092,
+        "wPx": 40.48162382251378,
+        "score": 0.3985401230602861,
+        "gl": 12.011537200790315,
+        "gr": 0.3985401230602861
+      },
+      "derivedOriginPx": [
+        778.3328564712724,
+        731.9977110621073
+      ],
+      "derivedWidthPx": 40.48162382251378,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 20,
+      "c": 6,
+      "b": 2,
+      "comparisonId": "bright-nonpath/after16",
+      "nominalBankPx": 50,
+      "fitIndex": 67,
+      "controlIndex": 68,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -28.414917109435983,
+        "rPx": 19.539532220759725,
+        "cPx": -4.437692444338129,
+        "wPx": 47.95444933019571,
+        "score": 0.08834318494371018,
+        "gl": 12.011537200790315,
+        "gr": 0.08834318494371018
+      },
+      "derivedOriginPx": [
+        779.0949137475366,
+        735.6555859881755
+      ],
+      "derivedWidthPx": 47.95444933019571,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 21,
+      "c": 7,
+      "b": 0,
+      "comparisonId": "bright-nonpath/long48",
+      "nominalBankPx": 34,
+      "fitIndex": 71,
+      "controlIndex": 72,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -6.261419686878437,
+        "rPx": 28.402158386497533,
+        "cPx": 11.070369349809548,
+        "wPx": 34.66357807337597,
+        "score": 0.3541592049373321,
+        "gl": 0.3541592049373321,
+        "gr": 3.957394814758402
+      },
+      "derivedOriginPx": [
+        782.2578489234847,
+        750.8376748327269
+      ],
+      "derivedWidthPx": 34.66357807337597,
+      "controlStates": {
+        "stationsCount": 48,
+        "left": {
+          "valid": 48,
+          "invalid": 0,
+          "finiteValid": 48,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 48,
+          "invalid": 0,
+          "finiteValid": 48,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 22,
+      "c": 7,
+      "b": 1,
+      "comparisonId": "bright-nonpath/long48",
+      "nominalBankPx": 42,
+      "fitIndex": 74,
+      "controlIndex": 75,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -13.579456910010949,
+        "rPx": 28.402158386497533,
+        "cPx": 7.411350738243292,
+        "wPx": 41.98161529650848,
+        "score": 0.3747209403442753,
+        "gl": 0.3747209403442753,
+        "gr": 3.957394814758402
+      },
+      "derivedOriginPx": [
+        781.5115765117808,
+        747.255567256548
+      ],
+      "derivedWidthPx": 41.98161529650848,
+      "controlStates": {
+        "stationsCount": 48,
+        "left": {
+          "valid": 48,
+          "invalid": 0,
+          "finiteValid": 48,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 48,
+          "invalid": 0,
+          "finiteValid": 48,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 23,
+      "c": 7,
+      "b": 2,
+      "comparisonId": "bright-nonpath/long48",
+      "nominalBankPx": 50,
+      "fitIndex": 77,
+      "controlIndex": 78,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -21.568460604005473,
+        "rPx": 28.402158386497533,
+        "cPx": 3.4168488912460298,
+        "wPx": 49.970618990503006,
+        "score": 1.8633897141781972,
+        "gl": 1.8633897141781972,
+        "gr": 3.957394814758402
+      },
+      "derivedOriginPx": [
+        780.6968808670275,
+        743.345028161732
+      ],
+      "derivedWidthPx": 49.970618990503006,
+      "controlStates": {
+        "stationsCount": 48,
+        "left": {
+          "valid": 48,
+          "invalid": 0,
+          "finiteValid": 48,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 48,
+          "invalid": 0,
+          "finiteValid": 48,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 24,
+      "c": 8,
+      "b": 0,
+      "comparisonId": "normal-plus6/before16",
+      "nominalBankPx": 34,
+      "fitIndex": 81,
+      "controlIndex": 82,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -20.109557636221222,
+        "rPx": 15.462006447061249,
+        "cPx": -2.3237755945799865,
+        "wPx": 35.57156408328247,
+        "score": 2.313262767880758,
+        "gl": 10.896457849882637,
+        "gr": 2.313262767880758
+      },
+      "derivedOriginPx": [
+        780.7497816065558,
+        909.5989517114676
+      ],
+      "derivedWidthPx": 35.57156408328247,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 25,
+      "c": 8,
+      "b": 1,
+      "comparisonId": "normal-plus6/before16",
+      "nominalBankPx": 42,
+      "fitIndex": 84,
+      "controlIndex": 85,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -25.826882995558037,
+        "rPx": 15.462006447061249,
+        "cPx": -5.182438274248394,
+        "wPx": 41.288889442619286,
+        "score": 2.313262767880758,
+        "gl": 5.366326941545253,
+        "gr": 2.313262767880758
+      },
+      "derivedOriginPx": [
+        780.1667451919661,
+        906.8003769214376
+      ],
+      "derivedWidthPx": 41.288889442619286,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 26,
+      "c": 8,
+      "b": 2,
+      "comparisonId": "normal-plus6/before16",
+      "nominalBankPx": 50,
+      "fitIndex": 87,
+      "controlIndex": 88,
+      "eligibility": "NOT_EXECUTED",
+      "reason": "NATIVE_NO_EDGE_PAIR",
+      "offendingFields": [],
+      "state": "NOT_EXECUTED",
+      "fit": {
+        "condition": "no edge pair"
+      },
+      "derivedOriginPx": null,
+      "derivedWidthPx": null,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 27,
+      "c": 9,
+      "b": 0,
+      "comparisonId": "normal-plus6/core16",
+      "nominalBankPx": 34,
+      "fitIndex": 91,
+      "controlIndex": 92,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -20.613743045844398,
+        "rPx": 14.537116483711745,
+        "cPx": -3.0383132810663263,
+        "wPx": 35.15085952955614,
+        "score": 3.0151354357906257,
+        "gl": 11.682581424609623,
+        "gr": 3.0151354357906257
+      },
+      "derivedOriginPx": [
+        780.6040486056735,
+        908.8994333072329
+      ],
+      "derivedWidthPx": 35.15085952955614,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 28,
+      "c": 9,
+      "b": 1,
+      "comparisonId": "normal-plus6/core16",
+      "nominalBankPx": 42,
+      "fitIndex": 94,
+      "controlIndex": 95,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -13.2948160393476,
+        "rPx": 28.443205811540434,
+        "cPx": 7.574194886096417,
+        "wPx": 41.73802185088803,
+        "score": 1.4570476646327677,
+        "gl": 1.4570476646327677,
+        "gr": 1.5881411602805997
+      },
+      "derivedOriginPx": [
+        782.7685147931647,
+        919.2888710071907
+      ],
+      "derivedWidthPx": 41.73802185088803,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 29,
+      "c": 9,
+      "b": 2,
+      "comparisonId": "normal-plus6/core16",
+      "nominalBankPx": 50,
+      "fitIndex": 97,
+      "controlIndex": 98,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -20.613743045844398,
+        "rPx": 28.443205811540434,
+        "cPx": 3.914731382848018,
+        "wPx": 49.05694885738483,
+        "score": 1.5881411602805997,
+        "gl": 11.682581424609623,
+        "gr": 1.5881411602805997
+      },
+      "derivedOriginPx": [
+        782.0221516439096,
+        915.7063278907661
+      ],
+      "derivedWidthPx": 49.05694885738483,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 30,
+      "c": 10,
+      "b": 0,
+      "comparisonId": "normal-plus6/after16",
+      "nominalBankPx": 34,
+      "fitIndex": 101,
+      "controlIndex": 102,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -6.080674391757049,
+        "rPx": 28.42231522250585,
+        "cPx": 11.1708204153744,
+        "wPx": 34.5029896142629,
+        "score": 2.3308348677997515,
+        "gl": 4.010428164222844,
+        "gr": 2.3308348677997515
+      },
+      "derivedOriginPx": [
+        783.5020618703088,
+        922.8098969774823
+      ],
+      "derivedWidthPx": 34.5029896142629,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 31,
+      "c": 10,
+      "b": 1,
+      "comparisonId": "normal-plus6/after16",
+      "nominalBankPx": 42,
+      "fitIndex": 104,
+      "controlIndex": 105,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -28.442205592874668,
+        "rPx": 14.787109567274378,
+        "cPx": -6.827548012800145,
+        "wPx": 43.22931516014904,
+        "score": 1.5117695293088218,
+        "gl": 1.5117695293088218,
+        "gr": 1.7107294018919106
+      },
+      "derivedOriginPx": [
+        779.8312180623075,
+        905.1898466990758
+      ],
+      "derivedWidthPx": 43.22931516014904,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 32,
+      "c": 10,
+      "b": 2,
+      "comparisonId": "normal-plus6/after16",
+      "nominalBankPx": 50,
+      "fitIndex": 107,
+      "controlIndex": 108,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -21.58743550919644,
+        "rPx": 28.42231522250585,
+        "cPx": 3.417439856654706,
+        "wPx": 50.00975073170229,
+        "score": 2.3308348677997515,
+        "gl": 11.572876702566845,
+        "gr": 2.3308348677997515
+      },
+      "derivedOriginPx": [
+        781.9207269216087,
+        915.2194892237214
+      ],
+      "derivedWidthPx": 50.00975073170229,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 33,
+      "c": 11,
+      "b": 0,
+      "comparisonId": "normal-plus6/long48",
+      "nominalBankPx": 34,
+      "fitIndex": 111,
+      "controlIndex": 112,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -20.60496633909978,
+        "rPx": 14.783880050163196,
+        "cPx": -2.910543144468291,
+        "wPx": 35.38884638926297,
+        "score": 2.2690275293854256,
+        "gl": 10.578942093743507,
+        "gr": 2.2690275293854256
+      },
+      "derivedOriginPx": [
+        780.6301078685811,
+        909.0245177691896
+      ],
+      "derivedWidthPx": 35.38884638926297,
+      "controlStates": {
+        "stationsCount": 48,
+        "left": {
+          "valid": 48,
+          "invalid": 0,
+          "finiteValid": 48,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 48,
+          "invalid": 0,
+          "finiteValid": 48,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 34,
+      "c": 11,
+      "b": 1,
+      "comparisonId": "normal-plus6/long48",
+      "nominalBankPx": 42,
+      "fitIndex": 114,
+      "controlIndex": 115,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -28.409939918678347,
+        "rPx": 11.596974436071113,
+        "cPx": -8.406482741303616,
+        "wPx": 40.00691435474946,
+        "score": 0.7293585934454256,
+        "gl": 0.7293585934454256,
+        "gr": 1.225397812898251
+      },
+      "derivedOriginPx": [
+        779.509187607464,
+        903.6441005158273
+      ],
+      "derivedWidthPx": 40.00691435474946,
+      "controlStates": {
+        "stationsCount": 48,
+        "left": {
+          "valid": 48,
+          "invalid": 0,
+          "finiteValid": 48,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 48,
+          "invalid": 0,
+          "finiteValid": 48,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 35,
+      "c": 11,
+      "b": 2,
+      "comparisonId": "normal-plus6/long48",
+      "nominalBankPx": 50,
+      "fitIndex": 117,
+      "controlIndex": 118,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -20.60496633909978,
+        "rPx": 28.479611544710174,
+        "cPx": 3.9373226028051977,
+        "wPx": 49.084577883809956,
+        "score": 0.7688248493557239,
+        "gl": 10.578942093743507,
+        "gr": 0.7688248493557239
+      },
+      "derivedOriginPx": [
+        782.0267592193254,
+        915.7284442527622
+      ],
+      "derivedWidthPx": 49.084577883809956,
+      "controlStates": {
+        "stationsCount": 48,
+        "left": {
+          "valid": 48,
+          "invalid": 0,
+          "finiteValid": 48,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 48,
+          "invalid": 0,
+          "finiteValid": 48,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 36,
+      "c": 12,
+      "b": 0,
+      "comparisonId": "masked-primary/before16",
+      "nominalBankPx": 34,
+      "fitIndex": 121,
+      "controlIndex": 122,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -14.109557636221224,
+        "rPx": 21.462006447061455,
+        "cPx": 3.6762244054201156,
+        "wPx": 35.57156408328268,
+        "score": 2.3132627678810707,
+        "gl": 10.896457849882609,
+        "gr": 2.3132627678810707
+      },
+      "derivedOriginPx": [
+        780.7497816065558,
+        909.5989517114679
+      ],
+      "derivedWidthPx": 35.57156408328268,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 37,
+      "c": 12,
+      "b": 1,
+      "comparisonId": "masked-primary/before16",
+      "nominalBankPx": 42,
+      "fitIndex": 124,
+      "controlIndex": 125,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -19.82688299555797,
+        "rPx": 21.462006447061455,
+        "cPx": 0.8175617257517427,
+        "wPx": 41.28888944261942,
+        "score": 2.3132627678810707,
+        "gl": 5.366326941545395,
+        "gr": 2.3132627678810707
+      },
+      "derivedOriginPx": [
+        780.1667451919662,
+        906.8003769214379
+      ],
+      "derivedWidthPx": 41.28888944261942,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 38,
+      "c": 12,
+      "b": 2,
+      "comparisonId": "masked-primary/before16",
+      "nominalBankPx": 50,
+      "fitIndex": 127,
+      "controlIndex": 128,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -28.391198627184508,
+        "rPx": 21.462006447061455,
+        "cPx": -3.4645960900615265,
+        "wPx": 49.85320507424596,
+        "score": 0.8709100093639393,
+        "gl": 0.8709100093639393,
+        "gr": 2.3132627678810707
+      },
+      "derivedOriginPx": [
+        779.2933808886521,
+        902.6082282655303
+      ],
+      "derivedWidthPx": 49.85320507424596,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 39,
+      "c": 13,
+      "b": 0,
+      "comparisonId": "masked-primary/core16",
+      "nominalBankPx": 34,
+      "fitIndex": 131,
+      "controlIndex": 132,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -14.728322159862959,
+        "rPx": 20.338792048900853,
+        "cPx": 2.805234944518947,
+        "wPx": 35.06711420876381,
+        "score": 3.5424019437251104,
+        "gl": 12.778150003287664,
+        "gr": 3.5424019437251104
+      },
+      "derivedOriginPx": [
+        780.5721396007183,
+        908.7462700834477
+      ],
+      "derivedWidthPx": 35.06711420876381,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 9,
+          "invalid": 7,
+          "finiteValid": 9,
+          "finiteInvalid": 4,
+          "NaNValid": 0,
+          "NaNInvalid": 3,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 9,
+          "invalid": 7,
+          "finiteValid": 9,
+          "finiteInvalid": 4,
+          "NaNValid": 0,
+          "NaNInvalid": 3,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 40,
+      "c": 13,
+      "b": 1,
+      "comparisonId": "masked-primary/core16",
+      "nominalBankPx": 42,
+      "fitIndex": 134,
+      "controlIndex": 135,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -20.142816891015304,
+        "rPx": 20.338792048900853,
+        "cPx": 0.09798757894277443,
+        "wPx": 40.48160893991616,
+        "score": 0.6574743851342646,
+        "gl": 0.6574743851342646,
+        "gr": 3.5424019437251104
+      },
+      "derivedOriginPx": [
+        780.0199849835756,
+        906.0959279211625
+      ],
+      "derivedWidthPx": 40.48160893991616,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 9,
+          "invalid": 7,
+          "finiteValid": 9,
+          "finiteInvalid": 4,
+          "NaNValid": 0,
+          "NaNInvalid": 3,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 9,
+          "invalid": 7,
+          "finiteValid": 9,
+          "finiteInvalid": 4,
+          "NaNValid": 0,
+          "NaNInvalid": 3,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 41,
+      "c": 13,
+      "b": 2,
+      "comparisonId": "masked-primary/core16",
+      "nominalBankPx": 50,
+      "fitIndex": 137,
+      "controlIndex": 138,
+      "eligibility": "NOT_EXECUTED",
+      "reason": "NATIVE_NO_EDGE_PAIR",
+      "offendingFields": [],
+      "state": "NOT_EXECUTED",
+      "fit": {
+        "condition": "no edge pair"
+      },
+      "derivedOriginPx": null,
+      "derivedWidthPx": null,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 9,
+          "invalid": 7,
+          "finiteValid": 9,
+          "finiteInvalid": 4,
+          "NaNValid": 0,
+          "NaNInvalid": 3,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 9,
+          "invalid": 7,
+          "finiteValid": 9,
+          "finiteInvalid": 4,
+          "NaNValid": 0,
+          "NaNInvalid": 3,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 42,
+      "c": 14,
+      "b": 0,
+      "comparisonId": "masked-primary/after16",
+      "nominalBankPx": 34,
+      "fitIndex": 141,
+      "controlIndex": 142,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -15.587435509196407,
+        "rPx": 16.667803096790614,
+        "cPx": 0.5401837937971035,
+        "wPx": 32.25523860598702,
+        "score": 0.5065255075564323,
+        "gl": 11.57287670256548,
+        "gr": 0.5065255075564323
+      },
+      "derivedOriginPx": [
+        780.1101727827473,
+        906.528829357187
+      ],
+      "derivedWidthPx": 32.25523860598702,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 43,
+      "c": 14,
+      "b": 1,
+      "comparisonId": "masked-primary/after16",
+      "nominalBankPx": 42,
+      "fitIndex": 144,
+      "controlIndex": 145,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -23.00626795935529,
+        "rPx": 20.787109567274452,
+        "cPx": -1.1095791960404195,
+        "wPx": 43.79337752662974,
+        "score": 1.7107294018919106,
+        "gl": 2.049909733222222,
+        "gr": 1.7107294018919106
+      },
+      "derivedOriginPx": [
+        779.7736966026933,
+        904.9137436929283
+      ],
+      "derivedWidthPx": 43.79337752662974,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 44,
+      "c": 14,
+      "b": 2,
+      "comparisonId": "masked-primary/after16",
+      "nominalBankPx": 50,
+      "fitIndex": 147,
+      "controlIndex": 148,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -23.00626795935529,
+        "rPx": 27.853332065605755,
+        "cPx": 2.423532053125232,
+        "wPx": 50.85960002496105,
+        "score": 0.3024730003076854,
+        "gl": 2.049909733222222,
+        "gr": 0.3024730003076854
+      },
+      "derivedOriginPx": [
+        780.4942896722117,
+        908.3725904266161
+      ],
+      "derivedWidthPx": 50.85960002496105,
+      "controlStates": {
+        "stationsCount": 16,
+        "left": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 16,
+          "invalid": 0,
+          "finiteValid": 16,
+          "finiteInvalid": 0,
+          "NaNValid": 0,
+          "NaNInvalid": 0,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 45,
+      "c": 15,
+      "b": 0,
+      "comparisonId": "masked-primary/long48",
+      "nominalBankPx": 34,
+      "fitIndex": 151,
+      "controlIndex": 152,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -14.635318706526652,
+        "rPx": 20.954276873637504,
+        "cPx": 3.159479083555426,
+        "wPx": 35.58959558016416,
+        "score": 2.238520990933864,
+        "gl": 10.610885931128252,
+        "gr": 2.238520990933864
+      },
+      "derivedOriginPx": [
+        780.644389199869,
+        909.0930681593712
+      ],
+      "derivedWidthPx": 35.58959558016416,
+      "controlStates": {
+        "stationsCount": 48,
+        "left": {
+          "valid": 41,
+          "invalid": 7,
+          "finiteValid": 41,
+          "finiteInvalid": 4,
+          "NaNValid": 0,
+          "NaNInvalid": 3,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 41,
+          "invalid": 7,
+          "finiteValid": 41,
+          "finiteInvalid": 4,
+          "NaNValid": 0,
+          "NaNInvalid": 3,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 46,
+      "c": 15,
+      "b": 1,
+      "comparisonId": "masked-primary/long48",
+      "nominalBankPx": 42,
+      "fitIndex": 154,
+      "controlIndex": 155,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -19.304013395056067,
+        "rPx": 20.954276873637504,
+        "cPx": 0.8251317392907183,
+        "wPx": 40.25829026869357,
+        "score": 2.18368935132267,
+        "gl": 2.18368935132267,
+        "gr": 2.238520990933864
+      },
+      "derivedOriginPx": [
+        780.1682891284312,
+        906.8077878164696
+      ],
+      "derivedWidthPx": 40.25829026869357,
+      "controlStates": {
+        "stationsCount": 48,
+        "left": {
+          "valid": 41,
+          "invalid": 7,
+          "finiteValid": 41,
+          "finiteInvalid": 4,
+          "NaNValid": 0,
+          "NaNInvalid": 3,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 41,
+          "invalid": 7,
+          "finiteValid": 41,
+          "finiteInvalid": 4,
+          "NaNValid": 0,
+          "NaNInvalid": 3,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    },
+    {
+      "j": 47,
+      "c": 15,
+      "b": 2,
+      "comparisonId": "masked-primary/long48",
+      "nominalBankPx": 50,
+      "fitIndex": 157,
+      "controlIndex": 158,
+      "eligibility": "ELIGIBLE",
+      "reason": null,
+      "offendingFields": [],
+      "state": "NOT_ATTEMPTED",
+      "fit": {
+        "lPx": -22.831018720326377,
+        "rPx": 27.1971832131295,
+        "cPx": 2.183082246401561,
+        "wPx": 50.028201933455875,
+        "score": 0.1314633144058348,
+        "gl": 0.8057761973092852,
+        "gr": 0.1314633144058348
+      },
+      "derivedOriginPx": [
+        780.44524891123,
+        908.137194773904
+      ],
+      "derivedWidthPx": 50.028201933455875,
+      "controlStates": {
+        "stationsCount": 48,
+        "left": {
+          "valid": 41,
+          "invalid": 7,
+          "finiteValid": 41,
+          "finiteInvalid": 4,
+          "NaNValid": 0,
+          "NaNInvalid": 3,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        },
+        "right": {
+          "valid": 41,
+          "invalid": 7,
+          "finiteValid": 41,
+          "finiteInvalid": 4,
+          "NaNValid": 0,
+          "NaNInvalid": 3,
+          "negativeZero": 0,
+          "positiveInfinity": 0,
+          "negativeInfinity": 0
+        }
+      }
+    }
+  ]
+}

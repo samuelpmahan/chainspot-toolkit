@@ -1,0 +1,42 @@
+{
+  "schema": "cycle07-root-checkpoint-source-review@1",
+  "observedUTC": "2026-10-19T00:55:17Z",
+  "status": "SOURCE_READ_ONLY_NO_COPY_OR_GIT_GO",
+  "copy": {
+    "v1": "110bbc0e4dbdf858a346114760b5bf79abe9f9dc93deb83f4dbb092ea5e63f47",
+    "v2": "321e5b116ce485f14a96fff9010b206b9af4bc5d1137597a10e9171c189af163",
+    "completeV1AndExactV2DiffRead": true,
+    "flowV2FullyRead": true,
+    "sourceOnlyFinding": "Unexecuted v1 entries/archivedPath incompatible with unchanged exporter/root verifier files[].path; v2 changes only manifest mapping. No observed copy/test failure or runtime success.",
+    "remaining": "Independent S2 copy-source review, new final docs and closed root sealed set after all writers quiescent, then ONE copy with captures OUTSIDE frozen source; source preservation and physical audit before Git.",
+    "caps": {
+      "file": 1048576,
+      "totalIncludingManifest": 5242880,
+      "files": 512,
+      "docsEach": 16384
+    },
+    "noOriginalSourcePermissionChange": true,
+    "nonportable": true
+  },
+  "exporter": {
+    "sha256": "826088766cfe4e840860ee1c213f1a895a6c77ca4bcbae6279c02f0881f6ca25",
+    "bytes": 10612,
+    "lines": 147,
+    "fullyRead": true,
+    "originalFullyRead": "ed7920523765cf7dd64378fd5904e16ba7fc0e98a7fd761b7123b2f5b76e5c87",
+    "fullDiffOnlyMechanical": true,
+    "independentReview": "ab7bf3c24c8ef2ed7a17136377704d498a0da717837ef2027f0895bc64ae42f2",
+    "actualExecution": 0,
+    "futureConfig": "Native manifest.files relative path + exact trailing-slash prefix; immutable actual commit/tree after sole S1 commit; no metadata reconstruction; separate root GO."
+  },
+  "originalOutput": {
+    "review": "a0f8ee27b4a92507240af60e5a88c9f54e8584e10786f6b1a77a4280be5e396b",
+    "accepted": "engineering output consistency only",
+    "eligibleNotAttempted": 44,
+    "nativeNoPairNotExecuted": 4,
+    "newPATH": 0,
+    "newStores": 0,
+    "newCV": 0,
+    "physicalScientificAcceptance": "UNKNOWN"
+  }
+}

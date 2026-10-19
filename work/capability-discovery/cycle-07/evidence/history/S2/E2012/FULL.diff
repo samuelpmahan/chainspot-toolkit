@@ -1,0 +1,146 @@
+
+--- E2010/plan-core.mjs
++++ E2012/plan-core.mjs
+@@ -24,7 +24,13 @@
+   if(Object.is(a,b)) return true;
+   if(Array.isArray(a)&&Array.isArray(b)) return a.length===b.length&&a.every((x,i)=>same(x,b[i]));
+   if(a&&b&&typeof a==='object'&&typeof b==='object') {
+-    const ka=Object.keys(a),kb=Object.keys(b);return ka.length===kb.length&&ka.every((k,i)=>k===kb[i]&&same(a[k],b[k]));
++    if(Object.getPrototypeOf(a)!==Object.prototype||Object.getPrototypeOf(b)!==Object.prototype)return false;
++    const ka=Reflect.ownKeys(a),kb=Reflect.ownKeys(b);
++    return ka.length===kb.length&&ka.every(k=>{
++      if(typeof k!=='string'||!own(b,k))return false;
++      const da=Object.getOwnPropertyDescriptor(a,k),db=Object.getOwnPropertyDescriptor(b,k);
++      return own(da,'value')&&own(db,'value')&&da.enumerable&&db.enumerable&&da.value!==undefined&&db.value!==undefined&&same(da.value,db.value);
++    });
+   }
+   return false;
+ }
+@@ -37,6 +43,10 @@
+   for(const p of node[2]) {if(!Array.isArray(p)||p.length!==2||typeof p[0]!=='string'||seen.has(p[0])) stop('duplicate/malformed tagged object pair');seen.add(p[0]);}
+   return node[2];
+ }
++function wireFields(node,keys) {
++  const actual=objectPairs(node).map(p=>p[0]);
++  if(actual.length!==keys.length||actual.some(k=>!keys.includes(k)))stop('tagged record key set');
++}
+ export function selectWire(root,path) {
+   let node=root;
+   for(const key of path) {
+@@ -89,10 +99,27 @@
+   if(!originPx.every(Number.isFinite))return {eligibility:'NOT_EXECUTED',reason:'NONFINITE_DERIVED_ORIGIN',offendingFields:['originPx'],rawArgs:null};
+   return {eligibility:'ELIGIBLE',reason:null,offendingFields:[],rawArgs:{raster:RASTER,mask:MASK,originPx,phiRad:PHI,t0Px:slot.t0Px,t1Px:slot.t1Px,stepPx:1,widthPx:value.wPx,bandPx:[1,3],alongPx:2}};
+ }
+-function control(answer,N) {
++function control(answer,N,slot,originalControl,codec) {
+   outer(answer,CONTRAST_UNIT);const v=answer.value;fields(v,['leftLum','rightLum','okLeft','okRight','stationsCount']);if(v.stationsCount!==N)stop('control stations');
+   for(const k of ['leftLum','rightLum'])if(dense(v[k],N).some(x=>typeof x!=='number'))stop('control luminance type');
+   for(const k of ['okLeft','okRight'])if(dense(v[k],N).some(x=>x!==0&&x!==1))stop('control flag type');
++  for(const side of ['leftLum','rightLum'])for(let stationIndex=0;stationIndex<N;stationIndex++) {
++    const rawValue=v[side][stationIndex];
++    if(rawValue!==Infinity&&rawValue!==-Infinity)continue;
++    const payload={code:'CONTRAST_INFINITY',j:slot.j,c:slot.c,b:slot.b,role:'control',side,stationIndex,
++      planIndex:originalControl.plannedQuery.planIndex,rawValue,answerBinding:originalControl.answerBinding,
++      rawAnswer:answer,originalState:originalControl.queryState,originalCallbackStatus:originalControl.callback.nativeEntry.status};
++    const error=new Error(`INTEGRITY_HOLD: source-impossible original contrast ${side}[${stationIndex}] at slot ${slot.j}`);
++    error.code='INTEGRITY_HOLD';
++    // Lossless detached small payload; existing selected-wire/node limits remain controlling.
++    error.integrityHold=small(codec.encodeValue(payload,{maxDepth:32,maxNodes:8192,maxTypedBytes:1,maxBytes:32768}),codec);
++    throw error;
++  }
++}
++function orderedRawArgs(actual,expected) {
++  fields(actual,Object.keys(expected));
++  requireSame(Object.keys(actual),Object.keys(expected),'rawArgs insertion order');
++  requireSame(actual,expected,'rawArgs values');
+ }
+ function expectedPlan(s,role) {
+   const rawArgs={raster:RASTER,mask:MASK,originPx:[...s.originalOriginPx],phiRad:PHI,t0Px:s.t0Px,t1Px:s.t1Px,stepPx:1};
+@@ -128,6 +155,40 @@
+   wireArray(selectWire(trace,['plannedQueries']),160);wireArray(selectWire(trace,['queryTrace']),160);wireArray(selectWire(trace,['requestBinding','comparisons']),16);
+   return snapshots;
+ }
++function hashPair(value,expected) {
++  fields(value,['rgbaSha256','maskSha256']);requireSame(value,expected,'input-integrity frozen hashes');
++}
++function inputGlobals(trace,codec) {
++  const root=selectWire(trace,['inputIntegrity']);
++  wireFields(root,['suppliedPlanes','snapshots','postFiles','request','postErrors']);
++  wireArray(selectWire(root,['snapshots']),16);
++  const postErrors=decodeAt(root,['postErrors'],codec);dense(postErrors,0);
++  const suppliedPlanes=decodeAt(root,['suppliedPlanes'],codec);
++  fields(suppliedPlanes,['pre','post','verified']);
++  if(suppliedPlanes.verified!==true)stop('canonical suppliedPlanes verification');
++  const canonical={rgbaSha256:PINS.rgba,maskSha256:PINS.mask};
++  hashPair(suppliedPlanes.pre,canonical);hashPair(suppliedPlanes.post,canonical);
++  const request=decodeAt(root,['request'],codec);fields(request,['verified','error']);
++  if(request.verified!==true||request.error!==null)stop('original request post-integrity');
++  return {strategy:'fixed16x10',snapshots:[],suppliedPlanes,request,postErrors};
++}
++function inputSnapshot(trace,slot,codec) {
++  // One bounded snapshot is decoded at a time, never the whole16-snapshot native tree.
++  const snapshot=decodeAt(trace,['inputIntegrity','snapshots',slot.c],codec);
++  fields(snapshot,['comparisonId','snapshotId','pre','checks','post','verified','partKeys','error']);
++  if(snapshot.comparisonId!==slot.comparisonId||snapshot.snapshotId!==`lenard5-fixed16/${slot.c}/${slot.comparisonId}`||snapshot.verified!==true||snapshot.error!==null)stop('snapshot post-integrity identity/status');
++  const expected={rgbaSha256:PINS.rgba,maskSha256:slot.c<12?null:PINS.mask};
++  hashPair(snapshot.pre,expected);hashPair(snapshot.post,expected);
++  fields(snapshot.partKeys,[RASTER,MASK]);
++  for(const address of [RASTER,MASK])if(typeof snapshot.partKeys[address]!=='string'||!/^[0-9a-f]{64}$/.test(snapshot.partKeys[address]))stop('snapshot Part key');
++  dense(snapshot.checks,10);
++  for(let k=0;k<10;k++) {
++    const check=snapshot.checks[k];fields(check,['planIndex','post','verified']);
++    if(check.planIndex!==10*slot.c+k||check.verified!==true)stop('snapshot check index/verification');
++    hashPair(check.post,expected);
++  }
++  return snapshot;
++}
+ function indexFragments(fragments,kind) {
+   const out=new Map(),paths=new Set();
+   for(const f of fragments) {
+@@ -150,6 +211,7 @@
+ /** Internal pure seam; public entry never accepts caller evidence/geometry. */
+ export function bindPlan({traceWire,sidecarWire,answerFragments,callbackFragments,sourceHashes},codec) {
+   const sourceWitness=witness(traceWire,sourceHashes,codec),answers=indexFragments(answerFragments,'answer'),callbacks=indexFragments(callbackFragments,'calculation');
++  const inputIntegrityWitness=inputGlobals(traceWire,codec);
+   if(answers.size!==96||callbacks.size!==176)stop('fixed fragment counts');
+   requireSame(decodeAt(sidecarWire,['schema'],codec),'cycle06-lenard5-sidecar@1','sidecar schema');
+   requireSame(decodeAt(sidecarWire,['protocolId'],codec),'lenard5-fixed16','sidecar protocol');wireArray(selectWire(sidecarWire,['calculationLog']),176);
+@@ -157,6 +219,7 @@
+   requireSame(decodeAt(sidecarWire,['error'],codec),null,'sidecar error');
+   const slots=[];
+   for(const s of fixedSlots()) {
++    if(s.b===0)inputIntegrityWitness.snapshots.push(inputSnapshot(traceWire,s,codec));
+     requireSame(decodeAt(traceWire,['requestBinding','comparisons',s.c],codec),declaration(s),'comparison declaration');
+     const id=s.comparisonId,base=11*s.c;
+     // Verify context once per original store: lazy constant exits before profile.
+@@ -164,20 +227,25 @@
+     const original={};let rawFit,rawControl;
+     for(const role of ['fit','control']) {
+       const expected=expectedPlan(s,role),pi=expected.planIndex,f=answers.get(pi);if(!f||f.metadata.comparisonId!==id)stop('missing/wrong answer binding');
+-      requireSame(decodeAt(traceWire,['plannedQueries',pi],codec),expected,'planned query/raw args');
++      const actualPlan=decodeAt(traceWire,['plannedQueries',pi],codec);
++      fields(actualPlan,Object.keys(expected));orderedRawArgs(actualPlan.rawArgs,expected.rawArgs);
++      requireSame(actualPlan,expected,'planned query/raw args');
+       const rowNode=selectWire(traceWire,['queryTrace',pi]);
+-      const rowKeys=objectPairs(rowNode).map(p=>p[0]);requireSame(rowKeys,['planIndex','comparisonId','state','resolvedIdentity','nativeAnswer','error'],'queryTrace shape');
++      wireFields(rowNode,['planIndex','comparisonId','state','resolvedIdentity','nativeAnswer','error']);
+       for(const [k,v]of Object.entries({planIndex:pi,comparisonId:id,state:'COMPLETED',error:null}))requireSame(decodeAt(rowNode,[k],codec),v,`queryTrace ${k}`);
+       const identity=resolvedIdentity(decodeAt(rowNode,['resolvedIdentity'],codec),s);
+       const nativeNode=selectWire(rowNode,['nativeAnswer']);requireSame(text(nativeNode),text(f.node),'answer wire mismatch');
+       const answer=small(f.node,codec),localPlan=pi-10*s.c,captureIndex=localPlan+1;
+       const joined=callbackAt(callbacks,sidecarWire,base+captureIndex,captureIndex,id,expected.query,codec);
+-      original[role]={answerBinding:f.metadata,plannedQuery:expected,resolvedIdentity:identity,...joined};if(role==='fit')rawFit=answer;else rawControl=answer;
++      original[role]={answerBinding:f.metadata,plannedQuery:actualPlan,queryState:decodeAt(rowNode,['state'],codec),resolvedIdentity:identity,...joined};if(role==='fit')rawFit=answer;else rawControl=answer;
+     }
+     requireSame(original.fit.resolvedIdentity,original.control.resolvedIdentity,'fit/control snapshot identity');
+-    control(rawControl,s.t1Px-s.t0Px);const fitState=classifyFit(rawFit,s);
++    const snapshot=inputIntegrityWitness.snapshots[s.c];
++    requireSame(snapshot.partKeys,original.fit.resolvedIdentity.partKeys,'snapshot/fit Part keys');
++    requireSame(snapshot.partKeys,original.control.resolvedIdentity.partKeys,'snapshot/control Part keys');
++    control(rawControl,s.t1Px-s.t0Px,s,original.control,codec);const fitState=classifyFit(rawFit,s);
+     slots.push({...s,original,rawFit,rawControl,...fitState,derivedRawArgs:fitState.rawArgs,state:fitState.eligibility==='ELIGIBLE'?'NOT_ATTEMPTED':'NOT_EXECUTED',newStore:null,newPartKeys:null,actualNewPATH:0});
+   }
+   // All values originate from selected codec decode or newly constructed literals.
+-  return {schema:'cycle07-original-evidence-jointfit-plan@1',status:'READY',protocolBehaviorAuthority:'Root-accepted protocol v2 @1.1.0 and E2002 source-shape authority; A2/A3 repair still pending observed fabricated RED',slots,sourceWitness,actualNewPATH:0,actualNewStores:0,actualCV:0,argumentCapture:'source-derived attribution, not callback dynamic args',claims:{scientificAcceptance:'UNKNOWN',humanAcceptance:'UNKNOWN',pathIdentity:'UNKNOWN',physicalEdgeIdentity:'UNKNOWN',calibratedWidth:'UNKNOWN',continuity:'UNKNOWN'}};
++  return {schema:'cycle07-original-evidence-jointfit-plan@1',status:'READY',protocolBehaviorAuthority:'Root-accepted protocol v2 @1.1.0 and E2002 source-shape authority; E2012 A2/A3/keyset repair authored after observed E2011 RED, awaiting separately admitted GREEN',slots,sourceWitness,inputIntegrityWitness,actualNewPATH:0,actualNewStores:0,actualCV:0,argumentCapture:'source-derived attribution, not callback dynamic args',claims:{scientificAcceptance:'UNKNOWN',humanAcceptance:'UNKNOWN',pathIdentity:'UNKNOWN',physicalEdgeIdentity:'UNKNOWN',calibratedWidth:'UNKNOWN',continuity:'UNKNOWN'}};
+ }

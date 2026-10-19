@@ -1,0 +1,97 @@
+/** E2022 copy-only construction. UNEXECUTED; a later explicit root GO is required. */
+import { openSync, closeSync, readSync, fstatSync, lstatSync, readdirSync, mkdirSync, writeFileSync, chmodSync, constants } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { resolve, dirname, sep } from 'node:path';
+const ROOT='/workspace/scratch/8528bb251845';
+const SOURCE=ROOT+'/discovery-cycle07';
+const LAB=ROOT+'/chainspot-discovery-lab';
+const DEST=LAB+'/work/capability-discovery/cycle-07';
+const SEAL=ROOT+'/discovery-cycle07-checkpoint-admission/finalized-files.json';
+const FILE_CAP=1048576,TOTAL_CAP=5242880,MAX_FILES=512;
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const fail=m=>{throw new Error('COPY_HOLD: '+m);};
+const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+const argv=process.argv.slice(2);
+if(argv.length!==2||argv[0]!=='--finalized-manifest-sha256'||!/^[0-9a-f]{64}$/.test(argv[1]))fail('exact separately reviewed finalized-manifest SHA256 required');
+function relative(p) {
+  if(typeof p!=='string'||!p||p.includes('\\')||p.includes('\0')||p.split('/').some(x=>!x||x==='.'||x==='..')||resolve(SOURCE,p)!==SOURCE+'/'+p)fail('relative source path');
+  return p;
+}
+function noLinks(path) {
+  let part=sep;const pieces=resolve(path).split(sep).filter(Boolean);
+  for(let i=0;i<pieces.length;i++){part=resolve(part,pieces[i]);const s=lstatSync(part);if(s.isSymbolicLink()||(i<pieces.length-1&&!s.isDirectory()))fail('symlink/non-directory component');}
+}
+function read(path,want) {
+  noLinks(path);const pre=lstatSync(path),mode=pre.mode&4095;
+  if(!pre.isFile()||!Number.isSafeInteger(pre.size)||pre.size<0||pre.size>FILE_CAP)fail('regular bounded file');
+  if(want&&(pre.size!==want.bytes||mode!==parseInt(want.posixPermissions,8)))fail('frozen size/mode drift');
+  if(!Number.isSafeInteger(constants.O_NOFOLLOW))fail('O_NOFOLLOW unavailable');
+  let fd;
+  try {
+    fd=openSync(path,constants.O_RDONLY|constants.O_NOFOLLOW|constants.O_NONBLOCK);const s=fstatSync(fd);
+    if(!s.isFile()||s.dev!==pre.dev||s.ino!==pre.ino||s.size!==pre.size)fail('descriptor identity');
+    const b=new Uint8Array(s.size);let at=0;
+    while(at<b.length){const n=readSync(fd,b,at,b.length-at,at);if(n===0)fail('truncated read');at+=n;}
+    if(readSync(fd,new Uint8Array(1),0,1,b.length)!==0)fail('grown file');
+    const end=fstatSync(fd);
+    if(end.dev!==s.dev||end.ino!==s.ino||end.size!==s.size||end.mtimeMs!==s.mtimeMs||(end.mode&4095)!==mode)fail('changed during read');
+    if(want&&sha(b)!==want.sha256)fail('frozen body hash drift');
+    return {bytes:b,mode};
+  } finally {if(fd!==undefined)closeSync(fd);}
+}
+function names(directory=SOURCE,prefix='') {
+  noLinks(directory);const out=[];
+  for(const n of readdirSync(directory).sort()){const rel=prefix+n,path=SOURCE+'/'+rel,s=lstatSync(path);if(s.isDirectory())out.push(...names(path,rel+'/'));else {if(!s.isFile()||s.isSymbolicLink())fail('nonregular source entry');out.push(rel);}}
+  return out.sort();
+}
+const sealBytes=read(SEAL).bytes;
+if(sha(sealBytes)!==argv[1])fail('final seal digest');
+let sealed;try{sealed=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(sealBytes));}catch{fail('plain seal metadata JSON');}
+if(sealed.schema!=='cycle07-finalized-copy-set@1'||sealed.status!=='ROOT_FINALIZED_COPY_GO_AFTER_R2021_ACCEPTED'||sealed.reviewR2021?.decision!=='accepted')fail('finalized post-R2021 gate');
+if(!Array.isArray(sealed.entries)||sealed.entries.length<1||sealed.entries.length>MAX_FILES)fail('sealed entry count');
+const byPath=new Map();
+for(const e of sealed.entries) {
+  if(!e||Object.getPrototypeOf(e)!==Object.prototype||!same(Object.keys(e).sort(),['bytes','path','posixPermissions','sha256']))fail('exact sealed entry fields');
+  relative(e.path);
+  if(byPath.has(e.path)||!Number.isSafeInteger(e.bytes)||e.bytes<0||e.bytes>FILE_CAP||!/^[0-9a-f]{64}$/.test(e.sha256)||!/^0?[0-7]{3}$/.test(e.posixPermissions))fail('sealed file binding');
+  byPath.set(e.path,e);
+}
+const paths=[...byPath.keys()].sort();
+if(!same(names(),paths))fail('complete finalized file-set drift; no exclusions');
+const review=byPath.get(relative(sealed.reviewR2021.path));
+if(!review||review.sha256!==sealed.reviewR2021.sha256)fail('accepted R2021 review not retained in sealed set');
+const opaque=byPath.get('S3/E2019/runs/E2021-original-plan-v1/plan.wire.json');
+if(!opaque||opaque.bytes!==617401||opaque.sha256!=='e1471209d9e91a885effb096fb052ac7a0ea61f42d07f348fa4856b3997dc7b5')fail('opaque E2021 output binding');
+const productPrefix='experiments/capability-discovery/joint-fit-original-plan/';
+const productPins=[
+ ['original-evidence-plan.mjs',12666,'0b6f2bad20177cd965085b3fbf889c008205653c03bcb72280d41769e17a001a'],
+ ['plan-core.mjs',20323,'52ea18fd97e0112bd8aee255b73743a79bb2ab9842b0ec828314bff9c1c26ea5'],
+ ['plan.test.mjs',25500,'44d810e1e0a19cb41afcc3ef0d085b364fc5fde52d278bdca6a049f4e0c270cb'],
+ ['README.md',8587,'bf185d3c0e93763395c4c843d760c9439b4521a95c78aafe63536fefd17ca7bf']
+].map(([n,bytes,sha256])=>({path:productPrefix+n,bytes,sha256,posixPermissions:'644'}));
+function products(){for(const p of productPins)read(LAB+'/'+p.path,p);}
+products();
+const inert=p=>/\.(?:mjs|cjs|js|sh|py|ts|tsx|jsx)$/.test(p)?p+'.txt':p;
+const planned=paths.map(p=>({...byPath.get(p),source:p,destination:'evidence/history/'+inert(p)}));
+const docNames=['CURRENT.md','README.md','REPRODUCE.md','RESUME.md','next-packets.json'];
+if(!Array.isArray(sealed.documents)||sealed.documents.length!==5||!same(sealed.documents.map(d=>d.destination).sort(),[...docNames].sort()))fail('five reviewed final documents required');
+for(const d of sealed.documents){const e=byPath.get(relative(d.source));if(!e||e.bytes>16384)fail('final document source/cap');planned.push({...e,source:d.source,destination:d.destination});}
+const destinations=new Set();let total=0;
+for(const p of planned){if(destinations.has(p.destination))fail('inert mapping collision');destinations.add(p.destination);total+=p.bytes;if(total>TOTAL_CAP)fail('cumulative copy cap');read(SOURCE+'/'+p.source,p);}
+if(!same(names(),paths))fail('source changed during preflight');
+const manifest={schema:'cycle07-file-only-evidence-manifest@1',status:'FROZEN_COPY_NOT_LIVE_AUTHORITY',rootSeal:{path:SEAL,sha256:argv[1]},acceptedR2021:sealed.reviewR2021,productPins,files:planned.map(p=>({path:p.destination,sourcePath:p.source,bytes:p.bytes,sha256:p.sha256,sourcePOSIXPermissions:p.posixPermissions,copiedPOSIXPermissions:p.posixPermissions,gitProjectedMode:(parseInt(p.posixPermissions,8)&64)?'100755':'100644'})),limits:{perFileBytes:FILE_CAP,totalBytes:TOTAL_CAP},meaning:'Opaque exact file copies; no native plan/value decode, tests, helper or science. Manifest self-excluded. Root seal and later administration separately indexed; no retroactive audit or live authority. Physical POSIX permissions and Git projection are distinct.'};
+const manifestBytes=new TextEncoder().encode(JSON.stringify(manifest,null,2)+'\n');
+if(manifestBytes.length>FILE_CAP||total+manifestBytes.length>TOTAL_CAP)fail('manifest-inclusive cumulative cap');
+noLinks(dirname(DEST));mkdirSync(DEST,{mode:0o755}); // Exclusive NEW target; no existing target reuse.
+function put(relativePath,bytes,mode) {
+  const path=DEST+'/'+relativePath;mkdirSync(dirname(path),{recursive:true});noLinks(dirname(path));
+  writeFileSync(path,bytes,{flag:'wx',mode:0o600});chmodSync(path,mode); // Only NEW destination, never source chmod.
+  const got=read(path,{bytes:bytes.length,sha256:sha(bytes),posixPermissions:mode.toString(8)});
+  if(sha(got.bytes)!==sha(bytes))fail('destination readback');
+}
+for(const p of planned){const got=read(SOURCE+'/'+p.source,p);put(p.destination,got.bytes,got.mode);}
+for(const e of sealed.entries)read(SOURCE+'/'+e.path,e);
+if(!same(names(),paths))fail('source changed after copy');
+products();
+put('evidence-manifest.json',manifestBytes,0o644);
+console.log(JSON.stringify({status:'COPIED_FILE_CHECKPOINT_PENDING_INDEPENDENT_AUDIT',destination:DEST,files:planned.length+1,bytes:total+manifestBytes.length,manifestBytes:manifestBytes.length,manifestSHA256:sha(manifestBytes),nativeDecodes:0,helperCalls:0,GitWrites:0,limits:'Best-effort retained prefix; no overwrite/retry/fsync/crash-durable/race-proof claim. Separate root admission and independent audit required.'}));

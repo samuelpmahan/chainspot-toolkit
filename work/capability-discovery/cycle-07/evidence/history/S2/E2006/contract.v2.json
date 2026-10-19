@@ -1,0 +1,55 @@
+{
+  "schema":"cycle07-original-evidence-binding-contract-amendment@2",
+  "job_id":"E2006",
+  "worker":"S2",
+  "status":"ROOT_APPROVED_CONSTRUCTION_ONLY_IMPLEMENTATION_UNEXECUTED",
+  "preservedDesign":"contract.json and FLOW.md remain the original design/HOLD checkpoint. This append-only v2 records root's later scoped construction approval and actual source choices.",
+  "authorityPrecedence":[
+    "Root E2006 source-only construction approval; no import/test/decode/helper execution",
+    "Current E2002 result12400B sha2564cbf7d093bbad21454474cdbca8372565708f574f4273832f30cc7a8035fd40d defines correct actual source paths",
+    "Pinned unchanged Lenard recipe/store/PATH/codec sources",
+    "E2001 v1 sha2566db61139f62965ee1f67433b22cd6c525400e69dfb3cbf657fbde774af74d5b6 is only the48-slot metadata ledger, not accepted unchanged behavior"
+  ],
+  "beforeFirstExecution":"Root-reviewed minimal V2 protocol shape amendment and any mechanical pin/schema rebinding must occur prospectively, followed by independent source review, fabricated NONCV admission, and separately admitted original-evidence decode integration. No changing caps after failure.",
+  "interface":{
+    "entry":"buildOriginalEvidencePlan(request)",
+    "request":{"schema":"cycle07-original-evidence-plan-request@1","enabled":true,"token":"cycle07-E2006-original-evidence-plan-v1"},
+    "disabled":"{status:'DISABLED',plan:null,encodedBytes:null,sha256:null,actualNewPATH:0}",
+    "enabled":"{status:'READY',plan,encodedBytes,sha256,bindings,actualNewPATH:0}",
+    "errors":"Throws INTEGRITY_STOP or descriptor/import/codec error; no retry/fallback/partial successful plan.",
+    "sideEffects":"No filesystem writes. Token is exact admission identity, not durable spent-token enforcement. External later admitted runner owns token/output reservation.",
+    "internalPureSeam":"plan-core.mjs fixedSlots/classifyFit/selectWire/bindPlan accepts fabricated already-bound wire evidence for NONCV tests; public operation has no evidence/geometry/root/codec/cap injection"
+  },
+  "actualSourceFiles":["plan.test.mjs","plan-core.mjs","original-evidence-plan.mjs"],
+  "testsFirst":"plan.test.mjs was written before plan-core.mjs and original-evidence-plan.mjs. Followup tests were written before corresponding guard amendments. NO observed RED/GREEN; no test/import/syntax execution.",
+  "predecodeReadset":{
+    "authorityFiles":8,
+    "authorityBytes":799799,
+    "sourceFiles":22,
+    "sourceBytes":258620,
+    "aggregateFiles":2,
+    "aggregateBytes":2276019,
+    "answerFiles":96,
+    "answerBytes":179543,
+    "callbackFiles":176,
+    "callbackBytes":118835,
+    "totalDescriptorBodyReads":304,
+    "prospectiveExactBytes":3632816,
+    "ceilingBytes":8388608,
+    "actualReadsOfNativeBodies":0,
+    "qualification":"Derived from already permitted plain JSON metadata and source literals, NOT an actual file/hash/decode run. Additional passes/pins must be charged prospectively; none is currently implemented. Source lstat/fstat/EOF reads are not extra full-body passes. No image/pixel/mask files."
+  },
+  "capEvidence":{
+    "originalSelectedAnswerMaximum":6218,
+    "answerCap":8192,
+    "originalCallbackMaximum":705,
+    "callbackCap":2048,
+    "smallDecode":"Explicit UTF8(JSON.stringify(selected tagged subtree)+'\\n') <=32768 before decodeValue, plus8192 encoded-tree scalar/array nodes and no typed tags. codec maxBytes is not relied upon for decodeValue enforcement.",
+    "aggregate":"Full JSON.parse produces encoded tagged tree only; canonical representation check and iterative500000 encoded-node/depth40 cap precede selection. This is NOT whole native aggregate/raster decode. Byte cap bounds parser input, not proven JS peak memory or preparse allocation depth.",
+    "output":"Pinned codec encodeBytes enforces2MiB before detached plan is returned; no writer/producer. Encoded-node/depth/output sufficiency remains proposed, independently unverified, no raise after failure.",
+    "noProducerBudgetClaim":true
+  },
+  "sourceJoinLimits":"Source-derived original store order/caller/calculation attribution, not independent callback dynamic-argument capture. No inner/outer support fractions invented: only native ok flags/stations/raw arrays are planned. Hash at check is not host/execution authentication or complete concurrent-replacement defense.",
+  "unresolvedReviewGates":["Review all literal source/data paths and object shapes before any decode","Review proposed encoded-tree depth/node/output caps; exact input bytes do not alone prove peak memory or sufficient ceilings","Fabricated tests have not run; positive NONCV public enabled path must NOT touch real originals","Original numeric decode integration remains separately gated","No scientific/human/path/physical-edge acceptance"],
+  "actualExecution":{"syntaxChecks":0,"moduleImports":0,"tests":0,"codecCalls":0,"nativeBodyReads":0,"helperCalls":0,"storeCalls":0,"PATHQueries":0,"CV":0,"render":0,"repositoryWrites":0,"nativeOperations":0,"GitOperations":0}
+}

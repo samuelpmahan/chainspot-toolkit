@@ -1,0 +1,98 @@
+{
+  "schema": "cycle07-independent-file-only-adoption-audit@1",
+  "job_id": "R2018",
+  "worker": "S4",
+  "status": "MATCH",
+  "summary": "One fresh opaque current-state audit independently matched all 3375 protected repository bodies, Git blobs and modes to the E2015 before-freeze and HEAD/index. Exactly four new untracked product files remain. Accepted E2012 entry/core are byte-identical; relocated tests have only the single codec import substitution. E2018 actual relocated 73-pass captures and post-pins match. No tests or original-data path were executed by this review.",
+  "prospective": {
+    "path": "discovery-cycle07/S4/R2018/prospective.json",
+    "bytes": 2336,
+    "sha256": "d3ff0793d85645f61f786c991469a67427156beda2ea0f4c2a14330c6ad7be4e",
+    "savedBeforeFreshFullAudit": true
+  },
+  "repository": {
+    "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "HEAD": "4f24d50391927e0e50220690ea8ececec79e0bb4",
+    "tree": "27616cbaac38b1b916fc337d22dd8f7cab5a7736",
+    "beforeFreeze": {"path":"discovery-cycle07/S1/E2015/source-freeze.before.json","bytes":866721,"sha256":"0ed26380b6b39b6da944c358699f353657683bb338ebc1cc52fd6787d58d8a10"},
+    "afterFreeze": {"path":"discovery-cycle07/S1/E2015/source-freeze.after.json","bytes":2143,"sha256":"197e4baaf07e0e217f49c5ad86e63d8ae9c8adc6b5c893897431f7b5053a47ab"},
+    "freshCurrentAudit": {
+      "protectedFiles": 3375,
+      "opaqueBodyBytes": 61601578,
+      "allCurrentRowsEqualBeforeFreeze": true,
+      "allHEADTuplesEqualBeforeFreeze": true,
+      "allIndexStageZeroTuplesEqualHEAD": true,
+      "rowColumns": ["path","HEADmode","HEADGitBlob","currentBytes","currentSHA256","currentPOSIXPermissionsOctal","currentGitBlob"],
+      "canonicalCurrentRowsJSONSHA256": "b8b0930e81099ff73c424bd45308eb1f462da80bb8965aecd86f1da62cf3f7c7",
+      "method": "Node builtins only; opaque regular-file bytes, SHA256, Git blob SHA1 over blob-length prefix plus bytes, actual POSIX permissions; stable dev/ino/size/mtime/mode around each read. Read-only Git --no-optional-locks rev-parse, ls-tree, ls-files, diff and status. No project imports, native values or image interpretation.",
+      "trackedDiffEmpty": true,
+      "indexDiffEmpty": true,
+      "statusBeforeAfterIdentical": true,
+      "HEADBeforeAfterIdentical": true,
+      "unexpectedConflicts": [],
+      "qualification": "Check-time preservation evidence, not race-proofing, filesystem authentication or cap/RSS proof. Opaque hashing is not pixel/native-value decoding."
+    },
+    "onlyUntracked": [
+      "experiments/capability-discovery/joint-fit-original-plan/README.md",
+      "experiments/capability-discovery/joint-fit-original-plan/original-evidence-plan.mjs",
+      "experiments/capability-discovery/joint-fit-original-plan/plan-core.mjs",
+      "experiments/capability-discovery/joint-fit-original-plan/plan.test.mjs"
+    ]
+  },
+  "currentProducts": [
+    {"path":"experiments/capability-discovery/joint-fit-original-plan/original-evidence-plan.mjs","bytes":12666,"sha256":"0b6f2bad20177cd965085b3fbf889c008205653c03bcb72280d41769e17a001a","POSIXPermissions":"644","comparison":"BYTE_IDENTICAL_E2012_ACCEPTED_TARGET"},
+    {"path":"experiments/capability-discovery/joint-fit-original-plan/plan-core.mjs","bytes":20323,"sha256":"52ea18fd97e0112bd8aee255b73743a79bb2ab9842b0ec828314bff9c1c26ea5","POSIXPermissions":"644","comparison":"BYTE_IDENTICAL_E2012_ACCEPTED_TARGET"},
+    {"path":"experiments/capability-discovery/joint-fit-original-plan/plan.test.mjs","bytes":25500,"sha256":"44d810e1e0a19cb41afcc3ef0d085b364fc5fde52d278bdca6a049f4e0c270cb","POSIXPermissions":"644","comparison":"EXACTLY_ONE_LITERAL_CODEC_IMPORT_SUBSTITUTION"},
+    {"path":"experiments/capability-discovery/joint-fit-original-plan/README.md","bytes":8587,"sha256":"bf185d3c0e93763395c4c843d760c9439b4521a95c78aafe63536fefd17ca7bf","POSIXPermissions":"644","comparison":"NEW_DOCUMENTATION_FULLY_READ"}
+  ],
+  "testDelta": {
+    "source": "discovery-cycle07/S2/E2012/plan.test.mjs",
+    "sourceBytes": 25563,
+    "sourceSHA256": "83083e5ed749a76051bc7e88d1ded5dabadf01d687ccfa727f443b8bcec05589",
+    "oldLiteral": "../../../chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs",
+    "newLiteral": "../station-evidence/codec.mjs",
+    "literalOccursOnce": true,
+    "singleSubstitutionEqualsEntireCurrentTestBytes": true,
+    "diff": {"path":"discovery-cycle07/S1/E2015/test-relocation.diff","bytes":762,"sha256":"09d22c160ab44ede93f3e96e7593d4d9b16fb9193fb8f1acdbf9ff226e9043c6"}
+  },
+  "oldSource22": {
+    "admission": {"path":"discovery-cycle06/root-source-admission.json","bytes":6356,"sha256":"6f3f30924749e0104a12e7d5d3d43b45b23569e55de8ffe565111620dd0355b8"},
+    "entries": 22,
+    "allFreshCurrentBytesSHA256AndHEADModesMatch": true,
+    "allActualPOSIXPermissions644Preserved": true,
+    "codec": {"path":"experiments/capability-discovery/station-evidence/codec.mjs","bytes":7322,"sha256":"3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015"},
+    "boundary": "Old defaults/source22 are unchanged. This audit checks actual current modes; the helper itself still checks only declared source22 mode metadata. No claim that fabricated tests exercised that public enabled boundary."
+  },
+  "authorAndPriorAuthority": [
+    {"path":"discovery-cycle07/S1/E2015/realresult.json","bytes":9435,"sha256":"7375463a512b4fe6a5628a8455acdb7c0e95c5772328913cf0da2c6ce9311479","meaning":"Construction author receipt; frozen source and four-product adoption claims checked against current files."},
+    {"path":"discovery-cycle07/S1/E2015/FLOW.md","bytes":6928,"sha256":"1de21d0118b436b057105af66a6d5feba2739a6b07167a3f6f61906ddaa7328c","meaning":"Fully read adoption flow; not runtime evidence."},
+    {"path":"discovery-cycle07/S4/R2013/realresult.json","bytes":8993,"sha256":"2b01e9f247a6d7c8d2640e60308797db2b4198f68c2beaf8603502b04146fca8","meaning":"Prior accepted exact THREE E2012 helper/core/tests targets reused; codec/protocol prior support is not invented fresh target coverage."}
+  ],
+  "relocatedActualEvidenceReviewed": {
+    "result": {"path":"discovery-cycle07/S1/E2018/realresult.json","bytes":9774,"sha256":"263902fd4eb8ddf3621318f756034eb5a335b445186b4217b9b448059312ceb8"},
+    "prospective": {"path":"discovery-cycle07/S1/E2018/prospective.json","bytes":3651,"sha256":"84aeb74560e7f12edb151074fefad0b7c47717302e2785569b30bb85f0456299"},
+    "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "argv": ["node","--test","--test-concurrency=1","experiments/capability-discovery/joint-fit-original-plan/plan.test.mjs"],
+    "invocationsInAuthorReceipt": 1,
+    "invocationsByR2018": 0,
+    "startUTC": "2026-10-19T00:19:22.698522700Z",
+    "endUTC": "2026-10-19T00:19:24.292097085Z",
+    "counts": {"registered":73,"reached":73,"pass":73,"fail":0,"cancelled":0,"skipped":0,"todo":0,"suites":0,"locatedInfinityHOLDValidators":12,"inputIntegrityNegativeCases":36},
+    "exitCode": 0,
+    "captures": [
+      {"path":"discovery-cycle07/S1/E2018/stdout.raw","bytes":7411,"sha256":"80d72ae99a6727941fadfcca53c5049f86c4f262aff3460939a8927cca8435b0"},
+      {"path":"discovery-cycle07/S1/E2018/stderr.raw","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      {"path":"discovery-cycle07/S1/E2018/start-utc.raw","bytes":31,"sha256":"c6eefdbe0379ee42773f1eafacd2bc193a6e125b6dffc129bc890b0f252690b8"},
+      {"path":"discovery-cycle07/S1/E2018/end-utc.raw","bytes":31,"sha256":"b8e46210df1f2cd442c0a215cc3f7bf99c9de16bee3201d2f0529013c21d5b85"},
+      {"path":"discovery-cycle07/S1/E2018/exit-code.raw","bytes":2,"sha256":"9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"}
+    ],
+    "inventory": {"path":"discovery-cycle07/S1/E2018/test-inventory.json","bytes":14241,"sha256":"770778dfe10d1f02034aa3aa101dcf58a1cdbec1e863f8164f620107d2cde00e","tests":73},
+    "checks": "All five capture hashes/sizes, raw stdout complete UTF8 read and 73 checkmarks/summaries, empty stderr, exit0, matching ordered UTCs, prospective argv/current four pins and all four current posthashes checked. Actual source/test imports, purecodec fabricated decoding and fixture actions belong to S1's one test run; this reviewer did not repeat them."
+  },
+  "incidentalFailures": [
+    {"kind":"METADATA_LOCATOR_PATH_ABSENT","detail":"Initial ls discovery-cycle07/S2/E2018 failed: actual evidence belongs to S1/E2018. Explicit filename-only location then corrected path. No test, project import or audit failure; no fabricated raw capture/backdating."}
+  ],
+  "priorTextIncident": "E2007 broad source-hash locator incidentally exposed tagged-report text in tool output. Existing conversation TOOLTESTIMONY only; no invented separate raw capture. No codec/native decode then, no reread here. Excluded from accepted evidence, predicates, eligibility and cap tuning. No blind-review or historically zero tagged-text exposure claim.",
+  "actualR2018Actions": {"freshFullOpaqueAudits":1,"projectModuleImports":0,"testCommands":0,"testReruns":0,"syntaxPrechecks":0,"helperCalls":0,"originalExternalFragmentBodyReads":0,"nativeValueReportReads":0,"codecDecodes":0,"storeCalls":0,"PATHQueries":0,"CV":0,"pixelDecodes":0,"renders":0,"repositoryWrites":0,"GitWrites":0,"runnerReviews":0},
+  "retention": "Fresh audit summary was printed through exec_command and is transcribed here; no separate contemporaneous shell raw capture is claimed. Tool outputs retain the locator failure and audit result."
+}

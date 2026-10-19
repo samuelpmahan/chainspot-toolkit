@@ -1,0 +1,58 @@
+{
+  "schema":"cycle07-independent-runner-review-result@1",
+  "job_id":"R2020",
+  "worker":"S4",
+  "decision":"accepted",
+  "outcome":"confirmed_reuse",
+  "status":"ACCEPTED_BOUNDED_ENGINEERING_SOURCE_AND_FABRICATED_TESTS_ONLY",
+  "summary":"Independently fully reviewed E2019 parent/child/core/old11/relocated22/FLOW/FULL.diff and prior R2014 AMEND plus original E2017 RED and E2020 GREEN captures. M1-M4 are addressed without broadening helper authority, weakening assertions or raising caps. ONE separately permitted same33 fabricated command passed all33 with0fail/exit0,empty stderr and unchanged source/codec/runtime-file pre/post hashes. Parent M1 remains source-only; no real parent/child/helper/original evidence or producer ran. Engineering acceptance only, not original-plan operation or scientific acceptance.",
+  "review":{"path":"discovery-cycle07/S4/R2020/review.md","fullyReadSources":true,"FULLdiffFullyRead":true,"sourceFinding":"No additional must-amend found within bounded admitted contract."},
+  "prospective":{"path":"discovery-cycle07/S4/R2020/prospective.json","bytes":3981,"sha256":"48e1b3f0c3ec3f6a0c709a298c633643a2357d206fa9c325e0bc0b7d81c5da48","savedBeforeLaunch":true},
+  "targets":[
+    {"role":"wrapper","path":"discovery-cycle07/S3/E2019/capture-original-plan.mjs","bytes":10277,"sha256":"13603b76a7c27dd9332f136fd7056f89bcc1bc620b4a275b96522a30c470a1a3","completeRead":true,"prePostMatch":true},
+    {"role":"runner","path":"discovery-cycle07/S3/E2019/run-original-plan.mjs","bytes":2177,"sha256":"3c58c5fd53ea170d28e82480642f09433be064fa3bbeeefe00a9d3e7c6275160","completeRead":true,"prePostMatch":true},
+    {"role":"captureCore","path":"discovery-cycle07/S3/E2019/capture-core.mjs","bytes":11924,"sha256":"ef9bfee41de9a1cfc7c4dd9ba4357a83e0760adcbe64836301551461c5bdde3d","completeRead":true,"prePostMatch":true},
+    {"role":"fabricatedTests","path":"discovery-cycle07/S3/E2019/fabricated.test.mjs","bytes":9279,"sha256":"983f003cc3baf4c97b4e74ef6cc6ee6073c0b0add96ac9cfa0e0cfe68257371d","completeRead":true,"prePostMatch":true}
+  ],
+  "supportingTestTarget":{"path":"discovery-cycle07/S3/E2019/artifact-identity.test.mjs","bytes":9202,"sha256":"9a537e2bcc1b667db07b04581d5205f1543634a71e7d9ab8a729d68366d93b2c","completeRead":true,"prePostMatch":true,"scope":"Reviewed and executed22 supporting tests, not an additional production import or parent pin key."},
+  "supportingSourcePins":[
+    {"path":"discovery-cycle07/S3/E2019/FLOW.md","bytes":7469,"sha256":"a9b53a5303c4ebfafe3b31e1ce41718a1f3be26d8ce1cb9b391e672abe8cd1d6","completeRead":true,"prePostMatch":true},
+    {"path":"discovery-cycle07/S3/E2019/FULL.diff","bytes":21934,"sha256":"58c1a2faac7b6d9f4ea9899a5ef03b617019214d740ed27343bb923c2345ff23","completeRead":true,"prePostMatch":true},
+    {"path":"discovery-cycle07/S3/E2019/realresult.json","bytes":8207,"sha256":"eef04c57d0fef092e7fc96dc0507784d1f294f9d93bac1cecc3bcf568496c61b","completeRead":true},
+    {"path":"chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs","bytes":7322,"sha256":"3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015","prePostMatch":true,"scope":"Prior purecodec authority reused, not fresh codec/protocol acceptance target."}
+  ],
+  "runtimeFile":{"path":"/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node","bytes":125989464,"sha256":"bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12","version":"v24.19.0","platform":"linux","arch":"x64","prePostMatch":true,"qualification":"Inspected file identity at check-time, not running interpreter or host authentication; no future original runtime admission."},
+  "M1throughM4":{
+    "M1":{"disposition":"accepted-source-only","reason":"Exact helper/core/tests capsule, separate codec/protocol/protocolReview prior authority reuse; true per-role reviewer exclusion; original parent not imported by fabricated suites."},
+    "M2":{"disposition":"accepted","reason":"Mandatory literal-role nonnull exact bindings, safe positive integer per-role caps and independent inventory equality; receipt complete/null/error relationships source-inspected. Known output name alone never role proof."},
+    "M3":{"disposition":"accepted","reason":"Both stream error listeners precede fallible data registration; mock cross-stream failure preserves first SETUP/later STDERR_ERROR, actual mock close and cleanup. No real OS cleanup proof."},
+    "M4":{"disposition":"accepted","reason":"Complete follows successful write/hash/binding; postwrite hash failure retains original HOLD and incomplete/null artifact without retry. Actual fabricated codec losslessly retains Infinity/NaN/-0."}
+  },
+  "priorEvidenceReviewed":[
+    {"path":"discovery-cycle07/S4/R2014/review.md","sha256":"93b1f969ee9ce934466a9dbe80ddd4aedeac96105b079cf241ed31fd154ad2d9","completeRead":true,"meaning":"All four prior source amendments checked."},
+    {"path":"discovery-cycle07/S2/E2017/realresult.json","bytes":6831,"sha256":"af498589c60659475cdd58208538171c635c2dea230e4e258b6ef111ef75eaee","completeRead":true,"captureHashesVerified":true,"actualCounts":{"tests":22,"pass":14,"fail":8,"exitCode":1}},
+    {"path":"discovery-cycle07/S3/E2020/realresult.json","bytes":10985,"sha256":"43d27ee6e78ae3d6a763305d0f4a57b372f49a2e352cbeaf7f415aafa3518066","completeRead":true,"captureHashesVerified":true,"actualCounts":{"tests":33,"pass":33,"fail":0,"exitCode":0}},
+    {"path":"discovery-cycle07/root-E2020-fabricated-green-admission.json","bytes":2064,"sha256":"aae29e0c648873a4dc3d1454277f8831b3d739412890de87b9817a266c597e66","completeRead":true,"meaning":"Historical S3 test admission reviewed; own authority is root R2020 dispatch."}
+  ],
+  "sourceIdentity":{"old11ByteIdenticalE2014":true,"childByteIdenticalE2014":true,"driver22OnlySingleLiteralImportReplacementE2016":true,"assertionsUnchanged":true,"capChanges":0,"chronology":"Old11 first ran E2020; only22 had actual E2017 RED14pass8fail, not all33 RED-proven. Previously unreached listener/cause and persisted-complete suffix assertions now passed in both GREEN evidence and independent run."},
+  "actualCommand":{"cwd":"/workspace/scratch/8528bb251845","argv":["node","--test","--test-concurrency=1","discovery-cycle07/S3/E2019/fabricated.test.mjs","discovery-cycle07/S3/E2019/artifact-identity.test.mjs"],"invocations":1,"retries":0,"exitCode":0,"startUTC":"2026-10-19T00:40:53.672071194Z","endUTC":"2026-10-19T00:40:53.925501016Z","captureMethod":"All five exclusive raw descriptors opened before launch under shell noclobber; separate direct unmodified stdout/stderr, UTC before/after and immediate actual test exit. Ambient inherited unchanged.","nodeReportedDurationMs":184.102657},
+  "captures":[
+    {"role":"stdout","path":"discovery-cycle07/S4/R2020/stdout.raw","bytes":3073,"sha256":"e9b9c57ea394eb27b523ef50acd769ee1d17712e16d8b036f4f69a371957af07","completeRead":true},
+    {"role":"stderr","path":"discovery-cycle07/S4/R2020/stderr.raw","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855","emptyRetained":true},
+    {"role":"startUTC","path":"discovery-cycle07/S4/R2020/start-utc.raw","bytes":31,"sha256":"286ffd3fc333b74cfd379666ca0901617735ed35fdb8e58fe06e225c91046965"},
+    {"role":"endUTC","path":"discovery-cycle07/S4/R2020/end-utc.raw","bytes":31,"sha256":"14b585bac58aacdd35a8a8fdbe394ea55c976626f0974129e8bcdfbf1c758b9d"},
+    {"role":"exitCode","path":"discovery-cycle07/S4/R2020/exit-code.raw","bytes":2,"sha256":"9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"}
+  ],
+  "actualCounts":{"registered":33,"reached":33,"pass":33,"fail":0,"cancelled":0,"skipped":0,"todo":0,"suites":0,"unexpectedFailures":[],"harnessImportFixtureFailuresObserved":0},
+  "actualActions":{"testInvocations":1,"syntaxPrechecks":0,"separateProjectImportCommands":0,"actualImportsAndCodec":"Node test/assert/events, pure core and purecodec imported; fabricated HOLD encode/decode occurred, internal counts uninstrumented/not zero.","inMemoryFixtures":"Fake helper/hash/encoder/writes/streams/manual timers ran; not real original helper/process/filesystem actions.","realParentChildHelperImports":0,"realParentChildHelperRuns":0,"originalExternalEvidenceBodyReads":0,"nativeValueReportReads":0,"originalNativeValueDecodes":0,"originalPacketsTokens":0,"realOSChildTimerFixtures":0,"storeCalls":0,"PATHQueries":0,"CV":0,"imagePixelMaskReads":0,"render":0,"sourceTestCapEdits":0,"GitWrites":0,"nativeWrites":0,"repositoryWrites":0,"scratchWritesOnly":"discovery-cycle07/S4/R2020/"},
+  "remainingLimits":[
+    "M1 real parent admission and runtime/ambient/source22/helper integrity path are source-reviewed, not dynamically tested by this original-incapable suite.",
+    "Real pipe/signal/process/fsync/filesystem behavior, cap sufficiency/RSS, race-free execution, executed-runtime/host authentication, full branch coverage and original pipeline compatibility remain unknown.",
+    "Frozen cap failure in a future separately admitted one-shot original plan is legitimate terminal evidence, not permission to raise caps/prune/retry.",
+    "Acceptance covers exact bounded engineering runner source and fabricated evidence only. Root must separately authorize original-plan operation and final immutable source/review/runtime/ambient/request packet; no original GO is minted here.",
+    "No eligibility44, original numeric results, new store/PATH/CV/producer/VisualRender/CLI scientific/physical/width/continuity/defaultON/main/deploy/publication acceptance. G1-G6 remain unchanged."
+  ],
+  "priorTextIncident":"Prior E2007 incidental tagged-report text exposure remains existing TOOLTESTIMONY only. No reread, decode, invented raw capture/backdating, blind-review claim or use for accepted evidence/predicates/cap tuning/eligibility.",
+  "skillInfluence":"verification-before-completion required fresh ONE command, full raw output/exit review and postpins before pass claim. materialize preserves E2017 failures/unreached suffixes, E2020 old11-first chronology and source-only M1 rather than claiming all33 RED-proven or original/scientific success.",
+  "claims":{"engineeringAccepted":true,"freshIndependent33Passed":true,"originalOperationApproved":false,"originalEligibilityObserved":false,"M1DynamicallyExercised":false,"capSufficiency":"UNKNOWN","realOSIntegration":"UNKNOWN","scientificAcceptance":"UNKNOWN","humanAcceptance":"UNKNOWN","publicationApproved":false}
+}

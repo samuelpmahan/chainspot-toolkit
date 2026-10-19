@@ -1,0 +1,11 @@
+--- /workspace/scratch/8528bb251845/discovery-cycle07/S2/E2012/plan.test.mjs	2026-10-19 02:47:54.660728932 +0300
++++ /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/joint-fit-original-plan/plan.test.mjs	2026-10-19 03:09:16.455498496 +0300
+@@ -5,7 +5,7 @@
+ import { tmpdir } from 'node:os';
+ import { join } from 'node:path';
+ import { createHash } from 'node:crypto';
+-import * as codec from '../../../chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs';
++import * as codec from '../station-evidence/codec.mjs';
+ import { fixedSlots, classifyFit, selectWire, bindPlan } from './plan-core.mjs';
+ import { buildOriginalEvidencePlan, readBoundedFile } from './original-evidence-plan.mjs';
+ 

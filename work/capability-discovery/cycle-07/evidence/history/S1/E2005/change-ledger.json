@@ -1,0 +1,327 @@
+{
+  "schema": "cycle07-protocol-literal-change-ledger@1",
+  "job_id": "E2005",
+  "worker": "S1",
+  "base": {
+    "path": "discovery-cycle07/S1/E2001/protocol.json",
+    "bytes": 71512,
+    "sha256": "6db61139f62965ee1f67433b22cd6c525400e69dfb3cbf657fbde774af74d5b6"
+  },
+  "review": {
+    "path": "discovery-cycle07/S3/R2001/realresult.json",
+    "bytes": 19448,
+    "sha256": "5af8eb0139b7975145d9e59fefc2ec3e2a7e8cf5747598a45c1130ad8bbb71b0",
+    "decision": "amend"
+  },
+  "changedFieldCount": 22,
+  "changedFields": [
+    {
+      "field": "schema",
+      "before": "cycle07-joint-fit-station-contrast-protocol@1.0.0",
+      "after": "cycle07-joint-fit-station-contrast-protocol@1.1.0"
+    },
+    {
+      "field": "job_id",
+      "before": "E2001",
+      "after": "E2005"
+    },
+    {
+      "field": "status",
+      "before": "SOURCE_ONLY_PROPOSAL_PENDING_INDEPENDENT_REVIEW_NO_EXECUTION",
+      "after": "SOURCE_ONLY_V2_AMENDMENTS_PENDING_INDEPENDENT_REVIEW_PRODUCER_HOLD"
+    },
+    {
+      "field": "bindingAuthority.predecodeGuard",
+      "before": "Before any separately admitted bounded pinned-codec decode: verify both manifest bytes/digests, exact protocol/source/receipt authority, raw aggregate bytes/digests, and all96 selected answer fragment bytes/digests; reject duplicate/missing/path-escaping entries. Resolve relative paths only under fixed originalRawRoot, regular-file bounded descriptor reads with exact size/hash/EOF, no path interpolation from native values.",
+      "after": "Before any separately admitted bounded pinned-codec decode: verify both manifest bytes/digests, exact protocol/source/receipt authority, raw aggregate bytes/digests, and all96 selected answer fragment bytes/digests; reject duplicate/missing/path-escaping entries. Resolve relative paths only under fixed originalRawRoot, regular-file bounded descriptor reads with exact size/hash/EOF, no path interpolation from native values. Fixed-root lexical descent and no-symlink/descriptor identity policy must be specified and independently reviewed; regular-file fstat alone does not prove containment. Separate byte verification from tagged-wire selection/decode; no full aggregate native decode is authorized by protocol acceptance."
+    },
+    {
+      "field": "bindingAuthority.furtherBindingGuard",
+      "before": "A separately admitted metadata/decode packet must freeze exact original declaration/plan rawArgs, queryTrace and corresponding callback fragment path/size/hash/identity for every48 slots from the already bound aggregate and raw manifest. Original c,b,j/comparison/bank, fit10*c+1+3*b and control10*c+2+3*b must equal this source-derived table. No producer until this enriched binding table is independently reviewed. Do not infer callback fragment index equals seq; use actual captureIndex/seq mapping.",
+      "after": "Separately assign and review a scoped bounded binding helper before any raw-body read/codec import/decode. It must enrich every48 slots using originalRecordJoins below: exact declaration/plannedQueries.rawArgs identities, separate queryTrace state/error/nativeAnswer and separately bound callback fragments. No producer until enriched table is independently reviewed. Callback .nativeEntry contains NO args/rawArgs; join is source-derived attribution under pinned original recipe, not independent dynamic argument capture. Do not infer callback filename global index equals local seq or captureIndex."
+    },
+    {
+      "field": "bindingAuthority.originalRecordJoins",
+      "before": {
+        "absent": true
+      },
+      "after": {
+        "plannedQueries": "At decoded value-trace.json ROOT (not {valueTrace:...}), plannedQueries[i] has exactly planIndex,comparisonId,groupId,windowId,widthPx,query,rawArgs. Bind i, source declaration/group/window/bank and query with exact ordered rawArgs HERE. It has NO state/error/status. Do not normalize absent fields to null.",
+        "queryTrace": "At the same root, queryTrace[i] has planIndex,comparisonId,state,resolvedIdentity,nativeAnswer,error. Require exact bound index/comparison, state:'COMPLETED', own error:null and present nativeAnswer for BOTH selected fit/control. Bind losslessly to the separately verified answer fragment; no invented status field.",
+        "snapshotChecks": "inputIntegrity.snapshots[c].checks entries have exactly planIndex,post,verified. Require correct planIndex, verified:true and bound hashes here; NO error field at this per-check path. Preserve source outer snapshot error/postchecks separately.",
+        "callbackWrapper": "Each bound fragments/calculation-K.json decoded ROOT is {comparisonId,captureIndex,nativeEntry}. Bind exact raw-manifest path/bytes/hash/kind/comparisonId/captureIndex and sidecar.calculationLog equivalent. Wrapper has NO args/rawArgs/status/error.",
+        "nativeEntry": "Verify own source fields seq,parent,depth,calculation,store,caller,site,inParts,outParts,elapsedMs,status,error,emits,key,cached,computedMs. Selected query callback: calculation equals plannedQueries[i].query; store=comparisonId; caller='cycle06-lenard5-station-measurement'; site:null; parent:null; depth:0; status:'ok'; own error:null; emits:{computed:1}; key:null; cached:false; inParts/outParts ordinary empty arrays. Runtime timing values retained as observed, not fixed predictions. NO args/rawArgs exists.",
+        "oldFixed10Mapping": {
+          "definition": "localOffset=i-10*c. All original scopes have10 public queries and one lazy constant, success path only.",
+          "profile": {
+            "localOffset": 0,
+            "seq": 0,
+            "captureIndex": 1,
+            "parent": null,
+            "depth": 0,
+            "calculation": "fn.q.path.profile"
+          },
+          "lazyConstant": {
+            "seq": 1,
+            "captureIndex": 0,
+            "parent": 0,
+            "depth": 1,
+            "calculation": "fn.input.lenard5StationMeasurement",
+            "caller": "lazy:px.image.cropped",
+            "site": null
+          },
+          "remainingQueries": "For localOffset1..9 ONLY, seq=localOffset+1 and captureIndex=localOffset+1; parent:null,depth0. Do NOT apply offset+1 to profile offset0.",
+          "selectedFits": {
+            "localOffsets": [
+              1,
+              4,
+              7
+            ],
+            "seqAndCaptureIndices": [
+              2,
+              5,
+              8
+            ]
+          },
+          "selectedControls": {
+            "localOffsets": [
+              2,
+              5,
+              8
+            ],
+            "seqAndCaptureIndices": [
+              3,
+              6,
+              9
+            ]
+          },
+          "fragmentFilename": "K is writer global fragment array index, not local captureIndex/seq. Locate and verify via manifest comparisonId+captureIndex plus decoded identities and sidecar record; never a filename-only inference."
+        },
+        "attribution": "The query rawArgs identity is declared/returned in plannedQueries and attributed to execution through pinned recipe loop, trace/answer/source integrity and callback relationships. Callbacks independently establish calculation/caller/site/order/status, not dynamic raw-argument capture. This limitation survives successful binding."
+      }
+    },
+    {
+      "field": "eligibility.originalExecutionGuard",
+      "before": "Bound original trace/request/source identity and original fit AND control plan rows must be COMPLETED, error:null, synchronous answer present; corresponding native callback status:'ok', error:null, correct calculation/comparison/raw args and source-derived callback relation. Unexpected cached answer/emits, query error or original failure -> INTEGRITY_STOP, not no-fit skip. Verify original aggregate status COMPLETED.",
+      "after": "Use bindingAuthority.originalRecordJoins exactly: plannedQueries[i].query/rawArgs/declaration identities; queryTrace[i].state==='COMPLETED', own error===null and nativeAnswer bound to selected answer fragment; callback.nativeEntry.status==='ok', own error===null and separately verified calculation/comparison/store/caller/site/seq/parent/depth/capture/emits identity. PlannedQueries and callback have no state/error or args fields respectively. Unexpected cached emits/original query error/binding failure is INTEGRITY_STOP. Aggregate status must be COMPLETED. No absent-field null normalization."
+    },
+    {
+      "field": "eligibility.controls",
+      "before": "All48 original native contrast answers retained, including skipped derived slots. Validate exact value/unit/emits wrapper and exact contrast keys/lengths against source; ordinary dense numeric leftLum/rightLum including raw nonfinite values, dense okLeft/okRight of0/1 and stationsCount16 or48. Null is not native stationContrast luminance; unexpected null/shape stops integrity, not normalization.",
+      "after": "All48 original native contrast answers retained, including skipped derived slots. Apply nativeGrammar O/A predicates, exact unit and O(computed)=1, exact contrast keys/common N/stationsCount16 or48. Dense primitive-number leftLum/rightLum preserve finite-invalid and NaN; numeric0/1 flags. Null/wrong type/shape is INTEGRITY_STOP. Any contrast +/-Infinity is retained source-impossible INTEGRITY_HOLD under contrastIntegrityPolicy, never normalized or passed as successful support."
+    },
+    {
+      "field": "eligibility.nativeGrammar",
+      "before": {
+        "absent": true
+      },
+      "after": {
+        "ordinaryNativeRecord": "O(K): value is non-null object with Object.getPrototypeOf(value)===Object.prototype, exactly K as own enumerable DATA string fields, no extra/hidden/nonenumerable/symbol/accessor/undefined fields. Match key SET, not key order. Generic codec's null-prototype support does not widen native constructor grammar.",
+        "appliesTo": [
+          "outer fit/control/derived answer O(value,unit,emits)",
+          "fit pair value O(lPx,rPx,cPx,wPx,score,gl,gr)",
+          "no-pair value O(condition)",
+          "computed emits O(computed)",
+          "stationContrast value O(leftLum,rightLum,okLeft,okRight,stationsCount)"
+        ],
+        "arrayPredicate": "A(N): Object.getPrototypeOf(array)===Array.prototype, length===N, exactly own keys length and string indices0..N-1, no holes/extra/hidden/symbol/accessor/undefined index values; each index enumerable data. The intrinsic length property is the sole expected nonenumerable field. Key-set validation, not enumeration-order validation. Numeric luminance elements and numeric0/1 flags only; N frozen16 or48.",
+        "insertionOrder": "Only query.rawArgumentKeysInOrder is an insertion-order contract. Native record/array shape matching remains exact key-set matching.",
+        "wrongShape": "Null/wrong prototype/type/missing/extra/hidden/symbol/accessor/undefined native fields -> retained INTEGRITY_STOP; no coercion or normalization."
+      }
+    },
+    {
+      "field": "eligibility.contrastIntegrityPolicy",
+      "before": {
+        "absent": true
+      },
+      "after": "For the exact bounded valid byte raster and frozen native stationContrast source, +/-Infinity contrast is source-impossible: retain exact raw bytes/value and original status, append integrity-HOLD cause and stop further admitted work without normalization, fallback or success interpretation. Applies to original nominal and future derived contrast. NaN and finite-invalid remain ordinary retained native support outcomes. This does NOT change numeric-shaped fit nonfinite NUMERIC_UNUSABLE skip policy."
+    },
+    {
+      "field": "query.returnedShape.nativeGrammar",
+      "before": {
+        "absent": true
+      },
+      "after": "Apply eligibility.nativeGrammar O/A and contrastIntegrityPolicy, not generic codec grammar alone."
+    },
+    {
+      "field": "trace.failure",
+      "before": "First integrity/query/codec/cap/input/output failure ends admitted run; preserve skipped/completed/failed/unattempted rows and available raw fragments. No retry/fallback/normalization/cap raise/retuning/control regeneration. Later independent packet requires new explicit authority, not same-run recovery.",
+      "after": "First integrity/query/codec/cap/input/output failure ends admitted run; preserve skipped/completed/failed/unattempted rows and available raw fragments. No retry/fallback/normalization/cap raise/retuning/control regeneration. Later independent packet requires new explicit authority, not same-run recovery. A native onCall may receive status:'ok' before callback encoding throws while store.call itself throws. Retain native status/error exactly; record orchestration/capture error separately and do not count a public completion unless store.call actually returned. Do not truncate native metadata to pass caps."
+    },
+    {
+      "field": "trace.matchedEvidence",
+      "before": "CLItext table and VisualRender must consume the SAME frozen trace/artifact-manifest digest and show every48 slots in j order: original nominal and derived raw arrays, side validity, mask denominators, nonfinite/null distinctions, native no-pair/skip/errors and unattempted prefix. No independent query/render source, rounded display input, row omission, zero fill, changed support denominator or scalar-only replacement. Visual display may format labels but never feeds back into inputs. Render only after separate checkpoint/admission.",
+      "after": "CLItext and VisualRender consume the SAME frozen trace/artifact-manifest digest and all48 slots in j order, nominal versus derived raw side arrays/flags/skip/errors/unattempted states. Display denominators ONLY as frozen stationsCount N and explicit per-side valid=sum(okFlag===1), invalid=N-valid station counts, separately for original nominal and derived records. Keep finite-invalid/NaN/raw flags visible. Internal inside/outside sample counts/fractions are NOT_EXPORTED/UNKNOWN; no inference from flags, equality of nominal/derived supports, extra queries/helper sampling/pixel reads or invented denominators. No scalar-only replacement, zero fill, row omission or rounded labels as inputs. Render remains separately admitted."
+    },
+    {
+      "field": "resources.newPacketTighterCaps.explanation",
+      "before": "Proposed conservative envelope for all new producer output including duplicated fragments/aggregates/manifest/receipt; counts actual bytes and refuses before exceeding budget. Existing codec/writer hard caps are unchanged; admission requires separately reviewed bounded wrapper/accounting implementation and fabricated-shape NONCV evidence. Existing writer alone does not enforce total ceiling; no claim it does.",
+      "after": "Proposed conservative per-file and cumulative ceilings for all new producer output; simultaneously reaching all per-file maxima sums18087936B, above total16777216B by1310720B. This is not a contradiction: an exact cumulative guard MUST STOP even when individual files fit. Per-file compliance does not prove total compliance. Before unchanged writer invocation, a separately assigned/reviewed whole-wrapper pre-writer success/failure byte reservation must cover answer/callback fragments, duplicated aggregate content, success/error manifest, CLI receipt and partial-file prefix. Existing writer has no cumulative/manifest/receipt limit and default value encode32MiB; it does not implement proposed4MiB value cap. Exact guard source plus separately admitted fabricated boundary/first-failure proof remain HOLD; never raise caps or patch frozen writer."
+    },
+    {
+      "field": "oneShot.prequery",
+      "before": "Reserve fresh exclusive output directory (no recursive reuse/overwrite) and fresh exclusive future-run token bound to exact request/protocol/source/binding hashes. Token spent when packet begins and never reusable, including prequery failure; output reservation failure means zero runner calls.",
+      "after": "Before future calls reserve output through unchanged createArtifactWriter(outDir), whose constructor exclusively mkdirs NEW directory; do NOT mkdir independently then call constructor. A separately assigned reviewed compatible mechanism would need explicit authority. Fresh exclusive future-run token must bind exact request/protocol/source/enriched-binding hashes; exact token schema/path/lifecycle implementation remains pending producer HOLD. A helper admission identifier is NOT durable cross-process spent-token enforcement. Failure never permits cleanup/replacement token/retry/rerun."
+    },
+    {
+      "field": "oneShot.writer",
+      "before": "Existing exclusive writer one invocation only, already-encoded answer fragments then callback fragments then value/sidecar then legacy cycle05 artifact manifest. Add separately reviewed bounded aggregate guard; do not alter writer authority silently.",
+      "after": "Existing writer constructor reserves output; writer.write(runResult) once only, even after failure. Persist preencoded answer then callback fragments, value/sidecar and legacy manifest under separately reviewed pre-writer whole-budget guard. Existing writer authority/caps remain unchanged and no total guard is claimed implemented."
+    },
+    {
+      "field": "amendmentClosure.A1",
+      "before": "Exact outer/fit/condition/unit/error/numeric types; separate input/raw manifests;48 metadata bindings plus predecode/argument/callback enrichment guard.",
+      "after": "R1528-A1 plus R2001-A1/A2: separate manifest identities/all48 metadata, exact ordinary native grammar and exact plannedQueries/queryTrace/callback/snapshot field joins; old profile seq0 exception. Enriched binding/source attribution still guarded."
+    },
+    {
+      "field": "amendmentClosure.A4",
+      "before": "Fixed48 trace/skip/stop states; one-live resource and selected-work accounting; hard/tighter caps; one-shot/prefix; same-trace CLIvisual.",
+      "after": "R1528-A4 plus R2001-A3/G1..G6: same48 states/resource limits; exported flag denominators only; explicit cumulative STOP/pre-writer/token/helper guards remain HOLD, not implemented/passed."
+    },
+    {
+      "field": "guardedNextPackets",
+      "before": [
+        {
+          "id": "P1_BINDINGS",
+          "state": "NOT_ADMITTED",
+          "work": "Independent source-only critique of this protocol and exact slot table. Root chooses hypothesis/guards. Separately assign bounded raw-binding/decode design/implementation with owned scratch paths; actual-flow checkpoint and exact hashes before any codec import/decode/test. Must enrich original callback/declaration/rawArgs bindings and preserve raw numeric identities."
+        },
+        {
+          "id": "P2_SIBLING_CONSTRUCTION",
+          "state": "NOT_ADMITTED",
+          "work": "Root/G6 assign distinct default-OFF sibling files; freeze original22/old5/fixed160 untouched. Source-only implementation, including caps/failure paths/token/CLI+trace contract, then independent source review and checkpoint. No production ABFeature by this protocol."
+        },
+        {
+          "id": "P3_NONCV",
+          "state": "NOT_ADMITTED",
+          "work": "Separate exact bounded fabricated-shape tests/import/codec/token/cap/stop-path packet. No image/pixel/gateway/store query. Demonstrate whole-wrapper and total-output cap passage and failure-prefix behavior; no assumption already passed."
+        },
+        {
+          "id": "P4_ONE_PRODUCER",
+          "state": "NOT_ADMITTED",
+          "work": "Only after verified raw decode/bindings, exact external image bodies/original absolute attestation/source closure/current ownership plus explicit root native-assigned GO: one query per eligible slot, max48, spent token/no rerun. Actual flow must be reviewed before execution."
+        },
+        {
+          "id": "P5_MATCHED_INSPECTION",
+          "state": "NOT_ADMITTED",
+          "work": "Independent lossless artifact/exit review then separate same-trace CLItext/VisualRender packet; retain every slot, validity/nonfinite/errors and falsifiers. No fresh queries/science acceptance. Publication/own-branch Git needs separate route authority; never release/main/defaultON/deploy."
+        }
+      ],
+      "after": [
+        {
+          "id": "P1_BINDINGS",
+          "state": "NOT_ADMITTED",
+          "work": "Independent source-only review of this v2 and literal ledger, then separately scoped E2006 original-evidence binding/ARGPLAN helper source/cap/attribution review. Before any helper run mechanically rebind exact v2 SHA/bytes and root admission; no accepted v1 behavior. Exact record joins/native grammar/source-impossible contrast HOLD and callback metadata must survive. No producer permission."
+        },
+        {
+          "id": "P2_SIBLING_CONSTRUCTION",
+          "state": "NOT_ADMITTED",
+          "work": "Root/G6 assign distinct default-OFF sibling files; freeze original22/old5/fixed160 untouched. Source-only implementation, including caps/failure paths/token/CLI+trace contract, then independent source review and checkpoint. No production ABFeature by this protocol."
+        },
+        {
+          "id": "P3_NONCV",
+          "state": "NOT_ADMITTED",
+          "work": "Separate exact bounded fabricated-shape tests/import/codec/token/cap/stop-path packet. No image/pixel/gateway/store query. Demonstrate whole-wrapper and total-output cap passage and failure-prefix behavior; no assumption already passed."
+        },
+        {
+          "id": "P4_ONE_PRODUCER",
+          "state": "NOT_ADMITTED",
+          "work": "Only after verified raw decode/bindings, exact external image bodies/original absolute attestation/source closure/current ownership plus explicit root native-assigned GO: one query per eligible slot, max48, spent token/no rerun. Actual flow must be reviewed before execution."
+        },
+        {
+          "id": "P5_MATCHED_INSPECTION",
+          "state": "NOT_ADMITTED",
+          "work": "Independent lossless artifact/exit review then separately admitted same-trace CLItext/VisualRender all48; N and per-side flag valid/invalid counts only, internal inside/outside support NOT_EXPORTED/UNKNOWN. No new queries/pixels/science acceptance. Publication/Git requires separate route authority; never release/main/defaultON/deploy."
+        }
+      ]
+    },
+    {
+      "field": "revision",
+      "before": {
+        "absent": true
+      },
+      "after": {
+        "version": "v2",
+        "supersedesForFutureConstructionOnly": {
+          "path": "discovery-cycle07/S1/E2001/protocol.json",
+          "bytes": 71512,
+          "sha256": "6db61139f62965ee1f67433b22cd6c525400e69dfb3cbf657fbde774af74d5b6"
+        },
+        "review": {
+          "path": "discovery-cycle07/S3/R2001/realresult.json",
+          "bytes": 19448,
+          "sha256": "5af8eb0139b7975145d9e59fefc2ec3e2a7e8cf5747598a45c1130ad8bbb71b0",
+          "decision": "amend"
+        },
+        "preservation": "E2001 files unchanged; all48 slot records/96 bindings have identical semantic values and serialization. This revision does not accept v1 behavior or close implementation/execution gates."
+      }
+    },
+    {
+      "field": "remainingProducerGuards",
+      "before": {
+        "absent": true
+      },
+      "after": [
+        {
+          "id": "G1",
+          "status": "HOLD_UNIMPLEMENTED_UNPROVEN",
+          "subject": "Exact pre-writer cumulative reservation/per-file envelope and fabricated first-failure proof; extrema18087936>16777216 deliberate cumulative STOP."
+        },
+        {
+          "id": "G2",
+          "status": "HOLD_SEPARATELY_SCOPED_HELPER",
+          "subject": "Byte verify before bounded selective tagged-wire decode; exact source/receipt/body/callback identities, depth/node/size counters, one-fragment retention and no-symlink fixed-root descriptor containment. Helper admission and review separate; protocol acceptance alone opens no raw body."
+        },
+        {
+          "id": "G3",
+          "status": "HOLD_TOKEN_SCHEMA_PATH_PENDING",
+          "subject": "Constructor-based exclusive output reservation, exact durable one-shot token schema/path/hash/consumed-on-failure source, write-once/no retry and actual outer exit evidence."
+        },
+        {
+          "id": "G4",
+          "status": "HOLD_ACTUAL_STOP_PATH_VERIFICATION",
+          "subject": "Native status versus callback/public return; preserve source metadata and separate errors; computed emits independently checked from key:null/cached:false."
+        },
+        {
+          "id": "G5",
+          "status": "HOLD_RESOURCE_SUPPORT_VERIFICATION",
+          "subject": "Selected work excludes full-frame luminance/hash/copy/interpolation; named planes not RSS. NaN/finite-invalid retained; contrast Infinity source-impossible -> retained integrity-HOLD. Exported station/flag denominators only."
+        },
+        {
+          "id": "G6",
+          "status": "HOLD_SEPARATE_AUTHORITY",
+          "subject": "Root ownership/source checkpoint/review, admitted fabricated NONCV then explicit one producer with exact original bodies/absolute attestation. No ABFeature/main/defaultON/deploy/scientific promotion."
+        }
+      ]
+    },
+    {
+      "field": "bindingHelperCoordination",
+      "before": {
+        "absent": true
+      },
+      "after": {
+        "helperJob": "E2006",
+        "authority": "Separate S2 scratch construction only; no accepted v1 behavior claim or execution from this protocol.",
+        "contractAtRead": {
+          "path": "discovery-cycle07/S2/E2006/contract.json",
+          "sha256": "a08439b37c581994c0dec9e06a76f63bc30bd8dfdbc731f346df5c14b9c39246"
+        },
+        "flowAtRead": {
+          "path": "discovery-cycle07/S2/E2006/FLOW.md",
+          "sha256": "decbf974cfd1b012d27621da0b715d2a4bdd28eb906a8d80877527b421ec22a8"
+        },
+        "pins": "E2006 may construct against E2001 v1 immutable SLOT LEDGER plus E2002 correct source contract, not approved v1 guard behavior. Before any helper run, independently review exact source and mechanically rebind guard protocol SHA/byte length to this actual v2, review capsule and future admission. No construction-time protocol hash permits codec/import/test/native-body decode.",
+        "scope": "Node builtins and pinned pure codec only in future scoped helper; no CV/store/PATH/source producer/pixels/query/render. No durable token/writer implementation is implied."
+      }
+    }
+  ],
+  "preserved": [
+    "All48 slots and96 manifest binding records (semantic values and JSON serialization identical)",
+    "question/order/fixed inputs/raw origin math/raw geometry/query argument order/default OFF",
+    "numeric pair eligibility finite7/w>0 and nonfinite fit skip policy",
+    "No refined nominal-width/latLim clamp/score/residual tuning",
+    "E2001 original files untouched"
+  ],
+  "literalChangeMeaning": "before/after values are exact protocol metadata, not claims of executed behavior; future guards remain HOLD."
+}
+

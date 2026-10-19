@@ -1,0 +1,71 @@
+{
+  "job_id": "E2017",
+  "worker": "S2",
+  "outcome": "mixed_change",
+  "summary": "Executed exactly one admitted original-incapable fabricated RED command. Actual result: 22 tests, 14 passes, 8 intended assertion failures, exit 1; no harness/import/fixture failures. Preserved byte-exact raw channels, UTC and exit; frozen source hashes unchanged. HOLD for separate S3 minimal repair, no retry or semantic changes.",
+  "admission": {
+    "path": "discovery-cycle07/root-E2017-red-admission.json",
+    "sha256": "7f707a9892d78c0d6c5c9bb696ad617326ae6067476f9e0857b17cf286403bf1"
+  },
+  "command": {
+    "cwd": "/workspace/scratch/8528bb251845",
+    "argv": ["node", "--test", "--test-concurrency=1", "discovery-cycle07/S2/E2016/artifact-identity.test.mjs"],
+    "launches": 1,
+    "retries": 0,
+    "exit_code": 1,
+    "start_utc": "2026-10-19T00:18:35.595098051Z",
+    "end_utc": "2026-10-19T00:18:35.759168381Z",
+    "capture": "Exclusive noclobber direct stdout/stderr channels; actual UTC and exit captured separately. Prospective paths were saved before launch."
+  },
+  "raw_artifacts": [
+    {"path":"discovery-cycle07/S2/E2017/prospective.json","bytes":1907,"sha256":"16aa3252d02819f9af813a0fcdf3c5794b2e94e642ddeacd1250a8e689f177c5"},
+    {"path":"discovery-cycle07/S2/E2017/stdout.raw","bytes":10782,"sha256":"7b566de7acd22c40db21a7877ba40e575511f46a763fef7792989827dae6a719"},
+    {"path":"discovery-cycle07/S2/E2017/stderr.raw","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    {"path":"discovery-cycle07/S2/E2017/start-utc.raw","bytes":31,"sha256":"49f48852123254da26db81cad6f4b0d61d1fc822b2954ea6a5a5fb542899567d"},
+    {"path":"discovery-cycle07/S2/E2017/end-utc.raw","bytes":31,"sha256":"25478d6bd8bd7bf0d08c45e820e281b27af8c48f510d97c78a72f81de9bfc155"},
+    {"path":"discovery-cycle07/S2/E2017/exit-code.raw","bytes":2,"sha256":"4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"}
+  ],
+  "source_pins_before_and_after_unchanged": [
+    {"path":"discovery-cycle07/S2/E2016/artifact-identity.test.mjs","sha256":"5a80e5caa344590371e2f9135142e173b9b34de7c3d720f9d99c5540bf556e02"},
+    {"path":"discovery-cycle07/S2/E2016/FLOW.md","sha256":"45e68e3cd15f2d8f5a437b232ac5d4b8ddc50ba01a7ed388a47a3e5a7ca7231f"},
+    {"path":"discovery-cycle07/S2/E2016/result.json","sha256":"eb1e20ae407a51f95097e6a5f015fa4dac891e6882f8a96547258fea1d5b7e21"},
+    {"path":"discovery-cycle07/S3/E2014/capture-core.mjs","sha256":"6d16296bb01932f66297fa1ea24ad47ef12e35e51f6d7da8d6033e32600ace13"}
+  ],
+  "observed_counts": {"tests":22,"suites":0,"pass":14,"fail":8,"cancelled":0,"skipped":0,"todo":0,"duration_ms":99.627433},
+  "observed_failures": [
+    {"name":"READY plan refuses wrong known role path stdout.raw with matching inventory","assertion":"Missing expected exception /REFUSED/","disposition":"intended RED: role filename accepted"},
+    {"name":"complete HOLD refuses wrong known role path plan.wire.json with matching inventory","assertion":"Missing expected exception /REFUSED/","disposition":"intended RED: role filename accepted"},
+    {"name":"READY plan refuses unknown path instead of relying on undefined cap lookup","assertion":"Missing expected exception /REFUSED/","disposition":"intended RED: unknown filename accepted"},
+    {"name":"complete HOLD refuses unknown path instead of relying on undefined cap lookup","assertion":"Missing expected exception /REFUSED/","disposition":"intended RED: unknown filename accepted"},
+    {"name":"READY plan refuses missing mandatory null plan binding","assertion":"Missing expected exception /REFUSED/","disposition":"intended RED: mandatory binding skipped"},
+    {"name":"complete HOLD refuses missing mandatory null artifact binding","assertion":"Missing expected exception /REFUSED/","disposition":"intended RED: mandatory binding skipped"},
+    {"name":"capture installs BOTH pipe error listeners before fallible stdout data setup","assertion":"doesNotThrow got unwanted exception: stderr after setup failure","disposition":"intended RED: stderr error unhandled after stdout data registration throws"},
+    {"name":"HOLD artifact hash failure after write retains first cause and reports INCOMPLETE","assertion":"strictEqual actual true expected false: write alone is not complete without artifact hash/binding","disposition":"intended RED: retention complete remained true after hash failure"}
+  ],
+  "reachability": {
+    "registration": "All 22 individual tests registered and ran; no cancelled/skipped/todo tests.",
+    "passes": "Two valid artifact controls including exact caps, ten integer/positive/cap refusal guards, normal stderr capture control, and fake-codec HOLD retention control passed.",
+    "capture_failure": "Reached stderr emit and failed doesNotThrow. Finally emitted mock close, awaited completion and passed timer/descriptor cleanup assertions; otherwise they would have replaced the reported first assertion. Listener-count snapshot assertion and later first/later-cause/close assertions were unreached.",
+    "hold_failure": "Reached and passed one fake helper call/hash/write checks, FAILED status, original HOLD code/message, helperCall flags, retention requested/error/postError and null artifact checks. Failed at complete false. Subsequent receiptPersisted and persisted-complete assertions were unreached.",
+    "harness_import_or_fixture_failure": "None reported. All eight failure stacks are intended ERR_ASSERTION sites; empty stderr is retained, not treated as sole proof."
+  },
+  "actual_execution": {
+    "test_runs":1,
+    "module_imports":"node:test, node:assert/strict, node:events and pinned pure capture-core actually imported; import counts not instrumented",
+    "pure_core_and_fakes":"checkArtifacts, captureSession and invokeOnce actually ran with fabricated inputs; fake helper/encoder/manual timers ran as supplied, not an actual codec or original helper",
+    "separate_syntax_prechecks":0,
+    "original_evidence_body_reads":0,
+    "actual_codec_calls":0,
+    "actual_original_helper_calls":0,
+    "real_child_or_timer_fixture_calls":0,
+    "query_store_path_cv_image_or_render_calls":0,
+    "semantic_repairs_test_edits_or_cap_changes":0,
+    "repository_native_or_git_writes":0
+  },
+  "limitations_and_gate": [
+    "Engineering artifact metadata and failure state falsifiers only, not scientific evidence or real-process/filesystem/codec integration.",
+    "No original-data route, producer admission, numeric evidence decode or new query authority follows from this run.",
+    "Materialize separates observed assertions from unreached later assertions. Retain this first result; HOLD for separate S3 versioned repair.",
+    "A future GREEN driver may only rebind the import to the new version; preserve original driver and assertion body byte-exactly."
+  ]
+}

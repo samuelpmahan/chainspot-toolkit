@@ -1,0 +1,42 @@
+{
+  "job_id": "R2023",
+  "worker": "S2",
+  "outcome": "confirmed_reuse",
+  "decision": "accepted",
+  "summary": "Independent source-only review accepts the exact E2023 mechanical exporter adaptation: fresh full diff contains only requested pins/prefix/four paths/schema/comments/count language, preserving actual Git-object and byte transport mechanics. The old copy draft's entries/archivedPath mismatch belongs to its pending files[].path repair, not exporter logic. Actual frozen manifest/config/final sole commit and export GO remain pending; no runtime or original-data approval.",
+  "scope": "Exact exporter source acceptance only; no copy-helper-v2 review or future export admission",
+  "targets": [
+    {"path":"discovery-cycle07/S3/E2023/prepare-export.v1.mjs","lines":147,"bytes":10612,"sha256":"826088766cfe4e840860ee1c213f1a895a6c77ca4bcbae6279c02f0881f6ca25","read":"complete"},
+    {"path":"discovery-cycle06/R1/E1544/prepare-export.v1.mjs","lines":147,"bytes":10586,"sha256":"ed7920523765cf7dd64378fd5904e16ba7fc0e98a7fd761b7123b2f5b76e5c87","read":"complete","prior_success":"root testimony only, not replayed"},
+    {"path":"discovery-cycle07/S3/E2023/FULL.diff","sha256":"dabcf5a4362f33a1679bc81d2b0e7158e011fdad9c26af7d0228637fcce83d06","read":"complete; fresh ordinary diff agrees"},
+    {"path":"discovery-cycle07/S3/E2023/FLOW.md","sha256":"85ef98395a69d8d16a9b8c1cb05ca7f8b0cdefd0493e2d08b7ae68614d840c65","read":"complete"},
+    {"path":"discovery-cycle07/S3/E2023/realresult.json","sha256":"6889e0a1215df9f0bb151ff35b7a8d3e685a2544c44b15f4f38492d11daec01a","read":"complete"}
+  ],
+  "source_findings": [
+    {"lines":"1,9-13,40-41,73,134","finding":"Only intended mechanical changes; no exporter algorithm amendment required."},
+    {"lines":"14,25-34,97-144","finding":"Preserves segment60000/index1000000/Gitbuffer67108864, fatalUTF8+roundtrip/base64, actual-byte segments and exclusive fresh output."},
+    {"lines":"36-93","finding":"Preserves exact commit/HEAD/branch/single-parent/tree/changed-path allowlist, actual Git blob mode/SHA1/SHA256, and native manifest.files binding."},
+    {"lines":"87-94","finding":"Package-relative files[].path requires future exact manifestArrayRelative:true and manifestPrefix work/capability-discovery/cycle-07/; actual frozen manifest pending. Old entries/archivedPath draft cannot satisfy this interface; v2 not reviewed here."},
+    {"lines":"134-147","finding":"Index and final summary both use cfg.commit; caller-reported remote parent remains explicitly unauthenticated testimony."}
+  ],
+  "fresh_current_source_pins": [
+    {"path":"experiments/capability-discovery/joint-fit-original-plan/original-evidence-plan.mjs","bytes":12666,"POSIXPermissions":"644","sha256":"0b6f2bad20177cd965085b3fbf889c008205653c03bcb72280d41769e17a001a"},
+    {"path":"experiments/capability-discovery/joint-fit-original-plan/plan-core.mjs","bytes":20323,"POSIXPermissions":"644","sha256":"52ea18fd97e0112bd8aee255b73743a79bb2ab9842b0ec828314bff9c1c26ea5"},
+    {"path":"experiments/capability-discovery/joint-fit-original-plan/plan.test.mjs","bytes":25500,"POSIXPermissions":"644","sha256":"44d810e1e0a19cb41afcc3ef0d085b364fc5fde52d278bdca6a049f4e0c270cb"},
+    {"path":"experiments/capability-discovery/joint-fit-original-plan/README.md","bytes":8587,"POSIXPermissions":"644","sha256":"bf185d3c0e93763395c4c843d760c9439b4521a95c78aafe63536fefd17ca7bf"}
+  ],
+  "metadata_context": [
+    {"path":"discovery-cycle07/S1/E2015/source-freeze.after.json","sha256":"197e4baaf07e0e217f49c5ad86e63d8ae9c8adc6b5c893897431f7b5053a47ab"},
+    {"path":"discovery-cycle07/S1/E2022/copy-checkpoint.once.mjs","sha256":"110bbc0e4dbdf858a346114760b5bf79abe9f9dc93deb83f4dbb092ea5e63f47","qualification":"preserved unexecuted mismatching draft only, not v2 approval"},
+    {"path":"discovery-cycle07/S1/E2022/checkpoint-plan.json","sha256":"1d606f2388fe3abcf472750e967ffbd3da5ca9bd237f693ba9519de524fc5f68"}
+  ],
+  "actual_actions": {"source_metadata_hash_stat_and_ordinary_diff_only":true,"writes_only":"discovery-cycle07/S2/R2023/","syntax_checks":0,"imports":0,"tests":0,"export_runs":0,"Git_commands":0,"Git_writes":0,"helper_calls":0,"original_plan_or_native_value_body_reads":0,"native_decodes":0,"CV_image_render":0,"repository_or_native_writes":0},
+  "limitations": [
+    "Source review is not observed execution success, real output correctness or publication.",
+    "Per-object/per-command caps are unchanged, not aggregate memory/whole export limits; config readFile cap is post-read.",
+    "Canonical paths/exclusive writes are not race-proof authentication or crash durability; partial output may remain on failure.",
+    "Current source hashes do not establish future commit inclusion. Final source/manifest/config/commit/tree must be pinned and independently accepted.",
+    "No numerical/scientific/physical acceptance or portable original replay follows from byte transport."
+  ],
+  "gate": "HOLD actual export until accepted physical package/copied-byte audit, exactly one S1 commit, exact root-reviewed native manifest/config/source pins and separate export GO. Copy-helper-v2 review is a separate future packet."
+}

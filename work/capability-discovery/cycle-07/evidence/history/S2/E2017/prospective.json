@@ -1,0 +1,25 @@
+{
+  "job_id": "E2017",
+  "worker": "S2",
+  "status": "SAVED_BEFORE_ONE_FABRICATED_RED_LAUNCH",
+  "cwd": "/workspace/scratch/8528bb251845",
+  "argv": ["node", "--test", "--test-concurrency=1", "discovery-cycle07/S2/E2016/artifact-identity.test.mjs"],
+  "admission": "/workspace/scratch/8528bb251845/discovery-cycle07/root-E2017-red-admission.json",
+  "pins": {
+    "driver": "5a80e5caa344590371e2f9135142e173b9b34de7c3d720f9d99c5540bf556e02",
+    "core": "6d16296bb01932f66297fa1ea24ad47ef12e35e51f6d7da8d6033e32600ace13",
+    "flow": "45e68e3cd15f2d8f5a437b232ac5d4b8ddc50ba01a7ed388a47a3e5a7ca7231f",
+    "source_receipt": "eb1e20ae407a51f95097e6a5f015fa4dac891e6882f8a96547258fea1d5b7e21"
+  },
+  "exclusive_capture_paths": {
+    "stdout": "/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2017/stdout.raw",
+    "stderr": "/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2017/stderr.raw",
+    "start_utc": "/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2017/start-utc.raw",
+    "end_utc": "/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2017/end-utc.raw",
+    "exit_code": "/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2017/exit-code.raw"
+  },
+  "capture_method": "Shell noclobber and direct stdout/stderr redirection retain original channels including empty files; UTC and actual child exit recorded separately. One launch only, no retry or semantic repair.",
+  "predictions_not_observations": {"tests":22,"intended_failures":8,"passes":14},
+  "scope": "Only pure capture core with in-memory EventEmitters/manual timers/fake helper and one-byte encoder. No original helper, actual codec, filesystem fixture, real child/timer, original evidence or CV route. Capture harness writes this packet only.",
+  "post_run_gate": "Retain first actual result, distinguish harness/import/fixture errors from intended assertions, then HOLD for root and separately assigned repair."
+}

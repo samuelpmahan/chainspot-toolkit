@@ -1,0 +1,10 @@
+{
+  "schema":"cycle07-source-name-digest-qualification@1",
+  "job_id":"R2024",
+  "worker":"S4",
+  "status":"DIRECT_EXACT_SET_MATCH_NOT_A_BODY_OR_COPY_FAILURE",
+  "auditDigest":{"sha256":"8b1c245bc3f684573dd951a5028e0d67873a34706febb25c37524cf14097e3bc","algorithm":"SHA256 of UTF8(codepoint-sorted339 relative file paths joined with one LF between names, NO terminal LF).","paths":"Every current source path was directly compared against the complete339 root-seal entries and matched exactly."},
+  "authorReportedDigest":{"sha256":"ea8519ed5d8efe19f09ed4f2f9555413426a5a013d6e2781d7c2b41a75f78c3e","where":"E2024 prospective/realresult source filename preflight indicator","serialization":"UNSPECIFIED in those receipts; copy-v2 source defines codepoint filename sorting but does not define this particular preflight digest serialization."},
+  "comparison":"Do not treat these differently specified/unspecified digest domains as a failed identical-preimage comparison. No unproven author algorithm is invented. Metadata-only common LF/JSON filename serialization checks did not identify the author preflight encoding. Independent acceptance uses exact current339 path-set equality to the root seal and every339 body/size/full-mode match, not this author indicator.",
+  "scope":"No new full audit, copy/helper/codec/test/CV run, source change or normalization. The original audit.json is preserved unchanged; this note makes its digest encoding explicit."
+}

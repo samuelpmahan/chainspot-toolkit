@@ -1,0 +1,41 @@
+✔ valid READY plan metadata and exact literal plan cap are accepted (1.099046ms)
+✔ valid complete HOLD metadata and exact literal HOLD cap are accepted (0.266577ms)
+✔ READY plan refuses wrong known role path stdout.raw with matching inventory (0.374107ms)
+✔ complete HOLD refuses wrong known role path plan.wire.json with matching inventory (0.192006ms)
+✔ READY plan refuses unknown path instead of relying on undefined cap lookup (0.284083ms)
+✔ complete HOLD refuses unknown path instead of relying on undefined cap lookup (0.152858ms)
+✔ READY plan refuses fractional bytes with matching inventory (0.16148ms)
+✔ READY plan refuses negative bytes with matching inventory (0.09443ms)
+✔ READY plan refuses zero bytes with matching inventory (0.169533ms)
+✔ READY plan refuses unsafe integer bytes with matching inventory (0.298004ms)
+✔ READY plan refuses above role-specific actual cap bytes with matching inventory (0.247158ms)
+✔ complete HOLD refuses fractional bytes with matching inventory (0.136213ms)
+✔ complete HOLD refuses negative bytes with matching inventory (0.070285ms)
+✔ complete HOLD refuses zero bytes with matching inventory (0.146899ms)
+✔ complete HOLD refuses unsafe integer bytes with matching inventory (0.134841ms)
+✔ complete HOLD refuses above role-specific actual cap bytes with matching inventory (0.096624ms)
+✔ READY plan refuses missing mandatory null plan binding (0.174139ms)
+✔ complete HOLD refuses missing mandatory null artifact binding (0.24145ms)
+✔ in-memory capture control handles stderr error and awaits mock close (1.2019ms)
+✔ capture installs BOTH pipe error listeners before fallible stdout data setup (1.436278ms)
+✔ in-memory HOLD control retains one projected artifact with opaque fake codec (1.286235ms)
+✔ HOLD artifact hash failure after write retains first cause and reports INCOMPLETE (0.414957ms)
+✔ ambient mismatch refuses; named set/unset/value states are unchanged, not sanitized (1.949342ms)
+✔ review independence is per role, not blanket S3 exclusion (0.420126ms)
+✔ exclusive token then output collision keeps consumed state; child marker collision prevents helper (0.574295ms)
+✔ second stream open closes first and never spawns (1.012848ms)
+✔ async pipe error keeps first cause, TERM/KILL until actual close and clears timers afterward (0.353867ms)
+✔ post-spawn setup exception still awaits actual close without cancelling escalation (0.257924ms)
+✔ spawn error then close and wall timeout record actual events, not kill-request success (0.298685ms)
+✔ partial writes/cap crossing retain raw prefix and cleanup failures do not replace cause (0.445243ms)
+✔ helper throws versus returns then output/receipt failure never retries (0.448999ms)
+✔ bounded HOLD artifact is lossless; encode/write/receipt failures report incomplete retention (5.094194ms)
+✔ opaque artifact hash/receipt identity/known filename caps refuse disagreement (0.642707ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 189.072052

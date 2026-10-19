@@ -1,0 +1,81 @@
+{
+  "schema": "cycle07-independent-package-audit@1",
+  "job_id": "R2024",
+  "worker": "S4",
+  "status": "PASS",
+  "summary": "All345 physical package files match344manifest-bound rows plus self-excluded manifest;all339sealed sources exact;old3375 opaque bodies/HEAD/index/Gitblob/fullmodes preserved. No codec/helper/test/CV/copy/Gitwrite.",
+  "package": {
+    "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-07",
+    "files": 345,
+    "bytes": 4783133,
+    "manifestBytes": 118141,
+    "manifestSHA256": "b84894941e25dfc7ddc0b0b534dbcb876639ce4537a6db47c071de344360369f",
+    "listed": 344,
+    "history": 339,
+    "topDocs": 5,
+    "zero": 12,
+    "archivedInertSourceFiles": 26,
+    "regularSingleLinks": true,
+    "allSourceCopiedFullModesEqual": true,
+    "directories": 47,
+    "exactDirectorySetDerivedFromFiles": true
+  },
+  "source": {
+    "files": 339,
+    "bytes": 4638336,
+    "nameSetSHA256": "8b1c245bc3f684573dd951a5028e0d67873a34706febb25c37524cf14097e3bc",
+    "rowCanonicalJSONSHA256": "63ad58ebe5d6d37d47334e9f976e3bc01553c1f0271327aaff28b220df1cd0cc",
+    "immutablePreserved": true
+  },
+  "old3375": {
+    "files": 3375,
+    "opaqueBytes": 61601578,
+    "currentRowsCanonicalJSONSHA256": "b8b0930e81099ff73c424bd45308eb1f462da80bb8965aecd86f1da62cf3f7c7",
+    "HEAD": "4f24d50391927e0e50220690ea8ececec79e0bb4",
+    "tree": "27616cbaac38b1b916fc337d22dd8f7cab5a7736",
+    "indexMatchesHEAD": true,
+    "allBodySHA256AndGitBlobsAndModesMatch": true,
+    "trackedDiffEmpty": true,
+    "indexDiffEmpty": true,
+    "statusBeforeAfterSame": true,
+    "untrackedOnlyNewPackage345PlusCurrentProduct4": 349
+  },
+  "evidence": {
+    "resultSHA256": "6184e208481534bc29f0ac54c04713e47de6bdad5ac70312442d64c940ff6730",
+    "sealSHA256": "8d79142b18fea6dad33879010169071f4796527c39221062a644c383f142ead5",
+    "GOsha256": "530bd48a95094feeedb3908fa764f262bb3acfb7a846e449bdf421425582fb12",
+    "handoffSHA256": "5dcb5e67072ade73926c00d50827eb8683d8a04f4f1576d234e481bcfa8aa770",
+    "authorExit": 0,
+    "authorSignal": null,
+    "captureBytesHashesVerified": 6,
+    "outerProspectiveVerified": true,
+    "emptyStderr": true,
+    "receiptMatchesPreview": true,
+    "currentProduct4Exact": true,
+    "opaquePlanMode": "100600",
+    "opaquePlanGitProjection": "100644",
+    "oldFrozenStateMatchesHandoffSnapshot": true,
+    "canonicalOutsideControlIntentionallyNotComparedForEquality": true
+  },
+  "readback": {
+    "path": "discovery-cycle07-checkpoint-admission/R2024/file-readback.json",
+    "bytes": 256214,
+    "sha256": "ee61e26430e809bd671b8650b7a68993d5bc2f7714feceffa0fdceaa814f7860"
+  },
+  "actions": {
+    "fileOnlyBuiltinAudit": true,
+    "opaqueBodyHashReads": true,
+    "nativeDecodes": 0,
+    "codecImports": 0,
+    "helperRuns": 0,
+    "copyRuns": 0,
+    "tests": 0,
+    "CV": 0,
+    "pixelsDecoded": 0,
+    "render": 0,
+    "sourceEdits": 0,
+    "GitWrites": 0,
+    "nativeWrites": 0
+  },
+  "qualification": "File checks at check-time only. No atomic/fsync/crash/race/host/continuous-worker or science/main/release/publication guarantee. Old state intentionally frozen;new canonical control outside. No body text from opaque historical reports/wires printed."
+}

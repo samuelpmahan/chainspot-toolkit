@@ -1,0 +1,35 @@
+{
+  "schema": "cycle07-root-one-copy-go@1",
+  "status": "ONE_COPY_GO_NO_GIT_OR_CV",
+  "job_id": "E2024",
+  "worker": "S1",
+  "seal": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/finalized-files.json",
+    "sha256": "8d79142b18fea6dad33879010169071f4796527c39221062a644c383f142ead5"
+  },
+  "script": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle07/S1/E2022/copy-checkpoint.once.v2.mjs",
+    "bytes": 8321,
+    "sha256": "321e5b116ce485f14a96fff9010b206b9af4bc5d1137597a10e9171c189af163"
+  },
+  "actualReviewR2021": "a0f8ee27b4a92507240af60e5a88c9f54e8584e10786f6b1a77a4280be5e396b",
+  "actualReviewR2022": "a67aae49abe889eb19ac8bbc30b4d1925e2e5f411cbf0d0874b9d58ae3c015f7",
+  "phase1Result": "51a7bfa479057f3b81615c2d496f7854a2534a80d13827c72caeed52af193a12",
+  "preview": {
+    "expectedFiles": 345,
+    "expectedBytes": 4783133,
+    "manifestBytes": 118141,
+    "manifestSHA256": "b84894941e25dfc7ddc0b0b534dbcb876639ce4537a6db47c071de344360369f",
+    "sourceFiles": 339,
+    "sourceBytes": 4638336,
+    "destinationAbsent": true
+  },
+  "captureRoot": "/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2024",
+  "command": [
+    "node",
+    "/workspace/scratch/8528bb251845/discovery-cycle07/S1/E2022/copy-checkpoint.once.v2.mjs",
+    "--finalized-manifest-sha256",
+    "8d79142b18fea6dad33879010169071f4796527c39221062a644c383f142ead5"
+  ],
+  "policy": "Same E2024 native pin, phase2 one actual opaque byte-copy. No source-tree writes/native/Git before copy completes. Genuine exclusive external prospective/raw UTC/exit; first failure terminal retain prefix; no retry/prune/capraise/source mode or body normalization. Independent copied-file review remains required."
+}

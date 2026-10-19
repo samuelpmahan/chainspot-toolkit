@@ -1,0 +1,18 @@
+{
+  "schema":"cycle07-evidence-binding-repair-phase1@1",
+  "job_id":"E2010",
+  "worker":"S2",
+  "phase":"PHASE1_SOURCE_CONSTRUCTION_ONLY",
+  "status":"HOLD_BEFORE_SEPARATE_FABRICATED_RED_GO",
+  "scope":"New copied entry/core/tests, mechanical accepted-v2 binding, source-shaped fabricated fixture and regression tests BEFORE semantic fixes or execution. E2006/v2protocol/repository/native/Git unchanged.",
+  "protocol":{"path":"discovery-cycle07/S1/E2005/protocol.v2.json","bytes":83022,"sha256":"7948df5ee19e10a065f907a7dc0af1b845b5b408f32776b78813ad938bedea6e","schema":"cycle07-joint-fit-station-contrast-protocol@1.1.0","replacesV1Input":true},
+  "unchangedPublicRequest":{"schema":"cycle07-original-evidence-plan-request@1","enabled":true,"token":"cycle07-E2006-original-evidence-plan-v1"},
+  "requestQualification":"Legacy schema/token are retained API identifiers only; not durable spent-token or permission for valid public enabled real-root execution.",
+  "guardState":{"InfinityHOLD":"UNFIXED_PENDING_OBSERVED_RED","inputIntegrityValidationAndWitness":"UNFIXED_PENDING_OBSERVED_RED","nativeRecordOrderSensitivity":"UNFIXED_PENDING_OBSERVED_RED","rawArgsOrderGuard":"UNCHANGED"},
+  "futureHOLD":{"errorCode":"INTEGRITY_HOLD","errorProperty":"integrityHold","requiredPayloadKeys":["code","j","c","b","role","side","stationIndex","planIndex","rawValue","answerBinding","rawAnswer","originalState","originalCallbackStatus"],"payloadCode":"CONTRAST_INFINITY","retain":"Exact raw numeric value/answer and bound fragment identity, completed original query/callback status; no partial READY plan, no writer required."},
+  "futureIntegrityWitness":{"property":"inputIntegrityWitness","strategy":"fixed16x10","keys":["strategy","snapshots","suppliedPlanes","request","postErrors"],"snapshotFields":["comparisonId","snapshotId","pre","checks","post","verified","partKeys","error"],"checkFields":["planIndex","post","verified"],"noInventedCheckError":true,"privateNullMask":"c<12 only","canonicalMask":"always exact pinned mask hash"},
+  "newTests":{"InfinityHOLD":12,"integrityNegativeMutations":36,"successWitness":1,"nativeRecordOrderRegression":2,"otherDistinctions":6,"retainedOriginal":16,"totalAfterExpansion":73,"predictedSemanticREDFailures":51,"observedREDFailures":0},
+  "caps":{"changed":false,"futureReadsetBytes":3644326,"futureDescriptorBodyReads":304,"excludingExternalAuditPins":true,"readCeilingBytes":8388608,"selectedWireBytes":32768,"selectedEncodedNodes":8192,"nativeCodecDepth":32,"aggregateEncodedNodes":500000,"aggregateEncodedDepth":40,"encodedPlanOutputBytes":2097152,"sufficiencyProved":false},
+  "proposedOneCommand":{"cwd":"/workspace/scratch/8528bb251845","command":"node --test --test-concurrency=1 discovery-cycle07/S2/E2010/plan.test.mjs","scope":"Fabricated core fixtures; disabled/malformed public only; temp descriptor fixtures; NO valid real-root public enabled request.","executed":false,"admitted":false,"expectedExit":"nonzero for actual intended regression assertions, not syntax/import/fixture failure"},
+  "nextGate":"Root exact source/test/hash review and separate RED GO. No semantic fix before actual intended RED. No syntax/import/test/codec/original native-body/helper execution now."
+}

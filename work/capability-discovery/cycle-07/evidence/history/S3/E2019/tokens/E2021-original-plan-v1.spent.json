@@ -1,0 +1,149 @@
+{
+  "schema": "cycle07-original-plan-spent@2",
+  "state": "CONSUMED",
+  "runId": "E2021-original-plan-v1",
+  "packetSha256": "e9823950159a5866c9f00b8f0875a56571cbceb6f073bf7895f264644a8b9ee1",
+  "requestSha256": "e1a0e2c8439567a24dc5b87668b53054b12ec24cf7a513b282f49ca8740dae63",
+  "pins": {
+    "helper": {
+      "bytes": 12666,
+      "sha256": "0b6f2bad20177cd965085b3fbf889c008205653c03bcb72280d41769e17a001a"
+    },
+    "core": {
+      "bytes": 20323,
+      "sha256": "52ea18fd97e0112bd8aee255b73743a79bb2ab9842b0ec828314bff9c1c26ea5"
+    },
+    "tests": {
+      "bytes": 25563,
+      "sha256": "83083e5ed749a76051bc7e88d1ded5dabadf01d687ccfa727f443b8bcec05589"
+    },
+    "codec": {
+      "bytes": 7322,
+      "sha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015"
+    },
+    "protocol": {
+      "bytes": 83022,
+      "sha256": "7948df5ee19e10a065f907a7dc0af1b845b5b408f32776b78813ad938bedea6e"
+    },
+    "protocolReview": {
+      "bytes": 15187,
+      "sha256": "c301cf5ff9005716cc7c1e7309e2f087bb282d53e99821611cb00a6b8e8b29b4"
+    },
+    "runner": {
+      "bytes": 2177,
+      "sha256": "3c58c5fd53ea170d28e82480642f09433be064fa3bbeeefe00a9d3e7c6275160"
+    },
+    "wrapper": {
+      "bytes": 10277,
+      "sha256": "13603b76a7c27dd9332f136fd7056f89bcc1bc620b4a275b96522a30c470a1a3"
+    },
+    "captureCore": {
+      "bytes": 11924,
+      "sha256": "ef9bfee41de9a1cfc7c4dd9ba4357a83e0760adcbe64836301551461c5bdde3d"
+    },
+    "fabricatedTests": {
+      "bytes": 9279,
+      "sha256": "983f003cc3baf4c97b4e74ef6cc6ee6073c0b0add96ac9cfa0e0cfe68257371d"
+    }
+  },
+  "reviews": {
+    "helper": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle07/S4/R2013/realresult.json",
+      "bytes": 8993,
+      "sha256": "2b01e9f247a6d7c8d2640e60308797db2b4198f68c2beaf8603502b04146fca8",
+      "reviewer": "S4",
+      "decision": "accepted",
+      "targets": [
+        "helper",
+        "core",
+        "tests"
+      ]
+    },
+    "runner": {
+      "path": "/workspace/scratch/8528bb251845/discovery-cycle07/S4/R2020/realresult.json",
+      "bytes": 10441,
+      "sha256": "c9ee8a57eb37bd60293807ef9d331371fa22a79014a89b0c66adfc629173466c",
+      "reviewer": "S4",
+      "decision": "accepted",
+      "targets": [
+        "runner",
+        "wrapper",
+        "captureCore",
+        "fabricatedTests"
+      ]
+    }
+  },
+  "authors": {
+    "helper": "S2",
+    "runner": "S3"
+  },
+  "runtime": {
+    "identity": {
+      "execPath": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "version": "v24.19.0",
+      "platform": "linux",
+      "arch": "x64",
+      "execArgv": []
+    },
+    "binary": {
+      "bytes": 125989464,
+      "sha256": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12"
+    }
+  },
+  "ambient": {
+    "NODE_OPTIONS": {
+      "set": false,
+      "value": null
+    },
+    "NODE_PATH": {
+      "set": true,
+      "value": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules"
+    },
+    "NODE_EXTRA_CA_CERTS": {
+      "set": true,
+      "value": "/usr/local/share/ca-certificates/nebula-dns.crt"
+    },
+    "TZ": {
+      "set": true,
+      "value": "Europe/Moscow"
+    },
+    "LANG": {
+      "set": true,
+      "value": "C.UTF-8"
+    },
+    "LC_ALL": {
+      "set": true,
+      "value": "C.UTF-8"
+    },
+    "LD_PRELOAD": {
+      "set": false,
+      "value": null
+    },
+    "LD_LIBRARY_PATH": {
+      "set": false,
+      "value": null
+    },
+    "NODE_V8_COVERAGE": {
+      "set": false,
+      "value": null
+    },
+    "NODE_COMPILE_CACHE": {
+      "set": false,
+      "value": null
+    },
+    "NODE_DISABLE_COMPILE_CACHE": {
+      "set": false,
+      "value": null
+    },
+    "OPENSSL_CONF": {
+      "set": false,
+      "value": null
+    },
+    "NODE_ICU_DATA": {
+      "set": false,
+      "value": null
+    }
+  },
+  "wrapperPid": 5,
+  "consumedUTC": "2026-10-19T00:44:30.613Z"
+}

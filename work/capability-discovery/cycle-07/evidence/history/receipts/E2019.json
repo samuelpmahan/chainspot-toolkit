@@ -1,0 +1,60 @@
+{
+  "job_id": "E2019",
+  "worker": "S3",
+  "outcome": "mixed_change",
+  "status": "SOURCE_CONSTRUCTION_ONLY_CHECKPOINT_HOLD",
+  "summary": "Authored NEW E2019 minimal M1-M4 repair after complete source review and actual E2017 RED record inspection. Helper acceptance now names true helper/core/tests scope with codec/protocol prior authority reuse separate; artifact role bindings are mandatory and literal with original per-role caps; both pipe-error handlers precede data setup; HOLD complete follows successful full hash-binding construction. Copied old11 tests byte-identically and E2016 22-test driver with only core import rebound. No source execution, syntax check, import or test occurred; root full-source/diff/flow/test-identity review and separate exact GREEN admission remain required.",
+  "artifacts": [
+    {"path":"discovery-cycle07/S3/E2019/capture-core.mjs","bytes":11924,"sha256":"ef9bfee41de9a1cfc7c4dd9ba4357a83e0760adcbe64836301551461c5bdde3d"},
+    {"path":"discovery-cycle07/S3/E2019/capture-original-plan.mjs","bytes":10277,"sha256":"13603b76a7c27dd9332f136fd7056f89bcc1bc620b4a275b96522a30c470a1a3"},
+    {"path":"discovery-cycle07/S3/E2019/run-original-plan.mjs","bytes":2177,"sha256":"3c58c5fd53ea170d28e82480642f09433be064fa3bbeeefe00a9d3e7c6275160"},
+    {"path":"discovery-cycle07/S3/E2019/fabricated.test.mjs","bytes":9279,"sha256":"983f003cc3baf4c97b4e74ef6cc6ee6073c0b0add96ac9cfa0e0cfe68257371d"},
+    {"path":"discovery-cycle07/S3/E2019/artifact-identity.test.mjs","bytes":9202,"sha256":"9a537e2bcc1b667db07b04581d5205f1543634a71e7d9ab8a729d68366d93b2c"},
+    {"path":"discovery-cycle07/S3/E2019/FLOW.md","bytes":7469,"sha256":"a9b53a5303c4ebfafe3b31e1ce41718a1f3be26d8ce1cb9b391e672abe8cd1d6"},
+    {"path":"discovery-cycle07/S3/E2019/FULL.diff","bytes":21934,"sha256":"58c1a2faac7b6d9f4ea9899a5ef03b617019214d740ed27343bb923c2345ff23"}
+  ],
+  "reviewedInputs": [
+    {"path":"discovery-cycle07/S4/R2014/review.md","sha256":"93b1f969ee9ce934466a9dbe80ddd4aedeac96105b079cf241ed31fd154ad2d9","read":"complete"},
+    {"path":"discovery-cycle07/S4/R2014/realresult.json","sha256":"08d0c53c6a7886a54d73916f5779bf621a3e674d19772aeb26941141bb46c71d","read":"complete"},
+    {"path":"discovery-cycle07/S2/E2016/artifact-identity.test.mjs","sha256":"5a80e5caa344590371e2f9135142e173b9b34de7c3d720f9d99c5540bf556e02","read":"complete"},
+    {"path":"discovery-cycle07/S2/E2016/FLOW.md","sha256":"45e68e3cd15f2d8f5a437b232ac5d4b8ddc50ba01a7ed388a47a3e5a7ca7231f","read":"complete"},
+    {"path":"discovery-cycle07/S2/E2017/realresult.json","sha256":"af498589c60659475cdd58208538171c635c2dea230e4e258b6ef111ef75eaee","read":"complete"},
+    {"path":"discovery-cycle07/S2/E2017/stdout.raw","bytes":10782,"sha256":"7b566de7acd22c40db21a7877ba40e575511f46a763fef7792989827dae6a719","read":"complete; fabricated test output only"},
+    {"path":"discovery-cycle07/S2/E2017/stderr.raw","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855","read":"complete empty stream"}
+  ],
+  "minimalRepairs": {
+    "M1":"loadAdmission helper review exact targets helper/core/tests. Existing codec/protocol/protocolReview pins and separate prior reuse authority retained, no widened R2013 coverage or invented final capsule. Own HERE changed E2014 to E2019; fixed E2012 helper/core/tests and original ROOT unchanged.",
+    "M2":"checkArtifacts required nonnull exact binding records for READY and complete HOLD, literal plan.wire.json or integrity-hold.wire.json, safe integer positive bytes within respective 2097152/65536 caps, and exact inventory size/hash. validateReceipt aligns null/complete/error relationships. Known-name inventory remains independent of role identity.",
+    "M3":"Separate first loop installs stdout and stderr error handlers before second loop attaches fallible data handlers. Existing stop/escalation/actual-close/cleanup machinery retained.",
+    "M4":"Nonempty bounded encoded HOLD is written once, hash binding constructed and nonempty hash checked, artifact assigned, then complete set true. Hash/write failure leaves null artifact/incomplete, preserves original HOLD/code and records retention error; physical bytes not erased or retried. Capability hashes remain opaque fake tokens in tests; production adapter still uses SHA256."
+  },
+  "testIdentity": {
+    "old11":"diff -u E2014/fabricated.test.mjs E2019/fabricated.test.mjs returned0/no differences; exact same SHA256. Relative codec path remains valid because folder depth unchanged.",
+    "driver22":"diff shows ONLY import path ../../S3/E2014/capture-core.mjs replaced with ./capture-core.mjs; all remaining source and assertion bodies byte-exact. Original E2016 file untouched.",
+    "child":"run-original-plan.mjs byte-identical; its relative parent/core imports now resolve within E2019. All fixed original helper paths remain E2012.",
+    "notWeakened":"No assertion edit, skip, added retry, fake original packet, cap increase or original helper injection. No new tests were invented to claim executed coverage."
+  },
+  "priorObservedRED": {"job_id":"E2017","tests":22,"pass":14,"fail":8,"exit_code":1,"sourceCoreSha256":"6d16296bb01932f66297fa1ea24ad47ef12e35e51f6d7da8d6033e32600ace13","qualification":"Prior raw/result inspection, not S3 execution. Later assertions after failing statements were unreached exactly as E2017 reports. M1 itself was not exercised by that original-incapable driver."},
+  "prospectiveGREEN": {
+    "cwd":"/workspace/scratch/8528bb251845",
+    "argv":["node","--test","--test-concurrency=1","discovery-cycle07/S3/E2019/fabricated.test.mjs","discovery-cycle07/S3/E2019/artifact-identity.test.mjs"],
+    "launchesNow":0,
+    "predictedRegisteredTests":33,
+    "qualification":"11 prior authored/unrun tests plus22 driver tests after actual RED; not all33 RED-proven, not any E2019 GREEN observed. Exactly one future command only after separate root packet. The old11 additionally use actual pure codec on fabricated values; driver22 uses fake encoder. Neither test route can import original helper/evidence/parent/child."
+  },
+  "preservation": {
+    "writesOnly":"discovery-cycle07/S3/E2019/",
+    "oldCoreSha256":"6d16296bb01932f66297fa1ea24ad47ef12e35e51f6d7da8d6033e32600ace13",
+    "oldParentSha256":"5ed22adc0d54b0cfad5fd2446c66afac4f3f4d26325babad161f789e5f815b1f",
+    "oldChildSha256":"3c58c5fd53ea170d28e82480642f09433be064fa3bbeeefe00a9d3e7c6275160",
+    "old11Sha256":"983f003cc3baf4c97b4e74ef6cc6ee6073c0b0add96ac9cfa0e0cfe68257371d",
+    "E2014ReceiptSha256":"76ef3223ae6ad16d4afddb0e884187c5ca8f28db3ed7727c58da7f1c2f907239",
+    "E2016ReceiptSha256":"eb1e20ae407a51f95097e6a5f015fa4dac891e6882f8a96547258fea1d5b7e21",
+    "E2017ReceiptSha256":"af498589c60659475cdd58208538171c635c2dea230e4e258b6ef111ef75eaee",
+    "noChanges":"No original root/helper/pin-key grammar/math/cap/environment policy/source repository changes. E2014/E2016/E2017 files unchanged. S1 repository adoption remains separate."
+  },
+  "actualExecution":{"syntaxChecks":0,"imports":0,"tests":0,"codecCalls":0,"helperCalls":0,"runnerCalls":0,"tokens":0,"packetsCreated":0,"originalBodyReads":0,"queries":0,"CV":0,"render":0,"GitOperations":0,"repositoryWrites":0},
+  "remainingGates":["Root full source/diff/FLOW/test-identity read before independent exact fabricated GREEN admission","Independent runner review and final accepted helper/test source pins before any separately admitted original run","Final immutable root-authored packet/runtime/named ambient/reviews/request authority unknown and not created","G1-G6 producer HOLD; no original query/decode/run authority","Existing cap sufficiency and real OS/fsync/pipe/signal behavior unknown; terminal frozen-cap failure is allowed, preserve/no raise/no retry"],
+  "skillInfluence":"Receiving-code-review grounded the four repairs in complete source and actual prior RED; checkpoint records actual flow and forces pause before syntax/import/test/run. Scoped construction authorization overrides executing tests during this receipt.",
+  "claims":{"testsPassed":false,"runtimeAccepted":false,"originalGO":false,"finalPinsInvented":false,"sourceProtocolMathChanged":false,"scientificAcceptance":"UNKNOWN"}
+}

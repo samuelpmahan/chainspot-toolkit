@@ -1,0 +1,178 @@
+{
+  "job_id": "E2020",
+  "worker": "S3",
+  "outcome": "mixed_change",
+  "summary": "Executed exactly one admitted original-incapable fabricated command against frozen E2019 sources. Actual33 tests all33 pass, zero failures/cancelled/skipped/todo, exit0. The old11 had their first execution here; driver22 follows prior actual E2017 RED14pass8fail, not all33 RED-proven. Raw separate stdout/stderr/UTC/exit preserved and all source/codec/runtime-file hashes unchanged. HOLD for different-worker source/runtime acceptance and separately authorized original-plan route; no original helper/evidence/packet/token/query/CV run.",
+  "admission": {
+    "path": "discovery-cycle07/root-E2020-fabricated-green-admission.json",
+    "sha256": "aae29e0c648873a4dc3d1454277f8831b3d739412890de87b9817a266c597e66",
+    "read": "complete"
+  },
+  "command": {
+    "cwd": "/workspace/scratch/8528bb251845",
+    "argv": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "discovery-cycle07/S3/E2019/fabricated.test.mjs",
+      "discovery-cycle07/S3/E2019/artifact-identity.test.mjs"
+    ],
+    "launches": 1,
+    "retries": 0,
+    "exit_code": 0,
+    "start_utc": "2026-10-19T00:27:16.917688989Z",
+    "end_utc": "2026-10-19T00:27:17.170508682Z",
+    "capture": "Prospective manifest saved first. Shell noclobber opened all five separate channels before launch; raw test stdout/stderr direct to exclusive descriptors; UTC and actual test shell exit separate."
+  },
+  "raw_artifacts": [
+    {
+      "path": "discovery-cycle07/S3/E2020/prospective.json",
+      "bytes": 2469,
+      "sha256": "409cb9713dde537a6f3d507d714da73aa08f03938b0294b671246b4fdd0e865d"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2020/stdout.raw",
+      "bytes": 3072,
+      "sha256": "b2b99a69b267f063d950da99574bd281d3f458dcfee7dc6342f67e92595bf90e"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2020/stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2020/start-utc.raw",
+      "bytes": 31,
+      "sha256": "a2566a04d94e5f37262b9b83262317a275477edf9178af99b62e06dc02b9f3bc"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2020/end-utc.raw",
+      "bytes": 31,
+      "sha256": "7e7090b4320d90f72bfde110c18d313c1736c8dd670582c4159d69edfbd8b60f"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2020/exit-code.raw",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  ],
+  "observed_counts": {
+    "tests": 33,
+    "suites": 0,
+    "pass": 33,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "duration_ms": 189.072052
+  },
+  "all_observed_test_names_in_raw_order": [
+    "valid READY plan metadata and exact literal plan cap are accepted",
+    "valid complete HOLD metadata and exact literal HOLD cap are accepted",
+    "READY plan refuses wrong known role path stdout.raw with matching inventory",
+    "complete HOLD refuses wrong known role path plan.wire.json with matching inventory",
+    "READY plan refuses unknown path instead of relying on undefined cap lookup",
+    "complete HOLD refuses unknown path instead of relying on undefined cap lookup",
+    "READY plan refuses fractional bytes with matching inventory",
+    "READY plan refuses negative bytes with matching inventory",
+    "READY plan refuses zero bytes with matching inventory",
+    "READY plan refuses unsafe integer bytes with matching inventory",
+    "READY plan refuses above role-specific actual cap bytes with matching inventory",
+    "complete HOLD refuses fractional bytes with matching inventory",
+    "complete HOLD refuses negative bytes with matching inventory",
+    "complete HOLD refuses zero bytes with matching inventory",
+    "complete HOLD refuses unsafe integer bytes with matching inventory",
+    "complete HOLD refuses above role-specific actual cap bytes with matching inventory",
+    "READY plan refuses missing mandatory null plan binding",
+    "complete HOLD refuses missing mandatory null artifact binding",
+    "in-memory capture control handles stderr error and awaits mock close",
+    "capture installs BOTH pipe error listeners before fallible stdout data setup",
+    "in-memory HOLD control retains one projected artifact with opaque fake codec",
+    "HOLD artifact hash failure after write retains first cause and reports INCOMPLETE",
+    "ambient mismatch refuses; named set/unset/value states are unchanged, not sanitized",
+    "review independence is per role, not blanket S3 exclusion",
+    "exclusive token then output collision keeps consumed state; child marker collision prevents helper",
+    "second stream open closes first and never spawns",
+    "async pipe error keeps first cause, TERM/KILL until actual close and clears timers afterward",
+    "post-spawn setup exception still awaits actual close without cancelling escalation",
+    "spawn error then close and wall timeout record actual events, not kill-request success",
+    "partial writes/cap crossing retain raw prefix and cleanup failures do not replace cause",
+    "helper throws versus returns then output/receipt failure never retries",
+    "bounded HOLD artifact is lossless; encode/write/receipt failures report incomplete retention",
+    "opaque artifact hash/receipt identity/known filename caps refuse disagreement"
+  ],
+  "failures": [],
+  "first_failure": null,
+  "harness_import_fixture_failures": "None reported; all33 completed successfully, not inferred solely from empty stderr.",
+  "reachability": {
+    "all33": "All33 named callbacks completed with their awaited promises and assertions passing. No failed/cancelled/skipped/todo callback; this is assertion evidence, not instrumented full-branch coverage.",
+    "driver22": "Both valid controls including exact caps; four wrong-known/unknown role filename refusals; ten numeric byte guards; two required null-binding refusals; stderr capture control; cross-stream setup-error sequence; fake-codec HOLD control; and postwrite hash-failure incomplete-retention case passed.",
+    "previouslyUnreachedCapture": "After stdout data setup throw, stderr emit did not throw; snapshot showed both error listeners1; finally emitted mock close, awaited completion, checked timer/descriptor cleanup; later first SETUP message, STDERR_ERROR later cause and actual mock-close assertions now passed.",
+    "previouslyUnreachedHold": "Original HOLD code/message, one helper/hash/write, helperCall flags, retention requested/error/postError and null binding passed; complete:false, receiptPersisted:true and persisted receipt complete:false now also passed.",
+    "old11": "First successful execution of all11 copied tests, including ambient/runtime mismatch guards, per-role review exclusion, in-memory collisions, stream setup/errors/escalation/mock close, partial writes/caps/cleanup, helper returned-versus-threw distinctions and actual pure codec fabricated HOLD +/-Infinity/NaN/-0 retention/decode plus failure paths.",
+    "unreached": "No known assertion suffix remained unreached due to failure in this run. Conditional branches and unlisted production/OS paths not selected by fixtures are NOT covered; no line/branch instrumentation was collected.",
+    "M1": "True3 helper-review capsule requirement lives in real fixed parent and was not imported/exercised by this original-incapable run. Its review remains source-based."
+  },
+  "source_pins_before_and_after_unchanged": [
+    {
+      "path": "discovery-cycle07/S3/E2019/capture-core.mjs",
+      "sha256": "ef9bfee41de9a1cfc7c4dd9ba4357a83e0760adcbe64836301551461c5bdde3d"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2019/capture-original-plan.mjs",
+      "sha256": "13603b76a7c27dd9332f136fd7056f89bcc1bc620b4a275b96522a30c470a1a3"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2019/run-original-plan.mjs",
+      "sha256": "3c58c5fd53ea170d28e82480642f09433be064fa3bbeeefe00a9d3e7c6275160"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2019/fabricated.test.mjs",
+      "sha256": "983f003cc3baf4c97b4e74ef6cc6ee6073c0b0add96ac9cfa0e0cfe68257371d"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2019/artifact-identity.test.mjs",
+      "sha256": "9a537e2bcc1b667db07b04581d5205f1543634a71e7d9ab8a729d68366d93b2c"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2019/FLOW.md",
+      "sha256": "a9b53a5303c4ebfafe3b31e1ce41718a1f3be26d8ce1cb9b391e672abe8cd1d6"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2019/FULL.diff",
+      "sha256": "58c1a2faac7b6d9f4ea9899a5ef03b617019214d740ed27343bb923c2345ff23"
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs",
+      "sha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "sha256": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12"
+    }
+  ],
+  "actual_execution": {
+    "test_runs": 1,
+    "separate_syntax_prechecks": 0,
+    "module_imports": "Node test/assert/events, pure capture-core and actual pure codec definitions imported by admitted tests; import counts not instrumented.",
+    "actual_codec_calls": "Fabricated HOLD encode/decode in old11 actually ran, including +/-Infinity, NaN and negative zero. Exact call count not instrumented.",
+    "fake_functions": "Driver22 fake helper/encoder/hash/writes/manual timers and old11 fake helper/writes/manual timers ran in memory; these are not actual original helper/process/filesystem operations.",
+    "actual_original_helper_calls": 0,
+    "real_parent_child_runner_calls": 0,
+    "original_evidence_body_reads": 0,
+    "original_native_value_decode": 0,
+    "original_packets_tokens_created": 0,
+    "real_OS_child_timer_fixture_calls": 0,
+    "PATH_queries_store_CV_image_render_calls": 0,
+    "source_test_cap_edits": 0,
+    "Git_native_repository_writes": 0
+  },
+  "preservation": "No edits to E2019 sources or E2014/E2016/E2017; only E2020 prospective/raw/result scratch outputs created.",
+  "limitations_and_gate": [
+    "Engineering fabricated semantics only; not real filesystem/pipe/signal/fsync/process capture, entire-runtime/host authentication, full branch coverage, original compatibility or scientific evidence.",
+    "Post-run executable file hash identifies the file inspected, not authentication of the already running interpreter or host.",
+    "No retry, source/test fix, cap raise, output filter or skipped test. No final ROOT_FINAL_GO packet or accepted runner capsule minted.",
+    "HOLD for independent different-worker exact source/runtime acceptance before separately admitted ONE original-plan route. ProducerG1-G6 scientific/defaultON/main/deploy gates unchanged.",
+    "Materialize distinguishes actual33 GREEN from prior22 RED and old11 first execution; not all33 RED-proven. Frozen-cap original failure remains legitimate terminal result, no raise/retry."
+  ]
+}

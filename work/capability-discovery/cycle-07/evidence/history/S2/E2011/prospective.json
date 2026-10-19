@@ -1,0 +1,28 @@
+{
+  "schema":"cycle07-fabricated-red-prospective@1",
+  "job_id":"E2011",
+  "worker":"S2",
+  "status":"SAVED_BEFORE_FIRST_LAUNCH_NOT_YET_RUN",
+  "admission":{"path":"/workspace/scratch/8528bb251845/discovery-cycle07/root-E2011-fabricated-red-admission.json","sha256":"08f9003c501997247884ea1df35281e702e0890b22ff48dd280b9ef96f4c019a"},
+  "freshPins":[
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2010/original-evidence-plan.mjs","bytes":12666,"sha256":"0b6f2bad20177cd965085b3fbf889c008205653c03bcb72280d41769e17a001a"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2010/plan-core.mjs","bytes":15713,"sha256":"b2dcde92eccb14e37a19e3353d49d7da593fbede0f8386c05179106c32927ec9"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2010/plan.test.mjs","bytes":25563,"sha256":"83083e5ed749a76051bc7e88d1ded5dabadf01d687ccfa727f443b8bcec05589"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2010/PHASE1.diff","bytes":19893,"sha256":"6464e4c4e59d2dc42bb8c9ee092f1abe8b12c4bc93fe88477c105e373f453ed9"},
+    {"path":"/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs","bytes":7322,"sha256":"3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015"}
+  ],
+  "cwd":"/workspace/scratch/8528bb251845",
+  "argv":["node","--test","--test-concurrency=1","discovery-cycle07/S2/E2010/plan.test.mjs"],
+  "command":"node --test --test-concurrency=1 discovery-cycle07/S2/E2010/plan.test.mjs",
+  "captures":{
+    "stdout":"/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2011/stdout.raw",
+    "stderr":"/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2011/stderr.raw",
+    "startUTC":"/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2011/start-utc.raw",
+    "endUTC":"/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2011/end-utc.raw",
+    "exitCode":"/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2011/exit-code.raw"
+  },
+  "captureMethod":"Shell noclobber protects exclusive NEW raw files; command stdout/stderr go directly to separate files, UTC date before/after, child status saved immediately and returned as outer shell exit. Empty streams remain byte-exact files. No shell pipeline or rerun of node command.",
+  "predictionsNotObservations":{"registeredTests":73,"semanticFailures":51,"otherChecks":22,"expectedExit":"nonzero regression assertions, not syntax/import/fixture errors"},
+  "scope":"One fabricated-only test process; definitions Node/helper/core/pure codec and fabricated/temp fixtures only. No valid enabled public real-root request, original native-body read/decode, store/PATH/CV or source change.",
+  "stop":"After first actual invocation regardless of outcome: no retry/filter/syntax precheck/fix/test change/cap raise. Report every result and reachability before any later separately admitted repair."
+}

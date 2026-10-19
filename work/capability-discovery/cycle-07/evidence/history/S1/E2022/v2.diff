@@ -1,0 +1,57 @@
+--- discovery-cycle07/S1/E2022/copy-checkpoint.once.mjs	2026-10-19 03:52:22.820843174 +0300
++++ discovery-cycle07/S1/E2022/copy-checkpoint.once.v2.mjs	2026-10-19 03:53:22.673575185 +0300
+@@ -79,7 +79,7 @@
+ const destinations=new Set();let total=0;
+ for(const p of planned){if(destinations.has(p.destination))fail('inert mapping collision');destinations.add(p.destination);total+=p.bytes;if(total>TOTAL_CAP)fail('cumulative copy cap');read(SOURCE+'/'+p.source,p);}
+ if(!same(names(),paths))fail('source changed during preflight');
+-const manifest={schema:'cycle07-file-only-evidence-manifest@1',status:'FROZEN_COPY_NOT_LIVE_AUTHORITY',rootSeal:{path:SEAL,sha256:argv[1]},acceptedR2021:sealed.reviewR2021,productPins,entries:planned.map(p=>({sourcePath:p.source,archivedPath:p.destination,bytes:p.bytes,sha256:p.sha256,sourcePOSIXPermissions:p.posixPermissions,copiedPOSIXPermissions:p.posixPermissions,gitProjectedMode:(parseInt(p.posixPermissions,8)&64)?'100755':'100644'})),limits:{perFileBytes:FILE_CAP,totalBytes:TOTAL_CAP},meaning:'Opaque exact file copies; no native plan/value decode, tests, helper or science. Manifest self-excluded. Root seal and later administration separately indexed; no retroactive audit or live authority. Physical POSIX permissions and Git projection are distinct.'};
++const manifest={schema:'cycle07-file-only-evidence-manifest@1',status:'FROZEN_COPY_NOT_LIVE_AUTHORITY',rootSeal:{path:SEAL,sha256:argv[1]},acceptedR2021:sealed.reviewR2021,productPins,files:planned.map(p=>({path:p.destination,sourcePath:p.source,bytes:p.bytes,sha256:p.sha256,sourcePOSIXPermissions:p.posixPermissions,copiedPOSIXPermissions:p.posixPermissions,gitProjectedMode:(parseInt(p.posixPermissions,8)&64)?'100755':'100644'})),limits:{perFileBytes:FILE_CAP,totalBytes:TOTAL_CAP},meaning:'Opaque exact file copies; no native plan/value decode, tests, helper or science. Manifest self-excluded. Root seal and later administration separately indexed; no retroactive audit or live authority. Physical POSIX permissions and Git projection are distinct.'};
+ const manifestBytes=new TextEncoder().encode(JSON.stringify(manifest,null,2)+'\n');
+ if(manifestBytes.length>FILE_CAP||total+manifestBytes.length>TOTAL_CAP)fail('manifest-inclusive cumulative cap');
+ noLinks(dirname(DEST));mkdirSync(DEST,{mode:0o755}); // Exclusive NEW target; no existing target reuse.
+--- discovery-cycle07/S1/E2022/checkpoint-plan.json	2026-10-19 03:49:37.210810834 +0300
++++ discovery-cycle07/S1/E2022/checkpoint-plan.v2.json	2026-10-19 03:53:23.185578629 +0300
+@@ -1,5 +1,5 @@
+ {
+-  "schema": "cycle07-e2022-additive-review-checkpoint-proposal@1",
++  "schema": "cycle07-e2022-additive-review-checkpoint-proposal@2",
+   "job_id": "E2022",
+   "worker": "S1",
+   "status": "CONSTRUCTION_ONLY_HOLD_BEFORE_FREEZE_COPY_SCRIPT_EXECUTION",
+@@ -76,9 +76,9 @@
+     "completeness": "Script compares full current source file-name set to sealed entries before and after copy. Unlisted added files, missing files, symlink/nonregular/body/mode drift -> STOP. Source must be quiescent; later finish/publication admin stays outside closure or new separately indexed layer."
+   },
+   "copyScript": {
+-    "path": "discovery-cycle07/S1/E2022/copy-checkpoint.once.mjs",
++    "path": "discovery-cycle07/S1/E2022/copy-checkpoint.once.v2.mjs",
+     "status": "WRITTEN_UNEXECUTED_UNTESTED_SOURCE_REVIEW_REQUIRED",
+-    "call": "node discovery-cycle07/S1/E2022/copy-checkpoint.once.mjs --finalized-manifest-sha256 ROOT_REVIEWED_FINAL_SHA256",
++    "call": "node discovery-cycle07/S1/E2022/copy-checkpoint.once.v2.mjs --finalized-manifest-sha256 ROOT_REVIEWED_FINAL_SHA256",
+     "behavior": "Node builtins only; parse only final seal JSON, never native plan/HOLD/value bodies. Bounded no-symlink descriptor/hash reads, exclusive fresh destination; copy source bytes exactly with inert filename projection and POSIX mode; opaque readback; one self-excluded evidence manifest. No compression/archive/decoder/test/helper/Git invocation.",
+     "failure": "No cleanup/overwrite/retry. Preserve any prefix and failure cause; later copied-byte audit is separate. Not atomic/fsync/crash-durable/race-proof. No snapshot can authenticate execution."
+   },
+@@ -104,5 +104,23 @@
+     "noPRUnlessAsked": true,
+     "noMainDefaultONDeployRelease": true
+   },
+-  "boundaries": "Nonportable fixed external absolute source/evidence/protocol pins unchanged; no original image replay, new CV query, helper run, original numerical review, or scientific/human/physical/path/width/continuity acceptance. Old3375 files and product4 unchanged; no repository writes in E2022."
++  "boundaries": "Nonportable fixed external absolute source/evidence/protocol pins unchanged; no original image replay, new CV query, helper run, original numerical review, or scientific/human/physical/path/width/continuity acceptance. Old3375 files and product4 unchanged; no repository writes in E2022.",
++  "revision": {
++    "version": "v2",
++    "originalDraft": {
++      "scriptPath": "copy-checkpoint.once.mjs",
++      "scriptBytes": 8331,
++      "scriptSHA256": "110bbc0e4dbdf858a346114760b5bf79abe9f9dc93deb83f4dbb092ea5e63f47",
++      "planPath": "checkpoint-plan.json",
++      "planBytes": 7525,
++      "planSHA256": "1d606f2388fe3abcf472750e967ffbd3da5ca9bd237f693ba9519de524fc5f68"
++    },
++    "finding": "Root source-only interface review found exporter/root verifier expects manifest.files[].path, not draft entries[].archivedPath. No test/copy/execution failed or ran. Original draft preserved byte-exact. V2 changes only output manifest field mapping in script; guards/caps/copy behavior unchanged."
++  },
++  "nativeManifest": {
++    "files": "[{path:p.destination,sourcePath:p.source,bytes,sha256,sourcePOSIXPermissions,copiedPOSIXPermissions,gitProjectedMode}]",
++    "compatibility": "Use unchanged Lab6-derived E2023 exporter and root verifier; later manifestPrefix config is relative to work/capability-discovery/cycle-07. No exporter-logic change.",
++    "selfExclusion": "evidence-manifest.json does not list itself or require its own circular SHA. Its exact hash/bytes are returned in small copy stdout and later separately indexed admin/audit.",
++    "reviewR2021": "Actual final accepted receipt must be hash-bound when available; current root testimony is predecode-gate PASS and pure-output inspection completed, final review pending. Do not treat partial/current report as accepted authority."
++  }
+ }

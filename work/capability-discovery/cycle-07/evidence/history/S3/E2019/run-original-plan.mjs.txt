@@ -1,0 +1,14 @@
+/** Fixed E2012 helper route; no helper/codec imports before admission, token and once marker. */
+import {pathToFileURL,fileURLToPath} from 'node:url';
+import {resolve} from 'node:path';
+import {loadAdmission,cliSha,readExact,parse,putJSON,putNew,syncDir,digest,LIMIT,fail,noLinks} from './capture-original-plan.mjs';
+import {invokeOnce,errorInfo} from './capture-core.mjs';
+export async function run(args){
+  const a=loadAdmission(cliSha(args)),t=parse(readExact(a.tokenPath,LIMIT.metadata));
+  if(t.schema!=='cycle07-original-plan-spent@2'||t.state!=='CONSUMED'||t.runId!==a.packet.runId||t.packetSha256!==a.packetSha256||t.requestSha256!==a.requestSha256||t.wrapperPid!==process.ppid)fail('token/parent identity');
+  for(const k of ['pins','reviews','authors','runtime','ambient'])if(JSON.stringify(t[k])!==JSON.stringify(a.packet[k]))fail('token '+k);
+  noLinks(a.runDir);
+  const r=await invokeOnce({claim:()=>{putJSON(`${a.runDir}/child-started.json`,{schema:'cycle07-original-plan-child-started@2',packetSha256:a.packetSha256,requestSha256:a.requestSha256,pid:process.pid,parentPid:process.ppid},true);syncDir(a.runDir);},loadHelper:async()=>{const m=await import(pathToFileURL(a.paths.helper).href);if(typeof m.buildOriginalEvidencePlan!=='function')fail('helper export');return {buildOriginalEvidencePlan:()=>m.buildOriginalEvidencePlan(a.packet.request)};},loadCodec:async()=>{const p=a.packet.pins.codec,b=readExact(a.paths.codec,LIMIT.source,p.bytes,p.sha256);return import(`data:text/javascript;base64,${Buffer.from(b).toString('base64')}`);},hash:digest,write:(name,b)=>{if(!['plan.wire.json','integrity-hold.wire.json'].includes(name))fail('fixed artifact');putNew(`${a.runDir}/${name}`,b,true);},receipt:v=>putJSON(`${a.runDir}/helper-receipt.json`,v,true),rawError:v=>process.stderr.write(`${JSON.stringify(v)}\n`)},{runId:a.packet.runId,packetSha256:a.packetSha256,requestSha256:a.requestSha256});
+  process.exitCode=r.status==='READY'&&r.receiptPersisted?0:1;
+}
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))run(process.argv.slice(2)).catch(e=>{process.stderr.write(`${JSON.stringify(errorInfo(e))}\n`);process.exitCode=1;});

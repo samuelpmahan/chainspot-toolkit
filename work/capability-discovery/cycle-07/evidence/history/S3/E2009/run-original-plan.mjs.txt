@@ -1,0 +1,32 @@
+/** SOURCE ONLY. Child entry: no helper import until fixed root admission/token checks. */
+import {openSync,closeSync,fsyncSync} from 'node:fs';
+import {pathToFileURL,fileURLToPath} from 'node:url';
+import {resolve} from 'node:path';
+import {loadAdmission,cliSha,readExact,parse,putJSON,putNew,smallError,digest,LIMIT,exact,fail,noLinks} from './capture-original-plan.mjs';
+
+export async function run(args){
+  const a=loadAdmission(cliSha(args));
+  const token=parse(readExact(a.tokenPath,LIMIT.metadata));
+  if(token.schema!=='cycle07-original-plan-spent@1'||token.state!=='CONSUMED'||token.packetSha256!==a.packetSha256||token.requestSha256!==a.requestSha256||token.runId!==a.packet.runId||token.wrapperPid!==process.ppid)fail('reserved token/parent identity');
+  if(JSON.stringify(token.pins)!==JSON.stringify(a.packet.pins)||JSON.stringify(token.reviews)!==JSON.stringify(a.packet.reviews))fail('token pin/request binding');
+  noLinks(a.runDir);
+  // Separate exclusive child marker prevents a second child call with this token.
+  putJSON(`${a.runDir}/child-started.json`,{schema:'cycle07-original-plan-child-started@1',packetSha256:a.packetSha256,requestSha256:a.requestSha256,pid:process.pid,parentPid:process.ppid},true);
+  const dirFd=openSync(a.runDir,'r');try{fsyncSync(dirFd);}finally{closeSync(dirFd);}
+  const events={attempted:false,returned:false,threw:false};let status='FAILED',plan=null,error=null;
+  try{
+    const module=await import(pathToFileURL(a.paths.helper).href);
+    if(typeof module.buildOriginalEvidencePlan!=='function')fail('final helper export');
+    events.attempted=true;
+    let result;
+    try{result=await module.buildOriginalEvidencePlan(a.packet.request);events.returned=true;}catch(e){events.threw=true;throw e;}
+    exact(result,['status','plan','encodedBytes','sha256','bindings','actualNewPATH']);
+    if(result.status!=='READY'||result.actualNewPATH!==0||!result.encodedBytes||Object.getPrototypeOf(result.encodedBytes)!==Uint8Array.prototype||result.encodedBytes.length<1||result.encodedBytes.length>LIMIT.plan)fail('READY output contract/2MiB cap');
+    const hash=digest(result.encodedBytes);if(hash!==result.sha256)fail('returned encodedBytes digest');
+    putNew(`${a.runDir}/plan.wire.json`,result.encodedBytes,true);
+    plan={path:'plan.wire.json',bytes:result.encodedBytes.length,sha256:hash};status='READY';
+  }catch(e){error=smallError(e);}
+  const receipt={schema:'cycle07-original-plan-helper-receipt@1',runId:a.packet.runId,packetSha256:a.packetSha256,requestSha256:a.requestSha256,status,helperCall:events,plan,error,intendedExitCode:status==='READY'?0:1,qualification:'No returned plan or encoded-byte wrapper is printed; raw plan bytes only. Helper return and subsequent output failure remain distinct.'};
+  try{putJSON(`${a.runDir}/helper-receipt.json`,receipt,true);}catch(receiptError){process.stderr.write(`${JSON.stringify({schema:'cycle07-original-plan-receipt-write-error@1',status,helperCall:events,firstError:error,receiptWriteError:smallError(receiptError)})}\n`);throw receiptError;}process.exitCode=status==='READY'?0:1;
+}
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))run(process.argv.slice(2)).catch(e=>{process.stderr.write(`${JSON.stringify(smallError(e))}\n`);process.exitCode=1;});

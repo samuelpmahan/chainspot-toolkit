@@ -1,0 +1,68 @@
+{
+  "job_id": "E2016",
+  "worker": "S2",
+  "outcome": "mixed_change",
+  "summary": "Authored an unexecuted, original-incapable driver for artifact role filenames/caps/null bindings, pipe-error listener ordering, and incomplete HOLD retention after artifact hashing fails. The pure capture core is unchanged. Twenty-two named tests are predicted to include eight intended RED falsifiers and fourteen controls/guard passes, not observations. HOLD for root exact source review and separate fabricated RED admission.",
+  "phase": "source_construction_only",
+  "ownership": "discovery-cycle07/S2/E2016/ only",
+  "source_pin": {
+    "path": "discovery-cycle07/S3/E2014/capture-core.mjs",
+    "bytes": 11362,
+    "sha256": "6d16296bb01932f66297fa1ea24ad47ef12e35e51f6d7da8d6033e32600ace13",
+    "post_write_hash_unchanged": true
+  },
+  "artifacts": [
+    {
+      "path": "discovery-cycle07/S2/E2016/artifact-identity.test.mjs",
+      "bytes": 9215,
+      "sha256": "5a80e5caa344590371e2f9135142e173b9b34de7c3d720f9d99c5540bf556e02"
+    },
+    {
+      "path": "discovery-cycle07/S2/E2016/FLOW.md",
+      "bytes": 6260,
+      "sha256": "45e68e3cd15f2d8f5a437b232ac5d4b8ddc50ba01a7ed388a47a3e5a7ca7231f"
+    }
+  ],
+  "source_facts": [
+    "checkArtifacts compares binding path/bytes/hash against inventory and currently chooses the byte cap using the supplied path, without a literal role-specific filename check; null mandatory bindings are skipped.",
+    "The current Number.isSafeInteger, bytes >= 1, and known-path upper-cap guards are retained as independently named refusal tests.",
+    "captureSession installs stdout error/data handlers before the stderr error handler, allowing a stdout data-registration exception to leave stderr error unhandled.",
+    "invokeOnce sets complete true before artifact hash evaluation; a hash exception after write can leave complete true with artifact null and a retention error.",
+    "The driver imports only node:test, node:assert/strict, node:events, and the pinned pure E2014 capture core. No filesystem, actual codec/helper/evidence, real parent, or child is imported or called.",
+    "All fixture hashes are opaque repeated-letter fake metadata. Exact-cap controls allocate no artifact bodies. Artifact fixtures target checkArtifacts only, not validateReceipt.",
+    "Capture capabilities are EventEmitters, string descriptor tokens and manual timer Maps. Both tests close the mock and await cleanup in finally even when an earlier assertion fails.",
+    "The closed sixteen-station HOLD fixture uses a fake one-byte encoder and fake helper/hash/write/receipt functions only. Its positive control validates reachability of the same source projection, not codec losslessness."
+  ],
+  "predictions_not_observations": {
+    "registered_tests_if_executed": 22,
+    "intended_filename_refusal_failures": 4,
+    "intended_null_binding_refusal_failures": 2,
+    "intended_pipe_listener_failure": 1,
+    "intended_hold_hash_failure": 1,
+    "total_intended_failures": 8,
+    "other_predicted_passes": 14,
+    "falsifier": "Four wrong-known/unknown filenames and two null mandatory bindings are currently accepted; the pipe test should fail at stderr doesNotThrow after stdout setup throws; post-write HOLD hash failure should fail at complete false. Later assertions within a failed callback are unreached, not observed."
+  },
+  "prospective_command_not_executed": {
+    "cwd": "/workspace/scratch/8528bb251845",
+    "command": "node --test --test-concurrency=1 discovery-cycle07/S2/E2016/artifact-identity.test.mjs",
+    "admission": "HOLD: root exact source review and separate native fabricated RED GO required"
+  },
+  "actual_execution": {
+    "test_runs": 0,
+    "syntax_checks": 0,
+    "module_imports": 0,
+    "codec_calls": 0,
+    "original_evidence_body_reads": 0,
+    "query_store_or_cv_calls": 0,
+    "semantic_core_changes": 0,
+    "fake_capability_or_fake_encoder_calls": 0,
+    "repository_native_or_git_writes": 0
+  },
+  "limitations": [
+    "Source construction is not an observed RED result, test registration, import success, or syntax validation.",
+    "These are engineering filename/metadata bindings, not scientific evidence or a claim of producer admission.",
+    "Checkpoint and test-driven-development preserve source-first counterexamples and pause before execution. The skill's referenced writing-good-tests resource was unavailable; no execution or implementation was substituted.",
+    "All prior packets and E2014 source remain untouched. After actual intended RED, repaired-source comparison should only rebind the import path without weakening assertions."
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "job_id":"E2021",
+  "worker":"S3",
+  "status":"PRELAUNCH_ONE_ORIGINAL_PLAN_OPERATION",
+  "cwd":"/workspace/scratch/8528bb251845",
+  "argv":["node","/workspace/scratch/8528bb251845/discovery-cycle07/S3/E2019/capture-original-plan.mjs","--packet-sha","e9823950159a5866c9f00b8f0875a56571cbceb6f073bf7895f264644a8b9ee1"],
+  "packet":{"path":"discovery-cycle07/S3/E2019/ROOT-ADMISSION.json","sha256":"e9823950159a5866c9f00b8f0875a56571cbceb6f073bf7895f264644a8b9ee1","read":"complete","sourceAndReviewHashesAndByteCounts":"All10 source/protocol/prior-review pins plus both actual accepted review capsules match fresh read-only checks."},
+  "runtimeFile":{"path":"/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node","bytes":125989464,"sha256":"bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12","resolvedNodeMatches":true,"qualification":"File identity, not executed-runtime/host authentication. Reviewed parent checks actual process identity/named ambient before token."},
+  "unusedTargets":{"runDir":"discovery-cycle07/S3/E2019/runs/E2021-original-plan-v1","token":"discovery-cycle07/S3/E2019/tokens/E2021-original-plan-v1.spent.json","checkedAbsentIncludingSymlinks":true},
+  "captures":{"stdout":"discovery-cycle07/S3/E2021/stdout.raw","stderr":"discovery-cycle07/S3/E2021/stderr.raw","startUTC":"discovery-cycle07/S3/E2021/start-utc.raw","endUTC":"discovery-cycle07/S3/E2021/end-utc.raw","exitCode":"discovery-cycle07/S3/E2021/exit-code.raw","signal":"discovery-cycle07/S3/E2021/signal.raw","returnCode":"discovery-cycle07/S3/E2021/return-code.raw","outerObserved":"discovery-cycle07/S3/E2021/outer-observed.json"},
+  "captureMethod":"Minimal Python standard-library subprocess launcher opens all8 exclusive binary capture descriptors BEFORE launch, records UTC, uses shell=False and exact argv/cwd with env omitted (all ambient inherited unchanged), waits actual process return. Popen wait negative returncode reports actual termination signal separately from normal exit, without shell128+signal inference. No project import/decode/query. Output is not filtered or reconstructed. Launcher errors, if any, are recorded separately without retry.",
+  "bounds":"Reviewed child wall120s, grace2s, raw64KiB per stream, plan2MiB, HOLD64KiB; outer launcher only waits/captures actual wrapper termination, not full process-tree/resource certification.",
+  "gate":"ONE original-plan operation only, at most one enabled helpercall. Any failure terminal HOLD, preserve raw/token/prefixes/no retry/cleanup/capraise/sourcechange. Helper targeted original decode is permitted inside this packet only. After close smallreceipt/exit/token/currentpins file-only and opaque plan/HOLD hash only, no plan decode/numeric recomputation/new PATH/store/CV/image/render. Historical44 eligibility remains prediction. Fresh independent file-only review follows."
+}

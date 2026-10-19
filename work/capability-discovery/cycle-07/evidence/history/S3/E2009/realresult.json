@@ -1,0 +1,193 @@
+{
+  "schema": "capability-discovery-source-construction@1",
+  "job_id": "E2009",
+  "worker": "S3",
+  "outcome": "mixed_change",
+  "status": "CONSTRUCTION_READY_SOURCE_ONLY_UNEXECUTED_PENDING_ROOT_DIFFERENT_WORKER_REVIEW",
+  "summary": "Constructed two minimal Node source files for one future original-evidence ARGPLAN helper call with bounded two-process capture, plus actual-flow checkpoint. Fixed root packet and independent packet SHA must supply final helper/core/test/codec/protocol/review/runner/wrapper pins; no future pins or admission packet were invented. Parent consumes exclusive fsynced token before NEW run directory/spawn; child independently rechecks packet/token and creates a separate exclusive child-start marker before dynamic helper import and at most one valid-enabled call. READY writes returned encodedBytes directly <=2MiB with independent digest checks; small receipts/raw streams are capped64KiB. Parent actually waits child close/exit/signal, retains stream prefixes/termination facts and distinguishes helper return/throw from subsequent output failure. No source execution/syntax/import/test/codec/evidence read occurred; root plus a different worker must review exact source and final repaired helper/tests before any run GO.",
+  "artifacts": [
+    {
+      "path": "discovery-cycle07/S3/E2009/capture-original-plan.mjs",
+      "bytes": 11127,
+      "sha256": "f98d35631f4cef1086a99cf169826c23098b6fdd43a75e7d1ffd463adcd3e79e",
+      "role": "parent actual child process capture + shared fixed admission/descriptor/hash/write guards"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2009/run-original-plan.mjs",
+      "bytes": 3294,
+      "sha256": "0f78425b56e23b520f35e8d80139efcf15cdb9fa89bdce8944f962fa77ada0de",
+      "role": "child once marker, late helper import, one call, direct opaque wire output + receipt"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2009/FLOW.md",
+      "bytes": 9243,
+      "sha256": "2d6655606654c8750a3491a21781bc389fcb590a1eb4220a6042c98b8d5f5f71",
+      "role": "actual numbered flow/checkpoint/packet grammar/holds"
+    }
+  ],
+  "futureEntry": {
+    "command": "node /workspace/scratch/8528bb251845/discovery-cycle07/S3/E2009/capture-original-plan.mjs --packet-sha ROOT_FINAL_ADMISSION_SHA256",
+    "commandStatus": "TEMPLATE_ONLY_NOT_RUN. Actual final64hex digest must be independently root-supplied.",
+    "packetPath": "/workspace/scratch/8528bb251845/discovery-cycle07/S3/E2009/ROOT-ADMISSION.json",
+    "packetCreated": false,
+    "closedPacketKeys": [
+      "schema",
+      "status",
+      "mode",
+      "runId",
+      "pins",
+      "reviews",
+      "request"
+    ],
+    "requiredValues": {
+      "schema": "cycle07-original-plan-admission@1",
+      "status": "ROOT_FINAL_GO",
+      "mode": "ORIGINAL_PLAN_ONCE"
+    },
+    "pinKeys": [
+      "helper",
+      "core",
+      "tests",
+      "codec",
+      "protocol",
+      "protocolReview",
+      "runner",
+      "wrapper"
+    ],
+    "pinRecordKeys": [
+      "bytes",
+      "sha256"
+    ],
+    "reviewKeys": [
+      "helper",
+      "runner"
+    ],
+    "reviewRecordKeys": [
+      "path",
+      "bytes",
+      "sha256",
+      "reviewer",
+      "decision",
+      "targets"
+    ],
+    "reviewTargets": {
+      "helper": [
+        "helper",
+        "core",
+        "tests",
+        "codec",
+        "protocol"
+      ],
+      "runner": [
+        "runner",
+        "wrapper"
+      ]
+    },
+    "requestKeys": [
+      "schema",
+      "enabled",
+      "token"
+    ],
+    "requestSchema": "cycle07-original-evidence-plan-request@1",
+    "requestEnabled": true,
+    "pending": "All final accepted target pin bytes/hashes and accepted different-worker review files/capsules, actual helper request token and root runId/digest. Known construction hashes are NOT future acceptance pins. Root's digest/authorship and review-to-pin coverage are external authority; code validates closed packet metadata/file hashes, not human identity from prose."
+  },
+  "actualProspectiveFlow": [
+    "Parent validates CLI/fixed packet SHA, exact source/protocol/review pins; no helper import or raw evidence.",
+    "Create fsynced exclusive tokens/<runId>.spent.json bound to packet/request/pins/reviews and wrapperPid; failed subsequent work does not unspend it.",
+    "Reserve NEW runs/<runId> and raw stream files; direct process.execPath spawn, shell:false, no inherited NODE_OPTIONS/NODE_PATH.",
+    "Child rechecks same fixed packet/pins/token/parent, creates exclusive child-started.json before helper import; reuse cannot call helper again.",
+    "Dynamic helper import then exactly one awaited buildOriginalEvidencePlan; attempted/returned/threw events reflect actual call boundary.",
+    "READY exact envelope/newPATH0/exact Uint8Array1..2MiB/independent returned SHA check; wx+fsync raw plan.wire.json without native decoding or whole-plan console dump.",
+    "Helper receipt <=64KiB separates returned helper from write/receipt errors. Receipt-write failure reports bounded event/first-error projection to raw stderr where possible.",
+    "Parent caps each raw stream64KiB, flags prefix-only and first failure, TERM then KILL2s, wall120s; awaits actual close event and records exit code/signal.",
+    "Parent independently rehashes opaque output wire and inventories known available files; empty raw streams valid; final exit metadata <=64KiB.",
+    "Root launcher separately observes wrapper exit/signal and hashes exit.json, which cannot contain its own hash."
+  ],
+  "limitsAndFailureContract": {
+    "packetMetadataBytes": 65536,
+    "eachRawStreamBytes": 65536,
+    "planWireBytes": 2097152,
+    "eachPinnedSourceOrReviewBytes": 1048576,
+    "wallTimeoutMs": 120000,
+    "killGraceMs": 2000,
+    "durableToken": "wx file write+file fsync+token-directory fsync before child/helper work. Fsync/reservation failure stops; partial file stays consumed. This is host filesystem machinery, not universal storage/crash authentication.",
+    "once": "Exclusive parent token plus separate exclusive child-start marker; no retry/cleanup/overwrite/replacement route.",
+    "capture": "Exact stored raw prefix, received/written counts and prefixOnly/writeFailed flags. A failed write can leave a partial file absent from inventory; preserve directory/token. Missing receipt/exit after disk failure or abrupt host death remains missing/unknown.",
+    "exit": "actualChildExit.closeObserved/code/signal comes from Node child close, not helper return or intended exit. Wrapper own later exit/signal requires external launcher; wrapperIntendedExitCode is labeled intended.",
+    "timeoutQualification": "Operational120s wall timer then2s TERM grace/KILL attempt; no total CPU/RSS/OS kill-latency/descendant-tree certification. Reviewed helper must not spawn descendants.",
+    "noBudgetConflation": "Parent/child source-pin rereads and output hashes are outside helper8MiB evidence load count and future CV producer16MiB budget. No actual original tree/output cap passage or resource sufficiency claim.",
+    "terminalNegative": "Frozen-cap failure is useful terminal engineering evidence, no cap raise/rerun. Output repair never repeats helper."
+  },
+  "reviewBoundary": {
+    "rootAndDifferentWorkerFullRunnerSourceReviewRequired": true,
+    "finalRepairedHelperCoreTestsAcceptanceRequired": true,
+    "actualFlowCheckpointDelivered": true,
+    "checkpointPauseActive": true,
+    "syntaxOrImportOrTestGO": false,
+    "originalPlanRunGO": false,
+    "CVGO": false,
+    "unimplemented": "No fabricated runner-test seam/packet or test file authored. Later synthetic runner/token/capture verification requires separately reviewed fixtures; never fabricate a ROOT_FINAL_GO packet to invoke original evidence during NONCV.",
+    "existingHolds": "R2005 source-protocol acceptance does not approve this implementation, final helper or tests. All producer G1-G6 HOLD remain.",
+    "authorityLimits": "Trusted independently supplied root packet digest/target review declarations; no cryptographic human-authorship detector. Source hashes/descriptor checks are at check-time, not host/ESM execution authentication or complete concurrent-replacement defense."
+  },
+  "sourceReferences": [
+    {
+      "path": "discovery-cycle07/S3/E2008/realresult.json",
+      "sha256": "fbf2872dd106191b9b8293b0998880620ee1862568196cc7d73d36671471c9f9",
+      "role": "one-shot capture/cap/stop contract"
+    },
+    {
+      "path": "discovery-cycle07/S3/R2005/realresult.json",
+      "sha256": "c301cf5ff9005716cc7c1e7309e2f087bb282d53e99821611cb00a6b8e8b29b4",
+      "role": "protocol-only acceptance, not source execution authority"
+    },
+    {
+      "path": "discovery-cycle07/S1/E2005/protocol.v2.json",
+      "bytes": 83022,
+      "sha256": "7948df5ee19e10a065f907a7dc0af1b845b5b408f32776b78813ad938bedea6e",
+      "role": "current protocol route; future root final pin independently binds exact bytes"
+    }
+  ],
+  "actualActions": {
+    "scratchWritesOnly": "discovery-cycle07/S3/E2009/",
+    "sourceTextAuthoringAndReadback": true,
+    "shaAndSizeInspection": true,
+    "sourceOnlyCorrections": "Before handoff, source inspection corrected empty-stream inventory acceptance, descriptor O_NONBLOCK/O_NOFOLLOW flags, first helper-error retention if receipt writing fails, and explicit inventoryComplete:false on incomplete verification. No observed runtime failure or test result is claimed.",
+    "syntaxChecks": 0,
+    "projectImports": 0,
+    "testsAuthored": 0,
+    "testsExecuted": 0,
+    "observedRedGreen": 0,
+    "subprocessesSpawned": 0,
+    "helperCalls": 0,
+    "codecCalls": 0,
+    "nativeEvidenceBodyReads": 0,
+    "nativeValueDecode": 0,
+    "originalImageOrPixelReads": 0,
+    "storeCalls": 0,
+    "PATHQueries": 0,
+    "CV": 0,
+    "render": 0,
+    "repositoryEdits": 0,
+    "GitOperations": 0,
+    "nativeOperations": 0,
+    "networkCalls": 0,
+    "subagents": 0
+  },
+  "skillInfluence": "checkpoint supplies actual entry/order/invocations/storage/inspection/boundaries and pauses before running. Explicit source-only no-execution scope supersedes ordinary observed RED/GREEN execution; no TDD passage or production readiness is claimed.",
+  "claims": {
+    "constructionWritten": true,
+    "constructionREADYOnly": true,
+    "sourceReviewedIndependently": false,
+    "syntaxVerified": false,
+    "testsPassed": false,
+    "futurePinsInvented": false,
+    "admissionPacketCreated": false,
+    "originalPlanRunExecuted": false,
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN",
+    "physicalEdgeIdentity": "UNKNOWN",
+    "pathIdentity": "UNKNOWN"
+  }
+}

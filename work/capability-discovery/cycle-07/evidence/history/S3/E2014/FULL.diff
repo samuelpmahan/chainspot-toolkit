@@ -1,0 +1,336 @@
+--- discovery-cycle07/S3/E2009/capture-original-plan.mjs	2026-10-19 02:39:10.082196262 +0300
++++ discovery-cycle07/S3/E2014/capture-original-plan.mjs	2026-10-19 03:04:05.163503654 +0300
+@@ -1,58 +1,40 @@
+-/** SOURCE ONLY. Two-process one-shot capture; no helper import in this parent. */
++/** E2014 source-only fixed ORIGINAL route. Ambient is inherited unchanged, never sanitized. */
+ import {openSync,closeSync,readSync,writeSync,fstatSync,lstatSync,mkdirSync,fsyncSync,readdirSync,constants} from 'node:fs';
+ import {createHash} from 'node:crypto';
+ import {spawn} from 'node:child_process';
+ import {resolve,sep} from 'node:path';
+ import {fileURLToPath} from 'node:url';
+-
+-export const ROOT='/workspace/scratch/8528bb251845';
+-export const HERE=`${ROOT}/discovery-cycle07/S3/E2009`;
+-export const PACKET=`${HERE}/ROOT-ADMISSION.json`;
+-export const LIMIT=Object.freeze({metadata:65536,stream:65536,plan:2097152,source:1048576,wallMs:120000,killGraceMs:2000});
+-const PATHS=Object.freeze({helper:`${ROOT}/discovery-cycle07/S2/E2006/original-evidence-plan.mjs`,core:`${ROOT}/discovery-cycle07/S2/E2006/plan-core.mjs`,tests:`${ROOT}/discovery-cycle07/S2/E2006/plan.test.mjs`,codec:`${ROOT}/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs`,protocol:`${ROOT}/discovery-cycle07/S1/E2005/protocol.v2.json`,protocolReview:`${ROOT}/discovery-cycle07/S3/R2005/realresult.json`,runner:`${HERE}/run-original-plan.mjs`,wrapper:`${HERE}/capture-original-plan.mjs`});
++import {ENV_KEYS,FILE_CAPS,fields,checkBoundary,roleReview,reserve,captureSession,errorInfo,validateReceipt,validateInventory,checkArtifacts} from './capture-core.mjs';
++export const ROOT='/workspace/scratch/8528bb251845',HERE=`${ROOT}/discovery-cycle07/S3/E2014`,PACKET=`${HERE}/ROOT-ADMISSION.json`;
++export const LIMIT=Object.freeze({metadata:65536,plan:2097152,source:1048576,runtimeBinary:268435456,streamBytes:65536,wallMs:120000,graceMs:2000});
++const PATHS=Object.freeze({helper:`${ROOT}/discovery-cycle07/S2/E2012/original-evidence-plan.mjs`,core:`${ROOT}/discovery-cycle07/S2/E2012/plan-core.mjs`,tests:`${ROOT}/discovery-cycle07/S2/E2012/plan.test.mjs`,codec:`${ROOT}/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs`,protocol:`${ROOT}/discovery-cycle07/S1/E2005/protocol.v2.json`,protocolReview:`${ROOT}/discovery-cycle07/S3/R2005/realresult.json`,runner:`${HERE}/run-original-plan.mjs`,wrapper:`${HERE}/capture-original-plan.mjs`,captureCore:`${HERE}/capture-core.mjs`,fabricatedTests:`${HERE}/fabricated.test.mjs`});
+ export const digest=b=>createHash('sha256').update(b).digest('hex');
+-export function fail(message){throw new Error(`REFUSED: ${message}`);}
+-export function exact(o,keys){if(!o||Object.getPrototypeOf(o)!==Object.prototype)fail('ordinary record');const k=Reflect.ownKeys(o);if(k.length!==keys.length||k.some(x=>typeof x!=='string'||!keys.includes(x)))fail('closed fields');for(const x of keys){const d=Object.getOwnPropertyDescriptor(o,x);if(!d||!Object.hasOwn(d,'value')||!d.enumerable||d.value===undefined)fail('own data fields');}}
+-export function hashText(s){if(typeof s!=='string'||!/^[0-9a-f]{64}$/.test(s)||/^0{64}$|^f{64}$/.test(s))fail('final SHA256 required');return s;}
+-export function noLinks(path){const a=resolve(path);let p=sep;const parts=a.split(sep).filter(Boolean);for(let i=0;i<parts.length;i++){p=resolve(p,parts[i]);const s=lstatSync(p);if(s.isSymbolicLink()||(i<parts.length-1&&!s.isDirectory()))fail('symlink/non-directory component');}return a;}
+-export function readExact(path,cap,bytes=null,expected=null){const a=noLinks(path),before=lstatSync(a);if(!before.isFile()||!Number.isSafeInteger(before.size)||before.size<0||before.size>cap||(bytes!==null&&before.size!==bytes))fail('file size/type');if(!Number.isSafeInteger(constants.O_NOFOLLOW))fail('O_NOFOLLOW required');let fd;try{fd=openSync(a,constants.O_RDONLY|constants.O_NONBLOCK|constants.O_NOFOLLOW);const s=fstatSync(fd);if(!s.isFile()||s.dev!==before.dev||s.ino!==before.ino||s.size!==before.size)fail('descriptor identity');const out=new Uint8Array(s.size);let n=0;while(n<out.length){const got=readSync(fd,out,n,out.length-n,n);if(!got)fail('truncated file');n+=got;}if(readSync(fd,new Uint8Array(1),0,1,out.length)!==0)fail('growing file');const after=fstatSync(fd);if(after.size!==s.size||after.mtimeMs!==s.mtimeMs||after.dev!==s.dev||after.ino!==s.ino)fail('file changed');if(expected!==null&&digest(out)!==expected)fail('file hash');return out;}finally{if(fd!==undefined)closeSync(fd);}}
+-export function parse(bytes){return JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));}
+-export function jsonBytes(value){const b=new TextEncoder().encode(`${JSON.stringify(value,null,2)}\n`);if(b.length>LIMIT.metadata)fail('metadata cap');return b;}
+-export function putNew(path,bytes,sync=false){let fd;try{fd=openSync(path,'wx',0o600);let n=0;while(n<bytes.length){const got=writeSync(fd,bytes,n,bytes.length-n);if(!got)fail('zero write');n+=got;}if(sync)fsyncSync(fd);}finally{if(fd!==undefined)closeSync(fd);}}
+-export function putJSON(path,value,sync=false){putNew(path,jsonBytes(value),sync);}
+-function syncDir(path){const fd=openSync(noLinks(path),'r');try{fsyncSync(fd);}finally{closeSync(fd);}}
+-export function smallError(e){const full=String(e?.message??e);return {name:String(e?.name??'Error').slice(0,128),message:full.slice(0,4096),messageTruncated:full.length>4096};}
+-function reviewPin(r,targets){exact(r,['path','bytes','sha256','reviewer','decision','targets']);if(r.decision!=='accepted'||typeof r.reviewer!=='string'||!/^[A-Za-z0-9_-]{1,64}$/.test(r.reviewer)||r.reviewer==='S3')fail('different-worker accepted final review');if(!Array.isArray(r.targets)||JSON.stringify([...r.targets].sort())!==JSON.stringify([...targets].sort()))fail('review targets');if(typeof r.path!=='string'||!r.path.startsWith(`${ROOT}/discovery-cycle07/`)||resolve(r.path)!==r.path)fail('review path');pin(r,r.path);}
+-function pin(p,path){if(!Number.isSafeInteger(p.bytes)||p.bytes<1||p.bytes>LIMIT.source)fail('final pin bytes');hashText(p.sha256);readExact(path,LIMIT.source,p.bytes,p.sha256);}
+-export function loadAdmission(expected){hashText(expected);const bytes=readExact(PACKET,LIMIT.metadata,null,expected),p=parse(bytes);exact(p,['schema','status','mode','runId','pins','reviews','request']);if(p.schema!=='cycle07-original-plan-admission@1'||p.status!=='ROOT_FINAL_GO'||p.mode!=='ORIGINAL_PLAN_ONCE'||typeof p.runId!=='string'||!/^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(p.runId))fail('final ROOT packet, not draft/null');exact(p.pins,Object.keys(PATHS));for(const [name,path]of Object.entries(PATHS)){exact(p.pins[name],['bytes','sha256']);pin(p.pins[name],path);}exact(p.reviews,['helper','runner']);reviewPin(p.reviews.helper,['helper','core','tests','codec','protocol']);reviewPin(p.reviews.runner,['runner','wrapper']);exact(p.request,['schema','enabled','token']);if(p.request.schema!=='cycle07-original-evidence-plan-request@1'||p.request.enabled!==true||typeof p.request.token!=='string'||!p.request.token||p.request.token.length>256||/draft|pending|null|placeholder/i.test(p.request.token))fail('final closed helper request');return {packet:p,packetSha256:expected,requestSha256:digest(jsonBytes(p.request)),paths:PATHS,runDir:`${HERE}/runs/${p.runId}`,tokenPath:`${HERE}/tokens/${p.runId}.spent.json`};}
++export function fail(s){throw Error('REFUSED: '+s);}
++export function hashText(s){if(typeof s!=='string'||!/^[0-9a-f]{64}$/.test(s)||/^0{64}$|^f{64}$/.test(s))fail('final SHA256');return s;}
++export function noLinks(path){const a=resolve(path);let p=sep;const parts=a.split(sep).filter(Boolean);for(let i=0;i<parts.length;i++){p=resolve(p,parts[i]);const s=lstatSync(p);if(s.isSymbolicLink()||(i<parts.length-1&&!s.isDirectory()))fail('symlink/path');}return a;}
++function descriptor(path,cap,bytes){const p=noLinks(path),before=lstatSync(p);if(!before.isFile()||!Number.isSafeInteger(before.size)||before.size<0||before.size>cap||(bytes!==null&&before.size!==bytes)||!Number.isSafeInteger(constants.O_NOFOLLOW))fail('regular bounded file');const fd=openSync(p,constants.O_RDONLY|constants.O_NONBLOCK|constants.O_NOFOLLOW);try{const s=fstatSync(fd);if(!s.isFile()||s.dev!==before.dev||s.ino!==before.ino||s.size!==before.size)fail('descriptor identity');return {fd,stat:s};}catch(e){closeSync(fd);throw e;}}
++function unchanged(fd,s){const a=fstatSync(fd);if(a.size!==s.size||a.dev!==s.dev||a.ino!==s.ino||a.mtimeMs!==s.mtimeMs)fail('changed file');}
++export function readExact(path,cap,bytes=null,expected=null){const {fd,stat}=descriptor(path,cap,bytes);try{const b=new Uint8Array(stat.size);let n=0;while(n<b.length){const got=readSync(fd,b,n,b.length-n,n);if(!got)fail('truncated file');n+=got;}if(readSync(fd,new Uint8Array(1),0,1,b.length)!==0)fail('growing file');unchanged(fd,stat);if(expected!==null&&digest(b)!==expected)fail('file hash');return b;}finally{closeSync(fd);}}
++function runtimeHash(p){fields(p,['bytes','sha256']);if(!Number.isSafeInteger(p.bytes)||p.bytes<1||p.bytes>LIMIT.runtimeBinary)fail('runtime byte pin');hashText(p.sha256);const {fd,stat}=descriptor(process.execPath,LIMIT.runtimeBinary,p.bytes);try{const h=createHash('sha256'),b=new Uint8Array(65536);let pos=0;while(pos<stat.size){const n=readSync(fd,b,0,Math.min(b.length,stat.size-pos),pos);if(!n)fail('runtime truncated');h.update(b.subarray(0,n));pos+=n;}if(readSync(fd,b,0,1,pos)!==0)fail('runtime grew');unchanged(fd,stat);if(h.digest('hex')!==p.sha256)fail('runtime hash');}finally{closeSync(fd);}}
++export const parse=b=>JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(b));
++export function jsonBytes(v){const b=new TextEncoder().encode(`${JSON.stringify(v,null,2)}\n`);if(b.length>LIMIT.metadata)fail('metadata cap');return b;}
++export function putNew(path,b,sync=false){let fd;try{fd=openSync(path,'wx',0o600);let n=0;while(n<b.length){const got=writeSync(fd,b,n,b.length-n);if(!got)fail('zero write');n+=got;}if(sync)fsyncSync(fd);}finally{if(fd!==undefined)closeSync(fd);}}
++export const putJSON=(path,v,sync=false)=>putNew(path,jsonBytes(v),sync);
++export function syncDir(path){const fd=openSync(noLinks(path),'r');try{fsyncSync(fd);}finally{closeSync(fd);}}
++function pin(p,path){fields(p,['bytes','sha256']);if(!Number.isSafeInteger(p.bytes)||p.bytes<1||p.bytes>LIMIT.source)fail('final source pin');hashText(p.sha256);readExact(path,LIMIT.source,p.bytes,p.sha256);}
++function review(r,targets,author){fields(r,['path','bytes','sha256','reviewer','decision','targets']);roleReview(r.reviewer,author);if(r.decision!=='accepted'||typeof r.reviewer!=='string'||!/^[A-Za-z0-9_-]{1,64}$/.test(r.reviewer)||!Array.isArray(r.targets)||JSON.stringify([...r.targets].sort())!==JSON.stringify([...targets].sort())||typeof r.path!=='string'||!r.path.startsWith(`${ROOT}/discovery-cycle07/`)||resolve(r.path)!==r.path)fail('review capsule');pin({bytes:r.bytes,sha256:r.sha256},r.path);}
++function observedBoundary(){return {runtime:{execPath:process.execPath,version:process.version,platform:process.platform,arch:process.arch,execArgv:[...process.execArgv]},ambient:Object.fromEntries(ENV_KEYS.map(k=>[k,{set:Object.hasOwn(process.env,k),value:Object.hasOwn(process.env,k)?process.env[k]:null}]))};}
++export function loadAdmission(expected){hashText(expected);const p=parse(readExact(PACKET,LIMIT.metadata,null,expected));fields(p,['schema','status','mode','runId','pins','reviews','authors','runtime','ambient','request']);if(p.schema!=='cycle07-original-plan-admission@2'||p.status!=='ROOT_FINAL_GO'||p.mode!=='ORIGINAL_PLAN_ONCE'||typeof p.runId!=='string'||!/^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(p.runId))fail('final ROOT packet');fields(p.authors,['helper','runner']);if(p.authors.helper!=='S2'||p.authors.runner!=='S3')fail('actual target authors');fields(p.runtime,['identity','binary']);checkBoundary({runtime:p.runtime.identity,ambient:p.ambient},observedBoundary());runtimeHash(p.runtime.binary);fields(p.pins,Object.keys(PATHS));for(const [k,path]of Object.entries(PATHS))pin(p.pins[k],path);fields(p.reviews,['helper','runner']);review(p.reviews.helper,['helper','core','tests','codec','protocol'],p.authors.helper);review(p.reviews.runner,['runner','wrapper','captureCore','fabricatedTests'],p.authors.runner);fields(p.request,['schema','enabled','token']);if(p.request.schema!=='cycle07-original-evidence-plan-request@1'||p.request.enabled!==true||typeof p.request.token!=='string'||!p.request.token||p.request.token.length>256||/draft|pending|null|placeholder/i.test(p.request.token))fail('closed final helper request');return {packet:p,packetSha256:expected,requestSha256:digest(jsonBytes(p.request)),paths:PATHS,runDir:`${HERE}/runs/${p.runId}`,tokenPath:`${HERE}/tokens/${p.runId}.spent.json`};}
+ export function cliSha(args){if(args.length!==2||args[0]!=='--packet-sha')fail('usage: --packet-sha FINAL_ROOT_PACKET_SHA256');return hashText(args[1]);}
+-function ensureParent(path){try{mkdirSync(path,0o700);}catch(e){if(e.code!=='EEXIST')throw e;}if(!lstatSync(noLinks(path)).isDirectory())fail('fixed parent directory');}
+-
++function parentDir(path){try{mkdirSync(path,0o700);}catch(e){if(e.code!=='EEXIST')throw e;}if(!lstatSync(noLinks(path)).isDirectory())fail('parent directory');}
+ export async function capture(args){
+-  const a=loadAdmission(cliSha(args));ensureParent(`${HERE}/tokens`);ensureParent(`${HERE}/runs`);
+-  // Token remains spent after every subsequent failure. No cleanup/overwrite path.
+-  putJSON(a.tokenPath,{schema:'cycle07-original-plan-spent@1',state:'CONSUMED',runId:a.packet.runId,packetSha256:a.packetSha256,requestSha256:a.requestSha256,pins:a.packet.pins,reviews:a.packet.reviews,wrapperPid:process.pid,consumedUTC:new Date().toISOString()},true);syncDir(`${HERE}/tokens`);
+-  mkdirSync(a.runDir,0o700);syncDir(`${HERE}/runs`);
+-  const errors=[],streams={};let child=null,terminal=null,killer=null,timedOut=false,interrupted=null,spawnError=null;
+-  const note=e=>{if(errors.length<16)errors.push(smallError(e));};
+-  const stop=reason=>{if(!terminal)terminal=reason;if(child){child.kill('SIGTERM');if(killer===null)killer=setTimeout(()=>child.kill('SIGKILL'),LIMIT.killGraceMs);}};
+-  for(const name of ['stdout','stderr']){const fd=openSync(`${a.runDir}/${name}.raw`,'wx',0o600);streams[name]={fd,written:0,received:0,prefixOnly:false,writeFailed:false};}
+-  const signalHandler=s=>{interrupted=s;stop(`WRAPPER_${s}`);};const onINT=()=>signalHandler('SIGINT'),onTERM=()=>signalHandler('SIGTERM');process.on('SIGINT',onINT);process.on('SIGTERM',onTERM);
+-  let observed={code:null,signal:null,closeObserved:false};
+-  try{
+-    child=spawn(process.execPath,[a.paths.runner,'--packet-sha',a.packetSha256],{cwd:ROOT,env:{TZ:'UTC'},stdio:['ignore','pipe','pipe'],shell:false});
+-    const timer=setTimeout(()=>{timedOut=true;stop('WALL_TIMEOUT');},LIMIT.wallMs);
+-    for(const name of ['stdout','stderr'])child[name].on('data',chunk=>{const s=streams[name];s.received+=chunk.length;if(s.writeFailed)return;const take=Math.min(chunk.length,LIMIT.stream-s.written);try{let n=0;while(n<take){const got=writeSync(s.fd,chunk,n,take-n);if(!got)fail('zero capture write');n+=got;s.written+=got;}}catch(e){s.writeFailed=true;s.prefixOnly=true;note(e);stop('CAPTURE_WRITE_FAILED');}if(take<chunk.length){s.prefixOnly=true;stop('STREAM_CAP');}});
+-    observed=await new Promise(resolveDone=>{child.on('error',e=>{spawnError=smallError(e);note(e);});child.on('close',(code,signal)=>resolveDone({code,signal,closeObserved:true}));});
+-    clearTimeout(timer);
+-  }catch(e){note(e);stop('SPAWN_OR_WAIT_FAILED');}finally{if(killer!==null)clearTimeout(killer);process.off('SIGINT',onINT);process.off('SIGTERM',onTERM);for(const s of Object.values(streams)){try{fsyncSync(s.fd);}catch(e){note(e);}try{closeSync(s.fd);}catch(e){note(e);}}}
+-  // Opaque output hashing only; no native plan decode or whole return console dump.
+-  const inventory=[];let receipt=null,planVerified=false,inventoryComplete=false;
+-  const caps={'stdout.raw':LIMIT.stream,'stderr.raw':LIMIT.stream,'child-started.json':LIMIT.metadata,'plan.wire.json':LIMIT.plan,'helper-receipt.json':LIMIT.metadata};
+-  try{const names=readdirSync(a.runDir);if(names.length>Object.keys(caps).length||names.some(n=>!Object.hasOwn(caps,n)))fail('unexpected output file');for(const name of names){const b=readExact(`${a.runDir}/${name}`,caps[name]);inventory.push({path:name,bytes:b.length,sha256:digest(b)});if(name==='helper-receipt.json')receipt=parse(b);}if(receipt?.status==='READY'){const plan=inventory.find(x=>x.path==='plan.wire.json');planVerified=Boolean(plan&&receipt.plan&&plan.bytes===receipt.plan.bytes&&plan.sha256===receipt.plan.sha256);if(!planVerified)fail('independent plan output hash');}inventoryComplete=true;}catch(e){note(e);if(!terminal)terminal='OUTPUT_VERIFICATION_FAILED';}
+-  const success=observed.closeObserved&&observed.code===0&&observed.signal===null&&!terminal&&!spawnError&&errors.length===0&&receipt?.status==='READY'&&planVerified;
+-  const streamMetadata=Object.fromEntries(Object.entries(streams).map(([k,s])=>[k,{receivedBytes:s.received,writtenBytes:s.written,prefixOnly:s.prefixOnly,writeFailed:s.writeFailed}]));
+-  const exit={schema:'cycle07-original-plan-observed-exit@1',runId:a.packet.runId,packetSha256:a.packetSha256,requestSha256:a.requestSha256,actualChildExit:observed,spawnError,timedOut,interrupted,terminal,errors,streams:streamMetadata,helperReceipt:receipt,planVerified,availableFilesBeforeExit:inventory,inventoryComplete,inventoryExcludes:['exit.json'],wrapperIntendedExitCode:success?0:1,limits:LIMIT,qualification:'Observed child close/exit/signal; wrapper own exit needs external launcher evidence. Prefix may be incomplete after filesystem failure. Hash-at-check-time is not execution authentication.'};
+-  putJSON(`${a.runDir}/exit.json`,exit,true);process.exitCode=success?0:1;
++  const a=loadAdmission(cliSha(args));parentDir(`${HERE}/tokens`);parentDir(`${HERE}/runs`);
++  reserve({token:()=>{putJSON(a.tokenPath,{schema:'cycle07-original-plan-spent@2',state:'CONSUMED',runId:a.packet.runId,packetSha256:a.packetSha256,requestSha256:a.requestSha256,pins:a.packet.pins,reviews:a.packet.reviews,authors:a.packet.authors,runtime:a.packet.runtime,ambient:a.packet.ambient,wrapperPid:process.pid,consumedUTC:new Date().toISOString()},true);syncDir(`${HERE}/tokens`);},directory:()=>{mkdirSync(a.runDir,0o700);syncDir(`${HERE}/runs`);}});
++  const session=await captureSession({open:name=>openSync(`${a.runDir}/${name}.raw`,'wx',0o600),write:(fd,b,off,n)=>writeSync(fd,b,off,n),sync:fsyncSync,close:closeSync,setTimer:setTimeout,clearTimer:clearTimeout,onStop:stop=>{const i=()=>stop('WRAPPER_SIGINT'),t=()=>stop('WRAPPER_SIGTERM');process.on('SIGINT',i);process.on('SIGTERM',t);return ()=>{process.off('SIGINT',i);process.off('SIGTERM',t);};},spawn:()=>spawn(process.execPath,[...process.execArgv,a.paths.runner,'--packet-sha',a.packetSha256],{cwd:ROOT,stdio:['ignore','pipe','pipe'],shell:false})},LIMIT);
++  // No env option: child inherits ALL ambient values unchanged; only named states are checked.
++  const inventory=[],outputErrors=[];let receipt=null,inventoryComplete=false,bindingsVerified=false;
++  try{const names=readdirSync(a.runDir);validateInventory(names);for(const name of names){const b=readExact(`${a.runDir}/${name}`,FILE_CAPS[name]);inventory.push({path:name,bytes:b.length,sha256:digest(b)});if(name==='helper-receipt.json')receipt=parse(b);}if(receipt===null)fail('missing helper receipt');validateReceipt(receipt,{runId:a.packet.runId,packetSha256:a.packetSha256,requestSha256:a.requestSha256});checkArtifacts(receipt,inventory);inventoryComplete=true;bindingsVerified=true;}catch(e){outputErrors.push(errorInfo(e));}
++  const ok=session.actualChildExit.closeObserved&&session.actualChildExit.code===0&&session.actualChildExit.signal===null&&session.firstCause===null&&session.laterErrors.length===0&&bindingsVerified&&receipt?.status==='READY';
++  putJSON(`${a.runDir}/exit.json`,{schema:'cycle07-original-plan-observed-exit@2',runId:a.packet.runId,packetSha256:a.packetSha256,requestSha256:a.requestSha256,session,helperReceipt:receipt,bindingsVerified,inventoryComplete,availableFilesBeforeExit:inventory,inventoryExcludes:['exit.json'],outputErrors,wrapperIntendedExitCode:ok?0:1,qualification:'actualChildExit comes only from real close; wrapper own exit/signal needs external launcher evidence. Checks do not authenticate host/executed runtime.'},true);process.exitCode=ok?0:1;
+ }
+-if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))capture(process.argv.slice(2)).catch(e=>{process.stderr.write(`${JSON.stringify(smallError(e))}\n`);process.exitCode=1;});
++if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))capture(process.argv.slice(2)).catch(e=>{process.stderr.write(`${JSON.stringify(errorInfo(e))}\n`);process.exitCode=1;});
+
+--- discovery-cycle07/S3/E2009/run-original-plan.mjs	2026-10-19 02:37:39.989487327 +0300
++++ discovery-cycle07/S3/E2014/run-original-plan.mjs	2026-10-19 03:04:05.619499028 +0300
+@@ -1,32 +1,14 @@
+-/** SOURCE ONLY. Child entry: no helper import until fixed root admission/token checks. */
+-import {openSync,closeSync,fsyncSync} from 'node:fs';
++/** Fixed E2012 helper route; no helper/codec imports before admission, token and once marker. */
+ import {pathToFileURL,fileURLToPath} from 'node:url';
+ import {resolve} from 'node:path';
+-import {loadAdmission,cliSha,readExact,parse,putJSON,putNew,smallError,digest,LIMIT,exact,fail,noLinks} from './capture-original-plan.mjs';
+-
++import {loadAdmission,cliSha,readExact,parse,putJSON,putNew,syncDir,digest,LIMIT,fail,noLinks} from './capture-original-plan.mjs';
++import {invokeOnce,errorInfo} from './capture-core.mjs';
+ export async function run(args){
+-  const a=loadAdmission(cliSha(args));
+-  const token=parse(readExact(a.tokenPath,LIMIT.metadata));
+-  if(token.schema!=='cycle07-original-plan-spent@1'||token.state!=='CONSUMED'||token.packetSha256!==a.packetSha256||token.requestSha256!==a.requestSha256||token.runId!==a.packet.runId||token.wrapperPid!==process.ppid)fail('reserved token/parent identity');
+-  if(JSON.stringify(token.pins)!==JSON.stringify(a.packet.pins)||JSON.stringify(token.reviews)!==JSON.stringify(a.packet.reviews))fail('token pin/request binding');
++  const a=loadAdmission(cliSha(args)),t=parse(readExact(a.tokenPath,LIMIT.metadata));
++  if(t.schema!=='cycle07-original-plan-spent@2'||t.state!=='CONSUMED'||t.runId!==a.packet.runId||t.packetSha256!==a.packetSha256||t.requestSha256!==a.requestSha256||t.wrapperPid!==process.ppid)fail('token/parent identity');
++  for(const k of ['pins','reviews','authors','runtime','ambient'])if(JSON.stringify(t[k])!==JSON.stringify(a.packet[k]))fail('token '+k);
+   noLinks(a.runDir);
+-  // Separate exclusive child marker prevents a second child call with this token.
+-  putJSON(`${a.runDir}/child-started.json`,{schema:'cycle07-original-plan-child-started@1',packetSha256:a.packetSha256,requestSha256:a.requestSha256,pid:process.pid,parentPid:process.ppid},true);
+-  const dirFd=openSync(a.runDir,'r');try{fsyncSync(dirFd);}finally{closeSync(dirFd);}
+-  const events={attempted:false,returned:false,threw:false};let status='FAILED',plan=null,error=null;
+-  try{
+-    const module=await import(pathToFileURL(a.paths.helper).href);
+-    if(typeof module.buildOriginalEvidencePlan!=='function')fail('final helper export');
+-    events.attempted=true;
+-    let result;
+-    try{result=await module.buildOriginalEvidencePlan(a.packet.request);events.returned=true;}catch(e){events.threw=true;throw e;}
+-    exact(result,['status','plan','encodedBytes','sha256','bindings','actualNewPATH']);
+-    if(result.status!=='READY'||result.actualNewPATH!==0||!result.encodedBytes||Object.getPrototypeOf(result.encodedBytes)!==Uint8Array.prototype||result.encodedBytes.length<1||result.encodedBytes.length>LIMIT.plan)fail('READY output contract/2MiB cap');
+-    const hash=digest(result.encodedBytes);if(hash!==result.sha256)fail('returned encodedBytes digest');
+-    putNew(`${a.runDir}/plan.wire.json`,result.encodedBytes,true);
+-    plan={path:'plan.wire.json',bytes:result.encodedBytes.length,sha256:hash};status='READY';
+-  }catch(e){error=smallError(e);}
+-  const receipt={schema:'cycle07-original-plan-helper-receipt@1',runId:a.packet.runId,packetSha256:a.packetSha256,requestSha256:a.requestSha256,status,helperCall:events,plan,error,intendedExitCode:status==='READY'?0:1,qualification:'No returned plan or encoded-byte wrapper is printed; raw plan bytes only. Helper return and subsequent output failure remain distinct.'};
+-  try{putJSON(`${a.runDir}/helper-receipt.json`,receipt,true);}catch(receiptError){process.stderr.write(`${JSON.stringify({schema:'cycle07-original-plan-receipt-write-error@1',status,helperCall:events,firstError:error,receiptWriteError:smallError(receiptError)})}\n`);throw receiptError;}process.exitCode=status==='READY'?0:1;
++  const r=await invokeOnce({claim:()=>{putJSON(`${a.runDir}/child-started.json`,{schema:'cycle07-original-plan-child-started@2',packetSha256:a.packetSha256,requestSha256:a.requestSha256,pid:process.pid,parentPid:process.ppid},true);syncDir(a.runDir);},loadHelper:async()=>{const m=await import(pathToFileURL(a.paths.helper).href);if(typeof m.buildOriginalEvidencePlan!=='function')fail('helper export');return {buildOriginalEvidencePlan:()=>m.buildOriginalEvidencePlan(a.packet.request)};},loadCodec:async()=>{const p=a.packet.pins.codec,b=readExact(a.paths.codec,LIMIT.source,p.bytes,p.sha256);return import(`data:text/javascript;base64,${Buffer.from(b).toString('base64')}`);},hash:digest,write:(name,b)=>{if(!['plan.wire.json','integrity-hold.wire.json'].includes(name))fail('fixed artifact');putNew(`${a.runDir}/${name}`,b,true);},receipt:v=>putJSON(`${a.runDir}/helper-receipt.json`,v,true),rawError:v=>process.stderr.write(`${JSON.stringify(v)}\n`)},{runId:a.packet.runId,packetSha256:a.packetSha256,requestSha256:a.requestSha256});
++  process.exitCode=r.status==='READY'&&r.receiptPersisted?0:1;
+ }
+-if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))run(process.argv.slice(2)).catch(e=>{process.stderr.write(`${JSON.stringify(smallError(e))}\n`);process.exitCode=1;});
++if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))run(process.argv.slice(2)).catch(e=>{process.stderr.write(`${JSON.stringify(errorInfo(e))}\n`);process.exitCode=1;});
+
+--- /dev/null	2026-10-18 03:35:30.931000043 +0300
++++ discovery-cycle07/S3/E2014/capture-core.mjs	2026-10-19 03:04:04.663508730 +0300
+@@ -0,0 +1,68 @@
++/** Pure bounded capture/failure semantics. NO imports, paths, filesystem, process or helper loader. */
++export const ENV_KEYS=Object.freeze(['NODE_OPTIONS','NODE_PATH','NODE_EXTRA_CA_CERTS','TZ','LANG','LC_ALL','LD_PRELOAD','LD_LIBRARY_PATH','NODE_V8_COVERAGE','NODE_COMPILE_CACHE','NODE_DISABLE_COMPILE_CACHE','OPENSSL_CONF','NODE_ICU_DATA']);
++export const FILE_CAPS=Object.freeze({'stdout.raw':65536,'stderr.raw':65536,'child-started.json':65536,'plan.wire.json':2097152,'integrity-hold.wire.json':65536,'helper-receipt.json':65536});
++const fail=s=>{throw new Error('REFUSED: '+s);};
++export function fields(o,keys){if(!o||Object.getPrototypeOf(o)!==Object.prototype)fail('ordinary record');const names=Reflect.ownKeys(o);if(names.length!==keys.length||names.some(k=>typeof k!=='string'||!keys.includes(k)))fail('record key set');for(const k of keys){const d=Object.getOwnPropertyDescriptor(o,k);if(!d||!Object.hasOwn(d,'value')||!d.enumerable||d.value===undefined)fail('record data');}}
++function equal(a,b){if(Object.is(a,b))return true;if(Array.isArray(a)&&Array.isArray(b))return a.length===b.length&&a.every((x,i)=>equal(x,b[i]));if(a&&b&&typeof a==='object'&&typeof b==='object'){const k=Object.keys(a);return k.length===Object.keys(b).length&&k.every(x=>Object.hasOwn(b,x)&&equal(a[x],b[x]));}return false;}
++export function checkBoundary(expected,actual){fields(expected.runtime,['execPath','version','platform','arch','execArgv']);fields(actual.runtime,['execPath','version','platform','arch','execArgv']);if(!equal(expected.runtime,actual.runtime))fail('runtime identity');fields(expected.ambient,ENV_KEYS);fields(actual.ambient,ENV_KEYS);for(const k of ENV_KEYS){const e=expected.ambient[k],a=actual.ambient[k];fields(e,['set','value']);fields(a,['set','value']);if(typeof e.set!=='boolean'||(e.set?typeof e.value!=='string':e.value!==null)||!equal(e,a))fail('ambient identity '+k);}return true;}
++export function roleReview(reviewer,author){if(typeof reviewer!=='string'||typeof author!=='string'||!reviewer||!author||reviewer===author)fail('review author independence');}
++export function reserve(io){io.token();io.directory();}
++export function errorInfo(e){const full=String(e?.message??e),code=typeof e?.code==='string'?e.code:null;return {name:String(e?.name??'Error').slice(0,128),message:full.slice(0,4096),messageTruncated:full.length>4096,code};}
++
++/** Cap/pipe/setup errors stop a fixture or real child; only child close supplies exit facts. */
++export async function captureSession(io,{streamBytes=65536,wallMs=120000,graceMs=2000}={}){
++  const streams={},laterErrors=[];let firstCause=null,child=null,wall=null,grace=null,wait=null,closed=false,unsubscribe=null;
++  let actualChildExit={code:null,signal:null,closeObserved:false};
++  const record=(stage,e)=>{const item={stage,error:errorInfo(e)};if(firstCause===null)firstCause=item;else if(laterErrors.length<12)laterErrors.push(item);};
++  const stop=(stage,e=Error(stage))=>{record(stage,e);if(!child||closed)return;try{child.kill('SIGTERM');}catch(x){record('TERM_REQUEST',x);}if(grace===null)try{grace=io.setTimer(()=>{try{if(!closed)child.kill('SIGKILL');}catch(x){record('KILL_REQUEST',x);}},graceMs);}catch(x){record('KILL_TIMER',x);}};
++  try{
++    if(io.onStop)unsubscribe=io.onStop(stage=>stop(stage));
++    for(const name of ['stdout','stderr']){const fd=io.open(name);streams[name]={fd,receivedBytes:0,writtenBytes:0,prefixOnly:false,writeFailed:false};}
++    child=io.spawn();
++    wait=new Promise(done=>child.once('close',(code,signal)=>{closed=true;actualChildExit={code,signal,closeObserved:true};done();}));
++    child.on('error',e=>stop('SPAWN_ERROR',e));
++    wall=io.setTimer(()=>stop('WALL_TIMEOUT'),wallMs);
++    for(const name of ['stdout','stderr']){
++      const s=streams[name],pipe=child[name],label=name.toUpperCase();
++      pipe.on('error',e=>{s.prefixOnly=true;stop(label+'_ERROR',e);});
++      pipe.on('data',b=>{s.receivedBytes+=b.length;if(s.writeFailed)return;const take=Math.min(b.length,streamBytes-s.writtenBytes);try{let n=0;while(n<take){const got=io.write(s.fd,b,n,take-n);if(!Number.isSafeInteger(got)||got<1||got>take-n)fail('capture write count');n+=got;s.writtenBytes+=got;}}catch(e){s.writeFailed=true;s.prefixOnly=true;stop(label+'_WRITE',e);}if(take<b.length){s.prefixOnly=true;stop(label+'_CAP');}});
++    }
++  }catch(e){stop('SETUP',e);}
++  // A post-spawn setup failure must NOT jump straight to timer/descriptor cleanup.
++  if(wait)try{await wait;}catch(e){record('CLOSE_OBSERVATION_FAILED',e);}
++  if(!child||closed){if(wall!==null)io.clearTimer(wall);if(grace!==null)io.clearTimer(grace);}
++  if(unsubscribe)try{unsubscribe();}catch(e){record('SIGNAL_CLEANUP',e);}
++  for(const s of Object.values(streams)){try{io.sync(s.fd);}catch(e){record('CAPTURE_SYNC',e);}try{io.close(s.fd);}catch(e){record('CAPTURE_CLOSE',e);}}
++  return {actualChildExit,firstCause,laterErrors,streams:Object.fromEntries(Object.entries(streams).map(([k,s])=>[k,{receivedBytes:s.receivedBytes,writtenBytes:s.writtenBytes,prefixOnly:s.prefixOnly,writeFailed:s.writeFailed}])),timersCleared:!child||closed};
++}
++
++function dense(a,n){if(!Array.isArray(a)||Object.getPrototypeOf(a)!==Array.prototype||a.length!==n||Reflect.ownKeys(a).length!==n+1)fail('HOLD dense array');for(let i=0;i<n;i++){const d=Object.getOwnPropertyDescriptor(a,String(i));if(!d||!Object.hasOwn(d,'value')||!d.enumerable)fail('HOLD array data');}}
++function holdProjection(e){
++  const p=e.integrityHold;fields(p,['code','j','c','b','role','side','stationIndex','planIndex','rawValue','answerBinding','rawAnswer','originalState','originalCallbackStatus']);
++  if(p.code!=='CONTRAST_INFINITY'||!Number.isInteger(p.c)||p.c<0||p.c>15||!Number.isInteger(p.b)||p.b<0||p.b>2||p.j!==3*p.c+p.b||p.role!=='control'||!['leftLum','rightLum'].includes(p.side)||p.planIndex!==10*p.c+2+3*p.b||(p.rawValue!==Infinity&&p.rawValue!==-Infinity)||p.originalState!=='COMPLETED'||p.originalCallbackStatus!=='ok')fail('HOLD location/source');
++  const m=p.answerBinding;fields(m,['path','bytes','sha256','kind','comparisonId','planIndex']);if(!/^fragments\/answer-\d+\.json$/.test(m.path)||!Number.isInteger(m.bytes)||m.bytes<1||m.bytes>8192||!/^[0-9a-f]{64}$/.test(m.sha256)||m.kind!=='answer'||m.planIndex!==p.planIndex||typeof m.comparisonId!=='string'||m.comparisonId.length>128)fail('HOLD answer binding');
++  const a=p.rawAnswer;fields(a,['value','unit','emits']);fields(a.emits,['computed']);if(a.emits.computed!==1||a.unit!=='lum per station (inside band minus outside band), per side')fail('HOLD answer unit');fields(a.value,['leftLum','rightLum','okLeft','okRight','stationsCount']);const n=a.value.stationsCount;if(n!==16&&n!==48)fail('HOLD stations');for(const k of ['leftLum','rightLum','okLeft','okRight']){dense(a.value[k],n);if(a.value[k].some(x=>typeof x!=='number'||(k.startsWith('ok')&&x!==0&&x!==1)))fail('HOLD array type');}if(!Number.isInteger(p.stationIndex)||p.stationIndex<0||p.stationIndex>=n||!Object.is(a.value[p.side][p.stationIndex],p.rawValue))fail('HOLD located value');
++  return {schema:'cycle07-located-integrity-hold@1',errorCode:'INTEGRITY_HOLD',integrityHold:p};
++}
++/** Internal capability seam. It has no way to discover/import a real helper or open evidence. */
++export async function invokeOnce(io,ids){
++  const helperCall={attempted:false,returned:false,threw:false},postErrors=[];let status='FAILED',plan=null,error=null,holdRetention={requested:false,complete:false,artifact:null,error:null};
++  try{
++    await io.claim();const module=await io.loadHelper();if(typeof module.buildOriginalEvidencePlan!=='function')fail('helper export');let r;
++    helperCall.attempted=true;try{r=await module.buildOriginalEvidencePlan();helperCall.returned=true;}catch(e){helperCall.threw=true;throw e;}
++    fields(r,['status','plan','encodedBytes','sha256','bindings','actualNewPATH']);if(r.status!=='READY'||r.actualNewPATH!==0||!r.encodedBytes||Object.getPrototypeOf(r.encodedBytes)!==Uint8Array.prototype||r.encodedBytes.length<1||r.encodedBytes.length>2097152||io.hash(r.encodedBytes)!==r.sha256)fail('READY wire contract');
++    await io.write('plan.wire.json',r.encodedBytes);plan={path:'plan.wire.json',bytes:r.encodedBytes.length,sha256:r.sha256};status='READY';
++  }catch(e){
++    error=errorInfo(e);
++    if(e?.code==='INTEGRITY_HOLD'){
++      holdRetention.requested=true;
++      try{const p=holdProjection(e),codec=await io.loadCodec(),b=codec.encodeBytes(p,{maxBytes:65536,maxNodes:8192,maxDepth:32,maxTypedBytes:1});if(!b||Object.getPrototypeOf(b)!==Uint8Array.prototype||b.length>65536)fail('HOLD artifact cap');await io.write('integrity-hold.wire.json',b);holdRetention.complete=true;holdRetention.artifact={path:'integrity-hold.wire.json',bytes:b.length,sha256:io.hash(b)};}catch(x){holdRetention.error=errorInfo(x);postErrors.push({stage:'HOLD_RETENTION',error:errorInfo(x)});}
++    }
++  }
++  const receipt={schema:'cycle07-original-plan-helper-receipt@2',...ids,status,helperCall,plan,error,holdRetention,postErrors,intendedExitCode:status==='READY'?0:1,qualification:'Source-derived helper evidence only; HOLD numbers live solely in lossless artifact, not this JSON.'};
++  let receiptPersisted=false;try{await io.receipt(receipt);receiptPersisted=true;}catch(e){const later={stage:'RECEIPT_WRITE',error:errorInfo(e)};postErrors.push(later);try{io.rawError({schema:'cycle07-original-plan-receipt-write-error@2',...ids,status,helperCall,firstError:error,holdRetention,postErrors});}catch{ /* unavailable raw capture remains unknown, never retry */ }}
++  return {...receipt,receiptPersisted};
++}
++export function validateReceipt(r,ids){const keys=['schema','runId','packetSha256','requestSha256','status','helperCall','plan','error','holdRetention','postErrors','intendedExitCode','qualification'];fields(r,Object.hasOwn(r,'receiptPersisted')?[...keys,'receiptPersisted']:keys);if(r.schema!=='cycle07-original-plan-helper-receipt@2'||r.runId!==ids.runId||r.packetSha256!==ids.packetSha256||r.requestSha256!==ids.requestSha256)fail('receipt identity');fields(r.helperCall,['attempted','returned','threw']);for(const x of Object.values(r.helperCall))if(typeof x!=='boolean')fail('receipt events');if(r.helperCall.returned&&r.helperCall.threw||r.helperCall.returned&&!r.helperCall.attempted||r.helperCall.threw&&!r.helperCall.attempted)fail('receipt event relation');if(!['READY','FAILED'].includes(r.status)||r.intendedExitCode!==(r.status==='READY'?0:1))fail('receipt status');fields(r.holdRetention,['requested','complete','artifact','error']);if(typeof r.holdRetention.requested!=='boolean'||typeof r.holdRetention.complete!=='boolean'||r.holdRetention.complete&&!r.holdRetention.requested)fail('receipt HOLD relation');if(r.status==='READY'&&(!r.helperCall.returned||r.error!==null||r.holdRetention.requested))fail('receipt READY');}
++export function validateInventory(names){if(names.length>Object.keys(FILE_CAPS).length||names.some(n=>!Object.hasOwn(FILE_CAPS,n)))fail('unexpected output file');}
++export function checkArtifacts(r,inventory){for(const b of [r.status==='READY'?r.plan:null,r.holdRetention.complete?r.holdRetention.artifact:null]){if(!b)continue;fields(b,['path','bytes','sha256']);const actual=inventory.find(x=>x.path===b.path);if(!actual||actual.bytes!==b.bytes||actual.sha256!==b.sha256||!Number.isSafeInteger(b.bytes)||b.bytes<1||b.bytes>FILE_CAPS[b.path])fail('artifact binding');}return true;}
+
+--- /dev/null	2026-10-18 03:35:30.931000043 +0300
++++ discovery-cycle07/S3/E2014/fabricated.test.mjs	2026-10-19 03:06:03.535662834 +0300
+@@ -0,0 +1,31 @@
++// Authored FIRST. UNEXECUTED. No fs/child_process/helper/evidence imports exist here.
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import {EventEmitter} from 'node:events';
++import * as codec from '../../../chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs';
++import {ENV_KEYS,checkBoundary,roleReview,reserve,captureSession,invokeOnce,validateReceipt,validateInventory,checkArtifacts} from './capture-core.mjs';
++
++const runtime={execPath:'/fabricated/node',version:'v0.fixture',platform:'fixture',arch:'fixture',execArgv:[]};
++const ambient=()=>Object.fromEntries(ENV_KEYS.map(k=>[k,{set:false,value:null}]));
++function captureFixture(options={}){
++  const child=new EventEmitter();child.stdout=new EventEmitter();child.stderr=new EventEmitter();const timers=new Map(),closed=[],signals=[],files=new Map();let spawned=0,id=0;
++  child.kill=s=>{signals.push(s);return true;};
++  if(options.afterSpawn){const on=child.stdout.on.bind(child.stdout);child.stdout.on=(event,fn)=>{if(event==='data')throw Error('post-spawn setup');return on(event,fn);};}
++  const io={open:name=>{if(options.secondOpen&&name==='stderr')throw Error('second open');files.set(name,[]);return name;},write:(fd,b,off,n)=>{if(options.writeFail)throw Error('write');const take=Math.min(n,options.partial??n);files.get(fd).push(...b.subarray(off,off+take));return take;},sync:()=>{if(options.syncFail)throw Error('sync');},close:fd=>{closed.push(fd);if(options.closeFail)throw Error('close');},spawn:()=>{spawned++;return child;},setTimer:(fn,ms)=>{const key=++id;timers.set(key,{fn,ms});return key;},clearTimer:key=>timers.delete(key)};
++  return {io,child,timers,closed,signals,files,spawned:()=>spawned,finish:(code=0,signal=null)=>child.emit('close',code,signal),fire:ms=>{const entry=[...timers].find(([,x])=>x.ms===ms);assert.ok(entry);entry[1].fn();}};
++}
++const ids={runId:'fixture',packetSha256:'a'.repeat(64),requestSha256:'b'.repeat(64)};
++function hold(sign=Infinity){const a={value:{leftLum:Array(16).fill(NaN),rightLum:Array(16).fill(-0),okLeft:Array(16).fill(0),okRight:Array(16).fill(1),stationsCount:16},unit:'lum per station (inside band minus outside band), per side',emits:{computed:1}};a.value.leftLum[0]=sign;const e=new Error('located hold');e.code='INTEGRITY_HOLD';e.integrityHold={code:'CONTRAST_INFINITY',j:0,c:0,b:0,role:'control',side:'leftLum',stationIndex:0,planIndex:2,rawValue:sign,answerBinding:{path:'fragments/answer-2.json',bytes:100,sha256:'c'.repeat(64),kind:'answer',comparisonId:'primary/before16',planIndex:2},rawAnswer:a,originalState:'COMPLETED',originalCallbackStatus:'ok'};return e;}
++function callFixture(options={}){const files=new Map();let calls=0,claims=0,loads=0,receipt=null,raw=null;const io={claim:async()=>{claims++;if(options.claimFail)throw Error('marker collision');},loadHelper:async()=>({buildOriginalEvidencePlan:async()=>{calls++;if(options.error)throw options.error;return {status:'READY',plan:{},encodedBytes:new Uint8Array([1,2]),sha256:'fixturehash',bindings:[],actualNewPATH:0};}}),loadCodec:async()=>{loads++;if(options.codecFail)throw Error('codec');if(options.encodeFail)return {encodeBytes:()=>{throw Error('encode');}};return codec;},hash:()=> 'fixturehash',write:async(name,b)=>{if(options.writeFail===name)throw Error('write '+name);files.set(name,b);},receipt:async value=>{receipt=value;if(options.receiptFail)throw Error('receipt');},rawError:value=>{raw=value;}};return {io,files,calls:()=>calls,claims:()=>claims,loads:()=>loads,receipt:()=>receipt,raw:()=>raw};}
++
++test('ambient mismatch refuses; named set/unset/value states are unchanged, not sanitized',()=>{const env=ambient();env.TZ={set:true,value:'Fixture/Zone'};env.NODE_PATH={set:true,value:'/fixture/modules'};env.NODE_EXTRA_CA_CERTS={set:true,value:'/fixture/ca'};const before=JSON.stringify(env);checkBoundary({runtime,ambient:env},{runtime:{...runtime},ambient:structuredClone(env)});assert.equal(JSON.stringify(env),before);const wrong=structuredClone(env);wrong.TZ.value='UTC';assert.throws(()=>checkBoundary({runtime,ambient:env},{runtime,ambient:wrong}),/ambient/);assert.throws(()=>checkBoundary({runtime,ambient:env},{runtime:{...runtime,version:'wrong'},ambient:env}),/runtime/);});
++test('review independence is per role, not blanket S3 exclusion',()=>{assert.throws(()=>roleReview('S2','S2'),/author/);assert.throws(()=>roleReview('S3','S3'),/author/);roleReview('S3','S2');roleReview('S4','S3');});
++test('exclusive token then output collision keeps consumed state; child marker collision prevents helper',async()=>{const names=new Set();let directory=0;const io={token:()=>{if(names.has('token'))throw Error('token collision');names.add('token');},directory:()=>{directory++;throw Error('output collision');}};assert.throws(()=>reserve(io),/output/);assert.ok(names.has('token'));assert.throws(()=>reserve(io),/token/);assert.equal(directory,1);const f=callFixture({claimFail:true});const r=await invokeOnce(f.io,ids);assert.equal(f.calls(),0);assert.equal(r.helperCall.attempted,false);});
++test('second stream open closes first and never spawns',async()=>{const f=captureFixture({secondOpen:true});const r=await captureSession(f.io);assert.equal(f.spawned(),0);assert.deepEqual(f.closed,['stdout']);assert.equal(r.firstCause.stage,'SETUP');assert.equal(r.actualChildExit.closeObserved,false);});
++test('async pipe error keeps first cause, TERM/KILL until actual close and clears timers afterward',async()=>{const f=captureFixture();const p=captureSession(f.io,{streamBytes:4,wallMs:10,graceMs:2});f.child.stdout.emit('error',Error('pipe'));f.fire(2);assert.deepEqual(f.signals,['SIGTERM','SIGKILL']);f.finish(null,'SIGKILL');const r=await p;assert.equal(r.firstCause.stage,'STDOUT_ERROR');assert.equal(r.actualChildExit.signal,'SIGKILL');assert.equal(f.timers.size,0);});
++test('post-spawn setup exception still awaits actual close without cancelling escalation',async()=>{const f=captureFixture({afterSpawn:true});const p=captureSession(f.io,{streamBytes:4,wallMs:10,graceMs:2});f.fire(2);f.finish(1,null);const r=await p;assert.equal(r.actualChildExit.closeObserved,true);assert.equal(r.firstCause.stage,'SETUP');assert.equal(f.timers.size,0);});
++test('spawn error then close and wall timeout record actual events, not kill-request success',async()=>{const f=captureFixture();const p=captureSession(f.io,{streamBytes:4,wallMs:10,graceMs:2});f.child.emit('error',Error('spawn'));f.finish(-2,null);const r=await p;assert.equal(r.firstCause.stage,'SPAWN_ERROR');assert.equal(r.actualChildExit.code,-2);const g=captureFixture();const q=captureSession(g.io,{streamBytes:4,wallMs:10,graceMs:2});g.fire(10);g.fire(2);g.finish(null,'SIGKILL');assert.equal((await q).firstCause.stage,'WALL_TIMEOUT');});
++test('partial writes/cap crossing retain raw prefix and cleanup failures do not replace cause',async()=>{const f=captureFixture({partial:1,syncFail:true,closeFail:true});const p=captureSession(f.io,{streamBytes:3,wallMs:10,graceMs:2});f.child.stderr.emit('data',new Uint8Array([1,2,3,4]));f.finish(1,null);const r=await p;assert.deepEqual(f.files.get('stderr'),[1,2,3]);assert.equal(r.streams.stderr.receivedBytes,4);assert.equal(r.streams.stderr.writtenBytes,3);assert.equal(r.streams.stderr.prefixOnly,true);assert.equal(r.firstCause.stage,'STDERR_CAP');assert.ok(r.laterErrors.length>=2);});
++test('helper throws versus returns then output/receipt failure never retries',async()=>{const f=callFixture({error:Error('helper')});const a=await invokeOnce(f.io,ids);assert.deepEqual(a.helperCall,{attempted:true,returned:false,threw:true});assert.equal(f.calls(),1);const g=callFixture({writeFail:'plan.wire.json',receiptFail:true});const b=await invokeOnce(g.io,ids);assert.deepEqual(b.helperCall,{attempted:true,returned:true,threw:false});assert.equal(g.calls(),1);assert.ok(g.raw());});
++test('bounded HOLD artifact is lossless; encode/write/receipt failures report incomplete retention',async()=>{for(const sign of [Infinity,-Infinity]){const f=callFixture({error:hold(sign)});const r=await invokeOnce(f.io,ids);assert.equal(r.error.code,'INTEGRITY_HOLD');assert.equal(r.holdRetention.complete,true);const decoded=codec.decodeBytes(f.files.get('integrity-hold.wire.json'));assert.equal(decoded.integrityHold.rawValue,sign);assert.ok(Number.isNaN(decoded.integrityHold.rawAnswer.value.leftLum[1]));assert.ok(Object.is(decoded.integrityHold.rawAnswer.value.rightLum[0],-0));}for(const opts of [{codecFail:true},{encodeFail:true},{writeFail:'integrity-hold.wire.json'},{receiptFail:true}]){const g=callFixture({error:hold(),...opts});const x=await invokeOnce(g.io,ids);assert.equal(x.error.code,'INTEGRITY_HOLD');if(!opts.receiptFail)assert.equal(x.holdRetention.complete,false);else assert.equal(x.receiptPersisted,false);assert.equal(g.calls(),1);}});
++test('opaque artifact hash/receipt identity/known filename caps refuse disagreement',async()=>{const f=callFixture();const r=await invokeOnce(f.io,ids);validateReceipt(r,ids);assert.throws(()=>validateReceipt({...r,runId:'other'},ids),/identity/);validateInventory(['stdout.raw','integrity-hold.wire.json']);assert.throws(()=>validateInventory(['other']),/file/);assert.throws(()=>checkArtifacts(r,[{path:'plan.wire.json',bytes:2,sha256:'wrong'}]),/artifact/);});
+
+--- discovery-cycle07/S3/E2009/FLOW.md	2026-10-19 02:38:20.501817549 +0300
++++ discovery-cycle07/S3/E2014/FLOW.md	2026-10-19 03:06:38.979701599 +0300
+@@ -1,54 +1,45 @@
+-# E2009 — written one-shot ORIGINAL-PLAN capture, UNEXECUTED
++# E2014 — versioned runner repair checkpoint, SOURCE ONLY / HOLD
+ 
+-Written in `capture-original-plan.mjs` (parent/shared guards) and `run-original-plan.mjs` (child). Only source/text authoring, source readback and SHA/size inspection occurred. No syntax check, import, test, subprocess, helper, codec, evidence-body read, CV/store/PATH or render ran. No observed RED/GREEN is claimed; the explicit source-only assignment overrides executing the ordinary TDD loop. No test file was authored in this two-source-file construction.
++Written: `fabricated.test.mjs` FIRST, then import-free `capture-core.mjs`, fixed-route `capture-original-plan.mjs` and `run-original-plan.mjs`. Initial tests preceded implementation; later fixture expansion covers both Infinity signs and an encoder failure. No syntax check, import, test, codec, process spawn, real helper/evidence read, environment change or run occurred. No observed RED/GREEN claim. E2009/E2006 are untouched.
+ 
+-Checkpoint is active: root and a different worker must fully review these exact files and the final repaired helper/core/tests before ANY run GO. Construction READY is not execution READY.
++## Entries — prospective only
+ 
+-## Future entry — not a command run here
++- Fabricated NONCV, only after exact source review and explicit bounded admission: `node --test /workspace/scratch/8528bb251845/discovery-cycle07/S3/E2014/fabricated.test.mjs`
++- ORIGINAL route, separate later authority: `node /workspace/scratch/8528bb251845/discovery-cycle07/S3/E2014/capture-original-plan.mjs --packet-sha ROOT_FINAL_ADMISSION_SHA256`
+ 
+-`node /workspace/scratch/8528bb251845/discovery-cycle07/S3/E2009/capture-original-plan.mjs --packet-sha ROOT_FINAL_ADMISSION_SHA256`
++No ROOT-ADMISSION.json, token, run directory, expected environment/runtime pin or future review capsule was created. The ORIGINAL command cannot be used for fabricated tests, and a fake final root packet is prohibited.
+ 
+-Replace the final argument only with root's independently supplied actual 64-hex SHA. Fixed packet path:
++## Actual written flow
+ 
+-`/workspace/scratch/8528bb251845/discovery-cycle07/S3/E2009/ROOT-ADMISSION.json`
++1. Parent reads only fixed `E2014/ROOT-ADMISSION.json` <=64KiB and checks its independently root-supplied digest. Closed schema `cycle07-original-plan-admission@2` requires own fields schema/status/mode/runId/pins/reviews/authors/runtime/ambient/request; status ROOT_FINAL_GO and mode ORIGINAL_PLAN_ONCE. Draft/null/placeholder pin data refuses. ROOT authorship and review coverage are trusted external packet authority, not prose mining or a cryptographic human detector.
++2. **Before any token**, root's exact admitted runtime identity (execPath/version/platform/arch/execArgv), executable size/hash and named environment set/unset/value states are checked. Named keys are NODE_OPTIONS, NODE_PATH, NODE_EXTRA_CA_CERTS, TZ, LANG, LC_ALL, LD_PRELOAD, LD_LIBRARY_PATH, NODE_V8_COVERAGE, NODE_COMPILE_CACHE, NODE_DISABLE_COMPILE_CACHE, OPENSSL_CONF, NODE_ICU_DATA. Only those are read/represented; no all-environment dump. Runtime binary SHA uses bounded64KiB streaming reads, explicit <=256MiB size ceiling and descriptor/EOF/postcheck guards. No expected value is baked from root's midnight observation; future root admission supplies fresh expectations. Mismatch REFUSES; no unset/remove/sanitize/TZforce/PATHoverride/fallback.
++3. Exact file pins are fixed to NEW E2012 helper/core/tests, pure codec, E2005 protocol, R2005 protocol review and E2014 runner/wrapper/captureCore/fabricatedTests. Packet has only bytes/hash for these paths, no arbitrary helper/evidence roots. Root must pin final accepted sources; current E2012 hashes are source observations only. Ancestor/leaf no-symlink, regular descriptor, exact size/hash/EOF/mtime checks remain check-time evidence, not host/ESM authentication or race proof.
++4. Authors must be actual current roles helper=S2, runner=S3. Accepted helper review excludes S2 but permits S3; accepted runner review excludes S3. Review target sets are helper/core/tests/codec/protocol and runner/wrapper/captureCore/fabricatedTests. Different-role authors are not globally rejected. Root binds the actual accepted review files to final target pins.
++5. Parent exclusively writes/fsyncs consumed token plus token directory, then exclusively creates NEW run directory and syncs its parent. Token binds packet/request/pins/reviews/authors/runtime/ambient. Failure never unspends/replaces/deletes it. Child route independently rechecks same packet/token/parent identity before exclusive child-start marker+directory fsync. No helper import precedes this marker.
++6. Parent calls the small shared `captureSession` with concrete Node file/pipe/timer operations. All stream opens occur inside its cleanup boundary; second-open failure closes the first, never spawns. A child, once created, receives a close listener before stream setup; stdout AND stderr error listeners request bounded stop. Post-spawn setup exceptions stop and still await actual close instead of cancelling timers early.
++7. **Ambient inheritance is unchanged:** spawn has NO env option, and forwards existing process.execArgv. Named admission checks do not create a sanitized environment. Spawn is direct process.execPath, shell:false, fixed child path/root cwd. Wall120s requests TERM, grace2s requests KILL; timers clear after observed close (or no child), not on catch entry. SIGINT/TERM wrapper handlers request the same stop. First cause plus <=12 later cleanup errors and exact received/written/prefix flags remain separate. OS kill latency, process trees and RSS are not certified; helper must not spawn descendants.
++8. Child `invokeOnce` is the shared bounded one-call primitive. Its production capabilities claim the child marker, import only fixed E2012 helper and bind its closed packet request. Attempted is set immediately before its single call, returned only after resolution, threw only on helper rejection. Import/marker failure is not an attempted helper call. No retry branch.
++9. READY checks exact result envelope/newPATH0/exact Uint8Array1..2MiB and independent digest, then writes returned bytes directly to plan.wire.json with wx/fsync. No plan decode/JSON normalization/console wrapper dump. Later output failure does not erase returned=true.
++10. A helper `error.code==='INTEGRITY_HOLD'` retains that code and its original first cause. Only the reviewed E2012 closed located payload is projected: code,j,c,b,role,side,stationIndex,planIndex,rawValue,answerBinding,rawAnswer,originalState,originalCallbackStatus. Source bounds require j=3*c+b, control-plan identity,16/48 arrays, actual ±Infinity at the named station, raw numeric arrays/flags and proper native wrapper. NaN/-0 elsewhere are retained. No full Error/raster/store wrapper is encoded.
++11. Only AFTER admission/token/marker and the bound failure does production loadCodec rehash/import fixed pinned pure codec bytes. It losslessly encodes `{schema,errorCode,integrityHold}` <=64KiB/depth32/nodes8192/typed1 and writes `integrity-hold.wire.json` once. No native HOLD numbers go through ordinary JSON. The small receipt carries error.code, retention requested/complete/error and opaque artifact bytes/SHA. Artifact projection/codec/write failure retains first HOLD cause, appends retention failure and explicitly reports incomplete. Receipt failure emits only bounded metadata to raw stderr where possible, without repeat helper call.
++12. Parent awaits actual child close/code/signal, closes/syncs every opened capture, and hashes only known opaque wire files. Receipt schema/run/packet/request/event relations and artifact size/hash bindings are checked independently; parent never native-decodes plan/HOLD. Inventory incomplete remains explicit; physical partial files stay. Exit.json <=64KiB reports actual close versus intended wrapper exit, first/later errors, receipt identity, exact known files and prefix flags. Wrapper's own exit/signal still requires external launcher evidence; no metadata is guaranteed after host/SIGKILL/disk failure.
+ 
+-No packet/draft/null-pin file has been created. Until root supplies it, source refuses before token/run-directory/helper work. The child entry is not a standalone authorized route.
+-
+-## Exact pending packet grammar
+-
+-Top own data fields are `schema,status,mode,runId,pins,reviews,request` only. Values must be schema `cycle07-original-plan-admission@1`, status `ROOT_FINAL_GO`, mode `ORIGINAL_PLAN_ONCE`, a bounded safe runId, final pins/reviews, and exact own-data helper request `schema,enabled,token` (enabled true). No geometry, evidence root, dependency/cap/output injection exists.
+-
+-`pins` has exactly `helper,core,tests,codec,protocol,protocolReview,runner,wrapper`; each is `{bytes,sha256}` with positive safe bytes <=1MiB and final non-placeholder SHA. Source paths are fixed in PATHS, not packet-selectable. Helper/core/tests are fixed E2006 files; protocol is E2005/protocol.v2.json; protocolReview is R2005/realresult.json. Root must pin the final repaired/accepted versions, not the historical unaccepted helper guards.
+-
+-`reviews` has `helper` and `runner`; each exact record is `path,bytes,sha256,reviewer,decision,targets`. Path must be an absolute canonical descendant of the fixed cycle07 workspace. Decision is `accepted`; reviewer is a bounded identity other than S3. Targets are exactly `[helper,core,tests,codec,protocol]` and `[runner,wrapper]`, respectively (sets, order irrelevant). Their file bytes/hashes are read and verified. Root's packet asserts which accepted review covers which final pins; the wrapper does NOT infer review coverage by mining arbitrary review prose. Root authorship/authority is a trusted externally supplied packet digest, not a cryptographic human-identity detector. No future review SHA is invented here.
+-
+-## Actual prospective order
+-
+-1. Parent validates exact CLI and fixed packet bytes/hash <=64KiB. It checks exact packet grammar, final pin shape and all fixed source/protocol/review file sizes/hashes using bounded no-symlink component + O_NONBLOCK/O_NOFOLLOW descriptor reads. This is source/authority I/O only, no raw scientific evidence. Hash-at-check-time does not authenticate the host or defeat concurrent replacement.
+-2. Parent ensures only fixed `tokens/` and `runs/` parent directories exist. It exclusively creates `tokens/<runId>.spent.json`, binding packet/request hashes, all pins/reviews, runId, wrapper PID and consumed time. It fsyncs token and token directory before proceeding. Any failure leaves any created bytes/token consumed; no overwrite/delete/replacement/retry.
+-3. Parent exclusively mkdirs NEW `runs/<runId>/` and syncs its parent. Collision means no child/helper call. If token creation succeeded but output reservation failed, token remains spent. Fixed source does not accept alternate output roots.
+-4. Parent opens write-once `stdout.raw` and `stderr.raw`, then spawns `process.execPath` directly with child path and packet SHA, no shell or inherited NODE_OPTIONS/NODE_PATH; child env is only TZ=UTC. No heavy shell construction. Parent attaches capture and real close/error listeners.
+-5. Child independently revalidates packet/pins/review hashes, verifies token packet/request/run/pins/reviews and parent PID, checks run path, and exclusively creates/fsyncs `child-started.json` plus run directory. This second once marker prevents a second child helper call with the spent token. PID checking is route linkage, not adversarial process authentication.
+-6. Only then does child dynamically import the pinned helper filesystem path and call `buildOriginalEvidencePlan(packet.request)` at most once. It records attempted immediately before call, returned only after await resolves, and threw only if the call rejects. Import failure is not a helper attempted call. No retry path exists.
+-7. READY requires the exact result envelope, actualNewPATH0, exact Uint8Array bytes of1..2097152 and independently recomputed digest matching returned sha256. It writes returned encodedBytes directly with wx+fsync to `plan.wire.json`. No codec/JSON conversion of plan wire, no console plan or typed-byte wrapper dump. It emits only a small <=64KiB helper receipt; helper return versus later output/receipt failure stays distinct. Receipt-write failure projects both first cause/events and receipt error to bounded stderr where possible.
+-8. Parent stores at most65536 raw bytes per stream. It preserves exact received prefix, counts received/written separately and flags prefixOnly if cap/write failure. First cap/failure requests SIGTERM; SIGKILL is attempted after2000ms. A wall timer120000ms from spawn requests the same stop. These are operational bounds, not peak-memory/CPU/RSS or guaranteed OS kill-latency certification. There is no child-process tree management; reviewed helper must not spawn descendants.
+-9. Parent awaits actual child `close` and records code/signal/closeObserved, spawn error, timeout/interruption and capture errors. SIGINT/SIGTERM to wrapper requests child stop then captures its close. SIGKILL/host crash/disk failure may prevent final metadata; consumed token and whatever prefix exists remain, not a fabricated exit record.
+-10. After close, parent syncs/closes raw captures and inventories only the fixed output names with exact bytes/hash. Empty raw streams are valid. It reads only small helper-receipt metadata and opaque plan bytes, rechecking plan size/hash independently, never native-decoding it. Unexpected files or disagreement fail output verification. Partial files remain physically present even if inventory verification stops.
+-11. Parent writes exclusive `exit.json` <=64KiB with actual child exit, helper receipt, raw capture completeness/prefix flags, available-file inventory and intended wrapper exit. Inventory necessarily excludes self-referential exit.json, which the external launcher/reviewer hashes separately. Wrapper intends0 only for observed child0/no signal/no capture errors/READY/verified plan. Actual wrapper exit/signal must be independently captured by root's launcher; the wrapper cannot testify its own later death.
+-
+-| Invocation | Inputs | Output / authority |
++| Stage | Actual source operation | Output / boundary |
+ |---|---|---|
+-| Parent capture wrapper | root packet digest + fixed packet/source/review bytes | consumed token, NEW directory, raw streams, actual child exit metadata |
+-| Child runner | revalidated same packet/token/new once marker | at most one helper import/call, raw plan wire and small helper receipt |
+-| Existing helper | exact closed original request from root packet | returned lossless plan or terminal error, no new PATH/store/CV |
+-| External root launcher/reviewer | exact source/packet and admitted command | observed wrapper exit/signal and final output hashes; NOT supplied by wrapper intended exit |
++| Pre-token admission | named ambient/runtime check + fixed final source/review pins | refuse mismatch; no sanitization |
++| Reservation | exclusive synced token then NEW directory; child wx marker | consumed even after failure |
++| One call | fixed E2012 helper, closed packet request | READY wire or thrown first cause, no PATH/store/CV |
++| HOLD retention | pinned pure codec, bounded closed located payload | lossless opaque wire + small identity receipt |
++| Capture | shared bounded pipe/timer primitives, actual child close | raw prefixes/exit facts, no invented success |
++
++## Original-incapable fabricated seam
+ 
+-## Limits and remaining boundaries
++`capture-core.mjs` imports NOTHING and contains no filesystem/process/module/evidence paths or dynamic import. It receives narrow explicit capability callbacks. The authored test module imports only Node test/assert/events, this pure core and the already pinned pure codec DEFINITIONS; it does not import either ORIGINAL entry, E2012 helper/core or fs/child_process. Its capabilities are in-memory maps, fabricated EventEmitters/manual timers and constructed numeric fixtures, not real roots/tokens/children. Thus the authored command cannot reach the public original helper/evidence route. It tests the SAME boundary/role/reserve/capture/invoke/receipt primitives used by production; production's fixed adapters are NOT injectable through the original request/packet.
+ 
+-64KiB each packet/metadata/raw-stream cap;2MiB raw plan cap; fixed source/review pins <=1MiB each. Metadata caps are terminal refusal, not proof every filesystem failure can produce a receipt. Files are wx; available prefixes are best effort, no transaction/all-files/crash guarantee. Token file+parent fsync is the durable reservation mechanism on the host filesystem; fsync failures stop before helper import, and no universal storage/host guarantee is claimed.
++Authored focused cases: ambient unchanged/mismatch; role-specific self-review; token/output/marker collision; second-fd setup; async pipe error; postspawn setup and real close settlement; spawn-error/close and timeout TERM/KILL; partial/cap/sync/close first cause; helper throw versus returned/output/receipt failure; ±Infinity HOLD with NaN/-0 and codec/encode/write/receipt failure; opaque artifact/receipt/file-name disagreement. They are UNEXECUTED, not passed. Tests do not claim actual OS fsync/signal behavior or original plan compatibility.
+ 
+-External source/pin rechecks and output hashing are outside E2006's own8MiB evidence-read accounting and outside any future producer16MiB budget. Original tree/output caps may legitimately reject the one original plan-run; retain it as useful engineering negative, no raise/rerun. Root must decide future changed packets explicitly.
++## Pending authority / review
+ 
+-No fabricated test packet is implemented by this original-only runner. Later synthetic runner/token/capture tests require a separate reviewed safe seam/fixture, not a fake final root packet that enables original evidence. Current construction leaves helper bugs/caps/NONCV acceptance to the separate reviewers. All G1-G6 producer holds remain. No main/defaultON/deploy/scientific/physical acceptance follows.
++Root's midnight runtime/environment observations and reported E2013 73/73 are message testimony only, NOT E2014 execution or final packet expectations. No live environment probe or mutation was made by S3 here. Full root + independent different-worker source/test/flow review comes next. Later fabricated NONCV admission is separate from original-plan admission. Both actual commands require prospective exact source hashes/runtime/ambient expectations and outer raw captures/observed launcher exit. All original tree/output caps may legitimately reject terminally; no raise/retry/cleanup. All producer G1–G6, main/defaultON/deploy/physical/scientific gates remain HOLD/UNKNOWN.
+ 
+-Review question: is this exact two-process flow the one root wants independently reviewed for a later separately admitted ORIGINAL-PLAN run? Pause remains in force; do not execute from this handoff.
++Review question: does this exact versioned flow address R2009 A1–A5 for independent source review? Checkpoint pauses before any syntax/import/test/run.
+
+

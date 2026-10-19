@@ -1,0 +1,6 @@
+// Read-only runtime and named ambient observation; no project module imports.
+import fs from 'node:fs';
+import crypto from 'node:crypto';
+const keys=['NODE_OPTIONS','NODE_PATH','NODE_EXTRA_CA_CERTS','TZ','LANG','LC_ALL','LD_PRELOAD','LD_LIBRARY_PATH','NODE_V8_COVERAGE','NODE_COMPILE_CACHE','NODE_DISABLE_COMPILE_CACHE','OPENSSL_CONF','NODE_ICU_DATA'];
+const b=fs.readFileSync(process.execPath);
+console.log(JSON.stringify({runtime:{identity:{execPath:process.execPath,version:process.version,platform:process.platform,arch:process.arch,execArgv:[...process.execArgv]},binary:{bytes:b.length,sha256:crypto.createHash('sha256').update(b).digest('hex')}},ambient:Object.fromEntries(keys.map(k=>[k,{set:Object.hasOwn(process.env,k),value:Object.hasOwn(process.env,k)?process.env[k]:null}]))}));

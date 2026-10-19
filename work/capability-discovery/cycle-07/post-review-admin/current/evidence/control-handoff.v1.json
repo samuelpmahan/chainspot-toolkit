@@ -1,0 +1,33 @@
+{
+  "schema": "cycle07-coordinator-control-handoff@1",
+  "status": "SAME_STATE_SAME_PINS_NEW_CANONICAL_ADMIN_PATH",
+  "oldState": "discovery-cycle07/state.json",
+  "newState": "discovery-cycle07-checkpoint-admission/control/state.json",
+  "bytes": 90885,
+  "sha256": "e3cf76ef40125ce7cd6c8184baa9e3c80a42060b11076a8ace90b20073e3b5d3",
+  "byteExact": true,
+  "epoch": 32,
+  "pins": {
+    "S1": {
+      "job": "E2024",
+      "agent": "/root/lab7_p1"
+    },
+    "S2": {
+      "job": null,
+      "agent": null
+    },
+    "S3": {
+      "job": null,
+      "agent": null
+    },
+    "S4": {
+      "job": null,
+      "agent": null
+    }
+  },
+  "oldStateRemainsFrozen": true,
+  "canonicalControl": "/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/control",
+  "reason": "Successful E2024 copy freezes all339 original cycle07 sources, including original native state. Copy actual authoritative state/spec/registry byte-exact outside freeze before any further finish/solve. Old source remains immutable snapshot, not live authority. No reset/reconstruction/requeue/reassignment/worker spawn/solver recovery claim.",
+  "coordination": "Root remains sole native coordinator. S1E2024 ownership/pin and all prior outcomes/history preserved. Future receipts/solves/admin append only outside frozen source; old completed receipt paths remain retained provenance.",
+  "notCovered": "This handoff postdates original copied manifest and is separately indexed later. Not independent package acceptance or continuously running-worker proof."
+}

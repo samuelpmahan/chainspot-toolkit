@@ -1,0 +1,251 @@
+/** Pure bounded tagged-wire selection and fixed48 planning. No filesystem/CV/store imports. */
+const FIT_UNIT='px (l, r, c, w: lateral offsets); score, gl, gr: lum/px';
+const CONTRAST_UNIT='lum per station (inside band minus outside band), per side';
+const PHI=-0.20539538918976738;
+const FRAME='Lenard-5.original-source-pixel-centers';
+const RASTER='px.image.cropped', MASK='tk.s6.pathMask';
+const FIT_FIELDS=['lPx','rPx','cPx','wPx','score','gl','gr'];
+const ENTRY_FIELDS=['seq','parent','depth','calculation','store','caller','site','inParts','outParts','elapsedMs','status','error','emits','key','cached','computedMs'];
+const PINS=Object.freeze({protocol:'cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829',attestation:'9f1cb90eed3c74214c9a03029730ea1ab487c48bd86b89cbe3a701eebe923ef1',rgba:'4379abb30a5b0907aa0e1435b13e19eafe8fdd31ac57c9b8bdff4495a14fdc2a',png:'30fa01879840deb0584ffe001fa39779998710010faeae93510dbc7a8a0abe6e',mask:'305285b7e2bc9d44dfd572caa8d39030ed1b0c2254c15967fbb9b7bff7fae609'});
+const stop=message=>{throw new Error(`INTEGRITY_STOP: ${message}`);};
+const own=(v,k)=>Object.hasOwn(v,k);
+function fields(v,keys) {
+  if(v===null||typeof v!=='object'||Object.getPrototypeOf(v)!==Object.prototype) stop('ordinary object required');
+  const actual=Reflect.ownKeys(v);
+  if(actual.length!==keys.length||actual.some(k=>typeof k!=='string'||!keys.includes(k))) stop('exact own fields required');
+  for(const k of keys) {const d=Object.getOwnPropertyDescriptor(v,k);if(!d||!own(d,'value')||!d.enumerable||d.value===undefined) stop('own enumerable data fields required');}
+}
+function dense(a,n) {
+  if(!Array.isArray(a)||Object.getPrototypeOf(a)!==Array.prototype||a.length!==n||Reflect.ownKeys(a).length!==n+1) stop('dense array shape');
+  for(let i=0;i<n;i++) {const d=Object.getOwnPropertyDescriptor(a,String(i));if(!d||!own(d,'value')||!d.enumerable) stop('dense array element');}
+  return a;
+}
+function same(a,b) {
+  if(Object.is(a,b)) return true;
+  if(Array.isArray(a)&&Array.isArray(b)) return a.length===b.length&&a.every((x,i)=>same(x,b[i]));
+  if(a&&b&&typeof a==='object'&&typeof b==='object') {
+    if(Object.getPrototypeOf(a)!==Object.prototype||Object.getPrototypeOf(b)!==Object.prototype)return false;
+    const ka=Reflect.ownKeys(a),kb=Reflect.ownKeys(b);
+    return ka.length===kb.length&&ka.every(k=>{
+      if(typeof k!=='string'||!own(b,k))return false;
+      const da=Object.getOwnPropertyDescriptor(a,k),db=Object.getOwnPropertyDescriptor(b,k);
+      return own(da,'value')&&own(db,'value')&&da.enumerable&&db.enumerable&&da.value!==undefined&&db.value!==undefined&&same(da.value,db.value);
+    });
+  }
+  return false;
+}
+const requireSame=(a,b,why)=>{if(!same(a,b)) stop(why);};
+const text=node=>`${JSON.stringify(node)}\n`;
+const wireBytes=node=>new TextEncoder().encode(text(node));
+function objectPairs(node) {
+  if(!Array.isArray(node)||node.length!==3||node[0]!=='object'||node[1]!=='plain'||!Array.isArray(node[2])) stop('plain tagged object required');
+  const seen=new Set();
+  for(const p of node[2]) {if(!Array.isArray(p)||p.length!==2||typeof p[0]!=='string'||seen.has(p[0])) stop('duplicate/malformed tagged object pair');seen.add(p[0]);}
+  return node[2];
+}
+function wireFields(node,keys) {
+  const actual=objectPairs(node).map(p=>p[0]);
+  if(actual.length!==keys.length||actual.some(k=>!keys.includes(k)))stop('tagged record key set');
+}
+export function selectWire(root,path) {
+  let node=root;
+  for(const key of path) {
+    if(typeof key==='number') {
+      if(!Array.isArray(node)||node.length!==2||node[0]!=='array'||!Array.isArray(node[1])||!Number.isSafeInteger(key)||key<0||key>=node[1].length) stop('tagged array index');
+      node=node[1][key];
+    } else {
+      const pair=objectPairs(node).find(p=>p[0]===key);if(!pair) stop(`missing tagged field ${key}`);node=pair[1];
+    }
+  }
+  return node;
+}
+function wireArray(node,length) {
+  if(!Array.isArray(node)||node.length!==2||node[0]!=='array'||!Array.isArray(node[1])||node[1].length!==length) stop('tagged array length');return node[1];
+}
+function parseFragment(bytes) {
+  if(Object.getPrototypeOf(bytes)!==Uint8Array.prototype) stop('exact fragment bytes');
+  let node;try{node=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));}catch{stop('invalid fragment UTF8/JSON');}
+  const canonical=wireBytes(node);if(canonical.length!==bytes.length||canonical.some((v,i)=>v!==bytes[i])) stop('noncanonical fragment wire');return node;
+}
+function small(node,codec) {
+  if(wireBytes(node).length>32768) stop('selected wire byte cap');
+  const stack=[node];let nodes=0;
+  while(stack.length){const x=stack.pop();if(++nodes>8192) stop('selected wire node cap');if(Array.isArray(x)){if(x[0]==='typed') stop('typed native value forbidden');for(const y of x)stack.push(y);}}
+  return codec.decodeValue(node,{maxDepth:32,maxNodes:8192,maxTypedBytes:1,maxBytes:32768});
+}
+const decodeAt=(root,path,codec)=>small(selectWire(root,path),codec);
+export function fixedSlots() {
+  const groups=[['primary',780,906],['bright-nonpath',780,740],['normal-plus6',781.223725524672,911.8738825184256],['masked-primary',780,906]];
+  const windows=[['before16',-24,-8],['core16',-8,8],['after16',8,24],['long48',-24,24]],out=[];
+  for(let c=0;c<16;c++)for(let b=0;b<3;b++) {
+    const [g,x,y]=groups[Math.floor(c/4)],[w,t0Px,t1Px]=windows[c%4];
+    out.push({j:3*c+b,c,b,comparisonId:`${g}/${w}`,nominalBankPx:[34,42,50][b],originalOriginPx:[x,y],t0Px,t1Px,fitIndex:10*c+1+3*b,controlIndex:10*c+2+3*b});
+  }return out;
+}
+function outer(answer,unit) {
+  fields(answer,['value','unit','emits']);if(answer.unit!==unit) stop('answer unit');fields(answer.emits,['computed']);if(answer.emits.computed!==1) stop('answer computation emission');
+}
+export function classifyFit(answer,slot) {
+  outer(answer,FIT_UNIT);const value=answer.value;
+  if(value&&typeof value==='object'&&own(value,'condition')) {
+    fields(value,['condition']);if(value.condition!=='no edge pair') stop('unexpected edgePair condition');
+    return {eligibility:'NOT_EXECUTED',reason:'NATIVE_NO_EDGE_PAIR',offendingFields:[],rawArgs:null};
+  }
+  fields(value,FIT_FIELDS);if(FIT_FIELDS.some(k=>typeof value[k]!=='number')) stop('numeric fit field type');
+  const offendingFields=FIT_FIELDS.filter(k=>!Number.isFinite(value[k]));if(!(value.wPx>0))offendingFields.push('wPx>0');
+  if(offendingFields.length)return {eligibility:'NOT_EXECUTED',reason:'NUMERIC_UNUSABLE',offendingFields,rawArgs:null};
+  const O=slot.originalOriginPx,cPx=value.cPx;
+  const originPx=[O[0]-cPx*Math.sin(PHI),O[1]+cPx*Math.cos(PHI)];
+  if(!originPx.every(Number.isFinite))return {eligibility:'NOT_EXECUTED',reason:'NONFINITE_DERIVED_ORIGIN',offendingFields:['originPx'],rawArgs:null};
+  return {eligibility:'ELIGIBLE',reason:null,offendingFields:[],rawArgs:{raster:RASTER,mask:MASK,originPx,phiRad:PHI,t0Px:slot.t0Px,t1Px:slot.t1Px,stepPx:1,widthPx:value.wPx,bandPx:[1,3],alongPx:2}};
+}
+function control(answer,N,slot,originalControl,codec) {
+  outer(answer,CONTRAST_UNIT);const v=answer.value;fields(v,['leftLum','rightLum','okLeft','okRight','stationsCount']);if(v.stationsCount!==N)stop('control stations');
+  for(const k of ['leftLum','rightLum'])if(dense(v[k],N).some(x=>typeof x!=='number'))stop('control luminance type');
+  for(const k of ['okLeft','okRight'])if(dense(v[k],N).some(x=>x!==0&&x!==1))stop('control flag type');
+  for(const side of ['leftLum','rightLum'])for(let stationIndex=0;stationIndex<N;stationIndex++) {
+    const rawValue=v[side][stationIndex];
+    if(rawValue!==Infinity&&rawValue!==-Infinity)continue;
+    const payload={code:'CONTRAST_INFINITY',j:slot.j,c:slot.c,b:slot.b,role:'control',side,stationIndex,
+      planIndex:originalControl.plannedQuery.planIndex,rawValue,answerBinding:originalControl.answerBinding,
+      rawAnswer:answer,originalState:originalControl.queryState,originalCallbackStatus:originalControl.callback.nativeEntry.status};
+    const error=new Error(`INTEGRITY_HOLD: source-impossible original contrast ${side}[${stationIndex}] at slot ${slot.j}`);
+    error.code='INTEGRITY_HOLD';
+    // Lossless detached small payload; existing selected-wire/node limits remain controlling.
+    error.integrityHold=small(codec.encodeValue(payload,{maxDepth:32,maxNodes:8192,maxTypedBytes:1,maxBytes:32768}),codec);
+    throw error;
+  }
+}
+function orderedRawArgs(actual,expected) {
+  fields(actual,Object.keys(expected));
+  requireSame(Object.keys(actual),Object.keys(expected),'rawArgs insertion order');
+  requireSame(actual,expected,'rawArgs values');
+}
+function expectedPlan(s,role) {
+  const rawArgs={raster:RASTER,mask:MASK,originPx:[...s.originalOriginPx],phiRad:PHI,t0Px:s.t0Px,t1Px:s.t1Px,stepPx:1};
+  if(role==='fit')Object.assign(rawArgs,{lat0Px:0,widthPx:s.nominalBankPx,tolPx:2,latLimPx:12,minOk:{count:8,ofStations:0.2}});
+  else Object.assign(rawArgs,{widthPx:s.nominalBankPx,bandPx:[1,3],alongPx:2});
+  return {planIndex:role==='fit'?s.fitIndex:s.controlIndex,comparisonId:s.comparisonId,groupId:s.comparisonId.split('/')[0],windowId:s.comparisonId.split('/')[1],widthPx:s.nominalBankPx,query:`fn.q.path.${role==='fit'?'edgePair':'stationContrast'}`,rawArgs};
+}
+function declaration(s) {
+  return {id:s.comparisonId,groupId:s.comparisonId.split('/')[0],windowId:s.comparisonId.split('/')[1],imageId:'Lenard-5',frame:FRAME,widthPx:1290,heightPx:2796,rgbaSha256:PINS.rgba,mask:s.c<12?null:{kind:'Uint8Array',bytes:3606840,sha256:PINS.mask},originPx:[...s.originalOriginPx],phiRad:PHI,t0Px:s.t0Px,t1Px:s.t1Px,stepPx:1,widthsPx:[34,42,50]};
+}
+function resolvedIdentity(value,s) {
+  fields(value,['snapshotId','comparisonId','frame','widthPx','heightPx','rgbaSha256','maskKind','maskSha256','partKeys']);
+  const expected={snapshotId:`lenard5-fixed16/${s.c}/${s.comparisonId}`,comparisonId:s.comparisonId,frame:FRAME,widthPx:1290,heightPx:2796,rgbaSha256:PINS.rgba,maskKind:s.c<12?null:'Uint8Array',maskSha256:s.c<12?null:PINS.mask};
+  for(const [k,v]of Object.entries(expected))requireSame(value[k],v,`resolved identity ${k}`);
+  fields(value.partKeys,[RASTER,MASK]);for(const k of [RASTER,MASK])if(typeof value.partKeys[k]!=='string'||!/^[0-9a-f]{64}$/.test(value.partKeys[k]))stop('naturally materialized original Part key');
+  return value;
+}
+function witness(trace,sourceHashes,codec) {
+  const expected={schema:'cycle06-lenard5-trace@1',protocolId:'lenard5-fixed16',protocolSha256:PINS.protocol,status:'COMPLETED',error:null};
+  for(const [k,v]of Object.entries(expected))requireSame(decodeAt(trace,[k],codec),v,`trace ${k}`);
+  const req={schema:'cycle06-lenard5-request-binding@1',protocolId:'lenard5-fixed16',protocolSha256:PINS.protocol,attestationSha256:PINS.attestation};
+  for(const [k,v]of Object.entries(req))requireSame(decodeAt(trace,['requestBinding',k],codec),v,`request ${k}`);
+  requireSame(decodeAt(trace,['requestBinding','sourceOriginal'],codec),{ref:'49255331791b1245cf0f9cd699816175f94e70f2',path:'specimens/dev/Lenard-5.png',gitBlob:'78a4345489a5544640859127cd79f5a06bf9f21b',frame:FRAME},'source original identity');
+  for(const [k,v]of [['encodedFileVerification',PINS.png],['rawStageVerification',PINS.rgba],['maskPolicy',PINS.mask]])requireSame(decodeAt(trace,['requestBinding',k,k==='maskPolicy'?'maskSha256':'sha256'],codec),v,'input hash witness');
+  const snapshots=[];
+  for(const when of ['beforeImport','afterImport','afterRun']) {
+    requireSame(decodeAt(trace,['sourceBinding',when,'verified'],codec),true,'source verification');
+    const entries=decodeAt(trace,['sourceBinding',when,'entries'],codec),seen=new Set();
+    if(!Array.isArray(entries)||entries.length!==Object.keys(sourceHashes).length)stop('source entries count');
+    for(const e of entries){fields(e,['path','expectedSha256','actualSha256','error']);if(seen.has(e.path)||!own(sourceHashes,e.path)||e.error!==null||e.expectedSha256!==sourceHashes[e.path]||e.actualSha256!==sourceHashes[e.path])stop('source entry');seen.add(e.path);}
+    snapshots.push({when,entries});
+  }
+  wireArray(selectWire(trace,['plannedQueries']),160);wireArray(selectWire(trace,['queryTrace']),160);wireArray(selectWire(trace,['requestBinding','comparisons']),16);
+  return snapshots;
+}
+function hashPair(value,expected) {
+  fields(value,['rgbaSha256','maskSha256']);requireSame(value,expected,'input-integrity frozen hashes');
+}
+function inputGlobals(trace,codec) {
+  const root=selectWire(trace,['inputIntegrity']);
+  wireFields(root,['suppliedPlanes','snapshots','postFiles','request','postErrors']);
+  wireArray(selectWire(root,['snapshots']),16);
+  const postErrors=decodeAt(root,['postErrors'],codec);dense(postErrors,0);
+  const suppliedPlanes=decodeAt(root,['suppliedPlanes'],codec);
+  fields(suppliedPlanes,['pre','post','verified']);
+  if(suppliedPlanes.verified!==true)stop('canonical suppliedPlanes verification');
+  const canonical={rgbaSha256:PINS.rgba,maskSha256:PINS.mask};
+  hashPair(suppliedPlanes.pre,canonical);hashPair(suppliedPlanes.post,canonical);
+  const request=decodeAt(root,['request'],codec);fields(request,['verified','error']);
+  if(request.verified!==true||request.error!==null)stop('original request post-integrity');
+  return {strategy:'fixed16x10',snapshots:[],suppliedPlanes,request,postErrors};
+}
+function inputSnapshot(trace,slot,codec) {
+  // One bounded snapshot is decoded at a time, never the whole16-snapshot native tree.
+  const snapshot=decodeAt(trace,['inputIntegrity','snapshots',slot.c],codec);
+  fields(snapshot,['comparisonId','snapshotId','pre','checks','post','verified','partKeys','error']);
+  if(snapshot.comparisonId!==slot.comparisonId||snapshot.snapshotId!==`lenard5-fixed16/${slot.c}/${slot.comparisonId}`||snapshot.verified!==true||snapshot.error!==null)stop('snapshot post-integrity identity/status');
+  const expected={rgbaSha256:PINS.rgba,maskSha256:slot.c<12?null:PINS.mask};
+  hashPair(snapshot.pre,expected);hashPair(snapshot.post,expected);
+  fields(snapshot.partKeys,[RASTER,MASK]);
+  for(const address of [RASTER,MASK])if(typeof snapshot.partKeys[address]!=='string'||!/^[0-9a-f]{64}$/.test(snapshot.partKeys[address]))stop('snapshot Part key');
+  dense(snapshot.checks,10);
+  for(let k=0;k<10;k++) {
+    const check=snapshot.checks[k];fields(check,['planIndex','post','verified']);
+    if(check.planIndex!==10*slot.c+k||check.verified!==true)stop('snapshot check index/verification');
+    hashPair(check.post,expected);
+  }
+  return snapshot;
+}
+function indexFragments(fragments,kind) {
+  const out=new Map(),paths=new Set();
+  for(const f of fragments) {
+    const m=f.metadata,key=kind==='answer'?m.planIndex:`${m.comparisonId}/${m.captureIndex}`;
+    if(m.kind!==kind||out.has(key)||paths.has(m.path))stop('duplicate fragment binding');paths.add(m.path);
+    out.set(key,{...f,node:parseFragment(f.bytes)});
+  }return out;
+}
+function callbackAt(callbacks,sidecar,index,captureIndex,id,calculation,codec) {
+  const f=callbacks.get(`${id}/${captureIndex}`);if(!f)stop('missing callback fragment');
+  requireSame(text(selectWire(sidecar,['calculationLog',index])),text(f.node),'callback wire mismatch');
+  const v=small(f.node,codec);fields(v,['comparisonId','captureIndex','nativeEntry']);if(v.comparisonId!==id||v.captureIndex!==captureIndex)stop('callback wrapper identity');
+  const e=v.nativeEntry;fields(e,ENTRY_FIELDS);
+  const constant=captureIndex===0,seq=constant?1:captureIndex===1?0:captureIndex;
+  const expected={seq,parent:constant?0:null,depth:constant?1:0,calculation,store:id,caller:constant?'lazy:px.image.cropped':'cycle06-lenard5-station-measurement',site:null,inParts:[],outParts:constant?[RASTER,MASK]:[],status:'ok',error:null,emits:constant?null:{computed:1},key:null,cached:false,computedMs:null};
+  for(const [k,x]of Object.entries(expected))requireSame(e[k],x,`callback ${k}`);
+  if(typeof e.elapsedMs!=='number'||!Number.isFinite(e.elapsedMs)||e.elapsedMs<0)stop('callback timing representation');
+  return {binding:f.metadata,callback:v,argumentAttribution:'plannedQueries/rawArgs + queryTrace + source-derived callback join; not dynamic args capture'};
+}
+/** Internal pure seam; public entry never accepts caller evidence/geometry. */
+export function bindPlan({traceWire,sidecarWire,answerFragments,callbackFragments,sourceHashes},codec) {
+  const sourceWitness=witness(traceWire,sourceHashes,codec),answers=indexFragments(answerFragments,'answer'),callbacks=indexFragments(callbackFragments,'calculation');
+  const inputIntegrityWitness=inputGlobals(traceWire,codec);
+  if(answers.size!==96||callbacks.size!==176)stop('fixed fragment counts');
+  requireSame(decodeAt(sidecarWire,['schema'],codec),'cycle06-lenard5-sidecar@1','sidecar schema');
+  requireSame(decodeAt(sidecarWire,['protocolId'],codec),'lenard5-fixed16','sidecar protocol');wireArray(selectWire(sidecarWire,['calculationLog']),176);
+  requireSame(decodeAt(sidecarWire,['status'],codec),'COMPLETED','sidecar status');
+  requireSame(decodeAt(sidecarWire,['error'],codec),null,'sidecar error');
+  const slots=[];
+  for(const s of fixedSlots()) {
+    if(s.b===0)inputIntegrityWitness.snapshots.push(inputSnapshot(traceWire,s,codec));
+    requireSame(decodeAt(traceWire,['requestBinding','comparisons',s.c],codec),declaration(s),'comparison declaration');
+    const id=s.comparisonId,base=11*s.c;
+    // Verify context once per original store: lazy constant exits before profile.
+    if(s.b===0){callbackAt(callbacks,sidecarWire,base,0,id,'fn.input.lenard5StationMeasurement',codec);callbackAt(callbacks,sidecarWire,base+1,1,id,'fn.q.path.profile',codec);}
+    const original={};let rawFit,rawControl;
+    for(const role of ['fit','control']) {
+      const expected=expectedPlan(s,role),pi=expected.planIndex,f=answers.get(pi);if(!f||f.metadata.comparisonId!==id)stop('missing/wrong answer binding');
+      const actualPlan=decodeAt(traceWire,['plannedQueries',pi],codec);
+      fields(actualPlan,Object.keys(expected));orderedRawArgs(actualPlan.rawArgs,expected.rawArgs);
+      requireSame(actualPlan,expected,'planned query/raw args');
+      const rowNode=selectWire(traceWire,['queryTrace',pi]);
+      wireFields(rowNode,['planIndex','comparisonId','state','resolvedIdentity','nativeAnswer','error']);
+      for(const [k,v]of Object.entries({planIndex:pi,comparisonId:id,state:'COMPLETED',error:null}))requireSame(decodeAt(rowNode,[k],codec),v,`queryTrace ${k}`);
+      const identity=resolvedIdentity(decodeAt(rowNode,['resolvedIdentity'],codec),s);
+      const nativeNode=selectWire(rowNode,['nativeAnswer']);requireSame(text(nativeNode),text(f.node),'answer wire mismatch');
+      const answer=small(f.node,codec),localPlan=pi-10*s.c,captureIndex=localPlan+1;
+      const joined=callbackAt(callbacks,sidecarWire,base+captureIndex,captureIndex,id,expected.query,codec);
+      original[role]={answerBinding:f.metadata,plannedQuery:actualPlan,queryState:decodeAt(rowNode,['state'],codec),resolvedIdentity:identity,...joined};if(role==='fit')rawFit=answer;else rawControl=answer;
+    }
+    requireSame(original.fit.resolvedIdentity,original.control.resolvedIdentity,'fit/control snapshot identity');
+    const snapshot=inputIntegrityWitness.snapshots[s.c];
+    requireSame(snapshot.partKeys,original.fit.resolvedIdentity.partKeys,'snapshot/fit Part keys');
+    requireSame(snapshot.partKeys,original.control.resolvedIdentity.partKeys,'snapshot/control Part keys');
+    control(rawControl,s.t1Px-s.t0Px,s,original.control,codec);const fitState=classifyFit(rawFit,s);
+    slots.push({...s,original,rawFit,rawControl,...fitState,derivedRawArgs:fitState.rawArgs,state:fitState.eligibility==='ELIGIBLE'?'NOT_ATTEMPTED':'NOT_EXECUTED',newStore:null,newPartKeys:null,actualNewPATH:0});
+  }
+  // All values originate from selected codec decode or newly constructed literals.
+  return {schema:'cycle07-original-evidence-jointfit-plan@1',status:'READY',protocolBehaviorAuthority:'Root-accepted protocol v2 @1.1.0 and E2002 source-shape authority; E2012 A2/A3/keyset repair authored after observed E2011 RED, awaiting separately admitted GREEN',slots,sourceWitness,inputIntegrityWitness,actualNewPATH:0,actualNewStores:0,actualCV:0,argumentCapture:'source-derived attribution, not callback dynamic args',claims:{scientificAcceptance:'UNKNOWN',humanAcceptance:'UNKNOWN',pathIdentity:'UNKNOWN',physicalEdgeIdentity:'UNKNOWN',calibratedWidth:'UNKNOWN',continuity:'UNKNOWN'}};
+}

@@ -1,0 +1,83 @@
+{
+  "schema":"capability-discovery-contract-review@1",
+  "job_id":"E2007",
+  "worker":"S4",
+  "outcome":"mixed_change",
+  "status":"DESIGN_ONLY_AMEND_BEFORE_FIRST_EXECUTION_NO_HELPER_APPROVAL",
+  "summary":"Independent review of pinned E2006 contract/FLOW confirms the narrow default-OFF fixed-root hash-before-selected-decode design and source-correct original plannedQueries/queryTrace/callback joins, while requiring pre-first-execution precision for SmallDecode byte enforcement, plain native grammar/canonical LF equality, actual cumulative read schedule, encoded-tree counting/depth,2MiB output envelope, repaired-v2 rebinding and leaf/ancestor/source symlink guards. Manifest metadata supports8192-byte selected-answer and2048-byte callback caps. Unique listed read set3616164B; two passes7232328B fit8MiB but three10848492B do not. No unfinished helper/test source was reviewed or executed. Incidental tagged-report TEXT exposure from one overbroad metadata-locator rg is explicitly recorded/excluded; imports/tests/codec/decode/query/CV execution remain0, original fragment reads0, and this is not blind review or execution approval.",
+  "reviewedArtifacts":[
+    {"path":"discovery-cycle07/S2/E2006/contract.json","bytes":5249,"sha256":"a08439b37c581994c0dec9e06a76f63bc30bd8dfdbc731f346df5c14b9c39246"},
+    {"path":"discovery-cycle07/S2/E2006/FLOW.md","bytes":2992,"sha256":"decbf974cfd1b012d27621da0b715d2a4bdd28eb906a8d80877527b421ec22a8"}
+  ],
+  "sourceHashes":[
+    {"path":"discovery-cycle07/S2/E2002/result.json","sha256":"4cbf7d093bbad21454474cdbca8372565708f574f4273832f30cc7a8035fd40d","role":"corrected source field-path review; root dispatch4cbf shorthand points here"},
+    {"path":"discovery-cycle07/S2/E2002/contract.md","bytes":15735,"sha256":"6d5e03b5762e9966bddd3d9f508ec47b9ea1489ef6ba16f13d53316df28789dc","role":"companion contract, not an identity mismatch"},
+    {"path":"discovery-cycle07/S1/E2001/protocol.json","bytes":71512,"sha256":"6db61139f62965ee1f67433b22cd6c525400e69dfb3cbf657fbde774af74d5b6","role":"metadata ledger ONLY; not accepted unchanged for execution; repaired S1v2 must be mechanically rebound before execution"},
+    {"path":"chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs","bytes":7322,"sha256":"3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015"},
+    {"path":"chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/recipe.mjs","bytes":29160,"sha256":"4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6"},
+    {"path":"chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs","bytes":32442,"sha256":"122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074"},
+    {"path":"chainspot-discovery-lab/experiments/capability-discovery/station-evidence/cli.mjs","sha256":"4ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c"},
+    {"path":"discovery-cycle06/root-source-admission.json","bytes":6356,"sha256":"6f3f30924749e0104a12e7d5d3d43b45b23569e55de8ffe565111620dd0355b8"},
+    {"path":"discovery-cycle06/G5/E1510/manifest.v1.json","bytes":367,"sha256":"4ae5f021bc3c9be8184cdb0627abdacabae9d7c8dcff88a12b404762843bbe9f"},
+    {"path":"discovery-cycle06/G5/E1510/producer-v1/artifact-manifest.json","bytes":87118,"sha256":"f85df68d1b34ce2464dcec869c023f0bb10a0240cf9f750ca1a0b23e0151064f"},
+    {"path":"discovery-cycle06/G1/E1501/staging-attestation.json","bytes":4252,"sha256":"9f1cb90eed3c74214c9a03029730ea1ab487c48bd86b89cbe3a701eebe923ef1","role":"named hash/size readback only for added future read schedule; no image/plane body access"}
+  ],
+  "sourceAuthority":"Source/manifest/contract hashes above were read-only SHA256 observations. Aggregate/fragment size/hash identities used only from plain artifact-manifest metadata, never fresh original-body read/hash/decode. All22 source bytes/sizes are source-admission metadata, not a fresh all22 body verification. Incidental tagged report text excluded completely from accepted evidence and reasoning.",
+  "capReview":{
+    "selectedAnswers":{"count":96,"sumBytes":179543,"maxBytes":6218,"capBytes":8192,"decision":"SUPPORTED_FOR_EXACT_SELECTED96_ONLY"},
+    "allCallbacks":{"count":176,"sumBytes":118835,"maxBytes":705,"capBytes":2048,"decision":"SUPPORTED_FOR_EXACT_BOUND176"},
+    "selectedQueryCallbacks":{"count":96,"sumBytes":64842,"maxBytes":686},
+    "constantProfileContextPairs":{"pairs":16,"callbackNodes":32,"sumBytes":21905,"maxBytes":705},
+    "source22":{"count":22,"sumBytes":258620,"maxBytes":32442,"perFileCap":1048576},
+    "acceptedReceipt":{"bytes":605076,"capBytes":1048576},
+    "listedUniqueReadBytes":3616164,
+    "listedFileReadCountOnePass":302,
+    "subsequentS2ReportedAdditionalFixedReads":{"shapeAuthorityResultBytes":12400,"stagingAttestationBytes":4252,"augmentedReadBytes":3632816,"augmentedDescriptorBodyReads":304,"authority":"S2 author-message testimony plus named-file size/hash readback only; code not reviewed,no cap test. S2 reports one pass/no postpass; independent complete-source review must verify schedule/guards and v2 rebinding."},
+    "totalReadCap":8388608,
+    "twoPassReadBytes":7232328,
+    "twoPassHeadroom":1156280,
+    "threePassReadBytes":10848492,
+    "optionalOriginalCliReceiptExtraPerRead":65951,
+    "readBudgetDecision":"CONDITIONAL_SCHEDULE_REQUIRED: enumerate repeated reads/postchecks/new protocol/helper pins, retain-once versus reread,actual/requested byte accounting and pre-read guard; unique sum is insufficient proof",
+    "smallDecode":{"wireCap":32768,"semanticNodesCap":8192,"nativeMaxContrastAnswerCodecVisits":202,"nativePairCodecVisits":12,"decision":"Explicit UTF8 serialized subtree byte bound before lowercase decodeValue; maxBytes option alone unenforced by decodeValue. Exact target granularity/grammar required; unspecified combined metadata targets not proved."},
+    "aggregateTree":{"nodesCap":500000,"encodedDepthCap":40,"decision":"UNSUPPORTED_SUFFICIENCY_YET: define encoded node/depth counting and derive complete-tree bound; not inherited from codec native500000/depth32"},
+    "bindingPlanOutput":{"bytesCap":2097152,"decision":"UNSUPPORTED_SUFFICIENCY_YET: exact full schema/string/count/duplication envelope and prospective cap guard required before first execution"}
+  },
+  "requiredAmendments":[
+    "Mechanically bind repaired independently reviewed S1E2005/v2 identities/sizes before execution; E2001v1 metadata ledger not accepted unchanged",
+    "Explicit SmallDecode UTF8 byte bound, grammar/plain-prototype/duplicate checks,semanticNodes8192 and codec depth<=32; encoded traversal40 is distinct",
+    "Exact tagged subtree JSON.stringify+LF byte equality to prehashed original fragment,not double encoding/value-only comparison/trim/normalization",
+    "Closed actual read schedule counts rereads/postchecks and fails before8MiB; prospective encoded-node/depth/output2MiB envelope proof",
+    "Every leaf/ancestor/source path symlink guard plus fixed membership/containment,regular descriptor,O_NONBLOCK,fstat,EOF,length/hash before parse/decode/import; no race-proofing claim",
+    "Read all176 callback fragments for prehash; boundedly select96query+16constant/profilepairs32nodes; no original profile answer widened selection",
+    "Token string is admissionID only,helperwritesNOFILES; external future spenttoken/outputreservation not implemented or claimed",
+    "Independent complete-source/test/flow review after construction and separate explicit bounded NONCV GO; no postfailure cap raise/retry"
+  ],
+  "proposedCounterexamples":["decodeValue maxBytes-only bypass","null-prototype/duplicate pair source-native bypass","missing LF/reordered encoded pairs/double encoding","wrong plannedQueries.state/callback.args field paths","global fragmentK confused with seq or captureIndex","unbudgeted third read pass","ordinary leaf under symlink ancestor/source root","disabled throwing getter/arbitrary injected root","encoded typed atoms/depth vs native codec budget confusion","duplicated metadata/encoded bytes defeats2MiB output"],
+  "incidentalExposure":{
+    "occurred":true,
+    "classification":"TAGGED-REPORT TEXT EXPOSURE; NOT codec/native tree decode",
+    "knownMatchedPath":"discovery-cycle06/V1/E1525/comparison-report.tagged.json",
+    "scopeQualification":"Tool result was truncated; no claim the one known path exhausts incidental textual exposure. No original fragment body opened. Do not claim blind review or no raw/tagged-body text read.",
+    "cause":"Overbroad source22-hash metadata locator rg matched a long tagged comparison report line.",
+    "toolTestimonyQuery":"rg -n '6f3f30924749e0104a12e7d5d3d43b45b23569e55de8ffe565111620dd0355b8' discovery-cycle06 --glob '*.json' --glob '*.md' --glob '!artifact-manifest.json' --glob '!value-trace.json' --glob '!timing-sidecar.json' --glob '!answer-*' --glob '!calculation-*' | head -35 && jq '.bindingAuthority.sourceAndReviewBindings' discovery-cycle07/S1/E2001/protocol.json && sed -n '1,95p' discovery-cycle06/G5/E1510/producer-v1/cli-receipt.json",
+    "preservation":"Existing conversation tool query/output is TOOLTESTIMONY only; no separate shell raw capture exists or is invented/backdated.",
+    "usedAsEvidence":false,
+    "usedForPredicateEligibilityOrCapTuning":false,
+    "response":"Promptly reported to root; root instructed explicit recording/exclusion; thereafter only explicitly named source/manifest/contract files and metadata inspected, no recursive broad content search."
+  },
+  "actualActions":{
+    "sourceContractManifestTextReads":true,"plainMetadataArithmetic":true,"sourceHashStatReadback":true,
+    "unfinishedHelperOrTestBodiesReviewed":false,
+    "metadataCommandFailure":"One jq .sources selection failed against source admission .entries,then corrected on explicit named metadata; not native/helper/test failure.",
+    "helperExecutions":0,"tests":0,"syntaxChecks":0,"sourceImports":0,"codecCalls":0,"nativeValueDecode":0,"originalFragmentBodyReads":0,"storeCalls":0,"PATHQueries":0,"CV":0,"imageDecode":0,"pixelReads":0,"render":0,"nativeOperations":0,"GitWrites":0,"repositoryWrites":0,"networkCalls":0,"subagents":0,
+    "incidentalTaggedBodyTextExposure":true,
+    "scratchWritesOnly":"discovery-cycle07/S4/E2007/"
+  },
+  "preservation":"No source22/new5/all3375 or HH/PageRouter writes; no whole-index/source22 fresh preservation scan claimed. Read scope incident recorded separately rather than erased.",
+  "laterConstructionNotice":"Root reports original-evidence-plan.mjs async buildOriginalEvidencePlan and internal fixedSlots/classifyFit/selectWire/bindPlan interface frozen/source files written UNEXECUTED. E2007 did not read implementation/test bodies or extend approval to them. Provisional metadata-derived read/SmallDecode/callback cap findings sent to S2; no cap-test pass. Whole-source handoff and independent S3 complete-source review remain separate.",
+  "S2AuthorResponse":"S2 reports augmented3632816B/304read schedule,precharged8MiB onepass/no postpass,explicit UTF8 JSON.stringify(taggedSubtree)+LF<=32768 guard and purecodec import from already verified source22 bytes after opaque prehash; no valid enabled public request in authored tests. These are construction testimony only,not E2007 source review or observed execution.",
+  "skillInfluence":"materialize separates accepted source/design reuse,unsupported cap sufficiency,incidental exposure and genuinely zero execution; it does not grant new review or query authority.",
+  "artifacts":["discovery-cycle07/S4/E2007/contract-review.md","discovery-cycle07/S4/E2007/realresult.json"],
+  "claims":{"designReuseConfirmedWithAmendments":true,"wholeHelperApproved":false,"testsPassed":false,"firstExecutionAuthorized":false,"originalNumericEligibilityObserved":false,"CVAccepted":false,"blindReview":false,"physicalConfidence":"UNKNOWN","scientificAcceptance":"UNKNOWN","humanAcceptance":"UNKNOWN"}
+}

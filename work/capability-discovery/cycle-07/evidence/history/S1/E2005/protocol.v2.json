@@ -1,0 +1,2208 @@
+{
+  "schema": "cycle07-joint-fit-station-contrast-protocol@1.1.0",
+  "job_id": "E2005",
+  "worker": "S1",
+  "status": "SOURCE_ONLY_V2_AMENDMENTS_PENDING_INDEPENDENT_REVIEW_PRODUCER_HOLD",
+  "protocolId": "lenard5-joint-raw-center-width-fixed48",
+  "authority": {
+    "scope": "Scratch-only standalone lab protocol; native assignment is work allocation, not autonomous science authority.",
+    "model": "User-selected gpt6.1sol/high overrides ABFeature defaults.",
+    "defaultEnabled": false,
+    "productionABFeature": false,
+    "originalFixed160Unchanged": true,
+    "priorReview": {
+      "job_id": "R1528",
+      "decision": "amend",
+      "acceptedUnchanged": false
+    },
+    "currentLabPublicationBlocked": false
+  },
+  "question": "On exposed fixed16x3 cases, does joint retained raw fitted center and width alter nominal bilateral contrast failures, and do bright controls improve too? No center-only/width-only causal isolation.",
+  "bindingAuthority": {
+    "originalInputManifest": {
+      "path": "discovery-cycle06/G5/E1510/manifest.v1.json",
+      "bytes": 367,
+      "sha256": "4ae5f021bc3c9be8184cdb0627abdacabae9d7c8dcff88a12b404762843bbe9f"
+    },
+    "originalRawArtifactManifest": {
+      "path": "discovery-cycle06/G5/E1510/producer-v1/artifact-manifest.json",
+      "bytes": 87118,
+      "sha256": "f85df68d1b34ce2464dcec869c023f0bb10a0240cf9f750ca1a0b23e0151064f"
+    },
+    "originalRawAggregateMetadata": [
+      {
+        "path": "value-trace.json",
+        "bytes": 2094896,
+        "sha256": "a2333d711ce5e46d5c13b8949c0027d3a67c91e5802b911f6bf62b1b33950d21",
+        "kind": "value-trace"
+      },
+      {
+        "path": "timing-sidecar.json",
+        "bytes": 181123,
+        "sha256": "2ce4fc7faa1c94f7dff078de7b5e5129c0876764012a82dc7b7691f0afde1fb0",
+        "kind": "timing-sidecar"
+      }
+    ],
+    "originalRawRoot": "/workspace/scratch/8528bb251845/discovery-cycle06/G5/E1510/producer-v1",
+    "sourceAndReviewBindings": [
+      {
+        "path": "chainspot-discovery-lab/README.md",
+        "bytes": 1542,
+        "sha256": "021d55b816f45de332480be01c0502f4e1c815a1c3c7a62a0f44fb3dfbd4472e"
+      },
+      {
+        "path": "chainspot-discovery-lab/REVIEW.md",
+        "bytes": 5706,
+        "sha256": "2d015479c367f3d20c7536e80f49859f8ad5ca5a602002b4519889aff5aabd93"
+      },
+      {
+        "path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/CURRENT.md",
+        "bytes": 2153,
+        "sha256": "4a3d85a616524ddeb4073ffd4601fa56a1ce79b646860dc7f7b8d117841cb3e8"
+      },
+      {
+        "path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/delivery-v1/README.md",
+        "bytes": 4333,
+        "sha256": "0db7384ceed687b0853d25463a3114b5d514f9ae3e42377a2442b6c4b353a72e"
+      },
+      {
+        "path": "chainspot-discovery-lab/work/capability-discovery/cycle-06/delivery-v1/next-packets.json",
+        "bytes": 2702,
+        "sha256": "d9f24923266f193ea0d66a804f29bd228242edc619c335c7582a025a3db9b561"
+      },
+      {
+        "path": "discovery-cycle06/V1/E1528/proposal.md",
+        "bytes": 5321,
+        "sha256": "f04146ec0cbd9b3ede22301d703bb9da26770728519fec5031ae0cc04c2330fb"
+      },
+      {
+        "path": "discovery-cycle06/Q1/R1528/result.json",
+        "bytes": 16218,
+        "sha256": "56d728d4a7fb6a1e5b48569c0ee230cccdefef48471754e1f3f00d89d18d2fcb"
+      },
+      {
+        "path": "chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/recipe.mjs",
+        "bytes": 29160,
+        "sha256": "4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6"
+      },
+      {
+        "path": "chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/cli.mjs",
+        "bytes": 7213,
+        "sha256": "a711ab50bc50bd3f69e61656f12002d41d901e19d7db4e8a9b3b5eb188457ffa"
+      },
+      {
+        "path": "chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/README.md",
+        "bytes": 9668,
+        "sha256": "6a40f91299961893ec7de5096b366f234be46743e7b86036a32e41dda24afaf7"
+      },
+      {
+        "path": "chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+        "bytes": 27838,
+        "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"
+      },
+      {
+        "path": "chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs",
+        "bytes": 32442,
+        "sha256": "122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074"
+      },
+      {
+        "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs",
+        "bytes": 7322,
+        "sha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015"
+      },
+      {
+        "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/cli.mjs",
+        "bytes": 9436,
+        "sha256": "4ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c"
+      },
+      {
+        "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/recipe.mjs",
+        "bytes": 25430,
+        "sha256": "ef7248daf5c83fd014c4a5004aa511e41399492a46be0460fe566ab421383ad3"
+      },
+      {
+        "path": "chainspot-discovery-lab/work/capability-discovery/cycle-05/capture/final/F2/E1104/protocol-proposal.json",
+        "bytes": 12718,
+        "sha256": "cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829"
+      }
+    ],
+    "metadataOnly": "Slot fragment path/size/SHA256 extracted solely from plain artifact-manifest JSON; no fragment bodies or tagged native values read/decoded. Manifest declarations are not independently verified fragment bytes yet.",
+    "originalReceiptTestimony": {
+      "path": "discovery-cycle06/R1/R1513/result.json",
+      "sha256": "0002f0c25157073eced2c6a4008abbd2a2feca268b863536160ba9069e8441c8",
+      "meaning": "Prior accepted engineering testimony; not freshly read/hashed or numeric input in E2001."
+    },
+    "fixedInput": {
+      "protocolSha256": "cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829",
+      "attestationSha256": "9f1cb90eed3c74214c9a03029730ea1ab487c48bd86b89cbe3a701eebe923ef1",
+      "pngSha256": "30fa01879840deb0584ffe001fa39779998710010faeae93510dbc7a8a0abe6e",
+      "rgbaSha256": "4379abb30a5b0907aa0e1435b13e19eafe8fdd31ac57c9b8bdff4495a14fdc2a",
+      "maskSha256": "305285b7e2bc9d44dfd572caa8d39030ed1b0c2254c15967fbb9b7bff7fae609",
+      "source22FreezeSha256": "6f3f30924749e0104a12e7d5d3d43b45b23569e55de8ffe565111620dd0355b8",
+      "sourceRef": "49255331791b1245cf0f9cd699816175f94e70f2",
+      "gitBlob": "78a4345489a5544640859127cd79f5a06bf9f21b",
+      "dimensionsPx": [
+        1290,
+        2796
+      ],
+      "frame": "Lenard-5.original-source-pixel-centers",
+      "frameMeaning": "Zero-based source-pixel centers; x right/y down; phi radians; distances/widths pixels. No crop/display rescale."
+    },
+    "predecodeGuard": "Before any separately admitted bounded pinned-codec decode: verify both manifest bytes/digests, exact protocol/source/receipt authority, raw aggregate bytes/digests, and all96 selected answer fragment bytes/digests; reject duplicate/missing/path-escaping entries. Resolve relative paths only under fixed originalRawRoot, regular-file bounded descriptor reads with exact size/hash/EOF, no path interpolation from native values. Fixed-root lexical descent and no-symlink/descriptor identity policy must be specified and independently reviewed; regular-file fstat alone does not prove containment. Separate byte verification from tagged-wire selection/decode; no full aggregate native decode is authorized by protocol acceptance.",
+    "furtherBindingGuard": "Separately assign and review a scoped bounded binding helper before any raw-body read/codec import/decode. It must enrich every48 slots using originalRecordJoins below: exact declaration/plannedQueries.rawArgs identities, separate queryTrace state/error/nativeAnswer and separately bound callback fragments. No producer until enriched table is independently reviewed. Callback .nativeEntry contains NO args/rawArgs; join is source-derived attribution under pinned original recipe, not independent dynamic argument capture. Do not infer callback filename global index equals local seq or captureIndex.",
+    "noInputSubstitution": "Do not parse R1513 descriptive scalar tokens for numeric inputs, regenerate controls/fits, remap absolute original attestation, regenerate image/mask, or claim original-image portability.",
+    "originalRecordJoins": {
+      "plannedQueries": "At decoded value-trace.json ROOT (not {valueTrace:...}), plannedQueries[i] has exactly planIndex,comparisonId,groupId,windowId,widthPx,query,rawArgs. Bind i, source declaration/group/window/bank and query with exact ordered rawArgs HERE. It has NO state/error/status. Do not normalize absent fields to null.",
+      "queryTrace": "At the same root, queryTrace[i] has planIndex,comparisonId,state,resolvedIdentity,nativeAnswer,error. Require exact bound index/comparison, state:'COMPLETED', own error:null and present nativeAnswer for BOTH selected fit/control. Bind losslessly to the separately verified answer fragment; no invented status field.",
+      "snapshotChecks": "inputIntegrity.snapshots[c].checks entries have exactly planIndex,post,verified. Require correct planIndex, verified:true and bound hashes here; NO error field at this per-check path. Preserve source outer snapshot error/postchecks separately.",
+      "callbackWrapper": "Each bound fragments/calculation-K.json decoded ROOT is {comparisonId,captureIndex,nativeEntry}. Bind exact raw-manifest path/bytes/hash/kind/comparisonId/captureIndex and sidecar.calculationLog equivalent. Wrapper has NO args/rawArgs/status/error.",
+      "nativeEntry": "Verify own source fields seq,parent,depth,calculation,store,caller,site,inParts,outParts,elapsedMs,status,error,emits,key,cached,computedMs. Selected query callback: calculation equals plannedQueries[i].query; store=comparisonId; caller='cycle06-lenard5-station-measurement'; site:null; parent:null; depth:0; status:'ok'; own error:null; emits:{computed:1}; key:null; cached:false; inParts/outParts ordinary empty arrays. Runtime timing values retained as observed, not fixed predictions. NO args/rawArgs exists.",
+      "oldFixed10Mapping": {
+        "definition": "localOffset=i-10*c. All original scopes have10 public queries and one lazy constant, success path only.",
+        "profile": {
+          "localOffset": 0,
+          "seq": 0,
+          "captureIndex": 1,
+          "parent": null,
+          "depth": 0,
+          "calculation": "fn.q.path.profile"
+        },
+        "lazyConstant": {
+          "seq": 1,
+          "captureIndex": 0,
+          "parent": 0,
+          "depth": 1,
+          "calculation": "fn.input.lenard5StationMeasurement",
+          "caller": "lazy:px.image.cropped",
+          "site": null
+        },
+        "remainingQueries": "For localOffset1..9 ONLY, seq=localOffset+1 and captureIndex=localOffset+1; parent:null,depth0. Do NOT apply offset+1 to profile offset0.",
+        "selectedFits": {
+          "localOffsets": [
+            1,
+            4,
+            7
+          ],
+          "seqAndCaptureIndices": [
+            2,
+            5,
+            8
+          ]
+        },
+        "selectedControls": {
+          "localOffsets": [
+            2,
+            5,
+            8
+          ],
+          "seqAndCaptureIndices": [
+            3,
+            6,
+            9
+          ]
+        },
+        "fragmentFilename": "K is writer global fragment array index, not local captureIndex/seq. Locate and verify via manifest comparisonId+captureIndex plus decoded identities and sidecar record; never a filename-only inference."
+      },
+      "attribution": "The query rawArgs identity is declared/returned in plannedQueries and attributed to execution through pinned recipe loop, trace/answer/source integrity and callback relationships. Callbacks independently establish calculation/caller/site/order/status, not dynamic raw-argument capture. This limitation survives successful binding."
+    }
+  },
+  "order": {
+    "groups": [
+      "primary",
+      "bright-nonpath",
+      "normal-plus6",
+      "masked-primary"
+    ],
+    "windows": [
+      "before16",
+      "core16",
+      "after16",
+      "long48"
+    ],
+    "banksPx": [
+      34,
+      42,
+      50
+    ],
+    "comparison": "c=4*groupIndex+windowIndex",
+    "slot": "j=3*c+b",
+    "originalFitPlanIndex": "10*c+1+3*b",
+    "originalControlPlanIndex": "10*c+2+3*b",
+    "selection": "Keep all48, no bank winner or deleted control."
+  },
+  "eligibility": {
+    "outerAnswer": {
+      "ownDataKeys": [
+        "value",
+        "unit",
+        "emits"
+      ],
+      "ordinaryObject": true,
+      "unit": "px (l, r, c, w: lateral offsets); score, gl, gr: lum/px",
+      "emits": {
+        "computed": 1
+      },
+      "extraMissingAccessorFields": "INTEGRITY_STOP"
+    },
+    "originalExecutionGuard": "Use bindingAuthority.originalRecordJoins exactly: plannedQueries[i].query/rawArgs/declaration identities; queryTrace[i].state==='COMPLETED', own error===null and nativeAnswer bound to selected answer fragment; callback.nativeEntry.status==='ok', own error===null and separately verified calculation/comparison/store/caller/site/seq/parent/depth/capture/emits identity. PlannedQueries and callback have no state/error or args fields respectively. Unexpected cached emits/original query error/binding failure is INTEGRITY_STOP. Aggregate status must be COMPLETED. No absent-field null normalization.",
+    "pair": {
+      "exactOwnDataKeys": [
+        "lPx",
+        "rPx",
+        "cPx",
+        "wPx",
+        "score",
+        "gl",
+        "gr"
+      ],
+      "types": "Each must be a primitive number; wrong type/missing/extra/accessor keys -> INTEGRITY_STOP.",
+      "finiteChecks": [
+        "lPx",
+        "rPx",
+        "cPx",
+        "wPx",
+        "score",
+        "gl",
+        "gr"
+      ],
+      "positiveWidth": "raw wPx > 0",
+      "noScoreResidualSignOrConfidenceCutoff": true
+    },
+    "legitimateNoPair": {
+      "exactValue": {
+        "condition": "no edge pair"
+      },
+      "exactUnit": "px (l, r, c, w: lateral offsets); score, gl, gr: lum/px",
+      "outerEmits": {
+        "computed": 1
+      },
+      "classification": "NOT_EXECUTED",
+      "reason": "NATIVE_NO_EDGE_PAIR",
+      "newStores": 0,
+      "newConstants": 0,
+      "newQueries": 0
+    },
+    "numericUnusable": "Well-formed numeric pair with any nonfinite of the seven fields, or wPx<=0 -> NOT_EXECUTED / NUMERIC_UNUSABLE with exact offending fields/raw native bytes retained. Finite raw c/w but nonfinite derived origin -> NOT_EXECUTED / NONFINITE_DERIVED_ORIGIN. No fallback.",
+    "fatalConditions": "Any other condition, wrong unit/schema, wrapper no-raster value {schema:'nctk-s6-path@1',condition:\"edgePair: no raster (pass raster: 'px.image.cropped')\"} with unit:'condition', missing fit/control or mismatched identity/binding -> INTEGRITY_STOP; never normal no-fit.",
+    "controls": "All48 original native contrast answers retained, including skipped derived slots. Apply nativeGrammar O/A predicates, exact unit and O(computed)=1, exact contrast keys/common N/stationsCount16 or48. Dense primitive-number leftLum/rightLum preserve finite-invalid and NaN; numeric0/1 flags. Null/wrong type/shape is INTEGRITY_STOP. Any contrast +/-Infinity is retained source-impossible INTEGRITY_HOLD under contrastIntegrityPolicy, never normalized or passed as successful support.",
+    "observations": "UNDECODED in current48-slot table is deliberate. 4 historical no-pair /44 conditional eligible is prior testimony/prediction only; 0 new queries observed.",
+    "nativeGrammar": {
+      "ordinaryNativeRecord": "O(K): value is non-null object with Object.getPrototypeOf(value)===Object.prototype, exactly K as own enumerable DATA string fields, no extra/hidden/nonenumerable/symbol/accessor/undefined fields. Match key SET, not key order. Generic codec's null-prototype support does not widen native constructor grammar.",
+      "appliesTo": [
+        "outer fit/control/derived answer O(value,unit,emits)",
+        "fit pair value O(lPx,rPx,cPx,wPx,score,gl,gr)",
+        "no-pair value O(condition)",
+        "computed emits O(computed)",
+        "stationContrast value O(leftLum,rightLum,okLeft,okRight,stationsCount)"
+      ],
+      "arrayPredicate": "A(N): Object.getPrototypeOf(array)===Array.prototype, length===N, exactly own keys length and string indices0..N-1, no holes/extra/hidden/symbol/accessor/undefined index values; each index enumerable data. The intrinsic length property is the sole expected nonenumerable field. Key-set validation, not enumeration-order validation. Numeric luminance elements and numeric0/1 flags only; N frozen16 or48.",
+      "insertionOrder": "Only query.rawArgumentKeysInOrder is an insertion-order contract. Native record/array shape matching remains exact key-set matching.",
+      "wrongShape": "Null/wrong prototype/type/missing/extra/hidden/symbol/accessor/undefined native fields -> retained INTEGRITY_STOP; no coercion or normalization."
+    },
+    "contrastIntegrityPolicy": "For the exact bounded valid byte raster and frozen native stationContrast source, +/-Infinity contrast is source-impossible: retain exact raw bytes/value and original status, append integrity-HOLD cause and stop further admitted work without normalization, fallback or success interpretation. Applies to original nominal and future derived contrast. NaN and finite-invalid remain ordinary retained native support outcomes. This does NOT change numeric-shaped fit nonfinite NUMERIC_UNUSABLE skip policy."
+  },
+  "query": {
+    "only": "fn.q.path.stationContrast",
+    "rawArgumentKeysInOrder": [
+      "raster",
+      "mask",
+      "originPx",
+      "phiRad",
+      "t0Px",
+      "t1Px",
+      "stepPx",
+      "widthPx",
+      "bandPx",
+      "alongPx"
+    ],
+    "rawArgsTemplate": {
+      "raster": "px.image.cropped",
+      "mask": "tk.s6.pathMask",
+      "originPx": "[O[0]-cPx*Math.sin(phi), O[1]+cPx*Math.cos(phi)]",
+      "phiRad": -0.20539538918976738,
+      "t0Px": "slot.t0Px",
+      "t1Px": "slot.t1Px",
+      "stepPx": 1,
+      "widthPx": "raw decoded native wPx",
+      "bandPx": [
+        1,
+        3
+      ],
+      "alongPx": 2
+    },
+    "numericalEvaluation": "Use JavaScript Number binary64 in written component/evaluation order: cPx*Math.sin(phi), subtract from O[0]; cPx*Math.cos(phi), add to O[1]. Freeze source lat0Px=0 and phi. Preserve raw binary64 c,w and derived args through pinned codec, including negative-zero identity. No rounding/clamping/refit/recentering/rescaling.",
+    "sourceRefinement": "tolPx2 and latLimPx12 apply to discrete edge candidate selection BEFORE parabolic subpixel refinement. Do not require refined |cPx|<=12 or |wPx-nominalBank|<=2. No new numerical envelope/epsilon is proposed. Any later integrity/resource envelope needs separate source derivation/review, never scientific acceptance.",
+    "unchangedSampling": "Same station ranges, band[1,3],along2, step1 and original null/strip masks; native out-of-bounds/mask invalidity remains, not a geometric rejection.",
+    "prohibited": [
+      "lat0Px/center/edgePair query keys",
+      "private stationContrastAt call or copied CV math",
+      "profile/edgePair rerun",
+      "width search",
+      "loss/overlay/threshold/tau additions",
+      "factorial/heldout/posthoc search",
+      "historical answer substitution"
+    ],
+    "returnedShape": {
+      "exactOwnDataKeys": [
+        "value",
+        "unit",
+        "emits"
+      ],
+      "unit": "lum per station (inside band minus outside band), per side",
+      "emits": {
+        "computed": 1
+      },
+      "valueKeys": [
+        "leftLum",
+        "rightLum",
+        "okLeft",
+        "okRight",
+        "stationsCount"
+      ],
+      "nativeGrammar": "Apply eligibility.nativeGrammar O/A and contrastIntegrityPolicy, not generic codec grammar alone."
+    },
+    "units": "l/r/c/w px; score/gl/gr lum/px, not confidence; contrast arithmetic RGB mean-brightness differences, not calibrated linear-light luminance or physical width."
+  },
+  "freshStore": {
+    "perEligibleSlot": "Create one uniquely named createPartStore({base:null,name:attemptId+'/slot/'+j,onCall}) with default new cache; register unchanged PATH_QUERIES. No shared/persistent cache or historical Part/store/answer object.",
+    "constant": "Register one new lazy named constant fn.input.lenard5JointFitSlot with outputs in order px.image.cropped then tk.s6.pathMask from this slot's private exact original snapshot. Capture unique attempt/slot/store/producer-registration/caller identities; e.g. caller cycle07-joint-fit-slot/<j>.",
+    "refs": "Unchanged SEMANTIC input contents and raw address spellings only. Fresh objects and execution/provenance; equal content keys or same address strings do not establish shared execution.",
+    "planes": "Canonical original RGBA+binary strip mask pair retained; copy one private RGBA and optional exact strip mask for eligible slot only. Twelve original comparisons use a real literal null mask Part (36slots), four use exact mask (12slots), never missing/all-zero.",
+    "materialization": "No has/get/keyOf for testimony; these may trigger production. provenance alone is non-forcing. Store/Part keys null until naturally materialized by the one query; record actual resulting Part keys/provenance then. No input/store/cache/Part references escape.",
+    "callback": "Native query assigned seq0; lazy combined constant assigned seq1 and completes/callbacks before enclosing query seq0 on ordinary successful path. Fresh successful query callback requires status:'ok', error:null, key:null, cached:false and emits:{computed:1}; returned answer separately requires emits:{computed:1}. PATH outParts[] makes store entry cached:false/key:null even when registerQueries could return emits:{cached:1}, so cached:false alone never proves first computation. CaptureIndex is observed completion order separate from seq/parent/depth; capture every actual callback immediately with unchanged codec, including status/error/emits/key/cached/elapsed and constant producer. Do not assert96 callbacks on failures; callback codec failure can interrupt outer completion.",
+    "integrity": "Hash private snapshot pre/post each attempt and postscope; canonical/input/source/runtime/request pre/post checks as existing recipe. Preserve first cause plus posterrors. Release each slot store/snapshot closure before next; GC/RSS reclamation not guaranteed."
+  },
+  "trace": {
+    "slots": 48,
+    "initial": "All slots preallocated with exact original fit/control bindings, UNDECODED eligibility, null derived args/store/keys and NOT_ATTEMPTED execution.",
+    "requiredPerSlot": [
+      "j,c,b,comparisonId,nominalBankPx",
+      "original fit/control planIndex/path/bytes/hash and verified argument/declaration/callback bindings",
+      "exact raw decoded native fit and preserved condition/numeric-unusable reasons",
+      "eligibility and skip reason",
+      "exact derived ordered raw args or null",
+      "new store/producer/caller/snapshot IDs and naturally materialized provenance",
+      "attempted/completed/failed events separately counted",
+      "raw returned answer and answer fragment hash",
+      "native callback captureIndex/seq/parent/status/error/emits/key/cached/timing identities",
+      "private input postchecks and errors"
+    ],
+    "states": [
+      "NOT_ATTEMPTED",
+      "NOT_EXECUTED",
+      "ATTEMPTED",
+      "COMPLETED",
+      "THREW"
+    ],
+    "completion": "Completion records actual synchronous store.call return, independent of later answer encoding; successful-but-unencodable remains COMPLETED with encoding error. Counters use actual events, never predictions.",
+    "failure": "First integrity/query/codec/cap/input/output failure ends admitted run; preserve skipped/completed/failed/unattempted rows and available raw fragments. No retry/fallback/normalization/cap raise/retuning/control regeneration. Later independent packet requires new explicit authority, not same-run recovery. A native onCall may receive status:'ok' before callback encoding throws while store.call itself throws. Retain native status/error exactly; record orchestration/capture error separately and do not count a public completion unless store.call actually returned. Do not truncate native metadata to pass caps.",
+    "matchedEvidence": "CLItext and VisualRender consume the SAME frozen trace/artifact-manifest digest and all48 slots in j order, nominal versus derived raw side arrays/flags/skip/errors/unattempted states. Display denominators ONLY as frozen stationsCount N and explicit per-side valid=sum(okFlag===1), invalid=N-valid station counts, separately for original nominal and derived records. Keep finite-invalid/NaN/raw flags visible. Internal inside/outside sample counts/fractions are NOT_EXPORTED/UNKNOWN; no inference from flags, equality of nominal/derived supports, extra queries/helper sampling/pixel reads or invented denominators. No scalar-only replacement, zero fill, row omission or rounded labels as inputs. Render remains separately admitted.",
+    "finalStatus": "COMPLETED may include legitimate NOT_EXECUTED slots; INTEGRITY_FAILED/PARTIAL_FAILED/ENCODING_FAILED/OUTPUT_FAILED preserve cause/prefix. Zero eligible is a retained null result, no fallback."
+  },
+  "resources": {
+    "status": "SOURCE_DERIVED_PROPOSED_CAPS_NOT_MEASURED_NOT_YET_CAP_TESTED",
+    "maximumEligibleSlots": 48,
+    "maximumNewPATH": 48,
+    "maximumFreshStores": 48,
+    "maximumLazyCombinedConstants": 48,
+    "maximumSuccessPathCallbacks": 96,
+    "observedNewPATH": 0,
+    "selectedWork": "band offsets1,1.5,2,2.5,3 (5); along offsets-2..2 (5); 2sides*2inside/outside ->100 nominal sampling positions/station; maximum48stations ->4800/call. Mask lookups and bilinear operations are extra; no timing/RSS inference.",
+    "maximumTotalSelectedSamplingPositions": 115200,
+    "reachablePlaneBytes": {
+      "canonicalRGBA": 14427360,
+      "canonicalMask": 3606840,
+      "privateRGBA": 14427360,
+      "privateMaskMaximum": 3606840,
+      "privateLuminanceFloat64": 28854720,
+      "totalNamedMaximum": 64923120,
+      "notIncluded": "JS/store/cache/codec/answer/hash/VM/GC overhead and raw metadata. One private snapshot only, never48 rasters."
+    },
+    "nativeTypedPerMaxCall": {
+      "stationsFloat64": 384,
+      "contrastFloat64": 768,
+      "validityUint8": 96,
+      "totalSelected": 1248,
+      "qualification": "Short-lived selected station/contrast typed arrays only; public wrapper returns ordinary arrays; temporary sample offset arrays and all other overhead excluded."
+    },
+    "originalDecode": "Only prebound exact selected fragments and bounded aggregate metadata under a separate packet; one bounded fragment at a time, detach small fit/control values, do not retain decoded full large aggregates or raster wrappers. Each original file<=its bound exact bytes; aggregates2094896/181123; unchanged codec hard caps apply. Independent review must prove bounded aggregate traversal strategy before decode.",
+    "codecCaps": {
+      "maxDepth": 32,
+      "maxNodes": 500000,
+      "maxTypedBytes": 1000000,
+      "maxBytes": 33554432,
+      "perCallbackBytes": 4194304,
+      "sidecarBytes": 4194304
+    },
+    "newPacketTighterCaps": {
+      "answerFragmentBytes": 65536,
+      "callbackFragmentBytes": 65536,
+      "valueTraceBytes": 4194304,
+      "totalProducerOutputBytes": 16777216,
+      "artifactManifestBytes": 131072,
+      "cliReceiptBytes": 131072,
+      "explanation": "Proposed conservative per-file and cumulative ceilings for all new producer output; simultaneously reaching all per-file maxima sums18087936B, above total16777216B by1310720B. This is not a contradiction: an exact cumulative guard MUST STOP even when individual files fit. Per-file compliance does not prove total compliance. Before unchanged writer invocation, a separately assigned/reviewed whole-wrapper pre-writer success/failure byte reservation must cover answer/callback fragments, duplicated aggregate content, success/error manifest, CLI receipt and partial-file prefix. Existing writer has no cumulative/manifest/receipt limit and default value encode32MiB; it does not implement proposed4MiB value cap. Exact guard source plus separately admitted fabricated boundary/first-failure proof remain HOLD; never raise caps or patch frozen writer."
+    },
+    "outputCountCeiling": "<=48 answer+96 callback fragments, value+sidecar+manifest+receipt =148 producer files, with separate one-shot token outside output; no diagnostic images in producer budget.",
+    "forbidden": "Never codec-encode full raster-containing store/Part/request wrappers or enumerate huge plane keys. Retain existing exact Uint8Array/bounded typed-plane checks; reject caller-decorated planes. Do not reuse old16-comparison resource total verbatim."
+  },
+  "oneShot": {
+    "prequery": "Before future calls reserve output through unchanged createArtifactWriter(outDir), whose constructor exclusively mkdirs NEW directory; do NOT mkdir independently then call constructor. A separately assigned reviewed compatible mechanism would need explicit authority. Fresh exclusive future-run token must bind exact request/protocol/source/enriched-binding hashes; exact token schema/path/lifecycle implementation remains pending producer HOLD. A helper admission identifier is NOT durable cross-process spent-token enforcement. Failure never permits cleanup/replacement token/retry/rerun.",
+    "writer": "Existing writer constructor reserves output; writer.write(runResult) once only, even after failure. Persist preencoded answer then callback fragments, value/sidecar and legacy manifest under separately reviewed pre-writer whole-budget guard. Existing writer authority/caps remain unchanged and no total guard is claimed implemented.",
+    "limits": "Best-effort retained prefix, not atomic/fsync/crash durability or all-fragment guarantee. Disk failure can leave partial file not in manifest; retain directory and errors. Never rerun producer to repair outputs. Separate CLI receipt/intendedExitCode and actual outer exit evidence required.",
+    "stops": "First failure ends work and preserves first cause plus later post-errors. No cap lift or hidden retry; output observe/hash failures do not trigger new query."
+  },
+  "falsifiers": [
+    "Primary valid-side contrast remains mixed/negative: defeats blanket nominal-miscentering account; gains alone do not accept a path.",
+    "Bright-nonpath obtains comparable bilateral gains: defeats specificity; no new threshold/discriminator.",
+    "Normal-plus6 fit switching, missing fits and exact coordinate differences remain visible; no epsilon/same-edge assertion.",
+    "Masked-primary finite-invalid/NaN support remains UNKNOWN; not zero, physical gap, success or hidden denominator.",
+    "Joint c+w cannot identify which component caused changes; no unapproved factorial/ablation.",
+    "No eligible fits is NOT_EXECUTED/null result, no fallback; malformed source/binding/API/cap is a stopped engineering failure, not scientific disproof."
+  ],
+  "claims": {
+    "heldout": false,
+    "promoted": false,
+    "allInputsExposed": true,
+    "independentConfidence": false,
+    "dependence": "Original fits and original/derived contrast share pixels, fitted geometry and overlapping support.",
+    "widthOnlyNovel": false,
+    "widthOnlyAuthority": "E1528 exact-tip historical routing testimony: hallwayOf already supplies best.wPx at original origin; not freshly remote-reverified here.",
+    "pathIdentity": "UNKNOWN",
+    "physicalEdgeIdentity": "UNKNOWN",
+    "continuity": "UNKNOWN",
+    "calibratedWidth": "UNKNOWN",
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN",
+    "R1525": "Current cycle06 delivery records independent comparator acceptance; historical E1528 pending language remains history, not current status."
+  },
+  "amendmentClosure": {
+    "A1": "R1528-A1 plus R2001-A1/A2: separate manifest identities/all48 metadata, exact ordinary native grammar and exact plannedQueries/queryTrace/callback/snapshot field joins; old profile seq0 exception. Enriched binding/source attribution still guarded.",
+    "A2": "Fresh base:null store+new lazy constant per eligible slot; semantic refs only; natural provenance; no shared cache.",
+    "A3": "Explicit finite unrounded source translation/raw positive width; no refined tolerance or latLim clamp.",
+    "A4": "R1528-A4 plus R2001-A3/G1..G6: same48 states/resource limits; exported flag denominators only; explicit cumulative STOP/pre-writer/token/helper guards remain HOLD, not implemented/passed."
+  },
+  "guardedNextPackets": [
+    {
+      "id": "P1_BINDINGS",
+      "state": "NOT_ADMITTED",
+      "work": "Independent source-only review of this v2 and literal ledger, then separately scoped E2006 original-evidence binding/ARGPLAN helper source/cap/attribution review. Before any helper run mechanically rebind exact v2 SHA/bytes and root admission; no accepted v1 behavior. Exact record joins/native grammar/source-impossible contrast HOLD and callback metadata must survive. No producer permission."
+    },
+    {
+      "id": "P2_SIBLING_CONSTRUCTION",
+      "state": "NOT_ADMITTED",
+      "work": "Root/G6 assign distinct default-OFF sibling files; freeze original22/old5/fixed160 untouched. Source-only implementation, including caps/failure paths/token/CLI+trace contract, then independent source review and checkpoint. No production ABFeature by this protocol."
+    },
+    {
+      "id": "P3_NONCV",
+      "state": "NOT_ADMITTED",
+      "work": "Separate exact bounded fabricated-shape tests/import/codec/token/cap/stop-path packet. No image/pixel/gateway/store query. Demonstrate whole-wrapper and total-output cap passage and failure-prefix behavior; no assumption already passed."
+    },
+    {
+      "id": "P4_ONE_PRODUCER",
+      "state": "NOT_ADMITTED",
+      "work": "Only after verified raw decode/bindings, exact external image bodies/original absolute attestation/source closure/current ownership plus explicit root native-assigned GO: one query per eligible slot, max48, spent token/no rerun. Actual flow must be reviewed before execution."
+    },
+    {
+      "id": "P5_MATCHED_INSPECTION",
+      "state": "NOT_ADMITTED",
+      "work": "Independent lossless artifact/exit review then separately admitted same-trace CLItext/VisualRender all48; N and per-side flag valid/invalid counts only, internal inside/outside support NOT_EXPORTED/UNKNOWN. No new queries/pixels/science acceptance. Publication/Git requires separate route authority; never release/main/defaultON/deploy."
+    }
+  ],
+  "slots": [
+    {
+      "j": 0,
+      "c": 0,
+      "b": 0,
+      "comparisonId": "primary/before16",
+      "nominalBankPx": 34,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": -24,
+      "t1Px": -8,
+      "fit": {
+        "path": "fragments/answer-1.json",
+        "bytes": 525,
+        "sha256": "7610ae4ee765a464187bda5bf1c729bdebb5759fc4d1d901d3abd7a438ad2625",
+        "kind": "answer",
+        "comparisonId": "primary/before16",
+        "planIndex": 1
+      },
+      "control": {
+        "path": "fragments/answer-2.json",
+        "bytes": 2287,
+        "sha256": "0955e3eb67227cab323f6535e3b69087ecae09ad3688a2112571db383a0a7cfb",
+        "kind": "answer",
+        "comparisonId": "primary/before16",
+        "planIndex": 2
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 1,
+      "c": 0,
+      "b": 1,
+      "comparisonId": "primary/before16",
+      "nominalBankPx": 42,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": -24,
+      "t1Px": -8,
+      "fit": {
+        "path": "fragments/answer-4.json",
+        "bytes": 523,
+        "sha256": "8b4e19f91bec1853a483b4bac646aa9e2633ca99ffc18d424ea71dea5bd359db",
+        "kind": "answer",
+        "comparisonId": "primary/before16",
+        "planIndex": 4
+      },
+      "control": {
+        "path": "fragments/answer-5.json",
+        "bytes": 2266,
+        "sha256": "bf410d0a0ef623199a482ac8da7b939f05731ef72917c7524017b76f77d0b9c1",
+        "kind": "answer",
+        "comparisonId": "primary/before16",
+        "planIndex": 5
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 2,
+      "c": 0,
+      "b": 2,
+      "comparisonId": "primary/before16",
+      "nominalBankPx": 50,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": -24,
+      "t1Px": -8,
+      "fit": {
+        "path": "fragments/answer-7.json",
+        "bytes": 526,
+        "sha256": "db0a9f08d5c699e5f75aac40823878bbe6cb141e01fe2b28a9da01d1cedc442e",
+        "kind": "answer",
+        "comparisonId": "primary/before16",
+        "planIndex": 7
+      },
+      "control": {
+        "path": "fragments/answer-8.json",
+        "bytes": 2294,
+        "sha256": "e8cbbfd02c105e47c4a353f71de0632e7e3c0d051ecd22008361852dfe139432",
+        "kind": "answer",
+        "comparisonId": "primary/before16",
+        "planIndex": 8
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 3,
+      "c": 1,
+      "b": 0,
+      "comparisonId": "primary/core16",
+      "nominalBankPx": 34,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": -8,
+      "t1Px": 8,
+      "fit": {
+        "path": "fragments/answer-11.json",
+        "bytes": 525,
+        "sha256": "a52882da6271f60fdb57f31a417c7e990f6dc6bd5baabf72d4ab9df8a0f23db6",
+        "kind": "answer",
+        "comparisonId": "primary/core16",
+        "planIndex": 11
+      },
+      "control": {
+        "path": "fragments/answer-12.json",
+        "bytes": 2279,
+        "sha256": "c8962208d1e3cf5b0ade65d584792c27a842984232cee24f18d8dd7e5796f12f",
+        "kind": "answer",
+        "comparisonId": "primary/core16",
+        "planIndex": 12
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 4,
+      "c": 1,
+      "b": 1,
+      "comparisonId": "primary/core16",
+      "nominalBankPx": 42,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": -8,
+      "t1Px": 8,
+      "fit": {
+        "path": "fragments/answer-14.json",
+        "bytes": 527,
+        "sha256": "99c53449fa21040e7370699ed65e7aacc35aeddc0d0c51471358f18c33370dfa",
+        "kind": "answer",
+        "comparisonId": "primary/core16",
+        "planIndex": 14
+      },
+      "control": {
+        "path": "fragments/answer-15.json",
+        "bytes": 2282,
+        "sha256": "f8d6ddffa5bc9c2dbe11da89ffbb6ae3a2531c8094dd96d422299e205079f9bc",
+        "kind": "answer",
+        "comparisonId": "primary/core16",
+        "planIndex": 15
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 5,
+      "c": 1,
+      "b": 2,
+      "comparisonId": "primary/core16",
+      "nominalBankPx": 50,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": -8,
+      "t1Px": 8,
+      "fit": {
+        "path": "fragments/answer-17.json",
+        "bytes": 236,
+        "sha256": "24f6f5c4861e95d37413b53d2a5f2ec68a1e3c37927841d1cfa1f9eb21872c29",
+        "kind": "answer",
+        "comparisonId": "primary/core16",
+        "planIndex": 17
+      },
+      "control": {
+        "path": "fragments/answer-18.json",
+        "bytes": 2288,
+        "sha256": "ba5af062ebc74e32b1f264e16b5e8682d3a0a3f35f39837ccbadd20391fe28fd",
+        "kind": "answer",
+        "comparisonId": "primary/core16",
+        "planIndex": 18
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 6,
+      "c": 2,
+      "b": 0,
+      "comparisonId": "primary/after16",
+      "nominalBankPx": 34,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": 8,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-21.json",
+        "bytes": 524,
+        "sha256": "4fd9f4f622aa3d810a73742416994c8c71ff4d6ba3268804ad035af3f5eb56d1",
+        "kind": "answer",
+        "comparisonId": "primary/after16",
+        "planIndex": 21
+      },
+      "control": {
+        "path": "fragments/answer-22.json",
+        "bytes": 2283,
+        "sha256": "ef16fcde4a847587ca4532ed11778f1c5dab2db4a840ce783fe1b23ace13fb1c",
+        "kind": "answer",
+        "comparisonId": "primary/after16",
+        "planIndex": 22
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 7,
+      "c": 2,
+      "b": 1,
+      "comparisonId": "primary/after16",
+      "nominalBankPx": 42,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": 8,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-24.json",
+        "bytes": 524,
+        "sha256": "b667009c9f2ac5254ff47d1e5fa4c193fb99d2730110110e86e406ba38e53afc",
+        "kind": "answer",
+        "comparisonId": "primary/after16",
+        "planIndex": 24
+      },
+      "control": {
+        "path": "fragments/answer-25.json",
+        "bytes": 2284,
+        "sha256": "02dfe906971d01e1f24310f5288a9f9bef37ee407ea514bd38b1f0cfd5070514",
+        "kind": "answer",
+        "comparisonId": "primary/after16",
+        "planIndex": 25
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 8,
+      "c": 2,
+      "b": 2,
+      "comparisonId": "primary/after16",
+      "nominalBankPx": 50,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": 8,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-27.json",
+        "bytes": 522,
+        "sha256": "646432327629b2ed2d53015952f3205cbe13543fbf653bf6681799310e788cf4",
+        "kind": "answer",
+        "comparisonId": "primary/after16",
+        "planIndex": 27
+      },
+      "control": {
+        "path": "fragments/answer-28.json",
+        "bytes": 2290,
+        "sha256": "271a792c3bf0269f3510c133fc2e18dc1df3dab5cac39276a399d4fa6b648130",
+        "kind": "answer",
+        "comparisonId": "primary/after16",
+        "planIndex": 28
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 9,
+      "c": 3,
+      "b": 0,
+      "comparisonId": "primary/long48",
+      "nominalBankPx": 34,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": -24,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-31.json",
+        "bytes": 523,
+        "sha256": "01d44e42b18b28e9c391c6db705609d6ef25d2a71c76c516d55a161666ad11fe",
+        "kind": "answer",
+        "comparisonId": "primary/long48",
+        "planIndex": 31
+      },
+      "control": {
+        "path": "fragments/answer-32.json",
+        "bytes": 6177,
+        "sha256": "3c86521174624955b26eb60e239fedf0389de364bd52c9fb22187177243d5e00",
+        "kind": "answer",
+        "comparisonId": "primary/long48",
+        "planIndex": 32
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 10,
+      "c": 3,
+      "b": 1,
+      "comparisonId": "primary/long48",
+      "nominalBankPx": 42,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": -24,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-34.json",
+        "bytes": 524,
+        "sha256": "c050838f8dc8850c12ed6064c3c5f1756f58485156636885d68e7adbf4152082",
+        "kind": "answer",
+        "comparisonId": "primary/long48",
+        "planIndex": 34
+      },
+      "control": {
+        "path": "fragments/answer-35.json",
+        "bytes": 6160,
+        "sha256": "31e5d8c75e723a58e9dbba7a4178da33001c08ab1edf101a05dcc9413dc8b292",
+        "kind": "answer",
+        "comparisonId": "primary/long48",
+        "planIndex": 35
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 11,
+      "c": 3,
+      "b": 2,
+      "comparisonId": "primary/long48",
+      "nominalBankPx": 50,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": -24,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-37.json",
+        "bytes": 236,
+        "sha256": "24f6f5c4861e95d37413b53d2a5f2ec68a1e3c37927841d1cfa1f9eb21872c29",
+        "kind": "answer",
+        "comparisonId": "primary/long48",
+        "planIndex": 37
+      },
+      "control": {
+        "path": "fragments/answer-38.json",
+        "bytes": 6200,
+        "sha256": "e1232f1a686c3f440cee3606ee3f65e488571840e236ba2c8d209230e8f64ad8",
+        "kind": "answer",
+        "comparisonId": "primary/long48",
+        "planIndex": 38
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 12,
+      "c": 4,
+      "b": 0,
+      "comparisonId": "bright-nonpath/before16",
+      "nominalBankPx": 34,
+      "originalOriginPx": [
+        780,
+        740
+      ],
+      "t0Px": -24,
+      "t1Px": -8,
+      "fit": {
+        "path": "fragments/answer-41.json",
+        "bytes": 524,
+        "sha256": "0e08a8817edb94b274d7dbe7cf325695edf661510d60280d518d8be95db86c08",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/before16",
+        "planIndex": 41
+      },
+      "control": {
+        "path": "fragments/answer-42.json",
+        "bytes": 2274,
+        "sha256": "c5dfc6d1a5e1b70974b3e21f7f075232a6beb59cd973466e4d541be811beb900",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/before16",
+        "planIndex": 42
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 13,
+      "c": 4,
+      "b": 1,
+      "comparisonId": "bright-nonpath/before16",
+      "nominalBankPx": 42,
+      "originalOriginPx": [
+        780,
+        740
+      ],
+      "t0Px": -24,
+      "t1Px": -8,
+      "fit": {
+        "path": "fragments/answer-44.json",
+        "bytes": 527,
+        "sha256": "7815f06bf0261ab0f6a8762ba044836ebc45dfcdedf53a45f71bea8b1cd5d77e",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/before16",
+        "planIndex": 44
+      },
+      "control": {
+        "path": "fragments/answer-45.json",
+        "bytes": 2284,
+        "sha256": "da29d112e73d13bbef86ee76a6817cd227be4ca37ce1c7e3e55c288738158f4c",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/before16",
+        "planIndex": 45
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 14,
+      "c": 4,
+      "b": 2,
+      "comparisonId": "bright-nonpath/before16",
+      "nominalBankPx": 50,
+      "originalOriginPx": [
+        780,
+        740
+      ],
+      "t0Px": -24,
+      "t1Px": -8,
+      "fit": {
+        "path": "fragments/answer-47.json",
+        "bytes": 524,
+        "sha256": "19bb7bea51d5b87f8c15233ea7c578459a8a529cab70b78bab2b1834fd4857ed",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/before16",
+        "planIndex": 47
+      },
+      "control": {
+        "path": "fragments/answer-48.json",
+        "bytes": 2265,
+        "sha256": "b57fe3d335c1f0ac51b232cf8199eb07d99a3efb22214d4199d32ae2ef7e743b",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/before16",
+        "planIndex": 48
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 15,
+      "c": 5,
+      "b": 0,
+      "comparisonId": "bright-nonpath/core16",
+      "nominalBankPx": 34,
+      "originalOriginPx": [
+        780,
+        740
+      ],
+      "t0Px": -8,
+      "t1Px": 8,
+      "fit": {
+        "path": "fragments/answer-51.json",
+        "bytes": 523,
+        "sha256": "781a2989db0938de86b4ae52f6be85434679bd20981d1c2f3c6748194b3901e1",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/core16",
+        "planIndex": 51
+      },
+      "control": {
+        "path": "fragments/answer-52.json",
+        "bytes": 2309,
+        "sha256": "5bb112381f498d32a4510399a5d7852bd0e7eefea2cdd2b950f5df8d169b7c8c",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/core16",
+        "planIndex": 52
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 16,
+      "c": 5,
+      "b": 1,
+      "comparisonId": "bright-nonpath/core16",
+      "nominalBankPx": 42,
+      "originalOriginPx": [
+        780,
+        740
+      ],
+      "t0Px": -8,
+      "t1Px": 8,
+      "fit": {
+        "path": "fragments/answer-54.json",
+        "bytes": 524,
+        "sha256": "43326ebf50c59c29aa539ee59e23cc4e7893633f1d83cd6bd961367b7bcc2ca7",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/core16",
+        "planIndex": 54
+      },
+      "control": {
+        "path": "fragments/answer-55.json",
+        "bytes": 2258,
+        "sha256": "dd225061dfae88dfd57c6edbb2b938e790de1144884e480f76eecdde4d00f900",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/core16",
+        "planIndex": 55
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 17,
+      "c": 5,
+      "b": 2,
+      "comparisonId": "bright-nonpath/core16",
+      "nominalBankPx": 50,
+      "originalOriginPx": [
+        780,
+        740
+      ],
+      "t0Px": -8,
+      "t1Px": 8,
+      "fit": {
+        "path": "fragments/answer-57.json",
+        "bytes": 524,
+        "sha256": "df8ee2ba2e435b431f214812eaa505469b4aae637087f0495750869a888a5bb7",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/core16",
+        "planIndex": 57
+      },
+      "control": {
+        "path": "fragments/answer-58.json",
+        "bytes": 2275,
+        "sha256": "1f9ec3654f58ae8fc3fc6e9073f79aca6827567d680f3c3b2c715bb37fe7ebdc",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/core16",
+        "planIndex": 58
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 18,
+      "c": 6,
+      "b": 0,
+      "comparisonId": "bright-nonpath/after16",
+      "nominalBankPx": 34,
+      "originalOriginPx": [
+        780,
+        740
+      ],
+      "t0Px": 8,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-61.json",
+        "bytes": 526,
+        "sha256": "2accf613dd62789a744638cd38cafb3f326b5c2544a9138c363f5937cf3141df",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/after16",
+        "planIndex": 61
+      },
+      "control": {
+        "path": "fragments/answer-62.json",
+        "bytes": 2307,
+        "sha256": "d8fbfead5f7c2c786b90e7002986e86a5e5273a893a145f58d16d6f9fd615fc1",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/after16",
+        "planIndex": 62
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 19,
+      "c": 6,
+      "b": 1,
+      "comparisonId": "bright-nonpath/after16",
+      "nominalBankPx": 42,
+      "originalOriginPx": [
+        780,
+        740
+      ],
+      "t0Px": 8,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-64.json",
+        "bytes": 525,
+        "sha256": "1c86396d83b4da7b915bc3d2290fefba471bf79c3c3dc1ee632caa1ca259d5cf",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/after16",
+        "planIndex": 64
+      },
+      "control": {
+        "path": "fragments/answer-65.json",
+        "bytes": 2284,
+        "sha256": "d059a4c623f5a6720107f008ae2bb48a9d5df17189c73b230fd4fa0bf43a4944",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/after16",
+        "planIndex": 65
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 20,
+      "c": 6,
+      "b": 2,
+      "comparisonId": "bright-nonpath/after16",
+      "nominalBankPx": 50,
+      "originalOriginPx": [
+        780,
+        740
+      ],
+      "t0Px": 8,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-67.json",
+        "bytes": 527,
+        "sha256": "58325045ccb4e03d50e7bd779bdde0b2260fbec177344da4721ff34c86fed68d",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/after16",
+        "planIndex": 67
+      },
+      "control": {
+        "path": "fragments/answer-68.json",
+        "bytes": 2281,
+        "sha256": "cc8a22fec2a515abaaf1114e25fcd986cde164f407c3aa78f76b580a126f60ed",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/after16",
+        "planIndex": 68
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 21,
+      "c": 7,
+      "b": 0,
+      "comparisonId": "bright-nonpath/long48",
+      "nominalBankPx": 34,
+      "originalOriginPx": [
+        780,
+        740
+      ],
+      "t0Px": -24,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-71.json",
+        "bytes": 523,
+        "sha256": "9847ed7c1682c3785af9181a9e2835670339b51d90553718ca1aca8c9b6876dd",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/long48",
+        "planIndex": 71
+      },
+      "control": {
+        "path": "fragments/answer-72.json",
+        "bytes": 6218,
+        "sha256": "c1dcf67636b8a7fd9b801ef635fc558d0ee31b2d9aba4736e10aff9d8292c9d5",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/long48",
+        "planIndex": 72
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 22,
+      "c": 7,
+      "b": 1,
+      "comparisonId": "bright-nonpath/long48",
+      "nominalBankPx": 42,
+      "originalOriginPx": [
+        780,
+        740
+      ],
+      "t0Px": -24,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-74.json",
+        "bytes": 523,
+        "sha256": "c4c35c0118c677a886b30200a68ff242c8b14603f99c1492821d92a8a5931ea3",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/long48",
+        "planIndex": 74
+      },
+      "control": {
+        "path": "fragments/answer-75.json",
+        "bytes": 6154,
+        "sha256": "ba2c3f77b3b69aabf7bf548c89fc93a4abdbc580e16a8c7642444fa3a499f4ff",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/long48",
+        "planIndex": 75
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 23,
+      "c": 7,
+      "b": 2,
+      "comparisonId": "bright-nonpath/long48",
+      "nominalBankPx": 50,
+      "originalOriginPx": [
+        780,
+        740
+      ],
+      "t0Px": -24,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-77.json",
+        "bytes": 525,
+        "sha256": "9cf8ec9aecdb26778ab35dd29f77b9336e6359c310a712463e72c5814ccb884a",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/long48",
+        "planIndex": 77
+      },
+      "control": {
+        "path": "fragments/answer-78.json",
+        "bytes": 6149,
+        "sha256": "f001a259ef671bbd70e795e5dd7578a1df55633582255c33b13765a649d21091",
+        "kind": "answer",
+        "comparisonId": "bright-nonpath/long48",
+        "planIndex": 78
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 24,
+      "c": 8,
+      "b": 0,
+      "comparisonId": "normal-plus6/before16",
+      "nominalBankPx": 34,
+      "originalOriginPx": [
+        781.223725524672,
+        911.8738825184256
+      ],
+      "t0Px": -24,
+      "t1Px": -8,
+      "fit": {
+        "path": "fragments/answer-81.json",
+        "bytes": 524,
+        "sha256": "00042d6977f10d1328ba46b78f3eec12880022b28df5d1f54c81ad263f9c06ba",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/before16",
+        "planIndex": 81
+      },
+      "control": {
+        "path": "fragments/answer-82.json",
+        "bytes": 2281,
+        "sha256": "2f21b6b91ba6707143a4f99ac3911c0fced9a2362e225d3c005657f7ad467422",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/before16",
+        "planIndex": 82
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 25,
+      "c": 8,
+      "b": 1,
+      "comparisonId": "normal-plus6/before16",
+      "nominalBankPx": 42,
+      "originalOriginPx": [
+        781.223725524672,
+        911.8738825184256
+      ],
+      "t0Px": -24,
+      "t1Px": -8,
+      "fit": {
+        "path": "fragments/answer-84.json",
+        "bytes": 523,
+        "sha256": "ef9bf422db2d5bcc94f119ed0d88cd07b2ab878b839b1525b2a9978f33789086",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/before16",
+        "planIndex": 84
+      },
+      "control": {
+        "path": "fragments/answer-85.json",
+        "bytes": 2286,
+        "sha256": "269b5eedc1ff6f2166a24470b126815a8f9b9af96e79101476e53cf8b0a140b0",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/before16",
+        "planIndex": 85
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 26,
+      "c": 8,
+      "b": 2,
+      "comparisonId": "normal-plus6/before16",
+      "nominalBankPx": 50,
+      "originalOriginPx": [
+        781.223725524672,
+        911.8738825184256
+      ],
+      "t0Px": -24,
+      "t1Px": -8,
+      "fit": {
+        "path": "fragments/answer-87.json",
+        "bytes": 236,
+        "sha256": "24f6f5c4861e95d37413b53d2a5f2ec68a1e3c37927841d1cfa1f9eb21872c29",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/before16",
+        "planIndex": 87
+      },
+      "control": {
+        "path": "fragments/answer-88.json",
+        "bytes": 2290,
+        "sha256": "c16e2859ecfb011780d876bd81f8412919646358a758763c9f59f839ad6a3103",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/before16",
+        "planIndex": 88
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 27,
+      "c": 9,
+      "b": 0,
+      "comparisonId": "normal-plus6/core16",
+      "nominalBankPx": 34,
+      "originalOriginPx": [
+        781.223725524672,
+        911.8738825184256
+      ],
+      "t0Px": -8,
+      "t1Px": 8,
+      "fit": {
+        "path": "fragments/answer-91.json",
+        "bytes": 526,
+        "sha256": "5aebf1a824acac37b41ef3e106770bc11a63dcd6d718f172477553ded5cf5af8",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/core16",
+        "planIndex": 91
+      },
+      "control": {
+        "path": "fragments/answer-92.json",
+        "bytes": 2275,
+        "sha256": "10a33dc34a976b070f0740b064da49ed764c5305f95c5fe175fa7c68dd0af9b8",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/core16",
+        "planIndex": 92
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 28,
+      "c": 9,
+      "b": 1,
+      "comparisonId": "normal-plus6/core16",
+      "nominalBankPx": 42,
+      "originalOriginPx": [
+        781.223725524672,
+        911.8738825184256
+      ],
+      "t0Px": -8,
+      "t1Px": 8,
+      "fit": {
+        "path": "fragments/answer-94.json",
+        "bytes": 522,
+        "sha256": "9d3287c125092e7dc13260d343dd1d06ba4d9d2deaaab99831f826e44d152ec2",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/core16",
+        "planIndex": 94
+      },
+      "control": {
+        "path": "fragments/answer-95.json",
+        "bytes": 2277,
+        "sha256": "4cec03d482131840572b926653b6771c00ccae49ea79a2819ffb5a91311bf475",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/core16",
+        "planIndex": 95
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 29,
+      "c": 9,
+      "b": 2,
+      "comparisonId": "normal-plus6/core16",
+      "nominalBankPx": 50,
+      "originalOriginPx": [
+        781.223725524672,
+        911.8738825184256
+      ],
+      "t0Px": -8,
+      "t1Px": 8,
+      "fit": {
+        "path": "fragments/answer-97.json",
+        "bytes": 524,
+        "sha256": "b16fab2d5fb7026a2520f714a4095e1b7db3a271fa50c1186fe17715d17642df",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/core16",
+        "planIndex": 97
+      },
+      "control": {
+        "path": "fragments/answer-98.json",
+        "bytes": 2288,
+        "sha256": "bb12114306e50f89106a2c2754eb4a02b78fb466d2dd7c4d43a7927aa0e6d749",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/core16",
+        "planIndex": 98
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 30,
+      "c": 10,
+      "b": 0,
+      "comparisonId": "normal-plus6/after16",
+      "nominalBankPx": 34,
+      "originalOriginPx": [
+        781.223725524672,
+        911.8738825184256
+      ],
+      "t0Px": 8,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-101.json",
+        "bytes": 519,
+        "sha256": "4611b135e359ad0aa11d589a26df010b1f49ffedc20811427ff7b07b3f65154e",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/after16",
+        "planIndex": 101
+      },
+      "control": {
+        "path": "fragments/answer-102.json",
+        "bytes": 2287,
+        "sha256": "9b7250b86083934f4ef2dc1d9d83b73224e8282019268dbc2039faee9ef708c7",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/after16",
+        "planIndex": 102
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 31,
+      "c": 10,
+      "b": 1,
+      "comparisonId": "normal-plus6/after16",
+      "nominalBankPx": 42,
+      "originalOriginPx": [
+        781.223725524672,
+        911.8738825184256
+      ],
+      "t0Px": 8,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-104.json",
+        "bytes": 525,
+        "sha256": "5f8ced5b711052099dc75591c5355689e60951a14f7953b2cb830cfc65d728d8",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/after16",
+        "planIndex": 104
+      },
+      "control": {
+        "path": "fragments/answer-105.json",
+        "bytes": 2282,
+        "sha256": "a22c353d5449d4d80f5fe4a103f6c46b23f7eada9a6df67f34ffc5b8e8d25e01",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/after16",
+        "planIndex": 105
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 32,
+      "c": 10,
+      "b": 2,
+      "comparisonId": "normal-plus6/after16",
+      "nominalBankPx": 50,
+      "originalOriginPx": [
+        781.223725524672,
+        911.8738825184256
+      ],
+      "t0Px": 8,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-107.json",
+        "bytes": 522,
+        "sha256": "322a1d0f01b10abb574a91ea936accbd19bf603808983f3669ec57a66bcb3607",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/after16",
+        "planIndex": 107
+      },
+      "control": {
+        "path": "fragments/answer-108.json",
+        "bytes": 2286,
+        "sha256": "1fee7479fb7c5a58a0447a52771be42530e0c8e12aa1aa64470f81642ca2fde6",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/after16",
+        "planIndex": 108
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 33,
+      "c": 11,
+      "b": 0,
+      "comparisonId": "normal-plus6/long48",
+      "nominalBankPx": 34,
+      "originalOriginPx": [
+        781.223725524672,
+        911.8738825184256
+      ],
+      "t0Px": -24,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-111.json",
+        "bytes": 524,
+        "sha256": "369840e359d9917b4df2b8ead8764cb1034263837845cf714e6e127d7e75e579",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/long48",
+        "planIndex": 111
+      },
+      "control": {
+        "path": "fragments/answer-112.json",
+        "bytes": 6171,
+        "sha256": "5fd533461157f615f78a38915ed6bfa44e4c09913be047ce895363ba38bcfab8",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/long48",
+        "planIndex": 112
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 34,
+      "c": 11,
+      "b": 1,
+      "comparisonId": "normal-plus6/long48",
+      "nominalBankPx": 42,
+      "originalOriginPx": [
+        781.223725524672,
+        911.8738825184256
+      ],
+      "t0Px": -24,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-114.json",
+        "bytes": 524,
+        "sha256": "e2ae98b1c203fac508b69d9a642d3eb7b6ef45f09e046e83beede67b44a3df2b",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/long48",
+        "planIndex": 114
+      },
+      "control": {
+        "path": "fragments/answer-115.json",
+        "bytes": 6173,
+        "sha256": "e8a451028cc95331acf7bd3c6ee324e9f80d694c4f8165f654d68fbe98a3fedc",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/long48",
+        "planIndex": 115
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 35,
+      "c": 11,
+      "b": 2,
+      "comparisonId": "normal-plus6/long48",
+      "nominalBankPx": 50,
+      "originalOriginPx": [
+        781.223725524672,
+        911.8738825184256
+      ],
+      "t0Px": -24,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-117.json",
+        "bytes": 525,
+        "sha256": "6d5aa96fe9bf4db4f94af9c7e9529a646988993097466c1f42a3ba6e600b14f3",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/long48",
+        "planIndex": 117
+      },
+      "control": {
+        "path": "fragments/answer-118.json",
+        "bytes": 6192,
+        "sha256": "69133c740be14854a8f4fc0e35af735033fd7bf6bc12a024bb45c9207f2a62a0",
+        "kind": "answer",
+        "comparisonId": "normal-plus6/long48",
+        "planIndex": 118
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 36,
+      "c": 12,
+      "b": 0,
+      "comparisonId": "masked-primary/before16",
+      "nominalBankPx": 34,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": -24,
+      "t1Px": -8,
+      "fit": {
+        "path": "fragments/answer-121.json",
+        "bytes": 525,
+        "sha256": "7610ae4ee765a464187bda5bf1c729bdebb5759fc4d1d901d3abd7a438ad2625",
+        "kind": "answer",
+        "comparisonId": "masked-primary/before16",
+        "planIndex": 121
+      },
+      "control": {
+        "path": "fragments/answer-122.json",
+        "bytes": 2287,
+        "sha256": "0955e3eb67227cab323f6535e3b69087ecae09ad3688a2112571db383a0a7cfb",
+        "kind": "answer",
+        "comparisonId": "masked-primary/before16",
+        "planIndex": 122
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 37,
+      "c": 12,
+      "b": 1,
+      "comparisonId": "masked-primary/before16",
+      "nominalBankPx": 42,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": -24,
+      "t1Px": -8,
+      "fit": {
+        "path": "fragments/answer-124.json",
+        "bytes": 523,
+        "sha256": "8b4e19f91bec1853a483b4bac646aa9e2633ca99ffc18d424ea71dea5bd359db",
+        "kind": "answer",
+        "comparisonId": "masked-primary/before16",
+        "planIndex": 124
+      },
+      "control": {
+        "path": "fragments/answer-125.json",
+        "bytes": 2266,
+        "sha256": "bf410d0a0ef623199a482ac8da7b939f05731ef72917c7524017b76f77d0b9c1",
+        "kind": "answer",
+        "comparisonId": "masked-primary/before16",
+        "planIndex": 125
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 38,
+      "c": 12,
+      "b": 2,
+      "comparisonId": "masked-primary/before16",
+      "nominalBankPx": 50,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": -24,
+      "t1Px": -8,
+      "fit": {
+        "path": "fragments/answer-127.json",
+        "bytes": 526,
+        "sha256": "db0a9f08d5c699e5f75aac40823878bbe6cb141e01fe2b28a9da01d1cedc442e",
+        "kind": "answer",
+        "comparisonId": "masked-primary/before16",
+        "planIndex": 127
+      },
+      "control": {
+        "path": "fragments/answer-128.json",
+        "bytes": 2294,
+        "sha256": "e8cbbfd02c105e47c4a353f71de0632e7e3c0d051ecd22008361852dfe139432",
+        "kind": "answer",
+        "comparisonId": "masked-primary/before16",
+        "planIndex": 128
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 39,
+      "c": 13,
+      "b": 0,
+      "comparisonId": "masked-primary/core16",
+      "nominalBankPx": 34,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": -8,
+      "t1Px": 8,
+      "fit": {
+        "path": "fragments/answer-131.json",
+        "bytes": 524,
+        "sha256": "d9efd64a8fb2b4bbc2454c8216ed12831460f672ffbddc122e356f4c6f6df356",
+        "kind": "answer",
+        "comparisonId": "masked-primary/core16",
+        "planIndex": 131
+      },
+      "control": {
+        "path": "fragments/answer-132.json",
+        "bytes": 2148,
+        "sha256": "329c119667728a6002444bbc7c411383a9eed2fdb036c71b3cd8db344b5b381c",
+        "kind": "answer",
+        "comparisonId": "masked-primary/core16",
+        "planIndex": 132
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 40,
+      "c": 13,
+      "b": 1,
+      "comparisonId": "masked-primary/core16",
+      "nominalBankPx": 42,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": -8,
+      "t1Px": 8,
+      "fit": {
+        "path": "fragments/answer-134.json",
+        "bytes": 526,
+        "sha256": "b238f6e3c9bb25dd35501845747e750ea8a7a7a3e31aea7e50b755e2488dd51c",
+        "kind": "answer",
+        "comparisonId": "masked-primary/core16",
+        "planIndex": 134
+      },
+      "control": {
+        "path": "fragments/answer-135.json",
+        "bytes": 2151,
+        "sha256": "b1877997ad1fe3bfa39c5de5c6e19cd8e291e95320e789f3ced924c3dc7676b5",
+        "kind": "answer",
+        "comparisonId": "masked-primary/core16",
+        "planIndex": 135
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 41,
+      "c": 13,
+      "b": 2,
+      "comparisonId": "masked-primary/core16",
+      "nominalBankPx": 50,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": -8,
+      "t1Px": 8,
+      "fit": {
+        "path": "fragments/answer-137.json",
+        "bytes": 236,
+        "sha256": "24f6f5c4861e95d37413b53d2a5f2ec68a1e3c37927841d1cfa1f9eb21872c29",
+        "kind": "answer",
+        "comparisonId": "masked-primary/core16",
+        "planIndex": 137
+      },
+      "control": {
+        "path": "fragments/answer-138.json",
+        "bytes": 2159,
+        "sha256": "c9ed87c3ffe7daf89dd484904002dfcc0b4d55f775c45a3ddd370169154d4ae8",
+        "kind": "answer",
+        "comparisonId": "masked-primary/core16",
+        "planIndex": 138
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 42,
+      "c": 14,
+      "b": 0,
+      "comparisonId": "masked-primary/after16",
+      "nominalBankPx": 34,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": 8,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-141.json",
+        "bytes": 524,
+        "sha256": "4fd9f4f622aa3d810a73742416994c8c71ff4d6ba3268804ad035af3f5eb56d1",
+        "kind": "answer",
+        "comparisonId": "masked-primary/after16",
+        "planIndex": 141
+      },
+      "control": {
+        "path": "fragments/answer-142.json",
+        "bytes": 2283,
+        "sha256": "ef16fcde4a847587ca4532ed11778f1c5dab2db4a840ce783fe1b23ace13fb1c",
+        "kind": "answer",
+        "comparisonId": "masked-primary/after16",
+        "planIndex": 142
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 43,
+      "c": 14,
+      "b": 1,
+      "comparisonId": "masked-primary/after16",
+      "nominalBankPx": 42,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": 8,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-144.json",
+        "bytes": 524,
+        "sha256": "b667009c9f2ac5254ff47d1e5fa4c193fb99d2730110110e86e406ba38e53afc",
+        "kind": "answer",
+        "comparisonId": "masked-primary/after16",
+        "planIndex": 144
+      },
+      "control": {
+        "path": "fragments/answer-145.json",
+        "bytes": 2284,
+        "sha256": "02dfe906971d01e1f24310f5288a9f9bef37ee407ea514bd38b1f0cfd5070514",
+        "kind": "answer",
+        "comparisonId": "masked-primary/after16",
+        "planIndex": 145
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 44,
+      "c": 14,
+      "b": 2,
+      "comparisonId": "masked-primary/after16",
+      "nominalBankPx": 50,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": 8,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-147.json",
+        "bytes": 522,
+        "sha256": "646432327629b2ed2d53015952f3205cbe13543fbf653bf6681799310e788cf4",
+        "kind": "answer",
+        "comparisonId": "masked-primary/after16",
+        "planIndex": 147
+      },
+      "control": {
+        "path": "fragments/answer-148.json",
+        "bytes": 2290,
+        "sha256": "271a792c3bf0269f3510c133fc2e18dc1df3dab5cac39276a399d4fa6b648130",
+        "kind": "answer",
+        "comparisonId": "masked-primary/after16",
+        "planIndex": 148
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 45,
+      "c": 15,
+      "b": 0,
+      "comparisonId": "masked-primary/long48",
+      "nominalBankPx": 34,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": -24,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-151.json",
+        "bytes": 522,
+        "sha256": "0d50af608ce67885ad9d17486ddace3e5304b91b9ed0d2442f9bb7b9a3628135",
+        "kind": "answer",
+        "comparisonId": "masked-primary/long48",
+        "planIndex": 151
+      },
+      "control": {
+        "path": "fragments/answer-152.json",
+        "bytes": 6046,
+        "sha256": "c11349d8ae097629c14c38a83897df2736dc9f9dd1f4dda2ab9d44d5f9523b47",
+        "kind": "answer",
+        "comparisonId": "masked-primary/long48",
+        "planIndex": 152
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 46,
+      "c": 15,
+      "b": 1,
+      "comparisonId": "masked-primary/long48",
+      "nominalBankPx": 42,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": -24,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-154.json",
+        "bytes": 520,
+        "sha256": "7f08dafea7fca4ec3b380422eaffd661845ecfb00f52bfce88587ca8c8650f75",
+        "kind": "answer",
+        "comparisonId": "masked-primary/long48",
+        "planIndex": 154
+      },
+      "control": {
+        "path": "fragments/answer-155.json",
+        "bytes": 6029,
+        "sha256": "b5499195b060f441059196ea720362e6a609f63fdcac4a03c9a1a42644417ae4",
+        "kind": "answer",
+        "comparisonId": "masked-primary/long48",
+        "planIndex": 155
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    },
+    {
+      "j": 47,
+      "c": 15,
+      "b": 2,
+      "comparisonId": "masked-primary/long48",
+      "nominalBankPx": 50,
+      "originalOriginPx": [
+        780,
+        906
+      ],
+      "t0Px": -24,
+      "t1Px": 24,
+      "fit": {
+        "path": "fragments/answer-157.json",
+        "bytes": 523,
+        "sha256": "434bd8aeb9b5cdce53221406c9b46e16001fe3bb3a9efb6442fb6310fd5c8c7f",
+        "kind": "answer",
+        "comparisonId": "masked-primary/long48",
+        "planIndex": 157
+      },
+      "control": {
+        "path": "fragments/answer-158.json",
+        "bytes": 6071,
+        "sha256": "21191488cbc3b3780d28e2993496c097019869fad9bc41bd6b13cbd55e8daa45",
+        "kind": "answer",
+        "comparisonId": "masked-primary/long48",
+        "planIndex": 158
+      },
+      "eligibility": "UNDECODED",
+      "state": "NOT_ATTEMPTED",
+      "derivedRawArgs": null,
+      "error": null,
+      "callbackIds": []
+    }
+  ],
+  "revision": {
+    "version": "v2",
+    "supersedesForFutureConstructionOnly": {
+      "path": "discovery-cycle07/S1/E2001/protocol.json",
+      "bytes": 71512,
+      "sha256": "6db61139f62965ee1f67433b22cd6c525400e69dfb3cbf657fbde774af74d5b6"
+    },
+    "review": {
+      "path": "discovery-cycle07/S3/R2001/realresult.json",
+      "bytes": 19448,
+      "sha256": "5af8eb0139b7975145d9e59fefc2ec3e2a7e8cf5747598a45c1130ad8bbb71b0",
+      "decision": "amend"
+    },
+    "preservation": "E2001 files unchanged; all48 slot records/96 bindings have identical semantic values and serialization. This revision does not accept v1 behavior or close implementation/execution gates."
+  },
+  "remainingProducerGuards": [
+    {
+      "id": "G1",
+      "status": "HOLD_UNIMPLEMENTED_UNPROVEN",
+      "subject": "Exact pre-writer cumulative reservation/per-file envelope and fabricated first-failure proof; extrema18087936>16777216 deliberate cumulative STOP."
+    },
+    {
+      "id": "G2",
+      "status": "HOLD_SEPARATELY_SCOPED_HELPER",
+      "subject": "Byte verify before bounded selective tagged-wire decode; exact source/receipt/body/callback identities, depth/node/size counters, one-fragment retention and no-symlink fixed-root descriptor containment. Helper admission and review separate; protocol acceptance alone opens no raw body."
+    },
+    {
+      "id": "G3",
+      "status": "HOLD_TOKEN_SCHEMA_PATH_PENDING",
+      "subject": "Constructor-based exclusive output reservation, exact durable one-shot token schema/path/hash/consumed-on-failure source, write-once/no retry and actual outer exit evidence."
+    },
+    {
+      "id": "G4",
+      "status": "HOLD_ACTUAL_STOP_PATH_VERIFICATION",
+      "subject": "Native status versus callback/public return; preserve source metadata and separate errors; computed emits independently checked from key:null/cached:false."
+    },
+    {
+      "id": "G5",
+      "status": "HOLD_RESOURCE_SUPPORT_VERIFICATION",
+      "subject": "Selected work excludes full-frame luminance/hash/copy/interpolation; named planes not RSS. NaN/finite-invalid retained; contrast Infinity source-impossible -> retained integrity-HOLD. Exported station/flag denominators only."
+    },
+    {
+      "id": "G6",
+      "status": "HOLD_SEPARATE_AUTHORITY",
+      "subject": "Root ownership/source checkpoint/review, admitted fabricated NONCV then explicit one producer with exact original bodies/absolute attestation. No ABFeature/main/defaultON/deploy/scientific promotion."
+    }
+  ],
+  "bindingHelperCoordination": {
+    "helperJob": "E2006",
+    "authority": "Separate S2 scratch construction only; no accepted v1 behavior claim or execution from this protocol.",
+    "contractAtRead": {
+      "path": "discovery-cycle07/S2/E2006/contract.json",
+      "sha256": "a08439b37c581994c0dec9e06a76f63bc30bd8dfdbc731f346df5c14b9c39246"
+    },
+    "flowAtRead": {
+      "path": "discovery-cycle07/S2/E2006/FLOW.md",
+      "sha256": "decbf974cfd1b012d27621da0b715d2a4bdd28eb906a8d80877527b421ec22a8"
+    },
+    "pins": "E2006 may construct against E2001 v1 immutable SLOT LEDGER plus E2002 correct source contract, not approved v1 guard behavior. Before any helper run, independently review exact source and mechanically rebind guard protocol SHA/byte length to this actual v2, review capsule and future admission. No construction-time protocol hash permits codec/import/test/native-body decode.",
+    "scope": "Node builtins and pinned pure codec only in future scoped helper; no CV/store/PATH/source producer/pixels/query/render. No durable token/writer implementation is implied."
+  }
+}
+

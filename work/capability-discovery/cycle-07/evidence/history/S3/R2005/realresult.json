@@ -1,0 +1,263 @@
+{
+  "schema": "capability-discovery-source-protocol-review@1",
+  "job_id": "R2005",
+  "worker": "S3",
+  "decision": "accepted",
+  "status": "EXACT_V2_SOURCE_PROTOCOL_ACCEPTED_ONLY_G1_G6_PRODUCER_HOLD_NO_EXECUTION_APPROVAL",
+  "summary": "Accept exact E2005 v2 as a source protocol for later separately reviewed bounded binding-helper work, not implementation, cap/NONCV passage, raw-body read/decode, helper execution or query GO. V2 closes all three R2001 textual clarifications: correct plannedQueries/queryTrace/nested nativeEntry paths and source-derived joins with profile seq0 exception and no callback args; ordinary native O/A grammar distinguishes exact key sets from raw-argument order; views use only N and per-side ok-flag counts, never unexported inside/outside fractions. Independent metadata comparison finds exactly22 changed fields; every ledger before/after matches and applying the ledger reconstructs v2 deep-exact. All48 slot records/96 bindings and their serialization, raw math, geometry, fit policy and default-OFF authority remain identical to v1; original files/hashes are preserved. All six G1-G6 remain explicit producer HOLD and A4 is not claimed implemented or proven. Original/derived contrast Infinity is retained integrity-HOLD, not a changed numeric-fit skip policy. S4 E2007 design critique/incident is explicitly scoped to its own report, not S3 actions or whole-helper approval.",
+  "exactReviewedArtifacts": [
+    {
+      "path": "discovery-cycle07/S1/E2005/protocol.v2.json",
+      "bytes": 83022,
+      "sha256": "7948df5ee19e10a065f907a7dc0af1b845b5b408f32776b78813ad938bedea6e"
+    },
+    {
+      "path": "discovery-cycle07/S1/E2005/FLOW.md",
+      "bytes": 6456,
+      "sha256": "32ca10bed8d5ef1d28e5047991a5fce6b3066417d6a144b85fb34bb6e6e28c4b"
+    },
+    {
+      "path": "discovery-cycle07/S1/E2005/change-ledger.json",
+      "bytes": 26864,
+      "sha256": "7d87f799dd5c38b1d2dd26c217bd7c2fa16d8030d1951be7adf6f2ad9328e70f"
+    },
+    {
+      "path": "discovery-cycle07/S1/E2005/realresult.json",
+      "bytes": 9259,
+      "sha256": "a962ed79cc7bfe00538480bfccddb330b0902bfa0abfe4dc69a3ce919c90e4d2"
+    },
+    {
+      "path": "discovery-cycle07/S3/R2001/realresult.json",
+      "bytes": 19448,
+      "sha256": "5af8eb0139b7975145d9e59fefc2ec3e2a7e8cf5747598a45c1130ad8bbb71b0"
+    }
+  ],
+  "metadataAudit": {
+    "method": "Read-only jq comparison of the two protocol documents and literal ledger; recursive object-key diff with arrays treated as whole field values, exact before/after comparison, then ledger application/reconstruction. Document metadata work only, not a product/NONCV test or tagged-native decode.",
+    "actualMinimalChangedFieldCount": 22,
+    "declaredChangedFieldCount": 22,
+    "fieldSetExact": true,
+    "allLedgerBeforeAfterValuesExact": true,
+    "ledgerReconstructsV2DeepExact": true,
+    "slots": 48,
+    "slotRecordsDeepExact": true,
+    "slotSerializationExact": true,
+    "answerBindingsUnchanged": 96,
+    "questionExact": true,
+    "orderExact": true,
+    "fixedInputExact": true,
+    "authorityIncludingDefaultOFFExact": true,
+    "rawArgsTemplateExact": true,
+    "rawArgumentOrderExact": true,
+    "numericalEvaluationExact": true,
+    "fitPairNoPairNumericUnusablePoliciesExact": true,
+    "changedFields": [
+      "amendmentClosure.A1",
+      "amendmentClosure.A4",
+      "bindingAuthority.furtherBindingGuard",
+      "bindingAuthority.originalRecordJoins",
+      "bindingAuthority.predecodeGuard",
+      "bindingHelperCoordination",
+      "eligibility.contrastIntegrityPolicy",
+      "eligibility.controls",
+      "eligibility.nativeGrammar",
+      "eligibility.originalExecutionGuard",
+      "guardedNextPackets",
+      "job_id",
+      "oneShot.prequery",
+      "oneShot.writer",
+      "query.returnedShape.nativeGrammar",
+      "remainingProducerGuards",
+      "resources.newPacketTighterCaps.explanation",
+      "revision",
+      "schema",
+      "status",
+      "trace.failure",
+      "trace.matchedEvidence"
+    ],
+    "meaning": "The exact v1 slot table previously accepted as manifest metadata in R2001 is unchanged. This is not fresh verification/decoding of any referenced body, observed eligibility, or current runtime evidence."
+  },
+  "preservedOriginals": [
+    {
+      "path": "discovery-cycle07/S1/E2001/protocol.json",
+      "sha256": "6db61139f62965ee1f67433b22cd6c525400e69dfb3cbf657fbde774af74d5b6",
+      "matchesPrior": true
+    },
+    {
+      "path": "discovery-cycle07/S1/E2001/FLOW.md",
+      "sha256": "d2f9ddfd3a5301cff6dddf0d5b994d0230b6d8ef3f2b2e54f5edb7ee3d2de527",
+      "matchesPrior": true
+    },
+    {
+      "path": "discovery-cycle07/S1/E2001/result.json",
+      "sha256": "a1b8b18e3ce791a2e5c2f46e0168d40ebda2f6cbf287de87493313317c5b568f",
+      "matchesPrior": true
+    }
+  ],
+  "amendmentDisposition": [
+    {
+      "id": "R2001-A1",
+      "decision": "CLOSED_IN_SOURCE_PROTOCOL_TEXT",
+      "paths": [
+        "bindingAuthority.originalRecordJoins",
+        "eligibility.originalExecutionGuard",
+        "bindingAuthority.furtherBindingGuard"
+      ],
+      "evidence": "plannedQueries owns ordered rawArgs but has no state/error/status; queryTrace owns state,error,nativeAnswer; callback wrapper is comparisonId,captureIndex,nativeEntry, and status/error are nested nativeEntry fields with NO args/rawArgs. Snapshot checks have planIndex/post/verified only. No absent-field normalization. Selected fit/control callback identities are attributed through pinned source/trace/answer/manifest joins, explicitly not independent dynamic argument capture.",
+      "mapping": "Old profile localOffset0 seq0/capture1; lazy constant seq1/capture0/parent0/depth1; only offsets1..9 use seq/capture=offset+1. Selected fits offsets1/4/7 map2/5/8; controls2/5/8 map3/6/9. Global filename K is not local capture/seq. Future one-query store remains queryseq0/constantseq1."
+    },
+    {
+      "id": "R2001-A2",
+      "decision": "CLOSED_IN_SOURCE_PROTOCOL_TEXT",
+      "paths": [
+        "eligibility.nativeGrammar",
+        "query.returnedShape.nativeGrammar"
+      ],
+      "evidence": "O(K) applies Object.prototype/exact own enumerable data string-key set/no extras,symbols,hidden,accessor,undefined to outer/value/emits variants; generic codec null-prototype support does not widen native grammar. A(N) requires Array.prototype,dense enumerable data indices,intrinsic length only and numeric luminance/0-or1 flags. Key-set matching is explicitly separate from raw-argument insertion order. No coercion or shape normalization."
+    },
+    {
+      "id": "R2001-A3",
+      "decision": "CLOSED_IN_SOURCE_PROTOCOL_TEXT",
+      "paths": [
+        "trace.matchedEvidence",
+        "guardedNextPackets.P5_MATCHED_INSPECTION"
+      ],
+      "evidence": "Display denominator is frozen N plus valid=sum(okFlag===1),invalid=N-valid per side and separately for nominal/derived records. Internal inside/outside sample counts/fractions are NOT_EXPORTED/UNKNOWN. No invented fractions,equality-of-support claim,extra query/helper sampling or pixel access."
+    }
+  ],
+  "producerHolds": [
+    {
+      "id": "G1",
+      "status": "HOLD_UNIMPLEMENTED_UNPROVEN",
+      "scope": "Exact whole-wrapper pre-writer success/failure byte reservation and cap boundary/first-failure proof. V2 explicitly recognizes18087936 per-file extrema exceed16777216 total by1310720 and requires cumulative STOP. Legacy writer has no total/manifest/receipt guard and default32MiB value encode does not implement proposed4MiB. No cap passage or writer change accepted."
+    },
+    {
+      "id": "G2",
+      "status": "HOLD_SEPARATELY_SCOPED_HELPER",
+      "scope": "Byte verification before separately bounded selective wire inspection/decode; exact authority/body/callback bindings,depth/node/size counters,one-fragment retention,fixed-root lexical/no-symlink descriptor policy. Protocol acceptance opens NO raw body and supplies no whole-helper acceptance."
+    },
+    {
+      "id": "G3",
+      "status": "HOLD_TOKEN_SCHEMA_PATH_PENDING",
+      "scope": "Unchanged writer constructor exclusively reserves NEW output, never prior independent mkdir then constructor. Durable token schema/path/bound hashes/exclusive consumed-on-failure enforcement still pending; helper token/admission identifier is not durable spent state. Writer.write once, retained prefix,no cleanup/replacement/rerun,actual outer exit separate."
+    },
+    {
+      "id": "G4",
+      "status": "HOLD_ACTUAL_STOP_PATH_VERIFICATION",
+      "scope": "Preserve native ok status if callback hook then throws, keep public completion/capture/errors distinct,require computed emits separately from cached:false/key:null. Do not truncate native metadata or claim actual stop paths proved."
+    },
+    {
+      "id": "G5",
+      "status": "HOLD_RESOURCE_SUPPORT_VERIFICATION",
+      "scope": "115200 selected sampling-coordinate visits and64923120 named plane bytes are not totalcost/RSS/GC evidence. Full-frame luminance/hash/copy/interpolation/JS overhead excluded. NaN/finite-invalid retained; original and derived contrast Infinity retained as source-impossible integrity-HOLD and stopped, not normalized or treated as successful support. This is expressly NOT a change to nonfinite numeric-fit NUMERIC_UNUSABLE skip policy."
+    },
+    {
+      "id": "G6",
+      "status": "HOLD_SEPARATE_AUTHORITY",
+      "scope": "Separate root-assigned source construction/checkpoint/review,admitted fabricated NONCV and later explicit one producer with exact external original bodies/unchanged absolute attestation. All P1-P5 remain NOT_ADMITTED in the reviewed text. No ABFeature/main/defaultON/deploy/release/scientific promotion."
+    }
+  ],
+  "helperBoundary": {
+    "E2006Status": "Construction is separate; its source/tests were not inspected or approved in R2005.",
+    "constructionInputs": "E2001 immutable SLOT LEDGER plus E2002 corrected source-shape report are usable construction evidence, NOT accepted v1 guard behavior.",
+    "beforeFirstExecution": "Any later complete helper source/flow/test review must mechanically pin actual reviewed v2 protocol83022B/SHA7948df5ee19e10a065f907a7dc0af1b845b5b408f32776b78813ad938bedea6e plus exact source/review closure and separately obtain scoped execution admission. This source-protocol acceptance is not that admission.",
+    "G2StillHold": true,
+    "A4ImplementationOrCapProof": false
+  },
+  "otherHandback": {
+    "job_id": "E2007",
+    "worker": "S4",
+    "contractReviewPath": "discovery-cycle07/S4/E2007/contract-review.md",
+    "contractReviewObservedSha256": "4b8f3f460c296aa9cee892d339b5300cd1dd6d137d86d77ab743f1cbc4d8a867",
+    "resultPath": "discovery-cycle07/S4/E2007/realresult.json",
+    "resultObservedSha256": "cc2d8968df811bd1ebce97288e7eafa81c34f22326e5988a95de6a91b2a2134d",
+    "coverage": "Read available E2007 contract review/result. It reviews E2006 design snapshots, not v2 or unfinished helper code; SmallDecode/UTF8/canonical-LF/read-schedule/aggregate-tree/output-envelope/symlink concerns remain later complete-source review issues. No future helper/test passage or whole-source approval inferred.",
+    "incident": "S4 reports an overbroad rg exposed tagged comparison-report TEXT, no codec parse/decode, no original fragment open; truncation prevents exhaustive exposure scope. That is S4 TOOLTESTIMONY, excluded from eligibility/cap reasoning. R2005 did not repeat that search or read that tagged report/body. S4's no-blind-review qualification is preserved as its own incident, not silently converted into a source of numerical evidence or attributed to S3."
+  },
+  "sourceHashes": [
+    {
+      "id": "R",
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/recipe.mjs",
+      "sha256": "4c32c70e80fada8e4454f3ed2fb45c0c396067d585070b20308d33302f0f19d6",
+      "referent": "R2001 actual source joins333-335,376-412 unchanged hash"
+    },
+    {
+      "id": "S",
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs",
+      "sha256": "122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074",
+      "referent": "callback fields/cache/status188-199,373-447 unchanged hash"
+    },
+    {
+      "id": "P",
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "referent": "math/units/exported support56-59,68-158,335-341 unchanged hash"
+    },
+    {
+      "id": "C",
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs",
+      "sha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015",
+      "referent": "native grammar versus generic codec34-44,118-129 unchanged hash"
+    },
+    {
+      "id": "W",
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/cli.mjs",
+      "sha256": "4ca8c6065698f49bf6d13766764e298f0edcfde55e720a830e1e3b78223ec04c",
+      "referent": "constructor/writer78-136 unchanged hash"
+    }
+  ],
+  "actualActions": {
+    "sourceProtocolAndReviewTextReads": true,
+    "readOnlyHashes": true,
+    "protocolDocumentMetadataComparison": true,
+    "artifactReadback": "jq protocol/ledger metadata checks only, not project/NONCV tests or tagged-native decode",
+    "incidentalMetadataFailure": "Initial standalone jq diff expression had an unparenthesized equality in an object field and failed compilation; corrected metadata expression succeeded. No project/helper/codec execution occurred.",
+    "scratchWritesOnly": "discovery-cycle07/S3/R2005/realresult.json",
+    "rawAnswerBodyReads": 0,
+    "rawCallbackBodyReads": 0,
+    "rawAggregateBodyReads": 0,
+    "taggedComparisonReportBodyReads": 0,
+    "nativeValueDecode": 0,
+    "codecCalls": 0,
+    "helperSourceBodiesReviewed": 0,
+    "helperExecutions": 0,
+    "projectImports": 0,
+    "syntaxChecks": 0,
+    "tests": 0,
+    "storeCalls": 0,
+    "PATHQueries": 0,
+    "CV": 0,
+    "producer": 0,
+    "replay": 0,
+    "render": 0,
+    "imageReads": 0,
+    "pixelReads": 0,
+    "repositoryEdits": 0,
+    "GitOperations": 0,
+    "nativeOperations": 0,
+    "networkCalls": 0,
+    "subagents": 0
+  },
+  "acceptanceBoundary": {
+    "sourceProtocolAccepted": true,
+    "exactV2Only": true,
+    "retroactiveV1BehaviorAcceptance": false,
+    "implementationApproval": false,
+    "wholeE2006HelperApproval": false,
+    "rawBodyReadOrDecodeGO": false,
+    "NONCVExecutionGO": false,
+    "queryGO": false,
+    "producerGO": false,
+    "A4Proven": false,
+    "G1ThroughG6RemainHold": true,
+    "nativeEligibilityObserved": false,
+    "conditional44Observed": false,
+    "currentPublicationBlocked": false,
+    "physicalEdgeIdentity": "UNKNOWN",
+    "pathIdentity": "UNKNOWN",
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN"
+  },
+  "requiredSourceProtocolChanges": [],
+  "skillInfluence": "fusion-verification keeps declaration/source attribution separate from dynamic argument capture and dependent shared-pixel findings separate from physical/causal acceptance; no execution or extra ablation authorized."
+}

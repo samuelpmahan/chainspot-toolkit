@@ -1,0 +1,61 @@
+{
+  "schema": "cycle07-e2024-prospective-one-copy@1",
+  "job_id": "E2024",
+  "worker": "S1",
+  "phase": "PHASE2",
+  "status": "SAVED_BEFORE_ONE_ADMITTED_COPY",
+  "sourceRoot": "/workspace/scratch/8528bb251845/discovery-cycle07",
+  "destination": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/work/capability-discovery/cycle-07",
+  "captureRoot": "/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2024",
+  "GO": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/root-one-copy-go.v1.json",
+    "bytes": 1753,
+    "sha256": "530bd48a95094feeedb3908fa764f262bb3acfb7a846e449bdf421425582fb12",
+    "fullyRead": true
+  },
+  "seal": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/finalized-files.json",
+    "bytes": 65880,
+    "sha256": "8d79142b18fea6dad33879010169071f4796527c39221062a644c383f142ead5"
+  },
+  "argv": [
+    "node",
+    "/workspace/scratch/8528bb251845/discovery-cycle07/S1/E2022/copy-checkpoint.once.v2.mjs",
+    "--finalized-manifest-sha256",
+    "8d79142b18fea6dad33879010169071f4796527c39221062a644c383f142ead5"
+  ],
+  "cwd": "/workspace/scratch/8528bb251845",
+  "maximumInvocations": 1,
+  "script": {
+    "bytes": 8321,
+    "sha256": "321e5b116ce485f14a96fff9010b206b9af4bc5d1137597a10e9171c189af163"
+  },
+  "phase1Result": "51a7bfa479057f3b81615c2d496f7854a2534a80d13827c72caeed52af193a12",
+  "preflight": {
+    "sourceFiles": 339,
+    "sourceBytes": 4638336,
+    "zeroByteFiles": 12,
+    "currentNamesAndSizesModesMatchSeal": true,
+    "nameSetSHA256": "ea8519ed5d8efe19f09ed4f2f9555413426a5a013d6e2781d7c2b41a75f78c3e",
+    "destinationAbsent": true,
+    "allCaptureTargetsAbsent": true,
+    "sourceWrites": 0
+  },
+  "expected": {
+    "files": 345,
+    "bytes": 4783133,
+    "manifestBytes": 118141,
+    "manifestSHA256": "b84894941e25dfc7ddc0b0b534dbcb876639ce4537a6db47c071de344360369f"
+  },
+  "captureMethod": "Python stdlib launcher opens all six external raw files with xb before launch, records UTC start/end, launches exactly the admitted node argv once with inherited environment/PATH and direct separate raw stdout/stderr; waits for actual child status, records exit code and observed terminating signal separately. No timeout/retry/cleanup. Launcher does not decode or modify source/evidence.",
+  "captures": [
+    "stdout.raw",
+    "stderr.raw",
+    "start-utc.raw",
+    "end-utc.raw",
+    "exit-code.raw",
+    "signal.raw"
+  ],
+  "stop": "First unexpected failure terminal;preserve prefix/raw/cause,no rerun/prune/capraise/sourcechmod. Copy mints no token.",
+  "scope": "Opaque file copy/hash/mode readback only;zero native-value/plan decode,syntax/test/helper/CV/Git/publication. All outcomes/administration OUTSIDE frozen source;no discovery-cycle07 writes."
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "capability-discovery-root-test-admission@1",
+  "job_id": "E2011",
+  "worker": "S2",
+  "scope": "ONE fabricated-only full node:test command against exact E2010 phase1. No syntax precheck, filtered rerun, source fix, real enabled public request or original-evidence decode.",
+  "reviewBasis": "Root fully read E2006 complete code/tests, R2006 full independent AMEND, complete E2010 unified diff/new tests/FLOW/result/contract. Accepted source protocol v2 only; no CV producer authority.",
+  "pins": {
+    "entry": {"path": "discovery-cycle07/S2/E2010/original-evidence-plan.mjs", "bytes": 12666, "sha256": "0b6f2bad20177cd965085b3fbf889c008205653c03bcb72280d41769e17a001a"},
+    "core": {"path": "discovery-cycle07/S2/E2010/plan-core.mjs", "bytes": 15713, "sha256": "b2dcde92eccb14e37a19e3353d49d7da593fbede0f8386c05179106c32927ec9"},
+    "tests": {"path": "discovery-cycle07/S2/E2010/plan.test.mjs", "bytes": 25563, "sha256": "83083e5ed749a76051bc7e88d1ded5dabadf01d687ccfa727f443b8bcec05589"},
+    "diff": {"path": "discovery-cycle07/S2/E2010/PHASE1.diff", "bytes": 19893, "sha256": "6464e4c4e59d2dc42bb8c9ee092f1abe8b12c4bc93fe88477c105e373f453ed9"},
+    "codec": {"path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs", "bytes": 7322, "sha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015"}
+  },
+  "cwd": "/workspace/scratch/8528bb251845",
+  "argv": ["node", "--test", "--test-concurrency=1", "discovery-cycle07/S2/E2010/plan.test.mjs"],
+  "predictionsNotObservations": {"tests": 73, "semanticFailures": 51, "otherChecks": 22, "expectedExit": "nonzero from regression assertions, not syntax/import/fixture errors"},
+  "beforeLaunch": "Fresh byte/hash guards and prospective command/capture paths saved. Only Node/helper/core/pure codec plus fabricated in-memory/temp text/symlink fixtures may run. No valid real-root public enabled request appears in the reviewed tests.",
+  "capture": "Own NEW absolute discovery-cycle07/S2/E2011/ paths, exclusive original stdout/stderr/UTC/actual exit and exact test source identity. First actual invocation only; preserve every result and report reached/unreached and unexpected harness failures separately.",
+  "after": "STOP after one command, no semantic fixes/test changes/retry. Root verifies actual failures before separate minimal repair packet. No cap/threshold widening or original data/CV permission."
+}

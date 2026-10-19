@@ -1,0 +1,14 @@
+{
+  "job_id":"E2020",
+  "worker":"S3",
+  "state":"PRELAUNCH_ONE_FABRICATED_COMMAND",
+  "admission":{"path":"discovery-cycle07/root-E2020-fabricated-green-admission.json","sha256":"aae29e0c648873a4dc3d1454277f8831b3d739412890de87b9817a266c597e66","read":"complete"},
+  "cwd":"/workspace/scratch/8528bb251845",
+  "argv":["node","--test","--test-concurrency=1","discovery-cycle07/S3/E2019/fabricated.test.mjs","discovery-cycle07/S3/E2019/artifact-identity.test.mjs"],
+  "captures":{"stdout":"discovery-cycle07/S3/E2020/stdout.raw","stderr":"discovery-cycle07/S3/E2020/stderr.raw","startUTC":"discovery-cycle07/S3/E2020/start-utc.raw","endUTC":"discovery-cycle07/S3/E2020/end-utc.raw","exitCode":"discovery-cycle07/S3/E2020/exit-code.raw"},
+  "captureMethod":"Shell noclobber opens all five exclusive channels before launch; UTC and actual shell-observed test exit captured separately. No tee/filter/edit/retry. A capture-open or start-clock failure prevents test launch.",
+  "sourcePins":{"core":"ef9bfee41de9a1cfc7c4dd9ba4357a83e0760adcbe64836301551461c5bdde3d","parent":"13603b76a7c27dd9332f136fd7056f89bcc1bc620b4a275b96522a30c470a1a3","child":"3c58c5fd53ea170d28e82480642f09433be064fa3bbeeefe00a9d3e7c6275160","old11":"983f003cc3baf4c97b4e74ef6cc6ee6073c0b0add96ac9cfa0e0cfe68257371d","driver22":"9a537e2bcc1b667db07b04581d5205f1543634a71e7d9ab8a729d68366d93b2c","flow":"a9b53a5303c4ebfafe3b31e1ce41718a1f3be26d8ce1cb9b391e672abe8cd1d6","diff":"58c1a2faac7b6d9f4ea9899a5ef03b617019214d740ed27343bb923c2345ff23","codec":"3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015"},
+  "runtimeObservation":{"resolvedNode":"/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node","bytes":125989464,"sha256":"bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12","qualification":"Fresh file/path hash before test; not executed-interpreter/host authentication or future original-run runtime admission."},
+  "prediction":{"tests":33,"basis":"old11 first execution plus22 after actual E2017 RED; not all33 RED-proven","passes":"predicted only before launch"},
+  "boundary":"Original-incapable fabricated command only. Old11 may execute actual pure codec on fabricated values; driver22 fake encoder. No real parent/child/helper/evidence/ROOT_FINAL_GO/token/PATH/query/CV/render/Git/repository mutation. No precheck import/syntax/filter/edit/capraise/retry. First unexpected failure ends this attempt and is reported, not repaired or rerun."
+}

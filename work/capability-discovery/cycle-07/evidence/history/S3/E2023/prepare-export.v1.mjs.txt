@@ -1,0 +1,147 @@
+// Construction only: mechanical Lab7 derivative of discovery-cycle06/R1/E1544/prepare-export.v1.mjs.
+// Git reads only; all writes are exclusive files in a fresh scratch directory.
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import {lstat, mkdir, readFile, realpath, writeFile} from 'node:fs/promises';
+import {basename, dirname, isAbsolute, join, resolve} from 'node:path';
+
+const workspace = '/workspace/scratch/8528bb251845';
+const parentPin = '4f24d50391927e0e50220690ea8ececec79e0bb4';
+const parentTreePin = '27616cbaac38b1b916fc337d22dd8f7cab5a7736';
+const packagePrefix = 'work/capability-discovery/cycle-07/';
+const sourcePaths = ['original-evidence-plan.mjs', 'plan-core.mjs', 'plan.test.mjs', 'README.md']
+  .map(name => `experiments/capability-discovery/joint-fit-original-plan/${name}`);
+const segmentLimit = 60_000, indexLimit = 1_000_000, gitBufferLimit = 64 * 1024 * 1024;
+const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
+const blobSha1 = bytes => createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex');
+const fail = message => { throw new Error(message); };
+const require = (condition, message) => { if (!condition) fail(message); };
+const hex = (value, n) => typeof value === 'string' && new RegExp(`^[0-9a-f]{${n}}$`).test(value);
+const safePath = value => {
+  require(typeof value === 'string' && value && !value.startsWith('/') && !/[\\\x00-\x1f\x7f]/.test(value)
+    && value.split('/').every(part => part && part !== '.' && part !== '..'), `unsafe path: ${value}`);
+  return value;
+};
+const utf8 = bytes => {
+  const text = new TextDecoder('utf-8', {fatal: true, ignoreBOM: true}).decode(bytes);
+  require(Buffer.from(text, 'utf8').equals(bytes), 'UTF8 roundtrip differs');
+  return text;
+};
+const asciiJson = value => Buffer.from(JSON.stringify(value, null, 2).replace(/[^\x00-\x7f]/g,
+  ch => `\\u${ch.charCodeAt(0).toString(16).padStart(4, '0')}`) + '\n', 'ascii');
+require(process.argv.length === 3 && isAbsolute(process.argv[2]), 'usage: node prepare-export.v1.mjs <absolute-config.json>');
+const configBytes = await readFile(process.argv[2]);
+require(configBytes.length <= 65_536, 'config exceeds65536B');
+const cfg = JSON.parse(utf8(configBytes));
+require(hex(cfg.commit, 40) && hex(cfg.tree, 40), 'explicit immutable commit/tree40hex required; never HEAD input');
+require(cfg.parent === parentPin && cfg.parentTree === parentTreePin, 'local parent/tree pins differ');
+require(typeof cfg.branch === 'string' && cfg.branch && !/[\x00-\x20\x7f]/.test(cfg.branch), 'branch required');
+require(Array.isArray(cfg.allowedExact) && JSON.stringify([...cfg.allowedExact].sort()) === JSON.stringify([...sourcePaths].sort())
+  && JSON.stringify(cfg.allowedPrefixes) === JSON.stringify([packagePrefix]), 'exact four-source/package-prefix allowlist required');
+require(cfg.expectedHashes && sourcePaths.every(path => hex(cfg.expectedHashes[path], 64)), 'four exact source SHA256 pins required');
+require(isAbsolute(cfg.repo) && resolve(cfg.repo) === cfg.repo && cfg.repo.startsWith(workspace + '/')
+  && await realpath(cfg.repo) === cfg.repo, 'canonical workspace repository required');
+const repo = cfg.repo, output = cfg.output;
+require(typeof output === 'string' && isAbsolute(output) && resolve(output) === output && output.startsWith(workspace + '/')
+  && output !== repo && !output.startsWith(repo + '/') && await realpath(dirname(output)) === dirname(output), 'fresh canonical scratch output outside repo required');
+try { await lstat(output); fail('output already exists'); } catch (error) { if (error.code !== 'ENOENT') throw error; }
+require(safePath(cfg.frozenManifest).startsWith(packagePrefix) && hex(cfg.frozenManifestSha256, 64), 'package manifest path/hash required');
+require(cfg.canonicalRemoteParentReportedOnly == null || hex(cfg.canonicalRemoteParentReportedOnly, 40), 'reported remote parent must be null/40hex');
+const allowed = path => sourcePaths.includes(path) || path.startsWith(packagePrefix);
+const git = (...args) => execFileSync('git', args, {cwd: repo, maxBuffer: gitBufferLimit});
+const str = (...args) => utf8(git(...args)).trim();
+const nul = bytes => {
+  const text = utf8(bytes);
+  require(!text || text.endsWith('\0'), 'unterminated NUL Git records');
+  return text ? text.slice(0, -1).split('\0') : [];
+};
+require(str('rev-parse', '--verify', cfg.commit + '^{commit}') === cfg.commit, 'not exact commit object');
+require(str('rev-parse', '--verify', 'HEAD') === cfg.commit, 'actual HEAD differs');
+require(str('symbolic-ref', '--quiet', '--short', 'HEAD') === cfg.branch, 'actual branch differs');
+const ancestry = str('rev-list', '--parents', '-n', '1', cfg.commit).split(' ');
+require(ancestry.length === 2 && ancestry[0] === cfg.commit && ancestry[1] === parentPin, 'single exact local parent required');
+const parentTree = str('rev-parse', parentPin + '^{tree}'), tree = str('rev-parse', cfg.commit + '^{tree}');
+require(parentTree === parentTreePin && tree === cfg.tree, 'actual tree/parent tree differs');
+const entries = new Map(nul(git('ls-tree', '-r', '-z', '--full-tree', cfg.commit)).map(record => {
+  const tab = record.indexOf('\t');
+  require(tab > 0, 'malformed tree record');
+  const [mode, type, sha] = record.slice(0, tab).split(' '), path = safePath(record.slice(tab + 1));
+  return [path, {mode, type, sha}];
+}));
+const changedPaths = nul(git('diff-tree', '--no-commit-id', '--name-only', '--no-renames', '-r', '-z', parentPin, cfg.commit)).map(safePath).sort();
+require(new Set(changedPaths).size === changedPaths.length && sourcePaths.every(path => changedPaths.includes(path))
+  && changedPaths.every(allowed), 'complete changed set differs from allowed four sources/package prefix');
+const readBlob = path => {
+  const entry = entries.get(safePath(path));
+  require(entry && entry.type === 'blob' && ['100644', '100755'].includes(entry.mode) && hex(entry.sha, 40), `missing/deleted/unsupported blob: ${path}`);
+  const bytes = git('cat-file', 'blob', entry.sha);
+  require(blobSha1(bytes) === entry.sha, `Git blob SHA1 differs: ${path}`);
+  return {entry, bytes};
+};
+for (const [path, expected] of Object.entries(cfg.expectedHashes)) {
+  require(allowed(safePath(path)) && hex(expected, 64) && sha256(readBlob(path).bytes) === expected, `expected SHA256 differs: ${path}`);
+}
+const manifestBytes = readBlob(cfg.frozenManifest).bytes;
+require(sha256(manifestBytes) === cfg.frozenManifestSha256, 'frozen manifest digest differs');
+const manifest = JSON.parse(utf8(manifestBytes));
+const manifestEntries = Array.isArray(manifest.files) ? manifest.files.map(entry => ({...entry,
+  path: cfg.manifestArrayRelative ? cfg.manifestPrefix + safePath(entry.path) : safePath(entry.path)}))
+  : Object.entries(manifest.files).map(([path, hash]) => ({path: cfg.manifestPrefix + safePath(path), sha256: hash}));
+for (const entry of manifestEntries) {
+  require(safePath(entry.path).startsWith(packagePrefix) && hex(entry.sha256, 64), 'manifest entry outside package or invalid digest');
+  const bytes = readBlob(entry.path).bytes;
+  require(sha256(bytes) === entry.sha256 && (entry.bytes === undefined || bytes.length === entry.bytes), `manifest entry differs: ${entry.path}`);
+}
+const sourceFiles = [], segmentFiles = [], prepared = [];
+let sequence = 0;
+for (const path of changedPaths) {
+  const {entry, bytes} = readBlob(path);
+  const identity = {path, mode: entry.mode, gitBlobSha1: entry.sha, sha256: sha256(bytes), byteLength: bytes.length};
+  let chars = null;
+  try { chars = Array.from(utf8(bytes)); } catch { /* Arbitrary original bytes use base64. */ }
+  sequence += 1;
+  let pieces = [];
+  if (chars !== null) {
+    for (let i = 0; i < chars.length || i === 0; i += 12_000) pieces.push(chars.slice(i, i + 12_000));
+  } else {
+    for (let i = 0; i < bytes.length || i === 0; i += 36_000) pieces.push(bytes.subarray(i, i + 36_000));
+  }
+  const envelope = (piece, i) => ({kind: chars === null ? 'binary-base64-segment' : 'utf8-text-segment', ...identity,
+    segmentIndex: i + 1, segmentCount: pieces.length, ...(chars === null
+      ? {chunkByteLength: piece.length, chunkSha256: sha256(piece), base64: piece.toString('base64')}
+      : {content: piece.join('')})});
+  for (;;) {
+    const next = [];
+    let split = false;
+    for (const [i, piece] of pieces.entries()) {
+      if (asciiJson(envelope(piece, i)).length <= segmentLimit) { next.push(piece); continue; }
+      require(chars !== null && piece.length > 1, `envelope cannot fit60000B: ${path}`);
+      const middle = Math.floor(piece.length / 2);
+      next.push(piece.slice(0, middle), piece.slice(middle)); split = true;
+    }
+    if (!split) break;
+    pieces = next;
+  }
+  const chunks = pieces.map((piece, i) => {
+    const name = `${chars === null ? 'binary' : 'text'}-${String(sequence).padStart(4, '0')}-${String(i + 1).padStart(4, '0')}.json`;
+    const body = asciiJson(envelope(piece, i));
+    require(body.length <= segmentLimit, 'serialized segment cap');
+    prepared.push({name, body}); segmentFiles.push({path: name, bytes: body.length, sha256: sha256(body)});
+    return name;
+  });
+  sourceFiles.push({...identity, encoding: chars === null ? 'binary-base64-segments' : 'utf8-text-segments', chunks});
+}
+const index = {schema: 'cycle07-readonly-git-export/v1', repository: basename(repo), branch: cfg.branch,
+  localCommit: cfg.commit, localParent: parentPin, localParentTree: parentTree, localTree: tree,
+  canonicalRemoteParentReportedOnly: cfg.canonicalRemoteParentReportedOnly ?? null,
+  frozenPayloadManifestSha256: cfg.frozenManifestSha256, frozenManifestPath: cfg.frozenManifest,
+  note: 'Actual canonical local Git objects; remote parent is caller-reported only, not inferred/authenticated/written.',
+  changedPaths, sourceFiles, segmentFiles, limits: {maxSegmentJsonBytes: segmentLimit, maxTransportIndexBytes: indexLimit}};
+const indexBytes = asciiJson(index);
+require(indexBytes.length <= indexLimit, 'serialized transport index exceeds1000000B');
+await mkdir(output, {recursive: false});
+for (const {name, body} of prepared) await writeFile(join(output, name), body, {flag: 'wx'});
+await writeFile(join(output, 'transport.json'), indexBytes, {flag: 'wx'});
+console.log(JSON.stringify({localCommit: cfg.commit, localParent: parentPin, localParentTree: parentTree, localTree: tree,
+  changedBlobs: sourceFiles.length, transportSegments: segmentFiles.length, maxSegmentBytes: Math.max(0, ...segmentFiles.map(s => s.bytes)),
+  transportIndexBytes: indexBytes.length, transportIndexSha256: sha256(indexBytes), output, gitMutation: 'none'}, null, 2));

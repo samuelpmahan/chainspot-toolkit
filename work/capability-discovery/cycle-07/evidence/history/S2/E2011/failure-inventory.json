@@ -1,0 +1,715 @@
+{
+  "schema": "cycle07-fabricated-red-inventory@1",
+  "job_id": "E2011",
+  "worker": "S2",
+  "source": "stdout.raw exact first73 individual status lines; failure causes also read from original detailed output",
+  "actual": {
+    "registered": 73,
+    "reached": 73,
+    "passed": 22,
+    "failed": 51,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "failures": [
+    {
+      "index": 18,
+      "name": "contrast Infinity leftLum with eligible fit retains located HOLD and never READY",
+      "status": "FAIL",
+      "durationMs": 44.121593,
+      "group": "A2_CONTRAST_INFINITY_HOLD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "HOLD payload validator assertions were not invoked because bindPlan did not throw"
+    },
+    {
+      "index": 19,
+      "name": "contrast -Infinity leftLum with eligible fit retains located HOLD and never READY",
+      "status": "FAIL",
+      "durationMs": 40.247544,
+      "group": "A2_CONTRAST_INFINITY_HOLD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "HOLD payload validator assertions were not invoked because bindPlan did not throw"
+    },
+    {
+      "index": 20,
+      "name": "contrast Infinity rightLum with eligible fit retains located HOLD and never READY",
+      "status": "FAIL",
+      "durationMs": 35.84628,
+      "group": "A2_CONTRAST_INFINITY_HOLD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "HOLD payload validator assertions were not invoked because bindPlan did not throw"
+    },
+    {
+      "index": 21,
+      "name": "contrast -Infinity rightLum with eligible fit retains located HOLD and never READY",
+      "status": "FAIL",
+      "durationMs": 35.795783,
+      "group": "A2_CONTRAST_INFINITY_HOLD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "HOLD payload validator assertions were not invoked because bindPlan did not throw"
+    },
+    {
+      "index": 22,
+      "name": "contrast Infinity leftLum with no-pair fit retains located HOLD and never READY",
+      "status": "FAIL",
+      "durationMs": 37.459947,
+      "group": "A2_CONTRAST_INFINITY_HOLD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "HOLD payload validator assertions were not invoked because bindPlan did not throw"
+    },
+    {
+      "index": 23,
+      "name": "contrast -Infinity leftLum with no-pair fit retains located HOLD and never READY",
+      "status": "FAIL",
+      "durationMs": 36.389299,
+      "group": "A2_CONTRAST_INFINITY_HOLD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "HOLD payload validator assertions were not invoked because bindPlan did not throw"
+    },
+    {
+      "index": 24,
+      "name": "contrast Infinity rightLum with no-pair fit retains located HOLD and never READY",
+      "status": "FAIL",
+      "durationMs": 37.520687,
+      "group": "A2_CONTRAST_INFINITY_HOLD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "HOLD payload validator assertions were not invoked because bindPlan did not throw"
+    },
+    {
+      "index": 25,
+      "name": "contrast -Infinity rightLum with no-pair fit retains located HOLD and never READY",
+      "status": "FAIL",
+      "durationMs": 43.302702,
+      "group": "A2_CONTRAST_INFINITY_HOLD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "HOLD payload validator assertions were not invoked because bindPlan did not throw"
+    },
+    {
+      "index": 26,
+      "name": "contrast Infinity leftLum with numeric-unusable fit retains located HOLD and never READY",
+      "status": "FAIL",
+      "durationMs": 37.22785,
+      "group": "A2_CONTRAST_INFINITY_HOLD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "HOLD payload validator assertions were not invoked because bindPlan did not throw"
+    },
+    {
+      "index": 27,
+      "name": "contrast -Infinity leftLum with numeric-unusable fit retains located HOLD and never READY",
+      "status": "FAIL",
+      "durationMs": 48.422527,
+      "group": "A2_CONTRAST_INFINITY_HOLD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "HOLD payload validator assertions were not invoked because bindPlan did not throw"
+    },
+    {
+      "index": 28,
+      "name": "contrast Infinity rightLum with numeric-unusable fit retains located HOLD and never READY",
+      "status": "FAIL",
+      "durationMs": 32.517365,
+      "group": "A2_CONTRAST_INFINITY_HOLD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "HOLD payload validator assertions were not invoked because bindPlan did not throw"
+    },
+    {
+      "index": 29,
+      "name": "contrast -Infinity rightLum with numeric-unusable fit retains located HOLD and never READY",
+      "status": "FAIL",
+      "durationMs": 35.9406,
+      "group": "A2_CONTRAST_INFINITY_HOLD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "HOLD payload validator assertions were not invoked because bindPlan did not throw"
+    },
+    {
+      "index": 31,
+      "name": "successful plan retains bounded fixed16x10 input-integrity acceptance witness",
+      "status": "FAIL",
+      "durationMs": 33.854138,
+      "group": "A3_INSPECTABLE_WITNESS",
+      "actualFailure": "AssertionError: new bounded witness is inspectable",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "Witness field equality assertions after the first missing-witness assertion were not reached"
+    },
+    {
+      "index": 32,
+      "name": "input-integrity rejects missing inputIntegrity without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 35.57792,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 33,
+      "name": "input-integrity rejects missing snapshots without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 32.986353,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 34,
+      "name": "input-integrity rejects snapshot count15 without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 36.292505,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 35,
+      "name": "input-integrity rejects wrong comparison c without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 32.62271,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 36,
+      "name": "input-integrity rejects wrong snapshotId without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 36.143693,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 37,
+      "name": "input-integrity rejects missing snapshot pre without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 34.844486,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 38,
+      "name": "input-integrity rejects private pre RGBA substituted without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 38.175793,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 39,
+      "name": "input-integrity rejects private post RGBA substituted without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 41.690888,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 40,
+      "name": "input-integrity rejects private pre and post jointly substituted without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 32.576972,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 41,
+      "name": "input-integrity rejects private null mask replaced by mask hash without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 36.326275,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 42,
+      "name": "input-integrity rejects private explicit mask replaced by null without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 32.927325,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 43,
+      "name": "input-integrity rejects missing selected check without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 35.844115,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 44,
+      "name": "input-integrity rejects wrong selected check planIndex without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 36.458053,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 45,
+      "name": "input-integrity rejects selected fit check verified false without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 33.430625,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 46,
+      "name": "input-integrity rejects selected control check verified false without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 36.298284,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 47,
+      "name": "input-integrity rejects selected check missing verified without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 33.356234,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 48,
+      "name": "input-integrity rejects selected check wrong post RGBA without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 34.559851,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 49,
+      "name": "input-integrity rejects masked selected check null mask without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 35.113646,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 50,
+      "name": "input-integrity rejects illegal invented selected check error null without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 32.955708,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 51,
+      "name": "input-integrity rejects unselected check invalid under whole10 strategy without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 35.693891,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 52,
+      "name": "input-integrity rejects outer snapshot verified false without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 32.072791,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 53,
+      "name": "input-integrity rejects outer snapshot missing error without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 34.97489,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 54,
+      "name": "input-integrity rejects outer snapshot error retained without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 36.002752,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 55,
+      "name": "input-integrity rejects outer snapshot Part key mismatch without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 33.165241,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 56,
+      "name": "input-integrity rejects global postErrors nonempty without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 36.239194,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 57,
+      "name": "input-integrity rejects global postErrors missing without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 32.451156,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 58,
+      "name": "input-integrity rejects canonical suppliedPlanes missing without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 35.508715,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 59,
+      "name": "input-integrity rejects canonical suppliedPlanes verified false without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 33.410898,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 60,
+      "name": "input-integrity rejects canonical suppliedPlanes pre RGBA wrong without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 36.815364,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 61,
+      "name": "input-integrity rejects canonical suppliedPlanes post mask null without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 38.267341,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 62,
+      "name": "input-integrity rejects canonical suppliedPlanes missing post without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 33.503785,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 63,
+      "name": "input-integrity rejects global request missing without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 41.115779,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 64,
+      "name": "input-integrity rejects global request verified false without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 40.100546,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 65,
+      "name": "input-integrity rejects global request missing error without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 59.570727,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 66,
+      "name": "input-integrity rejects global request error retained without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 60.875162,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 67,
+      "name": "input-integrity rejects global request extra refusal field without normalization or READY",
+      "status": "FAIL",
+      "durationMs": 56.695248,
+      "group": "A3_INPUT_INTEGRITY_GUARD",
+      "actualFailure": "AssertionError: Missing expected exception",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 69,
+      "name": "queryTrace native record key SET is accepted independently from rawArgs insertion order",
+      "status": "FAIL",
+      "durationMs": 18.93217,
+      "group": "NATIVE_RECORD_KEY_SET",
+      "actualFailure": "Error: INTEGRITY_STOP: queryTrace shape",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    },
+    {
+      "index": 70,
+      "name": "planned query native record key SET is accepted but rawArgs key order is not weakened",
+      "status": "FAIL",
+      "durationMs": 18.615617,
+      "group": "NATIVE_RECORD_KEY_SET",
+      "actualFailure": "Error: INTEGRITY_STOP: planned query/raw args",
+      "disposition": "Observed intended fabricated regression; repair not performed",
+      "bodyReached": true,
+      "unreachedAfterFailure": "No later top-level test suppressed; one independent test per case"
+    }
+  ],
+  "passed": [
+    {
+      "index": 1,
+      "name": "disabled returns before any request getter or file I/O",
+      "status": "PASS",
+      "durationMs": 2.48704
+    },
+    {
+      "index": 2,
+      "name": "closed request refuses arbitrary geometry/root/caps before evidence reads",
+      "status": "PASS",
+      "durationMs": 0.251475
+    },
+    {
+      "index": 3,
+      "name": "fixed48 order and original indices have independent boundary assertions",
+      "status": "PASS",
+      "durationMs": 0.910038
+    },
+    {
+      "index": 4,
+      "name": "refined values outside nominal tolerance/latLim remain eligible; no score cutoff",
+      "status": "PASS",
+      "durationMs": 0.407879
+    },
+    {
+      "index": 5,
+      "name": "exact no pair skips while null/type/no-raster are fatal",
+      "status": "PASS",
+      "durationMs": 0.470963
+    },
+    {
+      "index": 6,
+      "name": "numeric nonfinite/nonpositive width skips without normalization",
+      "status": "PASS",
+      "durationMs": 0.508649
+    },
+    {
+      "index": 7,
+      "name": "targeted wire selection rejects duplicate/null-prototype/missing fields",
+      "status": "PASS",
+      "durationMs": 0.544933
+    },
+    {
+      "index": 8,
+      "name": "fabricated full binding returns detached48 with raw NaN/-0 and zero execution",
+      "status": "PASS",
+      "durationMs": 64.145327
+    },
+    {
+      "index": 9,
+      "name": "plan row needs no invented state/error; queryTrace error is mandatory",
+      "status": "PASS",
+      "durationMs": 57.767298
+    },
+    {
+      "index": 10,
+      "name": "answer tagged representation must equal independently hashed fragment",
+      "status": "PASS",
+      "durationMs": 21.113584
+    },
+    {
+      "index": 11,
+      "name": "callback comparison/calculation/capture/seq/caller/site and sidecar join are enforced",
+      "status": "PASS",
+      "durationMs": 70.910493
+    },
+    {
+      "index": 12,
+      "name": "control flags remain native numeric and null luminance is refused",
+      "status": "PASS",
+      "durationMs": 16.042309
+    },
+    {
+      "index": 13,
+      "name": "skips retain all controls and no callback args are fabricated",
+      "status": "PASS",
+      "durationMs": 51.768809
+    },
+    {
+      "index": 14,
+      "name": "missing source/error/callback fields are integrity stops, not normalization",
+      "status": "PASS",
+      "durationMs": 36.271214
+    },
+    {
+      "index": 15,
+      "name": "per-slot resolved snapshot frame/hash/keys cannot be replaced by comparison name alone",
+      "status": "PASS",
+      "durationMs": 50.859573
+    },
+    {
+      "index": 16,
+      "name": "bounded descriptor read checks hash/size, refuses symlink and cap",
+      "status": "PASS",
+      "durationMs": 1.007883
+    },
+    {
+      "index": 17,
+      "name": "source-shaped fixture has16 snapshots10 checks and keeps canonical mask separate from private null",
+      "status": "PASS",
+      "durationMs": 4.061709
+    },
+    {
+      "index": 30,
+      "name": "ordinary NaN finite-invalid -0 controls remain retained and fit Infinity still skips",
+      "status": "PASS",
+      "durationMs": 32.999914
+    },
+    {
+      "index": 68,
+      "name": "native answer record key reordering remains grammar-valid when tagged representations agree",
+      "status": "PASS",
+      "durationMs": 57.968287
+    },
+    {
+      "index": 71,
+      "name": "rawArgs reordering is refused even though the same scalar values are present",
+      "status": "PASS",
+      "durationMs": 17.352524
+    },
+    {
+      "index": 72,
+      "name": "descriptor refuses ancestor symlink independently from leaf symlink",
+      "status": "PASS",
+      "durationMs": 0.659945
+    },
+    {
+      "index": 73,
+      "name": "descriptor refuses exactBytes above maxBytes before any path walk or file allocation",
+      "status": "PASS",
+      "durationMs": 0.108892
+    }
+  ],
+  "harnessErrors": [],
+  "reachability": "All73 top-level tests registered and reached; within each failing body execution stops at its first assertion/error. Individual case declarations prevent cross-case suppression.",
+  "noRerun": true
+}

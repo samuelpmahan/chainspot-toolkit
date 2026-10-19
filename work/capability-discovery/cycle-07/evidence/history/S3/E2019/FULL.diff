@@ -1,0 +1,114 @@
+--- discovery-cycle07/S3/E2014/capture-core.mjs	2026-10-19 03:04:04.663508730 +0300
++++ discovery-cycle07/S3/E2019/capture-core.mjs	2026-10-19 03:21:13.327102740 +0300
+@@ -23,8 +23,11 @@
+     child.on('error',e=>stop('SPAWN_ERROR',e));
+     wall=io.setTimer(()=>stop('WALL_TIMEOUT'),wallMs);
+     for(const name of ['stdout','stderr']){
++      const s=streams[name],label=name.toUpperCase();
++      child[name].on('error',e=>{s.prefixOnly=true;stop(label+'_ERROR',e);});
++    }
++    for(const name of ['stdout','stderr']){
+       const s=streams[name],pipe=child[name],label=name.toUpperCase();
+-      pipe.on('error',e=>{s.prefixOnly=true;stop(label+'_ERROR',e);});
+       pipe.on('data',b=>{s.receivedBytes+=b.length;if(s.writeFailed)return;const take=Math.min(b.length,streamBytes-s.writtenBytes);try{let n=0;while(n<take){const got=io.write(s.fd,b,n,take-n);if(!Number.isSafeInteger(got)||got<1||got>take-n)fail('capture write count');n+=got;s.writtenBytes+=got;}}catch(e){s.writeFailed=true;s.prefixOnly=true;stop(label+'_WRITE',e);}if(take<b.length){s.prefixOnly=true;stop(label+'_CAP');}});
+     }
+   }catch(e){stop('SETUP',e);}
+@@ -56,13 +59,13 @@
+     error=errorInfo(e);
+     if(e?.code==='INTEGRITY_HOLD'){
+       holdRetention.requested=true;
+-      try{const p=holdProjection(e),codec=await io.loadCodec(),b=codec.encodeBytes(p,{maxBytes:65536,maxNodes:8192,maxDepth:32,maxTypedBytes:1});if(!b||Object.getPrototypeOf(b)!==Uint8Array.prototype||b.length>65536)fail('HOLD artifact cap');await io.write('integrity-hold.wire.json',b);holdRetention.complete=true;holdRetention.artifact={path:'integrity-hold.wire.json',bytes:b.length,sha256:io.hash(b)};}catch(x){holdRetention.error=errorInfo(x);postErrors.push({stage:'HOLD_RETENTION',error:errorInfo(x)});}
++      try{const p=holdProjection(e),codec=await io.loadCodec(),b=codec.encodeBytes(p,{maxBytes:65536,maxNodes:8192,maxDepth:32,maxTypedBytes:1});if(!b||Object.getPrototypeOf(b)!==Uint8Array.prototype||b.length<1||b.length>65536)fail('HOLD artifact cap');await io.write('integrity-hold.wire.json',b);const artifact={path:'integrity-hold.wire.json',bytes:b.length,sha256:io.hash(b)};if(typeof artifact.sha256!=='string'||!artifact.sha256)fail('HOLD artifact hash');holdRetention.artifact=artifact;holdRetention.complete=true;}catch(x){holdRetention.error=errorInfo(x);postErrors.push({stage:'HOLD_RETENTION',error:errorInfo(x)});}
+     }
+   }
+   const receipt={schema:'cycle07-original-plan-helper-receipt@2',...ids,status,helperCall,plan,error,holdRetention,postErrors,intendedExitCode:status==='READY'?0:1,qualification:'Source-derived helper evidence only; HOLD numbers live solely in lossless artifact, not this JSON.'};
+   let receiptPersisted=false;try{await io.receipt(receipt);receiptPersisted=true;}catch(e){const later={stage:'RECEIPT_WRITE',error:errorInfo(e)};postErrors.push(later);try{io.rawError({schema:'cycle07-original-plan-receipt-write-error@2',...ids,status,helperCall,firstError:error,holdRetention,postErrors});}catch{ /* unavailable raw capture remains unknown, never retry */ }}
+   return {...receipt,receiptPersisted};
+ }
+-export function validateReceipt(r,ids){const keys=['schema','runId','packetSha256','requestSha256','status','helperCall','plan','error','holdRetention','postErrors','intendedExitCode','qualification'];fields(r,Object.hasOwn(r,'receiptPersisted')?[...keys,'receiptPersisted']:keys);if(r.schema!=='cycle07-original-plan-helper-receipt@2'||r.runId!==ids.runId||r.packetSha256!==ids.packetSha256||r.requestSha256!==ids.requestSha256)fail('receipt identity');fields(r.helperCall,['attempted','returned','threw']);for(const x of Object.values(r.helperCall))if(typeof x!=='boolean')fail('receipt events');if(r.helperCall.returned&&r.helperCall.threw||r.helperCall.returned&&!r.helperCall.attempted||r.helperCall.threw&&!r.helperCall.attempted)fail('receipt event relation');if(!['READY','FAILED'].includes(r.status)||r.intendedExitCode!==(r.status==='READY'?0:1))fail('receipt status');fields(r.holdRetention,['requested','complete','artifact','error']);if(typeof r.holdRetention.requested!=='boolean'||typeof r.holdRetention.complete!=='boolean'||r.holdRetention.complete&&!r.holdRetention.requested)fail('receipt HOLD relation');if(r.status==='READY'&&(!r.helperCall.returned||r.error!==null||r.holdRetention.requested))fail('receipt READY');}
++export function validateReceipt(r,ids){const keys=['schema','runId','packetSha256','requestSha256','status','helperCall','plan','error','holdRetention','postErrors','intendedExitCode','qualification'];fields(r,Object.hasOwn(r,'receiptPersisted')?[...keys,'receiptPersisted']:keys);if(r.schema!=='cycle07-original-plan-helper-receipt@2'||r.runId!==ids.runId||r.packetSha256!==ids.packetSha256||r.requestSha256!==ids.requestSha256)fail('receipt identity');fields(r.helperCall,['attempted','returned','threw']);for(const x of Object.values(r.helperCall))if(typeof x!=='boolean')fail('receipt events');if(r.helperCall.returned&&r.helperCall.threw||r.helperCall.returned&&!r.helperCall.attempted||r.helperCall.threw&&!r.helperCall.attempted)fail('receipt event relation');if(!['READY','FAILED'].includes(r.status)||r.intendedExitCode!==(r.status==='READY'?0:1))fail('receipt status');fields(r.holdRetention,['requested','complete','artifact','error']);if(typeof r.holdRetention.requested!=='boolean'||typeof r.holdRetention.complete!=='boolean'||r.holdRetention.complete&&!r.holdRetention.requested)fail('receipt HOLD relation');if(r.holdRetention.complete&&(r.holdRetention.artifact===null||r.holdRetention.error!==null)||!r.holdRetention.complete&&r.holdRetention.artifact!==null)fail('receipt HOLD artifact relation');if(r.status==='READY'&&(!r.helperCall.returned||r.error!==null||r.holdRetention.requested||r.plan===null))fail('receipt READY');}
+ export function validateInventory(names){if(names.length>Object.keys(FILE_CAPS).length||names.some(n=>!Object.hasOwn(FILE_CAPS,n)))fail('unexpected output file');}
+-export function checkArtifacts(r,inventory){for(const b of [r.status==='READY'?r.plan:null,r.holdRetention.complete?r.holdRetention.artifact:null]){if(!b)continue;fields(b,['path','bytes','sha256']);const actual=inventory.find(x=>x.path===b.path);if(!actual||actual.bytes!==b.bytes||actual.sha256!==b.sha256||!Number.isSafeInteger(b.bytes)||b.bytes<1||b.bytes>FILE_CAPS[b.path])fail('artifact binding');}return true;}
++export function checkArtifacts(r,inventory){const roles=[];if(r.status==='READY')roles.push([r.plan,'plan.wire.json',2097152]);if(r.holdRetention.complete)roles.push([r.holdRetention.artifact,'integrity-hold.wire.json',65536]);for(const [b,path,cap]of roles){if(!b)fail('artifact binding');fields(b,['path','bytes','sha256']);const actual=inventory.find(x=>x.path===path);if(b.path!==path||!Number.isSafeInteger(b.bytes)||b.bytes<1||b.bytes>cap||!actual||actual.bytes!==b.bytes||actual.sha256!==b.sha256)fail('artifact binding');}return true;}
+--- discovery-cycle07/S3/E2014/capture-original-plan.mjs	2026-10-19 03:04:05.163503654 +0300
++++ discovery-cycle07/S3/E2019/capture-original-plan.mjs	2026-10-19 03:21:13.831099710 +0300
+@@ -1,11 +1,11 @@
+-/** E2014 source-only fixed ORIGINAL route. Ambient is inherited unchanged, never sanitized. */
++/** E2019 source-only fixed ORIGINAL route. Ambient is inherited unchanged, never sanitized. */
+ import {openSync,closeSync,readSync,writeSync,fstatSync,lstatSync,mkdirSync,fsyncSync,readdirSync,constants} from 'node:fs';
+ import {createHash} from 'node:crypto';
+ import {spawn} from 'node:child_process';
+ import {resolve,sep} from 'node:path';
+ import {fileURLToPath} from 'node:url';
+ import {ENV_KEYS,FILE_CAPS,fields,checkBoundary,roleReview,reserve,captureSession,errorInfo,validateReceipt,validateInventory,checkArtifacts} from './capture-core.mjs';
+-export const ROOT='/workspace/scratch/8528bb251845',HERE=`${ROOT}/discovery-cycle07/S3/E2014`,PACKET=`${HERE}/ROOT-ADMISSION.json`;
++export const ROOT='/workspace/scratch/8528bb251845',HERE=`${ROOT}/discovery-cycle07/S3/E2019`,PACKET=`${HERE}/ROOT-ADMISSION.json`;
+ export const LIMIT=Object.freeze({metadata:65536,plan:2097152,source:1048576,runtimeBinary:268435456,streamBytes:65536,wallMs:120000,graceMs:2000});
+ const PATHS=Object.freeze({helper:`${ROOT}/discovery-cycle07/S2/E2012/original-evidence-plan.mjs`,core:`${ROOT}/discovery-cycle07/S2/E2012/plan-core.mjs`,tests:`${ROOT}/discovery-cycle07/S2/E2012/plan.test.mjs`,codec:`${ROOT}/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs`,protocol:`${ROOT}/discovery-cycle07/S1/E2005/protocol.v2.json`,protocolReview:`${ROOT}/discovery-cycle07/S3/R2005/realresult.json`,runner:`${HERE}/run-original-plan.mjs`,wrapper:`${HERE}/capture-original-plan.mjs`,captureCore:`${HERE}/capture-core.mjs`,fabricatedTests:`${HERE}/fabricated.test.mjs`});
+ export const digest=b=>createHash('sha256').update(b).digest('hex');
+@@ -23,8 +23,10 @@
+ export function syncDir(path){const fd=openSync(noLinks(path),'r');try{fsyncSync(fd);}finally{closeSync(fd);}}
+ function pin(p,path){fields(p,['bytes','sha256']);if(!Number.isSafeInteger(p.bytes)||p.bytes<1||p.bytes>LIMIT.source)fail('final source pin');hashText(p.sha256);readExact(path,LIMIT.source,p.bytes,p.sha256);}
+ function review(r,targets,author){fields(r,['path','bytes','sha256','reviewer','decision','targets']);roleReview(r.reviewer,author);if(r.decision!=='accepted'||typeof r.reviewer!=='string'||!/^[A-Za-z0-9_-]{1,64}$/.test(r.reviewer)||!Array.isArray(r.targets)||JSON.stringify([...r.targets].sort())!==JSON.stringify([...targets].sort())||typeof r.path!=='string'||!r.path.startsWith(`${ROOT}/discovery-cycle07/`)||resolve(r.path)!==r.path)fail('review capsule');pin({bytes:r.bytes,sha256:r.sha256},r.path);}
++// Helper acceptance covers helper/core/tests only. Codec and protocol pins plus protocolReview
++// retain separate prior authority reuse; the future ROOT packet must not claim fresh review coverage for them.
+ function observedBoundary(){return {runtime:{execPath:process.execPath,version:process.version,platform:process.platform,arch:process.arch,execArgv:[...process.execArgv]},ambient:Object.fromEntries(ENV_KEYS.map(k=>[k,{set:Object.hasOwn(process.env,k),value:Object.hasOwn(process.env,k)?process.env[k]:null}]))};}
+-export function loadAdmission(expected){hashText(expected);const p=parse(readExact(PACKET,LIMIT.metadata,null,expected));fields(p,['schema','status','mode','runId','pins','reviews','authors','runtime','ambient','request']);if(p.schema!=='cycle07-original-plan-admission@2'||p.status!=='ROOT_FINAL_GO'||p.mode!=='ORIGINAL_PLAN_ONCE'||typeof p.runId!=='string'||!/^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(p.runId))fail('final ROOT packet');fields(p.authors,['helper','runner']);if(p.authors.helper!=='S2'||p.authors.runner!=='S3')fail('actual target authors');fields(p.runtime,['identity','binary']);checkBoundary({runtime:p.runtime.identity,ambient:p.ambient},observedBoundary());runtimeHash(p.runtime.binary);fields(p.pins,Object.keys(PATHS));for(const [k,path]of Object.entries(PATHS))pin(p.pins[k],path);fields(p.reviews,['helper','runner']);review(p.reviews.helper,['helper','core','tests','codec','protocol'],p.authors.helper);review(p.reviews.runner,['runner','wrapper','captureCore','fabricatedTests'],p.authors.runner);fields(p.request,['schema','enabled','token']);if(p.request.schema!=='cycle07-original-evidence-plan-request@1'||p.request.enabled!==true||typeof p.request.token!=='string'||!p.request.token||p.request.token.length>256||/draft|pending|null|placeholder/i.test(p.request.token))fail('closed final helper request');return {packet:p,packetSha256:expected,requestSha256:digest(jsonBytes(p.request)),paths:PATHS,runDir:`${HERE}/runs/${p.runId}`,tokenPath:`${HERE}/tokens/${p.runId}.spent.json`};}
++export function loadAdmission(expected){hashText(expected);const p=parse(readExact(PACKET,LIMIT.metadata,null,expected));fields(p,['schema','status','mode','runId','pins','reviews','authors','runtime','ambient','request']);if(p.schema!=='cycle07-original-plan-admission@2'||p.status!=='ROOT_FINAL_GO'||p.mode!=='ORIGINAL_PLAN_ONCE'||typeof p.runId!=='string'||!/^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(p.runId))fail('final ROOT packet');fields(p.authors,['helper','runner']);if(p.authors.helper!=='S2'||p.authors.runner!=='S3')fail('actual target authors');fields(p.runtime,['identity','binary']);checkBoundary({runtime:p.runtime.identity,ambient:p.ambient},observedBoundary());runtimeHash(p.runtime.binary);fields(p.pins,Object.keys(PATHS));for(const [k,path]of Object.entries(PATHS))pin(p.pins[k],path);fields(p.reviews,['helper','runner']);review(p.reviews.helper,['helper','core','tests'],p.authors.helper);review(p.reviews.runner,['runner','wrapper','captureCore','fabricatedTests'],p.authors.runner);fields(p.request,['schema','enabled','token']);if(p.request.schema!=='cycle07-original-evidence-plan-request@1'||p.request.enabled!==true||typeof p.request.token!=='string'||!p.request.token||p.request.token.length>256||/draft|pending|null|placeholder/i.test(p.request.token))fail('closed final helper request');return {packet:p,packetSha256:expected,requestSha256:digest(jsonBytes(p.request)),paths:PATHS,runDir:`${HERE}/runs/${p.runId}`,tokenPath:`${HERE}/tokens/${p.runId}.spent.json`};}
+ export function cliSha(args){if(args.length!==2||args[0]!=='--packet-sha')fail('usage: --packet-sha FINAL_ROOT_PACKET_SHA256');return hashText(args[1]);}
+ function parentDir(path){try{mkdirSync(path,0o700);}catch(e){if(e.code!=='EEXIST')throw e;}if(!lstatSync(noLinks(path)).isDirectory())fail('parent directory');}
+ export async function capture(args){
+--- discovery-cycle07/S2/E2016/artifact-identity.test.mjs	2026-10-19 03:12:19.692677752 +0300
++++ discovery-cycle07/S3/E2019/artifact-identity.test.mjs	2026-10-19 03:21:12.819105792 +0300
+@@ -2,7 +2,7 @@
+ import test from 'node:test';
+ import assert from 'node:assert/strict';
+ import { EventEmitter } from 'node:events';
+-import { checkArtifacts, FILE_CAPS, captureSession, invokeOnce } from '../../S3/E2014/capture-core.mjs';
++import { checkArtifacts, FILE_CAPS, captureSession, invokeOnce } from './capture-core.mjs';
+ 
+ const FAKE_SHA='a'.repeat(64); // Opaque metadata token, never a claimed content digest.
+ const PLAN_CAP=2097152,HOLD_CAP=65536;
+--- /dev/null	2026-10-18 03:35:30.931000043 +0300
++++ discovery-cycle07/S3/E2019/FLOW.md	2026-10-19 03:22:45.971039957 +0300
+@@ -0,0 +1,40 @@
++# E2019 — minimal M1–M4 source repair; checkpoint HOLD
++
++Written only in NEW `discovery-cycle07/S3/E2019/`. No syntax check, module import, test, codec, runner, token, packet, original evidence body, query, render, CV or Git operation was performed. Read-only source/diff/hash inspection is not runtime verification. E2014, E2016 and E2017 are preserved.
++
++## Source and authority
++
++Complete R2014 review/result, E2016 driver/FLOW and E2017 stdout/stderr/result were read before repair. E2017 actually ran the 22-test E2016 driver once against E2014 core: 14 pass, eight intended assertion failures, exit1. Its result SHA is `af498589c60659475cdd58208538171c635c2dea230e4e258b6ef111ef75eaee`; these are prior observed RED results, not an E2019 execution.
++
++`fabricated.test.mjs` is byte-identical to E2014's 11 authored tests (SHA `983f003cc3baf4c97b4e74ef6cc6ee6073c0b0add96ac9cfa0e0cfe68257371d`). `artifact-identity.test.mjs` is the E2016 driver with exactly one import-line path replacement to `./capture-core.mjs`; all assertions, fixtures, comments and remaining bytes are unchanged. `run-original-plan.mjs` is byte-identical to E2014. The old 11 were never run in the supplied history; do not label all33 as observed RED.
++
++## Actual written flow
++
++1. M1: the fixed parent now requires accepted helper-review targets exactly `helper/core/tests`, matching the actual R2013 target scope. Codec/protocol pins and pinned R2005 `protocolReview` remain separate prior-authority reuse. The final ROOT packet must explicitly ground that reuse; no fresh five-target coverage is invented. Packet grammar, pin keys, review independence and all source/helper/protocol fixed paths are otherwise unchanged. Only the own `HERE` moves from E2014 to E2019, which moves its fixed runner/wrapper/captureCore/fabricatedTests, packet, runs and tokens paths together.
++2. At future original admission, the parent would check the closed packet, future root runtime/named ambient expectations, executable and source hashes, per-role author/reviewer separation and closed enabled request before creating an exclusive consumed token and a NEW fixed run directory. No packet, final pins, accepted runner capsule, runtime expectations or authority declaration is created here. Ambient inheritance, forwarded execArgv, no-sanitize behavior and all existing caps/math/helper paths are unchanged.
++3. M3: `captureSession` opens both raw streams and attaches actual child close/error handlers as before. It now installs stdout AND stderr error listeners in a first loop, before either fallible data-listener registration in a second loop. A stdout data setup exception can therefore remain first `SETUP` cause while a later stderr error is captured as a bounded later cause. TERM/KILL requests, wall120s/grace2s timers, prefix accounting, actual close wait and cleanup are unchanged. This is source reasoning; no OS process behavior was tested.
++4. The fixed child would recheck admission/token/parent identity, claim its exclusive child marker, and load only fixed E2012 helper. `invokeOnce` still makes at most one helper call. READY bytes are written directly to fixed `plan.wire.json` after the existing2MiB/digest contract; no plan dump or native-body decoding is added.
++5. M4: on the original `INTEGRITY_HOLD`, the existing located projection is retained and pinned pure codec loaded only through the admitted real adapter. The encoded HOLD must be nonempty and <=65536B. After its one write, the hash is obtained and a complete opaque binding constructed/validated (nonempty string hash in the capability seam) before assigning `artifact` and then `complete=true`. A write/hash failure leaves `artifact:null,complete:false`, preserves first HOLD/error.code and records bounded retention failure. Physical bytes may exist without a complete binding; no deletion, rewrite or helper retry occurs. Production hashing remains actual SHA256 via the fixed adapter; fabricated `fixturehash`/fake SHA tokens are not cryptographic evidence.
++6. M2: receipt validation rejects READY plan:null, complete HOLD artifact:null/error-nonnull and incomplete HOLD with a nonnull artifact. `checkArtifacts` independently makes required role bindings mandatory: READY literal `plan.wire.json`, safe integer bytes1..2097152; complete HOLD literal `integrity-hold.wire.json`, bytes1..65536. Both require exact binding keys and matching independently observed inventory size/hash. The role cap never comes from an arbitrary supplied filename. Known inventory names remain a separate check, not proof of role. Incomplete HOLD may legitimately have unbound physical partial/full bytes; it is never promoted to complete retention.
++7. The unchanged parent would enumerate known outputs, hash opaque bytes and validate the small receipt/role bindings, without decoding plan/HOLD native bodies. `exit.json` distinguishes helper attempted/returned/threw, retention/output failures and actual child close code/signal. Parent wrapper actual exit still requires separate external launcher evidence. These paths remain unexecuted and are not resource/host/OS certification.
++
++| Invocation | Inputs actually supplied by caller | Written output/stop behavior |
++|---|---|---|
++| `checkArtifacts(receipt,inventory)` | Role metadata and observed opaque binding inventory | Required literal role identity/cap/equality or REFUSED |
++| `captureSession(io,caps)` | Bounded stream/child/timer capabilities | First/later cause, raw prefixes and actual close observation |
++| `invokeOnce(io,ids)` | One helper capability; marker, write, hash, receipt; optional HOLD codec capability | One call at most; direct READY bytes or complete/incomplete HOLD binding; receipt |
++| Fixed original parent/child | Future immutable ROOT packet, accepted exact source/reviews/runtime/ambient/request | Exclusive spent token/new run; no retry; terminal failure allowed |
++
++## Prospective ONE future fabricated GREEN command — NOT RUN / NOT ADMITTED
++
++Working directory `/workspace/scratch/8528bb251845`:
++
++```sh
++node --test --test-concurrency=1 discovery-cycle07/S3/E2019/fabricated.test.mjs discovery-cycle07/S3/E2019/artifact-identity.test.mjs
++```
++
++Predicted registration is33 tests: 11 previously authored/unrun plus22 from the actual prior RED driver. No passing E2019 result, import success or syntax success is claimed. The new driver is original-incapable: only Node test/assert/events plus import-free core; all helpers/encoders/timers/writes are in-memory fakes. The copied old11 additionally import the fixed pure codec definitions and would encode/decode fabricated HOLD values only; neither test file imports the original parent/child/helper/evidence route or has fs/child_process capabilities. No mock ROOT_FINAL_GO packet may be minted for fabricated testing.
++
++Root must read the full new source, diff, flow and test identity before a separate exact GREEN admission. Original route execution is a different authority requiring final root-authored packet and accepted exact helper/runner review/pins. G1–G6 producer gates stay HOLD; cap sufficiency, real-pipe/fsync/signal behavior, original compatibility and scientific acceptance remain unknown. A future admitted original run may terminally fail existing frozen caps; do not raise caps, prune inputs or retry.
++
++Checkpoint pauses here for root review. This flow is proposed for the separately admitted fabricated command only; no execution is requested or implied by this construction receipt.

@@ -1,0 +1,763 @@
+diff --git a/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/joint-fit-original-plan/original-evidence-plan.mjs b/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/joint-fit-original-plan/original-evidence-plan.mjs
+new file mode 100644
+index 0000000..6e827e1
+--- /dev/null
++++ b/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/joint-fit-original-plan/original-evidence-plan.mjs
+@@ -0,0 +1,146 @@
++/** Closed default-OFF original-evidence binding operation. No CLI, writer, CV or store. */
++import { openSync, closeSync, readSync, fstatSync, lstatSync, constants } from 'node:fs';
++import { createHash } from 'node:crypto';
++import { resolve, sep } from 'node:path';
++import { fixedSlots, bindPlan } from './plan-core.mjs';
++
++const ROOT='/workspace/scratch/8528bb251845';
++const LAB=`${ROOT}/chainspot-discovery-lab`;
++const RAW=`${ROOT}/discovery-cycle06/G5/E1510/producer-v1`;
++const TOKEN='cycle07-E2006-original-evidence-plan-v1';
++const MAX_READ=8388608,MAX_OUTPUT=2097152;
++const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
++const refuse=why=>{throw new Error(`INTEGRITY_STOP: ${why}`);};
++const own=(o,k)=>Object.hasOwn(o,k);
++const PIN=Object.freeze({
++  protocol:{path:`${ROOT}/discovery-cycle07/S1/E2005/protocol.v2.json`,bytes:83022,sha256:'7948df5ee19e10a065f907a7dc0af1b845b5b408f32776b78813ad938bedea6e'},
++  input:{path:`${ROOT}/discovery-cycle06/G5/E1510/manifest.v1.json`,bytes:367,sha256:'4ae5f021bc3c9be8184cdb0627abdacabae9d7c8dcff88a12b404762843bbe9f'},
++  manifest:{path:`${RAW}/artifact-manifest.json`,bytes:87118,sha256:'f85df68d1b34ce2464dcec869c023f0bb10a0240cf9f750ca1a0b23e0151064f'},
++  trace:{path:`${RAW}/value-trace.json`,bytes:2094896,sha256:'a2333d711ce5e46d5c13b8949c0027d3a67c91e5802b911f6bf62b1b33950d21'},
++  sidecar:{path:`${RAW}/timing-sidecar.json`,bytes:181123,sha256:'2ce4fc7faa1c94f7dff078de7b5e5129c0876764012a82dc7b7691f0afde1fb0'},
++  freeze:{path:`${ROOT}/discovery-cycle06/root-source-admission.json`,bytes:6356,sha256:'6f3f30924749e0104a12e7d5d3d43b45b23569e55de8ffe565111620dd0355b8'},
++  originalProtocol:{path:`${LAB}/work/capability-discovery/cycle-05/capture/final/F2/E1104/protocol-proposal.json`,bytes:12718,sha256:'cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829'},
++  attestation:{path:`${ROOT}/discovery-cycle06/G1/E1501/staging-attestation.json`,bytes:4252,sha256:'9f1cb90eed3c74214c9a03029730ea1ab487c48bd86b89cbe3a701eebe923ef1'},
++  receipt:{path:`${ROOT}/discovery-cycle06/R1/R1513/result.json`,bytes:605076,sha256:'0002f0c25157073eced2c6a4008abbd2a2feca268b863536160ba9069e8441c8'},
++  shapeAuthority:{path:`${ROOT}/discovery-cycle07/S2/E2002/result.json`,bytes:12400,sha256:'4cbf7d093bbad21454474cdbca8372565708f574f4273832f30cc7a8035fd40d'},
++  codec:{path:`${LAB}/experiments/capability-discovery/station-evidence/codec.mjs`,bytes:7322,sha256:'3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015'}
++});
++
++function noSymlinkPath(path) {
++  const absolute=resolve(path);let current=sep;
++  const pieces=absolute.split(sep).filter(Boolean);
++  for(let i=0;i<pieces.length;i++) {
++    current=resolve(current,pieces[i]);const s=lstatSync(current);
++    if(s.isSymbolicLink()||(i<pieces.length-1&&!s.isDirectory()))refuse('symlink/non-directory path component');
++  }
++  return absolute;
++}
++/** Generic descriptor utility; the public operation supplies only closed pinned paths. */
++export function readBoundedFile(path,exactBytes,expectedSha256,maxBytes) {
++  if(!Number.isSafeInteger(exactBytes)||exactBytes<0||!Number.isSafeInteger(maxBytes)||exactBytes>maxBytes)refuse('file size/cap');
++  const absolute=noSymlinkPath(path),before=lstatSync(absolute);
++  if(!before.isFile()||before.size!==exactBytes)refuse('regular exact-size file required');
++  if(!Number.isSafeInteger(constants.O_NOFOLLOW))refuse('O_NOFOLLOW required');
++  let fd;
++  try {
++    fd=openSync(absolute,constants.O_RDONLY|constants.O_NONBLOCK|constants.O_NOFOLLOW);
++    const initial=fstatSync(fd);
++    if(!initial.isFile()||initial.size!==exactBytes||initial.dev!==before.dev||initial.ino!==before.ino)refuse('descriptor file identity/length');
++    const bytes=new Uint8Array(exactBytes);let pos=0;
++    while(pos<exactBytes){const n=readSync(fd,bytes,pos,exactBytes-pos,pos);if(n===0)refuse('truncated descriptor read');pos+=n;}
++    if(readSync(fd,new Uint8Array(1),0,1,exactBytes)!==0)refuse('file grew/EOF mismatch');
++    const after=fstatSync(fd);
++    if(after.size!==initial.size||after.dev!==initial.dev||after.ino!==initial.ino||after.mtimeMs!==initial.mtimeMs)refuse('file changed during read');
++    if(expectedSha256!==null&&sha(bytes)!==expectedSha256)refuse('file hash mismatch');
++    return bytes;
++  } finally {if(fd!==undefined)closeSync(fd);}
++}
++function json(bytes) {try{return JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));}catch{refuse('UTF8/JSON metadata');}}
++function closedRequest(input) {
++  if(input===null||(typeof input!=='object'&&typeof input!=='function'))return false;
++  const enabled=Object.getOwnPropertyDescriptor(input,'enabled');
++  if(!enabled)return false;
++  if(!own(enabled,'value')||typeof enabled.value!=='boolean')throw new Error('enabled must be own boolean data');
++  if(!enabled.value)return false;
++  if(Object.getPrototypeOf(input)!==Object.prototype)refuse('request ordinary object');
++  const keys=Reflect.ownKeys(input),expected=['schema','enabled','token'];
++  if(keys.length!==3||keys.some(k=>typeof k!=='string'||!expected.includes(k)))refuse('request fields');
++  for(const k of expected){const d=Object.getOwnPropertyDescriptor(input,k);if(!d||!own(d,'value')||!d.enumerable)refuse('request data fields');}
++  if(input.schema!=='cycle07-original-evidence-plan-request@1')refuse('request schema');
++  if(input.token!==TOKEN)refuse('request token');return true;
++}
++function metadataEntry(e,kind) {
++  if(!e||Object.getPrototypeOf(e)!==Object.prototype||e.kind!==kind||!Number.isSafeInteger(e.bytes)||e.bytes<1||typeof e.sha256!=='string'||!/^[0-9a-f]{64}$/.test(e.sha256))refuse('fragment metadata');
++  const pattern=kind==='answer'?/^fragments\/answer-\d+\.json$/:/^fragments\/calculation-\d+\.json$/;
++  if(!pattern.test(e.path)||resolve(RAW,e.path)!==`${RAW}/${e.path}`)refuse('fragment path');
++}
++function equalJSON(a,b,reason){if(JSON.stringify(a)!==JSON.stringify(b))refuse(reason);}
++function slotLedger(protocol,manifest) {
++  if(protocol.schema!=='cycle07-joint-fit-station-contrast-protocol@1.1.0'||!Array.isArray(protocol.slots)||protocol.slots.length!==48)refuse('fixed protocol ledger');
++  if(manifest.schema!=='cycle05-station-artifacts@1'||manifest.status!=='COMPLETED'||!Array.isArray(manifest.artifacts)||manifest.artifacts.length>512)refuse('raw artifact manifest');
++  const paths=new Set(),answers=new Map(),callbacks=new Map();
++  for(const e of manifest.artifacts){if(paths.has(e.path))refuse('duplicate artifact path');paths.add(e.path);
++    if(e.kind==='answer'){metadataEntry(e,'answer');if(answers.has(e.planIndex))refuse('duplicate answer index');answers.set(e.planIndex,e);}
++    if(e.kind==='calculation'){metadataEntry(e,'calculation');const key=`${e.comparisonId}/${e.captureIndex}`;if(callbacks.has(key))refuse('duplicate callback capture');callbacks.set(key,e);}
++  }
++  if(answers.size!==160||callbacks.size!==176)refuse('original160/176 artifact counts');
++  for(const [pin,relative,kind]of [[PIN.trace,'value-trace.json','value-trace'],[PIN.sidecar,'timing-sidecar.json','timing-sidecar']]){
++    const aggregate=manifest.artifacts.find(e=>e.path===relative);
++    if(!aggregate||aggregate.kind!==kind||aggregate.bytes!==pin.bytes||aggregate.sha256!==pin.sha256)refuse('aggregate manifest binding');
++  }
++  const selected=[];
++  for(const s of fixedSlots()){
++    const ledger=protocol.slots[s.j];
++    for(const k of ['j','c','b','comparisonId','nominalBankPx','originalOriginPx','t0Px','t1Px'])equalJSON(ledger[k],s[k],`ledger ${k}`);
++    for(const [role,index]of [['fit',s.fitIndex],['control',s.controlIndex]]){
++      const m=answers.get(index);if(!m||m.comparisonId!==s.comparisonId)refuse('answer slot metadata');equalJSON(ledger[role],m,'ledger/manifest exact answer binding');selected.push(m);
++    }
++    for(let captureIndex=0;captureIndex<11;captureIndex++)if(!callbacks.has(`${s.comparisonId}/${captureIndex}`))refuse('missing callback context');
++  }
++  return {answers:selected,callbacks:[...callbacks.values()]};
++}
++function encodedTree(bytes,maxDepth=40,maxNodes=500000) {
++  const tree=json(bytes),canonical=new TextEncoder().encode(`${JSON.stringify(tree)}\n`);
++  if(canonical.length!==bytes.length||sha(canonical)!==sha(bytes))refuse('noncanonical aggregate tagged wire');
++  const stack=[[tree,0]];let nodes=0;
++  while(stack.length){const [x,d]=stack.pop();if(++nodes>maxNodes||d>maxDepth)refuse('aggregate encoded-tree budget');if(Array.isArray(x))for(const y of x)stack.push([y,d+1]);else if(x!==null&&typeof x==='object')refuse('wire grammar contains JSON object');}
++  return tree;
++}
++
++/** No file/codec/native-value I/O before the closed enabled descriptor. */
++export async function buildOriginalEvidencePlan(input) {
++  if(!closedRequest(input))return {status:'DISABLED',plan:null,encodedBytes:null,sha256:null,actualNewPATH:0};
++  let readBytes=0;const bindings=[];
++  const load=(p,cap=1048576)=>{
++    if(readBytes+p.bytes>MAX_READ)refuse('total binding read cap');
++    const bytes=readBoundedFile(p.path,p.bytes,p.sha256,cap);readBytes+=bytes.length;bindings.push({...p});return bytes;
++  };
++  // Native fragments remain opaque until every selected answer/callback is hashed.
++  const protocol=json(load(PIN.protocol)),inputManifest=json(load(PIN.input)),manifest=json(load(PIN.manifest));
++  load(PIN.receipt);load(PIN.shapeAuthority);load(PIN.originalProtocol);load(PIN.attestation);
++  if(inputManifest.schema!=='cycle06-lenard5-files@1'||inputManifest.enabled!==true||inputManifest.protocolId!=='lenard5-fixed16'||inputManifest.protocolPath!==PIN.originalProtocol.path||inputManifest.inputAttestationPath!==`${ROOT}/discovery-cycle06/G1/E1501/staging-attestation.json`)refuse('original input manifest identity');
++  const freeze=json(load(PIN.freeze));
++  if(freeze.schema!=='cycle06-root-source-admission@1'||freeze.status!=='ACCEPTED_ENGINEERING_SOURCE_FREEZE_ONLY'||!Array.isArray(freeze.entries)||freeze.entries.length!==22)refuse('source22 authority');
++  const seenSource=new Set(),closureHashes={};let codecBytes=null;
++  for(const e of freeze.entries){
++    if(typeof e.path!=='string'||e.path.startsWith('/')||e.path.split('/').some(x=>x==='..'||x==='.'||!x)||seenSource.has(e.path)||e.mode!=='100644')refuse('source22 path/mode');seenSource.add(e.path);
++    const p={path:`${LAB}/${e.path}`,bytes:e.bytes,sha256:e.sha256},body=load(p);
++    if(e.path.startsWith('experiments/capability-discovery/probes/'))closureHashes[e.path]=e.sha256;
++    if(p.path===PIN.codec.path){if(e.bytes!==PIN.codec.bytes||e.sha256!==PIN.codec.sha256)refuse('codec freeze identity');codecBytes=body;}
++  }
++  if(Object.keys(closureHashes).length!==9||codecBytes===null)refuse('nine-module closure/codec');
++  const selection=slotLedger(protocol,manifest);
++  const exactTotal=readBytes+PIN.trace.bytes+PIN.sidecar.bytes+selection.answers.reduce((a,e)=>a+e.bytes,0)+selection.callbacks.reduce((a,e)=>a+e.bytes,0);
++  if(!Number.isSafeInteger(exactTotal)||exactTotal>MAX_READ)refuse('metadata-derived complete read budget');
++  const traceBytes=load(PIN.trace,PIN.trace.bytes),sidecarBytes=load(PIN.sidecar,PIN.sidecar.bytes);
++  const answerFragments=selection.answers.map(metadata=>({metadata,bytes:load({path:`${RAW}/${metadata.path}`,bytes:metadata.bytes,sha256:metadata.sha256},8192)}));
++  const callbackFragments=selection.callbacks.map(metadata=>({metadata,bytes:load({path:`${RAW}/${metadata.path}`,bytes:metadata.bytes,sha256:metadata.sha256},2048)}));
++  // FIRST codec import happens only after all opaque bindings above succeeded.
++  // Import verified pure source bytes; this does not authenticate the host/runtime.
++  const codec=await import(`data:text/javascript;base64,${Buffer.from(codecBytes).toString('base64')}`);
++  const plan=bindPlan({traceWire:encodedTree(traceBytes),sidecarWire:encodedTree(sidecarBytes),answerFragments,callbackFragments,sourceHashes:closureHashes},codec);
++  plan.bindingAuthority={inputManifest:PIN.input,rawManifest:PIN.manifest,aggregates:[PIN.trace,PIN.sidecar],source22:PIN.freeze,originalProtocol:PIN.originalProtocol,attestation:PIN.attestation,acceptedReceipt:PIN.receipt,shapeAuthority:PIN.shapeAuthority,acceptedProtocolV2:PIN.protocol,codec:PIN.codec,nonportableOriginalRawRoot:RAW,readBytes,readCap:MAX_READ,sourceHashMeaning:'hash at check, not execution authentication or concurrent replacement defense',tokenMeaning:'admission identifier, not durable spent token'};
++  const encodedBytes=codec.encodeBytes(plan,{maxBytes:MAX_OUTPUT,maxTypedBytes:1});
++  const detachedPlan=codec.decodeValue(codec.encodeValue(plan,{maxBytes:MAX_OUTPUT,maxTypedBytes:1}),{maxBytes:MAX_OUTPUT,maxTypedBytes:1});
++  return {status:'READY',plan:detachedPlan,encodedBytes,sha256:sha(encodedBytes),bindings,actualNewPATH:0};
++}
+diff --git a/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/joint-fit-original-plan/plan-core.mjs b/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/joint-fit-original-plan/plan-core.mjs
+new file mode 100644
+index 0000000..333dc39
+--- /dev/null
++++ b/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/joint-fit-original-plan/plan-core.mjs
+@@ -0,0 +1,251 @@
++/** Pure bounded tagged-wire selection and fixed48 planning. No filesystem/CV/store imports. */
++const FIT_UNIT='px (l, r, c, w: lateral offsets); score, gl, gr: lum/px';
++const CONTRAST_UNIT='lum per station (inside band minus outside band), per side';
++const PHI=-0.20539538918976738;
++const FRAME='Lenard-5.original-source-pixel-centers';
++const RASTER='px.image.cropped', MASK='tk.s6.pathMask';
++const FIT_FIELDS=['lPx','rPx','cPx','wPx','score','gl','gr'];
++const ENTRY_FIELDS=['seq','parent','depth','calculation','store','caller','site','inParts','outParts','elapsedMs','status','error','emits','key','cached','computedMs'];
++const PINS=Object.freeze({protocol:'cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829',attestation:'9f1cb90eed3c74214c9a03029730ea1ab487c48bd86b89cbe3a701eebe923ef1',rgba:'4379abb30a5b0907aa0e1435b13e19eafe8fdd31ac57c9b8bdff4495a14fdc2a',png:'30fa01879840deb0584ffe001fa39779998710010faeae93510dbc7a8a0abe6e',mask:'305285b7e2bc9d44dfd572caa8d39030ed1b0c2254c15967fbb9b7bff7fae609'});
++const stop=message=>{throw new Error(`INTEGRITY_STOP: ${message}`);};
++const own=(v,k)=>Object.hasOwn(v,k);
++function fields(v,keys) {
++  if(v===null||typeof v!=='object'||Object.getPrototypeOf(v)!==Object.prototype) stop('ordinary object required');
++  const actual=Reflect.ownKeys(v);
++  if(actual.length!==keys.length||actual.some(k=>typeof k!=='string'||!keys.includes(k))) stop('exact own fields required');
++  for(const k of keys) {const d=Object.getOwnPropertyDescriptor(v,k);if(!d||!own(d,'value')||!d.enumerable||d.value===undefined) stop('own enumerable data fields required');}
++}
++function dense(a,n) {
++  if(!Array.isArray(a)||Object.getPrototypeOf(a)!==Array.prototype||a.length!==n||Reflect.ownKeys(a).length!==n+1) stop('dense array shape');
++  for(let i=0;i<n;i++) {const d=Object.getOwnPropertyDescriptor(a,String(i));if(!d||!own(d,'value')||!d.enumerable) stop('dense array element');}
++  return a;
++}
++function same(a,b) {
++  if(Object.is(a,b)) return true;
++  if(Array.isArray(a)&&Array.isArray(b)) return a.length===b.length&&a.every((x,i)=>same(x,b[i]));
++  if(a&&b&&typeof a==='object'&&typeof b==='object') {
++    if(Object.getPrototypeOf(a)!==Object.prototype||Object.getPrototypeOf(b)!==Object.prototype)return false;
++    const ka=Reflect.ownKeys(a),kb=Reflect.ownKeys(b);
++    return ka.length===kb.length&&ka.every(k=>{
++      if(typeof k!=='string'||!own(b,k))return false;
++      const da=Object.getOwnPropertyDescriptor(a,k),db=Object.getOwnPropertyDescriptor(b,k);
++      return own(da,'value')&&own(db,'value')&&da.enumerable&&db.enumerable&&da.value!==undefined&&db.value!==undefined&&same(da.value,db.value);
++    });
++  }
++  return false;
++}
++const requireSame=(a,b,why)=>{if(!same(a,b)) stop(why);};
++const text=node=>`${JSON.stringify(node)}\n`;
++const wireBytes=node=>new TextEncoder().encode(text(node));
++function objectPairs(node) {
++  if(!Array.isArray(node)||node.length!==3||node[0]!=='object'||node[1]!=='plain'||!Array.isArray(node[2])) stop('plain tagged object required');
++  const seen=new Set();
++  for(const p of node[2]) {if(!Array.isArray(p)||p.length!==2||typeof p[0]!=='string'||seen.has(p[0])) stop('duplicate/malformed tagged object pair');seen.add(p[0]);}
++  return node[2];
++}
++function wireFields(node,keys) {
++  const actual=objectPairs(node).map(p=>p[0]);
++  if(actual.length!==keys.length||actual.some(k=>!keys.includes(k)))stop('tagged record key set');
++}
++export function selectWire(root,path) {
++  let node=root;
++  for(const key of path) {
++    if(typeof key==='number') {
++      if(!Array.isArray(node)||node.length!==2||node[0]!=='array'||!Array.isArray(node[1])||!Number.isSafeInteger(key)||key<0||key>=node[1].length) stop('tagged array index');
++      node=node[1][key];
++    } else {
++      const pair=objectPairs(node).find(p=>p[0]===key);if(!pair) stop(`missing tagged field ${key}`);node=pair[1];
++    }
++  }
++  return node;
++}
++function wireArray(node,length) {
++  if(!Array.isArray(node)||node.length!==2||node[0]!=='array'||!Array.isArray(node[1])||node[1].length!==length) stop('tagged array length');return node[1];
++}
++function parseFragment(bytes) {
++  if(Object.getPrototypeOf(bytes)!==Uint8Array.prototype) stop('exact fragment bytes');
++  let node;try{node=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));}catch{stop('invalid fragment UTF8/JSON');}
++  const canonical=wireBytes(node);if(canonical.length!==bytes.length||canonical.some((v,i)=>v!==bytes[i])) stop('noncanonical fragment wire');return node;
++}
++function small(node,codec) {
++  if(wireBytes(node).length>32768) stop('selected wire byte cap');
++  const stack=[node];let nodes=0;
++  while(stack.length){const x=stack.pop();if(++nodes>8192) stop('selected wire node cap');if(Array.isArray(x)){if(x[0]==='typed') stop('typed native value forbidden');for(const y of x)stack.push(y);}}
++  return codec.decodeValue(node,{maxDepth:32,maxNodes:8192,maxTypedBytes:1,maxBytes:32768});
++}
++const decodeAt=(root,path,codec)=>small(selectWire(root,path),codec);
++export function fixedSlots() {
++  const groups=[['primary',780,906],['bright-nonpath',780,740],['normal-plus6',781.223725524672,911.8738825184256],['masked-primary',780,906]];
++  const windows=[['before16',-24,-8],['core16',-8,8],['after16',8,24],['long48',-24,24]],out=[];
++  for(let c=0;c<16;c++)for(let b=0;b<3;b++) {
++    const [g,x,y]=groups[Math.floor(c/4)],[w,t0Px,t1Px]=windows[c%4];
++    out.push({j:3*c+b,c,b,comparisonId:`${g}/${w}`,nominalBankPx:[34,42,50][b],originalOriginPx:[x,y],t0Px,t1Px,fitIndex:10*c+1+3*b,controlIndex:10*c+2+3*b});
++  }return out;
++}
++function outer(answer,unit) {
++  fields(answer,['value','unit','emits']);if(answer.unit!==unit) stop('answer unit');fields(answer.emits,['computed']);if(answer.emits.computed!==1) stop('answer computation emission');
++}
++export function classifyFit(answer,slot) {
++  outer(answer,FIT_UNIT);const value=answer.value;
++  if(value&&typeof value==='object'&&own(value,'condition')) {
++    fields(value,['condition']);if(value.condition!=='no edge pair') stop('unexpected edgePair condition');
++    return {eligibility:'NOT_EXECUTED',reason:'NATIVE_NO_EDGE_PAIR',offendingFields:[],rawArgs:null};
++  }
++  fields(value,FIT_FIELDS);if(FIT_FIELDS.some(k=>typeof value[k]!=='number')) stop('numeric fit field type');
++  const offendingFields=FIT_FIELDS.filter(k=>!Number.isFinite(value[k]));if(!(value.wPx>0))offendingFields.push('wPx>0');
++  if(offendingFields.length)return {eligibility:'NOT_EXECUTED',reason:'NUMERIC_UNUSABLE',offendingFields,rawArgs:null};
++  const O=slot.originalOriginPx,cPx=value.cPx;
++  const originPx=[O[0]-cPx*Math.sin(PHI),O[1]+cPx*Math.cos(PHI)];
++  if(!originPx.every(Number.isFinite))return {eligibility:'NOT_EXECUTED',reason:'NONFINITE_DERIVED_ORIGIN',offendingFields:['originPx'],rawArgs:null};
++  return {eligibility:'ELIGIBLE',reason:null,offendingFields:[],rawArgs:{raster:RASTER,mask:MASK,originPx,phiRad:PHI,t0Px:slot.t0Px,t1Px:slot.t1Px,stepPx:1,widthPx:value.wPx,bandPx:[1,3],alongPx:2}};
++}
++function control(answer,N,slot,originalControl,codec) {
++  outer(answer,CONTRAST_UNIT);const v=answer.value;fields(v,['leftLum','rightLum','okLeft','okRight','stationsCount']);if(v.stationsCount!==N)stop('control stations');
++  for(const k of ['leftLum','rightLum'])if(dense(v[k],N).some(x=>typeof x!=='number'))stop('control luminance type');
++  for(const k of ['okLeft','okRight'])if(dense(v[k],N).some(x=>x!==0&&x!==1))stop('control flag type');
++  for(const side of ['leftLum','rightLum'])for(let stationIndex=0;stationIndex<N;stationIndex++) {
++    const rawValue=v[side][stationIndex];
++    if(rawValue!==Infinity&&rawValue!==-Infinity)continue;
++    const payload={code:'CONTRAST_INFINITY',j:slot.j,c:slot.c,b:slot.b,role:'control',side,stationIndex,
++      planIndex:originalControl.plannedQuery.planIndex,rawValue,answerBinding:originalControl.answerBinding,
++      rawAnswer:answer,originalState:originalControl.queryState,originalCallbackStatus:originalControl.callback.nativeEntry.status};
++    const error=new Error(`INTEGRITY_HOLD: source-impossible original contrast ${side}[${stationIndex}] at slot ${slot.j}`);
++    error.code='INTEGRITY_HOLD';
++    // Lossless detached small payload; existing selected-wire/node limits remain controlling.
++    error.integrityHold=small(codec.encodeValue(payload,{maxDepth:32,maxNodes:8192,maxTypedBytes:1,maxBytes:32768}),codec);
++    throw error;
++  }
++}
++function orderedRawArgs(actual,expected) {
++  fields(actual,Object.keys(expected));
++  requireSame(Object.keys(actual),Object.keys(expected),'rawArgs insertion order');
++  requireSame(actual,expected,'rawArgs values');
++}
++function expectedPlan(s,role) {
++  const rawArgs={raster:RASTER,mask:MASK,originPx:[...s.originalOriginPx],phiRad:PHI,t0Px:s.t0Px,t1Px:s.t1Px,stepPx:1};
++  if(role==='fit')Object.assign(rawArgs,{lat0Px:0,widthPx:s.nominalBankPx,tolPx:2,latLimPx:12,minOk:{count:8,ofStations:0.2}});
++  else Object.assign(rawArgs,{widthPx:s.nominalBankPx,bandPx:[1,3],alongPx:2});
++  return {planIndex:role==='fit'?s.fitIndex:s.controlIndex,comparisonId:s.comparisonId,groupId:s.comparisonId.split('/')[0],windowId:s.comparisonId.split('/')[1],widthPx:s.nominalBankPx,query:`fn.q.path.${role==='fit'?'edgePair':'stationContrast'}`,rawArgs};
++}
++function declaration(s) {
++  return {id:s.comparisonId,groupId:s.comparisonId.split('/')[0],windowId:s.comparisonId.split('/')[1],imageId:'Lenard-5',frame:FRAME,widthPx:1290,heightPx:2796,rgbaSha256:PINS.rgba,mask:s.c<12?null:{kind:'Uint8Array',bytes:3606840,sha256:PINS.mask},originPx:[...s.originalOriginPx],phiRad:PHI,t0Px:s.t0Px,t1Px:s.t1Px,stepPx:1,widthsPx:[34,42,50]};
++}
++function resolvedIdentity(value,s) {
++  fields(value,['snapshotId','comparisonId','frame','widthPx','heightPx','rgbaSha256','maskKind','maskSha256','partKeys']);
++  const expected={snapshotId:`lenard5-fixed16/${s.c}/${s.comparisonId}`,comparisonId:s.comparisonId,frame:FRAME,widthPx:1290,heightPx:2796,rgbaSha256:PINS.rgba,maskKind:s.c<12?null:'Uint8Array',maskSha256:s.c<12?null:PINS.mask};
++  for(const [k,v]of Object.entries(expected))requireSame(value[k],v,`resolved identity ${k}`);
++  fields(value.partKeys,[RASTER,MASK]);for(const k of [RASTER,MASK])if(typeof value.partKeys[k]!=='string'||!/^[0-9a-f]{64}$/.test(value.partKeys[k]))stop('naturally materialized original Part key');
++  return value;
++}
++function witness(trace,sourceHashes,codec) {
++  const expected={schema:'cycle06-lenard5-trace@1',protocolId:'lenard5-fixed16',protocolSha256:PINS.protocol,status:'COMPLETED',error:null};
++  for(const [k,v]of Object.entries(expected))requireSame(decodeAt(trace,[k],codec),v,`trace ${k}`);
++  const req={schema:'cycle06-lenard5-request-binding@1',protocolId:'lenard5-fixed16',protocolSha256:PINS.protocol,attestationSha256:PINS.attestation};
++  for(const [k,v]of Object.entries(req))requireSame(decodeAt(trace,['requestBinding',k],codec),v,`request ${k}`);
++  requireSame(decodeAt(trace,['requestBinding','sourceOriginal'],codec),{ref:'49255331791b1245cf0f9cd699816175f94e70f2',path:'specimens/dev/Lenard-5.png',gitBlob:'78a4345489a5544640859127cd79f5a06bf9f21b',frame:FRAME},'source original identity');
++  for(const [k,v]of [['encodedFileVerification',PINS.png],['rawStageVerification',PINS.rgba],['maskPolicy',PINS.mask]])requireSame(decodeAt(trace,['requestBinding',k,k==='maskPolicy'?'maskSha256':'sha256'],codec),v,'input hash witness');
++  const snapshots=[];
++  for(const when of ['beforeImport','afterImport','afterRun']) {
++    requireSame(decodeAt(trace,['sourceBinding',when,'verified'],codec),true,'source verification');
++    const entries=decodeAt(trace,['sourceBinding',when,'entries'],codec),seen=new Set();
++    if(!Array.isArray(entries)||entries.length!==Object.keys(sourceHashes).length)stop('source entries count');
++    for(const e of entries){fields(e,['path','expectedSha256','actualSha256','error']);if(seen.has(e.path)||!own(sourceHashes,e.path)||e.error!==null||e.expectedSha256!==sourceHashes[e.path]||e.actualSha256!==sourceHashes[e.path])stop('source entry');seen.add(e.path);}
++    snapshots.push({when,entries});
++  }
++  wireArray(selectWire(trace,['plannedQueries']),160);wireArray(selectWire(trace,['queryTrace']),160);wireArray(selectWire(trace,['requestBinding','comparisons']),16);
++  return snapshots;
++}
++function hashPair(value,expected) {
++  fields(value,['rgbaSha256','maskSha256']);requireSame(value,expected,'input-integrity frozen hashes');
++}
++function inputGlobals(trace,codec) {
++  const root=selectWire(trace,['inputIntegrity']);
++  wireFields(root,['suppliedPlanes','snapshots','postFiles','request','postErrors']);
++  wireArray(selectWire(root,['snapshots']),16);
++  const postErrors=decodeAt(root,['postErrors'],codec);dense(postErrors,0);
++  const suppliedPlanes=decodeAt(root,['suppliedPlanes'],codec);
++  fields(suppliedPlanes,['pre','post','verified']);
++  if(suppliedPlanes.verified!==true)stop('canonical suppliedPlanes verification');
++  const canonical={rgbaSha256:PINS.rgba,maskSha256:PINS.mask};
++  hashPair(suppliedPlanes.pre,canonical);hashPair(suppliedPlanes.post,canonical);
++  const request=decodeAt(root,['request'],codec);fields(request,['verified','error']);
++  if(request.verified!==true||request.error!==null)stop('original request post-integrity');
++  return {strategy:'fixed16x10',snapshots:[],suppliedPlanes,request,postErrors};
++}
++function inputSnapshot(trace,slot,codec) {
++  // One bounded snapshot is decoded at a time, never the whole16-snapshot native tree.
++  const snapshot=decodeAt(trace,['inputIntegrity','snapshots',slot.c],codec);
++  fields(snapshot,['comparisonId','snapshotId','pre','checks','post','verified','partKeys','error']);
++  if(snapshot.comparisonId!==slot.comparisonId||snapshot.snapshotId!==`lenard5-fixed16/${slot.c}/${slot.comparisonId}`||snapshot.verified!==true||snapshot.error!==null)stop('snapshot post-integrity identity/status');
++  const expected={rgbaSha256:PINS.rgba,maskSha256:slot.c<12?null:PINS.mask};
++  hashPair(snapshot.pre,expected);hashPair(snapshot.post,expected);
++  fields(snapshot.partKeys,[RASTER,MASK]);
++  for(const address of [RASTER,MASK])if(typeof snapshot.partKeys[address]!=='string'||!/^[0-9a-f]{64}$/.test(snapshot.partKeys[address]))stop('snapshot Part key');
++  dense(snapshot.checks,10);
++  for(let k=0;k<10;k++) {
++    const check=snapshot.checks[k];fields(check,['planIndex','post','verified']);
++    if(check.planIndex!==10*slot.c+k||check.verified!==true)stop('snapshot check index/verification');
++    hashPair(check.post,expected);
++  }
++  return snapshot;
++}
++function indexFragments(fragments,kind) {
++  const out=new Map(),paths=new Set();
++  for(const f of fragments) {
++    const m=f.metadata,key=kind==='answer'?m.planIndex:`${m.comparisonId}/${m.captureIndex}`;
++    if(m.kind!==kind||out.has(key)||paths.has(m.path))stop('duplicate fragment binding');paths.add(m.path);
++    out.set(key,{...f,node:parseFragment(f.bytes)});
++  }return out;
++}
++function callbackAt(callbacks,sidecar,index,captureIndex,id,calculation,codec) {
++  const f=callbacks.get(`${id}/${captureIndex}`);if(!f)stop('missing callback fragment');
++  requireSame(text(selectWire(sidecar,['calculationLog',index])),text(f.node),'callback wire mismatch');
++  const v=small(f.node,codec);fields(v,['comparisonId','captureIndex','nativeEntry']);if(v.comparisonId!==id||v.captureIndex!==captureIndex)stop('callback wrapper identity');
++  const e=v.nativeEntry;fields(e,ENTRY_FIELDS);
++  const constant=captureIndex===0,seq=constant?1:captureIndex===1?0:captureIndex;
++  const expected={seq,parent:constant?0:null,depth:constant?1:0,calculation,store:id,caller:constant?'lazy:px.image.cropped':'cycle06-lenard5-station-measurement',site:null,inParts:[],outParts:constant?[RASTER,MASK]:[],status:'ok',error:null,emits:constant?null:{computed:1},key:null,cached:false,computedMs:null};
++  for(const [k,x]of Object.entries(expected))requireSame(e[k],x,`callback ${k}`);
++  if(typeof e.elapsedMs!=='number'||!Number.isFinite(e.elapsedMs)||e.elapsedMs<0)stop('callback timing representation');
++  return {binding:f.metadata,callback:v,argumentAttribution:'plannedQueries/rawArgs + queryTrace + source-derived callback join; not dynamic args capture'};
++}
++/** Internal pure seam; public entry never accepts caller evidence/geometry. */
++export function bindPlan({traceWire,sidecarWire,answerFragments,callbackFragments,sourceHashes},codec) {
++  const sourceWitness=witness(traceWire,sourceHashes,codec),answers=indexFragments(answerFragments,'answer'),callbacks=indexFragments(callbackFragments,'calculation');
++  const inputIntegrityWitness=inputGlobals(traceWire,codec);
++  if(answers.size!==96||callbacks.size!==176)stop('fixed fragment counts');
++  requireSame(decodeAt(sidecarWire,['schema'],codec),'cycle06-lenard5-sidecar@1','sidecar schema');
++  requireSame(decodeAt(sidecarWire,['protocolId'],codec),'lenard5-fixed16','sidecar protocol');wireArray(selectWire(sidecarWire,['calculationLog']),176);
++  requireSame(decodeAt(sidecarWire,['status'],codec),'COMPLETED','sidecar status');
++  requireSame(decodeAt(sidecarWire,['error'],codec),null,'sidecar error');
++  const slots=[];
++  for(const s of fixedSlots()) {
++    if(s.b===0)inputIntegrityWitness.snapshots.push(inputSnapshot(traceWire,s,codec));
++    requireSame(decodeAt(traceWire,['requestBinding','comparisons',s.c],codec),declaration(s),'comparison declaration');
++    const id=s.comparisonId,base=11*s.c;
++    // Verify context once per original store: lazy constant exits before profile.
++    if(s.b===0){callbackAt(callbacks,sidecarWire,base,0,id,'fn.input.lenard5StationMeasurement',codec);callbackAt(callbacks,sidecarWire,base+1,1,id,'fn.q.path.profile',codec);}
++    const original={};let rawFit,rawControl;
++    for(const role of ['fit','control']) {
++      const expected=expectedPlan(s,role),pi=expected.planIndex,f=answers.get(pi);if(!f||f.metadata.comparisonId!==id)stop('missing/wrong answer binding');
++      const actualPlan=decodeAt(traceWire,['plannedQueries',pi],codec);
++      fields(actualPlan,Object.keys(expected));orderedRawArgs(actualPlan.rawArgs,expected.rawArgs);
++      requireSame(actualPlan,expected,'planned query/raw args');
++      const rowNode=selectWire(traceWire,['queryTrace',pi]);
++      wireFields(rowNode,['planIndex','comparisonId','state','resolvedIdentity','nativeAnswer','error']);
++      for(const [k,v]of Object.entries({planIndex:pi,comparisonId:id,state:'COMPLETED',error:null}))requireSame(decodeAt(rowNode,[k],codec),v,`queryTrace ${k}`);
++      const identity=resolvedIdentity(decodeAt(rowNode,['resolvedIdentity'],codec),s);
++      const nativeNode=selectWire(rowNode,['nativeAnswer']);requireSame(text(nativeNode),text(f.node),'answer wire mismatch');
++      const answer=small(f.node,codec),localPlan=pi-10*s.c,captureIndex=localPlan+1;
++      const joined=callbackAt(callbacks,sidecarWire,base+captureIndex,captureIndex,id,expected.query,codec);
++      original[role]={answerBinding:f.metadata,plannedQuery:actualPlan,queryState:decodeAt(rowNode,['state'],codec),resolvedIdentity:identity,...joined};if(role==='fit')rawFit=answer;else rawControl=answer;
++    }
++    requireSame(original.fit.resolvedIdentity,original.control.resolvedIdentity,'fit/control snapshot identity');
++    const snapshot=inputIntegrityWitness.snapshots[s.c];
++    requireSame(snapshot.partKeys,original.fit.resolvedIdentity.partKeys,'snapshot/fit Part keys');
++    requireSame(snapshot.partKeys,original.control.resolvedIdentity.partKeys,'snapshot/control Part keys');
++    control(rawControl,s.t1Px-s.t0Px,s,original.control,codec);const fitState=classifyFit(rawFit,s);
++    slots.push({...s,original,rawFit,rawControl,...fitState,derivedRawArgs:fitState.rawArgs,state:fitState.eligibility==='ELIGIBLE'?'NOT_ATTEMPTED':'NOT_EXECUTED',newStore:null,newPartKeys:null,actualNewPATH:0});
++  }
++  // All values originate from selected codec decode or newly constructed literals.
++  return {schema:'cycle07-original-evidence-jointfit-plan@1',status:'READY',protocolBehaviorAuthority:'Root-accepted protocol v2 @1.1.0 and E2002 source-shape authority; E2012 A2/A3/keyset repair authored after observed E2011 RED, awaiting separately admitted GREEN',slots,sourceWitness,inputIntegrityWitness,actualNewPATH:0,actualNewStores:0,actualCV:0,argumentCapture:'source-derived attribution, not callback dynamic args',claims:{scientificAcceptance:'UNKNOWN',humanAcceptance:'UNKNOWN',pathIdentity:'UNKNOWN',physicalEdgeIdentity:'UNKNOWN',calibratedWidth:'UNKNOWN',continuity:'UNKNOWN'}};
++}
+diff --git a/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/joint-fit-original-plan/plan.test.mjs b/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/joint-fit-original-plan/plan.test.mjs
+new file mode 100644
+index 0000000..a3c2105
+--- /dev/null
++++ b/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/joint-fit-original-plan/plan.test.mjs
+@@ -0,0 +1,292 @@
++// Tests authored before implementation. UNEXECUTED: no observed RED/GREEN.
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import { mkdtempSync, writeFileSync, symlinkSync, mkdirSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import { join } from 'node:path';
++import { createHash } from 'node:crypto';
++import * as codec from '../station-evidence/codec.mjs';
++import { fixedSlots, classifyFit, selectWire, bindPlan } from './plan-core.mjs';
++import { buildOriginalEvidencePlan, readBoundedFile } from './original-evidence-plan.mjs';
++
++const hash = b => createHash('sha256').update(b).digest('hex');
++const wire = value => codec.encodeValue(value);
++const bytes = value => codec.encodeBytes(value);
++const fitUnit = 'px (l, r, c, w: lateral offsets); score, gl, gr: lum/px';
++const contrastUnit = 'lum per station (inside band minus outside band), per side';
++const pair = cPx => ({ value:{lPx:-17,rPx:17,cPx,wPx:34,score:1,gl:1,gr:1},unit:fitUnit,emits:{computed:1} });
++const contrast = N => ({value:{leftLum:Array(N).fill(NaN),rightLum:Array(N).fill(-0),okLeft:Array(N).fill(0),okRight:Array(N).fill(1),stationsCount:N},unit:contrastUnit,emits:{computed:1}});
++const pins = {
++  protocolSha256:'cb4d757f36ffe6721e71541d6093a48cc11e081bd10c1684746aad8249973829',
++  attestationSha256:'9f1cb90eed3c74214c9a03029730ea1ab487c48bd86b89cbe3a701eebe923ef1',
++  rgbaSha256:'4379abb30a5b0907aa0e1435b13e19eafe8fdd31ac57c9b8bdff4495a14fdc2a',
++  pngSha256:'30fa01879840deb0584ffe001fa39779998710010faeae93510dbc7a8a0abe6e',
++  maskSha256:'305285b7e2bc9d44dfd572caa8d39030ed1b0c2254c15967fbb9b7bff7fae609'
++};
++
++// Fabricated wire evidence only. It never reads original evidence/pixels.
++function fixture() {
++  const slots = fixedSlots(), plannedQueries = Array(160).fill(null), queryTrace = Array(160).fill(null);
++  const callbacks = [], answerFragments = [], callbackFragments = [], comparisons = [], snapshots = [];
++  const sourceEntries = [{path:'experiments/mock-source.mjs',expectedSha256:'a'.repeat(64),actualSha256:'a'.repeat(64),error:null}];
++  for (let c=0;c<16;c++) {
++    const s=slots[3*c], groupId=s.comparisonId.split('/')[0], windowId=s.comparisonId.split('/')[1];
++    comparisons.push({id:s.comparisonId,groupId,windowId,imageId:'Lenard-5',frame:'Lenard-5.original-source-pixel-centers',widthPx:1290,heightPx:2796,rgbaSha256:pins.rgbaSha256,mask:c<12?null:{kind:'Uint8Array',bytes:3606840,sha256:pins.maskSha256},originPx:s.originalOriginPx,phiRad:-0.20539538918976738,t0Px:s.t0Px,t1Px:s.t1Px,stepPx:1,widthsPx:[34,42,50]});
++    const privateHashes=()=>({rgbaSha256:pins.rgbaSha256,maskSha256:c<12?null:pins.maskSha256});
++    snapshots.push({comparisonId:s.comparisonId,snapshotId:`lenard5-fixed16/${c}/${s.comparisonId}`,pre:privateHashes(),
++      checks:Array.from({length:10},(_,k)=>({planIndex:10*c+k,post:privateHashes(),verified:true})),
++      post:privateHashes(),verified:true,partKeys:{'px.image.cropped':'b'.repeat(64),'tk.s6.pathMask':'c'.repeat(64)},error:null});
++    for(let captureIndex=0;captureIndex<11;captureIndex++) {
++      const seq=captureIndex===0?1:captureIndex===1?0:captureIndex;
++      const localPlan=seq===0?0:seq-1;
++      const calculation=captureIndex===0?'fn.input.lenard5StationMeasurement':localPlan===0?'fn.q.path.profile':`fn.q.path.${(localPlan-1)%3===0?'edgePair':(localPlan-1)%3===1?'stationContrast':'loss'}`;
++      const nativeEntry={seq,parent:captureIndex===0?0:null,depth:captureIndex===0?1:0,calculation,store:s.comparisonId,caller:captureIndex===0?'lazy:px.image.cropped':'cycle06-lenard5-station-measurement',site:null,inParts:[],outParts:captureIndex===0?['px.image.cropped','tk.s6.pathMask']:[],elapsedMs:1,status:'ok',error:null,emits:captureIndex===0?null:{computed:1},key:null,cached:false,computedMs:null};
++      const value={comparisonId:s.comparisonId,captureIndex,nativeEntry}, body=bytes(value);
++      const metadata={path:`fragments/calculation-${11*c+captureIndex}.json`,bytes:body.length,sha256:hash(body),kind:'calculation',comparisonId:s.comparisonId,captureIndex};
++      callbacks.push(value); callbackFragments.push({metadata,bytes:body});
++    }
++  }
++  for(const s of slots) for(const role of ['fit','control']) {
++    const planIndex=role==='fit'?10*s.c+1+3*s.b:10*s.c+2+3*s.b;
++    const rawArgs={raster:'px.image.cropped',mask:'tk.s6.pathMask',originPx:[...s.originalOriginPx],phiRad:-0.20539538918976738,t0Px:s.t0Px,t1Px:s.t1Px,stepPx:1};
++    if(role==='fit') Object.assign(rawArgs,{lat0Px:0,widthPx:s.nominalBankPx,tolPx:2,latLimPx:12,minOk:{count:8,ofStations:0.2}});
++    else Object.assign(rawArgs,{widthPx:s.nominalBankPx,bandPx:[1,3],alongPx:2});
++    const nativeAnswer=role==='fit'?pair(-0):contrast(s.t1Px-s.t0Px),body=bytes(nativeAnswer);
++    plannedQueries[planIndex]={planIndex,comparisonId:s.comparisonId,groupId:s.comparisonId.split('/')[0],windowId:s.comparisonId.split('/')[1],widthPx:s.nominalBankPx,query:`fn.q.path.${role==='fit'?'edgePair':'stationContrast'}`,rawArgs};
++    queryTrace[planIndex]={planIndex,comparisonId:s.comparisonId,state:'COMPLETED',resolvedIdentity:{snapshotId:`lenard5-fixed16/${s.c}/${s.comparisonId}`,comparisonId:s.comparisonId,frame:'Lenard-5.original-source-pixel-centers',widthPx:1290,heightPx:2796,rgbaSha256:pins.rgbaSha256,maskKind:s.c<12?null:'Uint8Array',maskSha256:s.c<12?null:pins.maskSha256,partKeys:{'px.image.cropped':'b'.repeat(64),'tk.s6.pathMask':'c'.repeat(64)}},nativeAnswer,error:null};
++    answerFragments.push({metadata:{path:`fragments/answer-${planIndex}.json`,bytes:body.length,sha256:hash(body),kind:'answer',comparisonId:s.comparisonId,planIndex},bytes:body});
++  }
++  const trace={schema:'cycle06-lenard5-trace@1',protocolId:'lenard5-fixed16',protocolSha256:pins.protocolSha256,status:'COMPLETED',error:null,
++    requestBinding:{schema:'cycle06-lenard5-request-binding@1',protocolId:'lenard5-fixed16',protocolSha256:pins.protocolSha256,attestationSha256:pins.attestationSha256,comparisons,
++      sourceOriginal:{ref:'49255331791b1245cf0f9cd699816175f94e70f2',path:'specimens/dev/Lenard-5.png',gitBlob:'78a4345489a5544640859127cd79f5a06bf9f21b',frame:'Lenard-5.original-source-pixel-centers'},
++      encodedFileVerification:{sha256:pins.pngSha256},rawStageVerification:{sha256:pins.rgbaSha256},maskPolicy:{maskSha256:pins.maskSha256}},
++    sourceBinding:{beforeImport:{verified:true,entries:sourceEntries},afterImport:{verified:true,entries:sourceEntries},afterRun:{verified:true,entries:sourceEntries}},plannedQueries,queryTrace,
++    inputIntegrity:{suppliedPlanes:{pre:{rgbaSha256:pins.rgbaSha256,maskSha256:pins.maskSha256},post:{rgbaSha256:pins.rgbaSha256,maskSha256:pins.maskSha256},verified:true},snapshots,
++      postFiles:[['disk-manifest','4ae5f021bc3c9be8184cdb0627abdacabae9d7c8dcff88a12b404762843bbe9f'],['protocol',pins.protocolSha256],['input-attestation',pins.attestationSha256],['png',pins.pngSha256],['rgba',pins.rgbaSha256],['mask',pins.maskSha256]].map(([role,digest])=>({role,path:`/fabricated/${role}`,expectedSha256:digest,actualSha256:digest,verified:true,error:null})),
++      request:{verified:true,error:null},postErrors:[]}};
++  return {trace,sidecar:{schema:'cycle06-lenard5-sidecar@1',protocolId:'lenard5-fixed16',status:'COMPLETED',error:null,calculationLog:callbacks},answerFragments,callbackFragments,sourceHashes:{'experiments/mock-source.mjs':'a'.repeat(64)}};
++}
++function bind(f) { return bindPlan({traceWire:wire(f.trace),sidecarWire:wire(f.sidecar),answerFragments:f.answerFragments,callbackFragments:f.callbackFragments,sourceHashes:f.sourceHashes},codec); }
++
++// Break caught: disabled entry reading source/evidence or evaluating getters.
++test('disabled returns before any request getter or file I/O',async()=>{
++  const r=await buildOriginalEvidencePlan({get token(){throw Error('getter ran');}});
++  assert.equal(r.status,'DISABLED'); assert.equal(r.plan,null);
++  await assert.rejects(buildOriginalEvidencePlan({get enabled(){throw Error('getter ran');}}),/own boolean/);
++});
++test('closed request refuses arbitrary geometry/root/caps before evidence reads',async()=>{
++  await assert.rejects(buildOriginalEvidencePlan({schema:'cycle07-original-evidence-plan-request@1',enabled:true,token:'wrong'}),/request token/);
++  await assert.rejects(buildOriginalEvidencePlan({schema:'cycle07-original-evidence-plan-request@1',enabled:true,token:'cycle07-E2006-original-evidence-plan-v1',originPx:[0,0]}),/fields/);
++});
++test('fixed48 order and original indices have independent boundary assertions',()=>{
++  const s=fixedSlots(); assert.equal(s.length,48);
++  assert.deepEqual([s[0].j,s[0].c,s[0].b,s[0].comparisonId,s[0].fitIndex,s[0].controlIndex],[0,0,0,'primary/before16',1,2]);
++  assert.deepEqual([s[47].j,s[47].c,s[47].b,s[47].comparisonId,s[47].fitIndex,s[47].controlIndex],[47,15,2,'masked-primary/long48',157,158]);
++  s[0].originalOriginPx[0]=0;assert.equal(fixedSlots()[0].originalOriginPx[0],780);
++});
++test('refined values outside nominal tolerance/latLim remain eligible; no score cutoff',()=>{
++  const a=pair(12.125);Object.assign(a.value,{wPx:36.25,score:-1,gl:-2,gr:-3});
++  const r=classifyFit(a,fixedSlots()[0]);assert.equal(r.eligibility,'ELIGIBLE');
++  assert.equal(r.rawArgs.widthPx,36.25);
++  assert.deepEqual(r.rawArgs.originPx,[780-12.125*Math.sin(-0.20539538918976738),906+12.125*Math.cos(-0.20539538918976738)]);
++  assert.deepEqual(Object.keys(r.rawArgs),['raster','mask','originPx','phiRad','t0Px','t1Px','stepPx','widthPx','bandPx','alongPx']);
++});
++test('exact no pair skips while null/type/no-raster are fatal',()=>{
++  assert.equal(classifyFit({value:{condition:'no edge pair'},unit:fitUnit,emits:{computed:1}},fixedSlots()[0]).reason,'NATIVE_NO_EDGE_PAIR');
++  for(const value of [null,{...pair(0).value,cPx:null},{condition:'other'}]) assert.throws(()=>classifyFit({value,unit:fitUnit,emits:{computed:1}},fixedSlots()[0]),/INTEGRITY/);
++  assert.throws(()=>classifyFit({value:{schema:'nctk-s6-path@1',condition:'no raster'},unit:'condition',emits:{computed:1}},fixedSlots()[0]),/INTEGRITY/);
++});
++test('numeric nonfinite/nonpositive width skips without normalization',()=>{
++  for(const v of [NaN,Infinity,-Infinity]) {const a=pair(0);a.value.gl=v;assert.equal(classifyFit(a,fixedSlots()[0]).reason,'NUMERIC_UNUSABLE');}
++  for(const v of [-0,0,-1]) {const a=pair(0);a.value.wPx=v;assert.equal(classifyFit(a,fixedSlots()[0]).eligibility,'NOT_EXECUTED');}
++  const a=pair(-0);assert.ok(Object.is(a.value.cPx,-0));assert.equal(classifyFit(a,fixedSlots()[0]).eligibility,'ELIGIBLE');
++});
++test('targeted wire selection rejects duplicate/null-prototype/missing fields',()=>{
++  assert.deepEqual(selectWire(wire({a:1}),['a']),wire(1));
++  assert.throws(()=>selectWire(['object','plain',[['a',wire(1)],['a',wire(2)]]],['a']),/INTEGRITY/);
++  assert.throws(()=>selectWire(['object','null-prototype',[]],['a']),/INTEGRITY/);
++});
++test('fabricated full binding returns detached48 with raw NaN/-0 and zero execution',()=>{
++  const f=fixture(),plan=bind(f);assert.equal(plan.slots.length,48);assert.equal(plan.actualNewPATH,0);
++  assert.ok(Object.is(plan.slots[0].rawFit.value.cPx,-0));assert.ok(Number.isNaN(plan.slots[0].rawControl.value.leftLum[0]));
++  assert.ok(Object.is(plan.slots[0].rawControl.value.rightLum[0],-0));
++  assert.equal(plan.slots[0].original.fit.callback.nativeEntry.seq,2);
++  assert.equal(plan.slots[0].original.fit.callback.nativeEntry.error,null);
++  assert.equal(Object.hasOwn(plan.slots[0].original.fit.callback.nativeEntry,'args'),false);
++  assert.equal(plan.slots[0].state,'NOT_ATTEMPTED');
++  f.trace.queryTrace[1].nativeAnswer.value.cPx=99;assert.ok(Object.is(plan.slots[0].rawFit.value.cPx,-0));
++});
++test('plan row needs no invented state/error; queryTrace error is mandatory',()=>{
++  const f=fixture();assert.equal(Object.hasOwn(f.trace.plannedQueries[1],'error'),false);assert.equal(bind(f).slots.length,48);
++  delete f.trace.queryTrace[1].error;assert.throws(()=>bind(f),/INTEGRITY/);
++});
++test('answer tagged representation must equal independently hashed fragment',()=>{
++  const f=fixture();f.trace.queryTrace[1].nativeAnswer.value.cPx=1;assert.throws(()=>bind(f),/answer wire/);
++});
++test('callback comparison/calculation/capture/seq/caller/site and sidecar join are enforced',()=>{
++  for(const [field,value] of [['seq',99],['caller','wrong'],['site','wrong'],['calculation','fn.q.path.loss']]) {
++    const f=fixture(),v=f.sidecar.calculationLog[2];v.nativeEntry[field]=value;
++    const body=bytes(v);f.callbackFragments[2]={metadata:{...f.callbackFragments[2].metadata,bytes:body.length,sha256:hash(body)},bytes:body};
++    assert.throws(()=>bind(f),/INTEGRITY/);
++  }
++  const f=fixture();f.sidecar.calculationLog[2].nativeEntry.elapsedMs=2;assert.throws(()=>bind(f),/callback wire/);
++});
++test('control flags remain native numeric and null luminance is refused',()=>{
++  const f=fixture(),a=contrast(16);a.value.leftLum[0]=null;
++  f.trace.queryTrace[2].nativeAnswer=a;const body=bytes(a);f.answerFragments[1]={metadata:{...f.answerFragments[1].metadata,bytes:body.length,sha256:hash(body)},bytes:body};
++  assert.throws(()=>bind(f),/INTEGRITY/);
++});
++test('skips retain all controls and no callback args are fabricated',()=>{
++  const f=fixture(),answer={value:{condition:'no edge pair'},unit:fitUnit,emits:{computed:1}},body=bytes(answer);
++  f.trace.queryTrace[1].nativeAnswer=answer;f.answerFragments[0]={metadata:{...f.answerFragments[0].metadata,bytes:body.length,sha256:hash(body)},bytes:body};
++  const p=bind(f);assert.equal(p.slots.length,48);assert.equal(p.slots[0].reason,'NATIVE_NO_EDGE_PAIR');assert.equal(p.slots[0].derivedRawArgs,null);assert.equal(p.slots[0].rawControl.value.stationsCount,16);
++});
++test('missing source/error/callback fields are integrity stops, not normalization',()=>{
++  const f=fixture();delete f.sidecar.error;assert.throws(()=>bind(f),/INTEGRITY/);
++  const g=fixture();g.trace.sourceBinding.afterRun.entries[0].actualSha256='0'.repeat(64);assert.throws(()=>bind(g),/INTEGRITY/);
++  const h=fixture(),v=h.sidecar.calculationLog[2];v.nativeEntry.rawArgs={};const body=bytes(v);h.callbackFragments[2]={metadata:{...h.callbackFragments[2].metadata,bytes:body.length,sha256:hash(body)},bytes:body};assert.throws(()=>bind(h),/INTEGRITY/);
++});
++test('per-slot resolved snapshot frame/hash/keys cannot be replaced by comparison name alone',()=>{
++  for(const [field,value] of [['frame','display'],['rgbaSha256','0'.repeat(64)],['snapshotId','old']]){
++    const f=fixture();f.trace.queryTrace[1].resolvedIdentity[field]=value;assert.throws(()=>bind(f),/INTEGRITY/);
++  }
++  const f=fixture();f.trace.queryTrace[2].resolvedIdentity.partKeys['px.image.cropped']='d'.repeat(64);assert.throws(()=>bind(f),/INTEGRITY/);
++});
++test('bounded descriptor read checks hash/size, refuses symlink and cap',()=>{
++  const d=mkdtempSync(join(tmpdir(),'e2006-fixture-')),p=join(d,'source.txt');writeFileSync(p,'abc');
++  assert.equal(readBoundedFile(p,3,hash(Buffer.from('abc')),3).length,3);
++  assert.throws(()=>readBoundedFile(p,2,null,2));assert.throws(()=>readBoundedFile(p,3,'0'.repeat(64),3));
++  const link=join(d,'link.txt');symlinkSync(p,link);assert.throws(()=>readBoundedFile(link,3,null,3));
++});
++
++// E2010 PHASE1: regressions below are authored before semantic fixes or any test run.
++// Broken behavior to expose: current control accepts Infinity and bindPlan ignores inputIntegrity.
++function replaceAnswer(f,planIndex,answer) {
++  f.trace.queryTrace[planIndex].nativeAnswer=answer;
++  const i=f.answerFragments.findIndex(x=>x.metadata.planIndex===planIndex),body=bytes(answer);
++  assert.ok(i>=0,'fabricated selected answer exists');
++  f.answerFragments[i]={metadata:{...f.answerFragments[i].metadata,bytes:body.length,sha256:hash(body)},bytes:body};
++}
++function expectIntegrityStop(f) {
++  assert.throws(()=>bind(f),error=>error instanceof Error&&/INTEGRITY_(?:STOP|HOLD)/.test(error.message),'bad integrity witness must not return READY');
++}
++
++test('source-shaped fixture has16 snapshots10 checks and keeps canonical mask separate from private null',()=>{
++  const f=fixture();assert.equal(f.trace.inputIntegrity.snapshots.length,16);
++  for(let c=0;c<16;c++) {
++    const snapshot=f.trace.inputIntegrity.snapshots[c];assert.equal(snapshot.checks.length,10);
++    assert.deepEqual(Object.keys(snapshot),['comparisonId','snapshotId','pre','checks','post','verified','partKeys','error']);
++    for(let k=0;k<10;k++)assert.deepEqual(snapshot.checks[k],{planIndex:10*c+k,post:{rgbaSha256:pins.rgbaSha256,maskSha256:c<12?null:pins.maskSha256},verified:true});
++    assert.equal(Object.hasOwn(snapshot.checks[0],'error'),false);
++  }
++  assert.equal(f.trace.inputIntegrity.suppliedPlanes.pre.maskSha256,pins.maskSha256);
++  assert.equal(f.trace.inputIntegrity.snapshots[0].pre.maskSha256,null);
++});
++
++for(const skip of ['eligible','no-pair','numeric-unusable'])for(const side of ['leftLum','rightLum'])for(const rawValue of [Infinity,-Infinity]) {
++  test(`contrast ${rawValue} ${side} with ${skip} fit retains located HOLD and never READY`,()=>{
++    const f=fixture(),j=0,stationIndex=3,planIndex=2;
++    if(skip==='no-pair')replaceAnswer(f,1,{value:{condition:'no edge pair'},unit:fitUnit,emits:{computed:1}});
++    if(skip==='numeric-unusable'){const a=pair(-0);a.value.gl=NaN;replaceAnswer(f,1,a);}
++    const answer=contrast(16);answer.value[side][stationIndex]=rawValue;replaceAnswer(f,planIndex,answer);
++    const expectedBinding=f.answerFragments.find(x=>x.metadata.planIndex===planIndex).metadata;
++    assert.throws(()=>bind(f),error=>{
++      assert.equal(error.code,'INTEGRITY_HOLD');assert.match(error.message,/INTEGRITY_HOLD/);
++      const hold=error.integrityHold;assert.ok(hold,'retained bounded HOLD payload');
++      assert.equal(hold.code,'CONTRAST_INFINITY');assert.equal(hold.j,j);assert.equal(hold.c,0);assert.equal(hold.b,0);
++      assert.equal(hold.role,'control');assert.equal(hold.side,side);assert.equal(hold.stationIndex,stationIndex);
++      assert.equal(hold.planIndex,planIndex);assert.ok(Object.is(hold.rawValue,rawValue));
++      assert.equal(hold.originalState,'COMPLETED');assert.equal(hold.originalCallbackStatus,'ok');
++      assert.deepEqual(hold.answerBinding,expectedBinding);
++      assert.deepEqual(hold.rawAnswer,answer);assert.ok(Object.is(hold.rawAnswer.value[side][stationIndex],rawValue));
++      assert.equal(Object.hasOwn(error,'plan'),false,'no partial READY plan returned or attached');return true;
++    },'source-impossible original contrast must stop even when fit would skip');
++  });
++}
++
++test('ordinary NaN finite-invalid -0 controls remain retained and fit Infinity still skips',()=>{
++  const f=fixture(),a=pair(-0);a.value.gl=Infinity;replaceAnswer(f,1,a);
++  const p=bind(f);assert.equal(p.slots[0].eligibility,'NOT_EXECUTED');assert.equal(p.slots[0].reason,'NUMERIC_UNUSABLE');
++  assert.ok(Number.isNaN(p.slots[0].rawControl.value.leftLum[0]));assert.equal(p.slots[0].rawControl.value.okLeft[0],0);
++  assert.ok(Object.is(p.slots[0].rawControl.value.rightLum[0],-0));
++});
++
++test('successful plan retains bounded fixed16x10 input-integrity acceptance witness',()=>{
++  const f=fixture(),p=bind(f),w=p.inputIntegrityWitness;
++  assert.ok(w,'new bounded witness is inspectable');assert.equal(w.strategy,'fixed16x10');
++  assert.deepEqual(w.snapshots,f.trace.inputIntegrity.snapshots);
++  assert.deepEqual(w.suppliedPlanes,f.trace.inputIntegrity.suppliedPlanes);
++  assert.deepEqual(w.request,{verified:true,error:null});assert.deepEqual(w.postErrors,[]);
++  assert.equal(Object.hasOwn(w.snapshots[0].checks[0],'error'),false);
++});
++
++const invalidIntegrityCases=[
++  ['missing inputIntegrity',f=>{delete f.trace.inputIntegrity;}],
++  ['missing snapshots',f=>{delete f.trace.inputIntegrity.snapshots;}],
++  ['snapshot count15',f=>{f.trace.inputIntegrity.snapshots.pop();}],
++  ['wrong comparison c',f=>{f.trace.inputIntegrity.snapshots[0].comparisonId='primary/core16';}],
++  ['wrong snapshotId',f=>{f.trace.inputIntegrity.snapshots[0].snapshotId='historical';}],
++  ['missing snapshot pre',f=>{delete f.trace.inputIntegrity.snapshots[0].pre;}],
++  ['private pre RGBA substituted',f=>{f.trace.inputIntegrity.snapshots[0].pre.rgbaSha256='0'.repeat(64);}],
++  ['private post RGBA substituted',f=>{f.trace.inputIntegrity.snapshots[0].post.rgbaSha256='0'.repeat(64);}],
++  ['private pre and post jointly substituted',f=>{f.trace.inputIntegrity.snapshots[0].pre.rgbaSha256='0'.repeat(64);f.trace.inputIntegrity.snapshots[0].post.rgbaSha256='0'.repeat(64);}],
++  ['private null mask replaced by mask hash',f=>{f.trace.inputIntegrity.snapshots[0].pre.maskSha256=pins.maskSha256;}],
++  ['private explicit mask replaced by null',f=>{f.trace.inputIntegrity.snapshots[12].post.maskSha256=null;}],
++  ['missing selected check',f=>{f.trace.inputIntegrity.snapshots[0].checks.splice(1,1);}],
++  ['wrong selected check planIndex',f=>{f.trace.inputIntegrity.snapshots[0].checks[1].planIndex=2;}],
++  ['selected fit check verified false',f=>{f.trace.inputIntegrity.snapshots[0].checks[1].verified=false;}],
++  ['selected control check verified false',f=>{f.trace.inputIntegrity.snapshots[0].checks[2].verified=false;}],
++  ['selected check missing verified',f=>{delete f.trace.inputIntegrity.snapshots[0].checks[1].verified;}],
++  ['selected check wrong post RGBA',f=>{f.trace.inputIntegrity.snapshots[0].checks[1].post.rgbaSha256='0'.repeat(64);}],
++  ['masked selected check null mask',f=>{f.trace.inputIntegrity.snapshots[12].checks[1].post.maskSha256=null;}],
++  ['illegal invented selected check error null',f=>{f.trace.inputIntegrity.snapshots[0].checks[1].error=null;}],
++  ['unselected check invalid under whole10 strategy',f=>{f.trace.inputIntegrity.snapshots[0].checks[3].verified=false;}],
++  ['outer snapshot verified false',f=>{f.trace.inputIntegrity.snapshots[0].verified=false;}],
++  ['outer snapshot missing error',f=>{delete f.trace.inputIntegrity.snapshots[0].error;}],
++  ['outer snapshot error retained',f=>{f.trace.inputIntegrity.snapshots[0].error={code:'SNAPSHOT_HASH_MISMATCH',message:'fabricated'};}],
++  ['outer snapshot Part key mismatch',f=>{f.trace.inputIntegrity.snapshots[0].partKeys['px.image.cropped']='d'.repeat(64);}],
++  ['global postErrors nonempty',f=>{f.trace.inputIntegrity.postErrors.push({code:'POST_INPUT_MUTATION',message:'fabricated'});}],
++  ['global postErrors missing',f=>{delete f.trace.inputIntegrity.postErrors;}],
++  ['canonical suppliedPlanes missing',f=>{delete f.trace.inputIntegrity.suppliedPlanes;}],
++  ['canonical suppliedPlanes verified false',f=>{f.trace.inputIntegrity.suppliedPlanes.verified=false;}],
++  ['canonical suppliedPlanes pre RGBA wrong',f=>{f.trace.inputIntegrity.suppliedPlanes.pre.rgbaSha256='0'.repeat(64);}],
++  ['canonical suppliedPlanes post mask null',f=>{f.trace.inputIntegrity.suppliedPlanes.post.maskSha256=null;}],
++  ['canonical suppliedPlanes missing post',f=>{delete f.trace.inputIntegrity.suppliedPlanes.post;}],
++  ['global request missing',f=>{delete f.trace.inputIntegrity.request;}],
++  ['global request verified false',f=>{f.trace.inputIntegrity.request.verified=false;}],
++  ['global request missing error',f=>{delete f.trace.inputIntegrity.request.error;}],
++  ['global request error retained',f=>{f.trace.inputIntegrity.request.error={code:'POST_REQUEST_MUTATION'};}],
++  ['global request extra refusal field',f=>{f.trace.inputIntegrity.request.refusal=null;}]
++];
++for(const [name,mutate]of invalidIntegrityCases)test(`input-integrity rejects ${name} without normalization or READY`,()=>{
++  const f=fixture();mutate(f);expectIntegrityStop(f);
++});
++
++test('native answer record key reordering remains grammar-valid when tagged representations agree',()=>{
++  const f=fixture(),a=pair(-0),v=a.value;
++  replaceAnswer(f,1,{emits:{computed:1},unit:a.unit,value:{gr:v.gr,gl:v.gl,score:v.score,wPx:v.wPx,cPx:v.cPx,rPx:v.rPx,lPx:v.lPx}});
++  assert.equal(bind(f).slots[0].eligibility,'ELIGIBLE');
++});
++test('queryTrace native record key SET is accepted independently from rawArgs insertion order',()=>{
++  const f=fixture(),r=f.trace.queryTrace[1];
++  f.trace.queryTrace[1]={error:r.error,nativeAnswer:r.nativeAnswer,resolvedIdentity:r.resolvedIdentity,state:r.state,comparisonId:r.comparisonId,planIndex:r.planIndex};
++  assert.equal(bind(f).slots[0].eligibility,'ELIGIBLE');
++});
++test('planned query native record key SET is accepted but rawArgs key order is not weakened',()=>{
++  const f=fixture(),r=f.trace.plannedQueries[1];
++  f.trace.plannedQueries[1]={rawArgs:r.rawArgs,query:r.query,widthPx:r.widthPx,windowId:r.windowId,groupId:r.groupId,comparisonId:r.comparisonId,planIndex:r.planIndex};
++  assert.equal(bind(f).slots[0].eligibility,'ELIGIBLE');
++});
++test('rawArgs reordering is refused even though the same scalar values are present',()=>{
++  const f=fixture(),a=f.trace.plannedQueries[1].rawArgs;
++  f.trace.plannedQueries[1].rawArgs={mask:a.mask,raster:a.raster,originPx:a.originPx,phiRad:a.phiRad,t0Px:a.t0Px,t1Px:a.t1Px,stepPx:a.stepPx,lat0Px:a.lat0Px,widthPx:a.widthPx,tolPx:a.tolPx,latLimPx:a.latLimPx,minOk:a.minOk};
++  expectIntegrityStop(f);
++});
++test('descriptor refuses ancestor symlink independently from leaf symlink',()=>{
++  const d=mkdtempSync(join(tmpdir(),'e2010-ancestor-')),real=join(d,'real'),alias=join(d,'alias');
++  mkdirSync(real);writeFileSync(join(real,'source.txt'),'abc');symlinkSync(real,alias,'dir');
++  assert.throws(()=>readBoundedFile(join(alias,'source.txt'),3,hash(Buffer.from('abc')),3),/symlink/);
++});
++test('descriptor refuses exactBytes above maxBytes before any path walk or file allocation',()=>{
++  assert.throws(()=>readBoundedFile('/this-test-path-must-not-be-read',3,null,2),/file size\/cap/);
++});
+diff --git a/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/joint-fit-original-plan/README.md b/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/joint-fit-original-plan/README.md
+new file mode 100644
+index 0000000..756f7f0
+--- /dev/null
++++ b/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/joint-fit-original-plan/README.md
+@@ -0,0 +1,50 @@
++# Closed original-evidence joint-fit argument planner — default OFF
++
++This prototype helper binds retained original Lenard5 evidence and constructs a fixed48-slot joint fitted-center/fitted-width argument plan. It does **not** run stationContrast, create a store, identify a path, render, write artifacts, or provide a CLI. No production ABFeature/default-ON wiring or arbitrary geometry/root/evidence injection is exposed by its public entry.
++
++## Exact adoption and engineering history
++
++E2015 adopts E2012's original-evidence-plan.mjs (12666B, SHA256 `0b6f2bad20177cd965085b3fbf889c008205653c03bcb72280d41769e17a001a`) and plan-core.mjs (20323B, `52ea18fd97e0112bd8aee255b73743a79bb2ab9842b0ec828314bff9c1c26ea5`) byte-identically: no math, caps, default, pins or fixed-root changes. The73-test source derives from25563B SHA256 `83083e5ed749a76051bc7e88d1ded5dabadf01d687ccfa727f443b8bcec05589`; its **only** change is the codec import path to `../station-evidence/codec.mjs`. All existing3375 repository files remain untouched.
++
++Historical chronology is retained: E2011's73 fabricated tests reached22 pass/51 fail; E2012 repaired the intended semantics without changing those tests; E2013's author command passed73/73; different-worker R2013 independently passed73/73 and accepted exact source/fabricated engineering only (receipt SHA256 `2b01e9f247a6d7c8d2640e60308797db2b4198f68c2beaf8603502b04146fca8`). These are two distinct executions, not146 distinct tests or original-data acceptance. The preserved test header “UNEXECUTED: no observed RED/GREEN” and core's “awaiting separately admitted GREEN” are historical construction text; they are not rewritten by later receipts. E2015 has **not run** the relocated tests, syntax checks, imports or helper.
++
++## Closed entry and actual flow
++
++```js
++import { buildOriginalEvidencePlan } from './original-evidence-plan.mjs';
++// Disabled is the default: missing/false own enabled returns DISABLED.
++const request = {
++  schema: 'cycle07-original-evidence-plan-request@1',
++  enabled: true,
++  token: 'cycle07-E2006-original-evidence-plan-v1'
++};
++// await buildOriginalEvidencePlan(request); // NOT ADMITTED by this adoption.
++```
++
++The entry statically imports Node builtins and its pure local core; importing definitions does not autostart the helper. The own enabled descriptor is checked before filesystem/source/native-value/codec I/O. Enabled accessors/nonbooleans are rejected without getter invocation; enabled requests require exactly the ordinary own enumerable data fields above. No caller output path, root, evidence, geometry, dependency or cap option exists. The literal token is an admission identifier, **not** durable cross-process spent-token enforcement.
++
++An enabled call would, in order:
++
++1. Verify exact fixed absolute protocol/input/raw-manifest/receipt/source22/original-protocol/attestation/shape-authority identities, every22 source body and all selected opaque raw bodies under bounded no-symlink descriptor/hash/EOF checks. Source22's declared100644 mode is checked as metadata, **not actual POSIX filesystem-mode verification**.
++2. Bind original160-answer/176-callback manifest counts and48 slots (j=3*c+b), selecting96 fit/control fragments plus176 callback context fragments. Hash opaque bodies before importing the verified pure codec bytes. Encoded aggregates/fragments are retained under caps; whole native aggregate decode is not performed.
++3. Select bounded tagged-wire metadata and small native records. Bind plannedQueries' ordered rawArgs, queryTrace's own state/error/nativeAnswer and separate callback.nativeEntry status/error/order/calculation/store/caller/site. Callbacks have **no args/rawArgs**; this is pinned-source attribution, not independent dynamic argument capture. Original profile local offset0 is seq0/capture1, lazy constant seq1/capture0; only offsets1..9 use seq/capture=offset+1.
++4. Verify an inspectable inputIntegrityWitness with strategy `fixed16x10`: global canonical RGBA+strip-mask pre/post verification, request true/null, empty postErrors; then16 bounded snapshot records each with10 exact planIndex/post/verified checks, private null-or-strip masks and naturally materialized Part-key joins. There is no per-check error field. `postFiles` is a required root field, but its individual records are **not newly decoded/validated**; no full post-file audit is claimed.
++5. Validate each raw nominal control before fit eligibility. Finite-invalid/NaN/-0 and numeric0/1 side flags remain unchanged. Source-impossible control +/-Infinity throws located lossless INTEGRITY_HOLD with raw value/answer/binding/query-state/callback status and no attached partial READY plan. A no-pair or unusable fit cannot hide that control HOLD.
++6. Classify exact native fit records: seven primitive numbers all finite, raw wPx>0 and finite translated origin are eligible. Exact no-edge-pair and numeric-unusable retain skip reasons. Joint origin is unrounded `[Ox-cPx*Math.sin(phi), Oy+cPx*Math.cos(phi)]`, phi=-0.20539538918976738, raw wPx; no refined tol/latLim clamp, threshold, score/residual cutoff or winner selection. Derived args retain original windows/step/band[1,3]/along2/source-pixel frame.
++7. Return a bounded detached lossless plan, encoded bytes/hash and bindings:48 slots, original fits/controls/attribution/witness, ordered derived args or null; execution states remain NOT_ATTEMPTED/NOT_EXECUTED with actualNewPATH/newStores/CV0. READY means planning, not any measurement.
++
++Native Object.prototype records use exact own enumerable data key **sets**, with no hidden/symbol/accessor/undefined extras; ordinary arrays remain dense. Raw argument insertion order is a separate strict contract. Contrast support exports only stationsCount N and per-side ok flags; internal inside/outside support fractions are NOT_EXPORTED/UNKNOWN and must not be reconstructed via extra queries/pixels.
++
++## Limits and nonportability
++
++The entry still pins `/workspace/scratch/8528bb251845`, external `discovery-cycle06/G5/E1510/producer-v1` original evidence and cycle07 authority files. A fresh clone/new commit alone does not supply those exact bodies/paths. No remap, regenerated attestation, digest bypass, original image/plane/mask read or portable-original replay is implemented. The accepted original fixed160 recipe and separate E2012 runner/helper paths remain unchanged.
++
++Unchanged guards:8MiB aggregate read budget; fixed prospective3,644,326B/304 descriptor-body reads excluding outside runner audit pins;2MiB public encoded output; per selected wire32768B/8192 encoded nodes, native codec depth32; encoded aggregate depth40/500000 nodes; answer8192B/callback2048B read bounds. Generic codec hard ceilings remain unchanged. Fabricated73 coverage does **not** exercise valid enabled real-root/source22/aggregate/fragment prehash, full aggregate counters or public2MiB output/detachment sufficiency. No peak RSS, concurrency/race resistance, execution authentication, actual original read total or full POSIX-mode proof follows.
++
++No original fits/controls/conditional44 eligibility or new native measurement was observed by adoption. Same exposed pixels/fitted geometry remain dependent; joint c+w cannot isolate causes. Scientific/human/path/physical-edge/calibrated-width/continuity acceptance stays **UNKNOWN**. Source adoption ownership is not independent scientific review. Future CV producer G1–G6, durable token/writer/cumulative16MiB controls, source review and explicit admission remain separate.
++
++## Next gate and prior evidence
++
++Root must read exact adoption hashes, the one-import diff, all3375 before/after freeze and actual flow before separately admitting ONE relocated73-test command; a different worker reviews later. No test or enabled-helper GO is included here.
++
++Reuse [Lab6 delivery evidence](../../../work/capability-discovery/cycle-06/delivery-v1/README.md) and its [648-file payload manifest](../../../work/capability-discovery/cycle-06/payload-v1/package-manifest.json), SHA256 `1d083ffd9f9eb4bd6082c4fe2427ab4a8ccc909144ec92b39c5baa9389c42873`. Root-supplied Lab6 published checkpoint `bae599193610f87b7809d06ab508b033c7241d83`, tree `27616cbaac38b1b916fc337d22dd8f7cab5a7736`, is a publication identity, not freshly remote-verified here; older delivery prose remains chronology. A later minimal cycle07 package should add only this source/tests/docs and bounded actual adoption/review/test receipts, linking prior Lab6 raw160/archive evidence rather than duplicating it. No Git stage/commit/export/publication/main/deploy or release is authorized by this README.

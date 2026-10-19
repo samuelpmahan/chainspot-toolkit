@@ -1,0 +1,39 @@
+{
+  "schema": "capability-discovery-coordinator-checkpoint@1",
+  "createdAt": "2026-10-18T23:29:00Z",
+  "timeMeaning": "Coordinator checkpoint creation label, not task execution timestamp",
+  "branch": "codex/capability-discovery-lab",
+  "localHead": "4f24d50391927e0e50220690ea8ececec79e0bb4",
+  "publishedHead": "bae599193610f87b7809d06ab508b033c7241d83",
+  "repositoryWritesThisCycle": 0,
+  "nativeState": "discovery-cycle07/state.json",
+  "acceptedSolverEpoch": 7,
+  "stateCounter": 8,
+  "actualPackets": {
+    "R2006": "S4 complete helper/core/tests independent source review running; no execution",
+    "E2008": "S3 independent cap and capture-contract source analysis running; no execution"
+  },
+  "completedPackets": ["E2001", "E2002", "E2003", "E2004", "R2001", "E2005", "E2006", "E2007", "R2005"],
+  "protocol": {
+    "path": "discovery-cycle07/S1/E2005/protocol.v2.json",
+    "bytes": 83022,
+    "sha256": "7948df5ee19e10a065f907a7dc0af1b845b5b408f32776b78813ad938bedea6e",
+    "sourceOnlyReview": "discovery-cycle07/S3/R2005/realresult.json",
+    "reviewSha256": "c301cf5ff9005716cc7c1e7309e2f087bb282d53e99821611cb00a6b8e8b29b4",
+    "meaning": "Accepted source protocol only. All48 original slots and96 bindings unchanged. Producer G1-G6 remain HOLD."
+  },
+  "helper": {
+    "construction": "discovery-cycle07/S2/E2006/result.json",
+    "constructionSha256": "2f6f8d37d0a3db4af3e7dd1a7d83727400b6a9cfd58b395fa89fd8bf91871b4a",
+    "entrySha256": "6234b799ce57a1e0cab0744ff116041815a13db30839faf9b7f91843f0d856b4",
+    "coreSha256": "df6e398677ba99564619ab80ac886d752aaf88ab8a275933fd2f5f3878a3d57e",
+    "testsSha256": "e5f86e7cdfa703bc8cb614ba1ca0cb3c2c920b2ec8c3a1e0fba87a5b46172595",
+    "status": "Authored/unexecuted. Root fully read final code/tests/FLOW. Independent full-code review pending.",
+    "knownSourceGaps": ["Mechanical accepted-v2 pin/schema rebind", "Contrast infinity integrity HOLD", "Required snapshot post-integrity join absent"],
+    "proposedNext": "After actual review outcome, NEW versioned tests-first minimal repair packet, preserve E2006. Separately admit fabricated-only tests before any original-evidence enabled call. No cap widening after failure."
+  },
+  "execution": {"syntax": 0, "tests": 0, "imports": 0, "codec": 0, "originalNativeDecode": 0, "newPATH": 0, "newCV": 0, "imagePixelReads": 0, "render": 0},
+  "exposureQualification": "S4 E2007 overbroad metadata rg emitted at least one old tagged comparison-report line; TOOLTESTIMONY only, no codec/parse/native decode/original fragment opened. Excluded from eligibility/cap predicates. No blind-review claim.",
+  "ownership": "S1 eventual sole source/Git integrator currently free. S2 constructor currently completed. R2006/E2008 actual fresh followups dispatched after persisted native starts. This capture is not evidence of workers remaining alive later.",
+  "separateHH": "HH14 complete/published01512524bb4387f06471a927d6657f8486de579d at draftPR8. CI39174691048 success/buildsuccess/deployskipped. No active HH owner; no HH mutation authorized for Lab."
+}

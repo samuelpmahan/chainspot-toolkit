@@ -1,0 +1,309 @@
+{
+  "schema": "cycle07-original-plan-operation-result@1",
+  "job_id": "E2021",
+  "worker": "S3",
+  "outcome": "mixed_change",
+  "status": "ONE_ORIGINAL_PLAN_READY_FILE_ONLY_HANDOFF_HOLD",
+  "summary": "Executed exactly one root-admitted original-evidence-plan operation through fixed reviewed E2019 wrapper, with unchanged ambient. Consumed exclusive once token and NEW run directory. Helper receipt reports attempted=true, returned=true, threw=false, READY/error=null; actual child close0/signalnull and independently waited outer wrapper actual exit0/signalnull agree with intended0. Opaque617401B plan matches receipt and independent SHA256; no plan decode or eligibility/numerical review performed. No integrity/cap failure observed in small receipts, no retries/cleanup/capraise/edits/new PATH/store/CV. HOLD for fresh independent file-only review; historical44 eligibility stays prediction.",
+  "admission": {
+    "path": "discovery-cycle07/S3/E2019/ROOT-ADMISSION.json",
+    "sha256": "e9823950159a5866c9f00b8f0875a56571cbceb6f073bf7895f264644a8b9ee1",
+    "read": "complete",
+    "mode": "ORIGINAL_PLAN_ONCE",
+    "runId": "E2021-original-plan-v1",
+    "requestSha256": "e1a0e2c8439567a24dc5b87668b53054b12ec24cf7a513b282f49ca8740dae63",
+    "reviewAuthority": "Actual R2013 helper/core/tests only and R2020 runner/wrapper/captureCore/fabricatedTests acceptance bound; separate codec/protocol prior authority reused per root dispatch, not invented fresh review targets."
+  },
+  "preflight": {
+    "all10PinsMatchFreshSHAAndBytes": true,
+    "bothReviewCapsulesMatchFreshSHAAndBytes": true,
+    "runtimeFileMatches": true,
+    "resolvedNode": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "unusedRunAndTokenAbsentIncludingSymlinks": true,
+    "qualification": "Reviewed wrapper additionally checked runtime identity and13 named ambient set/unset/value states against final packet before consuming token. No environment override/sanitizer/TZ/PATH change supplied; file hash does not authenticate executed runtime or host."
+  },
+  "command": {
+    "cwd": "/workspace/scratch/8528bb251845",
+    "argv": [
+      "node",
+      "/workspace/scratch/8528bb251845/discovery-cycle07/S3/E2019/capture-original-plan.mjs",
+      "--packet-sha",
+      "e9823950159a5866c9f00b8f0875a56571cbceb6f073bf7895f264644a8b9ee1"
+    ],
+    "launches": 1,
+    "retries": 0,
+    "startUTC": "2026-10-19T00:44:30.459488Z",
+    "endUTC": "2026-10-19T00:44:30.958977Z",
+    "wrapperPid": 5,
+    "childPid": 13,
+    "environment": "Popen env option omitted; reviewed Node spawn env option omitted; all ambient inherited unchanged.",
+    "capture": "Prospective manifest saved before launch; minimal Python standard-library launcher opened8 exclusive binary channels before launching exact argv shell=False, waited actual wrapper process and recorded separate returncode/exit/signal. No project import/decode in launcher. A negative Popen returncode would record actual signal, not ambiguous shell128+signal inference.",
+    "launcherExitCode": 0,
+    "qualification": "Launcher tool exit0 is not substituted for wrapper actual exit; outer-observed.json records actual waited wrapper result."
+  },
+  "helper": {
+    "attempted": true,
+    "returned": true,
+    "threw": false,
+    "status": "READY",
+    "error": null,
+    "postErrors": [],
+    "enabledCalls": 1,
+    "callCountBasis": "Fixed reviewed at-most-once invokeOnce path plus receipt and exclusive child marker; no separate per-call tracer.",
+    "holdRetention": {
+      "requested": false,
+      "complete": false,
+      "artifact": null,
+      "error": null
+    },
+    "intendedExitCode": 0
+  },
+  "actualChild": {
+    "closeObserved": true,
+    "code": 0,
+    "signal": null,
+    "firstCause": null,
+    "laterErrors": [],
+    "timersCleared": true,
+    "stdout": {
+      "receivedBytes": 0,
+      "writtenBytes": 0,
+      "prefixOnly": false,
+      "writeFailed": false
+    },
+    "stderr": {
+      "receivedBytes": 0,
+      "writtenBytes": 0,
+      "prefixOnly": false,
+      "writeFailed": false
+    }
+  },
+  "actualOuter": {
+    "waitCompleted": true,
+    "waitReturnCode": 0,
+    "actualExitCode": 0,
+    "actualSignal": null,
+    "signalNumber": null,
+    "launchError": null,
+    "wrapperIntendedExitCode": 0
+  },
+  "plan": {
+    "path": "discovery-cycle07/S3/E2019/runs/E2021-original-plan-v1/plan.wire.json",
+    "bytes": 617401,
+    "sha256": "e1471209d9e91a885effb096fb052ac7a0ea61f42d07f348fa4856b3997dc7b5",
+    "receiptBindingMatchesIndependentOpaqueHashAndBytes": true,
+    "bodyDecodedByS3": false,
+    "numericPlanRecomputed": false,
+    "eligibilityReviewed": false,
+    "qualification": "One concrete successful bounded engineering operation, not numerical/scientific eligibility or future memory/cap certification."
+  },
+  "outputValidation": {
+    "bindingsVerified": true,
+    "inventoryComplete": true,
+    "outputErrors": [],
+    "innerStdoutBytes": 0,
+    "innerStderrBytes": 0,
+    "outerStdoutBytes": 0,
+    "outerStderrBytes": 0,
+    "capOrIntegrityFailureObserved": false,
+    "tokenState": "CONSUMED",
+    "tokenPath": "discovery-cycle07/S3/E2019/tokens/E2021-original-plan-v1.spent.json",
+    "tokenConsumedUTC": "2026-10-19T00:44:30.613Z",
+    "runPath": "discovery-cycle07/S3/E2019/runs/E2021-original-plan-v1",
+    "tokenPacketRequestSourceReviewRuntimeAmbientIdentity": "Small token/packet/receipt/exit identities read and consistent; token wrapperPid5 and marker parentPid5/childPid13 match external wrapperPid5.",
+    "qualification": "No token/output removal, overwrite, retry or numerical-body inspection after close."
+  },
+  "artifacts": [
+    {
+      "path": "discovery-cycle07/S3/E2019/runs/E2021-original-plan-v1/child-started.json",
+      "sha256": "90896b8a0118c337deb3b58bdbe9af21979fe35a371d40f9d93e5b0cdb363d9b",
+      "bytes": 260,
+      "inspection": "small metadata or raw stream file inspection"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2019/runs/E2021-original-plan-v1/exit.json",
+      "sha256": "6b250319418dd34cd1fe5f6c7f1ca1617c5c91aa8b24228c02cca18b0b04179b",
+      "bytes": 2760,
+      "inspection": "small metadata or raw stream file inspection"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2019/runs/E2021-original-plan-v1/helper-receipt.json",
+      "sha256": "02508d7e2a79a190fc70199ba9a060fae0f6ca8aa3fe3621cc2299cdd43af352",
+      "bytes": 820,
+      "inspection": "small metadata or raw stream file inspection"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2019/runs/E2021-original-plan-v1/plan.wire.json",
+      "sha256": "e1471209d9e91a885effb096fb052ac7a0ea61f42d07f348fa4856b3997dc7b5",
+      "bytes": 617401,
+      "inspection": "opaque size and SHA256 ONLY; body not read for content or decoded"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2019/runs/E2021-original-plan-v1/stderr.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "inspection": "small metadata or raw stream file inspection"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2019/runs/E2021-original-plan-v1/stdout.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "inspection": "small metadata or raw stream file inspection"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2019/tokens/E2021-original-plan-v1.spent.json",
+      "sha256": "07199096878e8f7a163aab644d2136e3f12cd9a247a0192eb88e7fc761de3e42",
+      "bytes": 3893,
+      "inspection": "small metadata or raw stream file inspection"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2021/end-utc.raw",
+      "sha256": "6fd4879703870f79e8aa0a24733315db64feac12318cc5f43bc4353107fe2d7f",
+      "bytes": 28,
+      "inspection": "small metadata or raw stream file inspection"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2021/exit-code.raw",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "inspection": "small metadata or raw stream file inspection"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2021/outer-observed.json",
+      "sha256": "406b81cf731f3714a533e0bc6c8aa29e5ebefa4b220fce3a8fb5648a02126b62",
+      "bytes": 646,
+      "inspection": "small metadata or raw stream file inspection"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2021/prospective.json",
+      "sha256": "b1094ff29d5562869796908a551871fcdf3a1c890dfb3f5c4bca573b2b052951",
+      "bytes": 2875,
+      "inspection": "small metadata or raw stream file inspection"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2021/return-code.raw",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2,
+      "inspection": "small metadata or raw stream file inspection"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2021/signal.raw",
+      "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed",
+      "bytes": 5,
+      "inspection": "small metadata or raw stream file inspection"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2021/start-utc.raw",
+      "sha256": "e4e67b00681be0c8a43e2a3373ad3041a968367b37cd55066014483db31a946d",
+      "bytes": 28,
+      "inspection": "small metadata or raw stream file inspection"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2021/stderr.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "inspection": "small metadata or raw stream file inspection"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2021/stdout.raw",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "inspection": "small metadata or raw stream file inspection"
+    }
+  ],
+  "postHashesMatchPreflight": true,
+  "sourceReviewPacketRuntimePinsBeforeAndAfter": [
+    {
+      "path": "discovery-cycle07/S3/E2019/ROOT-ADMISSION.json",
+      "sha256": "e9823950159a5866c9f00b8f0875a56571cbceb6f073bf7895f264644a8b9ee1"
+    },
+    {
+      "path": "discovery-cycle07/S2/E2012/original-evidence-plan.mjs",
+      "sha256": "0b6f2bad20177cd965085b3fbf889c008205653c03bcb72280d41769e17a001a"
+    },
+    {
+      "path": "discovery-cycle07/S2/E2012/plan-core.mjs",
+      "sha256": "52ea18fd97e0112bd8aee255b73743a79bb2ab9842b0ec828314bff9c1c26ea5"
+    },
+    {
+      "path": "discovery-cycle07/S2/E2012/plan.test.mjs",
+      "sha256": "83083e5ed749a76051bc7e88d1ded5dabadf01d687ccfa727f443b8bcec05589"
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs",
+      "sha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015"
+    },
+    {
+      "path": "discovery-cycle07/S1/E2005/protocol.v2.json",
+      "sha256": "7948df5ee19e10a065f907a7dc0af1b845b5b408f32776b78813ad938bedea6e"
+    },
+    {
+      "path": "discovery-cycle07/S3/R2005/realresult.json",
+      "sha256": "c301cf5ff9005716cc7c1e7309e2f087bb282d53e99821611cb00a6b8e8b29b4"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2019/run-original-plan.mjs",
+      "sha256": "3c58c5fd53ea170d28e82480642f09433be064fa3bbeeefe00a9d3e7c6275160"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2019/capture-original-plan.mjs",
+      "sha256": "13603b76a7c27dd9332f136fd7056f89bcc1bc620b4a275b96522a30c470a1a3"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2019/capture-core.mjs",
+      "sha256": "ef9bfee41de9a1cfc7c4dd9ba4357a83e0760adcbe64836301551461c5bdde3d"
+    },
+    {
+      "path": "discovery-cycle07/S3/E2019/fabricated.test.mjs",
+      "sha256": "983f003cc3baf4c97b4e74ef6cc6ee6073c0b0add96ac9cfa0e0cfe68257371d"
+    },
+    {
+      "path": "discovery-cycle07/S4/R2013/realresult.json",
+      "sha256": "2b01e9f247a6d7c8d2640e60308797db2b4198f68c2beaf8603502b04146fca8"
+    },
+    {
+      "path": "discovery-cycle07/S4/R2020/realresult.json",
+      "sha256": "c9ee8a57eb37bd60293807ef9d331371fa22a79014a89b0c66adfc629173466c"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "sha256": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12"
+    }
+  ],
+  "actualScope": {
+    "originalOperations": 1,
+    "fabricatedTestRuns": 0,
+    "syntaxPrechecks": 0,
+    "extraProjectImportPrechecks": 0,
+    "enabledHelperCalls": 1,
+    "originalNativeEvidenceReadDecode": "Actually permitted within fixed admitted helper; internal fragment/codec call counts uninstrumented, not falsely zero. S3 did not directly read/decode original evidence bodies outside helper.",
+    "afterClosePlanOrHoldDecode": 0,
+    "newPATHQueries": 0,
+    "newStoreCalls": 0,
+    "newCV": 0,
+    "imagePixelReads": 0,
+    "render": 0,
+    "sourceEdits": 0,
+    "capRaises": 0,
+    "cleanupOrRetries": 0,
+    "GitOrNativeWrites": 0,
+    "repositoryWrites": 0,
+    "writeScope": "Own E2021 prospective/raw/result plus fixed reviewed E2019 token/run outputs only; no source edits."
+  },
+  "remainingHolds": [
+    "Fresh independent file-only review of exact packet/token/receipts/raw/hash bindings before further action.",
+    "Historical44 eligibility remains prediction, not promoted by READY opaque plan. Numerical plan decoding/review would need separate authority.",
+    "No G1-G6 producer, new PATH/store/CV/image/pixel/render, scientific/physical/width/continuity/defaultON/main/deploy/publication acceptance.",
+    "Once token remains consumed permanently for this run. No retry, cleanup or cap raise. Existing cap success here is not general resource/RSS/OS/host certification."
+  ],
+  "claims": {
+    "engineeringOneShotREADY": true,
+    "actualExitConfirmed": true,
+    "opaquePlanPersistedAndHashMatched": true,
+    "eligibility44Observed": false,
+    "scientificAcceptance": "UNKNOWN",
+    "producerGO": false,
+    "continuation": "HOLD"
+  },
+  "skillInfluence": "Materialize separates actual helper/child/outer operation and byte/hash evidence from uninspected numerical plan, historical eligibility prediction, prior fabricated results and producer authority."
+}

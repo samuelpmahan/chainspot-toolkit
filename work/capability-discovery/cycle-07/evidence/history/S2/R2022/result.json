@@ -1,0 +1,50 @@
+{
+  "job_id": "R2022",
+  "worker": "S2",
+  "outcome": "confirmed_reuse",
+  "decision": "accepted",
+  "summary": "Independent source-only review accepts exact8321B v2 copy helper and scoped proposal for trusted root-owned closed metadata. Fresh diff changes only native manifest entries/archivedPath to files/path, matching unchanged exporter. Completeness, byte/mode, empty-file, collision and caps guards are coherent; outside-source captures/seal and final quiescence remain mandatory. Later accepted-R2021 binding is append-only chronology, not retroactive native finish or copy admission. No runtime/copy result or final E2024 docs/seal accepted.",
+  "scope": "Exact E2022 v2 source/proposal only; no final documents, seal or ONE-copy GO",
+  "targets": [
+    {"path":"discovery-cycle07/S1/E2022/copy-checkpoint.once.v2.mjs","bytes":8321,"sha256":"321e5b116ce485f14a96fff9010b206b9af4bc5d1137597a10e9171c189af163","read":"complete"},
+    {"path":"discovery-cycle07/S1/E2022/FLOW.v2.md","bytes":7579,"sha256":"c6d8b0e6281e7dfd4185df1f12f7a4b30d59a693e3b9a60b500ae97f5dc10bdd","read":"complete"},
+    {"path":"discovery-cycle07/S1/E2022/checkpoint-plan.v2.json","bytes":9037,"sha256":"6f963e99494ce50819585827d71cf73f2f9a733485100e4d77c32e131a7bd579","read":"complete"},
+    {"path":"discovery-cycle07/S1/E2022/v2.diff","bytes":6443,"sha256":"843fe8585dca5a93798ee846741f64b6ef17c57c6ba0356367cf095851938698","read":"complete; fresh ordinary code diff agrees"},
+    {"path":"discovery-cycle07/S1/E2022/finalization-addendum.md","bytes":2289,"sha256":"304c559637fa9787e6b6f2857f4fb286114152e4e95f983fdc7ff2fa580dd1fc","read":"complete"},
+    {"path":"discovery-cycle07/S1/E2022/realresult.json","bytes":12759,"sha256":"f570bb1ea45f167569dd1da40dd14112a952d13b9b01ccffe2078eb085b1bac5","read":"complete; initial native-finished result preserved"},
+    {"path":"discovery-cycle07/S1/E2022/realresult.v2.json","bytes":14271,"sha256":"9205d5e4c8adc9037d88c04c467b5191b638bbabb533e7f7a65d228a8f5098c6","read":"complete; later author appendendum only"},
+    {"path":"discovery-cycle07/S1/E2022/R2021-binding.json","bytes":1537,"sha256":"9558c99a56fe75876058fa46006114117950b9d88fa85f7429efdc75a40f9ca5","read":"complete"}
+  ],
+  "proposed_docs_read_complete_not_final": [
+    {"path":"discovery-cycle07/S1/E2022/CURRENT.proposed.md","sha256":"76de9b6bdcb19b68af40573dec2b91e2c99a755c42213a3f9fb36de12e17d315"},
+    {"path":"discovery-cycle07/S1/E2022/README.proposed.md","sha256":"e4074e3361e51d7c230e2fb5d508fb3b7cd8cf2c8fbca0f4c2e83bf13af35c6b"},
+    {"path":"discovery-cycle07/S1/E2022/REPRODUCE.proposed.md","sha256":"62f60e36195b1e3180192c4bbc5973ad81f1e49df0e726f5eabd10c5874e7e2b"},
+    {"path":"discovery-cycle07/S1/E2022/RESUME.proposed.md","sha256":"d4efa00b7de219451a9258f5bcc27a7cbc8d4e1e4787ad0757e37f3842ef4425"},
+    {"path":"discovery-cycle07/S1/E2022/next-packets.proposed.json","sha256":"a5f74447498b3b32a8d6c749308194a508138c76fa858f9e3b7f12b97311d264"}
+  ],
+  "interface_and_chronology": {
+    "preserved_v1_sha256":"110bbc0e4dbdf858a346114760b5bf79abe9f9dc93deb83f4dbb092ea5e63f47",
+    "unchanged_exporter_sha256":"826088766cfe4e840860ee1c213f1a895a6c77ca4bcbae6279c02f0881f6ca25",
+    "native_output":"manifest.files[] with destination-relative path, sourcePath, bytes, sha256, sourcePOSIXPermissions, copiedPOSIXPermissions and gitProjectedMode; manifest self-excluded",
+    "future_export_config":"manifestArrayRelative true and exact work/capability-discovery/cycle-07/ manifestPrefix; not created/admitted here",
+    "accepted_R2021_receipt":{"path":"discovery-cycle07/S4/R2021/realresult.json","bytes":11030,"sha256":"a0f8ee27b4a92507240af60e5a88c9f54e8584e10786f6b1a77a4280be5e396b","decision":"accepted","scope":"engineering output consistency only; fresh hash/size and receipt metadata read, no native body"},
+    "historical_pending_notes":"Preserve initial result/proposed documents as chronology; later binding does not rewrite native E2022 finish or admit copy."
+  },
+  "findings": [
+    {"lines":"5-15,47-64","finding":"Outside-source fixed root seal/hash and trusted ordinary JSON four-field source records; complete filename set/no exclusions, unique entries, accepted review included by hash, opaque plan pin."},
+    {"lines":"16-40,80,92-95","finding":"Bounded no-symlink descriptor/EOF/hash/size/mode checks; source preflight/copy rereads and full source body/mode/name postchecks; no source chmod."},
+    {"lines":"74-84","finding":"Collision-refusing filename projection, exact five top-doc destinations, docs16384, file/seal/manifest1048576, source-count512, total5242880 including duplicate docs+manifest; no cap increase."},
+    {"lines":"82-97","finding":"Native files/path interface, self-excluded manifest, exclusive fresh output, genuine zero-byte copies, new-destination-only chmod/readback, POSIX versus Git projection separation; retain prefix on failure."},
+    {"lines":"54 and addendum","finding":"Object.keys validates enumerable string fields, not arbitrary descriptors/symbols; adequate only for root-reviewed JSON-parsed closed ordinary metadata as explicitly scoped."}
+  ],
+  "actual_actions":{"source_metadata_hash_size_ordinary_diff_only":true,"writes_only":"discovery-cycle07/S2/R2022/","syntax_checks":0,"imports":0,"tests":0,"freeze_operations":0,"copies":0,"new_original_helper_calls":0,"original_plan_or_native_value_body_reads":0,"native_decodes":0,"codec_PATH_store_CV_image_render":0,"Git_commands_or_writes":0,"repository_or_native_writes":0},
+  "limitations":[
+    "Unexecuted source review, not a syntax/import/copy pass or security/host/race/crash-durability certificate.",
+    "Output caps are not cumulative read I/O or RSS bounds; mutable inventory headroom does not prove actual final caps.",
+    "Filename .txt projection is a discovery convention, not a prohibition on execution when source permissions are preserved.",
+    "Source/root seal and actual-copy prospective/captures/results must be outside discovery-cycle07; all included writers/reviews/docs/native records finish before sealing. Later administration separately indexed.",
+    "Final E2024 five docs, complete seal, accepted-R2021 binding and fresh destination require separate root full review; any set/body/mode drift stops without pruning/retry/cap raise.",
+    "No original operation replay, numerical/scientific/physical/path/center-versus-width acceptance or publication follows."
+  ],
+  "gate":"HOLD actual copy until root reconciliation/full final-doc read, source quiescence, complete outside-source exact seal/cap validation and distinct ONE-copy GO. Independent copied-byte audit and later one-commit/export/publication gates remain separate."
+}

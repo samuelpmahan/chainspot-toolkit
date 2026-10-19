@@ -1,0 +1,163 @@
+// E2016: ORIGINAL-INCAPABLE metadata-only regressions, authored UNEXECUTED.
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { EventEmitter } from 'node:events';
+import { checkArtifacts, FILE_CAPS, captureSession, invokeOnce } from '../../S3/E2014/capture-core.mjs';
+
+const FAKE_SHA='a'.repeat(64); // Opaque metadata token, never a claimed content digest.
+const PLAN_CAP=2097152,HOLD_CAP=65536;
+const roles=[
+  {name:'READY plan',path:'plan.wire.json',cap:PLAN_CAP},
+  {name:'complete HOLD',path:'integrity-hold.wire.json',cap:HOLD_CAP}
+];
+function fixture(role,path=role.path,bytes=8) {
+  const binding={path,bytes,sha256:FAKE_SHA};
+  const receipt=role.name==='READY plan'
+    ? {status:'READY',plan:binding,holdRetention:{complete:false,artifact:null}}
+    : {status:'FAILED',plan:null,holdRetention:{complete:true,artifact:binding}};
+  return {receipt,inventory:[{...binding}]};
+}
+function mustRefuse(role,path,bytes) {
+  const {receipt,inventory}=fixture(role,path,bytes);
+  assert.throws(()=>checkArtifacts(receipt,inventory),/REFUSED/,
+    `${role.name} must refuse invalid role filename/byte identity even when inventory matches`);
+}
+
+test('valid READY plan metadata and exact literal plan cap are accepted',()=>{
+  const role=roles[0];assert.equal(FILE_CAPS['plan.wire.json'],PLAN_CAP);
+  const ordinary=fixture(role),atCap=fixture(role,role.path,PLAN_CAP);
+  assert.equal(checkArtifacts(ordinary.receipt,ordinary.inventory),true);
+  assert.equal(checkArtifacts(atCap.receipt,atCap.inventory),true);
+});
+test('valid complete HOLD metadata and exact literal HOLD cap are accepted',()=>{
+  const role=roles[1];assert.equal(FILE_CAPS['integrity-hold.wire.json'],HOLD_CAP);
+  const ordinary=fixture(role),atCap=fixture(role,role.path,HOLD_CAP);
+  assert.equal(checkArtifacts(ordinary.receipt,ordinary.inventory),true);
+  assert.equal(checkArtifacts(atCap.receipt,atCap.inventory),true);
+});
+
+// These four should falsify current checkArtifacts: inventory equality cannot replace role identity.
+test('READY plan refuses wrong known role path stdout.raw with matching inventory',()=>{
+  mustRefuse(roles[0],'stdout.raw',8);
+});
+test('complete HOLD refuses wrong known role path plan.wire.json with matching inventory',()=>{
+  mustRefuse(roles[1],'plan.wire.json',8);
+});
+test('READY plan refuses unknown path instead of relying on undefined cap lookup',()=>{
+  mustRefuse(roles[0],'unknown.wire.json',8);
+});
+test('complete HOLD refuses unknown path instead of relying on undefined cap lookup',()=>{
+  mustRefuse(roles[1],'unknown.wire.json',8);
+});
+
+// Independent named tests preserve already-present safe-integer/positive/cap guards.
+const invalidByteCases=[
+  {name:'fractional',bytes:1.5},
+  {name:'negative',bytes:-1},
+  {name:'zero',bytes:0},
+  {name:'unsafe integer',bytes:Number.MAX_SAFE_INTEGER+1},
+  {name:'above role-specific actual cap',bytes:role=>role.cap+1}
+];
+for(const role of roles)for(const item of invalidByteCases)test(`${role.name} refuses ${item.name} bytes with matching inventory`,()=>{
+  const bytes=typeof item.bytes==='function'?item.bytes(role):item.bytes;
+  mustRefuse(role,role.path,bytes);
+});
+
+test('READY plan refuses missing mandatory null plan binding',()=>{
+  const {receipt}=fixture(roles[0]);receipt.plan=null;
+  assert.throws(()=>checkArtifacts(receipt,[]),/REFUSED/);
+});
+test('complete HOLD refuses missing mandatory null artifact binding',()=>{
+  const {receipt}=fixture(roles[1]);receipt.holdRetention.artifact=null;
+  assert.throws(()=>checkArtifacts(receipt,[]),/REFUSED/);
+});
+
+// No OS child, streams, descriptors, or timers: every capability below stays in memory.
+function captureFixture(throwOnStdoutData=false) {
+  const child=new EventEmitter();child.stdout=new EventEmitter();child.stderr=new EventEmitter();
+  const timers=new Map(),closed=[],signals=[];let firstDataErrorListeners=null;
+  child.kill=signal=>{signals.push(signal);return true;};
+  const ordinaryOn=child.stdout.on;
+  child.stdout.on=function(event,listener){
+    if(event==='data'){
+      firstDataErrorListeners={stdout:child.stdout.listenerCount('error'),stderr:child.stderr.listenerCount('error')};
+      if(throwOnStdoutData)throw Error('stdout data registration');
+    }
+    return ordinaryOn.call(this,event,listener);
+  };
+  const io={open:name=>name,spawn:()=>child,write:(_fd,_b,_off,n)=>n,sync:()=>{},
+    close:fd=>closed.push(fd),setTimer:(callback,ms)=>{const token={};timers.set(token,{callback,ms});return token;},
+    clearTimer:token=>timers.delete(token)};
+  return {child,io,timers,closed,signals,firstDataErrorListeners:()=>firstDataErrorListeners};
+}
+test('in-memory capture control handles stderr error and awaits mock close',async()=>{
+  const f=captureFixture(),pending=captureSession(f.io);let result;
+  try{assert.doesNotThrow(()=>f.child.stderr.emit('error',Error('stderr fixture')));}
+  finally{f.child.emit('close',1,null);result=await pending;assert.equal(f.timers.size,0);assert.deepEqual(f.closed,['stdout','stderr']);}
+  assert.equal(result.firstCause.stage,'STDERR_ERROR');
+  assert.equal(result.actualChildExit.closeObserved,true);
+});
+test('capture installs BOTH pipe error listeners before fallible stdout data setup',async()=>{
+  const f=captureFixture(true),pending=captureSession(f.io);let result;
+  try{
+    assert.doesNotThrow(()=>f.child.stderr.emit('error',Error('stderr after setup failure')),
+      'stderr error must already be handled after stdout data registration throws');
+    assert.deepEqual(f.firstDataErrorListeners(),{stdout:1,stderr:1});
+  }finally{
+    // Cleanup runs even when the refusal assertion fails; no pending real timer/child exists.
+    f.child.emit('close',1,null);result=await pending;
+    assert.equal(f.timers.size,0);assert.deepEqual(f.closed,['stdout','stderr']);
+  }
+  assert.equal(result.firstCause.stage,'SETUP');
+  assert.equal(result.firstCause.error.message,'stdout data registration');
+  assert.ok(result.laterErrors.some(e=>e.stage==='STDERR_ERROR'));
+  assert.equal(result.actualChildExit.closeObserved,true);
+});
+
+function locatedHold() {
+  const rawAnswer={value:{leftLum:Array(16).fill(NaN),rightLum:Array(16).fill(-0),
+    okLeft:Array(16).fill(0),okRight:Array(16).fill(1),stationsCount:16},
+    unit:'lum per station (inside band minus outside band), per side',emits:{computed:1}};
+  rawAnswer.value.leftLum[0]=Infinity;
+  const error=Error('first located HOLD');error.code='INTEGRITY_HOLD';
+  error.integrityHold={code:'CONTRAST_INFINITY',j:0,c:0,b:0,role:'control',side:'leftLum',stationIndex:0,
+    planIndex:2,rawValue:Infinity,answerBinding:{path:'fragments/answer-2.json',bytes:100,sha256:FAKE_SHA,
+      kind:'answer',comparisonId:'fabricated/before16',planIndex:2},rawAnswer,
+    originalState:'COMPLETED',originalCallbackStatus:'ok'};
+  return error;
+}
+async function invokeHoldFixture(hashThrows=false) {
+  const first=locatedHold(),writes=[],encoded=new Uint8Array([1]),ids={runId:'fake',packetSha256:FAKE_SHA,requestSha256:FAKE_SHA};
+  let calls=0,hashCalls=0,projected=null,persisted=null;
+  const result=await invokeOnce({claim:async()=>{},
+    loadHelper:async()=>({buildOriginalEvidencePlan:async()=>{calls++;throw first;}}),
+    loadCodec:async()=>({encodeBytes:p=>{projected=p;return encoded;}}),
+    write:async(path,bytes)=>{writes.push({path,bytes});},
+    hash:()=>{hashCalls++;if(hashThrows)throw Error('artifact hash fixture');return FAKE_SHA;},
+    receipt:async value=>{persisted=value;},rawError:()=>{throw Error('unexpected rawError');}},ids);
+  return {first,writes,encoded,calls,hashCalls,projected,persisted,result};
+}
+test('in-memory HOLD control retains one projected artifact with opaque fake codec',async()=>{
+  const f=await invokeHoldFixture();
+  assert.equal(f.calls,1);assert.equal(f.hashCalls,1);
+  assert.equal(f.projected.integrityHold,f.first.integrityHold);
+  assert.deepEqual(f.writes,[{path:'integrity-hold.wire.json',bytes:f.encoded}]);
+  assert.equal(f.result.error.code,'INTEGRITY_HOLD');
+  assert.equal(f.result.holdRetention.complete,true);
+  assert.deepEqual(f.result.holdRetention.artifact,{path:'integrity-hold.wire.json',bytes:1,sha256:FAKE_SHA});
+  assert.equal(f.result.holdRetention.error,null);assert.equal(f.result.receiptPersisted,true);
+});
+test('HOLD artifact hash failure after write retains first cause and reports INCOMPLETE',async()=>{
+  const f=await invokeHoldFixture(true),r=f.result;
+  assert.equal(f.calls,1);assert.equal(f.hashCalls,1);
+  assert.deepEqual(f.writes,[{path:'integrity-hold.wire.json',bytes:f.encoded}]);
+  assert.equal(r.status,'FAILED');assert.equal(r.error.code,'INTEGRITY_HOLD');
+  assert.equal(r.error.message,'first located HOLD');
+  assert.deepEqual(r.helperCall,{attempted:true,returned:false,threw:true});
+  assert.equal(r.holdRetention.requested,true);
+  assert.equal(r.holdRetention.error.message,'artifact hash fixture');
+  assert.equal(r.postErrors.length,1);assert.equal(r.postErrors[0].stage,'HOLD_RETENTION');
+  assert.equal(r.holdRetention.artifact,null);
+  assert.equal(r.holdRetention.complete,false,'write alone is not complete without artifact hash/binding');
+  assert.equal(r.receiptPersisted,true);assert.equal(f.persisted.holdRetention.complete,false);
+});

@@ -1,0 +1,28 @@
+{
+  "schema":"cycle07-fabricated-green-prospective@1",
+  "job_id":"E2013",
+  "worker":"S2",
+  "status":"SAVED_BEFORE_FIRST_LAUNCH_NOT_YET_RUN",
+  "admission":{"path":"/workspace/scratch/8528bb251845/discovery-cycle07/root-E2013-green-admission.json","sha256":"e58401edc1802cdd707175d4d55dc4f85ce7dca15cd9b7ea8598b3698823620f","read":"full"},
+  "cwd":"/workspace/scratch/8528bb251845",
+  "argv":["node","--test","--test-concurrency=1","discovery-cycle07/S2/E2012/plan.test.mjs"],
+  "freshPins":[
+    {"path":"discovery-cycle07/S2/E2012/original-evidence-plan.mjs","bytes":12666,"sha256":"0b6f2bad20177cd965085b3fbf889c008205653c03bcb72280d41769e17a001a"},
+    {"path":"discovery-cycle07/S2/E2012/plan-core.mjs","bytes":20323,"sha256":"52ea18fd97e0112bd8aee255b73743a79bb2ab9842b0ec828314bff9c1c26ea5"},
+    {"path":"discovery-cycle07/S2/E2012/plan.test.mjs","bytes":25563,"sha256":"83083e5ed749a76051bc7e88d1ded5dabadf01d687ccfa727f443b8bcec05589"},
+    {"path":"discovery-cycle07/S2/E2012/FLOW.md","bytes":8048,"sha256":"3105fd820514669b01a38fd3b8e8e06ca4d072dc7555fbce2b2bcb8c55627f8a"},
+    {"path":"discovery-cycle07/S2/E2012/FULL.diff","bytes":11347,"sha256":"b54d7e92d7ff80e8103ffc9b367bf8fea920f9fe571413609329f3ab19a5ac92"},
+    {"path":"chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs","bytes":7322,"sha256":"3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015"}
+  ],
+  "captures":{
+    "stdout":"/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2013/stdout.raw",
+    "stderr":"/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2013/stderr.raw",
+    "startUTC":"/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2013/start-utc.raw",
+    "endUTC":"/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2013/end-utc.raw",
+    "exitCode":"/workspace/scratch/8528bb251845/discovery-cycle07/S2/E2013/exit-code.raw"
+  },
+  "captureMethod":"Exclusive new raw files with shell noclobber, direct separate command stdout/stderr, UTC before/after, child exit saved immediately and returned. Preserve empty streams.",
+  "predictionNotObservation":{"tests":73,"pass":73,"fail":0},
+  "boundary":"ONE fabricated-only test command; disabled/malformed public helper calls and temporary descriptor fixtures only. No valid real-root enabled call, original native body/decode, store/PATH/CV/image/render/Git. Pure codec imports/calls may occur on fabricated values.",
+  "stop":"Stop after first run including unexpected failure. No syntax precheck, extra import, filtered rerun, fix, test edit or cap raise. Hold for independent different-worker review even if all tests pass."
+}

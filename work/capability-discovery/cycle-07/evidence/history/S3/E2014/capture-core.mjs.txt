@@ -1,0 +1,68 @@
+/** Pure bounded capture/failure semantics. NO imports, paths, filesystem, process or helper loader. */
+export const ENV_KEYS=Object.freeze(['NODE_OPTIONS','NODE_PATH','NODE_EXTRA_CA_CERTS','TZ','LANG','LC_ALL','LD_PRELOAD','LD_LIBRARY_PATH','NODE_V8_COVERAGE','NODE_COMPILE_CACHE','NODE_DISABLE_COMPILE_CACHE','OPENSSL_CONF','NODE_ICU_DATA']);
+export const FILE_CAPS=Object.freeze({'stdout.raw':65536,'stderr.raw':65536,'child-started.json':65536,'plan.wire.json':2097152,'integrity-hold.wire.json':65536,'helper-receipt.json':65536});
+const fail=s=>{throw new Error('REFUSED: '+s);};
+export function fields(o,keys){if(!o||Object.getPrototypeOf(o)!==Object.prototype)fail('ordinary record');const names=Reflect.ownKeys(o);if(names.length!==keys.length||names.some(k=>typeof k!=='string'||!keys.includes(k)))fail('record key set');for(const k of keys){const d=Object.getOwnPropertyDescriptor(o,k);if(!d||!Object.hasOwn(d,'value')||!d.enumerable||d.value===undefined)fail('record data');}}
+function equal(a,b){if(Object.is(a,b))return true;if(Array.isArray(a)&&Array.isArray(b))return a.length===b.length&&a.every((x,i)=>equal(x,b[i]));if(a&&b&&typeof a==='object'&&typeof b==='object'){const k=Object.keys(a);return k.length===Object.keys(b).length&&k.every(x=>Object.hasOwn(b,x)&&equal(a[x],b[x]));}return false;}
+export function checkBoundary(expected,actual){fields(expected.runtime,['execPath','version','platform','arch','execArgv']);fields(actual.runtime,['execPath','version','platform','arch','execArgv']);if(!equal(expected.runtime,actual.runtime))fail('runtime identity');fields(expected.ambient,ENV_KEYS);fields(actual.ambient,ENV_KEYS);for(const k of ENV_KEYS){const e=expected.ambient[k],a=actual.ambient[k];fields(e,['set','value']);fields(a,['set','value']);if(typeof e.set!=='boolean'||(e.set?typeof e.value!=='string':e.value!==null)||!equal(e,a))fail('ambient identity '+k);}return true;}
+export function roleReview(reviewer,author){if(typeof reviewer!=='string'||typeof author!=='string'||!reviewer||!author||reviewer===author)fail('review author independence');}
+export function reserve(io){io.token();io.directory();}
+export function errorInfo(e){const full=String(e?.message??e),code=typeof e?.code==='string'?e.code:null;return {name:String(e?.name??'Error').slice(0,128),message:full.slice(0,4096),messageTruncated:full.length>4096,code};}
+
+/** Cap/pipe/setup errors stop a fixture or real child; only child close supplies exit facts. */
+export async function captureSession(io,{streamBytes=65536,wallMs=120000,graceMs=2000}={}){
+  const streams={},laterErrors=[];let firstCause=null,child=null,wall=null,grace=null,wait=null,closed=false,unsubscribe=null;
+  let actualChildExit={code:null,signal:null,closeObserved:false};
+  const record=(stage,e)=>{const item={stage,error:errorInfo(e)};if(firstCause===null)firstCause=item;else if(laterErrors.length<12)laterErrors.push(item);};
+  const stop=(stage,e=Error(stage))=>{record(stage,e);if(!child||closed)return;try{child.kill('SIGTERM');}catch(x){record('TERM_REQUEST',x);}if(grace===null)try{grace=io.setTimer(()=>{try{if(!closed)child.kill('SIGKILL');}catch(x){record('KILL_REQUEST',x);}},graceMs);}catch(x){record('KILL_TIMER',x);}};
+  try{
+    if(io.onStop)unsubscribe=io.onStop(stage=>stop(stage));
+    for(const name of ['stdout','stderr']){const fd=io.open(name);streams[name]={fd,receivedBytes:0,writtenBytes:0,prefixOnly:false,writeFailed:false};}
+    child=io.spawn();
+    wait=new Promise(done=>child.once('close',(code,signal)=>{closed=true;actualChildExit={code,signal,closeObserved:true};done();}));
+    child.on('error',e=>stop('SPAWN_ERROR',e));
+    wall=io.setTimer(()=>stop('WALL_TIMEOUT'),wallMs);
+    for(const name of ['stdout','stderr']){
+      const s=streams[name],pipe=child[name],label=name.toUpperCase();
+      pipe.on('error',e=>{s.prefixOnly=true;stop(label+'_ERROR',e);});
+      pipe.on('data',b=>{s.receivedBytes+=b.length;if(s.writeFailed)return;const take=Math.min(b.length,streamBytes-s.writtenBytes);try{let n=0;while(n<take){const got=io.write(s.fd,b,n,take-n);if(!Number.isSafeInteger(got)||got<1||got>take-n)fail('capture write count');n+=got;s.writtenBytes+=got;}}catch(e){s.writeFailed=true;s.prefixOnly=true;stop(label+'_WRITE',e);}if(take<b.length){s.prefixOnly=true;stop(label+'_CAP');}});
+    }
+  }catch(e){stop('SETUP',e);}
+  // A post-spawn setup failure must NOT jump straight to timer/descriptor cleanup.
+  if(wait)try{await wait;}catch(e){record('CLOSE_OBSERVATION_FAILED',e);}
+  if(!child||closed){if(wall!==null)io.clearTimer(wall);if(grace!==null)io.clearTimer(grace);}
+  if(unsubscribe)try{unsubscribe();}catch(e){record('SIGNAL_CLEANUP',e);}
+  for(const s of Object.values(streams)){try{io.sync(s.fd);}catch(e){record('CAPTURE_SYNC',e);}try{io.close(s.fd);}catch(e){record('CAPTURE_CLOSE',e);}}
+  return {actualChildExit,firstCause,laterErrors,streams:Object.fromEntries(Object.entries(streams).map(([k,s])=>[k,{receivedBytes:s.receivedBytes,writtenBytes:s.writtenBytes,prefixOnly:s.prefixOnly,writeFailed:s.writeFailed}])),timersCleared:!child||closed};
+}
+
+function dense(a,n){if(!Array.isArray(a)||Object.getPrototypeOf(a)!==Array.prototype||a.length!==n||Reflect.ownKeys(a).length!==n+1)fail('HOLD dense array');for(let i=0;i<n;i++){const d=Object.getOwnPropertyDescriptor(a,String(i));if(!d||!Object.hasOwn(d,'value')||!d.enumerable)fail('HOLD array data');}}
+function holdProjection(e){
+  const p=e.integrityHold;fields(p,['code','j','c','b','role','side','stationIndex','planIndex','rawValue','answerBinding','rawAnswer','originalState','originalCallbackStatus']);
+  if(p.code!=='CONTRAST_INFINITY'||!Number.isInteger(p.c)||p.c<0||p.c>15||!Number.isInteger(p.b)||p.b<0||p.b>2||p.j!==3*p.c+p.b||p.role!=='control'||!['leftLum','rightLum'].includes(p.side)||p.planIndex!==10*p.c+2+3*p.b||(p.rawValue!==Infinity&&p.rawValue!==-Infinity)||p.originalState!=='COMPLETED'||p.originalCallbackStatus!=='ok')fail('HOLD location/source');
+  const m=p.answerBinding;fields(m,['path','bytes','sha256','kind','comparisonId','planIndex']);if(!/^fragments\/answer-\d+\.json$/.test(m.path)||!Number.isInteger(m.bytes)||m.bytes<1||m.bytes>8192||!/^[0-9a-f]{64}$/.test(m.sha256)||m.kind!=='answer'||m.planIndex!==p.planIndex||typeof m.comparisonId!=='string'||m.comparisonId.length>128)fail('HOLD answer binding');
+  const a=p.rawAnswer;fields(a,['value','unit','emits']);fields(a.emits,['computed']);if(a.emits.computed!==1||a.unit!=='lum per station (inside band minus outside band), per side')fail('HOLD answer unit');fields(a.value,['leftLum','rightLum','okLeft','okRight','stationsCount']);const n=a.value.stationsCount;if(n!==16&&n!==48)fail('HOLD stations');for(const k of ['leftLum','rightLum','okLeft','okRight']){dense(a.value[k],n);if(a.value[k].some(x=>typeof x!=='number'||(k.startsWith('ok')&&x!==0&&x!==1)))fail('HOLD array type');}if(!Number.isInteger(p.stationIndex)||p.stationIndex<0||p.stationIndex>=n||!Object.is(a.value[p.side][p.stationIndex],p.rawValue))fail('HOLD located value');
+  return {schema:'cycle07-located-integrity-hold@1',errorCode:'INTEGRITY_HOLD',integrityHold:p};
+}
+/** Internal capability seam. It has no way to discover/import a real helper or open evidence. */
+export async function invokeOnce(io,ids){
+  const helperCall={attempted:false,returned:false,threw:false},postErrors=[];let status='FAILED',plan=null,error=null,holdRetention={requested:false,complete:false,artifact:null,error:null};
+  try{
+    await io.claim();const module=await io.loadHelper();if(typeof module.buildOriginalEvidencePlan!=='function')fail('helper export');let r;
+    helperCall.attempted=true;try{r=await module.buildOriginalEvidencePlan();helperCall.returned=true;}catch(e){helperCall.threw=true;throw e;}
+    fields(r,['status','plan','encodedBytes','sha256','bindings','actualNewPATH']);if(r.status!=='READY'||r.actualNewPATH!==0||!r.encodedBytes||Object.getPrototypeOf(r.encodedBytes)!==Uint8Array.prototype||r.encodedBytes.length<1||r.encodedBytes.length>2097152||io.hash(r.encodedBytes)!==r.sha256)fail('READY wire contract');
+    await io.write('plan.wire.json',r.encodedBytes);plan={path:'plan.wire.json',bytes:r.encodedBytes.length,sha256:r.sha256};status='READY';
+  }catch(e){
+    error=errorInfo(e);
+    if(e?.code==='INTEGRITY_HOLD'){
+      holdRetention.requested=true;
+      try{const p=holdProjection(e),codec=await io.loadCodec(),b=codec.encodeBytes(p,{maxBytes:65536,maxNodes:8192,maxDepth:32,maxTypedBytes:1});if(!b||Object.getPrototypeOf(b)!==Uint8Array.prototype||b.length>65536)fail('HOLD artifact cap');await io.write('integrity-hold.wire.json',b);holdRetention.complete=true;holdRetention.artifact={path:'integrity-hold.wire.json',bytes:b.length,sha256:io.hash(b)};}catch(x){holdRetention.error=errorInfo(x);postErrors.push({stage:'HOLD_RETENTION',error:errorInfo(x)});}
+    }
+  }
+  const receipt={schema:'cycle07-original-plan-helper-receipt@2',...ids,status,helperCall,plan,error,holdRetention,postErrors,intendedExitCode:status==='READY'?0:1,qualification:'Source-derived helper evidence only; HOLD numbers live solely in lossless artifact, not this JSON.'};
+  let receiptPersisted=false;try{await io.receipt(receipt);receiptPersisted=true;}catch(e){const later={stage:'RECEIPT_WRITE',error:errorInfo(e)};postErrors.push(later);try{io.rawError({schema:'cycle07-original-plan-receipt-write-error@2',...ids,status,helperCall,firstError:error,holdRetention,postErrors});}catch{ /* unavailable raw capture remains unknown, never retry */ }}
+  return {...receipt,receiptPersisted};
+}
+export function validateReceipt(r,ids){const keys=['schema','runId','packetSha256','requestSha256','status','helperCall','plan','error','holdRetention','postErrors','intendedExitCode','qualification'];fields(r,Object.hasOwn(r,'receiptPersisted')?[...keys,'receiptPersisted']:keys);if(r.schema!=='cycle07-original-plan-helper-receipt@2'||r.runId!==ids.runId||r.packetSha256!==ids.packetSha256||r.requestSha256!==ids.requestSha256)fail('receipt identity');fields(r.helperCall,['attempted','returned','threw']);for(const x of Object.values(r.helperCall))if(typeof x!=='boolean')fail('receipt events');if(r.helperCall.returned&&r.helperCall.threw||r.helperCall.returned&&!r.helperCall.attempted||r.helperCall.threw&&!r.helperCall.attempted)fail('receipt event relation');if(!['READY','FAILED'].includes(r.status)||r.intendedExitCode!==(r.status==='READY'?0:1))fail('receipt status');fields(r.holdRetention,['requested','complete','artifact','error']);if(typeof r.holdRetention.requested!=='boolean'||typeof r.holdRetention.complete!=='boolean'||r.holdRetention.complete&&!r.holdRetention.requested)fail('receipt HOLD relation');if(r.status==='READY'&&(!r.helperCall.returned||r.error!==null||r.holdRetention.requested))fail('receipt READY');}
+export function validateInventory(names){if(names.length>Object.keys(FILE_CAPS).length||names.some(n=>!Object.hasOwn(FILE_CAPS,n)))fail('unexpected output file');}
+export function checkArtifacts(r,inventory){for(const b of [r.status==='READY'?r.plan:null,r.holdRetention.complete?r.holdRetention.artifact:null]){if(!b)continue;fields(b,['path','bytes','sha256']);const actual=inventory.find(x=>x.path===b.path);if(!actual||actual.bytes!==b.bytes||actual.sha256!==b.sha256||!Number.isSafeInteger(b.bytes)||b.bytes<1||b.bytes>FILE_CAPS[b.path])fail('artifact binding');}return true;}

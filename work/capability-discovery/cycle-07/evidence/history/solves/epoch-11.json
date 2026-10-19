@@ -1,0 +1,77 @@
+{
+  "epoch": 11,
+  "at": "2026-10-18T23:41:56.956655+00:00",
+  "ready_jobs": [
+    "E2011"
+  ],
+  "pinned_workers": [
+    "S3"
+  ],
+  "assignments": {
+    "S2": "E2011",
+    "S3": "E2009",
+    "S4": "BENCH",
+    "S1": "BENCH"
+  },
+  "dispatch": {
+    "S2": "E2011"
+  },
+  "native_seconds": 0.004530883001280017,
+  "native_constraints": {
+    "solved": true,
+    "brokenVal": 0,
+    "brokenCount": 0,
+    "constraints": [
+      {
+        "name": "independent_review",
+        "desc": "avoidAssignmentsSpec: Avoid 4 assignments on scope packets",
+        "value": 0
+      },
+      {
+        "name": "pin_in_flight",
+        "desc": "avoidMovingSpec: Avoid moving 1 objects",
+        "value": 0
+      },
+      {
+        "name": "ready_packet_capacity",
+        "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+        "value": 0
+      }
+    ]
+  },
+  "independent_capacity_check": true,
+  "independent_eligibility_check": true,
+  "exact_score": 100,
+  "native_score": 100,
+  "caps": {
+    "E2001": 0,
+    "E2002": 0,
+    "E2003": 0,
+    "E2004": 0,
+    "R2001": 0,
+    "E2006": 0,
+    "E2005": 0,
+    "E2007": 0,
+    "R2005": 0,
+    "R2006": 0,
+    "E2008": 0,
+    "E2009": 1,
+    "E2010": 0,
+    "E2011": 1,
+    "BENCH": 4
+  },
+  "eligible": {
+    "E2011": [
+      "S2"
+    ]
+  },
+  "weights": {
+    "E2011": 100
+  },
+  "agent_by_worker": {
+    "S1": null,
+    "S2": null,
+    "S3": "/root/lab7_p3",
+    "S4": null
+  }
+}

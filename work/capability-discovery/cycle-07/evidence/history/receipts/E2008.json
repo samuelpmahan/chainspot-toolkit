@@ -1,0 +1,225 @@
+{
+  "schema": "capability-discovery-cap-capture-contract@1",
+  "job_id": "E2008",
+  "worker": "S3",
+  "outcome": "mixed_change",
+  "status": "SOURCE_DERIVED_CAP_ENVELOPE_AND_CAPTURE_PROPOSAL_NO_EXECUTION",
+  "summary": "Read complete E2006 helper/core/tests and original/actual FLOW/contracts, accepted E2005 v2 and S4 E2007 design critique. Confirmed source has pre-read8MiB body guard, explicit selected-subtree UTF8 byte/node guards and terminal2MiB encoded-plan cap. Replacing v171512B by accepted v283022B prospectively changes the one-pass read set to3644326B/304 descriptor-body reads; preserving both requires3715838B/305. Original96 selected-answer and176 callback caps have plain-manifest support. Aggregate encoded500000-node/depth40 and whole2MiB plan-output sufficiency remain unproved; no numeric bodies were inspected and no cap raise is proposed. A frozen-cap rejection is a valid terminal engineering negative, not a prerequisite to bypass before fabricated tests or scientific disproof. Proposed minimal fabricated boundary cases and later external durable-token/exclusive capture/actual-exit contract; no runner implemented, no source changes, no execution approval or CV resource certification.",
+  "reviewedSourceHashes": [
+    {
+      "path": "discovery-cycle07/S2/E2006/original-evidence-plan.mjs",
+      "bytes": 12665,
+      "sha256": "6234b799ce57a1e0cab0744ff116041815a13db30839faf9b7f91843f0d856b4",
+      "read": "complete"
+    },
+    {
+      "path": "discovery-cycle07/S2/E2006/plan-core.mjs",
+      "bytes": 15679,
+      "sha256": "df6e398677ba99564619ab80ac886d752aaf88ab8a275933fd2f5f3878a3d57e",
+      "read": "complete"
+    },
+    {
+      "path": "discovery-cycle07/S2/E2006/plan.test.mjs",
+      "bytes": 14080,
+      "sha256": "e5f86e7cdfa703bc8cb614ba1ca0cb3c2c920b2ec8c3a1e0fba87a5b46172595",
+      "read": "complete; authored cases only, not run"
+    },
+    {
+      "path": "discovery-cycle07/S2/E2006/FLOW.v2.md",
+      "bytes": 8804,
+      "sha256": "4072059e2cab06b2fe1d6043cdda3c11595a0e2effece0eb8b892c81ee02915b",
+      "read": "complete"
+    },
+    {
+      "path": "discovery-cycle07/S2/E2006/contract.v2.json",
+      "bytes": 5008,
+      "sha256": "ed4653d0cc56ddc60ab482601ea405c2b5efc41d799707a074b5ead2c4090544",
+      "read": "complete"
+    },
+    {
+      "path": "discovery-cycle07/S2/E2006/result.json",
+      "sha256": "2f6f8d37d0a3db4af3e7dd1a7d83727400b6a9cfd58b395fa89fd8bf91871b4a"
+    },
+    {
+      "path": "discovery-cycle07/S1/E2005/protocol.v2.json",
+      "bytes": 83022,
+      "sha256": "7948df5ee19e10a065f907a7dc0af1b845b5b408f32776b78813ad938bedea6e"
+    },
+    {
+      "path": "discovery-cycle07/S3/R2005/realresult.json",
+      "sha256": "c301cf5ff9005716cc7c1e7309e2f087bb282d53e99821611cb00a6b8e8b29b4"
+    },
+    {
+      "path": "discovery-cycle07/S4/E2007/contract-review.md",
+      "sha256": "4b8f3f460c296aa9cee892d339b5300cd1dd6d137d86d77ab743f1cbc4d8a867"
+    },
+    {
+      "path": "discovery-cycle07/S4/E2007/realresult.json",
+      "sha256": "cc2d8968df811bd1ebce97288e7eafa81c34f22326e5988a95de6a91b2a2134d"
+    },
+    {
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs",
+      "bytes": 7322,
+      "sha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015",
+      "read": "complete source; no codec call"
+    }
+  ],
+  "readEnvelope": {
+    "authority": "Current source literals plus plain original artifact/source22 manifests and immutable v2 slots; prospective successful one-pass body reads only, not an observed helper run.",
+    "currentV1": {
+      "authorityFiles": 8,
+      "authorityBytes": 799799,
+      "sourceFiles": 22,
+      "sourceBytes": 258620,
+      "aggregateFiles": 2,
+      "aggregateBytes": 2276019,
+      "answerFiles": 96,
+      "answerBytes": 179543,
+      "callbackFiles": 176,
+      "callbackBytes": 118835,
+      "bodyReads": 304,
+      "bodyBytes": 3632816
+    },
+    "replaceV1WithV2": {
+      "deltaBytes": 11510,
+      "authorityBytes": 811309,
+      "bodyReads": 304,
+      "bodyBytes": 3644326,
+      "ceilingBytes": 8388608,
+      "headroomBytes": 4744282
+    },
+    "retainV1AndAlsoReadV2": {
+      "additionalBytes": 83022,
+      "bodyReads": 305,
+      "bodyBytes": 3715838,
+      "ceilingBytes": 8388608,
+      "headroomBytes": 4672770
+    },
+    "mechanicalPrecondition": "Current helper still pins E2001 path/size/hash and schema1.0.0. Accepted v2 substitution must mechanically rebind path83022B/SHA7948df5e... and schema1.1.0 before first execution, with new source hashes/review. Merely changing a digest while retaining the old schema predicate cannot run v2. Whether v1 is also read must be explicit, not silently added.",
+    "accountingLimits": "Code load checks readBytes+p.bytes before opening and adds successfully returned body bytes. EOF probes request one extra byte but ordinarily return0; lstat/fstat/open and Node module-loader I/O are not additional full body passes in this count. Failed-read accounting is not returned as a successful plan. External helper/core/test/runner/review pin reads, any rereads/postchecks and capture writes are OUTSIDE this source's declared load schedule unless explicitly added. This is not RSS or a whole-process I/O certification.",
+    "codecRead": "Pure codec7322B is already among source22, retained then imported from verified bytes; do not count a second filesystem codec body read unless future source actually adds one.",
+    "bodiesObservedByE2008": 0
+  },
+  "capEnvelope": [
+    {
+      "item": "Selected original answers",
+      "source": "helper slotLedger/load + core small",
+      "count": 96,
+      "manifestBytes": 179543,
+      "manifestMaxBytes": 6218,
+      "perFileCap": 8192,
+      "conclusion": "SUFFICIENT_FOR_EXACT_MANIFEST_SELECTED96_BYTES_ONLY; not profile/loss/unselected answers."
+    },
+    {
+      "item": "All original callbacks",
+      "source": "helper selection.callbacks/load",
+      "count": 176,
+      "manifestBytes": 118835,
+      "manifestMaxBytes": 705,
+      "perFileCap": 2048,
+      "conclusion": "SUFFICIENT_FOR_EXACT_MANIFEST176_BYTES_ONLY. Selected96 query callbacks plus16 constant/profile pairs are decoded later; no callback args invented."
+    },
+    {
+      "item": "Aggregate encoded trees",
+      "source": "original-evidence-plan.mjs encodedTree",
+      "inputBytes": [
+        2094896,
+        181123
+      ],
+      "maxEncodedNodes": 500000,
+      "maxEncodedDepth": 40,
+      "guard": "JSON.parse and canonical UTF8 JSON.stringify+LF occur BEFORE iterative array/scalar node/depth checks; rejects ordinary JSON objects. Root depth0; counter includes every popped array/scalar. Pending stack and parser/reserialization allocations precede completed budget traversal.",
+      "conclusion": "GUARDED_TERMINAL_LIMIT; sufficiency for these unseen trees UNKNOWN. Native codec500000 semantic visits/depth32 does not establish encoded-tree500000/depth40. Byte bounds do not prove peak parser/stringifier/stack RSS or preparse depth. No original-tree inspection needed to admit separately authorized fabricated cap tests."
+    },
+    {
+      "item": "Small selected decode",
+      "source": "plan-core.mjs small",
+      "maxUTF8WireBytes": 32768,
+      "maxEncodedNodes": 8192,
+      "maxCodecSemanticDepth": 32,
+      "maxCodecSemanticNodes": 8192,
+      "maxTypedBytes": 1,
+      "guard": "Explicit UTF8(JSON.stringify(selected tagged subtree)+LF).length is checked before decoder; separate iterative encoded node count rejects typed tags. decodeValue maxBytes alone is not relied upon.",
+      "conclusion": "EXPLICIT_SOURCE_GUARD_CONFIRMED; exact selected original answer/callback byte maxima fit. Sufficiency for every selected combined metadata target remains unproved; cap failure terminates. Serialization itself allocates before the32768 check."
+    },
+    {
+      "item": "Returned plan encoded bytes",
+      "source": "helper codec.encodeBytes(plan,{maxBytes:2097152,maxTypedBytes:1})",
+      "maxBytes": 2097152,
+      "guard": "encodeBytes checks after tagged-tree construction and UTF8 serialization; no returned READY result if this throws. Later codec detachment traverses the plan again; it does not create a larger permitted output budget.",
+      "knownPartialBytes": "Original raw fit/control fragment sums179543 plus selected query callback sums64842=244385B are only selected native wire contributions. Plan also constructs per-role bindings/plannedQuery/resolvedIdentity/attribution, repeated derived rawArgs/sourceWitness/authority metadata and codec envelopes; returned bindings[] is outside encoded plan.",
+      "conclusion": "ABSTAIN_ON_WHOLE_PLAN_SUFFICIENCY; no complete constructor/string/duplication/outer-return bound certified here. Retain2MiB cap/no raise. Source-defined terminal rejection is useful engineering evidence; successful numeric-plan materialization is not presumed."
+    }
+  ],
+  "minimalFutureNONCVCases": [
+    {
+      "id": "N1",
+      "case": "Run existing fabricated fixed48 happy/no-pair/numeric-unusable fixtures plus disabled/malformed public requests under explicit fabricated-only mode.",
+      "assert": "No valid enabled fixed-original public call reachable; zero original evidence/source22-body I/O by public enabled path, no store/PATH/CV/image/render. Preserve all48 rows/raw NaN/-0 and actual failure reasons. Existing authored tests are not claimed passed."
+    },
+    {
+      "id": "N2",
+      "case": "Synthetic selected-wire byte/node/depth boundaries and one-over cases; duplicate/null-prototype/typed/malformed tag rejection and canonical LF mismatch.",
+      "assert": "32768/32769 UTF8 bytes and8192/8193 encoded-node boundaries are distinct from codec semantic depth32/33. Freeze valid fixture construction/count convention and expected first refusal. No cap change or original public enabled call to reach an inaccessible guard; use only separately reviewed fabricated pure seams/codec boundaries."
+    },
+    {
+      "id": "N3",
+      "case": "Synthetic aggregate depth40/41 and encoded nodes500000/500001 through a source-reviewed fabricated-only cap seam; synthetic2MiB/2MiB+1 encoded-plan boundary.",
+      "assert": "Demonstrate the declared terminal guard/reason and no READY/partial-success result after refusal. These are prospective synthetic checks, not proof the true original trees or complete original plan fit. If private guards are unreachable without real I/O, review a bounded fabricated seam first; never unlock real-root enabled entry for NONCV."
+    },
+    {
+      "id": "N4",
+      "case": "Existing temp descriptor fixture plus missing/size/hash/leaf-and-ancestor-symlink refusal, exclusive capture/token collision and cap/output-failure capture fixture.",
+      "assert": "No original paths/pixels. First failure remains first, terminal prefix/actual exit retained, no cleanup/retry/replacement token. Driver/capture fixture is separately reviewed work, not implemented in this report."
+    }
+  ],
+  "laterOneFixedOriginalPlanRunContract": {
+    "scope": "Exactly one separately admitted buildOriginalEvidencePlan valid-enabled call for retained-original binding/ARGPLAN only; no new PATH/store/CV/image/producer work. Requires S4 complete-code defect closure, exact repaired/rebound helper/core/test/FLOW/protocol hashes and separate native/root admission after any admitted fabricated packet. This report is not that GO.",
+    "beforeImportOrHelperIO": "Outer runner validates its closed request, exclusively reserves a NEW capture directory and one durable O_EXCL token record bound to runID, exact v2/source/review/request hashes and admission. Token is consumed before helper import/enabled evidence work and stays consumed on every failure. Reservation failure means zero helper calls. Helper's constant request token is merely admission identity, not durable one-shot enforcement.",
+    "capture": "Use write-once raw stdout/stderr captures with predeclared bounds, explicit exclusive exit/receipt files and exact available-file byte/SHA inventory. Do not console-dump the returned plan or Uint8Array wrapper; on READY persist returned encodedBytes directly, byte-for-byte/LF intact, under its2MiB ceiling, with small metadata digest/count receipt. Outer return/serialized bindings/log/receipt envelope needs its own frozen bounds; not silently covered by helper2MiB or future producer16MiB.",
+    "failure": "A frozen read/tree/selected/output cap rejection is terminal useful negative: retain token, raw available captures, first error/post-capture errors and actual process exit/signal. Do not raise caps, rerun helper, normalize native evidence or manufacture successful partial plan. Capture/write failure after helper return records that return separately and retains partial file prefixes honestly; never replay to repair output.",
+    "exit": "Observed outer process exit/signal is authoritative and separate from intended receipt exit/status. Record actual call attempted/returned/threw and capture completion. READY alone is not independent artifact acceptance; absent logs/receipt/output after failure stay absent/unknown, not fabricated.",
+    "after": "Independent read-only exact output/capture/exit review only. Any later redesign or changed-cap experiment is a new explicit packet, not hidden recovery or permission implied by this plan-run. G1-G6 producer HOLD and scientific/physical identities remain unchanged."
+  },
+  "scopeCoordination": "S4 owns the broad complete-code defect review; E2008 does not duplicate or supersede it. Source guard existence and metadata-size arithmetic do not approve current source behavior. E2007 incidental tagged-report text exposure remains S4's disclosed testimony/excluded evidence, not E2008 original-body inspection.",
+  "actualActions": {
+    "completeSourceTestFlowReads": true,
+    "readOnlyHashes": true,
+    "plainMetadataJqArithmetic": true,
+    "scratchWritesOnly": "discovery-cycle07/S3/E2008/realresult.json",
+    "codeChanges": 0,
+    "rawAnswerBodyReads": 0,
+    "rawCallbackBodyReads": 0,
+    "rawAggregateBodyReads": 0,
+    "originalImageOrPlaneReads": 0,
+    "projectImports": 0,
+    "syntaxChecks": 0,
+    "tests": 0,
+    "codecCalls": 0,
+    "nativeValueDecode": 0,
+    "helperExecutions": 0,
+    "storeCalls": 0,
+    "PATHQueries": 0,
+    "CV": 0,
+    "render": 0,
+    "repositoryEdits": 0,
+    "GitOperations": 0,
+    "nativeOperations": 0,
+    "networkCalls": 0,
+    "subagents": 0
+  },
+  "claims": {
+    "capGuardsSourceConfirmed": true,
+    "exactByteReadEnvelopeProspective": true,
+    "aggregateTreeFitsKnown": false,
+    "wholePlan2MiBFitsKnown": false,
+    "NONCVPassed": false,
+    "fabricatedRunAuthorized": false,
+    "originalPlanRunAuthorized": false,
+    "CVResourceCertified": false,
+    "capRaiseProposed": false,
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN"
+  },
+  "skillInfluence": "materialize separates actual source/metadata findings, proposed fabricated/capture contracts and unproven sufficiency. Frozen-cap rejection is retained negative evidence, not fabricated success or scientific disproof."
+}

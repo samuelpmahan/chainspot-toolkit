@@ -1,0 +1,27 @@
+# Lab7 post-review administration checkpoint
+
+This additive entry records events after the frozen cycle-07 checkpoint. The original 345-file package, four product files, old 3375 tracked files and all 339 scratch source files remain unchanged. Original top-level documents saying copy/commit pending describe their creation time; they are not rewritten to imply later knowledge.
+
+## Actual completed engineering evidence
+
+E2024 invoked the admitted copy exactly once, exited 0 with signal null and empty stderr, and produced 345 files / 4,783,133 bytes. The original self-excluded manifest is `../../evidence-manifest.json`, 118141 bytes, SHA256 `b84894941e25dfc7ddc0b0b534dbcb876639ce4537a6db47c071de344360369f`. The external prospective, six genuine raw captures and author result are retained here byte-exact, including the empty stderr file. No copy replay occurred while preparing this entry.
+
+Independent R2024 accepted physical package preservation, not science or release. Its result SHA256 is `d224df6bb0ab1229d53d9859d592b2bca9edb3f5f6147f017244fffb72aa0c39`. It checked every copied 345 file, all 339 sealed original source paths/bodies/full modes, the four product files, and all 3375 prior tracked bodies/HEAD/index tuples. Twelve genuine empty captures and 26 inert `.mjs.txt` history sources remain preserved. The 617401-byte plan remains opaque, SHA256 `e1471209d9e91a885effb096fb052ac7a0ea61f42d07f348fa4856b3997dc7b5`; physical 0600 and Git-projected 100644 are distinct. Git does not preserve private POSIX permissions.
+
+The author's `ea8519ed5d8efe19f09ed4f2f9555413426a5a013d6e2781d7c2b41a75f78c3e` source-name aggregate has UNSPECIFIED / UNREPRODUCED serialization. It is not claimed independently reproduced or equivalent to the audit's differently specified LF digest. Acceptance rests on direct complete 339-path set equality and every body/size/full-mode match. The original audit and its later explicit name-digest note are both retained unchanged.
+
+## Control and payload boundary
+
+Canonical native control moved byte-exact from frozen `discovery-cycle07/state.json` to `discovery-cycle07-checkpoint-admission/control/` under root ownership. The handoff preserves the old epoch32 state identity, 90885 bytes / SHA256 `e3cf76ef40125ce7cd6c8184baa9e3c80a42060b11076a8ace90b20073e3b5d3`, without reset, requeue or reassignment. Later canonical state intentionally advances; equality with frozen state is not required.
+
+This entry's `evidence/control/state.json` is a historical check-time byte snapshot, dated and hashed in `manifest.json`, not live control or proof of continuous worker execution. The retained spec, registry, epoch32–34 actual solve outputs/commands and E2024/R2024 native receipts provide a bounded handoff, not the entire control history. Later assignments, including S2 E2025 draft/review work, are not adopted scientific or product payload here. Snapshot references to other work remain historical coordination only.
+
+`manifest.json` indexes originals one-to-one beneath `evidence/`, preserving bytes and actual source file permission modes through exclusive copies. It also indexes this entry, but excludes itself to avoid a circular own hash. The outside E2026 commit plan separately binds the manifest and the exact 345 + 4 + admin additive path list. Git blob SHA1 and SHA256 are both recorded; mode projection is explicit. No old inventory, raw failure, AMEND, counterexample or negative is removed or normalized.
+
+## Meaning and next gate
+
+Prior E2021 ran ONE original-plan helper; R2021 ran ONE independent output decode. Their accepted scope remains 48 slots: 44 ELIGIBLE / NOT_ATTEMPTED and four NATIVE_NO_EDGE_PAIR / NOT_EXECUTED at j5,11,26,41, with new PATH/store/CV calls zero. It is source/shape/units and retained 3×9 + 16×10 witness evidence, not new contrast measurement. NaN/finite-invalid policy remains unchanged; original queryTrace.error was checked null by the helper but is NOT_RETAINED_IN_PLAN for fresh independent review. Source-derived argument attribution is not dynamic callback argument capture.
+
+G1–G6 CV-producer seam closure remains SOURCE-ONLY NEXTREADY under the frozen protocol: independent source review, bounded default-OFF sibling and NONCV verification must precede any separate ONE44 new-contrast admission. No enabled helper, query, codec/native-value decode, pixels, CV or rendering is authorized by this administration checkpoint. Same-image exposed pixels are not held-out evidence; joint center+width changes do not isolate their causes. Scientific, path, physical, human, width and continuity claims remain UNKNOWN. Original absolute dependencies and consumed token are not a portable fresh-clone replay promise.
+
+At this entry's creation, preflight, syntax checks, staging, commit, export and publication are NOT RUN. The source-only E2026 flow proposes one literal additive staging set, an exact staged-tree verifier, and one own-branch commit only after root reads the actual sources and separately admits execution. Latest published checkpoint remains Lab6 `bae599193610f87b7809d06ab508b033c7241d83`; local parent remains `4f24d50391927e0e50220690ea8ececec79e0bb4`, tree `27616cbaac38b1b916fc337d22dd8f7cab5a7736`. No PR, main integration, production ABFeature, default-ON, release or deployment is admitted. Accepted E2023 exporter is a later separately gated read-only Git export, not part of this preparation.

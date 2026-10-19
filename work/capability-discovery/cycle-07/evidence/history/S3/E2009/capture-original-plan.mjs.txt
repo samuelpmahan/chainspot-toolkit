@@ -1,0 +1,58 @@
+/** SOURCE ONLY. Two-process one-shot capture; no helper import in this parent. */
+import {openSync,closeSync,readSync,writeSync,fstatSync,lstatSync,mkdirSync,fsyncSync,readdirSync,constants} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {spawn} from 'node:child_process';
+import {resolve,sep} from 'node:path';
+import {fileURLToPath} from 'node:url';
+
+export const ROOT='/workspace/scratch/8528bb251845';
+export const HERE=`${ROOT}/discovery-cycle07/S3/E2009`;
+export const PACKET=`${HERE}/ROOT-ADMISSION.json`;
+export const LIMIT=Object.freeze({metadata:65536,stream:65536,plan:2097152,source:1048576,wallMs:120000,killGraceMs:2000});
+const PATHS=Object.freeze({helper:`${ROOT}/discovery-cycle07/S2/E2006/original-evidence-plan.mjs`,core:`${ROOT}/discovery-cycle07/S2/E2006/plan-core.mjs`,tests:`${ROOT}/discovery-cycle07/S2/E2006/plan.test.mjs`,codec:`${ROOT}/chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs`,protocol:`${ROOT}/discovery-cycle07/S1/E2005/protocol.v2.json`,protocolReview:`${ROOT}/discovery-cycle07/S3/R2005/realresult.json`,runner:`${HERE}/run-original-plan.mjs`,wrapper:`${HERE}/capture-original-plan.mjs`});
+export const digest=b=>createHash('sha256').update(b).digest('hex');
+export function fail(message){throw new Error(`REFUSED: ${message}`);}
+export function exact(o,keys){if(!o||Object.getPrototypeOf(o)!==Object.prototype)fail('ordinary record');const k=Reflect.ownKeys(o);if(k.length!==keys.length||k.some(x=>typeof x!=='string'||!keys.includes(x)))fail('closed fields');for(const x of keys){const d=Object.getOwnPropertyDescriptor(o,x);if(!d||!Object.hasOwn(d,'value')||!d.enumerable||d.value===undefined)fail('own data fields');}}
+export function hashText(s){if(typeof s!=='string'||!/^[0-9a-f]{64}$/.test(s)||/^0{64}$|^f{64}$/.test(s))fail('final SHA256 required');return s;}
+export function noLinks(path){const a=resolve(path);let p=sep;const parts=a.split(sep).filter(Boolean);for(let i=0;i<parts.length;i++){p=resolve(p,parts[i]);const s=lstatSync(p);if(s.isSymbolicLink()||(i<parts.length-1&&!s.isDirectory()))fail('symlink/non-directory component');}return a;}
+export function readExact(path,cap,bytes=null,expected=null){const a=noLinks(path),before=lstatSync(a);if(!before.isFile()||!Number.isSafeInteger(before.size)||before.size<0||before.size>cap||(bytes!==null&&before.size!==bytes))fail('file size/type');if(!Number.isSafeInteger(constants.O_NOFOLLOW))fail('O_NOFOLLOW required');let fd;try{fd=openSync(a,constants.O_RDONLY|constants.O_NONBLOCK|constants.O_NOFOLLOW);const s=fstatSync(fd);if(!s.isFile()||s.dev!==before.dev||s.ino!==before.ino||s.size!==before.size)fail('descriptor identity');const out=new Uint8Array(s.size);let n=0;while(n<out.length){const got=readSync(fd,out,n,out.length-n,n);if(!got)fail('truncated file');n+=got;}if(readSync(fd,new Uint8Array(1),0,1,out.length)!==0)fail('growing file');const after=fstatSync(fd);if(after.size!==s.size||after.mtimeMs!==s.mtimeMs||after.dev!==s.dev||after.ino!==s.ino)fail('file changed');if(expected!==null&&digest(out)!==expected)fail('file hash');return out;}finally{if(fd!==undefined)closeSync(fd);}}
+export function parse(bytes){return JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));}
+export function jsonBytes(value){const b=new TextEncoder().encode(`${JSON.stringify(value,null,2)}\n`);if(b.length>LIMIT.metadata)fail('metadata cap');return b;}
+export function putNew(path,bytes,sync=false){let fd;try{fd=openSync(path,'wx',0o600);let n=0;while(n<bytes.length){const got=writeSync(fd,bytes,n,bytes.length-n);if(!got)fail('zero write');n+=got;}if(sync)fsyncSync(fd);}finally{if(fd!==undefined)closeSync(fd);}}
+export function putJSON(path,value,sync=false){putNew(path,jsonBytes(value),sync);}
+function syncDir(path){const fd=openSync(noLinks(path),'r');try{fsyncSync(fd);}finally{closeSync(fd);}}
+export function smallError(e){const full=String(e?.message??e);return {name:String(e?.name??'Error').slice(0,128),message:full.slice(0,4096),messageTruncated:full.length>4096};}
+function reviewPin(r,targets){exact(r,['path','bytes','sha256','reviewer','decision','targets']);if(r.decision!=='accepted'||typeof r.reviewer!=='string'||!/^[A-Za-z0-9_-]{1,64}$/.test(r.reviewer)||r.reviewer==='S3')fail('different-worker accepted final review');if(!Array.isArray(r.targets)||JSON.stringify([...r.targets].sort())!==JSON.stringify([...targets].sort()))fail('review targets');if(typeof r.path!=='string'||!r.path.startsWith(`${ROOT}/discovery-cycle07/`)||resolve(r.path)!==r.path)fail('review path');pin(r,r.path);}
+function pin(p,path){if(!Number.isSafeInteger(p.bytes)||p.bytes<1||p.bytes>LIMIT.source)fail('final pin bytes');hashText(p.sha256);readExact(path,LIMIT.source,p.bytes,p.sha256);}
+export function loadAdmission(expected){hashText(expected);const bytes=readExact(PACKET,LIMIT.metadata,null,expected),p=parse(bytes);exact(p,['schema','status','mode','runId','pins','reviews','request']);if(p.schema!=='cycle07-original-plan-admission@1'||p.status!=='ROOT_FINAL_GO'||p.mode!=='ORIGINAL_PLAN_ONCE'||typeof p.runId!=='string'||!/^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/.test(p.runId))fail('final ROOT packet, not draft/null');exact(p.pins,Object.keys(PATHS));for(const [name,path]of Object.entries(PATHS)){exact(p.pins[name],['bytes','sha256']);pin(p.pins[name],path);}exact(p.reviews,['helper','runner']);reviewPin(p.reviews.helper,['helper','core','tests','codec','protocol']);reviewPin(p.reviews.runner,['runner','wrapper']);exact(p.request,['schema','enabled','token']);if(p.request.schema!=='cycle07-original-evidence-plan-request@1'||p.request.enabled!==true||typeof p.request.token!=='string'||!p.request.token||p.request.token.length>256||/draft|pending|null|placeholder/i.test(p.request.token))fail('final closed helper request');return {packet:p,packetSha256:expected,requestSha256:digest(jsonBytes(p.request)),paths:PATHS,runDir:`${HERE}/runs/${p.runId}`,tokenPath:`${HERE}/tokens/${p.runId}.spent.json`};}
+export function cliSha(args){if(args.length!==2||args[0]!=='--packet-sha')fail('usage: --packet-sha FINAL_ROOT_PACKET_SHA256');return hashText(args[1]);}
+function ensureParent(path){try{mkdirSync(path,0o700);}catch(e){if(e.code!=='EEXIST')throw e;}if(!lstatSync(noLinks(path)).isDirectory())fail('fixed parent directory');}
+
+export async function capture(args){
+  const a=loadAdmission(cliSha(args));ensureParent(`${HERE}/tokens`);ensureParent(`${HERE}/runs`);
+  // Token remains spent after every subsequent failure. No cleanup/overwrite path.
+  putJSON(a.tokenPath,{schema:'cycle07-original-plan-spent@1',state:'CONSUMED',runId:a.packet.runId,packetSha256:a.packetSha256,requestSha256:a.requestSha256,pins:a.packet.pins,reviews:a.packet.reviews,wrapperPid:process.pid,consumedUTC:new Date().toISOString()},true);syncDir(`${HERE}/tokens`);
+  mkdirSync(a.runDir,0o700);syncDir(`${HERE}/runs`);
+  const errors=[],streams={};let child=null,terminal=null,killer=null,timedOut=false,interrupted=null,spawnError=null;
+  const note=e=>{if(errors.length<16)errors.push(smallError(e));};
+  const stop=reason=>{if(!terminal)terminal=reason;if(child){child.kill('SIGTERM');if(killer===null)killer=setTimeout(()=>child.kill('SIGKILL'),LIMIT.killGraceMs);}};
+  for(const name of ['stdout','stderr']){const fd=openSync(`${a.runDir}/${name}.raw`,'wx',0o600);streams[name]={fd,written:0,received:0,prefixOnly:false,writeFailed:false};}
+  const signalHandler=s=>{interrupted=s;stop(`WRAPPER_${s}`);};const onINT=()=>signalHandler('SIGINT'),onTERM=()=>signalHandler('SIGTERM');process.on('SIGINT',onINT);process.on('SIGTERM',onTERM);
+  let observed={code:null,signal:null,closeObserved:false};
+  try{
+    child=spawn(process.execPath,[a.paths.runner,'--packet-sha',a.packetSha256],{cwd:ROOT,env:{TZ:'UTC'},stdio:['ignore','pipe','pipe'],shell:false});
+    const timer=setTimeout(()=>{timedOut=true;stop('WALL_TIMEOUT');},LIMIT.wallMs);
+    for(const name of ['stdout','stderr'])child[name].on('data',chunk=>{const s=streams[name];s.received+=chunk.length;if(s.writeFailed)return;const take=Math.min(chunk.length,LIMIT.stream-s.written);try{let n=0;while(n<take){const got=writeSync(s.fd,chunk,n,take-n);if(!got)fail('zero capture write');n+=got;s.written+=got;}}catch(e){s.writeFailed=true;s.prefixOnly=true;note(e);stop('CAPTURE_WRITE_FAILED');}if(take<chunk.length){s.prefixOnly=true;stop('STREAM_CAP');}});
+    observed=await new Promise(resolveDone=>{child.on('error',e=>{spawnError=smallError(e);note(e);});child.on('close',(code,signal)=>resolveDone({code,signal,closeObserved:true}));});
+    clearTimeout(timer);
+  }catch(e){note(e);stop('SPAWN_OR_WAIT_FAILED');}finally{if(killer!==null)clearTimeout(killer);process.off('SIGINT',onINT);process.off('SIGTERM',onTERM);for(const s of Object.values(streams)){try{fsyncSync(s.fd);}catch(e){note(e);}try{closeSync(s.fd);}catch(e){note(e);}}}
+  // Opaque output hashing only; no native plan decode or whole return console dump.
+  const inventory=[];let receipt=null,planVerified=false,inventoryComplete=false;
+  const caps={'stdout.raw':LIMIT.stream,'stderr.raw':LIMIT.stream,'child-started.json':LIMIT.metadata,'plan.wire.json':LIMIT.plan,'helper-receipt.json':LIMIT.metadata};
+  try{const names=readdirSync(a.runDir);if(names.length>Object.keys(caps).length||names.some(n=>!Object.hasOwn(caps,n)))fail('unexpected output file');for(const name of names){const b=readExact(`${a.runDir}/${name}`,caps[name]);inventory.push({path:name,bytes:b.length,sha256:digest(b)});if(name==='helper-receipt.json')receipt=parse(b);}if(receipt?.status==='READY'){const plan=inventory.find(x=>x.path==='plan.wire.json');planVerified=Boolean(plan&&receipt.plan&&plan.bytes===receipt.plan.bytes&&plan.sha256===receipt.plan.sha256);if(!planVerified)fail('independent plan output hash');}inventoryComplete=true;}catch(e){note(e);if(!terminal)terminal='OUTPUT_VERIFICATION_FAILED';}
+  const success=observed.closeObserved&&observed.code===0&&observed.signal===null&&!terminal&&!spawnError&&errors.length===0&&receipt?.status==='READY'&&planVerified;
+  const streamMetadata=Object.fromEntries(Object.entries(streams).map(([k,s])=>[k,{receivedBytes:s.received,writtenBytes:s.written,prefixOnly:s.prefixOnly,writeFailed:s.writeFailed}]));
+  const exit={schema:'cycle07-original-plan-observed-exit@1',runId:a.packet.runId,packetSha256:a.packetSha256,requestSha256:a.requestSha256,actualChildExit:observed,spawnError,timedOut,interrupted,terminal,errors,streams:streamMetadata,helperReceipt:receipt,planVerified,availableFilesBeforeExit:inventory,inventoryComplete,inventoryExcludes:['exit.json'],wrapperIntendedExitCode:success?0:1,limits:LIMIT,qualification:'Observed child close/exit/signal; wrapper own exit needs external launcher evidence. Prefix may be incomplete after filesystem failure. Hash-at-check-time is not execution authentication.'};
+  putJSON(`${a.runDir}/exit.json`,exit,true);process.exitCode=success?0:1;
+}
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))capture(process.argv.slice(2)).catch(e=>{process.stderr.write(`${JSON.stringify(smallError(e))}\n`);process.exitCode=1;});

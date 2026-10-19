@@ -1,0 +1,100 @@
+{
+  "schema": "cycle07-independent-output-plan-inspection@1",
+  "job_id": "R2021",
+  "worker": "S4",
+  "status": "PASS",
+  "plan": {
+    "path": "/workspace/scratch/8528bb251845/discovery-cycle07/S3/E2019/runs/E2021-original-plan-v1/plan.wire.json",
+    "bytes": 617401,
+    "sha256": "e1471209d9e91a885effb096fb052ac7a0ea61f42d07f348fa4856b3997dc7b5"
+  },
+  "caps": {
+    "maxBytes": 2097152,
+    "maxTypedBytes": 1,
+    "maxDepth": 32,
+    "maxNodes": 500000
+  },
+  "actualPlanDecodeCalls": 1,
+  "canonicalLFBytesEquivalent": true,
+  "counts": {
+    "slots": 48,
+    "eligible": 44,
+    "NOT_ATTEMPTED": 44,
+    "NOT_EXECUTED": 4,
+    "NATIVE_NO_EDGE_PAIR": 4,
+    "NUMERIC_UNUSABLE": 0,
+    "NONFINITE_DERIVED_ORIGIN": 0,
+    "malformedConditions": 0,
+    "numericFieldTypeErrors": 0,
+    "originalCallbackErrors": 0,
+    "newPATH": 0,
+    "newStores": 0,
+    "newCV": 0
+  },
+  "controls": {
+    "left": {
+      "valid": 1110,
+      "invalid": 42,
+      "finiteValid": 1110,
+      "finiteInvalid": 24,
+      "NaNValid": 0,
+      "NaNInvalid": 18,
+      "negativeZero": 0,
+      "positiveInfinity": 0,
+      "negativeInfinity": 0
+    },
+    "right": {
+      "valid": 1110,
+      "invalid": 42,
+      "finiteValid": 1110,
+      "finiteInvalid": 24,
+      "NaNValid": 0,
+      "NaNInvalid": 18,
+      "negativeZero": 0,
+      "positiveInfinity": 0,
+      "negativeInfinity": 0
+    },
+    "stationsPerSide": 1152
+  },
+  "sourceWitnessPhases": 3,
+  "sourceWitnessEntriesPerPhase": 9,
+  "source22": 22,
+  "inputIntegrityWitness": {
+    "strategy": "fixed16x10",
+    "snapshots": 16,
+    "checksPerSnapshot": 10,
+    "checksTotal": 160,
+    "postErrors": 0,
+    "requestVerified": true,
+    "suppliedPlanesVerified": true
+  },
+  "answerRefs": 96,
+  "retainedCallbackRefs": 96,
+  "originalQueryErrorField": "NOT_RETAINED_IN_PLAN; admitted helper source checked own null error before output; not reread independently from old queryTrace",
+  "derivedMath": "Only O prime component expression in specified JavaScript evaluation order and raw refined width; no fit/CV/score recomputation or clamp.",
+  "originalFragmentBodiesRead": 0,
+  "newQueries": 0,
+  "newStores": 0,
+  "newCV": 0,
+  "claims": {
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN",
+    "pathIdentity": "UNKNOWN",
+    "physicalEdgeIdentity": "UNKNOWN",
+    "calibratedWidth": "UNKNOWN",
+    "continuity": "UNKNOWN"
+  },
+  "scope": "Output-plan internal/source/protocol consistency only; shared pixels/dependent measurements not causal or physical/scientific acceptance.",
+  "artifacts": [
+    {
+      "path": "discovery-cycle07/S4/R2021/rows.wire.json",
+      "bytes": 341991,
+      "sha256": "2652d3681fc1d12d50c50246905790bab1876803e7265be1ad6590bcb2802c8d"
+    },
+    {
+      "path": "discovery-cycle07/S4/R2021/rows.labels.json",
+      "bytes": 275458,
+      "sha256": "eaf163b5e949fd5397553eff449762bcc8478d172b612cb973fe32963d596c4e"
+    }
+  ]
+}

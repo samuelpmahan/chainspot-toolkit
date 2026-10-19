@@ -1,0 +1,190 @@
+✔ valid READY plan metadata and exact literal plan cap are accepted (1.343282ms)
+✔ valid complete HOLD metadata and exact literal HOLD cap are accepted (0.180872ms)
+✖ READY plan refuses wrong known role path stdout.raw with matching inventory (0.747945ms)
+✖ complete HOLD refuses wrong known role path plan.wire.json with matching inventory (0.156636ms)
+✖ READY plan refuses unknown path instead of relying on undefined cap lookup (0.13244ms)
+✖ complete HOLD refuses unknown path instead of relying on undefined cap lookup (0.547945ms)
+✔ READY plan refuses fractional bytes with matching inventory (0.335275ms)
+✔ READY plan refuses negative bytes with matching inventory (0.167482ms)
+✔ READY plan refuses zero bytes with matching inventory (0.120712ms)
+✔ READY plan refuses unsafe integer bytes with matching inventory (0.15258ms)
+✔ READY plan refuses above role-specific actual cap bytes with matching inventory (0.117477ms)
+✔ complete HOLD refuses fractional bytes with matching inventory (0.159851ms)
+✔ complete HOLD refuses negative bytes with matching inventory (0.131678ms)
+✔ complete HOLD refuses zero bytes with matching inventory (0.070806ms)
+✔ complete HOLD refuses unsafe integer bytes with matching inventory (0.127812ms)
+✔ complete HOLD refuses above role-specific actual cap bytes with matching inventory (0.374464ms)
+✖ READY plan refuses missing mandatory null plan binding (0.223337ms)
+✖ complete HOLD refuses missing mandatory null artifact binding (0.173151ms)
+✔ in-memory capture control handles stderr error and awaits mock close (2.048854ms)
+✖ capture installs BOTH pipe error listeners before fallible stdout data setup (0.29276ms)
+✔ in-memory HOLD control retains one projected artifact with opaque fake codec (1.03646ms)
+✖ HOLD artifact hash failure after write retains first cause and reports INCOMPLETE (0.658221ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 14
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 99.627433
+
+✖ failing tests:
+
+test at discovery-cycle07/S2/E2016/artifact-identity.test.mjs:40:1
+✖ READY plan refuses wrong known role path stdout.raw with matching inventory (0.747945ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception: READY plan must refuse invalid role filename/byte identity even when inventory matches
+      at mustRefuse (file:///workspace/scratch/8528bb251845/discovery-cycle07/S2/E2016/artifact-identity.test.mjs:22:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/discovery-cycle07/S2/E2016/artifact-identity.test.mjs:41:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /REFUSED/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at discovery-cycle07/S2/E2016/artifact-identity.test.mjs:43:1
+✖ complete HOLD refuses wrong known role path plan.wire.json with matching inventory (0.156636ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception: complete HOLD must refuse invalid role filename/byte identity even when inventory matches
+      at mustRefuse (file:///workspace/scratch/8528bb251845/discovery-cycle07/S2/E2016/artifact-identity.test.mjs:22:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/discovery-cycle07/S2/E2016/artifact-identity.test.mjs:44:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /REFUSED/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at discovery-cycle07/S2/E2016/artifact-identity.test.mjs:46:1
+✖ READY plan refuses unknown path instead of relying on undefined cap lookup (0.13244ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception: READY plan must refuse invalid role filename/byte identity even when inventory matches
+      at mustRefuse (file:///workspace/scratch/8528bb251845/discovery-cycle07/S2/E2016/artifact-identity.test.mjs:22:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/discovery-cycle07/S2/E2016/artifact-identity.test.mjs:47:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /REFUSED/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at discovery-cycle07/S2/E2016/artifact-identity.test.mjs:49:1
+✖ complete HOLD refuses unknown path instead of relying on undefined cap lookup (0.547945ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception: complete HOLD must refuse invalid role filename/byte identity even when inventory matches
+      at mustRefuse (file:///workspace/scratch/8528bb251845/discovery-cycle07/S2/E2016/artifact-identity.test.mjs:22:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/discovery-cycle07/S2/E2016/artifact-identity.test.mjs:50:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /REFUSED/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at discovery-cycle07/S2/E2016/artifact-identity.test.mjs:66:1
+✖ READY plan refuses missing mandatory null plan binding (0.223337ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/discovery-cycle07/S2/E2016/artifact-identity.test.mjs:68:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /REFUSED/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at discovery-cycle07/S2/E2016/artifact-identity.test.mjs:70:1
+✖ complete HOLD refuses missing mandatory null artifact binding (0.173151ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/discovery-cycle07/S2/E2016/artifact-identity.test.mjs:72:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /REFUSED/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at discovery-cycle07/S2/E2016/artifact-identity.test.mjs:100:1
+✖ capture installs BOTH pipe error listeners before fallible stdout data setup (0.29276ms)
+  AssertionError [ERR_ASSERTION]: Got unwanted exception: stderr error must already be handled after stdout data registration throws
+  Actual message: "stderr after setup failure"
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/discovery-cycle07/S2/E2016/artifact-identity.test.mjs:103:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: Error: stderr after setup failure
+        at file:///workspace/scratch/8528bb251845/discovery-cycle07/S2/E2016/artifact-identity.test.mjs:103:57
+        at getActual (node:assert:611:5)
+        at strict.doesNotThrow (node:assert:779:32)
+        at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/discovery-cycle07/S2/E2016/artifact-identity.test.mjs:103:12)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+        at Test.postRun (node:internal/test_runner/test:1522:19)
+        at Test.run (node:internal/test_runner/test:1447:12)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7),
+    expected: undefined,
+    operator: 'doesNotThrow',
+    diff: 'simple'
+  }
+
+test at discovery-cycle07/S2/E2016/artifact-identity.test.mjs:150:1
+✖ HOLD artifact hash failure after write retains first cause and reports INCOMPLETE (0.658221ms)
+  AssertionError [ERR_ASSERTION]: write alone is not complete without artifact hash/binding
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/discovery-cycle07/S2/E2016/artifact-identity.test.mjs:161:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

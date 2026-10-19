@@ -1,0 +1,72 @@
+{
+  "schema": "cycle07-e2018-prospective-relocated-test@1",
+  "job_id": "E2018",
+  "worker": "S1",
+  "status": "SAVED_BEFORE_ONE_ADMITTED_COMMAND",
+  "admission": {
+    "path": "discovery-cycle07/root-E2018-relocated-test-admission.json",
+    "bytes": 1739,
+    "sha256": "025d02e87863ef0f6892351c56db339867ff5577ab4a79b62fd66b0fc972fe87",
+    "fullyRead": true
+  },
+  "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+  "argv": [
+    "node",
+    "--test",
+    "--test-concurrency=1",
+    "experiments/capability-discovery/joint-fit-original-plan/plan.test.mjs"
+  ],
+  "maximumInvocations": 1,
+  "sourcePins": [
+    {
+      "path": "experiments/capability-discovery/joint-fit-original-plan/original-evidence-plan.mjs",
+      "bytes": 12666,
+      "sha256": "0b6f2bad20177cd965085b3fbf889c008205653c03bcb72280d41769e17a001a",
+      "POSIXPermissions": "644",
+      "adoption": "BYTE_IDENTICAL_E2012"
+    },
+    {
+      "path": "experiments/capability-discovery/joint-fit-original-plan/plan-core.mjs",
+      "bytes": 20323,
+      "sha256": "52ea18fd97e0112bd8aee255b73743a79bb2ab9842b0ec828314bff9c1c26ea5",
+      "POSIXPermissions": "644",
+      "adoption": "BYTE_IDENTICAL_E2012"
+    },
+    {
+      "path": "experiments/capability-discovery/joint-fit-original-plan/plan.test.mjs",
+      "bytes": 25500,
+      "sha256": "44d810e1e0a19cb41afcc3ef0d085b364fc5fde52d278bdca6a049f4e0c270cb",
+      "POSIXPermissions": "644",
+      "adoption": "ONLY_CODEC_IMPORT_CHANGED_FROM_ACCEPTED_73"
+    },
+    {
+      "path": "experiments/capability-discovery/joint-fit-original-plan/README.md",
+      "bytes": 8587,
+      "sha256": "bf185d3c0e93763395c4c843d760c9439b4521a95c78aafe63536fefd17ca7bf",
+      "POSIXPermissions": "644",
+      "adoption": "NEW_DOCUMENTATION"
+    }
+  ],
+  "flow": {
+    "path": "discovery-cycle07/S1/E2015/FLOW.md",
+    "bytes": 6928,
+    "sha256": "1de21d0118b436b057105af66a6d5feba2739a6b07167a3f6f61906ddaa7328c"
+  },
+  "codec": {
+    "path": "experiments/capability-discovery/station-evidence/codec.mjs",
+    "bytes": 7322,
+    "sha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015"
+  },
+  "preflight": "All source/FLOW/codec pins fresh matched; Git tracked/index diffs empty; only four authorized new untracked product paths, HEAD4f24d50391927e0e50220690ea8ececec79e0bb4.",
+  "captures": [
+    "/workspace/scratch/8528bb251845/discovery-cycle07/S1/E2018/stdout.raw",
+    "/workspace/scratch/8528bb251845/discovery-cycle07/S1/E2018/stderr.raw",
+    "/workspace/scratch/8528bb251845/discovery-cycle07/S1/E2018/start-utc.raw",
+    "/workspace/scratch/8528bb251845/discovery-cycle07/S1/E2018/end-utc.raw",
+    "/workspace/scratch/8528bb251845/discovery-cycle07/S1/E2018/exit-code.raw"
+  ],
+  "captureMethod": "Shell noclobber; all five exclusive descriptors opened before command; direct separate original stdout/stderr, date -u UTC before/after, child status saved immediately; no environment edits or test filters. Preserve first outcome, no rerun or cleanup.",
+  "scope": "Same73 fabricated tests including pure-codec imports/core calls, disabled/malformed public calls and temp descriptor fixtures. Actual internal imports/codec/temp writes will not be falsely reported zero.",
+  "prohibited": "No syntax/import precheck, source/test/cap edits, extra command/filtered/broad suite/retry; no valid enabled original-data helper/native original-body decode/store/PATH/CV/image/pixels/render/Gitstage/commit/publication.",
+  "completionGate": "Read full original stdout/retained stderr, count reached statuses/summary/exit; hash captures and source postpins. HOLD for independent adoption review."
+}

@@ -1,0 +1,54 @@
+--- discovery-cycle06/R1/E1544/prepare-export.v1.mjs	2026-10-19 00:51:57.317873639 +0300
++++ discovery-cycle07/S3/E2023/prepare-export.v1.mjs	2026-10-19 03:51:04.475998200 +0300
+@@ -1,4 +1,4 @@
+-// Construction only: derivative of hh-cycle13/H1/E1806/prepare-export-v2.mjs.
++// Construction only: mechanical Lab7 derivative of discovery-cycle06/R1/E1544/prepare-export.v1.mjs.
+ // Git reads only; all writes are exclusive files in a fresh scratch directory.
+ import {execFileSync} from 'node:child_process';
+ import {createHash} from 'node:crypto';
+@@ -6,11 +6,11 @@
+ import {basename, dirname, isAbsolute, join, resolve} from 'node:path';
+ 
+ const workspace = '/workspace/scratch/8528bb251845';
+-const parentPin = 'be67d44a653c79ca61efae99934e90475a9aba5e';
+-const parentTreePin = '87dfd9aebb09050d1c56e39d54d9a9920b93341c';
+-const packagePrefix = 'work/capability-discovery/cycle-06/';
+-const sourcePaths = ['README.md', 'cli.mjs', 'cli.test.mjs', 'recipe.mjs', 'recipe.test.mjs']
+-  .map(name => `experiments/capability-discovery/lenard5-station-evidence/${name}`);
++const parentPin = '4f24d50391927e0e50220690ea8ececec79e0bb4';
++const parentTreePin = '27616cbaac38b1b916fc337d22dd8f7cab5a7736';
++const packagePrefix = 'work/capability-discovery/cycle-07/';
++const sourcePaths = ['original-evidence-plan.mjs', 'plan-core.mjs', 'plan.test.mjs', 'README.md']
++  .map(name => `experiments/capability-discovery/joint-fit-original-plan/${name}`);
+ const segmentLimit = 60_000, indexLimit = 1_000_000, gitBufferLimit = 64 * 1024 * 1024;
+ const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
+ const blobSha1 = bytes => createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex');
+@@ -37,8 +37,8 @@
+ require(cfg.parent === parentPin && cfg.parentTree === parentTreePin, 'local parent/tree pins differ');
+ require(typeof cfg.branch === 'string' && cfg.branch && !/[\x00-\x20\x7f]/.test(cfg.branch), 'branch required');
+ require(Array.isArray(cfg.allowedExact) && JSON.stringify([...cfg.allowedExact].sort()) === JSON.stringify([...sourcePaths].sort())
+-  && JSON.stringify(cfg.allowedPrefixes) === JSON.stringify([packagePrefix]), 'exact five-source/package-prefix allowlist required');
+-require(cfg.expectedHashes && sourcePaths.every(path => hex(cfg.expectedHashes[path], 64)), 'five exact source SHA256 pins required');
++  && JSON.stringify(cfg.allowedPrefixes) === JSON.stringify([packagePrefix]), 'exact four-source/package-prefix allowlist required');
++require(cfg.expectedHashes && sourcePaths.every(path => hex(cfg.expectedHashes[path], 64)), 'four exact source SHA256 pins required');
+ require(isAbsolute(cfg.repo) && resolve(cfg.repo) === cfg.repo && cfg.repo.startsWith(workspace + '/')
+   && await realpath(cfg.repo) === cfg.repo, 'canonical workspace repository required');
+ const repo = cfg.repo, output = cfg.output;
+@@ -70,7 +70,7 @@
+ }));
+ const changedPaths = nul(git('diff-tree', '--no-commit-id', '--name-only', '--no-renames', '-r', '-z', parentPin, cfg.commit)).map(safePath).sort();
+ require(new Set(changedPaths).size === changedPaths.length && sourcePaths.every(path => changedPaths.includes(path))
+-  && changedPaths.every(allowed), 'complete changed set differs from allowed five sources/package prefix');
++  && changedPaths.every(allowed), 'complete changed set differs from allowed four sources/package prefix');
+ const readBlob = path => {
+   const entry = entries.get(safePath(path));
+   require(entry && entry.type === 'blob' && ['100644', '100755'].includes(entry.mode) && hex(entry.sha, 40), `missing/deleted/unsupported blob: ${path}`);
+@@ -131,7 +131,7 @@
+   });
+   sourceFiles.push({...identity, encoding: chars === null ? 'binary-base64-segments' : 'utf8-text-segments', chunks});
+ }
+-const index = {schema: 'cycle06-readonly-git-export/v1', repository: basename(repo), branch: cfg.branch,
++const index = {schema: 'cycle07-readonly-git-export/v1', repository: basename(repo), branch: cfg.branch,
+   localCommit: cfg.commit, localParent: parentPin, localParentTree: parentTree, localTree: tree,
+   canonicalRemoteParentReportedOnly: cfg.canonicalRemoteParentReportedOnly ?? null,
+   frozenPayloadManifestSha256: cfg.frozenManifestSha256, frozenManifestPath: cfg.frozenManifest,

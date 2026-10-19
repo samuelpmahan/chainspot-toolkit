@@ -1,0 +1,92 @@
+{
+  "schema": "cycle07-original-plan-observed-exit@2",
+  "runId": "E2021-original-plan-v1",
+  "packetSha256": "e9823950159a5866c9f00b8f0875a56571cbceb6f073bf7895f264644a8b9ee1",
+  "requestSha256": "e1a0e2c8439567a24dc5b87668b53054b12ec24cf7a513b282f49ca8740dae63",
+  "session": {
+    "actualChildExit": {
+      "code": 0,
+      "signal": null,
+      "closeObserved": true
+    },
+    "firstCause": null,
+    "laterErrors": [],
+    "streams": {
+      "stdout": {
+        "receivedBytes": 0,
+        "writtenBytes": 0,
+        "prefixOnly": false,
+        "writeFailed": false
+      },
+      "stderr": {
+        "receivedBytes": 0,
+        "writtenBytes": 0,
+        "prefixOnly": false,
+        "writeFailed": false
+      }
+    },
+    "timersCleared": true
+  },
+  "helperReceipt": {
+    "schema": "cycle07-original-plan-helper-receipt@2",
+    "runId": "E2021-original-plan-v1",
+    "packetSha256": "e9823950159a5866c9f00b8f0875a56571cbceb6f073bf7895f264644a8b9ee1",
+    "requestSha256": "e1a0e2c8439567a24dc5b87668b53054b12ec24cf7a513b282f49ca8740dae63",
+    "status": "READY",
+    "helperCall": {
+      "attempted": true,
+      "returned": true,
+      "threw": false
+    },
+    "plan": {
+      "path": "plan.wire.json",
+      "bytes": 617401,
+      "sha256": "e1471209d9e91a885effb096fb052ac7a0ea61f42d07f348fa4856b3997dc7b5"
+    },
+    "error": null,
+    "holdRetention": {
+      "requested": false,
+      "complete": false,
+      "artifact": null,
+      "error": null
+    },
+    "postErrors": [],
+    "intendedExitCode": 0,
+    "qualification": "Source-derived helper evidence only; HOLD numbers live solely in lossless artifact, not this JSON."
+  },
+  "bindingsVerified": true,
+  "inventoryComplete": true,
+  "availableFilesBeforeExit": [
+    {
+      "path": "child-started.json",
+      "bytes": 260,
+      "sha256": "90896b8a0118c337deb3b58bdbe9af21979fe35a371d40f9d93e5b0cdb363d9b"
+    },
+    {
+      "path": "helper-receipt.json",
+      "bytes": 820,
+      "sha256": "02508d7e2a79a190fc70199ba9a060fae0f6ca8aa3fe3621cc2299cdd43af352"
+    },
+    {
+      "path": "plan.wire.json",
+      "bytes": 617401,
+      "sha256": "e1471209d9e91a885effb096fb052ac7a0ea61f42d07f348fa4856b3997dc7b5"
+    },
+    {
+      "path": "stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "stdout.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "inventoryExcludes": [
+    "exit.json"
+  ],
+  "outputErrors": [],
+  "wrapperIntendedExitCode": 0,
+  "qualification": "actualChildExit comes only from real close; wrapper own exit/signal needs external launcher evidence. Checks do not authenticate host/executed runtime."
+}

@@ -1,0 +1,227 @@
+{
+  "schema": "cycle07-next-packets@1",
+  "job_id": "E2024",
+  "worker": "S1",
+  "phase": "PHASE1_CONSTRUCTION_ONLY",
+  "creationState": {
+    "freeze": "PENDING",
+    "copy": "PENDING",
+    "commit": "PENDING",
+    "export": "PENDING",
+    "publication": "PENDING",
+    "notLiveAuthority": true
+  },
+  "defaultEnabled": false,
+  "acceptedState": {
+    "originalOperation": "E2021 ONE helper call READY,child+outerexit0",
+    "plan": {
+      "bytes": 617401,
+      "sha256": "e1471209d9e91a885effb096fb052ac7a0ea61f42d07f348fa4856b3997dc7b5"
+    },
+    "independentInspection": {
+      "job_id": "R2021",
+      "outputDecodeCalls": 1,
+      "receiptPath": "S4/R2021/realresult.json",
+      "bytes": 11030,
+      "sha256": "a0f8ee27b4a92507240af60e5a88c9f54e8584e10786f6b1a77a4280be5e396b",
+      "decision": "accepted",
+      "scope": "Engineering frozen output consistency only"
+    },
+    "slots": 48,
+    "eligibleNOT_ATTEMPTED": 44,
+    "nativeNoEdgePairNOT_EXECUTED": [
+      5,
+      11,
+      26,
+      41
+    ],
+    "actualNewPATH": 0,
+    "actualNewStores": 0,
+    "actualCV": 0,
+    "sourceWitness": "3x9",
+    "inputIntegrity": "16x10",
+    "originalQueryError": "NOT_RETAINED_IN_PLAN;helper checked own null before output;not fresh R2021 oldtrace field review."
+  },
+  "deliveryPackets": [
+    {
+      "id": "PHASE1_FINAL_DOC_REVIEW",
+      "status": "AWAITING_ROOT_FULL_READ",
+      "requires": "Root actual5docs/flow/hashes and actual R2021;accepted R2022 copy-v2 source review",
+      "permits": "No execution;prepare complete finalized seal only under separate root scope"
+    },
+    {
+      "id": "PHASE2_ONE_COPY",
+      "status": "NOT_ADMITTED",
+      "requires": "All writers quiescent/nativeE2024start retained;root COMPLETE list OUTSIDE source;exact script/seal/final5pins and ONE-copy GO",
+      "script": {
+        "path": "S1/E2022/copy-checkpoint.once.v2.mjs",
+        "bytes": 8321,
+        "sha256": "321e5b116ce485f14a96fff9010b206b9af4bc5d1137597a10e9171c189af163"
+      },
+      "copyReview": {
+        "job_id": "R2022",
+        "bytes": 6696,
+        "sha256": "a67aae49abe889eb19ac8bbc30b4d1925e2e5f411cbf0d0874b9d58ae3c015f7",
+        "decision": "accepted-source-only",
+        "path": "S2/R2022/result.json"
+      },
+      "captureRoot": "/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2024",
+      "permits": "ONE opaque exclusive byte copy incl genuine0B/inert source/modes/nativefiles[].path;no decoder/tests/helper/Git",
+      "laterAdmin": "Actualprospective/captures/result/nativefinish/audit outside source, separately indexed;no sealed-file-set drift/retroaudit"
+    },
+    {
+      "id": "INDEPENDENT_COPY_AUDIT",
+      "status": "NOT_ADMITTED",
+      "requires": "Actual copied manifest/files/hash/modes/externaloutcome,independent worker and root assignment",
+      "permits": "Engineering preservation review only"
+    },
+    {
+      "id": "ONE_COMMIT_EXPORT",
+      "status": "NOT_ADMITTED",
+      "requires": "Accepted copy audit/root reconciliation/exact additive allowlist/product4+old3375 preservation/exactownbranchGO",
+      "permits": "Only stated commit/export,not publication"
+    },
+    {
+      "id": "ROOT_CONNECTED_PUBLICATION",
+      "status": "NOT_ADMITTED",
+      "requires": "Fresh canonical refs,exact export/transport review and route authority",
+      "permits": "Root-selected nonforce ownbranch update,noPRunlessasked/main/defaultON/deploy/release"
+    }
+  ],
+  "NEXT_READY_SCIENCE_SOURCE_ONLY": {
+    "status": "READY_FOR_SEPARATE_SOURCE_ONLY_ASSIGNMENT_NOT_CV_GO",
+    "question": "Joint retained raw cPx+wPx stationContrast on exposed fixed16x3;does nominal-sampling account survive primary/bright/offset/masked controls?",
+    "teamProposal": {
+      "protocolWorker": "Fresh Sol/high",
+      "critic": "Separate independent critic",
+      "integrator": "S1 sole Lab repo owner",
+      "spawnedNow": false,
+      "sourceOwnerNotScientificSelfReviewer": true
+    },
+    "immutableInputs": {
+      "protocolV2": {
+        "schema": "cycle07-joint-fit-station-contrast-protocol@1.1.0",
+        "bytes": 83022,
+        "sha256": "7948df5ee19e10a065f907a7dc0af1b845b5b408f32776b78813ad938bedea6e"
+      },
+      "source22Freeze": "6f3f30924749e0104a12e7d5d3d43b45b23569e55de8ffe565111620dd0355b8",
+      "acceptedPlan": "e1471209d9e91a885effb096fb052ac7a0ea61f42d07f348fa4856b3997dc7b5",
+      "all48Ledger": true,
+      "originalAnswers": 96,
+      "eligible44ObservedAsPlanOnly": true,
+      "rawValueSource": "Exact bound lossless plan/raw args under separately admitted reads,never descriptive tokens or display labels.",
+      "frozenSeam": "O'=[Ox-cPx*sin(phi),Oy+cPx*cos(phi)] unrounded/raw refined wPx;fixed geometry/units/null-or-strip support;no new tol/latLim clamp or score/residual threshold."
+    },
+    "requiredGates": [
+      {
+        "id": "G1",
+        "closeInSource": "Source-derived44-call sequential resource/wire/whole-output/pre-writer/failure-prefix caps and conservative success/failure reservation;one live private snapshot/store,no44planes/caches;cap boundary proof separately admitted.",
+        "notClaimed": "Copy1MiB/5MiB and helper8MiBread/2MiBoutput are NOT future producer budgets;RSS/GC/cap sufficiency unknown."
+      },
+      {
+        "id": "G2",
+        "closeInSource": "Exact accepted plan/protocol/source22/input/rawmanifest/96answer/callback/request join guards;no fabricated originalQueryTrace.error or dynamiccallbackargs. Any missingenrichment separate bounded admission,not control regeneration."
+      },
+      {
+        "id": "G3",
+        "closeInSource": "Frozen original fullframe source-pixel/RGBA/null-or-stripmask/absoluteattestation bodies;bounded no-symlink descriptors and canonical/private/source+pixel pre/postchecks;freshbase:null/defaultcache/newlazyconstant semantic px.image.cropped+tk.s6.pathMask pereligible;exactspenttoken/NEWoutput/no-retry lifecycle."
+      },
+      {
+        "id": "G4",
+        "closeInSource": "ONLY public fn.q.path.stationContrast, one per eligible slot, exact ten ordered keys/planned unrounded args, unchanged phi/windows/step/band/along; actual callback capture order/seq/parent/caller/site/emits/keys/source bound; computed1 separately from cached:false; native-ok/hook-throw/public-return/encode-fail distinct."
+      },
+      {
+        "id": "G5",
+        "closeInSource": "Losslessall48trace/4skips/raw sidearrays/flags/NaN/finiteinvalid/InfinityHOLD,original+derivedsupport separately;N+sideflags denominators only;internalfractionsUNKNOWN;sameartifacthash CLItext+VisualRender source/inspection gates,noindependent query rerun."
+      },
+      {
+        "id": "G6",
+        "closeInSource": "Independent source/args/units/caps/stop critique+actualflowcheckpoint,defaultOFFsibling ownership/construction,then separatelyadmitted fabricatedNONCV;only later explicit root ONE44-newcontrastGO. First failure preservesprefix/unattempted,nomath/cap/thresholdretune."
+      }
+    ],
+    "expectedArtifact": "New standalone default-OFF evidence sibling+literal48-slot trace/CLI contract,not productionABFeature or changed fixed160 recipe/productdefaults.",
+    "laterTrial": {
+      "status": "NOT_ADMITTED",
+      "plannedNewCalls": 44,
+      "maximumNewCalls": 44,
+      "allSlots": 48,
+      "zeroWorkSkips": [
+        5,
+        11,
+        26,
+        41
+      ],
+      "oneFreshStorePerAttemptedEligible": true,
+      "onlyQuery": "fn.q.path.stationContrast",
+      "condition": "All immutable bindings/source/pixel/resource/callback/one-shot/NONCV/independent gates stillpass;otherwise stop,not extra/replacementqueries.",
+      "noProfileEdgePairSearchLossOverlay": true,
+      "noRetuneFromPackageGO": true
+    },
+    "guardedAlternatives": [
+      {
+        "if": "Supports an in-sample joint-sampling explanation",
+        "proposal": "Design independent/heldout validation before promotion;no path/physical acceptance."
+      },
+      {
+        "if": "Falsifies blanket explanation or brightcontrol gains defeats specificity",
+        "proposal": "Retain negative;separately approved center-only/width-only ablation,not posthoc causal inference."
+      },
+      {
+        "if": "Engineering regression/provenance/cap/callback mismatch",
+        "proposal": "Preserve prefix and diagnose before newpacket;no numerical/cap tuning togreen."
+      },
+      {
+        "if": "Insufficient masked/invalid support or ambiguity",
+        "proposal": "Abstain UNKNOWN;no zerofill,denominatorhiding,fallback or manufacturedsuccess."
+      }
+    ],
+    "dependence": "Same exposed image,overlappingwindows/banks;not heldout or independentconfidence;joint center+width not causalisolation."
+  },
+  "claims": {
+    "productionABFeature": false,
+    "originalImageReplayPortable": false,
+    "consumedTokenReplayAllowed": false,
+    "newCVAdmitted": false,
+    "scientificAcceptance": "UNKNOWN",
+    "humanAcceptance": "UNKNOWN",
+    "pathIdentity": "UNKNOWN",
+    "physicalEdgeIdentity": "UNKNOWN",
+    "calibratedWidth": "UNKNOWN",
+    "continuity": "UNKNOWN"
+  },
+  "history": {
+    "E2022NativeFinish": "INITIAL realresult.json SHA f570bb1ea45f167569dd1da40dd14112a952d13b9b01ccffe2078eb085b1bac5",
+    "laterAuthorAddenda": "realresult.v2.json/R2021-binding.json preserved as later author addenda,not replacement nativefinish",
+    "E2022Draft5Preserved": true
+  },
+  "rootReportedPublication": {
+    "Lab6": "bae599193610f87b7809d06ab508b033c7241d83",
+    "local": "4f24d50391927e0e50220690ea8ececec79e0bb4",
+    "old3375Unchanged": true,
+    "newProductFiles": 4,
+    "noFreshPhase1GitOrRemoteAudit": true,
+    "checkTimeNotContinuousLife": true
+  },
+  "finalDocuments": [
+    {
+      "source": "S1/E2024/CURRENT.md",
+      "destination": "CURRENT.md"
+    },
+    {
+      "source": "S1/E2024/README.md",
+      "destination": "README.md"
+    },
+    {
+      "source": "S1/E2024/REPRODUCE.md",
+      "destination": "REPRODUCE.md"
+    },
+    {
+      "source": "S1/E2024/RESUME.md",
+      "destination": "RESUME.md"
+    },
+    {
+      "source": "S1/E2024/next-packets.json",
+      "destination": "next-packets.json"
+    }
+  ]
+}
