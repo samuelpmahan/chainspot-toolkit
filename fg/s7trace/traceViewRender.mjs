@@ -48,8 +48,8 @@ export function renderTraceView(address, v, dims, { canvas, deflate = null }) {
     [null, `S7 ROUTEMATCH WITH BEND PLACEMENT (HALLWAY WIDTH W = ${Math.round(v.widthPx * 10) / 10} PX; IMAGE ${IW} X ${IH} PX, DRAWN AT ${S}X)`],
     ...(confMode ? [
       [COL.agree, `CONFIRMED: ${T.confirmed} OF ${T.holes} HOLES (SENSOR READS >= ${v.sensorTau} ON >= ${v.sensorMinStations} STATIONS)`],
-      [COL.unconfirmed, `UNCONFIRMED: ${T.unconfirmed} HOLES (A READING BELOW THAT; HOLE NUMBER MARKED ?)`],
-      [COL.noReading, `NO READING: ${T.noReading} HOLES (NO ROUTE OR NO VISIBLE STATION; MARKED -)`],
+      [COL.unconfirmed, `UNCONFIRMED: ${T.unconfirmed} ${T.unconfirmed === 1 ? 'HOLE' : 'HOLES'} (A READING BELOW THAT; HOLE NUMBER MARKED ?)`],
+      [COL.noReading, `NO READING: ${T.noReading} ${T.noReading === 1 ? 'HOLE' : 'HOLES'} (NO ROUTE OR NO VISIBLE STATION; MARKED -)`],
       [null, `NO TESTIMONY FOR THIS COURSE: NOTHING IS JUDGED, CHECK BY EYE`]] : [
     [COL.agree, `ROUTE AGREES WITH TESTIMONY: ${T.agree} OF ${T.judged} JUDGED HOLES (TEE <= ${v.teeMatchPx} PX, BASKET <= ${v.basketMatchPx} PX, WITHIN W/2 OF HIS CORRIDOR)`],
     [COL.disagree, `ROUTE DISAGREES (HOLE NUMBER MARKED X)`],
