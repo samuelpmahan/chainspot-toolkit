@@ -1,0 +1,36 @@
+{
+  "job_id": "R3012",
+  "worker": "S2",
+  "decision": "accepted",
+  "summary": "Independent actual-evidence audit passed. Twelve rows/sixty raw candidates, projections, raw turns, P1, adverse missing cases, source/crop comparison and CLI/SVG identities agree. PNG viewed. Exposed midpoint-aliasing risk and width sensitivity only; no classifier or physical-continuity claim.",
+  "measurement": {"path": "discovery-cycle09/E3012/measurement/measurement.json", "bytes": 1808041, "sha256": "fc5da1eb88c0bb572506e815e653c94ddc71ba6d66b8832d513e889477fa95b1"},
+  "independent_scalar_audit": {
+    "method": "Python stdlib JSON/math/XML; direct comparison to exact E809 raw stations/candidates; own distance/tangent/atan2/threshold calculations. No product imports or producer reruns.",
+    "exit": 0,
+    "rows": 12,
+    "raw_candidates": 60,
+    "projected_points": 126,
+    "descriptors": 20,
+    "raw_turns": 58,
+    "unknown_slots": 18,
+    "maximum_scalar_difference": 7.958078640513122e-13,
+    "frame_comparisons": {"MATCHED": 3, "UNKNOWN": 3},
+    "maximum_frame_residual": 7.958078640513122e-13,
+    "diagnostic_tolerance": 1e-9,
+    "P1": "SUPPORTED in both dependent frames: nominal0, proposed42 midpoint1; no independent replication",
+    "adverse": "Proposed50 and bright42 sharp0; lateral42 partial; lateral50/bright50 isolated; missing rows abstain without bridging. Raw long context matches receipt."
+  },
+  "presentation": {"CLI_rows": 12, "SVG_panels": 12, "SVG_metadata_hash_run_params": "matched", "SVG_panel_ids_counts_missing_descriptions": "matched", "PNG_viewed": true, "visible_reason_ellipses": "deliberate; full reasons retained in JSON/SVGdesc"},
+  "execution_evidence": {
+    "source_input_pins": 7,
+    "pre_post_and_current_match": true,
+    "exits": [0, 0, 0],
+    "measure_seconds_RSS_KiB": [0.08215084100083914, 46264],
+    "render_seconds_RSS_KiB": [0.06407351499365177, 44416],
+    "conversion_seconds_RSS_KiB": [0.38456172500445973, 69548],
+    "warning": "Retained Inkscape GtkRecentManager warning; PNG produced and viewed. Costs are observed process values, not general bounds."
+  },
+  "limits": "Shared pixels/fit selection and source/crop translation remain dependent. Sharp-turn diagnostic does not establish true physical bends, tracked edges, continuity, path identity, calibrated width or bright-negative classification.",
+  "reruns": {"runAudit": 0, "producer": 0, "renderer": 0},
+  "writes_only": ["discovery-cycle09/R3012/review.md", "discovery-cycle09/R3012/result.json"]
+}

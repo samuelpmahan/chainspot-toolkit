@@ -1,0 +1,1 @@
+Accepted source proposal. Selectors, finite gate, projection/frame and width42/50 meanings match E809. Novel work is ordered turns on exposed data. Missing full-five geometry abstains; partial runs cannot satisfy P1. Build a tiny receipt-only recipe plus separate measurement-only SVG renderer. No new CV needed; no execution authorized here.

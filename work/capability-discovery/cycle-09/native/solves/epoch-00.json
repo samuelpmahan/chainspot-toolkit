@@ -1,0 +1,127 @@
+{
+  "epoch": 0,
+  "at": "2026-10-19T04:56:10.483137+00:00",
+  "ready_jobs": [
+    "E3001",
+    "E3002",
+    "E3003",
+    "E3004",
+    "E3005",
+    "E3006"
+  ],
+  "pinned_workers": [],
+  "assignments": {
+    "S6": "E3005",
+    "S2": "E3003",
+    "S5": "E3006",
+    "S3": "E3004",
+    "S4": "E3002",
+    "S1": "E3001"
+  },
+  "dispatch": {
+    "S6": "E3005",
+    "S2": "E3003",
+    "S5": "E3006",
+    "S3": "E3004",
+    "S4": "E3002",
+    "S1": "E3001"
+  },
+  "native_seconds": 0.006031443001120351,
+  "native_constraints": {
+    "solved": true,
+    "brokenVal": 0,
+    "brokenCount": 0,
+    "constraints": [
+      {
+        "name": "independent_review",
+        "desc": "avoidAssignmentsSpec: Avoid 6 assignments on scope packets",
+        "value": 0
+      },
+      {
+        "name": "pin_in_flight",
+        "desc": "avoidMovingSpec: Avoid moving 0 objects",
+        "value": 0
+      },
+      {
+        "name": "ready_packet_capacity",
+        "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+        "value": 0
+      }
+    ]
+  },
+  "independent_capacity_check": true,
+  "independent_eligibility_check": true,
+  "exact_score": 600,
+  "native_score": 600,
+  "caps": {
+    "E3001": 1,
+    "E3002": 1,
+    "E3003": 1,
+    "E3004": 1,
+    "E3005": 1,
+    "E3006": 1,
+    "R3001": 0,
+    "R3002": 0,
+    "R3003": 0,
+    "R3004": 0,
+    "R3005": 0,
+    "R3006": 0,
+    "BENCH": 6
+  },
+  "eligible": {
+    "E3001": [
+      "S1"
+    ],
+    "E3002": [
+      "S2",
+      "S3",
+      "S4",
+      "S5",
+      "S6"
+    ],
+    "E3003": [
+      "S2",
+      "S3",
+      "S4",
+      "S5",
+      "S6"
+    ],
+    "E3004": [
+      "S2",
+      "S3",
+      "S4",
+      "S5",
+      "S6"
+    ],
+    "E3005": [
+      "S2",
+      "S3",
+      "S4",
+      "S5",
+      "S6"
+    ],
+    "E3006": [
+      "S2",
+      "S3",
+      "S4",
+      "S5",
+      "S6"
+    ]
+  },
+  "weights": {
+    "E3001": 100,
+    "E3002": 100,
+    "E3003": 100,
+    "E3004": 100,
+    "E3005": 100,
+    "E3006": 100
+  },
+  "agent_by_worker": {
+    "S1": null,
+    "S2": null,
+    "S3": null,
+    "S4": null,
+    "S5": null,
+    "S6": null
+  }
+}

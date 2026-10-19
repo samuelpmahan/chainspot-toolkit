@@ -1,0 +1,25 @@
+{
+  "job_id": "R3010",
+  "worker": "S2",
+  "decision": "accepted",
+  "summary": "No actionable blocker in fixed window-midpoint audit source. Exact actual E809 receipt identity/structure match selection. Selectors, projection sign, missing-run/P1 abstention and source/crop translation diagnostics preserve adverse evidence. Source-only acceptance; no real measurement executed.",
+  "receipt": {"path": "discovery-cycle04/P3/E809/receipt.json", "bytes": 828263, "sha256": "302e50cb5b60f752eb6f3139a4e6a98c015005203359e0ade5aebb378e1897ba", "check": "opaque hash plus structural JSON only; no geometry measurement"},
+  "source_base": "chainspot-discovery-lab/experiments/capability-discovery/window-midpoint-audit/",
+  "source_sha256": {
+    "recipe.mjs": "29fc7753ee32d2c6dd7014952a804441c83900d1c27d26a6b43ff3f7d7bdbf15",
+    "cli.mjs": "e0f23c625f965104e0aaa1c37f847a082ab4eb4d6d805163d6858b8a00a939c7",
+    "meaningful.test.mjs": "4228ecc847d9f89df9d30c7d634546468a17e56af1f77249b273374f340c482a",
+    "README.md": "ad93fd879a9711fa9275aff304da857a0629949ec1c1fe764f9fea8ac135b0f4",
+    "render.mjs": "cedf9b7d6d53efa8ec215854a9c599995bf5edba77844d3f8187809153b8acd6"
+  },
+  "read_scope": "Full selected-experiment.json, E3010/E3011 FLOW, recipe/CLI/tests/README/render source; receipt hash and declared structure. Existing geometry operation semantics previously reviewed.",
+  "verification": [
+    {"command": "node --test chainspot-discovery-lab/experiments/capability-discovery/window-midpoint-audit/meaningful.test.mjs", "exit": 0, "passed": 2, "failed": 0, "skipped": 0, "data": "fabricated only; runAudit disabled boundary only"},
+    {"command": "node --input-type=module via stdin; independent fabricated buildRows checks", "exit": 0, "passed": 4, "cases": ["nonzero-heading projection sign", "interior missing slot forms two2-point runs without bridge", "duplicate projected vertices retain descriptor error and prevent complete-five", "duplicate width candidate refused"]}
+  ],
+  "P1_boundary": "Full-five unavailable/error -> UNKNOWN, as accepted R3003; no partial run can satisfy P1. All12 rows/controls retained.",
+  "actual_measurement_calls": 0,
+  "source_edits": 0,
+  "next": "Root may separately authorize the one actual receipt-only measurement; independently inspect real trace/CLI/render outputs afterward.",
+  "writes_only": ["discovery-cycle09/R3010/review.md", "discovery-cycle09/R3010/result.json"]
+}

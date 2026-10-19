@@ -1,0 +1,57 @@
+{
+  "schema": "discovery-cycle-worker-result@1",
+  "job_id": "E3003",
+  "worker": "S2",
+  "outcome": "mixed_change",
+  "status": "READY_FOR_INDEPENDENT_REVIEW_NOT_EXECUTED",
+  "summary": "Frozen new posthoc geometry experiment on actual E809 Lenard-1 receipt: compare straight nominal station-origin paths with ordered averaged-fit-midpoint paths using existing describePath/countTurns. Preserve missing-fit run breaks, both source/crop frames, historical anchor42 and distinct raw learner diagnostic50, all groups and all raw turns. No score or producer trial executed.",
+  "source_hashes": [
+    {"path": "chainspot-discovery-lab/experiments/capability-discovery/probes/path-geometry/path-geometry.mjs", "sha256": "ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34", "role": "only proposed nonbuiltin execution import; describePath and countTurns"},
+    {"path": "chainspot-discovery-lab/experiments/capability-discovery/composition/recipe.mjs", "sha256": "17ab387066cad11ab1605cd780565c6d35016204aa2350a2be528df33b5ac0d6", "role": "read-only midpoint and finite-pair gate evidence; do not import or execute"},
+    {"path": "chainspot-discovery-lab/experiments/capability-discovery/probes/path-geometry/test-output.txt", "sha256": "a89deab3a45a44501c1b615e6aae8bff888ab5888efcaf024e56d691ad307838", "role": "existing seven passing operation checks; not rerun"}
+  ],
+  "data_hashes": [
+    {"path": "discovery-cycle04/P3/E809/receipt.json", "sha256": "302e50cb5b60f752eb6f3139a4e6a98c015005203359e0ade5aebb378e1897ba", "bytes": 828263, "role": "sole measurement input; actual retained execution"},
+    {"path": "discovery-cycle04/P3/E809/result.json", "sha256": "8955be4b07c99c9c24e9cf229f0e769ec1f5da3029a07ea0fe6f31ae0ef62dc9", "role": "old execution provenance and exposed findings, not new result"},
+    {"path": "discovery-cycle04/P3/E809/analysis.json", "sha256": "424b1010656bd47b7fb7ba4626031f93276576913ad95cff0a6f163494b1ba8d", "role": "old analysis novelty check"},
+    {"path": "discovery-cycle04/P2/protocol.json", "sha256": "ea85f4520b20996bd5aff3da699663a40fc8613081f4738457ece2e8926d8537", "role": "E809 original protocol identity; not rerun"}
+  ],
+  "baseline_candidate_params": {
+    "branches": ["composition", "sourceComposition"],
+    "frames": ["Lenard-1.E802.fixed-roi-source-pixel-centers", "Lenard-1.original-source-pixel-centers"],
+    "groups": ["proposed-ribbon", "lateral-plus6", "bright-organic"],
+    "ordered_station_suffixes": ["short1", "short2", "short3", "short4", "short5"],
+    "width_selector": "candidate.widthArgPx === width",
+    "widths_px": [42, 50],
+    "width42_authority": "historical preregistered anchor; not learned or calibrated",
+    "width50_authority": "branch.rawWidthEstimate.widthPx; different-stage Dev72 training learner raw diagnostic; not calibrated or accepted",
+    "baseline": "[station.pose.xPx, station.pose.yPx]",
+    "candidate": "[x - Math.sin(h)*edgeFit.cPx, y + Math.cos(h)*edgeFit.cPx] in literal branch frame",
+    "finite_gate": "edgeFit exists; lPx/rPx/cPx/wPx/score/gl/gr finite; wPx>0; gl>0; gr>0; midpoint.status === OBSERVED_CHANNELS",
+    "missing_rule": "UNKNOWN splits ordered runs; >=2 consecutive observed vertices for a descriptor, >=3 for an interior turn; isolated points retained; no bridging or deduplication",
+    "turn_predicate": "turn.absoluteRadians > Math.PI/4",
+    "turn_definition": "E3003 exploratory |vertex turn| > pi/4; chosen after E809 exposure",
+    "branch_numeric_diagnostic_absolute_tolerance": 1e-9,
+    "all_raw_turns_retained": true,
+    "promoted": false
+  },
+  "prediction_falsifier": {
+    "P1_prediction": "Complete proposed-ribbon width42 midpoint polyline has >=1 sharp turn above pi/4; complete nominal baseline has zero.",
+    "P1_falsifier": "Either complete row unavailable, baseline sharp count nonzero, or midpoint sharp count zero. Keep exact cause; never retune.",
+    "P2_diagnostic_challenge": "Raw learner-selected50 may disagree or be partial; report both possibilities without winner selection or independent-replication claim.",
+    "adverse_cases": "All lateral-plus6 and bright-organic rows, nulls, failed descriptors and source/crop differences retained. Bright equal/sharper behavior defeats specificity interpretation.",
+    "unsupported": ["physical same-edge identity", "per-point continuity", "semantic path identity", "calibrated width", "endpoint ownership"]
+  },
+  "exposed_vs_independent": {
+    "exposed": "E809 actual receipt and result; width42 midpoint values and earlier negative cases inspected. Threshold chosen after exposure. New descriptor computation has not been executed.",
+    "independent": "none; source/crop share data, widths share pixels/training, groups have caller testimony only; future independent review is separate",
+    "novelty": "Old E809 analysis/result/render source show ordered finite/null and residual evidence but no fitted-midpoint-polyline turns. This is not a repeat producer/grid/width bank or native-analysis."
+  },
+  "minimum_script_output_contract": "Exact hashes; all12 rows/all60 candidate observations; nominal and midpoint/left/right vertices or UNKNOWN; run/isolated IDs; complete descriptors with every raw signed/absolute turn, segment and sharp count; complete-five status/errors; raw long context; source/crop residuals; P1 and all adverse cases. trace.svg draws those coordinates only, all12 rows, explicit missing markers, no gap bridging and no background image/pixel reread.",
+  "smallest_execution_command_proposal": "After separate root-assigned source freeze: node discovery-cycle09/<execution-job>/midpoint-turns.mjs --receipt discovery-cycle04/P3/E809/receipt.json --out discovery-cycle09/<execution-job>/measurement.json --svg discovery-cycle09/<execution-job>/trace.svg",
+  "execution_proposal_dependencies": "Runner does not exist in E3003 scope; separate packet must freeze independently reviewed selector/projection/SVG adapter before execution. Actual reachable data and dependency-free reusable operations already exist at pinned paths.",
+  "cost_bound": "One828263-byte JSON parse,60 raw selections,12 baseline plus at most24 candidate descriptors, at most36 candidate interior turns; no runtime/RSS claim.",
+  "executions_this_packet": {"score_trials": 0, "geometry_calls": 0, "producer_calls": 0, "project_imports": 0, "tests": 0},
+  "writes": ["discovery-cycle09/E3003/findings.md", "discovery-cycle09/E3003/result.json"],
+  "next_guarded_action": "Root independent R3003 review, then one separately assigned frozen receipt-only posthoc execution."
+}

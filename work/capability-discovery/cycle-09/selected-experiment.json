@@ -1,0 +1,83 @@
+{
+  "schema": "cycle09-selected-experiment@1",
+  "selected": "E3003 window-fit midpoint polyline audit",
+  "sourceReceipt": {
+    "path": "discovery-cycle04/P3/E809/receipt.json",
+    "bytes": 828263,
+    "sha256": "302e50cb5b60f752eb6f3139a4e6a98c015005203359e0ade5aebb378e1897ba"
+  },
+  "reuse": {
+    "module": "experiments/capability-discovery/probes/path-geometry/path-geometry.mjs",
+    "sha256": "ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34",
+    "exports": [
+      "describePath",
+      "countTurns"
+    ]
+  },
+  "protocol": "FrozenE3003/findings.md and independentR3003; exact12rows2frames3groups2widths;60observations;rawturns;missingrunbreak;exploratorypi/4;existing1e-9translationdiagnostic",
+  "implementation": {
+    "owner": "S1",
+    "uniqueDirectory": "chainspot-discovery-lab/experiments/capability-discovery/window-midpoint-audit/",
+    "measureFiles": [
+      "recipe.mjs",
+      "cli.mjs",
+      "README.md"
+    ],
+    "rendererOwnedSeparately": "render.mjs"
+  },
+  "evidence": {
+    "traceSchema": "window-midpoint-audit@1",
+    "requiredRowFields": [
+      "id",
+      "branch",
+      "frame",
+      "group",
+      "widthPx",
+      "rawStations",
+      "baseline",
+      "midpoint"
+    ],
+    "baselineFields": [
+      "points",
+      "descriptor",
+      "sharp"
+    ],
+    "midpointFields": [
+      "slots",
+      "runs",
+      "isolatedIds",
+      "completeFive",
+      "error"
+    ],
+    "slotFields": [
+      "id",
+      "state",
+      "reason",
+      "originPx",
+      "midpointPx",
+      "leftPx",
+      "rightPx",
+      "rawCandidate"
+    ],
+    "runFields": [
+      "stationIds",
+      "points",
+      "descriptor",
+      "sharp"
+    ],
+    "outputs": [
+      "measurement.json",
+      "cli.txt",
+      "trace.svg"
+    ],
+    "cliRender": "Both consume samehashboundmeasurementtrace; printsame12rowIDs/frames/completeFive/sharpcounts;renderer importsno geometry/recomputesscores;gapsneverbridged",
+    "run": "Oneboundedreceipt-onlymeasureprocess aftersourcecheckpoint, thenseparaterenderer;retainactualprocessoutputs/exit/costs, noCVpixelread"
+  },
+  "acceptance": "Independentreview math/selectors + actual12rows/rawgaps/control/P1falsifier, source/croptranslation; rootviewsrenderedtraceimage; no semanticphysicalcenterlineclaim",
+  "guards": {
+    "proposed": "R3003accepted ->implementation+sourcecheckpoint->oneactualmeasure->independentaudit->reviewbranchcommit",
+    "failure": "Retainactualfailureprefix;diagnosewithnewpacketonlyifneeded",
+    "alternative": "R3001two-groupCVproposalAMENDheld; E3002/E3004/E3005/E3006unselectedsourceproposalsremainunreviewed"
+  },
+  "style": "Briefperpacketnotes, originalartifactsreferencedonce; no archive/copy/essaypercommand"
+}
