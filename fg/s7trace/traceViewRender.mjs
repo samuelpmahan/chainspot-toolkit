@@ -9,7 +9,10 @@
  * The drawing kit (5 x 7 font canvas) is fg/render.mjs's, passed in so this module does not import it back.
  */
 import { encodePngRgb, base64 } from '../png.mjs';
-import { TRACE_VIEW_SCHEMA } from '../../ports/s7trace/traceView.mjs';
+
+/** The schema of tk.s7.routeMatchView. Defined here, not in ports/s7trace/traceView.mjs: fg/render.mjs loads this module in every
+ *  stage fork, and a fork holds only the runtime closure (recipes/closure.mjs STAGE_RUNTIME), which has no ports/s7trace. */
+export const TRACE_VIEW_SCHEMA = 'nctk-s7-trace-view@1';
 
 export const isTraceView = (v) => Boolean(v && typeof v === 'object' && v.schema === TRACE_VIEW_SCHEMA);
 export const VIEW = Object.freeze({ scale: 2, routePx: 4, centrelinePx: 3, bandAlpha: 0.22, ringRadiusPx: 8, dotRadiusPx: 5, labelScale: 3 });
