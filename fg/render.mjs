@@ -5,6 +5,7 @@
  *
  * The union, in match order (first case that fits):
  *   pxset         a PixelSet (fg/pxset.mjs)                             -> pxset
+ *   routeTable    { schema: 'nctk-s7-route-table@1', matrix, ... }      -> raster heatmap holes x baskets + legend (fg/s7route/routeRender.mjs)
  *   raster        { rgba, widthPx, heightPx }                          -> raster (size; pixels come from the viewer)
  *   alphaProfile  { schema: 'nctk-alpha-profile@1', overlays, ... }    -> ledger + raster swatches, crops, histogram (fg/alpha/alphaRender.mjs)
  *   plane         { width, height } + a typed array of width*height     -> raster (size) + ledger (value counts)
@@ -24,6 +25,7 @@ import { isPxSet, renderPart as renderPxSet } from './pxset.mjs';
 import { encodePngRgb, base64 } from './png.mjs';
 import { renderAlphaProfile } from './alpha/alphaRender.mjs';   // S7 lane: tk.s7.alphaProfile (contracts/alpha.profile@1)
 import { isHallwayScene, renderHallwayScene } from './s7trace/sceneRender.mjs';   // S7 trace lane block: tk.s7.scene
+import { isRouteTable, renderRouteTable } from './s7route/routeRender.mjs';   // S7 scoring block: tk.s7.routeTable
 
 const isTyped = (v) => ArrayBuffer.isView(v) && !(v instanceof DataView);
 const isScalar = (v) => v === null || ['number', 'string', 'boolean'].includes(typeof v);
@@ -31,7 +33,7 @@ const labelOf = (it, i) => it.label ?? it.name ?? it.candidate ?? it.hole ?? Str
 const scalarFields = (o) => Object.fromEntries(Object.entries(o).filter(([, v]) => isScalar(v) || (Array.isArray(v) && v.length <= 6 && v.every(isScalar))).map(([k, v]) => [k, Array.isArray(v) ? v.join(', ') : v]));
 const bboxOf = (it) => (Array.isArray(it.bbox) && it.bbox.length === 4 ? it.bbox : null);
 
-export const PART_KINDS = Object.freeze(['pxset', 'raster', 'alphaProfile', 'plane', 'pxsets', 'boxes', 'points', 'rows', 'strips', 'scalar', 'object', 'pathLoss', 'pathProfile', 'hallwayScene', 'pairFeatures']);   // strips: S5-B; alphaProfile: S7-A; pathLoss, pathProfile: S6-B; hallwayScene: S7-B; pairFeatures: S6 scoring
+export const PART_KINDS = Object.freeze(['pxset', 'raster', 'alphaProfile', 'plane', 'pxsets', 'boxes', 'points', 'rows', 'strips', 'scalar', 'object', 'pathLoss', 'pathProfile', 'hallwayScene', 'pairFeatures', 'routeTable']);   // strips: S5-B; alphaProfile: S7-A; pathLoss, pathProfile: S6-B; hallwayScene: S7-B; pairFeatures: S6 scoring; routeTable: S7 scoring
 
 /** Which case of the union a value is (the dispatch every default property can share). */
 export function partKind(v) {
@@ -39,6 +41,7 @@ export function partKind(v) {
   if (isPxSet(v)) return 'pxset';
   if (v && typeof v === 'object' && v.schema === 'nctk-alpha-profile@1') return 'alphaProfile';   // S7 lane block
   if (isHallwayScene(v)) return 'hallwayScene';   // S7 trace lane block
+  if (isRouteTable(v)) return 'routeTable';   // S7 scoring block
   if (v && typeof v === 'object' && v.rgba && Number.isInteger(v.widthPx) && Number.isInteger(v.heightPx)) return 'raster';
   if (Array.isArray(v)) {
     const it = v.find((x) => x && typeof x === 'object');
@@ -66,6 +69,7 @@ export function renderValue(address, v, dims = null, depth = 0) {
     case 'raster': return { kind, parts: [{ address, kind: 'raster', data: { width: v.widthPx, height: v.heightPx } }] };
     case 'alphaProfile': return renderAlphaProfile(address, v, dims);   // S7 lane block: swatches, unmixed crops, residual histogram
     case 'hallwayScene': return renderHallwayScene(address, v);   // S7 trace lane block: luminance, mask, BasketPoints
+    case 'routeTable': return renderRouteTable(address, v, { canvas: s6Canvas });   // S7 scoring block: holes x baskets heatmap
     case 'pxsets': {
       const px = []; for (const it of v) for (const i of it.px) px.push(i);
       const boxes = v.map((it, i) => (bboxOf(it) ? [...bboxOf(it), labelOf(it, i)] : null)).filter(Boolean);
