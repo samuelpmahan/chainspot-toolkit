@@ -140,9 +140,12 @@ export function acceptRule({ acceptedElsewhere = null, judged = true } = {}) {
   return accept;
 }
 
-export async function runHoleStraightForkJoin({ attempt, specimen, outDir = null, root = ROOT, acceptedElsewhere = null }) {
-  const loaded = loadS6Inputs({ attempt, specimen, root });
-  const out = outDir ?? join(loaded.out, 's6straight', `run-${new Date().toISOString().replace(/[:.]/g, '-')}`);
+/**
+ * The S6 store of an attempt: the S3 board, the lane outputs as constants, every S6 Calculation and query (hole, path,
+ * scoring), the S7 profile registered to be produced on first need. Nothing is produced here. Shared by the fork-join
+ * runner and the feature report (features.mjs).
+ */
+export function buildS6Store({ loaded, attempt, specimen, root = ROOT }) {
   const { store, document: instrumentation } = instrumentedStore({ name: `s6straight:${specimen}`, base: loaded.board });
   store.constant('fn.tk.s6straight.laneOutputs', loaded.values);
   for (const [fn, spec] of S6_CALCULATIONS) store.register(fn, spec);
@@ -152,6 +155,13 @@ export async function runHoleStraightForkJoin({ attempt, specimen, outDir = null
   const s4 = loadAttemptParts({ attempt, specimen, root });
   registerAlphaProfile(store, { s4LaneOutputs: s4LaneOutputsFor(s4.values, { omit: Object.keys(loaded.values) }), association: loadAssociation({ out: loaded.out, attempt, specimen }), course: specimen });
   registerPairFeatures(store);   // S6 SCORING: tk.s6.pairFeatures and its feature Parts; the five variants are MATCHING rules over it
+  return { store, instrumentation };
+}
+
+export async function runHoleStraightForkJoin({ attempt, specimen, outDir = null, root = ROOT, acceptedElsewhere = null }) {
+  const loaded = loadS6Inputs({ attempt, specimen, root });
+  const out = outDir ?? join(loaded.out, 's6straight', `run-${new Date().toISOString().replace(/[:.]/g, '-')}`);
+  const { store, instrumentation } = buildS6Store({ loaded, attempt, specimen, root });
   // shared by every branch: produced once on the parent, so no variant's standalone time is charged for them (the S4 convention)
   for (const address of ['tk.s6.holePairs', 'tk.s6.baskets', 'tk.s6.badgeCenters', 'tk.s6.hallway', 'tk.s6.pairFeatures']) store.get(address);
   const implementations = await discoverImplementations(join(root, 'impl'), HOLE_STRAIGHT_SLOT.slot);
