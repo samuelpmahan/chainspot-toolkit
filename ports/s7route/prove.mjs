@@ -30,6 +30,8 @@ export const FIXTURES = join(import.meta.dirname, 'fixtures');
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
 export const fixtureFile = (specimen, dir = FIXTURES) => join(dir, `match2-${specimen}.fixture.json`);
 export const fixture18File = (specimen, dir = FIXTURES) => join(dir, `match18-${specimen}.fixture.json`);
+/** The sensor-only fixture (fixture_sensor.py: match2.py up to the matrix loop) on the attempt it names. */
+export const sensorFixtureFile = (specimen, dir = FIXTURES) => join(dir, `sensor-${specimen}.fixture.json`);
 
 /** The prototype's inputs as Parts: tk.s7.sceneS4 (prototype offset, S3 family L), tk.s7.holes (its after-S4 baseline). */
 export function prototypeInputs({ specimen, attempt, fixture, attemptsRoot = ROOT, root = ROOT }) {
@@ -51,8 +53,8 @@ export function prototypeInputs({ specimen, attempt, fixture, attemptsRoot = ROO
 
 const maxAbs = (a, b) => Math.max(0, ...a.map((x, i) => Math.abs(x - b[i])));
 
-export function prove({ specimen, attempt, attemptsRoot = ROOT, fixtures = FIXTURES, matrix = true }) {
-  const fx = readJson(fixtureFile(specimen, fixtures));
+export function prove({ specimen, attempt, attemptsRoot = ROOT, fixtures = FIXTURES, matrix = true, fixturePath = null }) {
+  const fx = readJson(fixturePath ?? fixtureFile(specimen, fixtures));
   const inp = prototypeInputs({ specimen, attempt, fixture: fx, attemptsRoot });
   const store = createPartStore({ name: `s7route-prove:${specimen}`, base: inp.board });
   store.constant('fn.tk.s7route.prototypeInputs', { 'tk.s7.sceneS4': inp.scene, 'tk.s7.holes': inp.holes, 'testimony.source.holePaths': inp.holePaths });

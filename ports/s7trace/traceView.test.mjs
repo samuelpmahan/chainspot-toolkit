@@ -30,16 +30,16 @@ test('a tee mark farther than 8 px, a basket farther than 12 px, or a route outs
 });
 
 test('an old-schema hole (no bend points) is judged on its corridor centreline and reports no bend offsets', () => {
-  const p = { hole: '1', tee: [22, 100], basket: [231, 60], bends: null, corridorCentre: [[150, 100]] };
+  const p = { hole: '1', tee: [22, 100], basket: [231, 60], bends: null, centre: [[22, 100], [150, 100], [231, 60]] };
   const v = routeMatchViewOf({ solve, holesPart, holePaths: { path: 'f', holes: [p] }, widthPx: W });
   assert.equal(v.rows[0].judged, true); assert.equal(v.rows[0].bendsKnown, false); assert.equal(v.rows[0].bendOffAfterPx, undefined); assert.equal(v.totals.bendsSam, 0);
 });
 
-test('alex corridor centre: left and right polylines stored in opposite directions pair up end to end', () => {
+test('alex corridor centre (testimony corridorOf): left and right polylines stored in opposite directions pair up end to end', () => {
   const alex = loadHolePaths('alex');
   for (const h of alex.holes) {
     const [a, b] = [h.tee, h.basket], L = Math.hypot(b[0] - a[0], b[1] - a[1]);
-    for (const q of h.corridorCentre) {   // a mispaired (flipped) right polyline puts midpoints far off the tee -> basket chord
+    for (const q of h.centre) {   // a mispaired (flipped) right polyline puts midpoints far off the tee -> basket chord
       const t = ((q[0] - a[0]) * (b[0] - a[0]) + (q[1] - a[1]) * (b[1] - a[1])) / (L * L);
       assert.ok(t > -0.05 && t < 1.05 && Math.hypot(q[0] - a[0] - t * (b[0] - a[0]), q[1] - a[1] - t * (b[1] - a[1])) < 150, `hole ${h.hole} centre point ${q}`);
     }

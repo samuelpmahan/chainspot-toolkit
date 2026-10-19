@@ -8,6 +8,8 @@
  */
 import { geometricJoin } from '../../fg/identity.mjs';
 import { encodePngRgb, base64 } from '../../fg/png.mjs';
+/** Sam's corridor line: tee -> bends -> basket; old schema (no bends): its centreline from the geometry-oriented edges. */
+const samLine = (sam) => (!sam.bends && sam.centre ? sam.centre : [sam.tee, ...(sam.bends ?? []), sam.basket]);
 import { HOLE_TRACE_SLOT, ACCEPTANCE, STATUS } from './traceSpace.mjs';
 
 export const BRANCH_COLORS = Object.freeze({ s3first: [0, 230, 0], s3firstS4: [0, 200, 255], badgeOnly: [255, 140, 0], endpoints: [255, 0, 255], pinned: [160, 160, 255] });
@@ -42,7 +44,7 @@ export function drawCrop({ rgba, widthPx: IW, heightPx: IH }, { x0, y0, w, h, sc
 export function judgedMarks(trace, row, sam, { width = 2 } = {}) {
   const color = !row?.judged ? STATUS_COLORS.unjudged : row.ok ? STATUS_COLORS.agrees : trace?.status === STATUS.reached ? STATUS_COLORS.reachedDisagrees : STATUS_COLORS.notReached;
   const out = [];
-  if (sam) out.push({ kind: 'line', pts: [sam.tee, ...(sam.bends ?? []), sam.basket], color: SAM_COLOR, width: 0, dash: 5 });
+  if (sam) out.push({ kind: 'line', pts: samLine(sam), color: SAM_COLOR, width: 0, dash: 5 });
   if (trace?.path?.length > 1) out.push({ kind: 'line', pts: trace.path, color, width });
   for (const p of trace?.path ?? []) out.push({ kind: 'square', p, color, arm: 3 });
   for (const b of sam?.bends ?? []) out.push({ kind: 'cross', p: b, color: SAM_BEND, arm: 7 });
@@ -95,13 +97,13 @@ export function compareTraces({ contract, parentStore, raster, deflate }) {
     });
     const pages = [];
     for (const h of holesPart.holes) {
-      const sam = samOf(h.hole), pts = [...(sam ? [sam.tee, sam.basket, ...(sam.bends ?? [])] : []), ...names.flatMap((n) => view[n].traces.find((t) => t.hole === h.hole)?.path ?? [])];
+      const sam = samOf(h.hole), pts = [...(sam ? [sam.tee, sam.basket, ...(sam.bends ?? []), ...(sam.centre ?? [])] : []), ...names.flatMap((n) => view[n].traces.find((t) => t.hole === h.hole)?.path ?? [])];
       if (!pts.length) continue;
       const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]), m = W;
       const x0 = Math.floor(Math.min(...xs) - m), y0 = Math.floor(Math.min(...ys) - m), w = Math.ceil(Math.max(...xs) + m) - x0, hgt = Math.ceil(Math.max(...ys) + m) - y0;
       const scale = Math.min(2, 420 / Math.max(w, hgt));
       const marks = [];
-      if (sam) marks.push({ kind: 'line', pts: [sam.tee, ...(sam.bends ?? []), sam.basket], color: SAM_COLOR, width: 0, dash: 5 });
+      if (sam) marks.push({ kind: 'line', pts: samLine(sam), color: SAM_COLOR, width: 0, dash: 5 });
       for (const n of names) { const t = view[n].traces.find((x) => x.hole === h.hole); if (t?.path?.length > 1) { marks.push({ kind: 'line', pts: t.path, color: BRANCH_COLORS[n] ?? WHITE, width: 1 }); for (const p of t.path) marks.push({ kind: 'square', p, color: BRANCH_COLORS[n] ?? WHITE, arm: 3 }); } }
       for (const b of sam?.bends ?? []) marks.push({ kind: 'cross', p: b, color: SAM_BEND, arm: 8 });
       const crop = drawCrop(raster, { x0, y0, w, h: hgt, scale }, marks, { deflate });
@@ -117,7 +119,7 @@ export function compareTraces({ contract, parentStore, raster, deflate }) {
         calculation: HOLE_TRACE_SLOT.slot,
         parts: [{ address: `cmp.${HOLE_TRACE_SLOT.slot}.crop.hole${h.hole}`, kind: 'raster', data: crop }, { address: `cmp.${HOLE_TRACE_SLOT.slot}.hole${h.hole}`, kind: 'ledger', data: { rows } }],
         verdicts: rows.map((r) => ({ name: `${r.branch}: ${r.status}${r.why ? ` (${r.why})` : ''}`, ok: r.agrees === true })),
-        receipt: { legend: LEGEND, origin: crop.origin, scale: crop.scale, samCorridor: sam ? [sam.tee, ...(sam.bends ?? []), sam.basket] : null, widthPx: W }
+        receipt: { legend: LEGEND, origin: crop.origin, scale: crop.scale, samCorridor: sam ? samLine(sam) : null, widthPx: W }
       });
     }
     return { slot: HOLE_TRACE_SLOT.slot, contract: join.contract, acceptance: ACCEPTANCE, widthPx: W, branches: perBranch, disagreements,

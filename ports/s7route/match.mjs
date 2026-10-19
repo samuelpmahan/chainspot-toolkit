@@ -5,7 +5,10 @@
  *   1. assignment: maximum total of (edge contrast of the hole's best route to the basket + onAxisPrior), one-to-one
  *      over the whole table (no greedy claims); a cell without a contrast reading scores -99 (the prototype's value);
  *   2. the assigned 1-bend route is refined by coordinate search (polyscore refine_vertices, 2 iterations, the bend
- *      sliding on the tee axis);
+ *      sliding on the tee axis +- one 6 px grid step per iteration from the contrast route's bend, E18; the prototype slid +-60 px
+ *      and on a flat contrast that relocates the bend). Deliberate divergence from the prototype (review R02): match5.py left a hole that the
+ *      on-axis prior reassigned on its unrefined route; here every assigned 1-bend route is refined the same way, so
+ *      the rule does not depend on which pass chose the basket;
  *   3. bends by the hallway sensor: the straight route if it reads >= TAU on >= MIN_STATIONS visible stations, else the
  *      contrast route; a second bend (B1 on the tee axis, B2 free) only when the 1-bend route reads < TAU and the best
  *      2-bend route reads >= TAU, gains >= 0.15 and has >= MIN_STATIONS stations;
@@ -23,6 +26,10 @@ export const MATCH = Object.freeze({
   minStations: ROUTE.minStations,
   noReadingLum: -99.0,       // a cell with no contrast reading (polyscore.py's value)
   refineIters: 2,            // match18.py refine_vertices(iters=2)
+  // E18: the refine polishes the contrast route's bend, +- one 6 px grid step of best_route per iteration (2 iterations), it does
+  // not relocate it: along the axis the contrast is flat to +-2 lum over tens of px where the bend lies inside the
+  // basket's C1 disc (golden 4: a 0.24 deg change of u moved the global +-60 px refine's pick 14.7 px, sensor 1.00 both)
+  refineAxisSpanPx: ROUTE.contrastBendStepPx,
   secondBend: Object.freeze({ gain: 0.15, axisSpanPx: 80, axisStepPx: 8, gridStepW: 0.5, bboxW: 2, minLegW: 1, top: 8, refineAxisPx: 8, refineAxisStepPx: 2, refineStepPx: 2 })
 });
 
@@ -103,7 +110,7 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
     const sorted = [...score[i]].sort((a, b) => b - a);
     const E = table.baskets[k].point ?? cell.contrast.verts.at(-1);
     let V = cell.contrast.verts.map((v) => v.slice());
-    if (V.length === 3) V = refineVertices(S, V, W, start.u, MATCH.refineIters)[0];
+    if (V.length === 3) V = refineVertices(S, V, W, start.u, MATCH.refineIters, { axisSpanPx: MATCH.refineAxisSpanPx })[0];
     const straight = routeSensorAt(S, [start.S, E], W);
     let rec;
     if (straight.stations >= MATCH.minStations && straight.passFrac >= MATCH.tau) {

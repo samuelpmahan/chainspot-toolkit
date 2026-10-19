@@ -52,7 +52,13 @@ export function loadS7Lanes({ out, upperRowsRemoved, values }) {
   let association;
   if (existsSync(assocFile)) {
     const assoc = readJson(assocFile), base = baselineOf(assoc, out), poses = assoc.rows.filter((r) => r.pose);
-    association = { holes: base.holes, source: 's3assoc/px.tees.association.json (baselineOf: the frozen-baseline shape)', condition: null,
+    // baselineOf writes the frozen-baseline shape, whose tee ray is rounded to 2 decimals (a recorded artifact: up to
+    // 0.3 deg, about 1 px per 200 px along the axis); S7 reads the unrounded AA pose angle instead, with the same sense
+    const holes = Object.fromEntries(Object.entries(base.holes).map(([b, h]) => {
+      const r = assoc.rows.find((x) => x.best && String(x.best.badge) === String(b)), th = ((r?.pose?.thDeg ?? r?.thDeg) * Math.PI) / 180, s = r?.best?.sense ?? 1;
+      return [b, r && Number.isFinite(th) ? { ...h, u: [Math.cos(th) * s, Math.sin(th) * s], uRule: 'AA pose thDeg (unrounded), association sense' } : h];
+    }));
+    association = { holes, source: 's3assoc/px.tees.association.json (baselineOf: the frozen-baseline shape)', condition: null,
       pads: poses.map((r) => ({ label: r.tee, cx: r.pose.cx, cy: r.pose.cy, thDeg: r.pose.thDeg })), template: { L: assoc.template.L, W: assoc.template.W }, padRule: 'S3 association AA pad poses (fn.Tee.poseAA) and their template' };
   } else {
     const m = values['px.tees.familyRefined'].model;
@@ -108,8 +114,8 @@ export function acceptRule({ acceptedElsewhere = null, judged = true } = {}) {
   return accept;
 }
 
-export async function runHoleTraceForkJoin({ attempt, specimen, outDir = null, root = ROOT, acceptedElsewhere = null, only = null, cas = true }) {
-  const loaded = loadAttemptParts({ attempt, specimen, root });
+export async function runHoleTraceForkJoin({ attempt, specimen, outDir = null, root = ROOT, attemptsRoot = root, acceptedElsewhere = null, only = null, cas = true }) {
+  const loaded = loadAttemptParts({ attempt, specimen, root: attemptsRoot });   // attemptsRoot: where attempts/stages/<ID> lives (read only)
   const out = outDir ?? join(loaded.out, 's7trace', `run-${new Date().toISOString().replace(/[:.]/g, '-')}`);
   const { store, document: instrumentation } = instrumentedStore({ name: `s7trace:${specimen}`, base: loaded.board, ...runnerCache({ root, entry: import.meta.filename, cas }) });
   const holePaths = loadHolePaths(specimen, root);
@@ -170,8 +176,8 @@ export async function runHoleTraceForkJoin({ attempt, specimen, outDir = null, r
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1]]] : acc), []));
-  if (!args.attempt || !args.specimen) { console.error('usage: node ports/s7trace/run.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR] [--accept VARIANT] [--only a,b]'); process.exit(2); }
-  const r = await runHoleTraceForkJoin({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null, acceptedElsewhere: args.accept ?? null, only: args.only ? args.only.split(',') : null, cas: casFlag() });
+  if (!args.attempt || !args.specimen) { console.error('usage: node ports/s7trace/run.mjs --specimen golden --attempt ATTEMPT_ID [--attempts-root DIR] [--out DIR] [--accept VARIANT] [--only a,b]'); process.exit(2); }
+  const r = await runHoleTraceForkJoin({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null, attemptsRoot: args['attempts-root'] ?? ROOT, acceptedElsewhere: args.accept ?? null, only: args.only ? args.only.split(',') : null, cas: casFlag() });
   const c = r.comparison;
   console.log(JSON.stringify({ out: r.out, frames: r.frames, accepted: r.accepted, acceptedBy: r.acceptedBy, widthPx: c.widthPx, timingsMs: r.timingsMs,
     profile: r.profile.slice(0, 10).map((p) => `${p.calculation}: ${p.calls}x self ${p.selfMs} ms ${JSON.stringify(p.emits)}`),

@@ -8,7 +8,7 @@
  *   basket   the route ends within basketMatchPx (12 px) of Sam's basket mark;
  *   corridor the route stays within W / 2 of Sam's corridor (tee -> bends -> basket).
  * A hole whose annotation has no corridor at all is not judged. The old annotation schema (alex) has corridors but no bend
- * points: its corridor is the midline of the left / right polylines (ports/s7trace/holePaths.mjs corridorCentre), judged the
+ * points: its corridor is the midline of the left / right polylines (ports/judge/testimony.mjs corridorOf), judged the
  * same way, and its bend offsets are not reported (there is no bend point to measure against).
  */
 import { judgeTrace } from './hallway.mjs';
@@ -30,7 +30,7 @@ export function routeMatchViewOf({ solve, holesPart, holePaths, widthPx }) {
     const r = solve.holes?.[h.hole] ?? solve.holes?.[Number(h.hole)] ?? null, verts = r?.verts ?? [];
     const after = verts.slice(1, -1), before = r?.bendsRefined?.before ?? after;
     const p = (holePaths.holes ?? []).find((x) => String(x.hole) === String(h.hole)) ?? null;
-    const corridorBends = p ? (p.bends ?? p.corridorCentre ?? null) : null;
+    const corridorBends = p ? (p.bends ?? p.centre?.slice(1, -1) ?? null) : null;   // old schema: the corridor's midpoints (samples, not bends)
     const row = { hole: String(h.hole), path: verts, after, before, placementTaken: r?.bendsRefined?.taken ?? null, end: verts.length ? verts.at(-1) : null,
       teeCenter: h.tee?.teeCenter ?? null, samTee: p?.tee ?? null, samBasket: p?.basket ?? null,
       samCentre: corridorBends ? [p.tee, ...corridorBends, p.basket] : null, bendsKnown: Boolean(p?.bends), judged: false, agree: null };

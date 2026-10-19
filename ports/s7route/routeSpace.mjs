@@ -136,7 +136,9 @@ export function ribbonContrastAt(c, V, W, { band = ROUTE.contrastBandPx } = {}) 
   const x0 = Math.max(Math.floor(mnx - h - band[1] - 2), 0), y0 = Math.max(Math.floor(mny - h - band[1] - 2), 0);
   const x1 = Math.min(Math.ceil(mxx + h + band[1] + 3), IW), y1 = Math.min(Math.ceil(mxy + h + band[1] + 3), IH);
   const segs = []; for (let i = 1; i < V.length; i++) { const a = V[i - 1], b = V[i], dx = b[0] - a[0], dy = b[1] - a[1]; segs.push([a[0], a[1], dx, dy, Math.max(dx * dx + dy * dy, 1e-9)]); }
-  const e0 = V[0], e1 = V[V.length - 1], capR = h + band[1] + 2;
+  const e0 = V[0], e1 = V[V.length - 1], capR = h + band[1] + 2, capIn2 = (capR + 1) ** 2;
+  const nSeg = segs.length, flat = Float64Array.from(segs.flat());
+  const outer2 = (h + band[1] + 1) ** 2, inner2 = Math.max(0, h - band[1] - 1) ** 2;
   let si = 0, ni = 0, so = 0, no = 0;
   const rIn = h - band[1] - 0.01, iv = [], skip = [];
   const merge = (list) => { list.sort((p, q) => p[0] - q[0]); const out = []; for (const x of list) { const l = out.at(-1); if (l && x[0] <= l[1] + 1) l[1] = Math.max(l[1], x[1]); else out.push([x[0], x[1]]); } return out; };
@@ -170,9 +172,26 @@ export function ribbonContrastAt(c, V, W, { band = ROUTE.contrastBandPx } = {}) 
       if (s < inner.length && inner[s][0] <= x) { x = Math.min(hi, inner[s][1]); continue; }
       const i = y * IW + x;
       if (!(mask[i] < 0.01)) continue;
-      if (!(Math.hypot(x - e0[0], y - e0[1]) > capR) || !(Math.hypot(x - e1[0], y - e1[1]) > capR)) continue;
-      let D = Infinity;
-      for (const [ax, ay, dx, dy, L2] of segs) { let t = ((x - ax) * dx + (y - ay) * dy) / L2; t = t < 0 ? 0 : t > 1 ? 1 : t; const d = Math.hypot(x - (ax + t * dx), y - (ay + t * dy)); if (d < D) D = d; }
+      // the same tests as polyScore, the same Math.hypot values: squared distances only pick the nearest leg and skip
+      // px that are certainly outside the bands (margins of 1 px), so the counted px and their sums are unchanged
+      const c0x = x - e0[0], c0y = y - e0[1], c1x = x - e1[0], c1y = y - e1[1];
+      if (c0x * c0x + c0y * c0y <= capIn2 && !(Math.hypot(c0x, c0y) > capR)) continue;
+      if (c1x * c1x + c1y * c1y <= capIn2 && !(Math.hypot(c1x, c1y) > capR)) continue;
+      let best2 = Infinity, bx = 0, by = 0;
+      for (let q = 0; q < nSeg; q++) {
+        const o = 5 * q, ax = flat[o], ay = flat[o + 1], dx = flat[o + 2], dy = flat[o + 3];
+        let t = ((x - ax) * dx + (y - ay) * dy) / flat[o + 4]; t = t < 0 ? 0 : t > 1 ? 1 : t;
+        const ex = x - (ax + t * dx), ey = y - (ay + t * dy), d2 = ex * ex + ey * ey;
+        if (d2 < best2) { best2 = d2; bx = ex; by = ey; }
+      }
+      if (best2 > outer2 || best2 < inner2) continue;
+      let D = Infinity;   // polyScore's min of hypot over the legs (ties between legs give the same value)
+      for (let q = 0; q < nSeg; q++) {
+        const o = 5 * q, ax = flat[o], ay = flat[o + 1], dx = flat[o + 2], dy = flat[o + 3];
+        let t = ((x - ax) * dx + (y - ay) * dy) / flat[o + 4]; t = t < 0 ? 0 : t > 1 ? 1 : t;
+        const ex = x - (ax + t * dx), ey = y - (ay + t * dy);
+        if (ex * ex + ey * ey <= best2 * (1 + 1e-9) + 1e-12) { const d = Math.hypot(ex, ey); if (d < D) D = d; }
+      }
       if (D >= h - band[1] && D <= h - band[0]) { si += lum[i]; ni++; } else if (D >= h + band[0] && D <= h + band[1]) { so += lum[i]; no++; }
     }
   }

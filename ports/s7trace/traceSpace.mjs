@@ -59,11 +59,11 @@ export function sceneWithRecovered(S, boxes, { basketPointOffset = BASKET_POINT_
   return { ...S, mask, occluder: occ, bp: [...S.bp, ...bpNew], recovered: boxes.length, emits: { ...S.emits, recoveredBaskets: boxes.length } };
 }
 
-/** The unit ray along a pad's axis toward its badge (2 decimals, as the S3 association baseline writes it). */
+/** The unit ray along a pad's axis toward its badge. */
 const rayToBadge = (t, badge) => {
   const c = [badge.bbox[0] + (badge.bbox[2] - 1) / 2, badge.bbox[1] + (badge.bbox[3] - 1) / 2], u = [Math.cos(t.angleRad), Math.sin(t.angleRad)];
   const s = (c[0] - t.center[0]) * u[0] + (c[1] - t.center[1]) * u[1] >= 0 ? 1 : -1;
-  return [round(u[0] * s, 2), round(u[1] * s, 2)];
+  return [u[0] * s, u[1] * s];   // unrounded (a 2-decimal ray moved the tee cap start and the bend axis: review R12)
 };
 
 /** tk.s7.holes: per S1 badge label, its tee (S3 association first, else the accepted S4 recovered tee); the baskets named. */
