@@ -93,6 +93,14 @@ right and the repo is behind. Every number carries a unit.
 | S6 | straight holes are the trivial case: objective path loss along tee to basket; learn the course-local path transparency profile there. Heritage hole 8 is straight (Sam, 2026-10-18, from the S6 render: his mark's bend sat 2.67 px off the 272 px line); the corrected annotation is a new file | straight-hole residual |
 | S7 | find the path signal and ride it; all holes resolve tee to badge to basket, trace stays in the ribbon; perfection = bend points on the centreline. Known endpoints first (Sam, 2026-10-18): the ABFeature era paired every badge with every basket endpoint, scored the pairs and assigned them one-to-one, which is what let it assume known endpoints and work backwards from the basket. The hallway tracker prototypes (`docs/evidence/s7edge`, `s7main`: 16/18 on golden, lenard, townelake) graduate before any new signal | Sam's bends |
 
+**Partial views are stitched first (Sam, 2026-10-19).** S4's tee budget (N = badges in frame) and S7's one-to-one
+assignment assume the whole course is in the frame, and they should: a partial view (lenard1-5) is stitched into the
+whole course before S0 (autostitch: `source/provider/packages/alg/src/stitch.ts`, not yet wired into the toolkit).
+Stitched images stay deferred until absolute-pixel and absolute-ratio issues stop appearing. The checklist is the
+inventory of absolute px and fixed cross-unit ratios in S0-S7 (`docs/evidence/abs-px/INVENTORY.md`; E19: between 1x and 2.33x the map scales 2.33x, pad
+sprites 2.04x and the hallway ribbon 1.45x, so a rule written in one of those units and applied to another drifts up
+to 1.6x). No off-frame rule is built for partial views.
+
 ## Points and identity
 
 - **The tee is the full pad; its position is the pad centre.** Sam's
