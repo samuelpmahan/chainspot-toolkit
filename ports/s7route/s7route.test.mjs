@@ -5,7 +5,7 @@ import { renderValue } from '../../fg/render.mjs';
 import { SCENE_SCHEMA } from '../../fg/s7trace/sceneRender.mjs';
 import { FRONT } from '../s7trace/hallway.mjs';
 import { polyScore } from '../s7trace/hallway.mjs';
-import { routeSensorAt, routeRowOf, routeTableOn, ribbonContrastAt, ROUTE_QUERIES, ROUTE_TABLE_PART, rowAddress } from './routeSpace.mjs';
+import { routeSensorAt, routeRowOf, routeTableOn, ribbonContrastAt, onAxisOf, ROUTE_QUERIES, ROUTE_TABLE_PART, rowAddress } from './routeSpace.mjs';
 
 /**
  * Fixture: a flat 320 x 220 px course (lum 100) with one ribbon of width 30 px (lum 150) tee (30, 100) -> bend (170, 100)
@@ -115,4 +115,15 @@ test('the start is the tee cap: S = T + u FRONT L, badge distance along u', () =
   const h1 = s.get('tk.s7.routeStart').holes[0];
   assert.ok(Math.abs(h1.S[0] - (30 + FRONT * 24)) < 1e-12 && h1.S[1] === 100);
   assert.ok(Math.abs(h1.badgeAlongPx - (120 - 30 - FRONT * 24)) < 1e-12);
+});
+
+test('the on-axis prior (packet E03): the nearest BasketPoint past the badge within W / 2 of the tee ray gets 15, a column apart', () => {
+  const start = { S: [0, 0], u: [1, 0], badgeAlongPx: 100 };
+  const bp = [[80, 0], [300, 10], [200, -14], [150, 30], [400, 0]];   // before the badge; on axis; nearest on axis; too far off; farther on axis
+  const a = onAxisOf(start, bp, 30);
+  assert.deepEqual(a.map((x) => x.onAxisPrior), [0, 0, 15, 0, 0]);
+  assert.deepEqual(a[2], { alongPx: 200, lateralPx: -14, onAxisPrior: 15 });
+  const s = storeOf(new Map()), t = routeTableOn(s);
+  assert.equal(t.onAxisPrior.length, 2); assert.equal(t.rows[0].cells[0].axis.onAxisPrior, t.onAxisPrior[0][0]);
+  t.contrastMatrix.forEach((r, i) => r.forEach((v, k) => assert.equal(v, t.rows[i].cells[k].contrast.contrastLum)));   // never added into the contrast
 });

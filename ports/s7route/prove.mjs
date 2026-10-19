@@ -3,7 +3,7 @@
  * The graduation proof (AGENTS.md "prove identical output") of S7 scoring against the Python prototype
  * (after-s4/match2.py), node-only:
  *
- *   node ports/s7route/prove.mjs --specimen golden --attempt ID [--attempts-root DIR] [--fixtures DIR] [--sensor-only]
+ *   node ports/s7route/prove.mjs --specimen golden --attempt ID [--attempts-root DIR]  [--fixtures DIR] [--sensor-only] [--save FILE]
  *
  * The prototype's numbers are fixtures written FIRST by its own code (match2.py and match18.py exec'd verbatim up to the
  * assignment: the unrounded sensor and edge-contrast matrices with each cell's route, the starts, W, the BasketPoints,
@@ -14,7 +14,7 @@
  * tees, u to 4 decimals). Asserted: BasketPoints 1e-9 px, W 1e-9 px, starts 1e-9 px, random-route sensor 1e-9,
  * both matrices 1e-6 and every cell's route vertices 1e-6 px. The system run (ports/s7route/run.mjs) reads the system's own inputs; the difference is an input change.
  */
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, writeFileSync } from 'node:fs';
 import { deserialize } from 'node:v8';
 import { join, resolve } from 'node:path';
 import { createPartStore, registerQueries } from '../../fg/store.mjs';
@@ -79,10 +79,20 @@ export function prove({ specimen, attempt, attemptsRoot = ROOT, fixtures = FIXTU
   const f18 = existsSync(fixture18File(specimen, fixtures)) ? readJson(fixture18File(specimen, fixtures)) : null;
   const contrastMatrix = f18 ? { ...cmp(table.contrastMatrix, f18.matrix, (h, k) => f18.routes[`${h}|${k}`], (c) => c.contrast.verts), widthPyPx: f18.widthPx, pythonSeconds: f18.pythonSeconds }
     : { ok: false, condition: `no match18.py fixture for ${specimen}` };
+  // the prototypes' recorded outputs (after-s4/match2-<course>.json, match18-<course>.json): their matrices are rounded
+  // (3 and 2 decimals), so they agree within half the last digit; the unrounded fixtures above carry the 1e-6 proof
+  const recorded = Object.fromEntries([['match2', 'sensorMatrix', 3], ['match18', 'contrastMatrix', 2]].map(([name, key, d]) => {
+    const f = join(fixtures, 'recorded', `${name}-${specimen}.json`);
+    if (!existsSync(f)) return [name, { condition: `no recorded ${name}-${specimen}.json` }];
+    const P = readJson(f).matrix, tol = 0.5 * 10 ** -d + 1e-9;
+    let maxDiff = 0; table[key].forEach((r, i) => r.forEach((v, k) => { maxDiff = Math.max(maxDiff, Math.abs((v ?? -99) - P[i][k])); }));
+    return [name, { decimals: d, maxDiff, tolerance: tol, ok: maxDiff <= tol }];
+  }));
   return {
     specimen, attempt, widthPx: { js: W, py: fx.widthPx, diff: Math.abs(W - fx.widthPx) }, basketPointsMaxDiffPx: bpDiff, startsMaxDiff: startDiff,
-    sensor: sensorReport, sensorMatrix, contrastMatrix,
-    ok: bpDiff <= 1e-9 && Math.abs(W - fx.widthPx) <= 1e-9 && startDiff <= 1e-9 && sensorOk && sensorMatrix.ok && contrastMatrix.ok,
+    sensor: sensorReport, sensorMatrix, contrastMatrix, recorded,
+    js: { holes: table.holes, contrastMatrix: table.contrastMatrix, contrastRoutes: table.rows.map((r) => r.cells.map((c) => c.contrast.verts)), sensorMatrix: table.sensorMatrix },
+    ok: bpDiff <= 1e-9 && Math.abs(W - fx.widthPx) <= 1e-9 && startDiff <= 1e-9 && sensorOk && sensorMatrix.ok && contrastMatrix.ok && Object.values(recorded).every((x) => x.ok !== false),
     pythonSeconds: fx.pythonSeconds
   };
 }
@@ -92,7 +102,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const specimen = arg('--specimen'), attempt = arg('--attempt');
   if (!specimen || !attempt) { console.error('usage: node ports/s7route/prove.mjs --specimen golden --attempt ID [--attempts-root DIR] [--fixtures DIR]'); process.exit(2); }
   const r = prove({ specimen, attempt, attemptsRoot: arg('--attempts-root') ?? ROOT, fixtures: arg('--fixtures') ?? FIXTURES, matrix: !process.argv.includes('--sensor-only') });
-  const { rows, ...sensor } = r.sensor;
-  console.log(JSON.stringify({ ...r, sensor }, null, 1));
+  const { rows, ...sensor } = r.sensor, { js, ...rest } = r;
+  if (js && arg('--save')) writeFileSync(arg('--save'), JSON.stringify(js));
+  console.log(JSON.stringify({ ...rest, sensor }, null, 1));
   process.exit(r.ok ? 0 : 1);
 }

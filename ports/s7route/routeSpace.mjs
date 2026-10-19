@@ -34,7 +34,8 @@
  *                       names tk.s7.routeRow@<hole>: its cache key is the scene, the hole, ITS start and W, so a change to
  *                       one hole's tee recomputes that row alone (state is an argument)
  *   tk.s7.routeTable    the join: contrastMatrix (lum), sensorMatrix (match2 reading), contrastRouteSensor (the sensor on
- *                       each contrast route), every cell, Sam's basket per hole when testimony exists (judging only, 12 px)
+ *                       each contrast route), onAxisPrior (packet E03: 15 or 0, with each cell's alongPx / lateralPx off
+ *                       the tee ray), every cell, Sam's basket per hole when testimony exists (judging only, 12 px)
  * Queries:
  *   fn.q.route.sensor   { scene | raster + mask, verts, widthPx } -> { passFrac, stations, passCount, legs }
  *   fn.q.route.contrast { scene | raster + mask, verts, widthPx } -> { contrastLum, edgePx }
@@ -66,7 +67,9 @@ export const ROUTE = Object.freeze({
   contrastBendStepPx: 6.0,   // every 6 px (match18.py best_route step)
   contrastBandPx: Object.freeze([0.5, 3.0]),   // polyscore.py band inside / outside the predicted edge
   contrastMinPx: 30,         // polyscore.py: fewer visible px in either band = no reading (-99 in the prototype)
-  samMatchPx: 12             // judging only: the one basket match rule (AGENTS.md)
+  samMatchPx: 12,            // judging only: the one basket match rule (AGENTS.md)
+  onAxisPriorLum: 15.0,      // packet E03 (verified by the lead on 4 courses): the on-axis basket's prior, in the contrast's units
+  onAxisLateralW: 0.5        // on the tee ray: lateral offset <= 0.5 W
 });
 export const ROUTE_UNITS = Object.freeze({
   contrastLum: 'lum (mean lum of the visible px 0.5-3 px inside the rendered ribbon edges minus 0.5-3 px outside; end caps excluded)',
@@ -75,7 +78,10 @@ export const ROUTE_UNITS = Object.freeze({
   stations: 'visible stations (1 px apart; both edge bands unmasked)',
   verts: 'px (canonical frame): tee cap start, bends, BasketPoint',
   start: 'px (canonical frame) for S; unit vector for u; px along u for badgeAlongPx',
-  widthPx: 'px (hallway width W, LOCAL)'
+  widthPx: 'px (hallway width W, LOCAL)',
+  onAxisPrior: 'lum (added to the contrast by the matching rule, never here): 15 for the nearest BasketPoint past the badge along the tee ray within 0.5 W of it, else 0',
+  alongPx: 'px (BasketPoint along the tee axis u from the tee cap start S)',
+  lateralPx: 'px (BasketPoint off the tee ray, signed: + to the left of u in image coordinates, n = (-u_y, u_x))'
 });
 
 // ------------------------------------------------------------------ the sensor (match2.py sensor)
@@ -273,10 +279,22 @@ export function samBasketsOf(holePaths, bp) {
   return { source: holePaths.path, rule: `Sam's basket = the BasketPoint within ${ROUTE.samMatchPx} px of his mark (one match rule)`, byHole };
 }
 
+/**
+ * The on-axis prior (packet E03, after-s4/verify_axis_prior.py): per hole, every BasketPoint's along / lateral position
+ * relative to the tee ray from S; the nearest one past the badge (along > badge distance) within 0.5 W laterally gets 15.
+ */
+export function onAxisOf(start, bp, W) {
+  const { S, u, badgeAlongPx: dB } = start, n = [-u[1], u[0]];
+  const pos = bp.map((p) => { const d = [p[0] - S[0], p[1] - S[1]]; return { alongPx: d[0] * u[0] + d[1] * u[1], lateralPx: d[0] * n[0] + d[1] * n[1] }; });
+  let k = -1; pos.forEach((q, j) => { if (q.alongPx > dB && Math.abs(q.lateralPx) <= W * ROUTE.onAxisLateralW && (k < 0 || q.alongPx < pos[k].alongPx)) k = j; });
+  return pos.map((q, j) => ({ ...q, onAxisPrior: j === k ? ROUTE.onAxisPriorLum : 0 }));
+}
+
 const argmax = (row) => { let j = -1; row.forEach((v, i) => { if (v !== null && (j < 0 || v > row[j])) j = i; }); return j < 0 ? null : j; };
 
 /** tk.s7.routeTable: the holes x baskets matrices (edge contrast, sensor) with every cell's routes. No threshold, no verdict. */
-export function routeTableOf(start, hallway, rows, holesPart, sam) {
+export function routeTableOf(start, hallway, rows, holesPart, sam, bp) {
+  const axis = start.holes.map((h) => (hallway.widthPx > 0 ? onAxisOf(h, bp, hallway.widthPx) : bp.map(() => ({ alongPx: null, lateralPx: null, onAxisPrior: 0 }))));
   const baskets = holesPart.baskets.map((k) => ({ index: k.index, name: k.name, point: k.point, source: k.source }));
   const holes = start.holes.map((h) => h.hole);
   const contrastMatrix = rows.map((r) => r.cells.map((x) => x.contrast.contrastLum));
@@ -287,7 +305,9 @@ export function routeTableOf(start, hallway, rows, holesPart, sam) {
     rule: 'every hole (tee cap) x every basket (S2 + S4 recovered BasketPoint). contrastMatrix: the best 0- or 1-bend route by render-and-score edge contrast (match18.py best_route; bend on the tee axis past the badge, step 6 px); contrastRouteSensor: the hallway sensor on that route; sensorMatrix: the best reading of the sensor over the 0-bend and the best 1-bend route (match2.py; step 8 px; >= 20 visible stations, else 0)',
     units: { contrastMatrix: ROUTE_UNITS.contrastLum, contrastRouteSensor: ROUTE_UNITS.passFrac, sensorMatrix: ROUTE_UNITS.passFrac, ...ROUTE_UNITS },
     widthPx: hallway.widthPx, holes, baskets, contrastMatrix, contrastRouteSensor, sensorMatrix,
-    rows: rows.map((r) => ({ hole: r.hole, condition: r.condition, cells: r.cells })),
+    onAxisPrior: axis.map((r) => r.map((x) => x.onAxisPrior)),
+    onAxisRule: `packet E03 (after-s4/verify_axis_prior.py): ${ROUTE.onAxisPriorLum} for the nearest BasketPoint past the badge along the tee ray with |lateral| <= ${ROUTE.onAxisLateralW} W, else 0; a column for the matching rule, not added to the contrast here`,
+    rows: rows.map((r, i) => ({ hole: r.hole, condition: r.condition, cells: r.cells.map((c, k) => ({ ...c, axis: axis[i][k] })) })),
     rowBest: holes.map((h, i) => ({ hole: h, contrastBasket: argmax(contrastMatrix[i]), sensorBasket: argmax(sensorMatrix[i]) })),
     sam: { source: sam.source, rule: sam.rule, byHole: sam.byHole },
     conditions: [...start.conditions, ...(hallway.condition ? [{ hole: null, condition: hallway.condition }] : [])],
@@ -302,7 +322,7 @@ const CODE = Object.freeze({
   start: digestOf(routeStartOf),
   hallway: digestOf(routeHallwayOf, teeBadgeLearn),
   row: digestOf(routeRowOf, bendsOnAxis, contrastRouteAt, ribbonContrastAt, oneBendAt, routeSensorAt, verdicts, stationContrastAt),
-  table: digestOf(routeTableOf, samBasketsOf, argmax)
+  table: digestOf(routeTableOf, samBasketsOf, argmax, onAxisOf)
 });
 const SCENE = 'tk.s7.sceneS4', HOLES = 'tk.s7.holes';
 
@@ -319,7 +339,7 @@ export const ROUTE_ROW_CALCULATION = Object.freeze(['fn.tk.s7.routeRow', { inPar
   calculate: (io) => { const S = io.in(SCENE); return { [ROUTE_ROW_PART]: routeRowOf(S, io.args.start, S.bp, io.args.widthPx) }; } }]);
 export const routeTableCalculation = (rowAddresses) => ['fn.tk.s7.routeTable', { inParts: [ROUTE_START_PART, ROUTE_HALLWAY_PART, HOLES, SCENE, 'testimony.source.holePaths', ...rowAddresses], outParts: [ROUTE_TABLE_PART], code: CODE.table,
   note: 'holes x baskets: edge contrast and hallway sensor matrices, every cell\'s routes',
-  calculate: (io) => ({ [ROUTE_TABLE_PART]: routeTableOf(io.in(ROUTE_START_PART), io.in(ROUTE_HALLWAY_PART), rowAddresses.map((a) => io.in(a)), io.in(HOLES), samBasketsOf(io.in('testimony.source.holePaths'), io.in(SCENE).bp)) }) }];
+  calculate: (io) => ({ [ROUTE_TABLE_PART]: routeTableOf(io.in(ROUTE_START_PART), io.in(ROUTE_HALLWAY_PART), rowAddresses.map((a) => io.in(a)), io.in(HOLES), samBasketsOf(io.in('testimony.source.holePaths'), io.in(SCENE).bp), io.in(SCENE).bp) }) }];
 
 /**
  * Produce tk.s7.routeTable on a store that has tk.s7.sceneS4, tk.s7.holes and testimony.source.holePaths: the starts,
