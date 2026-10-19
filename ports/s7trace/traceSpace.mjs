@@ -162,10 +162,12 @@ export function registerTraceQueries(store, { matcher = null, board = null } = {
       const S = get('tk.s7.sceneS4'), r = solveEndpoints(S, holeList(S), W(), { tees: teesOf(), matcher });
       return { value: { ...r, scene: 'tk.s7.sceneS4' }, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, pairs: r.pairs.length, reached: Object.values(r.holes).filter((h) => h.end != null).length } };
     },
-    'fn.q.trace.routeMatch': ({ secondBends = true } = {}) => {
+    'fn.q.trace.routeMatch': ({ secondBends = true, refineBends = true } = {}) => {
       // S7 after S5 (docs/evidence/s7after): scoring = tk.s7.routeTable (cached rows), matching = ports/s7route/match.mjs
       const table = routeTableOn(store, { board: board ?? null }), S = get('tk.s7.sceneS4');
-      const r = routeMatchOf(table, S, get('tk.s7.routeStart'), { secondBends });
+      // rule 1 of the bend placement reads S6's accepted straight verdict (tk.s7.straight, a root input of the S7 runner)
+      const straight = !refineBends ? undefined : store.has('tk.s7.straight') ? get('tk.s7.straight').verdicts : null;
+      const r = routeMatchOf(table, S, get('tk.s7.routeStart'), { secondBends, straight });
       return { value: { ...r, scene: 'tk.s7.sceneS4' }, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, reached: Object.values(r.holes).filter((h) => h.end != null).length, secondBends: Object.values(r.holes).filter((h) => (h.verts?.length ?? 0) === 4).length } };
     },
     'fn.q.trace.pinned': () => {

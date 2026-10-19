@@ -65,6 +65,13 @@ export function loadS7Lanes({ out, upperRowsRemoved, values }) {
   const recoveredTees = recFile && existsSync(recFile)
     ? { source: `fn.Tee.recover@${cmp.accepted}, ${run}`, condition: null, tees: readJson(recFile).recovered.map((t) => ({ hole: String(t.hole), center: t.center, angleRad: t.angleRad })) }
     : { source: null, condition: run ? 'the S4 fork-join named no accepted variant' : 'S4 recovery not run', tees: [] };
+  // S6's accepted fn.Hole.straight variant: the straight / bent verdict per hole (the bend placement's rule 1)
+  const s6dir = join(out, 's6straight'), s6run = existsSync(s6dir) ? readdirSync(s6dir).filter((d) => d.startsWith('run-')).sort().at(-1) : null;
+  const s6cmp = s6run && existsSync(join(s6dir, s6run, 'cmp.fn.Hole.straight.json')) ? readJson(join(s6dir, s6run, 'cmp.fn.Hole.straight.json')) : null;
+  const s6file = s6cmp?.accepted ? join(s6dir, s6run, 'artifacts', 'fn.Hole.straight', s6cmp.accepted, 'straight.json') : null;
+  const straightVerdicts = s6file && existsSync(s6file)
+    ? { source: `fn.Hole.straight@${s6cmp.accepted}, ${s6run}`, condition: null, verdicts: Object.fromEntries(readJson(s6file).verdicts.map((v) => [String(v.hole), v.verdict])) }
+    : null;
   const diag = join(out, 's7', 'fresh-s6-heading-diagnostic.json'), geoFile = join(out, 'late', 'geometry.json');
   let pinnedTraces;
   if (existsSync(diag) && existsSync(geoFile)) {
@@ -75,7 +82,7 @@ export function loadS7Lanes({ out, upperRowsRemoved, values }) {
       traces: d.traces.filter((t) => t.status !== 'UNKNOWN').map((t) => ({ hitId: t.hitId, hole: holeOf.get(t.badgeId) ?? null, teeCenter: teeOf.get(t.teeId) ?? null, outcome: t.outcome, reason: t.reason ?? null,
         basketIdReached: t.basketIdReached ?? null, lengthPx: t.lengthPx, bendCount: t.bendCount, points: (t.points ?? []).map((p) => p.canonicalPoint) })) };
   } else pinnedTraces = { condition: 'lane not run: no native S7 heading trace in this attempt (recipe --until 7 with lane s5-axis-heading)', traces: [] };
-  return { 'tk.s7.association': association, 'tk.s7.recoveredTees': recoveredTees, 'tk.s7.pinnedTraces': pinnedTraces };
+  return { 'tk.s7.association': association, 'tk.s7.recoveredTees': recoveredTees, 'tk.s7.pinnedTraces': pinnedTraces, ...(straightVerdicts ? { 'tk.s7.straight': straightVerdicts } : {}) };
 }
 
 /**
