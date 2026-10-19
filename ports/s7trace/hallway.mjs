@@ -17,6 +17,8 @@
  * Coordinates: canonical (S0-cropped) px, pixel centres at integer coordinates; angles in radians unless named Deg.
  */
 
+import { samp as sampS6, profileAt, edgePairOf, stationContrastAt } from '../s6straight/pathSpace.mjs';
+
 export const TAU = 8.0;                       // lum: edge contrast a ribbon station must exceed on both sides (follow.py)
 export const FRONT = 10.6 / 25.02;            // pad lengths: the ribbon cap centre ahead of the pad centre (badgeseed.py)
 export const OFFS = arange(-30, 30.01, 0.25); // px: lateral offsets of an along-path profile (track.py)
@@ -38,12 +40,21 @@ const hyp = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 /** Python round(x, n) for display fields (ties are measure-zero for continuous values). */
 export const round = (x, n = 2) => (x == null || !Number.isFinite(x) ? x : Math.round(x * 10 ** n) / 10 ** n);
 
-/** Bilinear sample with edges replicated (scipy.ndimage.map_coordinates order=1, mode='nearest'). */
-export function samp(I, W, H, x, y) {
-  x = x < 0 ? 0 : x > W - 1 ? W - 1 : x; y = y < 0 ? 0 : y > H - 1 ? H - 1 : y;
-  const x0 = Math.floor(x), y0 = Math.floor(y), x1 = x0 + 1 < W ? x0 + 1 : x0, y1 = y0 + 1 < H ? y0 + 1 : y0, fx = x - x0, fy = y - y0;
-  return (I[y0 * W + x0] * (1 - fx) + I[y0 * W + x1] * fx) * (1 - fy) + (I[y1 * W + x0] * (1 - fx) + I[y1 * W + x1] * fx) * fy;
+// ------------------------------------------------------------------------------------------------ the S6 primitives (fn.q.path.*)
+// profile, edge pair and station contrast are written once, in ports/s6straight/pathSpace.mjs (track.py, contrast.py,
+// proved number for number there); the follower calls them on its scene ({ lum, mask, W, H } is their context).
+
+/** Bilinear sample with edges replicated (scipy map_coordinates order=1, mode='nearest'). */
+export const samp = sampS6;
+/** track.py profile -> { prof, ok, nT } or null when there is no station. */
+export function profile(S, O, phi, t0, t1, lat0 = 0, step = 1.0) { const P = profileAt(S, O, phi, t0, t1, { lat0, step }); return P.prof ? P : null; }
+/** track.py edge_pair -> { l, r, c, w, score, gl, gr } or null. */
+export function edgePair(P, Wexp, tolW = 3.0, latLim = 12.0) {
+  const e = P ? edgePairOf(P, Wexp, { tolW, latLim }) : null;
+  return e && { l: e.lPx, r: e.rPx, c: e.cPx, w: e.wPx, score: e.score, gl: e.gl, gr: e.gr };
 }
+/** contrast.py station_contrast -> { cl, cr, okl, okr } per station. */
+export const stationContrast = (S, O, phi, ts, W) => stationContrastAt(S, O, phi, ts, W);
 
 // ------------------------------------------------------------------------------------------------ the scene (course.py)
 
@@ -143,65 +154,6 @@ export function ringMask(W, H, bp, R1) {
 
 // ------------------------------------------------------------------------------------------------ profiles (track.py)
 
-/**
- * Along-path averaged lateral profile: stations O + t u (t in [t0, t1), 1 px), offsets OFFS + lat0 along the normal.
- * Masked (or near-border) samples are left out. -> { prof (NaN where nothing is visible), ok (visible stations per
- * offset), nT } or null when there is no station.
- */
-export function profile(S, O, phi, t0, t1, lat0 = 0, step = 1.0) {
-  const { lum, mask, W, H } = S, u = unit(phi), n = [-u[1], u[0]], T = arange(t0, t1, step);
-  if (T.length === 0) return null;
-  const prof = new Float64Array(OFFS.length), ok = new Int32Array(OFFS.length);
-  for (let j = 0; j < OFFS.length; j++) {
-    const o = OFFS[j] + lat0; let s = 0, c = 0;
-    for (let k = 0; k < T.length; k++) {
-      const t = T[k], X = O[0] + t * u[0] + o * n[0], Y = O[1] + t * u[1] + o * n[1];
-      if (!(X > 1 && X < W - 2 && Y > 1 && Y < H - 2)) continue;
-      if (samp(mask, W, H, X, Y) > 0.01) continue;
-      s += samp(lum, W, H, X, Y); c++;
-    }
-    ok[j] = c; prof[j] = c ? s / c : NaN;
-  }
-  return { prof, ok, nT: T.length };
-}
-
-/** The best rising (left) + falling (right) edge pair of a profile with width near Wexp; sub-pixel (track.py edge_pair). */
-export function edgePair(P, Wexp, tolW = 3.0, latLim = 12.0) {
-  if (!P) return null;
-  const { prof, ok, nT } = P, N = prof.length, p = Float64Array.from(prof), good = new Uint8Array(N);
-  let ng = 0; for (let i = 0; i < N; i++) if (ok[i] >= Math.max(8, 0.2 * nT)) { good[i] = 1; ng++; }
-  if (ng / N < 0.6) return null;
-  const gi = []; for (let i = 0; i < N; i++) if (good[i]) gi.push(i);
-  for (let i = 0; i < N; i++) if (!good[i]) {   // numpy.interp over the good samples (constant beyond the ends)
-    if (i <= gi[0]) p[i] = prof[gi[0]]; else if (i >= gi[gi.length - 1]) p[i] = prof[gi[gi.length - 1]];
-    else { let k = 0; while (gi[k + 1] < i) k++; const a = gi[k], b = gi[k + 1]; p[i] = prof[a] + (prof[b] - prof[a]) * (i - a) / (b - a); }
-  }
-  const sm = new Float64Array(N);   // numpy.convolve(p, ones(5) / 5, 'same'): zero padded
-  for (let i = 0; i < N; i++) { let s = 0; for (let k = i - 2; k <= i + 2; k++) if (k >= 0 && k < N) s += p[k] * 0.2; sm[i] = s; }
-  const g = new Float64Array(N);    // numpy.gradient / 0.25
-  for (let i = 0; i < N; i++) g[i] = (i === 0 ? sm[1] - sm[0] : i === N - 1 ? sm[N - 1] - sm[N - 2] : (sm[i + 1] - sm[i - 1]) / 2) / 0.25;
-  for (let i = 0; i < 6; i++) { g[i] = 0; g[N - 1 - i] = 0; }
-  for (let i = 0; i < N; i++) if (!good[i]) g[i] = 0;
-  const L = [], R = [];
-  for (let i = 1; i < N - 1; i++) {
-    if (g[i] > 0 && g[i] >= g[i - 1] && g[i] >= g[i + 1]) L.push(i);
-    if (g[i] < 0 && g[i] <= g[i - 1] && g[i] <= g[i + 1]) R.push(i);
-  }
-  let best = null;
-  for (const i of L) for (const j of R) {
-    const w = OFFS[j] - OFFS[i];
-    if (Math.abs(w - Wexp) > tolW) continue;
-    const c = (OFFS[i] + OFFS[j]) / 2;
-    if (Math.abs(c) > latLim) continue;
-    const sc = Math.min(g[i], -g[j]);
-    if (best === null || sc > best[2]) best = [i, j, sc];
-  }
-  if (best === null) return null;
-  const sub = (i) => { const a = g[i - 1], b = g[i], c = g[i + 1], den = a - 2 * b + c; return OFFS[i] + (den !== 0 ? 0.5 * (a - c) / den * 0.25 : 0); };
-  const [i, j, sc] = best, l = sub(i), r = sub(j);
-  return { l, r, c: (l + r) / 2, w: r - l, score: sc, gl: g[i], gr: -g[j] };
-}
-
 /** The best edge pair over headings phi0 +- span deg (track.py fit_free). */
 export function fitFree(S, O, phi0, t0, t1, Wexp, { span = 3.0, dstep = 0.25, tolW = 3.0, latLim = 12.0 } = {}) {
   let best = null;
@@ -213,36 +165,6 @@ export function fitFree(S, O, phi0, t0, t1, Wexp, { span = 3.0, dstep = 0.25, to
 }
 
 // ------------------------------------------------------------------------------------------------ station contrast (contrast.py)
-
-const INS = arange(1.0, 3.0 + 1e-9, 0.5), ALONG = arange(-2.0, 2.0 + 1e-9, 1.0);
-/**
- * Per station t (centreline O + t u): left and right edge contrast (inside band minus outside band, lum) and whether
- * more than half of each band is visible. -> { cl, cr, okl, okr } (Float64Array / Uint8Array per station).
- */
-export function stationContrast(S, O, phi, ts, W) {
-  const { lum, mask, W: IW, H: IH } = S, u = unit(phi), n = [-u[1], u[0]], h = W / 2, nts = ts.length;
-  const side = (sgn) => {
-    const band = (sign) => {
-      const v = new Float64Array(nts), okf = new Float64Array(nts);
-      for (let k = 0; k < nts; k++) {
-        let s = 0, c = 0, tot = 0;
-        for (const a of ALONG) for (const b of INS) {
-          const off = sgn * (h + sign * b), t = ts[k] + a, X = O[0] + t * u[0] + off * n[0], Y = O[1] + t * u[1] + off * n[1]; tot++;
-          if (!(X > 1 && X < IW - 2 && Y > 1 && Y < IH - 2)) continue;
-          if (samp(mask, IW, IH, X, Y) > 0.01) continue;
-          s += samp(lum, IW, IH, X, Y); c++;
-        }
-        v[k] = c ? s / c : NaN; okf[k] = c / tot;
-      }
-      return { v, okf };
-    };
-    const i = band(-1), o = band(1), d = new Float64Array(nts), ok = new Uint8Array(nts);
-    for (let k = 0; k < nts; k++) { d[k] = i.v[k] - o.v[k]; ok[k] = Math.min(i.okf[k], o.okf[k]) > 0.5 ? 1 : 0; }
-    return { d, ok };
-  };
-  const L = side(-1), R = side(1);
-  return { cl: L.d, cr: R.d, okl: L.ok, okr: R.ok };
-}
 
 // ------------------------------------------------------------------------------------------------ the leg follower (follow.py)
 

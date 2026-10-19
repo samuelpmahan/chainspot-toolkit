@@ -17,12 +17,12 @@
  *   fn.q.trace.s3first({ s4 })   Sam's order; s4: also S4 recovered tees as seeds and S4 recovered baskets as endpoints
  *   fn.q.trace.badgeOnly()       every hole seeded from its badge (badgeseed.py)
  *   fn.q.trace.endpoints()       every badge -> basket pair scored, assigned one-to-one, traced back from the basket
- *   fn.q.path.profile / edgePair / runEnd / polyScore   the primitives, by scene address, for any caller
+ *   the primitives (profile, edge pair, station contrast) are S6's fn.q.path.* math (ports/s6straight/pathSpace.mjs)
  */
 import { nameCandidates } from '../../fg/names.mjs';
 import { ownedPx } from '../../fg/pxset.mjs';
 import { BASKET_POINT_OFFSET } from '../../fg/s2/fg.s2.basketInvariants.observe.fg.mjs';
-import { profile, edgePair, runEnd, polyScore, ringMask, dilate4, round } from './hallway.mjs';
+import { ringMask, dilate4, round } from './hallway.mjs';
 import { sceneOf, hallwayModel, solveS3First, solveBadgeOnly } from './s3first.mjs';
 import { solveEndpoints } from './endpoints.mjs';
 
@@ -128,12 +128,11 @@ export function pinnedSolve(pinned, holesPart, W) {
   }
   return { holes: out, scene: 'native' };
 }
-export const PATH_QUERY_NAMES = Object.freeze(['profile', 'edgePair', 'runEnd', 'polyScore']);
 export const TRACE_CALLS = Object.freeze(TRACE_QUERY_NAMES.map((n) => `fn.q.trace.${n}`));
 export const traceQueries = (call) => (name, args) => call(`fn.q.trace.${name}`, args).value;
 
 /**
- * fn.q.trace.* and fn.q.path.* on a store. matcher: the provider's maximumWeightTeeBadgeMatching (the node runner loads
+ * fn.q.trace.* on a store. matcher: the provider's maximumWeightTeeBadgeMatching (the node runner loads
  * the pinned provider; a test passes any exact matcher). Every answer is cached by its arguments.
  */
 export function registerTraceQueries(store, { matcher = null } = {}) {
@@ -162,10 +161,6 @@ export function registerTraceQueries(store, { matcher = null } = {}) {
       const r = pinnedSolve(get('tk.s7.pinnedTraces'), get('tk.s7.holes'), W());
       return { value: r, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, reached: Object.values(r.holes).filter((h) => h.end != null).length } };
     },
-    'fn.q.path.profile': ({ scene = 'tk.s7.scene', O, phi, t0, t1 }) => { const P = profile(get(scene), O, phi, t0, t1); return { value: P && { prof: [...P.prof], ok: [...P.ok], nT: P.nT }, unit: 'lum per lateral offset (px)' }; },
-    'fn.q.path.edgePair': ({ scene = 'tk.s7.scene', O, phi, t0, t1, widthPx, tolW = 3, latLim = 12 }) => ({ value: edgePair(profile(get(scene), O, phi, t0, t1), widthPx, tolW, latLim), unit: 'px (offsets), lum/px (score)' }),
-    'fn.q.path.runEnd': ({ scene = 'tk.s7.scene', O, phi, t0, widthPx }) => ({ value: runEnd(get(scene), O, phi, widthPx ?? W(), t0), unit: '[px along, fraction of stations]' }),
-    'fn.q.path.polyScore': ({ scene = 'tk.s7.scene', verts, widthPx }) => ({ value: polyScore(get(scene), verts, widthPx ?? W()), unit: '[lum, px]' })
   };
   const answers = new Map();
   for (const [fn, q] of Object.entries(table)) store.register(fn, { note: 'S7 hallway math behind the PxC boundary (ports/s7trace)',
