@@ -35,7 +35,7 @@ function panel(v, { canvas, M, lo, hi, fmt, title, sub, maxOf, mark = null }) {
       else for (let d = 0; d < 7; d++) { cv.put(x + 9 + d, y + 4 + d, COL.none); cv.put(x + 15 - d, y + 4 + d, COL.none); }
       if (j === best) cv.fill(x + 2, y + ch - 3, cw - 5, 2, COL.best);
       if (j === sam) cv.frame(x - 1, y - 1, cw + 1, ch + 1, COL.sam, 2);
-      if (mark?.[i]?.[j]) cv.fill(x + cw - 5, y + 1, 3, 3, COL.prior);
+      if (mark?.[i]?.[j]) cv.fill(x + 1, y + 1, 6, 3, COL.prior);
     });
   });
   let y = top + ch * holes.length + 12, x = 8;
@@ -43,8 +43,8 @@ function panel(v, { canvas, M, lo, hi, fmt, title, sub, maxOf, mark = null }) {
   cv.text(x, y + 13, fmt(lo), COL.dim); cv.text(x + 150, y + 13, fmt(hi), COL.dim); x += 180;
   const sw = (c, label, frame = false) => { if (frame) cv.frame(x, y, 12, 10, c, 2); else cv.fill(x, y, 12, 10, c); x = cv.text(x + 16, y + 2, label) + 14; };
   sw(COL.sam, "SAM'S BASKET (TESTIMONY, 12 PX)", true); sw(COL.best, 'ROW MAXIMUM');
-  if (mark) sw(COL.prior, 'ON-AXIS PRIOR +15 (E03, NOT IN THE VALUE)');
   y += 26; x = 8; sw([235, 235, 235], 'NO READING (TOO FEW VISIBLE PX / STATIONS)');
+  if (mark) sw(COL.prior, 'ON-AXIS PRIOR +15 (E03; NOT IN THE VALUE)');
   cv.text(8, y + 16, v.sam?.source ? `TESTIMONY: ${String(v.sam.source).slice(0, 90)}` : 'NO TESTIMONY: NOTHING MARKED', COL.dim);
   return { width: w, height: h, png: base64(encodePngRgb({ width: w, height: h, rgb: cv.rgb })) };
 }
