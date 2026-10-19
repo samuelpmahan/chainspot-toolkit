@@ -1,0 +1,121 @@
+{
+  "job_id": "E4610",
+  "worker": "S6",
+  "outcome": "confirmed_reuse",
+  "repair_of": "E4609",
+  "summary": "One authorized v2 artifact-only render completed exit0 using the existing sharp package's actual dist entry. Actual PNG inspected: all12 exact row IDs,60 station IDs/states/verdicts, both dependent frames and qualification text are legible without clipping or overlap. Forty-two OBSERVED/MATCHED and18 UNKNOWN/UNKNOWN remain separate. Exact saved result+CLI identities unchanged. No audit, geometry or producer rerun.",
+  "script": {
+    "path": "/workspace/scratch/afc0d51965a8/lab16/S6/E4610/render-v2.mjs",
+    "bytes": 7669,
+    "sha256": "2e0427abed23c8a8190e75467ef10a7a33095a92b394468b39d02166eaf7df5b",
+    "diffOnly": [
+      "sharp/lib/index.js -> sharp/dist/index.mjs",
+      "OUT S6/E4609/rendered -> S6/E4610/rendered"
+    ]
+  },
+  "checkpoint": {
+    "path": "/workspace/scratch/afc0d51965a8/lab16/S6/E4610/checkpoint.md",
+    "sha256": "3b6b5c61856da05559123b007e2231dfb7187adce839769494fd75722b90bf4a"
+  },
+  "execution": {
+    "path": "/workspace/scratch/afc0d51965a8/lab16/S6/E4610/execution.json",
+    "bytes": 359,
+    "sha256": "020e6080f938383c3d69fab633e802ff070a18d9c71894a85e751b045cf818d0",
+    "command": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/scratch/afc0d51965a8/lab16/S6/E4610/render-v2.mjs"
+    ],
+    "startUTC": "2026-10-19T15:40:49.295Z",
+    "endUTC": "2026-10-19T15:40:49.793Z",
+    "elapsedSeconds": 0.497382043,
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "subprocessInvocations": 1,
+    "SVGOutputs": 1,
+    "PNGRasterizations": 1,
+    "stdout": {
+      "path": "/workspace/scratch/afc0d51965a8/lab16/S6/E4610/stdout.txt",
+      "bytes": 511,
+      "sha256": "d768fd616b1114ba801bc7064f8993efcd7aebb9562d8b65bdcfd88c0a37ec76"
+    },
+    "stderr": {
+      "path": "/workspace/scratch/afc0d51965a8/lab16/S6/E4610/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "inputs": [
+    {
+      "path": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/firstgreen/result.json",
+      "bytes": 321752,
+      "beforeSha256": "0ba97bcc17e85249042127907c173aef8dfcab6a3abe159756312c69cb78fe79",
+      "afterSha256": "0ba97bcc17e85249042127907c173aef8dfcab6a3abe159756312c69cb78fe79",
+      "unchanged": true
+    },
+    {
+      "path": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/firstgreen/cli.txt",
+      "bytes": 6030,
+      "beforeSha256": "555e80e8aab09623737c94110a6a614016325abd239a20a903143d5e7a9eea02",
+      "afterSha256": "555e80e8aab09623737c94110a6a614016325abd239a20a903143d5e7a9eea02",
+      "unchanged": true
+    }
+  ],
+  "outputs": [
+    {
+      "path": "/workspace/scratch/afc0d51965a8/lab16/S6/E4610/rendered/evidence.svg",
+      "bytes": 55376,
+      "sha256": "dcdeb276a481273fe8aaee058f450e964e017ac1ffadba5707524ce84316eb79"
+    },
+    {
+      "path": "/workspace/scratch/afc0d51965a8/lab16/S6/E4610/rendered/evidence.png",
+      "bytes": 497220,
+      "sha256": "66c98da1abdc4eb6149fa90c1072f38168e9217bebb7e0db707f9371143e8c35",
+      "width": 1640,
+      "height": 2220
+    },
+    {
+      "path": "/workspace/scratch/afc0d51965a8/lab16/S6/E4610/rendered/readback.json",
+      "bytes": 14106,
+      "sha256": "92521b7baf90c7824533f4f8852c97facd0da8cb4a911356de5fc4c21ed1fbf1"
+    }
+  ],
+  "checks": {
+    "rows": 12,
+    "stations": 60,
+    "observedMatched": 42,
+    "unknownUnknown": 18,
+    "CLIAndSVGDataAndMetadataRosterExact": true,
+    "inputBeforeAfterIdentical": true,
+    "readback": "/workspace/scratch/afc0d51965a8/lab16/S6/E4610/rendered/readback.json",
+    "postRenderCheck": "Read-only fs/crypto/assert check; emitted SVG data/metadata roster exactly equals readback/CLI roster. No render or scientific replay."
+  },
+  "inspection": {
+    "performed": true,
+    "method": "view_image actual PNG original detail",
+    "legible": true,
+    "summary": "All12 panels/60 records, exact IDs/states/verdicts, hashes and software/dependence/HOLD/swap/projection/already-saved-counterexample qualifiers legible; no clipping/overlap observed."
+  },
+  "originalFailure": {
+    "receipt": "/workspace/scratch/afc0d51965a8/lab16/S6/E4609/receipt.json",
+    "scriptSha256": "ac6790168c92641fa420df28bc8819b427cc5acfa98e1a39a8a9b0b808ff5281",
+    "preserved": true,
+    "qualification": "One earlier E4609 attempt exit1 ERR_MODULE_NOT_FOUND before output; retained original script/raw capture. E4610 only corrects installed sharp export entry and fresh output path."
+  },
+  "boundaries": "Software consistency only; exposed dependent views, physical UNKNOWN/HOLD, symmetric swap blind; saved8.090622377680736px is not new measurement.",
+  "actions": {
+    "geometryCalls": 0,
+    "auditReruns": 0,
+    "producerCalls": 0,
+    "measurementCalls": 0,
+    "CVCalls": 0,
+    "sourceImageReads": 0,
+    "productSourceEdits": 0,
+    "gitWrites": 0,
+    "HHChanges": 0,
+    "nativeControlWrites": 0,
+    "installs": 0,
+    "extraRenderAttempts": 0,
+    "onlyOwnScratchWritten": true
+  }
+}

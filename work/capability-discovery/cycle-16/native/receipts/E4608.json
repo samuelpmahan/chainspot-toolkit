@@ -1,0 +1,95 @@
+{
+  "schema": "lab16-execution-receipt@1",
+  "job_id": "E4608",
+  "worker": "S1",
+  "outcome": "confirmed_reuse",
+  "summary": "FIRSTGREEN: one focused4/4 pass and one actual saved-audit invocation exit0/stderr0. Existing describePath completed12/12 calls on all60 slots:42 observed/18 UNKNOWN, zero errors. All available consistency checks matched at frozen1e-9; maximum row residual2.2737367544323206e-13 and dependent-frame residual8.739675649849232e-13. Source/input pins unchanged. This confirms saved software-representation reuse only, not physical science or a repaired defect. STOP for independent review; no rerun/render/source/Git changes after execution.",
+  "source": {
+    "repository": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab",
+    "local": "f101061bd7547f0c350bc8c0f8ce126215047990",
+    "canonical": "c0f1205d3e3f66fc1a89fed5e4c3447e7f9045b2",
+    "tree": "403b74db31d121a559609ae6a2a3189fdf8de188",
+    "newSourceFolder": "experiments/capability-discovery/saved-pair-consistency",
+    "pins": {
+      "recipe.mjs": "00e0e4d251d85ae64f04210d2db03e5ba7492187abc540b414f3ff86a28d689b",
+      "recipe.test.mjs": "cbf9f613fb37014dd434acb9c7dfdba336ad13ff784462ea99f12a0ddf75a931",
+      "cli.mjs": "7e69d20890ed6c6fe30bf07eeaf6d5a19a4a3edbc1806a23c7f12ee706ad4d3f",
+      "README.md": "498b6672a354fb806750dabf1a9ad42c93a105a96c80dafd292af729c604a466",
+      "existingGeometry": "ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34"
+    },
+    "allFrozenPinsBeforeAfterIdentical": true,
+    "trackedDiffEmpty": true,
+    "fourNewProductFilesRemainUntracked": true
+  },
+  "input": {
+    "path": "work/capability-discovery/cycle-09/evidence/E3012/measurement/measurement.json",
+    "bytes": 1808041,
+    "sha256": "fc5da1eb88c0bb572506e815e653c94ddc71ba6d66b8832d513e889477fa95b1",
+    "suppliedBytesBeforeAfterIdentical": true,
+    "originalFileBeforeAfterIdentical": true,
+    "oldOriginalNotDuplicated": true
+  },
+  "tests": {
+    "command": "node --test experiments/capability-discovery/saved-pair-consistency/recipe.test.mjs",
+    "startedAt": "2026-10-19T15:23:52.652Z",
+    "finishedAt": "2026-10-19T15:23:52.827Z",
+    "capturedElapsedMs": 174.826947,
+    "exitCode": 0,
+    "passed": 4,
+    "failed": 0,
+    "actualSavedAuditCalls": 0,
+    "geometryCalls": 0,
+    "execution": {"path":"/workspace/scratch/afc0d51965a8/lab16/S1/E4608/tests/execution.json","sha256":"160561fa13844b60e1eaf34ea1fa8909177f798e68167ecc64ccfc0a4e797656"},
+    "stdout": {"path":"/workspace/scratch/afc0d51965a8/lab16/S1/E4608/tests/stdout.txt","bytes":453,"sha256":"566b989f54fe003af8edb6549f615dbf23c3f5429e9fe5f269223e37f3498f68"},
+    "stderr": {"path":"/workspace/scratch/afc0d51965a8/lab16/S1/E4608/tests/stderr.txt","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    "sourcePinsBefore": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/tests/source-pins.before.json",
+    "sourcePinsAfter": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/tests/source-pins.after.json"
+  },
+  "actualAudit": {
+    "command": "node experiments/capability-discovery/saved-pair-consistency/cli.mjs audit --enabled --input work/capability-discovery/cycle-09/evidence/E3012/measurement/measurement.json --run-id E4608-firstgreen --out /workspace/scratch/afc0d51965a8/lab16/S1/E4608/firstgreen",
+    "invocations": 1,
+    "startedAt": "2026-10-19T15:23:52.833Z",
+    "finishedAt": "2026-10-19T15:23:52.939Z",
+    "capturedElapsedMs": 106.377407,
+    "timingMeaning": "Process wall interval includes audit/serialization/output/capture; not isolated geometry time, RSS or throughput claim.",
+    "exitCode": 0,
+    "status": "CONSISTENT",
+    "counts": {"attempted":12,"completed":12,"errors":0,"rows":12,"slots":60,"observed":42,"unknown":18},
+    "rowChecks": {"checks":282,"numericalResiduals":222,"maxAbsResidual":2.2737367544323206e-13,"nonmatched":0},
+    "dependentFrameChecks": {"checks":147,"numericalResiduals":147,"maxAbsResidual":8.739675649849232e-13,"nonmatched":0},
+    "tolerances": {"px":1e-9,"dimensionless":1e-9},
+    "allRowsStatus": "CONSISTENT_AVAILABLE",
+    "errors": [],
+    "execution": {"path":"/workspace/scratch/afc0d51965a8/lab16/S1/E4608/audit-command/execution.json","sha256":"0206a985f302636fca55b66586a679c75906bee2fb4175af3c363617d680e257"},
+    "stdout": {"path":"/workspace/scratch/afc0d51965a8/lab16/S1/E4608/audit-command/stdout.txt","bytes":6030,"sha256":"555e80e8aab09623737c94110a6a614016325abd239a20a903143d5e7a9eea02"},
+    "stderr": {"path":"/workspace/scratch/afc0d51965a8/lab16/S1/E4608/audit-command/stderr.txt","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    "sourcePinsBefore": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/audit-command/source-pins.before.json",
+    "sourcePinsAfter": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/audit-command/source-pins.after.json"
+  },
+  "outputs": {
+    "result": {"path":"/workspace/scratch/afc0d51965a8/lab16/S1/E4608/firstgreen/result.json","bytes":321752,"sha256":"0ba97bcc17e85249042127907c173aef8dfcab6a3abe159756312c69cb78fe79"},
+    "cli": {"path":"/workspace/scratch/afc0d51965a8/lab16/S1/E4608/firstgreen/cli.txt","bytes":6030,"sha256":"555e80e8aab09623737c94110a6a614016325abd239a20a903143d5e7a9eea02"},
+    "projectionLabel": "Complete audit-used field projection, NOT complete original payload; exact tracked original is authoritative",
+    "sameCapturedResultForCLI": true,
+    "captureHarness": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/capture-execution.mjs"
+  },
+  "preservedCheckpoint": {
+    "path": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/checkpoint.md",
+    "sha256": "85460c9e381f9433d339a833cad0b23c214b6e853ab9557ff5befe8b1256fef2",
+    "originalReceiptPath": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/receipt.json",
+    "originalReceiptSha256": "fc4f8210ce76d7941b2be3c0f86c373f92cb7a75826e157bc5c6a65de7580931",
+    "unchanged": true
+  },
+  "meaning": {
+    "FIRSTGREEN": true,
+    "observedRED": false,
+    "savedCounterexample": "proposed-ribbon/w42 short1 saved offset8.090622377680736px still contradicts nominal-origin=fitted-midpoint; not a new physical observation or consumer defect",
+    "normalization": "Fitted pair width normalization checked separately from retained signed nominal42/50 ratio",
+    "dependence": "Scalar and coordinate representations share fits; translated crop/source views are dependent, not independent courses",
+    "blindness": "Symmetric left/right swap undetectable by midpoint/Euclidean/absolute-offset comparisons",
+    "physicalClaims": "UNKNOWN/HOLD",
+    "noOwnAcceptance": true
+  },
+  "notDone": ["No extra actual audit, test rerun or broad test suite","No source edits after run","No render or producer/CV/pixel/decode invocation","No stage/commit/push/HH edits","No repeated reviewer geometry"],
+  "next": "Independent source/result provenance and falsification review using retained result; STOP."
+}

@@ -1,0 +1,20 @@
+{
+  "job_id":"E4609",
+  "worker":"S6",
+  "outcome":"insufficient_evidence",
+  "summary":"One authorized artifact-only display subprocess failed at ESM dependency resolution before script evaluation: nonexistent sharp/lib/index.js entry. Exit1; no SVG, PNG or readback artifact was created, and actual image inspection was therefore impossible. Raw failure retained; no repair or rerun performed. Saved result and CLI hashes remain unchanged.",
+  "implementation":{"path":"/workspace/scratch/afc0d51965a8/lab16/S6/E4609/render.mjs","bytes":7667,"sha256":"ac6790168c92641fa420df28bc8819b427cc5acfa98e1a39a8a9b0b808ff5281","unchanged":true},
+  "checkpoint":{"path":"/workspace/scratch/afc0d51965a8/lab16/S6/E4609/checkpoint.md","sha256":"e56e3fdcfb8876ab984667edbea0d94edb02084fa2a76c94ec7a744f1db4320b","qualification":"node --check exit0 was syntax-only, not measurement or successful rendering evidence"},
+  "execution":{"path":"/workspace/scratch/afc0d51965a8/lab16/S6/E4609/execution.json","bytes":356,"sha256":"80fdcd144ffc84e70e8c48a3f14c8333ac258389a142de8f917a5ab1e8c27d04","command":["/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node","/workspace/scratch/afc0d51965a8/lab16/S6/E4609/render.mjs"],"startUTC":"2026-10-19T15:35:56.812Z","endUTC":"2026-10-19T15:35:56.871Z","elapsedSeconds":0.058089978,"exitCode":1,"signal":null,"error":null,"subprocessAttempts":1,"completedRenders":0},
+  "stdout":{"path":"/workspace/scratch/afc0d51965a8/lab16/S6/E4609/stdout.txt","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+  "stderr":{"path":"/workspace/scratch/afc0d51965a8/lab16/S6/E4609/stderr.txt","bytes":1173,"sha256":"2ad41d478ac482bd9f30efaf3f2a64f755e9df5e2cb50129870020122a0808c8","diagnostic":"ERR_MODULE_NOT_FOUND: /opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/sharp/lib/index.js"},
+  "saved_inputs_before_after":[
+    {"path":"/workspace/scratch/afc0d51965a8/lab16/S1/E4608/firstgreen/result.json","bytes":321752,"beforeSha256":"0ba97bcc17e85249042127907c173aef8dfcab6a3abe159756312c69cb78fe79","afterSha256":"0ba97bcc17e85249042127907c173aef8dfcab6a3abe159756312c69cb78fe79","unchanged":true},
+    {"path":"/workspace/scratch/afc0d51965a8/lab16/S1/E4608/firstgreen/cli.txt","bytes":6030,"beforeSha256":"555e80e8aab09623737c94110a6a614016325abd239a20a903143d5e7a9eea02","afterSha256":"555e80e8aab09623737c94110a6a614016325abd239a20a903143d5e7a9eea02","unchanged":true}
+  ],
+  "findings":["Failure was dependency-entry resolution, not a captured-audit mismatch, new geometry evidence, score/tolerance change or proof of unavailable sharp package.","No rendered folder, SVG, PNG or readback exists for this attempt; no display roster equality or visual-legibility success is claimed.","The intended stored60record/42OBSERVED-MATCHED/18UNKNOWN display remains unexecuted; physical claims remain UNKNOWN/HOLD."],
+  "outputs":[],
+  "inspection":{"performed":false,"reason":"No PNG was produced"},
+  "actions":{"geometryCalls":0,"producerCalls":0,"measurementCalls":0,"CVCalls":0,"sourceImageReads":0,"productSourceEdits":0,"gitWrites":0,"HHChanges":0,"nativeControlWrites":0,"installs":0,"repairs":0,"reruns":0,"onlyOwnScratchWritten":true},
+  "next":"STOP. Preserve this original script and raw failure. Root may close E4609 and separately assign E4610 for a narrow fresh-copy dependency-entry/output-path correction; no repair or rerun authorized by this receipt."
+}

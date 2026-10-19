@@ -1,0 +1,31 @@
+{
+  "schema": "lab16-protocol-receipt@1",
+  "job_id": "E4607",
+  "worker": "S1",
+  "outcome": "confirmed_reuse",
+  "summary": "Frozen protocol only for one saved E3012 representation-consistency pass through existing describePath:12 calls/all60 slots, fitted-vs-nominal normalization separated, exact missing pattern and saved nonzero-offset negative retained. FIRSTGREEN expected, no demonstrated seam defect or invented RED. STOP for independent protocol review before implementation/execution.",
+  "protocol": "/workspace/scratch/afc0d51965a8/lab16/S1/E4607/protocol.md",
+  "input": {
+    "path": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-09/evidence/E3012/measurement/measurement.json",
+    "bytes": 1808041,
+    "sha256": "fc5da1eb88c0bb572506e815e653c94ddc71ba6d66b8832d513e889477fa95b1",
+    "runId": "E3012",
+    "paramsHash": "13ab86a4f1631c0fb498e0e183c634275aa78ef3eaa3253f7195ff12bc3ba268"
+  },
+  "existing_operation": {
+    "path": "experiments/capability-discovery/probes/path-geometry/path-geometry.mjs",
+    "sha256": "ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34",
+    "calls": "Proposed once per row; zero executed by this packet",
+    "arguments": "points=all5origins; frame=row.frame; pairedEdges.values=OBSERVED same-slot left/right else null; no width/support or copied geometry equations"
+  },
+  "frozen_roster": {"rows":12,"slots":60,"observed":42,"unknown":18,"tolerancePx":1e-9,"toleranceDimensionless":1e-9,"dependentFrameDelta":[400,1010]},
+  "controls_and_review": {
+    "S3": "bounded_reuse_seam_proposal read; this audits existing representations, not a new observable",
+    "S2_S4": "Physical/independent-course inference HOLD retained; all missing/adverse exposed cases mandatory",
+    "S6": "Anchor nonbug retained; E4009 excluded from measurement input",
+    "symmetric_swap": "Euclidean/absolute-offset comparison is blind to symmetric left/right swap; no physical-edge association claim",
+    "counterexample": "Saved proposed-ribbon/w42 short1 offset8.090622377680736px already contradicts nominal origin=fitted midpoint; not new runtime evidence"
+  },
+  "execution": {"geometry_calls":0,"producer_calls":0,"tests_run":0,"source_edits":false,"Git_HH_edits":false,"subagents":false,"pixels_decode_CV":false,"only_metadata_parsing_hashes":true},
+  "next": "Independent protocol review and root scoped admission; STOP before implementing or running. Any later above-tolerance result must retain the complete pass and STOP before repair/tolerance/source change or rerun; informative falsification/reuse need not become a bugfix. Missing future modules are not hard-failure RED. Original scout receipts/envelopes must not be silently rewritten."
+}

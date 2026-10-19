@@ -1,0 +1,9 @@
+{
+  "scope": "Coordinator testimony; original tool outputs are in conversation, not separately retained raw streams.",
+  "preNativeReceiptFailures": [
+    {"job":"E4602","worker":"S2","error":"extraction receipt has an unknown outcome","cause":"Original receipt used validoutcome instead of outcome","effect":"No canonical receipt copy or native finish; separate valid-envelope.json preserves original hash and supplies valid outcome."},
+    {"job":"E4605","worker":"S5","error":"extraction receipt has an unknown outcome","cause":"Original receipt used validoutcome instead of outcome","effect":"No canonical receipt copy or native finish; separate valid-envelope.json preserves original hash and supplies valid outcome."}
+  ],
+  "nativeAssignmentRejections": 0,
+  "claims": "Six actual source-worker contexts were dispatched from accepted native epoch00 recommendations. Coordinator admits semantic readiness and dispatches agents; native solver checks worker capacity/eligibility/pins/objective. No autonomous dispatch service, throughput or allocator-causality claim."
+}

@@ -1,0 +1,495 @@
+{
+  "schema": "lab16-saved-pair-consistency-manifest@1",
+  "status": "prestage_root_audit_pending",
+  "source": {
+    "local": "f101061bd7547f0c350bc8c0f8ce126215047990",
+    "canonical": "c0f1205d3e3f66fc1a89fed5e4c3447e7f9045b2",
+    "tree": "403b74db31d121a559609ae6a2a3189fdf8de188",
+    "owner": "S1"
+  },
+  "scope": "Default-OFF saved software representation consistency only; physical claims UNKNOWN/HOLD; no new observable/core bug/render-anchor bug",
+  "preservation": {
+    "oldTrackedTuples": 4305,
+    "oldUntrackedBaseline": 0,
+    "allOldPathBodyModeTuplesPreserved": true,
+    "beforeAfterTupleArraySha256": "ba853af0228546fc1bf30bf92e1648fba1414b5e59132becdfc64b2a0e17d381"
+  },
+  "verification": {
+    "FIRSTGREEN": "One4/4 focused command; one actual12call pass,42observed18UNKNOWN",
+    "independent": "One saved-evidence checker; zero geometry/product-test reruns",
+    "render": "E4609 failed import retained; separate E4610 installed-entry/fresh-output repair rendered once; S6/root inspected1640x2220 PNG",
+    "scope": "No packaging product/test/audit/geometry/build/render reruns, source changes or Git writes"
+  },
+  "artifactAliases": [
+    {
+      "originalAbsolutePath": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/audit-command/stdout.txt",
+      "retainedPath": "work/capability-discovery/cycle-16/evidence/E4608/firstgreen/cli.txt",
+      "sha256": "555e80e8aab09623737c94110a6a614016325abd239a20a903143d5e7a9eea02",
+      "reason": "Exact same bytes as retained CLI; original execution capture unchanged"
+    }
+  ],
+  "phaseCaptureQualification": "Four identical source-pin arrays remain separate distinct before/after command-phase artifacts without normalization. Empty raw streams likewise preserve capture phases.",
+  "canonicalReceiptQualification": "Canonical native receipts copied once. S2/S5 malformed originals separately retained once; canonical coordinator envelopes bind their original hashes. Other worker result copies excluded.",
+  "counts": {
+    "productFiles": 4,
+    "copiedFiles": 58,
+    "generatedCurrentFiles": 1,
+    "manifestEntries": 63,
+    "filesIncludingManifest": 64,
+    "coveredBytes": 1113175
+  },
+  "manifestSelfExcluded": true,
+  "exclusions": [
+    "manifest itself",
+    "old1.8MB original input",
+    "old source/sourceTexts and prior proof copies",
+    "duplicate normal worker result receipts",
+    "native bundles/state/control/admin streams",
+    "E4611 completion receipt",
+    "dependency trees/installs",
+    "HH/unrelated source"
+  ],
+  "files": [
+    {
+      "path": "experiments/capability-discovery/saved-pair-consistency/cli.mjs",
+      "bytes": 2152,
+      "sha256": "7e69d20890ed6c6fe30bf07eeaf6d5a19a4a3edbc1806a23c7f12ee706ad4d3f",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/saved-pair-consistency/cli.mjs"
+    },
+    {
+      "path": "experiments/capability-discovery/saved-pair-consistency/README.md",
+      "bytes": 3787,
+      "sha256": "498b6672a354fb806750dabf1a9ad42c93a105a96c80dafd292af729c604a466",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/saved-pair-consistency/README.md"
+    },
+    {
+      "path": "experiments/capability-discovery/saved-pair-consistency/recipe.mjs",
+      "bytes": 13965,
+      "sha256": "00e0e4d251d85ae64f04210d2db03e5ba7492187abc540b414f3ff86a28d689b",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/saved-pair-consistency/recipe.mjs"
+    },
+    {
+      "path": "experiments/capability-discovery/saved-pair-consistency/recipe.test.mjs",
+      "bytes": 2740,
+      "sha256": "cbf9f613fb37014dd434acb9c7dfdba336ad13ff784462ea99f12a0ddf75a931",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/saved-pair-consistency/recipe.test.mjs"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/CURRENT.md",
+      "bytes": 4063,
+      "sha256": "1bcd8cb83693a4dc5f4f615d8e8be6b8bedd237c0a852bc3c1b2c9532745f2a8",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-16/CURRENT.md"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4608/audit-command/execution.json",
+      "bytes": 1352,
+      "sha256": "0206a985f302636fca55b66586a679c75906bee2fb4175af3c363617d680e257",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/audit-command/execution.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4608/audit-command/source-pins.after.json",
+      "bytes": 1801,
+      "sha256": "1de55ad229cfc6015c314f911f9c543dac85f874882ec888e994f2d1ef6c5c8b",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/audit-command/source-pins.after.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4608/audit-command/source-pins.before.json",
+      "bytes": 1801,
+      "sha256": "1de55ad229cfc6015c314f911f9c543dac85f874882ec888e994f2d1ef6c5c8b",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/audit-command/source-pins.before.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4608/audit-command/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/audit-command/stderr.txt"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4608/capture-execution.mjs",
+      "bytes": 3172,
+      "sha256": "5d62d1353d94ead41f9bf61e967c6e8a1469385ad5e9b38cfcd13ef5bddaa121",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/capture-execution.mjs"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4608/checkpoint.md",
+      "bytes": 7081,
+      "sha256": "85460c9e381f9433d339a833cad0b23c214b6e853ab9557ff5befe8b1256fef2",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/checkpoint.md"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4608/firstgreen/cli.txt",
+      "bytes": 6030,
+      "sha256": "555e80e8aab09623737c94110a6a614016325abd239a20a903143d5e7a9eea02",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/firstgreen/cli.txt"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4608/firstgreen/result.json",
+      "bytes": 321752,
+      "sha256": "0ba97bcc17e85249042127907c173aef8dfcab6a3abe159756312c69cb78fe79",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/firstgreen/result.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4608/original-checkpoint-receipt.json",
+      "bytes": 2417,
+      "sha256": "fc4f8210ce76d7941b2be3c0f86c373f92cb7a75826e157bc5c6a65de7580931",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/receipt.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4608/tests/execution.json",
+      "bytes": 930,
+      "sha256": "160561fa13844b60e1eaf34ea1fa8909177f798e68167ecc64ccfc0a4e797656",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/tests/execution.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4608/tests/source-pins.after.json",
+      "bytes": 1801,
+      "sha256": "1de55ad229cfc6015c314f911f9c543dac85f874882ec888e994f2d1ef6c5c8b",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/tests/source-pins.after.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4608/tests/source-pins.before.json",
+      "bytes": 1801,
+      "sha256": "1de55ad229cfc6015c314f911f9c543dac85f874882ec888e994f2d1ef6c5c8b",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/tests/source-pins.before.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4608/tests/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/tests/stderr.txt"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4608/tests/stdout.txt",
+      "bytes": 453,
+      "sha256": "566b989f54fe003af8edb6549f615dbf23c3f5429e9fe5f269223e37f3498f68",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S1/E4608/tests/stdout.txt"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4609/checkpoint.md",
+      "bytes": 4731,
+      "sha256": "e56e3fdcfb8876ab984667edbea0d94edb02084fa2a76c94ec7a744f1db4320b",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S6/E4609/checkpoint.md"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4609/execution.json",
+      "bytes": 356,
+      "sha256": "80fdcd144ffc84e70e8c48a3f14c8333ac258389a142de8f917a5ab1e8c27d04",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S6/E4609/execution.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4609/render.mjs",
+      "bytes": 7667,
+      "sha256": "ac6790168c92641fa420df28bc8819b427cc5acfa98e1a39a8a9b0b808ff5281",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S6/E4609/render.mjs"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4609/stderr.txt",
+      "bytes": 1173,
+      "sha256": "2ad41d478ac482bd9f30efaf3f2a64f755e9df5e2cb50129870020122a0808c8",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S6/E4609/stderr.txt"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4609/stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S6/E4609/stdout.txt"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4610/checkpoint.md",
+      "bytes": 4086,
+      "sha256": "3b6b5c61856da05559123b007e2231dfb7187adce839769494fd75722b90bf4a",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S6/E4610/checkpoint.md"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4610/execution.json",
+      "bytes": 359,
+      "sha256": "020e6080f938383c3d69fab633e802ff070a18d9c71894a85e751b045cf818d0",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S6/E4610/execution.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4610/render-v2.mjs",
+      "bytes": 7669,
+      "sha256": "2e0427abed23c8a8190e75467ef10a7a33095a92b394468b39d02166eaf7df5b",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S6/E4610/render-v2.mjs"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4610/rendered/evidence.png",
+      "bytes": 497220,
+      "sha256": "66c98da1abdc4eb6149fa90c1072f38168e9217bebb7e0db707f9371143e8c35",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S6/E4610/rendered/evidence.png"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4610/rendered/evidence.svg",
+      "bytes": 55376,
+      "sha256": "dcdeb276a481273fe8aaee058f450e964e017ac1ffadba5707524ce84316eb79",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S6/E4610/rendered/evidence.svg"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4610/rendered/readback.json",
+      "bytes": 14106,
+      "sha256": "92521b7baf90c7824533f4f8852c97facd0da8cb4a911356de5fc4c21ed1fbf1",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S6/E4610/rendered/readback.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4610/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S6/E4610/stderr.txt"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/E4610/stdout.txt",
+      "bytes": 511,
+      "sha256": "d768fd616b1114ba801bc7064f8993efcd7aebb9562d8b65bdcfd88c0a37ec76",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S6/E4610/stdout.txt"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/R4608/check-saved.mjs",
+      "bytes": 9526,
+      "sha256": "8fb15e862cf6e4cb9a8fc8543001aaabbc6c413f987b4ae9e88211aa7f797578",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S2/R4608/check-saved.mjs"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/R4608/execution.json",
+      "bytes": 896,
+      "sha256": "678d6ebf9f39d4c40bbb11c8a4360026807e46ff70af4cff96e5711471eff16f",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S2/R4608/execution.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/R4608/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S2/R4608/stderr.txt"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/evidence/R4608/stdout.txt",
+      "bytes": 644,
+      "sha256": "b38357d9c71936cf8ace96cc46f7d492296e3f19b7908c5c2e4fc12e626c3341",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S2/R4608/stdout.txt"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/bookkeeping-qualification.json",
+      "bytes": 1075,
+      "sha256": "09e2fcdf282f8ceaaf2089801dbb7b2d1b322e40c4d3779a4244ea484ceba4ad",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/bookkeeping-qualification.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/original-malformed/E4602.json",
+      "bytes": 8537,
+      "sha256": "856954f1cf49868c4724da81d46c69243e2b3a56bb6a99bac34b6831034bfb1c",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S2/E4602/receipt.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/original-malformed/E4605.json",
+      "bytes": 9763,
+      "sha256": "592279807b838c04e187dc5f605642976a8eb174650c95e723bca8f2249e98e7",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S5/E4605/receipt.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/PLAN.md",
+      "bytes": 2119,
+      "sha256": "21c6ee71f7418db96c28a17219b6cd498b81db598d18df50de692fb1c96f3717",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/PLAN.md"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/receipts/E4601.json",
+      "bytes": 12308,
+      "sha256": "390e54ac36cedc98b4583b347a8b727d53e95ce4a106aa7c8c469bf5b0462191",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/receipts/E4601.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/receipts/E4602.json",
+      "bytes": 702,
+      "sha256": "ef1c8749260fb4e7508a0b53cdd51ea295c65596aa49c465617cef2dffd933d9",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/receipts/E4602.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/receipts/E4603.json",
+      "bytes": 12045,
+      "sha256": "c8c4e9121e3712981e7860a9e25df16da9ef260bf0cb1e0f486739716c118bc2",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/receipts/E4603.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/receipts/E4604.json",
+      "bytes": 9041,
+      "sha256": "a4497f3119825d683e7108d51fed9599bf8b9df9f380bdf7232983889cfe66de",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/receipts/E4604.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/receipts/E4605.json",
+      "bytes": 582,
+      "sha256": "c3b3f7fd207aba82fb22eceda47df6c68d8a639566ed0423aca904d7d25e3ae0",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/receipts/E4605.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/receipts/E4606.json",
+      "bytes": 9586,
+      "sha256": "5a965567b03cd0ad661d567d4375e56a5187085839e8be17287c5495d6959013",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/receipts/E4606.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/receipts/E4607.json",
+      "bytes": 2748,
+      "sha256": "f274960a64be23d322db1c0184d9e11e145ac923d59819070455d756729ebd90",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/receipts/E4607.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/receipts/E4608.json",
+      "bytes": 6980,
+      "sha256": "1975f1cc5531943cefdc6dc1899f86a11b813e0292679e4adf0b12440bf47c78",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/receipts/E4608.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/receipts/E4609.json",
+      "bytes": 3460,
+      "sha256": "592688275e7f6fda07ff6d00cdcf1546960234e86bbeefcb04c7346d9c4a6871",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/receipts/E4609.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/receipts/E4610.json",
+      "bytes": 5098,
+      "sha256": "7b6b4b4e42f4c018a3adb84547c623f1d213c2d7e08cff586b97301df3a97e39",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/receipts/E4610.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/receipts/R4607.json",
+      "bytes": 6513,
+      "sha256": "4f77e84c7818e2711368106e73535975bfc54921a24ee786d47040aab21f0018",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/receipts/R4607.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/receipts/R4608.json",
+      "bytes": 10504,
+      "sha256": "4b3dc7b02027d8a62a02f609435164be2e8651d4f78e4c5454bf6293f3a2a404",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/receipts/R4608.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/solves/epoch-00.json",
+      "bytes": 1767,
+      "sha256": "1a370603da45ed5b258b588687f547f31008793917ef3ce667dd01bd09439604",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/solves/epoch-00.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/solves/epoch-01.json",
+      "bytes": 1367,
+      "sha256": "df4a05f1dc16a9b3c86dcf0ced1901e558ab762da04e7d7b268c72ee2ebe7a53",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/solves/epoch-01.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/solves/epoch-02.json",
+      "bytes": 1384,
+      "sha256": "57ee4015f5336c4e2aa1f4e81c25ed6c0768c1534895a5e8d5ed3fb61174eb78",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/solves/epoch-02.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/solves/epoch-03.json",
+      "bytes": 1400,
+      "sha256": "36a58f7c7f358ab047ef2b4f4449e4fd0fd45bbc204d652cd3f8d6a6b1e29328",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/solves/epoch-03.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/solves/epoch-04.json",
+      "bytes": 1416,
+      "sha256": "a9da1784f6c9bd2d1c269d31b05b41f8e6b04b027838848bba1747bce5d41c87",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/solves/epoch-04.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/solves/epoch-05.json",
+      "bytes": 1432,
+      "sha256": "d65f4463c52e0a24234e0628978d4bc2632ff3ccf0623a08d8fb0ef070a3e9bd",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/solves/epoch-05.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/solves/epoch-06.json",
+      "bytes": 1448,
+      "sha256": "8962893eb886e3d9ff0ef7607de5022a52e4c4e048ba096e38146522ad469e22",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/solves/epoch-06.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/solves/epoch-07.json",
+      "bytes": 1463,
+      "sha256": "d25970e9cfef548c94840ed89bcef99919b35ba965df4f174e5c9aaabeb6fa7b",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/solves/epoch-07.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/native/spec.json",
+      "bytes": 1601,
+      "sha256": "f79e678b32fd6bd8f1afb284b725209ad794fed81893e685963a07671d094238",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/spec.json"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/protocol/protocol-amendment.md",
+      "bytes": 3359,
+      "sha256": "2617e445f4371a7eb1a74f39d51bbf3c534dc3f281457824752804e2dc69d39f",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S3/R4607/protocol-amendment.md"
+    },
+    {
+      "path": "work/capability-discovery/cycle-16/protocol/protocol.md",
+      "bytes": 14059,
+      "sha256": "6da57b85ba0f9142eab150d67f275ce993214494bd2ec791fc919026c4ad0cbe",
+      "mode": "0644",
+      "copiedFrom": "/workspace/scratch/afc0d51965a8/lab16/S1/E4607/protocol.md"
+    }
+  ]
+}

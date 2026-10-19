@@ -1,0 +1,78 @@
+{
+  "schema": "lab16-independent-review-receipt@1",
+  "job_id": "R4608",
+  "worker": "S2",
+  "decision": "accepted",
+  "summary": "Accept E4608 as bounded default-OFF reuse of existing describePath for saved software-representation consistency, under E4607 plus R4607 amendment. Independent saved-evidence assertions checked every row/slot, source association, null, retained scalar comparison, dependent-frame comparison, projection pointer and report/custody binding against the exact tracked original:12 rows,60 slots,42 observed,18 UNKNOWN;282 row checks and147 dependent-frame numeric checks match. No fresh failure was found, so no actual geometry/test rerun, source repair or tolerance change was performed. Physical claims remain UNKNOWN/HOLD.",
+  "review_basis": {
+    "protocol": {"path":"/workspace/scratch/afc0d51965a8/lab16/S1/E4607/protocol.md","sha256":"6da57b85ba0f9142eab150d67f275ce993214494bd2ec791fc919026c4ad0cbe"},
+    "amendment": {"path":"/workspace/scratch/afc0d51965a8/lab16/S3/R4607/protocol-amendment.md","sha256":"2617e445f4371a7eb1a74f39d51bbf3c534dc3f281457824752804e2dc69d39f"},
+    "priorReview": {"path":"/workspace/scratch/afc0d51965a8/lab16/S3/R4607/receipt.json","sha256":"4f77e84c7818e2711368106e73535975bfc54921a24ee786d47040aab21f0018"},
+    "checkpoint": {"path":"/workspace/scratch/afc0d51965a8/lab16/S1/E4608/checkpoint.md","sha256":"85460c9e381f9433d339a833cad0b23c214b6e853ab9557ff5befe8b1256fef2"},
+    "authorReceipt": {"path":"/workspace/scratch/afc0d51965a8/lab16/S1/E4608/execution-receipt.json","sha256":"1975f1cc5531943cefdc6dc1899f86a11b813e0292679e4adf0b12440bf47c78"},
+    "captureHarness": {"path":"/workspace/scratch/afc0d51965a8/lab16/S1/E4608/capture-execution.mjs","sha256":"5d62d1353d94ead41f9bf61e967c6e8a1469385ad5e9b38cfcd13ef5bddaa121"}
+  },
+  "exact_source_ids": [
+    {"path":"experiments/capability-discovery/saved-pair-consistency/recipe.mjs","bytes":13965,"sha256":"00e0e4d251d85ae64f04210d2db03e5ba7492187abc540b414f3ff86a28d689b"},
+    {"path":"experiments/capability-discovery/saved-pair-consistency/recipe.test.mjs","bytes":2740,"sha256":"cbf9f613fb37014dd434acb9c7dfdba336ad13ff784462ea99f12a0ddf75a931"},
+    {"path":"experiments/capability-discovery/saved-pair-consistency/cli.mjs","bytes":2152,"sha256":"7e69d20890ed6c6fe30bf07eeaf6d5a19a4a3edbc1806a23c7f12ee706ad4d3f"},
+    {"path":"experiments/capability-discovery/saved-pair-consistency/README.md","bytes":3787,"sha256":"498b6672a354fb806750dabf1a9ad42c93a105a96c80dafd292af729c604a466"},
+    {"path":"experiments/capability-discovery/probes/path-geometry/path-geometry.mjs","bytes":7045,"sha256":"ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34"},
+    {"path":"work/capability-discovery/cycle-09/evidence/E3012/measurement/measurement.json","bytes":1808041,"sha256":"fc5da1eb88c0bb572506e815e653c94ddc71ba6d66b8832d513e889477fa95b1"}
+  ],
+  "repository": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab",
+  "source_review": {
+    "productFolderContainsExactlyFourFiles": true,
+    "closedDefaultOffEntry": "Missing/false own enabled returns before source/input inspection. Exact input bytes/hash/schema/12-row roster and all60 associations/states are admitted before geometry import.",
+    "dependencyClosure": "Recipe statically imports Node fs/crypto only, then hash-checks/imports existing dependency-free geometry. CLI statically imports Node fs/path/crypto and recipe only. No producer/provider/store/CV import or upstream input read is present.",
+    "actualCallAccounting": "One geometry.describePath call appears in the fixed12-row loop; attempted increments immediately before it, completed immediately after successful return. No countTurns, second midpoint call or helper geometry replay occurs. Captured result counts12/12/0 match the source/capture structure; reviewer did not dynamically instrument/replay these calls.",
+    "normalization": "No width/support argument is supplied. All saved signed pixel and nominal42/50 ratios stay separate from positive fitted-width normalization. Existing pairedEdges equations are not duplicated in the recipe.",
+    "failureRetention": "Source catches each per-row operation/comparison error, retains descriptor/error when available, continues later rows once, and then retains dependent unavailable/mismatch checks. Pre-admission refusal leaves zero calls. Source/input postcheck errors alter status without retry. CLI writes result before report and exits1 for non-CONSISTENT. No unexpected-error path was triggered or runtime fault-injected during this successful review; disk/crash atomicity and hostile runtime authentication are not claimed."
+  },
+  "independent_evidence_check": {
+    "command": "node /workspace/scratch/afc0d51965a8/lab16/S2/R4608/check-saved.mjs",
+    "checker": {"path":"/workspace/scratch/afc0d51965a8/lab16/S2/R4608/check-saved.mjs","sha256":"8fb15e862cf6e4cb9a8fc8543001aaabbc6c413f987b4ae9e88211aa7f797578"},
+    "execution": {"path":"/workspace/scratch/afc0d51965a8/lab16/S2/R4608/execution.json","sha256":"678d6ebf9f39d4c40bbb11c8a4360026807e46ff70af4cff96e5711471eff16f"},
+    "stdout": {"path":"/workspace/scratch/afc0d51965a8/lab16/S2/R4608/stdout.txt","sha256":"b38357d9c71936cf8ace96cc46f7d492296e3f19b7908c5c2e4fc12e626c3341"},
+    "stderr": {"path":"/workspace/scratch/afc0d51965a8/lab16/S2/R4608/stderr.txt","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    "exitCode": 0,
+    "invocations": 1,
+    "result": "ACCEPTED_METADATA_CONSISTENCY",
+    "method": "Checker imports only fs/crypto/assert, not recipe or geometry. For every result row/slot it independently joins original JSON pointers, candidate/pose/frame/width and state; validates all required projection fields and saved run/isolate/error/prediction context; compares each retained numeric actual to its descriptor sample, expected to the original saved scalar/coordinate, exact residual arithmetic/status/tolerance, all missing samples without zero quantities, and all six dependent-frame pairings. Reconstructs complete CLI bytes from captured result and verifies raw captures and before/after source/input hashes against current files. This independently challenges lost/reordered slots, wrong associations, nominal/fitted conflation, missing UNKNOWNs, forged MATCHED residuals, wrong translation and stale report bindings without reproducing geometry.",
+    "rows":12,"slots":60,"observed":42,"unknown":18,
+    "rowChecks":282,"rowNumericalChecks":222,"maxAbsRowResidual":2.2737367544323206e-13,
+    "dependentFrameNumericalChecks":147,"dependentFrameUnknownSlots":9,"maxAbsDependentFrameResidual":8.739675649849232e-13,
+    "tolerances":{"px":1e-9,"dimensionless":1e-9},
+    "reviewerGeometryImports":0,"reviewerGeometryCalls":0,"reviewerProductTestRuns":0
+  },
+  "author_raw_testimony_verified": {
+    "tests": {
+      "command":"node --test experiments/capability-discovery/saved-pair-consistency/recipe.test.mjs",
+      "executionPath":"/workspace/scratch/afc0d51965a8/lab16/S1/E4608/tests/execution.json",
+      "executionSha256":"160561fa13844b60e1eaf34ea1fa8909177f798e68167ecc64ccfc0a4e797656",
+      "stdoutSha256":"566b989f54fe003af8edb6549f615dbf23c3f5429e9fe5f269223e37f3498f68",
+      "exitCode":0,"passes":4,"failures":0,
+      "qualification":"One author FIRSTGREEN focused command, not observed RED. Reviewer read source/stdout and verified capture hashes without rerunning it; four overlapping assertions are not counted as eight unique tests. Fixtures do not call geometry or read E3012."
+    },
+    "audit": {
+      "command":"node experiments/capability-discovery/saved-pair-consistency/cli.mjs audit --enabled --input work/capability-discovery/cycle-09/evidence/E3012/measurement/measurement.json --run-id E4608-firstgreen --out /workspace/scratch/afc0d51965a8/lab16/S1/E4608/firstgreen",
+      "executionPath":"/workspace/scratch/afc0d51965a8/lab16/S1/E4608/audit-command/execution.json",
+      "executionSha256":"0206a985f302636fca55b66586a679c75906bee2fb4175af3c363617d680e257",
+      "stdoutSha256":"555e80e8aab09623737c94110a6a614016325abd239a20a903143d5e7a9eea02",
+      "exitCode":0,"invocations":1,"geometryCalls":12,
+      "qualification":"Retained source/capture/result support a single successful author pass; hash-at-check and capture files are not authenticated execution or proof against hostile replacement. No reviewer geometry reproduction was needed."
+    },
+    "result":{"path":"/workspace/scratch/afc0d51965a8/lab16/S1/E4608/firstgreen/result.json","bytes":321752,"sha256":"0ba97bcc17e85249042127907c173aef8dfcab6a3abe159756312c69cb78fe79"},
+    "source_and_input_pins":"Both author commands' before/after six-file pin arrays match; independently checked current bytes/hash too. Result's five-file closure and input/file before/after bindings match. Captured result/cli/stdout share the exact result hash and full60-row report roster."
+  },
+  "scientific_qualifications": {
+    "projection":"Audit-used projection only; omitted profile/rawStations/long context references resolve against exact original path/hash/source base. No claim of copying the complete original payload.",
+    "negative":"Saved short1 signed8.090622377680736px offset remains a counterexample to nominal-origin=fitted-midpoint, not new producer evidence or a demonstrated consumer defect.",
+    "dependence":"All scalar/coordinate channels share fits; crop/source translation is dependent, not independent courses. Exposed group labels are not independent positive/negative ground truth, and42/50 are uncalibrated pixel hypotheses.",
+    "blindness":"Symmetric left/right swaps remain invisible to midpoint, Euclidean width/distance and absolute-offset consistency. Retained signed cross-section output does not authenticate pair orientation.",
+    "physicalClaims":"UNKNOWN/HOLD: no fit correctness, path/edge identity, calibrated physical width, continuity, AA/alpha, ownership, confidence, causality or generalization follows."
+  },
+  "blocking_findings": [],
+  "nonblocking_qualifications": ["Acceptance covers the successful bounded software audit, not every untriggered failure branch or general/hostile-input correctness.","No render, publication, default promotion, producer or physical-claim admission is granted by this review."],
+  "actions":{"sourceEdits":0,"gitWrites":0,"HHChanges":0,"pixelsOrImagesRead":0,"E4012Reads":0,"producerOrCVCalls":0,"nativeControlWrites":0,"subagents":0,"onlyOwnScratchWritten":true}
+}

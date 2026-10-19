@@ -1,0 +1,103 @@
+{
+  "schema": "lab16-source-scout-receipt@1",
+  "job_id": "E4603",
+  "worker": "S3",
+  "outcome": "confirmed_reuse",
+  "summary": "The tested pairedEdges descriptor seam exists, but the candidate centerline-offset observable is already saved in every observed E3012 rawCandidate.midpoint. One saved proposed-ribbon/w42 short1 observation already contradicts nominal-origin equals fitted profile midpoint. No nonduplicating geometry measurement or current consumer failure was demonstrated; retain this informative negative and HOLD physical-path inference.",
+  "measurement_executed": false,
+  "source_or_git_changed": false,
+  "repository": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab",
+  "sourceIDs": [
+    {"path":"/workspace/scratch/afc0d51965a8/lab16/PLAN.md","sha256":"21c6ee71f7418db96c28a17219b6cd498b81db598d18df50de692fb1c96f3717"},
+    {"path":"/workspace/scratch/afc0d51965a8/lab16/spec.json","sha256":"f79e678b32fd6bd8f1afb284b725209ad794fed81893e685963a07671d094238"},
+    {"path":"experiments/capability-discovery/probes/path-geometry/README.md","sha256":"d1854e2fa3213ea60dc4ce4642d5c79d149950b916a5b54027434f73729d150e"},
+    {"path":"experiments/capability-discovery/probes/path-geometry/path-geometry.mjs","sha256":"ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34"},
+    {"path":"experiments/capability-discovery/probes/path-geometry/path-geometry.test.mjs","sha256":"8c8be29b7d581346aa9ad88be30dfe3a455fcfeb89782895caa75ed6ed685fc6"},
+    {"path":"experiments/capability-discovery/probes/path-geometry/native-analysis.json","sha256":"b724e719380000fc53fc8102c89d698e7a70ae1b435bd96b16961f9cf33b7eef"},
+    {"path":"experiments/capability-discovery/probes/path-geometry/source-evidence.json","sha256":"82f956dffffa03c361e180bf80eeb1f3cd464bbcb82ff667e2fa417d678d1e24"},
+    {"path":"experiments/capability-discovery/window-midpoint-audit/README.md","sha256":"ad93fd879a9711fa9275aff304da857a0629949ec1c1fe764f9fea8ac135b0f4"},
+    {"path":"experiments/capability-discovery/window-midpoint-audit/recipe.mjs","sha256":"29fc7753ee32d2c6dd7014952a804441c83900d1c27d26a6b43ff3f7d7bdbf15"},
+    {"path":"work/capability-discovery/cycle-09/evidence/E3012/measurement/measurement.json","sha256":"fc5da1eb88c0bb572506e815e653c94ddc71ba6d66b8832d513e889477fa95b1"},
+    {"path":"work/capability-discovery/cycle-10/evidence/E4009/output/trace.json","sha256":"f237792dc0753096c3ab390a6efdf901e8850dbd433be60c7b9c808588bd3e63"},
+    {"path":"work/capability-discovery/cycle-10/native/receipts/E4009.json","sha256":"aa5357b03a5f97e4453b9aaf3e3ae65e3eefd3f84d9bad07b60b67931dc45a0a"},
+    {"path":"experiments/capability-discovery/window-midpoint-audit/meaningful.test.mjs","sha256":"4228ecc847d9f89df9d30c7d634546468a17e56af1f77249b273374f340c482a"},
+    {"path":"experiments/capability-discovery/window-midpoint-audit/render.mjs","sha256":"cedf9b7d6d53efa8ec215854a9c599995bf5edba77844d3f8187809153b8acd6"}
+  ],
+  "input_schema": {
+    "E3012": {
+      "schema": "window-midpoint-audit@1",
+      "selector": "rows[].midpoint.slots[]",
+      "fields": ["id","state","originPx","midpointPx","leftPx","rightPx","rawCandidate.edgeFit","rawCandidate.midpoint"],
+      "fit_fields": ["lPx","rPx","cPx","wPx","score","gl","gr"],
+      "already_saved_offsets": ["fitMidpointNormalOffsetPx","candidateCenterMinusFitMidpointPx","candidateCenterMinusFitMidpointInNominalWidths"],
+      "frames": ["Lenard-1.E802.fixed-roi-source-pixel-centers","Lenard-1.original-source-pixel-centers"],
+      "frame_relationship": "Source branch is crop branch translated by [400,1010]; not independent observations.",
+      "units": "Coordinates and signed profile offsets in named-frame px; saved normalized offset uses explicit nominal candidate width42 or50, not calibrated physical width."
+    },
+    "E4009": {
+      "schema": "heading-ablation-trace@1",
+      "fields": "4 calls/renderRows with 16 longitudinal stations each; per-side contrast lum and heading arms; no bilateral edge coordinates or fitted cross-section midpoint identity",
+      "claims": "pathIdentity, physicalEdgeIdentity, AAAlpha and confidence remain UNKNOWN",
+      "usage": "Schema inspection only; cannot substitute brightness/heading for paired-edge testimony."
+    }
+  },
+  "proposal": {
+    "id": "saved-origin-versus-fitted-profile-midpoint",
+    "status": "DO_NOT_EXECUTE_REDUNDANT",
+    "hypothesis": "Nominal station origins in the proposed-ribbon/w42 row are fitted profile midpoints.",
+    "independently_switchable_parameter": {"name":"originMidpointAuditEnabled","default":false,"effect":"Read saved offsets only; no width/heading/support/ranking mutation."},
+    "comparison_parameter": {"name":"equalityTolerancePx","value":1e-9,"basis":"Existing window-midpoint-audit numerical tolerance; numerical equality only, not physical acceptance tolerance."},
+    "tested_operation_first": "describePath({points: origins, frame, pairedEdges:{values: saved left/right or null, provenance}}) is already implemented and has paired-edge/UNKNOWN/transform tests. Do not run it here: rawCandidate.midpoint already holds the equivalent signed nominal-center offset and nominal-width ratio.",
+    "prediction": "Existing saved short1 offset is nonzero, so the all-stations nominal-origin-equals-fitted-midpoint hypothesis is contradicted without any new execution.",
+    "falsifier": "The pinned saved short1 fields instead report zero offset within equalityTolerancePx and coincident origin/midpoint, or their provenance/frame/edge-fit status fails validation. A missing pair yields UNKNOWN, never zero.",
+    "saved_counterexample": {
+      "row": "composition/proposed-ribbon/w42",
+      "station": "proposed-ribbon.short1",
+      "state": "OBSERVED",
+      "midpoint_status": "OBSERVED_CHANNELS",
+      "originPx": [168.9691115068547,133.24710794516272],
+      "midpointPx": [176.99725710107182,134.25062614443988],
+      "fitMidpointNormalOffsetPx": -8.090622377680736,
+      "candidateCenterMinusFitMidpointPx": 8.090622377680736,
+      "candidateCenterMinusFitMidpointInNominalWidths": 0.19263386613525563,
+      "referent": "midpoint of two edges in longitudinally averaged profile; no per-pixel path identity"
+    },
+    "current_missing_observable_or_failure": "NONE DEMONSTRATED. baseline.descriptor.centerline is UNKNOWN because the audit did not supply pairedEdges, but slots retain explicit offsets already. That descriptor omission is not evidence of an unobservable quantity or failed consumer. Fitted-width normalization would be a different denominator, not a new independent physical observation."
+  },
+  "bounded_reuse_seam_proposal": {
+    "status": "PROPOSAL_ONLY_NOT_EXECUTED",
+    "purpose": "Audit coordinate/association agreement between saved projected edge pairs and saved profile-scalar offsets, not produce a new observable or physical centerline conclusion.",
+    "nonduplication_evidence": "recipe.describe never passes pairedEdges; compareFrames only compares translated views. meaningful.test checks fixture midpoint projection and missing runs, not descriptor-to-scalar offsets. render.checkTrace checks coordinates are finite/null and run points retained, not scalar-to-coordinate consistency. An actual inconsistency has NOT been observed.",
+    "input": "Exact E3012 measurement bytes above; every one of 12 rows and all five station slots in retained order; no reselection or producer execution.",
+    "parameters": {"savedPairSeamAuditEnabled":false,"tolerancePx":1e-9,"toleranceDimensionless":1e-9,"slot_policy":"all five origins; observed saved left/right pair, otherwise null","width_parameter_policy":"omit describePath.width; paired-edge fullWidthPx is fitted distance, not nominal candidate width"},
+    "operation": "Existing describePath once per retained row with points=slots[].originPx and pairedEdges.values=OBSERVED ? {left:leftPx,right:rightPx} : null, named row.frame and exact saved provenance. No smoothing, gap interpolation, fit, score or query.",
+    "frozen_prediction": [
+      "At every OBSERVED slot, returned distanceFromMidpointPx equals abs(rawCandidate.midpoint.candidateCenterMinusFitMidpointPx) within tolerancePx.",
+      "Returned midpointPx equals saved slot.midpointPx in each coordinate within tolerancePx; returned fullWidthPx equals rawCandidate.edgeFit.wPx within tolerancePx.",
+      "Returned distanceInFullWidths equals abs(saved candidateCenterMinusFitMidpointPx) divided by fitted edgeFit.wPx within toleranceDimensionless. It is not compared directly with the saved signed NOMINAL-width ratio.",
+      "Every UNKNOWN slot remains UNKNOWN and observedPairs equals the retained observed-slot count; no missing pair is replaced by zero or a neighboring pair."
+    ],
+    "falsifier": "One finite above-tolerance residual, state/count disagreement, duplicate/malformed origin rejection, wrong association or unavailable required field falsifies or blocks the seam. Retain all residuals/errors; do not cherry-pick matched cases or call an error a pass.",
+    "actual_negative_controls": "The complete pinned missing-slot pattern under controls applies separately to both branches: lateral42 short1; lateral50 short1,2,4,5; bright50 short1,2,3,4 must remain UNKNOWN. Bright-organic42 is a complete fitted-channel case, not false-path ground truth.",
+    "what_pass_cannot_establish": "Both scalar and projected values share the original fit and are dependent; pass checks software representation coherence only. Euclidean comparison cannot detect a symmetric left/right swap or establish physical edge association, calibrated width, path support, AA, ownership or generalization.",
+    "next_authority": "Only root may freeze/admit this one bounded reuse check after independent source/control review. Physical/CV inference remains HOLD regardless of seam outcome."
+  },
+  "controls": {
+    "positive_label": "proposed-ribbon is an exposed group name, not accepted true-path ground truth",
+    "negative_labels": "lateral-plus6 and bright-organic are exposed same-image controls, not independently verified false-path labels",
+    "each_branch_slots": [
+      {"group":"proposed-ribbon","widthPx":42,"observed":[1,2,3,4,5],"unknown":[]},
+      {"group":"proposed-ribbon","widthPx":50,"observed":[1,2,3,4,5],"unknown":[]},
+      {"group":"lateral-plus6","widthPx":42,"observed":[2,3,4,5],"unknown":[1]},
+      {"group":"lateral-plus6","widthPx":50,"observed":[3],"unknown":[1,2,4,5]},
+      {"group":"bright-organic","widthPx":42,"observed":[1,2,3,4,5],"unknown":[]},
+      {"group":"bright-organic","widthPx":50,"observed":[5],"unknown":[1,2,3,4]}
+    ],
+    "support_guard": "OBSERVED_CHANNELS requires finite edgeFit l/r/c/w/score/gl/gr, wPx>0, gl>0, gr>0 and finite projected edges. This establishes two fitted channel edges only. Neither support nor heading supplies path identity. Native-analysis support includes own-badge patch/waiver region and all listed native centerlines are UNKNOWN.",
+    "exposure": "All12 E3012 rows, stored sharp counts, all short1..5 geometry and four E4009 arm schemas inspected; widths42/50 and pi/4 sharp threshold were already exposed. No heldout or independent course validation.",
+    "physical_claim_status": "HOLD",
+    "hold_reasons": ["No independent frame-bound physical path/edge labels","Uncalibrated candidate width hypotheses","Crop/source dependence","Incomplete lateral and bright width50 controls","E4009 contrast arms cannot supply paired-edge physical identity"]
+  },
+  "nonduplication": "Rejected a new pairedEdges wiring experiment because E3012 already carries signed pixel offsets and nominal-width offsets. Existing bend counts, scoring existence/counterexample evidence and heading ablation are not rerun or reinterpreted as centerline/AA truth.",
+  "actions_not_taken": ["No measurement, test suite, producer or query execution","No image/raster/pixel read or decode","No E4012 metadata opened","No new equations, physical thresholds, CV, providers, ranker or installs","No HH, source or Git edits","No subagents"]
+}

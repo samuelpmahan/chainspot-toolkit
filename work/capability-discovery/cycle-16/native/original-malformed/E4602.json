@@ -1,0 +1,56 @@
+{
+  "schema": "lab16-control-ownership-audit@1",
+  "job_id": "E4602",
+  "worker": "S2",
+  "validoutcome": "insufficient_evidence",
+  "summary": "HOLD any fused physical/path/width claim. Saved E3012 geometry and E4009 contrast are reusable observations of different image instances and different quantities, not independent courses constraining the same latent path. No fresh scientific comparison is admitted by this audit.",
+  "latent_claim": "One independently identified physical path, its stationwise edges/continuity and physical width, in a single explicit image frame/support.",
+  "observations": [
+    {
+      "source": "cycle-09/evidence/E3012/measurement/measurement.json",
+      "directly_retained": "Exposed saved Lenard-1 local edge-fit summaries; nominal origins, projected midpoint/left/right channels, descriptor outputs, missing slots and crop/source residuals.",
+      "frame": ["Lenard-1.E802.fixed-roi-source-pixel-centers", "Lenard-1.original-source-pixel-centers"],
+      "support": "Fixed proposed-ribbon/lateral-plus6/bright-organic groups and short1..short5 windows, widths42 and50.",
+      "observation": "Complete proposed-ribbon42 has nominal0 versus midpoint1 sharp turn; proposed-ribbon50 and bright-organic42 have0. Incomplete controls remain UNKNOWN. Three complete crop/source comparisons MATCHED; largest residual reported7.9581e-13 at tolerance1e-9.",
+      "inference_boundary": "Midpoints are origin+cPx*[-sin(phi),cos(phi)] of independently selected window winners. They do not directly observe a continuous centerline or stationwise associated physical edges. Nominal traces are caller-chosen origins, not independent geometry truth.",
+      "independence": "Crop/source are deterministic dependent translations (+400,+1010), not two independent courses. Width42/50 are alternative parameter hypotheses on the same exposed receipt. Projected midpoint channels are derived from the same local fit outputs.",
+      "control_ownership": "Saved station schema has candidates/frame/id/pose/profile/window; no independent annotation or ownership record is bound in those station records. bright-organic is a group label, not authenticated independent nonpath ground truth.",
+      "exposure": "Recipe explicitly labels pi/4 turn definition chosen after E809 exposure. Physical width is UNKNOWN;42 and50 are nominal pixel hypotheses, not calibration."
+    },
+    {
+      "source": "cycle-10/evidence/E4009/output/trace.json",
+      "directly_retained": "Completed four-call Lenard-5 original-source-pixel stationContrast trace with exact planned arguments, source/input bindings, native answers/callbacks and public contrast projections.",
+      "frame": "Lenard-5.original-source-pixel-centers",
+      "support": "primary and bright-nonpath core16; fixed joint origin/width within each group's two heading arms, literal null mask; rotation changes sampled support.",
+      "observation": "Saved prediction SUPPORTED: Dprimary0.511630963318769 and Dbright-1.266855366519426; attempted4/completed4/callbacks8. This audit reads saved values only, without native decode or producer replay.",
+      "inference_boundary": "Signed inside-minus-outside arithmetic RGB-mean contrast is a sampling observation, not path, physical-edge, AA/alpha, confidence or calibrated-width evidence. Headings came from already exposed flank/core fits.",
+      "independence": "Fresh private stores/copies and different-worker numerical review establish custody/review separation, not independent physical observations. Both groups and arms share exposed Lenard-5 pixels. This is not the Lenard-1 E3012 instance.",
+      "control_ownership": "E3006 authored exploratory fixed constants; R3006 independently reviewed scalar/source construction. Neither is independent frame-bound human/physical annotation of a path or negative control. bright-nonpath is not interchangeable with Lenard-1 bright-organic.",
+      "exposure": "Conditional in-sample hypothesis only; no held-out or prospective identity validation. Raw widths42.26372284910734 and43.74145492884304 are fitted pixel widths, not physical measurements."
+    }
+  ],
+  "sourcepins": [
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-09/CURRENT.md","sha256":"4191f7be36691a93cdbfaa80d3b1c2f9568ae7e122dc645c0e6f25e2ec540abc"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-10/CURRENT.md","sha256":"ddf2c1e914771b53a1b729d9175b35fb00ef5d49da2b579bd4bfbceac5069859"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-10/evidence/E3006/findings.md","sha256":"ac488338b6af073ec41714ab33335cb94a58f3a13d173ec41651af3558697df3"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-10/evidence/R3006/review.md","sha256":"4101b72b6fbeb2967ea942b5a63c412ce6aed2c3a8de2a63abd5cb758fd4a2a7"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-09/evidence/E3012/measurement/measurement.json","sha256":"fc5da1eb88c0bb572506e815e653c94ddc71ba6d66b8832d513e889477fa95b1"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-10/evidence/E4009/output/trace.json","sha256":"f237792dc0753096c3ab390a6efdf901e8850dbd433be60c7b9c808588bd3e63"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/window-midpoint-audit/recipe.mjs","sha256":"29fc7753ee32d2c6dd7014952a804441c83900d1c27d26a6b43ff3f7d7bdbf15"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/lenard5-station-evidence/README.md","sha256":"6a40f91299961893ec7de5096b366f234be46743e7b86036a32e41dda24afaf7"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/joint-fit-original-plan/README.md","sha256":"bf185d3c0e93763395c4c843d760c9439b4521a95c78aafe63536fefd17ca7bf"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/probes/path-geometry/source-evidence.json","sha256":"82f956dffffa03c361e180bf80eeb1f3cd464bbcb82ff667e2fa417d678d1e24"}
+  ],
+  "upstream_input_pins_not_read": [
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle04/P3/E809/receipt.json","bytes":828263,"sha256":"302e50cb5b60f752eb6f3139a4e6a98c015005203359e0ade5aebb378e1897ba","authority":"E3012 saved input binding"},
+    {"path":"/workspace/scratch/8528bb251845/discovery-cycle06/G1/E1501/Lenard-5.full.rgba","bytes":14427360,"sha256":"4379abb30a5b0907aa0e1435b13e19eafe8fdd31ac57c9b8bdff4495a14fdc2a","authority":"E4009 saved input binding only; body not accessed"}
+  ],
+  "admission_guard": {
+    "decision": "HOLD_PHYSICAL_CLAIM",
+    "saved_only_eligibility": "Root may admit one nonduplicating comparison only after freezing exact saved-file SHA256, schema/field selectors, imageId/frame/group/window/width identity, all required rows and missing/error abstention, existing tested operation/source pins, prospective scalar prediction/falsifier and exposure label. A different worker must validate. Do not rerun E3012's existing nominal/midpoint42/50 or crop/source invariance result as a new experiment.",
+    "forbidden_fusion": "Do not join Lenard-1 and Lenard-5 by similar group names or width42; do not count deterministic translations, fit projections, stores, review contexts or same-image arms as independent courses.",
+    "required_for_physical_reopening": "Independently owned frame-bound path/edge and negative-control annotations with source identity/support/timestamp, tuning-exposure ledger, physical-width calibration if claimed, and fixed heading-arm geometry plus separately reviewed exposure-aware protocol. These are absent from audited saved bindings; do not manufacture them."
+  },
+  "recommendation": "Retain existing informative parameter sensitivity and sampling negatives. Treat all physical continuity/identity/calibrated-width statements as UNKNOWN. If other workers cannot identify a genuinely new saved-observation question satisfying the guard, abstain explicitly.",
+  "scope": {"repo_readonly":true,"E4012_read":false,"pixels_or_images_read":false,"pixel_decode_CV_provider_producer_replay":false,"old_E2021_160grid_fourcall_execution":false,"source_Git_HH_mutation":false,"subagents":false,"broad_tests":false,"only_output":"/workspace/scratch/afc0d51965a8/lab16/S2/E4602/receipt.json"}
+}

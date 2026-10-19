@@ -1,0 +1,57 @@
+{
+  "job_id": "E4606",
+  "worker": "S6",
+  "outcome": "confirmed_reuse",
+  "summary": "Saved complete JSON traces support a bounded trace-only consumer audit; existing CLI/SVG values and row identities agree in inspected projections. The useful next seam is explicit anchor-versus-station-center semantics and preservation of conditional/UNKNOWN claim qualifiers, not a producer rerun or established numeric defect. Physical identity remains HOLD.",
+  "scope": "Read-only repository source, JSON metadata and SVG text inspection. No producer, renderer, measurement, geometry computation, pixels, image decoding, CV, provider/ranker or forbidden packet execution. No E4012 read. Only this own-scratch receipt created.",
+  "pins": [
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-09/evidence/E3012/measurement/measurement.json","bytes":1808041,"sha256":"fc5da1eb88c0bb572506e815e653c94ddc71ba6d66b8832d513e889477fa95b1"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-09/evidence/E3012/measurement/cli.txt","bytes":1347,"sha256":"d4f2516f3fa9ec47e873d5a5e1d757623f2b016c05d73a8ae950e6f7beec8bb8"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-09/evidence/E3012/trace.svg","bytes":45030,"sha256":"1e27713dcafcfdf72ab39731cb4038ff5ead79bc919b997d8c92fe23a7a4e949"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-10/evidence/E4009/output/trace.json","bytes":146333,"sha256":"f237792dc0753096c3ab390a6efdf901e8850dbd433be60c7b9c808588bd3e63"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-10/evidence/E4009/output/receipt.json","bytes":61558,"sha256":"86914469b0d057ccbb0ec80f05a1f69cdd1bfb948167695b0fadef8654a57c3f"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-10/evidence/E4013/evidence.svg","bytes":139838,"sha256":"94ed87e635e722c5a499aa407c4d153318ebe69e61853b8c3ae8314839ebcf79"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-10/evidence/E4013/readback.json","bytes":1199,"sha256":"b38b79c776799034b4555fb81c6f9f5c55cab6612023a7ee43e8b1540c98ca77"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-10/evidence/E4010/render-source.mjs.txt","bytes":11854,"sha256":"0b565af576467c82f4a7d0b2b9ea76e0ce9d3f4f3f9a5b6280397a03fc5ef07f"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/window-midpoint-audit/render.mjs","bytes":10875,"sha256":"cedf9b7d6d53efa8ec215854a9c599995bf5edba77844d3f8187809153b8acd6"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/window-midpoint-audit/cli.mjs","bytes":1285,"sha256":"e0f23c625f965104e0aaa1c37f847a082ab4eb4d6d805163d6858b8a00a939c7"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/heading-ablation/render.mjs","bytes":11985,"sha256":"6b1c9f5b0dba6a9d37a323b91efcf4400afb39c4cca01996f09f1d47323a10d9"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/heading-ablation/cli.mjs","bytes":2516,"sha256":"9c65f17c4a5238eae1700948162c9b6af0cc26b340448d17cafee24f67655de8"},
+    {"path":"/workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs","sha256":"d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e"}
+  ],
+  "findings": [
+    {
+      "id":"F1-complete-versus-projection",
+      "cycle09":"Complete saved measurement includes input provenance plus longContext, twelve rows[id,branch,frame,group,widthPx,rawStations,baseline,midpoint], frameComparisons and predictions. baseline retains points/descriptor/sharp; midpoint retains slots/runs/isolatedIds/completeFive/error; slots retain originPx, midpointPx,leftPx,rightPx,rawCandidate,state,reason; runs retain stationIds,points,descriptor,sharp. CLI retains only exact trace/run/params hashes and twelve row/frame/completeness/baseline-count/candidate-count summaries. SVG is a lossy display projection: scaled points and abbreviated metadata, not full raw evidence.",
+      "cycle10":"Complete saved trace includes plannedQueries, calls including tagged nativeAnswer and callback entries, sourceBinding,inputBinding,counts,prediction,renderRows,claims. receipt.json copies renderRows and prediction exactly but omits calls, input/source manifests and claims. SVG retains row descriptions exactly and source/input manifests in metadata but not calls or claims. Consumers needing complete provenance must accept trace.json rather than receipt/SVG alone."
+    },
+    {
+      "id":"F2-identity-values-agree",
+      "checks":"Readback equality only, not scientific recomputation: all twelve cycle09 CLI row lines equal their stored measurement projection; cycle10 receipt.renderRows and prediction equal trace fields exactly; all four E4013 SVG JSON row descriptions equal trace.renderRows exactly; SVG metadata traceHash equals exact E4009 trace bytes hash. No measured numeric CLI/SVG disagreement demonstrated.",
+      "verdicts":"Cycle09 stored P1/composition and P1/sourceComposition SUPPORTED are explicitly exploratory chosen-after-E809-exposure, not independent-course confirmation. Cycle10 stored prediction SUPPORTED, Dprimary=0.511630963318769, Dbright=-1.266855366519426 is distinct from claims.pathIdentity/physicalEdgeIdentity/AAAlpha/confidence=UNKNOWN and promoted=false."
+    },
+    {
+      "id":"F3-anchor-not-station-point",
+      "source":"heading-ablation/recipe.mjs renderRows lines99-104 copies plan.rawArgs.originPx into every station.originPx and headingDeg from arm phiRad. Renderer column is explicitly originPx, row caption says Stored originPx; therefore repeated origins are anchor metadata, not established incorrect center coordinates. Structural guard wording Missing retained station location/heading is imprecise, and consumers could misread this field.",
+      "contract":"Pinned pathSpace.mjs lines88,140-147,333,341: u=[cos(phi),sin(phi)], n=[-uY,uX], ts=arange(t0Px,t1Px,stepPx), sampled coordinates O+(t+d)u+o*n. bandPx and alongPx specify an area support, not a single pixel. A separately named derived station-center field would be O+t*u, but was not calculated here. Shared index/tPx across heading arms does not imply identical physical samples; rotation changes support."
+    },
+    {
+      "id":"F4-lossy-claim-qualification",
+      "evidence":"E4013 SVG metadata keys are schema,runId,imageId,paramsHash,traceHash,rowIds,stationIds,sourceBinding,inputBinding. SVG source contains neither pathIdentity nor physicalEdgeIdentity nor conditional in-sample. The receipt also omits trace.claims. Thus sampling SUPPORTED survives while explicit UNKNOWN physical-identity and conditional-exposure qualifiers are absent from these projections. This is qualification loss, not contradictory numerical output or evidence of physical identity."
+    },
+    {
+      "id":"F5-portability-without-rerun",
+      "evidence":"Cycle09 input.path discovery-cycle04/P3/E809/receipt.json is absent relative to current repo cwd. All three recorded cycle09 source absolute paths under /workspace/scratch/8528bb251845 are absent. All five cycle10 recorded inputBinding.before absolute paths under that historical root are absent. Existence checks only; no pixel/input payload opened. Embedded saved answers remain reusable without following those paths; original-byte availability and a verified path relocation map are separate custody claims. Historical missing paths do not invalidate exact current trace hashes and do not authorize replay. This is not the already repaired Lab15 ranked-inspector portability work."
+    },
+    {
+      "id":"F6-render-source-custody",
+      "evidence":"E4009 source binding pins original renderer 0b565af...; preserved E4010/render-source.mjs.txt has exactly that SHA256. E4013 current renderer has distinct 6b1c9f... matching E4013 receipt. E4013 is a documented title-wrapping display-only repair, not fresh producer evidence. Do not rewrite original sourceBinding to current renderer hash."
+    }
+  ],
+  "proposed_narrow_consumer": {
+    "status":"PROPOSAL_ONLY_NOT_EXECUTED",
+    "operation":"Read exact hash-bound E4009 complete trace using builtins only; emit an explicit anchor/parametric-station-geometry projection with original source/station IDs and exact stored contrast/verdict fields unchanged, and carry claims plus rotation-changes-support qualifier. If admitted, separately label any O+t*u calculation as derived geometric center, never measured edge/path identity.",
+    "falsifier":"A consumer that treats repeated station.originPx as sixteen observed station centers, claims same support from same index across heading arms, drops UNKNOWN physical claims, or silently accepts projection-only input fails. Keep exact existing row/64station identities and all stored measurement/verdict fields; zero producer imports and zero score/validity recomputation.",
+    "hold":"Physical path/edge identity, independent courses, calibrated widths, confidence, alpha and CV admission remain HOLD. Geometry/qualification-only consumer is potentially ready subject to root nonduplication and scoped admission; no implementation or render authorized by this receipt."
+  }
+}

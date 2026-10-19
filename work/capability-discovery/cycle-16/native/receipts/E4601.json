@@ -1,0 +1,100 @@
+{
+  "schema": "lab16-source-gap-receipt@1",
+  "job_id": "E4601",
+  "worker": "S1",
+  "outcome": "confirmed_reuse",
+  "summary": "Existing describePath already computes offset from supplied edge-pair midpoints. E3012 retains origin/left/right coordinates, but window-midpoint describe() supplies only points/frame/width and therefore leaves centerline UNKNOWN. The smallest useful next candidate is composition of this existing operation on saved slots, not a new algorithm. Root admission and S3 independent confirmation remain required; physical path/edge identity stays HOLD. The heading renderer is not numerically wrong: originPx is explicitly common anchor metadata, and full sample support is O+(t+d)u+o*n.",
+  "source": {
+    "repository": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab",
+    "local_commit": "f101061bd7547f0c350bc8c0f8ce126215047990",
+    "canonical_commit": "c0f1205d3e3f66fc1a89fed5e4c3447e7f9045b2",
+    "tree": "403b74db31d121a559609ae6a2a3189fdf8de188",
+    "tracked_count": 4305,
+    "baseline_index_metadata": {
+      "command": "git ls-files --stage -z",
+      "bytes": 534114,
+      "sha256": "d743d3ed56b9fedf74353462abda0c6b9510bcb842552a5e136d589d7b4dc2d6"
+    },
+    "baseline_status": {
+      "command": "git status --porcelain=v1 -z",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "scope": "Read-only source and JSON-schema/metadata inspection only. No repository copy, source edit, commit, producer invocation, geometry execution, pixels, decode, CV, install or network."
+  },
+  "pins": [
+    {"path":"work/capability-discovery/cycle-09/evidence/E3012/measurement/measurement.json","bytes":1808041,"sha256":"fc5da1eb88c0bb572506e815e653c94ddc71ba6d66b8832d513e889477fa95b1","source_id":"E3012; window-midpoint-audit@1"},
+    {"path":"work/capability-discovery/cycle-10/evidence/E4009/output/trace.json","bytes":146333,"sha256":"f237792dc0753096c3ab390a6efdf901e8850dbd433be60c7b9c808588bd3e63","source_id":"E4009; heading-ablation-trace@1"},
+    {"path":"work/capability-discovery/cycle-10/evidence/E4009/output/receipt.json","bytes":61558,"sha256":"86914469b0d057ccbb0ec80f05a1f69cdd1bfb948167695b0fadef8654a57c3f","source_id":"E4009; heading-ablation-cli@1"},
+    {"path":"experiments/capability-discovery/probes/path-geometry/native-analysis.json","bytes":30261,"sha256":"b724e719380000fc53fc8102c89d698e7a70ae1b435bd96b16961f9cf33b7eef","source_id":"native-trace-geometry-analysis@1; baseline native bf0ca6a66866c53fe9ad58b55a231e4beb483b66189a5a7ffc46701031cb8ac1"},
+    {"path":"experiments/capability-discovery/heading-ablation/recipe.mjs","bytes":14900,"sha256":"97cc2bc1d30dd9039104df2c488fae491d93a21522aa3babbd7e5636b9710f2e","source_id":"planHeadingQueries lines70-73; renderRows lines99-105"},
+    {"path":"experiments/capability-discovery/heading-ablation/render.mjs","bytes":11985,"sha256":"6b1c9f5b0dba6a9d37a323b91efcf4400afb39c4cca01996f09f1d47323a10d9","source_id":"checkTrace; panel; renderer prints stored origins verbatim"},
+    {"path":"experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs","bytes":27838,"sha256":"d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e","source_id":"unit line88; stationContrastAt lines141-157; registered stationContrast line341"},
+    {"path":"experiments/capability-discovery/probes/path-geometry/path-geometry.mjs","bytes":7045,"sha256":"ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34","source_id":"describePath consumes supplied named-frame points; no inference"},
+    {"path":"experiments/capability-discovery/window-midpoint-audit/recipe.mjs","bytes":9614,"sha256":"29fc7753ee32d2c6dd7014952a804441c83900d1c27d26a6b43ff3f7d7bdbf15","source_id":"candidateSlot projects fitted lateral cPx; fixed external E809 input; not heading station-arm projector"},
+    {"path":"experiments/capability-discovery/probes/path-geometry/analyze-native.mjs","bytes":2385,"sha256":"6a1c84bf7693b8d5136ce55bf927166746ef541ce314b6180eed8d32999af3cb","source_id":"accepts only s7-width-bank-probe@1 native traced points"}
+  ],
+  "observed_metadata": {
+    "frame": "Lenard-5.original-source-pixel-centers",
+    "image_id": "Lenard-5",
+    "rows": ["primary/baseline","primary/candidate","bright-nonpath/baseline","bright-nonpath/candidate"],
+    "stations_per_row": 16,
+    "station_t_domain": "-8 through 7, step1; t1=8 exclusive",
+    "primary_anchor": [779.8786992392037,905.4177563481778],
+    "primary_phi_baseline": -0.20539538918976738,
+    "primary_phi_candidate": -0.26554589467489287,
+    "bright_anchor": [781.3283120117229,746.37589765627],
+    "bright_phi_baseline": -0.20539538918976738,
+    "bright_phi_candidate": -0.4545519493150654,
+    "station_field_keys": ["id","index","tPx","originPx","headingDeg","leftLum","rightLum","minLum","okLeft","okRight","badFlags","deltaFromBaseline"],
+    "actual_projected_station_field": "absent in inspected saved renderRows; rawArgs suffice for deterministic reconstruction"
+  },
+  "existing_operation_seam": {
+    "reuse": "E4009 trace plannedQueries/calls/renderRows identities and rawArgs, exact trace/receipt binding; pathSpace source formula only, without importing or calling provider",
+    "formula": "u=[cos(phiRad),sin(phiRad)], n=[-u.y,u.x]; nominal station anchor O+t*u; actual configured contrast sample O+(t+d)*u+o*n",
+    "footprint": "d=-alongPx..alongPx step1; inside/outside o=sgn*(widthPx/2 minus/plus b), b=bandPx[0]..bandPx[1] step0.5; bilinear/clamp/mask effects are not reconstructed from pixels",
+    "minimal_gap": "A pure saved-heading station-arm projection and consistency admission operation. Do not change renderer origin semantics or producer/default wiring. No need to recalculate contrasts, means, predictions or path ranking."
+  },
+  "archived_failure": {
+    "executed_red": false,
+    "status": "No archived failing projected-coordinate assertion found in this bounded source pass. Existing geometry analyzer rejects non-s7 schema by source inspection, not by a new execution. Existing cycle09 full-five geometry and cycle10 conditional prediction are archived observations, not this proposed operation's test results."
+  },
+  "proposal": {
+    "status": "RETIRED_AS_PRIMARY_AFTER_S6_SOURCE_CRITIQUE_NO_EXECUTION",
+    "smallest_runnable_falsifier": "One saved-trace-only call, after freeze/admission, checks exact E4009 trace bytes/receipt traceHash, schema/frame/row/call/plan association and all64 station IDs; projects O+t*u for every station without provider import; compares paired arms. Retain input hashes and unmodified stored predictions.",
+    "expected": "At t=0 paired arms have the same projected anchor; at every nonzero retained t their projected station anchors differ because each group's phi differs. There are16 ordered points per arm with adjacent separation1px in the declared frame. This documents changed sampling coordinates, not better physical geometry.",
+    "falsifier": "Any valid saved row lacks the declared16-point t domain, fails source/frame/call/row/receipt association, has nonfinite projection, or paired arms coincide away from t=0 under a declared tolerance1e-9; report REFUSED/UNKNOWN or retain counterexample, never repair source evidence silently.",
+    "controls": [
+      "Analytic same-origin/same-heading control must produce zero paired displacement; synthetic mechanism check only, not independent physical evidence.",
+      "t=0 anchor control must remain identical under heading change; keep all nonzero t points rather than select favorable samples.",
+      "Frame mismatch, missing station, changed t/phi/anchor association and byte/hash mismatch must refuse before arithmetic.",
+      "Configured d/o support footprint is distinct from nominal station anchor; no statement that contrast arrays sample the same physical points."
+    ],
+    "guard": "Saved exposed Lenard-5 only. Bright-nonpath is an in-image exposed contrast, not independent held-out course. No matching to cycle09 Lenard-1 or native-analysis IMG_5641 frames. No paired physical edges/annotations or independently fixed heading arms exist here; path identity, physical continuity/bends, causal width and44-query admission remain HOLD. Never present projected anchors as observed path vertices."
+  },
+  "revised_primary_candidate": {
+    "status": "HOLD_PENDING_ROOT_ADMISSION_AND_S3_CONFIRMATION",
+    "source_seam": "window-midpoint-audit/recipe.mjs describe() lines23-29 supplies width but no pairedEdges; candidateSlot retains originPx/midpointPx/leftPx/rightPx. path-geometry.mjs lines67-83 already accepts pairedEdges.values, one pair or null per supplied vertex, and computes midpoint offset/distance/full-width normalization.",
+    "minimal_operation": "Consume exact saved E3012 rows and slots. Call existing describePath on original slot origins in the same named frame with pairedEdges.values mapped to {left:leftPx,right:rightPx} only for OBSERVED finite valid slots, otherwise null; provenance explicitly fitted observations/association caller testimony. No source modification is intrinsically needed to demonstrate this composition.",
+    "fixed_contrast": "Report all12 row cases, all5 stations, both widths42/50 and all proposed-ribbon/lateral-plus6/bright-organic groups in both dependent frames; fixed hypothesis is origin-relative fitted-pair offset versus saved fitted midpoint-relative offset, not a width winner or route ranking.",
+    "expected": "For each admitted observed pair, existing describePath reports origin minus supplied-pair midpoint. For saved midpoint points, that offset should be near zero within an explicitly frozen1e-9 tolerance. Crop/source translation preserves offset vectors/distances; unavailable slots remain UNKNOWN/null and cannot be filled or joined across gaps.",
+    "falsifier": "Retain any observed saved midpoint whose paired-edge midpoint differs beyond1e-9, any frame-mapped offset discrepancy beyond1e-9, any degenerate edge pair, or any unexpected missing/duplicate station. Do not alter fit values, drop counterexamples or imply crop/source observations are independent.",
+    "negative_controls": ["Absent pairedEdges must preserve existing UNKNOWN result.","A declared null pair must remain an unknown sample, not zero offset.","Mismatched frame/slot association must refuse admission rather than combine cases."],
+    "physical_guard": "Fitted edge association and orientation remain caller testimony; this is exposed-data mathematical offset, not physical edge identity, path acceptance, calibrated width, continuity or a causal effect. Independent frame-bound controls and heading arms remain missing.",
+    "observed_failure": "No runtime RED claimed. Archived baseline centerline absence follows directly from recipe omitting pairedEdges; readiness is a source-backed composition proposal only."
+  },
+  "missing_evidence": [
+    "Independent frame-bound physical path/edge annotation and controls.",
+    "Exposure-aware independent heading-arm protocol; existing rotation changes sampled support.",
+    "Fresh archived RED for the proposed consumer; no execution authorized in E4601.",
+    "Independent reviewer confirmation that this projection is nonduplicating and useful before owner implementation."
+  ],
+  "disclosures": [
+    "Read README then REVIEW, cycle15 CURRENT/manifest, cycle09/10 CURRENT and midpoint/path-geometry/station recipes.",
+    "Did not reopen E4012 or any supposed metadata containing RGBA. Known authorized trace/measurement files parsed for metadata only; no raster values or native-answer decoding.",
+    "Did not run consumed E2021/planner/token/R2021/old160grid/Lab10fourcalls, ranker/inspector toys or any producer.",
+    "One broad metadata print included more stored prediction/measurement JSON than needed and was truncated by tool output; these are saved numerical observation fields, not pixel arrays. No derived score/geometry was executed.",
+    "One metadata-only node projection command had a syntax error and did not parse its input; this is not a product test or RED. No retry was needed to establish the source seam.",
+    "No subagents, HH edits, source/default/backend changes or Git writes. Receipt is the only created artifact in S1-owned scratch."
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "schema": "lab16-independent-review-receipt@1",
+  "job_id": "R4607",
+  "worker": "S3",
+  "decision": "accepted",
+  "summary": "Accept frozen E4607 protocol together with the separately recorded root-requested minimality amendment. Exact source/input pins match; saved schema confirms all12 rows/all60 slots/42 observed/18 unknown and the frozen null/association pattern. Existing pairedEdges operation supports the software cross-contract falsifier; no existing adapter audit already compares these descriptor outputs to saved scalar offsets. No scientific or consumer-defect inference is admitted, and no geometry/tests were run for this review.",
+  "protocol": {
+    "path": "/workspace/scratch/afc0d51965a8/lab16/S1/E4607/protocol.md",
+    "sha256": "6da57b85ba0f9142eab150d67f275ce993214494bd2ec791fc919026c4ad0cbe",
+    "original_unchanged": true
+  },
+  "amendment": {
+    "path": "/workspace/scratch/afc0d51965a8/lab16/S3/R4607/protocol-amendment.md",
+    "sha256": "2617e445f4371a7eb1a74f39d51bbf3c534dc3f281457824752804e2dc69d39f",
+    "authority": "Root PM explicit pre-execution minimality decision accepted by S3",
+    "effect": "Do not duplicate unchanged1.8MB original payload in result.evidence. Keep a disclosed complete audit-field projection plus authoritative original path/bytes/hash/source-base and raw-context JSON pointers; originalinputhash must be verified before/after. No oracle, tolerance, roster or scientific-boundary change."
+  },
+  "sourceIDs_verified": [
+    {"path":"work/capability-discovery/cycle-09/evidence/E3012/measurement/measurement.json","bytes":1808041,"sha256":"fc5da1eb88c0bb572506e815e653c94ddc71ba6d66b8832d513e889477fa95b1","git_tracked":true},
+    {"path":"experiments/capability-discovery/probes/path-geometry/path-geometry.mjs","bytes":7045,"sha256":"ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34"},
+    {"path":"experiments/capability-discovery/window-midpoint-audit/recipe.mjs","bytes":9614,"sha256":"29fc7753ee32d2c6dd7014952a804441c83900d1c27d26a6b43ff3f7d7bdbf15"},
+    {"path":"experiments/capability-discovery/probes/path-geometry/path-geometry.test.mjs","sha256":"8c8be29b7d581346aa9ad88be30dfe3a455fcfeb89782895caa75ed6ed685fc6"},
+    {"path":"experiments/capability-discovery/window-midpoint-audit/meaningful.test.mjs","sha256":"4228ecc847d9f89df9d30c7d634546468a17e56af1f77249b273374f340c482a"}
+  ],
+  "source_base_verified": {"HEAD":"f101061bd7547f0c350bc8c0f8ce126215047990","tree":"403b74db31d121a559609ae6a2a3189fdf8de188"},
+  "review_checks": {
+    "input_identity": "window-midpoint-audit@1; E3012; paramsHash13ab86a4f1631c0fb498e0e183c634275aa78ef3eaa3253f7195ff12bc3ba268 matched saved metadata.",
+    "roster": "Exactly12 frozen rows, five ordered slots per row;42 OBSERVED and18 UNKNOWN. Every row's slot/rawStation station/frame association matches and a unique rawStations candidate at row.widthPx exactly matches slot.rawCandidate.",
+    "null_missing": "All18 UNKNOWN saved slots have literal null midpoint/left/right geometry. Per branch lateral42 missing1; lateral50 missing1,2,4,5; bright50 missing1,2,3,4. Isolation, reasons and failures retained; no zero/imputation/gap bridging.",
+    "operation_contract": "One describePath call per row using all five saved origins and aligned observed edge pairs/nulls. Existing code returns centerline.samples, observedPairs, midpoint, fitted fullWidthPx, Euclidean distance and fitted-width ratio. No new geometry equations, width/support inputs, countTurns or producer execution required.",
+    "call_accounting": "Exactly12 attempted actual calls after successful admission, once each. Per-row error retained and remaining rows attempted once; no retry. Pre-admission refusal has zero geometry calls. Counters/descriptors/errors are not substituted by fixtures.",
+    "normalization": "Nonnegative returned distanceInFullWidths compares against abs(saved pixel offset)/saved fitted edgeFit.wPx. Signed saved nominal-width42/50 ratio is retained separately and never treated as the fitted denominator.",
+    "frames": "Named crop/source frames and [400,1010] relation retained. Cross-branch comparisons are dependent representation/custody checks, not a second course or physical validation.",
+    "nonduplication": "Existing window recipe never passes pairedEdges to describePath. Existing adapter tests check midpoint projection and missing-run behavior, not descriptor-to-saved-scalar consistency. Existing compareFrames checks translated representations but not this pair/scalar seam. Saved offset observable itself is already present and is not new.",
+    "falsifier": "Any above1e-9 residual, frame/association/roster/state/count discrepancy, malformed required data or unexpected operation error is retained as inconsistency/error/refusal. Complete one-pass evidence is retained before STOP; no repair, tolerance change or rerun. This can reject coordinate/scalar association coherence without claiming physical truth.",
+    "custody": "Exact original tracked bytes authoritative; before/after input/dependency/new-source hashes, fixed commands, fresh exclusive outputs and same captured result for reporting retained. Amendment removes redundant payload copy only; complete audit fields and raw-context pointers remain mandatory.",
+    "firstgreen": "Expected FIRSTGREEN is honest: neither missing module nor protocol proposal is RED. No observed current consumer failure is claimed. Narrow adapter fixtures do not call the actual saved audit and are not physical evidence.",
+    "review_execution": "One author actual pass is sufficient absent a fresh failure; reviewer does not duplicate geometry. Actual implementation must still present written flow and stop at checkpoint before any test/geometry execution.",
+    "blindness_and_hold": "Symmetric left/right swap is undetectable by midpoint/width/absolute-offset comparisons. Inputs share the same fit, labels are exposed and widths uncalibrated. Path/edge identity, fit correctness, support, AA, continuity, ownership, confidence, causality and generalization remain UNKNOWN/HOLD."
+  },
+  "blocking_findings": [],
+  "scope_of_acceptance": "Protocol plus identified amendment only, not implementation acceptance, run authorization, a passing actual audit or physical evidence. Root admission and written-flow checkpoint remain required.",
+  "actions": {"metadata_and_source_read_only":true,"geometry_calls":0,"test_runs":0,"pixel_reads":0,"source_edits":0,"git_writes":0,"implemented_suggestions":false}
+}

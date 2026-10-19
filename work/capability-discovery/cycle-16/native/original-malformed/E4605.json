@@ -1,0 +1,96 @@
+{
+  "schema": "lab16-source-nonduplication-audit@1",
+  "job_id": "E4605",
+  "worker": "S5",
+  "native_epoch": 0,
+  "validoutcome": "confirmed_reuse",
+  "summary": "Source-only inspection confirms existing Lab operations cover saved-path length/turn/support and supplied paired-edge midpoint geometry, station-query primitives, and fixed midpoint projection with gaps. Do not create another geometry, midpoint, station detector, simplifier, tracer or testimony judge. The safe prospective seam is provenance/admission and exact saved-observation composition into existing operations; physical identity remains UNKNOWN without independently admitted controls.",
+  "scope": {
+    "repo_read_only": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab",
+    "writes_only": "/workspace/scratch/afc0d51965a8/lab16/S5/E4605",
+    "connected_github_get_only": true,
+    "no_algorithms_pixels_decode_cv_producers_tests_execution": true,
+    "no_E4012_RGBAmetadata_opened": true,
+    "no_source_HH_git_ref_worktree_mutation": true,
+    "no_checkout_fetch_or_adoption": true,
+    "no_subagents": true
+  },
+  "source_refs": {
+    "repository": "samuelpmahan/chainspot-toolkit",
+    "main": "37a2dba87d61262f661af70f1a22440736e61efc",
+    "alg": "e3e11fab5de1e4562487472585259435694d88bc",
+    "claude": "87a5f41dcc2bb45176e1ff14ab915240f0c4d4e0",
+    "method": "Connected GitHub GET recursive source trees at all three exact refs, followed by fetch_file at exact alg/Claude SHAs. No broad commit-history mining. Source presence is not evidence of successful execution or physical validity."
+  },
+  "source_evidence": [
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/ribbon.ts",
+      "refs": ["37a2dba87d61262f661af70f1a22440736e61efc", "e3e11fab5de1e4562487472585259435694d88bc", "87a5f41dcc2bb45176e1ff14ab915240f0c4d4e0"],
+      "git_blob_all_three": "f74fda826701b534c131ffd6fa2b7e1a152a4a67",
+      "local_catalog_sha256": "b2bac13005c815cbbd0b854dc2ed16db4d6dcea6ceed3cbea4c70cd2745045bb",
+      "content_evidence": "computeRibbonSupport loops orientations and width bank, combines bilateral RGB gradient agreement; buildSupportCost computes 1 + costMultiplier * (1-support)^2. Actual alg-ref source read; all-three tree blob equality verified. Already cataloged locally; no new implementation needed."
+    },
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/routing.ts",
+      "git_blob_all_three": "9579d63a7ffc209d604251ae2b7f78ba0dd9f13b",
+      "local_catalog_sha256": "718c025e8db224198c553b09c1657d4494731bec90654487345a613268c0d1e1",
+      "content_evidence": "routeBadgeLegs floods an eight-neighbor support-cost field with seed clamp and bucketed queue, then reconstructs endpoint paths from previous cells. It is a producer, not saved-trace posthoc geometry. Actual alg-ref source read; all-three tree blob equality verified."
+    },
+    {
+      "ref": "87a5f41dcc2bb45176e1ff14ab915240f0c4d4e0",
+      "path": "ports/s6straight/pathSpace.mjs",
+      "git_blob": "fab3452d373f1b5fc8192240a7ee1cefd1a88486",
+      "content_evidence": "profileAt averages unmasked bilinear luminance; edgePairOf returns cPx:(l+r)/2 and wPx:r-l at line138; PATH_QUERIES lines352-358 registers profile, edgePair, stationContrast, width, overlayFraction, samples and loss. Local station-evidence recipe already targets profile/edgePair/stationContrast/loss behind exact source hashes. Local pinned pathSpace blob is 38963d20f7a8b7c7851b3a2abea2e472da8f7716, NOT byte-identical to the fresh Claude blob: this is operation overlap, not a claim of same-source equivalence. Do not rerun these queries under this audit."
+    },
+    {
+      "ref": "87a5f41dcc2bb45176e1ff14ab915240f0c4d4e0",
+      "path": "ports/s7trace/traceSpace.mjs",
+      "git_blob": "d022441835377bf05c92cea85aa417c76e3915f5",
+      "content_evidence": "simplify lines101-106 recursively retains maximal point-to-segment deviation over eps. pinnedSolve lines114-127 selects basket-reaching else longest trace, prepends tee, simplifies at W/4, associates nearest basket within W/2, snaps endpoint and rounds vertices. This is NOT lossless custody and must not be silently substituted for Lab raw-vertex metrics."
+    },
+    {
+      "ref": "87a5f41dcc2bb45176e1ff14ab915240f0c4d4e0",
+      "path": "ports/s7trace/hallway.mjs",
+      "git_blob": "f9370121784a74aecb3a6097aff352e272398b58",
+      "content_evidence": "Imports profileAt/edgePairOf/stationContrastAt from pathSpace line20; wrappers lines50-57 reuse those primitives. fitFree line158 scans headings; runEnd line172 follows contrast; findBend line216 searches next-run support; trace line254 produces paths. These active producer capabilities are reference-only and out of scope for replay/adoption."
+    },
+    {
+      "ref": "87a5f41dcc2bb45176e1ff14ab915240f0c4d4e0",
+      "path": "ports/s7trace/judgeBends.mjs",
+      "git_blob": "ff023ae5a1dfd4a7331d2067e7ff5aa9a714c081",
+      "content_evidence": "matchBends lines18-24 greedily matches closest one-to-one bend pairs within radius; judgeHoleTraces lines31-54 requires reached status and compares end/corridor testimony. Missing bend testimony is unjudged. This is testimony agreement, not supplied bilateral-edge midpoint offset or human acceptance."
+    },
+    {
+      "repository": "samuelpmahan/ChainSpot",
+      "ref": "ef2a4fc2dc4720d3647f705464342f119d5a39a5",
+      "path": "src/lib/nuthing/fourLaneRibbon.ts",
+      "git_blob": "91cfc2b620e11817410d4ce98525d2e4971cc06d",
+      "local_catalog_sha256": "3a001f8607cec33f235463ce6ee40242317c9077eba5dc97824b73fb59b3a689",
+      "content_evidence": "Actual historical source read: observeFourLaneCrossSection combines visible rail/interior evidence; trackFourLaneRibbon uses deterministic frozen-pose opaque-badge transit then heading-offset lookahead with min visible scores; estimateFourLaneCorridorWidth samples fractions [.2,.35,.5,.65,.78] of Tee->Badge segments. Existing catalog source contains these operations. No execution claim inferred from source."
+    }
+  ],
+  "existing_lab_operations": [
+    {
+      "path": "experiments/capability-discovery/probes/path-geometry/path-geometry.mjs",
+      "sha256": "ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34",
+      "operations": "describePath validates raw vertices, returns per-segment length/tangent, signed vertex turns, optional full-width normalization, support sample fractions and supplied paired-edge midpoint offsets. countTurns requires explicit caller definition/predicate. No smoothing, automatic bend segmentation, association or ranking. Missing paired edges => UNKNOWN."
+    },
+    {
+      "path": "experiments/capability-discovery/window-midpoint-audit/recipe.mjs",
+      "sha256": "29fc7753ee32d2c6dd7014952a804441c83900d1c27d26a6b43ff3f7d7bdbf15",
+      "operations": "candidateSlot projects existing cPx/lPx/rPx through origin + lateral * [-sin heading,cos heading]; finite positive two-edge evidence required. buildRows retains raw candidates, contiguous runs, gaps and isolated stations, then invokes describePath/countTurns. Full-five P1 only, existing exposed-data cutoff pi/4, source/crop residuals retained. Reimplementing midpoint geometry or counting bends is duplicate."
+    },
+    {
+      "path": "experiments/capability-discovery/station-evidence/recipe.mjs",
+      "sha256": "ef7248daf5c83fd014c4a5004aa511e41399492a46be0460fe566ab421383ad3",
+      "operations": "makePlan enumerates existing fn.q.path.profile, edgePair, stationContrast and loss; SOURCE_MODULES pins local pathSpace SHA d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e. Existing fixed synthetic protocol is not new independent real-course evidence."
+    }
+  ],
+  "overlap_guard": {
+    "duplicate_work_to_reject": ["new path length/turn or width-normalization implementation", "new midpoint projection or bilateral-edge offset implementation", "new station profile/edgePair/contrast/loss algorithm", "new simplifier or bend matcher framed as missing geometry", "new ribbon/tracer/CV replay or other-branch adoption"],
+    "exact_safe_seam": "At an independently admitted saved-receipt boundary: preserve exact input bytes/digest, named frame, source SHA, raw outcome/reason, vertex sequence, support association and any actual paired-edge provenance; call existing describePath only on unmodified eligible saved vertices and already-supplied observations. Existing fixed midpoint recipe remains fixed, not generalized silently. If a bounded adapter is truly absent, it may only validate/select/copy those fields, preserve null/gaps and expose both original native and posthoc values; no new geometric math, route inference, winner selection, snapping, smoothing or recalibration.",
+    "eligibility_caveat": "This audit finds reusable code, not an admitted physical experiment. Independent controls, frame/heading arms and exposure-aware protocol remain prerequisites. No supplied paired edges => centerline UNKNOWN. Dependent source/crop branches and synthetic protocols do not become independent courses. Longest walk, basket proximity, support or testimony agreement do not establish ownership or accepted centerline.",
+    "reference_only": "Claude and historical code are operation-level overlap evidence only. No code or claims adopted, no merge, no authority transfer."
+  },
+  "limitations": ["Bounded source inspection, not complete branch-wide nonduplication proof.", "No producer, CV, test, geometry measurement or render was executed.", "Source implementations and captured existing source hashes do not certify runtime behavior or physical validity.", "A read-only rg command named three nonexistent directories and returned errors; no inference relied on those absent paths."]
+}
