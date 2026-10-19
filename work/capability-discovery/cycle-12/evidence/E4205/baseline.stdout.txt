@@ -1,0 +1,31 @@
+{"locality":{"computations":[6,6,0],"queries":[6,6,0]}}
+✖ changing one upload recomputes only that query leaf; restore is warm (11.886764ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 138.899644
+
+✖ failing tests:
+
+test at ../../afc0d51965a8/lab12/S1/E4205/baseline.test.mjs:40:1
+✖ changing one upload recomputes only that query leaf; restore is warm (11.886764ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  6 !== 1
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/afc0d51965a8/lab12/S1/E4205/baseline.test.mjs:51:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 6,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,39 @@
+import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const here = dirname(fileURLToPath(import.meta.url));
+const repo = '/workspace/scratch/8528bb251845/chainspot-discovery-lab';
+const sha = bytes => createHash('sha256').update(bytes).digest('hex');
+const roots = ['experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs',
+  'experiments/capability-discovery/enumerable-board/board.mjs'];
+const seen = new Set();
+function sourcePins(relative) {
+  if (seen.has(relative)) return [];
+  seen.add(relative);
+  const bytes = readFileSync(resolve(repo, relative));
+  const rows = [{ path: relative, bytes: bytes.length, sha256: sha(bytes) }];
+  const imports = [...bytes.toString().matchAll(/(?:from\s*|import\s*)['"]([^'"]+\.mjs)['"]/g)].map(m => m[1]);
+  for (const spec of imports) if (spec.startsWith('.')) rows.push(...sourcePins(resolve(repo, dirname(relative), spec).slice(repo.length + 1)));
+  return rows;
+}
+const pins = roots.flatMap(sourcePins);
+writeFileSync(resolve(here, 'pins.json'), JSON.stringify({ source_commit: '620e0d51efd3c93af4cf5ef0d4768b1cefa4c265',
+  source_tree: '20f6c92a1702d8e17e5ec8f4509334d294e420e7', importedLocalSourceClosure: pins,
+  inputs: ['prediction.json', 'probe.mjs', 'capture.mjs'].map(path => { const bytes = readFileSync(resolve(here, path)); return { path, bytes: bytes.length, sha256: sha(bytes) }; }) }, null, 2) + '\n');
+const command = [process.execPath, resolve(here, 'probe.mjs')];
+const startedAt = new Date().toISOString();
+const started = performance.now();
+const run = spawnSync(command[0], command.slice(1), { cwd: here, encoding: 'utf8', timeout: 20000, maxBuffer: 5 * 1024 * 1024 });
+const finishedAt = new Date().toISOString();
+writeFileSync(resolve(here, 'stdout.json'), run.stdout ?? '');
+writeFileSync(resolve(here, 'stderr.txt'), run.stderr ?? '');
+const execution = { command, cwd: here, node: process.version, startedAt, finishedAt, elapsedMs: performance.now() - started,
+  timeoutMs: 20000, maxBufferBytes: 5 * 1024 * 1024, exitCode: run.status, signal: run.signal,
+  error: run.error ? { name: run.error.name, message: run.error.message, code: run.error.code } : null,
+  stdoutBytes: Buffer.byteLength(run.stdout ?? ''), stdoutSha256: sha(run.stdout ?? ''), stderrBytes: Buffer.byteLength(run.stderr ?? ''), stderrSha256: sha(run.stderr ?? '') };
+writeFileSync(resolve(here, 'execution.json'), JSON.stringify(execution, null, 2) + '\n');
+console.log(JSON.stringify(execution, null, 2));
+process.exitCode = run.status === 0 && !run.error ? 0 : 1;

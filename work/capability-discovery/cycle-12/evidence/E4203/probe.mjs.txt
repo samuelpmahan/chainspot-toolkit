@@ -1,0 +1,110 @@
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { createPartStore, registerQueries } from '/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs';
+import { enumerableBoard } from '/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/enumerable-board/board.mjs';
+
+const prediction = JSON.parse(readFileSync(new URL('./prediction.json', import.meta.url)));
+const addresses = Object.freeze(Array.from({ length: 6 }, (_, i) => `px.synthetic.upload.${i}`));
+const outputs = Object.freeze(addresses.map((_, i) => `tk.synthetic.sum.${i}`));
+const producerNames = Object.freeze(addresses.map((_, i) => `fn.synthetic.sum.${i}`));
+const queryName = 'fn.q.synthetic.byteSum';
+const aggregateName = 'fn.synthetic.aggregate';
+const aggregateOutput = 'tk.synthetic.aggregate';
+const controlName = 'fn.synthetic.declaredControl';
+const controlOutput = 'tk.synthetic.declaredControl';
+const sha = value => createHash('sha256').update(value).digest('hex');
+const byteSum = value => [...value].reduce((a, b) => a + b, 0);
+let nextArrayId = 0;
+const arrayIds = new WeakMap();
+
+function snapshot(phase) {
+  // These are newly allocated roots, never changed after construction or exposed as outputs.
+  const values = addresses.map((_, i) => new Uint8Array([10 + i, 20 + i + (phase === 'changed' && i === 2 ? 1 : 0), 30 + i, 40 + i]));
+  for (const value of values) arrayIds.set(value, nextArrayId++);
+  return new Map(addresses.map((a, i) => [a, values[i]]));
+}
+
+function runSnapshot(shape, phase, cache) {
+  const pxc = snapshot(phase);
+  const initialPins = [...pxc].map(([address, v]) => ({ address, bytes: [...v], sha256: sha(v), class: v.constructor.name, length: v.length,
+    byteOffset: v.byteOffset, byteLength: v.byteLength, bufferByteLength: v.buffer.byteLength, arrayIdentity: arrayIds.get(v) }));
+  const loader = Object.freeze({ addresses: Object.freeze([...pxc.keys()]),
+    has(a) { assert.equal(this, loader); return pxc.has(a); },
+    get(a) { assert.equal(this, loader); return pxc.get(a); } });
+  const base = shape === 'loader-enumerable' ? enumerableBoard(loader) : pxc;
+  assert.deepEqual([...base.keys()], addresses);
+  for (const address of addresses) assert.equal(base.get(address), pxc.get(address));
+  const store = createPartStore({ base, cache, name: `${shape}/${phase}` });
+  registerQueries(store, { [queryName]: ({ bytes }) => ({ value: byteSum(bytes), unit: 'synthetic byte sum' }) });
+  addresses.forEach((root, i) => {
+    const out = outputs[i];
+    store.register(producerNames[i], { inParts: [root], outParts: [out], calls: [queryName],
+      // Every registered producer has the exact same calculate source; only closure addresses differ.
+      calculate: io => ({ [out]: io.call(queryName, { bytes: root }).value }) });
+  });
+  store.register(aggregateName, { inParts: [...outputs], outParts: [aggregateOutput],
+    calculate: io => ({ [aggregateOutput]: outputs.reduce((sum, a) => sum + io.in(a), 0) }) });
+  store.register(controlName, { inParts: [addresses[5]], outParts: [controlOutput],
+    calculate: io => ({ [controlOutput]: byteSum(io.in(addresses[5])) }) });
+  const values = outputs.map(a => store.get(a));
+  const aggregate = store.get(aggregateOutput);
+  const control = store.get(controlOutput);
+  const calls = store.calls().sort((a, b) => a.seq - b.seq);
+  const byName = name => calls.filter(e => e.calculation === name);
+  const producers = producerNames.map(name => { assert.equal(byName(name).length, 1); return byName(name)[0]; });
+  const aggregateCall = byName(aggregateName)[0], controlCall = byName(controlName)[0];
+  const allowedCalls = new Set([...producerNames, queryName, aggregateName, controlName]);
+  assert.ok(calls.every(e => allowedCalls.has(e.calculation) && e.status === 'ok'));
+  assert.deepEqual(values, phase === 'changed' ? prediction.changed_values : prediction.baseline_values);
+  assert.equal(aggregate, phase === 'changed' ? 661 : 660);
+  assert.equal(control, 120);
+  for (const pin of initialPins) {
+    assert.deepEqual([...pxc.get(pin.address)], pin.bytes);
+    assert.equal(sha(pxc.get(pin.address)), pin.sha256);
+  }
+  return { phase, cacheSizeAfter: cache.size, pins: initialPins.map(p => ({ ...p, rootContentKey: store.keyOf(p.address) })),
+    values, aggregate, control, producers, aggregateCall, controlCall, syntheticQueryCalls: byName(queryName).length,
+    calls, keyspace: store.keyspace(), manifest: store.manifest() };
+}
+
+function runArm(shape) {
+  const cache = new Map();
+  const phases = ['baseline', 'changed', 'restored'].map(phase => runSnapshot(shape, phase, cache));
+  const [first, changed, restored] = phases;
+  const changedRoots = changed.pins.filter((p, i) => p.rootContentKey !== first.pins[i].rootContentKey).map(p => p.address);
+  const changedCallers = changed.producers.filter((p, i) => p.key !== first.producers[i].key).map(p => p.calculation);
+  assert.deepEqual(changedRoots, [addresses[2]]);
+  assert.deepEqual(changedCallers, producerNames);
+  assert.ok(first.producers.every(p => !p.cached));
+  assert.ok(changed.producers.every(p => !p.cached));
+  assert.ok(restored.producers.every((p, i) => p.cached && p.key === first.producers[i].key));
+  assert.equal(first.syntheticQueryCalls, 6);
+  assert.equal(changed.syntheticQueryCalls, 6);
+  assert.equal(restored.syntheticQueryCalls, 0);
+  assert.equal(first.controlCall.cached, false);
+  assert.equal(changed.controlCall.cached, true);
+  assert.equal(restored.controlCall.cached, true);
+  assert.equal(first.controlCall.key, changed.controlCall.key);
+  assert.equal(first.controlCall.key, restored.controlCall.key);
+  assert.equal(first.aggregateCall.cached, false);
+  assert.equal(changed.aggregateCall.cached, false);
+  assert.equal(restored.aggregateCall.cached, true);
+  assert.equal(first.aggregateCall.key, restored.aggregateCall.key);
+  const ids = phases.flatMap(p => p.pins.map(pin => pin.arrayIdentity));
+  assert.equal(new Set(ids).size, 18);
+  return { shape, phases, summary: { changedRoots, changedCallers, changedCallerRecomputes: 6, unaffectedCallerRecomputes: 5,
+    restoredCallerCacheHits: 6, controlWarmAcrossChange: true, restoredSyntheticQueryCalls: 0 } };
+}
+
+const arms = ['loader-enumerable', 'map-global-control'].map(runArm);
+for (let p = 0; p < 3; p++) {
+  const a = arms[0].phases[p], b = arms[1].phases[p];
+  assert.deepEqual(a.values, b.values);
+  assert.deepEqual(a.producers.map(e => [e.key, e.cached]), b.producers.map(e => [e.key, e.cached]));
+  assert.equal(a.aggregateCall.key, b.aggregateCall.key);
+  assert.equal(a.controlCall.key, b.controlCall.key);
+}
+console.log(JSON.stringify({ job_id: 'E4203', worker: 'S3', assertions: 'PASS', observedRed: false,
+  predictionSha256: sha(readFileSync(new URL('./prediction.json', import.meta.url))), arms,
+  interpretation: 'All six query callers rekey/recompute after one changed root; five unaffected query callers lose warm reuse. Correct values and restored warm cache confirmed. Map-global control matches. No partitioned-store runtime or native/pixel/CV query executed.' }, null, 2));

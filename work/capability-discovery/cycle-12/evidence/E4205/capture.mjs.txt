@@ -1,0 +1,29 @@
+import { spawnSync } from 'node:child_process';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+const [label, ...args] = process.argv.slice(2);
+const cwd = '/workspace/scratch/8528bb251845/chainspot-discovery-lab';
+const root = 'experiments/capability-discovery/';
+const sources = [...new Set([...args.filter(a => a.endsWith('.mjs')),
+  `${root}isolated-batch/recipe.mjs`, `${root}isolated-batch/README.md`, `${root}enumerable-board/board.mjs`,
+  ...['fg/store.mjs', 'fg/canon.mjs', 'fg/pxset.mjs', 'fg/render.mjs', 'fg/png.mjs',
+    'fg/alpha/alphaRender.mjs', 'contracts/alpha.profile@1.mjs'].map(a => `${root}probes/root-inventory/source/${a}`)])];
+const pin = path => {
+  const resolved = path.startsWith('/') ? path : `${cwd}/${path}`, bytes = readFileSync(resolved);
+  return { path: resolved, bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex') };
+};
+const pinsBefore = sources.map(pin);
+const startedAt = new Date().toISOString();
+const result = spawnSync(process.execPath, args, { cwd, encoding: 'utf8', timeout: 20000, maxBuffer: 5 * 1024 * 1024 });
+const finishedAt = new Date().toISOString();
+const pinsAfter = sources.map(pin);
+const target = new URL(`./${label}`, import.meta.url);
+writeFileSync(new URL(`${target}.stdout.txt`), result.stdout ?? '');
+writeFileSync(new URL(`${target}.stderr.txt`), result.stderr ?? '');
+writeFileSync(new URL(`${target}.execution.json`), JSON.stringify({ argv: [process.execPath, ...args], cwd,
+  node: process.version, startedAt, finishedAt, exit: result.status, signal: result.signal,
+  timeoutMs: 20000, maxBufferBytes: 5 * 1024 * 1024,
+  error: result.error ? String(result.error) : null, stdout: result.stdout, stderr: result.stderr, pinsBefore, pinsAfter }, null, 2));
+console.log(JSON.stringify({ label, startedAt, finishedAt, exit: result.status,
+  sourcePinsUnchanged: JSON.stringify(pinsBefore) === JSON.stringify(pinsAfter),
+  stdoutBytes: Buffer.byteLength(result.stdout ?? ''), stderrBytes: Buffer.byteLength(result.stderr ?? '') }));

@@ -1,0 +1,45 @@
+// Read-only analysis of the one captured allowlist run; this imports no product module.
+import { readFileSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+const raw = readFileSync(new URL('./stdout.txt', import.meta.url), 'utf8');
+const records = raw.split('\n').filter(line => line.startsWith('{')).map(line => JSON.parse(line));
+const isolated = records.find(record => record.isolated).isolated;
+const globals = records.find(record => record.globalControls).globalControls;
+const entry = leaf => leaf.calls.find(call => call.outParts.length > 0);
+const describe = phases => ({
+  computations: phases.map(batch => batch.leaves.filter(leaf => !entry(leaf).cached).length),
+  queries: phases.map(batch => batch.leaves.reduce((n, leaf) => n + leaf.calls.filter(call => call.calculation === 'fn.q.lab12.byteSum').length, 0)),
+  summaries: phases.map(batch => batch.summary),
+  sourceKeyUnchangedAfterPerturbation: phases[0].leaves.map((leaf, i) => leaf.bridge.sourceKey === phases[1].leaves[i].bridge.sourceKey),
+  producerKeyUnchangedAfterPerturbation: phases[0].leaves.map((leaf, i) => leaf.bridge.producerKey === phases[1].leaves[i].bridge.producerKey),
+  restoredBridgesExact: phases[0].leaves.every((leaf, i) => JSON.stringify(leaf.bridge) === JSON.stringify(phases[2].leaves[i].bridge)),
+  aggregateKeys: phases.map(batch => batch.aggregate.key),
+  aggregateCached: phases.map(batch => batch.aggregate.calls[0].cached),
+  bridgeFieldNames: phases[0].leaves.map(leaf => Object.keys(leaf.bridge)),
+  statuses: [...new Set(phases.flatMap(batch => [...batch.leaves.flatMap(leaf => leaf.calls), ...batch.aggregate.calls]).map(call => call.status))]
+});
+const execution = JSON.parse(readFileSync(new URL('./execution.json', import.meta.url), 'utf8'));
+const recipeUrl = new URL('file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/isolated-batch/recipe.mjs');
+const paths = ['recipe.mjs', '../enumerable-board/board.mjs',
+  ...['store.mjs', 'canon.mjs', 'pxset.mjs', 'render.mjs', 'png.mjs', 'alpha/alphaRender.mjs'].map(path => `../probes/root-inventory/source/fg/${path}`),
+  '../probes/root-inventory/source/contracts/alpha.profile@1.mjs'];
+const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+const closureParts = paths.map(path => ({ path, sha256: hash(readFileSync(new URL(path, recipeUrl))) }));
+const computedSalt = hash(JSON.stringify(closureParts));
+const closureImports = paths.map(path => {
+  const source = readFileSync(new URL(path, recipeUrl), 'utf8');
+  const imports = [...source.matchAll(/^import\s+.*?\s+from\s+['"]([^'"]+)['"];?/gm)].map(match => match[1]);
+  return { path, imports };
+});
+const footer = raw.split('\n').filter(line => line.startsWith('✔') || line.startsWith('ℹ'));
+const observation = { evidence: 'Analysis of direct captured bytes from the sole R4205 allowlist child; no second product execution',
+  isolated: describe(isolated.phases), globalControls: globals.map(arm => ({ shape: arm.shape, ...describe(arm.phases) })),
+  saltsAcrossIsolatedSnapshots: isolated.phases.map(batch => batch.codeSalt), capturedCodeSalt: isolated.codeSalt,
+  computedSaltFromPinnedLocalClosure: computedSalt, closureSaltMatches: computedSalt === isolated.codeSalt,
+  closureParts, closureImports, footer, exit: execution.exit, stderrBytes: execution.stderrBytes };
+writeFileSync(new URL('./observations.json', import.meta.url), JSON.stringify(observation, null, 2));
+console.log(JSON.stringify({ isolated: observation.isolated, globalControls: observation.globalControls.map(arm => ({ shape: arm.shape,
+  computations: arm.computations, queries: arm.queries, sourceKeyUnchangedAfterPerturbation: arm.sourceKeyUnchangedAfterPerturbation,
+  producerKeyUnchangedAfterPerturbation: arm.producerKeyUnchangedAfterPerturbation, restoredBridgesExact: arm.restoredBridgesExact,
+  aggregateCached: arm.aggregateCached })), closureSaltMatches: observation.closureSaltMatches, saltsAcrossIsolatedSnapshots: observation.saltsAcrossIsolatedSnapshots,
+  footer, exit: execution.exit, stderrBytes: execution.stderrBytes }, null, 2));

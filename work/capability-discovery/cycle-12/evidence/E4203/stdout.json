@@ -1,0 +1,5336 @@
+{
+  "job_id": "E4203",
+  "worker": "S3",
+  "assertions": "PASS",
+  "observedRed": false,
+  "predictionSha256": "407f1c37d3a60bd4d9611c93bb53d6935dc66b9881be526c25b4de341024e837",
+  "arms": [
+    {
+      "shape": "loader-enumerable",
+      "phases": [
+        {
+          "phase": "baseline",
+          "cacheSizeAfter": 8,
+          "pins": [
+            {
+              "address": "px.synthetic.upload.0",
+              "bytes": [
+                10,
+                20,
+                30,
+                40
+              ],
+              "sha256": "5f53c0ff07ba5d9a330e68c95dabb1a9bc49e29f9ed53f6fa7c6d99abb000050",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 0,
+              "rootContentKey": "194e61778574f415f3b3670f2b24e815da03765690ede50ac3d6389e1cfe5acc"
+            },
+            {
+              "address": "px.synthetic.upload.1",
+              "bytes": [
+                11,
+                21,
+                31,
+                41
+              ],
+              "sha256": "a546025591f08f7c49411d827b407feeadda1135e5f9ab41055bd793ca829edb",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 1,
+              "rootContentKey": "cbef63f4271d1462dee9e143aa507e39fd8cd904cc15ac727c28b0037bef8777"
+            },
+            {
+              "address": "px.synthetic.upload.2",
+              "bytes": [
+                12,
+                22,
+                32,
+                42
+              ],
+              "sha256": "4bf2f4b76bd131be9c69d51f72085a90ad741de5ef7c6c1079ac994225ffe65c",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 2,
+              "rootContentKey": "4c3fc19bf2593344af6acb803bb185b7bf32f7c6fa625a4d58ba016fc1c03335"
+            },
+            {
+              "address": "px.synthetic.upload.3",
+              "bytes": [
+                13,
+                23,
+                33,
+                43
+              ],
+              "sha256": "1ba130432410056fe30f0109c5e6eabce007c709d277c8a611fa1d73fd288ade",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 3,
+              "rootContentKey": "4ea6ba1344a139cf5a3797d4fe405b80551758dfaafecc7ece6c1442c68bef65"
+            },
+            {
+              "address": "px.synthetic.upload.4",
+              "bytes": [
+                14,
+                24,
+                34,
+                44
+              ],
+              "sha256": "ec51dafa45a0c4a306864e224a034f6582752b0e1583940f3989df690843edba",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 4,
+              "rootContentKey": "4f44354006dd21afe5262a9716e31d4d86f683f5485104b8e5db9541db0c68d7"
+            },
+            {
+              "address": "px.synthetic.upload.5",
+              "bytes": [
+                15,
+                25,
+                35,
+                45
+              ],
+              "sha256": "fafd134b4e16bc38995cfa5929a8d4bb5f126983d58b906911c27d851c86b32d",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 5,
+              "rootContentKey": "2a9b5daec1444716b768bac0db90445efc84c42fb5556f6ad635d1334d7bc041"
+            }
+          ],
+          "values": [
+            100,
+            104,
+            108,
+            112,
+            116,
+            120
+          ],
+          "aggregate": 660,
+          "control": 120,
+          "producers": [
+            {
+              "seq": 0,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.0",
+              "store": "loader-enumerable/baseline",
+              "caller": "lazy:tk.synthetic.sum.0",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.0"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.0"
+              ],
+              "elapsedMs": 0.844,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "c225fd4c913b197cd51a0cec2eb726e246bd685e692ff34372aac7a6042c448b",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 2,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.1",
+              "store": "loader-enumerable/baseline",
+              "caller": "lazy:tk.synthetic.sum.1",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.1"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.1"
+              ],
+              "elapsedMs": 0.131,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "33208fe3d5250eea43847f560889a9ab564da1b1a5c1a906bc0f67aaf2c708e3",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 4,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.2",
+              "store": "loader-enumerable/baseline",
+              "caller": "lazy:tk.synthetic.sum.2",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.2"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.2"
+              ],
+              "elapsedMs": 0.102,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "3f4f68dba3ff347e45013563000cb777b76a09d5e2087630601c6fd95d3e2e63",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 6,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.3",
+              "store": "loader-enumerable/baseline",
+              "caller": "lazy:tk.synthetic.sum.3",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.3"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.3"
+              ],
+              "elapsedMs": 0.095,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "0420cdb8d2a1a7e4ec11d07352edc5cc7684a120adb9939a749900417a4d1e14",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 8,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.4",
+              "store": "loader-enumerable/baseline",
+              "caller": "lazy:tk.synthetic.sum.4",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.4"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.4"
+              ],
+              "elapsedMs": 0.099,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "4730dcbabebdbb340bb9dc62a4b9384ab6374569e57965d91e176dbd7a529d96",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 10,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.5",
+              "store": "loader-enumerable/baseline",
+              "caller": "lazy:tk.synthetic.sum.5",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.5"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.5"
+              ],
+              "elapsedMs": 0.063,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "3e7f22f66420fa26856dda23fc07ef87418e41f87e9f1a079f2148413fad7ce2",
+              "cached": false,
+              "computedMs": null
+            }
+          ],
+          "aggregateCall": {
+            "seq": 12,
+            "parent": null,
+            "depth": 0,
+            "calculation": "fn.synthetic.aggregate",
+            "store": "loader-enumerable/baseline",
+            "caller": "lazy:tk.synthetic.aggregate",
+            "site": null,
+            "inParts": [
+              "tk.synthetic.sum.0",
+              "tk.synthetic.sum.1",
+              "tk.synthetic.sum.2",
+              "tk.synthetic.sum.3",
+              "tk.synthetic.sum.4",
+              "tk.synthetic.sum.5"
+            ],
+            "outParts": [
+              "tk.synthetic.aggregate"
+            ],
+            "elapsedMs": 0.102,
+            "status": "ok",
+            "error": null,
+            "emits": null,
+            "key": "449a42084af43ad172d33df8e82ce966dae5c362fc2e24b65075a543e1493f60",
+            "cached": false,
+            "computedMs": null
+          },
+          "controlCall": {
+            "seq": 13,
+            "parent": null,
+            "depth": 0,
+            "calculation": "fn.synthetic.declaredControl",
+            "store": "loader-enumerable/baseline",
+            "caller": "lazy:tk.synthetic.declaredControl",
+            "site": null,
+            "inParts": [
+              "px.synthetic.upload.5"
+            ],
+            "outParts": [
+              "tk.synthetic.declaredControl"
+            ],
+            "elapsedMs": 0.05,
+            "status": "ok",
+            "error": null,
+            "emits": null,
+            "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+            "cached": false,
+            "computedMs": null
+          },
+          "syntheticQueryCalls": 6,
+          "calls": [
+            {
+              "seq": 0,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.0",
+              "store": "loader-enumerable/baseline",
+              "caller": "lazy:tk.synthetic.sum.0",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.0"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.0"
+              ],
+              "elapsedMs": 0.844,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "c225fd4c913b197cd51a0cec2eb726e246bd685e692ff34372aac7a6042c448b",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 1,
+              "parent": 0,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "loader-enumerable/baseline",
+              "caller": "fn.synthetic.sum.0",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.235,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 2,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.1",
+              "store": "loader-enumerable/baseline",
+              "caller": "lazy:tk.synthetic.sum.1",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.1"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.1"
+              ],
+              "elapsedMs": 0.131,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "33208fe3d5250eea43847f560889a9ab564da1b1a5c1a906bc0f67aaf2c708e3",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 3,
+              "parent": 2,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "loader-enumerable/baseline",
+              "caller": "fn.synthetic.sum.1",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.02,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 4,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.2",
+              "store": "loader-enumerable/baseline",
+              "caller": "lazy:tk.synthetic.sum.2",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.2"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.2"
+              ],
+              "elapsedMs": 0.102,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "3f4f68dba3ff347e45013563000cb777b76a09d5e2087630601c6fd95d3e2e63",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 5,
+              "parent": 4,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "loader-enumerable/baseline",
+              "caller": "fn.synthetic.sum.2",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.035,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 6,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.3",
+              "store": "loader-enumerable/baseline",
+              "caller": "lazy:tk.synthetic.sum.3",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.3"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.3"
+              ],
+              "elapsedMs": 0.095,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "0420cdb8d2a1a7e4ec11d07352edc5cc7684a120adb9939a749900417a4d1e14",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 7,
+              "parent": 6,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "loader-enumerable/baseline",
+              "caller": "fn.synthetic.sum.3",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.017,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 8,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.4",
+              "store": "loader-enumerable/baseline",
+              "caller": "lazy:tk.synthetic.sum.4",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.4"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.4"
+              ],
+              "elapsedMs": 0.099,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "4730dcbabebdbb340bb9dc62a4b9384ab6374569e57965d91e176dbd7a529d96",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 9,
+              "parent": 8,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "loader-enumerable/baseline",
+              "caller": "fn.synthetic.sum.4",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.025,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 10,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.5",
+              "store": "loader-enumerable/baseline",
+              "caller": "lazy:tk.synthetic.sum.5",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.5"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.5"
+              ],
+              "elapsedMs": 0.063,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "3e7f22f66420fa26856dda23fc07ef87418e41f87e9f1a079f2148413fad7ce2",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 11,
+              "parent": 10,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "loader-enumerable/baseline",
+              "caller": "fn.synthetic.sum.5",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.01,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 12,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.aggregate",
+              "store": "loader-enumerable/baseline",
+              "caller": "lazy:tk.synthetic.aggregate",
+              "site": null,
+              "inParts": [
+                "tk.synthetic.sum.0",
+                "tk.synthetic.sum.1",
+                "tk.synthetic.sum.2",
+                "tk.synthetic.sum.3",
+                "tk.synthetic.sum.4",
+                "tk.synthetic.sum.5"
+              ],
+              "outParts": [
+                "tk.synthetic.aggregate"
+              ],
+              "elapsedMs": 0.102,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "449a42084af43ad172d33df8e82ce966dae5c362fc2e24b65075a543e1493f60",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 13,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.declaredControl",
+              "store": "loader-enumerable/baseline",
+              "caller": "lazy:tk.synthetic.declaredControl",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.5"
+              ],
+              "outParts": [
+                "tk.synthetic.declaredControl"
+              ],
+              "elapsedMs": 0.05,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+              "cached": false,
+              "computedMs": null
+            }
+          ],
+          "keyspace": [
+            {
+              "address": "tk.synthetic.aggregate",
+              "key": "449a42084af43ad172d33df8e82ce966dae5c362fc2e24b65075a543e1493f60",
+              "producedBy": "fn.synthetic.aggregate",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.declaredControl",
+              "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+              "producedBy": "fn.synthetic.declaredControl",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.0",
+              "key": "c225fd4c913b197cd51a0cec2eb726e246bd685e692ff34372aac7a6042c448b",
+              "producedBy": "fn.synthetic.sum.0",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.1",
+              "key": "33208fe3d5250eea43847f560889a9ab564da1b1a5c1a906bc0f67aaf2c708e3",
+              "producedBy": "fn.synthetic.sum.1",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.2",
+              "key": "3f4f68dba3ff347e45013563000cb777b76a09d5e2087630601c6fd95d3e2e63",
+              "producedBy": "fn.synthetic.sum.2",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.3",
+              "key": "0420cdb8d2a1a7e4ec11d07352edc5cc7684a120adb9939a749900417a4d1e14",
+              "producedBy": "fn.synthetic.sum.3",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.4",
+              "key": "4730dcbabebdbb340bb9dc62a4b9384ab6374569e57965d91e176dbd7a529d96",
+              "producedBy": "fn.synthetic.sum.4",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.5",
+              "key": "3e7f22f66420fa26856dda23fc07ef87418e41f87e9f1a079f2148413fad7ce2",
+              "producedBy": "fn.synthetic.sum.5",
+              "pointerTo": null
+            }
+          ],
+          "manifest": {
+            "store": "loader-enumerable/baseline",
+            "parts": [
+              {
+                "address": "tk.synthetic.aggregate",
+                "producedBy": "fn.synthetic.aggregate",
+                "inParts": [
+                  "tk.synthetic.sum.0",
+                  "tk.synthetic.sum.1",
+                  "tk.synthetic.sum.2",
+                  "tk.synthetic.sum.3",
+                  "tk.synthetic.sum.4",
+                  "tk.synthetic.sum.5"
+                ],
+                "key": "449a42084af43ad172d33df8e82ce966dae5c362fc2e24b65075a543e1493f60",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.declaredControl",
+                "producedBy": "fn.synthetic.declaredControl",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.0",
+                "producedBy": "fn.synthetic.sum.0",
+                "inParts": [
+                  "px.synthetic.upload.0"
+                ],
+                "key": "c225fd4c913b197cd51a0cec2eb726e246bd685e692ff34372aac7a6042c448b",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.1",
+                "producedBy": "fn.synthetic.sum.1",
+                "inParts": [
+                  "px.synthetic.upload.1"
+                ],
+                "key": "33208fe3d5250eea43847f560889a9ab564da1b1a5c1a906bc0f67aaf2c708e3",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.2",
+                "producedBy": "fn.synthetic.sum.2",
+                "inParts": [
+                  "px.synthetic.upload.2"
+                ],
+                "key": "3f4f68dba3ff347e45013563000cb777b76a09d5e2087630601c6fd95d3e2e63",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.3",
+                "producedBy": "fn.synthetic.sum.3",
+                "inParts": [
+                  "px.synthetic.upload.3"
+                ],
+                "key": "0420cdb8d2a1a7e4ec11d07352edc5cc7684a120adb9939a749900417a4d1e14",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.4",
+                "producedBy": "fn.synthetic.sum.4",
+                "inParts": [
+                  "px.synthetic.upload.4"
+                ],
+                "key": "4730dcbabebdbb340bb9dc62a4b9384ab6374569e57965d91e176dbd7a529d96",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.5",
+                "producedBy": "fn.synthetic.sum.5",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "key": "3e7f22f66420fa26856dda23fc07ef87418e41f87e9f1a079f2148413fad7ce2",
+                "pointerTo": null
+              }
+            ],
+            "calculations": [
+              {
+                "address": "fn.q.part.render",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "default render of the Part at args.a (fg/render.mjs), cached by address"
+              },
+              {
+                "address": "fn.q.pxset.bbox",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.pxset.count",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.pxset.intersectCount",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.pxset.render",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.synthetic.byteSum",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.synthetic.aggregate",
+                "inParts": [
+                  "tk.synthetic.sum.0",
+                  "tk.synthetic.sum.1",
+                  "tk.synthetic.sum.2",
+                  "tk.synthetic.sum.3",
+                  "tk.synthetic.sum.4",
+                  "tk.synthetic.sum.5"
+                ],
+                "outParts": [
+                  "tk.synthetic.aggregate"
+                ],
+                "calls": [],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.declaredControl",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "outParts": [
+                  "tk.synthetic.declaredControl"
+                ],
+                "calls": [],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.0",
+                "inParts": [
+                  "px.synthetic.upload.0"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.0"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.1",
+                "inParts": [
+                  "px.synthetic.upload.1"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.1"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.2",
+                "inParts": [
+                  "px.synthetic.upload.2"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.2"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.3",
+                "inParts": [
+                  "px.synthetic.upload.3"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.3"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.4",
+                "inParts": [
+                  "px.synthetic.upload.4"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.4"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.5",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.5"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.tk.instrumentation.calls",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "the calls made by args.caller and nested under them (timings: sidecar data, never hashed)"
+              }
+            ]
+          }
+        },
+        {
+          "phase": "changed",
+          "cacheSizeAfter": 15,
+          "pins": [
+            {
+              "address": "px.synthetic.upload.0",
+              "bytes": [
+                10,
+                20,
+                30,
+                40
+              ],
+              "sha256": "5f53c0ff07ba5d9a330e68c95dabb1a9bc49e29f9ed53f6fa7c6d99abb000050",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 6,
+              "rootContentKey": "194e61778574f415f3b3670f2b24e815da03765690ede50ac3d6389e1cfe5acc"
+            },
+            {
+              "address": "px.synthetic.upload.1",
+              "bytes": [
+                11,
+                21,
+                31,
+                41
+              ],
+              "sha256": "a546025591f08f7c49411d827b407feeadda1135e5f9ab41055bd793ca829edb",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 7,
+              "rootContentKey": "cbef63f4271d1462dee9e143aa507e39fd8cd904cc15ac727c28b0037bef8777"
+            },
+            {
+              "address": "px.synthetic.upload.2",
+              "bytes": [
+                12,
+                23,
+                32,
+                42
+              ],
+              "sha256": "e80f59a0b1a9d3421c71f5f981b73398f68bac23afa1cf26350cb27963e0df36",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 8,
+              "rootContentKey": "0f63974de79c65be59a386778907c5359595383fb20af03d713efdd048c78dca"
+            },
+            {
+              "address": "px.synthetic.upload.3",
+              "bytes": [
+                13,
+                23,
+                33,
+                43
+              ],
+              "sha256": "1ba130432410056fe30f0109c5e6eabce007c709d277c8a611fa1d73fd288ade",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 9,
+              "rootContentKey": "4ea6ba1344a139cf5a3797d4fe405b80551758dfaafecc7ece6c1442c68bef65"
+            },
+            {
+              "address": "px.synthetic.upload.4",
+              "bytes": [
+                14,
+                24,
+                34,
+                44
+              ],
+              "sha256": "ec51dafa45a0c4a306864e224a034f6582752b0e1583940f3989df690843edba",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 10,
+              "rootContentKey": "4f44354006dd21afe5262a9716e31d4d86f683f5485104b8e5db9541db0c68d7"
+            },
+            {
+              "address": "px.synthetic.upload.5",
+              "bytes": [
+                15,
+                25,
+                35,
+                45
+              ],
+              "sha256": "fafd134b4e16bc38995cfa5929a8d4bb5f126983d58b906911c27d851c86b32d",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 11,
+              "rootContentKey": "2a9b5daec1444716b768bac0db90445efc84c42fb5556f6ad635d1334d7bc041"
+            }
+          ],
+          "values": [
+            100,
+            104,
+            109,
+            112,
+            116,
+            120
+          ],
+          "aggregate": 661,
+          "control": 120,
+          "producers": [
+            {
+              "seq": 0,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.0",
+              "store": "loader-enumerable/changed",
+              "caller": "lazy:tk.synthetic.sum.0",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.0"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.0"
+              ],
+              "elapsedMs": 0.176,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "951923d0e8fe9d68985f3982a60ffc7ddd5a7cf55537142073988bc51c5aa7ab",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 2,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.1",
+              "store": "loader-enumerable/changed",
+              "caller": "lazy:tk.synthetic.sum.1",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.1"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.1"
+              ],
+              "elapsedMs": 0.071,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "8af39123c93c6bf0cda3b485614a3b2ecea70bd2726e5b4bc73a5222c967bf05",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 4,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.2",
+              "store": "loader-enumerable/changed",
+              "caller": "lazy:tk.synthetic.sum.2",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.2"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.2"
+              ],
+              "elapsedMs": 0.09,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "9fce4f3a8515503c601ca4735ee01e84a14103ede8ea83d25722fd488f2c7103",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 6,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.3",
+              "store": "loader-enumerable/changed",
+              "caller": "lazy:tk.synthetic.sum.3",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.3"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.3"
+              ],
+              "elapsedMs": 0.066,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "cce200383a9aa1c64895f12f18537ce180e5d5289bf62b82f6f1b865485c4667",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 8,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.4",
+              "store": "loader-enumerable/changed",
+              "caller": "lazy:tk.synthetic.sum.4",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.4"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.4"
+              ],
+              "elapsedMs": 0.048,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "18932dd4ba9cb5fe7b0df476fc127872843cdcca657176ac1493e05f035925ae",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 10,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.5",
+              "store": "loader-enumerable/changed",
+              "caller": "lazy:tk.synthetic.sum.5",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.5"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.5"
+              ],
+              "elapsedMs": 0.041,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "e440aa0ec2a8a6ebc29982271cabf64d9649edf38579a1caf2464ba8f179fae4",
+              "cached": false,
+              "computedMs": null
+            }
+          ],
+          "aggregateCall": {
+            "seq": 12,
+            "parent": null,
+            "depth": 0,
+            "calculation": "fn.synthetic.aggregate",
+            "store": "loader-enumerable/changed",
+            "caller": "lazy:tk.synthetic.aggregate",
+            "site": null,
+            "inParts": [
+              "tk.synthetic.sum.0",
+              "tk.synthetic.sum.1",
+              "tk.synthetic.sum.2",
+              "tk.synthetic.sum.3",
+              "tk.synthetic.sum.4",
+              "tk.synthetic.sum.5"
+            ],
+            "outParts": [
+              "tk.synthetic.aggregate"
+            ],
+            "elapsedMs": 0.028,
+            "status": "ok",
+            "error": null,
+            "emits": null,
+            "key": "66aaa3ed9e6f0f9778a0ce71360f02159262d7a2f4b3c9bd8bfa031c32b7438b",
+            "cached": false,
+            "computedMs": null
+          },
+          "controlCall": {
+            "seq": 13,
+            "parent": null,
+            "depth": 0,
+            "calculation": "fn.synthetic.declaredControl",
+            "store": "loader-enumerable/changed",
+            "caller": "lazy:tk.synthetic.declaredControl",
+            "site": null,
+            "inParts": [
+              "px.synthetic.upload.5"
+            ],
+            "outParts": [
+              "tk.synthetic.declaredControl"
+            ],
+            "elapsedMs": 0.021,
+            "status": "ok",
+            "error": null,
+            "emits": {
+              "cached": 1
+            },
+            "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+            "cached": true,
+            "computedMs": 0.05
+          },
+          "syntheticQueryCalls": 6,
+          "calls": [
+            {
+              "seq": 0,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.0",
+              "store": "loader-enumerable/changed",
+              "caller": "lazy:tk.synthetic.sum.0",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.0"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.0"
+              ],
+              "elapsedMs": 0.176,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "951923d0e8fe9d68985f3982a60ffc7ddd5a7cf55537142073988bc51c5aa7ab",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 1,
+              "parent": 0,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "loader-enumerable/changed",
+              "caller": "fn.synthetic.sum.0",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.021,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 2,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.1",
+              "store": "loader-enumerable/changed",
+              "caller": "lazy:tk.synthetic.sum.1",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.1"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.1"
+              ],
+              "elapsedMs": 0.071,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "8af39123c93c6bf0cda3b485614a3b2ecea70bd2726e5b4bc73a5222c967bf05",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 3,
+              "parent": 2,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "loader-enumerable/changed",
+              "caller": "fn.synthetic.sum.1",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.013,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 4,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.2",
+              "store": "loader-enumerable/changed",
+              "caller": "lazy:tk.synthetic.sum.2",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.2"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.2"
+              ],
+              "elapsedMs": 0.09,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "9fce4f3a8515503c601ca4735ee01e84a14103ede8ea83d25722fd488f2c7103",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 5,
+              "parent": 4,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "loader-enumerable/changed",
+              "caller": "fn.synthetic.sum.2",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.034,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 6,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.3",
+              "store": "loader-enumerable/changed",
+              "caller": "lazy:tk.synthetic.sum.3",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.3"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.3"
+              ],
+              "elapsedMs": 0.066,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "cce200383a9aa1c64895f12f18537ce180e5d5289bf62b82f6f1b865485c4667",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 7,
+              "parent": 6,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "loader-enumerable/changed",
+              "caller": "fn.synthetic.sum.3",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.019,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 8,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.4",
+              "store": "loader-enumerable/changed",
+              "caller": "lazy:tk.synthetic.sum.4",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.4"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.4"
+              ],
+              "elapsedMs": 0.048,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "18932dd4ba9cb5fe7b0df476fc127872843cdcca657176ac1493e05f035925ae",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 9,
+              "parent": 8,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "loader-enumerable/changed",
+              "caller": "fn.synthetic.sum.4",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.012,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 10,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.5",
+              "store": "loader-enumerable/changed",
+              "caller": "lazy:tk.synthetic.sum.5",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.5"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.5"
+              ],
+              "elapsedMs": 0.041,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "e440aa0ec2a8a6ebc29982271cabf64d9649edf38579a1caf2464ba8f179fae4",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 11,
+              "parent": 10,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "loader-enumerable/changed",
+              "caller": "fn.synthetic.sum.5",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.007,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 12,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.aggregate",
+              "store": "loader-enumerable/changed",
+              "caller": "lazy:tk.synthetic.aggregate",
+              "site": null,
+              "inParts": [
+                "tk.synthetic.sum.0",
+                "tk.synthetic.sum.1",
+                "tk.synthetic.sum.2",
+                "tk.synthetic.sum.3",
+                "tk.synthetic.sum.4",
+                "tk.synthetic.sum.5"
+              ],
+              "outParts": [
+                "tk.synthetic.aggregate"
+              ],
+              "elapsedMs": 0.028,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "66aaa3ed9e6f0f9778a0ce71360f02159262d7a2f4b3c9bd8bfa031c32b7438b",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 13,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.declaredControl",
+              "store": "loader-enumerable/changed",
+              "caller": "lazy:tk.synthetic.declaredControl",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.5"
+              ],
+              "outParts": [
+                "tk.synthetic.declaredControl"
+              ],
+              "elapsedMs": 0.021,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+              "cached": true,
+              "computedMs": 0.05
+            }
+          ],
+          "keyspace": [
+            {
+              "address": "tk.synthetic.aggregate",
+              "key": "66aaa3ed9e6f0f9778a0ce71360f02159262d7a2f4b3c9bd8bfa031c32b7438b",
+              "producedBy": "fn.synthetic.aggregate",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.declaredControl",
+              "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+              "producedBy": "fn.synthetic.declaredControl",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.0",
+              "key": "951923d0e8fe9d68985f3982a60ffc7ddd5a7cf55537142073988bc51c5aa7ab",
+              "producedBy": "fn.synthetic.sum.0",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.1",
+              "key": "8af39123c93c6bf0cda3b485614a3b2ecea70bd2726e5b4bc73a5222c967bf05",
+              "producedBy": "fn.synthetic.sum.1",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.2",
+              "key": "9fce4f3a8515503c601ca4735ee01e84a14103ede8ea83d25722fd488f2c7103",
+              "producedBy": "fn.synthetic.sum.2",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.3",
+              "key": "cce200383a9aa1c64895f12f18537ce180e5d5289bf62b82f6f1b865485c4667",
+              "producedBy": "fn.synthetic.sum.3",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.4",
+              "key": "18932dd4ba9cb5fe7b0df476fc127872843cdcca657176ac1493e05f035925ae",
+              "producedBy": "fn.synthetic.sum.4",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.5",
+              "key": "e440aa0ec2a8a6ebc29982271cabf64d9649edf38579a1caf2464ba8f179fae4",
+              "producedBy": "fn.synthetic.sum.5",
+              "pointerTo": null
+            }
+          ],
+          "manifest": {
+            "store": "loader-enumerable/changed",
+            "parts": [
+              {
+                "address": "tk.synthetic.aggregate",
+                "producedBy": "fn.synthetic.aggregate",
+                "inParts": [
+                  "tk.synthetic.sum.0",
+                  "tk.synthetic.sum.1",
+                  "tk.synthetic.sum.2",
+                  "tk.synthetic.sum.3",
+                  "tk.synthetic.sum.4",
+                  "tk.synthetic.sum.5"
+                ],
+                "key": "66aaa3ed9e6f0f9778a0ce71360f02159262d7a2f4b3c9bd8bfa031c32b7438b",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.declaredControl",
+                "producedBy": "fn.synthetic.declaredControl",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.0",
+                "producedBy": "fn.synthetic.sum.0",
+                "inParts": [
+                  "px.synthetic.upload.0"
+                ],
+                "key": "951923d0e8fe9d68985f3982a60ffc7ddd5a7cf55537142073988bc51c5aa7ab",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.1",
+                "producedBy": "fn.synthetic.sum.1",
+                "inParts": [
+                  "px.synthetic.upload.1"
+                ],
+                "key": "8af39123c93c6bf0cda3b485614a3b2ecea70bd2726e5b4bc73a5222c967bf05",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.2",
+                "producedBy": "fn.synthetic.sum.2",
+                "inParts": [
+                  "px.synthetic.upload.2"
+                ],
+                "key": "9fce4f3a8515503c601ca4735ee01e84a14103ede8ea83d25722fd488f2c7103",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.3",
+                "producedBy": "fn.synthetic.sum.3",
+                "inParts": [
+                  "px.synthetic.upload.3"
+                ],
+                "key": "cce200383a9aa1c64895f12f18537ce180e5d5289bf62b82f6f1b865485c4667",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.4",
+                "producedBy": "fn.synthetic.sum.4",
+                "inParts": [
+                  "px.synthetic.upload.4"
+                ],
+                "key": "18932dd4ba9cb5fe7b0df476fc127872843cdcca657176ac1493e05f035925ae",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.5",
+                "producedBy": "fn.synthetic.sum.5",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "key": "e440aa0ec2a8a6ebc29982271cabf64d9649edf38579a1caf2464ba8f179fae4",
+                "pointerTo": null
+              }
+            ],
+            "calculations": [
+              {
+                "address": "fn.q.part.render",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "default render of the Part at args.a (fg/render.mjs), cached by address"
+              },
+              {
+                "address": "fn.q.pxset.bbox",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.pxset.count",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.pxset.intersectCount",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.pxset.render",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.synthetic.byteSum",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.synthetic.aggregate",
+                "inParts": [
+                  "tk.synthetic.sum.0",
+                  "tk.synthetic.sum.1",
+                  "tk.synthetic.sum.2",
+                  "tk.synthetic.sum.3",
+                  "tk.synthetic.sum.4",
+                  "tk.synthetic.sum.5"
+                ],
+                "outParts": [
+                  "tk.synthetic.aggregate"
+                ],
+                "calls": [],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.declaredControl",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "outParts": [
+                  "tk.synthetic.declaredControl"
+                ],
+                "calls": [],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.0",
+                "inParts": [
+                  "px.synthetic.upload.0"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.0"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.1",
+                "inParts": [
+                  "px.synthetic.upload.1"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.1"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.2",
+                "inParts": [
+                  "px.synthetic.upload.2"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.2"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.3",
+                "inParts": [
+                  "px.synthetic.upload.3"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.3"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.4",
+                "inParts": [
+                  "px.synthetic.upload.4"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.4"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.5",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.5"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.tk.instrumentation.calls",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "the calls made by args.caller and nested under them (timings: sidecar data, never hashed)"
+              }
+            ]
+          }
+        },
+        {
+          "phase": "restored",
+          "cacheSizeAfter": 15,
+          "pins": [
+            {
+              "address": "px.synthetic.upload.0",
+              "bytes": [
+                10,
+                20,
+                30,
+                40
+              ],
+              "sha256": "5f53c0ff07ba5d9a330e68c95dabb1a9bc49e29f9ed53f6fa7c6d99abb000050",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 12,
+              "rootContentKey": "194e61778574f415f3b3670f2b24e815da03765690ede50ac3d6389e1cfe5acc"
+            },
+            {
+              "address": "px.synthetic.upload.1",
+              "bytes": [
+                11,
+                21,
+                31,
+                41
+              ],
+              "sha256": "a546025591f08f7c49411d827b407feeadda1135e5f9ab41055bd793ca829edb",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 13,
+              "rootContentKey": "cbef63f4271d1462dee9e143aa507e39fd8cd904cc15ac727c28b0037bef8777"
+            },
+            {
+              "address": "px.synthetic.upload.2",
+              "bytes": [
+                12,
+                22,
+                32,
+                42
+              ],
+              "sha256": "4bf2f4b76bd131be9c69d51f72085a90ad741de5ef7c6c1079ac994225ffe65c",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 14,
+              "rootContentKey": "4c3fc19bf2593344af6acb803bb185b7bf32f7c6fa625a4d58ba016fc1c03335"
+            },
+            {
+              "address": "px.synthetic.upload.3",
+              "bytes": [
+                13,
+                23,
+                33,
+                43
+              ],
+              "sha256": "1ba130432410056fe30f0109c5e6eabce007c709d277c8a611fa1d73fd288ade",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 15,
+              "rootContentKey": "4ea6ba1344a139cf5a3797d4fe405b80551758dfaafecc7ece6c1442c68bef65"
+            },
+            {
+              "address": "px.synthetic.upload.4",
+              "bytes": [
+                14,
+                24,
+                34,
+                44
+              ],
+              "sha256": "ec51dafa45a0c4a306864e224a034f6582752b0e1583940f3989df690843edba",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 16,
+              "rootContentKey": "4f44354006dd21afe5262a9716e31d4d86f683f5485104b8e5db9541db0c68d7"
+            },
+            {
+              "address": "px.synthetic.upload.5",
+              "bytes": [
+                15,
+                25,
+                35,
+                45
+              ],
+              "sha256": "fafd134b4e16bc38995cfa5929a8d4bb5f126983d58b906911c27d851c86b32d",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 17,
+              "rootContentKey": "2a9b5daec1444716b768bac0db90445efc84c42fb5556f6ad635d1334d7bc041"
+            }
+          ],
+          "values": [
+            100,
+            104,
+            108,
+            112,
+            116,
+            120
+          ],
+          "aggregate": 660,
+          "control": 120,
+          "producers": [
+            {
+              "seq": 0,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.0",
+              "store": "loader-enumerable/restored",
+              "caller": "lazy:tk.synthetic.sum.0",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.0"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.0"
+              ],
+              "elapsedMs": 0.186,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "c225fd4c913b197cd51a0cec2eb726e246bd685e692ff34372aac7a6042c448b",
+              "cached": true,
+              "computedMs": 0.844
+            },
+            {
+              "seq": 1,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.1",
+              "store": "loader-enumerable/restored",
+              "caller": "lazy:tk.synthetic.sum.1",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.1"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.1"
+              ],
+              "elapsedMs": 0.03,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "33208fe3d5250eea43847f560889a9ab564da1b1a5c1a906bc0f67aaf2c708e3",
+              "cached": true,
+              "computedMs": 0.131
+            },
+            {
+              "seq": 2,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.2",
+              "store": "loader-enumerable/restored",
+              "caller": "lazy:tk.synthetic.sum.2",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.2"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.2"
+              ],
+              "elapsedMs": 0.024,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "3f4f68dba3ff347e45013563000cb777b76a09d5e2087630601c6fd95d3e2e63",
+              "cached": true,
+              "computedMs": 0.102
+            },
+            {
+              "seq": 3,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.3",
+              "store": "loader-enumerable/restored",
+              "caller": "lazy:tk.synthetic.sum.3",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.3"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.3"
+              ],
+              "elapsedMs": 0.024,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "0420cdb8d2a1a7e4ec11d07352edc5cc7684a120adb9939a749900417a4d1e14",
+              "cached": true,
+              "computedMs": 0.095
+            },
+            {
+              "seq": 4,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.4",
+              "store": "loader-enumerable/restored",
+              "caller": "lazy:tk.synthetic.sum.4",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.4"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.4"
+              ],
+              "elapsedMs": 0.028,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "4730dcbabebdbb340bb9dc62a4b9384ab6374569e57965d91e176dbd7a529d96",
+              "cached": true,
+              "computedMs": 0.099
+            },
+            {
+              "seq": 5,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.5",
+              "store": "loader-enumerable/restored",
+              "caller": "lazy:tk.synthetic.sum.5",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.5"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.5"
+              ],
+              "elapsedMs": 0.051,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "3e7f22f66420fa26856dda23fc07ef87418e41f87e9f1a079f2148413fad7ce2",
+              "cached": true,
+              "computedMs": 0.063
+            }
+          ],
+          "aggregateCall": {
+            "seq": 6,
+            "parent": null,
+            "depth": 0,
+            "calculation": "fn.synthetic.aggregate",
+            "store": "loader-enumerable/restored",
+            "caller": "lazy:tk.synthetic.aggregate",
+            "site": null,
+            "inParts": [
+              "tk.synthetic.sum.0",
+              "tk.synthetic.sum.1",
+              "tk.synthetic.sum.2",
+              "tk.synthetic.sum.3",
+              "tk.synthetic.sum.4",
+              "tk.synthetic.sum.5"
+            ],
+            "outParts": [
+              "tk.synthetic.aggregate"
+            ],
+            "elapsedMs": 0.076,
+            "status": "ok",
+            "error": null,
+            "emits": {
+              "cached": 1
+            },
+            "key": "449a42084af43ad172d33df8e82ce966dae5c362fc2e24b65075a543e1493f60",
+            "cached": true,
+            "computedMs": 0.102
+          },
+          "controlCall": {
+            "seq": 7,
+            "parent": null,
+            "depth": 0,
+            "calculation": "fn.synthetic.declaredControl",
+            "store": "loader-enumerable/restored",
+            "caller": "lazy:tk.synthetic.declaredControl",
+            "site": null,
+            "inParts": [
+              "px.synthetic.upload.5"
+            ],
+            "outParts": [
+              "tk.synthetic.declaredControl"
+            ],
+            "elapsedMs": 0.014,
+            "status": "ok",
+            "error": null,
+            "emits": {
+              "cached": 1
+            },
+            "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+            "cached": true,
+            "computedMs": 0.05
+          },
+          "syntheticQueryCalls": 0,
+          "calls": [
+            {
+              "seq": 0,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.0",
+              "store": "loader-enumerable/restored",
+              "caller": "lazy:tk.synthetic.sum.0",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.0"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.0"
+              ],
+              "elapsedMs": 0.186,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "c225fd4c913b197cd51a0cec2eb726e246bd685e692ff34372aac7a6042c448b",
+              "cached": true,
+              "computedMs": 0.844
+            },
+            {
+              "seq": 1,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.1",
+              "store": "loader-enumerable/restored",
+              "caller": "lazy:tk.synthetic.sum.1",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.1"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.1"
+              ],
+              "elapsedMs": 0.03,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "33208fe3d5250eea43847f560889a9ab564da1b1a5c1a906bc0f67aaf2c708e3",
+              "cached": true,
+              "computedMs": 0.131
+            },
+            {
+              "seq": 2,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.2",
+              "store": "loader-enumerable/restored",
+              "caller": "lazy:tk.synthetic.sum.2",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.2"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.2"
+              ],
+              "elapsedMs": 0.024,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "3f4f68dba3ff347e45013563000cb777b76a09d5e2087630601c6fd95d3e2e63",
+              "cached": true,
+              "computedMs": 0.102
+            },
+            {
+              "seq": 3,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.3",
+              "store": "loader-enumerable/restored",
+              "caller": "lazy:tk.synthetic.sum.3",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.3"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.3"
+              ],
+              "elapsedMs": 0.024,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "0420cdb8d2a1a7e4ec11d07352edc5cc7684a120adb9939a749900417a4d1e14",
+              "cached": true,
+              "computedMs": 0.095
+            },
+            {
+              "seq": 4,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.4",
+              "store": "loader-enumerable/restored",
+              "caller": "lazy:tk.synthetic.sum.4",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.4"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.4"
+              ],
+              "elapsedMs": 0.028,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "4730dcbabebdbb340bb9dc62a4b9384ab6374569e57965d91e176dbd7a529d96",
+              "cached": true,
+              "computedMs": 0.099
+            },
+            {
+              "seq": 5,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.5",
+              "store": "loader-enumerable/restored",
+              "caller": "lazy:tk.synthetic.sum.5",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.5"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.5"
+              ],
+              "elapsedMs": 0.051,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "3e7f22f66420fa26856dda23fc07ef87418e41f87e9f1a079f2148413fad7ce2",
+              "cached": true,
+              "computedMs": 0.063
+            },
+            {
+              "seq": 6,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.aggregate",
+              "store": "loader-enumerable/restored",
+              "caller": "lazy:tk.synthetic.aggregate",
+              "site": null,
+              "inParts": [
+                "tk.synthetic.sum.0",
+                "tk.synthetic.sum.1",
+                "tk.synthetic.sum.2",
+                "tk.synthetic.sum.3",
+                "tk.synthetic.sum.4",
+                "tk.synthetic.sum.5"
+              ],
+              "outParts": [
+                "tk.synthetic.aggregate"
+              ],
+              "elapsedMs": 0.076,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "449a42084af43ad172d33df8e82ce966dae5c362fc2e24b65075a543e1493f60",
+              "cached": true,
+              "computedMs": 0.102
+            },
+            {
+              "seq": 7,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.declaredControl",
+              "store": "loader-enumerable/restored",
+              "caller": "lazy:tk.synthetic.declaredControl",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.5"
+              ],
+              "outParts": [
+                "tk.synthetic.declaredControl"
+              ],
+              "elapsedMs": 0.014,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+              "cached": true,
+              "computedMs": 0.05
+            }
+          ],
+          "keyspace": [
+            {
+              "address": "tk.synthetic.aggregate",
+              "key": "449a42084af43ad172d33df8e82ce966dae5c362fc2e24b65075a543e1493f60",
+              "producedBy": "fn.synthetic.aggregate",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.declaredControl",
+              "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+              "producedBy": "fn.synthetic.declaredControl",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.0",
+              "key": "c225fd4c913b197cd51a0cec2eb726e246bd685e692ff34372aac7a6042c448b",
+              "producedBy": "fn.synthetic.sum.0",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.1",
+              "key": "33208fe3d5250eea43847f560889a9ab564da1b1a5c1a906bc0f67aaf2c708e3",
+              "producedBy": "fn.synthetic.sum.1",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.2",
+              "key": "3f4f68dba3ff347e45013563000cb777b76a09d5e2087630601c6fd95d3e2e63",
+              "producedBy": "fn.synthetic.sum.2",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.3",
+              "key": "0420cdb8d2a1a7e4ec11d07352edc5cc7684a120adb9939a749900417a4d1e14",
+              "producedBy": "fn.synthetic.sum.3",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.4",
+              "key": "4730dcbabebdbb340bb9dc62a4b9384ab6374569e57965d91e176dbd7a529d96",
+              "producedBy": "fn.synthetic.sum.4",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.5",
+              "key": "3e7f22f66420fa26856dda23fc07ef87418e41f87e9f1a079f2148413fad7ce2",
+              "producedBy": "fn.synthetic.sum.5",
+              "pointerTo": null
+            }
+          ],
+          "manifest": {
+            "store": "loader-enumerable/restored",
+            "parts": [
+              {
+                "address": "tk.synthetic.aggregate",
+                "producedBy": "fn.synthetic.aggregate",
+                "inParts": [
+                  "tk.synthetic.sum.0",
+                  "tk.synthetic.sum.1",
+                  "tk.synthetic.sum.2",
+                  "tk.synthetic.sum.3",
+                  "tk.synthetic.sum.4",
+                  "tk.synthetic.sum.5"
+                ],
+                "key": "449a42084af43ad172d33df8e82ce966dae5c362fc2e24b65075a543e1493f60",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.declaredControl",
+                "producedBy": "fn.synthetic.declaredControl",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.0",
+                "producedBy": "fn.synthetic.sum.0",
+                "inParts": [
+                  "px.synthetic.upload.0"
+                ],
+                "key": "c225fd4c913b197cd51a0cec2eb726e246bd685e692ff34372aac7a6042c448b",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.1",
+                "producedBy": "fn.synthetic.sum.1",
+                "inParts": [
+                  "px.synthetic.upload.1"
+                ],
+                "key": "33208fe3d5250eea43847f560889a9ab564da1b1a5c1a906bc0f67aaf2c708e3",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.2",
+                "producedBy": "fn.synthetic.sum.2",
+                "inParts": [
+                  "px.synthetic.upload.2"
+                ],
+                "key": "3f4f68dba3ff347e45013563000cb777b76a09d5e2087630601c6fd95d3e2e63",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.3",
+                "producedBy": "fn.synthetic.sum.3",
+                "inParts": [
+                  "px.synthetic.upload.3"
+                ],
+                "key": "0420cdb8d2a1a7e4ec11d07352edc5cc7684a120adb9939a749900417a4d1e14",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.4",
+                "producedBy": "fn.synthetic.sum.4",
+                "inParts": [
+                  "px.synthetic.upload.4"
+                ],
+                "key": "4730dcbabebdbb340bb9dc62a4b9384ab6374569e57965d91e176dbd7a529d96",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.5",
+                "producedBy": "fn.synthetic.sum.5",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "key": "3e7f22f66420fa26856dda23fc07ef87418e41f87e9f1a079f2148413fad7ce2",
+                "pointerTo": null
+              }
+            ],
+            "calculations": [
+              {
+                "address": "fn.q.part.render",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "default render of the Part at args.a (fg/render.mjs), cached by address"
+              },
+              {
+                "address": "fn.q.pxset.bbox",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.pxset.count",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.pxset.intersectCount",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.pxset.render",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.synthetic.byteSum",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.synthetic.aggregate",
+                "inParts": [
+                  "tk.synthetic.sum.0",
+                  "tk.synthetic.sum.1",
+                  "tk.synthetic.sum.2",
+                  "tk.synthetic.sum.3",
+                  "tk.synthetic.sum.4",
+                  "tk.synthetic.sum.5"
+                ],
+                "outParts": [
+                  "tk.synthetic.aggregate"
+                ],
+                "calls": [],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.declaredControl",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "outParts": [
+                  "tk.synthetic.declaredControl"
+                ],
+                "calls": [],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.0",
+                "inParts": [
+                  "px.synthetic.upload.0"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.0"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.1",
+                "inParts": [
+                  "px.synthetic.upload.1"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.1"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.2",
+                "inParts": [
+                  "px.synthetic.upload.2"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.2"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.3",
+                "inParts": [
+                  "px.synthetic.upload.3"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.3"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.4",
+                "inParts": [
+                  "px.synthetic.upload.4"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.4"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.5",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.5"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.tk.instrumentation.calls",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "the calls made by args.caller and nested under them (timings: sidecar data, never hashed)"
+              }
+            ]
+          }
+        }
+      ],
+      "summary": {
+        "changedRoots": [
+          "px.synthetic.upload.2"
+        ],
+        "changedCallers": [
+          "fn.synthetic.sum.0",
+          "fn.synthetic.sum.1",
+          "fn.synthetic.sum.2",
+          "fn.synthetic.sum.3",
+          "fn.synthetic.sum.4",
+          "fn.synthetic.sum.5"
+        ],
+        "changedCallerRecomputes": 6,
+        "unaffectedCallerRecomputes": 5,
+        "restoredCallerCacheHits": 6,
+        "controlWarmAcrossChange": true,
+        "restoredSyntheticQueryCalls": 0
+      }
+    },
+    {
+      "shape": "map-global-control",
+      "phases": [
+        {
+          "phase": "baseline",
+          "cacheSizeAfter": 8,
+          "pins": [
+            {
+              "address": "px.synthetic.upload.0",
+              "bytes": [
+                10,
+                20,
+                30,
+                40
+              ],
+              "sha256": "5f53c0ff07ba5d9a330e68c95dabb1a9bc49e29f9ed53f6fa7c6d99abb000050",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 18,
+              "rootContentKey": "194e61778574f415f3b3670f2b24e815da03765690ede50ac3d6389e1cfe5acc"
+            },
+            {
+              "address": "px.synthetic.upload.1",
+              "bytes": [
+                11,
+                21,
+                31,
+                41
+              ],
+              "sha256": "a546025591f08f7c49411d827b407feeadda1135e5f9ab41055bd793ca829edb",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 19,
+              "rootContentKey": "cbef63f4271d1462dee9e143aa507e39fd8cd904cc15ac727c28b0037bef8777"
+            },
+            {
+              "address": "px.synthetic.upload.2",
+              "bytes": [
+                12,
+                22,
+                32,
+                42
+              ],
+              "sha256": "4bf2f4b76bd131be9c69d51f72085a90ad741de5ef7c6c1079ac994225ffe65c",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 20,
+              "rootContentKey": "4c3fc19bf2593344af6acb803bb185b7bf32f7c6fa625a4d58ba016fc1c03335"
+            },
+            {
+              "address": "px.synthetic.upload.3",
+              "bytes": [
+                13,
+                23,
+                33,
+                43
+              ],
+              "sha256": "1ba130432410056fe30f0109c5e6eabce007c709d277c8a611fa1d73fd288ade",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 21,
+              "rootContentKey": "4ea6ba1344a139cf5a3797d4fe405b80551758dfaafecc7ece6c1442c68bef65"
+            },
+            {
+              "address": "px.synthetic.upload.4",
+              "bytes": [
+                14,
+                24,
+                34,
+                44
+              ],
+              "sha256": "ec51dafa45a0c4a306864e224a034f6582752b0e1583940f3989df690843edba",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 22,
+              "rootContentKey": "4f44354006dd21afe5262a9716e31d4d86f683f5485104b8e5db9541db0c68d7"
+            },
+            {
+              "address": "px.synthetic.upload.5",
+              "bytes": [
+                15,
+                25,
+                35,
+                45
+              ],
+              "sha256": "fafd134b4e16bc38995cfa5929a8d4bb5f126983d58b906911c27d851c86b32d",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 23,
+              "rootContentKey": "2a9b5daec1444716b768bac0db90445efc84c42fb5556f6ad635d1334d7bc041"
+            }
+          ],
+          "values": [
+            100,
+            104,
+            108,
+            112,
+            116,
+            120
+          ],
+          "aggregate": 660,
+          "control": 120,
+          "producers": [
+            {
+              "seq": 0,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.0",
+              "store": "map-global-control/baseline",
+              "caller": "lazy:tk.synthetic.sum.0",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.0"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.0"
+              ],
+              "elapsedMs": 0.194,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "c225fd4c913b197cd51a0cec2eb726e246bd685e692ff34372aac7a6042c448b",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 2,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.1",
+              "store": "map-global-control/baseline",
+              "caller": "lazy:tk.synthetic.sum.1",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.1"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.1"
+              ],
+              "elapsedMs": 0.045,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "33208fe3d5250eea43847f560889a9ab564da1b1a5c1a906bc0f67aaf2c708e3",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 4,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.2",
+              "store": "map-global-control/baseline",
+              "caller": "lazy:tk.synthetic.sum.2",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.2"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.2"
+              ],
+              "elapsedMs": 0.034,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "3f4f68dba3ff347e45013563000cb777b76a09d5e2087630601c6fd95d3e2e63",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 6,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.3",
+              "store": "map-global-control/baseline",
+              "caller": "lazy:tk.synthetic.sum.3",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.3"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.3"
+              ],
+              "elapsedMs": 0.031,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "0420cdb8d2a1a7e4ec11d07352edc5cc7684a120adb9939a749900417a4d1e14",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 8,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.4",
+              "store": "map-global-control/baseline",
+              "caller": "lazy:tk.synthetic.sum.4",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.4"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.4"
+              ],
+              "elapsedMs": 0.108,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "4730dcbabebdbb340bb9dc62a4b9384ab6374569e57965d91e176dbd7a529d96",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 10,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.5",
+              "store": "map-global-control/baseline",
+              "caller": "lazy:tk.synthetic.sum.5",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.5"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.5"
+              ],
+              "elapsedMs": 0.077,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "3e7f22f66420fa26856dda23fc07ef87418e41f87e9f1a079f2148413fad7ce2",
+              "cached": false,
+              "computedMs": null
+            }
+          ],
+          "aggregateCall": {
+            "seq": 12,
+            "parent": null,
+            "depth": 0,
+            "calculation": "fn.synthetic.aggregate",
+            "store": "map-global-control/baseline",
+            "caller": "lazy:tk.synthetic.aggregate",
+            "site": null,
+            "inParts": [
+              "tk.synthetic.sum.0",
+              "tk.synthetic.sum.1",
+              "tk.synthetic.sum.2",
+              "tk.synthetic.sum.3",
+              "tk.synthetic.sum.4",
+              "tk.synthetic.sum.5"
+            ],
+            "outParts": [
+              "tk.synthetic.aggregate"
+            ],
+            "elapsedMs": 0.023,
+            "status": "ok",
+            "error": null,
+            "emits": null,
+            "key": "449a42084af43ad172d33df8e82ce966dae5c362fc2e24b65075a543e1493f60",
+            "cached": false,
+            "computedMs": null
+          },
+          "controlCall": {
+            "seq": 13,
+            "parent": null,
+            "depth": 0,
+            "calculation": "fn.synthetic.declaredControl",
+            "store": "map-global-control/baseline",
+            "caller": "lazy:tk.synthetic.declaredControl",
+            "site": null,
+            "inParts": [
+              "px.synthetic.upload.5"
+            ],
+            "outParts": [
+              "tk.synthetic.declaredControl"
+            ],
+            "elapsedMs": 0.043,
+            "status": "ok",
+            "error": null,
+            "emits": null,
+            "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+            "cached": false,
+            "computedMs": null
+          },
+          "syntheticQueryCalls": 6,
+          "calls": [
+            {
+              "seq": 0,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.0",
+              "store": "map-global-control/baseline",
+              "caller": "lazy:tk.synthetic.sum.0",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.0"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.0"
+              ],
+              "elapsedMs": 0.194,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "c225fd4c913b197cd51a0cec2eb726e246bd685e692ff34372aac7a6042c448b",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 1,
+              "parent": 0,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "map-global-control/baseline",
+              "caller": "fn.synthetic.sum.0",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.015,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 2,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.1",
+              "store": "map-global-control/baseline",
+              "caller": "lazy:tk.synthetic.sum.1",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.1"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.1"
+              ],
+              "elapsedMs": 0.045,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "33208fe3d5250eea43847f560889a9ab564da1b1a5c1a906bc0f67aaf2c708e3",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 3,
+              "parent": 2,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "map-global-control/baseline",
+              "caller": "fn.synthetic.sum.1",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.006,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 4,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.2",
+              "store": "map-global-control/baseline",
+              "caller": "lazy:tk.synthetic.sum.2",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.2"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.2"
+              ],
+              "elapsedMs": 0.034,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "3f4f68dba3ff347e45013563000cb777b76a09d5e2087630601c6fd95d3e2e63",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 5,
+              "parent": 4,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "map-global-control/baseline",
+              "caller": "fn.synthetic.sum.2",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.005,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 6,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.3",
+              "store": "map-global-control/baseline",
+              "caller": "lazy:tk.synthetic.sum.3",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.3"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.3"
+              ],
+              "elapsedMs": 0.031,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "0420cdb8d2a1a7e4ec11d07352edc5cc7684a120adb9939a749900417a4d1e14",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 7,
+              "parent": 6,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "map-global-control/baseline",
+              "caller": "fn.synthetic.sum.3",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.005,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 8,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.4",
+              "store": "map-global-control/baseline",
+              "caller": "lazy:tk.synthetic.sum.4",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.4"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.4"
+              ],
+              "elapsedMs": 0.108,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "4730dcbabebdbb340bb9dc62a4b9384ab6374569e57965d91e176dbd7a529d96",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 9,
+              "parent": 8,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "map-global-control/baseline",
+              "caller": "fn.synthetic.sum.4",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.011,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 10,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.5",
+              "store": "map-global-control/baseline",
+              "caller": "lazy:tk.synthetic.sum.5",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.5"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.5"
+              ],
+              "elapsedMs": 0.077,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "3e7f22f66420fa26856dda23fc07ef87418e41f87e9f1a079f2148413fad7ce2",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 11,
+              "parent": 10,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "map-global-control/baseline",
+              "caller": "fn.synthetic.sum.5",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.008,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 12,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.aggregate",
+              "store": "map-global-control/baseline",
+              "caller": "lazy:tk.synthetic.aggregate",
+              "site": null,
+              "inParts": [
+                "tk.synthetic.sum.0",
+                "tk.synthetic.sum.1",
+                "tk.synthetic.sum.2",
+                "tk.synthetic.sum.3",
+                "tk.synthetic.sum.4",
+                "tk.synthetic.sum.5"
+              ],
+              "outParts": [
+                "tk.synthetic.aggregate"
+              ],
+              "elapsedMs": 0.023,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "449a42084af43ad172d33df8e82ce966dae5c362fc2e24b65075a543e1493f60",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 13,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.declaredControl",
+              "store": "map-global-control/baseline",
+              "caller": "lazy:tk.synthetic.declaredControl",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.5"
+              ],
+              "outParts": [
+                "tk.synthetic.declaredControl"
+              ],
+              "elapsedMs": 0.043,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+              "cached": false,
+              "computedMs": null
+            }
+          ],
+          "keyspace": [
+            {
+              "address": "tk.synthetic.aggregate",
+              "key": "449a42084af43ad172d33df8e82ce966dae5c362fc2e24b65075a543e1493f60",
+              "producedBy": "fn.synthetic.aggregate",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.declaredControl",
+              "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+              "producedBy": "fn.synthetic.declaredControl",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.0",
+              "key": "c225fd4c913b197cd51a0cec2eb726e246bd685e692ff34372aac7a6042c448b",
+              "producedBy": "fn.synthetic.sum.0",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.1",
+              "key": "33208fe3d5250eea43847f560889a9ab564da1b1a5c1a906bc0f67aaf2c708e3",
+              "producedBy": "fn.synthetic.sum.1",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.2",
+              "key": "3f4f68dba3ff347e45013563000cb777b76a09d5e2087630601c6fd95d3e2e63",
+              "producedBy": "fn.synthetic.sum.2",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.3",
+              "key": "0420cdb8d2a1a7e4ec11d07352edc5cc7684a120adb9939a749900417a4d1e14",
+              "producedBy": "fn.synthetic.sum.3",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.4",
+              "key": "4730dcbabebdbb340bb9dc62a4b9384ab6374569e57965d91e176dbd7a529d96",
+              "producedBy": "fn.synthetic.sum.4",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.5",
+              "key": "3e7f22f66420fa26856dda23fc07ef87418e41f87e9f1a079f2148413fad7ce2",
+              "producedBy": "fn.synthetic.sum.5",
+              "pointerTo": null
+            }
+          ],
+          "manifest": {
+            "store": "map-global-control/baseline",
+            "parts": [
+              {
+                "address": "tk.synthetic.aggregate",
+                "producedBy": "fn.synthetic.aggregate",
+                "inParts": [
+                  "tk.synthetic.sum.0",
+                  "tk.synthetic.sum.1",
+                  "tk.synthetic.sum.2",
+                  "tk.synthetic.sum.3",
+                  "tk.synthetic.sum.4",
+                  "tk.synthetic.sum.5"
+                ],
+                "key": "449a42084af43ad172d33df8e82ce966dae5c362fc2e24b65075a543e1493f60",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.declaredControl",
+                "producedBy": "fn.synthetic.declaredControl",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.0",
+                "producedBy": "fn.synthetic.sum.0",
+                "inParts": [
+                  "px.synthetic.upload.0"
+                ],
+                "key": "c225fd4c913b197cd51a0cec2eb726e246bd685e692ff34372aac7a6042c448b",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.1",
+                "producedBy": "fn.synthetic.sum.1",
+                "inParts": [
+                  "px.synthetic.upload.1"
+                ],
+                "key": "33208fe3d5250eea43847f560889a9ab564da1b1a5c1a906bc0f67aaf2c708e3",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.2",
+                "producedBy": "fn.synthetic.sum.2",
+                "inParts": [
+                  "px.synthetic.upload.2"
+                ],
+                "key": "3f4f68dba3ff347e45013563000cb777b76a09d5e2087630601c6fd95d3e2e63",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.3",
+                "producedBy": "fn.synthetic.sum.3",
+                "inParts": [
+                  "px.synthetic.upload.3"
+                ],
+                "key": "0420cdb8d2a1a7e4ec11d07352edc5cc7684a120adb9939a749900417a4d1e14",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.4",
+                "producedBy": "fn.synthetic.sum.4",
+                "inParts": [
+                  "px.synthetic.upload.4"
+                ],
+                "key": "4730dcbabebdbb340bb9dc62a4b9384ab6374569e57965d91e176dbd7a529d96",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.5",
+                "producedBy": "fn.synthetic.sum.5",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "key": "3e7f22f66420fa26856dda23fc07ef87418e41f87e9f1a079f2148413fad7ce2",
+                "pointerTo": null
+              }
+            ],
+            "calculations": [
+              {
+                "address": "fn.q.part.render",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "default render of the Part at args.a (fg/render.mjs), cached by address"
+              },
+              {
+                "address": "fn.q.pxset.bbox",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.pxset.count",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.pxset.intersectCount",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.pxset.render",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.synthetic.byteSum",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.synthetic.aggregate",
+                "inParts": [
+                  "tk.synthetic.sum.0",
+                  "tk.synthetic.sum.1",
+                  "tk.synthetic.sum.2",
+                  "tk.synthetic.sum.3",
+                  "tk.synthetic.sum.4",
+                  "tk.synthetic.sum.5"
+                ],
+                "outParts": [
+                  "tk.synthetic.aggregate"
+                ],
+                "calls": [],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.declaredControl",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "outParts": [
+                  "tk.synthetic.declaredControl"
+                ],
+                "calls": [],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.0",
+                "inParts": [
+                  "px.synthetic.upload.0"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.0"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.1",
+                "inParts": [
+                  "px.synthetic.upload.1"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.1"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.2",
+                "inParts": [
+                  "px.synthetic.upload.2"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.2"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.3",
+                "inParts": [
+                  "px.synthetic.upload.3"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.3"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.4",
+                "inParts": [
+                  "px.synthetic.upload.4"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.4"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.5",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.5"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.tk.instrumentation.calls",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "the calls made by args.caller and nested under them (timings: sidecar data, never hashed)"
+              }
+            ]
+          }
+        },
+        {
+          "phase": "changed",
+          "cacheSizeAfter": 15,
+          "pins": [
+            {
+              "address": "px.synthetic.upload.0",
+              "bytes": [
+                10,
+                20,
+                30,
+                40
+              ],
+              "sha256": "5f53c0ff07ba5d9a330e68c95dabb1a9bc49e29f9ed53f6fa7c6d99abb000050",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 24,
+              "rootContentKey": "194e61778574f415f3b3670f2b24e815da03765690ede50ac3d6389e1cfe5acc"
+            },
+            {
+              "address": "px.synthetic.upload.1",
+              "bytes": [
+                11,
+                21,
+                31,
+                41
+              ],
+              "sha256": "a546025591f08f7c49411d827b407feeadda1135e5f9ab41055bd793ca829edb",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 25,
+              "rootContentKey": "cbef63f4271d1462dee9e143aa507e39fd8cd904cc15ac727c28b0037bef8777"
+            },
+            {
+              "address": "px.synthetic.upload.2",
+              "bytes": [
+                12,
+                23,
+                32,
+                42
+              ],
+              "sha256": "e80f59a0b1a9d3421c71f5f981b73398f68bac23afa1cf26350cb27963e0df36",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 26,
+              "rootContentKey": "0f63974de79c65be59a386778907c5359595383fb20af03d713efdd048c78dca"
+            },
+            {
+              "address": "px.synthetic.upload.3",
+              "bytes": [
+                13,
+                23,
+                33,
+                43
+              ],
+              "sha256": "1ba130432410056fe30f0109c5e6eabce007c709d277c8a611fa1d73fd288ade",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 27,
+              "rootContentKey": "4ea6ba1344a139cf5a3797d4fe405b80551758dfaafecc7ece6c1442c68bef65"
+            },
+            {
+              "address": "px.synthetic.upload.4",
+              "bytes": [
+                14,
+                24,
+                34,
+                44
+              ],
+              "sha256": "ec51dafa45a0c4a306864e224a034f6582752b0e1583940f3989df690843edba",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 28,
+              "rootContentKey": "4f44354006dd21afe5262a9716e31d4d86f683f5485104b8e5db9541db0c68d7"
+            },
+            {
+              "address": "px.synthetic.upload.5",
+              "bytes": [
+                15,
+                25,
+                35,
+                45
+              ],
+              "sha256": "fafd134b4e16bc38995cfa5929a8d4bb5f126983d58b906911c27d851c86b32d",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 29,
+              "rootContentKey": "2a9b5daec1444716b768bac0db90445efc84c42fb5556f6ad635d1334d7bc041"
+            }
+          ],
+          "values": [
+            100,
+            104,
+            109,
+            112,
+            116,
+            120
+          ],
+          "aggregate": 661,
+          "control": 120,
+          "producers": [
+            {
+              "seq": 0,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.0",
+              "store": "map-global-control/changed",
+              "caller": "lazy:tk.synthetic.sum.0",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.0"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.0"
+              ],
+              "elapsedMs": 0.106,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "951923d0e8fe9d68985f3982a60ffc7ddd5a7cf55537142073988bc51c5aa7ab",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 2,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.1",
+              "store": "map-global-control/changed",
+              "caller": "lazy:tk.synthetic.sum.1",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.1"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.1"
+              ],
+              "elapsedMs": 0.035,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "8af39123c93c6bf0cda3b485614a3b2ecea70bd2726e5b4bc73a5222c967bf05",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 4,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.2",
+              "store": "map-global-control/changed",
+              "caller": "lazy:tk.synthetic.sum.2",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.2"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.2"
+              ],
+              "elapsedMs": 0.033,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "9fce4f3a8515503c601ca4735ee01e84a14103ede8ea83d25722fd488f2c7103",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 6,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.3",
+              "store": "map-global-control/changed",
+              "caller": "lazy:tk.synthetic.sum.3",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.3"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.3"
+              ],
+              "elapsedMs": 0.064,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "cce200383a9aa1c64895f12f18537ce180e5d5289bf62b82f6f1b865485c4667",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 8,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.4",
+              "store": "map-global-control/changed",
+              "caller": "lazy:tk.synthetic.sum.4",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.4"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.4"
+              ],
+              "elapsedMs": 0.035,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "18932dd4ba9cb5fe7b0df476fc127872843cdcca657176ac1493e05f035925ae",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 10,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.5",
+              "store": "map-global-control/changed",
+              "caller": "lazy:tk.synthetic.sum.5",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.5"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.5"
+              ],
+              "elapsedMs": 0.049,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "e440aa0ec2a8a6ebc29982271cabf64d9649edf38579a1caf2464ba8f179fae4",
+              "cached": false,
+              "computedMs": null
+            }
+          ],
+          "aggregateCall": {
+            "seq": 12,
+            "parent": null,
+            "depth": 0,
+            "calculation": "fn.synthetic.aggregate",
+            "store": "map-global-control/changed",
+            "caller": "lazy:tk.synthetic.aggregate",
+            "site": null,
+            "inParts": [
+              "tk.synthetic.sum.0",
+              "tk.synthetic.sum.1",
+              "tk.synthetic.sum.2",
+              "tk.synthetic.sum.3",
+              "tk.synthetic.sum.4",
+              "tk.synthetic.sum.5"
+            ],
+            "outParts": [
+              "tk.synthetic.aggregate"
+            ],
+            "elapsedMs": 0.021,
+            "status": "ok",
+            "error": null,
+            "emits": null,
+            "key": "66aaa3ed9e6f0f9778a0ce71360f02159262d7a2f4b3c9bd8bfa031c32b7438b",
+            "cached": false,
+            "computedMs": null
+          },
+          "controlCall": {
+            "seq": 13,
+            "parent": null,
+            "depth": 0,
+            "calculation": "fn.synthetic.declaredControl",
+            "store": "map-global-control/changed",
+            "caller": "lazy:tk.synthetic.declaredControl",
+            "site": null,
+            "inParts": [
+              "px.synthetic.upload.5"
+            ],
+            "outParts": [
+              "tk.synthetic.declaredControl"
+            ],
+            "elapsedMs": 0.012,
+            "status": "ok",
+            "error": null,
+            "emits": {
+              "cached": 1
+            },
+            "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+            "cached": true,
+            "computedMs": 0.043
+          },
+          "syntheticQueryCalls": 6,
+          "calls": [
+            {
+              "seq": 0,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.0",
+              "store": "map-global-control/changed",
+              "caller": "lazy:tk.synthetic.sum.0",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.0"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.0"
+              ],
+              "elapsedMs": 0.106,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "951923d0e8fe9d68985f3982a60ffc7ddd5a7cf55537142073988bc51c5aa7ab",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 1,
+              "parent": 0,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "map-global-control/changed",
+              "caller": "fn.synthetic.sum.0",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.011,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 2,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.1",
+              "store": "map-global-control/changed",
+              "caller": "lazy:tk.synthetic.sum.1",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.1"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.1"
+              ],
+              "elapsedMs": 0.035,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "8af39123c93c6bf0cda3b485614a3b2ecea70bd2726e5b4bc73a5222c967bf05",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 3,
+              "parent": 2,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "map-global-control/changed",
+              "caller": "fn.synthetic.sum.1",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.005,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 4,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.2",
+              "store": "map-global-control/changed",
+              "caller": "lazy:tk.synthetic.sum.2",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.2"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.2"
+              ],
+              "elapsedMs": 0.033,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "9fce4f3a8515503c601ca4735ee01e84a14103ede8ea83d25722fd488f2c7103",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 5,
+              "parent": 4,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "map-global-control/changed",
+              "caller": "fn.synthetic.sum.2",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.004,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 6,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.3",
+              "store": "map-global-control/changed",
+              "caller": "lazy:tk.synthetic.sum.3",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.3"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.3"
+              ],
+              "elapsedMs": 0.064,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "cce200383a9aa1c64895f12f18537ce180e5d5289bf62b82f6f1b865485c4667",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 7,
+              "parent": 6,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "map-global-control/changed",
+              "caller": "fn.synthetic.sum.3",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.008,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 8,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.4",
+              "store": "map-global-control/changed",
+              "caller": "lazy:tk.synthetic.sum.4",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.4"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.4"
+              ],
+              "elapsedMs": 0.035,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "18932dd4ba9cb5fe7b0df476fc127872843cdcca657176ac1493e05f035925ae",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 9,
+              "parent": 8,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "map-global-control/changed",
+              "caller": "fn.synthetic.sum.4",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.006,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 10,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.5",
+              "store": "map-global-control/changed",
+              "caller": "lazy:tk.synthetic.sum.5",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.5"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.5"
+              ],
+              "elapsedMs": 0.049,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "e440aa0ec2a8a6ebc29982271cabf64d9649edf38579a1caf2464ba8f179fae4",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 11,
+              "parent": 10,
+              "depth": 1,
+              "calculation": "fn.q.synthetic.byteSum",
+              "store": "map-global-control/changed",
+              "caller": "fn.synthetic.sum.5",
+              "site": null,
+              "inParts": [],
+              "outParts": [],
+              "elapsedMs": 0.007,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "computed": 1
+              },
+              "key": null,
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 12,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.aggregate",
+              "store": "map-global-control/changed",
+              "caller": "lazy:tk.synthetic.aggregate",
+              "site": null,
+              "inParts": [
+                "tk.synthetic.sum.0",
+                "tk.synthetic.sum.1",
+                "tk.synthetic.sum.2",
+                "tk.synthetic.sum.3",
+                "tk.synthetic.sum.4",
+                "tk.synthetic.sum.5"
+              ],
+              "outParts": [
+                "tk.synthetic.aggregate"
+              ],
+              "elapsedMs": 0.021,
+              "status": "ok",
+              "error": null,
+              "emits": null,
+              "key": "66aaa3ed9e6f0f9778a0ce71360f02159262d7a2f4b3c9bd8bfa031c32b7438b",
+              "cached": false,
+              "computedMs": null
+            },
+            {
+              "seq": 13,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.declaredControl",
+              "store": "map-global-control/changed",
+              "caller": "lazy:tk.synthetic.declaredControl",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.5"
+              ],
+              "outParts": [
+                "tk.synthetic.declaredControl"
+              ],
+              "elapsedMs": 0.012,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+              "cached": true,
+              "computedMs": 0.043
+            }
+          ],
+          "keyspace": [
+            {
+              "address": "tk.synthetic.aggregate",
+              "key": "66aaa3ed9e6f0f9778a0ce71360f02159262d7a2f4b3c9bd8bfa031c32b7438b",
+              "producedBy": "fn.synthetic.aggregate",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.declaredControl",
+              "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+              "producedBy": "fn.synthetic.declaredControl",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.0",
+              "key": "951923d0e8fe9d68985f3982a60ffc7ddd5a7cf55537142073988bc51c5aa7ab",
+              "producedBy": "fn.synthetic.sum.0",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.1",
+              "key": "8af39123c93c6bf0cda3b485614a3b2ecea70bd2726e5b4bc73a5222c967bf05",
+              "producedBy": "fn.synthetic.sum.1",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.2",
+              "key": "9fce4f3a8515503c601ca4735ee01e84a14103ede8ea83d25722fd488f2c7103",
+              "producedBy": "fn.synthetic.sum.2",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.3",
+              "key": "cce200383a9aa1c64895f12f18537ce180e5d5289bf62b82f6f1b865485c4667",
+              "producedBy": "fn.synthetic.sum.3",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.4",
+              "key": "18932dd4ba9cb5fe7b0df476fc127872843cdcca657176ac1493e05f035925ae",
+              "producedBy": "fn.synthetic.sum.4",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.5",
+              "key": "e440aa0ec2a8a6ebc29982271cabf64d9649edf38579a1caf2464ba8f179fae4",
+              "producedBy": "fn.synthetic.sum.5",
+              "pointerTo": null
+            }
+          ],
+          "manifest": {
+            "store": "map-global-control/changed",
+            "parts": [
+              {
+                "address": "tk.synthetic.aggregate",
+                "producedBy": "fn.synthetic.aggregate",
+                "inParts": [
+                  "tk.synthetic.sum.0",
+                  "tk.synthetic.sum.1",
+                  "tk.synthetic.sum.2",
+                  "tk.synthetic.sum.3",
+                  "tk.synthetic.sum.4",
+                  "tk.synthetic.sum.5"
+                ],
+                "key": "66aaa3ed9e6f0f9778a0ce71360f02159262d7a2f4b3c9bd8bfa031c32b7438b",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.declaredControl",
+                "producedBy": "fn.synthetic.declaredControl",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.0",
+                "producedBy": "fn.synthetic.sum.0",
+                "inParts": [
+                  "px.synthetic.upload.0"
+                ],
+                "key": "951923d0e8fe9d68985f3982a60ffc7ddd5a7cf55537142073988bc51c5aa7ab",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.1",
+                "producedBy": "fn.synthetic.sum.1",
+                "inParts": [
+                  "px.synthetic.upload.1"
+                ],
+                "key": "8af39123c93c6bf0cda3b485614a3b2ecea70bd2726e5b4bc73a5222c967bf05",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.2",
+                "producedBy": "fn.synthetic.sum.2",
+                "inParts": [
+                  "px.synthetic.upload.2"
+                ],
+                "key": "9fce4f3a8515503c601ca4735ee01e84a14103ede8ea83d25722fd488f2c7103",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.3",
+                "producedBy": "fn.synthetic.sum.3",
+                "inParts": [
+                  "px.synthetic.upload.3"
+                ],
+                "key": "cce200383a9aa1c64895f12f18537ce180e5d5289bf62b82f6f1b865485c4667",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.4",
+                "producedBy": "fn.synthetic.sum.4",
+                "inParts": [
+                  "px.synthetic.upload.4"
+                ],
+                "key": "18932dd4ba9cb5fe7b0df476fc127872843cdcca657176ac1493e05f035925ae",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.5",
+                "producedBy": "fn.synthetic.sum.5",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "key": "e440aa0ec2a8a6ebc29982271cabf64d9649edf38579a1caf2464ba8f179fae4",
+                "pointerTo": null
+              }
+            ],
+            "calculations": [
+              {
+                "address": "fn.q.part.render",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "default render of the Part at args.a (fg/render.mjs), cached by address"
+              },
+              {
+                "address": "fn.q.pxset.bbox",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.pxset.count",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.pxset.intersectCount",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.pxset.render",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.synthetic.byteSum",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.synthetic.aggregate",
+                "inParts": [
+                  "tk.synthetic.sum.0",
+                  "tk.synthetic.sum.1",
+                  "tk.synthetic.sum.2",
+                  "tk.synthetic.sum.3",
+                  "tk.synthetic.sum.4",
+                  "tk.synthetic.sum.5"
+                ],
+                "outParts": [
+                  "tk.synthetic.aggregate"
+                ],
+                "calls": [],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.declaredControl",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "outParts": [
+                  "tk.synthetic.declaredControl"
+                ],
+                "calls": [],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.0",
+                "inParts": [
+                  "px.synthetic.upload.0"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.0"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.1",
+                "inParts": [
+                  "px.synthetic.upload.1"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.1"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.2",
+                "inParts": [
+                  "px.synthetic.upload.2"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.2"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.3",
+                "inParts": [
+                  "px.synthetic.upload.3"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.3"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.4",
+                "inParts": [
+                  "px.synthetic.upload.4"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.4"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.5",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.5"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.tk.instrumentation.calls",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "the calls made by args.caller and nested under them (timings: sidecar data, never hashed)"
+              }
+            ]
+          }
+        },
+        {
+          "phase": "restored",
+          "cacheSizeAfter": 15,
+          "pins": [
+            {
+              "address": "px.synthetic.upload.0",
+              "bytes": [
+                10,
+                20,
+                30,
+                40
+              ],
+              "sha256": "5f53c0ff07ba5d9a330e68c95dabb1a9bc49e29f9ed53f6fa7c6d99abb000050",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 30,
+              "rootContentKey": "194e61778574f415f3b3670f2b24e815da03765690ede50ac3d6389e1cfe5acc"
+            },
+            {
+              "address": "px.synthetic.upload.1",
+              "bytes": [
+                11,
+                21,
+                31,
+                41
+              ],
+              "sha256": "a546025591f08f7c49411d827b407feeadda1135e5f9ab41055bd793ca829edb",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 31,
+              "rootContentKey": "cbef63f4271d1462dee9e143aa507e39fd8cd904cc15ac727c28b0037bef8777"
+            },
+            {
+              "address": "px.synthetic.upload.2",
+              "bytes": [
+                12,
+                22,
+                32,
+                42
+              ],
+              "sha256": "4bf2f4b76bd131be9c69d51f72085a90ad741de5ef7c6c1079ac994225ffe65c",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 32,
+              "rootContentKey": "4c3fc19bf2593344af6acb803bb185b7bf32f7c6fa625a4d58ba016fc1c03335"
+            },
+            {
+              "address": "px.synthetic.upload.3",
+              "bytes": [
+                13,
+                23,
+                33,
+                43
+              ],
+              "sha256": "1ba130432410056fe30f0109c5e6eabce007c709d277c8a611fa1d73fd288ade",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 33,
+              "rootContentKey": "4ea6ba1344a139cf5a3797d4fe405b80551758dfaafecc7ece6c1442c68bef65"
+            },
+            {
+              "address": "px.synthetic.upload.4",
+              "bytes": [
+                14,
+                24,
+                34,
+                44
+              ],
+              "sha256": "ec51dafa45a0c4a306864e224a034f6582752b0e1583940f3989df690843edba",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 34,
+              "rootContentKey": "4f44354006dd21afe5262a9716e31d4d86f683f5485104b8e5db9541db0c68d7"
+            },
+            {
+              "address": "px.synthetic.upload.5",
+              "bytes": [
+                15,
+                25,
+                35,
+                45
+              ],
+              "sha256": "fafd134b4e16bc38995cfa5929a8d4bb5f126983d58b906911c27d851c86b32d",
+              "class": "Uint8Array",
+              "length": 4,
+              "byteOffset": 0,
+              "byteLength": 4,
+              "bufferByteLength": 4,
+              "arrayIdentity": 35,
+              "rootContentKey": "2a9b5daec1444716b768bac0db90445efc84c42fb5556f6ad635d1334d7bc041"
+            }
+          ],
+          "values": [
+            100,
+            104,
+            108,
+            112,
+            116,
+            120
+          ],
+          "aggregate": 660,
+          "control": 120,
+          "producers": [
+            {
+              "seq": 0,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.0",
+              "store": "map-global-control/restored",
+              "caller": "lazy:tk.synthetic.sum.0",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.0"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.0"
+              ],
+              "elapsedMs": 0.086,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "c225fd4c913b197cd51a0cec2eb726e246bd685e692ff34372aac7a6042c448b",
+              "cached": true,
+              "computedMs": 0.194
+            },
+            {
+              "seq": 1,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.1",
+              "store": "map-global-control/restored",
+              "caller": "lazy:tk.synthetic.sum.1",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.1"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.1"
+              ],
+              "elapsedMs": 0.024,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "33208fe3d5250eea43847f560889a9ab564da1b1a5c1a906bc0f67aaf2c708e3",
+              "cached": true,
+              "computedMs": 0.045
+            },
+            {
+              "seq": 2,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.2",
+              "store": "map-global-control/restored",
+              "caller": "lazy:tk.synthetic.sum.2",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.2"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.2"
+              ],
+              "elapsedMs": 0.023,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "3f4f68dba3ff347e45013563000cb777b76a09d5e2087630601c6fd95d3e2e63",
+              "cached": true,
+              "computedMs": 0.034
+            },
+            {
+              "seq": 3,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.3",
+              "store": "map-global-control/restored",
+              "caller": "lazy:tk.synthetic.sum.3",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.3"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.3"
+              ],
+              "elapsedMs": 0.022,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "0420cdb8d2a1a7e4ec11d07352edc5cc7684a120adb9939a749900417a4d1e14",
+              "cached": true,
+              "computedMs": 0.031
+            },
+            {
+              "seq": 4,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.4",
+              "store": "map-global-control/restored",
+              "caller": "lazy:tk.synthetic.sum.4",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.4"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.4"
+              ],
+              "elapsedMs": 0.021,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "4730dcbabebdbb340bb9dc62a4b9384ab6374569e57965d91e176dbd7a529d96",
+              "cached": true,
+              "computedMs": 0.108
+            },
+            {
+              "seq": 5,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.5",
+              "store": "map-global-control/restored",
+              "caller": "lazy:tk.synthetic.sum.5",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.5"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.5"
+              ],
+              "elapsedMs": 0.03,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "3e7f22f66420fa26856dda23fc07ef87418e41f87e9f1a079f2148413fad7ce2",
+              "cached": true,
+              "computedMs": 0.077
+            }
+          ],
+          "aggregateCall": {
+            "seq": 6,
+            "parent": null,
+            "depth": 0,
+            "calculation": "fn.synthetic.aggregate",
+            "store": "map-global-control/restored",
+            "caller": "lazy:tk.synthetic.aggregate",
+            "site": null,
+            "inParts": [
+              "tk.synthetic.sum.0",
+              "tk.synthetic.sum.1",
+              "tk.synthetic.sum.2",
+              "tk.synthetic.sum.3",
+              "tk.synthetic.sum.4",
+              "tk.synthetic.sum.5"
+            ],
+            "outParts": [
+              "tk.synthetic.aggregate"
+            ],
+            "elapsedMs": 0.021,
+            "status": "ok",
+            "error": null,
+            "emits": {
+              "cached": 1
+            },
+            "key": "449a42084af43ad172d33df8e82ce966dae5c362fc2e24b65075a543e1493f60",
+            "cached": true,
+            "computedMs": 0.023
+          },
+          "controlCall": {
+            "seq": 7,
+            "parent": null,
+            "depth": 0,
+            "calculation": "fn.synthetic.declaredControl",
+            "store": "map-global-control/restored",
+            "caller": "lazy:tk.synthetic.declaredControl",
+            "site": null,
+            "inParts": [
+              "px.synthetic.upload.5"
+            ],
+            "outParts": [
+              "tk.synthetic.declaredControl"
+            ],
+            "elapsedMs": 0.039,
+            "status": "ok",
+            "error": null,
+            "emits": {
+              "cached": 1
+            },
+            "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+            "cached": true,
+            "computedMs": 0.043
+          },
+          "syntheticQueryCalls": 0,
+          "calls": [
+            {
+              "seq": 0,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.0",
+              "store": "map-global-control/restored",
+              "caller": "lazy:tk.synthetic.sum.0",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.0"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.0"
+              ],
+              "elapsedMs": 0.086,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "c225fd4c913b197cd51a0cec2eb726e246bd685e692ff34372aac7a6042c448b",
+              "cached": true,
+              "computedMs": 0.194
+            },
+            {
+              "seq": 1,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.1",
+              "store": "map-global-control/restored",
+              "caller": "lazy:tk.synthetic.sum.1",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.1"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.1"
+              ],
+              "elapsedMs": 0.024,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "33208fe3d5250eea43847f560889a9ab564da1b1a5c1a906bc0f67aaf2c708e3",
+              "cached": true,
+              "computedMs": 0.045
+            },
+            {
+              "seq": 2,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.2",
+              "store": "map-global-control/restored",
+              "caller": "lazy:tk.synthetic.sum.2",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.2"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.2"
+              ],
+              "elapsedMs": 0.023,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "3f4f68dba3ff347e45013563000cb777b76a09d5e2087630601c6fd95d3e2e63",
+              "cached": true,
+              "computedMs": 0.034
+            },
+            {
+              "seq": 3,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.3",
+              "store": "map-global-control/restored",
+              "caller": "lazy:tk.synthetic.sum.3",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.3"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.3"
+              ],
+              "elapsedMs": 0.022,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "0420cdb8d2a1a7e4ec11d07352edc5cc7684a120adb9939a749900417a4d1e14",
+              "cached": true,
+              "computedMs": 0.031
+            },
+            {
+              "seq": 4,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.4",
+              "store": "map-global-control/restored",
+              "caller": "lazy:tk.synthetic.sum.4",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.4"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.4"
+              ],
+              "elapsedMs": 0.021,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "4730dcbabebdbb340bb9dc62a4b9384ab6374569e57965d91e176dbd7a529d96",
+              "cached": true,
+              "computedMs": 0.108
+            },
+            {
+              "seq": 5,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.sum.5",
+              "store": "map-global-control/restored",
+              "caller": "lazy:tk.synthetic.sum.5",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.5"
+              ],
+              "outParts": [
+                "tk.synthetic.sum.5"
+              ],
+              "elapsedMs": 0.03,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "3e7f22f66420fa26856dda23fc07ef87418e41f87e9f1a079f2148413fad7ce2",
+              "cached": true,
+              "computedMs": 0.077
+            },
+            {
+              "seq": 6,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.aggregate",
+              "store": "map-global-control/restored",
+              "caller": "lazy:tk.synthetic.aggregate",
+              "site": null,
+              "inParts": [
+                "tk.synthetic.sum.0",
+                "tk.synthetic.sum.1",
+                "tk.synthetic.sum.2",
+                "tk.synthetic.sum.3",
+                "tk.synthetic.sum.4",
+                "tk.synthetic.sum.5"
+              ],
+              "outParts": [
+                "tk.synthetic.aggregate"
+              ],
+              "elapsedMs": 0.021,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "449a42084af43ad172d33df8e82ce966dae5c362fc2e24b65075a543e1493f60",
+              "cached": true,
+              "computedMs": 0.023
+            },
+            {
+              "seq": 7,
+              "parent": null,
+              "depth": 0,
+              "calculation": "fn.synthetic.declaredControl",
+              "store": "map-global-control/restored",
+              "caller": "lazy:tk.synthetic.declaredControl",
+              "site": null,
+              "inParts": [
+                "px.synthetic.upload.5"
+              ],
+              "outParts": [
+                "tk.synthetic.declaredControl"
+              ],
+              "elapsedMs": 0.039,
+              "status": "ok",
+              "error": null,
+              "emits": {
+                "cached": 1
+              },
+              "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+              "cached": true,
+              "computedMs": 0.043
+            }
+          ],
+          "keyspace": [
+            {
+              "address": "tk.synthetic.aggregate",
+              "key": "449a42084af43ad172d33df8e82ce966dae5c362fc2e24b65075a543e1493f60",
+              "producedBy": "fn.synthetic.aggregate",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.declaredControl",
+              "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+              "producedBy": "fn.synthetic.declaredControl",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.0",
+              "key": "c225fd4c913b197cd51a0cec2eb726e246bd685e692ff34372aac7a6042c448b",
+              "producedBy": "fn.synthetic.sum.0",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.1",
+              "key": "33208fe3d5250eea43847f560889a9ab564da1b1a5c1a906bc0f67aaf2c708e3",
+              "producedBy": "fn.synthetic.sum.1",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.2",
+              "key": "3f4f68dba3ff347e45013563000cb777b76a09d5e2087630601c6fd95d3e2e63",
+              "producedBy": "fn.synthetic.sum.2",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.3",
+              "key": "0420cdb8d2a1a7e4ec11d07352edc5cc7684a120adb9939a749900417a4d1e14",
+              "producedBy": "fn.synthetic.sum.3",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.4",
+              "key": "4730dcbabebdbb340bb9dc62a4b9384ab6374569e57965d91e176dbd7a529d96",
+              "producedBy": "fn.synthetic.sum.4",
+              "pointerTo": null
+            },
+            {
+              "address": "tk.synthetic.sum.5",
+              "key": "3e7f22f66420fa26856dda23fc07ef87418e41f87e9f1a079f2148413fad7ce2",
+              "producedBy": "fn.synthetic.sum.5",
+              "pointerTo": null
+            }
+          ],
+          "manifest": {
+            "store": "map-global-control/restored",
+            "parts": [
+              {
+                "address": "tk.synthetic.aggregate",
+                "producedBy": "fn.synthetic.aggregate",
+                "inParts": [
+                  "tk.synthetic.sum.0",
+                  "tk.synthetic.sum.1",
+                  "tk.synthetic.sum.2",
+                  "tk.synthetic.sum.3",
+                  "tk.synthetic.sum.4",
+                  "tk.synthetic.sum.5"
+                ],
+                "key": "449a42084af43ad172d33df8e82ce966dae5c362fc2e24b65075a543e1493f60",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.declaredControl",
+                "producedBy": "fn.synthetic.declaredControl",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "key": "33d9836dea72bf03289b1beafca2e5a3aa369ae931de03f6dc8ea6366a18472a",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.0",
+                "producedBy": "fn.synthetic.sum.0",
+                "inParts": [
+                  "px.synthetic.upload.0"
+                ],
+                "key": "c225fd4c913b197cd51a0cec2eb726e246bd685e692ff34372aac7a6042c448b",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.1",
+                "producedBy": "fn.synthetic.sum.1",
+                "inParts": [
+                  "px.synthetic.upload.1"
+                ],
+                "key": "33208fe3d5250eea43847f560889a9ab564da1b1a5c1a906bc0f67aaf2c708e3",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.2",
+                "producedBy": "fn.synthetic.sum.2",
+                "inParts": [
+                  "px.synthetic.upload.2"
+                ],
+                "key": "3f4f68dba3ff347e45013563000cb777b76a09d5e2087630601c6fd95d3e2e63",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.3",
+                "producedBy": "fn.synthetic.sum.3",
+                "inParts": [
+                  "px.synthetic.upload.3"
+                ],
+                "key": "0420cdb8d2a1a7e4ec11d07352edc5cc7684a120adb9939a749900417a4d1e14",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.4",
+                "producedBy": "fn.synthetic.sum.4",
+                "inParts": [
+                  "px.synthetic.upload.4"
+                ],
+                "key": "4730dcbabebdbb340bb9dc62a4b9384ab6374569e57965d91e176dbd7a529d96",
+                "pointerTo": null
+              },
+              {
+                "address": "tk.synthetic.sum.5",
+                "producedBy": "fn.synthetic.sum.5",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "key": "3e7f22f66420fa26856dda23fc07ef87418e41f87e9f1a079f2148413fad7ce2",
+                "pointerTo": null
+              }
+            ],
+            "calculations": [
+              {
+                "address": "fn.q.part.render",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "default render of the Part at args.a (fg/render.mjs), cached by address"
+              },
+              {
+                "address": "fn.q.pxset.bbox",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.pxset.count",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.pxset.intersectCount",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.pxset.render",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.q.synthetic.byteSum",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "PxC query"
+              },
+              {
+                "address": "fn.synthetic.aggregate",
+                "inParts": [
+                  "tk.synthetic.sum.0",
+                  "tk.synthetic.sum.1",
+                  "tk.synthetic.sum.2",
+                  "tk.synthetic.sum.3",
+                  "tk.synthetic.sum.4",
+                  "tk.synthetic.sum.5"
+                ],
+                "outParts": [
+                  "tk.synthetic.aggregate"
+                ],
+                "calls": [],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.declaredControl",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "outParts": [
+                  "tk.synthetic.declaredControl"
+                ],
+                "calls": [],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.0",
+                "inParts": [
+                  "px.synthetic.upload.0"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.0"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.1",
+                "inParts": [
+                  "px.synthetic.upload.1"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.1"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.2",
+                "inParts": [
+                  "px.synthetic.upload.2"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.2"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.3",
+                "inParts": [
+                  "px.synthetic.upload.3"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.3"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.4",
+                "inParts": [
+                  "px.synthetic.upload.4"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.4"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.synthetic.sum.5",
+                "inParts": [
+                  "px.synthetic.upload.5"
+                ],
+                "outParts": [
+                  "tk.synthetic.sum.5"
+                ],
+                "calls": [
+                  "fn.q.synthetic.byteSum"
+                ],
+                "lazy": true,
+                "note": null
+              },
+              {
+                "address": "fn.tk.instrumentation.calls",
+                "inParts": [],
+                "outParts": [],
+                "calls": [],
+                "lazy": true,
+                "note": "the calls made by args.caller and nested under them (timings: sidecar data, never hashed)"
+              }
+            ]
+          }
+        }
+      ],
+      "summary": {
+        "changedRoots": [
+          "px.synthetic.upload.2"
+        ],
+        "changedCallers": [
+          "fn.synthetic.sum.0",
+          "fn.synthetic.sum.1",
+          "fn.synthetic.sum.2",
+          "fn.synthetic.sum.3",
+          "fn.synthetic.sum.4",
+          "fn.synthetic.sum.5"
+        ],
+        "changedCallerRecomputes": 6,
+        "unaffectedCallerRecomputes": 5,
+        "restoredCallerCacheHits": 6,
+        "controlWarmAcrossChange": true,
+        "restoredSyntheticQueryCalls": 0
+      }
+    }
+  ],
+  "interpretation": "All six query callers rekey/recompute after one changed root; five unaffected query callers lose warm reuse. Correct values and restored warm cache confirmed. Map-global control matches. No partitioned-store runtime or native/pixel/CV query executed."
+}

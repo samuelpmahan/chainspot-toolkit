@@ -1,0 +1,26 @@
+{
+  "job_id": "E4203",
+  "worker": "S3",
+  "frozen_before_runtime": true,
+  "scope": "ONE synthetic public-store process; three fresh immutable snapshots for loader-enumerable and Map-global control; shared cache within each arm only.",
+  "source_commit": "620e0d51efd3c93af4cf5ef0d4768b1cefa4c265",
+  "source_tree": "20f6c92a1702d8e17e5ec8f4509334d294e420e7",
+  "roots": 6,
+  "bytes_per_root": 4,
+  "changed_root_index": 2,
+  "changed_byte_index": 1,
+  "change": "+1 in new snapshot only; original arrays never mutated",
+  "baseline_values": [100, 104, 108, 112, 116, 120],
+  "changed_values": [100, 104, 109, 112, 116, 120],
+  "prediction": {
+    "changed_root_keys": 1,
+    "changed_querycaller_keys": 6,
+    "changed_querycaller_recomputes": 6,
+    "unaffected_querycaller_recomputes": 5,
+    "changed_declared_unrelated_control_cached": true,
+    "restored_querycaller_cache_hits": 6,
+    "restored_synthetic_query_calls": 0,
+    "map_global_matches_loader_enumerable": true
+  },
+  "interpretation": "Passing assertions confirm the predicted broad invalidation limitation. They are not observed RED evidence, nor proof of real pixel/CV behavior or partitioned-store reuse."
+}

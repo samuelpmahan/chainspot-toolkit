@@ -1,0 +1,44 @@
+import { spawnSync } from 'node:child_process';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+
+const cwd = '/workspace/scratch/8528bb251845/chainspot-discovery-lab';
+const prefix = 'experiments/capability-discovery/';
+const argv = ['--test', `${prefix}isolated-batch/recipe.test.mjs`, `${prefix}enumerable-board/board.test.mjs`];
+const closure = [`${prefix}isolated-batch/recipe.mjs`, `${prefix}enumerable-board/board.mjs`,
+  ...['store.mjs', 'canon.mjs', 'pxset.mjs', 'render.mjs', 'png.mjs', 'alpha/alphaRender.mjs']
+    .map(path => `${prefix}probes/root-inventory/source/fg/${path}`),
+  `${prefix}probes/root-inventory/source/contracts/alpha.profile@1.mjs`];
+const sources = [...closure, argv[1], argv[2], `${prefix}isolated-batch/README.md`];
+const sha = bytes => createHash('sha256').update(bytes).digest('hex');
+const pin = path => { const bytes = readFileSync(`${cwd}/${path}`); return { path, bytes: bytes.length, sha256: sha(bytes) }; };
+const pinsBefore = sources.map(pin);
+const baselinePath = '/workspace/scratch/afc0d51965a8/lab12/S1/E4205/baseline.test.mjs.txt';
+const baseline = readFileSync(baselinePath, 'utf8');
+const current = readFileSync(`${cwd}/${argv[1]}`, 'utf8');
+const marker = "test('changing one upload recomputes only that query leaf; restore is warm', () => {";
+const block = text => { const start = text.indexOf(marker); const end = text.indexOf('\n});', start); if (start < 0 || end < 0) throw new Error('Missing core test'); return text.slice(start, end + 5); };
+const addedDiagnostic = "  console.log(JSON.stringify({ isolated: { codeSalt, codeKeys: first.leaves[0].codeKeys,\n    aggregateCodeKey: first.aggregate.codeKey, phases: [first, changed, restored] } }));\n";
+const currentBlock = block(current), baselineBlock = block(baseline);
+if (currentBlock.split(addedDiagnostic).length !== 2) throw new Error('Expected exactly one added isolated diagnostic');
+const coreBodyExact = currentBlock.replace(addedDiagnostic, '') === baselineBlock;
+if (!coreBodyExact) throw new Error('Baseline core test body changed');
+const sourceComparison = { baselinePath, baselineSha256: sha(Buffer.from(baseline)),
+  baselineCoreSha256: sha(Buffer.from(baselineBlock)), currentCoreWithOnlyAddedDiagnosticRemovedSha256: sha(Buffer.from(currentBlock.replace(addedDiagnostic, ''))),
+  coreBodyExact, onlyAdditionalCoreBodyText: addedDiagnostic };
+writeFileSync(new URL('./source-comparison.json', import.meta.url), JSON.stringify(sourceComparison, null, 2));
+const startedAt = new Date().toISOString();
+const child = spawnSync(process.execPath, argv, { cwd, timeout: 20000, maxBuffer: 5 * 1024 * 1024 });
+const finishedAt = new Date().toISOString();
+const stdout = child.stdout ?? Buffer.alloc(0), stderr = child.stderr ?? Buffer.alloc(0);
+writeFileSync(new URL('./stdout.txt', import.meta.url), stdout);
+writeFileSync(new URL('./stderr.txt', import.meta.url), stderr);
+const pinsAfter = sources.map(pin);
+const execution = { argv: [process.execPath, ...argv], cwd, node: process.version, startedAt, finishedAt,
+  exit: child.status, signal: child.signal, error: child.error ? String(child.error) : null,
+  timeoutMs: 20000, maxBufferBytes: 5 * 1024 * 1024, capture: 'direct child Buffer bytes',
+  stdoutBytes: stdout.length, stderrBytes: stderr.length, stdoutSha256: sha(stdout), stderrSha256: sha(stderr),
+  sourcePinsUnchanged: JSON.stringify(pinsBefore) === JSON.stringify(pinsAfter), pinsBefore, pinsAfter };
+writeFileSync(new URL('./execution.json', import.meta.url), JSON.stringify(execution, null, 2));
+console.log(JSON.stringify({ exit: child.status, signal: child.signal, error: execution.error, stdoutBytes: stdout.length,
+  stderrBytes: stderr.length, sourcePinsUnchanged: execution.sourcePinsUnchanged, coreBodyExact }));

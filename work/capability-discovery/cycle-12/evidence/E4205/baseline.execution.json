@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "--test",
+    "/workspace/scratch/afc0d51965a8/lab12/S1/E4205/baseline.test.mjs"
+  ],
+  "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+  "node": "v24.19.0",
+  "startedAt": "2026-10-19T09:03:21.300Z",
+  "finishedAt": "2026-10-19T09:03:21.525Z",
+  "exit": 1,
+  "signal": null,
+  "error": null,
+  "stdout": "{\"locality\":{\"computations\":[6,6,0],\"queries\":[6,6,0]}}\n✖ changing one upload recomputes only that query leaf; restore is warm (11.886764ms)\nℹ tests 1\nℹ suites 0\nℹ pass 0\nℹ fail 1\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 138.899644\n\n✖ failing tests:\n\ntest at ../../afc0d51965a8/lab12/S1/E4205/baseline.test.mjs:40:1\n✖ changing one upload recomputes only that query leaf; restore is warm (11.886764ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  \n  6 !== 1\n  \n      at TestContext.<anonymous> (file:///workspace/scratch/afc0d51965a8/lab12/S1/E4205/baseline.test.mjs:51:10)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1382:25)\n      at Test.start (node:internal/test_runner/test:1242:17)\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 6,\n    expected: 1,\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+  "stderr": "",
+  "pins": [
+    {
+      "path": "/workspace/scratch/afc0d51965a8/lab12/S1/E4205/baseline.test.mjs",
+      "bytes": 4433,
+      "sha256": "738e95c1d8c4a4ff1bf52577d4f53e82bf03bf3a6282aa73e109abce08012139"
+    }
+  ]
+}
