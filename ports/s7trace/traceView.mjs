@@ -15,7 +15,8 @@ import { judgeTrace } from './hallway.mjs';
 import { matchBends } from './judgeBends.mjs';
 import { MATCH } from '../s7route/match.mjs';
 
-export const TRACE_VIEW_SCHEMA = 'nctk-s7-trace-view@1';
+import { TRACE_VIEW_SCHEMA } from '../../fg/s7trace/traceViewRender.mjs';
+export { TRACE_VIEW_SCHEMA };
 export const TRACE_VIEW = Object.freeze({ teeMatchPx: 8, basketMatchPx: 12 });
 /**
  * Confidence of a route with no testimony to agree with (northpark): confirmed = the sensor reads >= MATCH.tau (0.75) on
