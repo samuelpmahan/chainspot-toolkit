@@ -95,3 +95,12 @@ test('routeMatchOf: a second bend the sensor cannot confirm is rejected, and sec
   assert.equal(cheap.holes['3'].verts.length, 3); assert.doesNotMatch(cheap.holes['3'].how, /2-bend/);
   assert.equal(cheap.holes['1'].verts.length, 2); assert.equal(cheap.holes['2'].verts.length, 3);
 });
+
+test('E18: each refine iteration moves the bend at most one contrast grid step (2 iterations: <= 12 px); the default (prototype) span is unchanged', async () => {
+  const { refineVertices } = await import('../s7trace/hallway.mjs');
+  const S = scene(), W = 24, u = [1, 0], V = [[20, 110], [100, 110], [230, 170]];   // grid bend 40 px short of the corner (140, 110)
+  assert.equal(MATCH.refineAxisSpanPx, 6);
+  const near = refineVertices(S, V, W, u, 2, { axisSpanPx: MATCH.refineAxisSpanPx })[0], far = refineVertices(S, V, W, u, 2)[0];
+  assert.ok(Math.abs(near[1][0] - 100) <= 2 * MATCH.refineAxisSpanPx + 1e-9 && near[1][1] === 110, JSON.stringify(near[1]));
+  assert.ok(Math.abs(far[1][0] - 140) <= 4, `the +-60 px span reaches the corner: ${far[1]}`);
+});

@@ -301,12 +301,15 @@ export function polyScore(S, V, W, band = [0.5, 3.0]) {
   return [si / ni - so / no, Math.min(ni, no)];
 }
 
-/** Coordinate search on the inner vertices (vertex 1 slides along the pad axis), ends fixed (polyscore.py refine_vertices). */
-export function refineVertices(S, V0, W, padAxis = null, iters = 3) {
+/**
+ * Coordinate search on the inner vertices (vertex 1 slides along the pad axis, +-axisSpanPx, default the prototype's 60 px),
+ * ends fixed (polyscore.py refine_vertices).
+ */
+export function refineVertices(S, V0, W, padAxis = null, iters = 3, { axisSpanPx = 60 } = {}) {
   let V = V0.map((v) => v.slice()), best = polyScore(S, V, W)[0];
   for (let it = 0; it < iters; it++) for (let i = 1; i < V.length - 1; i++) {
     let cands;
-    if (i === 1 && padAxis) cands = [...arange(-60, 60.1, it === 0 ? 1.0 : 0.25)].map((s) => [V[1][0] + padAxis[0] * s, V[1][1] + padAxis[1] * s]);
+    if (i === 1 && padAxis) cands = [...arange(-axisSpanPx, axisSpanPx + 0.1, it === 0 ? 1.0 : 0.25)].map((s) => [V[1][0] + padAxis[0] * s, V[1][1] + padAxis[1] * s]);
     else { const st = it === 0 ? 2.0 : 0.5, rng = it === 0 ? arange(-20, 20.1, st) : arange(-4, 4.01, st); cands = []; for (const dx of rng) for (const dy of rng) cands.push([V[i][0] + dx, V[i][1] + dy]); }
     for (const c of cands) { const Vt = V.map((v) => v.slice()); Vt[i] = c; const s = polyScore(S, Vt, W)[0]; if (s > best) { best = s; V = Vt; } }
   }
