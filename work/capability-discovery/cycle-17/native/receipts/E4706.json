@@ -1,0 +1,51 @@
+{
+  "job_id": "E4706",
+  "worker": "S6",
+  "outcome": "confirmed_reuse",
+  "summary": "Concrete saved-display qualifier-fidelity candidate: the existing heading-ablation renderer and CLI receipt carry the saved SUPPORTED sampling verdict but omit the complete trace's explicit UNKNOWN physical claims and conditional-exposure qualifier. This is source-inspected projection loss, not a validated consumer defect or numeric/scientific contradiction. Exact saved nonpixel trace bytes can support one separately authorized artifact-only falsifier without producer/geometry/query replay.",
+  "status": "PROPOSAL_ONLY_NOT_EXECUTED",
+  "scope": "Read-only README/REVIEW/cycle16 CURRENT, selected source and saved nonpixel JSON/SVG text. No producer, tests, renderer, geometry, query, pixels, image decoding, CV or provider/ranker execution. No E4012, E2021, R2021, old160grid or external-original-pixel reads. Only own scratch receipt written; no Git mutation.",
+  "repository": {
+    "path": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab",
+    "assigned_local_base": "515160d416ccaa37a088e09434a30c6b31b0ba30",
+    "assigned_canonical_base": "5c7d7b7b79442520cf9fa5af74e0b944d9a33342",
+    "assigned_tree": "1e72d33d753ae2890c2b55b05aa8bebc2556e728",
+    "integration_owner": "S1"
+  },
+  "pins": [
+    {"path":"experiments/capability-discovery/heading-ablation/render.mjs","bytes":11985,"sha256":"6b1c9f5b0dba6a9d37a323b91efcf4400afb39c4cca01996f09f1d47323a10d9"},
+    {"path":"experiments/capability-discovery/heading-ablation/cli.mjs","bytes":2516,"sha256":"9c65f17c4a5238eae1700948162c9b6af0cc26b340448d17cafee24f67655de8"},
+    {"path":"experiments/capability-discovery/heading-ablation/recipe.mjs","bytes":14900,"sha256":"97cc2bc1d30dd9039104df2c488fae491d93a21522aa3babbd7e5636b9710f2e"},
+    {"path":"work/capability-discovery/cycle-10/evidence/E4009/output/trace.json","bytes":146333,"sha256":"f237792dc0753096c3ab390a6efdf901e8850dbd433be60c7b9c808588bd3e63"},
+    {"path":"work/capability-discovery/cycle-10/evidence/E4009/output/receipt.json","bytes":61558,"sha256":"86914469b0d057ccbb0ec80f05a1f69cdd1bfb948167695b0fadef8654a57c3f"},
+    {"path":"work/capability-discovery/cycle-10/evidence/E4013/evidence.svg","bytes":139838,"sha256":"94ed87e635e722c5a499aa407c4d153318ebe69e61853b8c3ae8314839ebcf79"},
+    {"path":"work/capability-discovery/cycle-10/evidence/E4013/readback.json","bytes":1199,"sha256":"b38b79c776799034b4555fb81c6f9f5c55cab6612023a7ee43e8b1540c98ca77"}
+  ],
+  "concrete_source_evidence": {
+    "complete_trace": "E4009 trace.json line3224 prediction.status SUPPORTED; lines5246-5253 claims={promoted:false,pathIdentity:UNKNOWN,physicalEdgeIdentity:UNKNOWN,AAAlpha:UNKNOWN,confidence:UNKNOWN,qualification:'conditional in-sample sampling evidence; rotation changes support'}. These are compatible claims, not contradictory verdicts.",
+    "actual_visual_consumer": "heading-ablation/render.mjs exports renderTrace(trace,traceHash) lines95-119. checkTrace lines16-42 validates rows/prediction but not claims. Binding line98 excludes claims. Visible header line106 explicitly selects prediction status/Dprimary/Dbright/groups and omits claims/qualification. main lines122-139 accepts exact-hash complete trace and writes fresh SVG using builtins only. E4013 readback binds this renderer hash and exact E4009 trace hash, records SUPPORTED, 4 row descriptions exactly equal, 64 station blocks exactly equal.",
+    "actual_cli_projection": "heading-ablation/cli.mjs persistHeadingTrace(trace,outDir) lines9-15 writes full trace first, then receipt selecting status/run/image/hash/rows/station IDs/prediction/renderRows/limits, without claims. Actual E4009 receipt has no claims key, but has prediction.status SUPPORTED and the same Dprimary/Dbright as complete trace. Calling its run CLI is prohibited here because it invokes recipe; future qualification reporter must read the saved trace directly.",
+    "ownership_boundary": "Consumer projection only: renderTrace/receipt serialization own qualifier selection; recipe.mjs line110 already records all qualifiers. No change to evaluatePrediction, query/geometry, fit/score, identities, raw answers, historical execution binding or frozen defaults is needed. S1 owns any integration; S6 owns only this scout packet."
+  },
+  "saved_counterexample": {
+    "runId": "lab10-fixed4-v1",
+    "prediction": {"status":"SUPPORTED","Dprimary":0.511630963318769,"Dbright":-1.266855366519426},
+    "claims": {"promoted":false,"pathIdentity":"UNKNOWN","physicalEdgeIdentity":"UNKNOWN","AAAlpha":"UNKNOWN","confidence":"UNKNOWN","qualification":"conditional in-sample sampling evidence; rotation changes support"},
+    "meaning": "SUPPORTED means only the stored conditional in-sample sampling prediction. Treating it as path/physical-edge identity support or promotion would discard an explicit saved counterqualification. The display currently does not make that affirmative false claim; omission alone requires root-admitted contract testing before a bug claim."
+  },
+  "proposed_falsifier": {
+    "authorization": "NOT RUN. Root must authorize one saved-trace artifact-only consumer invocation plus direct textual/readback comparison, and separately authorize any correction. No original inputs or trace call replay.",
+    "existing_consumer_command": "node experiments/capability-discovery/heading-ablation/render.mjs --input work/capability-discovery/cycle-10/evidence/E4009/output/trace.json --sha256 f237792dc0753096c3ab390a6efdf901e8850dbd433be60c7b9c808588bd3e63 --out /workspace/scratch/86659bbafcce/lab17/S6/E4706/falsifier-before.svg",
+    "contract_to_admit": "If a display exposes the saved sampling verdict, its visible summary and machine-readable binding must carry the exact saved promoted/pathIdentity/physicalEdgeIdentity/AAAlpha/confidence/qualification fields, without changing the sampling verdict. CLI and visual outputs must report one identical stored verdict-plus-qualification tuple. This is an explicit new consumer-fidelity requirement, not an implied scientific gate.",
+    "predicted_observation": "Current renderer likely succeeds with 4 rows/64 stations and SUPPORTED but fails that admitted qualifier-fidelity contract because no claims or conditional-exposure text is selected. This prediction has not been executed or validated as a bug. Dprimary/Dbright and existing row/station values should remain identical; no rerating/recalculation is expected.",
+    "negative_case": "Actual saved E4009 receipt.json is projection-only and lacks claims. A new complete-qualification reporter must reject it as insufficient complete-trace evidence rather than fill UNKNOWNs from defaults or assert qualifiers were retained. Existing renderer already rejects its distinct schema; do not loosen that guard. Actual E4013 SVG is the retained omission example, not a fabricated fixture.",
+    "working_case": "Actual complete E4009 trace supplies all qualifiers and all four row/64 station identities. A corrected consumer should emit the exact stored tuple in a CLI summary and visible SVG header/metadata, leaving rows, values and SUPPORTED unchanged. Explicit UNKNOWN is successful retention, not a failure status and not a value to infer from missing fields.",
+    "smallest_operation": "An additive opt-in artifact reporter/render entry reading only exact-hash complete trace bytes, structural complete-claims validation, and copying the retained tuple into CLI JSON plus visible SVG header and metadata. Reuse current renderer's rows/charts without producer imports; do not add station-center geometry, framework, ranking, fit, query or new scientific evaluation. Preserve old files/evidence and original trace sourceBinding. Root may choose a versioned wrapper instead of editing historically pinned renderer."
+  },
+  "holds": [
+    "No validated numeric bug, geometry bug, scientific score discrepancy or independent confirmation is claimed.",
+    "No tests/render/falsifier execution or implementation is authorized by this receipt.",
+    "Physical path/edge identity, calibrated width, AA/alpha, confidence, held-out/generalization and promotion remain UNKNOWN/HOLD.",
+    "No original pixels, real44 queries, Lab10 four-call repeat, HH/main/default-ON/merge/deploy/accounts/spend/services/AIimages."
+  ]
+}

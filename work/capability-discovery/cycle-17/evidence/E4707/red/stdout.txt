@@ -1,0 +1,154 @@
+✖ actual E4009 SVG preserves saved claims visibly and in metadata with every retained row/station (10.40145ms)
+✖ actual E4009 renderer main stdout retains the whole saved claims value (3.793891ms)
+✖ actual E4009 persistence retains claims and leaves prediction/rows/full trace unchanged (1.911735ms)
+✖ test-only legacy missing and explicit null claims remain unavailable rather than synthesized (3.694366ms)
+✖ test-only partial and extended claims retain all fields and XML-special text without promotion (6.540162ms)
+✔ existing renderer schema/row/hash/size/exclusive-write and persistence cap guards remain active (26.174821ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 1
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 155.44576
+
+✖ failing tests:
+
+test at experiments/capability-discovery/heading-ablation/projection.test.mjs:55:1
+✖ actual E4009 SVG preserves saved claims visibly and in metadata with every retained row/station (10.40145ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - {
+  -   AAAlpha: 'UNKNOWN',
+  -   confidence: 'UNKNOWN',
+  -   pathIdentity: 'UNKNOWN',
+  -   physicalEdgeIdentity: 'UNKNOWN',
+  -   promoted: false,
+  -   qualification: 'conditional in-sample sampling evidence; rotation changes support'
+  - }
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/heading-ablation/projection.test.mjs:57:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { promoted: false, pathIdentity: 'UNKNOWN', physicalEdgeIdentity: 'UNKNOWN', AAAlpha: 'UNKNOWN', confidence: 'UNKNOWN', qualification: 'conditional in-sample sampling evidence; rotation changes support' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/heading-ablation/projection.test.mjs:63:1
+✖ actual E4009 renderer main stdout retains the whole saved claims value (3.793891ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - {
+  -   AAAlpha: 'UNKNOWN',
+  -   confidence: 'UNKNOWN',
+  -   pathIdentity: 'UNKNOWN',
+  -   physicalEdgeIdentity: 'UNKNOWN',
+  -   promoted: false,
+  -   qualification: 'conditional in-sample sampling evidence; rotation changes support'
+  - }
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/heading-ablation/projection.test.mjs:66:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { promoted: false, pathIdentity: 'UNKNOWN', physicalEdgeIdentity: 'UNKNOWN', AAAlpha: 'UNKNOWN', confidence: 'UNKNOWN', qualification: 'conditional in-sample sampling evidence; rotation changes support' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/heading-ablation/projection.test.mjs:71:1
+✖ actual E4009 persistence retains claims and leaves prediction/rows/full trace unchanged (1.911735ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - {
+  -   AAAlpha: 'UNKNOWN',
+  -   confidence: 'UNKNOWN',
+  -   pathIdentity: 'UNKNOWN',
+  -   physicalEdgeIdentity: 'UNKNOWN',
+  -   promoted: false,
+  -   qualification: 'conditional in-sample sampling evidence; rotation changes support'
+  - }
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/heading-ablation/projection.test.mjs:73:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { promoted: false, pathIdentity: 'UNKNOWN', physicalEdgeIdentity: 'UNKNOWN', AAAlpha: 'UNKNOWN', confidence: 'UNKNOWN', qualification: 'conditional in-sample sampling evidence; rotation changes support' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/heading-ablation/projection.test.mjs:81:1
+✖ test-only legacy missing and explicit null claims remain unavailable rather than synthesized (3.694366ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - null
+  
+      at assertAllClaims (file:///workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/heading-ablation/projection.test.mjs:42:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/heading-ablation/projection.test.mjs:83:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: null,
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at experiments/capability-discovery/heading-ablation/projection.test.mjs:87:1
+✖ test-only partial and extended claims retain all fields and XML-special text without promotion (6.540162ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - {
+  -   pathIdentity: 'UNKNOWN'
+  - }
+  
+      at assertAllClaims (file:///workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/heading-ablation/projection.test.mjs:42:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/heading-ablation/projection.test.mjs:88:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { pathIdentity: 'UNKNOWN' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

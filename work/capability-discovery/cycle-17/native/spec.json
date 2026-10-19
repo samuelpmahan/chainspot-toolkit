@@ -1,0 +1,82 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "lab17-physical-admission-and-evidence-fidelity",
+    "scope": "Current saved routing/control evidence and concrete nonduplicating user-inspectable follow-up"
+  },
+  "workers": [
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6"
+  ],
+  "review_policy": {
+    "enabled": false
+  },
+  "jobs": [
+    {
+      "id": "E4701",
+      "kind": "extract",
+      "allow_workers": [
+        "S1"
+      ],
+      "subject": "Integration owner: exact physical-admission missing controls and source identity; source-only no pixels/queries"
+    },
+    {
+      "id": "E4702",
+      "kind": "extract",
+      "allow_workers": [
+        "S2"
+      ],
+      "subject": "Independent-course/control ownership and annotation availability, saved nonpixel metadata only"
+    },
+    {
+      "id": "E4703",
+      "kind": "extract",
+      "allow_workers": [
+        "S3"
+      ],
+      "subject": "Fresh Claude cc1fa5c route source/recorded-trace evidence, read-only nonadoption and claims"
+    },
+    {
+      "id": "E4704",
+      "kind": "extract",
+      "allow_workers": [
+        "S4"
+      ],
+      "subject": "Existing heading-arm/exposure-aware protocol and source-backed narrow falsifier feasibility, no producer rerun"
+    },
+    {
+      "id": "E4705",
+      "kind": "extract",
+      "allow_workers": [
+        "S5"
+      ],
+      "subject": "Read-only alg lane/history nonduplication against centerline width bend hypotheses and existing contracts"
+    },
+    {
+      "id": "E4706",
+      "kind": "extract",
+      "allow_workers": [
+        "S6"
+      ],
+      "subject": "Saved display physical-UNKNOWN qualifier fidelity; source-pin concrete lost-qualification hypothesis and bounded runnable falsifier"
+    }
+  ],
+  "conditional_policy": {
+    "physical_guard_satisfied": "Freeze ONE exact source/fixture/baseline/parameters/prediction/falsifier then independent protocol review before execution",
+    "physical_guard_missing": "Explicit HOLD original pixels/real44, evaluate other ready bounded evidence-use seam",
+    "display_gap_demonstrated": "Source-pin current captured trace+consumer, freeze a minimal real counterexample then defaultOFF correction with different reviewer",
+    "hypothesis_falsified": "Retain falsifier, do not force new machinery",
+    "independent_acceptance": "One exact ordinary commit and review-branch publication, no main/defaultON/deploy",
+    "regression": "Retain actual failure, diagnose, admit separate bounded repair"
+  },
+  "ownership": {
+    "integration": "S1 sole repository/Git writer, root connected publication",
+    "others": "read-only repo, disjoint scratch S2..S6",
+    "fit": "Explicit per-worker allow_workers encodes bounded context/ownership; native validates actual capacity, eligibility, pins and priority optimum",
+    "slots": "Six actual worker contexts beneath one coordinator; no unavailable slots or background survival inferred"
+  }
+}

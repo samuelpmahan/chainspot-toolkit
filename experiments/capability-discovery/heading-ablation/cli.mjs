@@ -10,7 +10,7 @@ export function persistHeadingTrace(trace,outDir){
   let total=0;const artifacts=[];
   const write=(name,value,max)=>{const bytes=new TextEncoder().encode(`${JSON.stringify(value,null,2)}\n`);if(bytes.length>max||total+bytes.length>MAX_TOTAL)throw Error('output practical byte cap exceeded');writeFileSync(join(outDir,name),bytes,{flag:'wx'});total+=bytes.length;artifacts.push({path:name,bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')});};
   try{write('trace.json',trace,MAX_TRACE);const receipt={schema:'heading-ablation-cli@1',status:trace.status,runId:trace.runId,imageId:trace.imageId,paramsHash:trace.paramsHash,traceHash:artifacts[0].sha256,
-    rowIds:trace.renderRows.map(r=>r.id),stationIds:trace.renderRows.flatMap(r=>r.stations.map(s=>s.id)),prediction:trace.prediction,renderRows:trace.renderRows,artifacts:[...artifacts],
+    rowIds:trace.renderRows.map(r=>r.id),stationIds:trace.renderRows.flatMap(r=>r.stations.map(s=>s.id)),prediction:trace.prediction,claims:trace.claims??null,renderRows:trace.renderRows,artifacts:[...artifacts],
     limits:{perTraceBytes:MAX_TRACE,totalBytes:MAX_TOTAL,qualification:'practical file caps; not RSS proof; outer timeout required'}};write('receipt.json',receipt,MAX_TRACE);return receipt;}
   catch(error){try{write('failure.json',{schema:'heading-ablation-output-failure@1',status:'OUTPUT_FAILED',error:String(error.message).slice(0,2048),retainedPrefix:artifacts},65536);}catch{}throw error;}
 }

@@ -1,0 +1,180 @@
+{
+  "schema": "lab17-independent-heading-readback@1",
+  "job_id": "R4708",
+  "status": "MATCH",
+  "checker": "Python stdlib hashlib/json/ElementTree; no recipe/renderer imports",
+  "sourceTrace": {
+    "path": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-10/evidence/E4009/output/trace.json",
+    "bytes": 146333,
+    "sha256": "f237792dc0753096c3ab390a6efdf901e8850dbd433be60c7b9c808588bd3e63"
+  },
+  "selectedAuthorSvg": {
+    "path": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/green/outputs/heading-projection-FyDDpZ/actual.svg",
+    "bytes": 140575,
+    "sha256": "c62dae1e0249897db41b4b93a496db4079c78b89704c71bb4dcd273db96935fd"
+  },
+  "selectedAuthorReceipt": {
+    "path": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/green/outputs/heading-projection-T6YLNl/receipt.json",
+    "bytes": 61814,
+    "sha256": "60940ca51e8f6c4196bdffaf0247bb4939e3a89de1aa42beeeab4a845db04b2c"
+  },
+  "selectedAuthorFullTrace": {
+    "path": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/green/outputs/heading-projection-T6YLNl/trace.json",
+    "bytes": 146333,
+    "sha256": "f237792dc0753096c3ab390a6efdf901e8850dbd433be60c7b9c808588bd3e63",
+    "exactOldBytes": true
+  },
+  "checks": {
+    "visibleClaims": true,
+    "metadataClaims": true,
+    "visiblePrediction": true,
+    "receiptPredictionAndClaims": true,
+    "fourFullRowDescriptions": true,
+    "all64StationIdentitiesAndVisibleCells": true,
+    "sourceAndInputBindings": true,
+    "oldTraceHashUnchanged": true,
+    "fullTraceNotLegacyOrClone": true
+  },
+  "prediction": {
+    "status": "SUPPORTED",
+    "Dprimary": 0.511630963318769,
+    "Dbright": -1.266855366519426,
+    "groups": [
+      {
+        "groupId": "primary",
+        "status": "VALID",
+        "D": 0.511630963318769
+      },
+      {
+        "groupId": "bright-nonpath",
+        "status": "VALID",
+        "D": -1.266855366519426
+      }
+    ]
+  },
+  "claims": {
+    "promoted": false,
+    "pathIdentity": "UNKNOWN",
+    "physicalEdgeIdentity": "UNKNOWN",
+    "AAAlpha": "UNKNOWN",
+    "confidence": "UNKNOWN",
+    "qualification": "conditional in-sample sampling evidence; rotation changes support"
+  },
+  "rowIds": [
+    "primary/baseline",
+    "primary/candidate",
+    "bright-nonpath/baseline",
+    "bright-nonpath/candidate"
+  ],
+  "stationIds": [
+    "primary/baseline/station0",
+    "primary/baseline/station1",
+    "primary/baseline/station2",
+    "primary/baseline/station3",
+    "primary/baseline/station4",
+    "primary/baseline/station5",
+    "primary/baseline/station6",
+    "primary/baseline/station7",
+    "primary/baseline/station8",
+    "primary/baseline/station9",
+    "primary/baseline/station10",
+    "primary/baseline/station11",
+    "primary/baseline/station12",
+    "primary/baseline/station13",
+    "primary/baseline/station14",
+    "primary/baseline/station15",
+    "primary/candidate/station0",
+    "primary/candidate/station1",
+    "primary/candidate/station2",
+    "primary/candidate/station3",
+    "primary/candidate/station4",
+    "primary/candidate/station5",
+    "primary/candidate/station6",
+    "primary/candidate/station7",
+    "primary/candidate/station8",
+    "primary/candidate/station9",
+    "primary/candidate/station10",
+    "primary/candidate/station11",
+    "primary/candidate/station12",
+    "primary/candidate/station13",
+    "primary/candidate/station14",
+    "primary/candidate/station15",
+    "bright-nonpath/baseline/station0",
+    "bright-nonpath/baseline/station1",
+    "bright-nonpath/baseline/station2",
+    "bright-nonpath/baseline/station3",
+    "bright-nonpath/baseline/station4",
+    "bright-nonpath/baseline/station5",
+    "bright-nonpath/baseline/station6",
+    "bright-nonpath/baseline/station7",
+    "bright-nonpath/baseline/station8",
+    "bright-nonpath/baseline/station9",
+    "bright-nonpath/baseline/station10",
+    "bright-nonpath/baseline/station11",
+    "bright-nonpath/baseline/station12",
+    "bright-nonpath/baseline/station13",
+    "bright-nonpath/baseline/station14",
+    "bright-nonpath/baseline/station15",
+    "bright-nonpath/candidate/station0",
+    "bright-nonpath/candidate/station1",
+    "bright-nonpath/candidate/station2",
+    "bright-nonpath/candidate/station3",
+    "bright-nonpath/candidate/station4",
+    "bright-nonpath/candidate/station5",
+    "bright-nonpath/candidate/station6",
+    "bright-nonpath/candidate/station7",
+    "bright-nonpath/candidate/station8",
+    "bright-nonpath/candidate/station9",
+    "bright-nonpath/candidate/station10",
+    "bright-nonpath/candidate/station11",
+    "bright-nonpath/candidate/station12",
+    "bright-nonpath/candidate/station13",
+    "bright-nonpath/candidate/station14",
+    "bright-nonpath/candidate/station15"
+  ],
+  "candidateInventory": [
+    {
+      "receipt": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/green/outputs/heading-projection-K3zc9p/receipt.json",
+      "receiptSha256": "db37c1de25c20f6dc9d970855ddd5ff9935a272cd2896386ad426ff2c1b92c51",
+      "traceSha256": "6dfbbf8efb83ae7ae6b408cbbb4ae6f5d80e0272f1f3bd302de59cba2f63be3d",
+      "wholeOriginalTraceEqual": false,
+      "failureArtifactPresent": false
+    },
+    {
+      "receipt": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/green/outputs/heading-projection-QcDWXz/receipt.json",
+      "receiptSha256": "16322fadc990083bfa21144d5c65c81d999cfddc824964c39f396491bb1dd3aa",
+      "traceSha256": "75d30f38ea66cbf44c830a6e8c379a3a558a0dfb8b63ef6c9ee590d0815f52e1",
+      "wholeOriginalTraceEqual": false,
+      "failureArtifactPresent": false
+    },
+    {
+      "receipt": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/green/outputs/heading-projection-T6YLNl/receipt.json",
+      "receiptSha256": "60940ca51e8f6c4196bdffaf0247bb4939e3a89de1aa42beeeab4a845db04b2c",
+      "traceSha256": "f237792dc0753096c3ab390a6efdf901e8850dbd433be60c7b9c808588bd3e63",
+      "wholeOriginalTraceEqual": true,
+      "failureArtifactPresent": false
+    },
+    {
+      "receipt": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/green/outputs/heading-projection-VmAHH8/receipt.json",
+      "receiptSha256": "60940ca51e8f6c4196bdffaf0247bb4939e3a89de1aa42beeeab4a845db04b2c",
+      "traceSha256": "f237792dc0753096c3ab390a6efdf901e8850dbd433be60c7b9c808588bd3e63",
+      "wholeOriginalTraceEqual": true,
+      "failureArtifactPresent": true
+    },
+    {
+      "receipt": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/green/outputs/heading-projection-Vq1gk7/receipt.json",
+      "receiptSha256": "5110b2081f7604acb47ada53bbeb0c56a9a93dbee0643f0b06588fb7fd45e4a4",
+      "traceSha256": "a4a3cf30de90ab71c12242fd7452249f07c50cc674e0de88e28ff2c9675f4c7c",
+      "wholeOriginalTraceEqual": false,
+      "failureArtifactPresent": false
+    },
+    {
+      "receipt": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/green/outputs/heading-projection-gZrYoZ/receipt.json",
+      "receiptSha256": "07b6f0ed76488e31403e8b3df89f5418b8895e8fa674211a80d4a7bcba558dd0",
+      "traceSha256": "ca562afc5de63a11cf47eb909f5714cf520e8871a21fb8397807b94b7b38d7b3",
+      "wholeOriginalTraceEqual": false,
+      "failureArtifactPresent": false
+    }
+  ],
+  "qualification": "Consumer qualifier preservation only. No scientific or physical validation. Canonical artifacts selected for separate S6 artifact-only rasterization; no standalone rendering here."
+}

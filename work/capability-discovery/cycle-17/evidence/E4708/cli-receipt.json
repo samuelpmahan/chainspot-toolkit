@@ -1,0 +1,2123 @@
+{
+  "schema": "heading-ablation-cli@1",
+  "status": "COMPLETED",
+  "runId": "lab10-fixed4-v1",
+  "imageId": "Lenard-5",
+  "paramsHash": "c3f79cfebf6599440cc7a586330ef3bdeffc37660109b2fdd333f8d79d699ac8",
+  "traceHash": "f237792dc0753096c3ab390a6efdf901e8850dbd433be60c7b9c808588bd3e63",
+  "rowIds": [
+    "primary/baseline",
+    "primary/candidate",
+    "bright-nonpath/baseline",
+    "bright-nonpath/candidate"
+  ],
+  "stationIds": [
+    "primary/baseline/station0",
+    "primary/baseline/station1",
+    "primary/baseline/station2",
+    "primary/baseline/station3",
+    "primary/baseline/station4",
+    "primary/baseline/station5",
+    "primary/baseline/station6",
+    "primary/baseline/station7",
+    "primary/baseline/station8",
+    "primary/baseline/station9",
+    "primary/baseline/station10",
+    "primary/baseline/station11",
+    "primary/baseline/station12",
+    "primary/baseline/station13",
+    "primary/baseline/station14",
+    "primary/baseline/station15",
+    "primary/candidate/station0",
+    "primary/candidate/station1",
+    "primary/candidate/station2",
+    "primary/candidate/station3",
+    "primary/candidate/station4",
+    "primary/candidate/station5",
+    "primary/candidate/station6",
+    "primary/candidate/station7",
+    "primary/candidate/station8",
+    "primary/candidate/station9",
+    "primary/candidate/station10",
+    "primary/candidate/station11",
+    "primary/candidate/station12",
+    "primary/candidate/station13",
+    "primary/candidate/station14",
+    "primary/candidate/station15",
+    "bright-nonpath/baseline/station0",
+    "bright-nonpath/baseline/station1",
+    "bright-nonpath/baseline/station2",
+    "bright-nonpath/baseline/station3",
+    "bright-nonpath/baseline/station4",
+    "bright-nonpath/baseline/station5",
+    "bright-nonpath/baseline/station6",
+    "bright-nonpath/baseline/station7",
+    "bright-nonpath/baseline/station8",
+    "bright-nonpath/baseline/station9",
+    "bright-nonpath/baseline/station10",
+    "bright-nonpath/baseline/station11",
+    "bright-nonpath/baseline/station12",
+    "bright-nonpath/baseline/station13",
+    "bright-nonpath/baseline/station14",
+    "bright-nonpath/baseline/station15",
+    "bright-nonpath/candidate/station0",
+    "bright-nonpath/candidate/station1",
+    "bright-nonpath/candidate/station2",
+    "bright-nonpath/candidate/station3",
+    "bright-nonpath/candidate/station4",
+    "bright-nonpath/candidate/station5",
+    "bright-nonpath/candidate/station6",
+    "bright-nonpath/candidate/station7",
+    "bright-nonpath/candidate/station8",
+    "bright-nonpath/candidate/station9",
+    "bright-nonpath/candidate/station10",
+    "bright-nonpath/candidate/station11",
+    "bright-nonpath/candidate/station12",
+    "bright-nonpath/candidate/station13",
+    "bright-nonpath/candidate/station14",
+    "bright-nonpath/candidate/station15"
+  ],
+  "prediction": {
+    "status": "SUPPORTED",
+    "Dprimary": 0.511630963318769,
+    "Dbright": -1.266855366519426,
+    "groups": [
+      {
+        "groupId": "primary",
+        "status": "VALID",
+        "D": 0.511630963318769,
+        "stations": [
+          {
+            "index": 0,
+            "tPx": -8,
+            "baseline": {
+              "leftLum": 3.627956678956579,
+              "rightLum": 9.624164477211366,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 3.627956678956579
+            },
+            "candidate": {
+              "leftLum": 3.749500375867882,
+              "rightLum": 10.873697814475136,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 3.749500375867882
+            },
+            "difference": 0.12154369691130285,
+            "valid": true
+          },
+          {
+            "index": 1,
+            "tPx": -7,
+            "baseline": {
+              "leftLum": 3.0473398562543537,
+              "rightLum": 10.678005283635613,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 3.0473398562543537
+            },
+            "candidate": {
+              "leftLum": 3.3784260207119985,
+              "rightLum": 12.67154507468868,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 3.3784260207119985
+            },
+            "difference": 0.3310861644576448,
+            "valid": true
+          },
+          {
+            "index": 2,
+            "tPx": -6,
+            "baseline": {
+              "leftLum": 2.274853478462859,
+              "rightLum": 12.367554106364437,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 2.274853478462859
+            },
+            "candidate": {
+              "leftLum": 2.8340469464540092,
+              "rightLum": 13.789048544129827,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 2.8340469464540092
+            },
+            "difference": 0.5591934679911503,
+            "valid": true
+          },
+          {
+            "index": 3,
+            "tPx": -5,
+            "baseline": {
+              "leftLum": 1.7149344586865993,
+              "rightLum": 13.602826373687009,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.7149344586865993
+            },
+            "candidate": {
+              "leftLum": 2.2036076384560346,
+              "rightLum": 13.79912201763905,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 2.2036076384560346
+            },
+            "difference": 0.48867317976943525,
+            "valid": true
+          },
+          {
+            "index": 4,
+            "tPx": -4,
+            "baseline": {
+              "leftLum": 1.30879804574937,
+              "rightLum": 13.879503407453598,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.30879804574937
+            },
+            "candidate": {
+              "leftLum": 1.8333092983737913,
+              "rightLum": 11.95394735114462,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.8333092983737913
+            },
+            "difference": 0.5245112526244213,
+            "valid": true
+          },
+          {
+            "index": 5,
+            "tPx": -3,
+            "baseline": {
+              "leftLum": 1.0894722563098753,
+              "rightLum": 12.515645211309746,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.0894722563098753
+            },
+            "candidate": {
+              "leftLum": 1.484141388039859,
+              "rightLum": 10.007344982272699,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.484141388039859
+            },
+            "difference": 0.39466913172998375,
+            "valid": true
+          },
+          {
+            "index": 6,
+            "tPx": -2,
+            "baseline": {
+              "leftLum": 1.0304332937373033,
+              "rightLum": 10.781204209036503,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.0304332937373033
+            },
+            "candidate": {
+              "leftLum": 1.2470589381616008,
+              "rightLum": 8.055018547029647,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.2470589381616008
+            },
+            "difference": 0.21662564442429755,
+            "valid": true
+          },
+          {
+            "index": 7,
+            "tPx": -1,
+            "baseline": {
+              "leftLum": 0.9134723507922189,
+              "rightLum": 8.917348959781648,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 0.9134723507922189
+            },
+            "candidate": {
+              "leftLum": 1.2233266933714617,
+              "rightLum": 7.222415158689415,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.2233266933714617
+            },
+            "difference": 0.3098543425792428,
+            "valid": true
+          },
+          {
+            "index": 8,
+            "tPx": 0,
+            "baseline": {
+              "leftLum": 0.6451904836681734,
+              "rightLum": 7.826389651519051,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 0.6451904836681734
+            },
+            "candidate": {
+              "leftLum": 1.2281451615792491,
+              "rightLum": 6.833889126080933,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.2281451615792491
+            },
+            "difference": 0.5829546779110757,
+            "valid": true
+          },
+          {
+            "index": 9,
+            "tPx": 1,
+            "baseline": {
+              "leftLum": 0.06740049189969,
+              "rightLum": 7.166411322868839,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 0.06740049189969
+            },
+            "candidate": {
+              "leftLum": 1.0677977824557132,
+              "rightLum": 7.526510461007277,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.0677977824557132
+            },
+            "difference": 1.0003972905560232,
+            "valid": true
+          },
+          {
+            "index": 10,
+            "tPx": 2,
+            "baseline": {
+              "leftLum": -0.5773578348638466,
+              "rightLum": 7.3175775001303975,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -0.5773578348638466
+            },
+            "candidate": {
+              "leftLum": 0.5683153214931309,
+              "rightLum": 7.9340375980712,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 0.5683153214931309
+            },
+            "difference": 1.1456731563569775,
+            "valid": true
+          },
+          {
+            "index": 11,
+            "tPx": 3,
+            "baseline": {
+              "leftLum": -1.343270378988052,
+              "rightLum": 7.493033498479363,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -1.343270378988052
+            },
+            "candidate": {
+              "leftLum": -0.1567664110322795,
+              "rightLum": 8.125068708038683,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -0.1567664110322795
+            },
+            "difference": 1.1865039679557725,
+            "valid": true
+          },
+          {
+            "index": 12,
+            "tPx": 4,
+            "baseline": {
+              "leftLum": -1.968271169029265,
+              "rightLum": 7.674052195812848,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -1.968271169029265
+            },
+            "candidate": {
+              "leftLum": -1.1263754132963868,
+              "rightLum": 7.917021464461072,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -1.1263754132963868
+            },
+            "difference": 0.8418957557328781,
+            "valid": true
+          },
+          {
+            "index": 13,
+            "tPx": 5,
+            "baseline": {
+              "leftLum": -2.2315188380836446,
+              "rightLum": 7.813788117543027,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -2.2315188380836446
+            },
+            "candidate": {
+              "leftLum": -2.108109958036124,
+              "rightLum": 7.960203959876424,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -2.108109958036124
+            },
+            "difference": 0.1234088800475206,
+            "valid": true
+          },
+          {
+            "index": 14,
+            "tPx": 6,
+            "baseline": {
+              "leftLum": -2.459175370965184,
+              "rightLum": 8.26102212165884,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -2.459175370965184
+            },
+            "candidate": {
+              "leftLum": -2.732396690615573,
+              "rightLum": 7.998986686270541,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -2.732396690615573
+            },
+            "difference": -0.2732213196503892,
+            "valid": true
+          },
+          {
+            "index": 15,
+            "tPx": 7,
+            "baseline": {
+              "leftLum": -3.7236265004278835,
+              "rightLum": 8.9386397534862,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -3.7236265004278835
+            },
+            "candidate": {
+              "leftLum": -3.0913003767249165,
+              "rightLum": 7.596293973762954,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -3.0913003767249165
+            },
+            "difference": 0.6323261237029669,
+            "valid": true
+          }
+        ]
+      },
+      {
+        "groupId": "bright-nonpath",
+        "status": "VALID",
+        "D": -1.266855366519426,
+        "stations": [
+          {
+            "index": 0,
+            "tPx": -8,
+            "baseline": {
+              "leftLum": 3.360899753294433,
+              "rightLum": 19.134976110080316,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 3.360899753294433
+            },
+            "candidate": {
+              "leftLum": -2.480566071112321,
+              "rightLum": 21.534502352378297,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -2.480566071112321
+            },
+            "difference": -5.841465824406754,
+            "valid": true
+          },
+          {
+            "index": 1,
+            "tPx": -7,
+            "baseline": {
+              "leftLum": 3.3200140594435084,
+              "rightLum": 15.940927908301774,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 3.3200140594435084
+            },
+            "candidate": {
+              "leftLum": -1.962801858600244,
+              "rightLum": 18.69241739434395,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -1.962801858600244
+            },
+            "difference": -5.282815918043752,
+            "valid": true
+          },
+          {
+            "index": 2,
+            "tPx": -6,
+            "baseline": {
+              "leftLum": 2.807103139273039,
+              "rightLum": 13.216552552820758,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 2.807103139273039
+            },
+            "candidate": {
+              "leftLum": -1.4837729646119158,
+              "rightLum": 16.472941505189794,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -1.4837729646119158
+            },
+            "difference": -4.290876103884955,
+            "valid": true
+          },
+          {
+            "index": 3,
+            "tPx": -5,
+            "baseline": {
+              "leftLum": 2.0527577793085072,
+              "rightLum": 11.372390700703818,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 2.0527577793085072
+            },
+            "candidate": {
+              "leftLum": -1.0870826753242397,
+              "rightLum": 14.627520978589274,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -1.0870826753242397
+            },
+            "difference": -3.139840454632747,
+            "valid": true
+          },
+          {
+            "index": 4,
+            "tPx": -4,
+            "baseline": {
+              "leftLum": 1.5688718885100172,
+              "rightLum": 10.231555856642785,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.5688718885100172
+            },
+            "candidate": {
+              "leftLum": -0.3126960310850393,
+              "rightLum": 13.26116002144721,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -0.3126960310850393
+            },
+            "difference": -1.8815679195950565,
+            "valid": true
+          },
+          {
+            "index": 5,
+            "tPx": -3,
+            "baseline": {
+              "leftLum": 1.5081477728368498,
+              "rightLum": 9.606737910532985,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.5081477728368498
+            },
+            "candidate": {
+              "leftLum": 0.644578635527381,
+              "rightLum": 12.255102408030751,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 0.644578635527381
+            },
+            "difference": -0.8635691373094687,
+            "valid": true
+          },
+          {
+            "index": 6,
+            "tPx": -2,
+            "baseline": {
+              "leftLum": 1.6932841204211684,
+              "rightLum": 9.521370236392073,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.6932841204211684
+            },
+            "candidate": {
+              "leftLum": 1.451039585233076,
+              "rightLum": 11.454234350160732,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.451039585233076
+            },
+            "difference": -0.2422445351880924,
+            "valid": true
+          },
+          {
+            "index": 7,
+            "tPx": -1,
+            "baseline": {
+              "leftLum": 1.5559314278099237,
+              "rightLum": 10.001569416421319,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.5559314278099237
+            },
+            "candidate": {
+              "leftLum": 1.971200172571315,
+              "rightLum": 10.904536731124779,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.971200172571315
+            },
+            "difference": 0.4152687447613914,
+            "valid": true
+          },
+          {
+            "index": 8,
+            "tPx": 0,
+            "baseline": {
+              "leftLum": 1.1038555281798779,
+              "rightLum": 10.710919631145032,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.1038555281798779
+            },
+            "candidate": {
+              "leftLum": 2.18086031931918,
+              "rightLum": 10.778245873724813,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 2.18086031931918
+            },
+            "difference": 1.0770047911393021,
+            "valid": true
+          },
+          {
+            "index": 9,
+            "tPx": 1,
+            "baseline": {
+              "leftLum": 0.4021167891275468,
+              "rightLum": 11.37920851252673,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 0.4021167891275468
+            },
+            "candidate": {
+              "leftLum": 1.8489646166684963,
+              "rightLum": 10.682220189402756,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.8489646166684963
+            },
+            "difference": 1.4468478275409495,
+            "valid": true
+          },
+          {
+            "index": 10,
+            "tPx": 2,
+            "baseline": {
+              "leftLum": -0.28972180166343264,
+              "rightLum": 12.185413572378593,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -0.28972180166343264
+            },
+            "candidate": {
+              "leftLum": 1.4200051340822029,
+              "rightLum": 10.419213165927573,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.4200051340822029
+            },
+            "difference": 1.7097269357456355,
+            "valid": true
+          },
+          {
+            "index": 11,
+            "tPx": 3,
+            "baseline": {
+              "leftLum": -0.8854259675626679,
+              "rightLum": 12.830011838356796,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -0.8854259675626679
+            },
+            "candidate": {
+              "leftLum": 1.0395393853717678,
+              "rightLum": 10.089900224248595,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 1.0395393853717678
+            },
+            "difference": 1.9249653529344357,
+            "valid": true
+          },
+          {
+            "index": 12,
+            "tPx": 4,
+            "baseline": {
+              "leftLum": -0.8306574565048663,
+              "rightLum": 13.102089926568084,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -0.8306574565048663
+            },
+            "candidate": {
+              "leftLum": 0.3506151750841582,
+              "rightLum": 10.061144471409108,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 0.3506151750841582
+            },
+            "difference": 1.1812726315890245,
+            "valid": true
+          },
+          {
+            "index": 13,
+            "tPx": 5,
+            "baseline": {
+              "leftLum": -0.3470772402207558,
+              "rightLum": 13.145557832427897,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -0.3470772402207558
+            },
+            "candidate": {
+              "leftLum": -0.8479631274515214,
+              "rightLum": 10.54786847605456,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -0.8479631274515214
+            },
+            "difference": -0.5008858872307655,
+            "valid": true
+          },
+          {
+            "index": 14,
+            "tPx": 6,
+            "baseline": {
+              "leftLum": 0.281274788173107,
+              "rightLum": 13.199117908088283,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 0.281274788173107
+            },
+            "candidate": {
+              "leftLum": -2.022856710682362,
+              "rightLum": 11.454078728715729,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -2.022856710682362
+            },
+            "difference": -2.304131498855469,
+            "valid": true
+          },
+          {
+            "index": 15,
+            "tPx": 7,
+            "baseline": {
+              "leftLum": 0.7199110860467499,
+              "rightLum": 13.166700826138879,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": 0.7199110860467499
+            },
+            "candidate": {
+              "leftLum": -2.9574637828277446,
+              "rightLum": 12.23016771210689,
+              "okLeft": 1,
+              "okRight": 1,
+              "badFlags": [],
+              "valid": true,
+              "minLum": -2.9574637828277446
+            },
+            "difference": -3.6773748688744945,
+            "valid": true
+          }
+        ]
+      }
+    ]
+  },
+  "claims": {
+    "promoted": false,
+    "pathIdentity": "UNKNOWN",
+    "physicalEdgeIdentity": "UNKNOWN",
+    "AAAlpha": "UNKNOWN",
+    "confidence": "UNKNOWN",
+    "qualification": "conditional in-sample sampling evidence; rotation changes support"
+  },
+  "renderRows": [
+    {
+      "id": "primary/baseline",
+      "groupId": "primary",
+      "arm": "baseline",
+      "sourceId": "Lenard-5.full.rgba",
+      "originPx": [
+        779.8786992392037,
+        905.4177563481778
+      ],
+      "headingDeg": -11.768288932020644,
+      "rawArgs": {
+        "raster": "px.image.cropped",
+        "mask": "tk.s6.pathMask",
+        "originPx": [
+          779.8786992392037,
+          905.4177563481778
+        ],
+        "phiRad": -0.20539538918976738,
+        "t0Px": -8,
+        "t1Px": 8,
+        "stepPx": 1,
+        "widthPx": 42.26372284910734,
+        "bandPx": [
+          1,
+          3
+        ],
+        "alongPx": 2
+      },
+      "stations": [
+        {
+          "id": "primary/baseline/station0",
+          "index": 0,
+          "tPx": -8,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 3.627956678956579,
+          "rightLum": 9.624164477211366,
+          "minLum": 3.627956678956579,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "primary/baseline/station1",
+          "index": 1,
+          "tPx": -7,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 3.0473398562543537,
+          "rightLum": 10.678005283635613,
+          "minLum": 3.0473398562543537,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "primary/baseline/station2",
+          "index": 2,
+          "tPx": -6,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 2.274853478462859,
+          "rightLum": 12.367554106364437,
+          "minLum": 2.274853478462859,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "primary/baseline/station3",
+          "index": 3,
+          "tPx": -5,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 1.7149344586865993,
+          "rightLum": 13.602826373687009,
+          "minLum": 1.7149344586865993,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "primary/baseline/station4",
+          "index": 4,
+          "tPx": -4,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 1.30879804574937,
+          "rightLum": 13.879503407453598,
+          "minLum": 1.30879804574937,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "primary/baseline/station5",
+          "index": 5,
+          "tPx": -3,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 1.0894722563098753,
+          "rightLum": 12.515645211309746,
+          "minLum": 1.0894722563098753,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "primary/baseline/station6",
+          "index": 6,
+          "tPx": -2,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 1.0304332937373033,
+          "rightLum": 10.781204209036503,
+          "minLum": 1.0304332937373033,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "primary/baseline/station7",
+          "index": 7,
+          "tPx": -1,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 0.9134723507922189,
+          "rightLum": 8.917348959781648,
+          "minLum": 0.9134723507922189,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "primary/baseline/station8",
+          "index": 8,
+          "tPx": 0,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 0.6451904836681734,
+          "rightLum": 7.826389651519051,
+          "minLum": 0.6451904836681734,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "primary/baseline/station9",
+          "index": 9,
+          "tPx": 1,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 0.06740049189969,
+          "rightLum": 7.166411322868839,
+          "minLum": 0.06740049189969,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "primary/baseline/station10",
+          "index": 10,
+          "tPx": 2,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": -0.5773578348638466,
+          "rightLum": 7.3175775001303975,
+          "minLum": -0.5773578348638466,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "primary/baseline/station11",
+          "index": 11,
+          "tPx": 3,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": -1.343270378988052,
+          "rightLum": 7.493033498479363,
+          "minLum": -1.343270378988052,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "primary/baseline/station12",
+          "index": 12,
+          "tPx": 4,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": -1.968271169029265,
+          "rightLum": 7.674052195812848,
+          "minLum": -1.968271169029265,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "primary/baseline/station13",
+          "index": 13,
+          "tPx": 5,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": -2.2315188380836446,
+          "rightLum": 7.813788117543027,
+          "minLum": -2.2315188380836446,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "primary/baseline/station14",
+          "index": 14,
+          "tPx": 6,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": -2.459175370965184,
+          "rightLum": 8.26102212165884,
+          "minLum": -2.459175370965184,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "primary/baseline/station15",
+          "index": 15,
+          "tPx": 7,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": -3.7236265004278835,
+          "rightLum": 8.9386397534862,
+          "minLum": -3.7236265004278835,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        }
+      ],
+      "aggregate": {
+        "status": "VALID",
+        "minLum": 0.21353945638494665,
+        "deltaFromBaseline": 0
+      }
+    },
+    {
+      "id": "primary/candidate",
+      "groupId": "primary",
+      "arm": "candidate",
+      "sourceId": "Lenard-5.full.rgba",
+      "originPx": [
+        779.8786992392037,
+        905.4177563481778
+      ],
+      "headingDeg": -15.214659031896842,
+      "rawArgs": {
+        "raster": "px.image.cropped",
+        "mask": "tk.s6.pathMask",
+        "originPx": [
+          779.8786992392037,
+          905.4177563481778
+        ],
+        "phiRad": -0.26554589467489287,
+        "t0Px": -8,
+        "t1Px": 8,
+        "stepPx": 1,
+        "widthPx": 42.26372284910734,
+        "bandPx": [
+          1,
+          3
+        ],
+        "alongPx": 2
+      },
+      "stations": [
+        {
+          "id": "primary/candidate/station0",
+          "index": 0,
+          "tPx": -8,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -15.214659031896842,
+          "leftLum": 3.749500375867882,
+          "rightLum": 10.873697814475136,
+          "minLum": 3.749500375867882,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0.12154369691130285
+        },
+        {
+          "id": "primary/candidate/station1",
+          "index": 1,
+          "tPx": -7,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -15.214659031896842,
+          "leftLum": 3.3784260207119985,
+          "rightLum": 12.67154507468868,
+          "minLum": 3.3784260207119985,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0.3310861644576448
+        },
+        {
+          "id": "primary/candidate/station2",
+          "index": 2,
+          "tPx": -6,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -15.214659031896842,
+          "leftLum": 2.8340469464540092,
+          "rightLum": 13.789048544129827,
+          "minLum": 2.8340469464540092,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0.5591934679911503
+        },
+        {
+          "id": "primary/candidate/station3",
+          "index": 3,
+          "tPx": -5,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -15.214659031896842,
+          "leftLum": 2.2036076384560346,
+          "rightLum": 13.79912201763905,
+          "minLum": 2.2036076384560346,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0.48867317976943525
+        },
+        {
+          "id": "primary/candidate/station4",
+          "index": 4,
+          "tPx": -4,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -15.214659031896842,
+          "leftLum": 1.8333092983737913,
+          "rightLum": 11.95394735114462,
+          "minLum": 1.8333092983737913,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0.5245112526244213
+        },
+        {
+          "id": "primary/candidate/station5",
+          "index": 5,
+          "tPx": -3,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -15.214659031896842,
+          "leftLum": 1.484141388039859,
+          "rightLum": 10.007344982272699,
+          "minLum": 1.484141388039859,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0.39466913172998375
+        },
+        {
+          "id": "primary/candidate/station6",
+          "index": 6,
+          "tPx": -2,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -15.214659031896842,
+          "leftLum": 1.2470589381616008,
+          "rightLum": 8.055018547029647,
+          "minLum": 1.2470589381616008,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0.21662564442429755
+        },
+        {
+          "id": "primary/candidate/station7",
+          "index": 7,
+          "tPx": -1,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -15.214659031896842,
+          "leftLum": 1.2233266933714617,
+          "rightLum": 7.222415158689415,
+          "minLum": 1.2233266933714617,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0.3098543425792428
+        },
+        {
+          "id": "primary/candidate/station8",
+          "index": 8,
+          "tPx": 0,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -15.214659031896842,
+          "leftLum": 1.2281451615792491,
+          "rightLum": 6.833889126080933,
+          "minLum": 1.2281451615792491,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0.5829546779110757
+        },
+        {
+          "id": "primary/candidate/station9",
+          "index": 9,
+          "tPx": 1,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -15.214659031896842,
+          "leftLum": 1.0677977824557132,
+          "rightLum": 7.526510461007277,
+          "minLum": 1.0677977824557132,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 1.0003972905560232
+        },
+        {
+          "id": "primary/candidate/station10",
+          "index": 10,
+          "tPx": 2,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -15.214659031896842,
+          "leftLum": 0.5683153214931309,
+          "rightLum": 7.9340375980712,
+          "minLum": 0.5683153214931309,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 1.1456731563569775
+        },
+        {
+          "id": "primary/candidate/station11",
+          "index": 11,
+          "tPx": 3,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -15.214659031896842,
+          "leftLum": -0.1567664110322795,
+          "rightLum": 8.125068708038683,
+          "minLum": -0.1567664110322795,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 1.1865039679557725
+        },
+        {
+          "id": "primary/candidate/station12",
+          "index": 12,
+          "tPx": 4,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -15.214659031896842,
+          "leftLum": -1.1263754132963868,
+          "rightLum": 7.917021464461072,
+          "minLum": -1.1263754132963868,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0.8418957557328781
+        },
+        {
+          "id": "primary/candidate/station13",
+          "index": 13,
+          "tPx": 5,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -15.214659031896842,
+          "leftLum": -2.108109958036124,
+          "rightLum": 7.960203959876424,
+          "minLum": -2.108109958036124,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0.1234088800475206
+        },
+        {
+          "id": "primary/candidate/station14",
+          "index": 14,
+          "tPx": 6,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -15.214659031896842,
+          "leftLum": -2.732396690615573,
+          "rightLum": 7.998986686270541,
+          "minLum": -2.732396690615573,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": -0.2732213196503892
+        },
+        {
+          "id": "primary/candidate/station15",
+          "index": 15,
+          "tPx": 7,
+          "originPx": [
+            779.8786992392037,
+            905.4177563481778
+          ],
+          "headingDeg": -15.214659031896842,
+          "leftLum": -3.0913003767249165,
+          "rightLum": 7.596293973762954,
+          "minLum": -3.0913003767249165,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0.6323261237029669
+        }
+      ],
+      "aggregate": {
+        "status": "VALID",
+        "minLum": 0.7251704197037157,
+        "deltaFromBaseline": 0.511630963318769
+      }
+    },
+    {
+      "id": "bright-nonpath/baseline",
+      "groupId": "bright-nonpath",
+      "arm": "baseline",
+      "sourceId": "Lenard-5.full.rgba",
+      "originPx": [
+        781.3283120117229,
+        746.37589765627
+      ],
+      "headingDeg": -11.768288932020644,
+      "rawArgs": {
+        "raster": "px.image.cropped",
+        "mask": "tk.s6.pathMask",
+        "originPx": [
+          781.3283120117229,
+          746.37589765627
+        ],
+        "phiRad": -0.20539538918976738,
+        "t0Px": -8,
+        "t1Px": 8,
+        "stepPx": 1,
+        "widthPx": 43.74145492884304,
+        "bandPx": [
+          1,
+          3
+        ],
+        "alongPx": 2
+      },
+      "stations": [
+        {
+          "id": "bright-nonpath/baseline/station0",
+          "index": 0,
+          "tPx": -8,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 3.360899753294433,
+          "rightLum": 19.134976110080316,
+          "minLum": 3.360899753294433,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "bright-nonpath/baseline/station1",
+          "index": 1,
+          "tPx": -7,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 3.3200140594435084,
+          "rightLum": 15.940927908301774,
+          "minLum": 3.3200140594435084,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "bright-nonpath/baseline/station2",
+          "index": 2,
+          "tPx": -6,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 2.807103139273039,
+          "rightLum": 13.216552552820758,
+          "minLum": 2.807103139273039,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "bright-nonpath/baseline/station3",
+          "index": 3,
+          "tPx": -5,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 2.0527577793085072,
+          "rightLum": 11.372390700703818,
+          "minLum": 2.0527577793085072,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "bright-nonpath/baseline/station4",
+          "index": 4,
+          "tPx": -4,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 1.5688718885100172,
+          "rightLum": 10.231555856642785,
+          "minLum": 1.5688718885100172,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "bright-nonpath/baseline/station5",
+          "index": 5,
+          "tPx": -3,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 1.5081477728368498,
+          "rightLum": 9.606737910532985,
+          "minLum": 1.5081477728368498,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "bright-nonpath/baseline/station6",
+          "index": 6,
+          "tPx": -2,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 1.6932841204211684,
+          "rightLum": 9.521370236392073,
+          "minLum": 1.6932841204211684,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "bright-nonpath/baseline/station7",
+          "index": 7,
+          "tPx": -1,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 1.5559314278099237,
+          "rightLum": 10.001569416421319,
+          "minLum": 1.5559314278099237,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "bright-nonpath/baseline/station8",
+          "index": 8,
+          "tPx": 0,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 1.1038555281798779,
+          "rightLum": 10.710919631145032,
+          "minLum": 1.1038555281798779,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "bright-nonpath/baseline/station9",
+          "index": 9,
+          "tPx": 1,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 0.4021167891275468,
+          "rightLum": 11.37920851252673,
+          "minLum": 0.4021167891275468,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "bright-nonpath/baseline/station10",
+          "index": 10,
+          "tPx": 2,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": -0.28972180166343264,
+          "rightLum": 12.185413572378593,
+          "minLum": -0.28972180166343264,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "bright-nonpath/baseline/station11",
+          "index": 11,
+          "tPx": 3,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": -0.8854259675626679,
+          "rightLum": 12.830011838356796,
+          "minLum": -0.8854259675626679,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "bright-nonpath/baseline/station12",
+          "index": 12,
+          "tPx": 4,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": -0.8306574565048663,
+          "rightLum": 13.102089926568084,
+          "minLum": -0.8306574565048663,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "bright-nonpath/baseline/station13",
+          "index": 13,
+          "tPx": 5,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": -0.3470772402207558,
+          "rightLum": 13.145557832427897,
+          "minLum": -0.3470772402207558,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "bright-nonpath/baseline/station14",
+          "index": 14,
+          "tPx": 6,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 0.281274788173107,
+          "rightLum": 13.199117908088283,
+          "minLum": 0.281274788173107,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        },
+        {
+          "id": "bright-nonpath/baseline/station15",
+          "index": 15,
+          "tPx": 7,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -11.768288932020644,
+          "leftLum": 0.7199110860467499,
+          "rightLum": 13.166700826138879,
+          "minLum": 0.7199110860467499,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0
+        }
+      ],
+      "aggregate": {
+        "status": "VALID",
+        "minLum": 1.1263303541545628,
+        "deltaFromBaseline": 0
+      }
+    },
+    {
+      "id": "bright-nonpath/candidate",
+      "groupId": "bright-nonpath",
+      "arm": "candidate",
+      "sourceId": "Lenard-5.full.rgba",
+      "originPx": [
+        781.3283120117229,
+        746.37589765627
+      ],
+      "headingDeg": -26.043908265197757,
+      "rawArgs": {
+        "raster": "px.image.cropped",
+        "mask": "tk.s6.pathMask",
+        "originPx": [
+          781.3283120117229,
+          746.37589765627
+        ],
+        "phiRad": -0.4545519493150654,
+        "t0Px": -8,
+        "t1Px": 8,
+        "stepPx": 1,
+        "widthPx": 43.74145492884304,
+        "bandPx": [
+          1,
+          3
+        ],
+        "alongPx": 2
+      },
+      "stations": [
+        {
+          "id": "bright-nonpath/candidate/station0",
+          "index": 0,
+          "tPx": -8,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -26.043908265197757,
+          "leftLum": -2.480566071112321,
+          "rightLum": 21.534502352378297,
+          "minLum": -2.480566071112321,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": -5.841465824406754
+        },
+        {
+          "id": "bright-nonpath/candidate/station1",
+          "index": 1,
+          "tPx": -7,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -26.043908265197757,
+          "leftLum": -1.962801858600244,
+          "rightLum": 18.69241739434395,
+          "minLum": -1.962801858600244,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": -5.282815918043752
+        },
+        {
+          "id": "bright-nonpath/candidate/station2",
+          "index": 2,
+          "tPx": -6,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -26.043908265197757,
+          "leftLum": -1.4837729646119158,
+          "rightLum": 16.472941505189794,
+          "minLum": -1.4837729646119158,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": -4.290876103884955
+        },
+        {
+          "id": "bright-nonpath/candidate/station3",
+          "index": 3,
+          "tPx": -5,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -26.043908265197757,
+          "leftLum": -1.0870826753242397,
+          "rightLum": 14.627520978589274,
+          "minLum": -1.0870826753242397,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": -3.139840454632747
+        },
+        {
+          "id": "bright-nonpath/candidate/station4",
+          "index": 4,
+          "tPx": -4,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -26.043908265197757,
+          "leftLum": -0.3126960310850393,
+          "rightLum": 13.26116002144721,
+          "minLum": -0.3126960310850393,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": -1.8815679195950565
+        },
+        {
+          "id": "bright-nonpath/candidate/station5",
+          "index": 5,
+          "tPx": -3,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -26.043908265197757,
+          "leftLum": 0.644578635527381,
+          "rightLum": 12.255102408030751,
+          "minLum": 0.644578635527381,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": -0.8635691373094687
+        },
+        {
+          "id": "bright-nonpath/candidate/station6",
+          "index": 6,
+          "tPx": -2,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -26.043908265197757,
+          "leftLum": 1.451039585233076,
+          "rightLum": 11.454234350160732,
+          "minLum": 1.451039585233076,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": -0.2422445351880924
+        },
+        {
+          "id": "bright-nonpath/candidate/station7",
+          "index": 7,
+          "tPx": -1,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -26.043908265197757,
+          "leftLum": 1.971200172571315,
+          "rightLum": 10.904536731124779,
+          "minLum": 1.971200172571315,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 0.4152687447613914
+        },
+        {
+          "id": "bright-nonpath/candidate/station8",
+          "index": 8,
+          "tPx": 0,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -26.043908265197757,
+          "leftLum": 2.18086031931918,
+          "rightLum": 10.778245873724813,
+          "minLum": 2.18086031931918,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 1.0770047911393021
+        },
+        {
+          "id": "bright-nonpath/candidate/station9",
+          "index": 9,
+          "tPx": 1,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -26.043908265197757,
+          "leftLum": 1.8489646166684963,
+          "rightLum": 10.682220189402756,
+          "minLum": 1.8489646166684963,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 1.4468478275409495
+        },
+        {
+          "id": "bright-nonpath/candidate/station10",
+          "index": 10,
+          "tPx": 2,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -26.043908265197757,
+          "leftLum": 1.4200051340822029,
+          "rightLum": 10.419213165927573,
+          "minLum": 1.4200051340822029,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 1.7097269357456355
+        },
+        {
+          "id": "bright-nonpath/candidate/station11",
+          "index": 11,
+          "tPx": 3,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -26.043908265197757,
+          "leftLum": 1.0395393853717678,
+          "rightLum": 10.089900224248595,
+          "minLum": 1.0395393853717678,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 1.9249653529344357
+        },
+        {
+          "id": "bright-nonpath/candidate/station12",
+          "index": 12,
+          "tPx": 4,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -26.043908265197757,
+          "leftLum": 0.3506151750841582,
+          "rightLum": 10.061144471409108,
+          "minLum": 0.3506151750841582,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": 1.1812726315890245
+        },
+        {
+          "id": "bright-nonpath/candidate/station13",
+          "index": 13,
+          "tPx": 5,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -26.043908265197757,
+          "leftLum": -0.8479631274515214,
+          "rightLum": 10.54786847605456,
+          "minLum": -0.8479631274515214,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": -0.5008858872307655
+        },
+        {
+          "id": "bright-nonpath/candidate/station14",
+          "index": 14,
+          "tPx": 6,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -26.043908265197757,
+          "leftLum": -2.022856710682362,
+          "rightLum": 11.454078728715729,
+          "minLum": -2.022856710682362,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": -2.304131498855469
+        },
+        {
+          "id": "bright-nonpath/candidate/station15",
+          "index": 15,
+          "tPx": 7,
+          "originPx": [
+            781.3283120117229,
+            746.37589765627
+          ],
+          "headingDeg": -26.043908265197757,
+          "leftLum": -2.9574637828277446,
+          "rightLum": 12.23016771210689,
+          "minLum": -2.9574637828277446,
+          "okLeft": 1,
+          "okRight": 1,
+          "badFlags": [],
+          "deltaFromBaseline": -3.6773748688744945
+        }
+      ],
+      "aggregate": {
+        "status": "VALID",
+        "minLum": -0.14052501236486314,
+        "deltaFromBaseline": -1.266855366519426
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "trace.json",
+      "bytes": 146333,
+      "sha256": "f237792dc0753096c3ab390a6efdf901e8850dbd433be60c7b9c808588bd3e63"
+    }
+  ],
+  "limits": {
+    "perTraceBytes": 2097152,
+    "totalBytes": 5242880,
+    "qualification": "practical file caps; not RSS proof; outer timeout required"
+  }
+}

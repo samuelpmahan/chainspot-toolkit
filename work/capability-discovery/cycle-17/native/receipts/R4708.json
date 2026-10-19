@@ -1,0 +1,86 @@
+{
+  "schema": "lab17-independent-heading-projection-review@1",
+  "job_id": "R4708",
+  "worker": "S2",
+  "depends_on": "E4707",
+  "decision": "accepted",
+  "outcome": "confirmed_reuse",
+  "summary": "Accept the minimal saved-heading-claims projection correction. One independent execution of the unchanged frozen six-test suite passed6/6, exit0, stderr0. A separate Python stdlib XML/JSON checker importing no recipe or renderer matched canonical author actual.svg and the unique complete original-trace receipt against exact unchanged E4009 bytes, including visible/structured claims and prediction, all4 row descriptions/all64 station IDs and visible cells, bindings and trace hash. This is consumer fidelity, not new physical evidence.",
+  "protocol": {
+    "path": "/workspace/scratch/86659bbafcce/lab17/protocol.md",
+    "sha256": "2c3c1bcf4faec0ef6cc570deff28289a403e540b444da32bca67ae174bc66a87",
+    "priorIndependentContract": "/workspace/scratch/86659bbafcce/lab17/S4/R4707/receipt.json"
+  },
+  "sourceReview": {
+    "repository": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab",
+    "baseLocal": "515160d416ccaa37a088e09434a30c6b31b0ba30",
+    "reviewedDiff": "render.mjs adds supplied claims??null to existing metadata, dynamic wrapped/XML-escaped header and stdout; cli.mjs adds supplied claims??null to existing receipt; README documents that contract; new frozen projection.test.mjs exercises actual consumer exports. No other product delta.",
+    "renderSha256": "e18a6a6329011c80e90ff0a9f1052751b08893de2519c1542dc996f25801caaf",
+    "cliSha256": "3b7c9808fe10396ab9e2106d454998107ff8e6aea1b83f470cffb00e730d3555",
+    "readmeSha256": "7e40e80460d07f45ff0f5ae14762907fd2bd8a585639b1316e0d77db7325c503",
+    "frozenTestSha256": "095cc1dc1eb043d2303943b62362a15392cfda64376c7fe7af03ffda941c218d",
+    "unchangedRecipeSha256": "97cc2bc1d30dd9039104df2c488fae491d93a21522aa3babbd7e5636b9710f2e",
+    "sourcePinsUnchangedBeforeAfterIndependentRun": true,
+    "gitDiffCheck": "exit0",
+    "scope": "S2 made no product, test, Git or sealed-evidence edits. Source, guards, caps, exclusive writes, producer/default and old execution-source bindings remain unchanged apart from additive consumer projections."
+  },
+  "redEvidence": {
+    "stdout": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/red/stdout.txt",
+    "stdoutSha256": "44ebd630f4bee86182b101bc6b143f6e8a34b909e28729b7e030f3204e656edb",
+    "observed": "Raw six-test run has5 assertion failures/1 guard-test pass, no stderr or syntax/import failure. First missing-claims assertions fail at test lines57,66,73 and shared helper42. Original before/after pins are identical and bind the same frozen test SHA as current GREEN. Existing render/cli pins in RED match protocol baseline.",
+    "qualification": "Later assertions in the five failing tests were not reached: explicit-null after the first missing case, extended/XML case after partial, subsequent visibility/rows/receipt assertions were not individually demonstrated RED. They are GREEN regression coverage, not separately observed prior failures. No RED rerun was made."
+  },
+  "independentFocusedRun": {
+    "capture": "/workspace/scratch/86659bbafcce/lab17/S2/R4708/focused",
+    "command": "node --test experiments/capability-discovery/heading-ablation/projection.test.mjs",
+    "started": "2026-10-19T17:11:16.785Z",
+    "ended": "2026-10-19T17:11:17.032Z",
+    "wallMs": 246.87492699999999,
+    "exitCode": 0,
+    "passed": 6,
+    "failed": 0,
+    "stderrBytes": 0,
+    "stdoutSha256": "2932fdc7010bd5c8395258ea0c7bf6ad873255eebf1dc4e05564ec46da4e47ab",
+    "cases": "Actual original SVG/metadata, actual renderer stdout, actual persistence/full trace, test-only legacy missing/null, partial/extensions/XML escaping, existing schema/row/hash/size/exclusive/cap guards. These are six tests, not new physical cases or duplicate producer measurements."
+  },
+  "independentReadback": {
+    "checker": "/workspace/scratch/86659bbafcce/lab17/S2/R4708/check_artifacts.py",
+    "checkerSha256": "d7da198af29c304a7eb8630d26275b33fa39689730cd067668055b349914cd74",
+    "executions": 1,
+    "exitCode": 0,
+    "status": "MATCH",
+    "captureQualification": "Checker was run once directly through exec_command. Exit0, output and tool wall_time_seconds0.011220921 are tool-result testimony, not separately captured child raw stdout/stderr/start/end streams. No independent checker raw stderr or start/end artifact was recorded, and no rerun was made merely for packaging. Transcribed original tool result is checker-tool-transcript.json, explicitly labeled as a transcription.",
+    "readback": "/workspace/scratch/86659bbafcce/lab17/S2/R4708/readback.json",
+    "readbackSha256": "7e5015e058becabcb9898b80e2f5e069a281d344bb0290f873bd8fb12a38b038",
+    "method": "Python stdlib parses actual SVG XML, complete row desc JSON, every station group/cell and metadata; compares against exact E4009 JSON. Selects author receipt by full saved trace equality plus absence of failure artifact, not legacy/clone path labels. Imports no recipe/renderer and calls no consumer or geometry function.",
+    "originalTraceSha256": "f237792dc0753096c3ab390a6efdf901e8850dbd433be60c7b9c808588bd3e63",
+    "prediction": {"status":"SUPPORTED","Dprimary":0.511630963318769,"Dbright":-1.266855366519426},
+    "claims": {"promoted":false,"pathIdentity":"UNKNOWN","physicalEdgeIdentity":"UNKNOWN","AAAlpha":"UNKNOWN","confidence":"UNKNOWN","qualification":"conditional in-sample sampling evidence; rotation changes support"}
+  },
+  "canonicalAuthorArtifactsForS6": {
+    "svg": {
+      "path": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/green/outputs/heading-projection-FyDDpZ/actual.svg",
+      "bytes": 140575,
+      "sha256": "c62dae1e0249897db41b4b93a496db4079c78b89704c71bb4dcd273db96935fd"
+    },
+    "receipt": {
+      "path": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/green/outputs/heading-projection-T6YLNl/receipt.json",
+      "bytes": 61814,
+      "sha256": "60940ca51e8f6c4196bdffaf0247bb4939e3a89de1aa42beeeab4a845db04b2c"
+    },
+    "fullTrace": {
+      "path": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/green/outputs/heading-projection-T6YLNl/trace.json",
+      "bytes": 146333,
+      "sha256": "f237792dc0753096c3ab390a6efdf901e8850dbd433be60c7b9c808588bd3e63",
+      "exactOldBytes": true
+    }
+  },
+  "limitations": [
+    "No standalone render/rasterization or PNG visual inspection by S2; root/S6 still own separate artifact-only rasterization and visible-layout acceptance.",
+    "No broad test suite, recipe execution, query/store/CV/geometry/producer, original pixels or E4012/E2021 forbidden data reads. Import of cli.mjs by the focused suite defines the unchanged recipe and pure metadata plan only; producer entry is never called.",
+    "Trusted finite JSON-safe saved trace contract. No generic hostile-input, authentication, scientific correctness, calibrated width, AA, confidence, generalization or path/edge identity claim.",
+    "A preliminary read command attempted an absent /lab17 shorthand and exited2 before task reads; corrected to the known absolute workspace path. This was not a test/product failure. No rerun-to-green or test rewrite occurred.",
+    "No commit/stage/push, source adoption, default change, subagents or native finish. Root owns native finish and publication gates."
+  ],
+  "next": "Canonical saved artifacts are ready for separately admitted S6 rasterization and root visual inspection. Physical original-pixel/real44 admission remains HOLD."
+}

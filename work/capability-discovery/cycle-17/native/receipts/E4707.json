@@ -1,0 +1,91 @@
+{
+  "schema": "lab17-heading-claims-projection-receipt@1",
+  "job_id": "E4707",
+  "worker": "S1",
+  "outcome": "mixed_change",
+  "summary": "Actual frozen focused RED demonstrated saved E4009 claims omitted from SVG metadata, renderer stdout and CLI receipt. Minimal additive projection correction now preserves the whole supplied claims value in those outputs and visible SVG, with explicit null/unavailable legacy handling. The identical six focused tests passed once after root reviewed the written checkpoint. This is author validation, not independent acceptance or physical/scientific validation. No commit or standalone display run.",
+  "protocol": {
+    "path": "/workspace/scratch/86659bbafcce/lab17/protocol.md",
+    "sha256": "2c3c1bcf4faec0ef6cc570deff28289a403e540b444da32bca67ae174bc66a87",
+    "independent_review": "/workspace/scratch/86659bbafcce/lab17/S4/R4707/receipt.json",
+    "decision": "accepted",
+    "checkpoint": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/checkpoint.md",
+    "checkpoint_sha256": "fca7e75c348d8c7d908241ba8e3c63f0dedb336b2241554b10cb5a0de726d137",
+    "checkpoint_before_green": true,
+    "green_root_GO_received": true
+  },
+  "source": {
+    "repository": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab",
+    "branch": "codex/capability-discovery-lab",
+    "base_local": "515160d416ccaa37a088e09434a30c6b31b0ba30",
+    "base_tree": "1e72d33d753ae2890c2b55b05aa8bebc2556e728",
+    "root_supplied_canonical": "5c7d7b7b79442520cf9fa5af74e0b944d9a33342",
+    "current_files": [
+      {"path":"experiments/capability-discovery/heading-ablation/render.mjs","bytes":12135,"sha256":"e18a6a6329011c80e90ff0a9f1052751b08893de2519c1542dc996f25801caaf","change":"claims in existing metadata, wrapped visible header and stdout"},
+      {"path":"experiments/capability-discovery/heading-ablation/cli.mjs","bytes":2542,"sha256":"3b7c9808fe10396ab9e2106d454998107ff8e6aea1b83f470cffb00e730d3555","change":"claims in existing returned/written receipt"},
+      {"path":"experiments/capability-discovery/heading-ablation/projection.test.mjs","bytes":6783,"sha256":"095cc1dc1eb043d2303943b62362a15392cfda64376c7fe7af03ffda941c218d","change":"new frozen focused nonpixel consumer regression"},
+      {"path":"experiments/capability-discovery/heading-ablation/README.md","bytes":1751,"sha256":"7e40e80460d07f45ff0f5ae14762907fd2bd8a585639b1316e0d77db7325c503","change":"brief supplied/legacy claim preservation and test entry documentation"}
+    ],
+    "unchanged_recipe_sha256": "97cc2bc1d30dd9039104df2c488fae491d93a21522aa3babbd7e5636b9710f2e",
+    "test_frozen_copy": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/frozen-projection.test.mjs",
+    "same_test_bytes_red_green": true,
+    "git_diff_check": "exit0; no whitespace errors",
+    "status": "Only the named four product files are modified/new; no stage/commit/push"
+  },
+  "input": {
+    "path": "work/capability-discovery/cycle-10/evidence/E4009/output/trace.json",
+    "bytes": 146333,
+    "sha256": "f237792dc0753096c3ab390a6efdf901e8850dbd433be60c7b9c808588bd3e63",
+    "role": "Trusted saved nonpixel exposed trace; test-only clones labeled for missing/null/partial/extensions/escaping/guards",
+    "unchanged": true
+  },
+  "actual_runs": [
+    {
+      "phase": "RED",
+      "capture": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/red",
+      "command": "node --test experiments/capability-discovery/heading-ablation/projection.test.mjs",
+      "started": "2026-10-19T17:04:36.123Z",
+      "ended": "2026-10-19T17:04:36.355Z",
+      "wallMs": 230.66142199999996,
+      "exitCode": 1,
+      "passed": 1,
+      "failed": 5,
+      "stderrBytes": 0,
+      "stdout_sha256": "44ebd630f4bee86182b101bc6b143f6e8a34b909e28729b7e030f3204e656edb",
+      "before_after_pin_sha256": "28dd68481c96118b2649f36ae6b1ce3d3b88ad06b47d8513b5b02e48b751413c",
+      "meaning": "Five assertions fail because claims are genuinely undefined in existing projections, including legacy expected null; existing guard test passes. No syntax/import/harness failure. Later assertions in each failing test were not reached."
+    },
+    {
+      "phase": "GREEN",
+      "capture": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/green",
+      "command": "node --test experiments/capability-discovery/heading-ablation/projection.test.mjs",
+      "started": "2026-10-19T17:05:42.598Z",
+      "ended": "2026-10-19T17:05:42.843Z",
+      "wallMs": 244.410863,
+      "exitCode": 0,
+      "passed": 6,
+      "failed": 0,
+      "stderrBytes": 0,
+      "stdout_sha256": "d70fae047b456a36c3ca55c4a8eb6954406327f350eb93b7ecc2328cdfe8428f",
+      "before_after_pin_sha256": "f8317288e733d91cce1bea5af4c9b5c3193cfef045ba1f0178c14966c755ab58",
+      "meaning": "Same frozen six tests pass once. Six tests across two executions are not twelve distinct cases. Assertions preserve whole qualifiers, all4 rows/64 identities, prediction/rows/full trace, source/input bindings, legacy null, partial/extra/XML escaping and existing schema/hash/size/exclusive/cap controls."
+    }
+  ],
+  "implementation": {
+    "selection": "trace.claims ?? null; no six-key whitelist, renamed field, inferred default or re-evaluation",
+    "visible": "Existing XML-safe text/chunks and dynamic header height render serialized supplied claims or claims=unavailable/null",
+    "machine": "Existing SVG metadata, renderer main stdout and persistHeadingTrace returned/written receipt",
+    "unchanged": "Prediction, D/group/station values, row/station ordering, source/input bindings, schema guards, input hash checks, exclusive writes, caps and failure behavior",
+    "physical_meaning": "Qualifier fidelity only; physical identity/calibration/AA/confidence/generalization remain UNKNOWN/HOLD"
+  },
+  "limitations": [
+    "Independent implementation/output review and standalone saved-trace display/rasterization remain pending separate packets; no self-acceptance.",
+    "Tests invoke actual consumer SVG functions and retain their outputs; there was no separate standalone display command or rasterization.",
+    "No broad existing recipe suite or full repository suite was run: root explicitly limited validation to the frozen consumer suite to avoid unadmitted producer/scientific work.",
+    "Trusted finite JSON-safe trace contract only; not generic serializer/schema hardening, hostile-input security or execution authentication.",
+    "No producer/runHeadingCLI/runHeadingAblation/query/store/provider/geometry operation, source pixels, native-answer decode, fitting/ranking, old44/160 replay or Lab10 producer repeat.",
+    "No old sealed E4009/E4013 artifact, recipe or default was edited; no Git writes/publication or subagents.",
+    "One optional skill reference resource read failed; no task/product command failed for that reason and no authority was expanded."
+  ],
+  "next": "Root owns native finish and separate independent review/standalone display admission. Ordinary owner Git work only after a new explicit commit packet."
+}

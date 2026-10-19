@@ -1,0 +1,55 @@
+{
+  "schema": "lab17-physical-admission-inventory-receipt@1",
+  "job_id": "E4701",
+  "worker": "S1",
+  "outcome": "insufficient_evidence",
+  "summary": "Source-only physical-admission inventory complete. Original pixels/new CV/real44 remain HOLD. Sam-owned historical annotations do exist for HeritagePark/Lenard/TowneLake, but their mapping to original full-frame source and independent negative-control translation remain incomplete; NorthPark has no testimony directory and is exposed legacy, not held out. Independently fixed heading arms remain missing. Real44 artifactSchemas/dependencyPathSet/phaseImplementation remain separately UNRESOLVED. Proposed next source-only request specification is not physical admission or execution authority.",
+  "source": {
+    "repository": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab",
+    "branch": "codex/capability-discovery-lab",
+    "local_commit": "515160d416ccaa37a088e09434a30c6b31b0ba30",
+    "tree": "1e72d33d753ae2890c2b55b05aa8bebc2556e728",
+    "root_supplied_canonical_commit": "5c7d7b7b79442520cf9fa5af74e0b944d9a33342",
+    "canonical_freshly_verified_by_S1": false,
+    "tracked_paths": 4369,
+    "status_clean": true
+  },
+  "artifact": "/workspace/scratch/86659bbafcce/lab17/S1/E4701/inventory.md",
+  "physical_admission": "HOLD",
+  "real44_admission": "HOLD",
+  "verified_facts": [
+    "Current cycle16 saved-pair agreement is software consistency only; independent physical identity/continuity/calibration/AA/ownership/confidence/causality/generalization stay UNKNOWN/HOLD.",
+    "Lenard-1 crop/source frames differ by [400,1010] and are dependent views; do not fuse with Lenard-5, IMG_5641 or NorthPark.",
+    "Cycle10 E4012 safe findings explicitly names missing independent tee/badge/path annotation and independently fixed heading arms; NorthPark is exposed legacy.",
+    "E502/E503/E504 protocols preserve real Sam-owned historical annotations; original full-frame mapping is UNKNOWN/unproven and fresh D2/D3/D4 visual bright controls are not independent negative truth.",
+    "Existing heading ablation was already executed once and changes sampled support on rotation; it is not a new ready physical experiment.",
+    "Finite-trial checker README leaves real artifactSchemas/dependencyPathSet/phaseImplementation UNRESOLVED."
+  ],
+  "next_packet": {
+    "status": "PROPOSAL_ONLY",
+    "operation": "One source-only physical-admission request specification using S2 control-availability and S4 heading/exposure findings, with independent review; preserve MISSING fields and HOLD.",
+    "owner": "S1 after a new exact root packet",
+    "fallback": "Evaluate S6 separately pinned display-qualifier consumer seam if root wants immediately runnable engineering work; this receipt does not authorize implementation/tests.",
+    "no_invented_data_or_thresholds": true
+  },
+  "actual_execution": {
+    "source_inspection_only": true,
+    "producer_calls": 0,
+    "query_calls": 0,
+    "geometry_calls": 0,
+    "tests": 0,
+    "renders": 0,
+    "pixel_payload_reads": 0,
+    "repository_writes": 0,
+    "git_writes": 0,
+    "external_adoptions": 0,
+    "subagents": 0
+  },
+  "disclosures": [
+    "E4012 findings.txt was read and pinned; E4012 metadata/pins were not opened.",
+    "No consumed E2021/planner/token/R2021/old160grid replay or Lab10 four-call repeat.",
+    "One instruction-name rg no-match stopped a chained read-only command; one absent cycle08/CURRENT.md search returned2. Neither is product RED.",
+    "Only own E4701 scratch inventory and receipt were created via apply_patch; no publication authority exercised.",
+    "Native completion belongs to root; dispatch recommendation and this receipt are not execution authority."
+  ]
+}

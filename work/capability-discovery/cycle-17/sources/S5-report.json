@@ -1,0 +1,147 @@
+{
+  "schema": "lab17-readonly-operation-scout@1",
+  "job_id": "E4705",
+  "worker": "S5",
+  "decision": "CONFIRMED_REUSE_WITH_PHYSICAL_HOLD",
+  "source": {
+    "local": "515160d416ccaa37a088e09434a30c6b31b0ba30",
+    "canonical": "5c7d7b7b79442520cf9fa5af74e0b944d9a33342",
+    "tree": "1e72d33d753ae2890c2b55b05aa8bebc2556e728",
+    "selectedAlgorithmReference": "e3e11fab5de1e4562487472585259435694d88bc",
+    "mainReference": "37a2dba87d61262f661af70f1a22440736e61efc",
+    "claudeReference": "cc1fa5c9c4191e11d1d70d021161da3bac2af492",
+    "claudeQualification": "S3 owns fresh route/fixture inspection; this scout does not duplicate/adopt/execute it."
+  },
+  "readOnlyLimits": {
+    "algorithmCalls": 0,
+    "producerCalls": 0,
+    "geometryCalls": 0,
+    "testCommands": 0,
+    "renderCommands": 0,
+    "originalPixelReads": 0,
+    "real44Queries": 0,
+    "gitMutations": 0,
+    "subagents": 0,
+    "repositoryEdits": 0,
+    "forbiddenArtifactsOpened": 0,
+    "historicalMiningNeeded": false
+  },
+  "existingOperations": [
+    {
+      "hypothesis": "Candidate lies on a centerline / midpoint",
+      "reuse": "describePath({points,frame,pairedEdges})",
+      "source": "experiments/capability-discovery/probes/path-geometry/path-geometry.mjs:67-88",
+      "math": "L/R supplied 2D edges; W=hypot(R-L)>0; M=(L+R)/2; d=P-M; distance=hypot(d); normalized distance=|d|/W; signed cross-section offset=dot(d,(R-L)/W)/W.",
+      "units": "px in explicitly named caller frame; normalized offsets in fitted full ribbon widths",
+      "boundary": "Pairs/orientation/association are caller testimony. Null pair stays UNKNOWN. Heading, brightness and nominal origins cannot establish midpoint; this is not a physical centerline detector. Symmetric L/R swaps leave midpoint, Euclidean width and absolute distance unchanged."
+    },
+    {
+      "hypothesis": "Long straight sections and few sharp bends",
+      "reuse": "describePath plus countTurns",
+      "source": "experiments/capability-discovery/probes/path-geometry/path-geometry.mjs:32-45,86-104",
+      "math": "Each consecutive supplied segment is one run with hypot(dx,dy), unit tangent and cumulative length. Interior signed turn=atan2(cross(t_prev,t_next),dot(t_prev,t_next)); normalized length=sum(segmentLength/fullWidth). countTurns requires explicit named boolean caller predicate.",
+      "units": "length px in named frame; turns radians with caller-axis sign; full-width multiples dimensionless",
+      "boundary": "No smoothing, collinear merging, physical-bend inference, default sharp threshold, three-bend rule or exponential penalty. A 180-degree reversal's sign is ambiguous. Do not infer physical routes from ordered station origins."
+    },
+    {
+      "hypothesis": "Plausible local ribbon width and local midpoint",
+      "reuse": "profileAt + edgePairOf + widthSearchAt; existing eligibility wrapper assessLocalWidth",
+      "source": "experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs:47-165; experiments/capability-discovery/probes/width/recipe.mjs:1-23",
+      "math": "Mean-RGB luminance, bilinear source samples. Lateral offsets -30..30px step .25; best rising/falling gradient pair near Wexp subject to width/center/visibility gates. Five-tap smoothing; score=min(leftGradient,-rightGradient); parabolic subpixel edge refinement gives l,r,c=(l+r)/2,w=r-l. Free width search Wg18..59px step1, tol.75px, latLim3px.",
+      "units": "l/r/c/w/wg source-frame lateral px; score/gl/gr luminance-per-px",
+      "boundary": "Finite profile and center gate limit what is observable. Fitted width is not nominal42/50 nor meter scale. assessLocalWidth requires explicit positive count/separation policy, qualified independent straight tee-badge segments, bilateral samples, nonboundary profile, spread and heldout uncertainty agreement; success comparison-only promoted=false. No physical confidence/default calibration."
+    },
+    {
+      "hypothesis": "Width already has cross-section sensor support",
+      "reuse": "observeFourLaneCrossSection / estimateFourLaneCorridorWidth, not a new width implementation",
+      "source": "source/provider/packages/alg/src/detectors/threeFactor/features/st.fourLaneSensor.ts:1-9,125-185; experiments/capability-discovery/probes/width/vendor/dev72/fourLaneRibbon.ts:495-530",
+      "math": "Expected lane centers [-W/2,-W/6,W/6,W/2], laneWidthW/3; nearest-pixel mean-RGB band samples; rail lift clamp((inside-outside)/liftReference,0,1), known-occluder majority/no-visible UNKNOWN. Legacy estimator averages scores at segment fractions .2,.35,.5,.65,.78 per candidate W; ranks mean score/visible count/width; empty fallback candidateWidths[0] or40.",
+      "units": "W and positions source px; lifts grayscale levels; normalized scores not probabilities",
+      "boundary": "Sensor is default-OFF observation primitive, not a tracker/heading search/basket attribution. Legacy estimator can return width with no visible evidence; retain diagnostic but do not call measured width. Wrapper already refuses such evidence."
+    },
+    {
+      "hypothesis": "Existing routing favors few bends universally",
+      "reuse": "Existing scorePair, optional zfitFactor and traceBadgeToBasket have distinct contracts",
+      "source": "source/provider/packages/alg/src/detectors/threeFactor/scoring.ts:165-183,271-313,387-425; source/provider/packages/alg/src/detectors/threeFactor/features/g4.teeBadgeLockMath.ts:465-503,580-588",
+      "math": "Base aligned sample=support*|localTangent dot bestTheta|^alignmentPower*zoneFactor; score=alignedWorst*simplePath*teeOrientation*badgeFraction*collinearity*basketIdentity*recoveredPrior*zfit. Raw efficiency=pathLength/directLength is reported, not a base multiplicative penalty. Optional Z-fit samples bend angles degrees -60,-45,-30,-20,0,20,30,45,60 and segment lengths .8/1.6/3*corridorWidth; rejects total length>1.4*chord; uses bend factors .8/.9 and final .9 multiplier. Native ridge tracer bends=count contiguous phases whose blended per-step drift exceeds2degrees; step=max(1,W/4), heading blend.5.",
+      "units": "path/chord/step px; sampled Z-fit angles degrees; internal headings radians; bendCount turning phases not vertices",
+      "boundary": "Existing E103/R103 saved shared-field existence case ties90px straight and170px six-bend near1.6; dense horizontal-field case straight1.6 vs six-bend5.92e-17 at alignmentPower2. These are prior recorded synthetic/source probes, not new S5 execution or image accuracy. No universal total-bend prior in base score does not mean no bend/length factors anywhere. More trace length does not establish arrival or ownership."
+    },
+    {
+      "hypothesis": "AA / transparency can simply be muted or called alpha",
+      "reuse": "Respect existing doctrine and separately pinned alpha.profile@1 arithmetic; do not create AA mutation",
+      "source": "remote-reference.json DOCTRINE.md; experiments/capability-discovery/probes/width/vendor/active/contracts/alpha.profile@1.mjs:45-68; pathSpace.mjs header/PROXY_OVERLAY",
+      "math": "observed=a*overlayRGB+(1-a)*background; overlayFraction=clamp(sum((observed-bg)*(rgb-bg))/sum((rgb-bg)^2),0,1); denominator<1e-6 null. No fitted profile uses explicitly labeled white-overlay brightness proxy, not path alpha.",
+      "units": "RGB0..255; alpha fraction0..1",
+      "boundary": "AA spatial sampling/edge blending is not the same latent quantity as translucent overlay alpha. Current doctrine says own AA pixels and fit anti-aliased renders; do not mute until baseline through S7 then explicit ablation across stages. No new baseline/ablation/physical AA conclusion in this pass."
+    }
+  ],
+  "currentReference": {
+    "completeTreeRead": true,
+    "providerBlobMatches": [
+      [
+        "scoring.ts",
+        "255d9ac4518c4d34a607776c2bd5c7e9946f246f"
+      ],
+      [
+        "routing.ts",
+        "9579d63a7ffc209d604251ae2b7f78ba0dd9f13b"
+      ],
+      [
+        "ribbon.ts",
+        "f74fda826701b534c131ffd6fa2b7e1a152a4a67"
+      ],
+      [
+        "features/g4.teeBadgeLockMath.ts",
+        "65e5c500d9a22141560c4741c017df091d2fa442"
+      ],
+      [
+        "features/st.fourLaneSensor.ts",
+        "fbb2181a10ed7ae82d546e6bd7fcc7976eaca379"
+      ]
+    ],
+    "widthReferenceSeparation": "ports/s6straight/pathSpace.mjs absent at e3e11fab by404 and complete tree; exact bundled pathSpace and alpha.profile originate at49255331791b1245cf0f9cd699816175f94e70f2, not current alg lane. Dev72 estimator originates ef2a4fc2dc4720d3647f705464342f119d5a39a5. Bundled provenance already records exact blobs/SHA256 and original attribution.",
+    "currentContracts": "s7.trace@1 identity=same badgeLabel, symmetric vertex-to-other-polyline-segments Hausdorff<=4px and endpoints<=4px in shared frame; outcome deliberately separate verdict. s6.row@1 uses s5 pair2px/2deg plus basket templateTop<=2px; status not identity. Neither is physical acceptance.",
+    "currentStageLimits": "stages/s7.json retains UNKNOWN continuation/ownership, building, acceptanceUNKNOWN. stages/s6.json proposes zero-bend geometry, not physical path. ports/s7.mjs existing runS7 invokes pinned legacy tracer; heading hints don't restore S0/PxC continuity or prove tee/basket ownership.",
+    "ownership": "At e3e11fab docs/agents/lanes.md platform(Claude):fg/**,scripts/**,docs/agents/**,AGENTS.md,CLAUDE.md,recipes/**,stages/**,ports/judge/**,ui/**. Algorithm(ChatGPT/Codex):impl/**,ports/s4recover/**,ports/s3assoc/**,ports/early/s3FamilyFix.mjs,ports/early/s*Assembly.mjs,ports/early/basketRecovery.mjs. Cross-lane need is request, not edit; jointly touched/unlisted ownership is human design question. Lab17 S1 sole integration/Git owner. No adoption here."
+  },
+  "savedTrace": {
+    "path": "work/capability-discovery/cycle-16/evidence/E4608/firstgreen/result.json",
+    "sha256": "0ba97bcc17e85249042127907c173aef8dfcab6a3abe159756312c69cb78fe79",
+    "pointers": [
+      "/counts",
+      "/qualifications",
+      "/savedCounterexample"
+    ],
+    "executionPath": "work/capability-discovery/cycle-16/evidence/E4608/audit-command/execution.json",
+    "observedHistoricalCalls": 12,
+    "slots": 60,
+    "observed": 42,
+    "unknown": 18,
+    "counterexample": {
+      "row": "composition/proposed-ribbon/w42",
+      "station": "proposed-ribbon.short1",
+      "savedSignedOffsetPx": 8.090622377680736,
+      "contradicts": "nominal origin equals fitted midpoint",
+      "newMeasurement": false
+    },
+    "qualification": "Saved E4608 producer/audit invocation by prior owner; this scout only read it. Dependent fitted scalar/coordinate channels and translations test representation consistency, not physical fit correctness, continuity, ownership, width calibration, AA or generalization."
+  },
+  "nextCapability": {
+    "status": "HOLD",
+    "proposedMissingCapability": null,
+    "reason": "No distinct new physical capability/falsifier is admitted by this nonpixel scout. Existing descriptor/width/source operations already answer the computational questions; saved origin-midpoint counterexample is already known and no new measurement. Independent control ownership/independent course and exposure-fixed heading protocol remain other workers' source-only admission responsibilities. Do not rerun original pixels/44queries/old160grid or invent toy consumer/hash work."
+  },
+  "sourcePins": {
+    "README.md": "021d55b816f45de332480be01c0502f4e1c815a1c3c7a62a0f44fb3dfbd4472e",
+    "REVIEW.md": "2d015479c367f3d20c7536e80f49859f8ad5ca5a602002b4519889aff5aabd93",
+    "work/capability-discovery/cycle-16/CURRENT.md": "1bcd8cb83693a4dc5f4f615d8e8be6b8bedd237c0a852bc3c1b2c9532745f2a8",
+    "experiments/capability-discovery/probes/path-geometry/path-geometry.mjs": "ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34",
+    "experiments/capability-discovery/probes/path-geometry/source-evidence.json": "82f956dffffa03c361e180bf80eeb1f3cd464bbcb82ff667e2fa417d678d1e24",
+    "experiments/capability-discovery/probes/width/recipe.mjs": "47046ec190a281afe8f8d3c38ff1d30116026f60404021a7eb706e1a372990b0",
+    "experiments/capability-discovery/probes/width/provenance.json": "0f3de094060d64f7614be6a8fa5023180e75070d33153976bdf318a734fdffaf",
+    "source/provider/packages/alg/src/detectors/threeFactor/scoring.ts": "d0d23d68d408806076b34b40f3c8140fc9a06e663c7ceafccfdfde8c79a22d22",
+    "source/provider/packages/alg/src/detectors/threeFactor/features/g4.teeBadgeLockMath.ts": "b9532fa20d351a85b3f264cc8054b2bdd1eb4a91a4a019c7759c4730b2d41141",
+    "source/provider/packages/alg/src/detectors/threeFactor/features/st.fourLaneSensor.ts": "b28a966f068f65d1087507e6220dd172b45ffcc48ac4c3caa6f8443618fc3904"
+  }
+}

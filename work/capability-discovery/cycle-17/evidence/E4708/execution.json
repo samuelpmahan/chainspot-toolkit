@@ -1,0 +1,43 @@
+{
+  "schema": "lab17-artifact-execution@1",
+  "job_id": "E4708",
+  "worker": "S6",
+  "started": "2026-10-19T17:15:34.133Z",
+  "ended": "2026-10-19T17:15:35.055Z",
+  "wallMs": 920.88166,
+  "command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "/workspace/scratch/86659bbafcce/lab17/S6/E4708/capture.mjs",
+    "--worker"
+  ],
+  "exitCode": 0,
+  "signal": null,
+  "error": null,
+  "script": {
+    "path": "/workspace/scratch/86659bbafcce/lab17/S6/E4708/capture.mjs",
+    "bytes": 4193,
+    "sha256": "860f25ae05b46ace47451c22552dcca13d288c3562b4b2237e28a087b9b96b6e"
+  },
+  "inputsAfter": [
+    {
+      "path": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/green/outputs/heading-projection-FyDDpZ/actual.svg",
+      "bytes": 140575,
+      "sha256": "c62dae1e0249897db41b4b93a496db4079c78b89704c71bb4dcd273db96935fd"
+    },
+    {
+      "path": "/workspace/scratch/86659bbafcce/lab17/S1/E4707/green/outputs/heading-projection-T6YLNl/receipt.json",
+      "bytes": 61814,
+      "sha256": "60940ca51e8f6c4196bdffaf0247bb4939e3a89de1aa42beeeab4a845db04b2c"
+    }
+  ],
+  "stdout": {
+    "path": "/workspace/scratch/86659bbafcce/lab17/S6/E4708/capture/stdout.txt",
+    "bytes": 1845,
+    "sha256": "30b7c58c89f5d5fd0f8fc35b378bda8faaf1da4453f32ae0a4f4807eb181a7b4"
+  },
+  "stderr": {
+    "path": "/workspace/scratch/86659bbafcce/lab17/S6/E4708/capture/stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "job_id": "E4704",
+  "worker": "S4",
+  "outcome": "insufficient_evidence",
+  "summary": "Abstain from a new numerical path/ribbon recipe. The inspected closure supports conditional exposed sampling and saved representation geometry, but contains neither independent physical annotations nor independently fixed, separately switchable heading/centerline/width/bend arms. No novel nonduplicating saved-only falsifier of physical correctness was established. Preserve the existing saved counterexample rather than rerun geometry or repeat four calls.",
+  "source_root": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab",
+  "source_base": {
+    "local": "515160d416ccaa37a088e09434a30c6b31b0ba30",
+    "canonical": "5c7d7b7b79442520cf9fa5af74e0b944d9a33342",
+    "tree": "1e72d33d753ae2890c2b55b05aa8bebc2556e728",
+    "meaning": "Parent-supplied read-only source identity; no Git mutation or fresh remote authentication by S4."
+  },
+  "actual_contracts": [
+    {
+      "source": "experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "finding": "profileAt pools longitudinal samples per lateral offset. edgePairOf selects one rising/falling pair by score subject to a nominal-width hypothesis; exported l/r/c/w do not retain stationwise physical correspondence. stationContrastAt computes arithmetic RGB-mean inside-minus-outside contrasts and binary validity. Its internal inside/outside support fractions are not exported. A valid flag is not proof of common support across rotated arms, path identity, calibrated confidence or AA."
+    },
+    {
+      "source": "experiments/capability-discovery/heading-ablation/recipe.mjs",
+      "sha256": "97cc2bc1d30dd9039104df2c488fae491d93a21522aa3babbd7e5636b9710f2e",
+      "finding": "planHeadingQueries changes phi alone within each group while retaining an exposed fitted-center/fitted-width baseline. Primary and bright controls use different fitted constants. It is not a factorial c/w/h/b design, an independent annotation or a shared-physical-support contrast. Its executed E4009 result must not be repeated as fresh evidence."
+    },
+    {
+      "source": "experiments/capability-discovery/joint-fit-original-plan/plan-core.mjs",
+      "sha256": "52ea18fd97e0112bd8aee255b73743a79bb2ab9842b0ec828314bff9c1c26ea5",
+      "finding": "classifyFit jointly changes origin using fitted cPx and width using fitted wPx, with PHI fixed. It does not independently switch centerline and width. The public original-evidence helper is fixed-root, plan-only and not admitted for execution; no token/planner/output was consumed."
+    },
+    {
+      "source": "experiments/capability-discovery/probes/path-geometry/path-geometry.mjs",
+      "sha256": "ba89598ffc830cb2da862b96abefdd16305e244b4737315be65b189b8f982b34",
+      "finding": "describePath measures supplied vertices/edge pairs only. Pair association/orientation and width provenance are caller testimony; each supplied segment is a run. countTurns requires an explicit caller definition and predicate. Neither operation supplies physical bend segmentation, path identity or independent calibration."
+    },
+    {
+      "source": "experiments/capability-discovery/window-midpoint-audit/recipe.mjs",
+      "sha256": "29fc7753ee32d2c6dd7014952a804441c83900d1c27d26a6b43ff3f7d7bdbf15",
+      "finding": "Both frames and edge/midpoint channels derive from the same fits. The pi/4 definition was explicitly chosen after exposure; width42/50 are hypotheses, not calibrated truths. Missing pairs break runs; fitted polylines do not authenticate one physical ribbon."
+    }
+  ],
+  "one_next_packet": {
+    "kind": "PHYSICAL_ADMISSION_HOLD_NOT_ALGORITHM_RECIPE",
+    "predicted_observation": "A packet restricted to currently inspected saved evidence still has no independent physical-edge/path testimony or independently fixed switched-arm roster, so physical centerline/width/bend/heading claims remain UNKNOWN/HOLD. This is an admission judgment, not a new measured outcome.",
+    "existing_source_bound_narrow_falsifier": {
+      "claim": "The nominal station origin equals its saved fitted edge-pair midpoint.",
+      "saved_counterexample": "Cycle16 protocol/CURRENT retain E3012 proposed-ribbon/w42 short1 distance 8.090622377680736 px. This already contradicts equality. It is a same-fit software/geometric negative, not physical truth or a renderer-anchor defect.",
+      "authoritative_saved_input": {
+        "path": "work/capability-discovery/cycle-09/evidence/E3012/measurement/measurement.json",
+        "bytes": 1808041,
+        "sha256": "fc5da1eb88c0bb572506e815e653c94ddc71ba6d66b8832d513e889477fa95b1"
+      },
+      "execution": "NONE. Reuse the already accepted stored contradiction. Running the completed cycle16 comparison or E3006 residual again would duplicate evidence; no new saved-only physical falsifier was established."
+    },
+    "required_missing_fields": [
+      {
+        "fields": "source.imageId, source.encodedPath/hash/bytes, source.frame, source.dimensions, source.pixel-center/orientation convention, source.transforms, source.metadataSchema/bodyClass, source.exposureLedger, source.courseIdentity, source.annotationAvailability",
+        "owner": "Root input custodian with independent provenance reviewer",
+        "why_missing": "A different-course legacy label is not held-out status. NorthPark safe findings explicitly report exposure, missing testimony and a historical RGBA-in-metadata incident. Supply a typed metadata-only inventory first; no new raster/body access is authorized."
+      },
+      {
+        "fields": "annotation.authority/author, annotation.frame/hash, annotation.pathIdentity, annotation.tee/badgeIdentity, annotation.leftRightEdgeCorrespondence, annotation.centerline, annotation.widthMeaning/units/uncertainty, annotation.bendMeaning, annotation.controlRegions/selectionRationale, annotation.exposureState, annotation.unknowns",
+        "owner": "Human/domain annotation authority or independently commissioned annotator; root admits exact deliverable",
+        "why_missing": "Visual endpoint names, exposed primary/bright labels, nominal width banks and independently selected window winners are not physical annotation. No scale or physical width calibration may be invented. If only pixels are intended, say pixel width explicitly."
+      },
+      {
+        "fields": "arms.id/order, arms.source/frame, arms.originPx, arms.phiRad, arms.widthPx, arms.points/pairedEdges if used, arms.t0/t1/step/band/along, arms.mask policy, arms.factorChanged, arms.factorsHeldFixed, arms.geometryAuthority/provenance, arms.exposureTimestamp",
+        "owner": "Independent geometry/protocol worker, not result-driven tuner; separate reviewer; root approves",
+        "why_missing": "Freeze literal baseline/candidate/control geometry before new observations. Heading-only, center-only and width-only hypotheses need explicit separately switched arms; bends need independently supplied/defined geometry rather than a posthoc turn threshold. No supported existing source provides that complete roster."
+      },
+      {
+        "fields": "protocol.claim, protocol.observand, protocol.scope/exposureQualification, protocol.prediction/falsifier, protocol.requiredControls/allSlots, protocol.missingInvalidPolicy, protocol.supportComparabilityPolicy, protocol.units/normalization, protocol.stopRule, protocol.input/sourcePins, protocol.reviewer, protocol.rootAdmission",
+        "owner": "Protocol author plus different-worker source/math reviewer and root",
+        "why_missing": "Binary contrast flags do not supply equal support fractions; rotated sampling is conditional. Physical thresholds, bend definition or calibration must come from stated authority, not favorable saved outputs. Preserve every adverse group, width hypothesis, missing pair, isolate and negative."
+      }
+    ],
+    "why_not_duplicate": "The deliverable is a precise missing-admission/ownership decision, not another geometry, toy hash, ranker or consumer experiment. Cycle09 exposed width-dependent midpoint turns; cycle10 executed the fixed heading contrast; cycle16 completed saved pair/scalar consistency. None supplied independent physical truth. Do not relabel those results as a new experiment.",
+    "guard_stop_conditions": [
+      "Stop if any required physical-admission field is absent or relies only on the same fitted output it is intended to validate.",
+      "Stop before opening E4012 metadata/pins or any pixel-bearing body; only its plain safe findings and native receipt were read.",
+      "No original images/pixels, conditional44, consumed E2021 planner/token/R2021 output, old160 replay, Lab10 four-call repeat, imports, algorithm/geometry/tests/render execution, source/Git changes or new threshold/calibration.",
+      "Any later observation must have its own exact protocol, source/input closure, frozen arms, exposure qualification, independent review and explicit root authority. This receipt is not GO."
+    ]
+  },
+  "additional_read_sources": [
+    "README.md",
+    "REVIEW.md",
+    "work/capability-discovery/cycle-16/CURRENT.md",
+    "work/capability-discovery/cycle-16/protocol/protocol.md",
+    "work/capability-discovery/cycle-16/protocol/protocol-amendment.md",
+    "work/capability-discovery/cycle-16/native/receipts/E4604.json",
+    "work/capability-discovery/cycle-09/CURRENT.md",
+    "work/capability-discovery/cycle-09/selected-experiment.json",
+    "work/capability-discovery/cycle-10/CURRENT.md",
+    "work/capability-discovery/cycle-10/evidence/E3006/findings.md",
+    "work/capability-discovery/cycle-10/evidence/R3006/review.md",
+    "work/capability-discovery/cycle-10/evidence/E4012/findings.txt",
+    "work/capability-discovery/cycle-10/native/receipts/E4012.json",
+    "experiments/capability-discovery/heading-ablation/README.md",
+    "experiments/capability-discovery/joint-fit-original-plan/README.md",
+    "experiments/capability-discovery/joint-fit-original-plan/original-evidence-plan.mjs",
+    "experiments/capability-discovery/probes/path-geometry/README.md",
+    "experiments/capability-discovery/probes/path-geometry/analyze-native.mjs"
+  ],
+  "execution_limits_observed": "Read source/documents/ordinary safe receipts, source hashes and native assignment metadata only. No big saved numerical payload or pixel data read; no geometry/arithmetic recomputation, algorithm/producer/planner/test/render execution, import, original image access, Git mutation or subagents. Only own scratch receipt written. Parent owns native finish."
+}

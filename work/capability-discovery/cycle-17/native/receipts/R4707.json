@@ -1,0 +1,53 @@
+{
+  "job_id": "R4707",
+  "worker": "S4",
+  "decision": "accepted",
+  "depends_on": "E4706",
+  "reviewed_protocol": {
+    "path": "/workspace/scratch/86659bbafcce/lab17/protocol.md",
+    "sha256": "2c3c1bcf4faec0ef6cc570deff28289a403e540b444da32bca67ae174bc66a87",
+    "decision": "Accepted exactly as frozen. This review elaborates test/readback detail without expanding its scientific or execution authority. If the predicted omission is falsified by actual tests, retain that result and make no forced correction."
+  },
+  "review_type": "independent preimplementation protocol review; not author/source/runtime acceptance",
+  "summary": "Accept root's bounded saved-claims projection-fidelity protocol. Add the complete supplied claims object to visible SVG, SVG metadata, renderer stdout and persistHeadingTrace receipt. Preserve unavailable legacy claims explicitly as null/unavailable; never invent UNKNOWN values or claim missing qualifications were retained. No new reporter, producer, geometry or scientific evaluation is needed.",
+  "native_status": "Root acknowledged epoch1 recommendation and successful native start before this final review artifact. Parent owns native finish.",
+  "source_pins_sha256": {
+    "experiments/capability-discovery/heading-ablation/render.mjs": "6b1c9f5b0dba6a9d37a323b91efcf4400afb39c4cca01996f09f1d47323a10d9",
+    "experiments/capability-discovery/heading-ablation/cli.mjs": "9c65f17c4a5238eae1700948162c9b6af0cc26b340448d17cafee24f67655de8",
+    "experiments/capability-discovery/heading-ablation/recipe.mjs": "97cc2bc1d30dd9039104df2c488fae491d93a21522aa3babbd7e5636b9710f2e",
+    "work/capability-discovery/cycle-10/evidence/E4009/output/trace.json": "f237792dc0753096c3ab390a6efdf901e8850dbd433be60c7b9c808588bd3e63",
+    "work/capability-discovery/cycle-10/evidence/E4009/output/receipt.json": "86914469b0d057ccbb0ec80f05a1f69cdd1bfb948167695b0fadef8654a57c3f"
+  },
+  "source_findings": [
+    "renderTrace currently selects prediction for its visible header and source/input/identity bindings for metadata, but selects no claims. main stdout likewise selects no claims. Existing checkTrace is structural, not scientific evaluation.",
+    "persistHeadingTrace writes the full trace and then constructs a narrower receipt containing prediction/renderRows/identities but no claims. Its direct exported function writes files only; it never calls the producer. runHeadingCLI is the separate execution entry and remains prohibited in this packet.",
+    "Importing cli.mjs imports recipe definitions and a pure fixed-plan/hash construction; source inspection finds no input/file/store/CV execution until runHeadingAblation is called. Tests must never call runHeadingCLI or runHeadingAblation.",
+    "The exact saved nonpixel E4009 trace has SUPPORTED, Dprimary 0.511630963318769, Dbright -1.266855366519426, four rows and sixty-four stations. Its complete claims include promoted=false, four explicit UNKNOWN physical/confidence fields, and conditional in-sample sampling evidence; rotation changes support. These coexist consistently with SUPPORTED."
+  ],
+  "accepted_contract": {
+    "inputs": "Trusted parsed saved heading-ablation trace, existing schema/row/station guards and exact input hash at the existing renderer CLI boundary. No generic untrusted-object/serializer/schema-hardening expansion.",
+    "claims_copy": "Copy the whole supplied claims object/value without a six-key whitelist, renaming, inferred defaults, evaluation or dropped extension fields. Keep nested/extra supplied fields in machine-readable output and visible serialized claims text. Preserve false/null/UNKNOWN exactly; no promotion is inferred from prediction status.",
+    "legacy_missing": "For a trace without claims, emit an explicit claims:null machine value and visible unavailable/null label. Explicit null is also unavailable, not an authoritative UNKNOWN tuple. A partially supplied claims object remains only that supplied object; do not fill absent fields. Existing projection-only receipt schema must remain rejected as a renderer trace.",
+    "outputs": "Existing renderTrace visible header and SVG metadata; existing main stdout summary; existing persistHeadingTrace returned/written receipt and therefore its existing stdout route. No need to invoke producer CLI or add another entry point to test this.",
+    "invariants": "Retained prediction and all D/group/station values, renderRows, rowIDs, stationIDs, ordering, source/input bindings and original sealed E4009/E4013 files stay unchanged. Existing metadata schema and receipt schema may gain additive claims only; do not rebind old trace execution source hashes to new renderer source.",
+    "layout": "Reuse current XML escaping, line wrapping and dynamic header height. Claims must be visible, not only hidden metadata; added header lines must not overlap or clip existing panels. Escape all added human text and metadata JSON through the existing XML-safe path.",
+    "limits": "Preserve exclusive fresh-output writes, input hash checks and existing per-file/total caps. No cap relaxation, overwrite, conversion of output failures to success or retry-to-green."
+  },
+  "admitted_test_design_not_execution": {
+    "base": "Read exact E4009 trace bytes at the pinned hash; call actual renderTrace, main and persistHeadingTrace exports as relevant, never copied consumer implementations, stubs replacing their logic or source-text substring tests.",
+    "red": "Before product edits, run the narrowly frozen fidelity tests against existing source and retain an actual assertion failure caused by missing saved claims in the real outputs. Syntax/import/missing-module failures do not establish the intended RED. Stop on an unrelated failure for diagnosis.",
+    "positive": "Assert deep equality of copied claims in parsed SVG metadata, renderer stdout and returned/written CLI receipt, and exact saved qualifier content in visible SVG. Assert unchanged prediction/renderRows, four row IDs and all sixty-four station identities/blocks. persistHeadingTrace receives an exclusive fresh directory created by the test; it does not create that directory itself.",
+    "negative_and_extensions": "Derive clearly labeled test-only clones of the exact trace for missing claims and XML-special-character/extra-field cases. Missing legacy claims must yield explicit unavailable/null, never synthesized physical authority. Extra/nested qualifiers and characters such as <, &, quotation marks must survive machine readback exactly and be safely escaped in visible SVG/metadata. These are consumer fixtures, not new observations or scientific evidence.",
+    "green_and_review": "After separately admitted implementation and written-flow checkpoint, rerun the same focused tests without changing assertions to obtain GREEN. Independent review should inspect actual retained output and source delta, not count duplicate producer/geometry work as evidence. Any real standalone display/render command or rasterization remains separately admitted."
+  },
+  "differences_from_scout_proposal": [
+    "Root's explicit legacy-null policy supersedes S6's optional complete-claims-only rejection proposal. Do not reject a structurally valid legacy trace solely because claims are absent, and do not manufacture defaults.",
+    "Modify existing renderer/CLI projection sites only; no additive reporter, broad validation framework or recipe change is required."
+  ],
+  "ownership_and_stops": {
+    "implementation_owner": "S1 or root-assigned implementation worker; S4 owns this independent protocol-review artifact only",
+    "stop": "Stop if implementation requires recipe, CV/provider/query/geometry, new observations, semantic re-evaluation, changed historical artifacts or cap relaxations. Request a new bounded admission for any such expansion.",
+    "meaning": "A passing new contract establishes qualifier preservation in artifact consumers, not original measurement correctness, physical identity, width calibration, AA, confidence, held-out validation or promotion."
+  },
+  "execution_observed": "Read-only source/S6 receipt review, exact nonpixel saved trace field inspection and source/input hashes. No tests, module imports, product edits, renderer execution, producer/CV/geometry/query calls, pixels, Git mutation or subagents. Only own R4707 receipt written."
+}

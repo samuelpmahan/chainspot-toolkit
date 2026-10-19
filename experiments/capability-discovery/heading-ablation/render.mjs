@@ -95,7 +95,8 @@ function panel(row, y) {
 export function renderTrace(trace, traceHash) {
   const ids = checkTrace(trace);
   if (!HEX.test(traceHash)) fail('Invalid exact-byte traceHash');
-  const binding = {schema:'heading-ablation-svg@1',runId:trace.runId,imageId:trace.imageId,paramsHash:trace.paramsHash,traceHash,...ids,sourceBinding:trace.sourceBinding,inputBinding:trace.inputBinding};
+  const claims = trace.claims ?? null;
+  const binding = {schema:'heading-ablation-svg@1',runId:trace.runId,imageId:trace.imageId,paramsHash:trace.paramsHash,traceHash,...ids,sourceBinding:trace.sourceBinding,inputBinding:trace.inputBinding,claims};
   const size = value => Array.isArray(value) ? value.length : 'unavailable';
   let svg = '';
   const header = [
@@ -104,6 +105,7 @@ export function renderTrace(trace, traceHash) {
     `paramsHash=${trace.paramsHash}`,
     `traceHash (exact input bytes)=${traceHash}`,
     `prediction=${show({status:trace.prediction.status,Dprimary:trace.prediction.Dprimary,Dbright:trace.prediction.Dbright,groups:trace.prediction.groups?.map(({groupId,status,D})=>({groupId,status,D}))})}`,
+    claims === null ? 'claims=unavailable/null' : `claims=${show(claims)}`,
     `Source pin counts: before=${size(trace.sourceBinding?.before)}, afterImport=${size(trace.sourceBinding?.afterImport)}, after=${size(trace.sourceBinding?.after)}; full path/hash manifests in SVG metadata and hash-bound JSON.`,
     `Input pin counts: before=${size(trace.inputBinding?.before)}, after=${size(trace.inputBinding?.after)}; canonical verified=${show(trace.inputBinding?.canonical?.verified)}; source path refs appear in full metadata.`,
     `rowIDs=${ids.rowIds.join(' | ')}`,
@@ -136,7 +138,7 @@ export function main(args = process.argv.slice(2)) {
   const trace = JSON.parse(new TextDecoder('utf-8', {fatal:true}).decode(bytes));
   const svg = renderTrace(trace, traceHash);
   writeFileSync(options['--out'], svg, {encoding:'utf8',flag:'wx'});
-  process.stdout.write(JSON.stringify({runId:trace.runId,imageId:trace.imageId,paramsHash:trace.paramsHash,traceHash,...checkTrace(trace),output:options['--out']}) + '\n');
+  process.stdout.write(JSON.stringify({runId:trace.runId,imageId:trace.imageId,paramsHash:trace.paramsHash,traceHash,...checkTrace(trace),claims:trace.claims ?? null,output:options['--out']}) + '\n');
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
