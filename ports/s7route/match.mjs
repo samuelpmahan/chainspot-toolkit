@@ -11,12 +11,15 @@
  *      the rule does not depend on which pass chose the basket;
  *   3. bends by the hallway sensor: the straight route if it reads >= TAU on >= MIN_STATIONS visible stations, else the
  *      contrast route; a second bend (B1 on the tee axis, B2 free) only when the 1-bend route reads < TAU and the best
- *      2-bend route reads >= TAU, gains >= 0.15 and has >= MIN_STATIONS stations.
+ *      2-bend route reads >= TAU, gains >= 0.15 and has >= MIN_STATIONS stations;
+ *   4. bend placement (bends.mjs, graduated from after-s4-e09): each bend moves to where the ribbon's heading changes, on a
+ *      sensor gate; a hole S6 reads STRAIGHT keeps the route of step 3 (rule 1).
  *
  * Pure functions on the S7 scene ({ lum, mask, W, H }) and the table; no thresholds hide anywhere else.
  */
 import { routeSensorAt, ribbonContrastAt, ROUTE } from './routeSpace.mjs';
 import { refineVertices, arange } from '../s7trace/hallway.mjs';
+import { refineBendsOf } from './bends.mjs';
 
 export const MATCH = Object.freeze({
   tau: 0.75,                 // sensor reading at which a route counts as hallway
@@ -96,7 +99,7 @@ export function secondBend(S, start, V1, E, W, f1) {
  * The matching rule: table (tk.s7.routeTable), S (tk.s7.sceneS4), starts (tk.s7.routeStart). -> { holes: { [hole]: { end, verts, how, ... } },
  * assignment: rows, widthPx }. secondBend: false skips step 3's second bend (cheap variant).
  */
-export function routeMatchOf(table, S, starts, { secondBends = true } = {}) {
+export function routeMatchOf(table, S, starts, { secondBends = true, straight: verdicts = undefined } = {}) {
   const W = table.widthPx, holes = table.holes;
   if (!(W > 0) || !holes.length) return { holes: {}, assignment: [], widthPx: W ?? null, condition: 'no hallway width or no holes in the route table' };
   const score = table.contrastMatrix.map((row, i) => row.map((c, k) => (c === null ? MATCH.noReadingLum : c) + (table.onAxisPrior[i]?.[k] ?? 0)));
@@ -120,7 +123,15 @@ export function routeMatchOf(table, S, starts, { secondBends = true } = {}) {
         rec = b2.accepted ? { verts: b2.verts, how: `2-bend accepted: ${b2.note}`, sensor: b2.sensor, secondBend: true } : { ...rec, how: `${rec.how}; 2-bend rejected: ${b2.note}` };
       }
     }
-    out[hole] = { end: k, verts: rec.verts, how: rec.how, polyScore: contrast(S, rec.verts, W), legs: [{ passFrac: rec.sensor.passFrac }],
+    if (verdicts !== undefined) {
+      if (verdicts === null) rec = { ...rec, bendsRefined: { taken: false, why: 'no S6 straight verdict on record: bend placement not run' } };
+      else {
+        const r = refineBendsOf(S, rec.verts, W, { straight: verdicts[hole] === 'straight' });
+        rec = { ...rec, verts: r.verts, how: `${rec.how} | bends ${r.taken ? 'placed' : 'kept'}: ${r.why}`, sensor: r.taken ? routeSensorAt(S, r.verts, W) : rec.sensor,
+          bendsRefined: { taken: r.taken, why: r.why, bendsBefore: r.K0, bendsAfter: r.taken ? r.K1 : r.K0, samples: r.samples ?? null } };
+      }
+    }
+    out[hole] = { end: k, verts: rec.verts, how: rec.how, polyScore: contrast(S, rec.verts, W), bendsRefined: rec.bendsRefined ?? null, legs: [{ passFrac: rec.sensor.passFrac }],
       pair: { basket: k, scoreLum: score[i][k], marginLum: sorted[0] === score[i][k] ? sorted[0] - (sorted[1] ?? sorted[0]) : score[i][k] - sorted[0], onAxisPrior: table.onAxisPrior[i]?.[k] ?? 0 } };
     assignment.push({ hole, basket: k, scoreLum: score[i][k], bends: rec.verts.length - 2, sensor: rec.sensor.passFrac, stations: rec.sensor.stations });
   }
