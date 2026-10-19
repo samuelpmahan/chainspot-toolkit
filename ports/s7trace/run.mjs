@@ -101,8 +101,8 @@ export function acceptRule({ acceptedElsewhere = null, judged = true } = {}) {
   return accept;
 }
 
-export async function runHoleTraceForkJoin({ attempt, specimen, outDir = null, root = ROOT, acceptedElsewhere = null, only = null, cas = true }) {
-  const loaded = loadAttemptParts({ attempt, specimen, root });
+export async function runHoleTraceForkJoin({ attempt, specimen, outDir = null, root = ROOT, attemptsRoot = root, acceptedElsewhere = null, only = null, cas = true }) {
+  const loaded = loadAttemptParts({ attempt, specimen, root: attemptsRoot });   // attemptsRoot: where attempts/stages/<ID> lives (read only)
   const out = outDir ?? join(loaded.out, 's7trace', `run-${new Date().toISOString().replace(/[:.]/g, '-')}`);
   const { store, document: instrumentation } = instrumentedStore({ name: `s7trace:${specimen}`, base: loaded.board, ...runnerCache({ root, entry: import.meta.filename, cas }) });
   const holePaths = loadHolePaths(specimen, root);
@@ -155,8 +155,8 @@ export async function runHoleTraceForkJoin({ attempt, specimen, outDir = null, r
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1]]] : acc), []));
-  if (!args.attempt || !args.specimen) { console.error('usage: node ports/s7trace/run.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR] [--accept VARIANT] [--only a,b]'); process.exit(2); }
-  const r = await runHoleTraceForkJoin({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null, acceptedElsewhere: args.accept ?? null, only: args.only ? args.only.split(',') : null, cas: casFlag() });
+  if (!args.attempt || !args.specimen) { console.error('usage: node ports/s7trace/run.mjs --specimen golden --attempt ATTEMPT_ID [--attempts-root DIR] [--out DIR] [--accept VARIANT] [--only a,b]'); process.exit(2); }
+  const r = await runHoleTraceForkJoin({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null, attemptsRoot: args['attempts-root'] ?? ROOT, acceptedElsewhere: args.accept ?? null, only: args.only ? args.only.split(',') : null, cas: casFlag() });
   const c = r.comparison;
   console.log(JSON.stringify({ out: r.out, frames: r.frames, accepted: r.accepted, acceptedBy: r.acceptedBy, widthPx: c.widthPx, timingsMs: r.timingsMs,
     profile: r.profile.slice(0, 10).map((p) => `${p.calculation}: ${p.calls}x self ${p.selfMs} ms ${JSON.stringify(p.emits)}`),

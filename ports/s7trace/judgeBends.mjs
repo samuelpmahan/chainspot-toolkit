@@ -32,6 +32,15 @@ export function judgeHoleTraces(traces, holePaths, { widthPx, basketMatchPx = 12
   const rows = [];
   for (const p of holePaths.holes ?? []) {
     const t = traces.find((x) => String(x.hole) === String(p.hole));
+    if (!p.bends && p.centre) {   // old schema: the route is judged against the corridor centreline; bends are unknown
+      const sam = { tee: p.centre[0], basket: p.centre.at(-1), bends: p.centre.slice(1, -1) };
+      if (!t || !t.path?.length || t.status !== 'reached') { rows.push({ hole: String(p.hole), judged: true, status: t?.status ?? 'missing', ok: false, why: `no BasketPoint reached (${t?.status ?? 'no trace'})`, reachedBasket: false, endErrPx: null, maxOffCentrelinePx: null, bendsSam: null, bendsOurs: (t?.bends ?? []).length, bendsJudged: false }); continue; }
+      const j = judgeTrace({ verts: t.path, endPoint: t.end.point }, sam, widthPx, basketMatchPx);
+      rows.push({ hole: String(p.hole), judged: true, status: t.status, ok: j.ok, why: j.ok ? null : j.endErrPx >= basketMatchPx ? `ends ${j.endErrPx} px from Sam's basket` : `leaves the hallway: ${j.maxDevPx} px from Sam's corridor centreline (W / 2 = ${j.halfWidthPx} px)`,
+        reachedBasket: j.endErrPx < basketMatchPx, endErrPx: j.endErrPx, maxOffCentrelinePx: j.maxDevPx, halfWidthPx: j.halfWidthPx, bendsSam: null, bendsOurs: t.bends.length, bendsJudged: false,
+        note: 'old annotation schema: route judged on the corridor centreline (edges oriented by geometry); bends not judged' });
+      continue;
+    }
     if (!p.bends) { rows.push({ hole: String(p.hole), judged: false, why: 'no bend testimony for this hole (old annotation schema)' }); continue; }
     const radius = (p.corridorWidthPx ?? widthPx) / 2;
     if (!t || !t.path?.length || t.status !== 'reached') {
