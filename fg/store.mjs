@@ -224,7 +224,7 @@ export function createPartStore({ base = null, name = 'root', onCall = null, cac
   store.register(RENDER_PART, { note: 'default render of the Part at args.a (fg/render.mjs), cached by address',
     calculate: (io) => {
       const a = io.args?.a;
-      if (!rendered.has(a)) { let d = null; try { d = imageDims(store); } catch { /* an image-free store renders without px coordinates */ } rendered.set(a, renderValue(a, store.get(a), d)); }
+      if (!rendered.has(a)) { let d = null; try { d = imageDims(store); } catch { /* an image-free store renders without px coordinates */ } rendered.set(a, renderValue(a, store.get(a), d, 0, { deflate: io.args?.deflate ?? null })); }
       const r = rendered.get(a);
       return { value: r, unit: 'frame parts', emits: { parts: r.parts.length, unrenderable: r.kind === 'unrenderable' ? 1 : 0 } };
     } });
