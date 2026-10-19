@@ -18,32 +18,7 @@ const COL = Object.freeze({ agree: [40, 220, 90], disagree: [255, 50, 50], unjud
 export function renderTraceView(address, v, dims, { canvas, deflate = null }) {
   const S = VIEW.scale, IW = dims?.widthPx, IH = dims?.heightPx;
   if (!(IW > 0) || !dims?.rgba) return { kind: 'routeMatchView', parts: [{ address, kind: 'ledger', data: { rows: [{ field: 'condition', value: 'no image raster (px.image.cropped) to draw over' }] } }] };
-  const w = IW * S, h = IH * S, cv = canvas(w, h), rgb = cv.rgb;
-  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const i = (Math.floor(y / S) * IW + Math.floor(x / S)) * 4, d = (y * w + x) * 3; rgb[d] = dims.rgba[i]; rgb[d + 1] = dims.rgba[i + 1]; rgb[d + 2] = dims.rgba[i + 2]; }
-  const P = (p) => [p[0] * S + S / 2, p[1] * S + S / 2];
-  const blend = (x, y, c, a) => { x = Math.round(x); y = Math.round(y); if (x < 0 || y < 0 || x >= w || y >= h) return; const d = (y * w + x) * 3; for (let k = 0; k < 3; k++) rgb[d + k] = Math.round(rgb[d + k] * (1 - a) + c[k] * a); };
-  const disk = (cx, cy, r, c, a = 1) => { for (let y = Math.floor(cy - r); y <= cy + r; y++) for (let x = Math.floor(cx - r); x <= cx + r; x++) if ((x - cx) ** 2 + (y - cy) ** 2 <= r * r) blend(x, y, c, a); };
-  const ring = (cx, cy, r, t, c) => { for (let y = Math.floor(cy - r - t); y <= cy + r + t; y++) for (let x = Math.floor(cx - r - t); x <= cx + r + t; x++) { const d = Math.hypot(x - cx, y - cy); if (d <= r + t / 2 && d >= r - t / 2) blend(x, y, c, 1); } };
-  const line = (a, b, r, c, al = 1, dash = null) => {
-    const [x0, y0] = P(a), [x1, y1] = P(b), L = Math.hypot(x1 - x0, y1 - y0), n = Math.max(1, Math.ceil(L));
-    for (let k = 0; k <= n; k++) { if (dash && Math.floor(k / dash) % 2) continue; disk(x0 + (x1 - x0) * k / n, y0 + (y1 - y0) * k / n, r, c, al); }
-  };
-  const poly = (V, r, c, al, dash) => { for (let i = 0; i + 1 < V.length; i++) line(V[i], V[i + 1], r, c, al, dash); };
-  const label = (x, y, s, c, k) => { for (const [dx, dy] of [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [1, 1], [-1, 1], [1, -1]]) cv.text(x + dx * 2, y + dy * 2, s, COL.black, k); cv.text(x, y, s, c, k); };
-  const bandR = (v.widthPx ?? 0) * S / 2;
   const confMode = v.totals.judged === 0;   // no testimony anywhere: colour by the sensor's confidence instead of agreement
-  const colOf = (r) => (confMode ? (r.confidence === 'confirmed' ? COL.agree : r.confidence === 'unconfirmed' ? COL.unconfirmed : COL.noReading) : !r.judged ? COL.unjudged : r.agree ? COL.agree : COL.disagree);
-  for (const r of v.rows) if (r.samCentre) { if (bandR > 0) { const V = r.samCentre; for (let i = 0; i + 1 < V.length; i++) { const [x0, y0] = P(V[i]), [x1, y1] = P(V[i + 1]), n = Math.ceil(Math.hypot(x1 - x0, y1 - y0) / 2); for (let k = 0; k <= n; k++) disk(x0 + (x1 - x0) * k / n, y0 + (y1 - y0) * k / n, bandR, COL.sam, VIEW.bandAlpha * 0.3); } } }
-  for (const r of v.rows) if (r.samCentre) poly(r.samCentre, VIEW.centrelinePx / 2, COL.sam, 1, 10);
-  for (const r of v.rows) {
-    const col = colOf(r);
-    if (r.path.length) poly(r.path, VIEW.routePx / 2, col, 1, null);
-    for (const q of r.samTee ? [r.samTee] : []) ring(...P(q), VIEW.ringRadiusPx, 3, COL.sam);
-    for (const q of r.samBasket ? [r.samBasket] : []) ring(...P(q), VIEW.ringRadiusPx, 3, COL.sam);
-    for (const b of r.before) { const [x, y] = P(b); ring(x, y, VIEW.ringRadiusPx, 3, COL.black); ring(x, y, VIEW.ringRadiusPx, 2, COL.ink); }
-    for (const b of r.after) { const [x, y] = P(b); disk(x, y, VIEW.dotRadiusPx + 1, COL.black); disk(x, y, VIEW.dotRadiusPx, col); }
-    if (r.path.length) { const [x, y] = P(r.path[0]); label(x + 12, y - 30, `${r.hole}${confMode ? (r.confidence === 'confirmed' ? '' : r.confidence === 'unconfirmed' ? ' ?' : ' -') : !r.judged ? '' : r.agree ? '' : ' X'}`, col, VIEW.labelScale); }
-  }
   const T = v.totals, lines = [
     [null, `S7 ROUTEMATCH WITH BEND PLACEMENT (HALLWAY WIDTH W = ${Math.round(v.widthPx * 10) / 10} PX; IMAGE ${IW} X ${IH} PX, DRAWN AT ${S}X)`],
     ...(confMode ? [
@@ -58,29 +33,42 @@ export function renderTraceView(address, v, dims, { canvas, deflate = null }) {
     ['hollow', `BEND BEFORE PLACEMENT (MATCHING RULE)  |  FILLED DOT = BEND AFTER PLACEMENT (ROUTE COLOUR)`],
     [null, T.bendsSam ? `BEND OFFSET TO HIS NEAREST BEND, MEDIAN OVER ${T.bendsSam} OF HIS BENDS: ${T.bendOffsetMedianBeforePx} PX BEFORE, ${T.bendOffsetMedianAfterPx} PX AFTER (MAX ${T.bendOffsetMaxBeforePx} / ${T.bendOffsetMaxAfterPx}); HIT WITHIN W/2: ${T.bendsHitBefore} -> ${T.bendsHitAfter}` : 'NO BEND POINTS IN THE TESTIMONY FOR THIS COURSE: BEND OFFSETS NOT MEASURED']
   ];
-  // the legend goes where it covers no hole: the free corner (or text size) with the fewest route / tee / basket / label samples under it
-  const pts = [];
-  for (const r of v.rows) {
-    for (let i = 0; i + 1 < r.path.length; i++) { const [x0, y0] = P(r.path[i]), [x1, y1] = P(r.path[i + 1]), n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) / 6)); for (let k = 0; k <= n; k++) pts.push([x0 + (x1 - x0) * k / n, y0 + (y1 - y0) * k / n]); }
-    if (r.path.length) { const [x, y] = P(r.path[0]); for (let dx = 0; dx <= 60; dx += 12) for (let dy = -34; dy <= 0; dy += 12) pts.push([x + 12 + dx, y + dy]); }   // the hole label
-    for (const q of [r.samTee, r.samBasket, r.teeCenter, r.end]) if (q) pts.push(P(q));
-  }
-  const boxFor = (sc, corner) => {
-    const bw = Math.min(w - 20, 12 + 6 * sc * Math.max(...lines.map((l) => l[1].length)) + 40), bh = 20 + lines.length * 13 * sc;
-    const x0 = corner & 1 ? w - 10 - bw : 10, y0 = corner & 2 ? h - 10 - bh : 10;
-    return { sc, bw, bh, x0, y0, hit: pts.filter(([x, y]) => x >= x0 - 8 && x <= x0 + bw + 8 && y >= y0 - 8 && y <= y0 + bh + 8).length };
+  const bandH = 14 * 2 + lines.length * 26, w = IW * S, h = IH * S + bandH, cv = canvas(w, h), rgb = cv.rgb;
+  for (let i = 0; i < w * bandH * 3; i++) rgb[i] = 18;
+  for (let y = bandH; y < h; y++) for (let x = 0; x < w; x++) { const i = (Math.floor((y - bandH) / S) * IW + Math.floor(x / S)) * 4, d = (y * w + x) * 3; rgb[d] = dims.rgba[i]; rgb[d + 1] = dims.rgba[i + 1]; rgb[d + 2] = dims.rgba[i + 2]; }
+  const P = (p) => [p[0] * S + S / 2, p[1] * S + S / 2 + bandH];
+  const blend = (x, y, c, a) => { x = Math.round(x); y = Math.round(y); if (x < 0 || y < 0 || x >= w || y >= h) return; const d = (y * w + x) * 3; for (let k = 0; k < 3; k++) rgb[d + k] = Math.round(rgb[d + k] * (1 - a) + c[k] * a); };
+  const disk = (cx, cy, r, c, a = 1) => { for (let y = Math.floor(cy - r); y <= cy + r; y++) for (let x = Math.floor(cx - r); x <= cx + r; x++) if ((x - cx) ** 2 + (y - cy) ** 2 <= r * r) blend(x, y, c, a); };
+  const ring = (cx, cy, r, t, c) => { for (let y = Math.floor(cy - r - t); y <= cy + r + t; y++) for (let x = Math.floor(cx - r - t); x <= cx + r + t; x++) { const d = Math.hypot(x - cx, y - cy); if (d <= r + t / 2 && d >= r - t / 2) blend(x, y, c, 1); } };
+  const line = (a, b, r, c, al = 1, dash = null) => {
+    const [x0, y0] = P(a), [x1, y1] = P(b), L = Math.hypot(x1 - x0, y1 - y0), n = Math.max(1, Math.ceil(L));
+    for (let k = 0; k <= n; k++) { if (dash && Math.floor(k / dash) % 2) continue; disk(x0 + (x1 - x0) * k / n, y0 + (y1 - y0) * k / n, r, c, al); }
   };
-  const cand = [2, 1].flatMap((sc) => [0, 1, 2, 3].map((c) => boxFor(sc, c))), LB = cand.find((c) => c.hit === 0) ?? cand.reduce((a, b) => (b.hit < a.hit ? b : a));
-  for (let y = LB.y0; y < LB.y0 + LB.bh; y++) for (let x = LB.x0; x < LB.x0 + LB.bw; x++) blend(x, y, COL.black, 0.72);
+  const poly = (V, r, c, al, dash) => { for (let i = 0; i + 1 < V.length; i++) line(V[i], V[i + 1], r, c, al, dash); };
+  const label = (x, y, s, c, k) => { for (const [dx, dy] of [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [1, 1], [-1, 1], [1, -1]]) cv.text(x + dx * 2, y + dy * 2, s, COL.black, k); cv.text(x, y, s, c, k); };
+  const bandR = (v.widthPx ?? 0) * S / 2;
+  const colOf = (r) => (confMode ? (r.confidence === 'confirmed' ? COL.agree : r.confidence === 'unconfirmed' ? COL.unconfirmed : COL.noReading) : !r.judged ? COL.unjudged : r.agree ? COL.agree : COL.disagree);
+  for (const r of v.rows) if (r.samCentre) { if (bandR > 0) { const V = r.samCentre; for (let i = 0; i + 1 < V.length; i++) { const [x0, y0] = P(V[i]), [x1, y1] = P(V[i + 1]), n = Math.ceil(Math.hypot(x1 - x0, y1 - y0) / 2); for (let k = 0; k <= n; k++) disk(x0 + (x1 - x0) * k / n, y0 + (y1 - y0) * k / n, bandR, COL.sam, VIEW.bandAlpha * 0.3); } } }
+  for (const r of v.rows) if (r.samCentre) poly(r.samCentre, VIEW.centrelinePx / 2, COL.sam, 1, 10);
+  for (const r of v.rows) {
+    const col = colOf(r);
+    if (r.path.length) poly(r.path, VIEW.routePx / 2, col, 1, null);
+    for (const q of r.samTee ? [r.samTee] : []) ring(...P(q), VIEW.ringRadiusPx, 3, COL.sam);
+    for (const q of r.samBasket ? [r.samBasket] : []) ring(...P(q), VIEW.ringRadiusPx, 3, COL.sam);
+    for (const b of r.before) { const [x, y] = P(b); ring(x, y, VIEW.ringRadiusPx, 3, COL.black); ring(x, y, VIEW.ringRadiusPx, 2, COL.ink); }
+    for (const b of r.after) { const [x, y] = P(b); disk(x, y, VIEW.dotRadiusPx + 1, COL.black); disk(x, y, VIEW.dotRadiusPx, col); }
+    if (r.path.length) { const [x, y] = P(r.path[0]); label(x + 12, y - 30, `${r.hole}${confMode ? (r.confidence === 'confirmed' ? '' : r.confidence === 'unconfirmed' ? ' ?' : ' -') : !r.judged ? '' : r.agree ? '' : ' X'}`, col, VIEW.labelScale); }
+  }
+  // the legend is a header band above the map (full size, never over a hole): the image is drawn below it
   lines.forEach(([c, t], i) => {
-    const y = LB.y0 + 10 + i * 13 * LB.sc, x = LB.x0 + 10;
+    const y = 14 + i * 26, x = 20;
     if (c === 'hollow') { ring(x + 10, y + 7, 7, 3, COL.black); ring(x + 10, y + 7, 7, 2, COL.ink); } else if (c) { cv.fill(x, y, 22, 14, c); }
-    cv.text(x + 32, y, t, COL.ink, LB.sc);
+    cv.text(x + 32, y, t, COL.ink, 2);
   });
   const png = base64(encodePngRgb({ width: w, height: h, rgb, ...(deflate ? { deflate } : {}) }));
   const rowsLedger = v.rows.map((r) => ({ hole: r.hole, judged: r.judged, agree: r.agree, teeErrPx: r.teeErrPx ?? null, endErrPx: r.endErrPx ?? null, maxOffCentrelinePx: r.maxOffCentrelinePx ?? null, confidence: r.confidence ?? null, marginLum: r.marginLum ?? null, sensor: r.sensor ?? null, stations: r.stations ?? null, bendsBefore: r.before.length, bendsAfter: r.after.length, bendOffBeforePx: (r.bendOffBeforePx ?? []).join(', '), bendOffAfterPx: (r.bendOffAfterPx ?? []).join(', ') }));
   return { kind: 'routeMatchView', parts: [
-    { address, kind: 'raster', data: { width: w, height: h, scale: S, origin: [0, 0], png } },
+    { address, kind: 'raster', data: { width: w, height: h, scale: S, origin: [0, 0], headerBandPx: bandH, png } },
     { address: `${address}#holes`, kind: 'ledger', data: { rows: rowsLedger } },
     { address: `${address}#legend`, kind: 'ledger', data: { rows: lines.map(([, t]) => ({ legend: t })) } }
   ] };

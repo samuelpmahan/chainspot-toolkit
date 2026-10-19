@@ -53,7 +53,8 @@ test('the view renders through the default render: one raster with the legend, b
   const r = renderValue('tk.s7.routeMatchView', v, { widthPx: IW, heightPx: IH, rgba });
   assert.equal(r.kind, 'routeMatchView');
   const png = r.parts.find((p) => p.kind === 'raster');
-  assert.equal(png.data.width, IW * 2); assert.equal(png.data.height, IH * 2); assert.ok(png.data.png.length > 1000);
+  assert.equal(png.data.width, IW * 2); assert.ok(png.data.headerBandPx > 0 && png.data.height === IH * 2 + png.data.headerBandPx);   // the legend is a header band above the map, never over it
+   assert.ok(png.data.png.length > 1000);
   assert.ok(r.parts.some((p) => p.address.endsWith('#legend')) && r.parts.some((p) => p.address.endsWith('#holes')));
   assert.equal(renderValue('x', v, null).parts[0].kind, 'ledger');   // an image-free store records the condition, never throws
 });
