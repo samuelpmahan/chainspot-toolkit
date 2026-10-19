@@ -156,6 +156,14 @@ export async function runHoleTraceForkJoin({ attempt, specimen, outDir = null, r
     overview = { path: join(out, 's7trace.overview.png'), variant: cmp.accepted, legend: LEGEND, labels: tr.map((t) => ({ hole: t.hole, at: t.path[0] ?? store.get('tk.s7.scene').badges[Number(t.hole)] ?? null, status: t.status, ok: j.rows.find((r) => r.hole === t.hole)?.ok ?? null })) };
     writeFileSync(join(out, 's7trace.overview.json'), JSON.stringify(overview, null, 1) + '\n');
   }
+  // routeMatch over the course with the testimony and the bends before / after the placement: tk.s7.routeMatchView through fn.q.part.render
+  let routeMatchView = null;
+  if (implementations.routeMatch && !result.branches.routeMatch?.error) {
+    store.get('tk.s7.routeMatchView');
+    const r = store.call(RENDER_PART, { a: 'tk.s7.routeMatchView', deflate: (bytes) => deflateSync(bytes) }).value;
+    const png = r.parts.find((q) => q.kind === 'raster');
+    if (png) { writeFileSync(join(out, 's7trace.routeMatch.png'), Buffer.from(png.data.png, 'base64')); routeMatchView = { path: join(out, 's7trace.routeMatch.png'), totals: store.get('tk.s7.routeMatchView').totals, rows: store.get('tk.s7.routeMatchView').rows }; writeFileSync(join(out, 's7trace.routeMatch.view.json'), JSON.stringify(routeMatchView, null, 1) + '\n'); }
+  }
   const partPages = store.manifest().parts.map((p) => p.address).filter((a) => a.startsWith('tk.s7.')).sort()
     .map((a) => { const r = store.call(RENDER_PART, { a }).value; return { title: `${a} (${r.kind})`, calculation: 'fg.render', tick: 'render', parts: r.parts, verdicts: [{ name: `${a} renders`, ok: r.kind !== 'unrenderable' && r.parts.length > 0 }] }; });
   const frames = [...forkJoinFrames(result), profileFrame(profile, { wallMs: doc.wallMs }), ...partPages];

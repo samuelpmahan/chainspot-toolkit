@@ -123,12 +123,13 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
         rec = b2.accepted ? { verts: b2.verts, how: `2-bend accepted: ${b2.note}`, sensor: b2.sensor, secondBend: true } : { ...rec, how: `${rec.how}; 2-bend rejected: ${b2.note}` };
       }
     }
+    const before = rec.verts;
     if (verdicts !== undefined) {
       if (verdicts === null) rec = { ...rec, bendsRefined: { taken: false, why: 'no S6 straight verdict on record: bend placement not run' } };
       else {
         const r = refineBendsOf(S, rec.verts, W, { straight: verdicts[hole] === 'straight' });
         rec = { ...rec, verts: r.verts, how: `${rec.how} | bends ${r.taken ? 'placed' : 'kept'}: ${r.why}`, sensor: r.taken ? routeSensorAt(S, r.verts, W) : rec.sensor,
-          bendsRefined: { taken: r.taken, why: r.why, bendsBefore: r.K0, bendsAfter: r.taken ? r.K1 : r.K0, samples: r.samples ?? null } };
+          bendsRefined: { taken: r.taken, why: r.why, bendsBefore: r.K0, bendsAfter: r.taken ? r.K1 : r.K0, samples: r.samples ?? null, before: before.slice(1, -1) } };
       }
     }
     out[hole] = { end: k, verts: rec.verts, how: rec.how, polyScore: contrast(S, rec.verts, W), bendsRefined: rec.bendsRefined ?? null, legs: [{ passFrac: rec.sensor.passFrac }],

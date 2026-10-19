@@ -27,6 +27,7 @@ import { sceneOf, hallwayModel, solveS3First, solveBadgeOnly } from './s3first.m
 import { solveEndpoints } from './endpoints.mjs';
 import { routeTableOn } from '../s7route/routeSpace.mjs';
 import { routeMatchOf } from '../s7route/match.mjs';
+import { routeMatchViewOf } from './traceView.mjs';
 
 export const HOLE_TRACE_SLOT = Object.freeze({
   slot: 'fn.Hole.trace',
@@ -95,7 +96,10 @@ export const S7_CALCULATIONS = Object.freeze([
   ['fn.tk.s7.hallway', { inParts: ['tk.s7.scene', 'tk.s7.association'], outParts: ['tk.s7.hallway'], note: 'hallway width W from the TEE -> BADGE segments (teebadge.py)',
     calculate: (io) => ({ 'tk.s7.hallway': hallwayModel(io.in('tk.s7.scene'), io.in('tk.s7.association').holes ?? {}) }) }],
   ['fn.tk.s7.holes', { inParts: ['px.badges', 'px.baskets', 'tk.s4.basketRecovery', 'tk.s7.association', 'tk.s7.recoveredTees'], outParts: ['tk.s7.holes'], note: 'per hole: its tee; every basket named',
-    calculate: (io) => ({ 'tk.s7.holes': holesView({ badges: io.in('px.badges'), baskets: io.in('px.baskets'), recoveredBoxes: io.in('tk.s4.basketRecovery').recoveredBoxes ?? [], association: io.in('tk.s7.association'), recovered: io.in('tk.s7.recoveredTees') }) }) }]
+    calculate: (io) => ({ 'tk.s7.holes': holesView({ badges: io.in('px.badges'), baskets: io.in('px.baskets'), recoveredBoxes: io.in('tk.s4.basketRecovery').recoveredBoxes ?? [], association: io.in('tk.s7.association'), recovered: io.in('tk.s7.recoveredTees') }) }) }],
+  ['fn.tk.s7.routeMatchView', { inParts: ['tk.s7.holes', 'tk.s7.hallway', 'testimony.source.holePaths'], outParts: ['tk.s7.routeMatchView'], calls: ['fn.q.trace.routeMatch'],
+    note: 'the routeMatch traces beside the testimony: route, bends before / after the placement, agreement (tee 8 px, basket 12 px, within W / 2 of the corridor); renders as the course picture',
+    calculate: (io) => ({ 'tk.s7.routeMatchView': routeMatchViewOf({ solve: io.call('fn.q.trace.routeMatch', {}).value, holesPart: io.in('tk.s7.holes'), holePaths: io.in('testimony.source.holePaths'), widthPx: io.in('tk.s7.hallway').widthPx }) }) }],
 ]);
 
 // ------------------------------------------------------------------------------------------------ the store boundary
@@ -199,7 +203,7 @@ export function tracesOf(solve, holesPart, { rule }) {
       path: verts, bends: reached ? verts.slice(1, -1) : verts.slice(1, -1),
       end: reached ? { basket: names[r.end]?.name ?? `BP${r.end}`, point: verts.at(-1), source: names[r.end]?.source ?? null } : verts.length ? { basket: null, point: verts.at(-1), source: null } : null,
       evidence: { legs: legs.length, meanPassFrac: legs.length ? round(legs.reduce((s, l) => s + (l.passFrac ?? 0), 0) / legs.length, 3) : null, polyScoreLum: r.polyScore ?? null,
-        walkedPx: round(pathLength(verts), 1), edgeStepLumPerPx: r.edgeStep ?? null, pair: r.pair ?? null, straightRejected: r.straightRejected ?? null },
+        walkedPx: round(pathLength(verts), 1), edgeStepLumPerPx: r.edgeStep ?? null, pair: r.pair ?? null, straightRejected: r.straightRejected ?? null, placement: r.bendsRefined ?? null },
       condition: r.fail ?? r.condition ?? (reached ? null : legs.at(-1)?.stop ? `the follower lost the ribbon (${legs.at(-1).stop})` : null)
     };
   });
