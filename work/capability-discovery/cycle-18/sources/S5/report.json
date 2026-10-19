@@ -1,0 +1,130 @@
+{
+  "schema": "lab18-changed-fixture-proof-source-scout@1",
+  "job_id": "E4805",
+  "worker": "S5",
+  "outcome": "mixed_change",
+  "summary": "The five-commit Claude advance contains genuine current-attempt sensor-fixture and dev-proof identity changes alongside reuse of all eight older full-matrix fixture payloads (only attempt metadata added). It does not supply independent physical controls or admit real44 work.",
+  "scope": {
+    "mode": "read-only selected source/provenance",
+    "sourcePin": "c67c2c232814048c5b0b074aff8b7e0f4651da93",
+    "basePin": "cc1fa5c9c4191e11d1d70d021161da3bac2af492",
+    "localContext": "work/capability-discovery/cycle-17/CURRENT.md",
+    "ownership": "No adoption; source remains theirs. No native API calls were made by S5; parent states epoch0 assignment/start already done."
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "finding": "Six current sensor fixture identities now match all six dev ATTEMPTS rows.",
+      "evidence": "docs/evidence/dev-s1s4/ATTEMPTS:1-6; fixtures/sensor-*.fixture.json; s7route.dev.test.mjs:21-29",
+      "count": {
+        "courses": 6,
+        "holesPerCourse": 18,
+        "basketsPerCourse": 18,
+        "randomRoutesPerCourse": 20,
+        "totalRecordedRandomRoutes": 120
+      },
+      "qualification": "120 deterministic prototype-generated route samples, not120 independently labeled controls, six new independent courses, or an S5 execution."
+    },
+    {
+      "id": "F2",
+      "finding": "Full unrounded sensor and contrast matrices cover only four courses on older attempt identities.",
+      "evidence": "fixtures/match2-*.fixture.json and match18-*.fixture.json; s7route.dev.test.mjs:32-37",
+      "courses": [
+        "golden",
+        "lenard",
+        "townelake",
+        "heritage"
+      ],
+      "count": {
+        "courses": 4,
+        "fixtures": 8,
+        "matrixRows": 18,
+        "matrixColumns": 18,
+        "cellsPerMatrix": 324
+      },
+      "qualification": "Alex/NorthPark have sensor fixtures, not full matrix fixtures in this pinned directory. Opt-in matrix tests use match2 fixture attempt rather than current dev ATTEMPTS attempt."
+    },
+    {
+      "id": "F3",
+      "finding": "All eight existing full-matrix JSON payloads are semantically identical to base after removing newly added top-level attempt.",
+      "evidence": "Compare old/new parsed documents (four match18 patch pairs, four directly fetched match2 pairs); sourcepins.matrixSemanticComparisons.",
+      "qualification": "Comparison-only document identity; no matrix recomputation or physical evidence. Generator fixture.py and fixture18.py do not themselves write the added attempt field, so saved metadata has additional custody beyond those generator bodies."
+    },
+    {
+      "id": "F4",
+      "finding": "Generator source identity is documentary and locally path-bound, not a hash-pinned prototype-source/attempt manifest.",
+      "evidence": "fixture.py:4-11,24-25; fixture18.py:4-13; fixture_sensor.py:4-9,19-20",
+      "details": [
+        "All three read match2.py/match18.py from the fixed /tmp/claude-0/.../scratchpad/after-s4 directory and exec a prefix.",
+        "fixture.py and fixture18.py cut before linear_sum_assignment; fixture_sensor.py cuts before the matrix loop.",
+        "The sensor generator records attempt=course.COURSES[name][0]; the local imported course mapping and prototype source bytes are not hashed by these inspected generator/proof files.",
+        "Random seed20261019;0..2 random interior vertices; final endpoint70% chosen BasketPoint, otherwise random scene coordinate. This is computational equivalence stimulus, not independent negative truth."
+      ]
+    },
+    {
+      "id": "F5",
+      "finding": "Dev proof now guards the current sensor attempt ID but still deliberately skips missing/mismatched fixtures or absent snapshot files.",
+      "evidence": "s7route.dev.test.mjs:17-28,32-36",
+      "details": [
+        "Identity is an attempt string check plus existence of early/s3.pxc.bin, not an attempt-content hash check.",
+        "Default path schedules six sensor tests only; full matrices require S7ROUTE_PROVE_MATRIX=1.",
+        "Absent attempts/fixtures produce skips, not demonstrated passes. Source inspection establishes configured coverage, not actual pass/skip counts on any machine."
+      ]
+    },
+    {
+      "id": "F6",
+      "finding": "prove() proves agreement with prototype inputs rather than independent physical route correctness.",
+      "evidence": "prove.mjs:37-51,56-97",
+      "details": [
+        "Prototype reconstruction reads the named attempt's serialized cropped raster/Parts and saved S3 refined tees/family model; S4 recovered BasketPoints use prototype offset.",
+        "Tee centers/directions/source labels come directly from fixture.holes; they are not independently estimated in prove().",
+        "Sensor-only path checks BasketPoints<=1e-9px and sensor pass fraction<=1e-9 with equal station counts; it returns before computed W/start/matrix checks.",
+        "Full path adds W/start thresholds1e-9 and matrices/routes1e-6. Recorded match2/match18 matrices are rounded3/2 decimals and compared within half last digit.",
+        "prove() itself does not enforce fx.attempt===attempt nor contrast-fixture attempt equality; callers carry that responsibility. Actual four match2/match18 pairs inspected share their older IDs.",
+        "A route mismatch is counted only when both JS and Python route vertices are truthy; equality conclusions remain bounded by implemented guards.",
+        "Recorded outputs and commit statements are their historical evidence, not our run."
+      ]
+    },
+    {
+      "id": "F7",
+      "finding": "Reported historical outcomes must remain attributed to Claude, not restated as fresh S5 verification.",
+      "evidence": "compare commit messages aaa4775ee392bee2af5d29545cfec9dada95f358, 9cff6ee900c1625c78bd3f20f6b9ec5424106f4f, c67c2c232814048c5b0b074aff8b7e0f4651da93",
+      "details": [
+        "Claude commit claims current-dev sensor6/6 diff0.",
+        "Claude routeMatch commit claims72/72 route agreement across four courses and ~11-14minute cold course runs.",
+        "Claude latest judge commit claims Alex3/3 route agreement while bends stay unjudged.",
+        "These are read commit narratives, not independently inspected execution receipts or S5 reproduced results; no speedup or accuracy claim is independently established here."
+      ]
+    }
+  ],
+  "physicalAdmission": {
+    "status": "HOLD",
+    "real44": "HOLD",
+    "reasons": [
+      "Six courses are explicitly dev courses with reused prototype/system inputs, not independently owned heldout controls.",
+      "No independently owned negative/control truth, original full-frame mapping, literal independently fixed heading arms, or exposure-aware accepted protocol is established by these selected files.",
+      "Seeded random route vertices are not independently verified physical negatives.",
+      "Source/prototype agreement does not establish physical edges/path, width calibration, continuity, antialiasing, ownership, confidence, causality or generalization."
+    ],
+    "proposal": "Use this source identity correction in future bounded admission planning only; no producer/pixel/query rerun authorized."
+  },
+  "counts": {
+    "producerCalls": 0,
+    "algorithmCalls": 0,
+    "sensorCalls": 0,
+    "geometryCalls": 0,
+    "testCommands": 0,
+    "renderCommands": 0,
+    "nativeQueries": 0,
+    "real44Queries": 0,
+    "pixelLoads": 0,
+    "originalFrameReads": 0,
+    "gitMutations": 0,
+    "repositoryEdits": 0,
+    "subagents": 0,
+    "forbiddenE4012Reads": 0,
+    "consumedE2021Reads": 0,
+    "HHReads": 0
+  },
+  "changes": "Only this S5 report/sourcepins/outcome are written under the assigned lab18/S5 output directory."
+}

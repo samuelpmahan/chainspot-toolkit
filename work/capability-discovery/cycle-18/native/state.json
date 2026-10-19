@@ -1,0 +1,682 @@
+{
+  "schema": "chainspot.rebalancer-state/v1",
+  "service": {
+    "name": "lab18-changed-routing-admission",
+    "scope": "Read-only c67c2c2 changed routing contracts; source-backed nonduplicate experiment only if guards satisfy"
+  },
+  "workers": {
+    "S1": {
+      "job": "E4808",
+      "agent": "/root/lab18_s1"
+    },
+    "S2": {
+      "job": null,
+      "agent": null
+    },
+    "S3": {
+      "job": null,
+      "agent": null
+    },
+    "S4": {
+      "job": null,
+      "agent": null
+    },
+    "S5": {
+      "job": null,
+      "agent": null
+    },
+    "S6": {
+      "job": null,
+      "agent": null
+    }
+  },
+  "jobs": {
+    "E4801": {
+      "id": "E4801",
+      "kind": "extract",
+      "allow_workers": [
+        "S1"
+      ],
+      "subject": "Integration owner: changed routeMatch public contract and minimal reusable seam; no implementation before coordinator guard",
+      "status": "done",
+      "worker": "S1",
+      "started_at": "2026-10-19T17:57:17.459373+00:00",
+      "finished_at": "2026-10-19T18:01:20.320450+00:00",
+      "receipt": "/workspace/scratch/86659bbafcce/lab18/receipts/E4801.json"
+    },
+    "E4802": {
+      "id": "E4802",
+      "kind": "extract",
+      "allow_workers": [
+        "S2"
+      ],
+      "subject": "Independent physical admission: changed legacy corridor annotation/frame/negative-control custody",
+      "status": "done",
+      "worker": "S2",
+      "started_at": "2026-10-19T17:57:17.553133+00:00",
+      "finished_at": "2026-10-19T18:00:24.524350+00:00",
+      "receipt": "/workspace/scratch/86659bbafcce/lab18/receipts/E4802.json"
+    },
+    "E4803": {
+      "id": "E4803",
+      "kind": "extract",
+      "allow_workers": [
+        "S3"
+      ],
+      "subject": "Changed route matching and bend sensor algorithm nonduplication inventory; source-only",
+      "status": "done",
+      "worker": "S3",
+      "started_at": "2026-10-19T17:57:17.656467+00:00",
+      "finished_at": "2026-10-19T18:00:47.521316+00:00",
+      "receipt": "/workspace/scratch/86659bbafcce/lab18/receipts/E4803.json"
+    },
+    "E4804": {
+      "id": "E4804",
+      "kind": "extract",
+      "allow_workers": [
+        "S4"
+      ],
+      "subject": "Independent critique of corridor judging semantics, uncertainty and endpoint/control identity",
+      "status": "done",
+      "worker": "S4",
+      "started_at": "2026-10-19T17:57:17.741717+00:00",
+      "finished_at": "2026-10-19T18:00:24.644486+00:00",
+      "receipt": "/workspace/scratch/86659bbafcce/lab18/receipts/E4804.json"
+    },
+    "E4805": {
+      "id": "E4805",
+      "kind": "extract",
+      "allow_workers": [
+        "S5"
+      ],
+      "subject": "Changed fixture/proof provenance, exposure and claimed multi-course evidence; no producer runs",
+      "status": "done",
+      "worker": "S5",
+      "started_at": "2026-10-19T17:57:17.838143+00:00",
+      "finished_at": "2026-10-19T18:00:24.837660+00:00",
+      "receipt": "/workspace/scratch/86659bbafcce/lab18/receipts/E4805.json"
+    },
+    "E4806": {
+      "id": "E4806",
+      "kind": "extract",
+      "allow_workers": [
+        "S6"
+      ],
+      "subject": "Changed renderer/CLI evidence fidelity against new judge qualifiers; no completed Lab17 replay",
+      "status": "done",
+      "worker": "S6",
+      "started_at": "2026-10-19T17:57:17.929248+00:00",
+      "finished_at": "2026-10-19T18:01:00.712672+00:00",
+      "receipt": "/workspace/scratch/86659bbafcce/lab18/receipts/E4806.json"
+    },
+    "E4807": {
+      "id": "E4807",
+      "kind": "extract",
+      "allow_workers": [
+        "S1"
+      ],
+      "subject": "Synthesize changed-source admission verdict and guarded continuation; source-only no product implementation",
+      "guard": "All six source packets completed; all find no admitted lab-owned hardfailure and physical controls incomplete; evaluate new source without replay",
+      "status": "done",
+      "worker": "S1",
+      "started_at": "2026-10-19T18:01:32.194221+00:00",
+      "finished_at": "2026-10-19T18:05:43.109825+00:00",
+      "receipt": "/workspace/scratch/86659bbafcce/lab18/receipts/E4807.json"
+    },
+    "R4807": {
+      "id": "R4807",
+      "kind": "review",
+      "depends_on": "E4807",
+      "allow_workers": [
+        "S4"
+      ],
+      "subject": "Independently falsify S1 aggregate source-only admission verdict against exact selected source and S6 counterevidence",
+      "guard": "E4807 frozen; different-worker S4 evaluates synthesis not self-acceptance; source only, no active-code execution",
+      "status": "done",
+      "worker": "S4",
+      "started_at": "2026-10-19T18:05:43.393273+00:00",
+      "finished_at": "2026-10-19T18:08:18.664075+00:00",
+      "receipt": "/workspace/scratch/86659bbafcce/lab18/receipts/R4807.json"
+    },
+    "E4808": {
+      "id": "E4808",
+      "kind": "extract",
+      "allow_workers": [
+        "S1"
+      ],
+      "subject": "Package accepted source-only Lab18 evidence and ordinary commit on existing branch",
+      "guard": "R4807 accepts frozen aggregate; root approves evidence-only publication scope, no product code or tests",
+      "status": "running",
+      "worker": "S1",
+      "started_at": "2026-10-19T18:08:18.959825+00:00",
+      "finished_at": null
+    }
+  },
+  "events": [
+    {
+      "type": "solve",
+      "epoch": 0,
+      "at": "2026-10-19T17:57:07.843212+00:00",
+      "ready_jobs": [
+        "E4801",
+        "E4802",
+        "E4803",
+        "E4804",
+        "E4805",
+        "E4806"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "S2": "E4802",
+        "S5": "E4805",
+        "S4": "E4804",
+        "S1": "E4801",
+        "S6": "E4806",
+        "S3": "E4803"
+      },
+      "dispatch": {
+        "S2": "E4802",
+        "S5": "E4805",
+        "S4": "E4804",
+        "S1": "E4801",
+        "S6": "E4806",
+        "S3": "E4803"
+      },
+      "native_seconds": 0.010218412000540411,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 6 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 600,
+      "native_score": 600,
+      "caps": {
+        "E4801": 1,
+        "E4802": 1,
+        "E4803": 1,
+        "E4804": 1,
+        "E4805": 1,
+        "E4806": 1,
+        "BENCH": 6
+      },
+      "eligible": {
+        "E4801": [
+          "S1"
+        ],
+        "E4802": [
+          "S2"
+        ],
+        "E4803": [
+          "S3"
+        ],
+        "E4804": [
+          "S4"
+        ],
+        "E4805": [
+          "S5"
+        ],
+        "E4806": [
+          "S6"
+        ]
+      },
+      "weights": {
+        "E4801": 100,
+        "E4802": 100,
+        "E4803": 100,
+        "E4804": 100,
+        "E4805": 100,
+        "E4806": 100
+      },
+      "agent_by_worker": {
+        "S1": null,
+        "S2": null,
+        "S3": null,
+        "S4": null,
+        "S5": null,
+        "S6": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T17:57:17.459373+00:00",
+      "worker": "S1",
+      "job": "E4801",
+      "agent": "/root/lab18_s1"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T17:57:17.553133+00:00",
+      "worker": "S2",
+      "job": "E4802",
+      "agent": "/root/lab18_s2"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T17:57:17.656467+00:00",
+      "worker": "S3",
+      "job": "E4803",
+      "agent": "/root/lab18_s3"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T17:57:17.741717+00:00",
+      "worker": "S4",
+      "job": "E4804",
+      "agent": "/root/lab18_s4"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T17:57:17.838143+00:00",
+      "worker": "S5",
+      "job": "E4805",
+      "agent": "/root/lab18_s5"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T17:57:17.929248+00:00",
+      "worker": "S6",
+      "job": "E4806",
+      "agent": "/root/lab18_s6"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T18:00:24.524350+00:00",
+      "worker": "S2",
+      "job": "E4802"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T18:00:24.644486+00:00",
+      "worker": "S4",
+      "job": "E4804"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T18:00:24.837660+00:00",
+      "worker": "S5",
+      "job": "E4805"
+    },
+    {
+      "type": "solve",
+      "epoch": 1,
+      "at": "2026-10-19T18:00:25.022618+00:00",
+      "ready_jobs": [],
+      "pinned_workers": [
+        "S1",
+        "S3",
+        "S6"
+      ],
+      "assignments": {
+        "S2": "BENCH",
+        "S4": "BENCH",
+        "S5": "BENCH",
+        "S6": "E4806",
+        "S1": "E4801",
+        "S3": "E4803"
+      },
+      "dispatch": {},
+      "native_seconds": 0.004306038998038275,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 6 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 3 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 0,
+      "native_score": 0,
+      "caps": {
+        "E4801": 1,
+        "E4802": 0,
+        "E4803": 1,
+        "E4804": 0,
+        "E4805": 0,
+        "E4806": 1,
+        "BENCH": 6
+      },
+      "eligible": {},
+      "weights": {},
+      "agent_by_worker": {
+        "S1": "/root/lab18_s1",
+        "S2": null,
+        "S3": "/root/lab18_s3",
+        "S4": null,
+        "S5": null,
+        "S6": "/root/lab18_s6"
+      }
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T18:00:47.521316+00:00",
+      "worker": "S3",
+      "job": "E4803"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T18:01:00.712672+00:00",
+      "worker": "S6",
+      "job": "E4806"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T18:01:20.320450+00:00",
+      "worker": "S1",
+      "job": "E4801"
+    },
+    {
+      "type": "coordinator_guard_admission",
+      "at": "2026-10-19T18:01:20.422827+00:00",
+      "job": "E4807",
+      "guard": "All six source packets completed; all find no admitted lab-owned hardfailure and physical controls incomplete; evaluate new source without replay"
+    },
+    {
+      "type": "solve",
+      "epoch": 2,
+      "at": "2026-10-19T18:01:20.551205+00:00",
+      "ready_jobs": [
+        "E4807"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "S5": "BENCH",
+        "S3": "BENCH",
+        "S6": "BENCH",
+        "S2": "BENCH",
+        "S4": "BENCH",
+        "S1": "E4807"
+      },
+      "dispatch": {
+        "S1": "E4807"
+      },
+      "native_seconds": 0.004040087998873787,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 6 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 100,
+      "native_score": 100,
+      "caps": {
+        "E4801": 0,
+        "E4802": 0,
+        "E4803": 0,
+        "E4804": 0,
+        "E4805": 0,
+        "E4806": 0,
+        "E4807": 1,
+        "BENCH": 6
+      },
+      "eligible": {
+        "E4807": [
+          "S1"
+        ]
+      },
+      "weights": {
+        "E4807": 100
+      },
+      "agent_by_worker": {
+        "S1": null,
+        "S2": null,
+        "S3": null,
+        "S4": null,
+        "S5": null,
+        "S6": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T18:01:32.194221+00:00",
+      "worker": "S1",
+      "job": "E4807",
+      "agent": "/root/lab18_s1"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T18:05:43.109825+00:00",
+      "worker": "S1",
+      "job": "E4807"
+    },
+    {
+      "type": "coordinator_guard_admission",
+      "at": "2026-10-19T18:05:43.217301+00:00",
+      "job": "R4807",
+      "guard": "E4807 frozen; different-worker S4 evaluates synthesis not self-acceptance; source only, no active-code execution"
+    },
+    {
+      "type": "solve",
+      "epoch": 3,
+      "at": "2026-10-19T18:05:43.304077+00:00",
+      "ready_jobs": [
+        "R4807"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "S2": "BENCH",
+        "S5": "BENCH",
+        "S6": "BENCH",
+        "S1": "BENCH",
+        "S3": "BENCH",
+        "S4": "R4807"
+      },
+      "dispatch": {
+        "S4": "R4807"
+      },
+      "native_seconds": 0.0035568470011639874,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 6 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 200,
+      "native_score": 200,
+      "caps": {
+        "E4801": 0,
+        "E4802": 0,
+        "E4803": 0,
+        "E4804": 0,
+        "E4805": 0,
+        "E4806": 0,
+        "E4807": 0,
+        "R4807": 1,
+        "BENCH": 6
+      },
+      "eligible": {
+        "R4807": [
+          "S4"
+        ]
+      },
+      "weights": {
+        "R4807": 200
+      },
+      "agent_by_worker": {
+        "S1": null,
+        "S2": null,
+        "S3": null,
+        "S4": null,
+        "S5": null,
+        "S6": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T18:05:43.393273+00:00",
+      "worker": "S4",
+      "job": "R4807",
+      "agent": "/root/lab18_s4"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T18:08:18.664075+00:00",
+      "worker": "S4",
+      "job": "R4807"
+    },
+    {
+      "type": "coordinator_guard_admission",
+      "at": "2026-10-19T18:08:18.754548+00:00",
+      "job": "E4808",
+      "guard": "R4807 accepts frozen aggregate; root approves evidence-only publication scope, no product code or tests"
+    },
+    {
+      "type": "solve",
+      "epoch": 4,
+      "at": "2026-10-19T18:08:18.857692+00:00",
+      "ready_jobs": [
+        "E4808"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "S5": "BENCH",
+        "S3": "BENCH",
+        "S6": "BENCH",
+        "S2": "BENCH",
+        "S4": "BENCH",
+        "S1": "E4808"
+      },
+      "dispatch": {
+        "S1": "E4808"
+      },
+      "native_seconds": 0.0042905750015052035,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 6 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 100,
+      "native_score": 100,
+      "caps": {
+        "E4801": 0,
+        "E4802": 0,
+        "E4803": 0,
+        "E4804": 0,
+        "E4805": 0,
+        "E4806": 0,
+        "E4807": 0,
+        "R4807": 0,
+        "E4808": 1,
+        "BENCH": 6
+      },
+      "eligible": {
+        "E4808": [
+          "S1"
+        ]
+      },
+      "weights": {
+        "E4808": 100
+      },
+      "agent_by_worker": {
+        "S1": null,
+        "S2": null,
+        "S3": null,
+        "S4": null,
+        "S5": null,
+        "S6": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T18:08:18.959825+00:00",
+      "worker": "S1",
+      "job": "E4808",
+      "agent": "/root/lab18_s1"
+    }
+  ],
+  "epoch": 5,
+  "policy": {
+    "extract_priority": 100,
+    "review_priority": 200,
+    "repair_priority": 300
+  }
+}

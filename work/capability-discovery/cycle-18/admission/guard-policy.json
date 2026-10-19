@@ -1,0 +1,73 @@
+{
+  "schema": "lab18-source-admission-guard-policy/v1",
+  "job_id": "E4807",
+  "worker": "S1",
+  "status": "CANDIDATE_FOR_INDEPENDENT_S4_REVIEW",
+  "outcome": "mixed_change",
+  "source": {
+    "repository": "samuelpmahan/chainspot-toolkit",
+    "commit": "c67c2c232814048c5b0b074aff8b7e0f4651da93",
+    "tree": "a74f48220e4377a61e224171085a6cf9b8f7c97b",
+    "base": "cc1fa5c9c4191e11d1d70d021161da3bac2af492",
+    "ahead_by": 5,
+    "local_base": "3fcc644a5e8db8ba23380921df3da92c9989d285",
+    "canonical_lab": "4e508532b38336c2bd0247fc1ff2d2af132a55dc"
+  },
+  "hypothesis": {
+    "text": "changed source closes physical guard or yields a nonduplicating lab-owned run",
+    "verdict": "FALSIFIED_BY_SELECTED_SOURCE_FOR_CURRENT_ADMISSION",
+    "runtime_falsifier_claimed": false,
+    "scope": "selected exact source and six source reports only; not a global impossibility claim"
+  },
+  "guards": {
+    "physical": "HOLD",
+    "original_pixels": "HOLD",
+    "new_cv": "HOLD",
+    "real44": "HOLD",
+    "product_patch": "NOT_ADMITTED",
+    "tests": "NOT_ADMITTED",
+    "producer_query_geometry": "NOT_ADMITTED",
+    "consumer_replay_render": "NOT_ADMITTED",
+    "active_owner_adoption_or_duplication": "NOT_ADMITTED"
+  },
+  "existing_reusable_contracts": {
+    "qualification": "SOURCE-ONLY / NOT VERIFIED OPERATION",
+    "surfaces": ["fn.q.trace.routeMatch", "routeMatchOf", "routeTableOn and cached per-hole rows", "fn.q.route.sensor", "fn.q.route.contrast", "testimony corridor interpretation", "judgeHoleTraces agreement-only semantics"],
+    "runtime_verified_by_lab18": false,
+    "use_requires_separate_admission": true,
+    "do_not_duplicate": true
+  },
+  "missing_requirements": [
+    {"id": "exact_frame_custody", "status": "MISSING", "requires": ["immutable source-image and annotation identities", "original/full/canonical bounds", "actual source-to-S0-to-canonical crop receipt and transform", "independent mapping review"]},
+    {"id": "independent_controls", "status": "MISSING", "requires": ["named independent control owner and creation time", "frame-bound positive and negative/control labels", "scope and uncertainty", "wrong-basket/crossing/short-visible controls relevant to claim", "development and exposure relationship"]},
+    {"id": "literal_heading_arms", "status": "MISSING", "requires": ["raw fixed origins/angles/widths/windows", "provenance independent of fitted S3/S4 and fixture headings", "freeze before outputs", "support/occlusion and width-meaning policy"]},
+    {"id": "accepted_exposure_protocol", "status": "MISSING", "requires": ["bounded claim", "frozen complete roster and exposure ledger", "prediction/falsifier", "uncertainty/missing/invalid handling", "acceptance authority and independent review", "exact action/output/stop limits"]},
+    {"id": "real44_engineering", "status": "UNRESOLVED", "requires": ["artifactSchemas", "dependencyPathSet", "phaseImplementation", "bounded source/input/read/copy/serialization/output/stop controls"]}
+  ],
+  "s6_projection_observation": {
+    "ownership": "ACTIVE_SOURCE_OWNER_ONLY",
+    "omitted_summary_fields": ["bendsJudged", "note"],
+    "counterevidence": "full raw judge rows retained in comparison/guarantee records",
+    "wholesale_saved_evidence_loss_claimed": false,
+    "runtime_regression_claimed": false,
+    "lab_patch_admitted": false
+  },
+  "evidence_qualification": {
+    "e4802_native_finished_before_final_worker_amendment": true,
+    "both_versions_retained": true,
+    "canonical_receipt_rewritten": false,
+    "qualification_file": "../receipt-timing-qualification.json",
+    "s2_broad_capture": "EXCLUDED_FROM_SELECTED_EVIDENCE",
+    "e4012_metadata_rgba_opened_by_synthesis": false,
+    "forbidden_replays": ["consumed E2021", "token/R2021", "old160", "Lab10", "completed Lab16/Lab17 for activity"]
+  },
+  "next_packet": {
+    "trigger_any": ["CHANGED exact source addressing a specific unresolved guard or lab-owned question", "NEW independently owned metadata bundle addressing missing admission requirements"],
+    "trigger_is_execution_authority": false,
+    "requires": ["root admission", "independent review", "bounded action and owner", "exact input/source closure", "costs/caps and stop policy"],
+    "unchanged_source_and_metadata": "STOP; no repeated six-scout cycle, toy failure, no-op producer or consumer replay",
+    "current_sufficient_result": "SOURCE_ONLY_HOLD_CHECKPOINT"
+  },
+  "source_reports": ["../S1/report.md", "../S2/report.md", "../S3/report.md", "../S4/report.md", "../S5/report.json", "../S6/report.md"],
+  "synthesis_execution": {"repo_git_writes": 0, "remote_reads": 0, "product_tests": 0, "producer_query_geometry": 0, "consumer_render": 0, "pixel_reads": 0, "native_state_writes": 0}
+}

@@ -1,0 +1,89 @@
+{
+  "job_id": "E4802",
+  "worker": "S2",
+  "schema": "lab18-source-evidence@1",
+  "repository": "samuelpmahan/chainspot-toolkit",
+  "candidate_ref": "c67c2c232814048c5b0b074aff8b7e0f4651da93",
+  "prior_ref": "cc1fa5c9c4191e11d1d70d021161da3bac2af492",
+  "retrieval": "Connected GitHub fetch_file, exact pinned refs; source-only. No tests executed.",
+  "sources": [
+    {
+      "url": "https://github.com/samuelpmahan/chainspot-toolkit/blob/c67c2c232814048c5b0b074aff8b7e0f4651da93/ports/judge/testimony.mjs",
+      "gitBlob": "777f345eeb9fa52567cc794331adb61e543cdd6a",
+      "sourceBytes": 3617,
+      "sourceSHA256": "d7f7b42ec18e32c749f5abc6b6fbe4d0af9fece728b42347cb7e2f478717c219",
+      "localEvidence": "source/testimony.mjs",
+      "representation": "Exact source bytes, trailing newline preserved",
+      "gitBlobVerified": true
+    },
+    {
+      "url": "https://github.com/samuelpmahan/chainspot-toolkit/blob/c67c2c232814048c5b0b074aff8b7e0f4651da93/ports/judge/testimony.test.mjs",
+      "gitBlob": "46a459394c6e0be39feec6946f9a9ed051559812",
+      "sourceBytes": 2467,
+      "sourceSHA256": "f968ffcac34b2c2315515770b3288862474ebe901bcf2f8cd4c17a781b58b9b5",
+      "localEvidence": "source/testimony.test.mjs",
+      "representation": "Exact source bytes, trailing newline preserved",
+      "gitBlobVerified": true
+    },
+    {
+      "url": "https://github.com/samuelpmahan/chainspot-toolkit/blob/c67c2c232814048c5b0b074aff8b7e0f4651da93/testimony/alex/README.md",
+      "gitBlob": "f7e92e66d59f5038cc0858c91076e50a535d036e",
+      "sourceBytes": 766,
+      "sourceSHA256": "5277a91c220f6e1e966634598e55e3d12ae3ac40947d6c1eedf3387bf3a6db01",
+      "localEvidence": "source/alex-README.md",
+      "representation": "Exact source bytes, trailing newline preserved",
+      "gitBlobVerified": true
+    },
+    {
+      "url": "https://github.com/samuelpmahan/chainspot-toolkit/blob/c67c2c232814048c5b0b074aff8b7e0f4651da93/testimony/alex/hole-numbers.json",
+      "gitBlob": "8232891f2e734e60fd9cbe80c6f98a0506f19a91",
+      "sourceBytes": 632,
+      "sourceSHA256": "976a2490bd2ee78efe8f9f1e094e355e34f67666300a895f3f37b1de64abb4ed",
+      "localEvidence": "source/alex-hole-numbers.json",
+      "representation": "Exact source bytes, trailing newline preserved",
+      "gitBlobVerified": true
+    },
+    {
+      "url": "https://github.com/samuelpmahan/chainspot-toolkit/blob/c67c2c232814048c5b0b074aff8b7e0f4651da93/testimony/alex/AlexClark-full.annotation.json",
+      "gitBlob": "358de4b0ea0ada546110228a01e223e6f1d5a1fe",
+      "sourceBytes": 2118,
+      "sourceSHA256": "8bcc919471f718e5222f0e2e4aaecb9901ef2d523d62d6f57e2c7631d91c7b84",
+      "localEvidence": "source/alex-annotation-source-envelope.json",
+      "representation": "JSON envelope sourceContent preserves original source string, which has no final newline; hashes refer to decoded sourceContent",
+      "gitBlobVerified": true
+    },
+    {
+      "url": "https://github.com/samuelpmahan/chainspot-toolkit/blob/cc1fa5c9c4191e11d1d70d021161da3bac2af492/ports/judge/testimony.mjs",
+      "gitBlob": "4d538b77d4d568376684f3faa1888875562a6205",
+      "sourceBytes": 2247,
+      "sourceSHA256": "3bb599e55afed8cab4cadddf3221840dbcca19093047f6af4882f39995dc7065",
+      "localEvidence": "source/prior-testimony.mjs",
+      "representation": "Exact source bytes, trailing newline preserved",
+      "gitBlobVerified": true
+    }
+  ],
+  "localReadEvidence": [
+    {
+      "path": "work/capability-discovery/cycle-17/CURRENT.md",
+      "sha256": "742fda5c4b52af97401dd4740711295404a59e78b9b221bd4dedd73b8a11a3de"
+    },
+    {
+      "path": "work/capability-discovery/cycle-03/evidence/E501/testimony-coordinate-inventory.json",
+      "sha256": "5edaa7200b7c5e52a90711217e52ec9a8203b9e739eaa77136e8866d7812c3f8",
+      "readScope": "first240 lines only"
+    },
+    {
+      "path": "work/capability-discovery/cycle-03/evidence/E502/testimony-README.md",
+      "sha256": "ed3682e621b72377c302bd6d794864648eefacfb62169076a79ed407f84b1c1e"
+    },
+    {
+      "path": "work/capability-discovery/cycle-03/evidence/E503/source/testimony-README.md",
+      "sha256": "7624197c26582d149ba1f20ada381cc11463125a901be116be996c53ef67e5c6"
+    },
+    {
+      "path": "work/capability-discovery/cycle-03/evidence/E504/TowneLake-testimony-README.md",
+      "sha256": "936df4cd250f6641d54d086a2b4f2b7113a746d65a57d74eea94fdee83a6a472"
+    }
+  ],
+  "excludedRead": "Accidental long-line rg output from legacy Alex capture, truncated; not an admission source or authority."
+}

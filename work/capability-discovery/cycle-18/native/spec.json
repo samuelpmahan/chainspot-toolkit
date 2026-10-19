@@ -1,0 +1,81 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "lab18-changed-routing-admission",
+    "scope": "Read-only c67c2c2 changed routing contracts; source-backed nonduplicate experiment only if guards satisfy"
+  },
+  "workers": [
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6"
+  ],
+  "review_policy": {
+    "enabled": false
+  },
+  "jobs": [
+    {
+      "id": "E4801",
+      "kind": "extract",
+      "allow_workers": [
+        "S1"
+      ],
+      "subject": "Integration owner: changed routeMatch public contract and minimal reusable seam; no implementation before coordinator guard"
+    },
+    {
+      "id": "E4802",
+      "kind": "extract",
+      "allow_workers": [
+        "S2"
+      ],
+      "subject": "Independent physical admission: changed legacy corridor annotation/frame/negative-control custody"
+    },
+    {
+      "id": "E4803",
+      "kind": "extract",
+      "allow_workers": [
+        "S3"
+      ],
+      "subject": "Changed route matching and bend sensor algorithm nonduplication inventory; source-only"
+    },
+    {
+      "id": "E4804",
+      "kind": "extract",
+      "allow_workers": [
+        "S4"
+      ],
+      "subject": "Independent critique of corridor judging semantics, uncertainty and endpoint/control identity"
+    },
+    {
+      "id": "E4805",
+      "kind": "extract",
+      "allow_workers": [
+        "S5"
+      ],
+      "subject": "Changed fixture/proof provenance, exposure and claimed multi-course evidence; no producer runs"
+    },
+    {
+      "id": "E4806",
+      "kind": "extract",
+      "allow_workers": [
+        "S6"
+      ],
+      "subject": "Changed renderer/CLI evidence fidelity against new judge qualifiers; no completed Lab17 replay"
+    }
+  ],
+  "conditional_policy": {
+    "controls_complete": "Freeze one exact experiment and obtain different-worker protocol acceptance before execution",
+    "controls_missing": "Retain exact absent frame/control/heading/exposure evidence; no pixels or real44",
+    "new_hard_failure": "Independently verify a nonduplicating existing lab-owned failure before minimal correction",
+    "no_new_failure": "Keep product unchanged; independently review source-backed admission verdict",
+    "accepted": "Persist one reviewable checkpoint with actual native and source evidence"
+  },
+  "ownership": {
+    "integration": "S1 sole repo/Git writer; root operational/publication owner",
+    "other_workers": "Disjoint lab18/S2..S6 scratch and read-only source",
+    "fit": "Per-worker context/ownership eligibility, native capacity/pins/objective checks distinct from semantic readiness",
+    "slots": "Six real Sol6.1 high contexts, no survival assumption"
+  }
+}

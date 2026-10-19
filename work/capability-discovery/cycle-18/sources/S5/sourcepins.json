@@ -1,0 +1,674 @@
+{
+  "schema": "lab18-sourcepins@1",
+  "job_id": "E4805",
+  "worker": "S5",
+  "repository": "samuelpmahan/chainspot-toolkit",
+  "base": "cc1fa5c9c4191e11d1d70d021161da3bac2af492",
+  "head": "c67c2c232814048c5b0b074aff8b7e0f4651da93",
+  "compare": {
+    "status": "ahead",
+    "ahead_by": 5,
+    "behind_by": 0,
+    "total_commits": 5,
+    "url": "https://api.github.com/repos/samuelpmahan/chainspot-toolkit/compare/cc1fa5c9c4191e11d1d70d021161da3bac2af492...c67c2c232814048c5b0b074aff8b7e0f4651da93",
+    "commits": [
+      {
+        "sha": "aaa4775ee392bee2af5d29545cfec9dada95f358",
+        "subject": "S7 routeMatch: the after-S5 matching rules over the cached route table (72/72 in the system)",
+        "parents": [
+          "cc1fa5c9c4191e11d1d70d021161da3bac2af492"
+        ]
+      },
+      {
+        "sha": "d6fb17f9c10b52bac3ef65e186c6d69cc0f8a2da",
+        "subject": "routeMatch: document the refine on prior-reassigned holes (review R02)",
+        "parents": [
+          "aaa4775ee392bee2af5d29545cfec9dada95f358"
+        ]
+      },
+      {
+        "sha": "9cff6ee900c1625c78bd3f20f6b9ec5424106f4f",
+        "subject": "S7 routeMatch tests; dev proof on the current ATTEMPTS; edge contrast 4x faster",
+        "parents": [
+          "aaa4775ee392bee2af5d29545cfec9dada95f358"
+        ]
+      },
+      {
+        "sha": "186b66aee6d67d8080da487e22453997cc8763a6",
+        "subject": "Merge branch 'lane/s7route' into claude/lucid-mendel-dvco6c",
+        "parents": [
+          "d6fb17f9c10b52bac3ef65e186c6d69cc0f8a2da",
+          "9cff6ee900c1625c78bd3f20f6b9ec5424106f4f"
+        ]
+      },
+      {
+        "sha": "c67c2c232814048c5b0b074aff8b7e0f4651da93",
+        "subject": "Judge: alex's old-schema corridors oriented by geometry; S7 judges alex routes on them",
+        "parents": [
+          "186b66aee6d67d8080da487e22453997cc8763a6"
+        ]
+      }
+    ]
+  },
+  "selected": [
+    {
+      "path": "ports/s7route/fixtures/make/fixture.py",
+      "gitBlobSha": "bb19a86329b4ab9a6cd746ceaa48609813b32785",
+      "url": "https://github.com/samuelpmahan/chainspot-toolkit/blob/c67c2c232814048c5b0b074aff8b7e0f4651da93/ports/s7route/fixtures/make/fixture.py"
+    },
+    {
+      "path": "ports/s7route/fixtures/make/fixture18.py",
+      "gitBlobSha": "2df77aa708a486fb2df19de7e00e0d356c31d7ef",
+      "url": "https://github.com/samuelpmahan/chainspot-toolkit/blob/c67c2c232814048c5b0b074aff8b7e0f4651da93/ports/s7route/fixtures/make/fixture18.py"
+    },
+    {
+      "path": "ports/s7route/fixtures/make/fixture_sensor.py",
+      "gitBlobSha": "743022f0933c2826808200fa72d7da99208376a2",
+      "url": "https://github.com/samuelpmahan/chainspot-toolkit/blob/c67c2c232814048c5b0b074aff8b7e0f4651da93/ports/s7route/fixtures/make/fixture_sensor.py"
+    },
+    {
+      "path": "ports/s7route/s7route.dev.test.mjs",
+      "gitBlobSha": "b4a11d1ffca54a37dbd88532dd664af0769e583f",
+      "url": "https://github.com/samuelpmahan/chainspot-toolkit/blob/c67c2c232814048c5b0b074aff8b7e0f4651da93/ports/s7route/s7route.dev.test.mjs"
+    },
+    {
+      "path": "ports/s7route/prove.mjs",
+      "gitBlobSha": "13039147bfd5a02298b1f1b74bbb172cddd71aff",
+      "url": "https://github.com/samuelpmahan/chainspot-toolkit/blob/c67c2c232814048c5b0b074aff8b7e0f4651da93/ports/s7route/prove.mjs"
+    },
+    {
+      "path": "docs/evidence/dev-s1s4/ATTEMPTS",
+      "gitBlobSha": "b43e154b12df1ed57c36173fad811ccc0dd0df12",
+      "url": "https://github.com/samuelpmahan/chainspot-toolkit/blob/c67c2c232814048c5b0b074aff8b7e0f4651da93/docs/evidence/dev-s1s4/ATTEMPTS"
+    }
+  ],
+  "fixtureMetadata": [
+    {
+      "path": "ports/s7route/fixtures/match18-golden.fixture.json",
+      "sha": "1a6947c1d87905318c64124a46d71381208f4d06",
+      "course": "golden",
+      "attempt": "attempt-1792309490729-fbfaba270265",
+      "source": "after-s4/match18.py exec verbatim up to the assignment (fixture18.py)",
+      "widthPx": 41.49,
+      "holes": 18,
+      "baskets": 18,
+      "matrixShape": [
+        18,
+        18
+      ],
+      "topKeys": [
+        "attempt",
+        "course",
+        "widthPx",
+        "order",
+        "bp",
+        "matrix",
+        "routes",
+        "pythonSeconds",
+        "source"
+      ]
+    },
+    {
+      "path": "ports/s7route/fixtures/match18-heritage.fixture.json",
+      "sha": "15dc8d8556f81ed076b63cec4f16592ed1f151f5",
+      "course": "heritage",
+      "attempt": "attempt-1792309633242-8490594faf21",
+      "source": "after-s4/match18.py exec verbatim up to the assignment (fixture18.py)",
+      "widthPx": 31.155,
+      "holes": 18,
+      "baskets": 18,
+      "matrixShape": [
+        18,
+        18
+      ],
+      "topKeys": [
+        "attempt",
+        "course",
+        "widthPx",
+        "order",
+        "bp",
+        "matrix",
+        "routes",
+        "pythonSeconds",
+        "source"
+      ]
+    },
+    {
+      "path": "ports/s7route/fixtures/match18-lenard.fixture.json",
+      "sha": "80e4e1128540d84f2435b7ff8c5aacfdb6ff8af8",
+      "course": "lenard",
+      "attempt": "attempt-1792309547329-8e5550ef2093",
+      "source": "after-s4/match18.py exec verbatim up to the assignment (fixture18.py)",
+      "widthPx": 35.760000000000005,
+      "holes": 18,
+      "baskets": 18,
+      "matrixShape": [
+        18,
+        18
+      ],
+      "topKeys": [
+        "attempt",
+        "course",
+        "widthPx",
+        "order",
+        "bp",
+        "matrix",
+        "routes",
+        "pythonSeconds",
+        "source"
+      ]
+    },
+    {
+      "path": "ports/s7route/fixtures/match18-townelake.fixture.json",
+      "sha": "289388824ba854b9a3b68dfa5c518617f8aece53",
+      "course": "townelake",
+      "attempt": "attempt-1792309590822-10405fb51e23",
+      "source": "after-s4/match18.py exec verbatim up to the assignment (fixture18.py)",
+      "widthPx": 36.83,
+      "holes": 18,
+      "baskets": 18,
+      "matrixShape": [
+        18,
+        18
+      ],
+      "topKeys": [
+        "attempt",
+        "course",
+        "widthPx",
+        "order",
+        "bp",
+        "matrix",
+        "routes",
+        "pythonSeconds",
+        "source"
+      ]
+    },
+    {
+      "path": "ports/s7route/fixtures/match2-golden.fixture.json",
+      "sha": "fce5332887dd72728a3ac5fbe3570834da455f94",
+      "course": "golden",
+      "attempt": "attempt-1792309490729-fbfaba270265",
+      "source": "after-s4/match2.py exec verbatim up to the assignment (fixture.py)",
+      "widthPx": 41.49,
+      "holes": 18,
+      "baskets": 18,
+      "randomRoutes": 20,
+      "matrixShape": [
+        18,
+        18
+      ],
+      "topKeys": [
+        "attempt",
+        "course",
+        "widthPx",
+        "L",
+        "order",
+        "bp",
+        "holes",
+        "starts",
+        "matrix",
+        "routes",
+        "random",
+        "pythonSeconds",
+        "source"
+      ]
+    },
+    {
+      "path": "ports/s7route/fixtures/match2-heritage.fixture.json",
+      "sha": "0a5d4575efcac63acec1cc1f29d55d29412c52a9",
+      "course": "heritage",
+      "attempt": "attempt-1792309633242-8490594faf21",
+      "source": "after-s4/match2.py exec verbatim up to the assignment (fixture.py)",
+      "widthPx": 31.155,
+      "holes": 18,
+      "baskets": 18,
+      "randomRoutes": 20,
+      "matrixShape": [
+        18,
+        18
+      ],
+      "topKeys": [
+        "attempt",
+        "course",
+        "widthPx",
+        "L",
+        "order",
+        "bp",
+        "holes",
+        "starts",
+        "matrix",
+        "routes",
+        "random",
+        "pythonSeconds",
+        "source"
+      ]
+    },
+    {
+      "path": "ports/s7route/fixtures/match2-lenard.fixture.json",
+      "sha": "33183cb514da5166ed5546b217deb8d4f5c002cd",
+      "course": "lenard",
+      "attempt": "attempt-1792309547329-8e5550ef2093",
+      "source": "after-s4/match2.py exec verbatim up to the assignment (fixture.py)",
+      "widthPx": 35.760000000000005,
+      "holes": 18,
+      "baskets": 18,
+      "randomRoutes": 20,
+      "matrixShape": [
+        18,
+        18
+      ],
+      "topKeys": [
+        "attempt",
+        "course",
+        "widthPx",
+        "L",
+        "order",
+        "bp",
+        "holes",
+        "starts",
+        "matrix",
+        "routes",
+        "random",
+        "pythonSeconds",
+        "source"
+      ]
+    },
+    {
+      "path": "ports/s7route/fixtures/match2-townelake.fixture.json",
+      "sha": "1243d403bffc5d2b54bcd3bccc83539399766ebf",
+      "course": "townelake",
+      "attempt": "attempt-1792309590822-10405fb51e23",
+      "source": "after-s4/match2.py exec verbatim up to the assignment (fixture.py)",
+      "widthPx": 36.83,
+      "holes": 18,
+      "baskets": 18,
+      "randomRoutes": 20,
+      "matrixShape": [
+        18,
+        18
+      ],
+      "topKeys": [
+        "attempt",
+        "course",
+        "widthPx",
+        "L",
+        "order",
+        "bp",
+        "holes",
+        "starts",
+        "matrix",
+        "routes",
+        "random",
+        "pythonSeconds",
+        "source"
+      ]
+    },
+    {
+      "path": "ports/s7route/fixtures/sensor-alex.fixture.json",
+      "sha": "b72cd0de6a2c4f747de58601beeb2c2ea34f87e4",
+      "course": "alex",
+      "attempt": "attempt-1792426160776-46e5ad0c22a0",
+      "source": "after-s4/match2.py exec verbatim up to the matrix loop (fixture_sensor.py), on the attempt named here",
+      "widthPx": 33.61,
+      "holes": 18,
+      "baskets": 18,
+      "randomRoutes": 20,
+      "matrixShape": null,
+      "topKeys": [
+        "course",
+        "attempt",
+        "widthPx",
+        "L",
+        "order",
+        "bp",
+        "holes",
+        "starts",
+        "random",
+        "pythonSeconds",
+        "source"
+      ]
+    },
+    {
+      "path": "ports/s7route/fixtures/sensor-golden.fixture.json",
+      "sha": "ecfa5b84a85d6e5d78a2828e9b751b44603b01d1",
+      "course": "golden",
+      "attempt": "attempt-1792387780115-69e8b7bb1974",
+      "source": "after-s4/match2.py exec verbatim up to the matrix loop (fixture_sensor.py), on the attempt named here",
+      "widthPx": 41.49,
+      "holes": 18,
+      "baskets": 18,
+      "randomRoutes": 20,
+      "matrixShape": null,
+      "topKeys": [
+        "course",
+        "attempt",
+        "widthPx",
+        "L",
+        "order",
+        "bp",
+        "holes",
+        "starts",
+        "random",
+        "pythonSeconds",
+        "source"
+      ]
+    },
+    {
+      "path": "ports/s7route/fixtures/sensor-heritage.fixture.json",
+      "sha": "99a4414933699f1fb7fd85c5d65ab022eef0210c",
+      "course": "heritage",
+      "attempt": "attempt-1792424214983-a09b76a6e180",
+      "source": "after-s4/match2.py exec verbatim up to the matrix loop (fixture_sensor.py), on the attempt named here",
+      "widthPx": 31.155,
+      "holes": 18,
+      "baskets": 18,
+      "randomRoutes": 20,
+      "matrixShape": null,
+      "topKeys": [
+        "course",
+        "attempt",
+        "widthPx",
+        "L",
+        "order",
+        "bp",
+        "holes",
+        "starts",
+        "random",
+        "pythonSeconds",
+        "source"
+      ]
+    },
+    {
+      "path": "ports/s7route/fixtures/sensor-lenard.fixture.json",
+      "sha": "2c1965564ec530cddb31977ff73a28750934e177",
+      "course": "lenard",
+      "attempt": "attempt-1792421939156-b3c7c67dcf2d",
+      "source": "after-s4/match2.py exec verbatim up to the matrix loop (fixture_sensor.py), on the attempt named here",
+      "widthPx": 35.760000000000005,
+      "holes": 18,
+      "baskets": 18,
+      "randomRoutes": 20,
+      "matrixShape": null,
+      "topKeys": [
+        "course",
+        "attempt",
+        "widthPx",
+        "L",
+        "order",
+        "bp",
+        "holes",
+        "starts",
+        "random",
+        "pythonSeconds",
+        "source"
+      ]
+    },
+    {
+      "path": "ports/s7route/fixtures/sensor-northpark.fixture.json",
+      "sha": "e1ec3f1f9124b7ae817b49c9407bf12bda869007",
+      "course": "northpark",
+      "attempt": "attempt-1792427106547-34912b1b5407",
+      "source": "after-s4/match2.py exec verbatim up to the matrix loop (fixture_sensor.py), on the attempt named here",
+      "widthPx": 40.33,
+      "holes": 18,
+      "baskets": 18,
+      "randomRoutes": 20,
+      "matrixShape": null,
+      "topKeys": [
+        "course",
+        "attempt",
+        "widthPx",
+        "L",
+        "order",
+        "bp",
+        "holes",
+        "starts",
+        "random",
+        "pythonSeconds",
+        "source"
+      ]
+    },
+    {
+      "path": "ports/s7route/fixtures/sensor-townelake.fixture.json",
+      "sha": "41d2d2e00e0187a76de5554fd5a7e11799feec86",
+      "course": "townelake",
+      "attempt": "attempt-1792423236147-3193c7deee80",
+      "source": "after-s4/match2.py exec verbatim up to the matrix loop (fixture_sensor.py), on the attempt named here",
+      "widthPx": 36.83,
+      "holes": 18,
+      "baskets": 18,
+      "randomRoutes": 20,
+      "matrixShape": null,
+      "topKeys": [
+        "course",
+        "attempt",
+        "widthPx",
+        "L",
+        "order",
+        "bp",
+        "holes",
+        "starts",
+        "random",
+        "pythonSeconds",
+        "source"
+      ]
+    }
+  ],
+  "fixtureDirectoryPins": [
+    {
+      "path": "ports/s7route/fixtures/make",
+      "sha": "01b4a20bccaa89cf823a8aff2867ca6c667c88a2",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "path": "ports/s7route/fixtures/match18-golden.fixture.json",
+      "sha": "1a6947c1d87905318c64124a46d71381208f4d06",
+      "size": 49563,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/match18-heritage.fixture.json",
+      "sha": "15dc8d8556f81ed076b63cec4f16592ed1f151f5",
+      "size": 49711,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/match18-lenard.fixture.json",
+      "sha": "80e4e1128540d84f2435b7ff8c5aacfdb6ff8af8",
+      "size": 49317,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/match18-townelake.fixture.json",
+      "sha": "289388824ba854b9a3b68dfa5c518617f8aece53",
+      "size": 49718,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/match2-golden.fixture.json",
+      "sha": "fce5332887dd72728a3ac5fbe3570834da455f94",
+      "size": 76973,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/match2-heritage.fixture.json",
+      "sha": "0a5d4575efcac63acec1cc1f29d55d29412c52a9",
+      "size": 77597,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/match2-lenard.fixture.json",
+      "sha": "33183cb514da5166ed5546b217deb8d4f5c002cd",
+      "size": 77700,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/match2-townelake.fixture.json",
+      "sha": "1243d403bffc5d2b54bcd3bccc83539399766ebf",
+      "size": 77534,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/recorded",
+      "sha": "eac17f9c1d54f3601cf93f02654b073a4006088c",
+      "size": 0,
+      "type": "dir"
+    },
+    {
+      "path": "ports/s7route/fixtures/sensor-alex.fixture.json",
+      "sha": "b72cd0de6a2c4f747de58601beeb2c2ea34f87e4",
+      "size": 9642,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/sensor-golden.fixture.json",
+      "sha": "ecfa5b84a85d6e5d78a2828e9b751b44603b01d1",
+      "size": 9659,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/sensor-heritage.fixture.json",
+      "sha": "99a4414933699f1fb7fd85c5d65ab022eef0210c",
+      "size": 9687,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/sensor-lenard.fixture.json",
+      "sha": "2c1965564ec530cddb31977ff73a28750934e177",
+      "size": 9828,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/sensor-northpark.fixture.json",
+      "sha": "e1ec3f1f9124b7ae817b49c9407bf12bda869007",
+      "size": 9737,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/sensor-townelake.fixture.json",
+      "sha": "41d2d2e00e0187a76de5554fd5a7e11799feec86",
+      "size": 9831,
+      "type": "file"
+    }
+  ],
+  "recordedDirectoryPins": [
+    {
+      "path": "ports/s7route/fixtures/recorded/match18-golden.json",
+      "sha": "f6f93106a4a3f2decb61be97ed1a1919f37066bd",
+      "size": 8710,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/recorded/match18-heritage.json",
+      "sha": "4cd1574bdef58f809004b0b0138fddeee3a74ca1",
+      "size": 8843,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/recorded/match18-lenard.json",
+      "sha": "7bc582857ee9c78a34bc2bcff909eb90b7ea1ed9",
+      "size": 8651,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/recorded/match18-townelake.json",
+      "sha": "bf6a25cb2c21dea6568675337a739daf67bb4e1c",
+      "size": 8690,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/recorded/match2-golden.json",
+      "sha": "abff1c6525c8317773bc9f9efff0aa429f3cb6bb",
+      "size": 8455,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/recorded/match2-heritage.json",
+      "sha": "576a186a6a608b301230584f836acb14c7d8db23",
+      "size": 8716,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/recorded/match2-lenard.json",
+      "sha": "4ca7b62a9d3ed54855bbcfa5db16657129a8318b",
+      "size": 8539,
+      "type": "file"
+    },
+    {
+      "path": "ports/s7route/fixtures/recorded/match2-townelake.json",
+      "sha": "3416d4183d076b445a0316ad81b7099a2ee62165",
+      "size": 8356,
+      "type": "file"
+    }
+  ],
+  "matrixSemanticComparisons": [
+    {
+      "path": "ports/s7route/fixtures/match18-golden.fixture.json",
+      "attempt": "attempt-1792309490729-fbfaba270265",
+      "oldAttemptPresent": false,
+      "otherwiseIdentical": true
+    },
+    {
+      "path": "ports/s7route/fixtures/match18-heritage.fixture.json",
+      "attempt": "attempt-1792309633242-8490594faf21",
+      "oldAttemptPresent": false,
+      "otherwiseIdentical": true
+    },
+    {
+      "path": "ports/s7route/fixtures/match18-lenard.fixture.json",
+      "attempt": "attempt-1792309547329-8e5550ef2093",
+      "oldAttemptPresent": false,
+      "otherwiseIdentical": true
+    },
+    {
+      "path": "ports/s7route/fixtures/match18-townelake.fixture.json",
+      "attempt": "attempt-1792309590822-10405fb51e23",
+      "oldAttemptPresent": false,
+      "otherwiseIdentical": true
+    },
+    {
+      "path": "ports/s7route/fixtures/match2-golden.fixture.json",
+      "baseSha": "5027ad07161ecf94cf17e926940154d06d33b9c2",
+      "headSha": "fce5332887dd72728a3ac5fbe3570834da455f94",
+      "attempt": "attempt-1792309490729-fbfaba270265",
+      "otherwiseIdentical": true
+    },
+    {
+      "path": "ports/s7route/fixtures/match2-heritage.fixture.json",
+      "baseSha": "8ceda93bb494327edbed9d026b9442ef6472da87",
+      "headSha": "0a5d4575efcac63acec1cc1f29d55d29412c52a9",
+      "attempt": "attempt-1792309633242-8490594faf21",
+      "otherwiseIdentical": true
+    },
+    {
+      "path": "ports/s7route/fixtures/match2-lenard.fixture.json",
+      "baseSha": "8ac52bd2718c7b50fb863f7300fb66a290588e3d",
+      "headSha": "33183cb514da5166ed5546b217deb8d4f5c002cd",
+      "attempt": "attempt-1792309547329-8e5550ef2093",
+      "otherwiseIdentical": true
+    },
+    {
+      "path": "ports/s7route/fixtures/match2-townelake.fixture.json",
+      "baseSha": "eff43ea679b132f24aaea4876aa77ebeaa61d247",
+      "headSha": "1243d403bffc5d2b54bcd3bccc83539399766ebf",
+      "attempt": "attempt-1792309590822-10405fb51e23",
+      "otherwiseIdentical": true
+    }
+  ],
+  "limitations": [
+    "Git blob SHAs pin inspected repository text, not the original local Python files or attempt payload contents.",
+    "recordedDirectoryPins are directory metadata only; their bodies were not opened by S5.",
+    "Full fixture JSON bodies were fetched and parsed only for source provenance/metadata and exact old/new document comparison; no producer, algorithm, sensor, matrix, geometry or native query was executed."
+  ],
+  "failedReadOnlyDiscovery": [
+    {
+      "path": "ports/s7route/README.md",
+      "result": "404 NOT_FOUND"
+    },
+    {
+      "path": "ports/s7route/EVIDENCE.md",
+      "result": "404 NOT_FOUND"
+    }
+  ]
+}
