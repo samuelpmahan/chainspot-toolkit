@@ -1,0 +1,144 @@
+import { readFileSync, statSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+
+const MAX_BYTES = 2 * 1024 * 1024;
+const HEX = /^[a-f0-9]{64}$/;
+const esc = value => String(value).replace(/[&<>"']/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&apos;' }[ch]));
+const fail = message => { throw new Error(message); };
+const show = value => value === undefined ? 'undefined' : typeof value === 'string' ? value : JSON.stringify(value);
+const point = value => Array.isArray(value) && value.length === 2 && value.every(Number.isFinite);
+const scalar = value => value === null || Number.isFinite(value) || ['NaN', '+Infinity', '-Infinity'].includes(value);
+const text = (x, y, value, cls = '') => `<text x="${x}" y="${y}"${cls ? ` class="${cls}"` : ''}>${esc(show(value))}</text>`;
+const chunks = (value, width = 155) => show(value).match(new RegExp(`.{1,${width}}`, 'gs')) || [''];
+
+/** Structural guards only. No luminance, validity, group mean, delta or verdict is derived here. */
+export function checkTrace(trace) {
+  if (!trace || trace.schema !== 'heading-ablation-trace@1') fail('Unexpected trace schema');
+  for (const key of ['runId', 'imageId']) if (typeof trace[key] !== 'string' || !trace[key] || trace[key].length > 200) fail(`Invalid ${key}`);
+  if (!HEX.test(trace.paramsHash)) fail('Invalid paramsHash');
+  if (!Array.isArray(trace.renderRows) || trace.renderRows.length !== 4) fail('Expected exactly four retained render rows');
+  if (!trace.prediction || !['SUPPORTED', 'FALSIFIED', 'UNKNOWN'].includes(trace.prediction.status)) fail('Missing retained prediction verdict');
+  const rowIds = new Set(), stationIds = new Set();
+  for (let r = 0; r < 4; r++) {
+    const row = trace.renderRows[r], groupId = r < 2 ? 'primary' : 'bright-nonpath', arm = r % 2 ? 'candidate' : 'baseline';
+    if (!row || row.id !== `${groupId}/${arm}` || row.groupId !== groupId || row.arm !== arm || rowIds.has(row.id)) fail('Unexpected row identity/order');
+    rowIds.add(row.id);
+    if (typeof row.sourceId !== 'string' || !row.sourceId || !point(row.originPx) || !Number.isFinite(row.headingDeg) || !Object.hasOwn(row, 'rawArgs')) fail('Missing retained source/arguments/origin/heading');
+    if (!Array.isArray(row.stations) || row.stations.length !== 16) fail('Expected exactly sixteen retained stations per arm');
+    if (!row.aggregate || !['VALID', 'UNKNOWN'].includes(row.aggregate.status) || !scalar(row.aggregate.minLum) || !scalar(row.aggregate.deltaFromBaseline)) fail('Invalid retained aggregate');
+    if (row.aggregate.status === 'UNKNOWN' && row.aggregate.minLum !== null) fail('UNKNOWN aggregate must retain null rather than a partial mean');
+    for (let i = 0; i < 16; i++) {
+      const station = row.stations[i];
+      if (!station || station.index !== i || station.id !== `${row.id}/station${i}` || stationIds.has(station.id)) fail('Unexpected station identity/order');
+      stationIds.add(station.id);
+      if (!point(station.originPx) || !Number.isFinite(station.headingDeg) || !scalar(station.tPx)) fail('Missing retained station location/heading');
+      for (const key of ['leftLum', 'rightLum', 'minLum', 'deltaFromBaseline']) if (!Object.hasOwn(station, key) || !scalar(station[key])) fail(`Invalid retained ${key}`);
+      for (const key of ['okLeft', 'okRight']) if (!Object.hasOwn(station, key)) fail(`Missing raw ${key}`);
+      if (!Array.isArray(station.badFlags)) fail('Missing retained raw badFlags');
+    }
+  }
+  return { rowIds: [...rowIds], stationIds: [...stationIds] };
+}
+
+function chart(row, field, x, y, width, height) {
+  const fields = field === 'luminance' ? ['leftLum', 'rightLum', 'minLum'] : ['deltaFromBaseline'];
+  const colors = ['#b35c00', '#7b39a0', '#006a98'];
+  const values = row.stations.flatMap(s => fields.map(k => s[k])).filter(Number.isFinite);
+  // Display transform only. Scientific minima and deltas are stored input fields, never calculated.
+  const low = values.length ? Math.min(...values) : 0, high = values.length ? Math.max(...values) : 1;
+  const magnitude = Math.max(1, Math.abs(low), Math.abs(high));
+  const scaledLow = low / magnitude, scaledSpan = high === low ? 1 : high / magnitude - scaledLow;
+  let svg = `<g><rect x="${x}" y="${y}" width="${width}" height="${height}" fill="#f4f7fb" stroke="#c5d0dd"/>`;
+  const titleLines = chunks(`${field}: display-only affine scale [${low}, ${high}], missing/nonfinite = ×`, Math.floor(width / 8));
+  titleLines.forEach((line, i) => { svg += text(x, y - 9 - (titleLines.length - 1 - i) * 16, line, 'small'); });
+  fields.forEach((key, f) => {
+    row.stations.forEach((s, i) => {
+      const px = x + 16 + i * (width - 32) / 15, value = s[key], color = colors[f];
+      if (!Number.isFinite(value)) {
+        svg += `<path d="M${px - 3},${y + height - 8}l6,6m-6,0l6,-6" stroke="${color}" fill="none"><title>${esc(`${s.id} ${key}=${show(value)}`)}</title></path>`;
+      } else {
+        const py = y + height - 8 - (value / magnitude - scaledLow) / scaledSpan * (height - 16);
+        svg += `<circle cx="${px}" cy="${py}" r="${key === 'minLum' ? 3.5 : 2.4}" fill="${color}"><title>${esc(`${s.id} ${key}=${show(value)}`)}</title></circle>`;
+      }
+    });
+  });
+  return svg + '</g>';
+}
+
+function panel(row, y) {
+  const argLines = chunks(`rawArgs=${show(row.rawArgs)}`);
+  const rowPitch = 42, chartTop = 112 + argLines.length * 17, tableTop = chartTop + 120, height = tableTop + row.stations.length * rowPitch + 68;
+  let svg = `<g transform="translate(20,${y})"><rect width="1760" height="${height}" rx="8" fill="#fff" stroke="#a7b8cc"/><title>${esc(row.id)}</title><desc>${esc(JSON.stringify(row))}</desc>`;
+  svg += text(18, 28, `${row.id} · sourceId=${row.sourceId}`, 'title');
+  svg += text(18, 52, `Stored originPx=${show(row.originPx)} headingDeg=${row.headingDeg}; aggregate=${show(row.aggregate)}`, 'small');
+  argLines.forEach((line, i) => { svg += text(18, 76 + i * 17, line, 'small'); });
+  svg += `<g transform="translate(1705,50) rotate(${row.headingDeg})"><path d="M-20,0H20m-7,-5l7,5l-7,5" stroke="#244a69" fill="none" stroke-width="2"/></g>`;
+  svg += chart(row, 'luminance', 30, chartTop, 1030, 85) + chart(row, 'stored candidate-minus-baseline Δ', 1100, chartTop, 620, 85);
+  const columns = [[18,'slot / tPx'],[170,'originPx'],[380,'headingDeg'],[550,'leftLum'],[730,'rightLum'],[910,'min(left,right)'],[1100,'stored Δ'],[1280,'okLeft / okRight / badFlags']];
+  columns.forEach(([x, label]) => { svg += text(x, tableTop, label, 'col'); });
+  row.stations.forEach((s, i) => {
+    const top = tableTop + 27 + i * rowPitch;
+    svg += `<g data-row-id="${esc(row.id)}" data-station-id="${esc(s.id)}"><title>${esc(s.id)}</title>`;
+    const values = [`${s.index} / ${show(s.tPx)}`, show(s.originPx), s.headingDeg, s.leftLum, s.rightLum, s.minLum, s.deltaFromBaseline, `${show(s.okLeft)} / ${show(s.okRight)} / ${show(s.badFlags)}`];
+    columns.forEach(([x], c) => {
+      const cls = s.badFlags.length ? 'bad' : 'small';
+      if (c === 1) svg += `<text x="${x}" y="${top}" class="${cls}"><tspan x="${x}">x=${esc(show(s.originPx[0]))}</tspan><tspan x="${x}" dy="16">y=${esc(show(s.originPx[1]))}</tspan></text>`;
+      else svg += text(x, top, values[c], cls);
+    });
+    svg += '</g>';
+  });
+  svg += text(18, height - 20, 'Orange left · purple right · blue stored minimum. Dots are not connected. UNKNOWN is retained, never replaced by a partial summary.', 'small');
+  return {svg:svg + '</g>',height};
+}
+
+export function renderTrace(trace, traceHash) {
+  const ids = checkTrace(trace);
+  if (!HEX.test(traceHash)) fail('Invalid exact-byte traceHash');
+  const binding = {schema:'heading-ablation-svg@1',runId:trace.runId,imageId:trace.imageId,paramsHash:trace.paramsHash,traceHash,...ids,sourceBinding:trace.sourceBinding,inputBinding:trace.inputBinding};
+  const size = value => Array.isArray(value) ? value.length : 'unavailable';
+  let svg = '';
+  const header = [
+    'Heading ablation · recorded values only',
+    `runId=${trace.runId} imageId=${trace.imageId}`,
+    `paramsHash=${trace.paramsHash}`,
+    `traceHash (exact input bytes)=${traceHash}`,
+    `prediction=${show({status:trace.prediction.status,Dprimary:trace.prediction.Dprimary,Dbright:trace.prediction.Dbright,groups:trace.prediction.groups?.map(({groupId,status,D})=>({groupId,status,D}))})}`,
+    `Source pin counts: before=${size(trace.sourceBinding?.before)}, afterImport=${size(trace.sourceBinding?.afterImport)}, after=${size(trace.sourceBinding?.after)}; full path/hash manifests in SVG metadata and hash-bound JSON.`,
+    `Input pin counts: before=${size(trace.inputBinding?.before)}, after=${size(trace.inputBinding?.after)}; canonical verified=${show(trace.inputBinding?.canonical?.verified)}; source path refs appear in full metadata.`,
+    `rowIDs=${ids.rowIds.join(' | ')}`,
+    'All 64 station IDs are retained in metadata and per-row title/data attributes. Full raw native answers remain in the hash-bound input.',
+    'No pixels/background. Stored origins are printed verbatim; heading arrows use SVG rotation only. Luminosity/delta charts use display-only scaling.'
+  ];
+  let top = 32;
+  header.forEach((value, i) => { chunks(value, 185).forEach(line => { svg += text(22, top, line, i === 0 ? 'title' : 'small'); top += i === 0 ? 29 : 19; }); });
+  top += 26;
+  for (const row of trace.renderRows) { const part = panel(row, top); svg += part.svg; top += part.height + 22; }
+  svg += text(22, top + 10, 'Renderer imports Node builtins only. Trace validation is structural; retained prediction, minima, deltas and validity are never recalculated.', 'small');
+  const height = top + 30;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="${height}" viewBox="0 0 1800 ${height}" role="img" aria-labelledby="title description"><title id="title">Heading ablation — frozen trace only</title><desc id="description">Four arms, two groups, sixty-four station records; stored measurements, raw flags, deltas, arguments, headings and prediction. No source pixels and no scientific recomputation.</desc><metadata>${esc(JSON.stringify(binding))}</metadata><style>text{font-family:monospace;fill:#172638;font-size:14px}.small{font-size:13px}.title{font-size:20px;font-weight:bold}.col{font-size:14px;font-weight:bold}.bad{font-size:13px;fill:#a42a23}</style><rect width="1800" height="${height}" fill="#eaf0f6"/>${svg}</svg>\n`;
+}
+
+export function main(args = process.argv.slice(2)) {
+  const options = {};
+  for (let i = 0; i < args.length; i += 2) {
+    const key = args[i], value = args[i + 1];
+    if (!['--input','--sha256','--out'].includes(key) || !value || Object.hasOwn(options, key)) fail('Usage: node render.mjs --input TRACE.json --sha256 EXACT_SHA256 --out FRESH.svg');
+    options[key] = value;
+  }
+  if (Object.keys(options).length !== 3 || !HEX.test(options['--sha256']) || !options['--out'].endsWith('.svg')) fail('Exact expected hash and fresh .svg output required');
+  const stat = statSync(options['--input']);
+  if (!stat.isFile() || stat.size > MAX_BYTES) fail('Trace must be a regular file of at most 2MiB');
+  const bytes = readFileSync(options['--input']);
+  if (bytes.length > MAX_BYTES) fail('Trace exceeds 2MiB');
+  const traceHash = createHash('sha256').update(bytes).digest('hex');
+  if (traceHash !== options['--sha256']) fail('Trace SHA256 mismatch');
+  const trace = JSON.parse(new TextDecoder('utf-8', {fatal:true}).decode(bytes));
+  const svg = renderTrace(trace, traceHash);
+  writeFileSync(options['--out'], svg, {encoding:'utf8',flag:'wx'});
+  process.stdout.write(JSON.stringify({runId:trace.runId,imageId:trace.imageId,paramsHash:trace.paramsHash,traceHash,...checkTrace(trace),output:options['--out']}) + '\n');
+}
+
+if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+  try { main(); } catch (error) { process.stderr.write(`heading-render: ${error.message}\n`); process.exitCode = 1; }
+}

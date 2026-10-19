@@ -1,0 +1,76 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "lab10-four-call-heading-ablation",
+    "source": "12f6113e343b08103016b772ef93ef1dec6f4d80",
+    "scope": "Four fixed Lenard5 stationContrast calls; implement smallest defaultOFF recipe, independent source/math/input review before actual execution; no originalhelper or44trial."
+  },
+  "workers": [
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6"
+  ],
+  "review_policy": {
+    "enabled": true,
+    "review_prefix": "R",
+    "reviewer_must_differ_from_extractor": true
+  },
+  "policy": {
+    "extract_priority": 100,
+    "review_priority": 200,
+    "repair_priority": 300
+  },
+  "jobs": [
+    {
+      "id": "E4001",
+      "kind": "extract",
+      "allow_workers": [
+        "S1"
+      ],
+      "subject": "Sole integrator: construct new fixed four-call recipe/CLI source using existing gateway/loader; no actual CV until independent closure reviews/root checkpoint."
+    },
+    {
+      "id": "E4002",
+      "kind": "extract",
+      "allow_workers": [
+        "S2"
+      ],
+      "subject": "Independent exact source dependency/registration closure: pins + review producer imports/gateway only; no runtime queries."
+    },
+    {
+      "id": "E4003",
+      "kind": "extract",
+      "allow_workers": [
+        "S3"
+      ],
+      "subject": "Disjoint render.mjs source: hash-bound trace-only four-arm/64station SVG with identical CLI IDs/values/verdicts, no queries."
+    },
+    {
+      "id": "E4004",
+      "kind": "extract",
+      "allow_workers": [
+        "S4"
+      ],
+      "subject": "Independent heading math/falsifier/pure regression driver; source/scalar checks, no real pixel query."
+    },
+    {
+      "id": "E4005",
+      "kind": "extract",
+      "allow_workers": [
+        "S5"
+      ],
+      "subject": "Verify actual fixed input files and source-derived four-call resource/capture bounds, no decode/query; finite blocker if missing."
+    },
+    {
+      "id": "E4006",
+      "kind": "extract",
+      "allow_workers": [
+        "S6"
+      ],
+      "subject": "Independent minimal producer provenance/first-failure critique and read-only current routing nonduplication, no adoption or query."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+--- /workspace/scratch/86659bbafcce/lab10/E4010/render-source.mjs.txt	2026-10-19 09:14:24.455458268 +0300
++++ /workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/heading-ablation/render.mjs	2026-10-19 09:15:03.759553032 +0300
+@@ -50,7 +50,8 @@
+   const magnitude = Math.max(1, Math.abs(low), Math.abs(high));
+   const scaledLow = low / magnitude, scaledSpan = high === low ? 1 : high / magnitude - scaledLow;
+   let svg = `<g><rect x="${x}" y="${y}" width="${width}" height="${height}" fill="#f4f7fb" stroke="#c5d0dd"/>`;
+-  svg += text(x, y - 9, `${field}: display-only affine scale [${low}, ${high}], missing/nonfinite = ×`, 'small');
++  const titleLines = chunks(`${field}: display-only affine scale [${low}, ${high}], missing/nonfinite = ×`, Math.floor(width / 8));
++  titleLines.forEach((line, i) => { svg += text(x, y - 9 - (titleLines.length - 1 - i) * 16, line, 'small'); });
+   fields.forEach((key, f) => {
+     row.stations.forEach((s, i) => {
+       const px = x + 16 + i * (width - 32) / 15, value = s[key], color = colors[f];
