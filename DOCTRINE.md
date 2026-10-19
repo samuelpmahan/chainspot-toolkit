@@ -101,6 +101,13 @@ inventory of absolute px and fixed cross-unit ratios in S0-S7 (`docs/evidence/ab
 sprites 2.04x and the hallway ribbon 1.45x, so a rule written in one of those units and applied to another drifts up
 to 1.6x). No off-frame rule is built for partial views.
 
+**Stitching is native, now (Sam, 2026-10-19, superseding the deferral above).** A capture of several tiles is one
+course that someone zoomed in on to make the screenshots easier, so stitching is part of the import flow. The thin
+end-to-end slice is The Rec (a 9-hole thrown round that needs stitching, so nothing may assume 18 holes) and the
+3-hole loop on Dash's Track. Effort guide: the long tail is closed by a correction UI, not by more CV. A bend is
+fixed in 3 clicks or fewer; with endpoints right and most straights and bends right, a bad course costs 10-15 clicks.
+CV effort moves to non-dev courses, to learn what to nail down and what to adapt.
+
 **A stitched course is one raster (Sam, 2026-10-19).** The tiles of one capture (lenard1-5; Dash's Track's four
 tiles and overview) are not separate images to judge, match or count one by one. Mathematically there is a single
 course raster in a single frame. Mechanically it may be backed by several rasters plus their placements, which is the
