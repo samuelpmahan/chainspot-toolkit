@@ -1,0 +1,226 @@
+{
+  "job_id": "E4408",
+  "worker": "S3",
+  "outcome": "insufficient_evidence",
+  "native_outcome": "insufficient_evidence",
+  "audit_outcome": "source_correspondence_supported",
+  "summary": "Static frozen CommonJS closure has 67 files (64 JS and 3 JSON assets), 125 literal local require edges, and a type:commonjs package boundary. No missing module, external package, builtin, dynamic require/import, or native addon was identified in this reachable graph. Relevant compiled ranking, gateway, memory-sink, board, and PCR behavior corresponds to inspected TS. Runtime import/test outcome remains unobserved; no compiled-freshness assumption is made.",
+  "repo": {
+    "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "head": "f68b731e1050c2cfbab5b065f8f01768dfda4f19",
+    "scoped_git_status": "No local changes reported for source/provider/packages/alg and provider package manifests."
+  },
+  "audit": {
+    "method": "Read-only literal-require transitive text walk plus manual scoped TS/compiled-JS correspondence review; producer JS never imported/evaluated.",
+    "module_count": 67,
+    "total_module_bytes": 908198,
+    "external_count": 0,
+    "dynamic_load_count": 0,
+    "missing_count": 0,
+    "javascript_count": 64,
+    "edge_count": 125,
+    "external_packages": [],
+    "builtins": [],
+    "dynamic_loads": [],
+    "missing": [],
+    "native_addons": [],
+    "first_stop": null,
+    "package_boundaries": [
+      {
+        "path": "source/provider/packages/alg/package.json",
+        "sha256": "c244bd295eb0872da4540e64fc8c69928c232c35b7e0b4692cf7362e865b3c14",
+        "size": 1189,
+        "type": "commonjs",
+        "name": "@chainspot/alg"
+      }
+    ],
+    "literal_json_assets": [
+      {
+        "path": "source/provider/packages/alg/dist/detectors/threeFactor/assets/basket-sprite.json",
+        "sha256": "c2867340d477a5e2f88e83b78516fc89005004a4aa279b6b9bc86a6f98e3598f",
+        "size": 3234
+      },
+      {
+        "path": "source/provider/packages/alg/dist/detectors/threeFactor/assets/logistic.json",
+        "sha256": "a86497b308da33f093ac4540a841b228272f0a14fbbb5ebbfa1490d047ebceb7",
+        "size": 151330
+      },
+      {
+        "path": "source/provider/packages/alg/dist/detectors/threeFactor/assets/badge-glyph-templates.json",
+        "sha256": "00af1d9d7bc40790a76aee0f8a2cce68b930c2ba4a94575b2842235fb1253b41",
+        "size": 11572
+      }
+    ],
+    "inventory": {
+      "sha256": "09ef1cd5dc707404d3699b5d82d0cf6c92f405999893dca36422cfa4979d9aa1",
+      "path": "/workspace/scratch/86659bbafcce/lab14/S3/E4408/import-closure.json"
+    },
+    "scanner": {
+      "sha256": "411ae28537b378a53d90c6089ee7d02a93ee84cf8b202b5caee32c5849c95d5b",
+      "path": "/workspace/scratch/86659bbafcce/lab14/S3/E4408/audit_static.py"
+    },
+    "preservation": "import-closure.json preserves every exact reachable module path, byte SHA-256, byte size, and every literal require edge/caller line/specifier/resolved path."
+  },
+  "loading_identifiers": {
+    "anchor": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/source/provider/package.json",
+    "compiled_root": "/workspace/scratch/8528bb251845/chainspot-discovery-lab/source/provider/packages/alg/dist",
+    "route": "Use node:module.createRequire with the provider package.json URL; require absolute compiled paths under the CJS alg package. Do not use the ESM provider root as an inferred module type for alg/dist files.",
+    "modules": {
+      "exec/gateway.js": [
+        "executeCompiledPlan"
+      ],
+      "exec/operations.js": [
+        "OPERATION_UNIVERSE",
+        "operationImpls",
+        "operationCalculationBindings",
+        "ARTIFACT_EXTRACTORS"
+      ],
+      "exec/board.js": [
+        "createExecBoard"
+      ],
+      "exec/sink.js": [
+        "createMemorySink"
+      ],
+      "exec/pcr.js": [
+        "composePcr"
+      ],
+      "exec/sha256.js": [
+        "sha256HexSyncText"
+      ],
+      "detectors/threeFactor/hash.js": [
+        "canonicalJson"
+      ],
+      "detectors/threeFactor/features/types.js": [
+        "nullFeatureContext"
+      ]
+    },
+    "operation": "OPERATION_UNIVERSE.find(op => op.id === 'assignment.ranking')",
+    "actual_producer": "operationImpls.get('assignment.ranking')",
+    "binding": "operationCalculationBindings.get('assignment.ranking'); expected fn.rankTeeBasketPairsByBadge bound to the compiled assignment.js rankPairsByBadge function",
+    "input": "assignment.scoredPairs",
+    "output": "assignment.rankedByBadge",
+    "scope": "Schedule only this existing operation in a one-op plan. Loading gateway eagerly loads the operation registry and the entire inventoried closure, including three JSON assets, but does not authorize invoking any other operation.",
+    "s1_notice": "Usable loading identifiers, closure inventory path, package pin and source findings sent to /root/lab14_s1."
+  },
+  "correspondence": [
+    {
+      "component": "ranking OperationSpec/run/binding",
+      "ts": "src/exec/operations.ts:481-502",
+      "js": "dist/exec/operations.js:337-356",
+      "finding": "Same ID, compute/G6/assignment metadata, input/output slots, fn address; run calls ctx.span, reads scoredPairs, invokes actual imported rankPairsByBadge once, writes Map, stops span. No feature resolve or image read in that operation."
+    },
+    {
+      "component": "actual rank function/comparator",
+      "ts": "src/detectors/threeFactor/assignment.ts:67-70,187-204",
+      "js": "dist/detectors/threeFactor/assignment.js:41-43,102-116",
+      "finding": "Same grouping by first badge appearance, descending score then supportMean then pairId.localeCompare, cloned row with rank index+1; raw/factors preserved by spread. No copied consumer algorithm."
+    },
+    {
+      "component": "operation registration",
+      "ts": "src/exec/operations.ts:878-912",
+      "js": "dist/exec/operations.js:700-725",
+      "finding": "Both derive exported universe, actual implementation map and calculation binding map from the same registered OperationDefs."
+    },
+    {
+      "component": "sync gateway",
+      "ts": "src/exec/gateway.ts:56-81,124-171",
+      "js": "dist/exec/gateway.js:29-45,86-124",
+      "finding": "Same runtime lookup, body hashing/binding order check, tracked operation call, Promise rejection, conformance, post-call extractor invocation, sink.putArtifact, Receipt and sink.putReceipt. No difference found in scoped behavior."
+    },
+    {
+      "component": "shape probes",
+      "ts": "src/exec/gateway.ts:94-103",
+      "js": "dist/exec/gateway.js:55-64",
+      "finding": "Both include only Array or ArrayBuffer-view lengths; Map not included."
+    },
+    {
+      "component": "memory sink",
+      "ts": "src/exec/sink.ts:35-57",
+      "js": "dist/exec/sink.js:24-44",
+      "finding": "Both hash emitted bytes, store artifact refs and bytes under ID, use memory://ID URI, and collect receipts. Null sink returns empty hashes and must not be used for the bridge."
+    },
+    {
+      "component": "PCR identity",
+      "ts": "src/exec/pcr.ts:35-98",
+      "js": "dist/exec/pcr.js:7-62",
+      "finding": "Both freeze op ID, bound calculation identity, actual accesses, writes and artifact {id,kind,sha256,dims}; probes, timing and opaque board output values are omitted. Both explicitly disclose tick-testimony-and-materializations scope. Baseline A/B identity equality under synthetic fixed params is a documented limitation, not a core bug."
+    },
+    {
+      "component": "board and tracking",
+      "ts": "src/exec/board.ts:50-78,97-144",
+      "js": "dist/exec/board.js:25-53,64-106",
+      "finding": "Same board Map API, missing-read error, tracked accesses and new-address/refinement/replacement write classification."
+    },
+    {
+      "component": "null context",
+      "ts": "src/detectors/threeFactor/features/types.ts:317-329",
+      "js": "dist/detectors/threeFactor/features/types.js:54-65",
+      "finding": "Same no-op span returns stop function; ranking only uses span. Module initializes an OcclusionDetector at load, already in static closure."
+    },
+    {
+      "component": "canonical JSON",
+      "ts": "src/detectors/threeFactor/hash.ts:7-19",
+      "js": "dist/detectors/threeFactor/hash.js:9-19",
+      "finding": "Same recursive key sorting, array-order preservation and undefined object-value omission. The async WebCrypto sha256 export exists but the sync PCR route uses exec/sha256, not it."
+    }
+  ],
+  "source_pins": {
+    "source/provider/packages/alg/src/exec/gateway.ts": "c79e00b91378f2af3717fb99c6c4ae76ad226098f97acc595822e35a04584e6f",
+    "source/provider/packages/alg/src/exec/operations.ts": "5bb9f97e0e8e235fa3e80a32761a701cdcfc107369565e3ec77e5ea6b95a26b8",
+    "source/provider/packages/alg/src/exec/board.ts": "3f6bad3c444ec8e1c107f96336b8d863bce0125f39fe39cb5a225fcfb1866675",
+    "source/provider/packages/alg/src/exec/sink.ts": "ef75def6f64ede0e702a769cb3923b60f910c2bdb17f66b7a68490ac2b7610e9",
+    "source/provider/packages/alg/src/exec/pcr.ts": "ba214fc58bafc3e703892a7e9160d131b07806f19a83772af98f8d1c946d3e54",
+    "source/provider/packages/alg/src/exec/sha256.ts": "6e0165aab586c80b1e503e3bc7cce0e17720a1c879c330dac1f3106ac3a0f6fa",
+    "source/provider/packages/alg/src/detectors/threeFactor/assignment.ts": "2f56a606fce6543ca96bcd1a1b2300af4e2ce0c29f2c27fd9378bc76f065946e",
+    "source/provider/packages/alg/src/detectors/threeFactor/features/types.ts": "c171463dea8a4ac16b23199d51686b260811148940107f80e76d40efdb1915a7",
+    "source/provider/packages/alg/src/detectors/threeFactor/hash.ts": "55c3d59326119fc102764e0694f4a9e4d6c94343719e57bd382b4ce7377a93de"
+  },
+  "direct_compiled_pins": [
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/types.js",
+      "sha256": "17a52ed479d06ec823b9e963fd8635559cc6c85fac3859f7c18693b4367dc3dd",
+      "size": 2887
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/hash.js",
+      "sha256": "65a56ca1a75fc11194613b4e8e03cdf25c42c45df670e3d5477e5a5245fc7f94",
+      "size": 1160
+    },
+    {
+      "path": "source/provider/packages/alg/dist/exec/board.js",
+      "sha256": "0849480a10add759328b41f23ad77f3eeae75f69ed8a15affaf94bb570702716",
+      "size": 3723
+    },
+    {
+      "path": "source/provider/packages/alg/dist/exec/gateway.js",
+      "sha256": "8c4652362d9739316b80dbd3f23dc595d8ff532d5ac9e8d11637df30d8915c97",
+      "size": 7399
+    },
+    {
+      "path": "source/provider/packages/alg/dist/exec/operations.js",
+      "sha256": "98e0d01066ef07948e6cf92b9a3e5f10fede36c83789ab8d44c11b5a84bece54",
+      "size": 38945
+    },
+    {
+      "path": "source/provider/packages/alg/dist/exec/pcr.js",
+      "sha256": "a1fcd9d7d27cedc2e4f9f74d4fcc6825347e23c36f62828ea98bbf9fb75e1ddd",
+      "size": 2523
+    },
+    {
+      "path": "source/provider/packages/alg/dist/exec/sha256.js",
+      "sha256": "499da2aaa1e2a657eea4a020badc585dad026b9731bfec89282a9da35e6dc07a",
+      "size": 4869
+    },
+    {
+      "path": "source/provider/packages/alg/dist/exec/sink.js",
+      "sha256": "a840ab8b7808da678d7defc91aad21a7a7ead7a2e183f0dc278dc8d50edd9552",
+      "size": 1799
+    }
+  ],
+  "limitations": [
+    "This text scanner is not a full JavaScript parser. All discovered calls were literal local requires; no missing or external edge was found, but runtime import remains a separate unperformed gate.",
+    "Manual correspondence covers the exact protocol-relevant behaviors listed, not proof that all dist files were freshly compiled from all source files.",
+    "No Node producer imports, tests, native/CV/image/pixel/decode work, network, installs, rebuilds, or native/canonical receipt writes occurred. Only owned S3/E4408 scratch artifacts were written.",
+    "If a later authorized import fails due to module resolution, top-level initialization, assets, or another dependency, stop and report the first error; this audit is not authorization to install/rebuild/patch/substitute."
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "job_id": "E4412",
+  "worker": "S1",
+  "outcome": "confirmed_reuse",
+  "summary": "ONE unchanged bridge capture passed4/4, then ONE explicit four-file regression passed14/14 actual cases, both exit0/direct stderr0B. Complete ordered losing alternatives changed real artifact/PCR identity A/B/A2 while winner IDs stayed fixed; restored A matched exact bytes/hash/PCR, full raw/factors matched independent oracle, OFF-after stayed artifact-free with original PCR, and winner-only real-sink projection was rejected by the same alternative-change oracle. All reviewed source pins and448 dependency pins remained unchanged; actual67 required CJS modules exactly match S3 static closure. No source edits, packaging or Git/native/canonical receipt mutation. Independent S2 validation is separate and pending here.",
+  "green": {
+    "directory": "/workspace/scratch/86659bbafcce/lab14/S1/E4412/green",
+    "capture_count": 1,
+    "tests": 4, "pass": 4, "fail": 0, "exit_code": 0,
+    "direct_stdout_bytes": 522, "direct_stderr_bytes": 0,
+    "source_pins_unchanged": true, "dependency_postflight_error": null,
+    "actual_required_modules": 67,
+    "required_module_paths_and_hashes_match_S3_static_closure": true,
+    "execution_json_sha256": "f1a1d768f07116b184a2f581e276408ebd1e29908535ff800722fbf691e335ed",
+    "runtime_json_sha256": "e6fad368a603a7f1ed0f441807e8dfd7a864bc022972dc66c800b558330fcaab",
+    "stdout_sha256": "cafcfa8359525a31d2df36b62eb5ebcf2582f240da8e4d4c79a72bd02a42446d",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "regression": {
+    "directory": "/workspace/scratch/86659bbafcce/lab14/S1/E4412/regression",
+    "capture_count": 1,
+    "tests": 14, "pass": 14, "fail": 0, "exit_code": 0,
+    "count_note": "Actual14 = unchanged old10 + new4, not independently additive imported cases and not20. No broad suite/glob was run.",
+    "argv": ["--test", "experiments/capability-discovery/ranked-evidence/integration.test.mjs", "experiments/capability-discovery/enumerable-board/board.test.mjs", "experiments/capability-discovery/isolated-batch/recipe.test.mjs", "experiments/capability-discovery/isolated-batch/same-answer.test.mjs"],
+    "arm": "bridge",
+    "direct_stdout_bytes": 58797, "direct_stderr_bytes": 0,
+    "source_pin_count": 17, "source_pins_unchanged": true, "dependency_postflight_error": null,
+    "execution_json_sha256": "616aec1fbcd9d632076b8477606a43826b3e9c5500d0249896cc2d5fb426e61c",
+    "runtime_json_sha256": "16b3b7922da98ebdb2b3b43e803b416562551d694901217409b1640fe7eb4e92",
+    "stdout_sha256": "869e3c504460cc81a8e528ffee04a3bfc72256a5b624903af94608510c322e4e",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "capture_tooling": "One inline Node tooling wrapper, exact process.execArgv retained in execution.json; one spawnSync, exclusive raw writes, timeout20s/max5MiB, before/after source/dependency verification. No repository script was edited."
+  },
+  "observed": {
+    "artifact_sha256_A_B_A2": ["35e426e6edbcddad6e048e526a2e6a0ed6c6d90a8d9cdedcc00479811f64be3e", "5d3b921b08ae7be8e5fdd0d4d35cb386e64fa03f527329661f5eb513ab1c64a3", "35e426e6edbcddad6e048e526a2e6a0ed6c6d90a8d9cdedcc00479811f64be3e"],
+    "pcr_runResultId_A_B_A2": ["889dbad132f77dde27a2546ef9827e03acdefb35946031ba554b7eaa0783b500", "d637786ff5803fe9c14a3eb61a7f3231a5bbcb9a737d7daf013981fc6a645427", "889dbad132f77dde27a2546ef9827e03acdefb35946031ba554b7eaa0783b500"],
+    "group_order": ["fixture-badge-a", "fixture-badge-b"],
+    "badge_a_order_A_A2": ["fixture-a1", "fixture-a3", "fixture-a2"],
+    "badge_a_order_B": ["fixture-a1", "fixture-a2", "fixture-a3"],
+    "unchanged_winners_all_phases": ["fixture-a1", "fixture-b1"],
+    "off_after_artifact_counts": [0, 0, 0],
+    "off_after_pcr_all_phases": "b1adff684197df15d99da3085164fbcf01718b8774746e10903243c3092ae2f9",
+    "winner_only_artifact_sha_all_phases": "def91c02a1df75e2ffa68afbe06fd79b9fc2d62cbab8117486c2629baed42802",
+    "winner_only_pcr_all_phases": "868e41500f9aefe6be64e93554ffe953937473f0d13a08135d42f215671da5b1",
+    "winner_only_shared_oracle_rejected": true
+  },
+  "source_sha256": {
+    "adapter.mjs": "a87140d62dc4a9d8ae844640486f766b8a32f8dc41806bc16b603832f48014ff",
+    "fixture.mjs": "eec0a017df87dbf99d4e36bb94d32cc16df43119a5fade88da0490ec3ddd8219",
+    "integration.test.mjs": "904a1403c034ca5cbcdb0db5e11b5ff9f73a850a4878c040330c24dc1b24aa57",
+    "capture.mjs": "c52809216af9fde77ac9a0a5e5238b54dead6159e872fc864aea05f4fc103046",
+    "README.md": "1ab7afc2b029a51b2639ee2544178f30bade7ed5c57c8303edecc8a3e8587728"
+  },
+  "dependency_manifest_sha256": "b0094d7dae7171370cc1aa4c8b62f7034472d1e5cfdeaa20f56a58e7441fc324",
+  "scope": "Bounded actual ranking-operation consumer integration over fabricated complete finite JSON-safe rows. No new ranker, selected ownership/endpoint truth/science/performance/native image input collision claim. No scoring/routing/selection/CV/pixel/original query/decode/image access, install/rebuild/provider/default/other-owner edits. Original pixel/44-query HOLD unchanged.",
+  "next_gate": "STOP source edits/packaging/Git; independent exact-candidate validation and root acceptance"
+}

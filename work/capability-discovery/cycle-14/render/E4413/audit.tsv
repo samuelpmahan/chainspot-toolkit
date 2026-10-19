@@ -1,0 +1,28 @@
+E4413 S6 CAPTURED-DATA AUDIT PASS
+No rerank, provider imports, producer execution, PCR recomputation or CV.
+capture	label	artifact bytes	artifact SHA256	PCR runResultId	rows (pair:score:support:rank)
+baseline	off-control-A	0	ABSENT	b1adff684197df15d99da3085164fbcf01718b8774746e10903243c3092ae2f9	fixture-a1:0.9:0.5:1 | fixture-a3:0.6:0.8:2 | fixture-a2:0.6:0.4:3 | fixture-b1:0.8:0.5:1
+baseline	off-control-B	0	ABSENT	b1adff684197df15d99da3085164fbcf01718b8774746e10903243c3092ae2f9	fixture-a1:0.9:0.5:1 | fixture-a2:0.65:0.4:2 | fixture-a3:0.6:0.8:3 | fixture-b1:0.8:0.5:1
+baseline	off-control-A2	0	ABSENT	b1adff684197df15d99da3085164fbcf01718b8774746e10903243c3092ae2f9	fixture-a1:0.9:0.5:1 | fixture-a3:0.6:0.8:2 | fixture-a2:0.6:0.4:3 | fixture-b1:0.8:0.5:1
+baseline	desired-baseline-A	0	ABSENT	b1adff684197df15d99da3085164fbcf01718b8774746e10903243c3092ae2f9	fixture-a1:0.9:0.5:1 | fixture-a3:0.6:0.8:2 | fixture-a2:0.6:0.4:3 | fixture-b1:0.8:0.5:1
+baseline	desired-baseline-B	0	ABSENT	b1adff684197df15d99da3085164fbcf01718b8774746e10903243c3092ae2f9	fixture-a1:0.9:0.5:1 | fixture-a2:0.65:0.4:2 | fixture-a3:0.6:0.8:3 | fixture-b1:0.8:0.5:1
+baseline	desired-baseline-A2	0	ABSENT	b1adff684197df15d99da3085164fbcf01718b8774746e10903243c3092ae2f9	fixture-a1:0.9:0.5:1 | fixture-a3:0.6:0.8:2 | fixture-a2:0.6:0.4:3 | fixture-b1:0.8:0.5:1
+baseline	winner-only-A	1539	def91c02a1df75e2ffa68afbe06fd79b9fc2d62cbab8117486c2629baed42802	868e41500f9aefe6be64e93554ffe953937473f0d13a08135d42f215671da5b1	fixture-a1:0.9:0.5:1 | fixture-a3:0.6:0.8:2 | fixture-a2:0.6:0.4:3 | fixture-b1:0.8:0.5:1
+baseline	winner-only-B	1539	def91c02a1df75e2ffa68afbe06fd79b9fc2d62cbab8117486c2629baed42802	868e41500f9aefe6be64e93554ffe953937473f0d13a08135d42f215671da5b1	fixture-a1:0.9:0.5:1 | fixture-a2:0.65:0.4:2 | fixture-a3:0.6:0.8:3 | fixture-b1:0.8:0.5:1
+baseline	winner-only-A2	1539	def91c02a1df75e2ffa68afbe06fd79b9fc2d62cbab8117486c2629baed42802	868e41500f9aefe6be64e93554ffe953937473f0d13a08135d42f215671da5b1	fixture-a1:0.9:0.5:1 | fixture-a3:0.6:0.8:2 | fixture-a2:0.6:0.4:3 | fixture-b1:0.8:0.5:1
+bridge	off-control-A	0	ABSENT	b1adff684197df15d99da3085164fbcf01718b8774746e10903243c3092ae2f9	fixture-a1:0.9:0.5:1 | fixture-a3:0.6:0.8:2 | fixture-a2:0.6:0.4:3 | fixture-b1:0.8:0.5:1
+bridge	off-control-B	0	ABSENT	b1adff684197df15d99da3085164fbcf01718b8774746e10903243c3092ae2f9	fixture-a1:0.9:0.5:1 | fixture-a2:0.65:0.4:2 | fixture-a3:0.6:0.8:3 | fixture-b1:0.8:0.5:1
+bridge	off-control-A2	0	ABSENT	b1adff684197df15d99da3085164fbcf01718b8774746e10903243c3092ae2f9	fixture-a1:0.9:0.5:1 | fixture-a3:0.6:0.8:2 | fixture-a2:0.6:0.4:3 | fixture-b1:0.8:0.5:1
+bridge	desired-bridge-A	2949	35e426e6edbcddad6e048e526a2e6a0ed6c6d90a8d9cdedcc00479811f64be3e	889dbad132f77dde27a2546ef9827e03acdefb35946031ba554b7eaa0783b500	fixture-a1:0.9:0.5:1 | fixture-a3:0.6:0.8:2 | fixture-a2:0.6:0.4:3 | fixture-b1:0.8:0.5:1
+bridge	desired-bridge-B	2950	5d3b921b08ae7be8e5fdd0d4d35cb386e64fa03f527329661f5eb513ab1c64a3	d637786ff5803fe9c14a3eb61a7f3231a5bbcb9a737d7daf013981fc6a645427	fixture-a1:0.9:0.5:1 | fixture-a2:0.65:0.4:2 | fixture-a3:0.6:0.8:3 | fixture-b1:0.8:0.5:1
+bridge	desired-bridge-A2	2949	35e426e6edbcddad6e048e526a2e6a0ed6c6d90a8d9cdedcc00479811f64be3e	889dbad132f77dde27a2546ef9827e03acdefb35946031ba554b7eaa0783b500	fixture-a1:0.9:0.5:1 | fixture-a3:0.6:0.8:2 | fixture-a2:0.6:0.4:3 | fixture-b1:0.8:0.5:1
+bridge	off-after-bridge-A	0	ABSENT	b1adff684197df15d99da3085164fbcf01718b8774746e10903243c3092ae2f9	fixture-a1:0.9:0.5:1 | fixture-a3:0.6:0.8:2 | fixture-a2:0.6:0.4:3 | fixture-b1:0.8:0.5:1
+bridge	off-after-bridge-B	0	ABSENT	b1adff684197df15d99da3085164fbcf01718b8774746e10903243c3092ae2f9	fixture-a1:0.9:0.5:1 | fixture-a2:0.65:0.4:2 | fixture-a3:0.6:0.8:3 | fixture-b1:0.8:0.5:1
+bridge	off-after-bridge-A2	0	ABSENT	b1adff684197df15d99da3085164fbcf01718b8774746e10903243c3092ae2f9	fixture-a1:0.9:0.5:1 | fixture-a3:0.6:0.8:2 | fixture-a2:0.6:0.4:3 | fixture-b1:0.8:0.5:1
+bridge	winner-only-A	1539	def91c02a1df75e2ffa68afbe06fd79b9fc2d62cbab8117486c2629baed42802	868e41500f9aefe6be64e93554ffe953937473f0d13a08135d42f215671da5b1	fixture-a1:0.9:0.5:1 | fixture-a3:0.6:0.8:2 | fixture-a2:0.6:0.4:3 | fixture-b1:0.8:0.5:1
+bridge	winner-only-B	1539	def91c02a1df75e2ffa68afbe06fd79b9fc2d62cbab8117486c2629baed42802	868e41500f9aefe6be64e93554ffe953937473f0d13a08135d42f215671da5b1	fixture-a1:0.9:0.5:1 | fixture-a2:0.65:0.4:2 | fixture-a3:0.6:0.8:3 | fixture-b1:0.8:0.5:1
+bridge	winner-only-A2	1539	def91c02a1df75e2ffa68afbe06fd79b9fc2d62cbab8117486c2629baed42802	868e41500f9aefe6be64e93554ffe953937473f0d13a08135d42f215671da5b1	fixture-a1:0.9:0.5:1 | fixture-a3:0.6:0.8:2 | fixture-a2:0.6:0.4:3 | fixture-b1:0.8:0.5:1
+Baseline exit1: desired full ranking materialization absent (0 !== 1); 3/4 pass.
+Green exit0: 4/4 pass. Broader E4412 regressions are outside this audit.
+OFF equal opaque identity is documented PCR scope, not a native-input collision or ranking bug.
+Winner-only keeps real hashes but drops losers; negative control is not a production repair.

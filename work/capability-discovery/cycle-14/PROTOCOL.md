@@ -1,0 +1,13 @@
+# Lab14 selected bounded experiment
+
+Base local f68b731e1050c2cfbab5b065f8f01768dfda4f19; connected d11ac8810f53d32c4ac6a01c7a64862fd8285ec5. Integration owner S1 only. S2 independent acceptance; S3 static dependency closure. Six actual Sol6.1/high source packets informed selection.
+
+Select S6/E4406's exact four-row fabricated loser-change A/B/A oracle, not S3's earlier winner-change alternative. Reuse actual frozen CommonJS assignment.ranking through executeCompiledPlan, actual bindings and createMemorySink. One-op fixed synthetic plan/params explicitly does not identify native image input. No installs/rebuilds/other-owner imports.
+
+Test-first desired capability: full ordered alternatives must reach a content artifact and PCR identity. Existing no-extractor baseline's opaque-output identity equality is documented limitation, NOT a core defect. Preserve baseline raw result. Only after actual missing-artifact assertion fails may S1 add a serialization-only opt-in extractor. Do not change rank/selection/math/provider/defaults. Preserve all complete JSON-safe rows/raw/factors, Map group and row order, ranks; no reranking. Winner-only control must fail the same losing-alternative identity check. OFF behavior stays baseline; A/B/A ranking values must agree between baseline and ON. Empty/single/ties/missing-input boundaries are FIRSTGREEN unless independently observed failing.
+
+Before imports: freeze actual fixture/test and exact static dependency pins; independent source review and root actual-flow checkpoint. Runtime first-failure stops on unavailable dependencies or source mismatch, retaining raw stderr. No substitutions. Capture command, times, exit/stdout/stderr, content artifacts, testimony/PCR and actual required modules. Evidence values are not geometry truth or held-out science.
+
+After execution: different worker falsifies exact candidate and provenance; meaningful regression preserves old Lab11/12/13 cases. Visual/CLI views consume frozen artifact/trace, never recompute ranks/scores. Source-only findings remain separate from executed evidence. Package one manifest+raw evidence+CURRENT; no copied prior archives. Ordinary scoped commit and connected branch publication after root preservation audit. No main/defaultON/release/deploy or HH changes.
+
+Guards: missing source/import closure -> retained HOLD and choose ready source work; actual behavior failure -> bounded correction and different reviewer; supported full-row bridge -> independent validation and only then review checkpoint. Original pixels/44 queries remain HOLD. No matched allocation baseline or speedup claim.

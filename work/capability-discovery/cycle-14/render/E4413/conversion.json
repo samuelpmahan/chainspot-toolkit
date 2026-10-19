@@ -1,0 +1,40 @@
+{
+  "schema": "lab14-e4413-conversion-provenance@1",
+  "job_id": "E4413",
+  "worker": "S6",
+  "input_svg_sha256": "4beeac70d13eba978b0ae586691d90aabc582abb2591acf15d8b4fd807853413",
+  "attempts": [
+    {
+      "order": 1,
+      "argv": ["convert", "-background", "none", "/workspace/scratch/86659bbafcce/lab14/S6/E4413/view.svg", "/workspace/scratch/86659bbafcce/lab14/S6/E4413/view.png"],
+      "cwd": "/workspace/scratch/86659bbafcce/lab14/S6/E4413",
+      "exitCode": 1,
+      "combined_tool_output": "conversion-failure.txt",
+      "stdout_separate": null,
+      "stderr_separate": null,
+      "stream_custody_limitation": "exec_command returned one combined output string; separate stdout/stderr were not captured, and are not reconstructed or asserted.",
+      "result": "missing configured rsvg-convert delegate; no PNG created",
+      "subsequent_view_image": "failed because PNG did not exist; no image content inspected on this attempt"
+    },
+    {
+      "order": 2,
+      "argv": ["node", "/workspace/scratch/86659bbafcce/lab14/S6/E4413/render-png.mjs"],
+      "cwd": "/workspace/scratch/86659bbafcce/lab14/S6/E4413",
+      "renderer_source_sha256": "36195538e1a225e643bf19d029763374a5194bf860330c32b8890bab044c3d89",
+      "dependency": "Existing installed runtime sharp at /opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/sharp; no install or dependency mutation",
+      "exitCode": 0,
+      "combined_tool_output": "",
+      "stdout_separate": null,
+      "stderr_separate": null,
+      "result": "view.png created from exact generated view.svg",
+      "png_sha256": "7f35a322b98f8df7741a79bceab85769d2e9b3e271f6517a4fe96c4f7ab2bdd2",
+      "png_bytes": 147947,
+      "png_width": 1400,
+      "png_height": 700,
+      "view_image_inspected": true,
+      "inspection": "All three A/B/A2 cards, four rows each, score/support/rank columns, identity prefixes, baseline/winner-only labels and scope footer legible; no clipping observed."
+    }
+  ],
+  "timestamps": "Per-process timestamps were not separately captured; tool call order and exit codes retained without inventing times.",
+  "scope": "Generated metadata SVG rasterization only. No original images, pixel/CV analysis, provider imports, producer rerun, rank or PCR recomputation."
+}

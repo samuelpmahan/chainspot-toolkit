@@ -1,0 +1,39 @@
+{
+  "schema": "lab14-ranked-evidence-regression@1",
+  "executable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+  "nodeVersion": "v24.19.0",
+  "argv": [
+    "--test",
+    "experiments/capability-discovery/ranked-evidence/integration.test.mjs",
+    "experiments/capability-discovery/enumerable-board/board.test.mjs",
+    "experiments/capability-discovery/isolated-batch/recipe.test.mjs",
+    "experiments/capability-discovery/isolated-batch/same-answer.test.mjs"
+  ],
+  "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+  "startUTC": "2026-10-19T12:07:50.582Z",
+  "endUTC": "2026-10-19T12:07:50.867Z",
+  "timeoutMs": 20000,
+  "maxBufferBytesPerStream": 5242880,
+  "exitCode": 0,
+  "signal": null,
+  "error": null,
+  "sourcePinsUnchanged": true,
+  "sourcePinCount": 17,
+  "postflightError": null,
+  "dependencyManifest": "/workspace/scratch/86659bbafcce/lab14/S1/E4407/dependencies.before.json",
+  "dependencyManifestSha256": "b0094d7dae7171370cc1aa4c8b62f7034472d1e5cfdeaa20f56a58e7441fc324",
+  "arm": "bridge",
+  "runnerExecArgv": [
+    "--input-type=module",
+    "-e",
+    "import { spawnSync } from \"node:child_process\";\nimport { mkdirSync, readFileSync, writeFileSync, statSync } from \"node:fs\";\nimport { createHash } from \"node:crypto\";\nimport { resolve } from \"node:path\";\nconst root = \"/workspace/scratch/8528bb251845/chainspot-discovery-lab\";\nconst out = \"/workspace/scratch/86659bbafcce/lab14/S1/E4412/regression\";\nprocess.env.LAB14_DEPENDENCY_MANIFEST = \"/workspace/scratch/86659bbafcce/lab14/S1/E4407/dependencies.before.json\";\nprocess.env.LAB14_DEPENDENCY_MANIFEST_SHA256 = \"b0094d7dae7171370cc1aa4c8b62f7034472d1e5cfdeaa20f56a58e7441fc324\";\nconst { verifyDependencies } = await import(\"./experiments/capability-discovery/ranked-evidence/fixture.mjs\");\nverifyDependencies();\nmkdirSync(out);\nconst write = (name, bytes) => writeFileSync(resolve(out, name), bytes, { flag: \"wx\" });\nconst sha = bytes => createHash(\"sha256\").update(bytes).digest(\"hex\");\nconst argv = [\"--test\",\n\"experiments/capability-discovery/ranked-evidence/integration.test.mjs\",\n\"experiments/capability-discovery/enumerable-board/board.test.mjs\",\n\"experiments/capability-discovery/isolated-batch/recipe.test.mjs\",\n\"experiments/capability-discovery/isolated-batch/same-answer.test.mjs\"];\nconst files = [...argv.slice(1),\n...[\"adapter.mjs\",\"fixture.mjs\",\"capture.mjs\",\"README.md\"].map(name => \"experiments/capability-discovery/ranked-evidence/\" + name),\n\"experiments/capability-discovery/isolated-batch/recipe.mjs\",\n\"experiments/capability-discovery/enumerable-board/board.mjs\",\n...[\"fg/store.mjs\",\"fg/canon.mjs\",\"fg/pxset.mjs\",\"fg/render.mjs\",\"fg/png.mjs\",\"fg/alpha/alphaRender.mjs\",\"contracts/alpha.profile@1.mjs\"].map(name => \"experiments/capability-discovery/probes/root-inventory/source/\" + name)];\nconst pins = () => files.map(path => { const bytes = readFileSync(resolve(root,path)); return { path, sha256:sha(bytes), bytes:bytes.length, mode:statSync(resolve(root,path)).mode & 0o777 }; });\nconst before=pins();\nwrite(\"source-pins.before.json\",JSON.stringify(before,null,2)+\"\\n\");\nconst startUTC=new Date().toISOString();\nconst child=spawnSync(process.execPath,argv,{cwd:root,encoding:null,timeout:20000,maxBuffer:5*1024*1024,env:{...process.env,LAB14_RANKED_ARM:\"bridge\",LAB14_RUNTIME_REPORT:resolve(out,\"runtime.json\")}});\nconst endUTC=new Date().toISOString();\nwrite(\"stdout.txt\",child.stdout??Buffer.alloc(0));\nwrite(\"stderr.txt\",child.stderr??Buffer.alloc(0));\nconst after=pins();\nwrite(\"source-pins.after.json\",JSON.stringify(after,null,2)+\"\\n\");\nlet postflightError=null;\ntry { verifyDependencies(); } catch(error) {postflightError=error.message;}\nconst metadata={schema:\"lab14-ranked-evidence-regression@1\",executable:process.execPath,nodeVersion:process.version,argv,cwd:root,startUTC,endUTC,timeoutMs:20000,maxBufferBytesPerStream:5*1024*1024,exitCode:child.status,signal:child.signal,error:child.error?.message??null,sourcePinsUnchanged:JSON.stringify(before)===JSON.stringify(after),sourcePinCount:before.length,postflightError,dependencyManifest:process.env.LAB14_DEPENDENCY_MANIFEST,dependencyManifestSha256:process.env.LAB14_DEPENDENCY_MANIFEST_SHA256,arm:\"bridge\",runnerExecArgv:process.execArgv,stdout:{bytes:child.stdout?.length??0,sha256:sha(child.stdout??Buffer.alloc(0))},stderr:{bytes:child.stderr?.length??0,sha256:sha(child.stderr??Buffer.alloc(0))}};\nwrite(\"execution.json\",JSON.stringify(metadata,null,2)+\"\\n\");\nconsole.log(JSON.stringify({...metadata,runnerExecArgv:\"retained in execution.json\"}));\nprocess.exitCode=metadata.sourcePinsUnchanged&&!postflightError?(child.status??1):1;"
+  ],
+  "stdout": {
+    "bytes": 58797,
+    "sha256": "869e3c504460cc81a8e528ffee04a3bfc72256a5b624903af94608510c322e4e"
+  },
+  "stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

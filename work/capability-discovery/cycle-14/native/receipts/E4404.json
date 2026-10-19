@@ -1,0 +1,65 @@
+{
+  "job_id": "E4404",
+  "worker": "S4",
+  "outcome": "insufficient_evidence",
+  "summary": "Source-only consumer gap identified: the pinned original loader builds an addresses-only deserialized board, then instrumentedStore forwards it unchanged to the frozen store. Lab11 proves a synthetic adapter, Lab12/13 prove six isolated byte-sum leaves and lineage, but none proves wiring that adapter at this loader/profiler boundary or transporting a loader-produced structured Part. No execution occurred; a smallest fabricated seam/control proposal is prospective and repeats no new cache-mechanism claim.",
+  "scope": {
+    "mode": "read-only repository/source/evidence discovery",
+    "repository": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "head": "f68b731e1050c2cfbab5b065f8f01768dfda4f19",
+    "owned_output": "/workspace/scratch/86659bbafcce/lab14/S4/E4404/result.json",
+    "imports_tests_producer_execution": 0,
+    "source_git_native_canonical_receipt_writes": 0,
+    "network_subagents_new_dependencies": 0,
+    "image_or_large_rgba_data_opened": false
+  },
+  "findings": [
+    {
+      "claim": "Actual preserved consumer seam, not an invented loader-shaped abstraction",
+      "evidence": "source-evidence/s4-run.mjs lines 57-58 deserialize s3.pxc.bin entries into a Map, then return frozen {has,get,addresses} without keys(); lines 149-150 pass loaded.board as instrumentedStore base and add loaded.values as constant lane outputs. profile.mjs lines 23-25 forward base unchanged to createPartStore.",
+      "qualification": "The root-inventory source-identities manifest attributes this exact snapshot to ports/s4recover/run.mjs at platform ref 49255331791b1245cf0f9cd699816175f94e70f2. It is historical source evidence, not current original-owner execution or integration permission."
+    },
+    {
+      "claim": "Exact fallback explains the known stale-key seam",
+      "evidence": "Frozen store.mjs lines 259-267 add provider roots only through b.keys(); line 415 adds rootsKey to any outPart-producing Calculation with nonempty calls. registerQueries lines 188-200 resolves string references through store.get without query inParts.",
+      "qualification": "Addresses alone are not enumerated by this store. Complete enumerableBoard makes those roots visible but retains broad invalidation; isolatedBatch obtains selective reuse by fresh single-root stores, not query dependency tracking."
+    },
+    {
+      "claim": "Prior observed failures and controls already cover the enumeration mechanism",
+      "evidence": "Lab11 E4105 baseline.execution.json records one exit1 with Map 1->9->1 and loader stale1 on changed9, different source key but unchanged dependent key/hit and query0. R4105 accepts six synthetic adapter tests. Root-inventory README also records earlier synthetic byte-array false-reuse falsifiers, complete Map/keys working controls, and the warning that changed constants can incidentally separate courses.",
+      "qualification": "Do not rerun or rename these as a new RED, native defect, or novel cache repair."
+    },
+    {
+      "claim": "Concrete missing consumer contract beyond scalar/six-sum tests",
+      "evidence": "enumerableBoard tests construct boards in memory; isolatedBatch accepts exactly six ordinary Uint8Array snapshots and emits scalar sums plus four-field lineage bridges. Lab13 adds same-answer permutation lineage only. None follows the loader's deserialize->addresses-only-board->instrumentedStore route with a fabricated structured provider Part plus unchanged constant lane outputs.",
+      "qualification": "That is a bounded integration/producer-shape gap, not evidence the adapter fails there. The six-Uint8Array recipe cannot simply receive loaded.board; no source here establishes a semantically correct native bridge or authoritative complete inventory."
+    }
+  ],
+  "prospective_smallest_probe": {
+    "status": "proposal only; no source written, imported or executed",
+    "purpose": "Verify a fabricated serialized-record producer reaches the exact existing profile/store seam with enumeration and Part content intact. Reuse the enumeration mechanism; do not market an additional algebra/property test as a new capability.",
+    "producer": "In a separate authorized scratch harness, create two tiny non-image Part entries and perform a node:v8 serialize/deserialize round trip. One is a structured packet {tag:'packet-A', payload:Uint8Array([1,2])}; the other is an unchanged declared no-calls control. Construct the exact preserved loader facade {has,get,addresses} over the resulting Map, without importing or invoking the original loader. Add one unchanged fabricated lane-output constant via store.constant, matching the consumer's boundary shape.",
+    "consumer": "Use existing instrumentedStore with one allowlisted synthetic unitful query reading only packet fields, and one outPart-producing synthetic caller declaring that query. Return a structured {tag, first} value rather than another sum or six-input aggregate. Keep functions, addresses, salt, constants and cache fixed across fresh immutable packet payload snapshots [1,2]->[9,2]->[1,2].",
+    "working_controls": [
+      "Independent-cache complete Map arm using the same deserialized entries and instrumentedStore.",
+      "Independent-cache enumerableBoard(loaderFacade) arm using the same exact provider entries and instrumentedStore.",
+      "One explicitly declared no-calls fixed-Part control in each arm; leave lane-output constants identical so they cannot mask missing board-root keys."
+    ],
+    "comparison_arm": "Unwrapped addresses-only facade; prospective source prediction is stale packet first field on change, matching prior enumeration evidence. This is not a new observed failure.",
+    "minimal_assertions": "Compare structured result, provider content key, consumer key/cache flag and synthetic query call count across initial/change/restore; complete Map and wrapped facade must agree, restore must reuse. Check deserialized Part identity is forwarded by the wrapper and input bytes remain unchanged. No six-leaf locality or equal-answer permutation repetition is needed.",
+    "exclusions": "No real snapshot, original image/query/CV, recovery calculations, planner, browser, producer receipt invention, native integration, other-owner source adoption, root inventory authority claim, performance or production/default change. Fabricated completeness is supplied by the fixture, not inferred from keys()."
+  },
+  "source_identities": [
+    {"path":"experiments/capability-discovery/probes/root-inventory/source-evidence/s4-run.mjs","sha256":"d75b516f1a414adf050e4fd4c740110160d6331d3b6e9092bcfb9e2c90295166","original_path":"ports/s4recover/run.mjs","platform_ref":"49255331791b1245cf0f9cd699816175f94e70f2"},
+    {"path":"experiments/capability-discovery/probes/root-inventory/source/fg/profile.mjs","sha256":"bf0247e7cefb883ceccb2337bf9e8fc1099dc1be13ee7b46d1fe47ec29fbcbc8","git_blob":"2ec725a323a8c47129724aeedd93c46f03b0c6d9"},
+    {"path":"experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs","sha256":"122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074","git_blob":"8ec5aec1959af6282d3a3feda37ab534be9f14d2"},
+    {"path":"experiments/capability-discovery/enumerable-board/board.mjs","sha256":"66cc93a4e742fa8ed9b3cfcba94d0d936bf73c907007c21f1e7af59061e62ad5"},
+    {"path":"experiments/capability-discovery/enumerable-board/board.test.mjs","sha256":"86ea244841fb47feee1fcdfe6d0b1be8b1b194dbf5f7ab11a3e8afde854cd1ef"},
+    {"path":"experiments/capability-discovery/isolated-batch/recipe.mjs","sha256":"05182d53c3b03cce77b7601e0b14d8ff534462b63838651850c72316066b572f"},
+    {"path":"experiments/capability-discovery/isolated-batch/recipe.test.mjs","sha256":"0bace347bd8c6132144b44b87cc22c494fd5179cf628b114a0ff0181514bad79"},
+    {"path":"experiments/capability-discovery/isolated-batch/same-answer.test.mjs","sha256":"fd25e9476005a81340041c8cbd0c4fb46d36a98a9d26f43f0fd0c36d883b65a3"},
+    {"path":"work/capability-discovery/cycle-11/evidence/E4105/baseline.execution.json","sha256":"ade38b0048e798df22721f8b01e9a62e85fba9b1a5bb7edef97207675ae0b7fd"},
+    {"path":"work/capability-discovery/cycle-12/CURRENT.md","sha256":"ea3f48c3c7995c72f46cb8ed2f5b6bb5cc31dff7d7d66f24b6077783aa4b1273"},
+    {"path":"work/capability-discovery/cycle-13/CURRENT.md","sha256":"2c4f857b73aa290c06fba5bd36ae4279fccc753357c44f93eda2f2d4b67a54e4"}
+  ]
+}

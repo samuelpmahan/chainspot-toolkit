@@ -1,0 +1,60 @@
+{
+  "job_id": "E4411",
+  "worker": "S1",
+  "outcome": "mixed_change",
+  "summary": "ONE reviewed baseline capture observed the intended missing-consumer-evidence RED: four tests, three pass, one failure specifically desired full ranking materialization is absent (actual0 expected1), exit1, direct stderr0B. Exact ranking/full-row/unchanged-winner and real-sink winner-only falsifier controls passed. All source/dependency checks passed; actual67 required modules match S3 static closure paths/hashes exactly. Only after that failure, added minimal serialization-only default-OFF adapter.mjs; original fixture/test/capture/README remain byte-identical. No GREEN run or adapter import yet. STOP for exact adapter source review/root checkpoint.",
+  "baseline": {
+    "directory": "/workspace/scratch/86659bbafcce/lab14/S1/E4411/baseline",
+    "capture_count": 1,
+    "exit_code": 1,
+    "tests": 4,
+    "pass": 3,
+    "fail": 1,
+    "failure": "AssertionError: desired full ranking materialization is absent; actual0 expected1; fixture.mjs:145",
+    "classification": "Missing consumer materialization capability, not a native ranking/core defect or real image input collision",
+    "start_utc": "2026-10-19T12:03:55.347Z",
+    "end_utc": "2026-10-19T12:03:55.637Z",
+    "source_pins_unchanged": true,
+    "dependency_postflight_error": null,
+    "direct_stderr_bytes": 0,
+    "actual_required_modules": 67,
+    "required_module_paths_and_hashes_match_S3_static_closure": true,
+    "execution_json_sha256": "24a263a822898319c7d2459f097058cd4fa1a33ed1906f3d05e4219839d70af0",
+    "runtime_json_sha256": "6a4b14851db0c671f6dbcbd99b0a8bbdadd272d715ce92d2b8ceef6cd6058ab3",
+    "stdout_sha256": "3375848d932a89da41f92328014e329569d17a22a29b56ce648f1f71bc8c529d",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "off_pcr_all_phases": "b1adff684197df15d99da3085164fbcf01718b8774746e10903243c3092ae2f9",
+    "winner_only_pcr_all_phases": "868e41500f9aefe6be64e93554ffe953937473f0d13a08135d42f215671da5b1"
+  },
+  "adapter": {
+    "path": "experiments/capability-discovery/ranked-evidence/adapter.mjs",
+    "sha256": "a87140d62dc4a9d8ae844640486f766b8a32f8dc41806bc16b603832f48014ff",
+    "entry": "withRankedEvidence(native.runtime, { enabled: true })",
+    "flow": [
+      "Omitted/false/nontrue enablement returns the exact original runtime.",
+      "Explicit true returns a shallow runtime copy with only a copied extractor table and one assignment.ranking extractor override.",
+      "Existing actual gateway first runs unchanged ranking; extractor then reads its produced assignment.rankedByBadge Map.",
+      "Traverse Map insertion order; retain each existing full ordered rows array; JSON.stringify copies schema/groups/all complete raw/factors/score/rank into UTF-8 bytes without sorting, reranking or mutation.",
+      "Return one candidateSet with fixed ID lab14.assignment.ranking.alternatives, no raster dims. Existing gateway passes bytes to real memory sink before receipt; existing PCR consumes content hash."
+    ],
+    "precondition": "Trusted complete finite JSON-safe ScoredPairEvidence rows only; no arbitrary Map/nonfinite/undefined/typed-array serializer claim",
+    "imported_or_executed": false,
+    "green_run": "NOT_PERFORMED"
+  },
+  "unchanged_source_sha256": {
+    "fixture.mjs": "eec0a017df87dbf99d4e36bb94d32cc16df43119a5fade88da0490ec3ddd8219",
+    "integration.test.mjs": "904a1403c034ca5cbcdb0db5e11b5ff9f73a850a4878c040330c24dc1b24aa57",
+    "capture.mjs": "c52809216af9fde77ac9a0a5e5238b54dead6159e872fc864aea05f4fc103046",
+    "README.md": "1ab7afc2b029a51b2639ee2544178f30bade7ed5c57c8303edecc8a3e8587728"
+  },
+  "dependency_manifest_sha256": "b0094d7dae7171370cc1aa4c8b62f7034472d1e5cfdeaa20f56a58e7441fc324",
+  "prospective_green_command_NOT_EXECUTED": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "/workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/ranked-evidence/capture.mjs",
+    "--arm", "bridge", "--out", "NEXT_SEPARATELY_ASSIGNED_PACKET/green",
+    "--manifest", "/workspace/scratch/86659bbafcce/lab14/S1/E4407/dependencies.before.json",
+    "--manifest-sha256", "b0094d7dae7171370cc1aa4c8b62f7034472d1e5cfdeaa20f56a58e7441fc324"
+  ],
+  "scope": "Only authorized fabricated ranking gateway calls and test controls executed. No scoring/routing/selection/CV/pixel/original query/decode/image access/install/rebuild/provider/default/other-owner/Git/native state/canonical receipt mutation. Source README intentionally retains pre-baseline construction text for later finalization; baseline raws are immutable.",
+  "next_gate": "Independent exact adapter source review and root checkpoint; separate native GO before ONE GREEN capture"
+}

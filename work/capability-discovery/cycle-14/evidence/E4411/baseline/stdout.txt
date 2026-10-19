@@ -1,0 +1,33 @@
+✔ existing OFF control preserves full loser-change ranking and disclosed opaque identity (5.06005ms)
+✖ desired capability: complete losing alternatives reach materialization and PCR identity (2.180602ms)
+✔ winner-only real-sink counterexample fails the same losing-alternative identity oracle (2.997174ms)
+✔ existing empty/single/lexical-tie and missing-input boundaries stay explicit (7.318248ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 212.535066
+
+✖ failing tests:
+
+test at experiments/capability-discovery/ranked-evidence/integration.test.mjs:64:1
+✖ desired capability: complete losing alternatives reach materialization and PCR identity (2.180602ms)
+  AssertionError [ERR_ASSERTION]: desired full ranking materialization is absent
+  
+  0 !== 1
+  
+      at assertAlternativeChange (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/ranked-evidence/fixture.mjs:145:12)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/chainspot-discovery-lab/experiments/capability-discovery/ranked-evidence/integration.test.mjs:74:3)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

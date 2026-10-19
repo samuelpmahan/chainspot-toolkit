@@ -1,0 +1,161 @@
+{
+  "job_id": "E4403",
+  "worker": "S3",
+  "native_outcome": "insufficient_evidence",
+  "outcome": "insufficient_evidence",
+  "phase": "source_only_consumer_seam_discovery",
+  "summary": "A bounded missing seam is content-frozen per-badge ranking alternatives. The existing assignment.ranking operation already computes the required Map, but its Map contents are neither a generic shape probe nor an emitted artifact. An injected extractor can materialize ordered ranked groups without changing ranking arithmetic, detectors, contracts, or defaults. No executable reuse claim is made before an authorized fabricated test.",
+  "provisional_implementation_classification": "mixed_change",
+  "classification_reason": "Existing operation and runtime interfaces are reusable; a new small consumer-side extractor/adapter would be needed. This is not a new ranking algorithm or second executor.",
+  "review": {
+    "root_selection": "Selected ranked-evidence bridge, subject to review and separate execution GO.",
+    "S6_independent_critique": "Equal PCR IDs for distinct opaque Maps are the explicitly documented identity limitation, not a core bug or new RED. Probes are excluded from frozenTickIdentity, so Map probes alone would not establish result identity. A real content artifact must preserve complete ordered groups and rows.",
+    "accepted_scope": "New consumer-side copy/serialization only, default OFF. No selection, reranking, geometry, CV, shared-contract, detector, or default changes."
+  },
+  "repo": {
+    "path": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "head": "f68b731e1050c2cfbab5b065f8f01768dfda4f19",
+    "read_only": true
+  },
+  "seam": {
+    "name": "content-frozen assignment.ranking alternatives",
+    "consumer_need": "PCR is allowed to identify Tick testimony and emitted materializations, not opaque PxC output values. A consumer auditing ranked alternatives needs materialized contents to distinguish different rankings or scores, rather than treating identical access testimony as identical result content.",
+    "existing_operation": "assignment.ranking",
+    "calculation_address": "fn.rankTeeBasketPairsByBadge",
+    "producer_symbol": "rankPairsByBadge",
+    "input": {
+      "address": "assignment.scoredPairs",
+      "type": "readonly ScoredPairEvidence[]",
+      "row_contract": "ScoredPairEvidence = {raw: RawPairEvidence, score: number, rank: number, factors: PairFactorBreakdown}",
+      "ranking_fields": ["raw.badgeId", "score", "raw.supportMean", "raw.pairId"],
+      "other_fields": "Other RawPairEvidence and factors fields are carried through unchanged; no geometry, score, or support is recomputed."
+    },
+    "output": {
+      "address": "assignment.rankedByBadge",
+      "type": "Map<string, ScoredPairEvidence[]>",
+      "semantics": "Groups follow first appearance of raw.badgeId in input. Within each group: descending score, then descending raw.supportMean, then ascending raw.pairId.localeCompare; output rank becomes index + 1. Input rank is not authoritative."
+    },
+    "proposed_materialization": {
+      "artifact_kind": "candidateSet",
+      "artifact_id": "assignment.ranking.rankedGroups",
+      "bytes": "UTF-8 JSON of {schema:'chainspot-ranked-groups@1',groups:[{badgeId,pairs:[...]}]} formed directly from Map iteration. Preserve group and pair order; do not JSON.stringify(Map) directly because that loses its entries.",
+      "dims": null,
+      "authority_limit": "Candidate rank is not selected endpoint ownership, human acceptance, or endpoint truth. Do not label this selected assignment or infer a hole number from badgeId."
+    },
+    "dependencies": [
+      "Existing assignment.ranking OperationSpec and operationImpls entry",
+      "Existing calculation binding for rankPairsByBadge",
+      "Existing ExecBoard with assignment.scoredPairs seeded",
+      "FeatureContext.span('assignment') only for this operation; no feature resolve is required",
+      "Existing injected OperationRuntime.artifactExtractors and ExecSink",
+      "Existing composePcr for testimony/materialization identity"
+    ],
+    "units": {
+      "score": "Source-native dimensionless score; preserve values, do not recalibrate",
+      "raw.supportMean": "Source-native dimensionless support used only as a tie-break",
+      "rank": "Dimensionless positive 1-based ordinal within badge group",
+      "ids": "Opaque identity strings; badgeId is not a human-readable hole label",
+      "geometry": "Any nested path/distance fields retain source-frame image-pixel semantics and pass through; this seam consumes no images or pixels"
+    },
+    "missingness_and_nonduplication": [
+      "gateway.shapeProbes only handles arrays or ArrayBuffer views, so assignment.rankedByBadge Map has no generic content or count probe.",
+      "ARTIFACT_EXTRACTORS contains assignment.selection and zfit tables, but no assignment.ranking artifact. Selected assignments are not the complete per-badge ranked alternatives.",
+      "composePcr explicitly limits identity to Tick testimony and materializations, excluding opaque output values; the proposed materialization fills that disclosed scope gap without changing the existing identity contract.",
+      "compileABFeatureSet already builds injected runtimes, so implementing another gateway would duplicate execution capability.",
+      "The catalog already lists matching.rank and a synthetic producer probe. Merely exposing or testing rankPairsByBadge would be duplicate work; the proposed novelty is the missing gateway-to-PCR content materialization.",
+      "The existing ports/late/assignmentGateway.mjs is an S5 two-ray one-to-one ownership operation with different Parts, not this ranking alternatives materialization."
+    ]
+  },
+  "fabricated_proposal_only": {
+    "executed": false,
+    "fixture_contract": "Use complete fabricated ScoredPairEvidence rows: RawPairEvidence scalar fields finite; path-length fields 0 px, legs empty-path fabricated records, failureReason null, factors finite dimensionless constants. Distinct opaque IDs only. No source image, decode, query, or native producer invocation.",
+    "working_cases": [
+      {
+        "name": "group and ordering",
+        "input_projection": [
+          {"badgeId":"b1","pairId":"p3","score":0.7,"supportMean":0.8,"rank":99},
+          {"badgeId":"b2","pairId":"p4","score":0.6,"supportMean":0.1,"rank":99},
+          {"badgeId":"b1","pairId":"p2","score":0.7,"supportMean":0.9,"rank":99},
+          {"badgeId":"b1","pairId":"p1","score":0.7,"supportMean":0.9,"rank":99}
+        ],
+        "expected": "Group b1 then b2. b1 pair order p1,p2,p3 with ranks 1,2,3; b2 p4 rank 1. Input rows retain rank 99 and original order. Materialized JSON preserves both group and pair order."
+      },
+      {
+        "name": "empty input",
+        "input_projection": [],
+        "expected": "Empty Map and explicit groups:[] artifact; no image dependencies or invented assignment."
+      }
+    ],
+    "falsifiers": [
+      "Content-identity falsifier: use one identical plan/runtime in two fresh boards. In A p1 score=.8 and p2 score=.7; in B p1 score=.6 and p2 score=.7. Same access/write/fn-body testimony can describe different winners. Without materialization PCR identity has no ranked Map content; with the proposed artifact its SHA-256 and PCR runResultId must differ. This is a proposal, not an observed collision.",
+      "Tie-break falsifier: equal scores but different supportMean must follow supportMean; equal both must follow pairId. Reversing input order must not reverse these within-group results.",
+      "Serialization falsifier: direct JSON.stringify(Map) yields no ranking entries; reject any artifact that loses b1/b2 groups or pair ranks.",
+      "Access falsifier: omit assignment.scoredPairs and require the existing gateway missing-address failure; no partial successful testimony or fabricated output should be claimed."
+    ],
+    "next_gate": "Separate authorization is needed to import the frozen producer and execute only fabricated data. No such execution occurred in this task."
+  },
+  "frozen_protocol": {
+    "status": "PROPOSED_NOT_EXECUTED",
+    "runtime": {
+      "node": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "node_location_evidence": "Resolved by shell type -P node and file listing, without launching Node.",
+      "tsx": "Not required: use the existing frozen CommonJS alg/dist producer. source/provider/node_modules and its tsx installation are absent. Do not install or silently replace dependencies.",
+      "planned_harness": "/workspace/scratch/86659bbafcce/lab14/S3/E4403/ranking-protocol.mjs",
+      "planned_command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node /workspace/scratch/86659bbafcce/lab14/S3/E4403/ranking-protocol.mjs --repo /workspace/scratch/8528bb251845/chainspot-discovery-lab --out /workspace/scratch/86659bbafcce/lab14/S3/E4403/evidence",
+      "harness_exists": false,
+      "command_executed": false
+    },
+    "dependency_closure": {
+      "loading_route": "Future harness uses node:module.createRequire anchored at source/provider/package.json, following the already-read Lab loading convention; directly require pinned packages/alg/dist/exec/{gateway,operations,board,sink,pcr,sha256}.js and dist/detectors/threeFactor/{hash,features/types}.js. Do not copy or rewrite the producer.",
+      "conservative_local_closure": "The frozen source/provider/packages/alg/dist directory, including its existing local required modules/assets and its parent packages/alg/package.json type:commonjs boundary, is the conservative dependency closure. The gateway statically loads the operation registry, which in turn loads the algorithm module graph; loading is not permission to run image/CV operations. Only assignment.ranking may be scheduled.",
+      "direct_node_builtins_for_harness": ["node:module", "node:assert/strict", "node:fs/promises", "node:path", "node:url"],
+      "no_new_dependencies": true,
+      "import_closure_status": "Source-pinned but not import-verified. If a required existing module/dependency is unavailable, stop and report insufficient_evidence; no installs or substitute implementation."
+    },
+    "exact_public_gateway_plan": [
+      "Obtain spec by OPERATION_UNIVERSE.find(op => op.id === 'assignment.ranking'); obtain actual run by operationImpls.get(spec.id), and actual calculation bindings by operationCalculationBindings.get(spec.id). Verify all exist and binding address is fn.rankTeeBasketPairsByBadge. Do not invoke or clone rankPairsByBadge directly, and do not implement a comparator or ranking loop in the consumer.",
+      "Build one CompiledExecutionPlan containing that exact existing spec only, bindings:{}, a fixed protocol-specific planFingerprint, and synthetic fixed paramsHash:'lab14-E4403-fabricated-ranking-fixed-params'. These are explicitly synthetic controls, not hashes of native A/B inputs. Do not compile the full assignment unit because it would schedule unrelated operations.",
+      "Define two complete JSON-safe row arrays A and B. Start A with b1/p1 score .8 and b1/p2 score .7; B differs only in p1 score .6. All raw fields, factors, IDs, and original rank 99 otherwise identical. Use complete LegEvidence {endpointId,geodesic:0,path:[],reachable:false}; finite RawPairEvidence values, all Px lengths 0; no raster data, native data, or typed-array payload is needed.",
+      "Restore each case from the same frozen JSON text via JSON.parse, create a fresh createExecBoard, seed only assignment.scoredPairs with those rows, and use actual nullFeatureContext. Use a fresh createMemorySink for every case; never createNullSink. Save the pre-run JSON and compare afterward to verify source rows were not mutated.",
+      "Baseline runtime uses actual operationImpls, actual operationCalculationBindings, and existing ARTIFACT_EXTRACTORS unchanged. Run A/B/A through executeCompiledPlan with only the one-op plan; inspect returned Map and sink.receipts; composePcr with tickIds:['assignment.ranking']. Expect ranking contents A != B and A == restored A, with no ranking artifacts. A/B PCR identity equality under intentionally fixed synthetic plan/params is the documented opaque-output limitation, not a bug/RED/native collision claim.",
+      "Bridge runtime differs only by an optional default-OFF consumer extractor for assignment.ranking. When explicitly ON, it reads the already-produced Map, preserves Map group iteration order and complete row arrays/all raw fields/factors, and emits TextEncoder UTF-8 JSON as candidateSet id assignment.ranking.rankedGroups, with no raster dims. It never changes or writes the Map and never calls the producer again.",
+      "Repeat fresh A/B/A restores using the same one-op plan, actual implementations/bindings, memory sink and PCR composition. Require byte-identical ranking values baseline-vs-bridge for each input. Require exactly one ranking candidateSet artifact per ON run, A artifact SHA == restored A SHA, A SHA != B SHA, A runResultId == restored A runResultId, A runResultId != B runResultId. Preserve and inspect complete artifact bytes, not only a winner/count.",
+      "Run OFF again and require baseline artifact absence and unchanged ranking values. A serialization-only bridge must not alter selected ownership, native geometry, registry/default state, or shared contracts.",
+      "Record only owned scratch diagnostic evidence; do not write native/canonical receipts or mutate frozen source. Import failure or unexpected source/runtime mismatch is a stop condition, not permission to install, patch, rerank, or use another owner."
+    ],
+    "compiled_entry_pins": {
+      "source/provider/packages/alg/dist/exec/gateway.js": "8c4652362d9739316b80dbd3f23dc595d8ff532d5ac9e8d11637df30d8915c97",
+      "source/provider/packages/alg/dist/exec/operations.js": "98e0d01066ef07948e6cf92b9a3e5f10fede36c83789ab8d44c11b5a84bece54",
+      "source/provider/packages/alg/dist/exec/board.js": "0849480a10add759328b41f23ad77f3eeae75f69ed8a15affaf94bb570702716",
+      "source/provider/packages/alg/dist/exec/sink.js": "a840ab8b7808da678d7defc91aad21a7a7ead7a2e183f0dc278dc8d50edd9552",
+      "source/provider/packages/alg/dist/exec/pcr.js": "a1fcd9d7d27cedc2e4f9f74d4fcc6825347e23c36f62828ea98bbf9fb75e1ddd",
+      "source/provider/packages/alg/dist/exec/sha256.js": "499da2aaa1e2a657eea4a020badc585dad026b9731bfec89282a9da35e6dc07a",
+      "source/provider/packages/alg/dist/detectors/threeFactor/assignment.js": "9f18504ad128684f2fcf5ea520d36c77892f1a592a7f8815bcf625619f27bff9",
+      "source/provider/packages/alg/dist/detectors/threeFactor/features/types.js": "17a52ed479d06ec823b9e963fd8635559cc6c85fac3859f7c18693b4367dc3dd",
+      "source/provider/packages/alg/dist/detectors/threeFactor/hash.js": "65a56ca1a75fc11194613b4e8e03cdf25c42c45df670e3d5477e5a5245fc7f94",
+      "source/provider/packages/alg/src/exec/pcr.ts": "ba214fc58bafc3e703892a7e9160d131b07806f19a83772af98f8d1c946d3e54",
+      "source/provider/package.json": "fbc907ea04ed9501bf13416446c436776c8dd86e85abd0df420ca94e67e7623f",
+      "source/provider/package-lock.json": "1cf655d24ad6efbf8bd3ae63de291055f8f44fc9bf5a4d8ba2eb0e3ffdd5f075"
+    }
+  },
+  "pins": [
+    {"path":"source/provider/packages/alg/src/exec/gateway.ts","lines":"26-50,87-102,124-171,176-223","sha256":"c79e00b91378f2af3717fb99c6c4ae76ad226098f97acc595822e35a04584e6f","claim":"Runtime injection, Map-excluding shape probes, artifacts and receipts"},
+    {"path":"source/provider/packages/alg/src/exec/operations.ts","lines":"481-502,856-912,970-1080","sha256":"5bb9f97e0e8e235fa3e80a32761a701cdcfc107369565e3ec77e5ea6b95a26b8","claim":"Existing ranking op and binding; no ranking artifact extractor"},
+    {"path":"source/provider/packages/alg/src/exec/board.ts","lines":"37-78,86-142","sha256":"3f6bad3c444ec8e1c107f96336b8d863bce0125f39fe39cb5a225fcfb1866675","claim":"Board API and access/write testimony"},
+    {"path":"source/provider/packages/alg/src/exec/contract.ts","lines":"23-57,79-149","sha256":"21716541e466d521fd1bcebf89f4d2fc8c76aeb5665a2fcbc30d6063ed715aad","claim":"Operation, candidateSet artifact, and Receipt contracts"},
+    {"path":"source/provider/packages/alg/src/exec/feature-set.ts","lines":"137-312,319-365","sha256":"8a745f7548556824a897d7f1b491e99410ff3b8a3827b17fa70a23535f5bbc38","claim":"Existing composition/runtime construction and async gateway consumer"},
+    {"path":"source/provider/packages/alg/src/exec/pcr.ts","lines":"20-99","claim":"PCR identity explicitly excludes opaque output content without materialization"},
+    {"path":"source/provider/packages/alg/src/detectors/threeFactor/assignment.ts","lines":"67-70,187-204","sha256":"2f56a606fce6543ca96bcd1a1b2300af4e2ce0c29f2c27fd9378bc76f065946e","claim":"Comparator, grouping and rank semantics"},
+    {"path":"source/provider/packages/alg/src/detectors/threeFactor/types.ts","lines":"241-279","sha256":"c9c4b914b9de990333f9e84bafba98f4cb86a9a57485b24599d7a1fecf5d81fa","claim":"Exact scored/raw pair row contracts"},
+    {"path":"ports/early/runEarly.mjs","lines":"35-100","sha256":"aadd7e9bd0d8df95426afd6a2befe69aace0a62f82075a1ce302fb13ddbf3544","claim":"Lab consumer loads pinned compiled modules and stage contracts; inspected, not imported"},
+    {"path":"ports/late/assignmentGateway.mjs","lines":"1-30","sha256":"dd2c6451054367daaf5997743b0e09fb5ccfe7eea0aed039a402e6c697f0d1f0","claim":"Existing different S5 assignment consumer is not adopted or changed"},
+    {"path":"recipes/compile.mjs","lines":"39-61","sha256":"fcbd48d94d84a0d65a3d2e5a032e61bd4f8493f44e37b52da756c8bcb81cf83a","claim":"Stage-boundary graph explicitly does not describe inner native calculations"},
+    {"path":"experiments/capability-discovery/catalog/catalog.json","lines":"428-446","claim":"Existing matching.rank catalog entry prevents treating the producer itself as novel"}
+  ],
+  "limits": [
+    "Source-only evidence cannot confirm executable reuse, fixture outcomes, artifact identity, or native runtime availability.",
+    "No public provider gateway test files were found in this frozen source snapshot using test/spec file searches. Root recipes/stages.test.mjs was read only; no tests were run.",
+    "No imports, code execution, native/canonical receipt writes, subagents, network, package installs, original queries, images, decode, pixel or CV computation occurred.",
+    "Only this owned scratch result file was written; frozen repo and other-owner work were not changed or adopted."
+  ]
+}

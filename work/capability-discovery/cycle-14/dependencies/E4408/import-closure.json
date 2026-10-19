@@ -1,0 +1,1262 @@
+{
+  "schema": "lab14-static-commonjs-closure@1",
+  "method": "Read bytes and scan literal require calls with line anchors; resolve local files as Node CJS file/directory candidates. No producer imports, evaluation, tests, or rebuild.",
+  "limitations": [
+    "Text scanner is not a full JavaScript parser. Dynamic loads and assets beyond literal require are separately reported and require source review.",
+    "External package exports conditions are not modeled; any external package is a review stop before import."
+  ],
+  "entries": [
+    "source/provider/packages/alg/dist/exec/gateway.js",
+    "source/provider/packages/alg/dist/exec/operations.js",
+    "source/provider/packages/alg/dist/exec/board.js",
+    "source/provider/packages/alg/dist/exec/sink.js",
+    "source/provider/packages/alg/dist/exec/pcr.js",
+    "source/provider/packages/alg/dist/exec/sha256.js",
+    "source/provider/packages/alg/dist/detectors/threeFactor/hash.js",
+    "source/provider/packages/alg/dist/detectors/threeFactor/features/types.js"
+  ],
+  "modules": [
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/assets/badge-glyph-templates.json",
+      "sha256": "00af1d9d7bc40790a76aee0f8a2cce68b930c2ba4a94575b2842235fb1253b41",
+      "size": 11572
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/assets/basket-sprite.json",
+      "sha256": "c2867340d477a5e2f88e83b78516fc89005004a4aa279b6b9bc86a6f98e3598f",
+      "size": 3234
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/assets/logistic.json",
+      "sha256": "a86497b308da33f093ac4540a841b228272f0a14fbbb5ebbfa1490d047ebceb7",
+      "size": 151330
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/assignment.js",
+      "sha256": "9f18504ad128684f2fcf5ea520d36c77892f1a592a7f8815bcf625619f27bff9",
+      "size": 13066
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/badgeEvidence.js",
+      "sha256": "47b423b29179d07480906457008ca76839c12fef8c71aca3a828c996e252081c",
+      "size": 8477
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/badgeStage.js",
+      "sha256": "ae68fe0e1c7c47a12a3b27098b509f615b4c62cdd8771357a6235697234b9887",
+      "size": 7020
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/componentAssembly.js",
+      "sha256": "a70e0e72b46515ffdabb8ea767d0d9b1e631ff5beba7fcb344cbf94cac3b5521",
+      "size": 9817
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/componentField.js",
+      "sha256": "e35c2d7d044283f7e7b4dc20683a9b4b67267f9280a1c0a4a2884f335b45bbe2",
+      "size": 1154
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/components.js",
+      "sha256": "b52628941ee06259aa6d2f4b4d24de930f51204218acacb138993e65fda752f0",
+      "size": 10177
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/digits/badgeGlyph.js",
+      "sha256": "675dc9f59218e65a65834526887ab7b9370419bcf0084be05e5c5c69e700ef10",
+      "size": 5819
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/digits/badgeGlyphTemplateMath.js",
+      "sha256": "f722ab6ed5fd0d34aec011d93e8f91156082f88d2d9b8a84d56b15fc33541f3c",
+      "size": 10528
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/digits/logisticInference.js",
+      "sha256": "09bbcf0724d05b5bef4338742ceba0d8ec5ffd9fe5cae93d6d690d91f917085f",
+      "size": 1302
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/digits/normalize.js",
+      "sha256": "09a52eb87c5b405a9584c584ade7b9a072420d531aedb83fe92619131794a109",
+      "size": 2493
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/digits/readBadges.js",
+      "sha256": "ae82e23fcdf1bf7047953ccd8e71abc6a02b5b628d7f0dd6e89b5a2f58b920e5",
+      "size": 3113
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/digits/segment.js",
+      "sha256": "9df1b0a6eb12d9cf45b6891814ea1857a8cf53762dda41fd0a5cd5b173995080",
+      "size": 8714
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/endpoints.js",
+      "sha256": "21339359c6ec0fac7cfdd990fef1a172335db0fb20c6621f3d96c021efe78b46",
+      "size": 20125
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/families.js",
+      "sha256": "3fb58d14c0bb99fa310f86db3a64960c17b03dc1ff79ebe4e29e3eb2f9f75a25",
+      "size": 2350
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g1.badgeGlyphTemplate.js",
+      "sha256": "6ce1313e99b2d807a74e669bcfeefbd118f7b5a04f08dc5ce0e7351e0988c411",
+      "size": 16136
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g1.badgeGlyphTemplateReceipt.js",
+      "sha256": "44aff975ea29d5f648cba8d1bf9704df4207bb6aa08e565e65952c265937c5b4",
+      "size": 8866
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g1.badges.js",
+      "sha256": "420bfc1106d97b8451ecb74fb114143ef6edd59e6451f3b441b7b45bab72b95f",
+      "size": 4933
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g1.digits.js",
+      "sha256": "44b5e2444c02586d548a8887a99563ecb8546b3d7997da50d797ff61ff9cb6b6",
+      "size": 7260
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g2.cleanBasketFamily.js",
+      "sha256": "cb84829dae8f14725a5fd5cc2693604c1c6605f3c2f15501ace7005f70d72b03",
+      "size": 14312
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g2.sprite.js",
+      "sha256": "78e03cf79da6960533aa63ebdf04a67b13c7d7b77c7d94fce2368a70cdf3ab7b",
+      "size": 10042
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.endpoints.js",
+      "sha256": "a68dedffbd594d495f949b02dcf95b096a8a4f4abbe15c4ddb4be4c8841b296e",
+      "size": 4852
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.phantomTee.js",
+      "sha256": "39b7ef1fa582ac7abaeb285366eb4003b21ad365a67ef904bfaecaac022c8e94",
+      "size": 12899
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeFamily.js",
+      "sha256": "e88b4291cdf7d840b04076b431b0dade6fb51b51067f632519a9ffc7961145cf",
+      "size": 29355
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPose.js",
+      "sha256": "04cc100c4a2f85899a5d5521b9acc814e384e2acefb78d349966ba89ac31fa74",
+      "size": 9955
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPoseMath.js",
+      "sha256": "ce24f3fab6ba86368a4d47c887aa5b9b5f596f01b4203e9fac4ef6901976566e",
+      "size": 8703
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPoseReceipt.js",
+      "sha256": "156895bb8ebac906438bf70a901657bde7dbd528a6c7b5ffee0664c5026403c2",
+      "size": 7937
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeReceipts.js",
+      "sha256": "8e4681c2bca9676118bd2bd98bc3f593f7b9c92d2b3309c675252e4390f17010",
+      "size": 10056
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeRecovery.js",
+      "sha256": "526d4e6fa06a2ad301c5f2a882773890bf692a73b1115b716ced6e5fcb24c4c4",
+      "size": 55773
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecovery.js",
+      "sha256": "d1566daff3813e7e30e1bee457807973e596e8fa44fbd816ec342e28cf2588e9",
+      "size": 33638
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecoveryReceipt.js",
+      "sha256": "ebe9cf39e88ec581dfb462a12720041e74f74d415feaddb7e4ec6cc0b28265b5",
+      "size": 9035
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.scoring.js",
+      "sha256": "f66b74a81576dc5eab3db87823c0601c7494929d1082437a95aad90b5bbfb229",
+      "size": 6250
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.search.js",
+      "sha256": "8e400f2c32399528d64df6ade1bd1180fdad18c37a8dc3969b96b2b88dd94ca7",
+      "size": 1510
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLock.js",
+      "sha256": "b852ee659014dd114a48cbc42d8c3635e3388f73010171e6084d735896e1926a",
+      "size": 17133
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLockMath.js",
+      "sha256": "14f6147fbf98a57ff624acc86ef34cb9cbe2ae9e6d9d4537eb7111e7d49a12ed",
+      "size": 41281
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLockReceipt.js",
+      "sha256": "784425893af1979087a42e5779215607a602ffe91b409a83b31a8da7799797bf",
+      "size": 15195
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.badgeM2Aa.js",
+      "sha256": "86929fe879c80a6a847b452226c2a2196fa394ff50ff3733df409e67a9d92014",
+      "size": 18562
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.ribbon.js",
+      "sha256": "ebc1e562dbc362bff7749cdeea12c11a2597dd8fc3f2421069fc21ad8853053b",
+      "size": 5162
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.routing.js",
+      "sha256": "2657fb59c0ac28ec6b2a691406d50e8fc239bca14cf8f8f85cef0e0206dec251",
+      "size": 3812
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.zfit.js",
+      "sha256": "03d33340eac0a3fc22fe3f72d7b7bf175e285a115adf1717a5c44010b5f9c053",
+      "size": 4386
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/shared.hsv.js",
+      "sha256": "e8c5989629cb0d9d120aec52c12b9ea7d6637017e9e59e48008508b67b3f7fca",
+      "size": 2355
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/st.straightTest.contract.js",
+      "sha256": "89dd42dedcfa2a26347207400deeadba0cd3300cf8fd4be7c3ccbb20c92717fa",
+      "size": 677
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/st.straightTest.js",
+      "sha256": "3ff1c67d8906e2de3fcc346116291acf4a3b7d4ad17f605792b2ff422c715ae5",
+      "size": 15902
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/teePoseVisuals.js",
+      "sha256": "84afbae2d2253ad14e5155881651fec085a914efefee57d5a8193263f0126efc",
+      "size": 2182
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/features/types.js",
+      "sha256": "17a52ed479d06ec823b9e963fd8635559cc6c85fac3859f7c18693b4367dc3dd",
+      "size": 2887
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/hash.js",
+      "sha256": "65a56ca1a75fc11194613b4e8e03cdf25c42c45df670e3d5477e5a5245fc7f94",
+      "size": 1160
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/m1Representation.js",
+      "sha256": "bc6923f9194c5457bf694aaffca4e33e92bce4a37a5fb708c01152ad63975dd5",
+      "size": 7553
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/m2RawFrameStatsControl.js",
+      "sha256": "9e03f15cda79dc824b7f5beb43cd604aebf03fe17c48dd8e74bf208e95009bfb",
+      "size": 13276
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/m2Representation.js",
+      "sha256": "cbeef96396415d535ac40bb41a0f7c7ea04cfdfebd7874b3375b9a2e2682275a",
+      "size": 57875
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "sha256": "bf1fc335acf7ea3f843bc5ae9f929e2ea5ac66dd4788ce6705eb163584751219",
+      "size": 42365
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/objects.js",
+      "sha256": "7fe9dbcb931af116695c14ab2af5867693a7b496ba7a7ab90b3afefd936ee27c",
+      "size": 7609
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/occlusion.js",
+      "sha256": "d4d0071be1f2b04dce0e4f77fae675992966f28551a68841c3a839ab0c9f7d2e",
+      "size": 2022
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/raster.js",
+      "sha256": "0a08746a7cdaf09b3c009ac104af26a1ffcbc34cd7c9f19b0f00021bbfc846cc",
+      "size": 2561
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/ribbon.js",
+      "sha256": "25635c2682a1f5ee3d3253207dcf6ba930ad23f968ac0bd316de1103391b8bc3",
+      "size": 14194
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/routing.js",
+      "sha256": "193e462e9f4a583f6d65d803c9c8b3cad265bf107faed92df3b737fee17e351d",
+      "size": 4590
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/scoring.js",
+      "sha256": "c327df5a44723178004ad8f0965f3a67e1f292765681691b6f5b96c556705055",
+      "size": 14557
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/screenChrome.js",
+      "sha256": "96c3c0912dfa3295137cca9d9e137bb5b9de25a676cadee5e071d76ce54acbad",
+      "size": 4228
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/smartBasket.js",
+      "sha256": "abf8f173d8c07909f1c4f3ad6fabd1f37ed4d0f34ca881ec6461accd9e2f010b",
+      "size": 25341
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/types.js",
+      "sha256": "7556f44d9255e361d304d47202395e74050b65251a58e175bcb41446a7b9ec40",
+      "size": 272
+    },
+    {
+      "path": "source/provider/packages/alg/dist/exec/board.js",
+      "sha256": "0849480a10add759328b41f23ad77f3eeae75f69ed8a15affaf94bb570702716",
+      "size": 3723
+    },
+    {
+      "path": "source/provider/packages/alg/dist/exec/gateway.js",
+      "sha256": "8c4652362d9739316b80dbd3f23dc595d8ff532d5ac9e8d11637df30d8915c97",
+      "size": 7399
+    },
+    {
+      "path": "source/provider/packages/alg/dist/exec/operations.js",
+      "sha256": "98e0d01066ef07948e6cf92b9a3e5f10fede36c83789ab8d44c11b5a84bece54",
+      "size": 38945
+    },
+    {
+      "path": "source/provider/packages/alg/dist/exec/pcr.js",
+      "sha256": "a1fcd9d7d27cedc2e4f9f74d4fcc6825347e23c36f62828ea98bbf9fb75e1ddd",
+      "size": 2523
+    },
+    {
+      "path": "source/provider/packages/alg/dist/exec/sha256.js",
+      "sha256": "499da2aaa1e2a657eea4a020badc585dad026b9731bfec89282a9da35e6dc07a",
+      "size": 4869
+    },
+    {
+      "path": "source/provider/packages/alg/dist/exec/sink.js",
+      "sha256": "a840ab8b7808da678d7defc91aad21a7a7ead7a2e183f0dc278dc8d50edd9552",
+      "size": 1799
+    }
+  ],
+  "package_boundaries": [
+    {
+      "path": "source/provider/packages/alg/package.json",
+      "sha256": "c244bd295eb0872da4540e64fc8c69928c232c35b7e0b4692cf7362e865b3c14",
+      "size": 1189,
+      "type": "commonjs",
+      "name": "@chainspot/alg"
+    }
+  ],
+  "edges": [
+    {
+      "caller": "source/provider/packages/alg/dist/exec/gateway.js",
+      "line": 17,
+      "specifier": "./board",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/exec/board.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/gateway.js",
+      "line": 18,
+      "specifier": "./sink",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/exec/sink.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/gateway.js",
+      "line": 19,
+      "specifier": "./operations",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/exec/operations.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/gateway.js",
+      "line": 20,
+      "specifier": "./sha256",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/exec/sha256.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 21,
+      "specifier": "../detectors/threeFactor/measure",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 22,
+      "specifier": "../detectors/threeFactor/features/g3.phantomTee",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.phantomTee.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 23,
+      "specifier": "../detectors/threeFactor/features/g3.teeFamily",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeFamily.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 24,
+      "specifier": "../detectors/threeFactor/features/g3.teeMinAreaPose",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPose.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 25,
+      "specifier": "../detectors/threeFactor/features/g3.teeRecovery",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeRecovery.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 26,
+      "specifier": "../detectors/threeFactor/features/g4.teeBadgeLock",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLock.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 27,
+      "specifier": "../detectors/threeFactor/features/g4.posteriorTeeRecovery",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecovery.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 28,
+      "specifier": "../detectors/threeFactor/features/g2.cleanBasketFamily",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g2.cleanBasketFamily.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 29,
+      "specifier": "../detectors/threeFactor/features/g1.badges",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g1.badges.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 30,
+      "specifier": "../detectors/threeFactor/features/g1.digits",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g1.digits.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 31,
+      "specifier": "../detectors/threeFactor/features/g1.badgeGlyphTemplate",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g1.badgeGlyphTemplate.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 32,
+      "specifier": "../detectors/threeFactor/features/shared.hsv",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/shared.hsv.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 33,
+      "specifier": "../detectors/threeFactor/features/g2.sprite",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g2.sprite.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 34,
+      "specifier": "../detectors/threeFactor/features/g3.endpoints",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.endpoints.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 35,
+      "specifier": "../detectors/threeFactor/features/g4.scoring",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.scoring.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 36,
+      "specifier": "../detectors/threeFactor/features/g4.search",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.search.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 37,
+      "specifier": "../detectors/threeFactor/features/g5.ribbon",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.ribbon.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 38,
+      "specifier": "../detectors/threeFactor/features/g5.routing",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.routing.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 39,
+      "specifier": "../detectors/threeFactor/features/g5.zfit",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.zfit.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 40,
+      "specifier": "../detectors/threeFactor/raster",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/raster.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 41,
+      "specifier": "../detectors/threeFactor/componentField",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/componentField.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 42,
+      "specifier": "../detectors/threeFactor/badgeEvidence",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/badgeEvidence.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 43,
+      "specifier": "../detectors/threeFactor/objects",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/objects.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 44,
+      "specifier": "../detectors/threeFactor/m1Representation",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/m1Representation.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 45,
+      "specifier": "../detectors/threeFactor/features/g5.badgeM2Aa",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.badgeM2Aa.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 46,
+      "specifier": "./sha256",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/exec/sha256.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 47,
+      "specifier": "../detectors/threeFactor/badgeStage",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/badgeStage.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 48,
+      "specifier": "../detectors/threeFactor/measure",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 49,
+      "specifier": "../detectors/threeFactor/endpoints",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/endpoints.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 50,
+      "specifier": "../detectors/threeFactor/assignment",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/assignment.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 51,
+      "specifier": "../detectors/threeFactor/features/st.straightTest",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/st.straightTest.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/operations.js",
+      "line": 52,
+      "specifier": "../detectors/threeFactor/types",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/types.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/sink.js",
+      "line": 13,
+      "specifier": "./sha256",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/exec/sha256.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/pcr.js",
+      "line": 5,
+      "specifier": "../detectors/threeFactor/hash",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/hash.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/exec/pcr.js",
+      "line": 6,
+      "specifier": "./sha256",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/exec/sha256.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/types.js",
+      "line": 13,
+      "specifier": "../occlusion",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/occlusion.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 14,
+      "specifier": "./assets/basket-sprite.json",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/assets/basket-sprite.json"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 15,
+      "specifier": "./assets/logistic.json",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/assets/logistic.json"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 16,
+      "specifier": "./badgeStage",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/badgeStage.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 17,
+      "specifier": "./endpoints",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/endpoints.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 18,
+      "specifier": "./smartBasket",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/smartBasket.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 19,
+      "specifier": "./digits/logisticInference",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/digits/logisticInference.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 20,
+      "specifier": "./digits/readBadges",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/digits/readBadges.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 21,
+      "specifier": "./digits/segment",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/digits/segment.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 22,
+      "specifier": "./raster",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/raster.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 23,
+      "specifier": "./ribbon",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/ribbon.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 24,
+      "specifier": "./routing",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/routing.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 25,
+      "specifier": "./scoring",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/scoring.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 26,
+      "specifier": "./screenChrome",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/screenChrome.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 27,
+      "specifier": "./types",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/types.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 28,
+      "specifier": "./features/types",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/types.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 29,
+      "specifier": "./features/g4.scoring",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.scoring.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 30,
+      "specifier": "./features/g5.ribbon",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.ribbon.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 31,
+      "specifier": "./features/g5.routing",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.routing.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 32,
+      "specifier": "./features/g3.endpoints",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.endpoints.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 33,
+      "specifier": "./features/g2.sprite",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g2.sprite.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 34,
+      "specifier": "./features/g1.badges",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g1.badges.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 35,
+      "specifier": "./features/g1.digits",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g1.digits.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/measure.js",
+      "line": 36,
+      "specifier": "./features/shared.hsv",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/shared.hsv.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.phantomTee.js",
+      "line": 14,
+      "specifier": "../assignment",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/assignment.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.phantomTee.js",
+      "line": 15,
+      "specifier": "./g5.zfit",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.zfit.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.phantomTee.js",
+      "line": 16,
+      "specifier": "./g4.scoring",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.scoring.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.phantomTee.js",
+      "line": 17,
+      "specifier": "./g4.search",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.search.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.phantomTee.js",
+      "line": 18,
+      "specifier": "./g5.ribbon",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.ribbon.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.phantomTee.js",
+      "line": 19,
+      "specifier": "./g5.routing",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.routing.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.phantomTee.js",
+      "line": 20,
+      "specifier": "./g3.teeReceipts",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeReceipts.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeFamily.js",
+      "line": 58,
+      "specifier": "./teePoseVisuals",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/teePoseVisuals.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPose.js",
+      "line": 12,
+      "specifier": "./g3.teeFamily",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeFamily.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPose.js",
+      "line": 13,
+      "specifier": "./g3.teeMinAreaPoseMath",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPoseMath.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPose.js",
+      "line": 14,
+      "specifier": "./g3.teeMinAreaPoseReceipt",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPoseReceipt.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeMinAreaPose.js",
+      "line": 15,
+      "specifier": "./teePoseVisuals",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/teePoseVisuals.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeRecovery.js",
+      "line": 12,
+      "specifier": "../components",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/components.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeRecovery.js",
+      "line": 13,
+      "specifier": "../assets/basket-sprite.json",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/assets/basket-sprite.json"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeRecovery.js",
+      "line": 14,
+      "specifier": "../assignment",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/assignment.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeRecovery.js",
+      "line": 15,
+      "specifier": "./g5.zfit",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.zfit.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeRecovery.js",
+      "line": 16,
+      "specifier": "./g4.scoring",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.scoring.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeRecovery.js",
+      "line": 17,
+      "specifier": "./g4.search",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.search.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeRecovery.js",
+      "line": 18,
+      "specifier": "./g5.ribbon",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.ribbon.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeRecovery.js",
+      "line": 19,
+      "specifier": "./g5.routing",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.routing.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeRecovery.js",
+      "line": 20,
+      "specifier": "./g3.teeReceipts",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeReceipts.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeRecovery.js",
+      "line": 21,
+      "specifier": "../screenChrome",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/screenChrome.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLock.js",
+      "line": 11,
+      "specifier": "./g4.scoring",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.scoring.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLock.js",
+      "line": 12,
+      "specifier": "./g4.teeBadgeLockMath",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLockMath.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLock.js",
+      "line": 13,
+      "specifier": "./g4.teeBadgeLockReceipt",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.teeBadgeLockReceipt.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecovery.js",
+      "line": 21,
+      "specifier": "../assignment",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/assignment.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecovery.js",
+      "line": 22,
+      "specifier": "./g3.teeRecovery",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeRecovery.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecovery.js",
+      "line": 23,
+      "specifier": "./g3.phantomTee",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.phantomTee.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecovery.js",
+      "line": 24,
+      "specifier": "./g4.scoring",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.scoring.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecovery.js",
+      "line": 25,
+      "specifier": "./g4.search",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.search.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecovery.js",
+      "line": 26,
+      "specifier": "./g5.ribbon",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.ribbon.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecovery.js",
+      "line": 27,
+      "specifier": "./g5.routing",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.routing.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecovery.js",
+      "line": 28,
+      "specifier": "./g5.zfit",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.zfit.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecovery.js",
+      "line": 29,
+      "specifier": "./g4.posteriorTeeRecoveryReceipt",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g4.posteriorTeeRecoveryReceipt.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g2.cleanBasketFamily.js",
+      "line": 17,
+      "specifier": "../assets/basket-sprite.json",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/assets/basket-sprite.json"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g2.cleanBasketFamily.js",
+      "line": 18,
+      "specifier": "../components",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/components.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g1.digits.js",
+      "line": 52,
+      "specifier": "../assets/logistic.json",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/assets/logistic.json"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g1.badgeGlyphTemplate.js",
+      "line": 40,
+      "specifier": "../assets/badge-glyph-templates.json",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/assets/badge-glyph-templates.json"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g1.badgeGlyphTemplate.js",
+      "line": 41,
+      "specifier": "../digits/badgeGlyphTemplateMath",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/digits/badgeGlyphTemplateMath.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g1.badgeGlyphTemplate.js",
+      "line": 42,
+      "specifier": "./g1.badgeGlyphTemplateReceipt",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/g1.badgeGlyphTemplateReceipt.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g2.sprite.js",
+      "line": 12,
+      "specifier": "../assets/basket-sprite.json",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/assets/basket-sprite.json"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g2.sprite.js",
+      "line": 13,
+      "specifier": "../smartBasket",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/smartBasket.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/componentField.js",
+      "line": 6,
+      "specifier": "./components",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/components.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/objects.js",
+      "line": 7,
+      "specifier": "./componentAssembly",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/componentAssembly.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/m1Representation.js",
+      "line": 7,
+      "specifier": "./componentAssembly",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/componentAssembly.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g5.badgeM2Aa.js",
+      "line": 14,
+      "specifier": "../m2Representation",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/m2Representation.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/badgeStage.js",
+      "line": 16,
+      "specifier": "./raster",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/raster.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/badgeStage.js",
+      "line": 17,
+      "specifier": "./components",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/components.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/badgeStage.js",
+      "line": 18,
+      "specifier": "./families",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/families.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/assignment.js",
+      "line": 11,
+      "specifier": "./routing",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/routing.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/assignment.js",
+      "line": 12,
+      "specifier": "./ribbon",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/ribbon.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/assignment.js",
+      "line": 13,
+      "specifier": "./scoring",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/scoring.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/st.straightTest.js",
+      "line": 6,
+      "specifier": "./st.straightTest.contract",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/st.straightTest.contract.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/smartBasket.js",
+      "line": 5,
+      "specifier": "./components",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/components.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/digits/readBadges.js",
+      "line": 18,
+      "specifier": "./badgeGlyph",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/digits/badgeGlyph.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/digits/readBadges.js",
+      "line": 19,
+      "specifier": "./segment",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/digits/segment.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/digits/readBadges.js",
+      "line": 20,
+      "specifier": "./normalize",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/digits/normalize.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/digits/segment.js",
+      "line": 55,
+      "specifier": "../components",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/components.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/routing.js",
+      "line": 5,
+      "specifier": "./ribbon",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/ribbon.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/features/g3.teeReceipts.js",
+      "line": 10,
+      "specifier": "./teePoseVisuals",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/features/teePoseVisuals.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/m2Representation.js",
+      "line": 16,
+      "specifier": "./m2RawFrameStatsControl",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/m2RawFrameStatsControl.js"
+    },
+    {
+      "caller": "source/provider/packages/alg/dist/detectors/threeFactor/digits/normalize.js",
+      "line": 18,
+      "specifier": "./segment",
+      "kind": "local",
+      "resolved": "source/provider/packages/alg/dist/detectors/threeFactor/digits/segment.js"
+    }
+  ],
+  "externals": [],
+  "dynamic_loads": [],
+  "literal_assets": [
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/assets/basket-sprite.json",
+      "sha256": "c2867340d477a5e2f88e83b78516fc89005004a4aa279b6b9bc86a6f98e3598f",
+      "size": 3234
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/assets/logistic.json",
+      "sha256": "a86497b308da33f093ac4540a841b228272f0a14fbbb5ebbfa1490d047ebceb7",
+      "size": 151330
+    },
+    {
+      "path": "source/provider/packages/alg/dist/detectors/threeFactor/assets/badge-glyph-templates.json",
+      "sha256": "00af1d9d7bc40790a76aee0f8a2cce68b930c2ba4a94575b2842235fb1253b41",
+      "size": 11572
+    }
+  ],
+  "missing": [],
+  "first_stop": null
+}
