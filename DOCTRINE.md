@@ -101,6 +101,13 @@ inventory of absolute px and fixed cross-unit ratios in S0-S7 (`docs/evidence/ab
 sprites 2.04x and the hallway ribbon 1.45x, so a rule written in one of those units and applied to another drifts up
 to 1.6x). No off-frame rule is built for partial views.
 
+**A stitched course is one raster (Sam, 2026-10-19).** The tiles of one capture (lenard1-5; Dash's Track's four
+tiles and overview) are not separate images to judge, match or count one by one. Mathematically there is a single
+course raster in a single frame. Mechanically it may be backed by several rasters plus their placements, which is the
+store's business, like any other backing. So identity, counts, budgets and judging take the course as the unit: a
+tile with 4 badges is not "refused", it is part of a course that has 18. Per-tile numbers are diagnostics, never
+verdicts.
+
 ## Points and identity
 
 - **The tee is the full pad; its position is the pad centre.** Sam's
