@@ -28,6 +28,7 @@ import { renderAlphaProfile } from './alpha/alphaRender.mjs';   // S7 lane: tk.s
 import { isHallwayScene, renderHallwayScene } from './s7trace/sceneRender.mjs';   // S7 trace lane block: tk.s7.scene
 import { isTraceView, renderTraceView } from './s7trace/traceViewRender.mjs';   // S7 trace lane block: tk.s7.routeMatchView
 import { isRouteTable, renderRouteTable } from './s7route/routeRender.mjs';   // S7 scoring block: tk.s7.routeTable
+import { isCourseGeometry, renderCourseGeometry } from './export/courseRender.mjs';   // export block: tk.export.course
 
 const isTyped = (v) => ArrayBuffer.isView(v) && !(v instanceof DataView);
 const isScalar = (v) => v === null || ['number', 'string', 'boolean'].includes(typeof v);
@@ -35,7 +36,7 @@ const labelOf = (it, i) => it.label ?? it.name ?? it.candidate ?? it.hole ?? Str
 const scalarFields = (o) => Object.fromEntries(Object.entries(o).filter(([, v]) => isScalar(v) || (Array.isArray(v) && v.length <= 6 && v.every(isScalar))).map(([k, v]) => [k, Array.isArray(v) ? v.join(', ') : v]));
 const bboxOf = (it) => (Array.isArray(it.bbox) && it.bbox.length === 4 ? it.bbox : null);
 
-export const PART_KINDS = Object.freeze(['pxset', 'raster', 'alphaProfile', 'plane', 'pxsets', 'boxes', 'points', 'rows', 'strips', 'scalar', 'object', 'pathLoss', 'pathProfile', 'hallwayScene', 'pairFeatures', 'routeTable', 'routeMatchView']);   // strips: S5-B; alphaProfile: S7-A; pathLoss, pathProfile: S6-B; hallwayScene: S7-B; pairFeatures: S6 scoring; routeTable: S7 scoring
+export const PART_KINDS = Object.freeze(['pxset', 'raster', 'alphaProfile', 'plane', 'pxsets', 'boxes', 'points', 'rows', 'strips', 'scalar', 'object', 'pathLoss', 'pathProfile', 'hallwayScene', 'pairFeatures', 'routeTable', 'routeMatchView', 'courseGeometry']);   // strips: S5-B; alphaProfile: S7-A; pathLoss, pathProfile: S6-B; hallwayScene: S7-B; pairFeatures: S6 scoring; routeTable: S7 scoring
 
 /** Which case of the union a value is (the dispatch every default property can share). */
 export function partKind(v) {
@@ -44,6 +45,7 @@ export function partKind(v) {
   if (v && typeof v === 'object' && v.schema === 'nctk-alpha-profile@1') return 'alphaProfile';   // S7 lane block
   if (isHallwayScene(v)) return 'hallwayScene';   // S7 trace lane block
   if (isRouteTable(v)) return 'routeTable';   // S7 scoring block
+  if (isCourseGeometry(v)) return 'courseGeometry';   // export block: the exported holes over the course
   if (isTraceView(v)) return 'routeMatchView';   // S7 trace lane block: the traces over the course
   if (v && typeof v === 'object' && v.rgba && Number.isInteger(v.widthPx) && Number.isInteger(v.heightPx)) return 'raster';
   if (Array.isArray(v)) {
@@ -73,6 +75,7 @@ export function renderValue(address, v, dims = null, depth = 0, opts = {}) {
     case 'alphaProfile': return renderAlphaProfile(address, v, dims);   // S7 lane block: swatches, unmixed crops, residual histogram
     case 'hallwayScene': return renderHallwayScene(address, v);   // S7 trace lane block: luminance, mask, BasketPoints
     case 'routeMatchView': return renderTraceView(address, v, dims, { canvas: s6Canvas, deflate: opts.deflate ?? null });   // S7 trace lane block: routes, bends before / after, testimony over the course
+    case 'courseGeometry': return renderCourseGeometry(address, v, dims, { canvas: s6Canvas, deflate: opts.deflate ?? null });   // export block: holes, bends, badges, candidates over the course
     case 'routeTable': return renderRouteTable(address, v, { canvas: s6Canvas });   // S7 scoring block: holes x baskets heatmap
     case 'pxsets': {
       const px = []; for (const it of v) for (const i of it.px) px.push(i);
