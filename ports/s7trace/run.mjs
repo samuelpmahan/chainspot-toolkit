@@ -52,7 +52,13 @@ export function loadS7Lanes({ out, upperRowsRemoved, values }) {
   let association;
   if (existsSync(assocFile)) {
     const assoc = readJson(assocFile), base = baselineOf(assoc, out), poses = assoc.rows.filter((r) => r.pose);
-    association = { holes: base.holes, source: 's3assoc/px.tees.association.json (baselineOf: the frozen-baseline shape)', condition: null,
+    // baselineOf writes the frozen-baseline shape, whose tee ray is rounded to 2 decimals (a recorded artifact: up to
+    // 0.3 deg, about 1 px per 200 px along the axis); S7 reads the unrounded AA pose angle instead, with the same sense
+    const holes = Object.fromEntries(Object.entries(base.holes).map(([b, h]) => {
+      const r = assoc.rows.find((x) => x.best && String(x.best.badge) === String(b)), th = ((r?.pose?.thDeg ?? r?.thDeg) * Math.PI) / 180, s = r?.best?.sense ?? 1;
+      return [b, r && Number.isFinite(th) ? { ...h, u: [Math.cos(th) * s, Math.sin(th) * s], uRule: 'AA pose thDeg (unrounded), association sense' } : h];
+    }));
+    association = { holes, source: 's3assoc/px.tees.association.json (baselineOf: the frozen-baseline shape)', condition: null,
       pads: poses.map((r) => ({ label: r.tee, cx: r.pose.cx, cy: r.pose.cy, thDeg: r.pose.thDeg })), template: { L: assoc.template.L, W: assoc.template.W }, padRule: 'S3 association AA pad poses (fn.Tee.poseAA) and their template' };
   } else {
     const m = values['px.tees.familyRefined'].model;
