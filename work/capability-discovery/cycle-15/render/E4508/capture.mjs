@@ -1,0 +1,18 @@
+import { spawnSync } from 'node:child_process';
+import { readFileSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+const cwd=dirname(fileURLToPath(import.meta.url));
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const argv=[resolve(cwd,'render.mjs')];
+const before=sha(readFileSync(argv[0]));
+const startUTC=new Date().toISOString();
+const child=spawnSync(process.execPath,argv,{cwd,env:process.env,encoding:null,timeout:20000,maxBuffer:5*1024*1024});
+const endUTC=new Date().toISOString();
+const stdout=child.stdout??Buffer.alloc(0),stderr=child.stderr??Buffer.alloc(0);
+for(const [name,bytes] of [['stdout.txt',stdout],['stderr.txt',stderr]]) writeFileSync(resolve(cwd,name),bytes,{flag:'wx'});
+const metadata={schema:'lab15-e4508-render-capture@1',executable:process.execPath,nodeVersion:process.version,argv,cwd,startUTC,endUTC,exitCode:child.status,signal:child.signal,error:child.error?.message??null,timeoutMs:20000,maxBufferBytesPerStream:5*1024*1024,environmentBindings:{NODE_PATH:process.env.NODE_PATH??null},renderSourceSha256Before:before,renderSourceSha256After:sha(readFileSync(argv[0])),captureSourceSha256:sha(readFileSync(fileURLToPath(import.meta.url))),stdout:{bytes:stdout.length,sha256:sha(stdout)},stderr:{bytes:stderr.length,sha256:sha(stderr)}};
+writeFileSync(resolve(cwd,'execution.json'),JSON.stringify(metadata,null,2)+'\n',{flag:'wx'});
+process.stdout.write(JSON.stringify(metadata)+'\n');
+process.exitCode=child.status??1;

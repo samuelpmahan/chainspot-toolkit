@@ -1,0 +1,99 @@
+{
+  "job_id": "E4502",
+  "worker": "S2",
+  "outcome": "mixed_change",
+  "summary": "Reuse the existing exact-byte/ref/receipt admission checks from the Lab14 captured-data audit, but do not treat that fixed-path four-row audit as a reusable candidate consumer. The narrow new gap is an evidence-status contract: unavailable saved bytes must remain distinct from an admitted empty candidate set. No new ranking, winner-only identity, or toy hash oracle is needed.",
+  "basis": {
+    "repo": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab",
+    "assigned_commit": "72283400af48cf19baa06723f0d66894a9590df2",
+    "commit_verified_with_git": false,
+    "method": "Read-only source and documentation inspection, explicit SHA-256 file pinning. No provider imports, tests, capture scripts, producers, ranking/PCR execution, images/pixels, CV, original queries, native state writes, Git operations, source changes, or subagents.",
+    "search_scope": "Root README/REVIEW, cycle14 CURRENT and ranked-evidence files; source/provider execution contracts, sink/gateway/PCR and scored-row types; code-only candidateSet searches and the E4413 audit/display consumer. Searches establish this bounded source finding, not global absence across other owners or branches."
+  },
+  "confirmed_reuse": [
+    {
+      "claim": "The adapter already preserves actual Map/group iteration and complete row objects in versioned saved JSON; the caller precondition is trusted complete finite JSON-safe scored rows.",
+      "sources": ["adapter.mjs:18-25", "ranked-evidence/README.md:45-50"]
+    },
+    {
+      "claim": "The existing E4413 consumer reads exact standalone artifact bytes, matches them to captured base64, hashes those bytes against the ref, checks kind/id, compares parsed JSON with captured JSON and the full hand oracle, and binds the artifact ref to the receipt. It also compares the PCR tick testimony with that receipt. These checks should be reused, not rediscovered as a missing hashing capability.",
+      "sources": ["render.mjs:69-90"]
+    },
+    {
+      "claim": "Gateway materializations become sink refs before the receipt is produced. PCR content identity includes artifact id/kind/sha256/dims but not URI or raw bytes; a PCR header/runResultId alone therefore does not make saved bytes available to a consumer.",
+      "sources": ["gateway.ts:152-169", "pcr.ts:35-47", "pcr.ts:69-85"]
+    }
+  ],
+  "critique": [
+    {
+      "severity": "bounded_missing_capability",
+      "finding": "E4413 is a single-use audit with fixed absolute BASE/GREEN paths, expected exit counts, fixture-specific complete rows and label-derived phase handling. Extract its admission concept into an additive source-backed consumer if desired; do not execute it unchanged on arbitrary captures or claim native loader integration.",
+      "sources": ["render.mjs:7-9", "render.mjs:28-55", "render.mjs:59-68", "render.mjs:88-92", "ranked-evidence/README.md:83-86"]
+    },
+    {
+      "severity": "missingness",
+      "finding": "Existing empty/single/tie tests invoke native.runtime (OFF), so they characterize ranking output, not the saved ON artifact admission boundary. An absent artifact, an unavailable byte source, and valid bytes containing groups:[] are not interchangeable zero-row results.",
+      "sources": ["integration.test.mjs:98-107", "integration.test.mjs:54-59", "render.mjs:92-98"]
+    },
+    {
+      "severity": "lossy_projection_risk",
+      "finding": "The audit table projects each row to pairId/score/supportMean/rank from record.ranked, although its preceding full oracle cross-checks those rows against exact saved artifact content. A reusable consumer must derive its admitted payload from verified saved bytes, retain full groups/rows/raw/legs/factors and ordered arrays, and label any display subset explicitly. Copying only the table projection or trusting artifact.json/record.ranked without byte admission would weaken the existing contract.",
+      "sources": ["render.mjs:64", "render.mjs:79-98", "types.ts:234-278", "adapter.mjs:21-24"]
+    },
+    {
+      "severity": "compatibility",
+      "finding": "candidateSet is a generic artifact kind, not this payload schema: the frozen tees.exclusion extractor emits a plain tee array under the same kind. Admit this ranked payload only with its specific artifact id and schema; do not route all candidateSet artifacts through the ranked parser or change the shared provider contract.",
+      "sources": ["contract.ts:76-88", "operations.ts:1032-1034", "adapter.mjs:6-9", "adapter.mjs:25"]
+    },
+    {
+      "severity": "compatibility",
+      "finding": "URI is sink-defined and opaque to the core; the captured memory:// identifier is not a reloadable file path. Accept an explicitly supplied saved-byte source and preserve URI as provenance, rather than dereferencing it or demanding a new URI to equal the original. The original receipt/artifact reference association can still be checked exactly within its capture. PCR's identity tuple intentionally omits URI.",
+      "sources": ["contract.ts:90-112", "sink.ts:43-48", "pcr.ts:42-47", "render.mjs:80-87"]
+    },
+    {
+      "severity": "scope_guard",
+      "finding": "The ON adapter replaces an existing ranking extractor in a copied table; arbitrary custom runtimes/composition are expressly unvalidated. No repair is needed for the pinned runtime, but a consumer probe must not silently broaden that applicability or implement a general hostile-input/security framework.",
+      "sources": ["adapter.mjs:12-26", "ranked-evidence/README.md:20-25", "ranked-evidence/README.md:49-50"]
+    }
+  ],
+  "recommended_narrow_falsifier": {
+    "name": "Saved ranked evidence: unavailable is not empty",
+    "user_value": "A candidate inspector can truthfully say that alternatives evidence could not be loaded instead of claiming there were no alternatives, while retaining the full observed losing candidates when bytes are available.",
+    "primary_counterexample": "Supply the unchanged valid saved A reference, receipt and PCR association but no artifact bytes. A consumer that falls back to groups:[] or reconstructs rows from record.ranked/artifact.json falsely reports zero alternatives. Required result is explicit unavailable/missing-bytes with no admitted rows and no producer fallback.",
+    "positive_control": "Admit the exact already-saved A artifact bytes under their existing matching ref and receipt/PCR association; expose the full ordered groups/rows including nested fields, without reranking or copying the comparator. This uses prior evidence, not a new producer run.",
+    "empty_control": "If a separately source-pinned and authorized genuine ON empty artifact is available, admit its exact bytes/ref/receipt and report admitted-empty. No such saved ON-empty evidence was established by this source-only review. Do not invent a native receipt, relabel OFF output, or construct new producer evidence inside this review.",
+    "optional_custody_control": "Pair exact saved B bytes with unchanged A ref/receipt. Reject as byte-digest mismatch before exposing a candidate projection, despite valid JSON and the same kind/id/schema. This is a saved-evidence association check, not a repeated loser-change PCR/ranking oracle.",
+    "minimal_contract": [
+      "Require the specific ranked artifact id, candidateSet kind, and lab14-ranked-alternatives@1 schema; an unrelated candidateSet is unsupported, not empty.",
+      "Require exact saved bytes and compare their digest with the associated artifact ref; if captured base64 is available, retain its exact-byte cross-check.",
+      "Associate the same ref with the ranking receipt and its PCR tick testimony; do not accept an arbitrary PCR header as proof of availability.",
+      "Only after admission, parse the bytes and preserve full ordered row content as the admitted payload. Display projection is separate and explicitly incomplete.",
+      "Represent admitted-nonempty, admitted-empty, unavailable and incompatible evidence distinctly. Do not add fallback ranking, provider execution, URI probing or geometry/ownership claims."
+    ],
+    "scope": "Proposal only. No falsifier, test, saved artifact admission, producer, loader or render was executed here. Root must obtain any next execution authority."
+  },
+  "sourcepins": [
+    {"path":"README.md","sha256":"021d55b816f45de332480be01c0502f4e1c815a1c3c7a62a0f44fb3dfbd4472e"},
+    {"path":"REVIEW.md","sha256":"2d015479c367f3d20c7536e80f49859f8ad5ca5a602002b4519889aff5aabd93"},
+    {"path":"work/capability-discovery/cycle-14/CURRENT.md","sha256":"69b7fae153630e6e573fa4f07d18c11ed89796749d9c292de5572c577f17b88e"},
+    {"path":"experiments/capability-discovery/ranked-evidence/README.md","sha256":"846badd497ccc77037d2e504cbfde289d92a568c4e5e67f17ca80f26498e3b38"},
+    {"path":"experiments/capability-discovery/ranked-evidence/adapter.mjs","sha256":"a87140d62dc4a9d8ae844640486f766b8a32f8dc41806bc16b603832f48014ff"},
+    {"path":"experiments/capability-discovery/ranked-evidence/fixture.mjs","sha256":"eec0a017df87dbf99d4e36bb94d32cc16df43119a5fade88da0490ec3ddd8219"},
+    {"path":"experiments/capability-discovery/ranked-evidence/integration.test.mjs","sha256":"904a1403c034ca5cbcdb0db5e11b5ff9f73a850a4878c040330c24dc1b24aa57"},
+    {"path":"experiments/capability-discovery/ranked-evidence/capture.mjs","sha256":"c52809216af9fde77ac9a0a5e5238b54dead6159e872fc864aea05f4fc103046"},
+    {"path":"work/capability-discovery/cycle-14/render/E4413/render.mjs","sha256":"eef4d742c25ed518f38ac25488913e1079e04d130a0066c8d9a40810d0b47b02"},
+    {"path":"source/provider/packages/alg/src/exec/contract.ts","sha256":"21716541e466d521fd1bcebf89f4d2fc8c76aeb5665a2fcbc30d6063ed715aad"},
+    {"path":"source/provider/packages/alg/src/exec/pcr.ts","sha256":"ba214fc58bafc3e703892a7e9160d131b07806f19a83772af98f8d1c946d3e54"},
+    {"path":"source/provider/packages/alg/src/exec/sink.ts","sha256":"ef75def6f64ede0e702a769cb3923b60f910c2bdb17f66b7a68490ac2b7610e9"},
+    {"path":"source/provider/packages/alg/src/exec/gateway.ts","sha256":"c79e00b91378f2af3717fb99c6c4ae76ad226098f97acc595822e35a04584e6f"},
+    {"path":"source/provider/packages/alg/dist/exec/pcr.js","sha256":"a1fcd9d7d27cedc2e4f9f74d4fcc6825347e23c36f62828ea98bbf9fb75e1ddd"},
+    {"path":"source/provider/packages/alg/dist/exec/sink.js","sha256":"a840ab8b7808da678d7defc91aad21a7a7ead7a2e183f0dc278dc8d50edd9552"},
+    {"path":"source/provider/packages/alg/src/detectors/threeFactor/types.ts","sha256":"c9c4b914b9de990333f9e84bafba98f4cb86a9a57485b24599d7a1fecf5d81fa"},
+    {"path":"source/provider/packages/alg/src/exec/operations.ts","sha256":"5bb9f97e0e8e235fa3e80a32761a701cdcfc107369565e3ec77e5ea6b95a26b8"}
+  ],
+  "limitations": [
+    "No new runtime evidence or RED/GREEN claim. Existing execution observations are documented historical claims, not reproduced by this worker.",
+    "No native inputs, physical truth, ownership/selection, performance, production adoption, or global absence claim.",
+    "No current source mutation, native result submission, state/bundle operation, other-owner adoption or publication. This JSON is a worker report in the assigned scratch path only."
+  ]
+}

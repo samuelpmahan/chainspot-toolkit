@@ -1,0 +1,50 @@
+✖ supplied saved capture is inspected into a fresh caller-selected directory (75.205729ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 201.46032
+
+✖ failing tests:
+
+test at experiments/capability-discovery/ranked-inspector/inspector.test.mjs:37:1
+✖ supplied saved capture is inspected into a fresh caller-selected directory (75.205729ms)
+  AssertionError [ERR_ASSERTION]: portable saved inspection must exit0; stderr=node:fs:622
+    return binding.open(
+                   ^
+  
+  Error: ENOENT: no such file or directory, open '/workspace/scratch/86659bbafcce/lab14/S1/E4411/baseline/execution.json'
+      at Object.openSync (node:fs:622:18)
+      at readFileSync (node:fs:488:35)
+      at read (file:///workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-14/render/E4413/render.mjs:13:17)
+      at load (file:///workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-14/render/E4413/render.mjs:18:32)
+      at file:///workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-14/render/E4413/render.mjs:28:18
+      at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+      at async node:internal/modules/esm/loader:643:26
+      at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+    errno: -2,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: '/workspace/scratch/86659bbafcce/lab14/S1/E4411/baseline/execution.json'
+  }
+  
+  Node.js v24.19.0
+  
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/ranked-inspector/inspector.test.mjs:41:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

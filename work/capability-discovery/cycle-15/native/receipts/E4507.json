@@ -1,0 +1,67 @@
+{
+  "job_id": "E4507",
+  "worker": "S1",
+  "outcome": "mixed_change",
+  "summary": "Implemented the opt-in saved-ranked inspector in four new authorized files, reusing E4413 byte/ref/receipt/PCR admission and ordered metadata display. One actual archived-consumer portability RED was followed by one focused4/4 GREEN. No ranking/provider/PCR recomputation, images/CV, native writes, Git or packaging.",
+  "repo": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab",
+  "written": [
+    "experiments/capability-discovery/ranked-inspector/inspector.mjs",
+    "experiments/capability-discovery/ranked-inspector/cli.mjs",
+    "experiments/capability-discovery/ranked-inspector/inspector.test.mjs",
+    "experiments/capability-discovery/ranked-inspector/README.md"
+  ],
+  "protocol": "lab15/S1/E4507/protocol.json",
+  "red": {
+    "actual_archive_invocations": 1,
+    "focused_test_runs": 1,
+    "tests": "0pass/1 intended failure",
+    "status": 1,
+    "actual_failure": "Desired portable saved inspection exit0 assertion observed actual archive exit1 ENOENT opening obsolete hardcoded BASE/execution.json despite supplied saved runtime/artifact/output paths.",
+    "classification": "missing portable consumer capability, not missing import, unsafe-byte acceptance, ranking or core defect",
+    "raw_directory": "lab15/S1/E4507/baseline",
+    "direct_test_stderr_bytes": 0,
+    "source_pins_unchanged": true
+  },
+  "green": {
+    "command": ["/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node", "--test", "/workspace/scratch/86659bbafcce/chainspot-discovery-lab/experiments/capability-discovery/ranked-inspector/inspector.test.mjs"],
+    "cwd": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab",
+    "runs": 1,
+    "status": 0,
+    "tests": "4pass/0fail",
+    "stdout_bytes": 495,
+    "stderr_bytes": 0,
+    "raw_directory": "lab15/S1/E4507/green",
+    "source_pins": "lab15/S1/E4507/green/source-pins.before.json",
+    "after_pins": "lab15/S1/E4507/green/source-pins.after.json",
+    "pinned_files": 9,
+    "source_pins_unchanged": true,
+    "original_portability_test_body_unchanged_between_red_and_green": true,
+    "suite_cli_calls": 3,
+    "suite_cli_details": "A JSON admitted exit0; same A output directory refused exit1 without overwrite; A TSV admitted exit0.",
+    "direct_api_calls": 12,
+    "direct_api_details": "4 saved admissions (A/B/A2 and altered record.ranked ignored);3 missing/OFF-absence/synthetic-empty cases;5 incompatible bytes/capturedJSON/receipt/PCR/kind cases.",
+    "first_green_qualifier": "All boundary cases beyond portable archive RED are FIRST-GREEN characterization, not additional REDs. Synthetic empty has fabricated consumer-shape bytes/ref/testimony and synthetic PCR provenance, never native-produced execution evidence.",
+    "tempfile_retention": "The unchanged original test helper cleans temporary outputs. A JSON/TSV and refused-output behavior were asserted but A report files are not retained; no A CLI rerun was made solely to populate an archive. Suite raw stdout/stderr and exact source pins are retained."
+  },
+  "supplemental_cli": {
+    "calls": 2,
+    "reason": "B/A2 calls had already completed before Root's no-further-CLI message arrived; acknowledged immediately, and no further execution occurred.",
+    "results": [
+      {"label":"desired-bridge-B", "format":"json", "status":0, "stderr_bytes":0, "source_pins_unchanged":true, "directory":"lab15/S1/E4507/cli-B", "report":"lab15/S1/E4507/cli-B/report/report.json", "report_bytes":7961, "report_sha256":"02d782ce61ee5b66afa2c9dbb8cb25501a036c52076920646d010d0a7694bbf2"},
+      {"label":"desired-bridge-A2", "format":"tsv", "status":0, "stderr_bytes":0, "source_pins_unchanged":true, "directory":"lab15/S1/E4507/cli-A2", "report":"lab15/S1/E4507/cli-A2/report/report.tsv", "report_bytes":534, "report_sha256":"dcf3087cd86b9e965e5bf31a1d94be7992390f96017caa5f7aa10ef16a1050fc"}
+    ],
+    "total_new_cli_calls_including_suite": 5,
+    "retention": "Each supplemental directory contains exact argv/executable/cwd/time/status, separate direct stdout/stderr, before/after pins and exclusive output report."
+  },
+  "boundaries": {
+    "complete_payload_source": "admitted saved bytes only; never record.ranked fallback",
+    "provenance": "Recorded PCR ID carried, not recomputed or independently authenticated. Trusted finite JSON-safe captured rows only; no hostile-input/security, native-input/geometry/ownership/selection claim.",
+    "source_scope": "No old tracked source or archive edited. Root's full4227-file preservation audit is separate; author source-pin checks cover nine exact files, not a global preservation claim.",
+    "documentation": "README retains creation-time pending-checkpoint wording; Root may update this docs-only wording before package and qualify final documentation hash separately from tested code hashes.",
+    "no_git_or_package": true,
+    "no_provider_import_producer_or_pcr_execution": true,
+    "no_native_writes": true,
+    "holds": "Original pixels/CV/44queries remain HOLD; consumed E2021/old160grid never replayed; HH/other owners/defaults/core untouched."
+  },
+  "handoff": "Stopped after GREEN. Root owns native completion, independent review, preservation audit and any later Git/package GO. Checkpoint result.json is retained separately and is not the native completion result."
+}

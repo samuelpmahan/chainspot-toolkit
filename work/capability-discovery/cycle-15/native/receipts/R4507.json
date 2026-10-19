@@ -1,0 +1,32 @@
+{
+  "job_id": "R4507",
+  "worker": "S3",
+  "decision": "accepted",
+  "summary": "Accepted exact four-file inspector checkpoint for trusted saved Lab14 desired-bridge A/B/A2 byte/capture association and metadata display. Independent focused suite passed4/4; one independent A JSON CLI passed and retained its full payload. No blocking findings; acceptance is not upstream completeness, authenticity, role or full-schema proof.",
+  "reviewed": "Protocol, S1/E4507/final-result.json, all raw baseline/green streams/metadata/pins, current four product sources, archived E4413 source and actual saved runtime/artifact associations. Base HEAD72283400af48cf19baa06723f0d66894a9590df2; no tracked/staged diff; only ranked-inspector directory untracked before/after. Root native bookkeeping qualification read; late repair times are not execution-start evidence.",
+  "source_identity": {
+    "inspector.mjs": "94e0d8825f669300c9bdf4977623cffcdbe9d972b422bb8c5d72ee18f2459adf",
+    "cli.mjs": "21940b9926248a4bd314c9cfad08e5b038cc91ca51eac61f4c9e4016dfbf2bd9",
+    "inspector.test.mjs": "b38c841004af4b7bbe12d700531b274588c575c62c500de7767044e7f5b81d06",
+    "README.md": "19e42adf8db78b6a5d996b3b606acb04f1f51b2e87ad37a468b9e5842c3d3d77",
+    "pin_evidence": "focused/source-pins.before.json and after.json retain all9 exact product/archive/runtime/A/B/A2 pins; match author GREEN, unchanged in both independent runs."
+  },
+  "independent_execution": {
+    "focused": "ONE node --test absolute inspector.test.mjs, default arm, no archive environment;4pass/0fail, exit0, stderr0B. Exact executable/argv/cwd/actual times/status/stream hashes in focused/execution.json; direct stdout/stderr retained exclusively.",
+    "cli_A": "ONE explicit-path cli.mjs --runtime cycle14/evidence/E4412/green/runtime.json --artifacts same directory --label desired-bridge-A --format json --out fresh owned cli-A/report; exit0, stderr0B. Exact command/pins/streams retained in cli-A/.",
+    "report": "/workspace/scratch/86659bbafcce/lab15/S3/R4507/cli-A/report/report.json",
+    "report_bytes": 7959,
+    "report_sha256": "a70ea8521ae464b2d08a35c6ac22cdfdfa7ecadfd6cc006a01180e145da58239",
+    "report_check": "admitted-nonempty;4 rows a1,a3,a2,b1; jq full payload equality against exact artifact-03-0.json passed. Artifact SHA35e426e6...; recorded PCR889dbad1.... No product rerun or archive invocation."
+  },
+  "findings": [
+    {"severity":"low","location":"README.md:36","finding":"Creation-time pending-checkpoint wording is now stale. Optional docs-only finalization should qualify a new documentation hash separately from tested code; not a blocking code finding."}
+  ],
+  "acceptance_scope": "inspector.mjs37-55 admits specific kind/id only after saved bytes/base64/hash/captured JSON and full ref/receipt/PCR testimony association;60-63 derives table solely from saved payload and retains complete supplied payload. Missing/OFF artifact absence stays unavailable, distinct from synthetic admitted-empty. CLI requires explicit flags and fresh absolute output, uses wx, no overwrite. Builtin-only; no provider import/reranking/PCR recomputation/default/core changes.",
+  "declined_to_judge": [
+    "Full upstream alternatives or fixture role: same trusted runtime contains winner-only negative controls sharing schema/id. Admission means saved-byte association consistency; no label-derived role gate or record.ranked fallback was requested.",
+    "Independently authenticated capture/PCR, complete row schema or hostile inputs/resource caps; code intentionally performs bounded shape checks over trusted complete finite JSON-safe captures.",
+    "Scientific/geometry/ownership/selection/native-image identity, full4227-file preservation, deployment or performance. Root owns global preservation and native completion."
+  ],
+  "boundaries": "Only owned scratch review capture/results written. Product source/Git/native state unchanged; no producer, old archive arm, CV/images/44queries, E2021/old160grid, installs, other-owner adoption or extra CLI calls. Original HOLD unchanged."
+}

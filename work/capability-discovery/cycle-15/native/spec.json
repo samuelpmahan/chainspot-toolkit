@@ -1,0 +1,21 @@
+{
+  "schema":"chainspot.rebalancer-spec/v1",
+  "service":{"name":"capability-discovery-lab15","scope":"saved-ranked-evidence-consumer"},
+  "workers":["S1","S2","S3","S4","S5","S6"],
+  "review_policy":{"enabled":false},
+  "jobs":[
+    {"id":"E4501","kind":"extract","subject":"Source-pin actual downstream candidateSet consumer and narrow missing behavior","allow_workers":["S1"]},
+    {"id":"E4502","kind":"extract","subject":"Independent contract and failure critique of saved ranking consumer seam","allow_workers":["S2"]},
+    {"id":"E4503","kind":"extract","subject":"Gateway loader/export and receipt artifact interface audit","allow_workers":["S3"]},
+    {"id":"E4504","kind":"extract","subject":"Mine existing executed materialization consumers without producer replay","allow_workers":["S4"]},
+    {"id":"E4505","kind":"extract","subject":"Fresh remote reference source nonduplication audit","allow_workers":["S5"]},
+    {"id":"E4506","kind":"extract","subject":"Source-driven narrow saved-byte admission/display falsifier","allow_workers":["S6"]}
+  ],
+  "conditional_policy":{
+    "source_seam_with_concrete_gap":"Freeze one saved-byte consumer protocol, implement only after desired failure, then different-worker review",
+    "existing_consumer_already_works":"Retain falsifier; select another ready source-supported seam",
+    "insufficient_evidence":"HOLD integration; publish informative source finding only if actionable",
+    "regression":"Diagnose and repair before acceptance",
+    "accepted":"One exact branch checkpoint; no main/default-on/release/deploy"
+  }
+}

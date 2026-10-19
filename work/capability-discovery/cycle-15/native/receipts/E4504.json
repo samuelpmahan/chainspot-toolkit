@@ -1,0 +1,100 @@
+{
+  "job_id": "E4504",
+  "worker": "S4",
+  "outcome": "mixed_change",
+  "summary": "Confirmed existing executed consumer/audit/display reuse in cycle14 E4413, but it is not yet a standalone candidateSet-only consumer: render.mjs verifies emitted artifact bytes and receipt/PCR relationships, then fills display rows from record.ranked rather than parsed artifact groups. Reuse the actual byte/ref/testimony admission and table/SVG projection; a bounded inlet extraction and removal of this captured-board side channel are needed. No new consumer, producer, test, CV, pixel, or render execution occurred in this source-only assignment.",
+  "repository": {
+    "path": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab",
+    "read_only_head_observed": "72283400af48cf19baa06723f0d66894a9590df2",
+    "source_git_or_native_mutations": false,
+    "owned_output": "/workspace/scratch/86659bbafcce/lab15/S4/E4504/result.json"
+  },
+  "primary_reuse": {
+    "path": "work/capability-discovery/cycle-14/render/E4413/render.mjs",
+    "operation": "Artifact-only captured-evidence audit, CLI/JSON review table, metadata SVG display",
+    "admission_lines": "17-33, 69-90",
+    "actual_behavior": [
+      "Reads execution/stdout/stderr/runtime captures and checks recorded stream hashes, stream lengths, zero stderr and unchanged source pins.",
+      "Checks each selected record's receipt actualConsumes/actualProduces/writes/probes and exact PCR tick testimony equality.",
+      "Reads each emitted artifact file; compares exact disk bytes to capture base64, actual SHA256 to ArtifactRef.sha256, kind candidateSet, exact artifact id, parsed JSON to captured JSON, and receipt artifact ref equality.",
+      "Checks lab14-ranked-alternatives@1 complete nested rows against the independent fixed four-row expected() oracle, including losing alternatives, legs/raw/factors/score/rank.",
+      "Builds projected review table, audit JSON/TSV and SVG without importing provider code, reranking, or recomputing PCR. A/B/A2 identities and OFF/winner-only controls are captured-data comparisons, not new executions."
+    ],
+    "display_lines": "93-98, 124-131, 133-168",
+    "critical_side_channel": "table.rows at lines97-98 is derived from record.ranked. artifact.json.groups is validated at lines86-90 but does not directly supply displayed rows. The current view is therefore a capture audit plus opaque-output projection, not proof that a standalone candidateSet inlet drove the display.",
+    "fixture_and_io_limits": [
+      "BASE/GREEN absolute input directories and OUT directory are hard-coded at lines7-9; the module is top-level executable, not an exported callable reader.",
+      "expectedRow()/expected() and A/B/A2 label routing are fixture-specific; arbitrary complete finite JSON-safe records are not admitted by this code.",
+      "SVG/TSV display pairId, score, supportMean and rank, while full nested content is checked against artifacts. This is not an existing arbitrary full-row interactive inspector.",
+      "The captured plan is explicitly synthetic with paramsHash null. Do not infer native input identity, selected endpoint truth, human geometry acceptance, or closed Real44query HOLD."
+    ]
+  },
+  "executed_vs_source": {
+    "this_assignment": "Read-only inspection and SHA256 calculation only; no tests/modules/producers/renderers were executed.",
+    "existing_executed_evidence": [
+      "cycle14 CURRENT.md reports E4413 artifact-only audit exit0 and metadata PNG inspection.",
+      "render/E4413/result.json reports audit_renderer_exit_code 0, captured-data-only scope, and producer_rerun/provider_imports/rank_or_pcr_recomputation false.",
+      "render/E4413/audit.json and audit.tsv are retained generated outputs; audit.json records exact source capture hashes and all seven checks true.",
+      "cycle14 manifest.json pins the exact renderer hash and copiedFrom original S6 scratch path, plus generated audit/SVG/PNG paths.",
+      "The E4413 renderer has no separate execution.json with direct stdout/stderr/timestamps in this package. Its execution status is retained report/capture evidence, not a fresh S4 run or independently reconstructed renderer process log.",
+      "conversion.json records an initial failed convert attempt and subsequent installed-sharp success, with combined-stream/timestamp limitations. S4 did not open pixels or rerun either conversion."
+    ],
+    "captured_artifact_identity_observed_by_hash_only": {
+      "A_artifact": "35e426e6edbcddad6e048e526a2e6a0ed6c6d90a8d9cdedcc00479811f64be3e",
+      "B_artifact": "5d3b921b08ae7be8e5fdd0d4d35cb386e64fa03f527329661f5eb513ab1c64a3",
+      "A2_artifact": "35e426e6edbcddad6e048e526a2e6a0ed6c6d90a8d9cdedcc00479811f64be3e",
+      "A_pcr_as_reported_in_audit": "889dbad132f77dde27a2546ef9827e03acdefb35946031ba554b7eaa0783b500",
+      "B_pcr_as_reported_in_audit": "d637786ff5803fe9c14a3eb61a7f3231a5bbcb9a737d7daf013981fc6a645427",
+      "A2_pcr_as_reported_in_audit": "889dbad132f77dde27a2546ef9827e03acdefb35946031ba554b7eaa0783b500"
+    }
+  },
+  "useful_seam": {
+    "status": "Source-backed proposal only, not implemented or authorized for execution by this packet",
+    "bounded_change": "Extract the existing artifact bytes/ref/receipt/PCR admission from E4413 as a parameterized input function, parse the admitted candidateSet once, and feed the existing review projection from that parsed groups array rather than record.ranked. Retain the four-row expected() oracle as a separately named fixture check, not a general loader precondition.",
+    "minimum_input": "Exact candidateSet bytes plus expected ArtifactRef and producing receipt/PCR testimony; any capture metadata or expected fixture is explicit rather than an implicit global path/label dependency.",
+    "minimum_output": "Admitted full groups in original artifact order plus the existing selected-field review projection and provenance identities. No ranker/comparator/scorer/provider/producer import or PCR recomputation.",
+    "prospective_admission_checks": [
+      "Retain exact bytes versus ref.sha256, kind/id/schema, receipt artifact binding, and receipt/PCR testimony correspondence from actual E4413 code.",
+      "Prove display comes from parsed artifact rows by omitting record.ranked entirely, rather than merely asserting two parallel views equal.",
+      "Use existing emitted captured A/B/A2 bytes as static inputs if separately authorized; display must preserve changed losing row and order, with winners unchanged.",
+      "Fail closed for absent artifact, stale/mismatched ref or receipt, corrupt bytes, and unsupported schema. Exact malformed-input policy beyond these source-backed cases remains a human-scoped decision.",
+      "Keep OFF artifact absence distinct from an empty candidateSet and from an unavailable materialization; never fabricate rows or native input identity."
+    ],
+    "why_not_toy": "The reused artifact is the actual gateway-emitted full nested candidateSet and its receipt/PCR custody, and the output is an actual review row projection. No scalar sum/hash-only operation or producer replay is proposed."
+  },
+  "secondary_source_only_candidate": {
+    "path": "source/provider/scripts/chainspot-lab/sweep/composedRenderContract.mjs",
+    "lines": "15-73",
+    "reuse": "Existing composeRender(capture, view) binds captured marks to named PCR ticks, validates source/frame/run/Part/payload provenance, preserves unavailable versus explicitly empty materialization, and separates content identity from visibility/render identity.",
+    "reason_not_primary": "Requires a different composed-render capture schema, source/frame/paramsHash and geometry marks; it does not load candidateSet bytes. Its companion composedRenderReplay.mjs reads original JPEG bytes and writes provider artifacts. Neither was executed or adopted here, and this source-only assignment does not authorize that replay.",
+    "execution_claim": "Callable source and existing captured files located; no fresh execution or source-pinned original process-custody validation established by S4."
+  },
+  "contract_context": {
+    "candidateSet": "source/provider/packages/alg/src/exec/contract.ts defines candidateSet as an ArtifactKind and sink-defined ArtifactRef.uri as opaque to exec core.",
+    "sink": "source/provider/packages/alg/src/exec/sink.ts createMemorySink retains refs and bytes and returns real SHA256; this is upstream emission custody, not a downstream display consumer by itself.",
+    "pcr": "source/provider/packages/alg/src/exec/pcr.ts freezes artifact id/kind/sha256/dims in testimony identity and states opaque output values require emitted materialization. pcrRenderId is a pure view projection, not execution authority."
+  },
+  "sourcepins": [
+    {"path":"work/capability-discovery/cycle-14/CURRENT.md","sha256":"69b7fae153630e6e573fa4f07d18c11ed89796749d9c292de5572c577f17b88e"},
+    {"path":"experiments/capability-discovery/ranked-evidence/README.md","sha256":"846badd497ccc77037d2e504cbfde289d92a568c4e5e67f17ca80f26498e3b38"},
+    {"path":"work/capability-discovery/cycle-14/render/E4413/render.mjs","sha256":"eef4d742c25ed518f38ac25488913e1079e04d130a0066c8d9a40810d0b47b02"},
+    {"path":"work/capability-discovery/cycle-14/render/E4413/result.json","sha256":"a3f9e41736f40cffd5249a7c27bab659eca3a28f4a4e9e9a6a8ad8de76437e14"},
+    {"path":"work/capability-discovery/cycle-14/render/E4413/audit.json","sha256":"2a8fd7b5a9334c9b9b375d4ffca71d3c8e1c0e357863642c0d10c009cc3a62c3"},
+    {"path":"work/capability-discovery/cycle-14/render/E4413/conversion.json","sha256":"82fbaf862f43b0efa1376c6697d980ab51535a80cf2170933dd41daf17c9cf93"},
+    {"path":"work/capability-discovery/cycle-14/evidence/E4412/green/runtime.json","sha256":"e6fad368a603a7f1ed0f441807e8dfd7a864bc022972dc66c800b558330fcaab"},
+    {"path":"source/provider/scripts/chainspot-lab/sweep/composedRenderContract.mjs","sha256":"0ff6a06c23dc9cec8c7499225423c48d871345d16e5b34a10b7e1e0713ac14ee"},
+    {"path":"source/provider/packages/alg/src/exec/pcr.ts","sha256":"ba214fc58bafc3e703892a7e9160d131b07806f19a83772af98f8d1c946d3e54"},
+    {"path":"source/provider/packages/alg/src/exec/contract.ts","sha256":"21716541e466d521fd1bcebf89f4d2fc8c76aeb5665a2fcbc30d6063ed715aad"},
+    {"path":"source/provider/packages/alg/src/exec/sink.ts","sha256":"ef75def6f64ede0e702a769cb3923b60f910c2bdb17f66b7a68490ac2b7610e9"}
+  ],
+  "scope_limits": {
+    "github_reference_needed": false,
+    "github_reference_accessed": false,
+    "global_absence_claim": false,
+    "tests_or_producers_run": false,
+    "provider_modules_executed": false,
+    "cv_pixels_or_44query_calls": false,
+    "library_or_other_owner_writes": false,
+    "real44query_hold": "unchanged"
+  }
+}

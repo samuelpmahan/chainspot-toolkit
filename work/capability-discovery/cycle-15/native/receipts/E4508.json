@@ -1,0 +1,28 @@
+{
+  "job_id": "E4508",
+  "worker": "S6",
+  "outcome": "confirmed_reuse",
+  "summary": "Rendered only the exact three root-pinned reviewed inspector reports after reading R4507 accepted receipt. All three input SHA256 pins matched; A/B ordered display rows exactly equal their retained full supplied JSON payload projections; A2 TSV rows/status/recorded artifact and PCR IDs match A. B swaps a2/a3 and carries distinct recorded IDs. One render child exited0 with stderr0B; installed sharp0.35.5 rasterized the same SVG to1500x690 PNG. PNG inspected: all actual pair IDs, scores, support, ranks, statuses and short identities are legible, no clipping/overlap; prominent A2 TSV-only warning and full audit path remain visible. No inspector/provider/rank/PCR/CV execution or image/geometry/native-input claim. Repository/Git untouched.",
+  "scope": "Reviewed inspector output metadata only; A+B source JSON retain full supplied payload; A2 is projection only, not full-payload restoration proof.",
+  "execution": {
+    "command": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node /workspace/scratch/86659bbafcce/lab15/S6/E4508/capture.mjs",
+    "child": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node /workspace/scratch/86659bbafcce/lab15/S6/E4508/render.mjs",
+    "capture": "execution.json",
+    "exit_code": 0,
+    "stderr_bytes": 0,
+    "source_pins_unchanged": true,
+    "raw_streams": ["stdout.txt", "stderr.txt"]
+  },
+  "source_output_pins": "pins.json",
+  "audit": "audit.json",
+  "png_inspected": true,
+  "png_dimensions": [1500,690],
+  "png_sha256": "c760197c06420ff62ba60a783e3ebdf97e45372d499993a889ef27dcdd324eac",
+  "artifacts": ["render.mjs","capture.mjs","audit.json","summary.txt","view.svg","view.png","pins.json","execution.json","stdout.txt","stderr.txt","result.json"],
+  "limits": [
+    "Admission means saved-byte/capture association consistency, not upstream completeness, authenticity, fixture role or full-schema proof.",
+    "PCR identity is carried from reports, not recomputed or independently authenticated.",
+    "No inspector rerun, provider import, ranking, producer, CV, original image/pixel access, course geometry, ownership or selection claim.",
+    "Native release/completion belongs to root; this receipt does not mutate native state. Original44queryHOLD unchanged."
+  ]
+}

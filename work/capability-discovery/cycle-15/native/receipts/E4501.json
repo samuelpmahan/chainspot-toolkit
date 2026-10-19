@@ -1,0 +1,82 @@
+{
+  "job_id": "E4501",
+  "worker": "S1",
+  "outcome": "mixed_change",
+  "summary": "Existing Lab14 E4413 is a real saved-candidateSet/PCR admission and table consumer, but its fixed obsolete scratch inputs/output prevent portable inspection of the restored evidence. Reuse its admission/table projection in a small opt-in saved-artifact inspector; preserve the archived script and all producers/core/defaults.",
+  "canonical_supplied_by_root": "72283400af48cf19baa06723f0d66894a9590df2",
+  "tree_supplied_by_root": "894a95a5d69f0365be7a285ea38ad3eef9a80230",
+  "repo": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab",
+  "sourcepins": [
+    {
+      "path": "work/capability-discovery/cycle-14/render/E4413/render.mjs",
+      "sha256": "eef4d742c25ed518f38ac25488913e1079e04d130a0066c8d9a40810d0b47b02",
+      "seam": "lines7-9,17-28 hardcoded input/output and load; lines69-90 receipt/PCR testimony plus exact bytes/base64/hash/ref/schema/full-row binding; lines93-98 table projection; lines167-168 exclusive archive-adjacent writes"
+    },
+    {
+      "path": "source/provider/scripts/chainspot-lab/sweep/composedRenderContract.mjs",
+      "sha256": "0ff6a06c23dc9cec8c7499225423c48d871345d16e5b34a10b7e1e0713ac14ee",
+      "seam": "lines15-23 requires source/frame/truthy paramsHash; lines25-51 actual PCR consumer only projects captured marks and ignores testimony.artifacts; not suitable for null-paramsHash Lab14 records without wrongly fabricating image identity"
+    },
+    {
+      "path": "source/provider/scripts/chainspot-lab/sweep/composedRenderReplay.mjs",
+      "sha256": "3d5128198e134e6935a85848534a04d1740d5ad9aad56595d5068603f7ec6ce9",
+      "seam": "lines58-96 existing saved-PCR/source projection checks, but reads original JPEG and writes historical projection outputs; do not execute"
+    },
+    {
+      "path": "experiments/capability-discovery/ranked-evidence/integration.test.mjs",
+      "sha256": "904a1403c034ca5cbcdb0db5e11b5ff9f73a850a4878c040330c24dc1b24aa57",
+      "seam": "existing four tests cover OFF, complete alternatives/PCR, winner-only loss, empty/single/tie/missing input; producer tests are not next consumer probe"
+    },
+    {
+      "path": "experiments/capability-discovery/ranked-evidence/adapter.mjs",
+      "sha256": "a87140d62dc4a9d8ae844640486f766b8a32f8dc41806bc16b603832f48014ff",
+      "seam": "already-produced ordered Map serialized to candidateSet; no ranking change required"
+    },
+    {
+      "path": "work/capability-discovery/cycle-14/evidence/E4412/green/runtime.json",
+      "sha256": "e6fad368a603a7f1ed0f441807e8dfd7a864bc022972dc66c800b558330fcaab",
+      "seam": "records3/4/5 desired-bridge-A/B/A2 contain actual captured refs, receipts and PCR; paramsHash null, synthetic plan fingerprint"
+    },
+    {
+      "path": "work/capability-discovery/cycle-14/evidence/E4412/green/artifact-03-0.json",
+      "sha256": "35e426e6edbcddad6e048e526a2e6a0ed6c6d90a8d9cdedcc00479811f64be3e"
+    },
+    {
+      "path": "work/capability-discovery/cycle-14/evidence/E4412/green/artifact-04-0.json",
+      "sha256": "5d3b921b08ae7be8e5fdd0d4d35cb386e64fa03f527329661f5eb513ab1c64a3"
+    },
+    {
+      "path": "work/capability-discovery/cycle-14/evidence/E4412/green/artifact-05-0.json",
+      "sha256": "35e426e6edbcddad6e048e526a2e6a0ed6c6d90a8d9cdedcc00479811f64be3e"
+    }
+  ],
+  "gap": {
+    "kind": "portable saved-evidence consumer admission/display capability",
+    "observed_static": "E4413 accepts no supplied paths: old BASE and GREEN constants are loaded at module top level; OUT is its own archived directory. Read-only stat confirmed both historical scratch directories absent in this restored workspace.",
+    "smallest_usable_change": "New opt-in inspector entry under ranked-evidence, using Node builtins only, with explicit saved runtime/artifact input paths and exclusive fresh output directory. Extract/reuse E4413 byte/ref/receipt/PCR checks and ordered table/full-row projection. No new producer, ranker, generic framework or geometry renderer; old E4413 unchanged.",
+    "do_not_claim": "No generic candidateSet consumer elsewhere was established; no global absence claim. E4413 is the verified actual consumer. No native input identity, endpoint truth, hostile-input security, completeness beyond captured trusted rows, or PCR recomputation claim."
+  },
+  "prior_tests": {
+    "reported_not_rerun": "Cycle14 CURRENT reports focused author/reviewer 4/4, explicit predecessor regression14/14, and E4413 artifact-only audit exit0; E4413 source contains exact four-row oracle and absent/winner-only controls.",
+    "consumer_checks_to_reuse": "Raw saved bytes equal recorded base64 and artifact.sha256; candidateSet ID/kind/schema; artifact ref equals receipt ref; PCR testimony equals receipt; complete rows preserve captured order and fields.",
+    "new_first_green_only": "Missing bytes must be unavailable/rejected rather than treated as empty. Matching admitted groups:[] may be characterized as admitted-empty, but existing saved empty record12 has no artifact and is not evidence of admitted-empty. Tampered bytes with unchanged recorded ref must fail admission. These are not additional RED claims."
+  },
+  "falsifier": {
+    "status": "root_accepted_direction_not_executed",
+    "desired": "The existing artifact-only consumer can inspect the supplied restored saved A/B/A2 evidence into a fresh output directory, yielding admitted full ordered four-row results, without historical scratch paths or provider imports.",
+    "predicted_narrow_failure": "Calling the actual archived E4413 script with supplied restored paths still loads its obsolete hardcoded BASE first and exits1 ENOENT; no missing import or new stub is required. It must be labelled absent portable-consumer capability, not unsafe-byte acceptance or core defect.",
+    "acceptance": "Equivalent bounded inspector reads only supplied saved bytes; emits visible ordered rows/full-row details and artifact/PCR provenance; A/B/A2 reflect captured data without ranking or PCR execution; bad/missing bytes fail admission explicitly; historical archive remains byte-identical.",
+    "caveat": "Root accepted this portability capability as the intended narrow RED. Execution still awaits separate native E4507 packet. Manually fabricated self-consistent admitted-empty evidence is explicitly consumer-shape characterization, never native-produced execution evidence."
+  },
+  "actions": {
+    "repo_read_only": true,
+    "source_edits": false,
+    "git_operations": false,
+    "producer_or_test_execution": false,
+    "provider_imports": false,
+    "native_writes": false,
+    "scratch_written": ["lab15/S1/E4501/result.json"],
+    "read_only_checks": "Read requested docs/code; rg/nl/sha256sum; stat historical directories; Node builtins-only JSON metadata inspection of saved runtime. No producer/test invoked."
+  },
+  "holds": ["original pixels/CV/44queries", "consumed E2021 and old160grid never replay", "HH and other owners untouched", "installs/rebuilds/Git/publication not authorized by this packet"]
+}

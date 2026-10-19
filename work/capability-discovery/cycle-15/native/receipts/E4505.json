@@ -1,0 +1,221 @@
+{
+  "job_id": "E4505",
+  "worker": "S5",
+  "epoch": "00",
+  "outcome": "mixed_change",
+  "summary": "Reusable opaque artifact hashing/storage, bounded evidence-file hash/path checks, and the existing Part-render query are present. No inspected source is a drop-in admission/display consumer of the saved Lab14 complete finite JSON-safe ranked candidateSet; generic ledger rendering is lossy for nested groups/rows/raw/factors. A Lab15-only adapter/probe would be new bounded consumer work, not a producer/geometry change.",
+  "canonical_source": {
+    "repo": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab",
+    "head": "72283400af48cf19baa06723f0d66894a9590df2",
+    "status_before": "clean",
+    "status_after": "clean"
+  },
+  "remote_refresh": {
+    "repository": "samuelpmahan/chainspot-toolkit",
+    "method": "connected GitHub branch GETs plus ordinary read-only git ls-remote; no fetch/clone/checkout",
+    "heads": [
+      {
+        "branch": "main",
+        "sha": "37a2dba87d61262f661af70f1a22440736e61efc"
+      },
+      {
+        "branch": "codex/alg-lane-20261018",
+        "sha": "e3e11fab5de1e4562487472585259435694d88bc"
+      },
+      {
+        "branch": "claude/lucid-mendel-dvco6c",
+        "sha": "87a5f41dcc2bb45176e1ff14ab915240f0c4d4e0"
+      }
+    ],
+    "trees": {
+      "main": {
+        "entries": 830,
+        "truncated": false
+      },
+      "alg": {
+        "entries": 1278,
+        "truncated": false
+      },
+      "Claude": {
+        "entries": 1392,
+        "truncated": false
+      }
+    },
+    "qualification": "These are refreshed observed heads, not claims that owners are inactive. Old otherowner local path was not probed or adopted."
+  },
+  "findings": [
+    {
+      "id": "opaque-storage-reuse",
+      "source": "local source/provider/packages/alg/src/exec/{contract,sink,node-sink}.ts",
+      "detail": "candidateSet is a declared ArtifactKind. Memory sink hashes exact bytes and stores refs/blobs; Node sink writes bytes. These do not parse/admit payload schema, validate complete scored rows, or render saved candidateSet semantics.",
+      "classification": "confirmed low-level reuse only"
+    },
+    {
+      "id": "bounded-evidence-admission-pattern",
+      "source": "remote main ui/render-board.mjs:197-214,327-336",
+      "detail": "resolveEvidencePath keeps paths lexically within forkRoot; validatedEvidence checks supplied SHA256 and JSON.parse; named downstream S5/S6 schema/source/snapshot branches then select data. This is source-backed existing evidence admission routing, but it is tied to named nctk files and is not a Lab14 candidateSet consumer. Lexical path confinement is not claimed symlink-safe or sufficient hostile-input security.",
+      "classification": "reusable pattern; different semantic contract"
+    },
+    {
+      "id": "current-generic-display-loses-nested-data",
+      "source": "remote alg fg/render.mjs:22-24,48-81; remote Claude fg/render.mjs:29-31,59-110",
+      "detail": "Both generic rows ledgers retain scalarFields only. A Lab14 envelope falls through object -> groups array -> rows ledger, whose per-group scalar fields retain badgeId but omit nested rows. Rendering individual scored rows similarly omits nested raw/factors. This is static source reasoning, not executed testimony.",
+      "classification": "not drop-in complete display"
+    },
+    {
+      "id": "current-part-render-query",
+      "source": "remote Claude fg/store.mjs:217-230",
+      "detail": "createPartStore registers fn.q.part.render, rendering store.get(args.a) through renderValue; an image-free store can render without coordinates. This is a reusable existing seam, not permission to invoke or adopt current-owner code.",
+      "classification": "confirmed source-backed seam"
+    },
+    {
+      "id": "byte-versus-canonical-identity",
+      "source": "remote Claude fg/canon.mjs canonicalJson/plain/digest and fg/node-sink.mjs",
+      "detail": "canonicalJson sorts object keys, refuses Map/Set, normalizes typed arrays and filters undefined keys; the file sink hashes exact supplied bytes and refuses overwrites. Re-serializing parsed Lab14 JSON with canonicalJson need not preserve original artifact SHA. Admission should preserve and verify captured original bytes before any presentation-derived copy.",
+      "classification": "important identity qualification"
+    },
+    {
+      "id": "ownership-routing",
+      "source": "remote Claude docs/agents/lanes.md and AGENTS.md",
+      "detail": "Current platform owner owns fg/**, scripts/**, docs/agents/** and ui/**. Algorithm owner owns separate impl/port paths. Requests across lanes are notes to owner/Sam, not edits. Lab15 should remain isolated in Lab experiments and not silently change those current routing/render sources.",
+      "classification": "nonduplication boundary"
+    }
+  ],
+  "sourcepins_file": "sourcepins.json",
+  "read_scopes": [
+    {
+      "lane": "main",
+      "commit": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "ui/render-board.mjs",
+      "git_blob_sha": "06378da49cd3f5319da519f9411891f708900c38",
+      "read_scope": "selected functions and call sites: safeJson/readJson; resolveEvidencePath/validatedEvidence; renderBoard evidence admission and explicitLayers routing",
+      "snapshot": "remote/main/ui/render-board.mjs"
+    },
+    {
+      "lane": "main",
+      "commit": "37a2dba87d61262f661af70f1a22440736e61efc",
+      "path": "ui/render-board.test.mjs",
+      "git_blob_sha": "0f7229cccb0fbebc6d3889f318cf84e803c73916",
+      "read_scope": "full file, static read only",
+      "snapshot": "remote/main/ui/render-board.test.mjs"
+    },
+    {
+      "lane": "alg",
+      "commit": "e3e11fab5de1e4562487472585259435694d88bc",
+      "path": "AGENTS.md",
+      "git_blob_sha": "39d75fbc6c68c7d3ff1066ea3687458addc7468d",
+      "read_scope": "full file",
+      "snapshot": "remote/alg/AGENTS.md"
+    },
+    {
+      "lane": "alg",
+      "commit": "e3e11fab5de1e4562487472585259435694d88bc",
+      "path": "fg/render.mjs",
+      "git_blob_sha": "c17b019459a44bbe474cd1bf4fdc6d46c72151b9",
+      "read_scope": "full file, static read only",
+      "snapshot": "remote/alg/fg/render.mjs"
+    },
+    {
+      "lane": "Claude",
+      "commit": "87a5f41dcc2bb45176e1ff14ab915240f0c4d4e0",
+      "path": "AGENTS.md",
+      "git_blob_sha": "08b81e317ebc7d4c806fe06e7aa2c83be233c334",
+      "read_scope": "full file",
+      "snapshot": "remote/Claude/AGENTS.md"
+    },
+    {
+      "lane": "Claude",
+      "commit": "87a5f41dcc2bb45176e1ff14ab915240f0c4d4e0",
+      "path": "fg/render.mjs",
+      "git_blob_sha": "b4f3b7cd732a03fa625ae4d25f8f52e341864936",
+      "read_scope": "lines 1-149 fully read; remaining file schema/function/routing keyword inspection only",
+      "snapshot": "remote/Claude/fg/render.mjs"
+    },
+    {
+      "lane": "Claude",
+      "commit": "87a5f41dcc2bb45176e1ff14ab915240f0c4d4e0",
+      "path": "fg/store.mjs",
+      "git_blob_sha": "8ec5aec1959af6282d3a3feda37ab534be9f14d2",
+      "read_scope": "API header and keyword matches; lines 217-233 fully read",
+      "snapshot": "remote/Claude/fg/store.mjs"
+    },
+    {
+      "lane": "Claude",
+      "commit": "87a5f41dcc2bb45176e1ff14ab915240f0c4d4e0",
+      "path": "fg/node-sink.mjs",
+      "git_blob_sha": "506f82360f1b04caa407f6d0d6b64d78c0ea88d2",
+      "read_scope": "full file",
+      "snapshot": "remote/Claude/fg/node-sink.mjs"
+    },
+    {
+      "lane": "Claude",
+      "commit": "87a5f41dcc2bb45176e1ff14ab915240f0c4d4e0",
+      "path": "fg/canon.mjs",
+      "git_blob_sha": "66758cb065b693ff1f85697c9cecbe9a26aba7e3",
+      "read_scope": "full file",
+      "snapshot": "remote/Claude/fg/canon.mjs"
+    },
+    {
+      "lane": "Claude",
+      "commit": "87a5f41dcc2bb45176e1ff14ab915240f0c4d4e0",
+      "path": "docs/agents/lanes.md",
+      "git_blob_sha": "de31a1d0d30e4f7575ffbb296cd5e9345d443187",
+      "read_scope": "full file",
+      "snapshot": "remote/Claude/docs/agents/lanes.md"
+    },
+    {
+      "lane": "Claude",
+      "commit": "87a5f41dcc2bb45176e1ff14ab915240f0c4d4e0",
+      "path": "docs/agents/evidence.md",
+      "git_blob_sha": "139bc0a6cd7d8e8b1474ff047713293cfe36a3e9",
+      "read_scope": "full file",
+      "snapshot": "remote/Claude/docs/agents/evidence.md"
+    }
+  ],
+  "local_read_scopes": [
+    {
+      "path": "experiments/capability-discovery/ranked-evidence/adapter.mjs",
+      "scope": "full file",
+      "sha256": "a87140d62dc4a9d8ae844640486f766b8a32f8dc41806bc16b603832f48014ff"
+    },
+    {
+      "path": "experiments/capability-discovery/ranked-evidence/README.md",
+      "scope": "full file",
+      "sha256": "846badd497ccc77037d2e504cbfde289d92a568c4e5e67f17ca80f26498e3b38"
+    },
+    {
+      "path": "work/capability-discovery/cycle-14/CURRENT.md",
+      "scope": "limits and next seam lines 80-100; keyword search",
+      "sha256": "69b7fae153630e6e573fa4f07d18c11ed89796749d9c292de5572c577f17b88e"
+    },
+    {
+      "path": "source/provider/packages/alg/src/exec/sink.ts",
+      "scope": "full file",
+      "sha256": "ef75def6f64ede0e702a769cb3923b60f910c2bdb17f66b7a68490ac2b7610e9"
+    },
+    {
+      "path": "source/provider/packages/alg/src/exec/node-sink.ts",
+      "scope": "full file",
+      "sha256": "41967507a232c3e8209c414e2d2381d82bb8a180ef006106ab45d9166a2251e7"
+    },
+    {
+      "path": "source/provider/packages/alg/src/exec/contract.ts",
+      "scope": "lines 70-150",
+      "sha256": "21716541e466d521fd1bcebf89f4d2fc8c76aeb5665a2fcbc30d6063ed715aad"
+    },
+    {
+      "path": "source/provider/packages/alg/src/detectors/threeFactor/features/types.ts",
+      "scope": "lines 1-240 (render contract/type boundaries, no invocation)",
+      "sha256": "c171463dea8a4ac16b23199d51686b260811148940107f80e76d40efdb1915a7"
+    }
+  ],
+  "nonduplication_qualifications": [
+    "No clone, fetch, checkout, branch adoption, Git/source mutation, producer execution, geometry math execution, CV/pixel/image access, tests, rendering, or subagents.",
+    "Tree/path inventory and selected source reads are scoped evidence only; no global absence claim across all branches/files, uncommitted owner work, services, or unavailable former local paths.",
+    "Default-branch connected code search for candidateSet returned no indexed matches; this is not proof of absence. Guessed legacy renderer paths returned 404 and were not treated as absence.",
+    "All observations are static source evidence; no runtime compatibility, independent capture, fixture admission result, visual result, physical truth, or production/deployment claim.",
+    "Saved candidateSet is evidence-only. It must not be re-derived into current live pipeline Parts contrary to current-owner AGENTS guidance without explicit owner/human direction.",
+    "Any future scoped proposal must preserve existing ranking and all rows/order/raw/factors; do not implement a duplicate ranker, choose winners, infer physical ownership, or mutate current platform source."
+  ],
+  "next_probe_qualification": "Only if separately approved: a Lab15-local opt-in consumer can accept a saved artifact reference plus original bytes, check the exact Lab14 artifact identity/kind/schema and complete finite JSON-safe row contract, then retain complete nested evidence for a faithful non-geometry view. Reuse low-level hashing/admission patterns by evidence, not branch adoption. The exact admission policy still needs root selection."
+}

@@ -1,0 +1,37 @@
+{
+  "schema": "lab15-saved-inspector-protocol@1",
+  "job_id": "E4507",
+  "worker": "S1",
+  "frozen_before_baseline": true,
+  "repo": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab",
+  "baseline": {
+    "command": "node --test experiments/capability-discovery/ranked-inspector/inspector.test.mjs",
+    "arm": "LAB15_INSPECTOR_ARM=archive",
+    "actual_child": "node work/capability-discovery/cycle-14/render/E4413/render.mjs --runtime ABS_RESTORED_GREEN/runtime.json --artifacts ABS_RESTORED_GREEN --label desired-bridge-A --format json --out FRESH_CALLER_DIRECTORY",
+    "archive_invocations": 1,
+    "desired": "supplied saved capture consumer exits0 and emits ordered complete admitted candidate data in requested fresh directory",
+    "prediction": "desired exit0 assertion fails actual status1, with ENOENT opening historical hardcoded BASE/execution.json; archived inputs ignore supplied flags",
+    "classification": "missing portable saved-consumer capability; not missing import, unsafe-byte acceptance, ranking or core defect",
+    "timeout_ms": 20000,
+    "max_stream_bytes": 5242880
+  },
+  "pins": {
+    "archive": "eef4d742c25ed518f38ac25488913e1079e04d130a0066c8d9a40810d0b47b02",
+    "runtime": "e6fad368a603a7f1ed0f441807e8dfd7a864bc022972dc66c800b558330fcaab",
+    "artifact03": "35e426e6edbcddad6e048e526a2e6a0ed6c6d90a8d9cdedcc00479811f64be3e",
+    "artifact04": "5d3b921b08ae7be8e5fdd0d4d35cb386e64fa03f527329661f5eb513ab1c64a3",
+    "artifact05": "35e426e6edbcddad6e048e526a2e6a0ed6c6d90a8d9cdedcc00479811f64be3e"
+  },
+  "implementation": {
+    "files": ["inspector.mjs", "cli.mjs", "inspector.test.mjs", "README.md"],
+    "api": "inspect({runtimePath, artifactDir, recordLabel})",
+    "cli": "node cli.mjs --runtime PATH --artifacts DIRECTORY --label EXACT_LABEL --format json|tsv --out NEW_ABSOLUTE_DIRECTORY",
+    "admission": "specific ranking artifact kind/id, full same ref association to receipt and matching PCR testimony; saved bytes equal captured base64 and SHA256; parsed JSON equal captured JSON and versioned groups shape. Admitted payload comes only from saved bytes; never record.ranked fallback.",
+    "display": "full admitted payload plus separate explicit incomplete table projection badgeId/pairId/score/supportMean/rank and recorded provenance; no recomputation",
+    "statuses": ["admitted-nonempty", "admitted-empty", "unavailable", "incompatible"],
+    "empty_fixture": "explicit synthetic consumer-shape bytes/ref/testimony only; never native-produced execution evidence",
+    "first_green": "missing vs synthetic empty, wrong saved B bytes under Aref, captured JSON/ref/testimony mismatch, full field/order retention, caller-owned exclusive outputs",
+    "stop": "after implementation written before any new-consumer/test execution; checkpoint root GO required"
+  },
+  "scope": "Node builtins only. Preserve archive/provider/core/defaults and all old tracked files. No producer, ranker, PCR recomputation, CV, pixels, 44queries, native writes, Git, install, reroute or HH change."
+}

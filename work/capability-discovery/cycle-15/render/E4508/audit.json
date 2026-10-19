@@ -1,0 +1,162 @@
+{
+  "schema": "lab15-e4508-report-render@1",
+  "job_id": "E4508",
+  "worker": "S6",
+  "scope": "Reviewed inspector outputs only; no inspector/provider/rank/PCR execution. A2 is TSV projection only.",
+  "sourceFiles": [
+    {
+      "path": "/workspace/scratch/86659bbafcce/lab15/S3/R4507/result.json",
+      "bytes": 4064,
+      "sha256": "c496f01add4aac3b3789c8dfd9bc73bccce26e479930ea00acca6df3ca55b7d3"
+    },
+    {
+      "path": "/workspace/scratch/86659bbafcce/lab15/S3/R4507/cli-A/report/report.json",
+      "bytes": 7959,
+      "sha256": "a70ea8521ae464b2d08a35c6ac22cdfdfa7ecadfd6cc006a01180e145da58239"
+    },
+    {
+      "path": "/workspace/scratch/86659bbafcce/lab15/S1/E4507/cli-B/report/report.json",
+      "bytes": 7961,
+      "sha256": "02d782ce61ee5b66afa2c9dbb8cb25501a036c52076920646d010d0a7694bbf2"
+    },
+    {
+      "path": "/workspace/scratch/86659bbafcce/lab15/S1/E4507/cli-A2/report/report.tsv",
+      "bytes": 534,
+      "sha256": "dcf3087cd86b9e965e5bf31a1d94be7992390f96017caa5f7aa10ef16a1050fc"
+    }
+  ],
+  "acceptance": {
+    "path": "/workspace/scratch/86659bbafcce/lab15/S3/R4507/result.json",
+    "decision": "accepted",
+    "scope": "inspector.mjs37-55 admits specific kind/id only after saved bytes/base64/hash/captured JSON and full ref/receipt/PCR testimony association;60-63 derives table solely from saved payload and retains complete supplied payload. Missing/OFF artifact absence stays unavailable, distinct from synthetic admitted-empty. CLI requires explicit flags and fresh absolute output, uses wx, no overwrite. Builtin-only; no provider import/reranking/PCR recomputation/default/core changes."
+  },
+  "checks": {
+    "inputPinsMatch": true,
+    "jsonRowsEqualPayloadProjection": true,
+    "a2ProjectionEqualsA": true,
+    "recordedIdentitiesDifferThenRestore": true,
+    "orderedRowsPreserved": true
+  },
+  "views": [
+    {
+      "phase": "A",
+      "format": "JSON: complete supplied payload retained",
+      "label": "desired-bridge-A",
+      "status": "admitted-nonempty",
+      "rows": [
+        {
+          "badgeId": "fixture-badge-a",
+          "pairId": "fixture-a1",
+          "score": 0.9,
+          "supportMean": 0.5,
+          "rank": 1
+        },
+        {
+          "badgeId": "fixture-badge-a",
+          "pairId": "fixture-a3",
+          "score": 0.6,
+          "supportMean": 0.8,
+          "rank": 2
+        },
+        {
+          "badgeId": "fixture-badge-a",
+          "pairId": "fixture-a2",
+          "score": 0.6,
+          "supportMean": 0.4,
+          "rank": 3
+        },
+        {
+          "badgeId": "fixture-badge-b",
+          "pairId": "fixture-b1",
+          "score": 0.8,
+          "supportMean": 0.5,
+          "rank": 1
+        }
+      ],
+      "artifactSha256": "35e426e6edbcddad6e048e526a2e6a0ed6c6d90a8d9cdedcc00479811f64be3e",
+      "pcrRunResultId": "889dbad132f77dde27a2546ef9827e03acdefb35946031ba554b7eaa0783b500"
+    },
+    {
+      "phase": "B",
+      "format": "JSON: complete supplied payload retained",
+      "label": "desired-bridge-B",
+      "status": "admitted-nonempty",
+      "rows": [
+        {
+          "badgeId": "fixture-badge-a",
+          "pairId": "fixture-a1",
+          "score": 0.9,
+          "supportMean": 0.5,
+          "rank": 1
+        },
+        {
+          "badgeId": "fixture-badge-a",
+          "pairId": "fixture-a2",
+          "score": 0.65,
+          "supportMean": 0.4,
+          "rank": 2
+        },
+        {
+          "badgeId": "fixture-badge-a",
+          "pairId": "fixture-a3",
+          "score": 0.6,
+          "supportMean": 0.8,
+          "rank": 3
+        },
+        {
+          "badgeId": "fixture-badge-b",
+          "pairId": "fixture-b1",
+          "score": 0.8,
+          "supportMean": 0.5,
+          "rank": 1
+        }
+      ],
+      "artifactSha256": "5d3b921b08ae7be8e5fdd0d4d35cb386e64fa03f527329661f5eb513ab1c64a3",
+      "pcrRunResultId": "d637786ff5803fe9c14a3eb61a7f3231a5bbcb9a737d7daf013981fc6a645427"
+    },
+    {
+      "phase": "A2",
+      "format": "TSV: display projection ONLY",
+      "label": "desired-bridge-A2",
+      "status": "admitted-nonempty",
+      "rows": [
+        {
+          "badgeId": "fixture-badge-a",
+          "pairId": "fixture-a1",
+          "score": 0.9,
+          "supportMean": 0.5,
+          "rank": 1
+        },
+        {
+          "badgeId": "fixture-badge-a",
+          "pairId": "fixture-a3",
+          "score": 0.6,
+          "supportMean": 0.8,
+          "rank": 2
+        },
+        {
+          "badgeId": "fixture-badge-a",
+          "pairId": "fixture-a2",
+          "score": 0.6,
+          "supportMean": 0.4,
+          "rank": 3
+        },
+        {
+          "badgeId": "fixture-badge-b",
+          "pairId": "fixture-b1",
+          "score": 0.8,
+          "supportMean": 0.5,
+          "rank": 1
+        }
+      ],
+      "artifactSha256": "35e426e6edbcddad6e048e526a2e6a0ed6c6d90a8d9cdedcc00479811f64be3e",
+      "pcrRunResultId": "889dbad132f77dde27a2546ef9827e03acdefb35946031ba554b7eaa0783b500"
+    }
+  ],
+  "limits": [
+    "Admission is saved-byte/capture association consistency, not upstream completeness, authenticity, role or complete-schema proof.",
+    "Recorded artifact/PCR identities are carried from reports; PCR is not recomputed or independently authenticated.",
+    "A and B source JSON retain supplied full payload; A2 TSV does not establish full-payload restoration.",
+    "No pixels, original images, course geometry, ownership, selection, native-input or physical claim."
+  ]
+}

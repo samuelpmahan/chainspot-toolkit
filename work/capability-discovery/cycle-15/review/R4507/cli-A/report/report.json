@@ -1,0 +1,250 @@
+{
+  "schema": "lab15-ranked-inspection@1",
+  "status": "admitted-nonempty",
+  "reason": null,
+  "provenance": {
+    "runtimePath": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-14/evidence/E4412/green/runtime.json",
+    "artifactDir": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-14/evidence/E4412/green",
+    "recordLabel": "desired-bridge-A",
+    "identityLimit": "Recorded PCR identity is carried, not recomputed or independently authenticated; no image, geometry, ownership or native-input claim.",
+    "runtimeSha256": "e6fad368a603a7f1ed0f441807e8dfd7a864bc022972dc66c800b558330fcaab",
+    "ref": {
+      "id": "lab14.assignment.ranking.alternatives",
+      "kind": "candidateSet",
+      "sha256": "35e426e6edbcddad6e048e526a2e6a0ed6c6d90a8d9cdedcc00479811f64be3e",
+      "uri": "memory://lab14.assignment.ranking.alternatives"
+    },
+    "pcrRunResultId": "889dbad132f77dde27a2546ef9827e03acdefb35946031ba554b7eaa0783b500",
+    "planFingerprint": "lab14-four-row-fixed-synthetic-plan@1",
+    "paramsHash": null,
+    "operation": "assignment.ranking",
+    "artifactPath": "/workspace/scratch/86659bbafcce/chainspot-discovery-lab/work/capability-discovery/cycle-14/evidence/E4412/green/artifact-03-0.json",
+    "artifactBytes": 2949
+  },
+  "payload": {
+    "schema": "lab14-ranked-alternatives@1",
+    "groups": [
+      {
+        "badgeId": "fixture-badge-a",
+        "rows": [
+          {
+            "raw": {
+              "pairId": "fixture-a1",
+              "badgeId": "fixture-badge-a",
+              "teeId": "fixture-tee-a1",
+              "basketId": "fixture-basket-a1",
+              "teeLeg": {
+                "endpointId": "fixture-end",
+                "geodesic": 0,
+                "path": [],
+                "reachable": true
+              },
+              "basketLeg": {
+                "endpointId": "fixture-end",
+                "geodesic": 0,
+                "path": [],
+                "reachable": true
+              },
+              "supportMean": 0.5,
+              "supportMin": 0,
+              "supportedFraction": 0,
+              "worstWindowMean": 0,
+              "weakSpanCount": 0,
+              "weakSpanLongestPx": 0,
+              "pathLengthPx": 0,
+              "straightDistancePx": 0,
+              "efficiency": 1,
+              "endpointSupportTee": 0,
+              "endpointSupportBasket": 0,
+              "failureReason": null
+            },
+            "score": 0.9,
+            "rank": 1,
+            "factors": {
+              "alignment": 0.5,
+              "zone": 0.5,
+              "simplePath": 0.5,
+              "teeOrientation": 0.5,
+              "badgeFraction": 0.5,
+              "collinearity": 0.5,
+              "basketIdentity": 0.5,
+              "recoveredPrior": 0.5,
+              "zfit": 0.5
+            }
+          },
+          {
+            "raw": {
+              "pairId": "fixture-a3",
+              "badgeId": "fixture-badge-a",
+              "teeId": "fixture-tee-a3",
+              "basketId": "fixture-basket-a3",
+              "teeLeg": {
+                "endpointId": "fixture-end",
+                "geodesic": 0,
+                "path": [],
+                "reachable": true
+              },
+              "basketLeg": {
+                "endpointId": "fixture-end",
+                "geodesic": 0,
+                "path": [],
+                "reachable": true
+              },
+              "supportMean": 0.8,
+              "supportMin": 0,
+              "supportedFraction": 0,
+              "worstWindowMean": 0,
+              "weakSpanCount": 0,
+              "weakSpanLongestPx": 0,
+              "pathLengthPx": 0,
+              "straightDistancePx": 0,
+              "efficiency": 1,
+              "endpointSupportTee": 0,
+              "endpointSupportBasket": 0,
+              "failureReason": null
+            },
+            "score": 0.6,
+            "rank": 2,
+            "factors": {
+              "alignment": 0.5,
+              "zone": 0.5,
+              "simplePath": 0.5,
+              "teeOrientation": 0.5,
+              "badgeFraction": 0.5,
+              "collinearity": 0.5,
+              "basketIdentity": 0.5,
+              "recoveredPrior": 0.5,
+              "zfit": 0.5
+            }
+          },
+          {
+            "raw": {
+              "pairId": "fixture-a2",
+              "badgeId": "fixture-badge-a",
+              "teeId": "fixture-tee-a2",
+              "basketId": "fixture-basket-a2",
+              "teeLeg": {
+                "endpointId": "fixture-end",
+                "geodesic": 0,
+                "path": [],
+                "reachable": true
+              },
+              "basketLeg": {
+                "endpointId": "fixture-end",
+                "geodesic": 0,
+                "path": [],
+                "reachable": true
+              },
+              "supportMean": 0.4,
+              "supportMin": 0,
+              "supportedFraction": 0,
+              "worstWindowMean": 0,
+              "weakSpanCount": 0,
+              "weakSpanLongestPx": 0,
+              "pathLengthPx": 0,
+              "straightDistancePx": 0,
+              "efficiency": 1,
+              "endpointSupportTee": 0,
+              "endpointSupportBasket": 0,
+              "failureReason": null
+            },
+            "score": 0.6,
+            "rank": 3,
+            "factors": {
+              "alignment": 0.5,
+              "zone": 0.5,
+              "simplePath": 0.5,
+              "teeOrientation": 0.5,
+              "badgeFraction": 0.5,
+              "collinearity": 0.5,
+              "basketIdentity": 0.5,
+              "recoveredPrior": 0.5,
+              "zfit": 0.5
+            }
+          }
+        ]
+      },
+      {
+        "badgeId": "fixture-badge-b",
+        "rows": [
+          {
+            "raw": {
+              "pairId": "fixture-b1",
+              "badgeId": "fixture-badge-b",
+              "teeId": "fixture-tee-b1",
+              "basketId": "fixture-basket-b1",
+              "teeLeg": {
+                "endpointId": "fixture-end",
+                "geodesic": 0,
+                "path": [],
+                "reachable": true
+              },
+              "basketLeg": {
+                "endpointId": "fixture-end",
+                "geodesic": 0,
+                "path": [],
+                "reachable": true
+              },
+              "supportMean": 0.5,
+              "supportMin": 0,
+              "supportedFraction": 0,
+              "worstWindowMean": 0,
+              "weakSpanCount": 0,
+              "weakSpanLongestPx": 0,
+              "pathLengthPx": 0,
+              "straightDistancePx": 0,
+              "efficiency": 1,
+              "endpointSupportTee": 0,
+              "endpointSupportBasket": 0,
+              "failureReason": null
+            },
+            "score": 0.8,
+            "rank": 1,
+            "factors": {
+              "alignment": 0.5,
+              "zone": 0.5,
+              "simplePath": 0.5,
+              "teeOrientation": 0.5,
+              "badgeFraction": 0.5,
+              "collinearity": 0.5,
+              "basketIdentity": 0.5,
+              "recoveredPrior": 0.5,
+              "zfit": 0.5
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "rows": [
+    {
+      "badgeId": "fixture-badge-a",
+      "pairId": "fixture-a1",
+      "score": 0.9,
+      "supportMean": 0.5,
+      "rank": 1
+    },
+    {
+      "badgeId": "fixture-badge-a",
+      "pairId": "fixture-a3",
+      "score": 0.6,
+      "supportMean": 0.8,
+      "rank": 2
+    },
+    {
+      "badgeId": "fixture-badge-a",
+      "pairId": "fixture-a2",
+      "score": 0.6,
+      "supportMean": 0.4,
+      "rank": 3
+    },
+    {
+      "badgeId": "fixture-badge-b",
+      "pairId": "fixture-b1",
+      "score": 0.8,
+      "supportMean": 0.5,
+      "rank": 1
+    }
+  ],
+  "projectionLimit": "Display subset only: badgeId, pairId, score, supportMean, rank; complete admitted payload is retained separately."
+}

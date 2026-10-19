@@ -1,0 +1,52 @@
+{
+  "job_id": "E4506",
+  "worker": "S6",
+  "outcome": "mixed_change",
+  "summary": "Source-only: reuse the existing E4413 artifact-only audit/display consumer to test semantic admission of a hash-valid but lossy saved winner-only B record as desired-bridge-B. No new ranking, scoring, comparator, producer, core or default behavior is needed. Consumer assertions are already sufficient; a future isolated execution would require only explicit scratch input/output path binding and saved-record staging. This is a proposed falsifier, not an observed test result.",
+  "canonical_commit_supplied_by_root": "72283400af48cf19baa06723f0d66894a9590df2",
+  "consumer": {
+    "path": "work/capability-discovery/cycle-14/render/E4413/render.mjs",
+    "admission_lines": "79-90: exact disk/base64 bytes, SHA256, candidateSet kind, stable artifact id, parsed JSON, receipt ref, and full ordered groups",
+    "testimony_lines": "63-78: full record.ranked/input B oracle and captured receipt/PCR testimony equality",
+    "display_lines": "93-98 and 141-155: visible rows come from record.ranked, while complete artifact admission precedes them",
+    "output_behavior": "audit.json, audit.tsv and view.svg are written exclusively at end of module after all assertions; malformed full-evidence admission must fail before those outputs",
+    "reuse_limit": "Existing renderer is a fixed-fixture audit, not a generic hostile-input loader. BASE/GREEN are hardcoded scratch paths; OUT is import.meta.url directory. Do not execute packaged source in place or overwrite original captures. Route only those paths in a separately pinned scratch copy after a future explicit GO."
+  },
+  "prediction": {
+    "accepted_control": "Unchanged saved author baseline+green captures should pass the existing consumer and retain desired A/B/A2 complete rows: A/A2 a1,a3,a2; B a1,a2,a3; winners a1,b1 unchanged.",
+    "rejected_control": "A complete clone of saved winner-only-B record at green runtime.records[10], relabeled desired-bridge-B and placed at records[4], with exact saved artifact-10-0.json bytes staged at artifact-04-0.json, should pass all existing byte/hash/ref/testimony/record-ranked guards but fail line90 full artifact groups assertion. Its correct B ranked testimony includes a2/a3 while its artifact has only a1/b1.",
+    "restoration": "Restoring the original record4 and artifact04 bytes should restore admission and the full ordered B display without invoking any ranking producer.",
+    "falsifier": "The lossy substitution reaches audit/view output generation, or fails for incidental missing files, path binding, stream hashes, JSON syntax, byte/base64 mismatch, digest mismatch, or testimony mismatch rather than the predicted line90 complete-groups assertion. Control or restoration failure also falsifies reusable protocol readiness."
+  },
+  "protocol": {
+    "status": "proposal_only_wait_for_separate_GO",
+    "scope": "savedbytes consumer admission/display; no provider imports, reranking, PCR recomputation or native-image input",
+    "step1": "Pin source and original saved captures. In fresh own scratch arm directories stage exact saved baseline/green execution.json, stdout.txt, stderr.txt, runtime.json and six listed artifact JSON files. Use independent fresh output per arm.",
+    "step2": "Bind only consumer BASE/GREEN constants and output location to the staged arm; retain and diff the consumer so all guards/display logic are unchanged. No dependency installation, provider imports or source-tree writes.",
+    "step3": "Control arm consumes unchanged staged bytes. Record actual argv/cwd/env/status/stdout/stderr/times and output existence; do not infer a pass from prior Lab14 results.",
+    "step4": "Lossy arm changes only the staged runtime: clone entire original records[10] to records[4], preserving all its native captured fields, then set label to desired-bridge-B. Stage exact saved artifact10 bytes as the artifact04 path required by index4. Keep original winner-only record10 and all other records/artifacts unchanged. Record derived runtime hash and precise transformation; never relabel this as original producer testimony.",
+    "step5": "Require failure at the full-groups assertion, before final output writes. Already valid saved SHA256/reference/PCR-testimony relationships are preserved by whole-record reuse; no fresh hash/PCR recomposition is necessary. Merely detecting missing data is not the intended failure.",
+    "step6": "Restoration arm returns exact original records[4] and artifact04 bytes and should match the unchanged control's semantic display. Report separate admission outcomes; inspect own generated metadata SVG/PNG only if separately authorized."
+  },
+  "why_meaningful": "Digest validity does not establish complete losing alternatives. This probe presents an actually captured, internally consistent real-sink winner-only artifact and its matching testimony under a complete-evidence slot. The consumer must enforce full nested groups even though record.ranked would otherwise supply a plausible complete B display. No toy key/sum property or Lab14 producer replay is used.",
+  "sourcepins": [
+    {"path":"work/capability-discovery/cycle-14/CURRENT.md","sha256":"69b7fae153630e6e573fa4f07d18c11ed89796749d9c292de5572c577f17b88e"},
+    {"path":"work/capability-discovery/cycle-14/manifest.json","sha256":"0300a3f57a3cad0f841073c53e7df04216f5eff915a105adba8edc946aeb5cf1"},
+    {"path":"work/capability-discovery/cycle-14/render/E4413/render.mjs","sha256":"eef4d742c25ed518f38ac25488913e1079e04d130a0066c8d9a40810d0b47b02"},
+    {"path":"experiments/capability-discovery/ranked-evidence/adapter.mjs","sha256":"a87140d62dc4a9d8ae844640486f766b8a32f8dc41806bc16b603832f48014ff"},
+    {"path":"experiments/capability-discovery/ranked-evidence/fixture.mjs","sha256":"eec0a017df87dbf99d4e36bb94d32cc16df43119a5fade88da0490ec3ddd8219"},
+    {"path":"experiments/capability-discovery/ranked-evidence/integration.test.mjs","sha256":"904a1403c034ca5cbcdb0db5e11b5ff9f73a850a4878c040330c24dc1b24aa57"},
+    {"path":"work/capability-discovery/cycle-14/evidence/E4412/green/runtime.json","sha256":"e6fad368a603a7f1ed0f441807e8dfd7a864bc022972dc66c800b558330fcaab"},
+    {"path":"work/capability-discovery/cycle-14/evidence/E4412/green/artifact-03-0.json","sha256":"35e426e6edbcddad6e048e526a2e6a0ed6c6d90a8d9cdedcc00479811f64be3e"},
+    {"path":"work/capability-discovery/cycle-14/evidence/E4412/green/artifact-04-0.json","sha256":"5d3b921b08ae7be8e5fdd0d4d35cb386e64fa03f527329661f5eb513ab1c64a3"},
+    {"path":"work/capability-discovery/cycle-14/evidence/E4412/green/artifact-05-0.json","sha256":"35e426e6edbcddad6e048e526a2e6a0ed6c6d90a8d9cdedcc00479811f64be3e"},
+    {"path":"work/capability-discovery/cycle-14/evidence/E4412/green/artifact-10-0.json","sha256":"def91c02a1df75e2ffa68afbe06fd79b9fc2d62cbab8117486c2629baed42802"}
+  ],
+  "limits": [
+    "No code/test/consumer execution or runtime outcome claimed; only shell source/file reads, SHA256 inspection and this own-scratch report write.",
+    "Repository and Git untouched; supplied canonical revision was not independently queried through Git.",
+    "No other-owner adoption, provider invocation, CV/pixels/44query/HH/image access, selection truth or physical geometry claim.",
+    "Future scratch-derived runtime must explicitly disclose that it is an admission attack fixture; original producer captures remain immutable.",
+    "Guard sufficiency is inferred from pinned source, not independently observed in this job. A generic loader or real Storybook UI integration would be a different scope."
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "job_id": "E4503",
+  "worker": "S3",
+  "outcome": "insufficient_evidence",
+  "summary": "Source-only audit confirms reusable gateway/sink/PCR/export interfaces and existing E4413 saved-byte consumer. Root-selected smallest seam: extract its saved-byte admission/table projection into an explicit-path inspector. No producer, core, loader, ranking copy or second executor is needed. No implementation or runtime proof occurred here.",
+  "repo": {"head":"72283400af48cf19baa06723f0d66894a9590df2","read_only":true},
+  "interfaces": {
+    "artifact": "candidateSet id=lab14.assignment.ranking.alternatives; UTF-8 JSON {schema:'lab14-ranked-alternatives@1',groups:[{badgeId,rows:[complete ScoredPairEvidence]}]}; no dims. Preserve group/row/path order, raw, factors, score and rank; do not rerank.",
+    "gateway_sink": "Existing extractor -> ExecSink.putArtifact(kind,id,bytes,dims?) -> ArtifactRef{id,kind,sha256,uri,dims?} in Receipt.artifacts. MemorySink blobs use id keys. Null-sink empty hashes cannot support admission. URI is sink-defined, not a loader instruction.",
+    "pcr_export": "PCR hashes artifact id/kind/sha256/dims-or-null, not URI/direct bytes; it does not read saved files. Fixture records ref/bytesBase64/json after real sink hash check. Capture writes exact decoded bytes as artifact-<record-index>-<artifact-index>.json.",
+    "existing_consumer": "E4413 lines79-98 reads saved bytes, matches bytesBase64/SHA, kind/id, full fixture rows and receipt ref, then forms table rows. It is fixture-specific with old hardcoded scratch roots. Extract only the data seam with explicit paths, no producer harness or general loader."
+  },
+  "pins": [
+    {"path":"work/capability-discovery/cycle-14/render/E4413/render.mjs","lines":"1-26,59-98","sha256":"eef4d742c25ed518f38ac25488913e1079e04d130a0066c8d9a40810d0b47b02"},
+    {"path":"experiments/capability-discovery/ranked-evidence/adapter.mjs","lines":"6-25","sha256":"a87140d62dc4a9d8ae844640486f766b8a32f8dc41806bc16b603832f48014ff"},
+    {"path":"experiments/capability-discovery/ranked-evidence/capture.mjs","lines":"45-50","sha256":"c52809216af9fde77ac9a0a5e5238b54dead6159e872fc864aea05f4fc103046"},
+    {"path":"source/provider/packages/alg/src/exec/pcr.ts","lines":"35-75","sha256":"ba214fc58bafc3e703892a7e9160d131b07806f19a83772af98f8d1c946d3e54"}
+  ],
+  "limits": "Hash/ref matches establish custody against an independently pinned expectation, not upstream completeness or selected ownership. Source/dist read-only inspection only; no imports/tests/producers/CV/images/44queries, E2021/old160grid, other-owner adoption, Git or native writes. Root owns native release."
+}
