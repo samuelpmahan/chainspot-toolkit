@@ -15,6 +15,7 @@
  *   cmp.fn.Hole.trace.json, keyspace.json, instrumentation.json, s7trace.{records.json,frames.json,flipbook.html},
  *   s7trace.overview.png (the accepted variant over the map, coloured by the judge), artifacts/fn.Hole.trace/<impl>/traces.json
  */
+import { runnerCache, casFlag } from '../../fg/casRunner.mjs';
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { deflateSync } from 'node:zlib';
@@ -100,15 +101,15 @@ export function acceptRule({ acceptedElsewhere = null, judged = true } = {}) {
   return accept;
 }
 
-export async function runHoleTraceForkJoin({ attempt, specimen, outDir = null, root = ROOT, acceptedElsewhere = null, only = null }) {
+export async function runHoleTraceForkJoin({ attempt, specimen, outDir = null, root = ROOT, acceptedElsewhere = null, only = null, cas = true }) {
   const loaded = loadAttemptParts({ attempt, specimen, root });
   const out = outDir ?? join(loaded.out, 's7trace', `run-${new Date().toISOString().replace(/[:.]/g, '-')}`);
-  const { store, document: instrumentation } = instrumentedStore({ name: `s7trace:${specimen}`, base: loaded.board });
+  const { store, document: instrumentation } = instrumentedStore({ name: `s7trace:${specimen}`, base: loaded.board, ...runnerCache({ root, entry: import.meta.filename, cas }) });
   const holePaths = loadHolePaths(specimen, root);
   store.constant('fn.tk.s7trace.laneOutputs', { ...loaded.values, ...loadS7Lanes({ out: loaded.out, upperRowsRemoved: loaded.upperRowsRemoved, values: loaded.values }), 'testimony.source.holePaths': holePaths });
   for (const [fn, spec] of S4_CALCULATIONS) store.register(fn, spec);
   for (const [fn, spec] of S7_CALCULATIONS) store.register(fn, spec);
-  registerTraceQueries(store, { matcher: loadMatcher(root) });
+  registerTraceQueries(store, { matcher: loadMatcher(root), board: loaded.board });
   for (const a of ['tk.s7.scene', 'tk.s7.hallway', 'tk.s7.holes']) store.get(a);   // shared by every variant, produced once on the parent
   let implementations = await discoverImplementations(join(root, 'impl'), HOLE_TRACE_SLOT.slot);
   if (only) implementations = Object.fromEntries(Object.entries(implementations).filter(([n]) => only.includes(n)));
@@ -155,7 +156,7 @@ export async function runHoleTraceForkJoin({ attempt, specimen, outDir = null, r
 if (import.meta.url === `file://${process.argv[1]}`) {
   const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1]]] : acc), []));
   if (!args.attempt || !args.specimen) { console.error('usage: node ports/s7trace/run.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR] [--accept VARIANT] [--only a,b]'); process.exit(2); }
-  const r = await runHoleTraceForkJoin({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null, acceptedElsewhere: args.accept ?? null, only: args.only ? args.only.split(',') : null });
+  const r = await runHoleTraceForkJoin({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null, acceptedElsewhere: args.accept ?? null, only: args.only ? args.only.split(',') : null, cas: casFlag() });
   const c = r.comparison;
   console.log(JSON.stringify({ out: r.out, frames: r.frames, accepted: r.accepted, acceptedBy: r.acceptedBy, widthPx: c.widthPx, timingsMs: r.timingsMs,
     profile: r.profile.slice(0, 10).map((p) => `${p.calculation}: ${p.calls}x self ${p.selfMs} ms ${JSON.stringify(p.emits)}`),

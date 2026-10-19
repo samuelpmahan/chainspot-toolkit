@@ -25,6 +25,8 @@ import { BASKET_POINT_OFFSET } from '../../fg/s2/fg.s2.basketInvariants.observe.
 import { ringMask, dilate4, round } from './hallway.mjs';
 import { sceneOf, hallwayModel, solveS3First, solveBadgeOnly } from './s3first.mjs';
 import { solveEndpoints } from './endpoints.mjs';
+import { routeTableOn } from '../s7route/routeSpace.mjs';
+import { routeMatchOf } from '../s7route/match.mjs';
 
 export const HOLE_TRACE_SLOT = Object.freeze({
   slot: 'fn.Hole.trace',
@@ -98,7 +100,7 @@ export const S7_CALCULATIONS = Object.freeze([
 
 // ------------------------------------------------------------------------------------------------ the store boundary
 
-export const TRACE_QUERY_NAMES = Object.freeze(['s3first', 'badgeOnly', 'endpoints', 'pinned']);
+export const TRACE_QUERY_NAMES = Object.freeze(['s3first', 'badgeOnly', 'endpoints', 'pinned', 'routeMatch']);
 
 /** Douglas-Peucker: the vertices of a walked polyline that leave the chord by more than eps px. */
 export function simplify(pts, eps) {
@@ -138,7 +140,7 @@ export const traceQueries = (call) => (name, args) => call(`fn.q.trace.${name}`,
  * fn.q.trace.* on a store. matcher: the provider's maximumWeightTeeBadgeMatching (the node runner loads
  * the pinned provider; a test passes any exact matcher). Every answer is cached by its arguments.
  */
-export function registerTraceQueries(store, { matcher = null } = {}) {
+export function registerTraceQueries(store, { matcher = null, board = null } = {}) {
   const get = (a) => store.get(a);
   const base = () => get('tk.s7.association').holes ?? {};
   const W = () => get('tk.s7.hallway').widthPx;
@@ -159,6 +161,12 @@ export function registerTraceQueries(store, { matcher = null } = {}) {
       if (!matcher) return { value: { condition: 'no exact matcher on this store (the provider is not loaded)', holes: {}, scene: 'tk.s7.sceneS4' }, unit: 'px (canonical frame)', emits: { holes: 0 } };
       const S = get('tk.s7.sceneS4'), r = solveEndpoints(S, holeList(S), W(), { tees: teesOf(), matcher });
       return { value: { ...r, scene: 'tk.s7.sceneS4' }, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, pairs: r.pairs.length, reached: Object.values(r.holes).filter((h) => h.end != null).length } };
+    },
+    'fn.q.trace.routeMatch': ({ secondBends = true } = {}) => {
+      // S7 after S5 (docs/evidence/s7after): scoring = tk.s7.routeTable (cached rows), matching = ports/s7route/match.mjs
+      const table = routeTableOn(store, { board: board ?? null }), S = get('tk.s7.sceneS4');
+      const r = routeMatchOf(table, S, get('tk.s7.routeStart'), { secondBends });
+      return { value: { ...r, scene: 'tk.s7.sceneS4' }, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, reached: Object.values(r.holes).filter((h) => h.end != null).length, secondBends: Object.values(r.holes).filter((h) => (h.verts?.length ?? 0) === 4).length } };
     },
     'fn.q.trace.pinned': () => {
       const r = pinnedSolve(get('tk.s7.pinnedTraces'), get('tk.s7.holes'), W());
