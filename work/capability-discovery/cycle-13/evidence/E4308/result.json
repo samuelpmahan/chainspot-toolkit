@@ -1,0 +1,55 @@
+{
+  "job_id": "E4308",
+  "worker": "S1",
+  "outcome": "confirmed_reuse",
+  "summary": "ONE authorized three-file allowlist run passed 10/10 tests, exit0, direct stderr0B. The same-answer FIRST-GREEN property retained total171 across all phases, computed/query counts6→1→0, slot3-only source/producer changes, aggregate miss/miss/hit and restored keys; all14 before/after source pins match. No retry, source fix, Git mutation, packaging, or canonical receipt write occurred.",
+  "construction": "E4307",
+  "executionPacket": "E4308",
+  "actual_capture_directory": "/workspace/scratch/86659bbafcce/lab13/S1/E4307/run",
+  "capture_label_custody": "The frozen capture script honestly retains schema lab13-e4307-execution@1 and job_id E4307 as its construction identity. This E4308 result binds the actual separately authorized runtime packet; no raw metadata was relabeled.",
+  "runtime": {
+    "executable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "nodeVersion": "v24.19.0",
+    "argv": ["--test","experiments/capability-discovery/isolated-batch/same-answer.test.mjs","experiments/capability-discovery/isolated-batch/recipe.test.mjs","experiments/capability-discovery/enumerable-board/board.test.mjs"],
+    "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "timeoutMs": 20000,
+    "maxBufferBytesPerStream": 5242880,
+    "startUTC": "2026-10-19T09:59:07.044Z",
+    "endUTC": "2026-10-19T09:59:07.260Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "tests": 10,
+    "pass": 10,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 144.807824,
+    "pinsUnchanged": true,
+    "pinCount": 14
+  },
+  "source_sha256": {
+    "test": "fd25e9476005a81340041c8cbd0c4fb46d36a98a9d26f43f0fd0c36d883b65a3",
+    "capture": "46e736991ff9ec132af4939e3381a16a24fe9747a4b17c0c6090fd76eb2e0769"
+  },
+  "artifacts": [
+    {"path":"/workspace/scratch/86659bbafcce/lab13/S1/E4307/run/execution.json","sha256":"444dbdc5f9cebcd56f9b4519ad72c686ae817e70454d6dc7e8117c447695e010"},
+    {"path":"/workspace/scratch/86659bbafcce/lab13/S1/E4307/run/stdout.txt","bytes":58388,"sha256":"dda7ca457d49301fb7ed8866e8cad330c1cd495a986924afa19c0412b1631028"},
+    {"path":"/workspace/scratch/86659bbafcce/lab13/S1/E4307/run/stderr.txt","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    {"path":"/workspace/scratch/86659bbafcce/lab13/S1/E4307/run/pins.before.json","sha256":"21bd24bf5a692e8deaa70aff6224719810c416f27bd737782a2f1d30df2065eb"},
+    {"path":"/workspace/scratch/86659bbafcce/lab13/S1/E4307/run/pins.after.json","sha256":"21bd24bf5a692e8deaa70aff6224719810c416f27bd737782a2f1d30df2065eb"},
+    {"path":"/workspace/scratch/86659bbafcce/lab13/S1/E4308/same-answer.json","sha256":"37a254f3ceee9604f4378a644f82287fe3c45a213a3a907b220e525744ae0333","custody":"Single JSON sameAnswer diagnostic extracted from direct stdout without altering raw output"}
+  ],
+  "observed": {
+    "totals": [171,171,171],
+    "leaf_computations": [6,1,0],
+    "query_calls": [6,1,0],
+    "aggregate_cached": [false,false,true],
+    "source_and_producer_change_only_slot": 3,
+    "aggregate_keys": ["b5ddbc362ebfe5f79489f6d98edc28d22a7a0183db27328a8e7f547e047d95f1","0e60c95f9e815c3718ee5c3b2c3af8f9d8ec3ce11dd95b7a878ff8d125c94444","b5ddbc362ebfe5f79489f6d98edc28d22a7a0183db27328a8e7f547e047d95f1"]
+  },
+  "postprocessing_note": "Initial read-only extraction assumed TAP-prefixed JSON; actual Node24 reporter emitted bare JSON plus spec summary. Read-only extraction was adjusted to bare JSON; the product was not rerun.",
+  "scope": "Finite immutable synthetic same-answer lineage property of the existing default-OFF recipe, not equal-answer aggregate reuse, RED evidence, new algorithm, core repair, physical causality, performance, pixels/CV, original-query integration, production/default, HH or other-owner change.",
+  "next_gate": "STOP before Git/package; independent R4308 execution review required."
+}

@@ -1,0 +1,53 @@
+// Prepared source only. Root must review this exact file and the test before ONE invocation.
+import { createHash } from 'node:crypto';
+import { mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { spawnSync } from 'node:child_process';
+
+const cwd = '/workspace/scratch/8528bb251845/chainspot-discovery-lab';
+const outputDirectory = '/workspace/scratch/86659bbafcce/lab13/S1/E4307/run';
+const argv = ['--test',
+  'experiments/capability-discovery/isolated-batch/same-answer.test.mjs',
+  'experiments/capability-discovery/isolated-batch/recipe.test.mjs',
+  'experiments/capability-discovery/enumerable-board/board.test.mjs'];
+const timeoutMs = 20000, maxBufferBytesPerStream = 5 * 1024 * 1024;
+const files = [
+  ...argv.slice(1),
+  'experiments/capability-discovery/isolated-batch/README.md',
+  'experiments/capability-discovery/isolated-batch/recipe.mjs',
+  'experiments/capability-discovery/enumerable-board/board.mjs',
+  ...['store.mjs', 'canon.mjs', 'pxset.mjs', 'render.mjs', 'png.mjs', 'alpha/alphaRender.mjs']
+    .map(path => `experiments/capability-discovery/probes/root-inventory/source/fg/${path}`),
+  'experiments/capability-discovery/probes/root-inventory/source/contracts/alpha.profile@1.mjs',
+  fileURLToPath(import.meta.url)
+];
+const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
+const pin = path => {
+  const absolute = path.startsWith('/') ? path : `${cwd}/${path}`;
+  const bytes = readFileSync(absolute), stat = statSync(absolute);
+  return { path, bytes: bytes.length, sha256: sha256(bytes), mode: (stat.mode & 0o777).toString(8) };
+};
+// Refuse overwrite: a second invocation is not silently a second trial.
+mkdirSync(outputDirectory);
+const before = files.map(pin);
+writeFileSync(`${outputDirectory}/pins.before.json`, `${JSON.stringify(before, null, 2)}\n`);
+const startUTC = new Date().toISOString();
+const child = spawnSync(process.execPath, argv, { cwd, timeout: timeoutMs,
+  maxBuffer: maxBufferBytesPerStream, encoding: null, stdio: ['ignore', 'pipe', 'pipe'] });
+const endUTC = new Date().toISOString();
+// Preserve direct child stream bytes; do not reformat, parse, filter, or merge them.
+const stdout = child.stdout ?? Buffer.alloc(0), stderr = child.stderr ?? Buffer.alloc(0);
+writeFileSync(`${outputDirectory}/stdout.txt`, stdout);
+writeFileSync(`${outputDirectory}/stderr.txt`, stderr);
+const after = files.map(pin);
+writeFileSync(`${outputDirectory}/pins.after.json`, `${JSON.stringify(after, null, 2)}\n`);
+const execution = { schema: 'lab13-e4307-execution@1', job_id: 'E4307', worker: 'S1',
+  executable: process.execPath, nodeVersion: process.version, argv, cwd, timeoutMs, maxBufferBytesPerStream,
+  startUTC, endUTC, exitCode: child.status, signal: child.signal,
+  error: child.error ? { name: child.error.name, code: child.error.code, message: child.error.message } : null,
+  stdout: { bytes: stdout.length, sha256: sha256(stdout) },
+  stderr: { bytes: stderr.length, sha256: sha256(stderr) },
+  pinsUnchanged: JSON.stringify(before) === JSON.stringify(after) };
+writeFileSync(`${outputDirectory}/execution.json`, `${JSON.stringify(execution, null, 2)}\n`);
+console.log(JSON.stringify(execution));
+process.exitCode = child.error || child.signal || !execution.pinsUnchanged ? 1 : (child.status ?? 1);

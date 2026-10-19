@@ -1,0 +1,104 @@
+{
+  "job_id": "R4308",
+  "worker": "S2",
+  "decision": "accepted",
+  "summary": "ONE independent exact three-file allowlist run passed10/10, exit0, direct stderr0B; all14 before/after pins identical. Author raw streams/artifact SHA256 and actual E4308 receipt binding verified. Complete deterministic sameAnswer diagnostic matches independently.",
+  "execution": {
+    "schema": "lab13-r4308-execution@1",
+    "job_id": "R4308",
+    "worker": "S2",
+    "executable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "nodeVersion": "v24.19.0",
+    "argv": [
+      "--test",
+      "experiments/capability-discovery/isolated-batch/same-answer.test.mjs",
+      "experiments/capability-discovery/isolated-batch/recipe.test.mjs",
+      "experiments/capability-discovery/enumerable-board/board.test.mjs"
+    ],
+    "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+    "timeoutMs": 20000,
+    "maxBufferBytesPerStream": 5242880,
+    "startUTC": "2026-10-19T10:02:16.335Z",
+    "endUTC": "2026-10-19T10:02:16.544Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null,
+    "stdout": {
+      "bytes": 58393,
+      "sha256": "958c4ce38dbb52fdb26e8741611aaf9c496a06f11a5e39da645a20001f4d271b"
+    },
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pinsUnchanged": true
+  },
+  "capture_sha256": "baa6ffdd0f369eadeed04f1a450cd751225284f14f74d11362a5812789cb7a96",
+  "test_sha256": "fd25e9476005a81340041c8cbd0c4fb46d36a98a9d26f43f0fd0c36d883b65a3",
+  "tests": {
+    "tests": 10,
+    "pass": 10,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "observed": {
+    "totals": [
+      171,
+      171,
+      171
+    ],
+    "leaf_computations": [
+      6,
+      1,
+      0
+    ],
+    "query_calls": [
+      6,
+      1,
+      0
+    ],
+    "aggregate_cached": [
+      false,
+      false,
+      true
+    ],
+    "source_and_producer_change_only_slot": 3,
+    "aggregate_keys": [
+      "b5ddbc362ebfe5f79489f6d98edc28d22a7a0183db27328a8e7f547e047d95f1",
+      "0e60c95f9e815c3718ee5c3b2c3af8f9d8ec3ce11dd95b7a878ff8d125c94444",
+      "b5ddbc362ebfe5f79489f6d98edc28d22a7a0183db27328a8e7f547e047d95f1"
+    ]
+  },
+  "audited": {
+    "mechanical_capture_diff_only_output_and_metadata": true,
+    "pins_each": 14,
+    "shared_input_pins_identical": 13,
+    "recipe_and_closure_frozen_pins_match": true,
+    "author_streams_sha_verified": true,
+    "author_all_artifact_hashes_verified": true,
+    "author_actual_E4308_packet_equals_receipt": true,
+    "deterministic_sameAnswer_deep_equal": true
+  },
+  "author_custody": "E4308 actual packet/receipt binds unchanged E4307 construction-labeled capture; no raw metadata relabeling and no claim R4307 executed.",
+  "artifacts": [
+    {
+      "path": "run/execution.json",
+      "sha256": "2d7de352aba08b0c26df409166a8ebaa144a84e0425a51dea93c29530c36cdbe"
+    },
+    {
+      "path": "run/pins.before.json",
+      "sha256": "bdb70df77dda7a6c933c55003139be83e2a3937f9f7fa1835ac2917e1de5a346"
+    },
+    {
+      "path": "run/pins.after.json",
+      "sha256": "bdb70df77dda7a6c933c55003139be83e2a3937f9f7fa1835ac2917e1de5a346"
+    },
+    {
+      "path": "same-answer.json",
+      "sha256": "9872f306743a5ca4c716aa152151a1bacd434a83613ff2e689c2770555ce5960"
+    }
+  ],
+  "scope": "Finite synthetic FIRST-GREEN lineage property only. No source/Git/native control writes, retry/fix, pixels/CV/original producer, performance, core repair, fine-grained query tracking, default/production or other-owner claim."
+}

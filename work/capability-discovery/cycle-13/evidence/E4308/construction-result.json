@@ -1,0 +1,16 @@
+{
+  "job_id": "E4307",
+  "worker": "S1",
+  "summary": "Constructed one FIRST-GREEN same-answer lineage property test against the unchanged delivered isolatedBatch recipe, plus a bounded one-run capture script. Both await exact-source review; neither has been imported or executed.",
+  "outcome": "confirmed_reuse",
+  "outcome_scope": "Source construction reuses the existing isolatedBatch API and implementation; this does not assert runtime cache reuse or a test PASS.",
+  "phase": "constructed_awaiting_independent_source_review_and_root_execution_gate",
+  "new_repository_file": "experiments/capability-discovery/isolated-batch/same-answer.test.mjs",
+  "capture_source": "/workspace/scratch/86659bbafcce/lab13/S1/E4307/capture.mjs",
+  "expected_tests_not_observed": 10,
+  "product_import_or_syntax_or_test_execution": false,
+  "existing_source_changes": false,
+  "git_stage_or_commit": false,
+  "canonical_receipt_or_native_state_write": false,
+  "next_gate": "Independent exact test/capture source review plus Root actual-flow read; no execution until explicit authorization."
+}

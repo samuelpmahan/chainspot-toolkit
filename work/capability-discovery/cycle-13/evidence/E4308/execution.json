@@ -1,0 +1,30 @@
+{
+  "schema": "lab13-e4307-execution@1",
+  "job_id": "E4307",
+  "worker": "S1",
+  "executable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+  "nodeVersion": "v24.19.0",
+  "argv": [
+    "--test",
+    "experiments/capability-discovery/isolated-batch/same-answer.test.mjs",
+    "experiments/capability-discovery/isolated-batch/recipe.test.mjs",
+    "experiments/capability-discovery/enumerable-board/board.test.mjs"
+  ],
+  "cwd": "/workspace/scratch/8528bb251845/chainspot-discovery-lab",
+  "timeoutMs": 20000,
+  "maxBufferBytesPerStream": 5242880,
+  "startUTC": "2026-10-19T09:59:07.044Z",
+  "endUTC": "2026-10-19T09:59:07.260Z",
+  "exitCode": 0,
+  "signal": null,
+  "error": null,
+  "stdout": {
+    "bytes": 58388,
+    "sha256": "dda7ca457d49301fb7ed8866e8cad330c1cd495a986924afa19c0412b1631028"
+  },
+  "stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "pinsUnchanged": true
+}
