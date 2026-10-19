@@ -20,8 +20,8 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { deserialize } from 'node:v8';
 import { deflateSync } from 'node:zlib';
-import { cropWindow, encodePngRgb } from '../../fg/png.mjs';
-import { CELLS, s4Accepted, s7Accepted, recoveredHoles } from './matrix.mjs';
+import { cropWindow, encodePngRgb, base64 } from '../../fg/png.mjs';
+import { CELLS, s7Accepted, s4Accepted, s5Accepted, s6Accepted, recoveredHoles } from './matrix.mjs';
 
 export const NEAR_MISS_PX = 3;          // a presentation tag, not a rule: errors above it are worth a look (mark or result?)
 export const SPARSE_VISIBLE = 0.25;     // a recovery with less of its frame visible than this is listed first for a look: it rests on less evidence, which is not a verdict
@@ -29,7 +29,8 @@ export const MOVED_PX = 0.5;            // against frozen: a center that moved m
 export const CROP = Object.freeze({ sizePx: 64, display: 4.5, wideSizePx: 112, wideDisplay: 2.6 });
 export const COLORS = Object.freeze({
   TP: '#3fb950', recoveredTP: '#58a6ff', FN: '#f85149', FP: '#d29922', recoveredFP: '#d29922', unjudged: '#8b949e', recovered: '#58a6ff',
-  right: '#3fb950', wrong: '#f85149', none: '#f85149', duplicate: '#d29922', expected: '#ffe11a', pipeline: '#ff7bd6', frozen: '#c8c8c8',
+  right: '#3fb950', wrong: '#f85149', none: '#f85149', duplicate: '#d29922', unpaired: '#d29922', expected: '#ffe11a', pipeline: '#ff7bd6', frozen: '#c8c8c8',
+  TN: '#3fb950', straight: '#2ecc40', bent: '#ff851b', unknown: '#aaaaaa',
   status: { met: '#238636', unmet: '#da3633', unjudged: '#6e7681', missing: '#8957e5', stale: '#bb8009' }
 });
 export const LEGEND = [
@@ -39,7 +40,9 @@ export const LEGEND = [
   ['rect', COLORS.TP, 'the pipeline\'s object (bbox): green TP, orange FP / duplicate, grey unjudged'],
   ['poly', COLORS.recovered, 'an S4 recovered pad (corners), with its ray to the badge it was recovered for'],
   ['line', COLORS.right, 'association: solid line to the badge chosen (green right, red wrong), dashed to the true badge'],
+  ['line', COLORS.unjudged, 'S5 pair: the ray from the tee to the plate centre of the badge it pairs with (green right, red wrong, grey unjudged), dashed yellow to its own hole\'s badge when wrong; orange box: a badge no tee pairs with'],
   ['dashed', COLORS.frozen, 'the frozen state (before), when a row changed against frozen.json'],
+  ['line', COLORS.straight, 'S6: the pair\'s segment by verdict: green straight (tee -> the basket it names), orange bent / grey unknown (tee -> badge); dashed yellow: Sam\'s path, his tee -> each corridorBend -> his basket; TP / FP / FN / TN vs his bends'],
   ['path', '#3fb950', 'S7 trace (accepted variant): green agrees with Sam (ends at his basket, within W / 2 of his corridor), orange reaches a basket but disagrees, red reaches none, grey unjudged; small squares: its vertices (tee cap, bends, end)'],
   ['dashed', '#ffe11a', "S7: Sam's corridor tee -> bends -> basket (dashed yellow); red cross: Sam's bend"],
   ['tag', '#f0883e', `near miss: error above ${NEAR_MISS_PX} px; visible N%: how much of a recovered pad's frame is visible (its evidence), contradicting M%: visible frame px that do not look like frame (a translucent ring across the pad does this)`]
@@ -76,6 +79,8 @@ export function cellRows(cell, course) {
     return rows.sort((a, b) => (a.hole ?? 99) - (b.hole ?? 99));
   }
 
+  if (cell.key === 'S6straight') { s6Rows(course, push, { cross, ring, line }); return rows; }
+
   if (cell.key === 'S7trace') return s7Rows(course, judged);
 
   if (cell.key === 'S3association') {
@@ -88,6 +93,28 @@ export function cellRows(cell, course) {
         reason: a.verdict === 'none' ? 'no badge associated' : a.verdict === 'wrong' ? `said Badge ${a.said}, is Tee ${a.hole}` : a.said != null ? `to Badge ${a.said}` : null,
         numbers: a.best ? { badge: a.said, zPx: a.best.z, lateralPx: a.best.latPx, residualDeg: a.best.resDeg, distancePx: a.best.distPx } : { badge: a.said ?? undefined } });
     });
+    return rows;
+  }
+
+  if (cell.key === 'S5pairs') {
+    // every tee after S4 (S3 observed + S4 recovered) and the badge it pairs with, from the accepted pairing variant
+    const v = J?.S5pairs?.variants?.[s5Accepted(course)] ?? null;
+    const src = judged && v ? v.rows : (O.pairs ?? []).map((p) => ({ hole: null, name: p.name, origin: p.origin, point: p.center, said: p.said, saidCenter: p.plateCenter, truthCenter: null, verdict: 'unjudged', teeErrorPx: null, residualDeg: p.residualDeg, signedPerpPx: p.signedPerpPx }));
+    src.forEach((a, i) => {
+      const color = COLORS[a.verdict] ?? COLORS.unjudged, name = a.name ?? `Tee #${i}`, marks = [cross(a.point, color, name)];
+      if (a.saidCenter) { marks.push(line(a.point, a.saidCenter, color, 0)); marks.push(cross(a.saidCenter, color, `Badge ${a.said}`)); }
+      if (a.verdict === 'wrong' && a.truthCenter) { marks.push(line(a.point, a.truthCenter, COLORS.expected, 6)); marks.push(cross(a.truthCenter, COLORS.expected, `Badge ${a.hole} (own hole)`)); }
+      if (a.verdict === 'none') marks.push(ring(a.point, 8, COLORS.none));
+      push({ hole: a.hole, name, verdict: a.verdict, center: a.point, marks, wide: true,
+        reason: a.verdict === 'none' ? `paired with no badge (is Tee ${a.hole})` : a.verdict === 'wrong' ? `pairs with Badge ${a.said}, is Tee ${a.hole}` : a.said != null ? `${a.origin ?? ''} to Badge ${a.said}, axis residual ${a.residualDeg} deg`.trim() : 'paired with no badge',
+        numbers: { badge: a.said ?? undefined, residualDeg: a.residualDeg ?? undefined, signedPerpPx: a.signedPerpPx ?? undefined, teeErrorPx: a.teeErrorPx ?? undefined, matchWithinPx: 8 } });
+    });
+    const plate = new Map((O.pairBadges ?? []).map((b) => [String(b.label), b.plateCenter]));
+    const unpaired = judged && v ? v.unmatchedBadges.map((b) => b.replace(/^Badge /, '')) : (O.unpairedBadges ?? []);
+    for (const b of unpaired) {
+      const c = plate.get(String(b)) ?? null;
+      push({ hole: null, name: `Badge ${b} (unpaired)`, verdict: 'unpaired', center: c, marks: c ? [rect([c[0] - 14, c[1] - 11, 28, 22], COLORS.unpaired, `Badge ${b}: no tee`)] : [], reason: 'no tee pairs with this badge' });
+    }
     return rows;
   }
 
@@ -143,6 +170,40 @@ export function cellRows(cell, course) {
       numbers: { errorPx: r2(r.errorPx) ?? undefined, dxPx: dx ?? undefined, dyPx: dy ?? undefined, matchWithinPx: radius, visibleFrameFrac: d?.visibleFrameFrac ?? undefined, contradictingFrac: evidenceOf(d)?.contradicting ?? undefined, confidence: d?.confidence ?? undefined, forBadge: d?.forHole ?? undefined, angleDeg: d?.angleRad != null ? r2(d.angleRad * 180 / Math.PI) : undefined } });
   }
   return rows;
+}
+
+/**
+ * S6: one row per tee-badge pair of the accepted variant (else straight3): its segment by verdict, Sam's path over it
+ * (testimony), the outcome vs his bends; a wide, downsampled crop around the whole hole (cropBox).
+ */
+function s6Rows(course, push, { cross, ring, line }) {
+  const judgedRows = course.testimony ? course.judgement?.S6straight?.variants?.[s6Accepted(course)]?.rows ?? [] : [];
+  for (const v of course.objects.s6 ?? []) {
+    const j = judgedRows.find((r) => r.pair === v.pair) ?? null, sam = j?.samPath ?? [];
+    const to = v.verdict === 'straight' && v.basket ? v.basket.point : v.badge?.center ?? v.tee.center;
+    const marks = [line(v.tee.center, to, COLORS[v.verdict] ?? COLORS.unknown, 0), cross(v.tee.center, COLORS.pipeline, v.tee.name, true)];
+    if (v.verdict === 'straight' && v.basket) marks.push(cross(v.basket.point, COLORS[v.verdict], v.basket.name, true));
+    for (let k = 0; k + 1 < sam.length; k++) marks.push(line(sam[k], sam[k + 1], COLORS.expected, 6));
+    if (sam.length) { marks.push(cross(sam[0], COLORS.expected, `Sam ${v.hole}`)); marks.push(ring(sam.at(-1), 12, '#ffffff')); }
+    const pts = [v.tee.center, to, ...sam];
+    const box = [Math.min(...pts.map((p) => p[0])), Math.min(...pts.map((p) => p[1])), Math.max(...pts.map((p) => p[0])), Math.max(...pts.map((p) => p[1]))];
+    const verdict = j ? j.outcome : course.testimony ? 'unjudged' : v.verdict;
+    push({ hole: Number(v.hole), name: `Hole ${v.hole} (${v.tee.name})`, verdict, center: [(box[0] + box[2]) / 2, (box[1] + box[3]) / 2], cropBox: box, marks, wide: true,
+      reason: `${v.verdict}${v.basket ? ` -> ${v.basket.name}` : ''}${j?.truthBent != null ? `; Sam: ${j.truthBent ? `bent (${j.truthBends} bends)` : 'straight'}` : ''}${j?.basketAgrees === false ? '; wrong basket' : ''}${v.condition ? `; ${v.condition}` : j?.why ? `; ${j.why}` : ''}`,
+      numbers: { ...Object.fromEntries(Object.entries(v.evidence ?? {}).filter(([, x]) => typeof x === 'number')), basketErrorPx: j?.basketErrorPx ?? undefined } });
+  }
+  return [];
+}
+
+/** A crop around a box (canonical px), downsampled to at most outPx on a side; marks keep source coordinates. */
+export function boxCrop({ rgba, width, height }, box, { marginPx = 40, outPx = 176, deflate } = {}) {
+  const size = Math.ceil(Math.max(box[2] - box[0], box[3] - box[1]) + 2 * marginPx), step = Math.max(1, Math.ceil(size / outPx)), n = Math.ceil(size / step);
+  const x0 = Math.round((box[0] + box[2]) / 2 - size / 2), y0 = Math.round((box[1] + box[3]) / 2 - size / 2), rgb = new Uint8Array(n * n * 3).fill(96);
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    const sx = x0 + x * step, sy = y0 + y * step; if (sx < 0 || sy < 0 || sx >= width || sy >= height) continue;
+    const s = (sy * width + sx) * 4, d = (y * n + x) * 3; rgb[d] = rgba[s]; rgb[d + 1] = rgba[s + 1]; rgb[d + 2] = rgba[s + 2];
+  }
+  return { png: base64(encodePngRgb({ width: n, height: n, rgb, deflate })), x0, y0, size: n * step, display: 640 / (n * step) };
 }
 
 export const S7_COLORS = Object.freeze({ agrees: '#3fb950', reachedDisagrees: '#f0883e', notReached: '#f85149', unjudged: '#8b949e', sam: '#ffe11a', samBend: '#ff2020' });
@@ -223,7 +284,7 @@ export function attention(courses) {
     k.rows.forEach((r, ri) => {
       const at = { course: c.course, cell: k.key, name: r.name, hole: r.hole, link: link(c, k, ri) };
       if (r.verdict === 'FN' && !r.recoveredByS4) items.push({ rank: 1, why: `FN${r.reason ? `: ${r.reason}` : ''}`, ...at });
-      else if (/FP|wrong|none/.test(r.verdict)) items.push({ rank: 2, why: `${r.verdict}${r.reason ? `: ${r.reason}` : ''}`, ...at });
+      else if (/FP|wrong|none|unpaired/.test(r.verdict)) items.push({ rank: 2, why: `${r.verdict}${r.reason ? `: ${r.reason}` : ''}`, ...at });
       if (r.vsFrozen && r.vsFrozen !== 'same') items.push({ rank: 3, why: `changed vs frozen: ${r.vsFrozen}`, ...at });
       if (r.weak) items.push({ rank: 4, visible: r.numbers?.visibleFrameFrac ?? 0, why: `recovered from ${Math.round((r.numbers?.visibleFrameFrac ?? 0) * 100)}% visible frame${r.numbers?.contradictingFrac ? `, ${Math.round(r.numbers.contradictingFrac * 100)}% of it contradicting` : ''}: a look, not a verdict`, ...at });
       if (c.testimony === 'none' && r.verdict === 'recovered') items.push({ rank: 5, why: `recovered without testimony: judge by eye (${r.reason ?? ''})`, ...at });
@@ -250,6 +311,7 @@ export function inspectorData(matrix, inputs, { root, frozen = null }) {
       const m = matrix.rows.find((r) => r.course === c.course && r.key === cell.key);
       const { rows: compared, gone } = compareWithFrozen(cellRows(cell, c), frozen?.objects?.[c.course]?.[cell.key] ?? null);
       const rows = compared.map((r) => {
+        if (r.cropBox) { const { cropBox, ...rest } = r; return { ...rest, crop: raster ? boxCrop(raster, cropBox, { deflate: (raw) => deflateSync(raw) }) : null }; }
         if (r.cropSizePx) {   // S7 trace lane: a whole hole, downsampled
           const c = raster && r.center ? scaledCrop(raster, { cx: r.center[0], cy: r.center[1], size: r.cropSizePx }) : null;
           return { ...r, crop: c ? { png: c.png, x0: c.x0, y0: c.y0, size: r.cropSizePx, display: Math.min(2, 560 / r.cropSizePx) } : null };
@@ -258,7 +320,7 @@ export function inspectorData(matrix, inputs, { root, frozen = null }) {
         const crop = raster && r.center ? cropWindow(raster, { cx: r.center[0], cy: r.center[1], size, deflate: (raw) => deflateSync(raw) }) : null;
         return { ...r, crop: crop ? { png: crop.png, x0: crop.origin[0], y0: crop.origin[1], size, display } : null };
       });
-      const summary = { rows: rows.length, FN: rows.filter((r) => r.verdict === 'FN').length, FP: rows.filter((r) => /FP|wrong|none/.test(r.verdict)).length,
+      const summary = { rows: rows.length, FN: rows.filter((r) => r.verdict === 'FN').length, FP: rows.filter((r) => /FP|wrong|none|unpaired/.test(r.verdict)).length,
         recovered: rows.filter((r) => /recovered/.test(r.verdict) || /^S4 /.test(r.name ?? '')).length, near: rows.filter((r) => r.near).length, weak: rows.filter((r) => r.weak).length,
         changed: rows.filter((r) => r.vsFrozen && r.vsFrozen !== 'same').length + gone.length };
       cells.push({ key: cell.key, what: cell.what, status: m?.status, result: m?.result, expected: m?.expected, freshness: m?.freshness, changedPaths: m?.changedPaths ?? [], vsFrozen: m?.vsFrozen, goal: m?.goal,
@@ -325,7 +387,7 @@ function render(){writeHash();grid();cellpanel();detail();}
 function grid(){let h='<table><tr><th>course</th>'+D.cells.map((c)=>'<th>'+esc(c.key)+'<br><small>'+esc(c.what)+'</small></th>').join('')+'</tr>';
 D.courses.forEach((c,ci)=>{h+='<tr><th>'+esc(c.course)+'<br><small>N = '+c.N+' &middot; testimony: '+esc(c.testimony)+'</small></th>';c.cells.forEach((k,ki)=>{const s=k.summary;h+='<td class="cell'+(sel.ci===ci&&sel.ki===ki?' sel':'')+'" data-ci="'+ci+'" data-ki="'+ki+'">'+st(k.status)+' <small>'+esc(k.freshness)+'</small>'+(s.changed?' <span class="chip" style="color:#bb8009">'+s.changed+' changed</span>':(D.frozenAt&&k.vsFrozen?' <span class="chip">'+esc(k.vsFrozen==='same'?'same':'cell '+k.vsFrozen)+'</span>':''))+'<br>'+esc(k.result||'-')+'<br><small>'+s.rows+' objects'+(s.FN?', <b style="color:#f85149">'+s.FN+' FN</b>':'')+(s.FP?', <b style="color:#d29922">'+s.FP+' FP/wrong</b>':'')+(s.recovered?', <b style="color:#58a6ff">'+s.recovered+' recovered</b>':'')+(s.near?', <b class="near">'+s.near+' near</b>':'')+(s.weak?', <b class="near">'+s.weak+' sparse</b>':'')+'</small></td>';});h+='</tr>';});
 $('#grid').innerHTML=h+'</table>';document.querySelectorAll('td.cell').forEach((td)=>td.onclick=()=>{sel={ci:+td.dataset.ci,ki:+td.dataset.ki,ri:null,filter:sel.filter};render();});}
-const show=(r)=>sel.filter==='all'||(sel.filter==='miss'&&/FN|FP|wrong|none/.test(r.verdict))||(sel.filter==='rec'&&(/recovered/.test(r.verdict)||/^S4 /.test(r.name||'')))||(sel.filter==='near'&&r.near)||(sel.filter==='weak'&&r.weak)||(sel.filter==='changed'&&r.vsFrozen&&r.vsFrozen!=='same');
+const show=(r)=>sel.filter==='all'||(sel.filter==='miss'&&/FN|FP|wrong|none|unpaired/.test(r.verdict))||(sel.filter==='rec'&&(/recovered/.test(r.verdict)||/^S4 /.test(r.name||'')))||(sel.filter==='near'&&r.near)||(sel.filter==='weak'&&r.weak)||(sel.filter==='changed'&&r.vsFrozen&&r.vsFrozen!=='same');
 function cellpanel(){if(sel.ci==null){$('#cellpanel').innerHTML='<small>Pick a cell above.</small>';return;}const c=D.courses[sel.ci],k=c.cells[sel.ki];
 let h='<h3>'+esc(c.course)+' &middot; '+esc(k.key)+' '+esc(k.what)+' '+st(k.status)+'</h3><div><b>expected:</b> '+esc(k.expected)+'<br><b>result:</b> '+esc(k.result||'-')+'<br><small>goal: '+esc(k.goal)+'</small>';
 if(k.freshness==='STALE')h+='<br><b class="near">stale:</b> <span class="num">'+esc(k.changedPaths.slice(0,8).join(', '))+(k.changedPaths.length>8?' ... ('+k.changedPaths.length+' paths)':'')+'</span>';

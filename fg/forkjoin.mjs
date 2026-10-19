@@ -80,7 +80,7 @@ export function standaloneMs(entries, caller) {
 const implementationSpec = (impl, slot, name) => {
   const calculate = typeof impl === 'function' ? impl : impl?.calculate;
   if (typeof calculate !== 'function') throw new Error(`comparableForkJoin ${slot}: implementation ${name} is neither a function nor { calculate }`);
-  return { calculate, reads: [...(impl.reads ?? [])], calls: [...(impl.calls ?? [])] };
+  return { calculate, reads: [...(impl.reads ?? [])], calls: [...(impl.calls ?? [])], closure: impl.code ?? null };
 };
 
 export function comparableForkJoin({
@@ -105,7 +105,7 @@ export function comparableForkJoin({
     try {
       branch.register(fn, {
         inParts: spec.reads, outParts: [part], calls: spec.calls, note: `implementation ${name} of ${slot}`,
-        code: digest({ implementation: name, source: String(spec.calculate) }),   // the implementation's own code, not the wrapper's
+        code: digest(spec.closure ? { implementation: name, source: String(spec.calculate), closure: spec.closure } : { implementation: name, source: String(spec.calculate) }),   // the implementation's own code, not the wrapper's; closure = sha of its module closure when discovery supplied it (fg/discover.mjs)
         calculate: (io) => ({ [part]: apply(Object.freeze({ get: io.in, has: io.board.has, call: io.call }), spec.calculate, name) })
       });
       branch.call(fn, undefined, { caller: `forkjoin:${name}` });

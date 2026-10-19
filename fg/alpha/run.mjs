@@ -17,6 +17,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import zlib from 'node:zlib';
+import { runnerCache, casFlag } from '../casRunner.mjs';
 import { instrumentedStore, profileSummary, profileFrame } from '../profile.mjs';
 import { RENDER_PART } from '../store.mjs';
 import { framesJson, renderFlipbook } from '../flipbook.mjs';
@@ -43,18 +44,41 @@ export function gradeShot(profile, shot = CALLED_SHOT) {
   return rows;
 }
 
-export function runAlphaProfile({ attempt, specimen, outDir = null, root = ROOT }) {
-  const loaded = loadAttemptParts({ attempt, specimen, root });
-  const assocFile = join(loaded.out, 's3assoc', 'px.tees.association.json');
-  const association = existsSync(assocFile) ? JSON.parse(readFileSync(assocFile, 'utf8'))
+/** The S3 association rows of an attempt (s3assoc/px.tees.association.json), or its recorded absence. */
+export function loadAssociation({ out, attempt, specimen }) {
+  const assocFile = join(out, 's3assoc', 'px.tees.association.json');
+  return existsSync(assocFile) ? JSON.parse(readFileSync(assocFile, 'utf8'))
     : { absent: `S3 association not run on this attempt (node ports/s3assoc/run.mjs --specimen ${specimen} --attempt ${attempt}): no straight segments` };
-  const out = outDir ?? join(loaded.out, 's7alpha', `run-${new Date().toISOString().replace(/[:.]/g, '-')}`);   // evidence is never overwritten
-  const { store, document: instrumentation } = instrumentedStore({ name: `s7alpha:${specimen}`, base: loaded.board });
-  store.constant('fn.tk.s4recover.laneOutputs', loaded.values);                       // S4's lane outputs (tk.s4.hallway reads them)
-  store.constant('fn.tk.s7alpha.laneOutputs', { [ASSOCIATION_PART]: association, [COURSE_PART]: specimen });
-  for (const [fn, spec] of S4_CALCULATIONS) store.register(fn, spec);
+}
+
+/** The S4 lane outputs tk.s4.hallway reads (loadAttemptParts values), less the roots a consumer's store already has. */
+export const s4LaneOutputsFor = (values, { omit = [] } = {}) => Object.fromEntries(Object.entries(values).filter(([k]) => !omit.includes(k)));
+
+/**
+ * Register what tk.s7.alphaProfile needs on a consumer's store, so the Part is produced on first need (an inPart of
+ * the consumer's Calculation: S5 learning, S6 discrimination), exactly as this runner produces it:
+ *   s4LaneOutputs  S4's lane outputs as one constant (fn.tk.s4recover.laneOutputs), and S4's Calculations, so
+ *                  tk.s4.hallway is produced on first need; null when the store already produces tk.s4.hallway
+ *   association    tk.s3assoc.association (loadAssociation; its absence is recorded by fn.tk.s7.straightSegments)
+ *   course         tk.s7.course, the specimen name
+ * plus fn.tk.s7.straightSegments, fn.tk.s7.alphaProfile and fn.q.alpha.*. Nothing is computed here.
+ */
+export function registerAlphaProfile(store, { s4LaneOutputs = null, association, course }) {
+  if (s4LaneOutputs) {
+    store.constant('fn.tk.s4recover.laneOutputs', s4LaneOutputs);                   // S4's lane outputs (tk.s4.hallway reads them)
+    for (const [fn, spec] of S4_CALCULATIONS) if (!store.registered(fn)) store.register(fn, spec);
+  }
+  store.constant('fn.tk.s7alpha.laneOutputs', { [ASSOCIATION_PART]: association, [COURSE_PART]: course });
   for (const [fn, spec] of ALPHA_CALCULATIONS) store.register(fn, spec);
   registerAlphaQueries(store);
+}
+
+export function runAlphaProfile({ attempt, specimen, outDir = null, root = ROOT, cas = true }) {
+  const loaded = loadAttemptParts({ attempt, specimen, root });
+  const association = loadAssociation({ out: loaded.out, attempt, specimen });
+  const out = outDir ?? join(loaded.out, 's7alpha', `run-${new Date().toISOString().replace(/[:.]/g, '-')}`);   // evidence is never overwritten
+  const { store, document: instrumentation } = instrumentedStore({ name: `s7alpha:${specimen}`, base: loaded.board, ...runnerCache({ root, entry: import.meta.filename, cas }) });
+  registerAlphaProfile(store, { s4LaneOutputs: loaded.values, association, course: specimen });
   const profile = store.get(ALPHA_PROFILE_PART);
   mkdirSync(out, { recursive: true });
   const { emits, ...value } = profile;
@@ -80,8 +104,8 @@ export function runAlphaProfile({ attempt, specimen, outDir = null, root = ROOT 
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1]]] : acc), []));
-  if (!args.attempt || !args.specimen) { console.error('usage: node fg/alpha/run.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR]'); process.exit(2); }
-  const r = runAlphaProfile({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null });
+  if (!args.attempt || !args.specimen) { console.error('usage: node fg/alpha/run.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR] [--no-cas]'); process.exit(2); }
+  const r = runAlphaProfile({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null, cas: casFlag() });
   const p = r.profile;
   console.log(JSON.stringify({ out: r.out, course: p.course, r1Px: p.r1Px, overlays: p.overlays, scale: p.fit.scale, perClass: Object.fromEntries(Object.entries(p.fit.perClass).map(([k, v]) => [k, { pairs: v.pairs, trimmedPairs: v.trimmedPairs, controlRatio: v.controlRatio, alphaOls: v.alphaOls, alphaByGeometry: v.alphaByGeometry.map((g) => `${g.binArcPx}/${g.depthPx}: ${g.alpha}`).join(', '), bounded: v.bounded, counts: v.counts }])),
     shot: r.shot, profile: r.profile_.slice(0, 8).map((x) => `${x.calculation}: ${x.calls}x self ${x.selfMs} ms ${JSON.stringify(x.emits)}`) }, null, 1));

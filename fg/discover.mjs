@@ -32,10 +32,11 @@
  * whose declared guarantee has no implementation).
  */
 import { readdirSync, readFileSync, existsSync } from 'node:fs';
-import { basename, join, resolve } from 'node:path';
+import { basename, dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { isGuarantee } from './guarantee.mjs';
 import { createRegistry, crossCheck } from './registry.mjs';
+import { closureSha } from './closure.mjs';
 
 const SKIP = new Set(['fixtures', 'node_modules']);
 
@@ -83,7 +84,8 @@ export async function discoverImplementations(root, slot) {
     for (const key of ['reads', 'calls'])
       if (mod[key] !== undefined && !(Array.isArray(mod[key]) && mod[key].every((a) => typeof a === 'string' && a)))
         throw new Error(`fg discover: ${join(dir, name)} export ${key} must be a list of addresses`);
-    impls[basename(name, '.mjs')] = Object.freeze({ calculate: mod.default, reads: Object.freeze([...(mod.reads ?? [])]), calls: Object.freeze([...(mod.calls ?? [])]) });
+    impls[basename(name, '.mjs')] = Object.freeze({ calculate: mod.default, reads: Object.freeze([...(mod.reads ?? [])]), calls: Object.freeze([...(mod.calls ?? [])]),
+      code: closureSha([join(dir, name)], { root: dirname(resolve(root)) }) });   // sha of the implementation's module closure: the persistent cache's code key
   }
   return impls;
 }

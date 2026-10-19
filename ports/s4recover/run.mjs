@@ -25,6 +25,7 @@
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
 import { deserialize } from 'node:v8';
 import { join, resolve } from 'node:path';
+import { runnerCache, casFlag } from '../../fg/casRunner.mjs';
 import { instrumentedStore, profileSummary, profileFrame } from '../../fg/profile.mjs';
 import { RENDER_PART } from '../../fg/store.mjs';
 import { comparableForkJoin, forkJoinFrames } from '../../fg/forkjoin.mjs';
@@ -141,11 +142,11 @@ export function acceptRule({ acceptedElsewhere = null, judged = true } = {}) {
   return accept;
 }
 
-export async function runTeeRecoverForkJoin({ attempt, specimen, outDir = null, root = ROOT, acceptedElsewhere = null }) {
+export async function runTeeRecoverForkJoin({ attempt, specimen, outDir = null, root = ROOT, acceptedElsewhere = null, cas = true }) {
   const loaded = loadAttemptParts({ attempt, specimen, root });
   const out = outDir ?? join(loaded.out, 's4recover', `run-${new Date().toISOString().replace(/[:.]/g, '-')}`); // evidence is never overwritten (file sink)
   // Profiled by construction (fg/profile.mjs): every Calculation call is timed with its emits into instrumentation.json.
-  const { store, document: instrumentation } = instrumentedStore({ name: `s4recover:${specimen}`, base: loaded.board });
+  const { store, document: instrumentation } = instrumentedStore({ name: `s4recover:${specimen}`, base: loaded.board, ...runnerCache({ root, entry: import.meta.filename, cas }) });
   store.constant('fn.tk.s4recover.laneOutputs', loaded.values);
   for (const [fn, spec] of S4_CALCULATIONS) store.register(fn, spec);
   registerPoseQueries(store);   // the pose search behind the PxC boundary: fn.q.pose.*
@@ -186,8 +187,8 @@ export async function runTeeRecoverForkJoin({ attempt, specimen, outDir = null, 
 
 if (import.meta.url === `file://${process.argv[1]}`) {
   const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1]]] : acc), []));
-  if (!args.attempt || !args.specimen) { console.error('usage: node ports/s4recover/run.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR] [--accept VARIANT  (for a course without testimony: what the annotated courses accepted)]'); process.exit(2); }
-  const r = await runTeeRecoverForkJoin({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null, acceptedElsewhere: args.accept ?? null });
+  if (!args.attempt || !args.specimen) { console.error('usage: node ports/s4recover/run.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR] [--no-cas  (do not use the persistent cache attempts/cas)] [--accept VARIANT  (for a course without testimony: what the annotated courses accepted)]'); process.exit(2); }
+  const r = await runTeeRecoverForkJoin({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null, acceptedElsewhere: args.accept ?? null, cas: casFlag() });
   const c = r.comparison;
   console.log(JSON.stringify({
     out: r.out, frames: r.frames, accepted: r.accepted, timingsMs: r.timingsMs, profile: r.profile.slice(0, 12).map((p) => `${p.calculation}: ${p.calls}x self ${p.selfMs} ms total ${p.totalMs} ms ${JSON.stringify(p.emits)}`), template: c.template, seeds: c.seeds, assignmentCount: c.assignment.length,

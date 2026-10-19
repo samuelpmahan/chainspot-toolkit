@@ -11,6 +11,15 @@ through contracts, never through each other's code.
 | S6 straight | `lane/s6` (`/home/user/lanes/s6`) | `fn.Hole.straight`: straight vs bent per pair (variants: the 3-point `straight3`, `pathLoss`, `pinned` two-ray rows); judge TP/FP/FN/TN vs Sam's bends; cell `S6straight` | **discrimination**: `fn.q.path.*`: overlay fraction along tee -> basket from the alpha profile; `tk.s6.pathLoss` per pair; the course-local path transparency profile learned on straight holes |
 | S7 trace | `lane/s7` (`/home/user/lanes/s7`) | **alpha composition**: `tk.s7.alphaProfile` per `contracts/alpha.profile@1.mjs`, fitted on the C1/C2 fills (known geometry) and straight-hole ribbons; `fn.q.alpha.*` queries; legible swatch + unmixed-crop renders | **trace**: `px.s7.overlayFrac` (a derived view), ride the path from the badge exit tee -> badge -> basket; bend points vs Sam's `corridorBends`; judge `S7bends`; cell `S7trace` |
 
+## Graduate the prototypes first (Sam, 2026-10-18: "didn't you already have almost perfect pathfinding and bend detection")
+
+The hallway tracker exists as Python evidence in `docs/evidence/s7edge/` and `docs/evidence/s7main/` (tee-seeded,
+badge-only and association-first tracing; width learned from tee -> badge segments; the 3-point straight verify; the
+8 lum edge-contrast test; bends refined by render-and-score). Recorded: golden, lenard, townelake 16/18 each, heritage
+5/18 before S4, bends matched at a 3.48 px median. It was never graduated. The S6 and S7 lanes port it as store
+queries and fork-join implementations (`s3first`, `badgeOnly`, `segmentVerify`) and prove identical output against the
+recorded `s3first-*.json` before any new signal (alpha, S4 seeds) is added as a further variant.
+
 ## What crosses lanes
 
 - `contracts/alpha.profile@1.mjs` is the only shared surface: the Part address `tk.s7.alphaProfile`, its shape, and

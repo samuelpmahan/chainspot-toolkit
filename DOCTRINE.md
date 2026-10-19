@@ -4,6 +4,21 @@ What Sam has decided, each with the evidence that made it concrete. Agents
 read this before changing a Stage. Where the repo and Sam disagree, Sam is
 right and the repo is behind. Every number carries a unit.
 
+## How to read these rulings (Sam, 2026-10-18)
+
+- **Phronesis and cleanrooming.** Sam's rulings are practical judgement on particular cases (heritage hole 8 is
+  straight); the cleanroom keeps that judgement honest: rebuild from behaviour and a stated spec, prove equivalence
+  on outputs (geometry, not hashes), hold validation out (`sealed/`).
+- **Metaphors are specs.** "Model it after Redis" became the keyspace; "known endpoints, work backwards" is
+  conditioning on a collider; "scoring and matching are separate, symbiotic phases" is two kinds of Calculation.
+  An agent that treats one as an image builds the wrong thing.
+- **The scene is a generative model.** Course -> hole n -> {tee, badge, basket, path}; stages condition on the known
+  nodes first (badges, ring geometry, then endpoints) and infer the uncertain ones from them.
+- **What it learns is generalization.** Declarative composition makes recombination predictable, which is what lets
+  a shot be called before the run; a called shot that lands on a combination never run before is the evidence that
+  something was learned rather than memorized, and an uncalled change is where the model is wrong. Dev is solved
+  reliably first; then the rest of the corpus opens up for true learning, and `sealed/` stays the unseen test.
+
 ## The scene
 
 - The image is a satellite photo with **rendered sprites** drawn over it:
@@ -75,8 +90,8 @@ right and the repo is behind. Every number carries a unit.
 | S3 | visible tees, **precision only**; recall is S4's. Initial association (Sam, 2026-10-17): each unoccluded pad pairs with at most 2 badges, one obviously better; continuing its axis to a BasketPoint starts S5's straight-hole matching before recovery (`ports/s3assoc/`) | Sam's tee points, hole numbers |
 | S4 | recover tees and baskets until counts match badge cardinality N; occlusion-aware by default: assume the sought sprite is occluded; entail from what must be true | Sam's points |
 | S5 | a tee's **long axis points directly at its badge**; residual indicts the tee fit | hole n's tee pairs with badge n |
-| S6 | straight holes are the trivial case: objective path loss along tee to basket; learn the course-local path transparency profile there | straight-hole residual |
-| S7 | find the path signal and ride it; all holes resolve tee to badge to basket, trace stays in the ribbon; perfection = bend points on the centreline | Sam's bends |
+| S6 | straight holes are the trivial case: objective path loss along tee to basket; learn the course-local path transparency profile there. Heritage hole 8 is straight (Sam, 2026-10-18, from the S6 render: his mark's bend sat 2.67 px off the 272 px line); the corrected annotation is a new file | straight-hole residual |
+| S7 | find the path signal and ride it; all holes resolve tee to badge to basket, trace stays in the ribbon; perfection = bend points on the centreline. Known endpoints first (Sam, 2026-10-18): the ABFeature era paired every badge with every basket endpoint, scored the pairs and assigned them one-to-one, which is what let it assume known endpoints and work backwards from the basket. The hallway tracker prototypes (`docs/evidence/s7edge`, `s7main`: 16/18 on golden, lenard, townelake) graduate before any new signal | Sam's bends |
 
 ## Points and identity
 

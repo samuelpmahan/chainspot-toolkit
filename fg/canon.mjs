@@ -41,8 +41,13 @@ export function toBytes(input) {
   throw new TypeError('sha256: expected a string, ArrayBuffer or ArrayBufferView');
 }
 
+// Node's native SHA-256 when the host offers it (process.getBuiltinModule, no import: this file stays browser-safe). The
+// digest is the same function, so every key and hash is unchanged; a warm cache run hashes its board contents for keys.
+const nativeSha = (() => { try { return globalThis.process?.getBuiltinModule?.('node:crypto')?.createHash ?? null; } catch { return null; } })();
+
 export function sha256Hex(input) {
   const bytes = toBytes(input);
+  if (nativeSha) return nativeSha('sha256').update(bytes).digest('hex');
   const len = bytes.length;
   const total = Math.ceil((len + 9) / 64) * 64;
   const buf = new Uint8Array(total);

@@ -27,3 +27,8 @@
 - **Variants:** `address@variant` is its own address (`px.tees.refined@structural`), so every implementation of a
   slot lives side by side in one store; `store.variants(address)` lists them; `store.point(address, target, { by })`
   names the accepted one and `get(address)` follows it. A branch is a key prefix, not a separate store.
+- **Persistent cache (`fg/cas.mjs`):** the runners (S4, S5, S5 residual, S6, S6 pathLoss, S7 alpha) pass
+  `createCas()` (root `attempts/cas/`, gitignored) as the store's `cache` by default; `--no-cas` opts out. The key
+  already holds content, so it is valid forever: a constant is keyed per Part by its own value without its locators
+  (`attempt`, `run`), a runner's `codeSalt` is the sha of its module closure (`fg/closure.mjs`), and a discovered
+  implementation carries the sha of its own closure. `node scripts/pxc.mjs cas --stats | --prune-older-than DAYS`.

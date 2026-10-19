@@ -89,13 +89,16 @@
  *                          the accepted variant: get(address) follows the pointer (write-once, with its author)
  *   store.variants(address)  the variant addresses present or declared for an address
  *   store.keyOf(address)   the content key of a Part: for a produced Part, the cache key of the call that made it;
- *                          for a provider or constant Part, a digest of its value (typed arrays by their bytes)
+ *                          for a provider Part, a digest of its value (typed arrays by their bytes); for a constant Part, a digest
+ *                          of its own value without its locators (LOCATORS: attempt, run), per Part, never of the bundle
  *   cache key              sha256 of { fn, code, args, inputs: [[inPart, keyOf(inPart)]...] }; code is the
  *                          Calculation's declared `code` key, else the digest of calculate's source. A call whose key is
  *                          in the store's cache writes its outParts from the cache without computing (the call is
  *                          logged with cached: 1). createPartStore({ cache }) takes any { has, get, set }; the default
  *                          is a Map shared by the store and its branches, so a variant computed once in a run is never
  *                          computed twice; a runner passes a persistent cache to make the next run warm.
+ *   codeSalt               createPartStore({ codeSalt }): a runner's module-closure sha (fg/closure.mjs closureSha), mixed into every
+ *                          Calculation's code key, so code a calculate calls but does not contain still changes the key
  *   store.keyspace()       every Part of this store with its key and producer: the snapshot as a key dump
  *
  * Address namespaces (the early runner's table of Parts, producers and
@@ -162,6 +165,12 @@ function withByteDigests(v, depth = 0) {
   return v;
 }
 export const contentKey = (value) => digest(withByteDigests(value));
+/** Top-level fields that say where a root input was read from, not what it is: ignored when a constant is keyed. */
+export const LOCATORS = Object.freeze(['attempt', 'run']);
+const withoutLocators = (value, locators) => {
+  if (!locators.length || !value || typeof value !== 'object' || Array.isArray(value) || isTyped(value) || value instanceof Map || value instanceof Set) return value;
+  return Object.fromEntries(Object.entries(value).filter(([k]) => !locators.includes(k)));
+};
 export const variantOf = (address, name) => `${address}@${name}`;
 
 /** The image size of a store's raster Part (px.image.cropped, else the canonical pixels). */
@@ -205,9 +214,9 @@ export function callSubtree(entries, caller) {
  * each entry timed with the emits its output declared, and offers it back as the capability INSTRUMENTATION_CALLS.
  * onCall stays a hook for runners that also stream entries elsewhere.
  */
-export function createPartStore({ base = null, name = 'root', onCall = null, cache = new Map() } = {}) {
+export function createPartStore({ base = null, name = 'root', onCall = null, cache = new Map(), codeSalt = null } = {}) {
   const log = [];
-  const store = makeStore({ base, name, parent: null, shared: { seq: 0, stack: [], log, cache, baseKeys: new WeakMap(), onCall: (entry) => { log.push(entry); onCall?.(entry); } } });
+  const store = makeStore({ base, name, parent: null, shared: { seq: 0, stack: [], log, cache, codeSalt, baseKeys: new WeakMap(), onCall: (entry) => { log.push(entry); onCall?.(entry); } } });
   // The PxC is queryable: pixel-set math lives in fg/pxset.mjs and is invoked from outside by Part address.
   registerQueries(store, PXSET_QUERIES, { resolve: (ref) => resolvePxSet((a) => store.get(a), ref, () => imageDims(store)) });
   // renderable is a default property of every Part: any address renders by the shape of its value (fg/render.mjs)
@@ -243,6 +252,19 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
     if (onBase(address)) throw new PartStoreError(`Part '${address}' is a provider-board address; a toolkit Calculation (${producedBy}) may not shadow it`);
     parts.set(address, Object.freeze({ value, producedBy, inParts, key }));
   };
+  // The roots key: every root input this store can reach (provider-board Parts and constant Parts, along the chain). A
+  // Calculation that calls queries can read any Part through them (queries declare no inParts), so its declared inParts do
+  // not bound what it saw: its cache key carries the roots key instead (a cross-run cache otherwise serves one course's
+  // answer to another: golden's S4 recovered tees on lenard, 2026-10-18).
+  const rootsKey = () => {
+    const rows = [];
+    for (const s of chain()) {
+      const b = s === self ? board() : null;
+      if (b && typeof b.keys === 'function') for (const address of b.keys()) rows.push([address, keyOf(address)]);
+      for (const [fn, spec] of s._calcs) if (spec.rootKey) for (const address of spec.outParts) rows.push([address, keyOf(address)]);
+    }
+    return digest(rows.sort((x, y) => (x[0] < y[0] ? -1 : x[0] > y[0] ? 1 : 0)));
+  };
   // the content key of any Part this store can see: a produced Part carries the key of the call that made it; a provider
   // or constant Part is digested once (by object identity, so a raster hashes once per run)
   const keyOf = (address) => {
@@ -257,6 +279,7 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
     if (owner) { owner._produce(address); return keyOf(address); }
     throw new PartStoreError(`keyOf: no Part at '${address}' on store ${name}`);
   };
+  const codeKey = (code) => (shared.codeSalt ? digest({ code, salt: shared.codeSalt }) : code);   // no salt: the key means what it always meant
   const cacheable = (args) => { try { plain(args ?? null); return true; } catch { return false; } };
 
   // Lazy production of a Part whose producer is registered on THIS store.
@@ -311,13 +334,14 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
 
     _produce: produceHere,
 
-    register(fn, { inParts = [], outParts = [], calls = [], calculate, lazy = true, note = null, code = null } = {}) {
+    register(fn, { inParts = [], outParts = [], calls = [], calculate, lazy = true, note = null, code = null, rootKey = null } = {}) {
       if (typeof fn !== 'string' || !FN.test(fn)) throw new PartStoreError(`register: ${JSON.stringify(fn)} is not a fn.* Calculation address`);
       if (findCalc(fn)) throw new PartStoreError(`register: Calculation '${fn}' is already registered`);
       if (typeof calculate !== 'function') throw new PartStoreError(`register ${fn}: calculate(io) is required`);
       const spec = Object.freeze({
         address: fn, store: name, note, lazy: lazy !== false,
-        code: code ?? sha256Hex(String(calculate)),   // the code key: pass the module graph's digest when a helper can change the result
+        rootKey,
+        code: codeKey(code ?? sha256Hex(String(calculate))),   // the code key: pass the module graph's digest when a helper can change the result; the store's codeSalt (a runner's module closure, fg/closure.mjs) is mixed into every key
         inParts: addressList(inParts, `register ${fn}: inParts`).map(A),
         outParts: addressList(outParts, `register ${fn}: outParts`).map(A),
         calls: addressList(calls, `register ${fn}: calls`),
@@ -334,9 +358,13 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
       return spec;
     },
 
-    constant(fn, values) {
+    constant(fn, values, { locators = LOCATORS } = {}) {
       const outParts = Object.keys(values);
-      return self.register(fn, { outParts, code: contentKey(values), calculate: () => ({ ...values }) });   // keyed by its value: a root input
+      // a root input is keyed by its content, per Part: the Part's key digests its own value (typed arrays by their bytes) without
+      // its locators (where it was read from: the attempt id, the run directory). The same pixels on a new attempt, or an
+      // upstream re-run that produced the same recovered tees, key identically, and one changed Part does not re-key the others.
+      const rootKey = (address, value) => digest({ root: address, content: contentKey(withoutLocators(value, locators)) });
+      return self.register(fn, { outParts, rootKey, calculate: () => ({ ...values }) });
     },
 
     registered: (fn) => Boolean(findCalc(fn)),
@@ -384,7 +412,7 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
           }
         });
         // the cache key of this call: the Calculation, its code, its arguments and the content keys of its inputs
-        key = spec.outParts.length && cacheable(args) ? digest({ fn, code: spec.code, args: plain(args ?? null), inputs: spec.inParts.map((a) => [a, keyOf(a)]) }) : null;
+        key = spec.outParts.length && !spec.rootKey && cacheable(args) ? digest({ fn, code: spec.code, args: plain(args ?? null), inputs: spec.inParts.map((a) => [a, keyOf(a)]), ...(spec.calls?.length ? { roots: rootsKey() } : {}) }) : null;
         entry.key = key;
         const finish = (result, fromCache = false) => {
           if (spec.outParts.length) {
@@ -394,7 +422,7 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
             const missing = spec.outParts.filter((a) => !keys.includes(a));
             const extra = keys.filter((a) => !spec.outParts.includes(a));
             if (missing.length || extra.length) throw new PartStoreError(`${fn} returned outParts that differ from its declaration (missing: ${missing.join(', ') || '-'}; undeclared: ${extra.join(', ') || '-'})`);
-            for (const address of spec.outParts) write(address, out[address], fn, spec.inParts, key);
+            for (const address of spec.outParts) write(address, out[address], fn, spec.inParts, spec.rootKey ? spec.rootKey(address, out[address]) : key);
             if (key && !fromCache && shared.cache) toCache = out;
             entry.emits = emitsOf(spec.outParts.map((a) => out[a]));
           } else entry.emits = emitsOf([result]);
