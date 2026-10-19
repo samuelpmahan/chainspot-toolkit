@@ -32,7 +32,7 @@ export function identityRun({ specimen, attempt, padsFile = null, system = false
   const tees = readJson(join(out, 'early', 'artifacts', 's3fix', 'px.tees.refined.json')).tees;
   const ownedLists = [...pxc.get('px.baskets').map((k) => ownedPx(W, H, k).px), ...pxc.get('px.badges').map((b) => ownedPx(W, H, b).px), ...tees.map((t) => t.px)];
   let pads, template, padRule;
-  if (system) { const J = readJson(join(out, 's3assoc', 'px.tees.association.json')); pads = J.rows.filter((r) => r.pose).map((r) => ({ label: r.tee, cx: r.pose.cx, cy: r.pose.cy, thDeg: r.pose.thDeg })); template = { L: J.template.L, W: J.template.W }; padRule = 'S3 association AA poses'; }
+  if (system) { const J = readJson(join(out, 's3assoc', 'px.tees.association.json')); pads = J.rows.filter((r) => r.pose).map((r) => ({ label: r.tee, cx: r.pose.cx, cy: r.pose.cy, thDeg: r.pose.thDeg })); template = { L: J.template.L, W: J.template.W }; padRule = 'S3 association AA poses; tee ray = the frozen 2-decimal baselineOf ray (S7 itself reads it unrounded)'; }
   else if (padsFile) { const P = readJson(padsFile), rows = P.rows ?? P; pads = rows; template = { L: med(rows.map((p) => p.L)), W: med(rows.map((p) => p.W)) }; padRule = `AA-fit pads ${padsFile}`; }
   else { const m = readJson(join(out, 'early', 'artifacts', 's3fix', 'px.tees.family-refined.json')).model; template = { L: m.major.median, W: m.minor.median }; pads = tees.map((t) => ({ label: t.label, cx: t.center[0], cy: t.center[1], thDeg: t.angleRad * 180 / Math.PI })); padRule = 'S3 refined tees, S3 family template'; }
   const S = sceneOf({ raster, ownedLists, baskets: pxc.get('px.baskets'), badges: pxc.get('px.badges'), pads, template, ...(system ? {} : { basketPointOffset: PROTOTYPE_BASKET_POINT_OFFSET }) });
