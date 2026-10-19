@@ -37,17 +37,20 @@ export const HOLE_TRACE_SLOT = Object.freeze({
 export const ACCEPTANCE = "UNKNOWN: acceptance is Sam's; agreement with his corridors is evidence only";
 export const STATUS = Object.freeze({ reached: 'reached', petered: 'petered out', fork: 'ambiguous fork', notTraced: 'not traced', laneNotRun: 'lane not run' });
 
-const bpOf = ([x, y, w, h]) => [x + (w - 1) / 2 + BASKET_POINT_OFFSET[0], y + h - 1 + BASKET_POINT_OFFSET[1]];
+const bpOf = ([x, y, w, h], off = BASKET_POINT_OFFSET) => [x + (w - 1) / 2 + off[0], y + h - 1 + off[1]];
 const pathLength = (v) => { let s = 0; for (let i = 1; i < v.length; i++) s += Math.hypot(v[i][0] - v[i - 1][0], v[i][1] - v[i - 1][1]); return s; };
 
 // ------------------------------------------------------------------------------------------------ derived views
 
-/** tk.s7.sceneS4: the scene with the S4 recovered baskets as further BasketPoints; their boxes and rings masked like S2's. */
-export function sceneWithRecovered(S, boxes) {
+/**
+ * tk.s7.sceneS4: the scene with the S4 recovered baskets as further BasketPoints; their boxes and rings masked like S2's.
+ * basketPointOffset: DOCTRINE's by default; a proof against a prototype passes the prototype's (as sceneOf takes it).
+ */
+export function sceneWithRecovered(S, boxes, { basketPointOffset = BASKET_POINT_OFFSET } = {}) {
   if (!boxes.length) return { ...S, recovered: 0, emits: { ...S.emits, recoveredBaskets: 0 } };
   const { W, H } = S, box = new Uint8Array(W * H);
   for (const [x, y, w, h] of boxes) for (let yy = Math.max(0, y); yy < Math.min(H, y + h); yy++) for (let xx = Math.max(0, x); xx < Math.min(W, x + w); xx++) box[yy * W + xx] = 1;
-  const sprite = dilate4(box, W, H, 2), occluder = dilate4(box, W, H, 1), bpNew = boxes.map(bpOf), ring = ringMask(W, H, bpNew, S.R1);
+  const sprite = dilate4(box, W, H, 2), occluder = dilate4(box, W, H, 1), bpNew = boxes.map((b) => bpOf(b, basketPointOffset)), ring = ringMask(W, H, bpNew, S.R1);
   const mask = Uint8Array.from(S.mask), occ = Uint8Array.from(S.occluder);
   for (let i = 0; i < W * H; i++) { mask[i] |= sprite[i] | ring[i]; occ[i] |= occluder[i]; }
   return { ...S, mask, occluder: occ, bp: [...S.bp, ...bpNew], recovered: boxes.length, emits: { ...S.emits, recoveredBaskets: boxes.length } };
