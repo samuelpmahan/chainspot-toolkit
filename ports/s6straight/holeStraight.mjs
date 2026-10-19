@@ -112,11 +112,16 @@ export function holeQueries(get) {
       return { value: r ? { ...r, basketName: baskets[r.basket].name, tlsBoundPx: ASSOC_BOUNDS.straight3TlsPx } : { condition: 'no BasketPoint beyond the badge' },
         unit: 'px (latPx, alongPx, tlsMaxPx: TLS max residual of tee centre, badge centre, BasketPoint)' };
     },
+    // pure on its arguments: ONE (tee, badge, BasketPoint) triple through the same straight3Test (the scoring half's column source)
+    'fn.q.hole.straight3Point': (_, { teePx, badgePx, pointPx }) => {
+      const r = straight3Test(teePx, badgePx, [{ index: 0, point: pointPx }], ASSOC_BOUNDS);
+      return { value: r ? { latPx: r.latPx, alongPx: r.alongPx, tlsMaxPx: r.tlsMaxPx } : { condition: 'BasketPoint not beyond the badge' }, unit: 'px (latPx, alongPx, tlsMaxPx of tee centre, badge centre, this BasketPoint)' };
+    },
     'fn.q.hole.pinned': (_, { pair }) => ({ value: pinnedOf(get('tk.s6.lateS6'), get('tk.s6.holePairs')[pair], get('tk.s6.baskets')),
       unit: 'px (topSignedPerpPx: basket template top off the tee ray; teeErrorPx: late tee to pair tee)' })
   };
 }
-export const HOLE_QUERY_NAMES = Object.freeze(['fn.q.hole.straight3', 'fn.q.hole.pinned']);
+export const HOLE_QUERY_NAMES = Object.freeze(['fn.q.hole.straight3', 'fn.q.hole.straight3Point', 'fn.q.hole.pinned']);
 
 /**
  * The straight segment of a hole (s3first.py step 2, seg_fit): the ribbon's round cap S = tee centre + u * FRONT * L

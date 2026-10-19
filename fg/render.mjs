@@ -31,7 +31,7 @@ const labelOf = (it, i) => it.label ?? it.name ?? it.candidate ?? it.hole ?? Str
 const scalarFields = (o) => Object.fromEntries(Object.entries(o).filter(([, v]) => isScalar(v) || (Array.isArray(v) && v.length <= 6 && v.every(isScalar))).map(([k, v]) => [k, Array.isArray(v) ? v.join(', ') : v]));
 const bboxOf = (it) => (Array.isArray(it.bbox) && it.bbox.length === 4 ? it.bbox : null);
 
-export const PART_KINDS = Object.freeze(['pxset', 'raster', 'alphaProfile', 'plane', 'pxsets', 'boxes', 'points', 'rows', 'strips', 'scalar', 'object', 'pathLoss', 'pathProfile', 'hallwayScene']);   // strips: S5-B; alphaProfile: S7-A; the last two: S6-B block below
+export const PART_KINDS = Object.freeze(['pxset', 'raster', 'alphaProfile', 'plane', 'pxsets', 'boxes', 'points', 'rows', 'strips', 'scalar', 'object', 'pathLoss', 'pathProfile', 'hallwayScene', 'pairFeatures']);   // strips: S5-B; alphaProfile: S7-A; pathLoss, pathProfile: S6-B; hallwayScene: S7-B; pairFeatures: S6 scoring
 
 /** Which case of the union a value is (the dispatch every default property can share). */
 export function partKind(v) {
@@ -61,6 +61,7 @@ export function renderValue(address, v, dims = null, depth = 0) {
   const kind = partKind(v);
   switch (kind) {
     case 'pathLoss': case 'pathProfile': return renderS6Path(address, v, kind);   // S6-B block below
+    case 'pairFeatures': return renderPairFeatures(address, v);   // S6 scoring block below
     case 'pxset': return { kind, parts: [renderPxSet(v, { address })] };
     case 'raster': return { kind, parts: [{ address, kind: 'raster', data: { width: v.widthPx, height: v.heightPx } }] };
     case 'alphaProfile': return renderAlphaProfile(address, v, dims);   // S7 lane block: swatches, unmixed crops, residual histogram
@@ -242,6 +243,7 @@ const S6_LEGEND_PX = (n) => 34 + 11 * n;
 function s6PathKind(v) {
   if (!v || typeof v !== 'object' || Array.isArray(v)) return null;
   if (v.schema === 'nctk-s6-path-loss@1') return 'pathLoss';
+  if (['nctk-s6-pair-features@1', 'nctk-s6-pair-feature-family@1', 'nctk-s6-pair-candidates@1'].includes(v.schema)) return 'pairFeatures';
   if ((v.schema === 'nctk-s6-path-loss-profile@1' || v.schema === 'nctk-s6-overlay-fraction@1') && !v.condition) return 'pathProfile';
   return null;
 }
@@ -285,4 +287,22 @@ function renderS6Path(address, v, kind) {
   if (pts.length) parts.push({ address: `${address}#segments`, kind: 'points', data: { points: pts } });
   if (!pairs.length) parts.push({ address: `${address}#condition`, kind: 'scalar', data: { value: v.condition ?? 'no pairs', unit: null } });
   return { kind, parts };
+}
+
+// ---- S6 scoring block (ports/s6straight/pairFeatures.mjs): the pair table and its feature families, rendered as ledgers.
+const PAIR_ROWS_SHOWN = 600;
+function renderPairFeatures(address, v) {
+  const names = { holes: new Map((v.holes ?? []).map((h) => [h.id, `${h.label} ${h.from}`])), baskets: new Map((v.baskets ?? []).map((k) => [k.index, k.name])) };
+  const own = scalarFields(v);
+  const parts = [];
+  if (v.columns) parts.push({ address: `${address}#columns`, kind: 'ledger', data: { rows: Object.entries(v.columns).map(([column, c]) => ({ column, family: typeof c === 'string' ? '' : c.family ?? '', unit: typeof c === 'string' ? c : c.unit })) } });
+  if (v.holes) parts.push({ address: `${address}#holes`, kind: 'ledger', data: { rows: v.holes.map((h) => ({ hole: h.id, label: h.label, from: h.from, tee: h.pair?.tee?.name ?? '', centre: h.centerPx?.map((x) => Math.round(x * 100) / 100).join(', ') })) } });
+  if (v.rows) {
+    const rows = v.rows.slice(0, PAIR_ROWS_SHOWN).map((r) => ({ pair: `${names.holes.get(r.hole) ?? r.hole} -> ${names.baskets.get(r.basket) ?? r.basket}`, ...scalarFields(r) }));
+    if (v.rows.length > PAIR_ROWS_SHOWN) rows.push({ pair: `... ${v.rows.length - PAIR_ROWS_SHOWN} more rows (shown: first ${PAIR_ROWS_SHOWN}; vector columns omitted)` });
+    parts.push({ address: `${address}#rows`, kind: 'ledger', data: { rows } });
+  }
+  if (Object.keys(own).length) parts.push({ address, kind: 'ledger', data: { rows: Object.entries(own).map(([field, value]) => ({ field, value })) } });
+  if (!parts.length) parts.push({ address, kind: 'ledger', data: { rows: [{ field: 'empty', value: '' }] } });
+  return { kind: 'pairFeatures', parts };
 }
