@@ -5,7 +5,9 @@
  *   1. assignment: maximum total of (edge contrast of the hole's best route to the basket + onAxisPrior), one-to-one
  *      over the whole table (no greedy claims); a cell without a contrast reading scores -99 (the prototype's value);
  *   2. the assigned 1-bend route is refined by coordinate search (polyscore refine_vertices, 2 iterations, the bend
- *      sliding on the tee axis);
+ *      sliding on the tee axis). Deliberate divergence from the prototype (review R02): match5.py left a hole that the
+ *      on-axis prior reassigned on its unrefined route; here every assigned 1-bend route is refined the same way, so
+ *      the rule does not depend on which pass chose the basket;
  *   3. bends by the hallway sensor: the straight route if it reads >= TAU on >= MIN_STATIONS visible stations, else the
  *      contrast route; a second bend (B1 on the tee axis, B2 free) only when the 1-bend route reads < TAU and the best
  *      2-bend route reads >= TAU, gains >= 0.15 and has >= MIN_STATIONS stations.
