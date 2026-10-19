@@ -1,0 +1,49 @@
+--- E2037/copy-once.v1.mjs
++++ E2037B/copy-once.v2.mjs
+@@ -1,4 +1,4 @@
+-// E2037 SOURCE CONSTRUCTION ONLY. Fixed one-shot byte copier; no project imports or Git calls.
++// E2037B SOURCE CONSTRUCTION ONLY. Fixed one-shot byte copier; no project imports or Git calls.
+ import fs from 'node:fs';
+ import path from 'node:path';
+ import crypto from 'node:crypto';
+@@ -6,10 +6,10 @@
+ assert.equal(process.argv.length,2);
+ const workspace='/workspace/scratch/8528bb251845';
+ const repo=workspace+'/chainspot-discovery-lab';
+-const own=workspace+'/discovery-cycle07-checkpoint-admission/E2037';
++const own=workspace+'/discovery-cycle07-checkpoint-admission/E2037B';
+ const mapPath=workspace+'/discovery-cycle07-checkpoint-admission/E2036/file-map.json';
+ const mapSHA='7d7d8d033aa30611fb3d039d7b2516d6aa39402e075492279a22748406d86260';
+-const manifestPath=own+'/manifest.preview.json';
++const manifestPath=workspace+'/discovery-cycle07-checkpoint-admission/E2037/manifest.preview.json';
+ const manifestSHA='66437c565f0d35662b7f38ebe32b33224a47772b55b3cb1b802cdd9edb92977f';
+ const productPrefix='experiments/capability-discovery/finite-trial-contract/';
+ const evidencePrefix='work/capability-discovery/cycle-08/';
+@@ -70,7 +70,13 @@
+ assert.equal(baseline.entries.length,3375);assert.equal(prior.candidates.length,382);
+ const old=[...baseline.entries.map(e=>({path:e[0],bytes:e[3],sha256:e[4],gitBlobSHA1:e[2],fullMode:(0o100000|parseInt(e[5],8)).toString(8)})),...prior.candidates];
+ assert.equal(new Set(old.map(r=>r.path)).size,3757);
+-assert.deepEqual(walk(repo),old.map(r=>r.path).sort(compare));
++const auxiliary=[
++  {path:'.superpowers/sdd/.gitignore',bytes:2,sha256:'cdbcae15105d6b781e620813c79c7e868740d4e9cc53ce6f5fcbbc12387adf4b',fullMode:'100644'},
++  {path:'.superpowers/sdd/lenard5-implementation-plan/plan-path',bytes:81,sha256:'770a51ddd0990fa70b48ae0db46550b0bbd529215f33deaa669b4c871458f547',fullMode:'100644'},
++  {path:'.superpowers/sdd/lenard5-implementation-plan/progress.md',bytes:2595,sha256:'7a1c14bbb21423f2eacb76a19865c39f5d0c7021966482aba21c1e62c60f90b3',fullMode:'100644'}
++];
++assert.deepEqual(walk(repo),[...old.map(r=>r.path),...auxiliary.map(r=>r.path)].sort(compare));
++for(const r of auxiliary)read(repo+'/'+safe(r.path),r);
+ for(const r of old)read(repo+'/'+safe(r.path),r);
+ const gitFiles=['.git/HEAD','.git/refs/heads/codex/capability-discovery-lab','.git/index'];
+ const beforeGit=gitFiles.map(p=>({path:p,...metadata(read(repo+'/'+p))}));
+@@ -101,9 +107,10 @@
+ }
+ for(let i=0;i<rows.length;i++)read(workspace+'/'+rows[i].source,{bytes:rows[i].bytes,sha256:rows[i].sha256,fullMode:snapshots[i].fullMode});
+ for(const r of old)read(repo+'/'+r.path,r);
++for(const r of auxiliary)read(repo+'/'+safe(r.path),r);
+ for(const r of beforeGit)read(repo+'/'+r.path,r);
+ absent(repo+'/.git/index.lock');
+-assert.deepEqual(walk(repo),[...old.map(r=>r.path),...rows.map(r=>r.destination)].sort(compare));
+-const result={schema:'cycle08-e2037-one-copy-readback@1',job_id:'E2037',worker:'S1',status:'COPIED_NOT_TESTED_AUDITED_STAGED_COMMITTED_OR_PUBLISHED',sourceMapSHA256:mapSHA,manifestSHA256:manifestSHA,originalMapFiles:87,originalMapBytes:479235,newManifestFiles:1,newManifestBytes:31545,copiedFiles:88,copiedBytes:510780,productFiles:5,evidenceFilesIncludingManifest:83,priorFilesPreserved:3757,predictedWorkingFilesObserved:3845,oldGitMetadataBefore:beforeGit,oldGitMetadataUnchanged:true,files:copied,qualification:'Builtin byte-copy/opaque check-time readback only; no Git command/index refresh, source chmod or module/test/codec/native-value/CV operation. No atomic/fsync/host/race/crash guarantee; failed prefix retained without retry/cleanup.'};
++assert.deepEqual(walk(repo),[...old.map(r=>r.path),...auxiliary.map(r=>r.path),...rows.map(r=>r.destination)].sort(compare));
++const result={schema:'cycle08-e2037b-one-copy-readback@2',job_id:'E2037B',worker:'S1',status:'COPIED_NOT_TESTED_AUDITED_STAGED_COMMITTED_OR_PUBLISHED',sourceMapSHA256:mapSHA,manifestSHA256:manifestSHA,originalMapFiles:87,originalMapBytes:479235,newManifestFiles:1,newManifestBytes:31545,copiedFiles:88,copiedBytes:510780,productFiles:5,evidenceFilesIncludingManifest:83,priorFilesPreserved:3757,auxiliaryFilesPreserved:3,auxiliaryMetadata:auxiliary,predictedWorkingFilesObserved:3848,oldGitMetadataBefore:beforeGit,oldGitMetadataUnchanged:true,files:copied,qualification:'Builtin byte-copy/opaque check-time readback only; no Git command/index refresh, source chmod or module/test/codec/native-value/CV operation. No atomic/fsync/host/race/crash guarantee; failed prefix retained without retry/cleanup.'};
+ fs.writeFileSync(own+'/copy-readback.json',JSON.stringify(result,null,2)+'\n',{flag:'wx',mode:0o644});
+ console.log(JSON.stringify({copiedFiles:88,copiedBytes:510780,sourceMapSHA256:mapSHA,manifestSHA256:manifestSHA,old3757Preserved:true,GitMetadataUnchanged:true,tests:0,GitCommands:0}));

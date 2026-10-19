@@ -1,0 +1,33 @@
+{
+  "job_id":"E2030",
+  "worker":"S2",
+  "outcome":"mixed_change",
+  "summary":"Authored exactly two unexecuted focused M2 ordering regressions against unchanged E2028. Each first asserts the ordinary31-event success fixture is COMPLETE, then changes only event order and requires REFUSED. A1 moves query native exit before the observed constant hook block; A2 moves postchecks before public entry. Current COMPLETE results and two final-assertion failures are source predictions only. No repair/execution or old42-test import; HOLD for root full read and separate focused RED admission.",
+  "status":"SOURCE_TESTS_FIRST_ONLY_HOLD",
+  "artifacts":[
+    {"path":"discovery-cycle07-checkpoint-admission/E2030/m2-order-regression.test.mjs","bytes":2475,"sha256":"cbbe10e33256066ded63185c6511930526a804b617d466395daf21bcc79d0ee7"},
+    {"path":"discovery-cycle07-checkpoint-admission/E2030/FLOW.md","bytes":3509,"sha256":"21897b618ea21a09c7e5594497318a503675138995ce8baeb99495343b43e3fb"},
+    {"path":"discovery-cycle07-checkpoint-admission/E2030/prospective.json","bytes":912,"sha256":"e6156e68af778115374f279ffcbfa3a9826a5de86d0a067cbb6e2c37899255b5"}
+  ],
+  "review_read_complete":[
+    {"path":"discovery-cycle07-checkpoint-admission/R2028/review.md","sha256":"0870ab82e39c4236d8d9bfe6d31fb99d0eeaced31111c066e21872df4c3234a5"},
+    {"path":"discovery-cycle07-checkpoint-admission/R2028/result.json","sha256":"4e8d9924d09288d7a7515b02adcb84f1929389464cda6a52291010d02edc3c33"}
+  ],
+  "frozen_E2028_before_after_pins":[
+    {"path":"budget-contract.v1.mjs","sha256":"bd80084cccf71272c6bbc60cf330a150df1d90bd64c66efb5f3153ba2270e0ec"},
+    {"path":"budget-contract.test.mjs","sha256":"2a0b6407873d98f080ff451abc89db49d324775fe4084a026d2f5ff2217f4651"},
+    {"path":"budget.v1.json","sha256":"2287562437f1a0897c03663f710e3219a14fc43267d55cdf2303faddb6b0ea8c"},
+    {"path":"FLOW.md","sha256":"498cf6aaafd9390222dbd2b09a6bfd9dcff388d344e5cdca024543750bbf3f8b"},
+    {"path":"result.json","sha256":"0dd3902e4af5d80b0196f1a65780cb63501f0226f70c5d00b821cf0057468390"}
+  ],
+  "prediction_not_observation":{
+    "namedTests":2,
+    "A1":"Baseline COMPLETE control,31 identical events reordered only as constant native->query native->constant hook->query hook->normal suffix; predicted current COMPLETE, expected REFUSED.",
+    "A2":"Independent baseline COMPLETE control,identical31 events with final postcheck pair moved immediately after INTENT;predicted current COMPLETE,expected REFUSED.",
+    "predicted_failures":2,
+    "reachability":"Any failed baseline/control assertion stops its callback suffix. Actual later output must distinguish these from intended final refusal assertions. No registration/pass/failure observed."
+  },
+  "prospective_command_NOT_RUN":{"cwd":"/workspace/scratch/8528bb251845","argv":["node","--test","--test-concurrency=1","discovery-cycle07-checkpoint-admission/E2030/m2-order-regression.test.mjs"],"meaning":"Canonical existing admission directory;new execution packet and exclusive prospective/raw/UTC/exit required before one launch. First actual run STOP,no retry/repair/filter/cap change."},
+  "actual_actions":{"plain_source_review_and_hash_reads":true,"writes_only":"discovery-cycle07-checkpoint-admission/E2030/","module_function_invocations":0,"imports":0,"syntax_checks":0,"tests":0,"core_repairs_or_old_test_changes":0,"codec_native_body_helper_query_store_PATH_producer_render":0,"Git_repo_native_published382_mutation":0},
+  "gate":"HOLD root exact driver/FLOW/pins read and NEW native focused RED admission. Only after actual RED/root separate GO may a versioned core repair preserve valid PUBLIC_THROW/postchecks,postreturn encoding/write/hash failure cleanup without artifact-binding prerequisite,source-supported preconstant query throws and UNKNOWN crash semantics. No schema/cap/producer/science/source-adoption authority."
+}

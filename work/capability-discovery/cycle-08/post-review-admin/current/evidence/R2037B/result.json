@@ -1,0 +1,44 @@
+{
+  "job_id":"R2037B",
+  "worker":"S4",
+  "decision":"accepted",
+  "outcome":"confirmed_reuse",
+  "summary":"Independent source-only review confirms the exact narrow v2 inventory correction: only new own identity/output and three literal auxiliary pins/pre-post checks/counts change; original3757 and all88 byte/mode/source/destination/EOF guards remain unchanged. Opaque metadata for exactly three authorized files matches; map/preview and prior first-failure captures remain hash-exact. No v2/Git/test/copy execution. Accepted source only, HOLD for separate root admission.",
+  "status":"SOURCE_ONLY_ACCEPTED_V2_UNRUN_HOLD",
+  "targets":[
+    {"path":"discovery-cycle07-checkpoint-admission/E2037B/copy-once.v2.mjs","bytes":10449,"sha256":"4816ad247b8434157c274a2eb9ef9c9540a844686f65dbadd73643dc9ebace1e"},
+    {"path":"discovery-cycle07-checkpoint-admission/E2037B/FULL.diff","bytes":4903,"sha256":"0bc4fe2b11ed75d1a8484332e28e24306a5ff8e91e7f891a5419ce1170af32f2"},
+    {"path":"discovery-cycle07-checkpoint-admission/E2037B/FLOW.md","bytes":6804,"sha256":"1308fadfecf3ad19a2e1af398d0a20ceebd47c2c8c398f25d7f49dadd157818d"},
+    {"path":"discovery-cycle07-checkpoint-admission/E2037B/prospective.json","bytes":3259,"sha256":"d41b8f96483a02af3ec77b464b269cc04f98c3796b6149ff686bd40211c281c2"},
+    {"path":"discovery-cycle07-checkpoint-admission/E2037B/result.json","bytes":4471,"sha256":"df2873c35432e7202ae58d1d6f0ab4ec441a7ebd42335d0cbb39b889b4d591f1"}
+  ],
+  "preserved_bindings":{
+    "v1":{"path":"discovery-cycle07-checkpoint-admission/E2037/copy-once.v1.mjs","bytes":9667,"sha256":"6fd0c9e4a4d0fd3979580c79dbab9ea049af5cb7cb6c772d2556337708a432dd"},
+    "first_failure_receipt":{"path":"discovery-cycle07-checkpoint-admission/E2037/actual-result.json","bytes":4245,"sha256":"c8f0b0b78c679be174f5c06f018414a1279d4b5d17e5fa640aeb4e3a32ab40e9"},
+    "map":{"path":"discovery-cycle07-checkpoint-admission/E2036/file-map.json","bytes":33633,"sha256":"7d7d8d033aa30611fb3d039d7b2516d6aa39402e075492279a22748406d86260"},
+    "preview":{"path":"discovery-cycle07-checkpoint-admission/E2037/manifest.preview.json","bytes":31545,"sha256":"66437c565f0d35662b7f38ebe32b33224a47772b55b3cb1b802cdd9edb92977f"},
+    "all_prior_capture_hashes_match_receipt":true,
+    "prior_failure":"Actual v1 exit1 before copies at inventory assertion; old3757 bytes/modes and Gitmetadata checks NOT_REACHED; no success inferred."
+  },
+  "source_findings":{
+    "full_diff_reconstructs_exact_new_source":true,
+    "only_identity_output_auxiliary3_and_inventory_readback_changes":true,
+    "all3757_guards_unchanged":true,"all88_copy_guards_and_bytes_unchanged":true,
+    "map_files":87,"map_bytes":479235,"manifest_files":1,"manifest_bytes":31545,"selected_files":88,"selected_bytes":510780,
+    "products":5,"evidence_including_manifest":83,"old_baseline":3757,"excluded_preserved_auxiliary":3,
+    "physical_before_required":3760,"physical_after_required":3848,
+    "folder_waiver":false,"auxiliary_in_rows_manifest_staging_or_export":false,
+    "Git_HEAD_ref_index_and_no_lock_guards_unchanged":true,"additional_must_amend_established":false
+  },
+  "opaque_auxiliary_actual":[
+    {"path":".superpowers/sdd/.gitignore","bytes":2,"sha256":"cdbcae15105d6b781e620813c79c7e868740d4e9cc53ce6f5fcbbc12387adf4b","fullMode":"100644","regular":true,"nlink":1},
+    {"path":".superpowers/sdd/lenard5-implementation-plan/plan-path","bytes":81,"sha256":"770a51ddd0990fa70b48ae0db46550b0bbd529215f33deaa669b4c871458f547","fullMode":"100644","regular":true,"nlink":1},
+    {"path":".superpowers/sdd/lenard5-implementation-plan/progress.md","bytes":2595,"sha256":"7a1c14bbb21423f2eacb76a19865c39f5d0c7021966482aba21c1e62c60f90b3","fullMode":"100644","regular":true,"nlink":1}
+  ],
+  "opaque_qualification":"Exactly authorized three files hashed with stable descriptor metadata, no content interpretation/update. Ignored/preexisting status supplied by root, not independently rediscovered with Git.",
+  "unexecuted_challenges":["wrong auxiliary size/hash/mode","fourth auxiliary or missing old path","source/destination symlink or collision","map/preview mismatch","old body/mode mutation"],
+  "actual_actions":{"v2_launch_syntax_import_tests":0,"Git_commands":0,"repository_copies_writes":0,"source_native_edits":0,"codec_native_pixel_decode_helper_store_PATH_query_CV_render":0,"subagents":0,"own_builtin_source_hash_JSON_diff_metadata_reads_only":true,"writes_only":"discovery-cycle07-checkpoint-admission/R2037B/review.md and result.json"},
+  "limitations":["Source-only acceptance, not actual v2 outcome or copy execution GO.","No fresh full3757 or all88 physical body/mode audit; reviewed preservation machinery and pinned metadata only.","No staging/commit/export/publication authority; auxiliary remains excluded.","Check-time guards do not prove race/crash/host isolation, fsync/atomicity, RSS/cap sufficiency or producer/scientific approval.","Prior E2007 incidental tagged-report text exposure disclosed/excluded as TOOLTESTIMONY; no reread or blind-review claim."],
+  "skillInfluence":"materialize separates preserved actual first failure, opaque metadata observations and unrun source proposal.",
+  "remaining_hold":"HOLD for root. No execution/sourcefix/further writes; any one-copy, relocated45, physical audit and ordinary commit/publication requires separate admission."
+}

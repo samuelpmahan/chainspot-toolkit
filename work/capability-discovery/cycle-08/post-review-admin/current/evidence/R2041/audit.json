@@ -1,0 +1,1186 @@
+{
+  "schema": "r2041-independent-opaque-physical-audit@1",
+  "job_id": "R2041",
+  "worker": "S4",
+  "status": "PASS",
+  "start_utc": "2026-10-19T03:56:21.646Z",
+  "end_utc": "2026-10-19T03:56:22.020Z",
+  "pins": [
+    {
+      "path": "discovery-cycle07-checkpoint-admission/E2036/file-map.json",
+      "bytes": 33633,
+      "sha256": "7d7d8d033aa30611fb3d039d7b2516d6aa39402e075492279a22748406d86260"
+    },
+    {
+      "path": "discovery-cycle07-checkpoint-admission/E2037/manifest.preview.json",
+      "bytes": 31545,
+      "sha256": "66437c565f0d35662b7f38ebe32b33224a47772b55b3cb1b802cdd9edb92977f"
+    },
+    {
+      "path": "discovery-cycle07/S1/E2015/source-freeze.before.json",
+      "bytes": 866721,
+      "sha256": "0ed26380b6b39b6da944c358699f353657683bb338ebc1cc52fd6787d58d8a10"
+    },
+    {
+      "path": "discovery-cycle07-checkpoint-admission/E2026/commit-plan.v2.json",
+      "bytes": 146180,
+      "sha256": "4858425aebaf59bda5c5cada8aeb47be4a02152a22c329b087bd6bd3c14d2c6c"
+    },
+    {
+      "path": "discovery-cycle07-checkpoint-admission/E2041/realresult.json",
+      "bytes": 5097,
+      "sha256": "8fcf87d0f8fd66ed221e17a2125271c0bae0805fcf91cdee0b2c53c007cc4c9d"
+    },
+    {
+      "path": "discovery-cycle07-checkpoint-admission/E2037B/copy-readback.json",
+      "bytes": 41749,
+      "sha256": "ccae94bbee6ba99a50d66135b6dc71b5375342bfca7ea12c973bbb5a292cbe3d"
+    }
+  ],
+  "checks": {
+    "selected88": {
+      "files": 88,
+      "bytes": 510780,
+      "products": 5,
+      "evidenceIncludingManifest": 83,
+      "allSourceAndDestinationBytesEqual": true,
+      "allSHA256GitBlobFullModeTypeSingleLinkAndAncestorsMatch": true,
+      "readback88RowsAgree": true,
+      "manifest82RelativeEntriesAnd5PinsExact": true,
+      "manifestSelfExcluded": true,
+      "runnable4ByteExactE2032": [
+        "experiments/capability-discovery/finite-trial-contract/budget-contract.v2.mjs",
+        "experiments/capability-discovery/finite-trial-contract/budget-contract.test.mjs",
+        "experiments/capability-discovery/finite-trial-contract/m2-order-regression.test.mjs",
+        "experiments/capability-discovery/finite-trial-contract/preconstant-preservation.test.mjs"
+      ],
+      "inert3HistoricalSourceSuffixes": [
+        "work/capability-discovery/cycle-08/evidence/E2028/budget-contract.v1.mjs.txt",
+        "work/capability-discovery/cycle-08/evidence/E2028/budget-contract.test.mjs.txt",
+        "work/capability-discovery/cycle-08/evidence/E2030/m2-order-regression.test.mjs.txt"
+      ],
+      "zeroByte3": [
+        "work/capability-discovery/cycle-08/evidence/E2031/stderr.raw",
+        "work/capability-discovery/cycle-08/evidence/E2035/stderr.raw",
+        "work/capability-discovery/cycle-08/evidence/R2035/stderr.raw"
+      ],
+      "fullModes": {
+        "100600": 7,
+        "100644": 81
+      }
+    },
+    "prior3757": {
+      "files": 3757,
+      "bytes": 67009046,
+      "allBodiesSHA256GitBlobFullModeRegularNlink1AncestorsVerified": true,
+      "mismatches": 0,
+      "metadataRowsSHA256": "6bf25926854ac445dc7fe28503f3ff1db5b8dbada5ab6a52daf3e813ff82f47d",
+      "metadataRowsAlgorithm": "SHA256 UTF8 JSON.stringify(codepoint-path-sorted arrays [path,bytes,sha256,gitBlobSHA1,fullMode]) + LF"
+    },
+    "exactPhysical": {
+      "files": 3848,
+      "startAndEndSetsEqualExact3757plus3plus88": true,
+      "twoNewPrefixSetsExact": true,
+      "newDerivedDirectorySetExact": true,
+      "newDirectoryCount": 16,
+      "newDirectoryFullModes": {"40755": 16},
+      "pathSetSHA256": "48453df8bab21b048ac46e45e2f16120a73e791c0b19405d518712c10bd9f611",
+      "pathSetAlgorithm": "SHA256 UTF8(codepoint-sorted3848 relative paths LF-joined + final LF)",
+      "repositoryWalkExclusion": ".git root directory only",
+      "futureAdminCovered": false
+    },
+    "auxiliary3": [
+      {
+        "path": ".superpowers/sdd/.gitignore",
+        "bytes": 2,
+        "sha256": "cdbcae15105d6b781e620813c79c7e868740d4e9cc53ce6f5fcbbc12387adf4b",
+        "gitBlobSHA1": "72e8ffc0db8aad71a934dd11e5968bd5109e54b4",
+        "fullMode": "100644",
+        "permissions": "644",
+        "nlink": 1,
+        "regular": true
+      },
+      {
+        "path": ".superpowers/sdd/lenard5-implementation-plan/plan-path",
+        "bytes": 81,
+        "sha256": "770a51ddd0990fa70b48ae0db46550b0bbd529215f33deaa669b4c871458f547",
+        "gitBlobSHA1": "b8f1095de150d5fe67e7c3880e2c050a204a1fab",
+        "fullMode": "100644",
+        "permissions": "644",
+        "nlink": 1,
+        "regular": true
+      },
+      {
+        "path": ".superpowers/sdd/lenard5-implementation-plan/progress.md",
+        "bytes": 2595,
+        "sha256": "7a1c14bbb21423f2eacb76a19865c39f5d0c7021966482aba21c1e62c60f90b3",
+        "gitBlobSHA1": "ebf44d2a7fc0eb9f350bc362d8b777f233a9a654",
+        "fullMode": "100644",
+        "permissions": "644",
+        "nlink": 1,
+        "regular": true
+      }
+    ],
+    "opaqueGitMetadataMatchesCopyReadback": [
+      {
+        "path": ".git/HEAD",
+        "bytes": 47,
+        "sha256": "0954b9403a3778e4403b8c5f78f64deb947408c526c49416a1d17ffccdf8f7f9",
+        "gitBlobSHA1": "e86c873030f282289a7f4bf6c5066979cd3fbea7",
+        "fullMode": "100644",
+        "permissions": "644",
+        "nlink": 1,
+        "regular": true
+      },
+      {
+        "path": ".git/refs/heads/codex/capability-discovery-lab",
+        "bytes": 41,
+        "sha256": "7b5a5ef0de418bc4ae1be3e06d2f2416d29da646471e2dea7d1642043d407fa3",
+        "gitBlobSHA1": "f21a11986644ce30189e8a15a63bce6af0a52ba8",
+        "fullMode": "100644",
+        "permissions": "644",
+        "nlink": 1,
+        "regular": true
+      },
+      {
+        "path": ".git/index",
+        "bytes": 547042,
+        "sha256": "546f3e605e74ed5746c8a4cab54f35ed9c6f2cf0e6be0ca74f6a480e2333100a",
+        "gitBlobSHA1": "55fe52214c78de586e5e3044c3cd629af62956ad",
+        "fullMode": "100644",
+        "permissions": "644",
+        "nlink": 1,
+        "regular": true
+      }
+    ],
+    "indexLockAbsent": true,
+    "ancestorDirectoriesChecked": 614,
+    "captures": [
+      {
+        "path": "prospective.json",
+        "bytes": 2280,
+        "sha256": "f65d548b994beb17bd348ceaefff472718cf9f493cd5d952b4c6229c2d217776"
+      },
+      {
+        "path": "copy.stdout.raw",
+        "bytes": 287,
+        "sha256": "d20be8c8eebbf0a3dcf3b47d082ef5a59dd920bc2c98f93bb9e23249ef0c9088"
+      },
+      {
+        "path": "copy.stderr.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "copy.startUTC.raw",
+        "bytes": 25,
+        "sha256": "5f70b1023115884490b16957ce4a59135b340ef0bda6c48228b9cca406ee205a"
+      },
+      {
+        "path": "copy.endUTC.raw",
+        "bytes": 25,
+        "sha256": "cf37f9e82f9a99cbd11eca63add57df7201d8b42c93e473c4eaccea9a1676805"
+      },
+      {
+        "path": "copy.exit.raw",
+        "bytes": 2,
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      {
+        "path": "copy.signal.raw",
+        "bytes": 5,
+        "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed"
+      }
+    ]
+  },
+  "copiedFiles": [
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2025/proposal.v1.md",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2025/proposal.v1.md",
+      "bytes": 19480,
+      "sha256": "bba6c9852d8805950dfe448995114ae83e80884577f11558ad4fb2c6eb3fcdfb",
+      "gitBlobSHA1": "e3d8cdfe7f164dc066d18f592e27fd77c4c24374",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2025/sources.v1.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2025/sources.v1.json",
+      "bytes": 6171,
+      "sha256": "c30940148493fc43fe3adf4f4a43aed86431dc114c946087964baad2fad25985",
+      "gitBlobSHA1": "cf0b5779571eaff1f1b67ff4e100b99bbad5b512",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2025/result.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2025/result.json",
+      "bytes": 7258,
+      "sha256": "21eccbb4beaa495a5ad2aa0f279e7ab64ac5d74b636303654485d00ce53ce59c",
+      "gitBlobSHA1": "01ddf191ee0a439ac04ffb1414bbef8b758ae69b",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/R2025/review.md",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/R2025/review.md",
+      "bytes": 12390,
+      "sha256": "9d7638ee8e3efdca552b09896fc2038105556f8dec905a92398f4ba6fecceffb",
+      "gitBlobSHA1": "9ff725dca65ef79fe3055983896b8989eed482cf",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/R2025/realresult.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/R2025/realresult.json",
+      "bytes": 13150,
+      "sha256": "ee36d0cea685c8187a2417ab28b135f4cc95ac0b52e17102f0f86b07374bdaf9",
+      "gitBlobSHA1": "8140000894c9d0162898957f0b373eafaba8e06b",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2028/budget-contract.v1.mjs.txt",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2028/budget-contract.v1.mjs",
+      "bytes": 21076,
+      "sha256": "bd80084cccf71272c6bbc60cf330a150df1d90bd64c66efb5f3153ba2270e0ec",
+      "gitBlobSHA1": "a056e07f90789816875ef77c2408ff951914d59b",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2028/budget-contract.test.mjs.txt",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2028/budget-contract.test.mjs",
+      "bytes": 15935,
+      "sha256": "2a0b6407873d98f080ff451abc89db49d324775fe4084a026d2f5ff2217f4651",
+      "gitBlobSHA1": "15fd3895b783caef1534dbf52c3b730d72a5803d",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2028/budget.v1.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2028/budget.v1.json",
+      "bytes": 7112,
+      "sha256": "2287562437f1a0897c03663f710e3219a14fc43267d55cdf2303faddb6b0ea8c",
+      "gitBlobSHA1": "a364cde5c0d0a39baa7d53f4f995ce3ebf61bd99",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2028/FLOW.md",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2028/FLOW.md",
+      "bytes": 12976,
+      "sha256": "498cf6aaafd9390222dbd2b09a6bfd9dcff388d344e5cdca024543750bbf3f8b",
+      "gitBlobSHA1": "4723bb7296f3758f4d3637ddba1fc38c63042129",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2028/result.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2028/result.json",
+      "bytes": 8559,
+      "sha256": "0dd3902e4af5d80b0196f1a65780cb63501f0226f70c5d00b821cf0057468390",
+      "gitBlobSHA1": "edaa68c64a02bee7a97553301094222b5ca3d1e6",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/R2028/review.md",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/R2028/review.md",
+      "bytes": 13197,
+      "sha256": "0870ab82e39c4236d8d9bfe6d31fb99d0eeaced31111c066e21872df4c3234a5",
+      "gitBlobSHA1": "6b5a2e29ceab36506af7dfbf2daae24b6b98aa06",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/R2028/result.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/R2028/result.json",
+      "bytes": 9921,
+      "sha256": "4e8d9924d09288d7a7515b02adcb84f1929389464cda6a52291010d02edc3c33",
+      "gitBlobSHA1": "6ab93204540a43210e37aef9597faadede5b82b3",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2029/constraints.md",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2029/constraints.md",
+      "bytes": 11876,
+      "sha256": "1696dcd29c6574c0355061db5d1dd1b0bca8f703785e47ed93954c2b8d6e3205",
+      "gitBlobSHA1": "f83cf854182930b1143a7ba993ff50a4059c854c",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2029/falsifiers.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2029/falsifiers.json",
+      "bytes": 10956,
+      "sha256": "04b4972822547c00da19b56b084550a870820ba4d40ade6255969da00cdb2915",
+      "gitBlobSHA1": "54fee1571e22e0885e0dff38e336a7df7b7a5409",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2029/sourcepins.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2029/sourcepins.json",
+      "bytes": 1991,
+      "sha256": "04ba7fdc22e905dfbc1cd610025f4cdf267a8bad81acdf244cecdeaa7caf4b42",
+      "gitBlobSHA1": "500c2ca05e595ac206cfa955c9f87b7916c226f5",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2029/result.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2029/result.json",
+      "bytes": 7612,
+      "sha256": "880568acb8a805896243b4694d651d8a056330c9eaa3c751a0e0125c1a51f56e",
+      "gitBlobSHA1": "b0eacdd9e09baa472d8a53e2a92d6be6155fdd16",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2030/m2-order-regression.test.mjs.txt",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2030/m2-order-regression.test.mjs",
+      "bytes": 2475,
+      "sha256": "cbbe10e33256066ded63185c6511930526a804b617d466395daf21bcc79d0ee7",
+      "gitBlobSHA1": "fd70c52eba3f4a19e698ed64ff0c879bcec75628",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2030/FLOW.md",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2030/FLOW.md",
+      "bytes": 3509,
+      "sha256": "21897b618ea21a09c7e5594497318a503675138995ce8baeb99495343b43e3fb",
+      "gitBlobSHA1": "b9f4a61269ae00df7ab76774d2f343fd95ca347c",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2030/prospective.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2030/prospective.json",
+      "bytes": 912,
+      "sha256": "e6156e68af778115374f279ffcbfa3a9826a5de86d0a067cbb6e2c37899255b5",
+      "gitBlobSHA1": "ee92cc5b18f3e40c1879d96f854c245e0b5e6158",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2030/result.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2030/result.json",
+      "bytes": 3870,
+      "sha256": "7c0a9deff0066c2f33c9f3dee23c7f2a27d43b0d21ee096959b4df642b758225",
+      "gitBlobSHA1": "1edb01b027a4514e4358bc1882bd03ba4c2b889f",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2031/prospective.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2031/prospective.json",
+      "bytes": 2039,
+      "sha256": "63833a28e4d42fecb7474c53d989445e13bf1d785a8916de19f9d4ff6668d042",
+      "gitBlobSHA1": "1e179692cd1c10df272b86452b7169c46df8a16f",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2031/stdout.raw",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2031/stdout.raw",
+      "bytes": 2207,
+      "sha256": "6194679490edffbcf5b1e143428def521a6970c3c61229ff9e52760e685e0fff",
+      "gitBlobSHA1": "71413d2e06bc7258b5a773d93360e265a28083e3",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2031/stderr.raw",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2031/stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlobSHA1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2031/start-utc.raw",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2031/start-utc.raw",
+      "bytes": 31,
+      "sha256": "a2deec4c77826c71360d779b66ac34f5fc4c45d00e9ce6a84c3bc21c2bc133ca",
+      "gitBlobSHA1": "0e444d23c5113437fcaf3616e0e9fa565304c9e5",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2031/end-utc.raw",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2031/end-utc.raw",
+      "bytes": 31,
+      "sha256": "deec7c6efb50897eda72bc13fb1fafc58e50b56a11728127cc381c3f4a29ccfd",
+      "gitBlobSHA1": "ac1fb963233c300da59d2bda565bef484721329c",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2031/exit-code.raw",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2031/exit-code.raw",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "gitBlobSHA1": "d00491fd7e5bb6fa28c517a0bb32b8b506539d4d",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2031/signal.raw",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2031/signal.raw",
+      "bytes": 5,
+      "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed",
+      "gitBlobSHA1": "19765bd501b636fce433540d9e6735f51d66151d",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2031/result.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2031/result.json",
+      "bytes": 4287,
+      "sha256": "67173be3f5a9b7865460cdb7b145431f35b484f99a630ed96d8496003de43d6c",
+      "gitBlobSHA1": "ac072742783384b9c8cb4fa9445cb0600f3d501d",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2032/FULL.diff",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2032/FULL.diff",
+      "bytes": 4714,
+      "sha256": "c4caed6abdeca7e70683500586f76114649a1127ec86b071c3ca89215f5028c8",
+      "gitBlobSHA1": "3ab0da068220a94669c6e7d534e2d50d3cdd8966",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2032/FLOW.md",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2032/FLOW.md",
+      "bytes": 4556,
+      "sha256": "0ccc2e210892b11dac210b69ccac842f103c0d8b0859f3d2df9a1a5d4c13d1c7",
+      "gitBlobSHA1": "333fd48b07f0cc4d1915957dbaea9b85cc962f4f",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2032/prospective.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2032/prospective.json",
+      "bytes": 968,
+      "sha256": "a8643acaddee1bf6dcd2b0073ae90fede491589c2f0e2a643dfba21698a13777",
+      "gitBlobSHA1": "8ea522c94cb62764b17a5315614c5c69d65f2a40",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2032/result.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2032/result.json",
+      "bytes": 5575,
+      "sha256": "f88021b0fe82488ce86ccebbf70e57874e15a3f51133a9bf07e4790061e9d49a",
+      "gitBlobSHA1": "d80b8870a2dedb2e222d7457084daea2a6dae608",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2035/prospective.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2035/prospective.json",
+      "bytes": 2223,
+      "sha256": "e1e8334724205f1227246c165210725d2418eaf77592cd4d7cece1aef4a86b2f",
+      "gitBlobSHA1": "76e3eb8b085509d200546ffd9cfb6c85521f8974",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2035/stdout.raw",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2035/stdout.raw",
+      "bytes": 3558,
+      "sha256": "aa47f03dc8a2be582d0c0b6b5d9b04cf0af43aced82ba0be76b7a80a7cb805ca",
+      "gitBlobSHA1": "029ad9ca1964724b41f79d1d2f00daeb4a10cca2",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2035/stderr.raw",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2035/stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlobSHA1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2035/start-utc.raw",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2035/start-utc.raw",
+      "bytes": 31,
+      "sha256": "8f828acd3421ca0b751d1f176765f064a1c44aec6253a1949e24e6b59f189f63",
+      "gitBlobSHA1": "684f8933cb9375b11cb46957cd8e888604b28a60",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2035/end-utc.raw",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2035/end-utc.raw",
+      "bytes": 31,
+      "sha256": "fbe3fc668fa0a3ae53ad87dedcb721757f194325127fccad09fea3c0b85ce15d",
+      "gitBlobSHA1": "e1c7222c4a294b146ba02373b602611e43a2888f",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2035/exit.raw",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2035/exit.raw",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "gitBlobSHA1": "573541ac9702dd3969c9bc859d2b91ec1f7e6e56",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2035/signal.raw",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2035/signal.raw",
+      "bytes": 5,
+      "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed",
+      "gitBlobSHA1": "19765bd501b636fce433540d9e6735f51d66151d",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/E2035/result.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2035/result.json",
+      "bytes": 4908,
+      "sha256": "f9e6f9b99268e4b6830e538a70c089b171198e9d0651ca3981673851488e34d6",
+      "gitBlobSHA1": "bdf404b2bf57bbed552ea19482dcf09a597e8478",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/R2035/review.md",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/R2035/review.md",
+      "bytes": 5723,
+      "sha256": "501ebbdf5d0be42979695f4f8e5bb54d63425165e3bca0e2ebe93df25a7ab2a6",
+      "gitBlobSHA1": "704aee8c0558b66674070f2ac44278501f1bf45a",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/R2035/execution.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/R2035/execution.json",
+      "bytes": 3134,
+      "sha256": "dee297313536cba5439afa3cf4b39d2c39dfd0569ff6a81ebd30c5ba00ace210",
+      "gitBlobSHA1": "e07074077d2f123a13084a2198c7a016e99db442",
+      "fullMode": "100600",
+      "permissions": "600",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/R2035/prospective.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/R2035/prospective.json",
+      "bytes": 2225,
+      "sha256": "e36be6a0353444ec8675376ddcf802d4d598a057f16211a0363170334935860d",
+      "gitBlobSHA1": "5463124c91ee9d971e9e1a9de7d228d1230fea40",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/R2035/stdout.raw",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/R2035/stdout.raw",
+      "bytes": 3564,
+      "sha256": "5c5522d01bfa439cd17b0bb62c68ef26251e80c18572028d45d06d0565d4b146",
+      "gitBlobSHA1": "ac989de16fd9eefa8cf5b35ac2412bcc7f281cad",
+      "fullMode": "100600",
+      "permissions": "600",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/R2035/stderr.raw",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/R2035/stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlobSHA1": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+      "fullMode": "100600",
+      "permissions": "600",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/R2035/start-utc.raw",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/R2035/start-utc.raw",
+      "bytes": 25,
+      "sha256": "122b1af2afb9a39d50ce0f2b4db2ad4997778ca908fe88609ab3abe6216d8529",
+      "gitBlobSHA1": "c39819d5d232816ffb1291d86899b1da267ce908",
+      "fullMode": "100600",
+      "permissions": "600",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/R2035/end-utc.raw",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/R2035/end-utc.raw",
+      "bytes": 25,
+      "sha256": "d9a8ac11308fc859514209b361f2d9f103c96f88f0c0445c845f881460f298c8",
+      "gitBlobSHA1": "7dbe0cb0f184f3ca911cdb726f68ee2a6026fdd7",
+      "fullMode": "100600",
+      "permissions": "600",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/R2035/exit.raw",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/R2035/exit.raw",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "gitBlobSHA1": "573541ac9702dd3969c9bc859d2b91ec1f7e6e56",
+      "fullMode": "100600",
+      "permissions": "600",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/R2035/signal.raw",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/R2035/signal.raw",
+      "bytes": 5,
+      "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed",
+      "gitBlobSHA1": "19765bd501b636fce433540d9e6735f51d66151d",
+      "fullMode": "100600",
+      "permissions": "600",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/R2035/result.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/R2035/result.json",
+      "bytes": 6671,
+      "sha256": "47c4bb9f734866424ad48e39fcb7c978d661c495f8c26ee887fccee0f85a4552",
+      "gitBlobSHA1": "63da3a20265172f95ca7afb5bc82ac42f1515daa",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/root-E2035-native-envelope.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/root-E2035-native-envelope.json",
+      "bytes": 782,
+      "sha256": "35c20396d80fff7e5ef55bf52bb26daae03ee47f0f2ee3d6e8787f7abc849948",
+      "gitBlobSHA1": "53032f5b312632fc278c3e542f00bcdce49f2f3c",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-33.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-33.json",
+      "bytes": 1802,
+      "sha256": "d0cd6c6f2d50ec01e2ae019489064cbf1b07f8a8267de353a658405e81f9e17c",
+      "gitBlobSHA1": "9965a3723794fa551b288c3aa41e025012dfc6da",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-33.root-command.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-33.root-command.json",
+      "bytes": 8555,
+      "sha256": "a4d980d68278dcd9b57e415f5fbaaa59fbbed7270cb71b08713eb0d9edd33060",
+      "gitBlobSHA1": "bd05818d1b685144631027dfe6087f3ae7249711",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/receipts/E2025.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/receipts/E2025.json",
+      "bytes": 7258,
+      "sha256": "21eccbb4beaa495a5ad2aa0f279e7ab64ac5d74b636303654485d00ce53ce59c",
+      "gitBlobSHA1": "01ddf191ee0a439ac04ffb1414bbef8b758ae69b",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-35.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-35.json",
+      "bytes": 1834,
+      "sha256": "a8ae861d9e87d42e081fd7e1f605577f780014e118fd66e570b92c276fbf2203",
+      "gitBlobSHA1": "8e149334b0447b2181f1b321138b94b1110ad09f",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-35.root-command.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-35.root-command.json",
+      "bytes": 9804,
+      "sha256": "e1c4727488bdaf616fd94c82a293cff6eaad3ca9eadb6c227ecd1d673b9cd69b",
+      "gitBlobSHA1": "5841a7100563b8e10f5c38ec5c255399a46e8158",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/receipts/R2025.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/receipts/R2025.json",
+      "bytes": 13150,
+      "sha256": "ee36d0cea685c8187a2417ab28b135f4cc95ac0b52e17102f0f86b07374bdaf9",
+      "gitBlobSHA1": "8140000894c9d0162898957f0b373eafaba8e06b",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-38.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-38.json",
+      "bytes": 1882,
+      "sha256": "d76e865cd9c00b038e9f753cb482b7244ac63c192bd41b258bb2dc7b4f278e54",
+      "gitBlobSHA1": "cf12b53ea831c38719d73e529cf6b6a0d18e0d95",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-38.root-command.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-38.root-command.json",
+      "bytes": 10137,
+      "sha256": "b4d3d47d00235a33f149b1e24850c5e49402ede70b2973a6422382b1a7467f5d",
+      "gitBlobSHA1": "7a75124a71f9452b318c70814c8fc01ca78bee4b",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/receipts/E2028.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/receipts/E2028.json",
+      "bytes": 8559,
+      "sha256": "0dd3902e4af5d80b0196f1a65780cb63501f0226f70c5d00b821cf0057468390",
+      "gitBlobSHA1": "edaa68c64a02bee7a97553301094222b5ca3d1e6",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-41.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-41.json",
+      "bytes": 1890,
+      "sha256": "33161fdb694859814271dc7bd4f56a1bdef57f3c8361772ff431fc00d873cbd2",
+      "gitBlobSHA1": "decd66be0e28165862e1dc6a4af9106fe2765c17",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-41.root-command.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-41.root-command.json",
+      "bytes": 8283,
+      "sha256": "979f17cb4ec8d5fa16f3298efab070654a5f1cc372d2b3936d29d9916566731c",
+      "gitBlobSHA1": "2d9952b54994980e8ef148ee3215e4b36e8ab6a6",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/receipts/R2028.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/receipts/R2028.json",
+      "bytes": 9921,
+      "sha256": "4e8d9924d09288d7a7515b02adcb84f1929389464cda6a52291010d02edc3c33",
+      "gitBlobSHA1": "6ab93204540a43210e37aef9597faadede5b82b3",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-39.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-39.json",
+      "bytes": 1919,
+      "sha256": "4ea2ad3aed10ea10d138568cd3138a8bc92ec6143578acab4984eb71171470ad",
+      "gitBlobSHA1": "02af8cc9b519fea78e5b3ee3f5c564feb6b20239",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-39.root-command.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-39.root-command.json",
+      "bytes": 10181,
+      "sha256": "cbd25cd8a2d81361e546e6722aa68ca7b45d5e2603f3d4ca056bb633309e9bc0",
+      "gitBlobSHA1": "1b587b2f99140ae925d5f0547be0f61c19977357",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/receipts/E2029.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/receipts/E2029.json",
+      "bytes": 7612,
+      "sha256": "880568acb8a805896243b4694d651d8a056330c9eaa3c751a0e0125c1a51f56e",
+      "gitBlobSHA1": "b0eacdd9e09baa472d8a53e2a92d6be6155fdd16",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-42.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-42.json",
+      "bytes": 1907,
+      "sha256": "1c2a9f69a53aff4c6604ab558dc71bf798371d8a71434026ddf3bfebf8ed32c5",
+      "gitBlobSHA1": "9d1c985937da4f3b3e95d47b717cdf967620bc4c",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-42.root-command.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-42.root-command.json",
+      "bytes": 10159,
+      "sha256": "a721687a73638274936234249316c18cd9efb56f436c680d1c4b8953bc8bbd35",
+      "gitBlobSHA1": "d6b4509cb5ca834749b17e82aa8eb28f340676cb",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/receipts/E2030.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/receipts/E2030.json",
+      "bytes": 3870,
+      "sha256": "7c0a9deff0066c2f33c9f3dee23c7f2a27d43b0d21ee096959b4df642b758225",
+      "gitBlobSHA1": "1edb01b027a4514e4358bc1882bd03ba4c2b889f",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-43.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-43.json",
+      "bytes": 1923,
+      "sha256": "c4a70a70190ead7f1a73848e5f9792c91df552c3cc5444603fb9c2c863c9b6d8",
+      "gitBlobSHA1": "f2316902d756aecebc4aae18f9e49e66c46e2db0",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-43.root-command.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-43.root-command.json",
+      "bytes": 8314,
+      "sha256": "4b9ce7ac2fd0b20d739f231b9cf69a7896325f9fc413bc75338903039230796e",
+      "gitBlobSHA1": "e8aa35b9377091f5d9642abdef0913dd13710f5e",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/receipts/E2031.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/receipts/E2031.json",
+      "bytes": 4287,
+      "sha256": "67173be3f5a9b7865460cdb7b145431f35b484f99a630ed96d8496003de43d6c",
+      "gitBlobSHA1": "ac072742783384b9c8cb4fa9445cb0600f3d501d",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-44.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-44.json",
+      "bytes": 1939,
+      "sha256": "6381c53d840bda287f7e1ba4e38cf1901429caf266eaa1361c96d0cf82249cd2",
+      "gitBlobSHA1": "ca7570357748f169394b4cc56b0a2eb9773f5ff8",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-44.root-command.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-44.root-command.json",
+      "bytes": 10193,
+      "sha256": "6463651d98fd0d77e89b3ebf4c2fe3ba2d94357958c1396a1550e5d908e8184b",
+      "gitBlobSHA1": "6a07dfbdd40dcb2e11e2e991d7a98864dee9262e",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/receipts/E2032.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/receipts/E2032.json",
+      "bytes": 5575,
+      "sha256": "f88021b0fe82488ce86ccebbf70e57874e15a3f51133a9bf07e4790061e9d49a",
+      "gitBlobSHA1": "d80b8870a2dedb2e222d7457084daea2a6dae608",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-46.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-46.json",
+      "bytes": 2031,
+      "sha256": "d85d0decafb1e0b5300056e9c74d7436f7b592afe74cbaa3d73334ff40a95d36",
+      "gitBlobSHA1": "f625113f79ecb6707fb6c59aa2f7fd061cf6beef",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-46.root-command.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-46.root-command.json",
+      "bytes": 10318,
+      "sha256": "01e9911c045aac99e1d7e5ea74f53f2d9e921a28d73290d2ff3693d6fe835764",
+      "gitBlobSHA1": "4ae42f2817d10beb67100a4272b4c13bf5d67ebb",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/receipts/E2035.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/receipts/E2035.json",
+      "bytes": 782,
+      "sha256": "35c20396d80fff7e5ef55bf52bb26daae03ee47f0f2ee3d6e8787f7abc849948",
+      "gitBlobSHA1": "53032f5b312632fc278c3e542f00bcdce49f2f3c",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-47.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-47.json",
+      "bytes": 2046,
+      "sha256": "c5da4f07285bf3d383a2c01fc085705a2c8f52433cc822970bafcb877f4b59d5",
+      "gitBlobSHA1": "5554e4308ffe61119c7ca3cc934b544b2c188e8f",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/solves/epoch-47.root-command.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/solves/epoch-47.root-command.json",
+      "bytes": 8463,
+      "sha256": "861104eda42c9ecb780325d0dc01a2114e045cc8d75e3436e7c7c581fe107a4b",
+      "gitBlobSHA1": "e7a99e42f60785f446ba87302bd2e567e287a758",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/evidence/native/receipts/R2035.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/control/receipts/R2035.json",
+      "bytes": 6671,
+      "sha256": "47c4bb9f734866424ad48e39fcb7c978d661c495f8c26ee887fccee0f85a4552",
+      "gitBlobSHA1": "63da3a20265172f95ca7afb5bc82ac42f1515daa",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "experiments/capability-discovery/finite-trial-contract/budget-contract.v2.mjs",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2032/budget-contract.v2.mjs",
+      "bytes": 21304,
+      "sha256": "6adc5eea6b2b947e6a6c7282511cad9e07ee3c6d8ca63ef9d51c9e488d635a4f",
+      "gitBlobSHA1": "9e267dc53ceaac61c7af438866f7404672dbd94a",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "experiments/capability-discovery/finite-trial-contract/budget-contract.test.mjs",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2032/budget-contract.test.mjs",
+      "bytes": 15935,
+      "sha256": "0327343f6fa5a88faffa9e5dbb967fe9b035906b155def5ce0859cb97392c7e4",
+      "gitBlobSHA1": "9a3f4fa6460568ba80d2e1eeb73a11f381489348",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "experiments/capability-discovery/finite-trial-contract/m2-order-regression.test.mjs",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2032/m2-order-regression.test.mjs",
+      "bytes": 2468,
+      "sha256": "de13e4bafd772053a8150c527f38c809670552c822eeb240be5aec6b0eab6933",
+      "gitBlobSHA1": "92902b1835a87dbd20ef4e99595682753dc024b4",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "experiments/capability-discovery/finite-trial-contract/preconstant-preservation.test.mjs",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2032/preconstant-preservation.test.mjs",
+      "bytes": 1421,
+      "sha256": "5a66379219ac8f906384925f653d7111547de9cd9cd4b55d9d88ae0a92093e18",
+      "gitBlobSHA1": "77b9d4f1077c67880e3415cdb16edb4db329a6da",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "experiments/capability-discovery/finite-trial-contract/README.md",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2036/README.draft.md",
+      "bytes": 6855,
+      "sha256": "6c0df5375ffb30168fcb77020ceaf6b2ca24fa761790b02f53f16e0be855565c",
+      "gitBlobSHA1": "c9a247322a084a260a9ac45027dfa97e6e126ea6",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/README.md",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2036/evidence-README.draft.md",
+      "bytes": 2232,
+      "sha256": "97990f087343a11108dad23f6035359265b6e9e95d79d990c95823c5a143502f",
+      "gitBlobSHA1": "2132f3f1e226efbf27a80d281e188e878ed8c733",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    },
+    {
+      "path": "work/capability-discovery/cycle-08/manifest.json",
+      "sourcePath": "discovery-cycle07-checkpoint-admission/E2037/manifest.preview.json",
+      "bytes": 31545,
+      "sha256": "66437c565f0d35662b7f38ebe32b33224a47772b55b3cb1b802cdd9edb92977f",
+      "gitBlobSHA1": "c7c2aa96cc6eafea1d2865da0ac0885dfede90b4",
+      "fullMode": "100644",
+      "permissions": "644",
+      "nlink": 1,
+      "regular": true
+    }
+  ],
+  "provenance": {
+    "actualCopyJob": "E2041",
+    "embeddedReviewedCopierJob": "E2037B",
+    "earlierE2037": "Actual first attempt failed before copying; old3757/hash-mode and Gitmetadata guards NOT_REACHED then, not erased by later success",
+    "concurrentRelocated45": "Not consumed or claimed covered; independent root packet",
+    "limitations": [
+      "Opaque check-time physical identities only; no Git command or semantic index validation",
+      "No total-RSS, durability/fsync/atomicity, race/crash/host proof or producer/science acceptance",
+      "No original data/native/report/pixel interpretation or decode; bytes opaque",
+      "First source locator requested absent E2041/result.json before finding realresult.json (tool exit2). Own setup assertion later used invented full expansion of abbreviated8fcf pin and failed before physical audit (exit1). These are reviewer errors, not payload/copy failures. Root confirmed actual full8fcf87d0... and explicitly authorized same-scope readonly resumption. Original tool outputs are TOOLTESTIMONY; no separate raw capture invented."
+    ]
+  },
+  "actualActions": {
+    "targetTestsImportsSyntaxBuildGitCodecStorePATHQueryCVRender": 0,
+    "repositorySourceNativeWrites": 0,
+    "fullPhysicalAudits": 1,
+    "earlierOwnSetupFailure": 1,
+    "earlierLocatorFailure": 1,
+    "writesOnly": "R2041/audit.json (review/result later)"
+  }
+}

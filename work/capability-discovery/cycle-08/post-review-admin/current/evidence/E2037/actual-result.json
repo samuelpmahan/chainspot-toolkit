@@ -1,0 +1,60 @@
+{
+  "job_id": "E2037",
+  "worker": "S1",
+  "outcome": "mixed_change",
+  "summary": "ONE authorized copier was launched exactly once and exited 1/signal null at the old-path-set pre-copy guard. Three additional auxiliary bookkeeping paths made the actual inventory 3760 rather than expected 3757. No repository target prefix or copy-readback was created. Original failure/captures are retained; no retry, source fix, cleanup, tests, or Git operation followed. Construction result is preserved separately.",
+  "status": "FAILED_BEFORE_ANY_COPY_HOLD",
+  "process": {
+    "cwd": "/workspace/scratch/8528bb251845",
+    "argv": ["node", "/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2037/copy-once.v1.mjs"],
+    "launches": 1,
+    "startUTC": "2026-10-19T03:33:34.238Z",
+    "endUTC": "2026-10-19T03:33:34.386Z",
+    "exit": 1,
+    "signal": null,
+    "environment": "Inherited unchanged; shell:false"
+  },
+  "pins": {
+    "script": {"bytes": 9667, "sha256": "6fd0c9e4a4d0fd3979580c79dbab9ea049af5cb7cb6c772d2556337708a432dd"},
+    "map": {"bytes": 33633, "sha256": "7d7d8d033aa30611fb3d039d7b2516d6aa39402e075492279a22748406d86260"},
+    "manifestPreview": {"bytes": 31545, "sha256": "66437c565f0d35662b7f38ebe32b33224a47772b55b3cb1b802cdd9edb92977f"},
+    "preservedConstructionResult": {"path": "result.json", "sha256": "45eed5b5ed5adb3f642018cc0bab62c411ce12e8fb19a37b8fac90a981c14e99"}
+  },
+  "capturesRelativeToThisDirectory": [
+    {"path": "copy.actual.prospective.json", "sha256": "2d1203f427eef86da91b37752b95bf92d958113ded8cebc343b25e45d3d1c028"},
+    {"path": "copy.stdout.raw", "bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    {"path": "copy.stderr.raw", "bytes": 15329, "sha256": "61061e95d0f20b45f63218b53022de712c4205e77f4663d072c9340d24ee17aa"},
+    {"path": "copy.startUTC.raw", "bytes": 25, "sha256": "cae04fa4a2a649b72ca8ccb56419761410c0f6f0b84e74ed4f879e513cb7fac5"},
+    {"path": "copy.endUTC.raw", "bytes": 25, "sha256": "a66e20a04cc306a213e040c6933150d26a37e95a707826c5c536fb73d0d5100b"},
+    {"path": "copy.exit.raw", "bytes": 2, "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"},
+    {"path": "copy.signal.raw", "bytes": 5, "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed"}
+  ],
+  "failure": {
+    "kind": "AssertionError ERR_ASSERTION",
+    "location": "copy-once.v1.mjs:73:8",
+    "guard": "assert.deepEqual(walk(repo),old.map(r=>r.path).sort(compare))",
+    "expectedInventoryFiles": 3757,
+    "actualInventoryFiles": 3760,
+    "unexpectedAuxiliaryPaths": 3,
+    "fullRawDiagnostic": "copy.stderr.raw",
+    "classification": "Actual copier precondition failure, not a test/producer/CV failure or accepted adoption. No attempt made to classify, modify, or remove the unexpected files."
+  },
+  "observedAfterFailure": {
+    "copiedFiles": 0,
+    "copiedBytes": 0,
+    "productPrefixExists": false,
+    "cycle08PrefixExists": false,
+    "copyReadbackExists": false,
+    "scriptPostHashMatches": true,
+    "old3757BodyModeValidation": "NOT_REACHED; no postfailure full audit claimed",
+    "gitMetadataSnapshotComparison": "NOT_REACHED; no Git preservation proof claimed from this failed run"
+  },
+  "actionsActuallyRun": [
+    "Read reviewed copier/prospective source text and fresh hashes; inspected own capture directory.",
+    "Wrote NEW actual prospective; builtin launcher rechecked reviewed pins, absent capture/readback/target prefixes, opened all six raw descriptors exclusively before ONE exact child launch.",
+    "Read original raw error/UTC/exit/signal and capture hashes; bounded builtin postfailure check confirmed both target prefixes and copy-readback absent, and script unchanged.",
+    "Wrote this NEW actual-result outside selected sources; preserved construction result and all original captures."
+  ],
+  "notRun": ["retry", "script edits", "cleanup/pruning/normalization", "old chmod", "syntax/import precheck", "tests", "project/codec/native/pixel decode", "store/PATH/query/CV", "Git commands/stage/commit/export/publication"],
+  "next": "HOLD. Root must review this actual first failure and choose a separate packet; no relocated-test or adoption authority is inferred."
+}

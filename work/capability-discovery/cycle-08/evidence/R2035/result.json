@@ -1,0 +1,67 @@
+{
+  "job_id": "R2035",
+  "worker": "S4",
+  "decision": "accepted",
+  "outcome": "confirmed_reuse",
+  "summary": "Independent full source review confirms exactly two M2 guards, unchanged inherited42 and focused2 assertions except import rebinding, and preserved legitimate failure/UNKNOWN semantics. ONE separately authorized same45 fabricated invocation passed45/fail0/exit0 with empty stderr and identical source/runtime pre/post pins. Acceptance is pure finite engineering only; real producer, schemas/path/phase proofs, OS/RSS and science remain unadmitted.",
+  "status": "INDEPENDENT_SOURCE_AND_ONE_FABRICATED_GREEN_ACCEPTED_HOLD",
+  "targets": [
+    {"path":"discovery-cycle07-checkpoint-admission/E2032/budget-contract.v2.mjs","bytes":21304,"sha256":"6adc5eea6b2b947e6a6c7282511cad9e07ee3c6d8ca63ef9d51c9e488d635a4f"},
+    {"path":"discovery-cycle07-checkpoint-admission/E2032/budget-contract.test.mjs","bytes":15935,"sha256":"0327343f6fa5a88faffa9e5dbb967fe9b035906b155def5ce0859cb97392c7e4"},
+    {"path":"discovery-cycle07-checkpoint-admission/E2032/m2-order-regression.test.mjs","bytes":2468,"sha256":"de13e4bafd772053a8150c527f38c809670552c822eeb240be5aec6b0eab6933"},
+    {"path":"discovery-cycle07-checkpoint-admission/E2032/preconstant-preservation.test.mjs","bytes":1421,"sha256":"5a66379219ac8f906384925f653d7111547de9cd9cd4b55d9d88ae0a92093e18"}
+  ],
+  "supporting_source_pins": {
+    "E2028/budget-contract.v1.mjs":"bd80084cccf71272c6bbc60cf330a150df1d90bd64c66efb5f3153ba2270e0ec",
+    "E2028/budget-contract.test.mjs":"2a0b6407873d98f080ff451abc89db49d324775fe4084a026d2f5ff2217f4651",
+    "E2028/budget.v1.json":"2287562437f1a0897c03663f710e3219a14fc43267d55cdf2303faddb6b0ea8c",
+    "R2028/review.md":"0870ab82e39c4236d8d9bfe6d31fb99d0eeaced31111c066e21872df4c3234a5",
+    "E2030/m2-order-regression.test.mjs":"cbbe10e33256066ded63185c6511930526a804b617d466395daf21bcc79d0ee7",
+    "E2031/result.json":"67173be3f5a9b7865460cdb7b145431f35b484f99a630ed96d8496003de43d6c",
+    "E2031/stdout.raw":"6194679490edffbcf5b1e143428def521a6970c3c61229ff9e52760e685e0fff",
+    "E2032/FULL.diff":"c4caed6abdeca7e70683500586f76114649a1127ec86b071c3ca89215f5028c8",
+    "E2032/FLOW.md":"0ccc2e210892b11dac210b69ccac842f103c0d8b0859f3d2df9a1a5d4c13d1c7",
+    "E2032/prospective.json":"a8643acaddee1bf6dcd2b0073ae90fede491589c2f0e2a643dfba21698a13777",
+    "E2035/result.json":"f9e6f9b99268e4b6830e538a70c089b171198e9d0651ca3981673851488e34d6",
+    "E2035/stdout.raw":"aa47f03dc8a2be582d0c0b6b5d9b04cf0af43aced82ba0be76b7a80a7cb805ca"
+  },
+  "mechanical_review": {"only_two_core_guards":true,"inherited42_import_only":true,"observed_RED2_import_only":true,"original_assertions_caps_thresholds_unchanged":true,"no_additional_must_amend_established":true},
+  "findings": [
+    "Conditional observed-constant terminal dependency refuses A1 while absent-constant query-threw/capture0 remains a valid FAILED prefix.",
+    "Postchecks require public return/throw and do not require complete artifact bindings. Failure first cause and later postchecks remain representable.",
+    "M1, budget arithmetic, actual-candidate UNRESOLVED gates, CRASH UNKNOWN, empty support and opaque identity semantics unchanged.",
+    "Some write-failure plus postcheck combinations are source-supported but not separately executed by this unchanged suite; no full branch coverage claim."
+  ],
+  "actual": {
+    "node_test_invocations":1,"tests":45,"pass":45,"fail":0,"suites":0,"cancelled":0,"skipped":0,"todo":0,
+    "exit_code":0,"signal":null,"spawn_error":null,"stderr_bytes":0,"reported_duration_ms":259.197979,
+    "start_utc":"2026-10-19T03:05:49.252Z","end_utc":"2026-10-19T03:05:49.578Z",
+    "groups":{"inherited42":42,"prior_RED_rebound":2,"new_preservation":1},
+    "reachability":"Passing synchronous tests include A1/A2 baseline/count/refusal assertions and separate preconstant-throw control; inferred from unchanged source and passed tests, not added instrumentation.",
+    "earlier_RED_scope":"Only focused2 demonstrated RED in E2031, not inherited42/new1.",
+    "environment":"Inherited unchanged; no env/PATH assignments, non-login shell, no child env override",
+    "source_pre_post_identical":true,"runtime_pre_post_identical":true,
+    "runtime":{"path":"/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node","bytes":125989464,"sha256":"bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12","version":"v24.19.0"}
+  },
+  "captures": {
+    "stdout.raw":{"bytes":3564,"sha256":"5c5522d01bfa439cd17b0bb62c68ef26251e80c18572028d45d06d0565d4b146"},
+    "stderr.raw":{"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    "start-utc.raw":{"bytes":25,"sha256":"122b1af2afb9a39d50ce0f2b4db2ad4997778ca908fe88609ab3abe6216d8529"},
+    "end-utc.raw":{"bytes":25,"sha256":"d9a8ac11308fc859514209b361f2d9f103c96f88f0c0445c845f881460f298c8"},
+    "exit.raw":{"bytes":2,"sha256":"9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"},
+    "signal.raw":{"bytes":5,"sha256":"38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed"}
+  },
+  "capture_provenance":"prospective.json saved before launch; all six raw descriptors opened wx before child spawn. stdout/stderr directly attached; actual close exit/signal and UTC retained. execution.json contains complete argv/cwd/source/runtime pre/post and raw hashes. No filtering/retry/repair/preliminary target import/syntax check.",
+  "scope": {
+    "acceptance":"Pure finite fabricated contract and exact two-guard engineering repair only",
+    "producerAdmitted":false,"artifactSchemas":"UNRESOLVED","dependencyPathSet":"UNRESOLVED","phaseImplementation":"UNRESOLVED",
+    "OS_RSS_physical_science":"DECLINE_TO_JUDGE",
+    "original_body_codec_helper_native_store_PATH_queries_CV_renderer_producer_Git_operations":0,
+    "target_syntax_or_import_prechecks":0,"retries_repairs_assertion_cap_changes":0,"source_repository_native_mutations":0,"subagents":0,
+    "actual_imports":"Node test/assert and pinned pure core via exactly three admitted fabricated drivers; capture harness Node builtin fs/crypto/child_process only",
+    "writes_only":"discovery-cycle07-checkpoint-admission/R2035/",
+    "prior_exposure":"E2007 incidental tagged-report text TOOLTESTIMONY disclosed/excluded; no reread or blind-review claim."
+  },
+  "skillInfluence":"materialize separates prior actual2RED, author45GREEN, independent45GREEN and unresolved producer/resource/science claims.",
+  "remaining_hold":"No further execution, source edits, producer permission or Git/adoption. S1 remains sole eventual Lab/Git writer; root decides any separately scoped next packet."
+}

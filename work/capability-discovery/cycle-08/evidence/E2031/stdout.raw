@@ -1,0 +1,56 @@
+✖ A1 refuses outer query native exit before the observed constant hook terminates (2.482849ms)
+✖ A2 refuses postchecks before a later public entry (0.565738ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 100.779404
+
+✖ failing tests:
+
+test at discovery-cycle07-checkpoint-admission/E2030/m2-order-regression.test.mjs:18:1
+✖ A1 refuses outer query native exit before the observed constant hook terminates (2.482849ms)
+  AssertionError [ERR_ASSERTION]: A1 must refuse the missing cross-role hook dependency
+  + actual - expected
+  
+  + 'COMPLETE'
+  - 'REFUSED'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2030/m2-order-regression.test.mjs:24:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'COMPLETE',
+    expected: 'REFUSED',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at discovery-cycle07-checkpoint-admission/E2030/m2-order-regression.test.mjs:27:1
+✖ A2 refuses postchecks before a later public entry (0.565738ms)
+  AssertionError [ERR_ASSERTION]: A2 must refuse precall checks used as postconditions
+  + actual - expected
+  
+  + 'COMPLETE'
+  - 'REFUSED'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2030/m2-order-regression.test.mjs:33:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'COMPLETE',
+    expected: 'REFUSED',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

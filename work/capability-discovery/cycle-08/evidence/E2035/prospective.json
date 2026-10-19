@@ -1,0 +1,26 @@
+{
+  "job_id": "E2035",
+  "worker_id": "S2",
+  "status": "PROSPECTIVE_BEFORE_FIRST_AND_ONLY_ATTEMPT",
+  "authorization": "Root E2035 native assignment/start readback and explicit one-command fabricated-only GO after full E2032 source review",
+  "cwd": "/workspace/scratch/8528bb251845",
+  "argv": ["node", "--test", "--test-concurrency=1", "discovery-cycle07-checkpoint-admission/E2032/budget-contract.test.mjs", "discovery-cycle07-checkpoint-admission/E2032/m2-order-regression.test.mjs", "discovery-cycle07-checkpoint-admission/E2032/preconstant-preservation.test.mjs"],
+  "environment": "Inherited unchanged; no environment or PATH assignments; non-login shell",
+  "source_sha256": {
+    "budget-contract.v2.mjs": "6adc5eea6b2b947e6a6c7282511cad9e07ee3c6d8ca63ef9d51c9e488d635a4f",
+    "budget-contract.test.mjs": "0327343f6fa5a88faffa9e5dbb967fe9b035906b155def5ce0859cb97392c7e4",
+    "m2-order-regression.test.mjs": "de13e4bafd772053a8150c527f38c809670552c822eeb240be5aec6b0eab6933",
+    "preconstant-preservation.test.mjs": "5a66379219ac8f906384925f653d7111547de9cd9cd4b55d9d88ae0a92093e18"
+  },
+  "exclusive_raw_paths": {
+    "stdout": "/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2035/stdout.raw",
+    "stderr": "/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2035/stderr.raw",
+    "start_utc": "/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2035/start-utc.raw",
+    "end_utc": "/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2035/end-utc.raw",
+    "exit": "/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2035/exit.raw",
+    "signal": "/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2035/signal.raw"
+  },
+  "capture": "All six files opened exclusively before launch. Direct unmodified stdout/stderr, UTC boundaries and shell-observed exit; no filtering or retry.",
+  "prediction_not_observation": {"authored_tests": 45, "pass": "UNKNOWN"},
+  "limits": "Fabricated-only module/tests; old 42 first executed here. No preliminary imports/syntax checks, codec, original data, helper/store/query/CV/Git. Stop after first outcome, raw receipt and source posthashes."
+}

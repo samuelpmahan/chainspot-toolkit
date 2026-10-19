@@ -1,0 +1,74 @@
+{
+  "schema": "cycle07-budget-contract-candidate@1",
+  "status": "PROPOSED_FINITE_LEDGER_EXPECTED_UNRESOLVED_NOT_EXECUTED",
+  "qualification": "Every number is a proposed bound or source arithmetic, not a measurement, validated serializer bound, enforced OS limit or producer permission. Grouped read IDs are not a finalized concrete path list. Only the nested ledger/policy are candidate inputs to the pure assessor; no file loader exists.",
+  "ledger": {
+    "schema": "cycle07-budget-ledger@1",
+    "scope": "FABRICATED_CONTRACT_ONLY",
+    "pins": {
+      "pathSpace": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "store": "122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074",
+      "core": "52ea18fd97e0112bd8aee255b73743a79bb2ab9842b0ec828314bff9c1c26ea5",
+      "plan": "e1471209d9e91a885effb096fb052ac7a0ea61f42d07f348fa4856b3997dc7b5",
+      "review": "a0f8ee27b4a92507240af60e5a88c9f54e8584e10786f6b1a77a4280be5e396b"
+    },
+    "skipSlots": [5,11,26,41],
+    "argumentKeys": ["raster","mask","originPx","phiRad","t0Px","t1Px","stepPx","widthPx","bandPx","alongPx"],
+    "counts": {"slots":48,"eligible":44,"skips":4,"shortCalls":33,"longCalls":11,"stationsPerSide":1056,"callbacks":88,"args":10,"liveStores":1},
+    "strings": {"identifier":128,"path":512,"error":4096},
+    "planes": {"rgbaBytes":14427360,"maskBytes":3606840,"luminanceBytes":28854720,"canonicalBytes":18034200,"maxN":48},
+    "copies": {"rgba":44,"mask":11,"luminanceAllocations":44},
+    "hashes": {"privatePasses":3,"canonicalPasses":2,"artifactPasses":2},
+    "reads": [
+      {"id":"source22","files":22,"bytesPerFile":32768,"passes":3},
+      {"id":"producer","files":4,"bytesPerFile":262144,"passes":3},
+      {"id":"metadata","files":8,"bytesPerFile":131072,"passes":2},
+      {"id":"plan","files":1,"bytesPerFile":617401,"passes":2},
+      {"id":"png","files":1,"bytesPerFile":3943106,"passes":2},
+      {"id":"rgba","files":1,"bytesPerFile":14427360,"passes":2},
+      {"id":"mask","files":1,"bytesPerFile":3606840,"passes":2}
+    ],
+    "artifacts": [
+      {"id":"originalPlan","count":1,"bytes":617401,"valueNodes":100000,"encodedNodes":400000,"valueDepth":16,"encodedDepth":52,"copies":1,"readbacks":1},
+      {"id":"answers","count":44,"bytes":32768,"valueNodes":512,"encodedNodes":2048,"valueDepth":8,"encodedDepth":28,"copies":1,"readbacks":1},
+      {"id":"callbacks","count":88,"bytes":8192,"valueNodes":128,"encodedNodes":512,"valueDepth":8,"encodedDepth":28,"copies":1,"readbacks":1},
+      {"id":"trace","count":1,"bytes":4194304,"valueNodes":150000,"encodedNodes":600000,"valueDepth":24,"encodedDepth":76,"copies":1,"readbacks":1},
+      {"id":"sidecar","count":1,"bytes":1048576,"valueNodes":20000,"encodedNodes":80000,"valueDepth":12,"encodedDepth":40,"copies":1,"readbacks":1},
+      {"id":"cli","count":1,"bytes":262144,"valueNodes":4096,"encodedNodes":16384,"valueDepth":8,"encodedDepth":28,"copies":1,"readbacks":1},
+      {"id":"manifest","count":1,"bytes":262144,"valueNodes":8192,"encodedNodes":32768,"valueDepth":12,"encodedDepth":40,"copies":1,"readbacks":1},
+      {"id":"firstFailure","count":1,"bytes":65536,"valueNodes":1024,"encodedNodes":4096,"valueDepth":8,"encodedDepth":28,"copies":1,"readbacks":1},
+      {"id":"hold","count":1,"bytes":65536,"valueNodes":8192,"encodedNodes":32768,"valueDepth":12,"encodedDepth":40,"copies":1,"readbacks":1},
+      {"id":"stdout","count":1,"bytes":65536,"valueNodes":1024,"encodedNodes":4096,"valueDepth":4,"encodedDepth":16,"copies":1,"readbacks":1},
+      {"id":"stderr","count":1,"bytes":65536,"valueNodes":1024,"encodedNodes":4096,"valueDepth":4,"encodedDepth":16,"copies":1,"readbacks":1},
+      {"id":"receipt","count":1,"bytes":65536,"valueNodes":4096,"encodedNodes":16384,"valueDepth":10,"encodedDepth":34,"copies":1,"readbacks":1},
+      {"id":"ledger","count":1,"bytes":65536,"valueNodes":8192,"encodedNodes":32768,"valueDepth":12,"encodedDepth":40,"copies":1,"readbacks":1},
+      {"id":"token","count":1,"bytes":4096,"valueNodes":128,"encodedNodes":512,"valueDepth":4,"encodedDepth":16,"copies":1,"readbacks":1}
+    ],
+    "reserve": {"successBytes":8747961,"firstFailurePrefixBytes":196608,"availableBytes":8944569},
+    "ordering": ["PREFLIGHT_METADATA","CONSUME_NEW_TOKEN","CREATE_NEW_OUTPUT","RESERVE_ALL_OUTPUT","ALLOCATE_PRIVATE","PUBLIC_ENTER"],
+    "os": {"wallMs":90000,"graceMs":1500,"stdoutBytes":65536,"stderrBytes":65536,"rss":"UNSUPPORTED","hostRace":"UNSUPPORTED"},
+    "proofs": {"artifactSchemas":"UNRESOLVED","dependencyPathSet":"UNRESOLVED","phaseImplementation":"UNRESOLVED"}
+  },
+  "policy": {
+    "schema":"cycle07-budget-policy@1",
+    "maxReadBytes":61539551,"maxReadPasses":246,"maxOutputBytes":8944569,"maxArtifactCount":144,
+    "maxPrivateCopyBytes":674479080,"maxHashBytes":2129989760,"maxSelectedPayloadBytes":64924448,
+    "maxValueNodesTotal":339760,"maxEncodedNodesTotal":1359040,"maxValueNodesPerArtifact":200000,"maxEncodedNodesPerArtifact":800000,
+    "maxValueDepth":32,"maxEncodedDepth":80,"maxIdentifier":128,"maxPath":512,"maxError":4096,
+    "maxWallMs":90000,"maxGraceMs":1500,"maxStreamBytes":65536
+  },
+  "predicted_arithmetic_not_executed": {
+    "inputReadBytes":52594982,"inputReadPasses":102,"readbackBytes":8944569,"readbackPasses":144,
+    "readBytes":61539551,"readPasses":246,"outputBytes":8944569,"artifactCount":144,
+    "privateCopyBytes":674479080,"hashBytes":2129989760,"selectedPayloadBytes":64924448,"valueNodes":339760,"encodedNodes":1359040,
+    "expectedStatus":"UNRESOLVED"
+  },
+  "unresolved": [
+    {"id":"artifactSchemas","needed":"Exact bounded final trace/sidecar/CLI/manifest/error/HOLD/native callback schemas, string cardinalities and independent byte/value-node/encoded-node/depth derivations, all duplicate copies and serializer intermediates. Four-times node and three-times-depth candidate columns are placeholders under refusal, not codec theorems. No actual serialize/parse/allocation sufficiency follows."},
+    {"id":"dependencyPathSet","needed":"Final exact producer/dependency file list, concrete source22/producer/metadata path membership, per-path hashes/modes/sizes, complete pre/post/readback pass enumeration. Group caps and proposed four producer files/eight metadata files do not establish this absent source contract."},
+    {"id":"phaseImplementation","needed":"Reviewed actual source implementing claimed ordering, reserve-before-first-private-allocation/call, retention of every success/failure prefix, no uncharged copies/reads/writes, one-live reachability and OS wall/stream enforcement. No producer/adapter/source exists in this packet."
+    }
+  ],
+  "unsupported_not_bounded": ["Peak RSS/GC timing/heap overhead","Host/executed-code authentication","Concurrent filesystem replacement isolation","Crash durability/fsync/atomic output","Portable original replay"],
+  "scope": "Only conditional finite arithmetic and proposed pure predicates may later be fabricated-tested. No candidate number can override an UNRESOLVED proof. No measurement, implementation, source adoption or original query admission."
+}

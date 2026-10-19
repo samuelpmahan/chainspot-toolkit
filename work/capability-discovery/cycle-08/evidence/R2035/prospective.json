@@ -1,0 +1,25 @@
+{
+  "job_id": "R2035",
+  "worker": "S4",
+  "status": "SAVED_BEFORE_ONE_INDEPENDENT_FABRICATED_ATTEMPT",
+  "authority": "Root R2035 native assignment epoch47/start persisted/readback and explicit ONE same45 command GO after full source/pin review",
+  "cwd": "/workspace/scratch/8528bb251845",
+  "argv": ["node", "--test", "--test-concurrency=1", "discovery-cycle07-checkpoint-admission/E2032/budget-contract.test.mjs", "discovery-cycle07-checkpoint-admission/E2032/m2-order-regression.test.mjs", "discovery-cycle07-checkpoint-admission/E2032/preconstant-preservation.test.mjs"],
+  "environment": "Inherited unchanged, no env/PATH assignments; non-login shell and child spawn without env override",
+  "source_sha256": {
+    "budget-contract.v2.mjs": "6adc5eea6b2b947e6a6c7282511cad9e07ee3c6d8ca63ef9d51c9e488d635a4f",
+    "budget-contract.test.mjs": "0327343f6fa5a88faffa9e5dbb967fe9b035906b155def5ce0859cb97392c7e4",
+    "m2-order-regression.test.mjs": "de13e4bafd772053a8150c527f38c809670552c822eeb240be5aec6b0eab6933",
+    "preconstant-preservation.test.mjs": "5a66379219ac8f906384925f653d7111547de9cd9cd4b55d9d88ae0a92093e18"
+  },
+  "runtime_pre": {
+    "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "bytes": 125989464,
+    "sha256": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12",
+    "nodeVersion": "v24.19.0"
+  },
+  "exclusive_raw_paths": ["stdout.raw", "stderr.raw", "start-utc.raw", "end-utc.raw", "exit.raw", "signal.raw"],
+  "capture": "All six own R2035 descriptors opened wx before child launch. stdout/stderr direct file descriptors without filtering. UTC actual boundaries and child close exit code/signal retained. Source/runtime rehashed immediately before launch and after actual close. No target imports/syntax prechecks/filter/retry/repair/assertion/cap change.",
+  "prediction_not_observation": {"tests": 45, "pass": "UNKNOWN"},
+  "limits": "Only three fabricated drivers, Node builtins and pinned import-free core; no original data/codec/helper/native store/PATH query/CV/Git/source mutation. First outcome authoritative, STOP/HOLD. Acceptance is engineering/pure contract only; producer/schema/path/phase and OS/RSS/science remain unadmitted."
+}

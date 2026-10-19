@@ -1,0 +1,23 @@
+{
+  "job_id":"E2031",
+  "worker":"S2",
+  "status":"SAVED_BEFORE_ONE_NATIVE_ADMITTED_FABRICATED_RUN",
+  "authority":"Root E2031 actual native assignment/start readback and explicit ONE command GO in dispatch; E2030 root full source read completed.",
+  "cwd":"/workspace/scratch/8528bb251845",
+  "argv":["node","--test","--test-concurrency=1","discovery-cycle07-checkpoint-admission/E2030/m2-order-regression.test.mjs"],
+  "pins":{
+    "driver":{"bytes":2475,"sha256":"cbbe10e33256066ded63185c6511930526a804b617d466395daf21bcc79d0ee7"},
+    "core":{"bytes":21076,"sha256":"bd80084cccf71272c6bbc60cf330a150df1d90bd64c66efb5f3153ba2270e0ec"}
+  },
+  "exclusive_raw_paths":{
+    "stdout":"/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2031/stdout.raw",
+    "stderr":"/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2031/stderr.raw",
+    "startUTC":"/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2031/start-utc.raw",
+    "endUTC":"/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2031/end-utc.raw",
+    "exit":"/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2031/exit-code.raw",
+    "signal":"/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2031/signal.raw"
+  },
+  "capture":"Shell noclobber opens all six descriptors before launch; direct original stdout/stderr channels, UTC and immediate actual waited shell status. Signal null for an ordinary <128 status; if signal/exit encoding is ambiguous preserve UNKNOWN rather than infer signal. Inherit unchanged environment/PATH.",
+  "prediction_not_observation":{"tests":2,"intended_final_assertion_failures":2,"baseline":"Each31-event COMPLETE control and equal-count assertion precedes its refusal assertion"},
+  "stop":"Exactly one invocation; no syntax/import precheck/filter, old42-test import, cleanup/retry/repair/assertion or cap changes. Distinguish harness/baseline failure, retain all empty raw files and actual first result, then HOLD."
+}

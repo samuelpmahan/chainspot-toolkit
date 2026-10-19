@@ -1,0 +1,195 @@
+// E2028 tests FIRST, authored UNEXECUTED. No loader/codec/store/query/real input capability.
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { assessBudget, reserveCall, stationState, eventFacts, pairedDiagnostic, matchTraceIdentity } from './budget-contract.v1.mjs';
+
+// These bounds are FABRICATED assumptions, not proofs of any actual producer schema.
+function fixture() {
+  const artifactRows=[
+    ['originalPlan',1,617401,100000,16],['answers',44,32768,512,8],['callbacks',88,8192,128,8],
+    ['trace',1,4194304,150000,24],['sidecar',1,1048576,20000,12],['cli',1,262144,4096,8],
+    ['manifest',1,262144,8192,12],['firstFailure',1,65536,1024,8],['hold',1,65536,8192,12],
+    ['stdout',1,65536,1024,4],['stderr',1,65536,1024,4],['receipt',1,65536,4096,10],
+    ['ledger',1,65536,8192,12],['token',1,4096,128,4]
+  ];
+  const ledger={schema:'cycle07-budget-ledger@1',scope:'FABRICATED_CONTRACT_ONLY',
+    pins:{pathSpace:'d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e',
+      store:'122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074',
+      core:'52ea18fd97e0112bd8aee255b73743a79bb2ab9842b0ec828314bff9c1c26ea5',
+      plan:'e1471209d9e91a885effb096fb052ac7a0ea61f42d07f348fa4856b3997dc7b5',
+      review:'a0f8ee27b4a92507240af60e5a88c9f54e8584e10786f6b1a77a4280be5e396b'},
+    skipSlots:[5,11,26,41],argumentKeys:['raster','mask','originPx','phiRad','t0Px','t1Px','stepPx','widthPx','bandPx','alongPx'],
+    counts:{slots:48,eligible:44,skips:4,shortCalls:33,longCalls:11,stationsPerSide:1056,callbacks:88,args:10,liveStores:1},
+    strings:{identifier:128,path:512,error:4096},
+    planes:{rgbaBytes:14427360,maskBytes:3606840,luminanceBytes:28854720,canonicalBytes:18034200,maxN:48},
+    copies:{rgba:44,mask:11,luminanceAllocations:44},
+    hashes:{privatePasses:3,canonicalPasses:2,artifactPasses:2},
+    reads:[['source22',22,32768,3],['producer',4,262144,3],['metadata',8,131072,2],['plan',1,617401,2],
+      ['png',1,3943106,2],['rgba',1,14427360,2],['mask',1,3606840,2]]
+      .map(([id,files,bytesPerFile,passes])=>({id,files,bytesPerFile,passes})),
+    artifacts:artifactRows.map(([id,count,bytes,valueNodes,valueDepth])=>({id,count,bytes,valueNodes,
+      encodedNodes:4*valueNodes,valueDepth,encodedDepth:3*valueDepth+4,copies:1,readbacks:1})),
+    reserve:{successBytes:8747961,firstFailurePrefixBytes:196608,availableBytes:8944569},
+    ordering:['PREFLIGHT_METADATA','CONSUME_NEW_TOKEN','CREATE_NEW_OUTPUT','RESERVE_ALL_OUTPUT','ALLOCATE_PRIVATE','PUBLIC_ENTER'],
+    os:{wallMs:90000,graceMs:1500,stdoutBytes:65536,stderrBytes:65536,rss:'UNSUPPORTED',hostRace:'UNSUPPORTED'},
+    proofs:{artifactSchemas:'FABRICATED_ASSUMPTION',dependencyPathSet:'FABRICATED_ASSUMPTION',phaseImplementation:'FABRICATED_ASSUMPTION'}};
+  const policy={schema:'cycle07-budget-policy@1',maxReadBytes:61539551,maxReadPasses:246,maxOutputBytes:8944569,
+    maxArtifactCount:144,maxPrivateCopyBytes:674479080,maxHashBytes:2129989760,maxSelectedPayloadBytes:64924448,
+    maxValueNodesTotal:339760,maxEncodedNodesTotal:1359040,maxValueNodesPerArtifact:200000,maxEncodedNodesPerArtifact:800000,
+    maxValueDepth:32,maxEncodedDepth:80,maxIdentifier:128,maxPath:512,maxError:4096,
+    maxWallMs:90000,maxGraceMs:1500,maxStreamBytes:65536};
+  return {ledger,policy};
+}
+test('finite fabricated candidate accepts exact aggregate cap equality without producer admission',()=>{
+  const f=fixture(),r=assessBudget(f.ledger,f.policy);
+  assert.equal(r.status,'ADMISSIBLE_FOR_FABRICATED');
+  assert.equal(r.totals.outputBytes,8944569);assert.equal(r.totals.readBytes,61539551);
+  assert.equal(r.totals.hashBytes,2129989760);assert.equal(r.totals.artifactCount,144);
+  assert.equal(r.producerAdmitted,false);
+});
+for(const [key,value]of [['maxOutputBytes',8944568],['maxReadBytes',61539550],['maxReadPasses',245],
+  ['maxValueNodesTotal',339759],['maxEncodedDepth',75],['maxPath',511]])test(`cap+1 refused at ${key}`,()=>{
+  const f=fixture();f.policy[key]=value;assert.equal(assessBudget(f.ledger,f.policy).status,'REFUSED');
+});
+test('unknown critical proof returns exact UNRESOLVED list, not a convenient default',()=>{
+  const f=fixture();for(const k of Object.keys(f.ledger.proofs))f.ledger.proofs[k]='UNRESOLVED';
+  const r=assessBudget(f.ledger,f.policy);assert.equal(r.status,'UNRESOLVED');
+  assert.deepEqual(r.unresolved,['artifactSchemas','dependencyPathSet','phaseImplementation']);
+});
+test('missing numeric cap, nonfinite/fractional/negative/-0 and unknown fields refuse',()=>{
+  for(const v of [undefined,Infinity,NaN,1.5,-1,-0]){
+    const f=fixture();f.policy.maxOutputBytes=v;assert.equal(assessBudget(f.ledger,f.policy).status,'REFUSED');
+  }
+  const f=fixture();f.ledger.extra=1;assert.equal(assessBudget(f.ledger,f.policy).status,'REFUSED');
+});
+test('closed pass/order/artifact lists reject omission, changed count and unknown OS claim',()=>{
+  const f=fixture();f.ledger.reads.pop();assert.equal(assessBudget(f.ledger,f.policy).status,'REFUSED');
+  const g=fixture();g.ledger.counts.callbacks=87;assert.equal(assessBudget(g.ledger,g.policy).status,'REFUSED');
+  const h=fixture();h.ledger.ordering.reverse();assert.equal(assessBudget(h.ledger,h.policy).status,'REFUSED');
+  const i=fixture();i.ledger.os.rss='MEASURED';assert.equal(assessBudget(i.ledger,i.policy).status,'REFUSED');
+});
+test('reserve equality allows a mock entry but one-byte deficit prevents it',()=>{
+  let entered=0;const equal=reserveCall({remaining:12,success:8,firstFailure:4});
+  if(equal.status==='RESERVED')entered++;assert.equal(entered,1);
+  const deficit=reserveCall({remaining:11,success:8,firstFailure:4});
+  if(deficit.status==='RESERVED')entered++;assert.equal(deficit.status,'REFUSED');assert.equal(entered,1);
+});
+test('ledger cannot underdeclare first-failure reserve',()=>{
+  const f=fixture();f.ledger.reserve.firstFailurePrefixBytes--;assert.equal(assessBudget(f.ledger,f.policy).status,'REFUSED');
+});
+
+const sample=(lum,flag,role='derived')=>({role,j:0,side:'left',k:0,lum,flag});
+for(const [name,lum,flag,state]of [['finite-valid',9,1,'VALID'],['finite-invalid',9,0,'FINITE_INVALID'],
+  ['negative-zero-lum-invalid',-0,0,'FINITE_INVALID'],['NaN-invalid',NaN,0,'NAN_INVALID']])test(`M1 retains ${name} losslessly`,()=>{
+  const r=stationState(sample(lum,flag));assert.equal(r.status,'RETAIN');assert.equal(r.state,state);
+  assert.ok(Object.is(r.raw.lum,lum));assert.ok(Object.is(r.raw.flag,flag));
+});
+for(const [name,lum,flag,code]of [['flag-negative-zero',1,-0,'FLAG_NEGATIVE_ZERO'],['NaN-valid',NaN,1,'NAN_VALID'],
+  ['positive-Infinity',Infinity,0,'CONTRAST_INFINITY'],['negative-Infinity',-Infinity,1,'CONTRAST_INFINITY'],
+  ['boolean-flag',1,true,'FLAG_TYPE_OR_VALUE']])test(`M1 located HOLD for ${name}`,()=>{
+  const r=stationState(sample(lum,flag));assert.equal(r.status,'HOLD');assert.equal(r.code,code);
+  assert.deepEqual([r.raw.j,r.raw.side,r.raw.k],[0,'left',0]);assert.ok(Object.is(r.raw.lum,lum));assert.ok(Object.is(r.raw.flag,flag));
+});
+test('M1 original grammar is preserved while added consistency policy is explicit',()=>{
+  const r=stationState(sample(3,-0,'original'));assert.equal(r.grammarAccepted,true);assert.equal(r.status,'HOLD');
+  assert.equal(r.policy,'ADDED_ORIGINAL_CONSISTENCY_REVIEW');assert.ok(Object.is(r.raw.flag,-0));
+  const n=stationState(sample(NaN,1,'original'));assert.equal(n.grammarAccepted,true);assert.equal(n.code,'NAN_VALID');
+});
+test('M1 bounded witness refuses object/buffer-like values rather than retaining them',()=>{
+  assert.equal(stationState(sample({rgba:'not a plane'},0)).status,'REFUSED');
+});
+
+const event=(type,role=null,status=null)=>({type,role,status,seq:null,parent:null,depth:null,captureIndex:null,
+  errorCode:/(_FAIL|_THROW)$/.test(type)?'E_FIXTURE':null,errorText:/(_FAIL|_THROW)$/.test(type)?'fixture failure':null});
+const native=(role,status)=>({...event('NATIVE_EXIT',role,status),seq:role==='constant'?1:0,parent:role==='constant'?0:null,
+  depth:role==='constant'?1:0,captureIndex:role==='constant'?0:1,errorCode:status==='threw'?'E_FIXTURE':null,errorText:status==='threw'?'fixture native failure':null});
+function hook(role){return [event('HOOK_ENTER',role),event('HOOK_ENCODE_START',role),event('HOOK_ENCODE_OK',role),event('HOOK_RETURN',role)];}
+function artifact(role){return [event('WRITE_START',role),event('WRITE_OK',role),event('HASH_START',role),event('HASH_OK',role)];}
+function returned(){return [event('INTENT'),event('PUBLIC_ENTER'),native('constant','ok'),...hook('constant'),
+  native('query','ok'),...hook('query'),event('PUBLIC_RETURN')];}
+function answer(){return [event('ANSWER_VALIDATE_START'),event('ANSWER_VALIDATE_OK'),event('ANSWER_ENCODE_START'),event('ANSWER_ENCODE_OK')];}
+function success(){return [...returned(),...answer(),...artifact('constant'),...artifact('query'),...artifact('answer'),event('POSTCHECK_START'),event('POSTCHECK_OK')];}
+test('M2 all terminal success layers are necessary and individually retained',()=>{
+  const r=eventFacts(success(),{termination:'NORMAL'});assert.equal(r.status,'COMPLETE');
+  assert.equal(r.publicCall,'RETURNED');assert.equal(r.artifacts.answer.bound,true);
+  assert.equal(r.hooks.constant.native,'ok');assert.equal(r.hooks.constant.encode,'OK');
+});
+test('M2 nested constant hook failure retains constant native-ok, outer native-threw and public throw',()=>{
+  const e=[event('INTENT'),event('PUBLIC_ENTER'),native('constant','ok'),event('HOOK_ENTER','constant'),
+    event('HOOK_ENCODE_START','constant'),event('HOOK_ENCODE_FAIL','constant'),event('HOOK_THROW','constant'),
+    native('query','threw'),...hook('query'),event('PUBLIC_THROW'),event('POSTCHECK_START'),event('POSTCHECK_OK')];
+  const r=eventFacts(e,{termination:'NORMAL'});assert.equal(r.status,'FAILED');assert.equal(r.publicCall,'THREW');
+  assert.equal(r.hooks.constant.native,'ok');assert.equal(r.hooks.query.native,'threw');
+  assert.equal(r.firstFailure.type,'HOOK_ENCODE_FAIL');assert.equal(r.artifacts.answer.bound,false);
+});
+test('M2 query hook throws after native-ok without falsely recording public return',()=>{
+  const e=returned().slice(0,-2);e.push(event('HOOK_THROW','query'),event('PUBLIC_THROW'),event('POSTCHECK_START'),event('POSTCHECK_OK'));
+  const r=eventFacts(e,{termination:'NORMAL'});assert.equal(r.status,'FAILED');assert.equal(r.hooks.query.native,'ok');assert.equal(r.publicCall,'THREW');
+});
+test('M2 bounded empty failure text is retained without invented fallback wording',()=>{
+  const thrown=event('PUBLIC_THROW');thrown.errorText='';
+  const r=eventFacts([event('INTENT'),event('PUBLIC_ENTER'),thrown],{termination:'NORMAL'});
+  assert.equal(r.status,'FAILED');assert.equal(r.firstFailure.message,'');
+});
+test('M2 public return survives later answer encoding failure as a distinct fact',()=>{
+  const e=[...returned(),event('ANSWER_VALIDATE_START'),event('ANSWER_VALIDATE_OK'),event('ANSWER_ENCODE_START'),event('ANSWER_ENCODE_FAIL'),event('POSTCHECK_START'),event('POSTCHECK_OK')];
+  const r=eventFacts(e,{termination:'NORMAL'});assert.equal(r.status,'FAILED');assert.equal(r.publicCall,'RETURNED');
+  assert.equal(r.answerEncode,'FAIL');assert.equal(r.artifacts.answer.bound,false);
+});
+test('M2 write success then hash failure never yields bound persistence',()=>{
+  const e=[...returned(),...answer(),event('WRITE_START','answer'),event('WRITE_OK','answer'),event('HASH_START','answer'),event('HASH_FAIL','answer'),event('POSTCHECK_START'),event('POSTCHECK_OK')];
+  const r=eventFacts(e,{termination:'NORMAL'});assert.equal(r.status,'FAILED');assert.equal(r.artifacts.answer.write,'OK');
+  assert.equal(r.artifacts.answer.hash,'FAIL');assert.equal(r.artifacts.answer.bound,false);
+});
+test('M2 every failing terminal layer has a direct falsifier',()=>{
+  for(const [start,fail]of [['ANSWER_VALIDATE_START','ANSWER_VALIDATE_FAIL'],['POSTCHECK_START','POSTCHECK_FAIL']]){
+    const r=eventFacts([...returned(),event(start),event(fail)],{termination:'NORMAL'});assert.equal(r.status,'FAILED');assert.equal(r.firstFailure.type,fail);
+  }
+  const r=eventFacts([...returned(),...answer(),event('WRITE_START','answer'),event('WRITE_FAIL','answer')],{termination:'NORMAL'});
+  assert.equal(r.status,'FAILED');assert.equal(r.artifacts.answer.write,'FAIL');
+});
+test('M2 crash after intent or write-start leaves UNKNOWN windows, not false success',()=>{
+  assert.equal(eventFacts([event('INTENT')],{termination:'CRASH'}).publicCall,'UNKNOWN');
+  const r=eventFacts([...returned(),...answer(),event('WRITE_START','answer')],{termination:'CRASH'});
+  assert.equal(r.status,'UNKNOWN');assert.equal(r.artifacts.answer.write,'UNKNOWN');assert.equal(r.artifacts.answer.bound,false);
+});
+test('M2 crash before the first durable observation cannot assert no call or no write',()=>{
+  const r=eventFacts([],{termination:'CRASH'});assert.equal(r.publicCall,'UNKNOWN');
+  assert.equal(r.hooks.constant.entered,null);assert.equal(r.artifacts.answer.write,'UNKNOWN');
+});
+for(const role of ['constant','query'])for(const stage of ['WRITE','HASH'])test(`M2 ${role} ${stage} failure has a distinct terminal fact`,()=>{
+  const tail=stage==='WRITE'?[event('WRITE_START',role),event('WRITE_FAIL',role)]
+    :[event('WRITE_START',role),event('WRITE_OK',role),event('HASH_START',role),event('HASH_FAIL',role)];
+  const r=eventFacts([...returned(),...tail],{termination:'NORMAL'});
+  assert.equal(r.status,'FAILED');assert.equal(r.artifacts[role][stage.toLowerCase()],'FAIL');assert.equal(r.artifacts[role].bound,false);
+});
+test('M2 false public success, hash without write, and unterminated normal state refuse',()=>{
+  const nested=[event('INTENT'),event('PUBLIC_ENTER'),native('constant','ok'),event('HOOK_ENTER','constant'),event('HOOK_THROW','constant'),event('PUBLIC_RETURN')];
+  assert.equal(eventFacts(nested,{termination:'NORMAL'}).status,'REFUSED');
+  assert.equal(eventFacts([...returned(),...answer(),event('HASH_START','answer')],{termination:'NORMAL'}).status,'REFUSED');
+  assert.equal(eventFacts([event('INTENT'),event('PUBLIC_ENTER')],{termination:'NORMAL'}).status,'REFUSED');
+});
+test('M2 sequence is not capture order and wrong native callback identity refuses',()=>{
+  const e=success();e.find(x=>x.type==='NATIVE_EXIT'&&x.role==='constant').captureIndex=1;
+  assert.equal(eventFacts(e,{termination:'NORMAL'}).status,'REFUSED');
+});
+
+const values=flag=>({leftLum:Array(16).fill(9),rightLum:Array(16).fill(9),okLeft:Array(16).fill(flag),okRight:Array(16).fill(flag),stationsCount:16});
+test('paired empty intersection yields null/UNKNOWN, not a success fraction',()=>{
+  const r=pairedDiagnostic({j:0,original:values(0),derived:values(1)});
+  assert.equal(r.status,'UNKNOWN');assert.equal(r.originalBilateralN,0);assert.equal(r.derivedBilateralN,16);
+  assert.equal(r.pairedN,0);assert.equal(r.failToPassFraction,null);
+});
+test('paired strict historical tau8 and separate support counts are retained',()=>{
+  const o=values(1),d=values(1);o.leftLum[0]=8;d.okRight[1]=0;
+  const r=pairedDiagnostic({j:0,original:o,derived:d});assert.equal(r.status,'DIAGNOSTIC');
+  assert.equal(r.originalBilateralN,16);assert.equal(r.derivedBilateralN,15);assert.equal(r.pairedN,15);assert.equal(r.failToPass,1);
+});
+const identity=()=>({runId:'fake-run',imageId:'Lenard-5',frame:'Lenard-5.original-source-pixel-centers',trialId:'fake-trial',paramsHash:'a'.repeat(64),traceHash:'b'.repeat(64),rowIds:Array.from({length:48},(_,i)=>i)});
+test('one-trace identity accepts all48 identical opaque headers without hashing bodies',()=>{
+  assert.equal(matchTraceIdentity(identity(),identity(),identity()).status,'MATCH');
+});
+test('one-trace hash mismatch and missing/duplicate row refuse',()=>{
+  const a=identity(),b=identity();b.traceHash='c'.repeat(64);assert.equal(matchTraceIdentity(a,b,identity()).status,'REFUSED');
+  const c=identity();c.rowIds[47]=46;assert.equal(matchTraceIdentity(identity(),identity(),c).status,'REFUSED');
+});

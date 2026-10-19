@@ -1,0 +1,28 @@
+{
+  "job_id":"E2031",
+  "worker":"S2",
+  "outcome":"mixed_change",
+  "summary":"Exactly ONE admitted fabricated-only focused run observed both intended M2 ordering failures. Actual2 tests/0pass/2fail,exit1,signalnull; both baseline COMPLETE and equal31-event-count assertions passed before final COMPLETE-versus-REFUSED assertions failed. No harness/import/baseline errors or old42-test autorun. Original six raw channels retained; driver/core unchanged. STOP/HOLD,no repair,retry or assertion/cap change.",
+  "command":{"cwd":"/workspace/scratch/8528bb251845","argv":["node","--test","--test-concurrency=1","discovery-cycle07-checkpoint-admission/E2030/m2-order-regression.test.mjs"],"invocations":1,"exitCode":1,"signal":null,"startUTC":"2026-10-19T02:51:09.667048253Z","endUTC":"2026-10-19T02:51:09.831155387Z","environment":"Inherited unchanged env/PATH;no syntax/import precheck/filter","capture":"Shell noclobber opened all six exclusive raw descriptors BEFORE launch;direct unmodified stdout/stderr,UTC,immediate waited exit and unambiguous ordinary-status signalnull."},
+  "counts":{"tests":2,"suites":0,"pass":0,"fail":2,"cancelled":0,"skipped":0,"todo":0,"duration_ms":100.779404,"reporter":"Actual default Node spec-style output,not a claimed TAP serialization"},
+  "failures":[
+    {"name":"A1 refuses outer query native exit before the observed constant hook terminates","sourceLine":24,"actual":"COMPLETE","expected":"REFUSED","operator":"strictEqual","baselineAndCountAssertions":"passed first;final assertion reached","classification":"intended temporal RED"},
+    {"name":"A2 refuses postchecks before a later public entry","sourceLine":33,"actual":"COMPLETE","expected":"REFUSED","operator":"strictEqual","baselineAndCountAssertions":"passed first;final assertion reached","classification":"intended temporal RED"}
+  ],
+  "raw_artifacts":[
+    {"path":"discovery-cycle07-checkpoint-admission/E2031/prospective.json","bytes":2039,"sha256":"63833a28e4d42fecb7474c53d989445e13bf1d785a8916de19f9d4ff6668d042","savedBeforeLaunch":true},
+    {"path":"discovery-cycle07-checkpoint-admission/E2031/stdout.raw","bytes":2207,"sha256":"6194679490edffbcf5b1e143428def521a6970c3c61229ff9e52760e685e0fff","completeRead":true},
+    {"path":"discovery-cycle07-checkpoint-admission/E2031/stderr.raw","bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    {"path":"discovery-cycle07-checkpoint-admission/E2031/start-utc.raw","bytes":31,"sha256":"a2deec4c77826c71360d779b66ac34f5fc4c45d00e9ce6a84c3bc21c2bc133ca"},
+    {"path":"discovery-cycle07-checkpoint-admission/E2031/end-utc.raw","bytes":31,"sha256":"deec7c6efb50897eda72bc13fb1fafc58e50b56a11728127cc381c3f4a29ccfd"},
+    {"path":"discovery-cycle07-checkpoint-admission/E2031/exit-code.raw","bytes":2,"sha256":"4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"},
+    {"path":"discovery-cycle07-checkpoint-admission/E2031/signal.raw","bytes":5,"sha256":"38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed"}
+  ],
+  "source_before_after_unchanged":[
+    {"path":"discovery-cycle07-checkpoint-admission/E2030/m2-order-regression.test.mjs","bytes":2475,"sha256":"cbbe10e33256066ded63185c6511930526a804b617d466395daf21bcc79d0ee7"},
+    {"path":"discovery-cycle07-checkpoint-admission/E2028/budget-contract.v1.mjs","bytes":21076,"sha256":"bd80084cccf71272c6bbc60cf330a150df1d90bd64c66efb5f3153ba2270e0ec"}
+  ],
+  "actual_scope":{"NodeTestAssertAndPureCoreImports":"actually occurred","eventFactsCalls":"four implied by frozen driver and observed final-assertion reachability,not separately instrumented","old42TestsRun":0,"repairsRetriesCleanupAssertionCapChanges":0,"originalJSONWireNativePixelBodyReadsCodecHelperStorePATHQueryCVProducerRenderer":0,"GitRepoNativePublished382Mutation":0,"writesOnly":"discovery-cycle07-checkpoint-admission/E2031/"},
+  "gate":"Actual focused RED retained. HOLD for root actual-output read and separate versioned repair GO. This run closes no producer/schema/dependency/cap/scientific gate;valid failure-postcheck/preconstant-throw/UNKNOWN behavior must be preserved by any later repair.",
+  "skillInfluence":"Materialize separates actual reached failures/raw results from prior predictions and from unperformed repair/producer work."
+}

@@ -1,0 +1,63 @@
+{
+  "job_id": "E2041",
+  "worker": "S1",
+  "outcome": "mixed_change",
+  "summary": "ONE explicitly admitted reviewed v2 copier completed exit0/signalnull with287B stdout and genuine0B stderr. It copied exactly88 files510780B, preserving source600/644 modes and three zero-byte captures, and its readback records unchanged3757 originals, exact3 excluded auxiliary files, and opaque HEAD/ref/index identities. Physical working count3848. Earlier E2037 failure is preserved; no tests, independent physical audit, Git command or publication occurred. HOLD for separate next admission.",
+  "status": "COPIED_NOT_TESTED_INDEPENDENTLY_AUDITED_STAGED_COMMITTED_OR_PUBLISHED",
+  "process": {
+    "cwd": "/workspace/scratch/8528bb251845",
+    "argv": ["node", "/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2037B/copy-once.v2.mjs"],
+    "launches": 1,
+    "startUTC": "2026-10-19T03:49:33.836Z",
+    "endUTC": "2026-10-19T03:49:34.628Z",
+    "exit": 0,
+    "signal": null,
+    "environment": "Unchanged inherited env/PATH; shell:false"
+  },
+  "sourcePreAndPostPinsMatch": {
+    "script": {"bytes": 10449, "sha256": "4816ad247b8434157c274a2eb9ef9c9540a844686f65dbadd73643dc9ebace1e"},
+    "map": {"bytes": 33633, "sha256": "7d7d8d033aa30611fb3d039d7b2516d6aa39402e075492279a22748406d86260"},
+    "preview": {"bytes": 31545, "sha256": "66437c565f0d35662b7f38ebe32b33224a47772b55b3cb1b802cdd9edb92977f"}
+  },
+  "capturesRelativeToThisDirectory": [
+    {"path": "prospective.json", "bytes": 2280, "sha256": "f65d548b994beb17bd348ceaefff472718cf9f493cd5d952b4c6229c2d217776"},
+    {"path": "copy.stdout.raw", "bytes": 287, "sha256": "d20be8c8eebbf0a3dcf3b47d082ef5a59dd920bc2c98f93bb9e23249ef0c9088"},
+    {"path": "copy.stderr.raw", "bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    {"path": "copy.startUTC.raw", "bytes": 25, "sha256": "5f70b1023115884490b16957ce4a59135b340ef0bda6c48228b9cca406ee205a"},
+    {"path": "copy.endUTC.raw", "bytes": 25, "sha256": "cf37f9e82f9a99cbd11eca63add57df7201d8b42c93e473c4eaccea9a1676805"},
+    {"path": "copy.exit.raw", "bytes": 2, "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"},
+    {"path": "copy.signal.raw", "bytes": 5, "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed"}
+  ],
+  "copierReadback": {
+    "path": "discovery-cycle07-checkpoint-admission/E2037B/copy-readback.json",
+    "bytes": 41749,
+    "sha256": "ccae94bbee6ba99a50d66135b6dc71b5375342bfca7ea12c973bbb5a292cbe3d",
+    "fullMode": "100644",
+    "schema": "cycle08-e2037b-one-copy-readback@2",
+    "embeddedJobId": "E2037B",
+    "attribution": "Reviewed fixed copier's embedded construction job id is E2037B; actual execution/captures/native receipt are E2041. No source rewrite to relabel the reviewed script."
+  },
+  "actualCountsAndReadbackFacts": {
+    "copiedFiles": 88,
+    "copiedBytes": 510780,
+    "productFiles": 5,
+    "evidenceFilesIncludingManifest": 83,
+    "priorFilesPreserved": 3757,
+    "auxiliaryExcludedPreserved": 3,
+    "physicalWorkingFilesObserved": 3848,
+    "zeroByteFilesCopied": 3,
+    "copiedFullModes": ["100644", "100600"],
+    "gitProjectedModes": ["100644"],
+    "opaqueGitMetadataUnchanged": true
+  },
+  "actionsActuallyRun": [
+    "Fresh reviewed script/map/preview/FLOW/construction-result hashes; absent destination prefixes/readback/capture-directory observation.",
+    "apply_patch NEW E2041 actual prospective; builtin capture launcher fresh checked fixed script/map/preview pins and absent paths, opened all six original raw descriptors exclusively BEFORE ONE direct child launch.",
+    "Executed exact reviewed v2 copier once, unchanged inherited env/PATH. Copier builtin source/old/aux/target byte-hash-mode checks, exclusive88 copies and destination-only chmod actually occurred.",
+    "Read complete small stdout/stderr/UTC/exit/signal, opaque hashes and own metadata-only copy-readback. Verified88 unique metadata rows sum510780B and recorded3757+3/3848/Gitopaqueunchanged facts. Rehashed script/map/preview postrun unchanged.",
+    "Wrote this NEW E2041 receipt outside fixed sources and targets; no other target/admin added."
+  ],
+  "notRun": ["syntax/import precheck", "relocated45 or broad tests", "independent physical audit", "project/codec/native/pixel body decode", "helper/store/PATH/query/CV/renderer", "Git commands/stage/commit/export/publication", "retry/sourcefix/cleanup/normalization/ignoreedit/oldchmod"],
+  "limits": "Own copier check-time byte/hash/mode/path readback is engineering evidence, not independent audit, semantic index proof, atomic/fsync/race/crash/RSS/host proof, producer implementation/cap sufficiency, or scientific/physical/causal validation. Original600 private permissions and Git100644 projection are distinct. E2037 first failure, map/preview and all v2 construction history remain separate and unchanged.",
+  "next": "HOLD for root full read of actual captures/readback/identity. Relocated45 test and later independent physical audit/Git packets require separate explicit admissions."
+}

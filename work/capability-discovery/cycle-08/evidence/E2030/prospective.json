@@ -1,0 +1,10 @@
+{
+  "job_id":"E2030",
+  "worker":"S2",
+  "status":"SOURCE_ONLY_PROSPECTIVE_NOT_EXECUTION_ADMISSION",
+  "cwd":"/workspace/scratch/8528bb251845",
+  "argv":["node","--test","--test-concurrency=1","discovery-cycle07-checkpoint-admission/E2030/m2-order-regression.test.mjs"],
+  "core":{"path":"discovery-cycle07-checkpoint-admission/E2028/budget-contract.v1.mjs","bytes":21076,"sha256":"bd80084cccf71272c6bbc60cf330a150df1d90bd64c66efb5f3153ba2270e0ec"},
+  "prediction_only":{"namedTests":2,"baselineControls":"Both assert COMPLETE before mutation","intendedFailure":"Both final assertions require REFUSED but unchanged core is source-predicted COMPLETE","actualRuns":0},
+  "boundary":"No import/syntax/test/function invocation now. Root exact source review then NEW native execution packet with exclusive raw capture paths before ONE first run. No old42-test import, real inputs, repairs, retries or cap changes."
+}

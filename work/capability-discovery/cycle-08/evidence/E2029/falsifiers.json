@@ -1,0 +1,187 @@
+{
+  "schema": "cycle07-independent-g1-falsifiers@1",
+  "job_id": "E2029",
+  "worker": "S3",
+  "status": "SOURCE_ONLY_UNEXECUTED_NOT_E2028_REVIEW",
+  "qualification": "Descriptions are fabricated future test design, not tagged/native evidence, executed fixtures or accepted final policy. No E2028 file inspected.",
+  "cases": [
+    {
+      "id": "I01",
+      "group": "safe_integer",
+      "fixture": "For every count/cap/pass/multiplicity/length: independently supply NaN, Infinity,-Infinity,-0, fractional, negative, unsafe integer or missing field.",
+      "expected": "REFUSED/UNRESOLVED before arithmetic/allocation/mockcall; no default/coercion.",
+      "source": "C12-18; safe ledger policy"
+    },
+    {
+      "id": "I02",
+      "group": "checked_arithmetic",
+      "fixture": "Safe operands whose sum/product exceeds MAX_SAFE_INTEGER; include zero-factor control and subtraction underflow.",
+      "expected": "Refuse using pre-operation overflow guards, never rounded result test; zero valid count allowed only per schema.",
+      "source": "independent ledger arithmetic constraint"
+    },
+    {
+      "id": "A01",
+      "group": "fixed_counts",
+      "fixture": "All48 rows fixed; accepted skips5/11/26/41;33 short+11 long eligible.",
+      "expected": "44 max calls/stores/constants,1056stations/side,4224array leaves,105600 sample visits,88 full-success callback exits. Any forced count or skipped-row work refuses.",
+      "source": "K77-100; P142-155; Waccepted summary/history"
+    },
+    {
+      "id": "A02",
+      "group": "answer_shape_nodes",
+      "fixture": "Exact N16 or48 answer versus one extra field/arrayhole/typed-array/nonordinary record.",
+      "expected": "Exact successful native node counts74/202 and depth3; raw tagged-node structural maxima309/821 and depth9 are separate counters. Extra shape refuses, not budgeted as same answer.",
+      "source": "P341; C67-95/99-141"
+    },
+    {
+      "id": "A03",
+      "group": "copy_multiplicity",
+      "fixture": "Same answer object referenced standalone+trace+roundtrip; callback standalone+sidecar; shared object aliases.",
+      "expected": "Every occurrence charged; no content-key/alias dedup assumption; reducing multiplicity without source proof refuses.",
+      "source": "C67-95 ancestors per traversal, not global dedup"
+    },
+    {
+      "id": "B01",
+      "group": "inclusive_cap",
+      "fixture": "For each role bytes/nodes/depth/total exactly cap, then same bound cap+1 with valid shape.",
+      "expected": "Equality admitted for pure budget test; plus1 refused before corresponding mock encode/write/call. Existing codec hard ceilings not raised.",
+      "source": "C17,58,145-158; policy ledger"
+    },
+    {
+      "id": "B02",
+      "group": "reserve_before_call",
+      "fixture": "Success alone fits but remaining is one below success+terminal-failure+fixed-finalization reserve.",
+      "expected": "REFUSED with mock-call counter0 and no success serializer/allocator entry; never borrow failure reserve.",
+      "source": "G1 independent conservative reservation"
+    },
+    {
+      "id": "B03",
+      "group": "worst_prefix",
+      "fixture": "Failure at first, middle and final eligible slot with different N; later postcheck/close errors and all remaining rows.",
+      "expected": "Preserve bounded prefix and first cause, terminal48-row representation/later NOT_ATTEMPTED, bounded later errors/finalization; no extra query/retry. Reserve includes prefix finalization if reserialized.",
+      "source": "M2/G1 terminal policy"
+    },
+    {
+      "id": "B04",
+      "group": "escaping_and_strings",
+      "fixture": "Longest permitted identifiers/path/error strings including quotes, backslashes, controls, nonASCII and surrogate code units; one-over maximum; long cause/stack.",
+      "expected": "Charge quoted UTF8 worst-case<=6*UTF16Length+2 plus tags; overlong or recursive unbounded fields refuse/retain explicit bounded failure; no arbitrary String/stack capture claim.",
+      "source": "C73,91-92,145-147; independent string policy"
+    },
+    {
+      "id": "B05",
+      "group": "number_token_policy",
+      "fixture": "Finite numeric token policy absent or invalid; longest justified finite token and special NaN/-0/Infinity witness tags.",
+      "expected": "Missing T => U2 UNRESOLVED; numeric leaf bound max(20+T,30). No measured-average or ordinary JSON null replacement used.",
+      "source": "C74-79,111-118"
+    },
+    {
+      "id": "B06",
+      "group": "path_pass_artifact_roster",
+      "fixture": "Extra path/readback/hash/serialized copy/file alias/fallback manifest or error artifact not in closed ledger; short-read/growing-file/symlink drift modeled by fake capabilities.",
+      "expected": "Refuse before unlisted action; exact path role and pass accounting; file-read bytes distinct from in-memory hash/copy work; no original-body discovery.",
+      "source": "source bounded-I/O contract requirements; independent ledger"
+    },
+    {
+      "id": "B07",
+      "group": "liveness",
+      "fixture": "Delayed cleanup/GC keeps two private rasters/LUM arrays reachable/resident; success output still small.",
+      "expected": "Reject any proven-one-RSS-allocation claim; update overlapping liveness charge or unsupported scope. Do not infer GC from dropped refs/WeakMap.",
+      "source": "P68-77; Sconstant closure/log/cache"
+    },
+    {
+      "id": "B08",
+      "group": "codec_preallocation",
+      "fixture": "Wire output just over byte cap despite native nodes fitting; tagged wrapper increases raw depth/nodes; pixel-plane typed array supplied.",
+      "expected": "No byte-cap-after-encode treated as preallocation proof; shape/writer reserve guards before work; pixel planes never serialized into native trace; raw/native counters independent.",
+      "source": "C47-51,55-63,67-95,145-158"
+    },
+    {
+      "id": "M101",
+      "group": "new_native_flags",
+      "fixture": "Flag negative-zero, boolean, null,NaN, fraction or typed-array flags versus exact positive0/1 ordinary dense arrays.",
+      "expected": "New public source anomalies HOLD with located raw witness; never normalize -0 to+0. Historical original policy not silently tightened.",
+      "source": "P143,154-155,341"
+    },
+    {
+      "id": "M102",
+      "group": "value_flag_relation",
+      "fixture": "NaN+flag1; lum Infinity or-Infinity with either flag; finite including lum-0+flag0; NaN+positive0; finite+1.",
+      "expected": "First two classes integrityHOLD; finite-invalid and NaN-invalid retained; finite+1 valid. No zero-fill/skip-as-success/finite-range or fit clamp.",
+      "source": "P68-87,145-155"
+    },
+    {
+      "id": "M201",
+      "group": "constant_hook_failure",
+      "fixture": "Constant native statusok, then constant hook encode/write failure; outer query encounters resulting throw.",
+      "expected": "Constant native-ok remains actual observed fact, outer query may native-threw; public call threw, not returned. Preserve hook stage failure and later bounded outer event; no expected-success metadata substitution.",
+      "source": "S386-393,425-447"
+    },
+    {
+      "id": "M202",
+      "group": "query_hook_failure",
+      "fixture": "Query native statusok after computed answer, then its hook fails.",
+      "expected": "Nativeok does not imply public returned or callback encoded/persisted; public threw. No answer completion fabricated.",
+      "source": "S197-198,386-393,442-447"
+    },
+    {
+      "id": "M203",
+      "group": "postreturn_encode_failure",
+      "fixture": "Public call returned valid answer, answer encoder then fails.",
+      "expected": "Returnedtrue/threwfalse at public layer; answer encoded/persistedfalse; first output-stage failure preserved; no query retry or reinterpretation as native-threw.",
+      "source": "S442-447; M2 layer policy"
+    },
+    {
+      "id": "M204",
+      "group": "write_hash_binding",
+      "fixture": "Answer/callback/HOLD bytes fully or partly written, subsequent hash/close/readback fails.",
+      "expected": "Physical bytes/prefix acknowledged but no complete hash-bound artifact; firstcause preserved, bounded later errors, no overwrite/retry. HOLD complete never before binding.",
+      "source": "independent M2 persistence contract"
+    },
+    {
+      "id": "M205",
+      "group": "nested_failure_reserve",
+      "fixture": "Hook firstfailure plus outer native-exit hook failure and later private/source postcheck/manifest failure.",
+      "expected": "Firstcause stable; finite configured later-error limit and terminal-overflow marker; stop; reserve handles prescribed nested/finalization facts without recursively growing causes.",
+      "source": "S386-393/445-447; G1/M2"
+    },
+    {
+      "id": "M206",
+      "group": "callback_order_cache",
+      "fixture": "Expect constant seq1/parent0/depth1 capture0 before query seq0/parentnull/depth0 capture1; swaporder or answer emitscached while cachedfalse/keynull.",
+      "expected": "Record real observed metadata then integritySTOP; success requires computed1 independently of store-cache flags. Never reorder events or invent callbackargs.",
+      "source": "S188-199,376-393; K203-209"
+    },
+    {
+      "id": "D01",
+      "group": "empty_intersection",
+      "fixture": "Original and derived separately valid supports are disjoint, M0; individual denominators positive.",
+      "expected": "Paired fractions null/UNKNOWN, not0success or independently pooled denominator; outside-M support changes retained; internal inside/outside fractions remain UNKNOWN.",
+      "source": "P145-155; paired-support contract"
+    },
+    {
+      "id": "D02",
+      "group": "one_trace_identity",
+      "fixture": "CLI/visual has matching labels but a different traceHash/run/image/frame/trial/paramsHash, missing skip/error row, or recomputed diagnostic.",
+      "expected": "MATCH fails; all48 one-to-one row identities required; no query/refit/reselection/recomputation; separate renderer gate.",
+      "source": "independent same-trace acceptance constraint"
+    },
+    {
+      "id": "O01",
+      "group": "one_shot_crash",
+      "fixture": "Token/output collision or crash before/after dispatch/return/write/hash; token exists but final receipt absent.",
+      "expected": "TerminalHOLD/no retry/cleanup; durable intent is not proof of call entry/return/complete binding; unknown crash window stays UNKNOWN. No arbitrary crash-retention guarantee.",
+      "source": "one-shot boundary and M2 failure facts"
+    }
+  ],
+  "unresolved": [
+    "U1 final exact schemas/copy multiplicities",
+    "U2 bounded strings/paths/errors/number token policy",
+    "U3 exact absolute input/dependency roster and passes",
+    "U4 numeric per-role/total/native+encoded caps",
+    "U5 fixed/failure artifact roster and preallocated reserve bookkeeping",
+    "U6 precise one-shot/source/input/postcheck/crash order",
+    "U7 numeric wall/grace/raw and supported host enforcement"
+  ],
+  "actualExecution": 0
+}

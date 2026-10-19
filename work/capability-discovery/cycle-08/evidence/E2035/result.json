@@ -1,0 +1,59 @@
+{
+  "job_id": "E2035",
+  "worker_id": "S2",
+  "outcome": "mixed_change",
+  "summary": "The single authorized fabricated-only invocation passed all 45 registered tests with exit 0 and empty stderr. The 42 inherited tests were first executed here; the two prior focused RED cases and one new preservation control also passed. All four source pins remained unchanged. No original-data or producer admission is implied.",
+  "status": "ACTUAL_FABRICATED_GREEN_HOLD_FOR_INDEPENDENT_REVIEW",
+  "cwd": "/workspace/scratch/8528bb251845",
+  "argv": ["node", "--test", "--test-concurrency=1", "discovery-cycle07-checkpoint-admission/E2032/budget-contract.test.mjs", "discovery-cycle07-checkpoint-admission/E2032/m2-order-regression.test.mjs", "discovery-cycle07-checkpoint-admission/E2032/preconstant-preservation.test.mjs"],
+  "attempts": 1,
+  "environment": "Inherited unchanged, no environment or PATH assignments, non-login shell",
+  "actual": {
+    "start_utc": "2026-10-19T03:01:40.507190394Z",
+    "end_utc": "2026-10-19T03:01:40.826915039Z",
+    "exit_code": 0,
+    "signal": null,
+    "reporter": "Default spec-style output, not TAP serialization",
+    "tests": 45,
+    "suites": 0,
+    "pass": 45,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "reported_duration_ms": 254.199937,
+    "harness_import_or_baseline_errors": 0,
+    "stderr_bytes": 0,
+    "groups": {"inherited_first_execution": 42, "prior_focused_RED_cases": 2, "new_preconstant_preservation_control": 1},
+    "focused_reachability": "A1 and A2 passed their ordinary 31-event COMPLETE baseline controls, equal-count preconditions and final REFUSED assertions. The separate preconstant query-throw fixture passed its FAILED/THREW/postchecks OK and absent-constant assertions. This is inferred from unchanged synchronous test source and whole-test passing, not separate runtime instrumentation.",
+    "not_claimed": "The inherited 42 and new preservation control were not previously demonstrated RED. A single fabricated pass is not schema/dependency/phase closure, OS/RSS sufficiency, original-data integration or producer admission."
+  },
+  "source_pre_and_post_sha256_identical": {
+    "discovery-cycle07-checkpoint-admission/E2032/budget-contract.v2.mjs": "6adc5eea6b2b947e6a6c7282511cad9e07ee3c6d8ca63ef9d51c9e488d635a4f",
+    "discovery-cycle07-checkpoint-admission/E2032/budget-contract.test.mjs": "0327343f6fa5a88faffa9e5dbb967fe9b035906b155def5ce0859cb97392c7e4",
+    "discovery-cycle07-checkpoint-admission/E2032/m2-order-regression.test.mjs": "de13e4bafd772053a8150c527f38c809670552c822eeb240be5aec6b0eab6933",
+    "discovery-cycle07-checkpoint-admission/E2032/preconstant-preservation.test.mjs": "5a66379219ac8f906384925f653d7111547de9cd9cd4b55d9d88ae0a92093e18"
+  },
+  "capture_root": "/workspace/scratch/8528bb251845/discovery-cycle07-checkpoint-admission/E2035",
+  "captures": {
+    "prospective.json": {"bytes": 2223, "sha256": "e1e8334724205f1227246c165210725d2418eaf77592cd4d7cece1aef4a86b2f"},
+    "stdout.raw": {"bytes": 3558, "sha256": "aa47f03dc8a2be582d0c0b6b5d9b04cf0af43aced82ba0be76b7a80a7cb805ca"},
+    "stderr.raw": {"bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    "start-utc.raw": {"bytes": 31, "sha256": "8f828acd3421ca0b751d1f176765f064a1c44aec6253a1949e24e6b59f189f63"},
+    "end-utc.raw": {"bytes": 31, "sha256": "fbe3fc668fa0a3ae53ad87dedcb721757f194325127fccad09fea3c0b85ce15d"},
+    "exit.raw": {"bytes": 2, "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"},
+    "signal.raw": {"bytes": 5, "sha256": "38e0b9de817f645c4bec37c0d4a3e58baecccb040f5718dc069a72c7385a0bed"}
+  },
+  "capture_provenance": "Prospective saved before launch. Shell noclobber opened all six raw descriptors before invocation; stdout/stderr were redirected directly without filtering. UTC and actual exit were captured after the first invocation. Signal null corresponds to normal exit 0. Raw files were retained byte-exact, including empty stderr.",
+  "actual_scope": {
+    "node_test_invocations": 1,
+    "actual_imports": "Node test/assert and the pinned import-free pure budget-contract.v2.mjs via the three admitted fabricated test files",
+    "syntax_or_import_prechecks": 0,
+    "retries": 0,
+    "source_assertion_fixture_or_cap_edits": 0,
+    "codec_original_data_helper_store_PATH_query_CV_renderer_Git_operations": 0,
+    "repository_native_or_published_checkpoint_writes": 0,
+    "writes": "Only new E2035 prospective, six raw captures and this result receipt"
+  },
+  "remaining_hold": "STOP after this first outcome. Author does not independently accept the repair. Root and a different worker must review actual evidence before any further admission. Original inputs/producer remain unadmitted; artifactSchemas, dependencyPathSet and phaseImplementation remain unresolved. No repair, rerun, cap change or cleanup performed."
+}

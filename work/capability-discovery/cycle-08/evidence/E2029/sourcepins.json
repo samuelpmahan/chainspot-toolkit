@@ -1,0 +1,46 @@
+{
+  "schema": "cycle07-independent-g1-sourcepins@1",
+  "job_id": "E2029",
+  "worker": "S3",
+  "qualification": "Current source hashes and accepted small metadata only. Not fullsource22, original evidence hash/read/decode or E2028 review.",
+  "sources": [
+    {
+      "id": "P",
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/probes/width/vendor/active/ports/s6straight/pathSpace.mjs",
+      "sha256": "d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e",
+      "read": "68-87,140-158,331-347"
+    },
+    {
+      "id": "S",
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/probes/root-inventory/source/fg/store.mjs",
+      "sha256": "122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074",
+      "read": "147-172,188-219,361-367,373-447,494-501"
+    },
+    {
+      "id": "C",
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/station-evidence/codec.mjs",
+      "sha256": "3cba80fa24f1ff9ae30f5a24fbcc8c4b29944304a03447252d6172448fdd7015",
+      "read": "6-20,47-95,98-159"
+    },
+    {
+      "id": "K",
+      "path": "chainspot-discovery-lab/experiments/capability-discovery/joint-fit-original-plan/plan-core.mjs",
+      "sha256": "52ea18fd97e0112bd8aee255b73743a79bb2ab9842b0ec828314bff9c1c26ea5",
+      "read": "77-100,200-250; ENTRY_FIELDS source shape known from prior R2025 source review"
+    },
+    {
+      "id": "W_SUMMARY",
+      "path": "discovery-cycle07/S4/R2021/inspection-summary.json",
+      "sha256": "7aaa1b94166e2799c56b641c306a167abb7dc5b810eaf6c1cb8c1b1d5f976a2b",
+      "read": "complete plain accepted small metadata"
+    },
+    {
+      "id": "W_REVIEW",
+      "path": "discovery-cycle07/S4/R2021/review.md",
+      "sha256": "2bc7e6f3422d668ea4bfed50c064091bbfc90e74a536fbe2feb50dc25a7d8b1d",
+      "read": "fresh hash only here; skip identities from complete accepted review read during R2025, not new body decode"
+    }
+  ],
+  "bodyReadOrDecode": 0,
+  "E2028FilesRead": 0
+}

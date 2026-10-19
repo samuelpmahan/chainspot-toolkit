@@ -1,0 +1,116 @@
+// E2037B SOURCE CONSTRUCTION ONLY. Fixed one-shot byte copier; no project imports or Git calls.
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import assert from 'node:assert/strict';
+assert.equal(process.argv.length,2);
+const workspace='/workspace/scratch/8528bb251845';
+const repo=workspace+'/chainspot-discovery-lab';
+const own=workspace+'/discovery-cycle07-checkpoint-admission/E2037B';
+const mapPath=workspace+'/discovery-cycle07-checkpoint-admission/E2036/file-map.json';
+const mapSHA='7d7d8d033aa30611fb3d039d7b2516d6aa39402e075492279a22748406d86260';
+const manifestPath=workspace+'/discovery-cycle07-checkpoint-admission/E2037/manifest.preview.json';
+const manifestSHA='66437c565f0d35662b7f38ebe32b33224a47772b55b3cb1b802cdd9edb92977f';
+const productPrefix='experiments/capability-discovery/finite-trial-contract/';
+const evidencePrefix='work/capability-discovery/cycle-08/';
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+const blob=b=>crypto.createHash('sha1').update(Buffer.from(`blob ${b.length}\0`)).update(b).digest('hex');
+const compare=(a,b)=>a<b?-1:a>b?1:0;
+function safe(p){assert(typeof p==='string'&&p&&!path.isAbsolute(p));assert(p.split('/').every(s=>s&&s!=='.'&&s!=='..'));assert(!/[\\\x00-\x1f\x7f]/.test(p));return p;}
+function absent(p){try{fs.lstatSync(p);}catch(e){if(e.code==='ENOENT')return;throw e;}throw new Error('COLLISION '+p);}
+function parents(file,allowMissing=false){
+  const absolute=path.resolve(file);assert.equal(absolute,file);
+  let current=path.parse(file).root,missing=false;
+  for(const part of path.dirname(file).slice(current.length).split('/').filter(Boolean)){
+    current=path.join(current,part);if(missing)continue;
+    let s;try{s=fs.lstatSync(current);}catch(e){if(allowMissing&&e.code==='ENOENT'){missing=true;continue;}throw e;}
+    assert(s.isDirectory()&&!s.isSymbolicLink(),'ANCESTOR '+current);
+  }
+}
+function read(file,expected={}){
+  parents(file);const fd=fs.openSync(file,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);
+  try{
+    const a=fs.fstatSync(fd,{bigint:true});assert(a.isFile()&&a.nlink===1n);
+    const size=Number(a.size);assert(Number.isSafeInteger(size)&&size>=0);
+    if(expected.bytes!==undefined)assert.equal(size,expected.bytes,file+':size');
+    const body=Buffer.alloc(size);let offset=0;
+    while(offset<size){const n=fs.readSync(fd,body,offset,size-offset,null);assert(n>0,'EARLY_EOF');offset+=n;}
+    assert.equal(fs.readSync(fd,Buffer.alloc(1),0,1,null),0,'TRAILING_BYTES');
+    const z=fs.fstatSync(fd,{bigint:true});for(const k of ['dev','ino','size','mode','nlink','mtimeNs','ctimeNs'])assert.equal(z[k],a[k],file+':'+k);
+    const result={body,bytes:size,sha256:sha(body),gitBlobSHA1:blob(body),fullMode:a.mode.toString(8),permissions:(a.mode&0o7777n).toString(8)};
+    for(const k of ['bytes','sha256','gitBlobSHA1','fullMode','permissions'])if(expected[k]!==undefined)assert.equal(result[k],expected[k],file+':'+k);
+    return result;
+  }finally{fs.closeSync(fd);}
+}
+function metadata(r){const {body,...m}=r;return m;}
+function walk(dir){
+  const out=[];function visit(abs,rel=''){
+    const s=fs.lstatSync(abs);assert(s.isDirectory()&&!s.isSymbolicLink());
+    for(const name of fs.readdirSync(abs).sort(compare)){
+      if(!rel&&name==='.git')continue;
+      const p=path.join(abs,name),r=rel?rel+'/'+name:name,t=fs.lstatSync(p);assert(!t.isSymbolicLink());
+      if(t.isDirectory())visit(p,r);else{assert(t.isFile()&&t.nlink===1);out.push(r);}
+    }
+  }visit(dir);return out.sort(compare);
+}
+const mapRead=read(mapPath,{bytes:33633,sha256:mapSHA}),map=JSON.parse(mapRead.body);
+const preview=read(manifestPath,{bytes:31545,sha256:manifestSHA,permissions:'644'}),manifest=JSON.parse(preview.body);
+assert.equal(map.source_root,workspace);assert.equal(map.files.length,87);assert.equal(map.count,87);
+const expectedEntries=map.files.filter(f=>f.destination.startsWith(evidencePrefix)).map(f=>({path:f.destination.slice(evidencePrefix.length),sourcePath:f.source,bytes:f.bytes,sha256:f.sha256,sourceFullMode:'100'+f.source_posix_mode,copiedFullMode:'100'+f.proposed_posix_mode,gitProjectedMode:f.proposed_git_mode}));
+const expectedProducts=map.files.filter(f=>f.destination.startsWith(productPrefix)).map(f=>({path:f.destination,bytes:f.bytes,sha256:f.sha256,sourceFullMode:'100'+f.source_posix_mode,copiedFullMode:'100'+f.proposed_posix_mode,gitProjectedMode:f.proposed_git_mode}));
+assert.equal(expectedEntries.length,82);assert.equal(expectedProducts.length,5);
+assert.equal(manifest.sourceMapSHA256,mapSHA);assert.equal(manifest.manifestSelfExcluded,true);
+assert.deepEqual(manifest.files,expectedEntries);assert.deepEqual(manifest.productPins,expectedProducts);
+const rows=[...map.files,{source:'discovery-cycle07-checkpoint-admission/E2037/manifest.preview.json',destination:evidencePrefix+'manifest.json',bytes:31545,sha256:manifestSHA,source_posix_mode:'644',proposed_posix_mode:'644',proposed_git_mode:'100644'}];
+assert.equal(rows.length,88);assert.equal(new Set(rows.map(r=>r.destination)).size,88);
+assert.equal(rows.reduce((n,r)=>n+r.bytes,0),510780);
+// Reuse the already pinned old3375 + Lab7 additive382 metadata, not a new baseline framework.
+const baseline=JSON.parse(read(workspace+'/discovery-cycle07/S1/E2015/source-freeze.before.json',{bytes:866721,sha256:'0ed26380b6b39b6da944c358699f353657683bb338ebc1cc52fd6787d58d8a10'}).body);
+const prior=JSON.parse(read(workspace+'/discovery-cycle07-checkpoint-admission/E2026/commit-plan.v2.json',{bytes:146180,sha256:'4858425aebaf59bda5c5cada8aeb47be4a02152a22c329b087bd6bd3c14d2c6c'}).body);
+assert.equal(baseline.entries.length,3375);assert.equal(prior.candidates.length,382);
+const old=[...baseline.entries.map(e=>({path:e[0],bytes:e[3],sha256:e[4],gitBlobSHA1:e[2],fullMode:(0o100000|parseInt(e[5],8)).toString(8)})),...prior.candidates];
+assert.equal(new Set(old.map(r=>r.path)).size,3757);
+const auxiliary=[
+  {path:'.superpowers/sdd/.gitignore',bytes:2,sha256:'cdbcae15105d6b781e620813c79c7e868740d4e9cc53ce6f5fcbbc12387adf4b',fullMode:'100644'},
+  {path:'.superpowers/sdd/lenard5-implementation-plan/plan-path',bytes:81,sha256:'770a51ddd0990fa70b48ae0db46550b0bbd529215f33deaa669b4c871458f547',fullMode:'100644'},
+  {path:'.superpowers/sdd/lenard5-implementation-plan/progress.md',bytes:2595,sha256:'7a1c14bbb21423f2eacb76a19865c39f5d0c7021966482aba21c1e62c60f90b3',fullMode:'100644'}
+];
+assert.deepEqual(walk(repo),[...old.map(r=>r.path),...auxiliary.map(r=>r.path)].sort(compare));
+for(const r of auxiliary)read(repo+'/'+safe(r.path),r);
+for(const r of old)read(repo+'/'+safe(r.path),r);
+const gitFiles=['.git/HEAD','.git/refs/heads/codex/capability-discovery-lab','.git/index'];
+const beforeGit=gitFiles.map(p=>({path:p,...metadata(read(repo+'/'+p))}));
+assert.equal(read(repo+'/.git/HEAD').body.toString(),'ref: refs/heads/codex/capability-discovery-lab\n');
+assert.equal(read(repo+'/'+gitFiles[1]).body.toString(),'4371c7e2e5abfc0a1404be29b505c9398e8a6ff2\n');
+absent(repo+'/.git/index.lock');absent(own+'/copy-readback.json');
+parents(repo+'/'+productPrefix.slice(0,-1));parents(repo+'/'+evidencePrefix.slice(0,-1));
+absent(repo+'/'+productPrefix.slice(0,-1));absent(repo+'/'+evidencePrefix.slice(0,-1));
+// ALL88 source/ancestor/body/mode and ALL88 destination/ancestor/collision guards precede ANY copy/mkdir.
+const snapshots=rows.map(r=>{
+  safe(r.source);safe(r.destination);assert(r.source.startsWith('discovery-cycle07-checkpoint-admission/'));
+  assert(r.destination.startsWith(productPrefix)||r.destination.startsWith(evidencePrefix));
+  assert(['600','644'].includes(r.source_posix_mode));assert.equal(r.proposed_posix_mode,r.source_posix_mode);assert.equal(r.proposed_git_mode,'100644');
+  const target=repo+'/'+r.destination;parents(target,true);absent(target);
+  return read(workspace+'/'+r.source,{bytes:r.bytes,sha256:r.sha256,permissions:r.source_posix_mode});
+});
+const copied=[];
+for(let i=0;i<rows.length;i++){
+  const r=rows[i],target=repo+'/'+r.destination;let current=repo;
+  for(const part of path.dirname(r.destination).split('/')){
+    current=path.join(current,part);try{const s=fs.lstatSync(current);assert(s.isDirectory()&&!s.isSymbolicLink());}catch(e){if(e.code!=='ENOENT')throw e;fs.mkdirSync(current,{mode:0o755});}
+  }
+  parents(target);absent(target);
+  const fd=fs.openSync(target,fs.constants.O_WRONLY|fs.constants.O_CREAT|fs.constants.O_EXCL|fs.constants.O_NOFOLLOW,parseInt(r.proposed_posix_mode,8));
+  try{let n=0;while(n<snapshots[i].body.length){const wrote=fs.writeSync(fd,snapshots[i].body,n,snapshots[i].body.length-n);assert(wrote>0);n+=wrote;}fs.fchmodSync(fd,parseInt(r.proposed_posix_mode,8));}finally{fs.closeSync(fd);}
+  const actual=metadata(read(target,{bytes:r.bytes,sha256:r.sha256,fullMode:snapshots[i].fullMode}));
+  copied.push({path:r.destination,sourcePath:r.source,...actual,gitProjectedMode:'100644'});
+}
+for(let i=0;i<rows.length;i++)read(workspace+'/'+rows[i].source,{bytes:rows[i].bytes,sha256:rows[i].sha256,fullMode:snapshots[i].fullMode});
+for(const r of old)read(repo+'/'+r.path,r);
+for(const r of auxiliary)read(repo+'/'+safe(r.path),r);
+for(const r of beforeGit)read(repo+'/'+r.path,r);
+absent(repo+'/.git/index.lock');
+assert.deepEqual(walk(repo),[...old.map(r=>r.path),...auxiliary.map(r=>r.path),...rows.map(r=>r.destination)].sort(compare));
+const result={schema:'cycle08-e2037b-one-copy-readback@2',job_id:'E2037B',worker:'S1',status:'COPIED_NOT_TESTED_AUDITED_STAGED_COMMITTED_OR_PUBLISHED',sourceMapSHA256:mapSHA,manifestSHA256:manifestSHA,originalMapFiles:87,originalMapBytes:479235,newManifestFiles:1,newManifestBytes:31545,copiedFiles:88,copiedBytes:510780,productFiles:5,evidenceFilesIncludingManifest:83,priorFilesPreserved:3757,auxiliaryFilesPreserved:3,auxiliaryMetadata:auxiliary,predictedWorkingFilesObserved:3848,oldGitMetadataBefore:beforeGit,oldGitMetadataUnchanged:true,files:copied,qualification:'Builtin byte-copy/opaque check-time readback only; no Git command/index refresh, source chmod or module/test/codec/native-value/CV operation. No atomic/fsync/host/race/crash guarantee; failed prefix retained without retry/cleanup.'};
+fs.writeFileSync(own+'/copy-readback.json',JSON.stringify(result,null,2)+'\n',{flag:'wx',mode:0o644});
+console.log(JSON.stringify({copiedFiles:88,copiedBytes:510780,sourceMapSHA256:mapSHA,manifestSHA256:manifestSHA,old3757Preserved:true,GitMetadataUnchanged:true,tests:0,GitCommands:0}));

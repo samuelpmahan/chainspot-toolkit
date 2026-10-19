@@ -1,0 +1,62 @@
+--- discovery-cycle07-checkpoint-admission/E2028/budget-contract.v1.mjs	2026-10-19 05:31:57.522279732 +0300
++++ discovery-cycle07-checkpoint-admission/E2032/budget-contract.v2.mjs	2026-10-19 05:55:38.740913936 +0300
+@@ -155,6 +155,7 @@
+         if(publicCall!=='ENTERED'||hooks[e.role].native!=='NOT_OBSERVED'||!['ok','threw'].includes(e.status))fail('NATIVE_EXIT_STATE');
+         const c=e.role==='constant';if(!Object.is(e.seq,c?1:0)||!Object.is(e.parent,c?0:null)||!Object.is(e.depth,c?1:0)||!Object.is(e.captureIndex,nativeCount))fail('NATIVE_IDENTITY_ORDER');
+         if(c&&hooks.query.native!=='NOT_OBSERVED')fail('CONSTANT_AFTER_QUERY');
++        if(!c&&hooks.constant.native!=='NOT_OBSERVED'&&hooks.constant.terminal==='NOT_OBSERVED')fail('QUERY_BEFORE_CONSTANT_HOOK_TERMINAL');
+         hooks[e.role].native=e.status;hooks[e.role].seq=e.seq;hooks[e.role].captureIndex=e.captureIndex;nativeCount++;continue;
+       }
+       if(hookEvent){
+@@ -184,7 +185,7 @@
+         else {if(a.write!=='OK')fail('HASH_WITHOUT_WRITE');a.hash=transition(a.hash,e.type.slice(5));}
+         a.bound=a.write==='OK'&&a.hash==='OK';continue;
+       }
+-      if(e.type.startsWith('POSTCHECK_')){postchecks=transition(postchecks,e.type.slice(10));continue;}
++      if(e.type.startsWith('POSTCHECK_')){if(!['RETURNED','THREW'].includes(publicCall))fail('POSTCHECK_BEFORE_PUBLIC_TERMINAL');postchecks=transition(postchecks,e.type.slice(10));continue;}
+       fail('UNHANDLED_EVENT');
+     }
+     const firstFailure=failures[0]??null,laterFailures=failures.slice(1);
+--- discovery-cycle07-checkpoint-admission/E2028/budget-contract.test.mjs	2026-10-19 05:31:55.630252095 +0300
++++ discovery-cycle07-checkpoint-admission/E2032/budget-contract.test.mjs	2026-10-19 05:55:35.736893536 +0300
+@@ -1,7 +1,7 @@
+ // E2028 tests FIRST, authored UNEXECUTED. No loader/codec/store/query/real input capability.
+ import test from 'node:test';
+ import assert from 'node:assert/strict';
+-import { assessBudget, reserveCall, stationState, eventFacts, pairedDiagnostic, matchTraceIdentity } from './budget-contract.v1.mjs';
++import { assessBudget, reserveCall, stationState, eventFacts, pairedDiagnostic, matchTraceIdentity } from './budget-contract.v2.mjs';
+ 
+ // These bounds are FABRICATED assumptions, not proofs of any actual producer schema.
+ function fixture() {
+--- discovery-cycle07-checkpoint-admission/E2030/m2-order-regression.test.mjs	2026-10-19 05:47:58.108158985 +0300
++++ discovery-cycle07-checkpoint-admission/E2032/m2-order-regression.test.mjs	2026-10-19 05:55:37.100902799 +0300
+@@ -1,7 +1,7 @@
+ // E2030: two tests FIRST, UNEXECUTED, against the exact unchanged E2028 core.
+ import test from 'node:test';
+ import assert from 'node:assert/strict';
+-import { eventFacts } from '../E2028/budget-contract.v1.mjs';
++import { eventFacts } from './budget-contract.v2.mjs';
+ 
+ // Explicit tiny all-success vocabulary; no old test import or original input/capability.
+ const event=(type,role=null,status=null)=>({type,role,status,seq:null,parent:null,depth:null,captureIndex:null,errorCode:null,errorText:null});
+--- /dev/null	2026-10-18 03:35:30.931000043 +0300
++++ discovery-cycle07-checkpoint-admission/E2032/preconstant-preservation.test.mjs	2026-10-19 05:55:39.584919667 +0300
+@@ -0,0 +1,18 @@
++// E2032 optional single preservation control, authored UNEXECUTED; no store or original inputs.
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import { eventFacts } from './budget-contract.v2.mjs';
++
++const event=(type,role=null)=>({type,role,status:null,seq:null,parent:null,depth:null,captureIndex:null,
++  errorCode:type==='PUBLIC_THROW'?'E_PRECONSTANT':null,errorText:type==='PUBLIC_THROW'?'preconstant failure':null});
++test('source-supported preconstant query throw needs no invented constant and allows failure postchecks',()=>{
++  const events=[event('INTENT'),event('PUBLIC_ENTER'),
++    {...event('NATIVE_EXIT','query'),status:'threw',seq:0,parent:null,depth:0,captureIndex:0,errorCode:'E_PRECONSTANT',errorText:'preconstant failure'},
++    event('HOOK_ENTER','query'),event('HOOK_ENCODE_START','query'),event('HOOK_ENCODE_OK','query'),event('HOOK_RETURN','query'),
++    event('PUBLIC_THROW'),event('POSTCHECK_START'),event('POSTCHECK_OK')];
++  const r=eventFacts(events,{termination:'NORMAL'});
++  assert.equal(r.status,'FAILED');assert.equal(r.publicCall,'THREW');assert.equal(r.postchecks,'OK');
++  assert.equal(r.hooks.constant.native,'NOT_OBSERVED');assert.equal(r.hooks.constant.entered,false);
++  assert.equal(r.hooks.query.captureIndex,0);assert.equal(r.artifacts.answer.bound,false);
++  assert.equal(r.firstFailure.type,'NATIVE_EXIT');assert.equal(r.firstFailure.code,'E_PRECONSTANT');
++});

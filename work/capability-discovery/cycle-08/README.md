@@ -1,0 +1,11 @@
+# Cycle-08 — pure finite contract evidence
+
+PROPOSED additive archive, not a trial packet. Product target: `experiments/capability-discovery/finite-trial-contract/`. Exact selected mapping, byte hashes and modes are recorded in the E2036 proposal; historical source files are copied byte-exact, but all archived `.mjs` names gain `.txt` to prevent test-glob execution. Only the separate product core/three drivers remain runnable.
+
+Chronology: E2025/R2025 established source-only HOLD and M1/M2 requirements. E2029 provided independent constraints, not a final ledger. E2028 authored a pure checker/42 tests and unresolved candidate ledger. R2028 AMEND identified two temporal gaps. E2030 authored focused two-case tests; E2031 observed their first actual RED (2 failed after baseline controls). E2032 made only two ordering repairs and one preservation control. E2035 author run passed 45; R2035 separately reviewed and ran the same 45 successfully. No all-45 prior RED, exhaustive coverage, original trial or producer claim.
+
+The immutable raw receipts, including empty streams and historical worker_id spelling, are preserved. A separate root envelope supplies native worker identity; this was preflight normalization, not a native rejection. Native solve/receipt records are capture-time assignment/completion evidence, not proof of continuously active worker processes. A later snapshot/document is not retroactive R2035 review.
+
+All three real critical proofs remain UNRESOLVED: artifactSchemas, dependencyPathSet, phaseImplementation. The historical ledger is an inert unresolved example, not a loaded product config. OS/RSS/cap sufficiency, full schemas/copy/serialization bounds, producer/science and real queries remain HOLD. E2033/E2034/R2034 are excluded from this checkpoint selection, not silently accepted through references in historical text.
+
+This archive and its README are proposed in E2036 after R2035; R2035 did not review or adopt this package. Root must select exact final pins and authorize S1 separately; one relocation run plus independent exact file audit precede ordinary commit and existing connected publication. Preserve every prior tracked path/body/mode. No default-ON, main merge or deployment.

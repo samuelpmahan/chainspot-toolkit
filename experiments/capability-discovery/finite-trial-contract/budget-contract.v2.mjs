@@ -1,0 +1,239 @@
+/** E2028 pure contract only. IMPORT-FREE: no loader, codec, token, writer, store or producer. UNEXECUTED. */
+const fail=code=>{throw new Error(code);};
+function exact(o,keys){
+  if(!o||Object.getPrototypeOf(o)!==Object.prototype)fail('ORDINARY_RECORD');
+  const names=Reflect.ownKeys(o);
+  if(names.length!==keys.length||names.some(k=>typeof k!=='string'||!keys.includes(k)))fail('RECORD_FIELDS');
+  for(const k of keys){const d=Object.getOwnPropertyDescriptor(o,k);if(!d||!Object.hasOwn(d,'value')||!d.enumerable||d.value===undefined)fail('DATA_FIELDS');}
+}
+function dense(a,max){
+  if(!Array.isArray(a)||Object.getPrototypeOf(a)!==Array.prototype||a.length>max||Reflect.ownKeys(a).length!==a.length+1)fail('DENSE_ARRAY');
+  for(let i=0;i<a.length;i++){const d=Object.getOwnPropertyDescriptor(a,String(i));if(!d||!Object.hasOwn(d,'value')||!d.enumerable)fail('ARRAY_DATA');}
+  return a;
+}
+function uint(n){if(!Number.isSafeInteger(n)||n<0||Object.is(n,-0))fail('SAFE_NONNEGATIVE_INTEGER');return n;}
+function positive(n){uint(n);if(n===0)fail('POSITIVE_INTEGER');return n;}
+function add(a,b){uint(a);uint(b);return uint(a+b);}
+function mul(a,b){uint(a);uint(b);return uint(a*b);}
+function sameArray(a,b){dense(a,b.length);if(a.length!==b.length||a.some((x,i)=>!Object.is(x,b[i])))fail('CLOSED_LIST');}
+function text(s,max){if(typeof s!=='string'||s.length<1||s.length>max)fail('BOUNDED_STRING');return s;}
+const rejected=e=>({status:'REFUSED',reason:e instanceof Error?e.message:'CONTRACT_FAILURE'});
+const COUNTS={slots:48,eligible:44,skips:4,shortCalls:33,longCalls:11,stationsPerSide:1056,callbacks:88,args:10,liveStores:1};
+const PINS={pathSpace:'d0fb2bf5076a386a5c362b8fe034ab49ba5318fda2bd21eb74d30334ed6a105e',
+  store:'122d624e0311e18f596db37bf292d9c31f47a364e75c8808ca6788c3449a3074',
+  core:'52ea18fd97e0112bd8aee255b73743a79bb2ab9842b0ec828314bff9c1c26ea5',
+  plan:'e1471209d9e91a885effb096fb052ac7a0ea61f42d07f348fa4856b3997dc7b5',
+  review:'a0f8ee27b4a92507240af60e5a88c9f54e8584e10786f6b1a77a4280be5e396b'};
+const ARGS=['raster','mask','originPx','phiRad','t0Px','t1Px','stepPx','widthPx','bandPx','alongPx'];
+const READ_LAYOUT=[['source22',22,32768,3],['producer',4,262144,3],['metadata',8,131072,2],
+  ['plan',1,617401,2],['png',1,3943106,2],['rgba',1,14427360,2],['mask',1,3606840,2]];
+const ARTIFACTS=[['originalPlan',1],['answers',44],['callbacks',88],['trace',1],['sidecar',1],['cli',1],
+  ['manifest',1],['firstFailure',1],['hold',1],['stdout',1],['stderr',1],['receipt',1],['ledger',1],['token',1]];
+const ORDER=['PREFLIGHT_METADATA','CONSUME_NEW_TOKEN','CREATE_NEW_OUTPUT','RESERVE_ALL_OUTPUT','ALLOCATE_PRIVATE','PUBLIC_ENTER'];
+const PROOFS=['artifactSchemas','dependencyPathSet','phaseImplementation'];
+const POLICY=['maxReadBytes','maxReadPasses','maxOutputBytes','maxArtifactCount','maxPrivateCopyBytes','maxHashBytes',
+  'maxSelectedPayloadBytes','maxValueNodesTotal','maxEncodedNodesTotal','maxValueNodesPerArtifact','maxEncodedNodesPerArtifact',
+  'maxValueDepth','maxEncodedDepth','maxIdentifier','maxPath','maxError','maxWallMs','maxGraceMs','maxStreamBytes'];
+
+/** Conditional arithmetic only. FABRICATED_ASSUMPTION is not evidence, authentication or producer authority. */
+export function assessBudget(l,p){
+  try{
+    exact(l,['schema','scope','pins','skipSlots','argumentKeys','counts','strings','planes','copies','hashes','reads','artifacts','reserve','ordering','os','proofs']);
+    if(l.schema!=='cycle07-budget-ledger@1'||l.scope!=='FABRICATED_CONTRACT_ONLY')fail('FABRICATED_SCOPE_ONLY');
+    exact(p,['schema',...POLICY]);if(p.schema!=='cycle07-budget-policy@1')fail('POLICY_SCHEMA');for(const k of POLICY)positive(p[k]);
+    exact(l.pins,Object.keys(PINS));for(const k of Object.keys(PINS))if(l.pins[k]!==PINS[k])fail('FIXED_PIN');
+    sameArray(l.skipSlots,[5,11,26,41]);sameArray(l.argumentKeys,ARGS);sameArray(l.ordering,ORDER);
+    exact(l.counts,Object.keys(COUNTS));for(const k of Object.keys(COUNTS))if(uint(l.counts[k])!==COUNTS[k])fail('FIXED_COUNT');
+    exact(l.strings,['identifier','path','error']);for(const k of ['identifier','path','error'])positive(l.strings[k]);
+    if(l.strings.identifier>p.maxIdentifier||l.strings.path>p.maxPath||l.strings.error>p.maxError)fail('STRING_CAP');
+    exact(l.planes,['rgbaBytes','maskBytes','luminanceBytes','canonicalBytes','maxN']);
+    const planes={rgbaBytes:14427360,maskBytes:3606840,luminanceBytes:28854720,canonicalBytes:18034200,maxN:48};
+    for(const k of Object.keys(planes))if(uint(l.planes[k])!==planes[k])fail('PLANE_FACT');
+    exact(l.copies,['rgba','mask','luminanceAllocations']);if(l.copies.rgba!==44||l.copies.mask!==11||l.copies.luminanceAllocations!==44)fail('COPY_COUNT');
+    exact(l.hashes,['privatePasses','canonicalPasses','artifactPasses']);
+    if(l.hashes.privatePasses!==3||l.hashes.canonicalPasses!==2||l.hashes.artifactPasses!==2)fail('HASH_PASSES');
+    dense(l.reads,7);if(l.reads.length!==7)fail('READ_SET');let inputReadBytes=0,inputReadPasses=0;
+    for(let i=0;i<7;i++){
+      const r=l.reads[i],[id,files,bytesPerFile,passes]=READ_LAYOUT[i];exact(r,['id','files','bytesPerFile','passes']);
+      if(r.id!==id||r.files!==files||r.bytesPerFile!==bytesPerFile||r.passes!==passes)fail('READ_LAYOUT');
+      inputReadBytes=add(inputReadBytes,mul(mul(r.files,r.passes),r.bytesPerFile));inputReadPasses=add(inputReadPasses,mul(r.files,r.passes));
+    }
+    dense(l.artifacts,14);if(l.artifacts.length!==14)fail('ARTIFACT_SET');
+    let outputBytes=0,artifactCount=0,readbackBytes=0,readbackPasses=0,valueNodes=0,encodedNodes=0,failureBytes=0;
+    for(let i=0;i<14;i++){
+      const a=l.artifacts[i];exact(a,['id','count','bytes','valueNodes','encodedNodes','valueDepth','encodedDepth','copies','readbacks']);
+      if(a.id!==ARTIFACTS[i][0]||a.count!==ARTIFACTS[i][1]||a.copies!==1||a.readbacks!==1)fail('ARTIFACT_ID_COUNT_COPY');
+      for(const k of ['bytes','valueNodes','encodedNodes','valueDepth','encodedDepth'])positive(a[k]);
+      if(a.valueNodes>p.maxValueNodesPerArtifact||a.encodedNodes>p.maxEncodedNodesPerArtifact||a.valueDepth>p.maxValueDepth||a.encodedDepth>p.maxEncodedDepth)fail('ARTIFACT_TREE_CAP');
+      const bytes=mul(mul(a.count,a.copies),a.bytes);outputBytes=add(outputBytes,bytes);artifactCount=add(artifactCount,mul(a.count,a.copies));
+      readbackBytes=add(readbackBytes,mul(bytes,a.readbacks));readbackPasses=add(readbackPasses,mul(mul(a.count,a.copies),a.readbacks));
+      valueNodes=add(valueNodes,mul(mul(a.count,a.copies),a.valueNodes));encodedNodes=add(encodedNodes,mul(mul(a.count,a.copies),a.encodedNodes));
+      if(['firstFailure','hold','stderr'].includes(a.id))failureBytes=add(failureBytes,bytes);
+      if(['stdout','stderr'].includes(a.id)&&a.bytes>p.maxStreamBytes)fail('STREAM_ARTIFACT_CAP');
+    }
+    const privateCopyBytes=add(mul(44,planes.rgbaBytes),mul(11,planes.maskBytes));
+    const readBytes=add(inputReadBytes,readbackBytes),readPasses=add(inputReadPasses,readbackPasses);
+    const hashBytes=add(add(inputReadBytes,mul(3,privateCopyBytes)),add(mul(2,planes.canonicalBytes),mul(2,outputBytes)));
+    // Selected typed payload only: canonical + private masked planes/lum + contrast/ts/ins/da.
+    const selectedPayloadBytes=add(add(planes.canonicalBytes,add(add(planes.rgbaBytes,planes.maskBytes),planes.luminanceBytes)),add(mul(26,planes.maxN),80));
+    const totals={inputReadBytes,inputReadPasses,outputBytes,artifactCount,readbackBytes,readbackPasses,readBytes,readPasses,
+      privateCopyBytes,hashBytes,selectedPayloadBytes,valueNodes,encodedNodes};
+    for(const [n,cap]of [['readBytes','maxReadBytes'],['readPasses','maxReadPasses'],['outputBytes','maxOutputBytes'],['artifactCount','maxArtifactCount'],
+      ['privateCopyBytes','maxPrivateCopyBytes'],['hashBytes','maxHashBytes'],['selectedPayloadBytes','maxSelectedPayloadBytes'],
+      ['valueNodes','maxValueNodesTotal'],['encodedNodes','maxEncodedNodesTotal']])if(totals[n]>p[cap])fail('CAP_'+n);
+    exact(l.reserve,['successBytes','firstFailurePrefixBytes','availableBytes']);
+    if(l.reserve.successBytes!==outputBytes-failureBytes||l.reserve.firstFailurePrefixBytes!==failureBytes||l.reserve.availableBytes!==p.maxOutputBytes)fail('RESERVE_DECLARATION');
+    const reservation=reserveCall({remaining:l.reserve.availableBytes,success:l.reserve.successBytes,firstFailure:failureBytes});
+    if(reservation.status!=='RESERVED')fail('RESERVE_DEFICIT');
+    exact(l.os,['wallMs','graceMs','stdoutBytes','stderrBytes','rss','hostRace']);
+    for(const k of ['wallMs','graceMs','stdoutBytes','stderrBytes'])positive(l.os[k]);
+    if(l.os.wallMs>p.maxWallMs||l.os.graceMs>p.maxGraceMs||l.os.graceMs>l.os.wallMs||l.os.stdoutBytes>p.maxStreamBytes||l.os.stderrBytes>p.maxStreamBytes)fail('OS_POLICY_CAP');
+    if(l.os.rss!=='UNSUPPORTED'||l.os.hostRace!=='UNSUPPORTED')fail('UNSUPPORTED_OS_CLAIM');
+    if(p.maxValueDepth>32||p.maxValueNodesPerArtifact>500000)fail('PINNED_CODEC_HARD_CEILING');
+    exact(l.proofs,PROOFS);const unresolved=[];
+    for(const k of PROOFS){if(l.proofs[k]==='UNRESOLVED')unresolved.push(k);else if(l.proofs[k]!=='FABRICATED_ASSUMPTION')fail('PROOF_STATE');}
+    return {status:unresolved.length?'UNRESOLVED':'ADMISSIBLE_FOR_FABRICATED',unresolved,totals,reservation,producerAdmitted:false,
+      scope:'Conditional policy arithmetic, not artifact-schema proof, runtime enforcement, actual input passage or RSS guarantee'};
+  }catch(e){return rejected(e);}
+}
+
+/** No callback argument exists: this cannot enter any real or mocked public query. */
+export function reserveCall(r){try{exact(r,['remaining','success','firstFailure']);uint(r.remaining);uint(r.success);positive(r.firstFailure);
+  const required=add(r.success,r.firstFailure);if(required>r.remaining)fail('RESERVE_DEFICIT');
+  return {status:'RESERVED',required,remainingAfter:r.remaining-required};}catch(e){return rejected(e);}}
+
+/** M1: original grammar and new source-consistency policy are distinct facts; raw primitives are never normalized. */
+export function stationState(v){
+  try{
+    exact(v,['role','j','side','k','lum','flag']);if(!['original','derived'].includes(v.role))fail('STATION_ROLE');
+    uint(v.j);uint(v.k);const N=Math.floor(v.j/3)%4===3?48:16;
+    if(v.j>47||v.k>=N||!['left','right'].includes(v.side))fail('STATION_LOCATION');
+    for(const x of [v.lum,v.flag])if(x!==null&&!['number','boolean'].includes(typeof x)&&(typeof x!=='string'||x.length>128))fail('UNBOUNDED_STATION_VALUE');
+    const grammarAccepted=typeof v.lum==='number'&&typeof v.flag==='number'&&(v.flag===0||v.flag===1);
+    const raw={role:v.role,j:v.j,side:v.side,k:v.k,lum:v.lum,flag:v.flag};let code=null;
+    if(typeof v.lum!=='number')code='LUMINANCE_TYPE';
+    else if(typeof v.flag!=='number'||(v.flag!==0&&v.flag!==1))code='FLAG_TYPE_OR_VALUE';
+    else if(Object.is(v.flag,-0))code='FLAG_NEGATIVE_ZERO';
+    else if(v.lum===Infinity||v.lum===-Infinity)code='CONTRAST_INFINITY';
+    else if(Number.isNaN(v.lum)&&Object.is(v.flag,1))code='NAN_VALID';
+    const policy=v.role==='original'&&['FLAG_NEGATIVE_ZERO','NAN_VALID'].includes(code)?'ADDED_ORIGINAL_CONSISTENCY_REVIEW':'PINNED_SOURCE_CONSISTENCY';
+    if(code)return {status:'HOLD',code,grammarAccepted:v.role==='derived'&&Object.is(v.flag,-0)?false:grammarAccepted,policy,raw};
+    return {status:'RETAIN',state:Number.isNaN(v.lum)?'NAN_INVALID':v.flag===1?'VALID':'FINITE_INVALID',grammarAccepted,policy,raw};
+  }catch(e){return rejected(e);}
+}
+
+const EVENT_KEYS=['type','role','status','seq','parent','depth','captureIndex','errorCode','errorText'];
+const EVENT_TYPES=['INTENT','PUBLIC_ENTER','PUBLIC_RETURN','PUBLIC_THROW','NATIVE_EXIT','HOOK_ENTER','HOOK_RETURN','HOOK_THROW',
+  'HOOK_ENCODE_START','HOOK_ENCODE_OK','HOOK_ENCODE_FAIL','ANSWER_VALIDATE_START','ANSWER_VALIDATE_OK','ANSWER_VALIDATE_FAIL',
+  'ANSWER_ENCODE_START','ANSWER_ENCODE_OK','ANSWER_ENCODE_FAIL','WRITE_START','WRITE_OK','WRITE_FAIL','HASH_START','HASH_OK','HASH_FAIL',
+  'POSTCHECK_START','POSTCHECK_OK','POSTCHECK_FAIL'];
+/** M2 records are bounded projected facts, not dynamic args or complete nativeEntry evidence. */
+export function eventFacts(events,options){
+  try{
+    exact(options,['termination']);if(!['NORMAL','CRASH'].includes(options.termination))fail('TERMINATION');dense(events,96);
+    let intent=false,publicCall='NOT_ATTEMPTED',answerValidate='NOT_STARTED',answerEncode='NOT_STARTED',postchecks='NOT_STARTED',nativeCount=0;
+    const hook=()=>({native:'NOT_OBSERVED',seq:null,captureIndex:null,entered:false,encode:'NOT_STARTED',terminal:'NOT_OBSERVED'});
+    const hooks={constant:hook(),query:hook()},artifacts={};for(const role of ['constant','query','answer'])artifacts[role]={write:'NOT_STARTED',hash:'NOT_STARTED',bound:false};
+    const failures=[];
+    const transition=(old,tag)=>{if(tag==='START'){if(old!=='NOT_STARTED')fail('DUPLICATE_START');return 'STARTED';}
+      if(old!=='STARTED')fail('TERMINAL_WITHOUT_START');return tag;};
+    for(let index=0;index<events.length;index++){
+      const e=events[index];exact(e,EVENT_KEYS);if(!EVENT_TYPES.includes(e.type))fail('EVENT_TYPE');
+      const isNative=e.type==='NATIVE_EXIT',bad=/_FAIL$|_THROW$/.test(e.type)||(isNative&&e.status==='threw');
+      if(bad){text(e.errorCode,64);if(typeof e.errorText!=='string'||e.errorText.length>4096)fail('BOUNDED_ERROR_TEXT');
+        failures.push({index,type:e.type,role:e.role,code:e.errorCode,message:e.errorText});if(failures.length>13)fail('LATER_FAILURE_CAP');}
+      else if(e.errorCode!==null||e.errorText!==null)fail('UNEXPECTED_ERROR');
+      if(!isNative&&[e.status,e.seq,e.parent,e.depth,e.captureIndex].some(x=>x!==null))fail('NON_NATIVE_FIELDS');
+      const hookEvent=e.type.startsWith('HOOK_'),artifactEvent=e.type.startsWith('WRITE_')||e.type.startsWith('HASH_');
+      if((isNative||hookEvent)&&!['constant','query'].includes(e.role))fail('HOOK_ROLE');
+      if(artifactEvent&&!['constant','query','answer'].includes(e.role))fail('ARTIFACT_ROLE');
+      if(!isNative&&!hookEvent&&!artifactEvent&&e.role!==null)fail('UNEXPECTED_ROLE');
+      if(e.type==='INTENT'){if(intent||index!==0)fail('INTENT_ORDER');intent=true;continue;}
+      if(!intent)fail('NO_INTENT');
+      if(e.type==='PUBLIC_ENTER'){if(publicCall!=='NOT_ATTEMPTED')fail('PUBLIC_ENTRY');publicCall='ENTERED';continue;}
+      if(isNative){
+        if(publicCall!=='ENTERED'||hooks[e.role].native!=='NOT_OBSERVED'||!['ok','threw'].includes(e.status))fail('NATIVE_EXIT_STATE');
+        const c=e.role==='constant';if(!Object.is(e.seq,c?1:0)||!Object.is(e.parent,c?0:null)||!Object.is(e.depth,c?1:0)||!Object.is(e.captureIndex,nativeCount))fail('NATIVE_IDENTITY_ORDER');
+        if(c&&hooks.query.native!=='NOT_OBSERVED')fail('CONSTANT_AFTER_QUERY');
+        if(!c&&hooks.constant.native!=='NOT_OBSERVED'&&hooks.constant.terminal==='NOT_OBSERVED')fail('QUERY_BEFORE_CONSTANT_HOOK_TERMINAL');
+        hooks[e.role].native=e.status;hooks[e.role].seq=e.seq;hooks[e.role].captureIndex=e.captureIndex;nativeCount++;continue;
+      }
+      if(hookEvent){
+        const h=hooks[e.role];if(publicCall!=='ENTERED'||h.native==='NOT_OBSERVED')fail('HOOK_BEFORE_NATIVE');
+        if(e.type==='HOOK_ENTER'){if(h.entered)fail('HOOK_REENTRY');h.entered=true;continue;}
+        if(!h.entered||h.terminal!=='NOT_OBSERVED')fail('HOOK_TERMINAL_STATE');
+        if(e.type.startsWith('HOOK_ENCODE_'))h.encode=transition(h.encode,e.type.slice(12));
+        else if(e.type==='HOOK_RETURN'){if(h.encode!=='OK')fail('HOOK_RETURN_WITHOUT_ENCODE');h.terminal='RETURNED';}
+        else if(e.type==='HOOK_THROW')h.terminal='THREW';
+        continue;
+      }
+      if(e.type==='PUBLIC_RETURN'||e.type==='PUBLIC_THROW'){
+        if(publicCall!=='ENTERED')fail('PUBLIC_TERMINAL');
+        if(e.type==='PUBLIC_RETURN'&&(['constant','query'].some(r=>hooks[r].native!=='ok'||hooks[r].terminal!=='RETURNED')))fail('FALSE_PUBLIC_SUCCESS');
+        publicCall=e.type==='PUBLIC_RETURN'?'RETURNED':'THREW';continue;
+      }
+      if(e.type.startsWith('ANSWER_VALIDATE_')){
+        if(publicCall!=='RETURNED')fail('VALIDATE_WITHOUT_RETURN');answerValidate=transition(answerValidate,e.type.slice(16));continue;
+      }
+      if(e.type.startsWith('ANSWER_ENCODE_')){
+        if(publicCall!=='RETURNED'||answerValidate!=='OK')fail('ENCODE_WITHOUT_VALIDATION');answerEncode=transition(answerEncode,e.type.slice(14));continue;
+      }
+      if(artifactEvent){
+        const a=artifacts[e.role],encoded=e.role==='answer'?answerEncode:hooks[e.role].encode;
+        if(encoded!=='OK')fail('WRITE_WITHOUT_ENCODING');
+        if(e.type.startsWith('WRITE_'))a.write=transition(a.write,e.type.slice(6));
+        else {if(a.write!=='OK')fail('HASH_WITHOUT_WRITE');a.hash=transition(a.hash,e.type.slice(5));}
+        a.bound=a.write==='OK'&&a.hash==='OK';continue;
+      }
+      if(e.type.startsWith('POSTCHECK_')){if(!['RETURNED','THREW'].includes(publicCall))fail('POSTCHECK_BEFORE_PUBLIC_TERMINAL');postchecks=transition(postchecks,e.type.slice(10));continue;}
+      fail('UNHANDLED_EVENT');
+    }
+    const firstFailure=failures[0]??null,laterFailures=failures.slice(1);
+    if(options.termination==='CRASH'){
+      if(['NOT_ATTEMPTED','ENTERED'].includes(publicCall))publicCall='UNKNOWN';
+      for(const h of Object.values(hooks)){if(h.native==='NOT_OBSERVED')h.native='UNKNOWN';if(!h.entered)h.entered=null;
+        if(['NOT_STARTED','STARTED'].includes(h.encode))h.encode='UNKNOWN';if(h.terminal==='NOT_OBSERVED')h.terminal='UNKNOWN';}
+      for(const a of Object.values(artifacts)){if(['NOT_STARTED','STARTED'].includes(a.write))a.write='UNKNOWN';if(['NOT_STARTED','STARTED'].includes(a.hash))a.hash='UNKNOWN';}
+      if(['NOT_STARTED','STARTED'].includes(answerValidate))answerValidate='UNKNOWN';if(['NOT_STARTED','STARTED'].includes(answerEncode))answerEncode='UNKNOWN';if(['NOT_STARTED','STARTED'].includes(postchecks))postchecks='UNKNOWN';
+      return {status:'UNKNOWN',intent,publicCall,hooks,artifacts,answerValidate,answerEncode,postchecks,firstFailure,laterFailures};
+    }
+    if(publicCall==='ENTERED'||[answerValidate,answerEncode,postchecks].includes('STARTED')||Object.values(hooks).some(h=>h.encode==='STARTED'||h.entered&&h.terminal==='NOT_OBSERVED')||Object.values(artifacts).some(a=>a.write==='STARTED'||a.hash==='STARTED'))fail('NONTERMINAL_NORMAL');
+    const complete=publicCall==='RETURNED'&&answerValidate==='OK'&&answerEncode==='OK'&&postchecks==='OK'&&Object.values(artifacts).every(a=>a.bound);
+    if(!complete&&!firstFailure&&publicCall!=='NOT_ATTEMPTED')fail('INCOMPLETE_SUCCESS');
+    return {status:firstFailure?'FAILED':complete?'COMPLETE':'NOT_ATTEMPTED',intent,publicCall,hooks,artifacts,answerValidate,answerEncode,postchecks,firstFailure,laterFailures};
+  }catch(e){return rejected(e);}
+}
+
+/** Predeclared historical diagnostic, not sampling/CV; all raw inputs remain untouched. */
+export function pairedDiagnostic(v){
+  try{
+    exact(v,['j','original','derived']);uint(v.j);if(v.j>47)fail('PAIR_SLOT');const N=Math.floor(v.j/3)%4===3?48:16;
+    for(const a of [v.original,v.derived]){exact(a,['leftLum','rightLum','okLeft','okRight','stationsCount']);if(a.stationsCount!==N)fail('PAIR_N');for(const k of ['leftLum','rightLum','okLeft','okRight'])if(dense(a[k],N).length!==N)fail('PAIR_ARRAY');}
+    let originalBilateralN=0,derivedBilateralN=0,pairedN=0,failToPass=0,passToFail=0,samePass=0,sameFail=0;
+    for(let k=0;k<N;k++){
+      const states=[];
+      for(const role of ['original','derived']){
+        const a=v[role],l=stationState({role,j:v.j,side:'left',k,lum:a.leftLum[k],flag:a.okLeft[k]}),r=stationState({role,j:v.j,side:'right',k,lum:a.rightLum[k],flag:a.okRight[k]});
+        if(l.status!=='RETAIN'||r.status!=='RETAIN')return {status:'HOLD',witness:l.status!=='RETAIN'?l:r};
+        states.push({valid:l.state==='VALID'&&r.state==='VALID',pass:Math.min(a.leftLum[k],a.rightLum[k])>8});
+      }
+      const [o,d]=states;if(o.valid)originalBilateralN++;if(d.valid)derivedBilateralN++;
+      if(o.valid&&d.valid){pairedN++;if(!o.pass&&d.pass)failToPass++;else if(o.pass&&!d.pass)passToFail++;else if(o.pass)samePass++;else sameFail++;}
+    }
+    return {status:pairedN?'DIAGNOSTIC':'UNKNOWN',N,originalBilateralN,derivedBilateralN,pairedN,failToPass,passToFail,samePass,sameFail,
+      originalOutsidePaired:originalBilateralN-pairedN,derivedOutsidePaired:derivedBilateralN-pairedN,failToPassFraction:pairedN?failToPass/pairedN:null,
+      meaning:'Protocol-index pairing, not identical pixel support or causal/physical acceptance'};
+  }catch(e){return rejected(e);}
+}
+
+/** Hashes are opaque equality witnesses; no body hashing/rendering or value recomputation occurs. */
+export function matchTraceIdentity(trace,cli,visual){
+  try{
+    const fields=['runId','imageId','frame','trialId','paramsHash','traceHash','rowIds'];
+    for(const x of [trace,cli,visual]){exact(x,fields);for(const k of fields.slice(0,4))text(x[k],128);
+      for(const k of ['paramsHash','traceHash'])if(typeof x[k]!=='string'||!/^[0-9a-f]{64}$/.test(x[k]))fail('IDENTITY_HASH');
+      sameArray(x.rowIds,Array.from({length:48},(_,i)=>i));}
+    for(const x of [cli,visual])for(const k of fields.slice(0,6))if(x[k]!==trace[k])fail('TRACE_IDENTITY_MISMATCH');
+    return {status:'MATCH',rows:48,bodyHashVerified:false};
+  }catch(e){return rejected(e);}
+}
