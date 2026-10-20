@@ -43,9 +43,14 @@
  *   scalar  data { value, unit? } or a bare value        value
  *   raster  ref only (artifact uri) or data { width, height }: listed; the
  *           pixels come from the optional `raster` background. data
+ *           { width, height, src, origin? } (an image file beside the page,
+ *           written once by fg/node-flipbook.mjs writeFlipbook) or
  *           { width, height, png, origin? } (base64 PNG, e.g. fg/png.mjs
- *           cropWindow) renders inline as an <img class="crop">: in the
- *           viewer when the frame draws nothing else, else in the inspector
+ *           cropWindow) renders as an <img class="crop">: in the viewer when
+ *           the frame draws nothing else, else in the inspector. Runners
+ *           write files (writeFlipbook); inline base64 is for tests and
+ *           one-off pages, since the stream embeds it once and the <img>
+ *           again
  * pxset/bbox/points share one canvas per frame, drawn over the optional
  * background, one colour per part in part order. The canvas extent is the
  * background's when given, else the largest extent the parts imply; each
@@ -53,9 +58,10 @@
  *
  * Options:
  *   raster      { width, height, rgba }  embedded RGBA background (base64)
- *   background  { src, width, height, x?, y? }  an image URL (e.g. a data:
- *               URL of the source JPEG) drawn under every frame, top-left at
- *               (x, y) in frame coordinates. Far cheaper than `raster`.
+ *   background  { src, width, height, x?, y? }  an image URL (a file beside
+ *               the page, e.g. img/<sha>.png from writeFlipbook, or a data:
+ *               URL) drawn under every frame, top-left at (x, y) in frame
+ *               coordinates. Far cheaper than `raster`.
  *   records     FG records, for status in the tree: a `<stage>.records.json`
  *               sidecar ({ stage, order, records }), a fork-join sidecar
  *               ({ branches: { <b>: { records, error } } }), or a bare
@@ -248,11 +254,14 @@ function ledgerHtml(data) {
     rows.map((r) => `<tr>${cols.map((c) => `<td>${cell(isObj(r) ? r[c] : '')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 }
 
-const pngOk = (d) => isObj(d) && typeof d.png === 'string' && /^[A-Za-z0-9+/=]+$/.test(d.png);
+// an image file beside the page (relative path, no scheme, no '..') or an inline base64 PNG
+const srcOk = (src) => typeof src === 'string' && /^[\w][\w./-]*\.(png|jpe?g)$/i.test(src) && !src.split('/').includes('..');
+const pngOk = (d) => isObj(d) && (srcOk(d.src) || (typeof d.png === 'string' && /^[A-Za-z0-9+/=]+$/.test(d.png)));
 function imageHtml(data, address) {
   if (!pngOk(data)) return '';
   const w = Number(data.width) || 0, h = Number(data.height) || 0;
-  return `<img class="crop" alt="${esc(address)}" width="${w}" height="${h}" src="data:image/png;base64,${data.png}">`;
+  const src = srcOk(data.src) ? esc(data.src) : `data:image/png;base64,${data.png}`;
+  return `<img class="crop" alt="${esc(address)}" width="${w}" height="${h}" loading="lazy" decoding="async" src="${src}">`;
 }
 
 function scalarHtml(data) {

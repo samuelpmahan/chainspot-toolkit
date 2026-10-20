@@ -32,7 +32,7 @@ import { RENDER_PART } from '../../fg/store.mjs';
 import { comparableForkJoin, forkJoinFrames } from '../../fg/forkjoin.mjs';
 import { discoverImplementations } from '../../fg/discover.mjs';
 import { createFileSink } from '../../fg/node-sink.mjs';
-import { framesJson, renderFlipbook } from '../../fg/flipbook.mjs';
+import { writeFlipbook } from '../../fg/node-flipbook.mjs';
 import { canonicalJson } from '../../fg/canon.mjs';
 import contract from '../../contracts/tee.pose@1.mjs';
 import { TEE_RECOVER_SLOT, S4_CALCULATIONS } from './teeRecover.mjs';
@@ -96,7 +96,7 @@ export function loadAttemptParts({ attempt, specimen, root = ROOT }) {
 
   const srcPath = courseSourceOf(fork, record.request.sourcePath);   // a capture's source is the course raster S0 stitched
   const bytes = existsSync(srcPath) ? readFileSync(srcPath) : null;
-  const background = bytes && originalPx ? { src: `data:image/${bytes[0] === 0x89 ? 'png' : 'jpeg'};base64,${bytes.toString('base64')}`, width: originalPx.width, height: originalPx.height, x: 0, y: -upper } : null;
+  const background = bytes && originalPx ? { src: `data:image/${bytes[0] === 0x89 ? 'png' : 'jpeg'};base64,${bytes.toString('base64')}`, width: originalPx.width, height: originalPx.height, x: 0, y: -upper, path: srcPath } : null;   // path: a run hardlinks the source instead of copying it (fg/node-flipbook.mjs)
 
   return {
     fork, out, upperRowsRemoved: upper, sourcePath: record.request.sourcePath,
@@ -181,8 +181,7 @@ export async function runTeeRecoverForkJoin({ attempt, specimen, outDir = null, 
   const frames = [...forkJoinFrames(result), profileFrame(profile, { wallMs: doc.wallMs }), ...partPages];
   const records = Object.fromEntries(Object.entries(result.branches).map(([n, b]) => [n, { error: b.error, records: b.records }]));
   writeFileSync(join(out, 's4recover.records.json'), canonicalJson({ schema: 'nctk-fg-forkjoin-records@1', slot: result.slot, specimen, attempt, branches: records }) + '\n');
-  writeFileSync(join(out, 's4recover.frames.json'), framesJson(frames) + '\n');
-  writeFileSync(join(out, 's4recover.flipbook.html'), renderFlipbook(frames, { title: `S4 ${TEE_RECOVER_SLOT.slot} fork-join (${specimen}): ${result.comparison.implementations.join(' vs ')}`, background: loaded.background, records: { branches: records }, stage: 'S4' }));
+  writeFlipbook(out, 's4recover', frames, { title: `S4 ${TEE_RECOVER_SLOT.slot} fork-join (${specimen}): ${result.comparison.implementations.join(' vs ')}`, background: loaded.background, records: { branches: records }, stage: 'S4' });   // images once, as files under out/img/ (fg/node-flipbook.mjs)
   return { out, comparison: v, accepted: cmp.accepted, variants: cmp.variants, timingsMs: timings, frames: frames.length, branches: records, profile };
 }
 

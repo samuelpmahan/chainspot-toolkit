@@ -28,7 +28,7 @@ import { pathToFileURL } from 'node:url';
 import { loadRegistry, discoverImplementations } from '../../fg/discover.mjs';
 import { comparableForkJoin, forkJoinFrames } from '../../fg/forkjoin.mjs';
 import { createFileSink, nodeSha256 } from '../../fg/node-sink.mjs';
-import { framesJson, renderFlipbook } from '../../fg/flipbook.mjs';
+import { writeFlipbook } from '../../fg/node-flipbook.mjs';
 import { canonicalJson } from '../../fg/canon.mjs';
 import { cropWindow } from '../../fg/png.mjs';
 import { TEE_FAMILY_SLOT, compareTeeFamilies, ACCEPTANCE } from '../../fg/s3/teeFamily.mjs';
@@ -78,9 +78,8 @@ export async function runTeeFamilyForkJoin({ forkRoot, outDir, store }) {
   mkdirSync(sidecarDir, { recursive: true });
   const records = Object.fromEntries(Object.entries(result.branches).map(([n, b]) => [n, { error: b.error, records: b.records }]));
   writeFileSync(join(sidecarDir, `${SIDECAR}.records.json`), canonicalJson({ schema: 'nctk-fg-forkjoin-records@1', slot: result.slot, guarantees: FGS, branches: records, comparison: { address: result.comparison.address, sha256: result.comparison.sha256 } }) + '\n');
-  writeFileSync(join(sidecarDir, `${SIDECAR}.frames.json`), framesJson(frames) + '\n');
   const background = store.has('view.source.background') ? store.get('view.source.background') : null;
-  writeFileSync(join(sidecarDir, `${SIDECAR}.flipbook.html`), renderFlipbook(frames, { title: `S3 ${TEE_FAMILY_SLOT.slot} fork-join: ${result.comparison.implementations.join(' vs ')}`, background, records: { branches: records }, stage: 'S3' }));
+  writeFlipbook(sidecarDir, `${SIDECAR}`, frames, { title: `S3 ${TEE_FAMILY_SLOT.slot} fork-join: ${result.comparison.implementations.join(' vs ')}`, background, records: { branches: records }, stage: 'S3' });   // images once, as files under fg/img/
   writeFileSync(join(sidecarDir, `${SIDECAR}.timings.json`), JSON.stringify({ restoreMs: restores }, null, 2) + '\n');
 
   const v = result.comparison.value;

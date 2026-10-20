@@ -30,7 +30,7 @@ import { RENDER_PART, registerQueries } from '../../fg/store.mjs';
 import { comparableForkJoin, forkJoinFrames } from '../../fg/forkjoin.mjs';
 import { discoverImplementations } from '../../fg/discover.mjs';
 import { createFileSink } from '../../fg/node-sink.mjs';
-import { framesJson, renderFlipbook } from '../../fg/flipbook.mjs';
+import { writeFlipbook } from '../../fg/node-flipbook.mjs';
 import { canonicalJson } from '../../fg/canon.mjs';
 import { PAIR_QUERIES } from './residualQuery.mjs';
 import { S4_CALCULATIONS } from '../s4recover/teeRecover.mjs';
@@ -95,7 +95,7 @@ export function loadAttemptParts({ attempt, specimen, root = ROOT }) {
   } : { frame: 'canonical', path: null, rule: `no testimony for ${specimen}: blind run, nothing judged`, points: [] };
   const srcPath = courseSourceOf(fork, record.request.sourcePath);   // a capture's source is the course raster S0 stitched
   const bytes = existsSync(srcPath) ? readFileSync(srcPath) : null;
-  const background = bytes && originalPx ? { src: `data:image/${bytes[0] === 0x89 ? 'png' : 'jpeg'};base64,${bytes.toString('base64')}`, width: originalPx.width, height: originalPx.height, x: 0, y: -upper } : null;
+  const background = bytes && originalPx ? { src: `data:image/${bytes[0] === 0x89 ? 'png' : 'jpeg'};base64,${bytes.toString('base64')}`, width: originalPx.width, height: originalPx.height, x: 0, y: -upper, path: srcPath } : null;   // path: a run hardlinks the source instead of copying it (fg/node-flipbook.mjs)
   return {
     fork, out, upperRowsRemoved: upper, board, background,
     values: { 'px.tees.association': assoc, 'px.tees.recovered': recovered, 'tk.s5.latePinned': latePinnedPart(join(out, 'late'), upper), 'testimony.source.teePoints': teePoints }
@@ -165,17 +165,16 @@ export async function runPairBadgeForkJoin({ attempt, specimen, outDir = null, r
   const frames = [...forkJoinFrames(result), profileFrame(profile, { wallMs: doc.wallMs }), ...partPages];
   const records = Object.fromEntries(Object.entries(result.branches).map(([n, b]) => [n, { error: b.error, records: b.records }]));
   writeFileSync(join(out, 's5pair.records.json'), canonicalJson({ schema: 'nctk-fg-forkjoin-records@1', slot: result.slot, specimen, attempt, branches: records }) + '\n');
-  writeFileSync(join(out, 's5pair.frames.json'), framesJson(frames) + '\n');
-  writeFileSync(join(out, 's5pair.flipbook.html'), renderFlipbook(frames, { title: `S5 ${PAIR_SLOT.slot} fork-join (${specimen}): ${cmp.implementations.join(' vs ')}`, background: loaded.background, records: { branches: records }, stage: 'S5' }));
+  const { images } = writeFlipbook(out, 's5pair', frames, { title: `S5 ${PAIR_SLOT.slot} fork-join (${specimen}): ${cmp.implementations.join(' vs ')}`, background: loaded.background, records: { branches: records }, stage: 'S5' });   // images once, as files under out/img/ (fg/node-flipbook.mjs)
   // the labelled render of each variant (the pointer's marked): tees, rays to their badge plate, coloured by verdict, legend
-  const img = store.get('px.image.cropped'), plateOf = new Map(store.get('tk.s4.badgePlates').map((p) => [String(p.label), p.plateCenter]));
+  const img = store.get('px.image.cropped'), image = images.background(loaded.background), plateOf = new Map(store.get('tk.s4.badgePlates').map((p) => [String(p.label), p.plateCenter]));
   const renders = {};
   for (const n of cmp.implementations) {
     const j = result.branches[n].records?.[PAIR_SLOT.testimony];
     if (result.branches[n].error || !j?.rows) continue;
     const file = `s5pair.${n}.svg`;
     writeFileSync(join(out, file), pairsSvg({ title: `S5 tee -> badge pairs, ${specimen} (${attempt}), variant ${n}${cmp.accepted === n ? ' (the pointer)' : ''}${judged ? '' : '; no testimony: unjudged'}`,
-      rows: j.rows, unmatched: j.unmatchedBadges, plates: plateOf, widthPx: img.widthPx, heightPx: img.heightPx, image: loaded.background, totals: j.totals }) + '\n');
+      rows: j.rows, unmatched: j.unmatchedBadges, plates: plateOf, widthPx: img.widthPx, heightPx: img.heightPx, image, totals: j.totals }) + '\n');
     renders[n] = file;
   }
   return { out, comparison: v, accepted: cmp.accepted, acceptedBy: accept.decided, variants: cmp.variants, timingsMs: timings, frames: frames.length, branches: records, renders, profile };

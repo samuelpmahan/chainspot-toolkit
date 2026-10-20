@@ -39,7 +39,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { loadRegistry } from '../../fg/discover.mjs';
 import { createFileSink, nodeSha256 } from '../../fg/node-sink.mjs';
-import { framesJson, renderFlipbook } from '../../fg/flipbook.mjs';
+import { writeFlipbook } from '../../fg/node-flipbook.mjs';
 import { canonicalJson } from '../../fg/canon.mjs';
 
 export async function runStageGuarantees({ forkRoot, stage, store, outDir, lanes = [] }) {
@@ -64,9 +64,8 @@ export async function runStageGuarantees({ forkRoot, stage, store, outDir, lanes
       crossCheck: { declared: ids, mismatches: drift, implementedUndeclared: report.implementedUndeclared },
       failure
     }) + '\n');
-    writeFileSync(join(sidecarDir, `${stage}.frames.json`), framesJson(frames) + '\n');
     const background = store.has('view.source.background') ? store.get('view.source.background') : null;
-    writeFileSync(join(sidecarDir, `${stage}.flipbook.html`), renderFlipbook(frames, { title: `${stage} FunctionalGuarantees`, background, records, stage: stage.toUpperCase() }));
+    writeFlipbook(sidecarDir, stage, frames, { title: `${stage} FunctionalGuarantees`, background, records, stage: stage.toUpperCase() });   // images once, as files under fg/img/
     writeFileSync(join(sidecarDir, `${stage}.timings.json`), JSON.stringify(timings, null, 2) + '\n');
   };
   let run;

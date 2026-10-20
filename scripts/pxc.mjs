@@ -16,6 +16,12 @@
  *                                                         costliest Calculations by self time, opaque hot spots
  *   node scripts/pxc.mjs cas --stats                     the persistent cache (attempts/cas): entries, size, age, largest
  *   node scripts/pxc.mjs cas --prune-older-than DAYS      remove entries nothing has used for DAYS days
+ *   node scripts/pxc.mjs prune [--dry-run] [--root DIR] [--hours 12] [--json]   delete attempts not in the dev ATTEMPTS
+ *                                                         (or modified in the last 12 h) and, inside kept ones, every run
+ *                                                         but the latest, latest complete and evidence-named per stage;
+ *                                                         prints the bytes freed (ports/state/prune.mjs)
+ *   node scripts/pxc.mjs flipbook --inline <x.flipbook.html> [out.html]   one self-contained copy of a run's flipbook
+ *                                                         (its img/ files as data: URLs) for sharing a single file
  * Scaffolds never overwrite a file.
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
@@ -208,6 +214,11 @@ else if (cmd === 'cas') {
   if (i >= 0) { const days = Number(rest[i + 1]); if (!(days >= 0)) say('usage: cas --prune-older-than DAYS'); else say(JSON.stringify(cas.casPrune({ days }), null, 1)); }
   else if (rest.includes('--stats')) say(JSON.stringify(cas.casStats(), null, 1));
   else say('usage: cas --stats | --prune-older-than DAYS');
+}
+else if (cmd === 'prune') (await import('../ports/state/prune.mjs')).pruneCommand(rest, { say });
+else if (cmd === 'flipbook' && rest[0] === '--inline' && rest[1]) {
+  const { inlineFlipbook } = await import('../fg/node-flipbook.mjs'), src = rest[1], out = rest[2] ?? src.replace(/\.html$/, '.inline.html');
+  writeFileSync(out, inlineFlipbook(readFileSync(src, 'utf8'), dirname(src))); say(`  wrote ${out}`);
 }
 else if (cmd === 'state') await (await import('../ports/state/matrix.mjs')).stateCommand(rest, { say });
 else if (cmd === 'shot') { const [file, outDir, ...hashes] = rest; if (!file || !outDir || !hashes.length) say('usage: shot <file.html> <outdir> "<hash>" ...'); else for (const f of await (await import('./pxc/shot.mjs')).shot(file, outDir, hashes)) say(`  wrote ${f}`); }

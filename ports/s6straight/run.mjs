@@ -37,7 +37,7 @@ import { RENDER_PART, registerQueries } from '../../fg/store.mjs';
 import { comparableForkJoin, forkJoinFrames } from '../../fg/forkjoin.mjs';
 import { discoverImplementations } from '../../fg/discover.mjs';
 import { createFileSink } from '../../fg/node-sink.mjs';
-import { framesJson, renderFlipbook } from '../../fg/flipbook.mjs';
+import { writeFlipbook } from '../../fg/node-flipbook.mjs';
 import { canonicalJson } from '../../fg/canon.mjs';
 import { HOLE_STRAIGHT_SLOT, S6_CALCULATIONS, holeQueries } from './holeStraight.mjs';
 import { GUARANTEES } from './guarantees.mjs';
@@ -113,7 +113,7 @@ export function loadS6Inputs({ attempt, specimen, root = ROOT }) {
 
   const srcPath = courseSourceOf(fork, record.request.sourcePath);   // a capture's source is the course raster S0 stitched
   const bytes = existsSync(srcPath) ? readFileSync(srcPath) : null;
-  const background = bytes && originalPx ? { src: `data:image/${bytes[0] === 0x89 ? 'png' : 'jpeg'};base64,${bytes.toString('base64')}`, width: originalPx.width, height: originalPx.height, x: 0, y: -upper } : null;
+  const background = bytes && originalPx ? { src: `data:image/${bytes[0] === 0x89 ? 'png' : 'jpeg'};base64,${bytes.toString('base64')}`, width: originalPx.width, height: originalPx.height, x: 0, y: -upper, path: srcPath } : null;   // path: a run hardlinks the source instead of copying it (fg/node-flipbook.mjs)
   return { out, board, upperRowsRemoved: upper, background,
     values: { 'px.tees.association': association, 'px.tees.refined': refined, 'tk.s6.padLength': padLength, 'tk.s6.s4Recovered': s4Recovered, 'tk.s6.basketRecovery': basketRecovery, 'tk.s6.lateS6': lateS6, 'testimony.source.holes': holes } };
 }
@@ -195,9 +195,8 @@ export async function runHoleStraightForkJoin({ attempt, specimen, outDir = null
   const frames = [...forkJoinFrames(result), profileFrame(profile, { wallMs: doc.wallMs }), ...partPages];
   const records = Object.fromEntries(Object.entries(result.branches).map(([n, b]) => [n, { error: b.error, records: b.records }]));
   writeFileSync(join(out, 's6straight.records.json'), canonicalJson({ schema: 'nctk-fg-forkjoin-records@1', slot: result.slot, specimen, attempt, branches: records }) + '\n');
-  writeFileSync(join(out, 's6straight.frames.json'), framesJson(frames) + '\n');
-  writeFileSync(join(out, 's6straight.flipbook.html'), renderFlipbook(frames, { title: `S6 ${HOLE_STRAIGHT_SLOT.slot} fork-join (${specimen}): ${cmp.implementations.join(' vs ')}`, background: loaded.background, records: { branches: records }, stage: 'S6' }));
-  const render = writeRender({ out, specimen, attempt, store, result, judged, background: loaded.background });
+  const { images } = writeFlipbook(out, 's6straight', frames, { title: `S6 ${HOLE_STRAIGHT_SLOT.slot} fork-join (${specimen}): ${cmp.implementations.join(' vs ')}`, background: loaded.background, records: { branches: records }, stage: 'S6' });   // images once, as files under out/img/ (fg/node-flipbook.mjs)
+  const render = writeRender({ out, specimen, attempt, store, result, judged, background: images.background(loaded.background) });   // the run's image file, not a data URL
   return { out, comparison: v, accepted: cmp.accepted, acceptedBy: accept.decided, variants: cmp.variants, timingsMs: Object.fromEntries(Object.entries(cmp.timingsMs).map(([n, t]) => [n, t.ms])), frames: frames.length, branches: records, profile, render };
 }
 

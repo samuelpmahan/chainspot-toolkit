@@ -20,13 +20,11 @@
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { inflateSync, deflateSync } from 'node:zlib';
 import { runnerCache, casFlag } from '../../fg/casRunner.mjs';
 import { instrumentedStore, profileSummary, profileFrame } from '../../fg/profile.mjs';
 import { RENDER_PART } from '../../fg/store.mjs';
-import { framesJson, renderFlipbook } from '../../fg/flipbook.mjs';
+import { writeFlipbook } from '../../fg/node-flipbook.mjs';
 import { canonicalJson } from '../../fg/canon.mjs';
-import { encodePngRgb } from '../../fg/png.mjs';
 import { loadAttemptParts } from '../s4recover/run.mjs';
 import { loadTestimony } from '../judge/testimony.mjs';
 import { registerAlphaProfile, s4LaneOutputsFor, loadAssociation } from '../../fg/alpha/run.mjs';
@@ -35,20 +33,6 @@ import { registerPathLoss, PATH_LOSS_PART, TESTIMONY_PART } from './pathLoss.mjs
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 
-/** A stored-deflate PNG (fg/png.mjs default) re-encoded with zlib: the same pixels, smaller bytes. */
-function recompressPng(bytes) {
-  const v = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength), idat = [];
-  let width = 0, height = 0;
-  for (let o = 8; o < bytes.length;) {
-    const len = v.getUint32(o), type = String.fromCharCode(...bytes.subarray(o + 4, o + 8)), data = bytes.subarray(o + 8, o + 8 + len);
-    if (type === 'IHDR') { width = v.getUint32(o + 8); height = v.getUint32(o + 12); }
-    if (type === 'IDAT') idat.push(data);
-    o += 12 + len;
-  }
-  const raw = inflateSync(Buffer.concat(idat)), rgb = new Uint8Array(width * height * 3);
-  for (let y = 0; y < height; y++) rgb.set(raw.subarray(y * (1 + width * 3) + 1, (y + 1) * (1 + width * 3)), y * width * 3);
-  return encodePngRgb({ width, height, rgb, deflate: (b) => new Uint8Array(deflateSync(b, { level: 9 })) });
-}
 /** The Part for the JSON file: typed arrays (the corridor pixels) summarized, never dumped. */
 /** What the run's profile is: its producer and the path class (fitted or its recorded condition), for the JSON file. */
 const alphaSummary = (store) => { const p = store.get(ALPHA_PROFILE_PART), o = p?.overlays?.path; return { producedBy: store.provenance(ALPHA_PROFILE_PART)?.producedBy ?? null, status: p?.status ?? null, path: o ? (o.alpha != null ? { alpha: o.alpha, sigmaAlpha: o.sigmaAlpha, rgb: o.rgb, fitOn: o.fitOn } : o) : null }; };
@@ -74,14 +58,11 @@ export function runPathLoss({ attempt, specimen, outDir = null, root = ROOT, cas
   writeFileSync(join(out, 'instrumentation.json'), JSON.stringify(doc) + '\n');   // sidecar: timings are never hashed evidence
   const partPages = store.manifest().parts.map((p) => p.address).filter((a) => a.startsWith('tk.s6.')).sort()
     .map((a) => { const r = store.call(RENDER_PART, { a }).value; return { title: `${a} (${r.kind})`, calculation: 'fg.render', tick: 'render', parts: r.parts, verdicts: [{ name: `${a} renders`, ok: r.kind !== 'unrenderable' && r.parts.length > 0 }] }; });
-  // the store's renders, their inline PNGs recompressed (same pixels, smaller page)
-  for (const f of partPages) f.parts = f.parts.map((p) => (p.kind === 'raster' && p.data?.png ? { ...p, data: { ...p.data, png: Buffer.from(recompressPng(new Uint8Array(Buffer.from(p.data.png, 'base64')))).toString('base64') } } : p));
   const frames = [profileFrame(profile, { wallMs: doc.wallMs }), ...partPages];
-  writeFileSync(join(out, 's6pathLoss.frames.json'), framesJson(frames) + '\n');
-  writeFileSync(join(out, 's6pathLoss.flipbook.html'), renderFlipbook(frames, { title: `S6 path loss (${specimen}): edge test and alpha overlay along tee cap -> basket`, background: loaded.background, stage: 'S6' }));
+  const { images } = writeFlipbook(out, 's6pathLoss', frames, { title: `S6 path loss (${specimen}): edge test and alpha overlay along tee cap -> basket`, background: loaded.background, stage: 'S6' });   // images once, as files under out/img/ (fg/node-flipbook.mjs)
   const sheet = partPages.find((f) => f.title.startsWith(`${PATH_LOSS_PART} `))?.parts.find((p) => p.address.endsWith('#sheet'));
   const sheetPath = sheet ? join(out, `${PATH_LOSS_PART}.sheet.png`) : null;
-  if (sheet) writeFileSync(sheetPath, Buffer.from(sheet.data.png, 'base64'));
+  if (sheet) images.alias(images.png(sheet.data.png).src, `${PATH_LOSS_PART}.sheet.png`);   // the flipbook's own file under a stable name (a hardlink)
   return { out, sheetPath, value, hallway: store.get('tk.s6.hallway'), profile, emits: doc.calculations.find((e) => e.calculation === 'fn.tk.s6.pathLoss')?.emits ?? null };
 }
 
