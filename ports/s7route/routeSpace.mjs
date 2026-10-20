@@ -134,7 +134,22 @@ function verdicts(c, a, phi, t0, n, W, memo) {
  * sums are bit-identical: only the rows' x intervals that can lie within h + 3 px of a leg are visited (a px farther from
  * every leg is in neither band), minus the intervals deeper than h - 3 px inside a leg (in neither band either). -> [contrast lum, counted px] or [null, 0] when a band has < 30 visible px.
  */
+// Per scene, every route's reading (a pure function of the scene, the route, W and the bands): the rule sets re-read the same
+// routes (the lean table's coarse bends are the fast table's every other one; variants with one table repeat its second-bend
+// scans). The same numbers, read once. Bounded: cleared past ROUTE_MEMO_MAX entries.
+const ROUTE_MEMO = new WeakMap(), ROUTE_MEMO_MAX = 400000;
 export function ribbonContrastAt(c, V, W, { band = ROUTE.contrastBandPx } = {}) {
+  let m = ROUTE_MEMO.get(c);
+  if (!m) { m = new Map(); ROUTE_MEMO.set(c, m); }
+  let key = `${W} ${band[0]} ${band[1]}`; for (const v of V) key += ` ${v[0]},${v[1]}`;
+  const hit = m.get(key);
+  if (hit) return [hit[0], hit[1]];
+  if (m.size >= ROUTE_MEMO_MAX) m.clear();
+  const r = ribbonContrastRead(c, V, W, band);
+  m.set(key, r);
+  return [r[0], r[1]];
+}
+function ribbonContrastRead(c, V, W, band) {
   const { lum, mask, W: IW, H: IH } = c, h = W / 2, b0 = band[0], b1 = band[1], reach = h + b1 + 1;
   let mnx = Infinity, mny = Infinity, mxx = -Infinity, mxy = -Infinity;
   for (const [x, y] of V) { mnx = Math.min(mnx, x); mny = Math.min(mny, y); mxx = Math.max(mxx, x); mxy = Math.max(mxy, y); }
@@ -464,7 +479,7 @@ const digestOf = (...fns) => sha256Hex(fns.map(String).join('\n'));
 const CODE = Object.freeze({
   start: digestOf(routeStartOf),
   hallway: digestOf(routeHallwayOf, teeBadgeLearn),
-  row: digestOf(routeRowOf, bendsOnAxis, contrastRouteAt, contrastRouteFastAt, coarseContrastAt, ribbonContrastAt, routeSensorAt, verdicts, stationContrastAt),
+  row: digestOf(routeRowOf, bendsOnAxis, contrastRouteAt, contrastRouteFastAt, contrastRouteBadgeAt, coarseContrastAt, ribbonContrastAt, ribbonContrastRead, routeSensorAt, verdicts, stationContrastAt),
   sensorRow: digestOf(routeSensorRowOf, bendsOnAxis, oneBendAt, routeSensorAt, verdicts, stationContrastAt),
   table: digestOf(routeTableOf, samBasketsOf, argmax, onAxisOf)
 });

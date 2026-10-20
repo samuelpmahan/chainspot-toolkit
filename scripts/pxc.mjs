@@ -10,7 +10,7 @@
  *   node scripts/pxc.mjs scaffold calculation <dir> <name>   <dir>/<name>.calc.mjs + test (a Calculation with emits)
  *   node scripts/pxc.mjs scaffold mixin <name>            fg/mixins.<name>.mjs + test (an FG property)
  *   node scripts/pxc.mjs shot <file.html> <outdir> "<hash>"...   full-page screenshots of a render at deep links (inspector)
- *   node scripts/pxc.mjs state [--retest [all]] [--freeze] [--json]   every stage on every dev course: goal, expected,
+ *   node scripts/pxc.mjs state [--retest [all]] [--jobs N] [--freeze] [--json]   every stage on every dev course: goal, expected,
  *                                                         result, status (derived), freshness; retest re-runs only stale cells
  *   node scripts/pxc.mjs profile --attempt <id> [--top N]  each stage's latest run: wall, inside/outside the store, the
  *                                                         costliest Calculations by self time, opaque hot spots

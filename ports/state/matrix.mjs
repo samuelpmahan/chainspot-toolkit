@@ -31,7 +31,8 @@
  */
 import { loadTestimony } from '../judge/testimony.mjs';
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from 'node:fs';
-import { spawnSync } from 'node:child_process';
+import { spawnSync, spawn } from 'node:child_process';
+import { availableParallelism } from 'node:os';
 import { join, resolve } from 'node:path';
 import { deserialize } from 'node:v8';
 import { snapshotPaths, differences, sha, canonical } from '../../facts.mjs';
@@ -439,6 +440,20 @@ export async function freeze(root, matrix, inputs) {
 // ------------------------------------------------------------------------------------------------ retest
 
 const DEV_REQUEST = Object.freeze({ recipe: 'recipes/chainspot-s0-s7.json', until: 4, lanes: ['s3-findfamily-structural-fix', 's4.basketRecovery'] });
+/** The same as run, without blocking: the retest runs independent courses side by side. */
+const runP = (root, args, log) => new Promise((resolve, reject) => {
+  log(`  $ node ${args.join(' ')}`);
+  const p = spawn('node', args, { cwd: root }), out = [], err = [];
+  p.stdout.on('data', (d) => out.push(d)); p.stderr.on('data', (d) => err.push(d));
+  p.on('error', reject);
+  p.on('close', (code) => { const so = Buffer.concat(out).toString('utf8'), se = Buffer.concat(err).toString('utf8'); if (code !== 0) reject(new Error(`${args[0]} failed (${code}): ${(se || so).slice(-2000)}`)); else resolve(so); });
+});
+/** Run f over items, at most n at a time; resolves to the results in order, rejects on the first failure. */
+async function pool(items, n, f) {
+  const out = new Array(items.length); let next = 0;
+  await Promise.all(Array.from({ length: Math.min(n, items.length) }, async () => { while (next < items.length) { const i = next++; out[i] = await f(items[i]); } }));
+  return out;
+}
 const run = (root, args, log) => { log(`  $ node ${args.join(' ')}`); const r = spawnSync('node', args, { cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 }); if (r.status !== 0) throw new Error(`${args[0]} failed (${r.status}): ${(r.stderr || r.stdout).slice(-2000)}`); return r.stdout; };
 
 /** The variant most of the annotated courses accepted in their latest run of a fork-join (default S4; ties: alphabetical), or null when none has a pointer. */
@@ -456,53 +471,60 @@ export function acceptedOnAnnotated(root, courses, attempts, { dir = 's4recover'
   return [...votes].sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]))[0]?.[0] ?? null;
 }
 
-/** Re-run exactly the cells that need it, record the closures each step ran with, and update ATTEMPTS. */
-export async function retest(root, inputs, { all = false, only = null, log = () => {} } = {}) {
+/**
+ * Re-run exactly the cells that need it, record the closures each step ran with, and update ATTEMPTS. Courses are independent:
+ * up to `jobs` run side by side (default: the machine's cores, at most 4), the annotated courses first, then the ones without
+ * testimony (they take the variant the annotated courses accepted).
+ */
+export async function retest(root, inputs, { all = false, only = null, log = () => {}, jobs = Math.min(availableParallelism(), 4) } = {}) {
   const attempts = new Map(readAttempts(root));
   const needs = (c, k) => all || !c.freshness[k] || c.freshness[k].state !== 'VERIFIED';
-  for (const c of inputs.courses) {
-    if (only && !only.includes(c.course)) continue;
+  const run = runP;
+  const selected = inputs.courses.filter((c) => !only || only.includes(c.course));
+  const course = async (c) => {
     let attempt = c.attempt, out = join(root, 'attempts', 'stages', attempt, 'fork', 'stage-output');
     const req = c.request ?? DEV_REQUEST;
     const redoRecipe = needs(c, 'recipe') || !c.outputs.early || !c.outputs.s3fix || !c.outputs.basketBridge;
     if (redoRecipe) {
       log(`${c.course}: recipe ${c.freshness.recipe?.state ?? 'MISSING'}${c.freshness.recipe?.changed?.length ? ` (${c.freshness.recipe.changed.slice(0, 4).join(', ')})` : ''}: re-running S0-S${req.until}`);
-      const neat = run(root, ['toolkit.mjs', 'neat', '--recipe', req.recipe, '--specimen', c.course, '--until', String(req.until), '--lanes', req.lanes.join(',')], log);
+      const neat = await run(root, ['toolkit.mjs', 'neat', '--recipe', req.recipe, '--specimen', c.course, '--until', String(req.until), '--lanes', req.lanes.join(',')], log);
       const next = /"next": "node (.*)"/.exec(neat)?.[1]; if (!next) throw new Error(`${c.course}: neat printed no next command`);
-      const ran = run(root, next.split(' '), log);
+      const ran = await run(root, next.split(' '), log);
       attempt = /attempts\/stages\/(attempt-[0-9a-f-]+)\//.exec(ran)?.[1]; if (!attempt) throw new Error(`${c.course}: run printed no attempt id`);
       out = join(root, 'attempts', 'stages', attempt, 'fork', 'stage-output'); attempts.set(c.course, attempt);
     }
     const closures = existsSync(join(out, 'state', 'closures.json')) ? readJson(join(out, 'state', 'closures.json')) : {};
     const record = async (k) => { closures[k] = { ...(await closureSnapshot(root, POST_RECIPE_CLOSURES[k])), at: new Date().toISOString() }; mkdirSync(join(out, 'state'), { recursive: true }); writeFileSync(join(out, 'state', 'closures.json'), JSON.stringify(closures, null, 1) + '\n'); };
     let ranUpstream = false;
-    if (redoRecipe || needs(c, 's3assoc') || !c.outputs.s3assoc) { log(`${c.course}: S3 association`); run(root, ['ports/s3assoc/run.mjs', '--specimen', c.course, '--attempt', attempt], log); await record('s3assoc'); ranUpstream = true; }
+    if (redoRecipe || needs(c, 's3assoc') || !c.outputs.s3assoc) { log(`${c.course}: S3 association`); await run(root, ['ports/s3assoc/run.mjs', '--specimen', c.course, '--attempt', attempt], log); await record('s3assoc'); ranUpstream = true; }
     const redoS4 = redoRecipe || needs(c, 's4recover') || !c.outputs.s4recover;
     if (redoS4) {
       // a course without testimony ships the variant the annotated courses accepted (their latest runs, this pass or before)
       const elsewhere = c.testimony ? null : acceptedOnAnnotated(root, inputs.courses, attempts);
       log(`${c.course}: S4 tee recovery${elsewhere ? ` (pointer from the annotated courses: ${elsewhere})` : ''}`);
-      run(root, ['ports/s4recover/run.mjs', '--specimen', c.course, '--attempt', attempt, ...(elsewhere ? ['--accept', elsewhere] : [])], log); await record('s4recover'); ranUpstream = true;
+      await run(root, ['ports/s4recover/run.mjs', '--specimen', c.course, '--attempt', attempt, ...(elsewhere ? ['--accept', elsewhere] : [])], log); await record('s4recover'); ranUpstream = true;
     }
     // S5 pairs what S4 recovered: it re-runs after S4 does, or when its own closure changed; same --accept handling as S4
     if (redoS4 || needs(c, 's5pair') || !c.outputs.s5pair) {
       const elsewhere = c.testimony ? null : acceptedOnAnnotated(root, inputs.courses, attempts, { dir: 's5pair', cmp: 'cmp.fn.Tee.pairBadge.json' });
       log(`${c.course}: S5 tee-badge pairs${elsewhere ? ` (pointer from the annotated courses: ${elsewhere})` : ''}`);
-      run(root, ['ports/s5pair/run.mjs', '--specimen', c.course, '--attempt', attempt, ...(elsewhere ? ['--accept', elsewhere] : [])], log); await record('s5pair');
+      await run(root, ['ports/s5pair/run.mjs', '--specimen', c.course, '--attempt', attempt, ...(elsewhere ? ['--accept', elsewhere] : [])], log); await record('s5pair');
     }
     // S6 rides on S3 association and the S4 pointer: it re-runs after either, or when its own closure changed
     if (ranUpstream || redoRecipe || needs(c, 's6straight') || !c.outputs.s6straight) {
       const elsewhere = c.testimony ? null : acceptedOnAnnotated(root, inputs.courses, attempts, { dir: 's6straight', cmp: 'cmp.fn.Hole.straight.json' });
       log(`${c.course}: S6 straight vs bent${elsewhere ? ` (pointer from the annotated courses: ${elsewhere})` : ''}`);
-      run(root, ['ports/s6straight/run.mjs', '--specimen', c.course, '--attempt', attempt, ...(elsewhere ? ['--accept', elsewhere] : [])], log); await record('s6straight');
+      await run(root, ['ports/s6straight/run.mjs', '--specimen', c.course, '--attempt', attempt, ...(elsewhere ? ['--accept', elsewhere] : [])], log); await record('s6straight');
     }
     // S7 trace lane: the traces ride on S3 association and S4 recovery; re-run after either, or when its own closure changed
     if (ranUpstream || redoRecipe || needs(c, 's7trace') || !c.outputs.s7trace) {
       const elsewhere = c.testimony ? null : acceptedOnAnnotated(root, inputs.courses, attempts, { dir: 's7trace', cmp: 'cmp.fn.Hole.trace.json' });
       log(`${c.course}: S7 hole traces${elsewhere ? ` (pointer from the annotated courses: ${elsewhere})` : ''}`);
-      run(root, ['ports/s7trace/run.mjs', '--specimen', c.course, '--attempt', attempt, '--only', RETEST_S7_VARIANTS.join(','), ...(elsewhere ? ['--accept', elsewhere] : [])], log); await record('s7trace');
+      await run(root, ['ports/s7trace/run.mjs', '--specimen', c.course, '--attempt', attempt, '--only', RETEST_S7_VARIANTS.join(','), ...(elsewhere ? ['--accept', elsewhere] : [])], log); await record('s7trace');
     }
-  }
+  };
+  await pool(selected.filter((c) => c.testimony), jobs, course);
+  await pool(selected.filter((c) => !c.testimony), jobs, course);
   writeFileSync(join(root, ATTEMPTS_FILE), [...attempts].map(([c, a]) => `${c} ${a}`).join('\n') + '\n');
   return [...attempts];
 }
@@ -544,7 +566,8 @@ export async function stateCommand(args, { root = ROOT, say = (s = '') => proces
   if (retestAt >= 0) {
     const inputs = await loadStateInputs(root);
     const all = args[retestAt + 1] === 'all', at = args.indexOf('--course');
-    await retest(root, inputs, { all, only: at >= 0 ? args[at + 1].split(',') : null, log: say });
+    const j = args.indexOf('--jobs');
+    await retest(root, inputs, { all, only: at >= 0 ? args[at + 1].split(',') : null, log: say, ...(j >= 0 ? { jobs: Math.max(1, Number(args[j + 1]) || 1) } : {}) });
     const p = pruneAttempts(root); say(`pruned ${p.removed.length} unreferenced attempts (${(p.bytes / 1e9).toFixed(2)} GB); kept ${p.kept.length}`);
   }
   if (args.includes('--prune')) {
