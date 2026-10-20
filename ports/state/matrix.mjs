@@ -37,7 +37,8 @@ import { deserialize } from 'node:v8';
 import { snapshotPaths, differences, sha, canonical } from '../../facts.mjs';
 import { stageState } from '../../recipes/closure.mjs';
 import { judgeAttempt } from '../judge/judge.mjs';
-import { loadHolePaths } from '../s7trace/holePaths.mjs';   // S7 trace lane: Sam's corridors for the inspector
+import { loadHolePaths } from '../s7trace/holePaths.mjs';
+import { RETEST_S7_VARIANTS } from '../s7route/match.mjs';   // the S7 variants the retest runs (the rest: ports/s7trace/sweep.mjs --profile wide)   // S7 trace lane: Sam's corridors for the inspector
 import { createPartStore } from '../../fg/store.mjs';
 import { partFrame } from '../../fg/render.mjs';
 import { renderFlipbook } from '../../fg/flipbook.mjs';
@@ -499,7 +500,7 @@ export async function retest(root, inputs, { all = false, only = null, log = () 
     if (ranUpstream || redoRecipe || needs(c, 's7trace') || !c.outputs.s7trace) {
       const elsewhere = c.testimony ? null : acceptedOnAnnotated(root, inputs.courses, attempts, { dir: 's7trace', cmp: 'cmp.fn.Hole.trace.json' });
       log(`${c.course}: S7 hole traces${elsewhere ? ` (pointer from the annotated courses: ${elsewhere})` : ''}`);
-      run(root, ['ports/s7trace/run.mjs', '--specimen', c.course, '--attempt', attempt, ...(elsewhere ? ['--accept', elsewhere] : [])], log); await record('s7trace');
+      run(root, ['ports/s7trace/run.mjs', '--specimen', c.course, '--attempt', attempt, '--only', RETEST_S7_VARIANTS.join(','), ...(elsewhere ? ['--accept', elsewhere] : [])], log); await record('s7trace');
     }
   }
   writeFileSync(join(root, ATTEMPTS_FILE), [...attempts].map(([c, a]) => `${c} ${a}`).join('\n') + '\n');

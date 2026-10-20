@@ -176,6 +176,12 @@ export const PROFILES = Object.freeze({
   wide: Object.keys(RULE_SETS),
   quick: ['routeMatchFast', 'routeMatchFastPxRefine', 'routeMatchLean', 'routeMatchLeanPxRefine', 'routeMatchLeanCoarse2', 'routeMatchLeanPxRefineCoarse2']
 });
+/**
+ * The S7 variants `pxc state --retest` runs: the quick rule sets plus the pinned prototype (1 ms). The old tracers (badgeOnly,
+ * endpoints, s3first*: 2-8 min each per course, beaten on every judged course) and the slow rule sets (px table, dense second
+ * bend) stay one command away: node ports/s7trace/sweep.mjs --profile wide.
+ */
+export const RETEST_S7_VARIANTS = Object.freeze(['pinned', ...PROFILES.quick]);
 export const profileOf = (name) => (PROFILES[name] ?? String(name ?? '').split(',').map((s) => s.trim()).filter((s) => s in RULE_SETS));
 
 export function routeMatchOf(table, S, starts, { secondBends = true, straight: verdicts = undefined, steps = MATCH_STEPS, rules = MATCH_RULES } = {}) {
