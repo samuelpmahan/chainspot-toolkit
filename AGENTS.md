@@ -88,7 +88,7 @@ output.
   - `fg/pxset.dev.test.mjs`: every backing gives the same answers.
   - The registry checks declarations against `stages/*.json`.
   - `unitful` checks the units of anything published.
-- **Run everything:** `node --test fg/*.test.mjs fg/*/*.test.mjs ports/*/*.test.mjs architecture.test.mjs inventory.test.mjs models.test.mjs provider-adapter.test.mjs`
+- **Run everything:** `node --test fg/*.test.mjs fg/*/*.test.mjs ports/*/*.test.mjs impl.load.test.mjs architecture.test.mjs inventory.test.mjs models.test.mjs provider-adapter.test.mjs`
 
 ## Commands
 
