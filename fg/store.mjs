@@ -187,12 +187,13 @@ export function imageDims(store) {
  */
 export function registerQueries(store, table, { resolve = (ref) => store.get(ref), note = 'PxC query' } = {}) {
   const answers = new Map();
-  for (const [fn, q] of Object.entries(table)) store.register(fn, { note,
+  // a query that asks other queries declares them as q.calls; it is then handed call(fn, args) -> value (a profiled, cached store call)
+  for (const [fn, q] of Object.entries(table)) store.register(fn, { note, ...(q.calls?.length ? { calls: q.calls } : {}),
     calculate: (io) => {
       const args = io.args ?? {}, key = `${fn} ${JSON.stringify(args)}`;
       if (answers.has(key)) return { ...answers.get(key), emits: { cached: 1 } };
       const resolved = Object.fromEntries(Object.entries(args).map(([k, v]) => [k, typeof v === 'string' ? resolve(v) : v]));
-      const ans = q(resolved, args);
+      const ans = q.calls?.length ? q(resolved, args, (inner, a) => io.call(inner, a).value) : q(resolved, args);
       if (!ans || !('value' in ans) || typeof ans.unit !== 'string') throw new PartStoreError(`${fn} must answer { value, unit }`);
       answers.set(key, ans);
       return { ...ans, emits: { computed: 1 } };

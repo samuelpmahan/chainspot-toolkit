@@ -321,7 +321,8 @@ export function overlayAt(s, W, profile) {
   let noBackground = 0;
   // per-channel background lists in reused typed buffers: median = the same sorted-Float64Array median, without the allocations
   const bg = [new Float64Array(M), new Float64Array(M), new Float64Array(M)], toW = BACKGROUND_BAND.toW * w, lat = s.lateralRgbLevel;
-  const med = (a, nb) => { const x = a.subarray(0, nb).sort(); return nb % 2 ? x[(nb - 1) / 2] : (x[nb / 2 - 1] + x[nb / 2]) / 2; };
+  // insertion sort: a few dozen finite levels per station, where it beats TypedArray#sort; the same sorted order, the same median
+  const med = (x, nb) => { for (let i = 1; i < nb; i++) { const v = x[i]; let j = i - 1; while (j >= 0 && x[j] > v) { x[j + 1] = x[j]; j--; } x[j + 1] = v; } return nb % 2 ? x[(nb - 1) / 2] : (x[nb / 2 - 1] + x[nb / 2]) / 2; };
   for (let k = 0; k < N; k++) {
     if (s.hiddenCenter[k]) continue;
     let nb = 0;
@@ -361,13 +362,18 @@ export function overlayPassOf(overlayFrac, thresholdFrac, stepPx = 1) {
 }
 
 /** Both measures on the same stations: the edge test (proven) and the overlay fraction (new), with their agreement. */
-export function lossAt(c, a) {
-  const { originPx: O, phiRad: phi, t0Px, t1Px, stepPx = 1, widthPx: W, profile = null, threshold = null, tauLum = EVIDENCE.tauLum } = a;
+/**
+ * via (optional): { contrast(), samples() } answering the station contrast and the samples of these stations, so a store
+ * computes them once per segment for every loss asked on it (fn.q.path.stationContrast / fn.q.path.samples); without it
+ * they are computed here. corridor: false leaves the corridor render out of the answer (a caller that reads no picture).
+ */
+export function lossAt(c, a, via = null) {
+  const { originPx: O, phiRad: phi, t0Px, t1Px, stepPx = 1, widthPx: W, profile = null, threshold = null, tauLum = EVIDENCE.tauLum, corridor: withCorridor = true } = a;
   const base = { schema: 'nctk-s6-path-loss-profile@1', originPx: O, phiRad: phi, t0Px, t1Px, stepPx, widthPx: W, tauLum };
   if (!(W > 0)) return { ...base, condition: 'no corridor width', stationsCount: 0 };
   const ts = arange(t0Px, t1Px, stepPx);
   if (!ts.length) return { ...base, condition: `no stations (t0 ${r3(t0Px)} px >= t1 ${r3(t1Px)} px)`, stationsCount: 0 };
-  const sc = stationContrastAt(c, O, phi, ts, W), s = samplesAt(c, O, phi, ts, W), ov = overlayAt(s, W, profile);
+  const sc = via ? via.contrast() : stationContrastAt(c, O, phi, ts, W), s = via ? via.samples() : samplesAt(c, O, phi, ts, W), ov = overlayAt(s, W, profile);
   const N = ts.length, edgeMinLum = new Array(N), edgeVisible = new Uint8Array(N), edgeFail = new Uint8Array(N);
   let ev = 0, ep = 0;
   for (let k = 0; k < N; k++) {
@@ -386,14 +392,14 @@ export function lossAt(c, a) {
       passFrac: pass.passFrac, lossFrac: pass.lossFrac, longestGapPx: pass.longestGapPx, gapsCount: pass.gapsCount, noBackgroundCount: ov.noBackgroundCount },
     agreementCounts: thr != null ? both : null,
     stations: { tPx: Array.from(ts, r3), edgeMinLum, overlayFrac: ov.overlayFrac, edgeGapsPx: eg.slice(0, 8), overlayGapsPx: pass.gaps.slice(0, 8) },
-    corridor: corridorOf(s, W)
+    ...(withCorridor ? { corridor: corridorOf(s, W) } : {})
   };
 }
 /** The straightened corridor for the render: rows = offset -R..R, columns = station. */
 function corridorOf(s, W) {
   const N = s.stationsCount, R = s.lateralReachPx, M = 2 * R + 1, rgb = new Uint8Array(N * M * 3);
   const lat = s.lateralRgbLevel;
-  for (let k = 0; k < N; k++) for (let j = 0; j < M; j++) { const a = (k * M + j) * 3, b = (j * N + k) * 3; rgb[b] = Math.round(lat[a]); rgb[b + 1] = Math.round(lat[a + 1]); rgb[b + 2] = Math.round(lat[a + 2]); }
+  for (let k = 0; k < N; k++) for (let j = 0; j < M; j++) { const a = (k * M + j) * 3, b = (j * N + k) * 3; rgb[b] = lat[a] + 0.5; rgb[b + 1] = lat[a + 1] + 0.5; rgb[b + 2] = lat[a + 2] + 0.5; }   // levels 0..255 (float32): ToUint8 of v + 0.5 = Math.round(v), exactly
   return { widthPx: N, heightPx: M, offsetsPx: [-R, R], ribbonHalfPx: r3(W / 2), rgbLevel: rgb, hiddenCenter: s.hiddenCenter, layout: 'rgbLevel[(row*widthPx + col)*3 + c], row = offset + R, col = station' };
 }
 
@@ -413,7 +419,17 @@ export const PATH_QUERIES = Object.freeze({
   'fn.q.path.width': q('width', PATH_UNITS.width, (c, a) => widthSearchAt(c, a.originPx, a.phiRad, a.t0Px, a.t1Px, { widths: a.widthsPx ?? EVIDENCE.widthsPx, tolW: a.tolPx ?? EVIDENCE.widthTolPx, latLim: a.latLimPx ?? EVIDENCE.widthLatPx, minOk: a.minOk ?? EVIDENCE.edgeMinOk }) ?? { condition: 'no edge pair at any width' }),
   'fn.q.path.overlayFraction': q('overlayFraction', PATH_UNITS.overlayFraction, (c, a) => (a.widthPx > 0 ? overlayAt(samplesAt(c, a.originPx, a.phiRad, tsOf(a), a.widthPx), a.widthPx, a.profile ?? null) : { condition: 'no corridor width' })),
   'fn.q.path.samples': q('samples', PATH_UNITS.samples, (c, a) => (a.widthPx > 0 ? samplesAt(c, a.originPx, a.phiRad, tsOf(a), a.widthPx) : { condition: 'no corridor width' })),
-  'fn.q.path.loss': q('loss', PATH_UNITS.loss, (c, a) => lossAt(c, a)),
+  // asks the store for the segment's station contrast and samples (one computation per segment, shared by the edge and
+  // overlay families); called directly (no call), it computes them itself: the same answer either way
+  'fn.q.path.loss': Object.assign(({ raster, mask = null, ...a }, raw = {}, call = null) => {
+    if (!rasterOf(raster)) return cond('loss', "no raster (pass raster: 'px.image.cropped')");
+    const stations = { raster: raw.raster, mask: raw.mask ?? null, originPx: a.originPx, phiRad: a.phiRad, t0Px: a.t0Px, t1Px: a.t1Px, stepPx: a.stepPx ?? 1, widthPx: a.widthPx };
+    const via = call ? {
+      contrast: () => { const r = call('fn.q.path.stationContrast', stations); return { cl: r.leftLum, cr: r.rightLum, okl: r.okLeft, okr: r.okRight }; },
+      samples: () => call('fn.q.path.samples', stations)
+    } : null;
+    return { value: lossAt(ctxOf(raster, mask), a, via), unit: PATH_UNITS.loss };
+  }, { calls: ['fn.q.path.stationContrast', 'fn.q.path.samples'] }),
   // pure on its arguments (no raster): the matching rules ask it for the pass fraction of a stored station vector at THEIR threshold
   'fn.q.path.overlayPass': (_, a) => { const { gaps, passCount, ...rest } = overlayPassOf(a.overlayFrac ?? [], a.thresholdFrac ?? null, a.stepPx ?? 1); return { value: rest, unit: PATH_UNITS.overlayPass }; }
 });
