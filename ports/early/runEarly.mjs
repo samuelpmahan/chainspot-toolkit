@@ -14,6 +14,8 @@ import { createEarlyStore, sealStage } from './earlyStore.mjs';
 import { runStageGuarantees, attachPublished } from './stageGuarantees.mjs';
 import { isCaptureManifest, runCapture } from '../capture/capture.mjs';
 import { CAPTURE_VIEW_CALCULATION } from '../../fg/stitch/capture.calc.mjs';
+import { RENDER_PART } from '../../fg/store.mjs';
+import { deflateSync } from 'node:zlib';
 
 // Experiment code (what run-stages passes) -> lane name (what an FG's
 // `lane` names); the inverse of ports/run-stages.mjs's lane table.
@@ -145,6 +147,9 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     sealStage(store, id, { addresses, capturePxC });
     stage.outputSnapshotSha256 = store.get(`tk.stage.${id}.snapshotSha256`);
   }
+  // the capture's default render (tiles, seams, links, badges over the canonical course): early/capture/capture.png
+  if (capture) for (const p of store.call(RENDER_PART, { a: 'tk.source.captureView', deflate: (b) => deflateSync(b) }).value.parts)
+    if (p.kind === 'raster' && p.data?.png) writeFileSync(join(out, 'capture', 'capture.png'), Buffer.from(p.data.png, 'base64'));
   // S1-S3 FunctionalGuarantees (stages/s1.json, s2.json, s3.json
   // "guarantees"): one file per guarantee under fg/<stage>/<id>.fg.mjs,
   // discovered and run per stage by the fg registry in requires order

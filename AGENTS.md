@@ -99,7 +99,8 @@ output.
   Writes `instrumentation.json` and a flipbook with profile and Part pages.
 - **S3 association:** `node ports/s3assoc/run.mjs --specimen golden --attempt ID`.
 - **Specimens:** golden, lenard, townelake, heritage, alex, northpark (full courses); lenard1-5 (zoomed views of
-  Lenard). Testimony is in `testimony/<specimen>/`.
+  Lenard). Testimony is in `testimony/<specimen>/`. Captures (tiles S0 stitches into one course, `explain boundary`):
+  therecCapture, dashsCapture, lenardCapture; therec is The Rec as one raster.
 
 ## Constraints
 
