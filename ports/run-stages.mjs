@@ -2,9 +2,11 @@
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { safePath, sha } from '../facts.mjs';
+import { installModules, verifyModules } from '../dependencies/localci.mjs';
 const exec=promisify(execFile);
 
 export async function outputFiles(root,path='stage-output') {
@@ -21,12 +23,32 @@ export async function outputFiles(root,path='stage-output') {
   return result.sort();
 }
 
-export async function runStages({forkRoot,request}) {
+/** What `npm ci --ignore-scripts` depends on: the lockfile, every package manifest it installs from, node and npm. */
+function installKey(providerDir) {
+  const manifest=JSON.parse(readFileSync(join(providerDir,'package.json')));
+  const files=['package.json','package-lock.json',...(manifest.workspaces??[]).map(w=>`${w}/package.json`)];
+  let npm=null;
+  for(const path of [join(dirname(process.execPath),'../lib/node_modules/npm/package.json'),join(dirname(process.execPath),'node_modules/npm/package.json')])
+    try{npm=JSON.parse(readFileSync(path)).version;break;}catch{}
+  if(!npm)return null;   // npm version unknown: no reuse
+  return sha(JSON.stringify({command:'npm ci --ignore-scripts',node:process.version,npm,platform:`${process.platform}-${process.arch}`,
+    files:files.map(f=>[f,sha(readFileSync(join(providerDir,f)))])}));
+}
+
+export async function runStages({forkRoot,request,modules}) {
   const providerDir=join(forkRoot,'source/provider');
-  const install=await exec('npm',['ci','--ignore-scripts'],{cwd:providerDir,maxBuffer:8*1024*1024,timeout:180000});
+  let at=performance.now();
+  const phases={},lap=name=>{const now=performance.now();phases[name]=Math.round(now-at);at=now;};
+  const npmCi=async()=>{const r=await exec('npm',['ci','--ignore-scripts'],{cwd:providerDir,maxBuffer:8*1024*1024,timeout:180000});return {stdout:r.stdout,stderr:r.stderr};};
+  const key=modules?installKey(providerDir):null;
+  const install=key?await installModules({providerDir,cache:modules,key,install:npmCi}):await npmCi();
+  lap('npm');
   const entry=join(forkRoot,'ports/run-stages.mjs');
   const child=await exec(process.execPath,['--import','tsx',entry,'--worker',JSON.stringify(request)],
     {cwd:providerDir,maxBuffer:16*1024*1024,timeout:360000});
+  lap('provider');
+  const inner=JSON.parse(await readFile(join(forkRoot,'provider-phases.json')).catch(()=>'{}'));
+  if(inner.boot!=null)Object.assign(phases,{providerBoot:inner.boot,providerWorker:inner.worker});
   const native=JSON.parse(await readFile(join(forkRoot,'stage-output/summary.json')));
   const outputs=new Set(await outputFiles(forkRoot));
   for(const evidence of native.s7?.nativeEvidence??[]) {
@@ -35,13 +57,19 @@ export async function runStages({forkRoot,request}) {
     if(bytes.length!==evidence.bytes||sha(bytes)!==evidence.sha256)throw Error(`S7 native evidence hash mismatch: ${evidence.path}`);
     outputs.add(evidence.path);
   }
-  return {...native,outputs:[...outputs].sort(),install:{exitCode:0,stdout:install.stdout,stderr:install.stderr},
+  const modulesVerified=key?verifyModules({providerDir,cache:modules,key}):null;
+  lap('outputs');
+  return {...native,phases,outputs:[...outputs].sort(),install:{exitCode:0,stdout:install.stdout,stderr:install.stderr,
+      ...(key?{key,...(install.reused?{reused:install.reused}:{stored:install.stored}),postRun:modulesVerified}:{})},
     process:{exitCode:0,stdout:child.stdout,stderr:child.stderr}};
 }
 
 async function worker() {
+  const boot=performance.now();
   const request=JSON.parse(process.argv.at(-1));
   const forkRoot=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+  // provider wall phases (ms), a sidecar beside stage-output: never evidence, never hashed
+  process.on('exit',()=>{try{writeFileSync(join(forkRoot,'provider-phases.json'),JSON.stringify({unit:'ms wall, provider process',boot:Math.round(boot),worker:Math.round(performance.now()-boot)})+'\n');}catch{}});
   const out='stage-output';
   await mkdir(join(forkRoot,out),{recursive:true});
   const {runEarly}=await import('./early/runEarly.mjs');
