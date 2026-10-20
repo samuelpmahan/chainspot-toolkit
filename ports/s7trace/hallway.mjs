@@ -17,7 +17,7 @@
  * Coordinates: canonical (S0-cropped) px, pixel centres at integer coordinates; angles in radians unless named Deg.
  */
 
-import { samp as sampS6, profileAt, edgePairOf, stationContrastAt } from '../s6straight/pathSpace.mjs';
+import { samp as sampS6, profileAt, edgePairOf, stationContrastAt, reachFor } from '../s6straight/pathSpace.mjs';
 
 export const TAU = 8.0;                       // lum: edge contrast a ribbon station must exceed on both sides (follow.py)
 export const FRONT = 10.6 / 25.02;            // pad lengths: the ribbon cap centre ahead of the pad centre (badgeseed.py)
@@ -47,7 +47,13 @@ export const round = (x, n = 2) => (x == null || !Number.isFinite(x) ? x : Math.
 /** Bilinear sample with edges replicated (scipy map_coordinates order=1, mode='nearest'). */
 export const samp = sampS6;
 /** track.py profile -> { prof, ok, nT } or null when there is no station. */
-export function profile(S, O, phi, t0, t1, lat0 = 0, step = 1.0) { const P = profileAt(S, O, phi, t0, t1, { lat0, step }); return P.prof ? P : null; }
+export function profile(S, O, phi, t0, t1, lat0 = 0, step = 1.0, reach = 30) { const P = profileAt(S, O, phi, t0, t1, { lat0, step, reach }); return P.prof ? P : null; }
+/**
+ * The hallway width search's upper end (DOCTRINE, 2026-10-20: UDisc renders differently at different zooms): the graduated 60 px,
+ * or 1.2 rC1 when the map is zoomed in further (S6's rule, lane/stitch), so a stitched capture's ribbon (W ~70 px on The Rec at
+ * rC1 94 px) is not clipped. Every image whose ribbon fits under 60 px searches exactly as before.
+ */
+export const widthSearchMaxPx = (S) => Math.max(60, Number.isFinite(S?.R1) ? 1.2 * S.R1 : 0);
 /** track.py edge_pair -> { l, r, c, w, score, gl, gr } or null. */
 export function edgePair(P, Wexp, tolW = 3.0, latLim = 12.0) {
   const e = P ? edgePairOf(P, Wexp, { tolW, latLim }) : null;
@@ -357,7 +363,7 @@ export function widthFromStraight(S, base) {
   const ws = [];
   for (const [h, b] of Object.entries(base)) {
     const s3 = b.straight3; if (!s3 || s3.verdict !== 'STRAIGHT') continue;
-    for (const Wg of arange(20, 60, 2.0)) { const [e] = segFit(S, b.teeCenter, s3.basketPoint, Wg, 1.0, 3.0, S.L * 0.6, 2); if (e) ws.push([e.score, e.w, h]); }
+    for (const Wg of arange(20, widthSearchMaxPx(S), 2.0)) { const [e] = segFit(S, b.teeCenter, s3.basketPoint, Wg, 1.0, 3.0, S.L * 0.6, 2); if (e) ws.push([e.score, e.w, h]); }
   }
   const by = new Map(); for (const [sc, w, h] of ws) { if (!by.has(h)) by.set(h, []); by.get(h).push([sc, w]); }
   const per = [...by.values()].map((v) => v.reduce((m, x) => (x[0] > m[0] || (x[0] === m[0] && x[1] > m[1]) ? x : m))[1]);
@@ -371,8 +377,8 @@ export function teeBadgeLearn(S, base) {
     const T = b.teeCenter, u = b.u, St = capStart(T, u, S.L), B = S.badges[Number(h)];
     const stop = (B[0] - St[0]) * u[0] + (B[1] - St[1]) * u[1] - S.badgeHalf[Number(h)] - 2;
     if (stop < 25) { rows.push({ hole: Number(h), usable: false, why: `only ${Math.round(stop)} px between tee cap and badge` }); continue; }
-    const phi = Math.atan2(u[1], u[0]), P = profile(S, St, phi, 2, stop); let best = null;
-    for (const Wg of arange(18, 60, 1.0)) { const e = P ? edgePair(P, Wg, 0.75, 3.0) : null; if (e && (best === null || e.score > best.score)) best = e; }
+    const wMax = widthSearchMaxPx(S), phi = Math.atan2(u[1], u[0]), P = profile(S, St, phi, 2, stop, 0, 1.0, reachFor(wMax)); let best = null;
+    for (const Wg of arange(18, wMax, 1.0)) { const e = P ? edgePair(P, Wg, 0.75, 3.0) : null; if (e && (best === null || e.score > best.score)) best = e; }
     if (!best) { rows.push({ hole: Number(h), usable: false, why: 'no edge pair', lenPx: round(stop, 1) }); continue; }
     const m = passStats(S, St, phi, arange(2, stop, 1.0), best.w);
     const pct = (xs, q) => { const s = Float64Array.from(xs).sort(); const k = (s.length - 1) * q / 100, f = Math.floor(k), c = Math.min(f + 1, s.length - 1); return s[f] + (s[c] - s[f]) * (k - f); };

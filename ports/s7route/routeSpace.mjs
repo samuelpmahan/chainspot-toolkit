@@ -226,7 +226,7 @@ export function routeHallwayOf(S, start) {
   const base = Object.fromEntries(start.holes.map((h) => [h.hole, { teeCenter: h.teeCenter, u: h.u }]));
   const tb = teeBadgeLearn(S, base);
   return { schema: 'nctk-s7-route-hallway@1', widthPx: tb.widthPx, unit: ROUTE_UNITS.widthPx, segments: tb.segments, of: tb.of, rows: tb.rows,
-    rule: 'teebadge.py: per tee (S3 + S4) the TEE -> BADGE segment, free width search 18..59 px, usable when centred within 3 px; W = median',
+    rule: 'teebadge.py: per tee (S3 + S4) the TEE -> BADGE segment, free width search 18 px .. max(60 px, 1.2 rC1), usable when centred within 3 px; W = median',
     condition: tb.widthPx ? null : 'no usable TEE -> BADGE segment: no hallway width', emits: { widthPx: tb.widthPx ?? 0, segmentsCount: tb.segments } };
 }
 
