@@ -113,7 +113,7 @@ parts follow different laws. Measured on The Rec (single raster vs the zoomed L 
 grey fill scales with the map (28x17 -> 52x33 px), its white frame stays ~3-4 px at every zoom, and its colours do not
 change (fill 158, frame 255). Badges are fixed-size sprites (54-57 x 42-44 px at 1x and 2.33x). The hallway ribbon
 scaled 1.45x where the map scaled 2.33x (E19). So every rule names which law its quantity follows: map-scaled
-(expressed in a unit measured per image, e.g. hallway W), screen-fixed (a constant px, GLOBAL), or a ratio only
+(expressed in rC1px, the radius of the basket's C1 circle measured per image; never the hallway width, which follows its own curve), screen-fixed (a constant px, GLOBAL), or a ratio only
 between quantities that follow the same law. Accommodating this variety is the requirement, not an edge case.
 
 **A stitched course is one raster (Sam, 2026-10-19).** The tiles of one capture (lenard1-5; Dash's Track's four
