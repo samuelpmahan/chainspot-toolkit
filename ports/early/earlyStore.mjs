@@ -112,7 +112,37 @@ function locateTestimony(forkRoot, sourceSha256) {
  * current PxC, which the stage gateways may replace between stages), with
  * every toolkit Part producer and provider capability registered.
  */
-export function createEarlyStore({ forkRoot, source, getBoard, dist, restorePxC, instrumentation }) {
+/**
+ * A capture whose S1 read no badge at all. The pinned provider's S1 plan declares that Badge.findPx reads px.badges.stage and
+ * px.components, but it reads them only through a badge, so an empty badge read set fails its own access-conformance check with
+ * "missing reads=[px.badges.stage, px.components]". That is a data condition (no badges in this image), not an integrity failure:
+ * the S1 gateway recognises exactly that signature with an empty read set and raises this typed condition for the runner to record.
+ */
+export class NoBadgesCondition extends Error {
+  constructor(detail) { super(`S1 read no badges: ${detail}`); this.name = 'NoBadgesCondition'; this.condition = { stage: 'S1', result: 'no badges', detail }; }
+}
+const EMPTY_READ_SET = /Tick 'Badge\.findPx' access contradicts its declaration; missing reads=\[px\.badges\.stage, px\.components\] extra reads=\[\] missing writes=\[\] extra writes=\[\]/;
+
+/**
+ * Lane s1-round-view-plate: provider feature knobs (feature id -> knob -> value) applied only while the S1 gateway runs. The badge
+ * plate in the UDisc round view is a translucent black over the map (V 43-65), not the opaque near-black of the course map (V 7-10),
+ * so the plate test's dark ceiling and fill floor are recalibrated. Provider files stay untouched: the knobs are the provider's own.
+ */
+/** Temporarily wrap a provider FeatureContext's resolve() so the named features' knobs take the given values; returns the restore function. */
+export function applyFeatureKnobs(context, knobs) {
+  const base = context.resolve;
+  if (!knobs) return () => {};
+  context.resolve = function (feature) { const r = base.call(this, feature); const o = knobs[feature.id]; return o ? { ...r, knobs: { ...r.knobs, ...o } } : r; };
+  return () => { context.resolve = base; };
+}
+/** The typed condition when `error` is the pinned S1 plan's empty-read-set access failure on a board whose badge read set is empty; else null. */
+export function noBadgesOf(error, board) {
+  if (!EMPTY_READ_SET.test(String(error?.message)) || !board?.has?.('badges') || board.get('badges').length !== 0) return null;
+  return new NoBadgesCondition('the badge read set is empty (the pinned plan then fails its own access check on the declared reads px.badges.stage, px.components)');
+}
+export const S1_ROUND_VIEW_PLATE_KNOBS = Object.freeze({ hsv: Object.freeze({ darkVMax: 65 }), badges: Object.freeze({ plateFillMin: 0.45 }) });
+
+export function createEarlyStore({ forkRoot, source, getBoard, dist, restorePxC, instrumentation, featureKnobs = null }) {
   const store = createPartStore({ base: getBoard, name: 'early', onCall: (entry) => instrumentation.calculations.push(entry) });
   const { executeCompiledPlan } = dist('exec/gateway');
   const { nullFeatureContext, defaultKnobs } = dist('detectors/threeFactor/features/types');
@@ -176,7 +206,11 @@ export function createEarlyStore({ forkRoot, source, getBoard, dist, restorePxC,
   });
   store.register('fn.provider.S1.detectBadges', {
     inParts: ['localImage'],
-    calculate: (io) => dist('detectors/threeFactor/measure').detectBadges(io.in('localImage'), 0)
+    calculate: (io) => {
+      // the witness re-runs the pinned detector under the same knobs the S1 gateway ran with (lane s1-round-view-plate recalibrates two)
+      const { DEFAULT_BADGE_STAGE_KNOBS } = dist('detectors/threeFactor/badgeStage'), { DEFAULT_HSV_KNOBS } = dist('detectors/threeFactor/raster');
+      return dist('detectors/threeFactor/measure').detectBadges(io.in('localImage'), 0, undefined, { ...DEFAULT_BADGE_STAGE_KNOBS, ...(featureKnobs?.badges ?? {}) }, { ...DEFAULT_HSV_KNOBS, ...(featureKnobs?.hsv ?? {}) });
+    }
   });
   store.register('fn.provider.S1.badgeGlyphTemplate.compile', {
     outParts: ['tk.s1.badgeGlyphTemplate.plan'], note: "the provider's badge-glyph-template-on config, resolved and compiled",
@@ -257,6 +291,13 @@ export function createEarlyStore({ forkRoot, source, getBoard, dist, restorePxC,
   // own gateway function; the runner routes that invocation through the
   // store (the original function is kept under a symbol so a second run in
   // the same process wraps the original, not a previous run's wrapper).
+  const features = dist('detectors/threeFactor/features/types');
+  const runS1Gateway = (original, args) => {
+    const restore = applyFeatureKnobs(features.nullFeatureContext, featureKnobs);
+    try { return original(...args); }
+    catch (error) { throw noBadgesOf(error, args[0]) ?? error; }
+    finally { restore(); }
+  };
   for (const id of STAGE_IDS) {
     const [path, name] = GATEWAYS[id];
     const mod = dist(path);
@@ -265,7 +306,7 @@ export function createEarlyStore({ forkRoot, source, getBoard, dist, restorePxC,
     const fn = `fn.provider.${id}.gateway`;
     const out = `tk.stage.${id}.captured`;
     store.register(fn, { outParts: [out], lazy: false, note: `the pinned clean ${id} gateway (${path}.${name})`, calculate: ({ args }) => {
-      const result = original(...args);
+      const result = id === 'S1' ? runS1Gateway(original, args) : original(...args);
       return result instanceof Promise ? result.then((value) => ({ [out]: value })) : { [out]: result };
     } });
     const wrapped = (...args) => {
