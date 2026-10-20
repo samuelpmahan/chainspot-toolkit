@@ -1,12 +1,12 @@
 {
  "schema": "nctk-state-frozen@2",
- "at": "2026-10-20T20:36:33.779Z",
+ "at": "2026-10-20T22:05:42.861Z",
  "closures": {
   "s3assoc": "8580575923421b111fc17a20717a4fd9c5db5f267f7e6fa84aaca0860dd5088b",
-  "s4recover": "17639b34a85896cf2aec571774d6213c46a7c6554be90e845c6c8a5ccb9daae8",
-  "s5pair": "47d08b9e7b6ca4ff7b4d7b89a24815db450a2a9307056d99ec4a9a68bbebb526",
-  "s6straight": "015a87158af05e792a541cf662d25e65f4054499e1d566329ad92afadd63a7dd",
-  "s7trace": "ce1dfec163b34e1fe5af95e28125a1c71da624aac7361ea86ac8765a295cceeb"
+  "s4recover": "0adbefda0893c5fb4a21e91046898aa2ef84e46c354d3fc17ec52b99e3b56928",
+  "s5pair": "3ce6df8f76ba50ecd514032a3824173ff462135ee5ccfe02a8e95e464547d2bd",
+  "s6straight": "9aebbedae4f62697eb33cf08e30722f1b149bf627dc3656dcb79475097f7805d",
+  "s7trace": "3aacd3e310396f7674bc185ce2610ecb5622c75f828269fb9547b49a67eaf669"
  },
  "rows": [
   {
@@ -15,7 +15,7 @@
    "expected": "badge labels for all 18 holes",
    "result": "18 found; missing 0, duplicates 0",
    "status": "met",
-   "attempt": "attempt-1792475496265-c679d0afc722"
+   "attempt": "attempt-1792533767125-ec969cc0d97f"
   },
   {
    "course": "golden",
@@ -23,7 +23,7 @@
    "expected": "baskets within 12 px of all 18 holes, or recovered by S4 (occlusion is expected)",
    "result": "17/1/0 TP/FN/FP (1 FN recovered by S4)",
    "status": "met",
-   "attempt": "attempt-1792475496265-c679d0afc722"
+   "attempt": "attempt-1792533767125-ec969cc0d97f"
   },
   {
    "course": "golden",
@@ -31,7 +31,7 @@
    "expected": "tees within 8 px of all 18 holes, or recovered by S4 (occlusion is expected)",
    "result": "15/3/0 TP/FN/FP (3 FN recovered by S4)",
    "status": "met",
-   "attempt": "attempt-1792475496265-c679d0afc722"
+   "attempt": "attempt-1792533767125-ec969cc0d97f"
   },
   {
    "course": "golden",
@@ -39,7 +39,7 @@
    "expected": "every judged tee associated to its own badge (all 18 holes)",
    "result": "15 right / 0 wrong / 0 none",
    "status": "met",
-   "attempt": "attempt-1792475496265-c679d0afc722"
+   "attempt": "attempt-1792533767125-ec969cc0d97f"
   },
   {
    "course": "golden",
@@ -47,7 +47,7 @@
    "expected": "baskets after recovery within 12 px of all 18 holes",
    "result": "18/0/0 TP/FN/FP (+1 recovered)",
    "status": "met",
-   "attempt": "attempt-1792475496265-c679d0afc722"
+   "attempt": "attempt-1792533767125-ec969cc0d97f"
   },
   {
    "course": "golden",
@@ -55,7 +55,7 @@
    "expected": "tees after recovery (accepted variant) within 8 px of all 18 holes",
    "result": "18/0/0 TP/FN/FP (+3 recovered, 3 right hole)",
    "status": "met",
-   "attempt": "attempt-1792475496265-c679d0afc722"
+   "attempt": "attempt-1792533767125-ec969cc0d97f"
   },
   {
    "course": "golden",
@@ -63,7 +63,7 @@
    "expected": "every judged tee (S3 + S4) paired with its own hole's badge, none unpaired (all 18 holes; tee within 8 px)",
    "result": "18 right / 0 wrong / 0 none; 0 unmatched badges",
    "status": "met",
-   "attempt": "attempt-1792475496265-c679d0afc722"
+   "attempt": "attempt-1792533767125-ec969cc0d97f"
   },
   {
    "course": "golden",
@@ -71,7 +71,7 @@
    "expected": "straight vs bent as Sam's corridorBends (none = straight) on every judged pair (all 18 holes; tee within 8 px), FP = 0 and FN = 0; basket within 12 px",
    "result": "9/0/0/9 TP/FP/FN/TN on 18 judged pairs; straight with wrong basket 0",
    "status": "met",
-   "attempt": "attempt-1792475496265-c679d0afc722"
+   "attempt": "attempt-1792533767125-ec969cc0d97f"
   },
   {
    "course": "golden",
@@ -79,7 +79,7 @@
    "expected": "every hole with bend testimony (all 18 holes) ends within 12 px of Sam's basket, stays within W / 2 of his corridor, all his bends hit (within half his corridor width), none extra",
    "result": "18/18 holes agree; bends 10/0/0 hit/missed/extra of 10",
    "status": "met",
-   "attempt": "attempt-1792475496265-c679d0afc722"
+   "attempt": "attempt-1792533767125-ec969cc0d97f"
   },
   {
    "course": "lenard",
@@ -87,7 +87,7 @@
    "expected": "badge labels for all 18 holes",
    "result": "18 found; missing 0, duplicates 0",
    "status": "met",
-   "attempt": "attempt-1792477227054-0727de32f75f"
+   "attempt": "attempt-1792533767381-f81caf56368d"
   },
   {
    "course": "lenard",
@@ -95,7 +95,7 @@
    "expected": "baskets within 12 px of all 18 holes, or recovered by S4 (occlusion is expected)",
    "result": "16/2/0 TP/FN/FP (2 FN recovered by S4)",
    "status": "met",
-   "attempt": "attempt-1792477227054-0727de32f75f"
+   "attempt": "attempt-1792533767381-f81caf56368d"
   },
   {
    "course": "lenard",
@@ -103,7 +103,7 @@
    "expected": "tees within 8 px of all 18 holes, or recovered by S4 (occlusion is expected)",
    "result": "17/1/0 TP/FN/FP (1 FN recovered by S4)",
    "status": "met",
-   "attempt": "attempt-1792477227054-0727de32f75f"
+   "attempt": "attempt-1792533767381-f81caf56368d"
   },
   {
    "course": "lenard",
@@ -111,7 +111,7 @@
    "expected": "every judged tee associated to its own badge (all 18 holes)",
    "result": "17 right / 0 wrong / 0 none",
    "status": "met",
-   "attempt": "attempt-1792477227054-0727de32f75f"
+   "attempt": "attempt-1792533767381-f81caf56368d"
   },
   {
    "course": "lenard",
@@ -119,7 +119,7 @@
    "expected": "baskets after recovery within 12 px of all 18 holes",
    "result": "18/0/0 TP/FN/FP (+2 recovered)",
    "status": "met",
-   "attempt": "attempt-1792477227054-0727de32f75f"
+   "attempt": "attempt-1792533767381-f81caf56368d"
   },
   {
    "course": "lenard",
@@ -127,7 +127,7 @@
    "expected": "tees after recovery (accepted variant) within 8 px of all 18 holes",
    "result": "18/0/0 TP/FN/FP (+1 recovered, 1 right hole)",
    "status": "met",
-   "attempt": "attempt-1792477227054-0727de32f75f"
+   "attempt": "attempt-1792533767381-f81caf56368d"
   },
   {
    "course": "lenard",
@@ -135,7 +135,7 @@
    "expected": "every judged tee (S3 + S4) paired with its own hole's badge, none unpaired (all 18 holes; tee within 8 px)",
    "result": "18 right / 0 wrong / 0 none; 0 unmatched badges",
    "status": "met",
-   "attempt": "attempt-1792477227054-0727de32f75f"
+   "attempt": "attempt-1792533767381-f81caf56368d"
   },
   {
    "course": "lenard",
@@ -143,7 +143,7 @@
    "expected": "straight vs bent as Sam's corridorBends (none = straight) on every judged pair (all 18 holes; tee within 8 px), FP = 0 and FN = 0; basket within 12 px",
    "result": "18/0/0/0 TP/FP/FN/TN on 18 judged pairs; straight with wrong basket 0",
    "status": "met",
-   "attempt": "attempt-1792477227054-0727de32f75f"
+   "attempt": "attempt-1792533767381-f81caf56368d"
   },
   {
    "course": "lenard",
@@ -151,7 +151,7 @@
    "expected": "every hole with bend testimony (all 18 holes) ends within 12 px of Sam's basket, stays within W / 2 of his corridor, all his bends hit (within half his corridor width), none extra",
    "result": "18/18 holes agree; bends 0/0/0 hit/missed/extra of 0",
    "status": "met",
-   "attempt": "attempt-1792477227054-0727de32f75f"
+   "attempt": "attempt-1792533767381-f81caf56368d"
   },
   {
    "course": "townelake",
@@ -159,7 +159,7 @@
    "expected": "badge labels for all 18 holes",
    "result": "18 found; missing 0, duplicates 0",
    "status": "met",
-   "attempt": "attempt-1792478263482-ff6559d71761"
+   "attempt": "attempt-1792533767190-8e6e27988d59"
   },
   {
    "course": "townelake",
@@ -167,7 +167,7 @@
    "expected": "baskets within 12 px of all 18 holes, or recovered by S4 (occlusion is expected)",
    "result": "18/0/0 TP/FN/FP",
    "status": "met",
-   "attempt": "attempt-1792478263482-ff6559d71761"
+   "attempt": "attempt-1792533767190-8e6e27988d59"
   },
   {
    "course": "townelake",
@@ -175,7 +175,7 @@
    "expected": "tees within 8 px of all 18 holes, or recovered by S4 (occlusion is expected)",
    "result": "17/1/0 TP/FN/FP (1 FN recovered by S4)",
    "status": "met",
-   "attempt": "attempt-1792478263482-ff6559d71761"
+   "attempt": "attempt-1792533767190-8e6e27988d59"
   },
   {
    "course": "townelake",
@@ -183,7 +183,7 @@
    "expected": "every judged tee associated to its own badge (all 18 holes)",
    "result": "17 right / 0 wrong / 0 none",
    "status": "met",
-   "attempt": "attempt-1792478263482-ff6559d71761"
+   "attempt": "attempt-1792533767190-8e6e27988d59"
   },
   {
    "course": "townelake",
@@ -191,7 +191,7 @@
    "expected": "baskets after recovery within 12 px of all 18 holes",
    "result": "18/0/0 TP/FN/FP (+0 recovered)",
    "status": "met",
-   "attempt": "attempt-1792478263482-ff6559d71761"
+   "attempt": "attempt-1792533767190-8e6e27988d59"
   },
   {
    "course": "townelake",
@@ -199,7 +199,7 @@
    "expected": "tees after recovery (accepted variant) within 8 px of all 18 holes",
    "result": "18/0/0 TP/FN/FP (+1 recovered, 1 right hole)",
    "status": "met",
-   "attempt": "attempt-1792478263482-ff6559d71761"
+   "attempt": "attempt-1792533767190-8e6e27988d59"
   },
   {
    "course": "townelake",
@@ -207,7 +207,7 @@
    "expected": "every judged tee (S3 + S4) paired with its own hole's badge, none unpaired (all 18 holes; tee within 8 px)",
    "result": "18 right / 0 wrong / 0 none; 0 unmatched badges",
    "status": "met",
-   "attempt": "attempt-1792478263482-ff6559d71761"
+   "attempt": "attempt-1792533767190-8e6e27988d59"
   },
   {
    "course": "townelake",
@@ -215,7 +215,7 @@
    "expected": "straight vs bent as Sam's corridorBends (none = straight) on every judged pair (all 18 holes; tee within 8 px), FP = 0 and FN = 0; basket within 12 px",
    "result": "15/0/0/3 TP/FP/FN/TN on 18 judged pairs; straight with wrong basket 0",
    "status": "met",
-   "attempt": "attempt-1792478263482-ff6559d71761"
+   "attempt": "attempt-1792533767190-8e6e27988d59"
   },
   {
    "course": "townelake",
@@ -223,7 +223,7 @@
    "expected": "every hole with bend testimony (all 18 holes) ends within 12 px of Sam's basket, stays within W / 2 of his corridor, all his bends hit (within half his corridor width), none extra",
    "result": "18/18 holes agree; bends 3/0/0 hit/missed/extra of 3",
    "status": "met",
-   "attempt": "attempt-1792478263482-ff6559d71761"
+   "attempt": "attempt-1792533767190-8e6e27988d59"
   },
   {
    "course": "heritage",
@@ -231,7 +231,7 @@
    "expected": "badge labels for all 18 holes",
    "result": "18 found; missing 0, duplicates 0",
    "status": "met",
-   "attempt": "attempt-1792479122567-fe86ba569223"
+   "attempt": "attempt-1792533767246-e52feb2d9964"
   },
   {
    "course": "heritage",
@@ -239,7 +239,7 @@
    "expected": "baskets within 12 px of all 18 holes, or recovered by S4 (occlusion is expected)",
    "result": "15/3/0 TP/FN/FP (3 FN recovered by S4)",
    "status": "met",
-   "attempt": "attempt-1792479122567-fe86ba569223"
+   "attempt": "attempt-1792533767246-e52feb2d9964"
   },
   {
    "course": "heritage",
@@ -247,7 +247,7 @@
    "expected": "tees within 8 px of all 18 holes, or recovered by S4 (occlusion is expected)",
    "result": "14/4/0 TP/FN/FP (4 FN recovered by S4)",
    "status": "met",
-   "attempt": "attempt-1792479122567-fe86ba569223"
+   "attempt": "attempt-1792533767246-e52feb2d9964"
   },
   {
    "course": "heritage",
@@ -255,7 +255,7 @@
    "expected": "every judged tee associated to its own badge (all 18 holes)",
    "result": "14 right / 0 wrong / 0 none",
    "status": "met",
-   "attempt": "attempt-1792479122567-fe86ba569223"
+   "attempt": "attempt-1792533767246-e52feb2d9964"
   },
   {
    "course": "heritage",
@@ -263,7 +263,7 @@
    "expected": "baskets after recovery within 12 px of all 18 holes",
    "result": "18/0/0 TP/FN/FP (+3 recovered)",
    "status": "met",
-   "attempt": "attempt-1792479122567-fe86ba569223"
+   "attempt": "attempt-1792533767246-e52feb2d9964"
   },
   {
    "course": "heritage",
@@ -271,7 +271,7 @@
    "expected": "tees after recovery (accepted variant) within 8 px of all 18 holes",
    "result": "18/0/0 TP/FN/FP (+4 recovered, 4 right hole)",
    "status": "met",
-   "attempt": "attempt-1792479122567-fe86ba569223"
+   "attempt": "attempt-1792533767246-e52feb2d9964"
   },
   {
    "course": "heritage",
@@ -279,7 +279,7 @@
    "expected": "every judged tee (S3 + S4) paired with its own hole's badge, none unpaired (all 18 holes; tee within 8 px)",
    "result": "18 right / 0 wrong / 0 none; 0 unmatched badges",
    "status": "met",
-   "attempt": "attempt-1792479122567-fe86ba569223"
+   "attempt": "attempt-1792533767246-e52feb2d9964"
   },
   {
    "course": "heritage",
@@ -287,15 +287,15 @@
    "expected": "straight vs bent as Sam's corridorBends (none = straight) on every judged pair (all 18 holes; tee within 8 px), FP = 0 and FN = 0; basket within 12 px",
    "result": "3/0/0/15 TP/FP/FN/TN on 18 judged pairs; straight with wrong basket 0",
    "status": "met",
-   "attempt": "attempt-1792479122567-fe86ba569223"
+   "attempt": "attempt-1792533767246-e52feb2d9964"
   },
   {
    "course": "heritage",
    "key": "S7trace",
    "expected": "every hole with bend testimony (all 18 holes) ends within 12 px of Sam's basket, stays within W / 2 of his corridor, all his bends hit (within half his corridor width), none extra",
-   "result": "18/18 holes agree; bends 13/6/4 hit/missed/extra of 19",
+   "result": "18/18 holes agree; bends 18/1/1 hit/missed/extra of 19",
    "status": "unmet",
-   "attempt": "attempt-1792479122567-fe86ba569223"
+   "attempt": "attempt-1792533767246-e52feb2d9964"
   },
   {
    "course": "alex",
@@ -303,7 +303,7 @@
    "expected": "badge labels for holes 6, 13, 16",
    "result": "18 found; missing 0, duplicates 0",
    "status": "met",
-   "attempt": "attempt-1792481749238-9d9c3c166761"
+   "attempt": "attempt-1792533819469-b9e8dbd44dd3"
   },
   {
    "course": "alex",
@@ -311,7 +311,7 @@
    "expected": "baskets within 12 px of holes 6, 13, 16, or recovered by S4 (occlusion is expected)",
    "result": "3/0/- TP/FN/FP",
    "status": "met",
-   "attempt": "attempt-1792481749238-9d9c3c166761"
+   "attempt": "attempt-1792533819469-b9e8dbd44dd3"
   },
   {
    "course": "alex",
@@ -319,7 +319,7 @@
    "expected": "tees within 8 px of holes 6, 13, 16, or recovered by S4 (occlusion is expected)",
    "result": "2/1/- TP/FN/FP (1 FN recovered by S4)",
    "status": "met",
-   "attempt": "attempt-1792481749238-9d9c3c166761"
+   "attempt": "attempt-1792533819469-b9e8dbd44dd3"
   },
   {
    "course": "alex",
@@ -327,7 +327,7 @@
    "expected": "every judged tee associated to its own badge (holes 6, 13, 16)",
    "result": "2 right / 0 wrong / 0 none",
    "status": "met",
-   "attempt": "attempt-1792481749238-9d9c3c166761"
+   "attempt": "attempt-1792533819469-b9e8dbd44dd3"
   },
   {
    "course": "alex",
@@ -335,7 +335,7 @@
    "expected": "baskets after recovery within 12 px of holes 6, 13, 16",
    "result": "3/0/- TP/FN/FP (+3 recovered)",
    "status": "met",
-   "attempt": "attempt-1792481749238-9d9c3c166761"
+   "attempt": "attempt-1792533819469-b9e8dbd44dd3"
   },
   {
    "course": "alex",
@@ -343,7 +343,7 @@
    "expected": "tees after recovery (accepted variant) within 8 px of holes 6, 13, 16",
    "result": "3/0/- TP/FN/FP (+5 recovered, 1 right hole)",
    "status": "met",
-   "attempt": "attempt-1792481749238-9d9c3c166761"
+   "attempt": "attempt-1792533819469-b9e8dbd44dd3"
   },
   {
    "course": "alex",
@@ -351,7 +351,7 @@
    "expected": "every judged tee (S3 + S4) paired with its own hole's badge, none unpaired (holes 6, 13, 16; tee within 8 px)",
    "result": "3 right / 0 wrong / 0 none (+15 unjudged); 0 unmatched badges",
    "status": "met",
-   "attempt": "attempt-1792481749238-9d9c3c166761"
+   "attempt": "attempt-1792533819469-b9e8dbd44dd3"
   },
   {
    "course": "alex",
@@ -359,7 +359,7 @@
    "expected": "straight vs bent as Sam's corridorBends (none = straight) on every judged pair (holes 6, 13, 16; tee within 8 px), FP = 0 and FN = 0; basket within 12 px",
    "result": "0/0/0/3 TP/FP/FN/TN on 3 judged pairs; straight with wrong basket 0",
    "status": "met",
-   "attempt": "attempt-1792481749238-9d9c3c166761"
+   "attempt": "attempt-1792533819469-b9e8dbd44dd3"
   },
   {
    "course": "alex",
@@ -367,7 +367,7 @@
    "expected": "every hole with bend testimony (holes 6, 13, 16) ends within 12 px of Sam's basket, stays within W / 2 of his corridor, all his bends hit (within half his corridor width), none extra",
    "result": "3/3 holes agree; bends 0/0/0 hit/missed/extra of 0",
    "status": "met",
-   "attempt": "attempt-1792481749238-9d9c3c166761"
+   "attempt": "attempt-1792533819469-b9e8dbd44dd3"
   },
   {
    "course": "northpark",
@@ -375,7 +375,7 @@
    "expected": "N = 18 badges (no testimony: count closure only)",
    "result": "18 of N = 18",
    "status": "unjudged",
-   "attempt": "attempt-1792489574653-1ff8fa265e0f"
+   "attempt": "attempt-1792533879441-7ecb4c9e0946"
   },
   {
    "course": "northpark",
@@ -383,7 +383,7 @@
    "expected": "N = 18 badges (no testimony: count closure only)",
    "result": "17 of N = 18",
    "status": "unjudged",
-   "attempt": "attempt-1792489574653-1ff8fa265e0f"
+   "attempt": "attempt-1792533879441-7ecb4c9e0946"
   },
   {
    "course": "northpark",
@@ -391,7 +391,7 @@
    "expected": "N = 18 badges (no testimony: count closure only)",
    "result": "16 of N = 18",
    "status": "unjudged",
-   "attempt": "attempt-1792489574653-1ff8fa265e0f"
+   "attempt": "attempt-1792533879441-7ecb4c9e0946"
   },
   {
    "course": "northpark",
@@ -399,7 +399,7 @@
    "expected": "N = 18 badges (no testimony: count closure only)",
    "result": "16 of N = 18",
    "status": "unjudged",
-   "attempt": "attempt-1792489574653-1ff8fa265e0f"
+   "attempt": "attempt-1792533879441-7ecb4c9e0946"
   },
   {
    "course": "northpark",
@@ -407,7 +407,7 @@
    "expected": "N = 18 badges (no testimony: count closure only)",
    "result": "18 of N = 18",
    "status": "unjudged",
-   "attempt": "attempt-1792489574653-1ff8fa265e0f"
+   "attempt": "attempt-1792533879441-7ecb4c9e0946"
   },
   {
    "course": "northpark",
@@ -415,7 +415,7 @@
    "expected": "N = 18 badges (no testimony: count closure only)",
    "result": "18 of N = 18",
    "status": "unjudged",
-   "attempt": "attempt-1792489574653-1ff8fa265e0f"
+   "attempt": "attempt-1792533879441-7ecb4c9e0946"
   },
   {
    "course": "northpark",
@@ -423,7 +423,7 @@
    "expected": "N = 18 badges (no testimony: count closure only)",
    "result": "18 of N = 18",
    "status": "unjudged",
-   "attempt": "attempt-1792489574653-1ff8fa265e0f"
+   "attempt": "attempt-1792533879441-7ecb4c9e0946"
   },
   {
    "course": "northpark",
@@ -431,7 +431,7 @@
    "expected": "N = 18 badges (no testimony: count closure only)",
    "result": "15 straight / 3 bent / 0 unknown of 18 pairs",
    "status": "unjudged",
-   "attempt": "attempt-1792489574653-1ff8fa265e0f"
+   "attempt": "attempt-1792533879441-7ecb4c9e0946"
   },
   {
    "course": "northpark",
@@ -439,7 +439,7 @@
    "expected": "N = 18 badges (no testimony: count closure only)",
    "result": "18 of N = 18 holes reach a basket",
    "status": "unjudged",
-   "attempt": "attempt-1792489574653-1ff8fa265e0f"
+   "attempt": "attempt-1792533879441-7ecb4c9e0946"
   }
  ],
  "objects": {
@@ -5395,8 +5395,8 @@
          427.22499803420277
         ],
         [
-         643.9658575320709,
-         463.322508931317
+         644.1993692398519,
+         463.4113642098232
         ],
         [
          516.84,
@@ -5411,8 +5411,8 @@
       },
       {
        "kind": "cross",
-       "x": 643.9658575320709,
-       "y": 463.322508931317
+       "x": 644.1993692398519,
+       "y": 463.4113642098232
       },
       {
        "kind": "cross",
@@ -5466,8 +5466,8 @@
          571.9818918993287
         ],
         [
-         690.2323325977635,
-         584.7846497255297
+         690.6738326565786,
+         584.74639151155
         ],
         [
          763.84,
@@ -5482,8 +5482,8 @@
       },
       {
        "kind": "cross",
-       "x": 690.2323325977635,
-       "y": 584.7846497255297
+       "x": 690.6738326565786,
+       "y": 584.74639151155
       },
       {
        "kind": "cross",
@@ -5583,8 +5583,8 @@
          654.2861539447949
         ],
         [
-         459.96052968381366,
-         842.8428277104074
+         459.08442817220293,
+         837.2263572356273
         ],
         [
          432.84,
@@ -5599,8 +5599,8 @@
       },
       {
        "kind": "cross",
-       "x": 459.96052968381366,
-       "y": 842.8428277104074
+       "x": 459.08442817220293,
+       "y": 837.2263572356273
       },
       {
        "kind": "cross",
@@ -5732,7 +5732,7 @@
      "verdict": "TP",
      "center": [
       492.56181818181824,
-      961.3313068205002
+      961.4099598200066
      ],
      "confidence": null,
      "marks": [
@@ -5771,8 +5771,8 @@
          978.0586695470597
         ],
         [
-         508.08303939003423,
-         979.6626136410003
+         520.7410532822016,
+         979.8199196400134
         ],
         [
          617.84,
@@ -5787,8 +5787,8 @@
       },
       {
        "kind": "cross",
-       "x": 508.08303939003423,
-       "y": 979.6626136410003
+       "x": 520.7410532822016,
+       "y": 979.8199196400134
       },
       {
        "kind": "cross",
@@ -5802,7 +5802,7 @@
      "name": "Hole 8 trace",
      "verdict": "TP",
      "center": [
-      465.0631401890395,
+      460.7089425570842,
       1091.1566666666668
      ],
      "confidence": null,
@@ -5842,8 +5842,8 @@
          1016.4235719056649
         ],
         [
-         410.9444621962609,
-         1111.6584013943313
+         402.23606693235024,
+         1120.0199619912153
         ],
         [
          422.84,
@@ -5858,8 +5858,8 @@
       },
       {
        "kind": "cross",
-       "x": 410.9444621962609,
-       "y": 1111.6584013943313
+       "x": 402.23606693235024,
+       "y": 1120.0199619912153
       },
       {
        "kind": "cross",
@@ -6214,8 +6214,8 @@
          1346.3843674551322
         ],
         [
-         936.0000432355273,
-         1200.0879392486531
+         935.7609014402132,
+         1200.3716933668725
         ],
         [
          1032.84,
@@ -6230,8 +6230,8 @@
       },
       {
        "kind": "cross",
-       "x": 936.0000432355273,
-       "y": 1200.0879392486531
+       "x": 935.7609014402132,
+       "y": 1200.3716933668725
       },
       {
        "kind": "cross",
@@ -6337,7 +6337,7 @@
      "name": "Hole 18 trace",
      "verdict": "TP",
      "center": [
-      896.188068488987,
+      896.187544671074,
       637.1570881226054
      ],
      "confidence": null,
@@ -6393,12 +6393,12 @@
          833.719953006255
         ],
         [
-         927.5125898568906,
-         715.4038647581194
+         927.5361536026588,
+         715.3534922188574
         ],
         [
-         1004.2841829549856,
-         555.2611162267465
+         1004.2831353191593,
+         555.2674830064071
         ],
         [
          998.84,
@@ -6413,13 +6413,13 @@
       },
       {
        "kind": "cross",
-       "x": 927.5125898568906,
-       "y": 715.4038647581194
+       "x": 927.5361536026588,
+       "y": 715.3534922188574
       },
       {
        "kind": "cross",
-       "x": 1004.2841829549856,
-       "y": 555.2611162267465
+       "x": 1004.2831353191593,
+       "y": 555.2674830064071
       },
       {
        "kind": "cross",
@@ -15284,20 +15284,20 @@
        "kind": "poly",
        "pts": [
         [
-         377.741,
-         1039.536
+         377.747,
+         1039.526
         ],
         [
-         396.149,
-         1038.659
+         396.155,
+         1038.668
         ],
         [
-         396.759,
-         1051.464
+         396.753,
+         1051.474
         ],
         [
-         378.351,
-         1052.341
+         378.345,
+         1052.332
         ]
        ]
       },
@@ -17411,8 +17411,8 @@
          1014.0204631983788
         ],
         [
-         810.7524252710556,
-         877.4845493973036
+         812.2982785252412,
+         876.4765455097221
         ],
         [
          907.84,
@@ -17427,8 +17427,8 @@
       },
       {
        "kind": "cross",
-       "x": 810.7524252710556,
-       "y": 877.4845493973036
+       "x": 812.2982785252412,
+       "y": 876.4765455097221
       },
       {
        "kind": "cross",
@@ -17580,7 +17580,7 @@
      "name": "Hole 11 trace",
      "verdict": "TP",
      "center": [
-      707.4217599202559,
+      706.4516089134477,
       640.0629475456021
      ],
      "confidence": null,
@@ -17620,8 +17620,8 @@
          544.8341832222441
         ],
         [
-         685.1411471123904,
-         670.707765546723
+         683.0632178268953,
+         680.0500534533605
         ],
         [
          729.84,
@@ -17636,8 +17636,8 @@
       },
       {
        "kind": "cross",
-       "x": 685.1411471123904,
-       "y": 670.707765546723
+       "x": 683.0632178268953,
+       "y": 680.0500534533605
       },
       {
        "kind": "cross",
@@ -17698,7 +17698,7 @@
      "verdict": "TP",
      "center": [
       263.7172334331616,
-      1052.8005519349858
+      1052.7966560353266
      ],
      "confidence": null,
      "marks": [
@@ -17717,8 +17717,8 @@
        "kind": "path",
        "pts": [
         [
-         379.45838493433456,
-         1045.8711038699719
+         379.45801772633365,
+         1045.863312070653
         ],
         [
          138.84,
@@ -17728,8 +17728,8 @@
       },
       {
        "kind": "cross",
-       "x": 379.45838493433456,
-       "y": 1045.8711038699719
+       "x": 379.45801772633365,
+       "y": 1045.863312070653
       },
       {
        "kind": "cross",
@@ -17836,7 +17836,7 @@
      "verdict": "TP",
      "center": [
       478.57979766845705,
-      1647.6527366510622
+      1645.6122706496362
      ],
      "confidence": null,
      "marks": [
@@ -17875,8 +17875,8 @@
          1706.6886077433362
         ],
         [
-         578.9564072502243,
-         1585.3363952381594
+         582.8649231756995,
+         1581.2554632353078
         ],
         [
          647.84,
@@ -17891,8 +17891,8 @@
       },
       {
        "kind": "cross",
-       "x": 578.9564072502243,
-       "y": 1585.3363952381594
+       "x": 582.8649231756995,
+       "y": 1581.2554632353078
       },
       {
        "kind": "cross",
@@ -22992,7 +22992,7 @@
      "verdict": "TP",
      "center": [
       474.2700022888184,
-      1553.8000030517578
+      1554.192522680863
      ],
      "confidence": null,
      "marks": [
@@ -23031,8 +23031,8 @@
          1532.6782574480908
         ],
         [
-         487.078258107344,
-         1576.3880745169834
+         491.76475803551875,
+         1578.7850392582106
         ],
         [
          552.84,
@@ -23047,8 +23047,8 @@
       },
       {
        "kind": "cross",
-       "x": 487.078258107344,
-       "y": 1576.3880745169834
+       "x": 491.76475803551875,
+       "y": 1578.7850392582106
       },
       {
        "kind": "cross",
@@ -23133,7 +23133,7 @@
      "name": "Hole 4 trace",
      "verdict": "TP",
      "center": [
-      718.5162254698248,
+      719.27186796668,
       1282.875770111084
      ],
      "confidence": null,
@@ -23189,12 +23189,12 @@
          1388.0094646831492
         ],
         [
-         727.8133526270541,
-         1293.1954773403127
+         730.54373593336,
+         1290.6908268279883
         ],
         [
-         723.2037379683622,
-         1217.2771065715992
+         723.1199357350562,
+         1216.9845608084927
         ],
         [
          708.84,
@@ -23209,13 +23209,13 @@
       },
       {
        "kind": "cross",
-       "x": 727.8133526270541,
-       "y": 1293.1954773403127
+       "x": 730.54373593336,
+       "y": 1290.6908268279883
       },
       {
        "kind": "cross",
-       "x": 723.2037379683622,
-       "y": 1217.2771065715992
+       "x": 723.1199357350562,
+       "y": 1216.9845608084927
       },
       {
        "kind": "cross",
@@ -23229,7 +23229,7 @@
      "name": "Hole 5 trace",
      "verdict": "TP",
      "center": [
-      734.1614506953646,
+      732.8655400973068,
       1039.579966905716
      ],
      "confidence": null,
@@ -23269,8 +23269,8 @@
          1143.2308173595904
         ],
         [
-         716.4829013907291,
-         1010.122496632849
+         713.8910801946137,
+         1015.9887933333831
         ],
         [
          751.84,
@@ -23285,8 +23285,8 @@
       },
       {
        "kind": "cross",
-       "x": 716.4829013907291,
-       "y": 1010.122496632849
+       "x": 713.8910801946137,
+       "y": 1015.9887933333831
       },
       {
        "kind": "cross",
@@ -23344,10 +23344,10 @@
     {
      "hole": 7,
      "name": "Hole 7 trace",
-     "verdict": "FN",
+     "verdict": "TP",
      "center": [
       1003.7758769226074,
-      695.2765327170226
+      695.2656127216703
      ],
      "confidence": null,
      "marks": [
@@ -23402,12 +23402,12 @@
          711.9075253995392
         ],
         [
-         968.4217400939463,
-         677.100123539514
+         958.7468607236249,
+         694.1426729091086
         ],
         [
-         1009.7084400852062,
-         680.8905056899634
+         968.5726473474922,
+         677.0782835488095
         ],
         [
          1136.84,
@@ -23422,13 +23422,13 @@
       },
       {
        "kind": "cross",
-       "x": 968.4217400939463,
-       "y": 677.100123539514
+       "x": 958.7468607236249,
+       "y": 694.1426729091086
       },
       {
        "kind": "cross",
-       "x": 1009.7084400852062,
-       "y": 680.8905056899634
+       "x": 968.5726473474922,
+       "y": 677.0782835488095
       },
       {
        "kind": "cross",
@@ -23544,12 +23544,12 @@
          1053.701046231489
         ],
         [
-         1058.5021056316648,
-         1130.6636081599313
+         1058.8987105094623,
+         1129.7502154083325
         ],
         [
-         995.28375,
-         1150.1435462314892
+         995.4887127850886,
+         1150.7676927909285
         ],
         [
          993.84,
@@ -23564,13 +23564,13 @@
       },
       {
        "kind": "cross",
-       "x": 1058.5021056316648,
-       "y": 1130.6636081599313
+       "x": 1058.8987105094623,
+       "y": 1129.7502154083325
       },
       {
        "kind": "cross",
-       "x": 995.28375,
-       "y": 1150.1435462314892
+       "x": 995.4887127850886,
+       "y": 1150.7676927909285
       },
       {
        "kind": "cross",
@@ -23624,8 +23624,8 @@
          1138.7418897111038
         ],
         [
-         956.5092478912632,
-         976.4972171394769
+         955.6932368046112,
+         971.5358083321981
         ],
         [
          917.84,
@@ -23640,8 +23640,8 @@
       },
       {
        "kind": "cross",
-       "x": 956.5092478912632,
-       "y": 976.4972171394769
+       "x": 955.6932368046112,
+       "y": 971.5358083321981
       },
       {
        "kind": "cross",
@@ -23655,8 +23655,8 @@
      "name": "Hole 11 trace",
      "verdict": "FN",
      "center": [
-      853.0268046508886,
-      943.5408730330504
+      853.2918328240764,
+      943.6336130836545
      ],
      "confidence": null,
      "marks": [
@@ -23695,8 +23695,8 @@
          856.852719163613
         ],
         [
-         823.5036062500194,
-         1036.7317399625852
+         824.033662596395,
+         1036.9172200637934
         ],
         [
          832.84,
@@ -23711,8 +23711,8 @@
       },
       {
        "kind": "cross",
-       "x": 823.5036062500194,
-       "y": 1036.7317399625852
+       "x": 824.033662596395,
+       "y": 1036.9172200637934
       },
       {
        "kind": "cross",
@@ -23724,9 +23724,9 @@
     {
      "hole": 12,
      "name": "Hole 12 trace",
-     "verdict": "FN",
+     "verdict": "TP",
      "center": [
-      791.3954827699276,
+      790.9122067088351,
       1224.77
      ],
      "confidence": null,
@@ -23766,8 +23766,8 @@
          1158.6713034995796
         ],
         [
-         787.1360582254448,
-         1261.712149478546
+         783.8244134176701,
+         1295.3719786630818
         ],
         [
          795.84,
@@ -23782,8 +23782,8 @@
       },
       {
        "kind": "cross",
-       "x": 787.1360582254448,
-       "y": 1261.712149478546
+       "x": 783.8244134176701,
+       "y": 1295.3719786630818
       },
       {
        "kind": "cross",
@@ -23795,7 +23795,7 @@
     {
      "hole": 13,
      "name": "Hole 13 trace",
-     "verdict": "FN",
+     "verdict": "TP",
      "center": [
       840.7912724202432,
       1426.615
@@ -23837,8 +23837,8 @@
          1355.2891707667782
         ],
         [
-         838.7965388339776,
-         1462.291793137514
+         841.5283777463602,
+         1494.1834764630983
         ],
         [
          851.84,
@@ -23853,8 +23853,8 @@
       },
       {
        "kind": "cross",
-       "x": 838.7965388339776,
-       "y": 1462.291793137514
+       "x": 841.5283777463602,
+       "y": 1494.1834764630983
       },
       {
        "kind": "cross",
@@ -23937,7 +23937,7 @@
     {
      "hole": 15,
      "name": "Hole 15 trace",
-     "verdict": "FN",
+     "verdict": "TP",
      "center": [
       1155.7747650279898,
       1563.126773124106
@@ -23995,6 +23995,14 @@
          1520.0556019778303
         ],
         [
+         1183.4168856713407,
+         1559.2244441814596
+        ],
+        [
+         1134.634561058292,
+         1572.6903125708711
+        ],
+        [
          1087.84,
          1610.73
         ]
@@ -24004,6 +24012,16 @@
        "kind": "cross",
        "x": 1218.696401298865,
        "y": 1520.0556019778303
+      },
+      {
+       "kind": "cross",
+       "x": 1183.4168856713407,
+       "y": 1559.2244441814596
+      },
+      {
+       "kind": "cross",
+       "x": 1134.634561058292,
+       "y": 1572.6903125708711
       },
       {
        "kind": "cross",
@@ -24135,7 +24153,7 @@
      "verdict": "TP",
      "center": [
       248.3003599102812,
-      1486.5369874214014
+      1485.9329730172021
      ],
      "confidence": null,
      "marks": [
@@ -24174,8 +24192,8 @@
          1477.3439748428027
         ],
         [
-         205.0734236895816,
-         1479.055658187753
+         217.96290696919857,
+         1476.1359460344045
         ],
         [
          146.84,
@@ -24190,8 +24208,8 @@
       },
       {
        "kind": "cross",
-       "x": 205.0734236895816,
-       "y": 1479.055658187753
+       "x": 217.96290696919857,
+       "y": 1476.1359460344045
       },
       {
        "kind": "cross",
@@ -28509,8 +28527,8 @@
          1839.234912383112
         ],
         [
-         495.32319400620986,
-         1711.2808326679844
+         496.2189566715303,
+         1712.6072820107458
         ],
         [
          428.84,
@@ -28525,8 +28543,8 @@
       },
       {
        "kind": "cross",
-       "x": 495.32319400620986,
-       "y": 1711.2808326679844
+       "x": 496.2189566715303,
+       "y": 1712.6072820107458
       },
       {
        "kind": "cross",
@@ -28728,8 +28746,8 @@
          227.83796354060965
         ],
         [
-         542.4944770788925,
-         150.51522886267867
+         542.4944770807427,
+         150.51522886083723
         ],
         [
          606.84,
@@ -28744,8 +28762,8 @@
       },
       {
        "kind": "cross",
-       "x": 542.4944770788925,
-       "y": 150.51522886267867
+       "x": 542.4944770807427,
+       "y": 150.51522886083723
       },
       {
        "kind": "cross",
@@ -28783,8 +28801,8 @@
          72.457157049278
         ],
         [
-         898.8412829866398,
-         134.69981942657986
+         910.5148907981322,
+         149.34611110514396
         ],
         [
          1014.84,
@@ -28799,8 +28817,8 @@
       },
       {
        "kind": "cross",
-       "x": 898.8412829866398,
-       "y": 134.69981942657986
+       "x": 910.5148907981322,
+       "y": 149.34611110514396
       },
       {
        "kind": "cross",
@@ -28908,8 +28926,8 @@
          444.0701253733515
         ],
         [
-         691.2209304402985,
-         694.7948450348696
+         690.8300008775365,
+         694.5835018390751
         ],
         [
          863.84,
@@ -28924,8 +28942,8 @@
       },
       {
        "kind": "cross",
-       "x": 691.2209304402985,
-       "y": 694.7948450348696
+       "x": 690.8300008775365,
+       "y": 694.5835018390751
       },
       {
        "kind": "cross",
@@ -33236,8 +33254,8 @@
          745.5813804276137
         ],
         [
-         581.1398769635945,
-         769.127477948774
+         586.7727927665823,
+         770.6448189366477
         ],
         [
          709.84,
@@ -33252,8 +33270,8 @@
       },
       {
        "kind": "cross",
-       "x": 581.1398769635945,
-       "y": 769.127477948774
+       "x": 586.7727927665823,
+       "y": 770.6448189366477
       },
       {
        "kind": "cross",
@@ -33315,8 +33333,8 @@
          1061.9819578325428
         ],
         [
-         587.5696992255085,
-         872.3492687918841
+         580.1129447326433,
+         865.0509817025337
         ],
         [
          423.84,
@@ -33331,8 +33349,8 @@
       },
       {
        "kind": "cross",
-       "x": 587.5696992255085,
-       "y": 872.3492687918841
+       "x": 580.1129447326433,
+       "y": 865.0509817025337
       },
       {
        "kind": "cross",
@@ -33485,11 +33503,11 @@
   }
  },
  "attempts": {
-  "golden": "attempt-1792475496265-c679d0afc722",
-  "lenard": "attempt-1792477227054-0727de32f75f",
-  "townelake": "attempt-1792478263482-ff6559d71761",
-  "heritage": "attempt-1792479122567-fe86ba569223",
-  "alex": "attempt-1792481749238-9d9c3c166761",
-  "northpark": "attempt-1792489574653-1ff8fa265e0f"
+  "golden": "attempt-1792533767125-ec969cc0d97f",
+  "lenard": "attempt-1792533767381-f81caf56368d",
+  "townelake": "attempt-1792533767190-8e6e27988d59",
+  "heritage": "attempt-1792533767246-e52feb2d9964",
+  "alex": "attempt-1792533819469-b9e8dbd44dd3",
+  "northpark": "attempt-1792533879441-7ecb4c9e0946"
  }
 }
