@@ -43,6 +43,10 @@ output.
 - **Every Calculation is profiled.** The store logs every call with its time and the `emits` its output declares.
   Put measures in `emits`; never time things by hand. The log becomes the `instrumentation.json` sidecar; view it
   with `fg/profile.mjs`.
+- **Opaque hot spots are flagged automatically.** Any call whose own time (outside its nested store calls) is 5% of the
+  run or more is an OPAQUE HOT SPOT: its steps happen outside the garden and the profile cannot see them. Every profile
+  summary carries them, every profile page fails a verdict on them, runners print them, and `pxc doctor --attempt` lists
+  them. Fix one by making its steps store queries or Calculations; never by raising the threshold.
 - **Every composed FG** is `instrumented`, `profiled` and `rendered` (`fg/compose.mjs`, registry
   `DEFAULT_PROPERTIES`). Records hold only deterministic numbers, with units (`unitful`); timings never go in.
 - **Every Part is renderable.** `fn.q.part.render` renders any address to flipbook kinds. If a Part does not

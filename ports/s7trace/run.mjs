@@ -20,7 +20,7 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 
 import { createRequire } from 'node:module';
 import { deflateSync } from 'node:zlib';
 import { join, resolve } from 'node:path';
-import { instrumentedStore, profileSummary, profileFrame } from '../../fg/profile.mjs';
+import { instrumentedStore, profileSummary, profileFrame, hotSpotLines } from '../../fg/profile.mjs';
 import { RENDER_PART } from '../../fg/store.mjs';
 import { comparableForkJoin, forkJoinFrames } from '../../fg/forkjoin.mjs';
 import { discoverImplementations } from '../../fg/discover.mjs';
@@ -179,7 +179,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   if (!args.attempt || !args.specimen) { console.error('usage: node ports/s7trace/run.mjs --specimen golden --attempt ATTEMPT_ID [--attempts-root DIR] [--out DIR] [--accept VARIANT] [--only a,b]'); process.exit(2); }
   const r = await runHoleTraceForkJoin({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null, attemptsRoot: args['attempts-root'] ?? ROOT, acceptedElsewhere: args.accept ?? null, only: args.only ? args.only.split(',') : null, cas: casFlag() });
   const c = r.comparison;
-  console.log(JSON.stringify({ out: r.out, frames: r.frames, accepted: r.accepted, acceptedBy: r.acceptedBy, widthPx: c.widthPx, timingsMs: r.timingsMs,
+  console.log(JSON.stringify({ out: r.out, frames: r.frames, accepted: r.accepted, acceptedBy: r.acceptedBy, widthPx: c.widthPx, timingsMs: r.timingsMs, hotSpots: hotSpotLines(r.profile.hotSpots ?? []),
     profile: r.profile.slice(0, 10).map((p) => `${p.calculation}: ${p.calls}x self ${p.selfMs} ms ${JSON.stringify(p.emits)}`),
     branches: Object.fromEntries(Object.entries(c.branches).map(([n, b]) => [n, { reached: b.reached, agree: `${b.agree}/${b.judged}`, bends: `${b.bendsHit} hit / ${b.bendsMissed} missed / ${b.extraBends} extra of ${b.bendsSam}`, notAgreeing: b.notAgreeing.join(' '), error: b.error }])),
     disagreements: c.disagreements.map((d) => `hole ${d.hole}: ${d.sameTrace.join(' vs ')}${d.noPath.length ? `; no path: ${d.noPath.join(' ')}` : ''}`),

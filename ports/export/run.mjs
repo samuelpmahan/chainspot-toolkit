@@ -15,7 +15,7 @@ import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { join, resolve, basename } from 'node:path';
 import { deflateSync } from 'node:zlib';
-import { instrumentedStore, profileSummary } from '../../fg/profile.mjs';
+import { instrumentedStore, profileSummary, hotSpotLines } from '../../fg/profile.mjs';
 import { RENDER_PART } from '../../fg/store.mjs';
 import { runnerCache, casFlag } from '../../fg/casRunner.mjs';
 import { canonicalJson } from '../../fg/canon.mjs';
@@ -61,6 +61,6 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const specimen = arg('--specimen'), attempt = arg('--attempt');
   if (!specimen || !attempt) { console.error('usage: node ports/export/run.mjs --specimen golden --attempt ID [--attempts-root DIR] [--out DIR] [--no-cas]'); process.exit(2); }
   const r = runExportCourse({ specimen, attempt, attemptsRoot: arg('--attempts-root') ?? ROOT, outDir: arg('--out'), cas: casFlag() });
-  console.log(JSON.stringify({ out: r.out, file: join(r.out, 'course-geometry.json'), emits: r.emits, conditions: r.doc.conditions, cache: r.cache,
+  console.log(JSON.stringify({ out: r.out, file: join(r.out, 'course-geometry.json'), emits: r.emits, conditions: r.doc.conditions, cache: r.cache, hotSpots: hotSpotLines(r.profile.hotSpots),
     profile: r.profile.slice(0, 6).map((p) => `${p.calculation}: ${p.calls}x self ${p.selfMs} ms ${JSON.stringify(p.emits)}`) }, null, 1));
 }

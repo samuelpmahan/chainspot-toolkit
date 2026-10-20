@@ -41,16 +41,45 @@ export function profileSummary(doc) {
     rows.set(e.calculation, r);
   }
   const round = (v) => Math.round(v * 10) / 10;
-  return [...rows.values()].map((r) => ({ ...r, totalMs: round(r.totalMs), selfMs: round(r.selfMs) })).sort((a, b) => b.selfMs - a.selfMs);
+  const summary = [...rows.values()].map((r) => ({ ...r, totalMs: round(r.totalMs), selfMs: round(r.selfMs) })).sort((a, b) => b.selfMs - a.selfMs);
+  // default property: every summary carries its opaque hot spots, and every profile page shows them (profileFrame)
+  Object.defineProperty(summary, 'hotSpots', { value: opaqueHotSpots(doc), enumerable: false });
+  return summary;
 }
 
+/**
+ * Opaque hot spots: a Calculation or query whose own (self) time, outside its nested store calls, is a large share of the
+ * run, so its inner steps never reach the profile. That is work happening outside the walled garden in all but name
+ * (2026-10-20: routeMatch's second-bend search hid 53 s per course inside one query). The fix is to make its steps store
+ * calls (queries or Calculations), each profiled. share: of the run's wall time (or, without one, of the summed root time).
+ */
+export const HOT_SPOT = Object.freeze({ share: 0.05, minMs: 1000 });
+export function opaqueHotSpots(doc, { share = HOT_SPOT.share, minMs = HOT_SPOT.minMs } = {}) {
+  // self time = elapsed minus the nested store calls: a call that makes some store calls can still hide most of its work
+  // (routeMatch before 2026-10-20 fetched the route table through the store and spent 59 s more in plain functions)
+  const calls = doc.calculations ?? [], childMs = new Map();
+  for (const e of calls) if (e.parent != null) childMs.set(e.parent, (childMs.get(e.parent) ?? 0) + (e.elapsedMs ?? 0));
+  const rootMs = calls.filter((e) => e.parent == null).reduce((s, e) => s + (e.elapsedMs ?? 0), 0);
+  const runMs = doc.wallMs > 0 ? doc.wallMs : rootMs, by = new Map();
+  for (const e of calls) {
+    const r = by.get(e.calculation) ?? { calculation: e.calculation, calls: 0, selfMs: 0 };
+    r.calls++; r.selfMs += (e.elapsedMs ?? 0) - (childMs.get(e.seq) ?? 0); by.set(e.calculation, r);
+  }
+  return [...by.values()].filter((r) => r.selfMs >= minMs && runMs > 0 && r.selfMs / runMs >= share)
+    .map((r) => ({ ...r, selfMs: Math.round(r.selfMs), shareOfRun: Math.round((r.selfMs / runMs) * 1000) / 1000,
+      fix: 'its own time is spent outside any nested store call, so the profile cannot see its steps: make each step a store query or Calculation' }))
+    .sort((a, b) => b.selfMs - a.selfMs);
+}
+export const hotSpotLines = (spots) => spots.map((h) => `OPAQUE HOT SPOT ${h.calculation}: ${h.calls}x ${h.selfMs} ms (${Math.round(h.shareOfRun * 100)}% of the run) of its own time; ${h.fix}`);
+
 /** One ledger frame (fg/guarantee.mjs FRAME_KINDS) for a flipbook page. */
-export function profileFrame(summary, { title = 'profile: every Calculation call, self time first', wallMs = null } = {}) {
+export function profileFrame(summary, { title = 'profile: every Calculation call, self time first', wallMs = null, hotSpots = summary.hotSpots ?? [] } = {}) {
   return {
     title: wallMs == null ? title : `${title} (wall ${Math.round(wallMs)} ms)`,
     calculation: 'fg.profile', tick: 'profile',
     parts: [{ address: 'tk.profile', kind: 'ledger', data: { rows: summary.map((r) => ({ calculation: r.calculation, calls: r.calls, selfMs: r.selfMs, totalMs: r.totalMs,
       emits: Object.entries(r.emits).map(([k, v]) => `${k} ${v}`).join(', '), threw: r.threw })) } }],
-    verdicts: summary.filter((r) => r.threw).map((r) => ({ name: `${r.calculation} threw ${r.threw}x`, ok: false }))
+    verdicts: [...summary.filter((r) => r.threw).map((r) => ({ name: `${r.calculation} threw ${r.threw}x`, ok: false })),
+      ...hotSpots.map((h) => ({ name: `opaque hot spot: ${h.calculation} ${h.selfMs} ms (${Math.round(h.shareOfRun * 100)}% of the run) of its own time, not itemised in the store`, ok: false }))]
   };
 }

@@ -16,7 +16,7 @@
  *   node scripts/pxc.mjs cas --prune-older-than DAYS      remove entries nothing has used for DAYS days
  * Scaffolds never overwrite a file.
  */
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
 import { deserialize } from 'node:v8';
 import { ROOT, measure, measureFile, FIX } from './pxc/boundary.mjs';
@@ -59,6 +59,13 @@ async function doctorAttempt(id) {
   const pxc = new Map(deserialize(readFileSync(snap))), img = pxc.get('px.image.cropped');
   const bad = [...pxc].map(([a, v]) => [a, renderValue(a, v, img)]).filter(([, r]) => r.kind === 'unrenderable' || !r.parts.length);
   say(`renderable: ${pxc.size - bad.length}/${pxc.size} Parts render${bad.length ? `; not: ${bad.map(([a]) => a).join(', ')} (add a case in fg/render.mjs)` : ''}`);
+  const { opaqueHotSpots, hotSpotLines } = await import('../fg/profile.mjs');
+  const outRoot = join(ROOT, 'attempts/stages', id, 'fork/stage-output');
+  const sidecars = []; const walk = (d) => { for (const n of readdirSync(d, { withFileTypes: true })) { const p = join(d, n.name); if (n.isDirectory()) walk(p); else if (n.name === 'instrumentation.json') sidecars.push(p); } };
+  if (existsSync(outRoot)) walk(outRoot);
+  let spots = 0;
+  for (const f of sidecars) { const lines = hotSpotLines(opaqueHotSpots(JSON.parse(readFileSync(f, 'utf8')))); spots += lines.length; for (const l of lines) say(`${relative(outRoot, f)}: ${l}`); }
+  say(spots ? `${spots} opaque hot spot(s) in ${sidecars.length} profiled runs` : `no opaque hot spots in ${sidecars.length} profiled runs`);
   for (const side of ['early/instrumentation.json']) {
     const f = join(ROOT, 'attempts/stages', id, 'fork/stage-output', side);
     if (!existsSync(f)) continue;
