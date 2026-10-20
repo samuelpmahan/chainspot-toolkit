@@ -22,7 +22,10 @@ export const STAGE_SOURCES = {
   // Unannotated dev images (no testimony): NorthPark, and Lenard's five partial captures.
   northpark: 'specimens/dev/NorthPark-full.png',
   lenard1: 'specimens/dev/Lenard-1.png', lenard2: 'specimens/dev/Lenard-2.png', lenard3: 'specimens/dev/Lenard-3.png',
-  lenard4: 'specimens/dev/Lenard-4.png', lenard5: 'specimens/dev/Lenard-5.png'
+  lenard4: 'specimens/dev/Lenard-4.png', lenard5: 'specimens/dev/Lenard-5.png',
+  // E27 (local, not committed): single-raster captures outside the dev set, from chainspot-corpus demo/ and chainspot resources/
+  therec: 'specimens/wide/therec.jpg', therecThrown: 'specimens/wide/therecThrown.png', dashs5612: 'specimens/wide/dashs5612.png',
+  dashs5613: 'specimens/wide/dashs5613.png', unknown5693: 'specimens/wide/unknown5693.png', lenardChrome: 'specimens/wide/lenardChrome.png'
 };
 
 /** One literal authoring path list closes an execution; no second registration table. */
