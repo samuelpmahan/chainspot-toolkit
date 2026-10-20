@@ -57,17 +57,19 @@ async function worker() {
       's3-findfamily-structural-fix':'S3FIX','s1-badge-assembly':'S1ASM','s2-basket-assembly':'S2ASM','s3-tee-assembly':'S3ASM','s3-findfamily-forkjoin':'S3FJ'
     })[name])});
   let late=null,s7=null;
+  // the course the later stages read: the request's source, or for a capture (*.capture.json) the course raster S0 stitched
+  const course=early.source.path;
   if(request.until>=4) {
     if(!early.snapshot?.path||!early.snapshot?.sha256)throw Error('S4 requires fresh sealed S3 PxC snapshot');
     let basketBridge=null;
     if(request.lanes.includes('s4.basketRecovery')) {
       const {runBasketRecovery}=await import('./early/basketRecovery.mjs');
       basketBridge=await runBasketRecovery({forkRoot,
-        receiptPath:join(forkRoot,out,'early/run.receipt.json'),sourcePath:join(forkRoot,request.sourcePath),
+        receiptPath:join(forkRoot,out,'early/run.receipt.json'),sourcePath:course,
         outDir:join(forkRoot,out,'basket-bridge')});
     }
     const {runLate}=await import('./late/runLate.mjs');
-    late=await runLate({forkRoot,sourcePath:request.sourcePath,outDir:`${out}/late`,early,
+    late=await runLate({forkRoot,sourcePath:course,outDir:`${out}/late`,early,
       earlyOutDir:join(forkRoot,out,'early'),until:Math.min(request.until,6),
       lanes:request.lanes.filter(x=>['s4.openFrame','s4.singletonPropagation','s5.exactCellPose','s5.globalAssignment','s6.axisPropagation'].includes(x)),
       basketBridge});

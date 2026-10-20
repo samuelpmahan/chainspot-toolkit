@@ -6,12 +6,14 @@
 import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
-import { basename, extname, join, resolve } from 'node:path';
+import { basename, extname, join, relative, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { createInstrumentation } from './instrument.mjs';
 import { createEarlyStore, sealStage } from './earlyStore.mjs';
 import { runStageGuarantees, attachPublished } from './stageGuarantees.mjs';
+import { isCaptureManifest, runCapture } from '../capture/capture.mjs';
+import { CAPTURE_VIEW_CALCULATION } from '../../fg/stitch/capture.calc.mjs';
 
 // Experiment code (what run-stages passes) -> lane name (what an FG's
 // `lane` names); the inverse of ports/run-stages.mjs's lane table.
@@ -21,6 +23,11 @@ const EXPERIMENT_LANES = {
   S2ASM: 's2-basket-assembly', S3ASM: 's3-tee-assembly', S3FJ: 's3-findfamily-forkjoin'
 };
 const hash = (value) => createHash('sha256').update(value).digest('hex');
+/** A capture run's receipt entry: what was stitched and how (the record itself is early/capture/capture.json). */
+const captureReceipt = (c, manifest) => ({ manifest, overlapRule: c.overlapRule, frame: c.frame, coverage: c.coverage, conditions: c.conditions,
+  tiles: c.tiles.map((t) => ({ name: t.name, sha256: t.sha256, crop: t.crop, placed: t.placed, transform: t.transform ?? null, copy: t.copy ?? null })),
+  links: c.links.map((l) => ({ a: l.a, b: l.b, evidence: l.evidence, sharedHoles: l.sharedHoles, model: l.model, residualLuma: l.residualLuma, contrast: l.contrast })),
+  rejected: c.rejected.map((l) => ({ a: l.a, b: l.b, sharedHoles: l.sharedHoles })), record: 'capture/capture.json' });
 const json = (value) => JSON.stringify(value, null, 2);
 function treeIdentity(dir, suffixes) {
   const files = [];
@@ -40,7 +47,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   const provider = resolve(root, 'source/provider');
   if (!existsSync(resolve(provider, 'packages/alg/dist/stages/S0/contract.js')))
     throw new Error(`Pinned compiled Stage contracts not found under ${provider}`);
-  const source = resolve(root, sourcePath);
+  let source = resolve(root, sourcePath);
   const out = resolve(root, outDir);
   mkdirSync(out, { recursive: true });
   const require = createRequire(pathToFileURL(join(provider, 'package.json')));
@@ -61,6 +68,15 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   // it never enters the receipt, whose bytes are hashed into evidence.
   const instrumentation = createInstrumentation();
 
+  // S0 takes a capture (ports/capture/capture.mjs): a *.capture.json source is 2..N tiles of one course, stitched into one
+  // course raster before the stage gateways run; from here on the run's source is that raster (S1-S7 see one course).
+  // A plain image path is a capture of one tile: nothing below changes for it.
+  let capture = null, decode = decodeNodeFile;
+  if (isCaptureManifest(source)) {
+    capture = await runCapture({ root, manifestPath: relative(root, source), outDir: join(out, 'capture'), dist, decodeNodeFile, onCall: (entry) => instrumentation.calculations.push(entry) });
+    source = capture.coursePath; decode = capture.decode;
+  }
+
   // The run's addressed store (ports/early/earlyStore.mjs): an overlay on
   // the live provider board. Toolkit Parts (source intake, gateway
   // captures, stage snapshots, the crop receipt, the flipbook background,
@@ -72,6 +88,10 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   // through fn.provider.<S>.gateway, producing tk.stage.<S>.captured.
   let pxc;
   const store = createEarlyStore({ forkRoot: root, source, getBoard: () => pxc, dist, restorePxC, instrumentation });
+  if (capture) {
+    store.constant('fn.tk.source.captureRun', { 'tk.source.capture': capture.capture, 'tk.source.courseRaster': capture.courseRaster });
+    store.register(...CAPTURE_VIEW_CALCULATION);
+  }
   store.call('fn.tk.source.intake');
   const sourceSha256 = store.get('tk.source.sha256');
   const captured = (id) => (store.has(`tk.stage.${id}.captured`) ? store.get(`tk.stage.${id}.captured`) : undefined);
@@ -90,7 +110,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     const started = Date.now();
     const inputSnapshotSha256 = pxc ? store.get(`tk.stage.${stageOrder[stageOrder.indexOf(id) - 1]}.snapshotSha256`) : null;
     const contract = dist(`stages/${id}/contract`).stageContract;
-    const result = await contract.execute({ source, inputLabel: basename(source), decode: decodeNodeFile, ...(pxc ? { pxc } : {}) });
+    const result = await contract.execute({ source, inputLabel: basename(source), decode, ...(pxc ? { pxc } : {}) });
     pxc = result.pxc;
     const image = pxc.get(id === 'S0' ? 'px.course.canonicalPixels' : ComponentPxC.image);
     const canonicalRgbaSha256 = hash(image.rgba);
@@ -255,6 +275,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     stages,
     materializations: stageMaterializations,
     crop: store.get('tk.source.cropReceipt'),
+    ...(capture ? { capture: captureReceipt(store.get('tk.source.capture'), sourcePath) } : {}),
     snapshot: snapshotBytes ? { path: snapshotPath, relativePath: 's3.pxc.bin', sha256: snapshotSha256, addresses: presentAddresses } : null,
     counts: { ...(final.has(BadgePxC.objects.address) ? { badges: final.get(BadgePxC.objects).length } : {}), ...(final.has(BasketPxC.objects.address) ? { baskets: final.get(BasketPxC.objects).length } : {}), ...(final.has(TeePxC.objects.address) ? { tees: final.get(TeePxC.objects).length } : {}) },
     experiments: { gates, branches: branchResults },

@@ -27,7 +27,7 @@ const labelNumber = (label) => (/^[1-9][0-9]*$/.test(String(label)) ? Number(lab
  * crop = tk.source.cropReceipt ({ originalPx: {width, height}, upperRowsRemoved, lowerRowsRemoved }); source = { fileName, sha256 };
  * producer = { name, recipe, attemptId, stagesRun }.
  */
-export function courseGeometryOf({ solve, holesPart, hallway, badges, crop, source, producer }) {
+export function courseGeometryOf({ solve, holesPart, hallway, badges, crop, source, producer, capture = null }) {
   const dy = crop.upperRowsRemoved, W = crop.originalPx.width, H = crop.originalPx.height;
   const toSource = ([x, y]) => ({ xPx: r2(x), yPx: r2(y + dy) });
   const inFrame = (p) => p.xPx >= 0 && p.yPx >= 0 && p.xPx < W && p.yPx < H;
@@ -71,20 +71,32 @@ export function courseGeometryOf({ solve, holesPart, hallway, badges, crop, sour
   const candidates = holesPart.baskets.filter((b) => !assigned.has(b.index)).map((b) => ({ label: b.name, ...toSource(b.point), kind: 'basket' })).filter(inFrame);
   return {
     format: FORMAT, version: VERSION, producer,
-    source: { fileName: source.fileName, sha256: source.sha256, widthPx: W, heightPx: H, frame: 'original-upload', s0Crop: { rowsRemovedTop: dy, rowsRemovedBottom: crop.lowerRowsRemoved } },
+    source: { fileName: source.fileName, sha256: source.sha256, widthPx: W, heightPx: H, frame: 'original-upload', s0Crop: { rowsRemovedTop: dy, rowsRemovedBottom: crop.lowerRowsRemoved }, ...(capture ? { capture } : {}) },
     holes, numberBadges, candidates, evidence, conditions,
     units: { 'xPx/yPx': 'px in source.frame (the original upload, S0 crop added back)', corridorWidthPx: 'px in source.frame; the course hallway W (LOCAL, learned on this screenshot)', lengthPx: 'px in source.frame', sensor: 'fraction of stations reading as hallway, 0..1', stations: 'count of sampled stations along the route' }
   };
 }
 
+/**
+ * A capture's provenance for the export (null for a one-tile upload): the original upload of a capture is the course raster S0
+ * stitched; each tile's transform maps ITS source px into that frame (ChainSpot's SourceTransform convention), so a point maps
+ * back to its tile by the inverse (fn.q.stitch.sourcePoint: every covering tile, the one the overlap rule painted first).
+ */
+export function captureProvenanceOf(record) {
+  if (!record) return null;
+  return { schema: record.schema, overlapRule: record.overlapRule, convention: record.convention, coverage: record.coverage.text,
+    tiles: record.tiles.map((t) => ({ fileName: t.name, sha256: t.sha256, widthPx: t.widthPx, heightPx: t.heightPx, crop: t.crop, placed: t.placed,
+      ...(t.placed ? { transform: t.transform, coveragePolygon: t.coveragePolygon } : {}) })) };
+}
+
 export const exportCourse = ['fn.tk.export.course', {
-  inParts: ['tk.s7.holes', 'tk.s7.hallway', 'px.badges', 'tk.source.cropReceipt', 'tk.source.sha256', 'tk.source.path', 'tk.export.producer'],
+  inParts: ['tk.s7.holes', 'tk.s7.hallway', 'px.badges', 'tk.source.cropReceipt', 'tk.source.sha256', 'tk.source.path', 'tk.source.captureProvenance', 'tk.export.producer'],
   outParts: [EXPORT_COURSE_PART], calls: ['fn.q.trace.routeMatch'],
   note: 'the toolkit/app boundary: S7 routeMatch holes + S1 badges + unclaimed baskets as chainspot.course-geometry v1 (original-upload frame)',
   calculate: (io) => {
     const path = io.in('tk.source.path');
     const doc = courseGeometryOf({ solve: io.call('fn.q.trace.routeMatch', {}).value, holesPart: io.in('tk.s7.holes'), hallway: io.in('tk.s7.hallway'), badges: io.in('px.badges'),
-      crop: io.in('tk.source.cropReceipt'), source: { fileName: String(path).split('/').pop(), sha256: io.in('tk.source.sha256') }, producer: io.in('tk.export.producer') });
+      crop: io.in('tk.source.cropReceipt'), source: { fileName: String(path).split('/').pop(), sha256: io.in('tk.source.sha256') }, producer: io.in('tk.export.producer'), capture: io.in('tk.source.captureProvenance') });
     const n = (s) => doc.evidence.filter((e) => e.status === s).length;
     return { [EXPORT_COURSE_PART]: { ...doc, emits: { holesCount: doc.holes.length, resolvedHolesCount: n('resolved'), straightHolesCount: n('straight'), partialHolesCount: n('partial'), unresolvedHolesCount: n('unresolved'),
       numberBadgesCount: doc.numberBadges.length, candidatesCount: doc.candidates.length, corridorWidthPx: doc.holes[0]?.corridorWidthPx ?? null } } };

@@ -28,6 +28,7 @@
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
 import { deserialize } from 'node:v8';
 import { join, resolve } from 'node:path';
+import { courseSourceOf } from '../capture/capture.mjs';
 import { spawnSync } from 'node:child_process';
 import { deflateSync } from 'node:zlib';
 import { runnerCache, casFlag } from '../../fg/casRunner.mjs';
@@ -110,7 +111,7 @@ export function loadS6Inputs({ attempt, specimen, root = ROOT }) {
     holes: [...T.holes.values()].sort((a, b) => a.hole - b.hole).map((h) => ({ hole: String(h.hole), tee: h.tee, basket: h.basket, bends: h.bends ?? [], bent: h.bent })) }
     : { path: null, complete: false, rule: `no testimony for ${specimen}: blind run, nothing judged`, holes: [] };
 
-  const srcPath = join(fork, record.request.sourcePath);
+  const srcPath = courseSourceOf(fork, record.request.sourcePath);   // a capture's source is the course raster S0 stitched
   const bytes = existsSync(srcPath) ? readFileSync(srcPath) : null;
   const background = bytes && originalPx ? { src: `data:image/${bytes[0] === 0x89 ? 'png' : 'jpeg'};base64,${bytes.toString('base64')}`, width: originalPx.width, height: originalPx.height, x: 0, y: -upper } : null;
   return { out, board, upperRowsRemoved: upper, background,

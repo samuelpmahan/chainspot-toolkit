@@ -23,15 +23,19 @@ import { loadAttemptParts } from '../s4recover/run.mjs';
 import { S4_CALCULATIONS } from '../s4recover/teeRecover.mjs';
 import { S7_CALCULATIONS, registerTraceQueries } from '../s7trace/traceSpace.mjs';
 import { loadS7Lanes, loadMatcher } from '../s7trace/run.mjs';
-import { exportCourse, EXPORT_COURSE_PART } from './course.calc.mjs';
+import { exportCourse, EXPORT_COURSE_PART, captureProvenanceOf } from './course.calc.mjs';
+import { courseSourceOf, isCaptureManifest } from '../capture/capture.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 
 export function runExportCourse({ specimen, attempt, attemptsRoot = ROOT, root = ROOT, outDir = null, cas = true, recipe = 'chainspot-s0-s7' }) {
   const loaded = loadAttemptParts({ attempt, specimen, root: attemptsRoot });
   const record = JSON.parse(readFileSync(join(attemptsRoot, 'attempts', 'stages', `${attempt}.json`), 'utf8'));
-  const sourceFile = join(loaded.fork, loaded.sourcePath), bytes = readFileSync(sourceFile), sha256 = createHash('sha256').update(bytes).digest('hex');
-  if (record.request.sourceSha256 && record.request.sourceSha256 !== sha256) throw new Error(`integrity: ${sourceFile} hashes to ${sha256}, the attempt recorded ${record.request.sourceSha256}`);
+  // a capture's original upload is the course raster S0 stitched (its tiles and their transforms travel as source.capture)
+  const isCapture = isCaptureManifest(loaded.sourcePath), sourceFile = courseSourceOf(loaded.fork, loaded.sourcePath), bytes = readFileSync(sourceFile), sha256 = createHash('sha256').update(bytes).digest('hex');
+  const recorded = isCapture ? JSON.parse(readFileSync(join(loaded.out, 'early', 'run.receipt.json'), 'utf8')).source.sha256 : record.request.sourceSha256;
+  if (recorded && recorded !== sha256) throw new Error(`integrity: ${sourceFile} hashes to ${sha256}, the attempt recorded ${recorded}`);
+  const captureRecord = isCapture ? JSON.parse(readFileSync(join(loaded.out, 'early', 'capture', 'capture.json'), 'utf8')) : null;
   const original = loaded.background, cropped = loaded.board.get('px.image.cropped');
   const crop = { originalPx: { width: original.width, height: original.height }, upperRowsRemoved: loaded.upperRowsRemoved, lowerRowsRemoved: original.height - cropped.heightPx - loaded.upperRowsRemoved };
   const out = outDir ?? join(root, 'attempts', 'export', specimen, `run-${new Date().toISOString().replace(/[:.]/g, '-')}`);
@@ -40,7 +44,7 @@ export function runExportCourse({ specimen, attempt, attemptsRoot = ROOT, root =
   const lanes = loadS7Lanes({ out: loaded.out, upperRowsRemoved: loaded.upperRowsRemoved, values: loaded.values });
   store.constant('fn.tk.s7trace.laneOutputs', { ...loaded.values, ...lanes, 'testimony.source.holePaths': { path: null, rule: 'the export is blind: no testimony is read', holes: [] } });
   const stagesRun = [0, 1, 2, 3, 4, ...('tk.s7.straight' in lanes ? [6] : []), 7];
-  store.constant('fn.tk.export.source', { 'tk.source.cropReceipt': crop, 'tk.source.sha256': sha256, 'tk.source.path': sourceFile, 'tk.export.producer': { name: 'chainspot-toolkit', recipe, attemptId: attempt, stagesRun } });
+  store.constant('fn.tk.export.source', { 'tk.source.cropReceipt': crop, 'tk.source.sha256': sha256, 'tk.source.path': sourceFile, 'tk.source.captureProvenance': captureProvenanceOf(captureRecord), 'tk.export.producer': { name: 'chainspot-toolkit', recipe, attemptId: attempt, stagesRun } });
   for (const [fn, spec] of S4_CALCULATIONS) store.register(fn, spec);
   for (const [fn, spec] of S7_CALCULATIONS) store.register(fn, spec);
   registerTraceQueries(store, { matcher: loadMatcher(root), board: loaded.board });
