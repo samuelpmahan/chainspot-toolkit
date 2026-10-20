@@ -2,7 +2,8 @@
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { mkdir, readFile, readdir, rename, rm, stat, writeFile } from 'node:fs/promises';
-import { readFileSync } from 'node:fs';
+import { lstatSync } from 'node:fs';
+import { hashFiles, warmHashPool } from '../dependencies/hashpool.mjs';
 import { dirname, join, resolve } from 'node:path';
 import { neatStages } from '../policies/neat.mjs';
 import { kompozeStages, checkpointMismatch, describeRequest } from '../policies/kompoze.mjs';
@@ -102,12 +103,18 @@ async function previous(root) {
   return values.filter(Boolean);
 }
 async function currentFiles(root,checkpoint) {
-  const values=[];
-  for(const file of checkpoint.files) {
-    try { values.push(...await snapshotPaths(root,[file.path])); }
-    catch(error) { if(!String(error).includes('Missing dependency:'))throw error; }
+  // the checkpoint's files that still exist, hashed in one batch (a missing one is skipped, as before)
+  const present=checkpoint.files.filter(file=>{try{lstatSync(join(root,file.path));return true;}catch{return false;}});
+  try { return await snapshotPaths(root,present.map(f=>f.path)); }
+  catch(error) {
+    if(!String(error).includes('Missing dependency:'))throw error;
+    const values=[];   // something vanished meanwhile: fall back to one file at a time
+    for(const file of present) {
+      try { values.push(...await snapshotPaths(root,[file.path])); }
+      catch(error) { if(!String(error).includes('Missing dependency:'))throw error; }
+    }
+    return values;
   }
-  return values;
 }
 async function saveCheckpoint(root,value) {
   const path=checkpointPath(root,value.id),text=JSON.stringify(value,null,2)+'\n';
@@ -167,6 +174,7 @@ export async function stageToolkit(root,command,argv) {
       request:result.request,describe:describeRequest(result.request),files:result.files.length,
       next:`node toolkit.mjs run ${options.requestArgs} --checkpoint ${short(result.id)}`});
   }
+  if(['run','compare','tidy'].includes(command))warmHashPool();   // workers boot while the checkpoint loads
   const pinned=await loadCheckpoint(root,options);
   const source=await checkpointRoot(root,pinned);
   lap('checkpoint');
@@ -206,7 +214,7 @@ export async function stageToolkit(root,command,argv) {
     lap('fork');
     const result=await runStages({forkRoot,request:resolved.request,modules:join(root,'attempts/stages/modules')});
     Object.assign(phases,result.phases);clock.at=performance.now();
-    record.materialization.postRun=verifyFork(forkRoot,resolved.files,{objects});
+    record.materialization.postRun=await verifyFork(forkRoot,resolved.files,{objects});
     lap('verifyFork');
     record.stageObservations=result.stages;
     record.blockers=result.blockers;
@@ -214,9 +222,11 @@ export async function stageToolkit(root,command,argv) {
       early:result.early,late:result.late,s7:result.s7,testimonyLimit:result.testimonyLimit};
     record.install=result.install;
     record.process=result.process;
-    for(const path of result.outputs) {
-      const bytes=readFileSync(join(forkRoot,path));
-      record.evidence.push({path:`attempts/stages/${id}/fork/${path}`,sha256:sha(bytes),size:bytes.length});
+    const hashes=await hashFiles(result.outputs.map(path=>join(forkRoot,path)),
+      result.outputs.map(path=>lstatSync(join(forkRoot,path),{throwIfNoEntry:false})?.size??0));
+    for(const [i,path] of result.outputs.entries()) {
+      if(hashes[i].error)throw Error(`Evidence unreadable: ${path} (${hashes[i].error})`);
+      record.evidence.push({path:`attempts/stages/${id}/fork/${path}`,sha256:hashes[i].sha256,size:hashes[i].size});
     }
     if(!record.evidence.length)throw Error('Stage provider produced no native evidence');
     lap('evidence');

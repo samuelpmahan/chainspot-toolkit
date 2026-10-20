@@ -3,19 +3,12 @@ import { chmodSync, copyFileSync, linkSync, lstatSync, mkdirSync, readFileSync, 
 import { cp, mkdir, readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { sha } from '../facts.mjs';
+import { hashFiles } from './hashpool.mjs';
 
 const exists=path=>{try{lstatSync(path);return true;}catch(error){if(error.code==='ENOENT')return false;throw error;}};
 const temp=path=>`${path}.${process.pid}-${Date.now()}-${Math.random().toString(36).slice(2)}.tmp`;
 const objectPath=(objects,file)=>{const key=`${file.sha256}-${(file.mode??0o644).toString(8)}`;return join(objects,key.slice(0,2),key);};
 
-/** Bytes of a content object, verified: a corrupt object is evicted (null), never served. */
-function verifiedObject(path,file) {
-  if(!exists(path))return null;
-  const bytes=readFileSync(path);
-  if(bytes.length===file.size&&sha(bytes)===file.sha256)return bytes;
-  rmSync(path,{force:true});
-  return null;
-}
 /** Write once: a temp file with the declared mode, renamed into place (a concurrent writer of the same key writes the same bytes). */
 function putObject(path,bytes,mode) {
   mkdirSync(dirname(path),{recursive:true});
@@ -45,10 +38,14 @@ export async function materializeFork(root, resolved, forkRoot, {objects}={}) {
   }
   let linked=0,reused=0,copied=0;
   const dirs=new Set();
-  for(const file of resolved.files) {
-    const object=objectPath(objects,file),output=join(forkRoot,file.path);
-    if(verifiedObject(object,file))reused++;
+  // every stored object is re-hashed before it is linked (on all cores); a corrupt one is evicted and rebuilt
+  const paths=resolved.files.map(file=>objectPath(objects,file));
+  const hashes=await hashFiles(paths,resolved.files.map(f=>f.size));
+  for(const [i,file] of resolved.files.entries()) {
+    const object=paths[i],output=join(forkRoot,file.path),h=hashes[i];
+    if(!h.error&&h.size===file.size&&h.sha256===file.sha256)reused++;
     else {
+      if(!h.error)rmSync(object,{force:true});
       const bytes=readFileSync(join(root,file.path));
       if(sha(bytes)!==file.sha256||bytes.length!==file.size)throw Error(`Input changed before LocalCI: ${file.path}`);
       putObject(object,bytes,file.mode??0o644);
@@ -69,11 +66,12 @@ export async function materializeFork(root, resolved, forkRoot, {objects}={}) {
  * Integrity after the run: every closure file in the fork is still a regular file with its checkpoint bytes and mode.
  * A hardlinked fork shares inodes with the content store, so this is the proof that nothing wrote through a link.
  */
-export function verifyFork(forkRoot, files, {objects}={}) {
-  for(const file of files) {
-    const path=join(forkRoot,file.path),stat=lstatSync(path,{throwIfNoEntry:false});
-    const bytes=stat?.isFile()?readFileSync(path):null;
-    if(!bytes||bytes.length!==file.size||sha(bytes)!==file.sha256||(file.mode!=null&&(stat.mode&0o777)!==file.mode)) {
+export async function verifyFork(forkRoot, files, {objects}={}) {
+  const paths=files.map(file=>join(forkRoot,file.path));
+  const hashes=await hashFiles(paths,files.map(f=>f.size));
+  for(const [i,file] of files.entries()) {
+    const stat=lstatSync(paths[i],{throwIfNoEntry:false}),h=hashes[i];
+    if(!stat?.isFile()||h.error||h.size!==file.size||h.sha256!==file.sha256||(file.mode!=null&&(stat.mode&0o777)!==file.mode)) {
       if(objects)rmSync(objectPath(objects,file),{force:true});   // the shared object may be the inode that changed: evict it
       throw Error(`Fork closure changed during the run (integrity): ${file.path}`);
     }

@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { lstat, readFile, readdir } from 'node:fs/promises';
-import { lstatSync, readFileSync, readdirSync } from 'node:fs';
+import { lstatSync, readdirSync } from 'node:fs';
+import { hashFiles } from './dependencies/hashpool.mjs';
 import { join, relative, resolve, sep } from 'node:path';
 
 export const BASE = '5433854c72b1dc5aa420934d91e16458c2abe09f';
@@ -13,19 +14,29 @@ export function safePath(root, path) {
   if (full !== resolve(root) && !full.startsWith(resolve(root) + sep)) throw Error(`Outside root: ${path}`);
   return full;
 }
-// Synchronous on purpose: whole-file reads of a closure from page cache are ~3x faster than fs/promises readFile,
-// and the bytes are hashed on the main thread either way (same records, same order, same errors).
-async function walk(root, path, files) {
+// Paths are listed synchronously and the bytes hashed on every core (dependencies/hashpool.mjs): the same records,
+// order and errors as reading and hashing one file at a time.
+function list(root, path, entries) {
   const full = safePath(root, path);
   let stat;
   try { stat = lstatSync(full); } catch { throw Error(`Missing dependency: ${path}`); }
   if (stat.isSymbolicLink()) throw Error(`Symlink dependency: ${path}`);
   if (stat.isDirectory()) {
-    for (const child of readdirSync(full).sort()) await walk(root, `${path}/${child}`, files);
-  } else if (stat.isFile()) {
-    const bytes = readFileSync(full);
-    files.set(path, { path, sha256: sha(bytes), size: bytes.length, mode: stat.mode & 0o777 });
-  } else throw Error(`Nonregular dependency: ${path}`);
+    for (const child of readdirSync(full).sort()) list(root, `${path}/${child}`, entries);
+  } else if (stat.isFile()) entries.push({ path, full, size: stat.size, mode: stat.mode & 0o777 });
+  else throw Error(`Nonregular dependency: ${path}`);
+}
+async function hashInto(entries, files) {
+  const hashes = await hashFiles(entries.map(e => e.full), entries.map(e => e.size));
+  entries.forEach((e, i) => {
+    if (hashes[i].error) throw Error(`Missing dependency: ${e.path}`);
+    files.set(e.path, { path: e.path, sha256: hashes[i].sha256, size: hashes[i].size, mode: e.mode });
+  });
+}
+async function walk(root, path, files) {
+  const entries = [];
+  list(root, path, entries);
+  await hashInto(entries, files);
 }
 export async function compile(root, targetPath) {
   if (!/^targets\/[a-z0-9-]+\.json$/.test(targetPath)) throw Error(`Target must be a declaration path: ${targetPath}`);
@@ -71,13 +82,15 @@ export async function inventory(root) {
   const dirs = new Set(['source','targets','ticks','overlays','policies','dependencies','semantic']);
   const paths = (await readdir(root,{withFileTypes:true})).filter(entry =>
     dirs.has(entry.name) || (entry.isFile() && /\.(mjs|md)$/.test(entry.name))).map(entry=>entry.name).sort();
-  const files = new Map();
-  for (const path of paths) await walk(root, path, files);
+  const files = new Map(), entries = [];
+  for (const path of paths) list(root, path, entries);
+  await hashInto(entries, files);
   return [...files.values()].sort((a,b) => a.path.localeCompare(b.path));
 }
 export async function snapshotPaths(root, paths) {
-  const files = new Map();
-  for (const path of paths) await walk(root,path,files);
+  const files = new Map(), entries = [];
+  for (const path of paths) list(root,path,entries);
+  await hashInto(entries, files);
   return [...files.values()].sort((a,b) => a.path.localeCompare(b.path));
 }
 export function differences(before, after) {
