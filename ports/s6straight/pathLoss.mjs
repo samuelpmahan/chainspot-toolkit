@@ -84,12 +84,15 @@ export function pathMaskPart(raster, { baskets, badges, tees, recoveredBoxes = [
 // ------------------------------------------------------------------ fn.tk.s6.hallway (teebadge.py learn)
 
 /**
- * The width search range: 18 px up to max(60 px, 1.2 rC1). 60 px is teebadge.py's graduated ceiling; the ribbon follows the map on
- * its own curve (W / rC1 = 1.46-1.49 at rC1 <= 27 px, 0.93-0.94 at rC1 >= 36 px: fg/scene/invariants.mjs REGIMES), so 1.2 rC1
- * keeps ~28% headroom over the fine regime at any zoom and never narrows the graduated range (every dev course is unchanged).
+ * The hallway width search range, in rC1 only (Sam, 2026-10-20: no hard px limit, no fixed ratio posing as a fix). The ribbon
+ * follows the map on its own curve: W / rC1 = 1.46-1.49 at rC1 <= 27 px, 0.93-0.94 at 36-45 px (fg/scene/invariants.mjs REGIMES),
+ * 0.75 on the stitched Rec at rC1 94 px. So no ratio is assumed: the search spans 0.25-2.5 rC1, wide enough for every regime seen
+ * with room both ways, and the edge pair alone decides W. The step is 0.02 rC1 (0.89 px on golden). Behaviour change: judged.
  */
-export const WIDTH_SEARCH = Object.freeze({ minPx: 18, maxPx: 60, maxRc1: 1.2, stepPx: 1 });
-export const widthSearchRange = (r1Px) => [WIDTH_SEARCH.minPx, Math.max(WIDTH_SEARCH.maxPx, Number.isFinite(r1Px) ? Math.ceil(WIDTH_SEARCH.maxRc1 * r1Px) : 0), WIDTH_SEARCH.stepPx];
+export const WIDTH_SEARCH = Object.freeze({ minRc1: 0.25, maxRc1: 2.5, stepRc1: 0.02 });
+export const widthSearchRange = (r1Px) => (Number.isFinite(r1Px) && r1Px > 0
+  ? [WIDTH_SEARCH.minRc1 * r1Px, WIDTH_SEARCH.maxRc1 * r1Px, WIDTH_SEARCH.stepRc1 * r1Px]
+  : [18, 60, 1]);   // no rC1 measured on this image: teebadge.py's recorded range, recorded as such by the caller
 
 export function hallwayOf(q, { association, badges, r1Px = null }) {
   const rows = association?.rows ?? [], L = association?.template?.L;
@@ -115,7 +118,7 @@ export function hallwayOf(q, { association, badges, r1Px = null }) {
     schema: 'nctk-s6-hallway@1', condition: W ? null : 'no usable tee -> badge segment', widthPx: W,
     widthIqrPx: use.length ? [r2(percentile(use.map((s) => s.widthPx), 25)), r2(percentile(use.map((s) => s.widthPx), 75))] : null,
     contrastMedianLum: use.length ? median(use.filter((s) => s.contrastMedianLum != null).map((s) => s.contrastMedianLum)) : null,
-    rule: 'teebadge.py: per S3 tee -> badge segment, S = T + u FRONT L, profile(S, phi, 2, stop), best edge pair over Wg 18 px .. max(60 px, 1.2 rC1) (tol 0.75, lat 3); median width over usable segments with |centre| <= 3 px',
+    rule: 'teebadge.py: per S3 tee -> badge segment, S = T + u FRONT L, profile(S, phi, 2, stop), best edge pair over Wg 0.25 .. 2.5 rC1 every 0.02 rC1 (tol 0.75, lat 3); median width over usable segments with |centre| <= 3 px',
     padLengthPx: L, segments: segs, emits: { widthPx: W, segmentsCount: use.length, ofSegmentsCount: segs.length }
   };
 }
