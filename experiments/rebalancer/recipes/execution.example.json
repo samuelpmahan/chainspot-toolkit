@@ -1,0 +1,123 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "source_root": "..",
+  "service": {
+    "name": "chainspot-receipt-gated-emulator",
+    "description": "Read-only AST extraction and independent receipt review; no live LLM dispatch."
+  },
+  "workers": ["W1", "W2", "W3", "W4", "W5", "W6"],
+  "execution": {
+    "max_repairs": 1,
+    "max_attempts": 5,
+    "fixed_roles": {
+      "W1": "extract",
+      "W2": "extract",
+      "W3": "review",
+      "W4": "extract",
+      "W5": "review",
+      "W6": "review"
+    },
+    "worker_lanes": {
+      "W1": ["platform"],
+      "W2": ["platform"],
+      "W3": ["platform"],
+      "W4": ["algorithm"],
+      "W5": ["algorithm"],
+      "W6": ["algorithm"]
+    }
+  },
+  "review_policy": {
+    "enabled": true,
+    "review_prefix": "R",
+    "require_accepted_review": true,
+    "repair_on_amend": true
+  },
+  "policy": {
+    "extract_priority": 100,
+    "review_priority": 200,
+    "repair_priority": 300
+  },
+  "jobs": [
+    {
+      "id": "E01",
+      "kind": "extract",
+      "lane": "platform",
+      "source_path": "adversarial/probe_a03.py",
+      "source_sha256": "c2f4618fb2b01c7226c4925956cf0edb7c1df2981fbbae78d5c05672f020b6bc",
+      "expected_declarations": ["solve_case", "initial_for", "assert_expected_cases", "main"],
+      "emulator_seconds": 0.08,
+      "review_seconds": 0.19,
+      "inject_fault": true
+    },
+    {
+      "id": "E02",
+      "kind": "extract",
+      "lane": "algorithm",
+      "source_path": "adversarial/probe_a03.py",
+      "source_sha256": "c2f4618fb2b01c7226c4925956cf0edb7c1df2981fbbae78d5c05672f020b6bc",
+      "expected_declarations": ["solve_case", "initial_for", "assert_expected_cases", "main"],
+      "emulator_seconds": 0.08,
+      "review_seconds": 0.19
+    },
+    {
+      "id": "E03",
+      "kind": "extract",
+      "lane": "platform",
+      "source_path": "adversarial/probe_a03.py",
+      "source_sha256": "c2f4618fb2b01c7226c4925956cf0edb7c1df2981fbbae78d5c05672f020b6bc",
+      "expected_declarations": ["solve_case", "initial_for", "assert_expected_cases", "main"],
+      "emulator_seconds": 0.08,
+      "review_seconds": 0.19
+    },
+    {
+      "id": "E04",
+      "kind": "extract",
+      "lane": "algorithm",
+      "source_path": "adversarial/probe_a03.py",
+      "source_sha256": "c2f4618fb2b01c7226c4925956cf0edb7c1df2981fbbae78d5c05672f020b6bc",
+      "expected_declarations": ["solve_case", "initial_for", "assert_expected_cases", "main"],
+      "emulator_seconds": 0.08,
+      "review_seconds": 0.19
+    },
+    {
+      "id": "E05",
+      "kind": "extract",
+      "lane": "platform",
+      "source_path": "adversarial/probe_a03.py",
+      "source_sha256": "c2f4618fb2b01c7226c4925956cf0edb7c1df2981fbbae78d5c05672f020b6bc",
+      "expected_declarations": ["solve_case", "initial_for", "assert_expected_cases", "main"],
+      "emulator_seconds": 0.08,
+      "review_seconds": 0.19
+    },
+    {
+      "id": "E06",
+      "kind": "extract",
+      "lane": "algorithm",
+      "source_path": "adversarial/probe_a03.py",
+      "source_sha256": "c2f4618fb2b01c7226c4925956cf0edb7c1df2981fbbae78d5c05672f020b6bc",
+      "expected_declarations": ["solve_case", "initial_for", "assert_expected_cases", "main"],
+      "emulator_seconds": 0.08,
+      "review_seconds": 0.19
+    },
+    {
+      "id": "E07",
+      "kind": "extract",
+      "lane": "platform",
+      "source_path": "adversarial/probe_a03.py",
+      "source_sha256": "c2f4618fb2b01c7226c4925956cf0edb7c1df2981fbbae78d5c05672f020b6bc",
+      "expected_declarations": ["solve_case", "initial_for", "assert_expected_cases", "main"],
+      "emulator_seconds": 0.08,
+      "review_seconds": 0.19
+    },
+    {
+      "id": "E08",
+      "kind": "extract",
+      "lane": "algorithm",
+      "source_path": "adversarial/probe_a03.py",
+      "source_sha256": "c2f4618fb2b01c7226c4925956cf0edb7c1df2981fbbae78d5c05672f020b6bc",
+      "expected_declarations": ["solve_case", "initial_for", "assert_expected_cases", "main"],
+      "emulator_seconds": 0.08,
+      "review_seconds": 0.19
+    }
+  ]
+}
