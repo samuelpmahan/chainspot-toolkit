@@ -69,12 +69,13 @@ export function secondBend(S, start, V1, E, W, f1, rules = MATCH_RULES) {
   const R = MATCH.secondBend, u = start.u, St = start.S, r1 = S.R1;
   const t1 = (V1[1][0] - St[0]) * u[0] + (V1[1][1] - St[1]) * u[1], box = R.bboxR1 * r1, minLeg = R.minLegR1 * r1;
   const lo = [Math.min(St[0], E[0]) - box, Math.min(St[1], E[1]) - box], hi = [Math.max(St[0], E[0]) + box, Math.max(St[1], E[1]) + box];
-  const gx = arange(Math.max(lo[0], 0), Math.min(hi[0], S.W), R.gridStepR1 * r1), gy = arange(Math.max(lo[1], 0), Math.min(hi[1], S.H), R.gridStepR1 * r1);
+  const grid = R.gridStepR1 * r1 * (rules.secondBendGrid === 'coarse' ? 2 : 1);   // coarse: half the B2 grid each way, the search starts there
+  const gx = arange(Math.max(lo[0], 0), Math.min(hi[0], S.W), grid), gy = arange(Math.max(lo[1], 0), Math.min(hi[1], S.H), grid);
   const B1at = (t) => [St[0] + u[0] * t, St[1] + u[1] * t];
   const inside = (p) => p[0] >= 0 && p[0] < S.W && p[1] >= 0 && p[1] < S.H;
   const legsOk = (B1, B2) => !(Math.hypot(B2[0] - B1[0], B2[1] - B1[1]) < minLeg || Math.hypot(B2[0] - E[0], B2[1] - E[1]) < minLeg);
   const cands = [];
-  for (const t of arange(t1 - R.axisSpanR1 * r1, t1 + R.axisSpanR1 * r1 + 0.01 * r1, R.axisStepR1 * r1)) {
+  for (const t of arange(t1 - R.axisSpanR1 * r1, t1 + R.axisSpanR1 * r1 + 0.01 * r1, R.axisStepR1 * r1 * (rules.secondBendGrid === 'coarse' ? 2 : 1))) {
     const B1 = B1at(t);
     if (!inside(B1)) continue;
     for (const x of gx) for (const y of gy) {
@@ -96,7 +97,7 @@ export function secondBend(S, start, V1, E, W, f1, rules = MATCH_RULES) {
     }
   } else for (const [s0, t0, B20] of cands.slice(0, R.top)) {
     // coordinate search on (t, B2x, B2y): try +- step on each, move on the best strict gain, else halve the step
-    let s = s0, t = t0, B2 = B20, step = (rules.secondBendRefine === 'coordWide' ? R.gridStepR1 : R.refineStartR1) * r1;   // coordWide: start at the coarse grid spacing
+    let s = s0, t = t0, B2 = B20, step = (rules.secondBendRefine === 'coordWide' ? R.gridStepR1 * (rules.secondBendGrid === 'coarse' ? 2 : 1) : R.refineStartR1) * r1;   // coordWide: start at the coarse grid spacing
     while (step >= R.refineEndR1 * r1) {
       let move = null;
       for (const [dt, dx, dy] of [[step, 0, 0], [-step, 0, 0], [0, step, 0], [0, -step, 0], [0, 0, step], [0, 0, -step]]) {
@@ -144,6 +145,7 @@ export const MATCH_STEPS = Object.freeze({
  *   tableUnits: 'r1' (the route table's bend search in rC1px) | 'px' (match18.py's recorded 800 px reach, 6 px step)
  *   tableSearch: 'full' (every bend on the axis) | 'fast' (coarse sweep at 4x the step, the best 2 refined)
  *                | 'lean' (every basket at 8x the step; only the row's best 3 baskets refined as 'fast')
+ *   secondBendGrid: 'fine' | 'coarse' (the second bend's B1 axis and B2 grid at twice the spacing; the coordinate search starts there)
  */
 export const MATCH_RULES = Object.freeze({ straightFromS6: true, secondBendRefine: 'coordWide', refineUnits: 'r1', tableUnits: 'r1' });   // batch 2 (2026-10-20): S6CoordWide
 
@@ -160,7 +162,9 @@ export const RULE_SETS = Object.freeze({
   routeMatchFast: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'fast' },
   routeMatchFastPxRefine: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'fast', refineUnits: 'px' },
   routeMatchLean: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean' },
-  routeMatchLeanPxRefine: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px' }
+  routeMatchLeanPxRefine: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px' },
+  routeMatchLeanCoarse2: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', secondBendGrid: 'coarse' },
+  routeMatchLeanPxRefineCoarse2: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse' }
 });
 
 /**
@@ -170,7 +174,7 @@ export const RULE_SETS = Object.freeze({
  */
 export const PROFILES = Object.freeze({
   wide: Object.keys(RULE_SETS),
-  quick: ['routeMatchFast', 'routeMatchFastPxRefine', 'routeMatchLean', 'routeMatchLeanPxRefine']
+  quick: ['routeMatchFast', 'routeMatchFastPxRefine', 'routeMatchLean', 'routeMatchLeanPxRefine', 'routeMatchLeanCoarse2', 'routeMatchLeanPxRefineCoarse2']
 });
 export const profileOf = (name) => (PROFILES[name] ?? String(name ?? '').split(',').map((s) => s.trim()).filter((s) => s in RULE_SETS));
 
