@@ -309,6 +309,24 @@ export function contrastRouteFastAt(c, start, E, W, units = 'r1') {
   return { best, tried };
 }
 
+/**
+ * The badge-midpoint bend (heritage7 prototype, 2026-10-20: on the annotated courses the badge sits at 0.51-0.57 of the first
+ * leg, tee -> first bend, or tee -> basket on a straight hole, within ~3 px of it): B* = tee centre + 2 x (badge along the
+ * tee axis) u, the first leg's end if the badge is its midpoint. Measured from the route start S: 2 x badgeAlongPx + |S - tee|.
+ */
+export const badgeMidAlongPx = (start) => 2 * start.badgeAlongPx + Math.hypot(start.S[0] - start.teeCenter[0], start.S[1] - start.teeCenter[1]);
+export const badgeMidOf = (start) => { const t = badgeMidAlongPx(start); return [start.S[0] + start.u[0] * t, start.S[1] + start.u[1] * t]; };
+/** The badge-midpoint search (rule set tableSearch 'badgeMid'): the 0-bend route, or S -> B* -> basket on strict improvement. */
+export function contrastRouteBadgeAt(c, start, E, W) {
+  const S = start.S, z = ribbonContrastAt(c, [S, E], W), t = badgeMidAlongPx(start), B1 = badgeMidOf(start);
+  let best = { contrastLum: z[0], edgePx: z[1], verts: [S, E], bendAlongPx: null }, tried = 1;
+  if (B1[0] >= 0 && B1[0] < c.W && B1[1] >= 0 && B1[1] < c.H) {
+    const r = ribbonContrastAt(c, [S, B1, E], W); tried++;
+    if (r[0] !== null && (best.contrastLum === null || r[0] > best.contrastLum)) best = { contrastLum: r[0], edgePx: r[1], verts: [S, B1, E], bendAlongPx: t };
+  }
+  return { best, tried };
+}
+
 /** match18.py best_route: the 0-bend route, replaced by a 1-bend route only on strict improvement of the edge contrast. */
 export function contrastRouteAt(c, start, E, W, units = 'r1') {
   const S = start.S, z = ribbonContrastAt(c, [S, E], W);
@@ -338,7 +356,7 @@ export function oneBendAt(c, start, E, W, { memo = null } = {}) {
  */
 export const ROW_STEPS = Object.freeze({
   coarse: (c, start, E, W, units, mult) => coarseContrastAt(c, start, E, W, units, mult),
-  contrast: (c, start, E, W, units, search) => (search === 'full' ? contrastRouteAt : contrastRouteFastAt)(c, start, E, W, units),
+  contrast: (c, start, E, W, units, search) => (search === 'full' ? contrastRouteAt : search === 'badgeMid' ? contrastRouteBadgeAt : contrastRouteFastAt)(c, start, E, W, units),
   sensor: (c, verts, W, memo) => routeSensorAt(c, verts, W, { memo })
 });
 export function routeRowOf(c, start, bp, W, units = 'r1', search = 'full', steps = ROW_STEPS) {
@@ -354,7 +372,7 @@ export function routeRowOf(c, start, bp, W, units = 'r1', search = 'full', steps
   }
   for (let k = 0; k < bp.length; k++) {
     const cr = lean ? (lean.refine.has(k) ? steps.contrast(c, start, bp[k], W, units, 'fast') : { ...lean.coarse[k], tried: 0 })
-      : steps.contrast(c, start, bp[k], W, units, search === 'fast' ? 'fast' : 'full'); contrastRoutes += cr.tried;
+      : steps.contrast(c, start, bp[k], W, units, search === 'fast' || search === 'badgeMid' ? search : 'full'); contrastRoutes += cr.tried;
     const crs = steps.sensor(c, cr.best.verts, W, memo);
     const contrast = { contrastLum: cr.best.contrastLum, edgePx: cr.best.edgePx, bends: cr.best.verts.length - 2, verts: cr.best.verts, bendAlongPx: cr.best.bendAlongPx,
       sensor: { passFrac: crs.passFrac, stations: crs.stations }, condition: cr.best.contrastLum === null ? `fewer than ${ROUTE.contrastMinPx} visible px in an edge band on every route` : null };
@@ -509,7 +527,7 @@ export function routeTableOn(store, { board = null, sensor = false, units = 'r1'
   for (const [fn, spec] of ROUTE_CALCULATIONS) if (!store.registered(fn)) store.register(fn, spec);
   registerRowSteps(store);
   const start = store.get(ROUTE_START_PART), W = store.get(ROUTE_HALLWAY_PART).widthPx ?? null, rows = [];
-  const suffix = `${units === 'px' ? 'Px' : ''}${search === 'fast' ? 'Fast' : search === 'lean' ? 'Lean' : ''}`;
+  const suffix = `${units === 'px' ? 'Px' : ''}${search === 'fast' ? 'Fast' : search === 'lean' ? 'Lean' : search === 'badgeMid' ? 'BadgeMid' : ''}`;
   if (suffix) {   // a rule set's table (px: match18.py's recorded px; Fast: coarse-to-fine bends): its own rows and table Parts
     const rowPart = `${ROUTE_ROW_PART}${suffix}`, tablePart = `${ROUTE_TABLE_PART}${suffix}`, rowFn = `fn.tk.s7.routeRow${suffix}`, tableFn = `fn.tk.s7.routeTable${suffix}`;
     for (const h of start.holes) {

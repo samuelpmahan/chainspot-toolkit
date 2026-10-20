@@ -17,7 +17,7 @@
  *
  * Pure functions on the S7 scene ({ lum, mask, W, H }) and the table; no thresholds hide anywhere else.
  */
-import { routeSensorAt, ribbonContrastAt, ROUTE } from './routeSpace.mjs';
+import { routeSensorAt, ribbonContrastAt, ROUTE, badgeMidAlongPx, badgeMidOf } from './routeSpace.mjs';
 import { refineVertices, arange } from '../s7trace/hallway.mjs';
 import { refineBendsOf } from './bends.mjs';
 
@@ -25,6 +25,7 @@ export const MATCH = Object.freeze({
   tau: 0.75,                 // sensor reading at which a route counts as hallway
   minStations: ROUTE.minStations,
   noReadingLum: -99.0,       // a cell with no contrast reading (polyscore.py's value)
+  priorDrop: 0.02,           // firstBend 'badgePrior': the sensor may read this much lower at B* (bends.mjs's refit tolerance)
   refineIters: 2,            // match18.py refine_vertices(iters=2)
   // E18: the refine polishes the contrast route's bend, +- one 6 px grid step of best_route per iteration (2 iterations), it does
   // not relocate it: along the axis the contrast is flat to +-2 lum over tens of px where the bend lies inside the
@@ -89,7 +90,9 @@ export function secondBendScan(S, start, V1, E, W, rules = MATCH_RULES) {
   const grid = R.gridStepR1 * r1 * coarse;   // coarse: half the B2 grid each way, the search starts there
   const gx = arange(Math.max(lo[0], 0), Math.min(hi[0], S.W), grid), gy = arange(Math.max(lo[1], 0), Math.min(hi[1], S.H), grid);
   const cands = [];
-  for (const t of arange(t1 - R.axisSpanR1 * r1, t1 + R.axisSpanR1 * r1 + 0.01 * r1, R.axisStepR1 * r1 * coarse)) {
+  // secondBendB1 'badge': the first bend stays at the badge midpoint B* (the scan and the refine move B2 only)
+  const axis = rules.secondBendB1 === 'badge' ? [badgeMidAlongPx(start)] : arange(t1 - R.axisSpanR1 * r1, t1 + R.axisSpanR1 * r1 + 0.01 * r1, R.axisStepR1 * r1 * coarse);
+  for (const t of axis) {
     const B1 = B1at(t);
     if (!inside(B1)) continue;
     for (const x of gx) for (const y of gy) {
@@ -108,7 +111,7 @@ export function secondBendRefine(S, start, E, W, cand, rules = MATCH_RULES) {
   if (rules.secondBendRefine === 'dense') {
     // match6.py's dense refine, its px over golden's R1 (+-8 px every 2 px on the axis, +-W/2 every 2 px for B2)
     const ax = 0.18 * r1, st = 0.045 * r1, half = W / 2, [, t, B2] = cand;
-    for (const dt of arange(-ax, ax + 0.01 * r1, st)) {
+    for (const dt of rules.secondBendB1 === 'badge' ? [0] : arange(-ax, ax + 0.01 * r1, st)) {
       const B1 = B1at(t + dt);
       for (const dx of arange(-half, half + 0.1, st)) for (const dy of arange(-half, half + 0.1, st)) {
         const Vt = [St, B1, [B2[0] + dx, B2[1] + dy], E], s2 = contrast(S, Vt, W);
@@ -120,7 +123,7 @@ export function secondBendRefine(S, start, E, W, cand, rules = MATCH_RULES) {
     let [s, t, B2] = cand, step = (rules.secondBendRefine === 'coordWide' ? R.gridStepR1 * coarse : R.refineStartR1) * r1;   // coordWide: start at the coarse grid spacing
     while (step >= R.refineEndR1 * r1) {
       let move = null;
-      for (const [dt, dx, dy] of [[step, 0, 0], [-step, 0, 0], [0, step, 0], [0, -step, 0], [0, 0, step], [0, 0, -step]]) {
+      for (const [dt, dx, dy] of rules.secondBendB1 === 'badge' ? [[0, step, 0], [0, -step, 0], [0, 0, step], [0, 0, -step]] : [[step, 0, 0], [-step, 0, 0], [0, step, 0], [0, -step, 0], [0, 0, step], [0, 0, -step]]) {
         const tt = t + dt, B1 = B1at(tt), P = [B2[0] + dx, B2[1] + dy];
         if (!inside(B1) || !inside(P) || !legsOk(B1, P)) continue;
         const v = contrast(S, [St, B1, P, E], W);
@@ -178,6 +181,11 @@ export const MATCH_STEPS = Object.freeze({
  *   tableSearch: 'full' (every bend on the axis) | 'fast' (coarse sweep at 4x the step, the best 2 refined)
  *                | 'lean' (every basket at 8x the step; only the row's best 3 baskets refined as 'fast')
  *   secondBendGrid: 'fine' | 'coarse' (the second bend's B1 axis and B2 grid at twice the spacing; the coordinate search starts there)
+ *   tableSearch 'badgeMid': each cell reads 2 routes, S -> basket and S -> B* -> basket (B* = tee + 2 x the badge's distance
+ *     along the tee axis: the first leg's end when the badge is its midpoint, as on every annotated hole measured 2026-10-20)
+ *   secondBendB1: 'axis' (default: B1 searched on the tee axis) | 'badge' (B1 stays at B*; only B2 is searched)
+ *   firstBend: 'free' (default: refined and placed) | 'badge' (a 1-bend route through B* keeps it there) | 'badgePrior' (after
+ *     the bend placement, the first bend moves to B* when the sensor reads no worse there, within MATCH.priorDrop)
  */
 export const MATCH_RULES = Object.freeze({ straightFromS6: true, secondBendRefine: 'coordWide', refineUnits: 'r1', tableUnits: 'r1' });   // batch 2 (2026-10-20): S6CoordWide
 
@@ -196,7 +204,13 @@ export const RULE_SETS = Object.freeze({
   routeMatchLean: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean' },
   routeMatchLeanPxRefine: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px' },
   routeMatchLeanCoarse2: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', secondBendGrid: 'coarse' },
-  routeMatchLeanPxRefineCoarse2: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse' }
+  routeMatchLeanPxRefineCoarse2: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse' },
+  // the badge-midpoint rule (2026-10-20): the first bend at B* = tee + 2 x (badge along the tee axis), one route read per cell
+  routeMatchBadgeMid: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse' },
+  routeMatchBadgeMidPinned: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', secondBendB1: 'badge', firstBend: 'badge' },
+  routeMatchLeanBadgeMid2: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', secondBendB1: 'badge' },
+  routeMatchLeanBadgePrior: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', firstBend: 'badgePrior' },
+  routeMatchBadgeMidPrior: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', firstBend: 'badgePrior' }
 });
 
 /**
@@ -228,7 +242,9 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
     const E = table.baskets[k].point ?? cell.contrast.verts.at(-1);
     let V = cell.contrast.verts.map((v) => v.slice());
     const s6Straight = rules.straightFromS6 && verdicts && verdicts[hole] === 'straight';
-    if (V.length === 3 && !s6Straight) V = steps.refine(S, V, W, start.u, rules);
+    // firstBend 'badge': a route through B* keeps it (no refine slide; the bend placement below leaves it where it is)
+    const pinB = rules.firstBend === 'badge' && V.length === 3 ? badgeMidOf(start) : null;
+    if (V.length === 3 && !s6Straight && !pinB) V = steps.refine(S, V, W, start.u, rules);
     const straight = steps.sensor(S, [start.S, E], W);
     let rec;
     if (s6Straight) {
@@ -247,10 +263,18 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
     if (verdicts !== undefined && !s6Straight) {
       if (verdicts === null) rec = { ...rec, bendsRefined: { taken: false, why: 'no S6 straight verdict on record: bend placement not run' } };
       else {
-        const r = steps.placeBends(S, rec.verts, W, verdicts[hole] === 'straight');
+        let r = steps.placeBends(S, rec.verts, W, verdicts[hole] === 'straight');
+        if (pinB && r.taken && rec.verts.length >= 3 && r.verts.length === rec.verts.length) r = { ...r, verts: [r.verts[0], rec.verts[1], ...r.verts.slice(2)], why: `${r.why}; the first bend kept at B* (rule firstBend badge)` };
         rec = { ...rec, verts: r.verts, how: `${rec.how} | bends ${r.taken ? 'placed' : 'kept'}: ${r.why}`, sensor: r.taken ? steps.sensor(S, r.verts, W) : rec.sensor,
           bendsRefined: { taken: r.taken, why: r.why, bendsBefore: r.K0, bendsAfter: r.taken ? r.K1 : r.K0, samples: r.samples ?? null, before: before.slice(1, -1) } };
       }
+    }
+    if (rules.firstBend === 'badgePrior' && rec.verts.length >= 3) {
+      // the badge-midpoint prior: the first bend moves to B* when the sensor reads no worse there (within MATCH.priorDrop, on
+      // >= MATCH.minStations visible stations); the route's other vertices stay
+      const Vb = [rec.verts[0], badgeMidOf(start), ...rec.verts.slice(2)], rb = steps.sensor(S, Vb, W);
+      if (rb.stations >= MATCH.minStations && rb.passFrac >= rec.sensor.passFrac - MATCH.priorDrop)
+        rec = { ...rec, verts: Vb, sensor: rb, how: `${rec.how} | first bend at B* (badge-midpoint prior): sensor ${rec.sensor.passFrac.toFixed(2)} -> ${rb.passFrac.toFixed(2)} on ${rb.stations} st` };
     }
     out[hole] = { end: k, verts: rec.verts, how: rec.how, polyScore: steps.contrast(S, rec.verts, W), bendsRefined: rec.bendsRefined ?? null, legs: [{ passFrac: rec.sensor.passFrac }],
       pair: { basket: k, scoreLum: score[i][k], marginLum: sorted[0] === score[i][k] ? sorted[0] - (sorted[1] ?? sorted[0]) : score[i][k] - sorted[0], onAxisPrior: table.onAxisPrior[i]?.[k] ?? 0 } };
