@@ -26,7 +26,7 @@ import { ringMask, dilate4, round } from './hallway.mjs';
 import { sceneOf, hallwayModel, solveS3First, solveBadgeOnly } from './s3first.mjs';
 import { solveEndpoints } from './endpoints.mjs';
 import { routeTableOn } from '../s7route/routeSpace.mjs';
-import { routeMatchOf } from '../s7route/match.mjs';
+import { routeMatchOf, MATCH_STEPS } from '../s7route/match.mjs';
 import { routeMatchViewOf } from './traceView.mjs';
 
 export const HOLE_TRACE_SLOT = Object.freeze({
@@ -171,7 +171,9 @@ export function registerTraceQueries(store, { matcher = null, board = null } = {
       const table = routeTableOn(store, { board: board ?? null }), S = get('tk.s7.sceneS4');
       // rule 1 of the bend placement reads S6's accepted straight verdict (tk.s7.straight, a root input of the S7 runner)
       const straight = !refineBends ? undefined : store.has('tk.s7.straight') ? get('tk.s7.straight').verdicts : null;
-      const r = routeMatchOf(table, S, get('tk.s7.routeStart'), { secondBends, straight });
+      // every per-hole step is its own profiled store call (fn.q.match.*); the scene is passed by address
+      const steps = Object.fromEntries(Object.keys(MATCH_STEPS).map((k) => [k, (_S, ...a) => store.call(`fn.q.match.${k}`, { scene: 'tk.s7.sceneS4', a }).value]));
+      const r = routeMatchOf(table, S, get('tk.s7.routeStart'), { secondBends, straight, steps });
       return { value: { ...r, scene: 'tk.s7.sceneS4' }, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, reached: Object.values(r.holes).filter((h) => h.end != null).length, secondBends: Object.values(r.holes).filter((h) => (h.verts?.length ?? 0) === 4).length } };
     },
     'fn.q.trace.pinned': () => {
@@ -179,6 +181,10 @@ export function registerTraceQueries(store, { matcher = null, board = null } = {
       return { value: r, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, reached: Object.values(r.holes).filter((h) => h.end != null).length } };
     },
   };
+  const units = { refine: 'px (canonical frame): the refined vertices', sensor: 'passFrac / stations', secondBend: 'the 2-bend proposal and its sensor reading',
+    placeBends: 'px (canonical frame): the placed bends and their reading', contrast: 'lum (edge contrast) and visible px' };
+  for (const [k, f] of Object.entries(MATCH_STEPS)) if (!store.registered(`fn.q.match.${k}`)) store.register(`fn.q.match.${k}`, { note: `routeMatch step: ${k} (ports/s7route/match.mjs)`,
+    calculate: (io) => { const v = f(get(io.args.scene), ...io.args.a); return { value: v, unit: units[k], emits: { computed: 1 } }; } });
   const answers = new Map();
   for (const [fn, q] of Object.entries(table)) store.register(fn, { note: 'S7 hallway math behind the PxC boundary (ports/s7trace)',
     calculate: (io) => {
