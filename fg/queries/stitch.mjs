@@ -131,7 +131,7 @@ export function localSearch(a, b, { predicted, radiusPx, linear = null }) {
     const r = Math.ceil(L[k - 1] / L[k]) + 1, s = L[k - 1] / L[k];
     at = sweep(A[k], B[k], Math.round(at.dx * s), Math.round(at.dy * s), r, { linear, rowStride: L[k] === 1 ? STITCH.fineStride : STITCH.rowStride, minFraction: 0.01 }) ?? at;
   }
-  const fine = sweep(a, b, at.dx, at.dy, 1, { linear, rowStride: 1, minFraction: 0.01 }) ?? at;   // polish: +- 1 px, every pixel
+  const fine = sweep(a, b, at.dx, at.dy, 1, { linear, rowStride: STITCH.rowStride, minFraction: 0.01 }) ?? at;   // polish: +- 1 px, every 2nd row and column
   const atPredicted = residualAt(a, b, Math.round(predicted[0]), Math.round(predicted[1]), { linear, rowStride: STITCH.fineStride, minFraction: 0.01 });
   const contrast = fine.residual / coarse.medianResidual;
   const shiftPx = Math.hypot(fine.dx - predicted[0], fine.dy - predicted[1]);
