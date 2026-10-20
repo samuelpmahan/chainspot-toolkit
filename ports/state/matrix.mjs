@@ -518,15 +518,19 @@ export function referencedAttempts(root = ROOT) {
 }
 const dirBytes = (dir) => { let n = 0; for (const e of readdirSync(dir, { withFileTypes: true })) { const p = join(dir, e.name); n += e.isDirectory() ? dirBytes(p) : statSync(p).size; } return n; };
 
-/** Attempts are reproducible from the recipe; only the ones evidence names are kept. Returns what was (or would be) removed. */
-export function pruneAttempts(root = ROOT, { dryRun = false } = {}) {
-  const keep = referencedAttempts(root), dir = join(root, 'attempts', 'stages');
+/**
+ * Attempts are reproducible from the recipe; the ones evidence names are kept, and so is any attempt touched in the last
+ * `hours` (another agent may be running a course in it right now: a retest's prune once deleted one mid-run, 2026-10-20).
+ * Returns what was (or would be) removed.
+ */
+export function pruneAttempts(root = ROOT, { dryRun = false, hours = 12 } = {}) {
+  const keep = referencedAttempts(root), dir = join(root, 'attempts', 'stages'), recentAfter = Date.now() - hours * 3600e3;
   if (!existsSync(dir)) return { removed: [], kept: [], bytes: 0 };
   const all = readdirSync(dir).filter((d) => d.startsWith('attempt-')), removed = [], kept = [];
   let bytes = 0;
   for (const name of all) {
     const id = name.replace(/\.json$/, '');
-    if (keep.has(id)) { kept.push(id); continue; }
+    if (keep.has(id) || statSync(join(dir, name)).mtimeMs > recentAfter) { kept.push(id); continue; }
     const p = join(dir, name); bytes += statSync(p).isDirectory() ? dirBytes(p) : statSync(p).size;
     removed.push(name); if (!dryRun) rmSync(p, { recursive: true, force: true });
   }
