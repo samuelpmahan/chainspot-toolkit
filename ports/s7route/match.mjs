@@ -241,8 +241,10 @@ export const RULE_SETS = Object.freeze({
  */
 export const PROFILES = Object.freeze({
   wide: Object.keys(RULE_SETS),
-  quick: ['routeMatchFast', 'routeMatchFastPxRefine', 'routeMatchLean', 'routeMatchLeanPxRefine', 'routeMatchLeanCoarse2', 'routeMatchLeanPxRefineCoarse2',
-    'routeMatchTeeAxisBadgePrior', 'routeMatchBadgeMidTeeAxisPrior']
+  // moved to wide (2026-10-20), each the same on every dev course as a cheaper rule set kept here: the fast table's two (heritage
+  // Fast 12/7/4, FastPxRefine 13/6/4 bends; their table 15 s of golden's 27 s) and the lean table's fine second-bend grid
+  // (Lean = LeanCoarse2, LeanPxRefine = LeanPxRefineCoarse2 on all six; the fine scan 8x the routes, 11 s of golden's 20 s)
+  quick: ['routeMatchLeanCoarse2', 'routeMatchLeanPxRefineCoarse2', 'routeMatchTeeAxisBadgePrior', 'routeMatchBadgeMidTeeAxisPrior']
 });
 /**
  * The S7 variants `pxc state --retest` runs: the quick rule sets plus the pinned prototype (1 ms). The old tracers (badgeOnly,
