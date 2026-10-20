@@ -46,7 +46,7 @@ function alternativesOf(hole, number, primaryVerts, primary, alternatives, toSou
   return { agree: all[0]?.ruleSets ?? [], alternatives: all.slice(1) };
 }
 
-export function courseGeometryOf({ solve, primary = 'routeMatch', alternatives = [], holesPart, hallway, badges, crop, source, producer, capture = null }) {
+export function courseGeometryOf({ solve, primary = 'routeMatch', alternatives = [], holesPart, hallway, badges, crop, source, producer, capture = null, r1Px = null }) {
   const dy = crop.upperRowsRemoved, W = crop.originalPx.width, H = crop.originalPx.height;
   const toSource = ([x, y]) => ({ xPx: r2(x), yPx: r2(y + dy) });
   const inFrame = (p) => p.xPx >= 0 && p.yPx >= 0 && p.xPx < W && p.yPx < H;
@@ -75,7 +75,8 @@ export function courseGeometryOf({ solve, primary = 'routeMatch', alternatives =
     holes.push({ id, number, ...(tee ? { tee } : {}), ...(basket ? { basket } : {}), shots: [], corridorBends: bends, corridorWidthPx: widthPx });
     evidence.push({ holeId: id, status, confidence: { level, sensor: r3(asg?.sensor), stations: asg?.stations ?? null, marginLum: r3(r?.pair?.marginLum) },
       tee: { state: tee ? 'placed' : 'none', source: h.tee?.source ?? null }, basket: { state: basket ? 'matched' : 'none', ...(asg ? { candidate: (holesPart.baskets[asg.basket]?.name ?? null) } : {}) },
-      trace: { outcome: verts.length ? 'basket' : 'none', lengthPx: verts.length ? r2(lengthOf(verts)) : null, bendCount: bends.length }, reasons,
+      trace: { outcome: verts.length ? 'basket' : 'none', lengthPx: verts.length ? r2(lengthOf(verts)) : null,
+        lengthFt: verts.length && r1Px > 0 ? Math.round(lengthOf(verts) * 10 / r1Px / 0.3048) : null, bendCount: bends.length }, reasons,
       // every distinct route the profile's other rule sets produced for this hole (rounded to 0.5 px), with who produced it
       ...(() => { const r = alternativesOf(h.hole, number, verts, primary, alternatives, toSource); return { routeAgreement: r.agree, alternatives: r.alternatives }; })() });
   }
@@ -94,7 +95,10 @@ export function courseGeometryOf({ solve, primary = 'routeMatch', alternatives =
     format: FORMAT, version: VERSION, producer,
     source: { fileName: source.fileName, sha256: source.sha256, widthPx: W, heightPx: H, frame: 'original-upload', s0Crop: { rowsRemovedTop: dy, rowsRemovedBottom: crop.lowerRowsRemoved }, ...(capture ? { capture } : {}) },
     holes, numberBadges, candidates, evidence, conditions,
-    units: { 'xPx/yPx': 'px in source.frame (the original upload, S0 crop added back)', corridorWidthPx: 'px in source.frame; the course hallway W (LOCAL, learned on this screenshot)', lengthPx: 'px in source.frame', sensor: 'fraction of stations reading as hallway, 0..1', stations: 'count of sampled stations along the route' }
+    // the ground scale, from the screenshot itself: the C1 putting circle is 10 m in radius, so 10 m = rC1 px (Sam, 2026-10-20)
+    ...(r1Px > 0 ? { scale: { rC1Px: r2(r1Px), metresPerPx: Math.round((10 / r1Px) * 1e6) / 1e6, feetPerPx: Math.round((10 / r1Px / 0.3048) * 1e6) / 1e6,
+      rule: 'the C1 circle around every basket is 10 m in radius; rC1Px is its radius measured on this image (LOCAL)' } } : {}),
+    units: { 'xPx/yPx': 'px in source.frame (the original upload, S0 crop added back)', corridorWidthPx: 'px in source.frame; the course hallway W (LOCAL, learned on this screenshot)', lengthPx: 'px in source.frame', lengthFt: 'ft along the route, from the C1 ground scale (10 m = rC1 px)', sensor: 'fraction of stations reading as hallway, 0..1', stations: 'count of sampled stations along the route' }
   };
 }
 
@@ -111,7 +115,7 @@ export function captureProvenanceOf(record) {
 }
 
 export const exportCourse = ['fn.tk.export.course', {
-  inParts: ['tk.s7.holes', 'tk.s7.hallway', 'px.badges', 'tk.source.cropReceipt', 'tk.source.sha256', 'tk.source.path', 'tk.source.captureProvenance', 'tk.export.producer', 'tk.export.ruleSet'],
+  inParts: ['tk.s7.holes', 'tk.s7.hallway', 'tk.s7.sceneS4', 'px.badges', 'tk.source.cropReceipt', 'tk.source.sha256', 'tk.source.path', 'tk.source.captureProvenance', 'tk.export.producer', 'tk.export.ruleSet'],
   outParts: [EXPORT_COURSE_PART], calls: ['fn.q.trace.routeMatch'],
   note: 'the toolkit/app boundary: S7 routeMatch holes + S1 badges + unclaimed baskets as chainspot.course-geometry v1 (original-upload frame)',
   calculate: (io) => {
@@ -120,7 +124,7 @@ export const exportCourse = ['fn.tk.export.course', {
     const solveOf = (rules) => io.call('fn.q.trace.routeMatch', rules && Object.keys(rules).length ? { rules } : {}).value;
     const alternatives = (ruleSet?.wide ?? []).map((w) => ({ variant: w.variant, solve: solveOf(w.rules) }));
     const doc = courseGeometryOf({ solve: solveOf(ruleSet?.rules), primary: ruleSet?.variant ?? 'routeMatch', alternatives, holesPart: io.in('tk.s7.holes'), hallway: io.in('tk.s7.hallway'), badges: io.in('px.badges'),
-      crop: io.in('tk.source.cropReceipt'), source: { fileName: String(path).split('/').pop(), sha256: io.in('tk.source.sha256') }, producer: io.in('tk.export.producer'), capture: io.in('tk.source.captureProvenance') });
+      r1Px: io.in('tk.s7.sceneS4').R1, crop: io.in('tk.source.cropReceipt'), source: { fileName: String(path).split('/').pop(), sha256: io.in('tk.source.sha256') }, producer: io.in('tk.export.producer'), capture: io.in('tk.source.captureProvenance') });
     const n = (s) => doc.evidence.filter((e) => e.status === s).length;
     return { [EXPORT_COURSE_PART]: { ...doc, emits: { holesCount: doc.holes.length, resolvedHolesCount: n('resolved'), straightHolesCount: n('straight'), partialHolesCount: n('partial'), unresolvedHolesCount: n('unresolved'),
       numberBadgesCount: doc.numberBadges.length, candidatesCount: doc.candidates.length, corridorWidthPx: doc.holes[0]?.corridorWidthPx ?? null } } };

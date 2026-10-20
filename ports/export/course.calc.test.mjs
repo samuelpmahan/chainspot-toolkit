@@ -48,7 +48,7 @@ test('data conditions are recorded, never thrown: no hallway width exports no ho
 });
 
 test('fn.tk.export.course: produces tk.export.course, emits its measures, renders over the course', () => {
-  const parts = { 'tk.s7.holes': holesPart, 'tk.s7.hallway': { widthPx: 41.627 }, 'px.badges': badges, 'tk.source.cropReceipt': crop, 'tk.source.sha256': 'a'.repeat(64), 'tk.source.path': '/x/a.jpg', 'tk.source.captureProvenance': null, 'tk.export.producer': { name: 'chainspot-toolkit' }, 'tk.export.ruleSet': { variant: 'routeMatch', rules: {}, how: 'test' }, 'px.image.cropped': img };
+  const parts = { 'tk.s7.holes': holesPart, 'tk.s7.hallway': { widthPx: 41.627 }, 'px.badges': badges, 'tk.source.cropReceipt': crop, 'tk.source.sha256': 'a'.repeat(64), 'tk.source.path': '/x/a.jpg', 'tk.source.captureProvenance': null, 'tk.export.producer': { name: 'chainspot-toolkit' }, 'tk.export.ruleSet': { variant: 'routeMatch', rules: {}, how: 'test' }, 'tk.s7.sceneS4': { R1: 44.5 }, 'px.image.cropped': img };
   const store = createPartStore({ base: { has: (a) => a in parts, get: (a) => parts[a] } });
   store.register('fn.q.trace.routeMatch', { calculate: () => ({ value: solve, unit: 'px (canonical frame)' }) });
   store.register(...exportCourse);
@@ -117,4 +117,14 @@ test('the export runs the S7 rule set the pointer vote accepted, never a hard-co
   const none = exportRuleSet('/nonexistent');
   assert.equal(none.variant, 'routeMatch'); assert.match(none.how, /no S7 pointer on record/);
   assert.match(exportRuleSet('/nonexistent', 'pinned').how, /not a routeMatch rule set/);
+});
+
+test('the export carries the C1 ground scale: 10 m = rC1 px, so a 445 px route at rC1 44.5 px is 100 m = 328 ft', async () => {
+  const { courseGeometryOf } = await import('./course.calc.mjs');
+  const doc = courseGeometryOf({ solve: { holes: { 1: { verts: [[0, 0], [445, 0]] } }, assignment: [{ hole: '1', basket: 0, sensor: 1, stations: 400 }] },
+    holesPart: { holes: [{ hole: '1', tee: { teeCenter: [0, 0], source: 'S3' } }], baskets: [{ index: 0, name: 'Basket ca', point: [445, 0] }], conditions: [] },
+    hallway: { widthPx: 40 }, badges: [], crop: { upperRowsRemoved: 0, lowerRowsRemoved: 0, originalPx: { width: 1000, height: 1000 } },
+    source: { fileName: 'a.png', sha256: 'a'.repeat(64) }, producer: {}, r1Px: 44.5 });
+  assert.equal(doc.scale.metresPerPx, Math.round((10 / 44.5) * 1e6) / 1e6);
+  assert.equal(doc.evidence[0].trace.lengthFt, 328);
 });
