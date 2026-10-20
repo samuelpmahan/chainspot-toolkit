@@ -96,7 +96,7 @@ export function secondBend(S, start, V1, E, W, f1, rules = MATCH_RULES) {
     }
   } else for (const [s0, t0, B20] of cands.slice(0, R.top)) {
     // coordinate search on (t, B2x, B2y): try +- step on each, move on the best strict gain, else halve the step
-    let s = s0, t = t0, B2 = B20, step = R.refineStartR1 * r1;
+    let s = s0, t = t0, B2 = B20, step = (rules.secondBendRefine === 'coordWide' ? R.gridStepR1 : R.refineStartR1) * r1;   // coordWide: start at the coarse grid spacing
     while (step >= R.refineEndR1 * r1) {
       let move = null;
       for (const [dt, dx, dy] of [[step, 0, 0], [-step, 0, 0], [0, step, 0], [0, -step, 0], [0, 0, step], [0, 0, -step]]) {
@@ -138,7 +138,8 @@ export const MATCH_STEPS = Object.freeze({
  * Rule sets (Sam, 2026-10-20: "have a bunch of possible rule sets so you can optimize over a wide batch"). Each is a
  * routeMatch variant in impl/fn.Hole.trace/ and the S7 pointer vote picks among them on the judged courses.
  *   straightFromS6: a hole S6 reads straight is drawn straight (tee cap -> BasketPoint), no bend search
- *   secondBendRefine: 'coord' (halving coordinate search) | 'dense' (match6.py's dense grid, in rC1px)
+ *   secondBendRefine: 'coord' (halving coordinate search from 0.25 R1) | 'coordWide' (from the coarse grid spacing, 0.47 R1)
+ *                     | 'dense' (match6.py's dense grid, in rC1px)
  *   refineUnits: 'r1' (the 1-bend refine in rC1px) | 'px' (E18 as recorded)
  *   tableUnits: 'r1' (the route table's bend search in rC1px) | 'px' (match18.py's recorded 800 px reach, 6 px step)
  */
