@@ -15,6 +15,7 @@ import { runStageGuarantees, attachPublished } from './stageGuarantees.mjs';
 import { isCaptureManifest, runCapture } from '../capture/capture.mjs';
 import { CAPTURE_VIEW_CALCULATION } from '../../fg/stitch/capture.calc.mjs';
 import { RENDER_PART } from '../../fg/store.mjs';
+import { installScaledTee } from '../../fg/s3/teeScale.mjs';
 import { deflateSync } from 'node:zlib';
 
 // Experiment code (what run-stages passes) -> lane name (what an FG's
@@ -107,11 +108,14 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   }));
 
   const stages = [];
-  let initialPixels;
+  let initialPixels, uninstallTee = null;
   for (const id of stageOrder.slice(0, lastIndex + 1)) {
     const started = Date.now();
     const inputSnapshotSha256 = pxc ? store.get(`tk.stage.${stageOrder[stageOrder.indexOf(id) - 1]}.snapshotSha256`) : null;
     const contract = dist(`stages/${id}/contract`).stageContract;
+    // S3 across zoom levels (fg/s3/teeScale.mjs): the pinned S3 registers its ring and family Calculations with this image's
+    // rC1-scaled bounds (measured from the S2 BasketPoints, tk.scale.rC1)
+    if (id === 'S3') uninstallTee = installScaledTee(dist, () => store.get('tk.scale.rC1').tee);
     const result = await contract.execute({ source, inputLabel: basename(source), decode, ...(pxc ? { pxc } : {}) });
     pxc = result.pxc;
     const image = pxc.get(id === 'S0' ? 'px.course.canonicalPixels' : ComponentPxC.image);
@@ -280,6 +284,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     stages,
     materializations: stageMaterializations,
     crop: store.get('tk.source.cropReceipt'),
+    ...(lastIndex >= 3 ? { scale: (({ r1Px, unit, tee, condition }) => ({ rC1Px: r1Px, unit, s3TeeBounds: tee, condition }))(store.get('tk.scale.rC1')) } : {}),
     ...(capture ? { capture: captureReceipt(store.get('tk.source.capture'), sourcePath) } : {}),
     snapshot: snapshotBytes ? { path: snapshotPath, relativePath: 's3.pxc.bin', sha256: snapshotSha256, addresses: presentAddresses } : null,
     counts: { ...(final.has(BadgePxC.objects.address) ? { badges: final.get(BadgePxC.objects).length } : {}), ...(final.has(BasketPxC.objects.address) ? { baskets: final.get(BasketPxC.objects).length } : {}), ...(final.has(TeePxC.objects.address) ? { tees: final.get(TeePxC.objects).length } : {}) },
@@ -287,6 +292,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     oracle: 'UNKNOWN',
     testimonyScope: 'Compiled gateway PCR operation testimony: declared/actual Part traffic, writes, frozen calculation bindings, and artifact hashes. It does not independently prove semantic correctness or every internal read/cache effect.'
   };
+  uninstallTee?.();
   writeFileSync(join(out, 'run.receipt.json'), json(receipt));
   writeFileSync(join(out, 'tick-traffic.json'), json({ stages: Object.fromEntries(stages.map(({ id, ticks }) => [id, ticks])), experiments: branchResults }));
   // Auto-instrumentation sidecar: per-op timing and verbatim emits for every
