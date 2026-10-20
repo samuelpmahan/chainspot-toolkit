@@ -9,36 +9,36 @@
  *
  * Law of each S3 tee rule (pinned value -> how it is applied here):
  *   holeAreaMin 10 px, largeRadiiAreaMin 40 px      map-scaled floors; kept (a zoom-in only loosens what they reject)
- *   holeAreaMax 480 px, holeDimMax 44 px            map-scaled ceilings (the fill)      -> max(pinned, k rC1^2 | k rC1)
- *   frame area <= 500 px, bbox <= 50 x 50 px        map-scaled ceilings (pad outline)   -> max(pinned, k rC1^2 | k rC1)
+ *   holeAreaMax 480 px, holeDimMax 44 px            map-scaled ceilings (the fill)      -> 1.0 rC1^2, 1.5 rC1
+ *   frame area <= 500 px, bbox <= 50 x 50 px        map-scaled ceilings (pad outline)   -> 1.5 rC1^2, 2.0 rC1
  *   frame area >= 10 px                             floor; kept
- *   ringMergeProximity 10 px                        map-scaled (centre distance)        -> max(pinned, k rC1)
+ *   ringMergeProximity 10 px                        SCREEN-FIXED: it merges one hole found at dilation radii 0..3 px, whose
+ *                                                   centroids differ by the dilation (screen px), not by the map; kept
  *   ringBand 3 px                                   SCREEN-FIXED (the white frame is ~3-4 px at every zoom); kept
  *   dilationRadii 0..3 px                           screen-fixed (AA / occlusion gaps in the frame stroke); kept
  *   ringFracMin 0.6, elongationThreshold 1.18       ratios of quantities that follow one law; kept
  *   family MAJOR/MINOR 1.25, AREA 1.5 (log-ratio)   LOCAL: members resemble each other (findFamily); kept
- * The ceilings are only pre-filters: they are loosened (never tightened below the pinned px), and family consistency does the
- * selection, as Sam asked. The unit of the map-scaled ceilings is rC1px, the radius of the basket's C1 circle (a physical 10 m
+ * The map-scaled ceilings are purely in rC1 (no px floor): the floor bound on lenard, townelake, heritage and northpark
+ * (rC1 21-27.5 px) and on none of the zoomed captures, and without it every dev course keeps the same family (judged).
+ * The ceilings are only pre-filters, generous in rC1, and family consistency does the selection, as Sam asked: the family is
+ * UP TO N visible pads that resemble each other (occluded pads are S4's), never forced to N. The unit of the map-scaled ceilings is rC1px, the radius of the basket's C1 circle (a physical 10 m
  * ring) measured per image before S3 from the S2 BasketPoints (tk.scale.rC1, fg/alpha/alphaSpace.mjs ringScale). The family
  * itself then carries its own size (pad major / rC1 = 0.64-0.79 across the dev courses and the zoomed captures, the frame
  * being screen-fixed and the fill map-scaled).
  */
-export const TEE_SCALE = Object.freeze({ holeDimMax: 1.5, holeAreaMax: 1.0, frameDimMax: 2.0, frameAreaMax: 1.5, ringMergeProximity: 0.225 });
-export const TEE_SCALE_UNITS = Object.freeze({ holeDimMax: 'rC1 (x rC1px)', holeAreaMax: 'rC1^2 (x rC1px^2)', frameDimMax: 'rC1 (x rC1px)', frameAreaMax: 'rC1^2 (x rC1px^2)', ringMergeProximity: 'rC1 (x rC1px)' });
-/** The pinned provider px (never tightened below). */
+export const TEE_SCALE = Object.freeze({ holeDimMax: 1.5, holeAreaMax: 1.0, frameDimMax: 2.0, frameAreaMax: 1.5 });
+export const TEE_SCALE_UNITS = Object.freeze({ holeDimMax: 'rC1 (x rC1px)', holeAreaMax: 'rC1^2 (x rC1px^2)', frameDimMax: 'rC1 (x rC1px)', frameAreaMax: 'rC1^2 (x rC1px^2)' });
+/** The pinned provider px: the screen-fixed ones are kept; the map-scaled ones apply only when rC1 is not measured. */
 export const PINNED_PX = Object.freeze({ holeDimMax: 44, holeAreaMax: 480, frameDimMax: 50, frameAreaMax: 500, frameAreaMin: 10, ringMergeProximity: 10 });
 
-/** The S3 tee bounds for an image whose C1 radius is rC1 px (null: not measured -> the pinned px). */
+/** The S3 tee bounds for an image whose C1 radius is rC1 px (null: not measured -> the pinned px, recorded as the condition). */
 export function teeBounds(rC1) {
-  const r = Number.isFinite(rC1) && rC1 > 0 ? rC1 : 0;
+  const r = Number.isFinite(rC1) && rC1 > 0 ? rC1 : null;
+  if (!r) return { rC1Px: null, ...PINNED_PX, condition: 'rC1 not measured: the pinned px bounds' };
   return {
-    rC1Px: r || null,
-    holeDimMax: Math.max(PINNED_PX.holeDimMax, TEE_SCALE.holeDimMax * r),
-    holeAreaMax: Math.max(PINNED_PX.holeAreaMax, TEE_SCALE.holeAreaMax * r * r),
-    frameDimMax: Math.max(PINNED_PX.frameDimMax, TEE_SCALE.frameDimMax * r),
-    frameAreaMax: Math.max(PINNED_PX.frameAreaMax, TEE_SCALE.frameAreaMax * r * r),
-    frameAreaMin: PINNED_PX.frameAreaMin,
-    ringMergeProximity: Math.max(PINNED_PX.ringMergeProximity, TEE_SCALE.ringMergeProximity * r)
+    rC1Px: r, holeDimMax: TEE_SCALE.holeDimMax * r, holeAreaMax: TEE_SCALE.holeAreaMax * r * r,
+    frameDimMax: TEE_SCALE.frameDimMax * r, frameAreaMax: TEE_SCALE.frameAreaMax * r * r,
+    frameAreaMin: PINNED_PX.frameAreaMin, ringMergeProximity: PINNED_PX.ringMergeProximity, condition: null
   };
 }
 
