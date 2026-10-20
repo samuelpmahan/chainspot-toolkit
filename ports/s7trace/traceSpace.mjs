@@ -168,7 +168,7 @@ export function registerTraceQueries(store, { matcher = null, board = null } = {
     },
     'fn.q.trace.routeMatch': ({ secondBends = true, refineBends = true, rules = undefined } = {}) => {
       // S7 after S5 (docs/evidence/s7after): scoring = tk.s7.routeTable (cached rows), matching = ports/s7route/match.mjs
-      const table = routeTableOn(store, { board: board ?? null, units: rules?.tableUnits ?? 'r1' }), S = get('tk.s7.sceneS4');
+      const table = routeTableOn(store, { board: board ?? null, units: rules?.tableUnits ?? 'r1', search: rules?.tableSearch ?? 'full' }), S = get('tk.s7.sceneS4');
       // rule 1 of the bend placement reads S6's accepted straight verdict (tk.s7.straight, a root input of the S7 runner)
       const straight = !refineBends ? undefined : store.has('tk.s7.straight') ? get('tk.s7.straight').verdicts : null;
       // every per-hole step is its own profiled store call (fn.q.match.*); the scene is passed by address

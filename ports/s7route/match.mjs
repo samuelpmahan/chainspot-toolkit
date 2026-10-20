@@ -142,6 +142,7 @@ export const MATCH_STEPS = Object.freeze({
  *                     | 'dense' (match6.py's dense grid, in rC1px)
  *   refineUnits: 'r1' (the 1-bend refine in rC1px) | 'px' (E18 as recorded)
  *   tableUnits: 'r1' (the route table's bend search in rC1px) | 'px' (match18.py's recorded 800 px reach, 6 px step)
+ *   tableSearch: 'full' (every bend on the axis) | 'fast' (coarse sweep at 4x the step, the best 2 refined)
  */
 export const MATCH_RULES = Object.freeze({ straightFromS6: true, secondBendRefine: 'coordWide', refineUnits: 'r1', tableUnits: 'r1' });   // batch 2 (2026-10-20): S6CoordWide
 
@@ -154,7 +155,9 @@ export const RULE_SETS = Object.freeze({
   routeMatchS6PxDense: { straightFromS6: true, tableUnits: 'px', refineUnits: 'px', secondBendRefine: 'dense' },
   routeMatchDenseSecondBend: { secondBendRefine: 'dense' },
   routeMatchPxRefine: { refineUnits: 'px' },
-  routeMatchPxTable: { tableUnits: 'px', refineUnits: 'px' }
+  routeMatchPxTable: { tableUnits: 'px', refineUnits: 'px' },
+  routeMatchFast: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'fast' },
+  routeMatchFastPxRefine: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'fast', refineUnits: 'px' }
 });
 
 export function routeMatchOf(table, S, starts, { secondBends = true, straight: verdicts = undefined, steps = MATCH_STEPS, rules = MATCH_RULES } = {}) {

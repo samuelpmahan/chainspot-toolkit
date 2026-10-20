@@ -243,6 +243,30 @@ function bendsOnAxis(c, start, W, step, units = 'r1') {
   return out;
 }
 
+/**
+ * The fast search (rule set tableSearch 'fast'): the same bend axis swept at FAST.coarse x the step, then the best FAST.keep
+ * coarse bends refined at the full step within +- one coarse step. Same scoring, same strict-improvement rule over the 0-bend.
+ */
+export const FAST = Object.freeze({ coarse: 4, keep: 2 });
+export function contrastRouteFastAt(c, start, E, W, units = 'r1') {
+  const S = start.S, z = ribbonContrastAt(c, [S, E], W), step = units === 'px' ? 6 : ROUTE.contrastBendStepR1 * c.R1;
+  let best = { contrastLum: z[0], edgePx: z[1], verts: [S, E], bendAlongPx: null }, tried = 1;
+  const coarse = [];
+  for (const [t, B1] of bendsOnAxis(c, start, W, step * FAST.coarse, units)) { const r = ribbonContrastAt(c, [S, B1, E], W); tried++; if (r[0] !== null) coarse.push([r[0], t, r[1], B1]); }
+  coarse.sort((a, b) => b[0] - a[0]);
+  const consider = (t, B1, r) => { if (r[0] !== null && (best.contrastLum === null || r[0] > best.contrastLum)) best = { contrastLum: r[0], edgePx: r[1], verts: [S, B1, E], bendAlongPx: t }; };
+  for (const [v, t0, px, B10] of coarse.slice(0, FAST.keep)) {
+    consider(t0, B10, [v, px]);
+    for (let k = -FAST.coarse + 1; k < FAST.coarse; k++) {
+      if (k === 0) continue;
+      const t = t0 + k * step, B1 = [S[0] + start.u[0] * t, S[1] + start.u[1] * t];
+      if (!(B1[0] >= 0 && B1[0] < c.W && B1[1] >= 0 && B1[1] < c.H)) continue;
+      consider(t, B1, ribbonContrastAt(c, [S, B1, E], W)); tried++;
+    }
+  }
+  return { best, tried };
+}
+
 /** match18.py best_route: the 0-bend route, replaced by a 1-bend route only on strict improvement of the edge contrast. */
 export function contrastRouteAt(c, start, E, W, units = 'r1') {
   const S = start.S, z = ribbonContrastAt(c, [S, E], W);
@@ -266,12 +290,12 @@ export function oneBendAt(c, start, E, W, { memo = null } = {}) {
 }
 
 /** tk.s7.routeRow@<hole>: per BasketPoint, the best route by edge contrast, with the sensor's reading on that route. */
-export function routeRowOf(c, start, bp, W, units = 'r1') {
+export function routeRowOf(c, start, bp, W, units = 'r1', search = 'full') {
   if (!(W > 0)) return { schema: 'nctk-s7-route-row@1', hole: start.hole, condition: 'no hallway width', cells: [], emits: { cellsCount: 0 } };
   const memo = new Map(), cells = [];
   let contrastRoutes = 0;
   for (let k = 0; k < bp.length; k++) {
-    const cr = contrastRouteAt(c, start, bp[k], W, units); contrastRoutes += cr.tried;
+    const cr = (search === 'fast' ? contrastRouteFastAt : contrastRouteAt)(c, start, bp[k], W, units); contrastRoutes += cr.tried;
     const crs = routeSensorAt(c, cr.best.verts, W, { memo });
     const contrast = { contrastLum: cr.best.contrastLum, edgePx: cr.best.edgePx, bends: cr.best.verts.length - 2, verts: cr.best.verts, bendAlongPx: cr.best.bendAlongPx,
       sensor: { passFrac: crs.passFrac, stations: crs.stations }, condition: cr.best.contrastLum === null ? `fewer than ${ROUTE.contrastMinPx} visible px in an edge band on every route` : null };
@@ -363,7 +387,7 @@ const digestOf = (...fns) => sha256Hex(fns.map(String).join('\n'));
 const CODE = Object.freeze({
   start: digestOf(routeStartOf),
   hallway: digestOf(routeHallwayOf, teeBadgeLearn),
-  row: digestOf(routeRowOf, bendsOnAxis, contrastRouteAt, ribbonContrastAt, routeSensorAt, verdicts, stationContrastAt),
+  row: digestOf(routeRowOf, bendsOnAxis, contrastRouteAt, contrastRouteFastAt, ribbonContrastAt, routeSensorAt, verdicts, stationContrastAt),
   sensorRow: digestOf(routeSensorRowOf, bendsOnAxis, oneBendAt, routeSensorAt, verdicts, stationContrastAt),
   table: digestOf(routeTableOf, samBasketsOf, argmax, onAxisOf)
 });
@@ -399,22 +423,25 @@ export const routeSensorTableCalculation = (rowAddresses, sensorAddresses) => ['
  * Produce tk.s7.routeTable on a store that has tk.s7.sceneS4, tk.s7.holes and testimony.source.holePaths: the starts,
  * the width, one row per hole (each its own cached call), then the join. board: the branch's provider board (the runner's).
  */
-export function routeTableOn(store, { board = null, sensor = false, units = 'r1' } = {}) {
+export function routeTableOn(store, { board = null, sensor = false, units = 'r1', search = 'full' } = {}) {
   for (const [fn, spec] of ROUTE_CALCULATIONS) if (!store.registered(fn)) store.register(fn, spec);
   const start = store.get(ROUTE_START_PART), W = store.get(ROUTE_HALLWAY_PART).widthPx ?? null, rows = [];
-  if (units === 'px') {   // rule set: the table's bend search in match18.py's recorded px (tk.s7.routeTablePx, its own rows)
+  const suffix = `${units === 'px' ? 'Px' : ''}${search === 'fast' ? 'Fast' : ''}`;
+  if (suffix) {   // a rule set's table (px: match18.py's recorded px; Fast: coarse-to-fine bends): its own rows and table Parts
+    const rowPart = `${ROUTE_ROW_PART}${suffix}`, tablePart = `${ROUTE_TABLE_PART}${suffix}`, rowFn = `fn.tk.s7.routeRow${suffix}`, tableFn = `fn.tk.s7.routeTable${suffix}`;
     for (const h of start.holes) {
-      const address = `${ROUTE_ROW_PART}Px@${h.hole}`;
+      const address = `${rowPart}@${h.hole}`;
       if (!store.has(address)) {
-        const b = store.branch(board, { name: `s7route/hole ${h.hole} (px)`, alias: { [`${ROUTE_ROW_PART}Px`]: address }, sharedParts: true });
-        b.register(...ROUTE_ROW_PX_CALCULATION);
-        b.call('fn.tk.s7.routeRowPx', { hole: h.hole, start: h, widthPx: W });
+        const b = store.branch(board, { name: `s7route/hole ${h.hole} (${suffix})`, alias: { [rowPart]: address }, sharedParts: true });
+        b.register(rowFn, { inParts: [SCENE], outParts: [rowPart], code: CODE.row, note: `one hole x every basket, rule set table ${suffix}`,
+          calculate: (io) => { const S = io.in(SCENE); return { [rowPart]: routeRowOf(S, io.args.start, S.bp, io.args.widthPx, units, search) }; } });
+        b.call(rowFn, { hole: h.hole, start: h, widthPx: W });
       }
       rows.push(address);
     }
-    if (!store.registered('fn.tk.s7.routeTablePx')) store.register('fn.tk.s7.routeTablePx', { ...routeTableCalculation(rows)[1], outParts: [`${ROUTE_TABLE_PART}Px`],
-      calculate: (io) => ({ [`${ROUTE_TABLE_PART}Px`]: routeTableCalculation(rows)[1].calculate(io)[ROUTE_TABLE_PART] }) });
-    return store.get(`${ROUTE_TABLE_PART}Px`);
+    if (!store.registered(tableFn)) store.register(tableFn, { ...routeTableCalculation(rows)[1], outParts: [tablePart],
+      calculate: (io) => ({ [tablePart]: routeTableCalculation(rows)[1].calculate(io)[ROUTE_TABLE_PART] }) });
+    return store.get(tablePart);
   }
   for (const h of start.holes) {
     const address = rowAddress(h.hole);
