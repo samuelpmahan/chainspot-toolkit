@@ -178,7 +178,7 @@ function ribbonContrastRead(c, V, W, band) {
     return m;
   };
   for (let y = y0; y < y1; y++) {
-    let nIv = 0, nSk = 0;
+    let nIv = 0, nSk = 0, oneLeg = -1;
     for (let q = 0; q < nSeg; q++) {
       const ax = AX[q], ay = AY[q], dx = DX[q], dy = DY[q];
       // the x interval of this row within `reach` of the leg (conservative: a superset)
@@ -186,7 +186,7 @@ function ribbonContrastRead(c, V, W, band) {
       if (Math.abs(dy) < 1e-12) { if (Math.abs(ay - y) > reach) continue; ta = 0; tb = 1; }
       else { ta = (y - reach - ay) / dy; tb = (y + reach - ay) / dy; if (ta > tb) { const t = ta; ta = tb; tb = t; } ta = Math.max(ta, 0); tb = Math.min(tb, 1); if (ta > tb) continue; }
       const xa = ax + ta * dx, xb = ax + tb * dx;
-      ivLo[nIv] = Math.max(x0, Math.ceil(Math.min(xa, xb) - reach)); ivHi[nIv] = Math.min(x1 - 1, Math.floor(Math.max(xa, xb) + reach)); nIv++;
+      ivLo[nIv] = Math.max(x0, Math.ceil(Math.min(xa, xb) - reach)); ivHi[nIv] = Math.min(x1 - 1, Math.floor(Math.max(xa, xb) + reach)); nIv++; oneLeg = q;
       // the x interval whose px lie deeper than h - 3 px inside the ribbon of this leg (a subset): in no band, skipped
       if (rIn > 0 && L2[q] > 1e-9) {
         const L = LL[q]; let lo = -Infinity, hi = Infinity;
@@ -203,6 +203,9 @@ function ribbonContrastRead(c, V, W, band) {
     }
     if (!nIv) continue;
     const nOut = merge(ivLo, ivHi, nIv), nIn = nSk ? merge(skLo, skHi, nSk) : 0, row = y * IW, c0y = y - e0y, c1y = y - e1y;
+    // a row only one leg reaches: every other leg is farther than reach (> the outer band) from all its px, so the nearest
+    // leg's distance is that leg's (qa..qb: the legs the distance loops visit); the end caps only on rows within their reach
+    const qa = nIv === 1 ? oneLeg : 0, qb = nIv === 1 ? oneLeg + 1 : nSeg, cap0 = c0y * c0y <= capIn2, cap1 = c1y * c1y <= capIn2;
     let s = 0;
     for (let r = 0; r < nOut; r++) {
       const hiX = ivHi[r];
@@ -214,12 +217,12 @@ function ribbonContrastRead(c, V, W, band) {
         // the same tests as polyScore, the same Math.hypot values: squared distances only pick the nearest leg and skip
         // px that are certainly outside the bands (margins of 1 px), so the counted px and their sums are unchanged
         const c0x = x - e0x, c1x = x - e1x;
-        if (c0x * c0x + c0y * c0y <= capIn2 && !(Math.hypot(c0x, c0y) > capR)) continue;
-        if (c1x * c1x + c1y * c1y <= capIn2 && !(Math.hypot(c1x, c1y) > capR)) continue;
+        if (cap0 && c0x * c0x + c0y * c0y <= capIn2 && !(Math.hypot(c0x, c0y) > capR)) continue;
+        if (cap1 && c1x * c1x + c1y * c1y <= capIn2 && !(Math.hypot(c1x, c1y) > capR)) continue;
         // the nearest leg's squared distance (times the reciprocal: off by rounding only, which the 1 px early-outs and the
         // edge margin absorb; the hypot path below divides exactly as polyScore does)
         let best2 = Infinity;
-        for (let q = 0; q < nSeg; q++) {
+        for (let q = qa; q < qb; q++) {
           const ax = AX[q], ay = AY[q], dx = DX[q], dy = DY[q];
           let t = ((x - ax) * dx + (y - ay) * dy) * IL2[q]; t = t < 0 ? 0 : t > 1 ? 1 : t;
           const ex = x - (ax + t * dx), ey = y - (ay + t * dy), d2 = ex * ex + ey * ey;
@@ -235,7 +238,7 @@ function ribbonContrastRead(c, V, W, band) {
           continue;
         }
         let D = Infinity;   // polyScore's min of hypot over the legs (ties between legs give the same value)
-        for (let q = 0; q < nSeg; q++) {
+        for (let q = qa; q < qb; q++) {
           const ax = AX[q], ay = AY[q], dx = DX[q], dy = DY[q];
           let t = ((x - ax) * dx + (y - ay) * dy) / L2[q]; t = t < 0 ? 0 : t > 1 ? 1 : t;
           const ex = x - (ax + t * dx), ey = y - (ay + t * dy);
