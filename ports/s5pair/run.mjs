@@ -23,6 +23,7 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 
 import { deserialize } from 'node:v8';
 import { deflateSync } from 'node:zlib';
 import { join, resolve } from 'node:path';
+import { courseSourceOf } from '../capture/capture.mjs';
 import { runnerCache, casFlag } from '../../fg/casRunner.mjs';
 import { instrumentedStore, profileSummary, profileFrame } from '../../fg/profile.mjs';
 import { RENDER_PART, registerQueries } from '../../fg/store.mjs';
@@ -92,7 +93,7 @@ export function loadAttemptParts({ attempt, specimen, root = ROOT }) {
     frame: 'canonical', path: T.file, rule: `canonical y = annotation y - ${T.dy} px (testimony/${specimen}/README.md measured mapping); tee points are ring-hole centroids`,
     points: [...T.holes.values()].map((h) => ({ hole: h.hole, source: [h.tee[0], h.tee[1] + T.dy], canonical: h.tee })).sort((a, b) => a.hole - b.hole)
   } : { frame: 'canonical', path: null, rule: `no testimony for ${specimen}: blind run, nothing judged`, points: [] };
-  const srcPath = join(fork, record.request.sourcePath);
+  const srcPath = courseSourceOf(fork, record.request.sourcePath);   // a capture's source is the course raster S0 stitched
   const bytes = existsSync(srcPath) ? readFileSync(srcPath) : null;
   const background = bytes && originalPx ? { src: `data:image/${bytes[0] === 0x89 ? 'png' : 'jpeg'};base64,${bytes.toString('base64')}`, width: originalPx.width, height: originalPx.height, x: 0, y: -upper } : null;
   return {

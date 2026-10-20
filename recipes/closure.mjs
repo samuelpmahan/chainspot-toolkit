@@ -4,7 +4,7 @@ import { canonical, sha, snapshotPaths } from '../facts.mjs';
 import { compileStageRecipe } from './compile.mjs';
 
 export const STAGE_RUNTIME = [
-  'source/provider', 'ports/run-stages.mjs', 'ports/early', 'fg', 'recipes',
+  'source/provider', 'ports/run-stages.mjs', 'ports/early', 'ports/capture', 'ports/identity/identitySpace.mjs', 'fg', 'recipes',
   'policies', 'dependencies', 'toolkit.mjs', 'facts.mjs',
   'provider-adapter.mjs', 'models.mjs',
   // ComparableForkJoin inputs: competing implementations by slot, equality
@@ -22,7 +22,17 @@ export const STAGE_SOURCES = {
   // Unannotated dev images (no testimony): NorthPark, and Lenard's five partial captures.
   northpark: 'specimens/dev/NorthPark-full.png',
   lenard1: 'specimens/dev/Lenard-1.png', lenard2: 'specimens/dev/Lenard-2.png', lenard3: 'specimens/dev/Lenard-3.png',
-  lenard4: 'specimens/dev/Lenard-4.png', lenard5: 'specimens/dev/Lenard-5.png'
+  lenard4: 'specimens/dev/Lenard-4.png', lenard5: 'specimens/dev/Lenard-5.png',
+  // Dash's Track (McKinney / Frisco, TX): ChainSpot v1's public demo captures (static/resources/demo/dashs-track/), the course
+  // Sam says golden is. One mid-round overview and four overlapping map tiles (partial views), phone chrome included.
+  dashsOverview: 'specimens/demo/dashs-udisc-round-overview.png',
+  dashs1: 'specimens/demo/dashs-udisc-capture-1.png', dashs2: 'specimens/demo/dashs-udisc-capture-2.png',
+  dashs3: 'specimens/demo/dashs-udisc-capture-3.png', dashs4: 'specimens/demo/dashs-udisc-capture-4.png',
+  // The REC (McKinney, TX; 9 holes) as one raster, and captures: 2..N tiles of ONE course that S0 stitches into one course
+  // raster (ports/capture/capture.mjs; Sam, 2026-10-19: "a stitched course is one raster").
+  therec: 'specimens/wide/therec.jpg',
+  therecCapture: 'specimens/captures/therec.capture.json', dashsCapture: 'specimens/captures/dashs.capture.json',
+  lenardCapture: 'specimens/captures/lenard.capture.json'
 };
 
 /** One literal authoring path list closes an execution; no second registration table. */

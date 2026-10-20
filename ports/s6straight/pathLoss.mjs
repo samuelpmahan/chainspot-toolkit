@@ -83,7 +83,15 @@ export function pathMaskPart(raster, { baskets, badges, tees, recoveredBoxes = [
 
 // ------------------------------------------------------------------ fn.tk.s6.hallway (teebadge.py learn)
 
-export function hallwayOf(q, { association, badges }) {
+/**
+ * The width search range: 18 px up to max(60 px, 1.2 rC1). 60 px is teebadge.py's graduated ceiling; the ribbon follows the map on
+ * its own curve (W / rC1 = 1.46-1.49 at rC1 <= 27 px, 0.93-0.94 at rC1 >= 36 px: fg/scene/invariants.mjs REGIMES), so 1.2 rC1
+ * keeps ~28% headroom over the fine regime at any zoom and never narrows the graduated range (every dev course is unchanged).
+ */
+export const WIDTH_SEARCH = Object.freeze({ minPx: 18, maxPx: 60, maxRc1: 1.2, stepPx: 1 });
+export const widthSearchRange = (r1Px) => [WIDTH_SEARCH.minPx, Math.max(WIDTH_SEARCH.maxPx, Number.isFinite(r1Px) ? Math.ceil(WIDTH_SEARCH.maxRc1 * r1Px) : 0), WIDTH_SEARCH.stepPx];
+
+export function hallwayOf(q, { association, badges, r1Px = null }) {
   const rows = association?.rows ?? [], L = association?.template?.L;
   if (!rows.length || !(L > 0)) return { schema: 'nctk-s6-hallway@1', condition: !rows.length ? 'no S3 association rows' : 'no pad template length', widthPx: null, segments: [], emits: { segmentsCount: 0 } };
   const byLabel = new Map(badges.map((b) => [String(b.label), badgeGeom(b)]));
@@ -94,7 +102,7 @@ export function hallwayOf(q, { association, badges }) {
     const stop = (B.center[0] - S[0]) * u[0] + (B.center[1] - S[1]) * u[1] - B.halfPx - 2;   // stop before the badge sprite
     if (stop < 25) return { ...base, usable: false, why: `only ${Math.round(stop)} px between tee cap and badge` };
     const phi = Math.atan2(u[1], u[0]), a = { raster: 'px.image.cropped', mask: PATH_MASK_PART, originPx: S, phiRad: phi, t0Px: 2, t1Px: stop };
-    const best = q('width', a);
+    const best = q('width', { ...a, widthsPx: widthSearchRange(r1Px) });
     if (best.condition) return { ...base, usable: false, why: best.condition, lenPx: r2(stop) };
     const sc = q('stationContrast', { ...a, widthPx: best.wPx }), m = [];
     sc.leftLum.forEach((cl, k) => { if (sc.okLeft[k] && sc.okRight[k]) m.push(Math.min(cl, sc.rightLum[k])); });
@@ -107,7 +115,7 @@ export function hallwayOf(q, { association, badges }) {
     schema: 'nctk-s6-hallway@1', condition: W ? null : 'no usable tee -> badge segment', widthPx: W,
     widthIqrPx: use.length ? [r2(percentile(use.map((s) => s.widthPx), 25)), r2(percentile(use.map((s) => s.widthPx), 75))] : null,
     contrastMedianLum: use.length ? median(use.filter((s) => s.contrastMedianLum != null).map((s) => s.contrastMedianLum)) : null,
-    rule: 'teebadge.py: per S3 tee -> badge segment, S = T + u FRONT L, profile(S, phi, 2, stop), best edge pair over Wg 18..59 px (tol 0.75, lat 3); median width over usable segments with |centre| <= 3 px',
+    rule: 'teebadge.py: per S3 tee -> badge segment, S = T + u FRONT L, profile(S, phi, 2, stop), best edge pair over Wg 18 px .. max(60 px, 1.2 rC1) (tol 0.75, lat 3); median width over usable segments with |centre| <= 3 px',
     padLengthPx: L, segments: segs, emits: { widthPx: W, segmentsCount: use.length, ofSegmentsCount: segs.length }
   };
 }
@@ -232,7 +240,7 @@ export const S6_PATH_CALCULATIONS = Object.freeze([
     calculate: (io) => ({ [PATH_MASK_PART]: pathMaskPart(io.in('px.image.cropped'), { baskets: io.in('px.baskets'), badges: io.in('px.badges'), tees: io.in('px.tees.refined'), recoveredBoxes: io.in('tk.s6.basketRecovery').recoveredBoxes ?? [] }) }) }],
   ['fn.tk.s6.hallway', { inParts: ['px.image.cropped', PATH_MASK_PART, 'px.badges', 'px.tees.association'], outParts: [HALLWAY_PART], calls: [PATH_CALLS.width, PATH_CALLS.stationContrast], code: CODE,
     note: 'teebadge.py: the course hallway width from the tee -> badge segments',
-    calculate: (io) => ({ [HALLWAY_PART]: hallwayOf((n, a) => io.call(PATH_CALLS[n], a).value, { association: io.in('px.tees.association'), badges: io.in('px.badges') }) }) }],
+    calculate: (io) => ({ [HALLWAY_PART]: hallwayOf((n, a) => io.call(PATH_CALLS[n], a).value, { association: io.in('px.tees.association'), badges: io.in('px.badges'), r1Px: io.in(PATH_MASK_PART).r1Px }) }) }],
   ['fn.tk.s6.pairs', { inParts: ['px.baskets', 'tk.s6.basketRecovery', 'px.tees.association'], outParts: [PATH_PAIRS_PART], code: CODE,
     note: 'tee cap -> BasketPoint (straight3 when STRAIGHT, else nearest the tee axis among S2 + S4 recovered) per associated tee',
     calculate: (io) => ({ [PATH_PAIRS_PART]: pairsOf(io.in('px.baskets'), io.in('px.tees.association'), io.in('tk.s6.basketRecovery')) }) }],

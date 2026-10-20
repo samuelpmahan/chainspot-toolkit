@@ -65,6 +65,8 @@
  *   fn.provider.sha256Text                   args { text } (the provider's sha256HexSyncText)
  *   fn.tk.sha256                             args { bytes } (node:crypto; bytes or text)
  */
+import { ringScale, opaquePlane } from '../../fg/alpha/alphaSpace.mjs';
+import { teeBounds } from '../../fg/s3/teeScale.mjs';
 import { createHash } from 'node:crypto';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
@@ -112,6 +114,8 @@ function locateTestimony(forkRoot, sourceSha256) {
  * current PxC, which the stage gateways may replace between stages), with
  * every toolkit Part producer and provider capability registered.
  */
+const BASKET_POINT_DOCTRINE = Object.freeze([0.34, 0.73]);   // DOCTRINE BasketPoint: px from the sprite's bottom-centre pixel
+
 export function createEarlyStore({ forkRoot, source, getBoard, dist, restorePxC, instrumentation }) {
   const store = createPartStore({ base: getBoard, name: 'early', onCall: (entry) => instrumentation.calculations.push(entry) });
   const { executeCompiledPlan } = dist('exec/gateway');
@@ -234,11 +238,25 @@ export function createEarlyStore({ forkRoot, source, getBoard, dist, restorePxC,
     calculate: (io) => { const c = io.in('tk.stage.S3.captured'); return dist('stages/S3/clean/index').materializeS3Subtraction(c.image, c.tees); }
   });
   store.register('fn.provider.S3.detectTeeRings', {
-    inParts: ['px.components'], note: "the provider's pure detectTeeRings over the board's bright mask",
+    inParts: ['px.components', 'tk.scale.rC1'], note: "the provider's pure detectTeeRings over the board's bright mask, with S3's bounds for this image's rC1 (fg/s3/teeScale.mjs)",
     calculate: (io) => {
       const fields = io.in('px.components');
       if (!fields?.bright?.mask) throw new Error('px.components has no bright mask; cannot detect tee rings');
-      return dist('detectors/threeFactor/endpoints').detectTeeRings(fields.bright.mask);
+      const ends = dist('detectors/threeFactor/endpoints'), { tee } = io.in('tk.scale.rC1');
+      return ends.detectTeeRings(fields.bright.mask, { ...ends.DEFAULT_ENDPOINTS_KNOBS, holeDimMax: tee.holeDimMax, holeAreaMax: tee.holeAreaMax, ringMergeProximity: tee.ringMergeProximity });
+    }
+  });
+  // rC1px: the radius of the basket's C1 circle (a physical 10 m ring, so it follows the map), measured per image from the S2
+  // BasketPoints before S3 (LOCAL); the unit of every map-scaled S3 bound (DOCTRINE: UDisc renders differently at different zooms)
+  store.register('fn.tk.scale.rC1', {
+    inParts: ['px.image.cropped', 'px.badges', 'px.baskets'], outParts: ['tk.scale.rC1'],
+    note: 'rC1px from the C1/C2 rings around every S2 BasketPoint (fg/alpha/alphaSpace.mjs ringScale), and the S3 tee bounds in it',
+    calculate: (io) => {
+      const img = io.in('px.image.cropped'), baskets = io.in('px.baskets');
+      const centres = baskets.map(({ bbox: [x, y, w, h] }) => [x + (w - 1) / 2 + BASKET_POINT_DOCTRINE[0], y + h - 1 + BASKET_POINT_DOCTRINE[1]]);
+      const fit = ringScale(img, centres, opaquePlane(img, [io.in('px.badges'), baskets]), { stepPx: 0.5, angleStepDeg: 2 });
+      const r1Px = Number.isFinite(fit.r1Px) ? fit.r1Px : null;
+      return { 'tk.scale.rC1': { r1Px, unit: 'px (C1 radius)', fit, tee: teeBounds(r1Px), condition: r1Px ? null : `rC1 not measured (${fit.reason ?? 'no fit'}): S3 keeps the pinned px bounds`, emits: { rC1Px: r1Px ?? -1, baskets: centres.length } } };
     }
   });
   store.register('fn.provider.S3.makeTee', {

@@ -88,13 +88,21 @@ const ctxOf = (raster, mask) => ({ lum: lumOf(raster), W: raster.widthPx, H: ras
 const maskedAt = (c, x, y) => !(x > 1 && x < c.W - 2 && y > 1 && y < c.H - 2) || Boolean(c.mask && samp(c.mask, c.W, c.H, x, y) > EVIDENCE.maskOver);
 const unit = (phi) => [Math.cos(phi), Math.sin(phi)];
 export const OFFS = arange(EVIDENCE.offsetsPx.from, EVIDENCE.offsetsPx.to, EVIDENCE.offsetsPx.step);
+/**
+ * The lateral reach of a profile for a ribbon up to widthPx wide (DOCTRINE, 2026-10-20: the ribbon follows the map's zoom on its
+ * own curve, so a fixed +-30 px profile clips it at a zoomed capture): the edge at W/2 plus the 3 px outer contrast band plus a
+ * 3 px margin, never less than the graduated +-30 px (track.py OFFS), so every image whose ribbon fits +-30 px is unchanged.
+ */
+export const reachFor = (widthPx) => Math.max(EVIDENCE.offsetsPx.to - 0.01, Number.isFinite(widthPx) ? widthPx / 2 + EVIDENCE.bandPx[1] + 3 : 0);
+const OFFS_BY_REACH = new Map([[30, OFFS]]);
+export const offsetsFor = (reach = 30) => { const r = Math.ceil(reach); if (!OFFS_BY_REACH.has(r)) OFFS_BY_REACH.set(r, arange(-r, r + 0.01, EVIDENCE.offsetsPx.step)); return OFFS_BY_REACH.get(r); };
 
 // ------------------------------------------------------------------ the ported math (track.py, contrast.py, teebadge.py)
 
 /** track.py profile(C, O, phi, t0, t1, lat0, step). */
-export function profileAt(c, O, phi, t0, t1, { lat0 = 0, step = 1 } = {}) {
-  const u = unit(phi), n = [-u[1], u[0]], T = arange(t0, t1, step), M = OFFS.length;
-  if (!T.length) return { prof: null, ok: null, nT: 0 };
+export function profileAt(c, O, phi, t0, t1, { lat0 = 0, step = 1, reach = 30 } = {}) {
+  const OFFS = offsetsFor(reach), u = unit(phi), n = [-u[1], u[0]], T = arange(t0, t1, step), M = OFFS.length;
+  if (!T.length) return { prof: null, ok: null, nT: 0, offs: OFFS };
   const sum = new Float64Array(M), ok = new Int32Array(M);
   for (const t of T) for (let j = 0; j < M; j++) {
     const o = OFFS[j] + lat0, x = O[0] + t * u[0] + o * n[0], y = O[1] + t * u[1] + o * n[1];
@@ -102,12 +110,13 @@ export function profileAt(c, O, phi, t0, t1, { lat0 = 0, step = 1 } = {}) {
     sum[j] += samp(c.lum, c.W, c.H, x, y); ok[j]++;
   }
   const prof = new Float64Array(M); for (let j = 0; j < M; j++) prof[j] = ok[j] ? sum[j] / ok[j] : NaN;
-  return { prof, ok, nT: T.length };
+  return { prof, ok, nT: T.length, offs: OFFS };
 }
 
 /** track.py edge_pair(prof, ok, nT, Wexp, tolW, lat_lim): null when there is no pair. */
-export function edgePairOf({ prof, ok, nT }, Wexp, { tolW = 3, latLim = 12, minOk = EVIDENCE.edgeMinOk } = {}) {
+export function edgePairOf({ prof, ok, nT, offs = OFFS }, Wexp, { tolW = 3, latLim = 12, minOk = EVIDENCE.edgeMinOk } = {}) {
   if (!prof) return null;
+  const OFFS = offs;
   const M = prof.length, good = new Uint8Array(M), need = Math.max(minOk.count, minOk.ofStations * nT);
   let nGood = 0; for (let j = 0; j < M; j++) if (ok[j] >= need) { good[j] = 1; nGood++; }
   if (nGood / M < EVIDENCE.edgeGoodFrac) return null;
@@ -160,7 +169,7 @@ export function stationContrastAt(c, O, phi, ts, W, { band = EVIDENCE.bandPx, al
 
 /** teebadge.py: the free width search, best edge pair over widths Wg on one profile. */
 export function widthSearchAt(c, O, phi, t0, t1, { widths = EVIDENCE.widthsPx, tolW = EVIDENCE.widthTolPx, latLim = EVIDENCE.widthLatPx, minOk } = {}) {
-  const P = profileAt(c, O, phi, t0, t1);
+  const P = profileAt(c, O, phi, t0, t1, { reach: reachFor(widths[1]) });
   let best = null;
   for (const Wg of arange(...widths)) { const e = P.prof ? edgePairOf(P, Wg, { tolW, latLim, minOk }) : null; if (e && (!best || e.score > best.score)) best = { ...e, wgPx: Wg }; }
   return best;
@@ -350,7 +359,7 @@ const q = (fn, unitText, f) => ({ raster, mask = null, ...a }) => (rasterOf(rast
 /** registerQueries(store, PATH_QUERIES): string arguments are Part references, resolved before the math runs. */
 export const PATH_QUERIES = Object.freeze({
   'fn.q.path.profile': q('profile', PATH_UNITS.profile, (c, a) => { const p = profileAt(c, a.originPx, a.phiRad, a.t0Px, a.t1Px, { lat0: a.lat0Px ?? 0, step: a.stepPx ?? 1 }); return p.prof ? { offsetsPx: [OFFS[0], OFFS.at(-1), EVIDENCE.offsetsPx.step], profLum: Array.from(p.prof, (y) => (Number.isNaN(y) ? null : y)), okCount: Array.from(p.ok), stationsCount: p.nT } : { condition: 'no stations', stationsCount: 0 }; }),
-  'fn.q.path.edgePair': q('edgePair', PATH_UNITS.edgePair, (c, a) => edgePairOf(profileAt(c, a.originPx, a.phiRad, a.t0Px, a.t1Px, { lat0: a.lat0Px ?? 0, step: a.stepPx ?? 1 }), a.widthPx, { tolW: a.tolPx ?? 3, latLim: a.latLimPx ?? 12, minOk: a.minOk ?? EVIDENCE.edgeMinOk }) ?? { condition: 'no edge pair' }),
+  'fn.q.path.edgePair': q('edgePair', PATH_UNITS.edgePair, (c, a) => edgePairOf(profileAt(c, a.originPx, a.phiRad, a.t0Px, a.t1Px, { lat0: a.lat0Px ?? 0, step: a.stepPx ?? 1, reach: reachFor(a.widthPx + (a.tolPx ?? 3)) }), a.widthPx, { tolW: a.tolPx ?? 3, latLim: a.latLimPx ?? 12, minOk: a.minOk ?? EVIDENCE.edgeMinOk }) ?? { condition: 'no edge pair' }),
   'fn.q.path.stationContrast': q('stationContrast', PATH_UNITS.stationContrast, (c, a) => { const r = stationContrastAt(c, a.originPx, a.phiRad, tsOf(a), a.widthPx, { band: a.bandPx ?? EVIDENCE.bandPx, along: a.alongPx ?? EVIDENCE.alongPx }); return { leftLum: Array.from(r.cl), rightLum: Array.from(r.cr), okLeft: Array.from(r.okl), okRight: Array.from(r.okr), stationsCount: r.cl.length }; }),
   'fn.q.path.width': q('width', PATH_UNITS.width, (c, a) => widthSearchAt(c, a.originPx, a.phiRad, a.t0Px, a.t1Px, { widths: a.widthsPx ?? EVIDENCE.widthsPx, tolW: a.tolPx ?? EVIDENCE.widthTolPx, latLim: a.latLimPx ?? EVIDENCE.widthLatPx, minOk: a.minOk ?? EVIDENCE.edgeMinOk }) ?? { condition: 'no edge pair at any width' }),
   'fn.q.path.overlayFraction': q('overlayFraction', PATH_UNITS.overlayFraction, (c, a) => (a.widthPx > 0 ? overlayAt(samplesAt(c, a.originPx, a.phiRad, tsOf(a), a.widthPx), a.widthPx, a.profile ?? null) : { condition: 'no corridor width' })),

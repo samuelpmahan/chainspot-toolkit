@@ -241,3 +241,16 @@ x1.45. Two views mis-assign a basket to a neighbouring hole (lenard3: hole 9 -> 
 Render/layout sizes (cropPx 64, 120, 270, inspect.mjs CROP, flipbook, attention packet pad/maxSide), test fixtures, and
 source/provider/* (S1/S2/autostitch detectors are outside the scoped paths). Stages JSON and recipes contain no length
 constants beyond prose counts (e.g. s2.json "BasketPoints within 10 px", "46 x 72 px", which mirror GLOBAL-ok entries).
+
+## Resolved on lane/stitch (2026-10-20): unit rC1px, the radius of the basket's C1 circle (tk.scale.rC1, measured before S3)
+
+| entry | was | now | law | px floor binds on dev? |
+|---|---|---|---|---|
+| S3 hole <= 44 px, <= 480 px (provider endpoints.ts; not in the scoped sweep above) | px | 1.5 rC1, 1.0 rC1^2 (fg/s3/teeScale.mjs) | map-scaled (the pad's grey fill) | yes (rC1 < 29 px: lenard, townelake, heritage, northpark); dropped: same S3/S4/S6 agreement on all six |
+| S3 frame <= 50 x 50 px, <= 500 px (provider Tee.ts) | px | 2.0 rC1, 1.5 rC1^2 | map-scaled (pad outline) | yes; dropped, as above |
+| S3 ring merge 10 px | px | kept | screen-fixed (one hole across dilation radii 0..3 px) | n/a |
+| S3 ring band 3 px, dilation 0..3 px | px | kept | screen-fixed (the white frame is ~3-4 px at every zoom) | n/a |
+| A8 profile reach +-30 px | px | max(30, W/2 + 6) px | ribbon (W) | yes, all six: kept as the floor (W/2 + 6 < 30 on every dev course) |
+| A9 width search 18..60 px (S6 pathSpace) | px | 18 .. max(60, 1.2 rC1) px | ribbon, bounded by the fine regime W/rC1 0.94 | yes, all six (1.2 rC1 <= 53 px); a pure 1.2 rC1 ceiling would cut lenard's W 35.75 (W/rC1 1.46 in the coarse regime) |
+
+S7 route-search constants (A3, A2b, A10, A12 in ports/s7*) are on lane/s7units.
