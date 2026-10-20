@@ -358,6 +358,41 @@ export function detectTeeRings(bright: Mask, knobs: EndpointsKnobs = DEFAULT_END
 	return merged;
 }
 
+/**
+ * Binary dilation by a (2r+1)x(2r+1) square, clipped to the image: 1 where
+ * any truthy source pixel lies within Chebyshev distance r. Identical to r
+ * iterations of the clipped 3x3 dilation (the clipped square is convex).
+ */
+function dilateSquare(src: Uint8Array, width: number, height: number, r: number): Uint8Array {
+	const n = width * height;
+	const rows = new Uint8Array(n);
+	for (let y = 0; y < height; y++) {
+		const base = y * width;
+		// Forward: distance to the last set pixel at or left of x.
+		let last = -Infinity;
+		for (let x = 0; x < width; x++) {
+			if (src[base + x]) last = x;
+			if (x - last <= r) rows[base + x] = 1;
+		}
+		let next = Infinity;
+		for (let x = width - 1; x >= 0; x--) {
+			if (src[base + x]) next = x;
+			if (next - x <= r) rows[base + x] = 1;
+		}
+	}
+	const out = new Uint8Array(n);
+	for (let y = 0; y < height; y++) {
+		const a = Math.max(0, y - r);
+		const b = Math.min(height - 1, y + r);
+		const dst = y * width;
+		for (let yy = a; yy <= b; yy++) {
+			const from = yy * width;
+			for (let x = 0; x < width; x++) if (rows[from + x]) out[dst + x] = 1;
+		}
+	}
+	return out;
+}
+
 export function detectTeeRingsPass(
 	bright: Mask,
 	wallRadius: number,
@@ -366,92 +401,93 @@ export function detectTeeRingsPass(
 ): TeeRing[] {
 	const { width, height, data: raw } = bright;
 	const n = width * height;
-	let wall = raw;
-	for (let it = 0; it < wallRadius; it++) {
-		const src = wall;
-		const dst = new Uint8Array(n);
-		for (let y = 0; y < height; y++) {
-			for (let x = 0; x < width; x++) {
-				const i = y * width + x;
-				let acc = 0;
-				for (let dy = -1; dy <= 1 && !acc; dy++) {
-					const yy = y + dy;
-					if (yy < 0 || yy >= height) continue;
-					for (let dx = -1; dx <= 1; dx++) {
-						const xx = x + dx;
-						if (xx < 0 || xx >= width) continue;
-						if (src[yy * width + xx]) {
-							acc = 1;
-							break;
-						}
-					}
-				}
-				dst[i] = acc;
-			}
-		}
-		wall = dst;
-	}
+	// Iterating a clipped 3x3 dilation wallRadius times equals one clipped
+	// (2r+1)x(2r+1) square dilation, which is separable: rows, then columns.
+	const wall = wallRadius > 0 ? dilateSquare(raw, width, height, wallRadius) : raw;
 	const data = raw;
 	// 0 unknown, 1 background (border-connected non-wall), 2 wall
 	const state = new Uint8Array(n);
 	for (let i = 0; i < n; i++) if (wall[i]) state[i] = 2;
-	const stack: number[] = [];
-	const pushBg = (i: number): void => {
+	// The background set is order-independent; an explicit typed stack.
+	const stack = new Int32Array(n);
+	let top = 0;
+	const seedBg = (i: number): void => {
 		if (state[i] === 0) {
 			state[i] = 1;
-			stack.push(i);
+			stack[top++] = i;
 		}
 	};
 	for (let x = 0; x < width; x++) {
-		pushBg(x);
-		pushBg((height - 1) * width + x);
+		seedBg(x);
+		seedBg((height - 1) * width + x);
 	}
 	for (let y = 0; y < height; y++) {
-		pushBg(y * width);
-		pushBg(y * width + width - 1);
+		seedBg(y * width);
+		seedBg(y * width + width - 1);
 	}
-	while (stack.length) {
-		const i = stack.pop() as number;
+	while (top > 0) {
+		const i = stack[--top];
 		const x = i % width;
-		if (x > 0) pushBg(i - 1);
-		if (x < width - 1) pushBg(i + 1);
-		if (i >= width) pushBg(i - width);
-		if (i < n - width) pushBg(i + width);
+		let j = i - 1;
+		if (x > 0 && state[j] === 0) {
+			state[j] = 1;
+			stack[top++] = j;
+		}
+		j = i + 1;
+		if (x < width - 1 && state[j] === 0) {
+			state[j] = 1;
+			stack[top++] = j;
+		}
+		j = i - width;
+		if (i >= width && state[j] === 0) {
+			state[j] = 1;
+			stack[top++] = j;
+		}
+		j = i + width;
+		if (i < n - width && state[j] === 0) {
+			state[j] = 1;
+			stack[top++] = j;
+		}
 	}
 
 	// Label enclosed holes (state 0), 4-connected.
 	const out: TeeRing[] = [];
-	const holeStack: number[] = [];
-	const cells: number[] = [];
+	// Typed LIFO stack and cell list: the same visit order as push/pop arrays.
+	const holeStack = stack;
+	const cells = new Int32Array(n);
+	let cellCount = 0;
 	for (let seed = 0; seed < n; seed++) {
 		if (state[seed] !== 0) continue;
-		cells.length = 0;
-		holeStack.push(seed);
+		cellCount = 0;
+		top = 0;
+		holeStack[top++] = seed;
 		state[seed] = 3;
 		let overflow = false;
-		while (holeStack.length) {
-			const i = holeStack.pop() as number;
-			cells.push(i);
-			if (cells.length > knobs.holeAreaMax * 4) overflow = true;
+		while (top > 0) {
+			const i = holeStack[--top];
+			cells[cellCount++] = i;
+			if (cellCount > knobs.holeAreaMax * 4) overflow = true;
 			const x = i % width;
-			const neigh = [i - 1, i + 1, i - width, i + width];
-			for (const j of neigh) {
+			// Same neighbours, same order, without a per-cell array.
+			for (let q = 0; q < 4; q++) {
+				const j = q === 0 ? i - 1 : q === 1 ? i + 1 : q === 2 ? i - width : i + width;
 				if (j < 0 || j >= n) continue;
 				if ((j === i - 1 && x === 0) || (j === i + 1 && x === width - 1)) continue;
 				if (state[j] === 0) {
 					state[j] = 3;
-					holeStack.push(j);
+					holeStack[top++] = j;
 				}
 			}
 		}
-		if (overflow || cells.length < areaMin || cells.length > knobs.holeAreaMax) continue;
+		if (overflow || cellCount < areaMin || cellCount > knobs.holeAreaMax) continue;
 		let x0 = width;
 		let x1 = -1;
 		let y0 = height;
 		let y1 = -1;
 		let sx = 0;
 		let sy = 0;
-		for (const i of cells) {
+		for (let c = 0; c < cellCount; c++) {
+			const i = cells[c];
 			const x = i % width;
 			const y = (i - x) / width;
 			if (x < x0) x0 = x;
@@ -464,22 +500,23 @@ export function detectTeeRingsPass(
 		const bw = x1 - x0 + 1;
 		const bh = y1 - y0 + 1;
 		if (bw > knobs.holeDimMax || bh > knobs.holeDimMax) continue;
-	const cx = sx / cells.length;
-	const cy = sy / cells.length;
+	const cx = sx / cellCount;
+	const cy = sy / cellCount;
 	// Central moments → undirected tee orientation and elongation.
 		let mxx = 0;
 		let myy = 0;
 		let mxy = 0;
-		for (const i of cells) {
+		for (let c = 0; c < cellCount; c++) {
+			const i = cells[c];
 			const x = (i % width) - cx;
 			const y = (i - (i % width)) / width - cy;
 			mxx += x * x;
 			myy += y * y;
 			mxy += x * y;
 		}
-		mxx /= cells.length;
-		myy /= cells.length;
-		mxy /= cells.length;
+		mxx /= cellCount;
+		myy /= cellCount;
+		mxy /= cellCount;
 		const trace = mxx + myy;
 		const determinant = mxx * myy - mxy * mxy;
 		const discriminant = Math.sqrt(Math.max(0, (trace * trace) / 4 - determinant));
@@ -492,7 +529,8 @@ export function detectTeeRingsPass(
 		const lw = bw + 2 * knobs.ringBand;
 		const lh = bh + 2 * knobs.ringBand;
 		let grid = new Uint8Array(lw * lh);
-		for (const i of cells) {
+		for (let c = 0; c < cellCount; c++) {
+			const i = cells[c];
 			const x = (i % width) - x0 + knobs.ringBand;
 			const y = (i - (i % width)) / width - y0 + knobs.ringBand;
 			grid[y * lw + x] = 1;
@@ -536,7 +574,7 @@ export function detectTeeRingsPass(
 		out.push({
 			cx,
 			cy,
-			holeArea: cells.length,
+			holeArea: cellCount,
 			bboxX: x0,
 			bboxY: y0,
 			bboxW: bw,

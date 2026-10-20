@@ -101,7 +101,19 @@ function sha256Bytes(message) {
 function toHex(bytes) {
     return Array.from(bytes).map((b) => b.toString(16).padStart(2, '0')).join('');
 }
+const nativeCrypto = (() => {
+    try {
+        const host = globalThis;
+        const crypto = host.process?.getBuiltinModule?.('node:crypto');
+        return typeof crypto?.createHash === 'function' ? crypto : undefined;
+    }
+    catch {
+        return undefined;
+    }
+})();
 function sha256HexSync(bytes) {
+    if (nativeCrypto)
+        return nativeCrypto.createHash('sha256').update(bytes).digest('hex');
     return toHex(sha256Bytes(bytes));
 }
 function sha256HexSyncText(text) {
