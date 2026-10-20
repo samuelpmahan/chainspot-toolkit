@@ -50,11 +50,11 @@ async function worker() {
     until:`S${earlyLast}`,experiments:request.lanes.filter(name=>({
       's0-chrome-conservatism':'S0','s1-badge-cardinality-audit':'S1',
       's2-shell-ownership-audit':'S2','fill-consistent-tee-selection':'S3',
-      's3-findfamily-structural-fix':'S3FIX','s1-round-view-plate':'S1PLATE','s1-badge-assembly':'S1ASM','s2-basket-assembly':'S2ASM','s3-tee-assembly':'S3ASM','s3-findfamily-forkjoin':'S3FJ'
+      's3-findfamily-structural-fix':'S3FIX','s1-badge-assembly':'S1ASM','s2-basket-assembly':'S2ASM','s3-tee-assembly':'S3ASM','s3-findfamily-forkjoin':'S3FJ'
     })[name]).map(name=>({
       's0-chrome-conservatism':'S0','s1-badge-cardinality-audit':'S1',
       's2-shell-ownership-audit':'S2','fill-consistent-tee-selection':'S3',
-      's3-findfamily-structural-fix':'S3FIX','s1-round-view-plate':'S1PLATE','s1-badge-assembly':'S1ASM','s2-basket-assembly':'S2ASM','s3-tee-assembly':'S3ASM','s3-findfamily-forkjoin':'S3FJ'
+      's3-findfamily-structural-fix':'S3FIX','s1-badge-assembly':'S1ASM','s2-basket-assembly':'S2ASM','s3-tee-assembly':'S3ASM','s3-findfamily-forkjoin':'S3FJ'
     })[name])});
   if(early.condition) {
     // a recorded data condition (e.g. no badges): nothing later can run; the result says so and the run passes

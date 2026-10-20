@@ -85,7 +85,7 @@ right and the repo is behind. Every number carries a unit.
 
 | Stage | Contract | Judge |
 |---|---|---|
-| S1 | badges and numerals; needs no external truth | count = holes, labels 1..N |
+| S1 | badges and numerals; needs no external truth. A thrown round is found by its purple walk line (S0 `tk.s0.purple`, purple >= 0.25 % of canonical px; 17 clean captures have 0, the thrown ones 0.5-3.8 %): then the plate test is LOCAL (dark = V <= 45 or V <= 0.6 x the mean V of the 51 px box around it; read 9/7/18 badges on therecThrown/dashs5612/dashs5613, 0 false, 0 wrong numeral, against 8/6/17 for a fixed 65 / 0.45); a course view runs the pinned rule unchanged | count = holes, labels 1..N |
 | S2 | baskets, **precision only** | Sam's basket points |
 | S3 | visible tees, **precision only**; recall is S4's. Initial association (Sam, 2026-10-17): each unoccluded pad pairs with at most 2 badges, one obviously better; continuing its axis to a BasketPoint starts S5's straight-hole matching before recovery (`ports/s3assoc/`) | Sam's tee points, hole numbers |
 | S4 | recover tees and baskets until counts match badge cardinality N; occlusion-aware by default: assume the sought sprite is occluded; entail from what must be true | Sam's points |
