@@ -29,8 +29,10 @@ export const MATCH = Object.freeze({
   // E18: the refine polishes the contrast route's bend, +- one 6 px grid step of best_route per iteration (2 iterations), it does
   // not relocate it: along the axis the contrast is flat to +-2 lum over tens of px where the bend lies inside the
   // basket's C1 disc (golden 4: a 0.24 deg change of u moved the global +-60 px refine's pick 14.7 px, sensor 1.00 both)
-  refineAxisSpanPx: ROUTE.contrastBendStepPx,
-  secondBend: Object.freeze({ gain: 0.15, axisSpanPx: 80, axisStepPx: 8, gridStepW: 0.5, bboxW: 2, minLegW: 1, top: 8, refineAxisPx: 8, refineAxisStepPx: 2, refineStepPx: 2 })
+  refineAxisSpanR1: ROUTE.contrastBendStepR1,
+  // match6.py second_bend in rC1px (its px and W multiples over golden's R1 44.5 px and W 41.6 px). The prototype refined
+  // the top 8 on a dense 2 px grid (~35k contrast reads); here a coordinate search halving its step from 0.25 R1 to 0.045 R1.
+  secondBend: Object.freeze({ gain: 0.15, axisSpanR1: 1.8, axisStepR1: 0.18, gridStepR1: 0.47, bboxR1: 1.87, minLegR1: 0.935, top: 8, refineStartR1: 0.25, refineEndR1: 0.045 })
 });
 
 /** Rectangular min-cost assignment (Hungarian; Infinity = forbidden). -> [[row, col], ...] */
@@ -63,30 +65,49 @@ export function assignMinCost(cost) {
 const contrast = (S, V, W) => { const [c] = ribbonContrastAt(S, V, W); return c === null ? MATCH.noReadingLum : c; };
 
 /** match6.py second_bend: B1 on the tee axis (+-80 px around the 1-bend vertex), B2 on a W/2 grid, top 8 refined; sensor-gated. */
-export function secondBend(S, start, V1, E, W, f1) {
-  const R = MATCH.secondBend, u = start.u, St = start.S;
-  const t1 = (V1[1][0] - St[0]) * u[0] + (V1[1][1] - St[1]) * u[1];
-  const lo = [Math.min(St[0], E[0]) - R.bboxW * W, Math.min(St[1], E[1]) - R.bboxW * W], hi = [Math.max(St[0], E[0]) + R.bboxW * W, Math.max(St[1], E[1]) + R.bboxW * W];
-  const gx = arange(Math.max(lo[0], 0), Math.min(hi[0], S.W), W * R.gridStepW), gy = arange(Math.max(lo[1], 0), Math.min(hi[1], S.H), W * R.gridStepW);
+export function secondBend(S, start, V1, E, W, f1, rules = MATCH_RULES) {
+  const R = MATCH.secondBend, u = start.u, St = start.S, r1 = S.R1;
+  const t1 = (V1[1][0] - St[0]) * u[0] + (V1[1][1] - St[1]) * u[1], box = R.bboxR1 * r1, minLeg = R.minLegR1 * r1;
+  const lo = [Math.min(St[0], E[0]) - box, Math.min(St[1], E[1]) - box], hi = [Math.max(St[0], E[0]) + box, Math.max(St[1], E[1]) + box];
+  const gx = arange(Math.max(lo[0], 0), Math.min(hi[0], S.W), R.gridStepR1 * r1), gy = arange(Math.max(lo[1], 0), Math.min(hi[1], S.H), R.gridStepR1 * r1);
+  const B1at = (t) => [St[0] + u[0] * t, St[1] + u[1] * t];
+  const inside = (p) => p[0] >= 0 && p[0] < S.W && p[1] >= 0 && p[1] < S.H;
+  const legsOk = (B1, B2) => !(Math.hypot(B2[0] - B1[0], B2[1] - B1[1]) < minLeg || Math.hypot(B2[0] - E[0], B2[1] - E[1]) < minLeg);
   const cands = [];
-  for (const t of arange(t1 - R.axisSpanPx, t1 + R.axisSpanPx + 0.1, R.axisStepPx)) {
-    const B1 = [St[0] + u[0] * t, St[1] + u[1] * t];
-    if (!(B1[0] >= 0 && B1[0] < S.W && B1[1] >= 0 && B1[1] < S.H)) continue;
+  for (const t of arange(t1 - R.axisSpanR1 * r1, t1 + R.axisSpanR1 * r1 + 0.01 * r1, R.axisStepR1 * r1)) {
+    const B1 = B1at(t);
+    if (!inside(B1)) continue;
     for (const x of gx) for (const y of gy) {
-      if (Math.hypot(x - B1[0], y - B1[1]) < W * R.minLegW || Math.hypot(x - E[0], y - E[1]) < W * R.minLegW) continue;
+      if (!legsOk(B1, [x, y])) continue;
       cands.push([contrast(S, [St, B1, [x, y], E], W), t, [x, y]]);
     }
   }
   cands.sort((a, b) => b[0] - a[0]);
   let best = [MATCH.noReadingLum, null];
-  for (const [, t, B2] of cands.slice(0, R.top)) {
-    for (const dt of arange(-R.refineAxisPx, R.refineAxisPx + 0.1, R.refineAxisStepPx)) {
-      const B1 = [St[0] + u[0] * (t + dt), St[1] + u[1] * (t + dt)];
-      for (const dx of arange(-W / 2, W / 2 + 0.1, R.refineStepPx)) for (const dy of arange(-W / 2, W / 2 + 0.1, R.refineStepPx)) {
+  if (rules.secondBendRefine === 'dense') {
+    // match6.py's dense refine, its px over golden's R1 (+-8 px every 2 px on the axis, +-W/2 every 2 px for B2)
+    const ax = 0.18 * r1, st = 0.045 * r1, half = W / 2;
+    for (const [, t, B2] of cands.slice(0, R.top)) for (const dt of arange(-ax, ax + 0.01 * r1, st)) {
+      const B1 = B1at(t + dt);
+      for (const dx of arange(-half, half + 0.1, st)) for (const dy of arange(-half, half + 0.1, st)) {
         const Vt = [St, B1, [B2[0] + dx, B2[1] + dy], E], s2 = contrast(S, Vt, W);
         if (s2 > best[0]) best = [s2, Vt];
       }
     }
+  } else for (const [s0, t0, B20] of cands.slice(0, R.top)) {
+    // coordinate search on (t, B2x, B2y): try +- step on each, move on the best strict gain, else halve the step
+    let s = s0, t = t0, B2 = B20, step = (rules.secondBendRefine === 'coordWide' ? R.gridStepR1 : R.refineStartR1) * r1;   // coordWide: start at the coarse grid spacing
+    while (step >= R.refineEndR1 * r1) {
+      let move = null;
+      for (const [dt, dx, dy] of [[step, 0, 0], [-step, 0, 0], [0, step, 0], [0, -step, 0], [0, 0, step], [0, 0, -step]]) {
+        const tt = t + dt, B1 = B1at(tt), P = [B2[0] + dx, B2[1] + dy];
+        if (!inside(B1) || !inside(P) || !legsOk(B1, P)) continue;
+        const v = contrast(S, [St, B1, P, E], W);
+        if (v > s && (!move || v > move[0])) move = [v, tt, P];
+      }
+      if (move) [s, t, B2] = move; else step /= 2;
+    }
+    if (s > best[0]) best = [s, [St, B1at(t), B2, E]];
   }
   if (!best[1]) return { accepted: false, note: 'no 2-bend candidate' };
   const r2 = routeSensorAt(S, best[1], W), c1 = contrast(S, V1, W);
@@ -104,14 +125,27 @@ export function secondBend(S, start, V1, E, W, f1) {
  * traceSpace.mjs) so every step is a profiled store call: same functions, same arguments, so the same answers.
  */
 export const MATCH_STEPS = Object.freeze({
-  refine: (S, V, W, u) => refineVertices(S, V, W, u, MATCH.refineIters, { axisSpanPx: MATCH.refineAxisSpanPx })[0],
+  refine: (S, V, W, u, rules = MATCH_RULES) => (rules.refineUnits === 'px'
+    ? refineVertices(S, V, W, u, MATCH.refineIters, { axisSpanPx: 6 })[0]   // E18 as recorded: +-6 px, the prototype's px steps
+    : refineVertices(S, V, W, u, MATCH.refineIters, { axisSpanPx: MATCH.refineAxisSpanR1 * S.R1, unitPx: S.R1 })[0]),
   sensor: (S, V, W) => routeSensorAt(S, V, W),
-  secondBend: (S, start, V, E, W, f1) => secondBend(S, start, V, E, W, f1),
+  secondBend: (S, start, V, E, W, f1, rules = MATCH_RULES) => secondBend(S, start, V, E, W, f1, rules),
   placeBends: (S, V, W, straight) => refineBendsOf(S, V, W, { straight }),
   contrast: (S, V, W) => contrast(S, V, W)
 });
 
-export function routeMatchOf(table, S, starts, { secondBends = true, straight: verdicts = undefined, steps = MATCH_STEPS } = {}) {
+/**
+ * Rule sets (Sam, 2026-10-20: "have a bunch of possible rule sets so you can optimize over a wide batch"). Each is a
+ * routeMatch variant in impl/fn.Hole.trace/ and the S7 pointer vote picks among them on the judged courses.
+ *   straightFromS6: a hole S6 reads straight is drawn straight (tee cap -> BasketPoint), no bend search
+ *   secondBendRefine: 'coord' (halving coordinate search from 0.25 R1) | 'coordWide' (from the coarse grid spacing, 0.47 R1)
+ *                     | 'dense' (match6.py's dense grid, in rC1px)
+ *   refineUnits: 'r1' (the 1-bend refine in rC1px) | 'px' (E18 as recorded)
+ *   tableUnits: 'r1' (the route table's bend search in rC1px) | 'px' (match18.py's recorded 800 px reach, 6 px step)
+ */
+export const MATCH_RULES = Object.freeze({ straightFromS6: true, secondBendRefine: 'coordWide', refineUnits: 'r1', tableUnits: 'r1' });   // batch 2 (2026-10-20): S6CoordWide
+
+export function routeMatchOf(table, S, starts, { secondBends = true, straight: verdicts = undefined, steps = MATCH_STEPS, rules = MATCH_RULES } = {}) {
   const W = table.widthPx, holes = table.holes;
   if (!(W > 0) || !holes.length) return { holes: {}, assignment: [], widthPx: W ?? null, condition: 'no hallway width or no holes in the route table' };
   const score = table.contrastMatrix.map((row, i) => row.map((c, k) => (c === null ? MATCH.noReadingLum : c) + (table.onAxisPrior[i]?.[k] ?? 0)));
@@ -122,21 +156,24 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
     const sorted = [...score[i]].sort((a, b) => b - a);
     const E = table.baskets[k].point ?? cell.contrast.verts.at(-1);
     let V = cell.contrast.verts.map((v) => v.slice());
-    if (V.length === 3) V = steps.refine(S, V, W, start.u);
+    const s6Straight = rules.straightFromS6 && verdicts && verdicts[hole] === 'straight';
+    if (V.length === 3 && !s6Straight) V = steps.refine(S, V, W, start.u, rules);
     const straight = steps.sensor(S, [start.S, E], W);
     let rec;
-    if (straight.stations >= MATCH.minStations && straight.passFrac >= MATCH.tau) {
+    if (s6Straight) {
+      rec = { verts: [start.S, E], how: `straight: S6 reads the hole straight (rule straightFromS6); sensor ${straight.passFrac.toFixed(2)} on ${straight.stations} st`, sensor: straight };
+    } else if (straight.stations >= MATCH.minStations && straight.passFrac >= MATCH.tau) {
       rec = { verts: [start.S, E], how: `straight: sensor ${straight.passFrac.toFixed(2)} on ${straight.stations} st`, sensor: straight };
     } else {
       const r1 = steps.sensor(S, V, W);
       rec = { verts: V, how: `contrast route (${V.length - 2} bends): sensor ${r1.passFrac.toFixed(2)}; straight read ${straight.passFrac.toFixed(2)}`, sensor: r1 };
       if (secondBends && V.length === 3 && r1.passFrac < MATCH.tau) {
-        const b2 = steps.secondBend(S, start, V, E, W, r1.passFrac);
+        const b2 = steps.secondBend(S, start, V, E, W, r1.passFrac, rules);
         rec = b2.accepted ? { verts: b2.verts, how: `2-bend accepted: ${b2.note}`, sensor: b2.sensor, secondBend: true } : { ...rec, how: `${rec.how}; 2-bend rejected: ${b2.note}` };
       }
     }
     const before = rec.verts;
-    if (verdicts !== undefined) {
+    if (verdicts !== undefined && !s6Straight) {
       if (verdicts === null) rec = { ...rec, bendsRefined: { taken: false, why: 'no S6 straight verdict on record: bend placement not run' } };
       else {
         const r = steps.placeBends(S, rec.verts, W, verdicts[hole] === 'straight');

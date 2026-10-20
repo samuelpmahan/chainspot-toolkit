@@ -26,7 +26,7 @@ import { ringMask, dilate4, round } from './hallway.mjs';
 import { sceneOf, hallwayModel, solveS3First, solveBadgeOnly } from './s3first.mjs';
 import { solveEndpoints } from './endpoints.mjs';
 import { routeTableOn } from '../s7route/routeSpace.mjs';
-import { routeMatchOf, MATCH_STEPS } from '../s7route/match.mjs';
+import { routeMatchOf, MATCH_STEPS, MATCH_RULES } from '../s7route/match.mjs';
 import { routeMatchViewOf } from './traceView.mjs';
 
 export const HOLE_TRACE_SLOT = Object.freeze({
@@ -166,14 +166,14 @@ export function registerTraceQueries(store, { matcher = null, board = null } = {
       const S = get('tk.s7.sceneS4'), r = solveEndpoints(S, holeList(S), W(), { tees: teesOf(), matcher });
       return { value: { ...r, scene: 'tk.s7.sceneS4' }, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, pairs: r.pairs.length, reached: Object.values(r.holes).filter((h) => h.end != null).length } };
     },
-    'fn.q.trace.routeMatch': ({ secondBends = true, refineBends = true } = {}) => {
+    'fn.q.trace.routeMatch': ({ secondBends = true, refineBends = true, rules = undefined } = {}) => {
       // S7 after S5 (docs/evidence/s7after): scoring = tk.s7.routeTable (cached rows), matching = ports/s7route/match.mjs
-      const table = routeTableOn(store, { board: board ?? null }), S = get('tk.s7.sceneS4');
+      const table = routeTableOn(store, { board: board ?? null, units: rules?.tableUnits ?? 'r1' }), S = get('tk.s7.sceneS4');
       // rule 1 of the bend placement reads S6's accepted straight verdict (tk.s7.straight, a root input of the S7 runner)
       const straight = !refineBends ? undefined : store.has('tk.s7.straight') ? get('tk.s7.straight').verdicts : null;
       // every per-hole step is its own profiled store call (fn.q.match.*); the scene is passed by address
       const steps = Object.fromEntries(Object.keys(MATCH_STEPS).map((k) => [k, (_S, ...a) => store.call(`fn.q.match.${k}`, { scene: 'tk.s7.sceneS4', a }).value]));
-      const r = routeMatchOf(table, S, get('tk.s7.routeStart'), { secondBends, straight, steps });
+      const r = routeMatchOf(table, S, get('tk.s7.routeStart'), { secondBends, straight, steps, ...(rules ? { rules: { ...MATCH_RULES, ...rules } } : {}) });
       return { value: { ...r, scene: 'tk.s7.sceneS4' }, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, reached: Object.values(r.holes).filter((h) => h.end != null).length, secondBends: Object.values(r.holes).filter((h) => (h.verts?.length ?? 0) === 4).length } };
     },
     'fn.q.trace.pinned': () => {
