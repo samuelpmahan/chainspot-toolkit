@@ -68,9 +68,10 @@
 import { ringScale, opaquePlane } from '../../fg/alpha/alphaSpace.mjs';
 import { teeBounds } from '../../fg/s3/teeScale.mjs';
 import { createHash } from 'node:crypto';
+import { PURPLE_QUERIES, purpleShare, THROWN_CUT } from '../../fg/queries/purple.mjs';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import { createPartStore } from '../../fg/store.mjs';
+import { createPartStore, registerQueries } from '../../fg/store.mjs';
 import { TEE_POINTS_CALCULATION } from '../../fg/s3/teeFamily.mjs';
 import { executePlanInstrumented } from './instrument.mjs';
 
@@ -115,9 +116,73 @@ function locateTestimony(forkRoot, sourceSha256) {
  * every toolkit Part producer and provider capability registered.
  */
 const BASKET_POINT_DOCTRINE = Object.freeze([0.34, 0.73]);   // DOCTRINE BasketPoint: px from the sprite's bottom-centre pixel
+/**
+ * A capture whose S1 read no badge at all. The pinned provider's S1 plan declares that Badge.findPx reads px.badges.stage and
+ * px.components, but it reads them only through a badge, so an empty badge read set fails its own access-conformance check with
+ * "missing reads=[px.badges.stage, px.components]". That is a data condition (no badges in this image), not an integrity failure:
+ * the S1 gateway recognises exactly that signature with an empty read set and raises this typed condition for the runner to record.
+ */
+export class NoBadgesCondition extends Error {
+  constructor(detail) { super(`S1 read no badges: ${detail}`); this.name = 'NoBadgesCondition'; this.condition = { stage: 'S1', result: 'no badges', detail }; }
+}
+const EMPTY_READ_SET = /Tick 'Badge\.findPx' access contradicts its declaration; missing reads=\[px\.badges\.stage, px\.components\] extra reads=\[\] missing writes=\[\] extra writes=\[\]/;
+
+/**
+ * Lane s1-round-view-plate: provider feature knobs (feature id -> knob -> value) applied only while the S1 gateway runs. The badge
+ * plate in the UDisc round view is a translucent black over the map (V 43-65), not the opaque near-black of the course map (V 7-10),
+ * so the plate test's dark ceiling and fill floor are recalibrated. Provider files stay untouched: the knobs are the provider's own.
+ */
+/**
+ * The S1 dark rule for a THROWN ROUND (Sam, 2026-10-20: the clean course-view CV must not change at all; "find purple and it's thrown").
+ * A capture is thrown when its canonical pixels carry the UDisc round view's purple walk line (tk.s0.purple, fg/queries/purple.mjs: hue
+ * 250-270 deg, share >= THROWN_CUT of the canonical pixels). Only then does S1 use this rule; a course-view capture runs the pinned rule
+ * exactly. The round view draws the badge plate as a translucent black over the map (V 43-65 over any terrain), not the course map's
+ * opaque near-black (V 7-10). The rule is LOCAL: a pixel is dark when V <= 45 (the pinned ceiling, kept) OR when it is darker than the map
+ * immediately around it, V <= ratio x the mean V of the windowPx x windowPx box centred on it. The provider's white-frame, aspect, size,
+ * glyph and numeral tests run unchanged on the resulting mask; provider files stay untouched (the rule wraps raster.computeBrightDarkMasks
+ * for the S1 gateway and its digit witness). On therecThrown / dashs5612 / dashs5613, windowPx 51 / ratio 0.6 reads 9 / 7 / 18 badges and
+ * the fixed 65 / 0.45 reads 8 / 6 / 17, both with 0 false and 0 wrong numerals. On course-view captures the local rule breaks S2 (no basket
+ * read on townelake, heritage, northpark), which is why it is keyed on the walk line.
+ */
+export const S1_LOCAL_DARK = Object.freeze({ windowPx: 51, ratio: 0.6 });
+export function localDarkMasks(baseMasks, { windowPx, ratio }) {
+  return function (image, knobs) {
+    const m = baseMasks(image, knobs), { width: W, height: H, data } = image, n = W * H, V = new Uint8Array(n);
+    for (let i = 0, p = 0; i < n; i++, p += 4) V[i] = Math.max(data[p], data[p + 1], data[p + 2]);
+    const S = new Float64Array((W + 1) * (H + 1));
+    for (let y = 0; y < H; y++) { let row = 0; for (let x = 0; x < W; x++) { row += V[y * W + x]; S[(y + 1) * (W + 1) + x + 1] = S[y * (W + 1) + x + 1] + row; } }
+    const h = windowPx >> 1, dark = m.dark.data;
+    for (let y = 0; y < H; y++) {
+      const y0 = Math.max(0, y - h), y1 = Math.min(H, y + h + 1);
+      for (let x = 0; x < W; x++) {
+        const i = y * W + x; if (dark[i]) continue;
+        const x0 = Math.max(0, x - h), x1 = Math.min(W, x + h + 1);
+        const mean = (S[y1 * (W + 1) + x1] - S[y0 * (W + 1) + x1] - S[y1 * (W + 1) + x0] + S[y0 * (W + 1) + x0]) / ((x1 - x0) * (y1 - y0));
+        if (V[i] <= ratio * mean) dark[i] = 1;
+      }
+    }
+    return m;
+  };
+}
+/** Install the local dark rule on the provider's raster module (computeBrightDarkMasks); returns the restore function. */
+export function applyLocalDarkRule(rasterModule, params = S1_LOCAL_DARK) {
+  const base = rasterModule.computeBrightDarkMasks;
+  rasterModule.computeBrightDarkMasks = localDarkMasks(base, params);
+  return () => { rasterModule.computeBrightDarkMasks = base; };
+}
+/** The typed condition when `error` is the pinned S1 plan's empty-read-set access failure on a board whose badge read set is empty; else null. */
+export function noBadgesOf(error, board) {
+  if (!EMPTY_READ_SET.test(String(error?.message)) || !board?.has?.('badges') || board.get('badges').length !== 0) return null;
+  return new NoBadgesCondition('the badge read set is empty (the pinned plan then fails its own access check on the declared reads px.badges.stage, px.components)');
+}
 
 export function createEarlyStore({ forkRoot, source, getBoard, dist, restorePxC, instrumentation }) {
   const store = createPartStore({ base: getBoard, name: 'early', onCall: (entry) => instrumentation.calculations.push(entry) });
+  // S0: the purple walk-line share of the canonical pixels (Part tk.s0.purple) and the query fn.q.s0.purple; thrown = purple present
+  store.register('fn.tk.s0.purple', { inParts: ['px.course.canonicalPixels'], outParts: ['tk.s0.purple'], note: 'share of canonical px that are the round view\'s purple walk line; thrown when >= THROWN_CUT',
+    calculate: (io) => { const r = purpleShare(io.in('px.course.canonicalPixels')); return { 'tk.s0.purple': { ...r, thrown: r.share >= THROWN_CUT, cut: THROWN_CUT } }; } });
+  registerQueries(store, PURPLE_QUERIES);
+  const isThrown = () => store.get('tk.s0.purple').thrown;
   const { executeCompiledPlan } = dist('exec/gateway');
   const { nullFeatureContext, defaultKnobs } = dist('detectors/threeFactor/features/types');
   const { createMemorySink } = dist('exec/sink');
@@ -180,7 +245,11 @@ export function createEarlyStore({ forkRoot, source, getBoard, dist, restorePxC,
   });
   store.register('fn.provider.S1.detectBadges', {
     inParts: ['localImage'],
-    calculate: (io) => dist('detectors/threeFactor/measure').detectBadges(io.in('localImage'), 0)
+    calculate: (io) => {
+      // the witness re-runs the pinned detector under the same local dark rule the S1 gateway ran with
+      const restore = isThrown() ? applyLocalDarkRule(rasterModule) : () => {};
+      try { return dist('detectors/threeFactor/measure').detectBadges(io.in('localImage'), 0); } finally { restore(); }
+    }
   });
   store.register('fn.provider.S1.badgeGlyphTemplate.compile', {
     outParts: ['tk.s1.badgeGlyphTemplate.plan'], note: "the provider's badge-glyph-template-on config, resolved and compiled",
@@ -275,6 +344,13 @@ export function createEarlyStore({ forkRoot, source, getBoard, dist, restorePxC,
   // own gateway function; the runner routes that invocation through the
   // store (the original function is kept under a symbol so a second run in
   // the same process wraps the original, not a previous run's wrapper).
+  const rasterModule = dist('detectors/threeFactor/raster');
+  const runS1Gateway = (original, args) => {
+    const restore = isThrown() ? applyLocalDarkRule(rasterModule) : () => {};
+    try { return original(...args); }
+    catch (error) { throw noBadgesOf(error, args[0]) ?? error; }
+    finally { restore(); }
+  };
   for (const id of STAGE_IDS) {
     const [path, name] = GATEWAYS[id];
     const mod = dist(path);
@@ -283,7 +359,7 @@ export function createEarlyStore({ forkRoot, source, getBoard, dist, restorePxC,
     const fn = `fn.provider.${id}.gateway`;
     const out = `tk.stage.${id}.captured`;
     store.register(fn, { outParts: [out], lazy: false, note: `the pinned clean ${id} gateway (${path}.${name})`, calculate: ({ args }) => {
-      const result = original(...args);
+      const result = id === 'S1' ? runS1Gateway(original, args) : original(...args);
       return result instanceof Promise ? result.then((value) => ({ [out]: value })) : { [out]: result };
     } });
     const wrapped = (...args) => {

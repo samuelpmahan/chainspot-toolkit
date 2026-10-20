@@ -10,7 +10,7 @@ import { basename, extname, join, relative, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { createInstrumentation } from './instrument.mjs';
-import { createEarlyStore, sealStage } from './earlyStore.mjs';
+import { createEarlyStore, sealStage, NoBadgesCondition } from './earlyStore.mjs';
 import { runStageGuarantees, attachPublished } from './stageGuarantees.mjs';
 import { isCaptureManifest, runCapture } from '../capture/capture.mjs';
 import { CAPTURE_VIEW_CALCULATION } from '../../fg/stitch/capture.calc.mjs';
@@ -116,7 +116,17 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     // S3 across zoom levels (fg/s3/teeScale.mjs): the pinned S3 registers its ring and family Calculations with this image's
     // rC1-scaled bounds (measured from the S2 BasketPoints, tk.scale.rC1)
     if (id === 'S3') uninstallTee = installScaledTee(dist, () => store.get('tk.scale.rC1').tee);
-    const result = await contract.execute({ source, inputLabel: basename(source), decode, ...(pxc ? { pxc } : {}) });
+    let result;
+    try { result = await contract.execute({ source, inputLabel: basename(source), decode, ...(pxc ? { pxc } : {}) }); }
+    catch (error) {
+      // a data condition, not an integrity failure: recorded as the run's result, the later stages are not run
+      if (!(error instanceof NoBadgesCondition)) throw error;
+      const receipt = { schema: 'nctk-early@1', source: { path: source, sha256: sourceSha256 }, stages, condition: error.condition, counts: { badges: 0 },
+        notRun: stageOrder.slice(stageOrder.indexOf(id) + 1).concat(['S4', 'S5', 'S6', 'S7']), crop: store.has('tk.source.cropReceipt') ? store.get('tk.source.cropReceipt') : null, snapshot: null, experiments: { gates: {}, branches: {} } };
+      writeFileSync(join(out, 'run.receipt.json'), json(receipt));
+      writeFileSync(join(out, 'instrumentation.json'), json(instrumentation.document({ store: store.manifest() })));
+      return receipt;
+    }
     pxc = result.pxc;
     const image = pxc.get(id === 'S0' ? 'px.course.canonicalPixels' : ComponentPxC.image);
     const canonicalRgbaSha256 = hash(image.rgba);
@@ -271,7 +281,9 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   Object.assign(branchResults, stageBranches);
   if (s3ForkJoinEvidence) branchResults.S3FJ = s3ForkJoinEvidence;
 
-  const sourceInfo = { path: source, sha256: sourceSha256, widthPx: captured('S0').fullImage.widthPx, heightPx: captured('S0').fullImage.heightPx };
+  // the purple-walk-line verdict rides on the receipt only for a thrown round, so every course-view receipt stays byte-identical to today's
+  const purple = store.has('tk.s0.purple') ? store.get('tk.s0.purple') : null;
+  const sourceInfo = { path: source, sha256: sourceSha256, widthPx: captured('S0').fullImage.widthPx, heightPx: captured('S0').fullImage.heightPx, ...(purple?.thrown ? { thrown: { purpleShare: purple.share, purplePx: purple.pixels, cut: purple.cut, unit: purple.unit } } : {}) };
   const final = pxc;
   const provenance = JSON.parse(readFileSync(resolve(provider, 'REPLAY-PROVENANCE.json'), 'utf8'));
   const sourceAlgSha256 = treeIdentity(resolve(provider, 'packages/alg/src'), /\.(ts|json|yaml)$/);

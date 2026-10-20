@@ -56,6 +56,14 @@ async function worker() {
       's2-shell-ownership-audit':'S2','fill-consistent-tee-selection':'S3',
       's3-findfamily-structural-fix':'S3FIX','s1-badge-assembly':'S1ASM','s2-basket-assembly':'S2ASM','s3-tee-assembly':'S3ASM','s3-findfamily-forkjoin':'S3FJ'
     })[name])});
+  if(early.condition) {
+    // a recorded data condition (e.g. no badges): nothing later can run; the result says so and the run passes
+    const result={schema:'nctk-stage-run@1',request,source:early.source,early:{receiptPath:`${out}/early/run.receipt.json`,snapshot:null},condition:early.condition,notRun:early.notRun,
+      stages:early.stages.map(s=>({stage:s.id,source:'compiled gateway',durationMs:s.durationMs,acceptance:'UNKNOWN'})),blockers:[`${early.condition.stage}: ${early.condition.result}; ${early.notRun.join(', ')} not run`],humanAcceptance:'UNKNOWN'};
+    await writeFile(join(forkRoot,out,'summary.json'),JSON.stringify(result,null,2)+'\n');
+    console.log(JSON.stringify({stageCount:result.stages.length,blockers:result.blockers}));
+    return;
+  }
   let late=null,s7=null;
   // the course the later stages read: the request's source, or for a capture (*.capture.json) the course raster S0 stitched
   const course=early.source.path;
