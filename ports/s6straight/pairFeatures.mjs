@@ -167,7 +167,7 @@ export function edgeFamily(cands, { hallway, padLength }, q) {
     const out = { ...nullsOf(EDGE_COLUMNS), edgeCondition: course.condition };
     const s = segmentOf(h, k, course); if (!s) return out;
     const { tolPx, latLimPx, ...stations } = s.args;   // the edge pair's tolerances are not the loss query's
-    const l = q('fn.q.path.loss', { ...stations, stepPx: 1, profile: null, threshold: null });
+    const l = q('fn.q.path.loss', { ...stations, stepPx: 1, profile: null, threshold: null, corridor: false });   // the edge columns read no corridor picture
     out.stationsCount = l.stationsCount ?? 0; out.edgeCondition = l.condition ?? null;
     if (!l.condition) Object.assign(out, { edgeVisibleStationsCount: l.edge.visibleCount, edgePassFrac: l.edge.passFrac, edgeLongestGapPx: l.edge.longestGapPx, edgeMedianContrastLum: l.edge.medianContrastLum });
     return out;
