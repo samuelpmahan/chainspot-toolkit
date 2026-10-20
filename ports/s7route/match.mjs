@@ -29,8 +29,10 @@ export const MATCH = Object.freeze({
   // E18: the refine polishes the contrast route's bend, +- one 6 px grid step of best_route per iteration (2 iterations), it does
   // not relocate it: along the axis the contrast is flat to +-2 lum over tens of px where the bend lies inside the
   // basket's C1 disc (golden 4: a 0.24 deg change of u moved the global +-60 px refine's pick 14.7 px, sensor 1.00 both)
-  refineAxisSpanPx: ROUTE.contrastBendStepPx,
-  secondBend: Object.freeze({ gain: 0.15, axisSpanPx: 80, axisStepPx: 8, gridStepW: 0.5, bboxW: 2, minLegW: 1, top: 8, refineAxisPx: 8, refineAxisStepPx: 2, refineStepPx: 2 })
+  refineAxisSpanR1: ROUTE.contrastBendStepR1,
+  // match6.py second_bend in rC1px (its px and W multiples over golden's R1 44.5 px and W 41.6 px). The prototype refined
+  // the top 8 on a dense 2 px grid (~35k contrast reads); here a coordinate search halving its step from 0.25 R1 to 0.045 R1.
+  secondBend: Object.freeze({ gain: 0.15, axisSpanR1: 1.8, axisStepR1: 0.18, gridStepR1: 0.47, bboxR1: 1.87, minLegR1: 0.935, top: 8, refineStartR1: 0.25, refineEndR1: 0.045 })
 });
 
 /** Rectangular min-cost assignment (Hungarian; Infinity = forbidden). -> [[row, col], ...] */
@@ -64,29 +66,38 @@ const contrast = (S, V, W) => { const [c] = ribbonContrastAt(S, V, W); return c 
 
 /** match6.py second_bend: B1 on the tee axis (+-80 px around the 1-bend vertex), B2 on a W/2 grid, top 8 refined; sensor-gated. */
 export function secondBend(S, start, V1, E, W, f1) {
-  const R = MATCH.secondBend, u = start.u, St = start.S;
-  const t1 = (V1[1][0] - St[0]) * u[0] + (V1[1][1] - St[1]) * u[1];
-  const lo = [Math.min(St[0], E[0]) - R.bboxW * W, Math.min(St[1], E[1]) - R.bboxW * W], hi = [Math.max(St[0], E[0]) + R.bboxW * W, Math.max(St[1], E[1]) + R.bboxW * W];
-  const gx = arange(Math.max(lo[0], 0), Math.min(hi[0], S.W), W * R.gridStepW), gy = arange(Math.max(lo[1], 0), Math.min(hi[1], S.H), W * R.gridStepW);
+  const R = MATCH.secondBend, u = start.u, St = start.S, r1 = S.R1;
+  const t1 = (V1[1][0] - St[0]) * u[0] + (V1[1][1] - St[1]) * u[1], box = R.bboxR1 * r1, minLeg = R.minLegR1 * r1;
+  const lo = [Math.min(St[0], E[0]) - box, Math.min(St[1], E[1]) - box], hi = [Math.max(St[0], E[0]) + box, Math.max(St[1], E[1]) + box];
+  const gx = arange(Math.max(lo[0], 0), Math.min(hi[0], S.W), R.gridStepR1 * r1), gy = arange(Math.max(lo[1], 0), Math.min(hi[1], S.H), R.gridStepR1 * r1);
+  const B1at = (t) => [St[0] + u[0] * t, St[1] + u[1] * t];
+  const inside = (p) => p[0] >= 0 && p[0] < S.W && p[1] >= 0 && p[1] < S.H;
+  const legsOk = (B1, B2) => !(Math.hypot(B2[0] - B1[0], B2[1] - B1[1]) < minLeg || Math.hypot(B2[0] - E[0], B2[1] - E[1]) < minLeg);
   const cands = [];
-  for (const t of arange(t1 - R.axisSpanPx, t1 + R.axisSpanPx + 0.1, R.axisStepPx)) {
-    const B1 = [St[0] + u[0] * t, St[1] + u[1] * t];
-    if (!(B1[0] >= 0 && B1[0] < S.W && B1[1] >= 0 && B1[1] < S.H)) continue;
+  for (const t of arange(t1 - R.axisSpanR1 * r1, t1 + R.axisSpanR1 * r1 + 0.01 * r1, R.axisStepR1 * r1)) {
+    const B1 = B1at(t);
+    if (!inside(B1)) continue;
     for (const x of gx) for (const y of gy) {
-      if (Math.hypot(x - B1[0], y - B1[1]) < W * R.minLegW || Math.hypot(x - E[0], y - E[1]) < W * R.minLegW) continue;
+      if (!legsOk(B1, [x, y])) continue;
       cands.push([contrast(S, [St, B1, [x, y], E], W), t, [x, y]]);
     }
   }
   cands.sort((a, b) => b[0] - a[0]);
   let best = [MATCH.noReadingLum, null];
-  for (const [, t, B2] of cands.slice(0, R.top)) {
-    for (const dt of arange(-R.refineAxisPx, R.refineAxisPx + 0.1, R.refineAxisStepPx)) {
-      const B1 = [St[0] + u[0] * (t + dt), St[1] + u[1] * (t + dt)];
-      for (const dx of arange(-W / 2, W / 2 + 0.1, R.refineStepPx)) for (const dy of arange(-W / 2, W / 2 + 0.1, R.refineStepPx)) {
-        const Vt = [St, B1, [B2[0] + dx, B2[1] + dy], E], s2 = contrast(S, Vt, W);
-        if (s2 > best[0]) best = [s2, Vt];
+  for (const [s0, t0, B20] of cands.slice(0, R.top)) {
+    // coordinate search on (t, B2x, B2y): try +- step on each, move on the best strict gain, else halve the step
+    let s = s0, t = t0, B2 = B20, step = R.refineStartR1 * r1;
+    while (step >= R.refineEndR1 * r1) {
+      let move = null;
+      for (const [dt, dx, dy] of [[step, 0, 0], [-step, 0, 0], [0, step, 0], [0, -step, 0], [0, 0, step], [0, 0, -step]]) {
+        const tt = t + dt, B1 = B1at(tt), P = [B2[0] + dx, B2[1] + dy];
+        if (!inside(B1) || !inside(P) || !legsOk(B1, P)) continue;
+        const v = contrast(S, [St, B1, P, E], W);
+        if (v > s && (!move || v > move[0])) move = [v, tt, P];
       }
+      if (move) [s, t, B2] = move; else step /= 2;
     }
+    if (s > best[0]) best = [s, [St, B1at(t), B2, E]];
   }
   if (!best[1]) return { accepted: false, note: 'no 2-bend candidate' };
   const r2 = routeSensorAt(S, best[1], W), c1 = contrast(S, V1, W);
@@ -104,7 +115,7 @@ export function secondBend(S, start, V1, E, W, f1) {
  * traceSpace.mjs) so every step is a profiled store call: same functions, same arguments, so the same answers.
  */
 export const MATCH_STEPS = Object.freeze({
-  refine: (S, V, W, u) => refineVertices(S, V, W, u, MATCH.refineIters, { axisSpanPx: MATCH.refineAxisSpanPx })[0],
+  refine: (S, V, W, u) => refineVertices(S, V, W, u, MATCH.refineIters, { axisSpanPx: MATCH.refineAxisSpanR1 * S.R1, unitPx: S.R1 })[0],
   sensor: (S, V, W) => routeSensorAt(S, V, W),
   secondBend: (S, start, V, E, W, f1) => secondBend(S, start, V, E, W, f1),
   placeBends: (S, V, W, straight) => refineBendsOf(S, V, W, { straight }),

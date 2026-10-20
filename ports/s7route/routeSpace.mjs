@@ -65,9 +65,11 @@ export const ROUTE = Object.freeze({
   jointSkipW: 0.5,           // later legs start 0.5 W past the joint; every leg ends 0.5 W before its end
   stationStepPx: 1.0,
   bendFromBadgeW: 0.5,       // B1 from 0.5 W past the badge ...
-  bendReachPx: 800,          // ... up to 800 px past it
-  bendStepPx: 8.0,           // every 8 px (match2.py one_bend step)
-  contrastBendStepPx: 6.0,   // every 6 px (match18.py best_route step)
+  // map-scaled search distances are in rC1px, the basket C1 radius measured per image (S.R1; DOCTRINE: UDisc renders
+  // differently at different zooms). The values are the prototypes' px on golden (R1 44.5 px) rounded: 800 px, 8 px, 6 px.
+  bendReachR1: 18,           // ... up to 18 R1 past it
+  bendStepR1: 0.18,          // every 0.18 R1 (match2.py one_bend step, 8 px on golden)
+  contrastBendStepR1: 0.135, // every 0.135 R1 (match18.py best_route step, 6 px on golden)
   contrastBandPx: Object.freeze([0.5, 3.0]),   // polyscore.py band inside / outside the predicted edge
   contrastMinPx: 30,         // polyscore.py: fewer visible px in either band = no reading (-99 in the prototype)
   samMatchPx: 12,            // judging only: the one basket match rule (AGENTS.md)
@@ -233,7 +235,7 @@ export function routeHallwayOf(S, start) {
 /** The bend points on the tee axis: from 0.5 W past the badge, every `step` px, up to 800 px past it, while inside the image. */
 function bendsOnAxis(c, start, W, step) {
   const { S, u, badgeAlongPx: dB } = start, out = [];
-  for (const t of arange(dB + W * ROUTE.bendFromBadgeW, dB + ROUTE.bendReachPx, step)) {
+  for (const t of arange(dB + W * ROUTE.bendFromBadgeW, dB + ROUTE.bendReachR1 * c.R1, step)) {
     const B1 = [S[0] + u[0] * t, S[1] + u[1] * t];
     if (!(B1[0] >= 0 && B1[0] < c.W && B1[1] >= 0 && B1[1] < c.H)) break;
     out.push([t, B1]);
@@ -245,7 +247,7 @@ function bendsOnAxis(c, start, W, step) {
 export function contrastRouteAt(c, start, E, W) {
   const S = start.S, z = ribbonContrastAt(c, [S, E], W);
   let best = { contrastLum: z[0], edgePx: z[1], verts: [S, E], bendAlongPx: null }, tried = 1;
-  for (const [t, B1] of bendsOnAxis(c, start, W, ROUTE.contrastBendStepPx)) {
+  for (const [t, B1] of bendsOnAxis(c, start, W, ROUTE.contrastBendStepR1 * c.R1)) {
     const r = ribbonContrastAt(c, [S, B1, E], W); tried++;
     if (r[0] !== null && (best.contrastLum === null || r[0] > best.contrastLum)) best = { contrastLum: r[0], edgePx: r[1], verts: [S, B1, E], bendAlongPx: t };
   }
@@ -256,7 +258,7 @@ export function contrastRouteAt(c, start, E, W) {
 export function oneBendAt(c, start, E, W, { memo = null } = {}) {
   const S = start.S;
   let best = null, tried = 0;
-  for (const [t, B1] of bendsOnAxis(c, start, W, ROUTE.bendStepPx)) {
+  for (const [t, B1] of bendsOnAxis(c, start, W, ROUTE.bendStepR1 * c.R1)) {
     const r = routeSensorAt(c, [S, B1, E], W, { memo }); tried++;
     if (r.stations >= ROUTE.minStations && (best === null || r.passFrac > best.passFrac)) best = { passFrac: r.passFrac, stations: r.stations, verts: [S, B1, E], bendAlongPx: t };
   }
