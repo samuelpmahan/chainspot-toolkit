@@ -105,3 +105,12 @@ test('E18: each refine iteration moves the bend at most one contrast grid step (
   assert.ok(Math.abs(near[1][0] - 100) <= 2 * span + 1e-9 && near[1][1] === 110, JSON.stringify(near[1]));
   assert.ok(Math.abs(far[1][0] - 140) <= 4, `the +-60 px span reaches the corner: ${far[1]}`);
 });
+
+test('minStationsOf: 20 stations by default; stationsUnits r1 is 0.449 R1 (golden R1 44.5 px keeps its floor of 20 stations)', async () => {
+  const { minStationsOf, MATCH_RULES } = await import('./match.mjs');
+  assert.equal(minStationsOf({ R1: 21 }), MATCH.minStations);
+  assert.equal(minStationsOf({ R1: 21 }, MATCH_RULES), 20);
+  const golden = minStationsOf({ R1: 44.5 }, { stationsUnits: 'r1' });
+  assert.ok(golden <= 20 && golden > 19, `golden floor ${golden}`);
+  assert.ok(Math.abs(minStationsOf({ R1: 21 }, { stationsUnits: 'r1' }) - 0.449 * 21) < 1e-12);
+});

@@ -24,6 +24,10 @@ import { refineBendsOf } from './bends.mjs';
 export const MATCH = Object.freeze({
   tau: 0.75,                 // sensor reading at which a route counts as hallway
   minStations: ROUTE.minStations,
+  // rule-set option stationsUnits 'r1': the same floor as a map-scaled length. Stations are 1 px apart, so a station count is
+  // a visible ribbon length in px (map-scaled): 20 px on golden (R1 44.5 px, where match2.py was recorded) is 0.449 R1, rounded
+  // down so golden's floor stays 20 stations
+  minStationsR1: 0.449,
   noReadingLum: -99.0,       // a cell with no contrast reading (polyscore.py's value)
   priorDrop: 0.02,           // firstBend 'badgePrior': the sensor may read this much lower at B* (bends.mjs's refit tolerance)
   refineIters: 2,            // match18.py refine_vertices(iters=2)
@@ -66,6 +70,9 @@ export function assignMinCost(cost) {
 const contrast = (S, V, W) => { const [c] = ribbonContrastAt(S, V, W); return c === null ? MATCH.noReadingLum : c; };
 /** polyScore's answer from ribbonContrastAt (the same px in the same order: bit-identical, -99 for no reading). */
 const polyScoreFast = (S, V, W) => { const [c, n] = ribbonContrastAt(S, V, W); return c === null ? [MATCH.noReadingLum, 0] : [c, n]; };
+/** The visible-station floor of a route reading under the rule set: MATCH.minStations stations, or (stationsUnits 'r1') minStationsR1 x R1. */
+export const minStationsOf = (S, rules = MATCH_RULES) => (rules.stationsUnits === 'r1' ? MATCH.minStationsR1 * S.R1 : MATCH.minStations);
+const stLabel = (m) => (Number.isInteger(m) ? String(m) : m.toFixed(1));
 
 /** match6.py second_bend's geometry: the B1 axis, the B2 search box, the leg check (shared by the scan and the refine). */
 function secondBendFrame(S, start, E, rules) {
@@ -147,7 +154,7 @@ export function secondBend(S, start, V1, E, W, f1, rules = MATCH_RULES, steps = 
   if (!best[1]) return { accepted: false, note: 'no 2-bend candidate' };
   const r2 = steps.sensor(S, best[1], W), c1 = steps.contrast(S, V1, W);
   const note = `2-bend candidate contrast ${best[0].toFixed(1)} (1-bend ${c1.toFixed(1)}) lum, sensor ${r2.passFrac.toFixed(2)} on ${r2.stations} st vs 1-bend ${f1.toFixed(2)}`;
-  const ok = r2.passFrac >= MATCH.tau && r2.passFrac - f1 >= R.gain && r2.stations >= MATCH.minStations;
+  const ok = r2.passFrac >= MATCH.tau && r2.passFrac - f1 >= R.gain && r2.stations >= minStationsOf(S, rules);
   return { accepted: ok, verts: best[1], note, sensor: r2 };
 }
 
@@ -166,7 +173,7 @@ export const MATCH_STEPS = Object.freeze({
   sensor: (S, V, W) => routeSensorAt(S, V, W),
   secondBendScan: (S, start, V, E, W, rules = MATCH_RULES) => secondBendScan(S, start, V, E, W, rules),
   secondBendRefine: (S, start, E, W, cand, rules = MATCH_RULES) => secondBendRefine(S, start, E, W, cand, rules),
-  placeBends: (S, V, W, straight) => refineBendsOf(S, V, W, { straight }),
+  placeBends: (S, V, W, straight, opts = {}) => refineBendsOf(S, V, W, { straight, ...opts }),
   contrast: (S, V, W) => contrast(S, V, W)
 });
 
@@ -186,6 +193,12 @@ export const MATCH_STEPS = Object.freeze({
  *   secondBendB1: 'axis' (default: B1 searched on the tee axis) | 'badge' (B1 stays at B*; only B2 is searched)
  *   firstBend: 'free' (default: refined and placed) | 'badge' (a 1-bend route through B* keeps it there) | 'badgePrior' (after
  *     the bend placement, the first bend moves to B* when the sensor reads no worse there, within MATCH.priorDrop)
+ *   stationsUnits: absent (MATCH.minStations = 20 visible stations, an absolute px length) | 'r1' (minStationsR1 x R1: the
+ *                  station floor of the straight read, the second bend and the bend placement's gate as a map-scaled length)
+ *   straightSecondBend: true = a contrast route with NO bend that the sensor rejects (< tau) also gets the second-bend search,
+ *                  B1 seeded on the tee axis 0.5 W past the badge (Sam: the tee -> badge segment is straight hallway; the
+ *                  recorded rule searches a second bend only from a 1-bend route)
+ *   placeAxis:     true = the bend placement fits the first bend on the tee axis (by its distance along it) instead of freely
  */
 export const MATCH_RULES = Object.freeze({ straightFromS6: true, secondBendRefine: 'coordWide', refineUnits: 'r1', tableUnits: 'r1' });   // batch 2 (2026-10-20): S6CoordWide
 
@@ -210,7 +223,15 @@ export const RULE_SETS = Object.freeze({
   routeMatchBadgeMidPinned: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', secondBendB1: 'badge', firstBend: 'badge' },
   routeMatchLeanBadgeMid2: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', secondBendB1: 'badge' },
   routeMatchLeanBadgePrior: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', firstBend: 'badgePrior' },
-  routeMatchBadgeMidPrior: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', firstBend: 'badgePrior' }
+  routeMatchBadgeMidPrior: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', firstBend: 'badgePrior' },
+  // heritage S7 bends (2026-10-20, lane heritage7): the pointer plus one fix each, then all three together
+  routeMatchLeanPxRefineCoarse2R1St: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1' },
+  routeMatchLeanPxRefineCoarse2StraightB2: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', straightSecondBend: true },
+  routeMatchLeanPxRefineCoarse2AxisB1: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', placeAxis: true },
+  routeMatchLeanPxRefineCoarse2TeeAxis: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true },
+  // the heritage fixes with the badge-midpoint prior (heritage7 prototype: 18/18 agree, bends 18/1/1), on the lean and the B* tables
+  routeMatchTeeAxisBadgePrior: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior' },
+  routeMatchBadgeMidTeeAxisPrior: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior' }
 });
 
 /**
@@ -220,7 +241,8 @@ export const RULE_SETS = Object.freeze({
  */
 export const PROFILES = Object.freeze({
   wide: Object.keys(RULE_SETS),
-  quick: ['routeMatchFast', 'routeMatchFastPxRefine', 'routeMatchLean', 'routeMatchLeanPxRefine', 'routeMatchLeanCoarse2', 'routeMatchLeanPxRefineCoarse2']
+  quick: ['routeMatchFast', 'routeMatchFastPxRefine', 'routeMatchLean', 'routeMatchLeanPxRefine', 'routeMatchLeanCoarse2', 'routeMatchLeanPxRefineCoarse2',
+    'routeMatchTeeAxisBadgePrior', 'routeMatchBadgeMidTeeAxisPrior']
 });
 /**
  * The S7 variants `pxc state --retest` runs: the quick rule sets plus the pinned prototype (1 ms). The old tracers (badgeOnly,
@@ -249,13 +271,15 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
     let rec;
     if (s6Straight) {
       rec = { verts: [start.S, E], how: `straight: S6 reads the hole straight (rule straightFromS6); sensor ${straight.passFrac.toFixed(2)} on ${straight.stations} st`, sensor: straight };
-    } else if (straight.stations >= MATCH.minStations && straight.passFrac >= MATCH.tau) {
+    } else if (straight.stations >= minStationsOf(S, rules) && straight.passFrac >= MATCH.tau) {
       rec = { verts: [start.S, E], how: `straight: sensor ${straight.passFrac.toFixed(2)} on ${straight.stations} st`, sensor: straight };
     } else {
       const r1 = steps.sensor(S, V, W);
       rec = { verts: V, how: `contrast route (${V.length - 2} bends): sensor ${r1.passFrac.toFixed(2)}; straight read ${straight.passFrac.toFixed(2)}`, sensor: r1 };
-      if (secondBends && V.length === 3 && r1.passFrac < MATCH.tau) {
-        const b2 = secondBend(S, start, V, E, W, r1.passFrac, rules, steps);
+      // straightSecondBend: a straight contrast route the sensor rejects seeds B1 on the tee axis 0.5 W past the badge
+      const seed = V.length === 2 && rules.straightSecondBend ? (() => { const t = start.badgeAlongPx + ROUTE.bendFromBadgeW * W; return [start.S, [start.S[0] + start.u[0] * t, start.S[1] + start.u[1] * t], E]; })() : V;
+      if (secondBends && seed.length === 3 && r1.passFrac < MATCH.tau) {
+        const b2 = secondBend(S, start, seed, E, W, r1.passFrac, rules, steps);
         rec = b2.accepted ? { verts: b2.verts, how: `2-bend accepted: ${b2.note}`, sensor: b2.sensor, secondBend: true } : { ...rec, how: `${rec.how}; 2-bend rejected: ${b2.note}` };
       }
     }
@@ -263,7 +287,9 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
     if (verdicts !== undefined && !s6Straight) {
       if (verdicts === null) rec = { ...rec, bendsRefined: { taken: false, why: 'no S6 straight verdict on record: bend placement not run' } };
       else {
-        let r = steps.placeBends(S, rec.verts, W, verdicts[hole] === 'straight');
+        // rule-set options of the placement, passed only when set (the recorded rule's calls keep their arguments)
+        const placeOpts = { ...(rules.stationsUnits === 'r1' ? { minStations: minStationsOf(S, rules) } : {}), ...(rules.placeAxis ? { axis: start.u } : {}) };
+        let r = Object.keys(placeOpts).length ? steps.placeBends(S, rec.verts, W, verdicts[hole] === 'straight', placeOpts) : steps.placeBends(S, rec.verts, W, verdicts[hole] === 'straight');
         if (pinB && r.taken && rec.verts.length >= 3 && r.verts.length === rec.verts.length) r = { ...r, verts: [r.verts[0], rec.verts[1], ...r.verts.slice(2)], why: `${r.why}; the first bend kept at B* (rule firstBend badge)` };
         rec = { ...rec, verts: r.verts, how: `${rec.how} | bends ${r.taken ? 'placed' : 'kept'}: ${r.why}`, sensor: r.taken ? steps.sensor(S, r.verts, W) : rec.sensor,
           bendsRefined: { taken: r.taken, why: r.why, bendsBefore: r.K0, bendsAfter: r.taken ? r.K1 : r.K0, samples: r.samples ?? null, before: before.slice(1, -1) } };
@@ -271,9 +297,9 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
     }
     if (rules.firstBend === 'badgePrior' && rec.verts.length >= 3) {
       // the badge-midpoint prior: the first bend moves to B* when the sensor reads no worse there (within MATCH.priorDrop, on
-      // >= MATCH.minStations visible stations); the route's other vertices stay
+      // >= the rule set's station floor, minStationsOf); the route's other vertices stay
       const Vb = [rec.verts[0], badgeMidOf(start), ...rec.verts.slice(2)], rb = steps.sensor(S, Vb, W);
-      if (rb.stations >= MATCH.minStations && rb.passFrac >= rec.sensor.passFrac - MATCH.priorDrop)
+      if (rb.stations >= minStationsOf(S, rules) && rb.passFrac >= rec.sensor.passFrac - MATCH.priorDrop)
         rec = { ...rec, verts: Vb, sensor: rb, how: `${rec.how} | first bend at B* (badge-midpoint prior): sensor ${rec.sensor.passFrac.toFixed(2)} -> ${rb.passFrac.toFixed(2)} on ${rb.stations} st` };
     }
     out[hole] = { end: k, verts: rec.verts, how: rec.how, polyScore: steps.contrast(S, rec.verts, W), bendsRefined: rec.bendsRefined ?? null, legs: [{ passFrac: rec.sensor.passFrac }],
