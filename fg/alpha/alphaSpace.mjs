@@ -237,20 +237,24 @@ export function ringScale(img, centres, opaque, { stepPx = 0.25, angleStepDeg = 
   const rs = []; for (let r = 6; r <= rMax; r += stepPx) rs.push(r);
   const nA = Math.round(360 / angleStepDeg), cs = [], sn = [];
   for (let k = 0; k < nA; k++) { const t = (k * angleStepDeg * Math.PI) / 180; cs.push(Math.cos(t)); sn.push(Math.sin(t)); }
+  // the luminance samples are finite, so a typed-array sort orders them as median's numeric comparator does: the same median
+  const vals = new Float64Array(nA), rgba = img.rgba;
+  const medianOf = (a, n) => { const x = a.subarray(0, n).sort(), m = n >> 1; return n % 2 ? x[m] : (x[m - 1] + x[m]) / 2; };
   const prof = rs.map((r) => {
     let sum = 0, cnt = 0;
     for (const [bx, by] of centres) {
-      const vals = [];
+      let nv = 0;
       for (let k = 0; k < nA; k++) {
         const x = Math.round(bx + r * cs[k]), y = Math.round(by + r * sn[k]);
         if (x < 1 || y < 1 || x >= W - 1 || y >= H - 1 || plane[y * W + x]) continue;
-        vals.push(lumAt(img, x, y));
+        const i = (y * W + x) * 4; vals[nv++] = (rgba[i] + rgba[i + 1] + rgba[i + 2]) / 3;   // lumAt
       }
-      if (vals.length > nA / 9) { sum += median(vals); cnt++; }
+      if (nv > nA / 9) { sum += medianOf(vals, nv); cnt++; }
     }
     return cnt ? sum / cnt : NaN;
   });
-  const half = Math.round(5 / stepPx), base = prof.map((_, i) => median(prof.slice(Math.max(0, i - half), i + half + 1).filter(Number.isFinite)) ?? 0);
+  const half = Math.round(5 / stepPx), win = new Float64Array(2 * half + 1);
+  const base = prof.map((_, i) => { let n = 0; for (let j = Math.max(0, i - half); j < Math.min(prof.length, i + half + 1); j++) if (Number.isFinite(prof[j])) win[n++] = prof[j]; return n ? medianOf(win, n) : 0; });
   const e = prof.map((v, i) => (Number.isFinite(v) ? v - base[i] : -9));
   const idx = (r) => Math.max(0, Math.min(rs.length - 1, Math.round((r - rs[0]) / stepPx)));
   let best = null;
@@ -294,7 +298,11 @@ export function ringSamples(img, { centres, r1Px, ring = 'c1', opaque, names = n
   const e = (ring === 'c1' ? geometry.c1StrokeFwhmPx : geometry.c2StrokeFwhmPx) / 2 + geometry.aaBandPx;
   const strokeBand = [[r1Px, geometry.c1StrokeFwhmPx / 2 + geometry.aaBandPx], [2 * r1Px, geometry.c2StrokeFwhmPx / 2 + geometry.aaBandPx]];
   const counts = { candidatePx: 0, spritePx: 0, spriteAaFringePx: 0, ringStrokeAaPx: 0, outsideImagePx: 0, crossesOtherFillEdgePx: 0, keptPx: 0 };
-  const onAnyStroke = (x, y) => centres.some(([cx, cy]) => { const d = Math.hypot(x - cx, y - cy); return strokeBand.some(([rr, hw]) => Math.abs(d - rr) <= hw); });
+  const nC = centres.length, cX = Float64Array.from(centres, (c) => c[0]), cY = Float64Array.from(centres, (c) => c[1]);
+  const [[sr1, sh1], [sr2, sh2]] = strokeBand, fr1 = r1Px, fr2 = 2 * r1Px;
+  const onAnyStroke = (x, y) => { for (let i = 0; i < nC; i++) { const d = Math.hypot(x - cX[i], y - cY[i]); if (Math.abs(d - sr1) <= sh1 || Math.abs(d - sr2) <= sh2) return true; } return false; };
+  // another basket's C1 or C2 disc holds one side of the pair and not the other
+  const crossesOf = (b, pi, po) => { for (let j = 0; j < nC; j++) { if (j === b) continue; const di = Math.hypot(pi[0] - cX[j], pi[1] - cY[j]), dO = Math.hypot(po[0] - cX[j], po[1] - cY[j]); if ((di <= fr1) !== (dO <= fr1) || (di <= fr2) !== (dO <= fr2)) return true; } return false; };
   const pairs = [];
   const nBins = Math.max(8, Math.round((2 * Math.PI * R) / geometry.binArcPx)), perBin = Math.max(1, Math.round(geometry.binArcPx));
   centres.forEach(([cx, cy], b) => {
@@ -316,7 +324,7 @@ export function ringSamples(img, { centres, r1Px, ring = 'c1', opaque, names = n
             if (o === 1) { counts.spritePx++; bad = true; } else if (o === 2) { counts.spriteAaFringePx++; bad = true; } else if (onAnyStroke(x, y)) { counts.ringStrokeAaPx++; bad = true; }
           }
           if (bad) continue;
-          const crosses = centres.some(([ox, oy], j) => j !== b && [r1Px, 2 * r1Px].some((rr) => (Math.hypot(pi[0] - ox, pi[1] - oy) <= rr) !== (Math.hypot(po[0] - ox, po[1] - oy) <= rr)));
+          const crosses = crossesOf(b, pi, po);
           if (crosses) { counts.crossesOtherFillEdgePx += 2; continue; }
           acc.add(rgbAt(img, pi[0], pi[1]), rgbAt(img, po[0], po[1]));
           counts.keptPx += 2;

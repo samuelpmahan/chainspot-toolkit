@@ -104,10 +104,15 @@ export function profileAt(c, O, phi, t0, t1, { lat0 = 0, step = 1, reach = 30 } 
   const OFFS = offsetsFor(reach), u = unit(phi), n = [-u[1], u[0]], T = arange(t0, t1, step), M = OFFS.length;
   if (!T.length) return { prof: null, ok: null, nT: 0, offs: OFFS };
   const sum = new Float64Array(M), ok = new Int32Array(M);
-  for (const t of T) for (let j = 0; j < M; j++) {
-    const o = OFFS[j] + lat0, x = O[0] + t * u[0] + o * n[0], y = O[1] + t * u[1] + o * n[1];
-    if (maskedAt(c, x, y)) continue;
-    sum[j] += samp(c.lum, c.W, c.H, x, y); ok[j]++;
+  const { lum, mask, W: IW, H: IH } = c, over = EVIDENCE.maskOver, xHi = IW - 2, yHi = IH - 2, O0 = O[0], O1 = O[1], u0 = u[0], u1 = u[1], n0 = n[0], n1 = n[1];
+  for (const t of T) for (let j = 0; j < M; j++) {   // maskedAt and samp inlined: the same arithmetic in the same order
+    const o = OFFS[j] + lat0, x = O0 + t * u0 + o * n0, y = O1 + t * u1 + o * n1;
+    if (!(x > 1 && x < xHi && y > 1 && y < yHi)) continue;
+    const x0 = Math.floor(x), y0 = Math.floor(y), fx = x - x0, fy = y - y0;
+    const xa = clampI(x0, IW), xb = clampI(x0 + 1, IW), ya = clampI(y0, IH), yb = clampI(y0 + 1, IH);
+    const iaa = ya * IW + xa, iab = ya * IW + xb, iba = yb * IW + xa, ibb = yb * IW + xb;
+    if (mask && (1 - fy) * ((1 - fx) * mask[iaa] + fx * mask[iab]) + fy * ((1 - fx) * mask[iba] + fx * mask[ibb]) > over) continue;
+    sum[j] += (1 - fy) * ((1 - fx) * lum[iaa] + fx * lum[iab]) + fy * ((1 - fx) * lum[iba] + fx * lum[ibb]); ok[j]++;
   }
   const prof = new Float64Array(M); for (let j = 0; j < M; j++) prof[j] = ok[j] ? sum[j] / ok[j] : NaN;
   return { prof, ok, nT: T.length, offs: OFFS };
@@ -285,13 +290,21 @@ export function pathMaskOf(raster, lists, bps, { r1Range = [10, 260, 0.5], r1Px 
 /** Per station: the centre colour, the lateral colours at integer offsets -2w..2w, which samples the mask hides. */
 export function samplesAt(c, O, phi, ts, W) {
   const w = W / 2, R = Math.ceil(BACKGROUND_BAND.toW * w), M = 2 * R + 1, N = ts.length, u = unit(phi), n = [-u[1], u[0]], { rgba } = c.raster;
-  const rgbAt = (x, y) => [0, 1, 2].map((ch) => { const x0 = Math.floor(x), y0 = Math.floor(y), fx = x - x0, fy = y - y0, g = (X, Y) => rgba[(clampI(Y, c.H) * c.W + clampI(X, c.W)) * 4 + ch];
-    return (1 - fy) * ((1 - fx) * g(x0, y0) + fx * g(x0 + 1, y0)) + fy * ((1 - fx) * g(x0, y0 + 1) + fx * g(x0 + 1, y0 + 1)); });
   const centerRgbLevel = new Float32Array(N * 3), lateralRgbLevel = new Float32Array(N * M * 3), hiddenCenter = new Uint8Array(N), hiddenLateral = new Uint8Array(N * M);
+  const IW = c.W, IH = c.H, mask = c.mask, over = EVIDENCE.maskOver, xHi = IW - 2, yHi = IH - 2;
+  // one sample: the bilinear RGB (rgbAt) into out[at3..], and maskedAt; inlined, the same arithmetic in the same order
+  const sample = (x, y, out, at3) => {
+    const x0 = Math.floor(x), y0 = Math.floor(y), fx = x - x0, fy = y - y0;
+    const xa = clampI(x0, IW), xb = clampI(x0 + 1, IW), ya = clampI(y0, IH), yb = clampI(y0 + 1, IH);
+    const iaa = ya * IW + xa, iab = ya * IW + xb, iba = yb * IW + xa, ibb = yb * IW + xb;
+    for (let ch = 0; ch < 3; ch++) out[at3 + ch] = (1 - fy) * ((1 - fx) * rgba[iaa * 4 + ch] + fx * rgba[iab * 4 + ch]) + fy * ((1 - fx) * rgba[iba * 4 + ch] + fx * rgba[ibb * 4 + ch]);
+    if (!(x > 1 && x < xHi && y > 1 && y < yHi)) return 1;
+    return mask && (1 - fy) * ((1 - fx) * mask[iaa] + fx * mask[iab]) + fy * ((1 - fx) * mask[iba] + fx * mask[ibb]) > over ? 1 : 0;
+  };
   for (let k = 0; k < N; k++) {
     const cx = O[0] + ts[k] * u[0], cy = O[1] + ts[k] * u[1];
-    centerRgbLevel.set(rgbAt(cx, cy), k * 3); hiddenCenter[k] = maskedAt(c, cx, cy) ? 1 : 0;
-    for (let j = -R; j <= R; j++) { const x = cx + j * n[0], y = cy + j * n[1], at = k * M + j + R; lateralRgbLevel.set(rgbAt(x, y), at * 3); hiddenLateral[at] = maskedAt(c, x, y) ? 1 : 0; }
+    hiddenCenter[k] = sample(cx, cy, centerRgbLevel, k * 3);
+    for (let j = -R; j <= R; j++) { const x = cx + j * n[0], y = cy + j * n[1], at = k * M + j + R; hiddenLateral[at] = sample(x, y, lateralRgbLevel, at * 3); }
   }
   let hidden = 0; for (const x of hiddenCenter) hidden += x;
   return { schema: 'nctk-s6-path-samples@1', stationsCount: N, windowPx: r3(w), lateralReachPx: R, offsetsPx: [-R, R], hiddenCount: hidden,
@@ -306,16 +319,19 @@ export function overlayAt(s, W, profile) {
     : { condition: 'no alpha profile', mode: 'proxy', reason: profile?.reason ?? (profile ? `profile has no fitted path overlay (${profile.overlays?.path?.reason ?? profile.status ?? 'unknown'})` : 'no profile given'), overlayRgbLevel: PROXY_OVERLAY.rgb, rule: PROXY_OVERLAY.rule };
   const N = s.stationsCount, R = s.lateralReachPx, M = 2 * R + 1, overlayFrac = new Array(N).fill(null), minBg = Math.max(3, Math.ceil(w / 2));
   let noBackground = 0;
+  // per-channel background lists in reused typed buffers: median = the same sorted-Float64Array median, without the allocations
+  const bg = [new Float64Array(M), new Float64Array(M), new Float64Array(M)], toW = BACKGROUND_BAND.toW * w, lat = s.lateralRgbLevel;
+  const med = (a, nb) => { const x = a.subarray(0, nb).sort(); return nb % 2 ? x[(nb - 1) / 2] : (x[nb / 2 - 1] + x[nb / 2]) / 2; };
   for (let k = 0; k < N; k++) {
     if (s.hiddenCenter[k]) continue;
-    const bg = [[], [], []];
+    let nb = 0;
     for (let j = -R; j <= R; j++) {
-      if (Math.abs(j) <= w || Math.abs(j) > BACKGROUND_BAND.toW * w) continue;
+      if (Math.abs(j) <= w || Math.abs(j) > toW) continue;
       const at = k * M + j + R; if (s.hiddenLateral[at]) continue;
-      for (let ch = 0; ch < 3; ch++) bg[ch].push(s.lateralRgbLevel[at * 3 + ch]);
+      bg[0][nb] = lat[at * 3]; bg[1][nb] = lat[at * 3 + 1]; bg[2][nb] = lat[at * 3 + 2]; nb++;
     }
-    if (bg[0].length < minBg) { noBackground++; continue; }
-    const f = contractOverlayFraction([0, 1, 2].map((ch) => s.centerRgbLevel[k * 3 + ch]), bg.map(median), overlay);
+    if (nb < minBg) { noBackground++; continue; }
+    const f = contractOverlayFraction([s.centerRgbLevel[k * 3], s.centerRgbLevel[k * 3 + 1], s.centerRgbLevel[k * 3 + 2]], [med(bg[0], nb), med(bg[1], nb), med(bg[2], nb)], overlay);
     if (f != null) overlayFrac[k] = r3(f);
   }
   return { schema: 'nctk-s6-overlay-fraction@1', kind: withProfile ? 'overlay fraction (alpha profile)' : 'PROXY overlay fraction (no alpha profile: white-overlay brightness)', alpha,
@@ -376,7 +392,8 @@ export function lossAt(c, a) {
 /** The straightened corridor for the render: rows = offset -R..R, columns = station. */
 function corridorOf(s, W) {
   const N = s.stationsCount, R = s.lateralReachPx, M = 2 * R + 1, rgb = new Uint8Array(N * M * 3);
-  for (let k = 0; k < N; k++) for (let j = 0; j < M; j++) for (let ch = 0; ch < 3; ch++) rgb[(j * N + k) * 3 + ch] = Math.round(s.lateralRgbLevel[(k * M + j) * 3 + ch]);
+  const lat = s.lateralRgbLevel;
+  for (let k = 0; k < N; k++) for (let j = 0; j < M; j++) { const a = (k * M + j) * 3, b = (j * N + k) * 3; rgb[b] = Math.round(lat[a]); rgb[b + 1] = Math.round(lat[a + 1]); rgb[b + 2] = Math.round(lat[a + 2]); }
   return { widthPx: N, heightPx: M, offsetsPx: [-R, R], ribbonHalfPx: r3(W / 2), rgbLevel: rgb, hiddenCenter: s.hiddenCenter, layout: 'rgbLevel[(row*widthPx + col)*3 + c], row = offset + R, col = station' };
 }
 
