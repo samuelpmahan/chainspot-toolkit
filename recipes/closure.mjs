@@ -23,9 +23,14 @@ export const STAGE_SOURCES = {
   northpark: 'specimens/dev/NorthPark-full.png',
   lenard1: 'specimens/dev/Lenard-1.png', lenard2: 'specimens/dev/Lenard-2.png', lenard3: 'specimens/dev/Lenard-3.png',
   lenard4: 'specimens/dev/Lenard-4.png', lenard5: 'specimens/dev/Lenard-5.png',
-  // E27 (local, not committed): single-raster captures outside the dev set, from chainspot-corpus demo/ and chainspot resources/
+  // E27: single-raster captures outside the dev set, from chainspot-corpus demo/ and chainspot resources/
   therec: 'specimens/wide/therec.jpg', therecThrown: 'specimens/wide/therecThrown.png', dashs5612: 'specimens/wide/dashs5612.png',
-  dashs5613: 'specimens/wide/dashs5613.png', unknown5693: 'specimens/wide/unknown5693.png', lenardChrome: 'specimens/wide/lenardChrome.png'
+  dashs5613: 'specimens/wide/dashs5613.png', unknown5693: 'specimens/wide/unknown5693.png', lenardChrome: 'specimens/wide/lenardChrome.png',
+  // Dash's Track (McKinney / Frisco, TX): ChainSpot v1's public demo captures (static/resources/demo/dashs-track/), the course
+  // Sam says golden is. One mid-round overview and four overlapping map tiles (partial views), phone chrome included.
+  dashsOverview: 'specimens/demo/dashs-udisc-round-overview.png',
+  dashs1: 'specimens/demo/dashs-udisc-capture-1.png', dashs2: 'specimens/demo/dashs-udisc-capture-2.png',
+  dashs3: 'specimens/demo/dashs-udisc-capture-3.png', dashs4: 'specimens/demo/dashs-udisc-capture-4.png'
 };
 
 /** One literal authoring path list closes an execution; no second registration table. */
