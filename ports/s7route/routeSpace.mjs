@@ -233,9 +233,9 @@ export function routeHallwayOf(S, start) {
 // ------------------------------------------------------------------ one row (match18.py best_route, match2.py one_bend)
 
 /** The bend points on the tee axis: from 0.5 W past the badge, every `step` px, up to 800 px past it, while inside the image. */
-function bendsOnAxis(c, start, W, step) {
-  const { S, u, badgeAlongPx: dB } = start, out = [];
-  for (const t of arange(dB + W * ROUTE.bendFromBadgeW, dB + ROUTE.bendReachR1 * c.R1, step)) {
+function bendsOnAxis(c, start, W, step, units = 'r1') {
+  const { S, u, badgeAlongPx: dB } = start, out = [], reach = units === 'px' ? 800 : ROUTE.bendReachR1 * c.R1;   // px: match2.py as recorded
+  for (const t of arange(dB + W * ROUTE.bendFromBadgeW, dB + reach, step)) {
     const B1 = [S[0] + u[0] * t, S[1] + u[1] * t];
     if (!(B1[0] >= 0 && B1[0] < c.W && B1[1] >= 0 && B1[1] < c.H)) break;
     out.push([t, B1]);
@@ -244,10 +244,10 @@ function bendsOnAxis(c, start, W, step) {
 }
 
 /** match18.py best_route: the 0-bend route, replaced by a 1-bend route only on strict improvement of the edge contrast. */
-export function contrastRouteAt(c, start, E, W) {
+export function contrastRouteAt(c, start, E, W, units = 'r1') {
   const S = start.S, z = ribbonContrastAt(c, [S, E], W);
   let best = { contrastLum: z[0], edgePx: z[1], verts: [S, E], bendAlongPx: null }, tried = 1;
-  for (const [t, B1] of bendsOnAxis(c, start, W, ROUTE.contrastBendStepR1 * c.R1)) {
+  for (const [t, B1] of bendsOnAxis(c, start, W, units === 'px' ? 6 : ROUTE.contrastBendStepR1 * c.R1, units)) {
     const r = ribbonContrastAt(c, [S, B1, E], W); tried++;
     if (r[0] !== null && (best.contrastLum === null || r[0] > best.contrastLum)) best = { contrastLum: r[0], edgePx: r[1], verts: [S, B1, E], bendAlongPx: t };
   }
@@ -266,12 +266,12 @@ export function oneBendAt(c, start, E, W, { memo = null } = {}) {
 }
 
 /** tk.s7.routeRow@<hole>: per BasketPoint, the best route by edge contrast, with the sensor's reading on that route. */
-export function routeRowOf(c, start, bp, W) {
+export function routeRowOf(c, start, bp, W, units = 'r1') {
   if (!(W > 0)) return { schema: 'nctk-s7-route-row@1', hole: start.hole, condition: 'no hallway width', cells: [], emits: { cellsCount: 0 } };
   const memo = new Map(), cells = [];
   let contrastRoutes = 0;
   for (let k = 0; k < bp.length; k++) {
-    const cr = contrastRouteAt(c, start, bp[k], W); contrastRoutes += cr.tried;
+    const cr = contrastRouteAt(c, start, bp[k], W, units); contrastRoutes += cr.tried;
     const crs = routeSensorAt(c, cr.best.verts, W, { memo });
     const contrast = { contrastLum: cr.best.contrastLum, edgePx: cr.best.edgePx, bends: cr.best.verts.length - 2, verts: cr.best.verts, bendAlongPx: cr.best.bendAlongPx,
       sensor: { passFrac: crs.passFrac, stations: crs.stations }, condition: cr.best.contrastLum === null ? `fewer than ${ROUTE.contrastMinPx} visible px in an edge band on every route` : null };
@@ -380,6 +380,10 @@ export const ROUTE_CALCULATIONS = Object.freeze([
 export const ROUTE_ROW_CALCULATION = Object.freeze(['fn.tk.s7.routeRow', { inParts: [SCENE], outParts: [ROUTE_ROW_PART], code: CODE.row,
   note: 'one hole x every basket: the best route by edge contrast, with the sensor reading on it',
   calculate: (io) => { const S = io.in(SCENE); return { [ROUTE_ROW_PART]: routeRowOf(S, io.args.start, S.bp, io.args.widthPx) }; } }]);
+/** The rule set's row in recorded px (tk.s7.routeRowPx@<hole>). */
+export const ROUTE_ROW_PX_CALCULATION = Object.freeze(['fn.tk.s7.routeRowPx', { inParts: [SCENE], outParts: [`${ROUTE_ROW_PART}Px`], code: CODE.row,
+  note: 'one hole x every basket, the bend search in match18.py\'s recorded px (rule set tablePx)',
+  calculate: (io) => { const S = io.in(SCENE); return { [`${ROUTE_ROW_PART}Px`]: routeRowOf(S, io.args.start, S.bp, io.args.widthPx, 'px') }; } }]);
 /** One sensor row (the scoring view; never read by the matching rule): alias tk.s7.routeSensorRow -> tk.s7.routeSensorRow@<hole>. */
 export const ROUTE_SENSOR_ROW_CALCULATION = Object.freeze(['fn.tk.s7.routeSensorRow', { inParts: [SCENE], outParts: [ROUTE_SENSOR_ROW_PART], code: CODE.sensorRow,
   note: 'one hole x every basket: the sensor\'s own best 0- or 1-bend route (match2.py)',
@@ -395,9 +399,23 @@ export const routeSensorTableCalculation = (rowAddresses, sensorAddresses) => ['
  * Produce tk.s7.routeTable on a store that has tk.s7.sceneS4, tk.s7.holes and testimony.source.holePaths: the starts,
  * the width, one row per hole (each its own cached call), then the join. board: the branch's provider board (the runner's).
  */
-export function routeTableOn(store, { board = null, sensor = false } = {}) {
+export function routeTableOn(store, { board = null, sensor = false, units = 'r1' } = {}) {
   for (const [fn, spec] of ROUTE_CALCULATIONS) if (!store.registered(fn)) store.register(fn, spec);
   const start = store.get(ROUTE_START_PART), W = store.get(ROUTE_HALLWAY_PART).widthPx ?? null, rows = [];
+  if (units === 'px') {   // rule set: the table's bend search in match18.py's recorded px (tk.s7.routeTablePx, its own rows)
+    for (const h of start.holes) {
+      const address = `${ROUTE_ROW_PART}Px@${h.hole}`;
+      if (!store.has(address)) {
+        const b = store.branch(board, { name: `s7route/hole ${h.hole} (px)`, alias: { [`${ROUTE_ROW_PART}Px`]: address }, sharedParts: true });
+        b.register(...ROUTE_ROW_PX_CALCULATION);
+        b.call('fn.tk.s7.routeRowPx', { hole: h.hole, start: h, widthPx: W });
+      }
+      rows.push(address);
+    }
+    if (!store.registered('fn.tk.s7.routeTablePx')) store.register('fn.tk.s7.routeTablePx', { ...routeTableCalculation(rows)[1], outParts: [`${ROUTE_TABLE_PART}Px`],
+      calculate: (io) => ({ [`${ROUTE_TABLE_PART}Px`]: routeTableCalculation(rows)[1].calculate(io)[ROUTE_TABLE_PART] }) });
+    return store.get(`${ROUTE_TABLE_PART}Px`);
+  }
   for (const h of start.holes) {
     const address = rowAddress(h.hole);
     if (!store.has(address)) {
