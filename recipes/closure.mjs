@@ -35,7 +35,21 @@ export const STAGE_SOURCES = {
   // raster (ports/capture/capture.mjs; Sam, 2026-10-19: "a stitched course is one raster").
   therec: 'specimens/wide/therec.jpg',
   therecCapture: 'specimens/captures/therec.capture.json', dashsCapture: 'specimens/captures/dashs.capture.json',
-  lenardCapture: 'specimens/captures/lenard.capture.json'
+  lenardCapture: 'specimens/captures/lenard.capture.json',
+  // chainspot-corpus validation/ (no testimony; checked by eye). Per course: <name>Capture (the -1..N tiles, one course),
+  // <name>Full (zoomed so the course fills the screen) and <name>Lazy (the app's default overview, course small in frame).
+  // Seatac has no -lazy screenshot. Images live in specimens/validation/<Course>/ (copied from the corpus, not committed).
+  beaverranchCapture: 'specimens/captures/beaverranch.capture.json',
+  beaverranchFull: 'specimens/validation/BeaverRanch-Gold/BeaverRanch-Gold-full.png',
+  beaverranchLazy: 'specimens/validation/BeaverRanch-Gold/BeaverRanch-Gold-lazy.png',
+  coletocreekCapture: 'specimens/captures/coletocreek.capture.json',
+  coletocreekFull: 'specimens/validation/ColetoCreek/ColetoCreek-full.png',
+  coletocreekLazy: 'specimens/validation/ColetoCreek/ColetoCreek-lazy.png',
+  fountainhillsCapture: 'specimens/captures/fountainhills.capture.json',
+  fountainhillsFull: 'specimens/validation/FountainHills/FountainHills-full.png',
+  fountainhillsLazy: 'specimens/validation/FountainHills/FountainHills-lazy.png',
+  seatacCapture: 'specimens/captures/seatac.capture.json',
+  seatacFull: 'specimens/validation/Seatac/Seatac-full.png'
 };
 
 /** One literal authoring path list closes an execution; no second registration table. */
