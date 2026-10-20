@@ -27,7 +27,26 @@ const labelNumber = (label) => (/^[1-9][0-9]*$/.test(String(label)) ? Number(lab
  * crop = tk.source.cropReceipt ({ originalPx: {width, height}, upperRowsRemoved, lowerRowsRemoved }); source = { fileName, sha256 };
  * producer = { name, recipe, attemptId, stagesRun }.
  */
-export function courseGeometryOf({ solve, holesPart, hallway, badges, crop, source, producer, capture = null }) {
+/** The distinct routes per hole: the primary first (its rule sets listed too), then the others; identical routes merged. */
+function alternativesOf(hole, number, primaryVerts, primary, alternatives, toSource) {
+  const key = (vs) => vs.map(([x, y]) => `${Math.round(x * 2) / 2},${Math.round(y * 2) / 2}`).join(';');
+  const out = new Map(), add = (variant, vs, asg) => {
+    if (!vs?.length) return;
+    const k = key(vs);
+    if (!out.has(k)) out.set(k, { verts: vs.map((p) => { const q = toSource(p); return [q.xPx, q.yPx]; }), ruleSets: [], sensor: asg ? { passFrac: r3(asg.sensor), stations: asg.stations ?? null } : null, bends: vs.length - 2 });
+    out.get(k).ruleSets.push(variant);
+  };
+  add(primary, primaryVerts, null);
+  for (const a of alternatives) {
+    const r = a.solve?.holes?.[hole] ?? a.solve?.holes?.[number] ?? null;
+    add(a.variant, r?.verts, (a.solve?.assignment ?? []).find((x) => String(x.hole) === String(hole)) ?? null);
+  }
+  const all = [...out.values()];
+  // the primary is holes[i]: agree lists every rule set that drew exactly it; alternatives are the routes that differ
+  return { agree: all[0]?.ruleSets ?? [], alternatives: all.slice(1) };
+}
+
+export function courseGeometryOf({ solve, primary = 'routeMatch', alternatives = [], holesPart, hallway, badges, crop, source, producer, capture = null }) {
   const dy = crop.upperRowsRemoved, W = crop.originalPx.width, H = crop.originalPx.height;
   const toSource = ([x, y]) => ({ xPx: r2(x), yPx: r2(y + dy) });
   const inFrame = (p) => p.xPx >= 0 && p.yPx >= 0 && p.xPx < W && p.yPx < H;
@@ -56,7 +75,9 @@ export function courseGeometryOf({ solve, holesPart, hallway, badges, crop, sour
     holes.push({ id, number, ...(tee ? { tee } : {}), ...(basket ? { basket } : {}), shots: [], corridorBends: bends, corridorWidthPx: widthPx });
     evidence.push({ holeId: id, status, confidence: { level, sensor: r3(asg?.sensor), stations: asg?.stations ?? null, marginLum: r3(r?.pair?.marginLum) },
       tee: { state: tee ? 'placed' : 'none', source: h.tee?.source ?? null }, basket: { state: basket ? 'matched' : 'none', ...(asg ? { candidate: (holesPart.baskets[asg.basket]?.name ?? null) } : {}) },
-      trace: { outcome: verts.length ? 'basket' : 'none', lengthPx: verts.length ? r2(lengthOf(verts)) : null, bendCount: bends.length }, reasons });
+      trace: { outcome: verts.length ? 'basket' : 'none', lengthPx: verts.length ? r2(lengthOf(verts)) : null, bendCount: bends.length }, reasons,
+      // every distinct route the profile's other rule sets produced for this hole (rounded to 0.5 px), with who produced it
+      ...(() => { const r = alternativesOf(h.hole, number, verts, primary, alternatives, toSource); return { routeAgreement: r.agree, alternatives: r.alternatives }; })() });
   }
   holes.sort((a, b) => a.number - b.number);
   evidence.sort((a, b) => Number(a.holeId.slice(5)) - Number(b.holeId.slice(5)));
@@ -96,7 +117,9 @@ export const exportCourse = ['fn.tk.export.course', {
   calculate: (io) => {
     const path = io.in('tk.source.path');
     const ruleSet = io.in('tk.export.ruleSet');   // the S7 rule set the pointer vote accepted (ports/export/run.mjs)
-    const doc = courseGeometryOf({ solve: io.call('fn.q.trace.routeMatch', ruleSet?.rules && Object.keys(ruleSet.rules).length ? { rules: ruleSet.rules } : {}).value, holesPart: io.in('tk.s7.holes'), hallway: io.in('tk.s7.hallway'), badges: io.in('px.badges'),
+    const solveOf = (rules) => io.call('fn.q.trace.routeMatch', rules && Object.keys(rules).length ? { rules } : {}).value;
+    const alternatives = (ruleSet?.wide ?? []).map((w) => ({ variant: w.variant, solve: solveOf(w.rules) }));
+    const doc = courseGeometryOf({ solve: solveOf(ruleSet?.rules), primary: ruleSet?.variant ?? 'routeMatch', alternatives, holesPart: io.in('tk.s7.holes'), hallway: io.in('tk.s7.hallway'), badges: io.in('px.badges'),
       crop: io.in('tk.source.cropReceipt'), source: { fileName: String(path).split('/').pop(), sha256: io.in('tk.source.sha256') }, producer: io.in('tk.export.producer'), capture: io.in('tk.source.captureProvenance') });
     const n = (s) => doc.evidence.filter((e) => e.status === s).length;
     return { [EXPORT_COURSE_PART]: { ...doc, emits: { holesCount: doc.holes.length, resolvedHolesCount: n('resolved'), straightHolesCount: n('straight'), partialHolesCount: n('partial'), unresolvedHolesCount: n('unresolved'),

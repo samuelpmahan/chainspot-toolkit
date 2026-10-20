@@ -163,6 +163,17 @@ export const RULE_SETS = Object.freeze({
   routeMatchLeanPxRefine: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px' }
 });
 
+/**
+ * Profiles: named lists of rule sets (Sam, 2026-10-20: "include multiple possibilities, make wide testing easy, then make it
+ * easy to select a narrow version"). wide: every rule set (testing); quick: the rule sets on the cheap route tables (the
+ * export's default alternatives); any comma list of RULE_SETS names also works.
+ */
+export const PROFILES = Object.freeze({
+  wide: Object.keys(RULE_SETS),
+  quick: ['routeMatchFast', 'routeMatchFastPxRefine', 'routeMatchLean', 'routeMatchLeanPxRefine']
+});
+export const profileOf = (name) => (PROFILES[name] ?? String(name ?? '').split(',').map((s) => s.trim()).filter((s) => s in RULE_SETS));
+
 export function routeMatchOf(table, S, starts, { secondBends = true, straight: verdicts = undefined, steps = MATCH_STEPS, rules = MATCH_RULES } = {}) {
   const W = table.widthPx, holes = table.holes;
   if (!(W > 0) || !holes.length) return { holes: {}, assignment: [], widthPx: W ?? null, condition: 'no hallway width or no holes in the route table' };

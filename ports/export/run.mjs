@@ -25,7 +25,7 @@ import { S7_CALCULATIONS, registerTraceQueries } from '../s7trace/traceSpace.mjs
 import { loadS7Lanes, loadMatcher } from '../s7trace/run.mjs';
 import { exportCourse, EXPORT_COURSE_PART, captureProvenanceOf } from './course.calc.mjs';
 import { courseSourceOf, isCaptureManifest } from '../capture/capture.mjs';
-import { RULE_SETS } from '../s7route/match.mjs';
+import { RULE_SETS, profileOf } from '../s7route/match.mjs';
 import { acceptedOnAnnotated } from '../state/matrix.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
@@ -34,7 +34,7 @@ const ROOT = resolve(import.meta.dirname, '..', '..');
  * The S7 rule set the export runs: the one the pointer vote accepted on the annotated dev courses (the variant most of their
  * latest S7 runs accepted, ports/state/matrix.mjs acceptedOnAnnotated), never a hard-coded default; --variant overrides.
  */
-export function exportRuleSet(root, variant = null) {
+export function exportRuleSet(root, variant = null, profile = 'quick') {
   let how = variant ? 'given (--variant)' : null;
   if (!variant) {
     const file = join(root, 'docs/evidence/dev-s1s4/ATTEMPTS');
@@ -42,11 +42,13 @@ export function exportRuleSet(root, variant = null) {
     variant = acceptedOnAnnotated(root, pairs.map(([course, a]) => ({ course, attempt: a, testimony: null })), new Map(pairs), { dir: 's7trace', cmp: 'cmp.fn.Hole.trace.json' });
     how = variant ? 'the S7 pointer vote on the annotated dev courses' : null;
   }
-  if (!variant || !(variant in RULE_SETS)) return { variant: 'routeMatch', rules: {}, how: variant ? `${variant} is not a routeMatch rule set: routeMatch's defaults` : 'no S7 pointer on record: routeMatch\'s defaults' };
-  return { variant, rules: RULE_SETS[variant], how };
+  // the alternatives: every rule set in the profile besides the primary (each route a one-click choice in the app)
+  const wide = profileOf(profile).filter((n) => n !== variant).map((n) => ({ variant: n, rules: RULE_SETS[n] }));
+  if (!variant || !(variant in RULE_SETS)) return { variant: 'routeMatch', rules: {}, how: variant ? `${variant} is not a routeMatch rule set: routeMatch's defaults` : 'no S7 pointer on record: routeMatch\'s defaults', profile, wide };
+  return { variant, rules: RULE_SETS[variant], how, profile, wide };
 }
 
-export function runExportCourse({ specimen, attempt, attemptsRoot = ROOT, root = ROOT, outDir = null, cas = true, recipe = 'chainspot-s0-s7', variant = null }) {
+export function runExportCourse({ specimen, attempt, attemptsRoot = ROOT, root = ROOT, outDir = null, cas = true, recipe = 'chainspot-s0-s7', variant = null, profile = 'quick' }) {
   const loaded = loadAttemptParts({ attempt, specimen, root: attemptsRoot });
   const record = JSON.parse(readFileSync(join(attemptsRoot, 'attempts', 'stages', `${attempt}.json`), 'utf8'));
   // a capture's original upload is the course raster S0 stitched (its tiles and their transforms travel as source.capture)
@@ -62,7 +64,7 @@ export function runExportCourse({ specimen, attempt, attemptsRoot = ROOT, root =
   const lanes = loadS7Lanes({ out: loaded.out, upperRowsRemoved: loaded.upperRowsRemoved, values: loaded.values });
   store.constant('fn.tk.s7trace.laneOutputs', { ...loaded.values, ...lanes, 'testimony.source.holePaths': { path: null, rule: 'the export is blind: no testimony is read', holes: [] } });
   const stagesRun = [0, 1, 2, 3, 4, ...('tk.s7.straight' in lanes ? [6] : []), 7];
-  store.constant('fn.tk.export.source', { 'tk.source.cropReceipt': crop, 'tk.source.sha256': sha256, 'tk.source.path': sourceFile, 'tk.source.captureProvenance': captureProvenanceOf(captureRecord), 'tk.export.producer': { name: 'chainspot-toolkit', recipe, attemptId: attempt, stagesRun }, 'tk.export.ruleSet': exportRuleSet(root, variant) });
+  store.constant('fn.tk.export.source', { 'tk.source.cropReceipt': crop, 'tk.source.sha256': sha256, 'tk.source.path': sourceFile, 'tk.source.captureProvenance': captureProvenanceOf(captureRecord), 'tk.export.producer': { name: 'chainspot-toolkit', recipe, attemptId: attempt, stagesRun }, 'tk.export.ruleSet': exportRuleSet(root, variant, profile) });
   for (const [fn, spec] of S4_CALCULATIONS) store.register(fn, spec);
   for (const [fn, spec] of S7_CALCULATIONS) store.register(fn, spec);
   registerTraceQueries(store, { matcher: loadMatcher(root), board: loaded.board });
@@ -82,7 +84,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const arg = (k) => { const i = process.argv.indexOf(k); return i >= 0 ? process.argv[i + 1] : null; };
   const specimen = arg('--specimen'), attempt = arg('--attempt');
   if (!specimen || !attempt) { console.error('usage: node ports/export/run.mjs --specimen golden --attempt ID [--attempts-root DIR] [--out DIR] [--no-cas]'); process.exit(2); }
-  const r = runExportCourse({ specimen, attempt, attemptsRoot: arg('--attempts-root') ?? ROOT, outDir: arg('--out'), cas: casFlag(), variant: arg('--variant') });
+  const r = runExportCourse({ specimen, attempt, attemptsRoot: arg('--attempts-root') ?? ROOT, outDir: arg('--out'), cas: casFlag(), variant: arg('--variant'), profile: arg('--profile') ?? 'quick' });
   console.log(JSON.stringify({ out: r.out, file: join(r.out, 'course-geometry.json'), emits: r.emits, conditions: r.doc.conditions, cache: r.cache, hotSpots: hotSpotLines(r.profile.hotSpots),
     profile: r.profile.slice(0, 6).map((p) => `${p.calculation}: ${p.calls}x self ${p.selfMs} ms ${JSON.stringify(p.emits)}`) }, null, 1));
 }
