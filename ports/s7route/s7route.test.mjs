@@ -5,7 +5,7 @@ import { renderValue } from '../../fg/render.mjs';
 import { SCENE_SCHEMA } from '../../fg/s7trace/sceneRender.mjs';
 import { FRONT } from '../s7trace/hallway.mjs';
 import { polyScore } from '../s7trace/hallway.mjs';
-import { routeSensorAt, routeRowOf, routeTableOn, ribbonContrastAt, onAxisOf, ROUTE_QUERIES, ROUTE_TABLE_PART, rowAddress } from './routeSpace.mjs';
+import { routeSensorAt, routeRowOf, routeSensorRowOf, routeTableOn, ribbonContrastAt, onAxisOf, ROUTE_QUERIES, ROUTE_TABLE_PART, ROUTE_SENSOR_TABLE_PART, sensorRowAddress, rowAddress } from './routeSpace.mjs';
 
 /**
  * Fixture: a flat 320 x 220 px course (lum 100) with one ribbon of width 30 px (lum 150) tee (30, 100) -> bend (170, 100)
@@ -54,16 +54,17 @@ test('the edge contrast visits only the px near the legs, in scan order: bit-ide
 
 test('the memo is exact: a row read with and without it gives the same numbers', () => {
   const S = fixtureScene(), start = { hole: '1', S: [40, 100], u: [1, 0], badgeAlongPx: 80 };
-  const row = routeRowOf(S, start, S.bp, 30);
-  for (const { sensorBest: c, contrast } of row.cells) {
+  const row = routeRowOf(S, start, S.bp, 30), sensorRow = routeSensorRowOf(S, start, S.bp, 30);
+  for (const [k, { contrast }] of row.cells.entries()) {
+    const c = sensorRow.cells[k].sensorBest;
     const z = routeSensorAt(S, c.zero.verts, 30); assert.equal(z.passFrac, c.zero.passFrac); assert.equal(z.stations, c.zero.stations);
     if (c.one) { const o = routeSensorAt(S, c.one.verts, 30); assert.equal(o.passFrac, c.one.passFrac); assert.equal(o.stations, c.one.stations); }
     const s = routeSensorAt(S, contrast.verts, 30); assert.equal(s.passFrac, contrast.sensor.passFrac); assert.equal(s.stations, contrast.sensor.stations);
   }
-  const c0 = row.cells[0].sensorBest;
+  const c0 = sensorRow.cells[0].sensorBest;
   assert.equal(c0.best, 'one'); assert.equal(c0.bends, 1);
   assert.ok(Math.abs(c0.one.verts[1][0] - 170) <= 8 && c0.one.passFrac > 0.95, JSON.stringify(c0.one));
-  assert.ok(row.cells[1].sensorBest.passFrac < c0.passFrac);
+  assert.ok(sensorRow.cells[1].sensorBest.passFrac < c0.passFrac);
   // the edge contrast's best route bends on the ribbon too, and reads higher than to the off-ribbon basket
   const k0 = row.cells[0].contrast;
   assert.equal(k0.bends, 1); assert.ok(Math.abs(k0.verts[1][0] - 170) <= 6, JSON.stringify(k0.verts));
@@ -72,7 +73,7 @@ test('the memo is exact: a row read with and without it gives the same numbers',
 
 test('the table: one cached row per hole; a change to one hole\'s tee recomputes that row alone', () => {
   const cache = new Map();
-  const a = storeOf(cache), t = routeTableOn(a);
+  const a = storeOf(cache), t = routeTableOn(a, { sensor: true });
   assert.deepEqual(t.holes, ['1', '2']); assert.equal(t.sensorMatrix.length, 2); assert.equal(t.sensorMatrix[0].length, 2);
   assert.ok(Math.abs(t.widthPx - 30) <= 1.5, `W ${t.widthPx}`);
   assert.equal(t.rowBest[0].contrastBasket, 0); assert.equal(t.rowBest[0].sensorBasket, 0); assert.equal(t.sam.byHole['1'].basket, 0);
@@ -103,7 +104,11 @@ test('tk.s7.routeTable renders: a heatmap raster with a legend', () => {
   const r = renderValue(ROUTE_TABLE_PART, s.get(ROUTE_TABLE_PART));
   assert.equal(r.kind, 'routeTable');
   const pngs = r.parts.filter((p) => p.kind === 'raster');
-  assert.equal(pngs.length, 3);
+  assert.equal(pngs.length, 2);   // contrast and the sensor on the contrast route; the sensor's own routes are tk.s7.routeSensorTable's
+  routeTableOn(s, { sensor: true });
+  const rs = renderValue(ROUTE_SENSOR_TABLE_PART, s.get(ROUTE_SENSOR_TABLE_PART));
+  assert.equal(rs.parts.filter((p) => p.kind === 'raster').length, 3);
+  assert.notEqual(renderValue(sensorRowAddress('1'), s.get(sensorRowAddress('1'))).kind, 'unrenderable');
   for (const png of pngs) assert.ok(png.data.png.length > 100 && png.data.width > 0);
   assert.ok(r.parts.some((p) => p.address.endsWith('#legend')));
   // and every row Part renders through the default union

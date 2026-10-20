@@ -22,7 +22,7 @@ import { S4_CALCULATIONS } from '../s4recover/teeRecover.mjs';
 import { S7_CALCULATIONS } from '../s7trace/traceSpace.mjs';
 import { loadS7Lanes } from '../s7trace/run.mjs';
 import { loadHolePaths } from '../s7trace/holePaths.mjs';
-import { routeTableOn, ROUTE_QUERIES, ROUTE_TABLE_PART, ROUTE_HALLWAY_PART } from './routeSpace.mjs';
+import { routeTableOn, ROUTE_QUERIES, ROUTE_TABLE_PART, ROUTE_SENSOR_TABLE_PART, ROUTE_HALLWAY_PART } from './routeSpace.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 
@@ -35,8 +35,8 @@ export function runRouteTable({ specimen, attempt, attemptsRoot = ROOT, root = R
   for (const [fn, spec] of S4_CALCULATIONS) store.register(fn, spec);
   for (const [fn, spec] of S7_CALCULATIONS) store.register(fn, spec);
   registerQueries(store, ROUTE_QUERIES, { note: 'S7 hallway sensor (ports/s7route)' });
-  const table = routeTableOn(store, { board: loaded.board });
-  const render = store.call(RENDER_PART, { a: ROUTE_TABLE_PART }).value;
+  const table = routeTableOn(store, { board: loaded.board, sensor: true });   // the scoring view: the sensor's own routes too
+  const render = store.call(RENDER_PART, { a: ROUTE_SENSOR_TABLE_PART }).value;
   mkdirSync(out, { recursive: true });
   const { emits, ...value } = table;
   writeFileSync(join(out, `${ROUTE_TABLE_PART}.json`), canonicalJson({ specimen, attempt, ...value }) + '\n');

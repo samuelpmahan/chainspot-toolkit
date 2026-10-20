@@ -64,7 +64,7 @@ export function prove({ specimen, attempt, attemptsRoot = ROOT, fixtures = FIXTU
   const sensorOk = sensor.every((s) => s.diff <= 1e-9 && s.pyStations === s.jsStations);
   const sensorReport = { routes: sensor.length, maxDiff: Math.max(0, ...sensor.map((s) => s.diff)), stationsEqual: sensor.every((s) => s.pyStations === s.jsStations), rows: sensor };
   if (!matrix) return { specimen, attempt, basketPointsMaxDiffPx: bpDiff, sensor: sensorReport, ok: bpDiff <= 1e-9 && sensorOk };
-  const table = routeTableOn(store, { board: inp.board });
+  const table = routeTableOn(store, { board: inp.board, sensor: true });
   const start = store.get(ROUTE_START_PART), W = store.get(ROUTE_HALLWAY_PART).widthPx;
   const startDiff = Math.max(0, ...start.holes.map((h) => { const p = fx.starts[h.hole]; return Math.max(maxAbs(h.S, p.S), maxAbs(h.u, p.u), Math.abs(h.badgeAlongPx - p.badgeAlongPx)); }));
   const cmp = (M, P, key, verts) => {   // a JS matrix against a fixture matrix (null = the prototype's -99)

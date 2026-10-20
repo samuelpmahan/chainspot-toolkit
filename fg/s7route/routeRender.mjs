@@ -59,7 +59,7 @@ export function renderRouteTable(address, v, { canvas }) {
     ['contrastRouteSensor', v.contrastRouteSensor ?? [], 0, 1, pct, `S7 ROUTE TABLE: HALLWAY SENSOR ON THE CONTRAST ROUTE (%) (W ${W} PX)`, 'CELL = VISIBLE STATIONS WHOSE BOTH EDGES STEP > 8 LUM, ON THE ROUTE OF THE CONTRAST PANEL'],
     ['sensor', v.sensorMatrix ?? [], 0, 1, pct, `S7 ROUTE TABLE: HALLWAY SENSOR, ITS OWN BEST 0/1-BEND ROUTE (%) (W ${W} PX)`, 'CELL = BEST SENSOR READING (MATCH2: BEND STEP 8 PX, >= 20 VISIBLE STATIONS, ELSE 0)']
   ];
-  const parts = panels.map(([key, M, lo, top, fmt, title, sub]) => ({ address: `${address}#${key}`, kind: 'raster', data: panel(v, { canvas, M, lo, hi: top, fmt, title, sub, maxOf: (i) => argmaxRow(M[i]), mark: key === 'contrast' ? v.onAxisPrior : null }) }));
+  const parts = panels.filter(([key, M]) => key !== 'sensor' || v.sensorMatrix).map(([key, M, lo, top, fmt, title, sub]) => ({ address: `${address}#${key}`, kind: 'raster', data: panel(v, { canvas, M, lo, hi: top, fmt, title, sub, maxOf: (i) => argmaxRow(M[i]), mark: key === 'contrast' ? v.onAxisPrior : null }) }));
   const judged = holes.filter((hole) => v.sam?.byHole?.[hole]?.basket != null);
   const agree = (M) => judged.filter((hole) => argmaxRow(M[holes.indexOf(hole)]) === v.sam.byHole[hole].basket).length;
   parts.push(
@@ -71,7 +71,7 @@ export function renderRouteTable(address, v, { canvas }) {
     { address, kind: 'ledger', data: { rows: [
       { field: 'hallway width W (px, LOCAL)', value: v.widthPx }, { field: 'holes (tee caps)', value: holes.length }, { field: 'baskets (S2 + S4 recovered)', value: (v.baskets ?? []).length },
       { field: "contrast row maximum at Sam's basket (holes with testimony)", value: `${agree(C)} / ${judged.length}` },
-      { field: "sensor row maximum at Sam's basket (holes with testimony)", value: `${agree(v.sensorMatrix ?? [])} / ${judged.length}` },
+      { field: "sensor row maximum at Sam's basket (holes with testimony)", value: v.sensorMatrix ? `${agree(v.sensorMatrix)} / ${judged.length}` : 'not produced (tk.s7.routeSensorTable)' },
       { field: 'conditions', value: (v.conditions ?? []).map((c) => `${c.hole ?? 'course'}: ${c.condition}`).join('; ') || 'none' }] } });
   return { kind: 'routeTable', parts };
 }

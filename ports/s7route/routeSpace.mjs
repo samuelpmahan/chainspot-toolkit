@@ -51,8 +51,11 @@ export const ROUTE_START_PART = 'tk.s7.routeStart';
 export const ROUTE_HALLWAY_PART = 'tk.s7.routeHallway';
 export const ROUTE_ROW_PART = 'tk.s7.routeRow';
 export const ROUTE_TABLE_PART = 'tk.s7.routeTable';
+export const ROUTE_SENSOR_ROW_PART = 'tk.s7.routeSensorRow';
+export const ROUTE_SENSOR_TABLE_PART = 'tk.s7.routeSensorTable';
 export { ROUTE_TABLE_SCHEMA };
 export const rowAddress = (hole) => `${ROUTE_ROW_PART}@${hole}`;
+export const sensorRowAddress = (hole) => `${ROUTE_SENSOR_ROW_PART}@${hole}`;
 
 /** The recorded constants of match2.py (Sam, 2026-10-19). */
 export const ROUTE = Object.freeze({
@@ -260,16 +263,32 @@ export function oneBendAt(c, start, E, W, { memo = null } = {}) {
   return { best, tried };
 }
 
-/** tk.s7.routeRow@<hole>: per BasketPoint, the best route by edge contrast (with its sensor reading) and the sensor's best route. */
+/** tk.s7.routeRow@<hole>: per BasketPoint, the best route by edge contrast, with the sensor's reading on that route. */
 export function routeRowOf(c, start, bp, W) {
   if (!(W > 0)) return { schema: 'nctk-s7-route-row@1', hole: start.hole, condition: 'no hallway width', cells: [], emits: { cellsCount: 0 } };
   const memo = new Map(), cells = [];
-  let contrastRoutes = 0, sensorRoutes = 0;
+  let contrastRoutes = 0;
   for (let k = 0; k < bp.length; k++) {
     const cr = contrastRouteAt(c, start, bp[k], W); contrastRoutes += cr.tried;
     const crs = routeSensorAt(c, cr.best.verts, W, { memo });
     const contrast = { contrastLum: cr.best.contrastLum, edgePx: cr.best.edgePx, bends: cr.best.verts.length - 2, verts: cr.best.verts, bendAlongPx: cr.best.bendAlongPx,
       sensor: { passFrac: crs.passFrac, stations: crs.stations }, condition: cr.best.contrastLum === null ? `fewer than ${ROUTE.contrastMinPx} visible px in an edge band on every route` : null };
+    cells.push({ basket: k, contrast });
+  }
+  return { schema: 'nctk-s7-route-row@1', hole: start.hole, start, widthPx: W, cells, condition: null,
+    emits: { cellsCount: cells.length, contrastRoutesCount: contrastRoutes, contrastReadCellsCount: cells.filter((x) => x.contrast.contrastLum !== null).length } };
+}
+
+/**
+ * tk.s7.routeSensorRow@<hole>: per BasketPoint, the sensor's own best 0- or 1-bend route (match2.py). The matching rule never
+ * reads it (it reads the contrast route and the sensor ON that route, both in tk.s7.routeRow); it is the scoring view, the
+ * route-table render's sensor panel and the match2.py parity proof, so it is produced only when one of them asks.
+ */
+export function routeSensorRowOf(c, start, bp, W) {
+  if (!(W > 0)) return { schema: 'nctk-s7-route-sensor-row@1', hole: start.hole, condition: 'no hallway width', cells: [], emits: { cellsCount: 0 } };
+  const memo = new Map(), cells = [];
+  let sensorRoutes = 0;
+  for (let k = 0; k < bp.length; k++) {
     const z = routeSensorAt(c, [start.S, bp[k]], W, { memo });
     const zero = { passFrac: z.passFrac, stations: z.stations, verts: [start.S, bp[k]], counts: z.stations >= ROUTE.minStations };
     const o = oneBendAt(c, start, bp[k], W, { memo }); sensorRoutes += o.tried + 2;
@@ -278,10 +297,10 @@ export function routeRowOf(c, start, bp, W) {
     if (one && (best === null || one.passFrac > zero.passFrac)) best = 'one';
     const sensorBest = { passFrac: best === 'zero' ? zero.passFrac : best === 'one' ? one.passFrac : 0, best, bends: best === 'zero' ? 0 : best === 'one' ? 1 : null, zero, one,
       condition: best ? null : `no route with >= ${ROUTE.minStations} visible stations` };
-    cells.push({ basket: k, contrast, sensorBest });
+    cells.push({ basket: k, sensorBest });
   }
-  return { schema: 'nctk-s7-route-row@1', hole: start.hole, start, widthPx: W, cells, condition: null,
-    emits: { cellsCount: cells.length, contrastRoutesCount: contrastRoutes, sensorRoutesCount: sensorRoutes, contrastReadCellsCount: cells.filter((x) => x.contrast.contrastLum !== null).length } };
+  return { schema: 'nctk-s7-route-sensor-row@1', hole: start.hole, start, widthPx: W, cells, condition: null,
+    emits: { cellsCount: cells.length, sensorRoutesCount: sensorRoutes } };
 }
 
 // ------------------------------------------------------------------ the table
@@ -312,13 +331,14 @@ export function onAxisOf(start, bp, W) {
 const argmax = (row) => { let j = -1; row.forEach((v, i) => { if (v !== null && (j < 0 || v > row[j])) j = i; }); return j < 0 ? null : j; };
 
 /** tk.s7.routeTable: the holes x baskets matrices (edge contrast, sensor) with every cell's routes. No threshold, no verdict. */
-export function routeTableOf(start, hallway, rows, holesPart, sam, bp) {
+export function routeTableOf(start, hallway, rows, holesPart, sam, bp, sensorRows = null) {
+  if (sensorRows) rows = rows.map((r, i) => ({ ...r, cells: r.cells.map((c, k) => ({ ...c, sensorBest: sensorRows[i].cells[k]?.sensorBest ?? null })) }));
   const axis = start.holes.map((h) => (hallway.widthPx > 0 ? onAxisOf(h, bp, hallway.widthPx) : bp.map(() => ({ alongPx: null, lateralPx: null, onAxisPrior: 0 }))));
   const baskets = holesPart.baskets.map((k) => ({ index: k.index, name: k.name, point: k.point, source: k.source }));
   const holes = start.holes.map((h) => h.hole);
   const contrastMatrix = rows.map((r) => r.cells.map((x) => x.contrast.contrastLum));
   const contrastRouteSensor = rows.map((r) => r.cells.map((x) => x.contrast.sensor.passFrac));
-  const sensorMatrix = rows.map((r) => r.cells.map((x) => x.sensorBest.passFrac));
+  const sensorMatrix = sensorRows ? rows.map((r) => r.cells.map((x) => x.sensorBest?.passFrac ?? 0)) : null;
   return {
     schema: ROUTE_TABLE_SCHEMA,
     rule: 'every hole (tee cap) x every basket (S2 + S4 recovered BasketPoint). contrastMatrix: the best 0- or 1-bend route by render-and-score edge contrast (match18.py best_route; bend on the tee axis past the badge, step 6 px); contrastRouteSensor: the hallway sensor on that route; sensorMatrix: the best reading of the sensor over the 0-bend and the best 1-bend route (match2.py; step 8 px; >= 20 visible stations, else 0)',
@@ -327,7 +347,8 @@ export function routeTableOf(start, hallway, rows, holesPart, sam, bp) {
     onAxisPrior: axis.map((r) => r.map((x) => x.onAxisPrior)),
     onAxisRule: `packet E03 (after-s4/verify_axis_prior.py): ${ROUTE.onAxisPriorLum} for the nearest BasketPoint past the badge along the tee ray with |lateral| <= ${ROUTE.onAxisLateralW} W, else 0; a column for the matching rule, not added to the contrast here`,
     rows: rows.map((r, i) => ({ hole: r.hole, condition: r.condition, cells: r.cells.map((c, k) => ({ ...c, axis: axis[i][k] })) })),
-    rowBest: holes.map((h, i) => ({ hole: h, contrastBasket: argmax(contrastMatrix[i]), sensorBasket: argmax(sensorMatrix[i]) })),
+    rowBest: holes.map((h, i) => ({ hole: h, contrastBasket: argmax(contrastMatrix[i]), sensorBasket: sensorMatrix ? argmax(sensorMatrix[i]) : null })),
+    sensorView: sensorRows ? 'produced (tk.s7.routeSensorRow per hole)' : 'not produced: the matching rule reads only the contrast route and the sensor on it (tk.s7.routeSensorTable carries it)',
     sam: { source: sam.source, rule: sam.rule, byHole: sam.byHole },
     conditions: [...start.conditions, ...(hallway.condition ? [{ hole: null, condition: hallway.condition }] : [])],
     emits: { holesCount: holes.length, basketsCount: baskets.length, cellsCount: holes.length * baskets.length, contrastReadCellsCount: contrastMatrix.flat().filter((v) => v !== null).length }
@@ -340,7 +361,8 @@ const digestOf = (...fns) => sha256Hex(fns.map(String).join('\n'));
 const CODE = Object.freeze({
   start: digestOf(routeStartOf),
   hallway: digestOf(routeHallwayOf, teeBadgeLearn),
-  row: digestOf(routeRowOf, bendsOnAxis, contrastRouteAt, ribbonContrastAt, oneBendAt, routeSensorAt, verdicts, stationContrastAt),
+  row: digestOf(routeRowOf, bendsOnAxis, contrastRouteAt, ribbonContrastAt, routeSensorAt, verdicts, stationContrastAt),
+  sensorRow: digestOf(routeSensorRowOf, bendsOnAxis, oneBendAt, routeSensorAt, verdicts, stationContrastAt),
   table: digestOf(routeTableOf, samBasketsOf, argmax, onAxisOf)
 });
 const SCENE = 'tk.s7.sceneS4', HOLES = 'tk.s7.holes';
@@ -354,17 +376,24 @@ export const ROUTE_CALCULATIONS = Object.freeze([
 ]);
 /** One row: registered on a per-hole branch (alias tk.s7.routeRow -> tk.s7.routeRow@<hole>), called with { hole, start, widthPx }. */
 export const ROUTE_ROW_CALCULATION = Object.freeze(['fn.tk.s7.routeRow', { inParts: [SCENE], outParts: [ROUTE_ROW_PART], code: CODE.row,
-  note: 'one hole x every basket: the best route by edge contrast (with its sensor reading) and the sensor\'s best route',
+  note: 'one hole x every basket: the best route by edge contrast, with the sensor reading on it',
   calculate: (io) => { const S = io.in(SCENE); return { [ROUTE_ROW_PART]: routeRowOf(S, io.args.start, S.bp, io.args.widthPx) }; } }]);
+/** One sensor row (the scoring view; never read by the matching rule): alias tk.s7.routeSensorRow -> tk.s7.routeSensorRow@<hole>. */
+export const ROUTE_SENSOR_ROW_CALCULATION = Object.freeze(['fn.tk.s7.routeSensorRow', { inParts: [SCENE], outParts: [ROUTE_SENSOR_ROW_PART], code: CODE.sensorRow,
+  note: 'one hole x every basket: the sensor\'s own best 0- or 1-bend route (match2.py)',
+  calculate: (io) => { const S = io.in(SCENE); return { [ROUTE_SENSOR_ROW_PART]: routeSensorRowOf(S, io.args.start, S.bp, io.args.widthPx) }; } }]);
 export const routeTableCalculation = (rowAddresses) => ['fn.tk.s7.routeTable', { inParts: [ROUTE_START_PART, ROUTE_HALLWAY_PART, HOLES, SCENE, 'testimony.source.holePaths', ...rowAddresses], outParts: [ROUTE_TABLE_PART], code: CODE.table,
   note: 'holes x baskets: edge contrast and hallway sensor matrices, every cell\'s routes',
   calculate: (io) => ({ [ROUTE_TABLE_PART]: routeTableOf(io.in(ROUTE_START_PART), io.in(ROUTE_HALLWAY_PART), rowAddresses.map((a) => io.in(a)), io.in(HOLES), samBasketsOf(io.in('testimony.source.holePaths'), io.in(SCENE).bp), io.in(SCENE).bp) }) }];
+export const routeSensorTableCalculation = (rowAddresses, sensorAddresses) => ['fn.tk.s7.routeSensorTable', { inParts: [ROUTE_START_PART, ROUTE_HALLWAY_PART, HOLES, SCENE, 'testimony.source.holePaths', ...rowAddresses, ...sensorAddresses], outParts: [ROUTE_SENSOR_TABLE_PART], code: CODE.table,
+  note: 'the route table with the sensor\'s own best routes joined in (scoring view, render sensor panel, match2.py parity)',
+  calculate: (io) => ({ [ROUTE_SENSOR_TABLE_PART]: routeTableOf(io.in(ROUTE_START_PART), io.in(ROUTE_HALLWAY_PART), rowAddresses.map((a) => io.in(a)), io.in(HOLES), samBasketsOf(io.in('testimony.source.holePaths'), io.in(SCENE).bp), io.in(SCENE).bp, sensorAddresses.map((a) => io.in(a))) }) }];
 
 /**
  * Produce tk.s7.routeTable on a store that has tk.s7.sceneS4, tk.s7.holes and testimony.source.holePaths: the starts,
  * the width, one row per hole (each its own cached call), then the join. board: the branch's provider board (the runner's).
  */
-export function routeTableOn(store, { board = null } = {}) {
+export function routeTableOn(store, { board = null, sensor = false } = {}) {
   for (const [fn, spec] of ROUTE_CALCULATIONS) if (!store.registered(fn)) store.register(fn, spec);
   const start = store.get(ROUTE_START_PART), W = store.get(ROUTE_HALLWAY_PART).widthPx ?? null, rows = [];
   for (const h of start.holes) {
@@ -377,7 +406,19 @@ export function routeTableOn(store, { board = null } = {}) {
     rows.push(address);
   }
   if (!store.registered('fn.tk.s7.routeTable')) store.register(...routeTableCalculation(rows));
-  return store.get(ROUTE_TABLE_PART);
+  if (!sensor) return store.get(ROUTE_TABLE_PART);
+  const sensorRows = [];
+  for (const h of start.holes) {
+    const address = sensorRowAddress(h.hole);
+    if (!store.has(address)) {
+      const b = store.branch(board, { name: `s7route/sensor hole ${h.hole}`, alias: { [ROUTE_SENSOR_ROW_PART]: address }, sharedParts: true });
+      b.register(...ROUTE_SENSOR_ROW_CALCULATION);
+      b.call('fn.tk.s7.routeSensorRow', { hole: h.hole, start: h, widthPx: W });
+    }
+    sensorRows.push(address);
+  }
+  if (!store.registered('fn.tk.s7.routeSensorTable')) store.register(...routeSensorTableCalculation(rows, sensorRows));
+  return store.get(ROUTE_SENSOR_TABLE_PART);
 }
 
 // ------------------------------------------------------------------ the queries
