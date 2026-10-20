@@ -199,6 +199,14 @@ function fitComponent(pixels, component, target, viewportTopPx, halfWidth, halfH
         minCenterY = Math.max(minCenterY, y - outerRadius);
         maxCenterY = Math.min(maxCenterY, y + outerRadius);
     }
+    // The same coordinates as flat typed arrays for the hot loops below.
+    const pixelCount = pixels.length;
+    const pixelX = new Float64Array(pixelCount);
+    const pixelY = new Float64Array(pixelCount);
+    for (let k = 0; k < pixelCount; k++) {
+        pixelX[k] = pixels[k][0];
+        pixelY[k] = pixels[k][1];
+    }
     const badgeX = target.cxPx;
     const badgeY = target.cyPx - viewportTopPx;
     const fallback = {
@@ -232,9 +240,9 @@ function fitComponent(pixels, component, target, viewportTopPx, halfWidth, halfH
         const c = rayC * axisOffset.c - rayS * axisOffset.s;
         const s = rayS * axisOffset.c + rayC * axisOffset.s;
         let unexplained = 0;
-        for (const point of pixels) {
-            const dx = point[0] - centerX;
-            const dy = point[1] - centerY;
+        for (let k = 0; k < pixelCount; k++) {
+            const dx = pixelX[k] - centerX;
+            const dy = pixelY[k] - centerY;
             const u = dx * c + dy * s;
             const v = -dx * s + dy * c;
             const absU = Math.abs(u);
@@ -250,16 +258,23 @@ function fitComponent(pixels, component, target, viewportTopPx, halfWidth, halfH
         if (unexplained > bestUnexplained)
             return;
         let residual = 0;
-        for (const point of pixels) {
-            const dx = point[0] - centerX;
-            const dy = point[1] - centerY;
+        for (let k = 0; k < pixelCount; k++) {
+            const dx = pixelX[k] - centerX;
+            const dy = pixelY[k] - centerY;
             const u = dx * c + dy * s;
             const v = -dx * s + dy * c;
             const absU = Math.abs(u);
             const absV = Math.abs(v);
-            const outer = Math.hypot(Math.max(0, absU - halfWidth), Math.max(0, absV - halfHeight));
+            const outU = Math.max(0, absU - halfWidth);
+            const outV = Math.max(0, absV - halfHeight);
+            // hypot(a, 0) is exactly |a|; call it only when both legs are nonzero.
+            const outer = outU === 0 ? outV : outV === 0 ? outU : Math.hypot(outU, outV);
             const edgeDistance = Math.min(Math.abs(absU - halfWidth), Math.abs(absV - halfHeight));
             residual += outer * 4 + edgeDistance;
+            // Terms are nonnegative, so the running sum never decreases: once it
+            // exceeds the best at equal unexplained count, this pose cannot win.
+            if (unexplained === bestUnexplained && residual > bestResidual)
+                return;
         }
         const absOffset = Math.abs(axisOffset.rad);
         if (unexplained < bestUnexplained ||
@@ -295,9 +310,9 @@ function fitComponent(pixels, component, target, viewportTopPx, halfWidth, halfH
     for (let y = minCenterY; y <= maxCenterY + 1e-9; y += 0.5) {
         for (let x = minCenterX; x <= maxCenterX + 1e-9; x += 0.5) {
             let possible = true;
-            for (const point of pixels) {
-                const dx = point[0] - x;
-                const dy = point[1] - y;
+            for (let k = 0; k < pixelCount; k++) {
+                const dx = pixelX[k] - x;
+                const dy = pixelY[k] - y;
                 if (dx * dx + dy * dy > outerRadiusSq + broadPhaseEpsilon) {
                     possible = false;
                     break;
@@ -310,9 +325,9 @@ function fitComponent(pixels, component, target, viewportTopPx, halfWidth, halfH
             const rayLength = Math.hypot(rayX, rayY);
             const rayC = rayLength === 0 ? 1 : rayX / rayLength;
             const rayS = rayLength === 0 ? 0 : rayY / rayLength;
-            for (const point of pixels) {
-                const dx = point[0] - x;
-                const dy = point[1] - y;
+            for (let k = 0; k < pixelCount; k++) {
+                const dx = pixelX[k] - x;
+                const dy = pixelY[k] - y;
                 const u = dx * rayC + dy * rayS;
                 const v = -dx * rayS + dy * rayC;
                 if (Math.abs(u) > rayFrameHalfWidth + broadPhaseEpsilon ||

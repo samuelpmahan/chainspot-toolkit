@@ -2,7 +2,10 @@
   "schema": "chainspot-bundled-provider-v1",
   "sourceRepository": "samuelpmahan/ChainSpot",
   "sourceCommit": "5433854c72b1dc5aa420934d91e16458c2abe09f",
-  "sourceAlgSha256": "7212b6dda39becc4b12e3604fc2352d69ac302d8a12021649500f4842e80bdc2",
-  "compiledAlgSha256": "d949cae2184406c9cc3ce67f2222c2a1284395c8a72e49d9296a95b3cba071f4",
-  "scope": "Hash of sorted relative file paths and SHA-256 content hashes: .ts/.json/.yaml under packages/alg/src and .js/.json under packages/alg/dist. Git metadata is not included in the core archive."
+  "sourceAlgSha256": "3c1fb28e3ca2428b25900a6fa1bc4b2d9a4cf4d0172ed77382b3cb0a07c7b5dc",
+  "compiledAlgSha256": "e6fae4924b366283a7c10148ebc5eba84f720be9d6cd37340532e1d1061b720b",
+  "scope": "Hash of sorted relative file paths and SHA-256 content hashes: .ts/.json/.yaml under packages/alg/src and .js/.json under packages/alg/dist. Git metadata is not included in the core archive.",
+  "localPatches": [
+    "lane/fastA: output-identical speedups of packages/alg (smartBasket occlusion mask, tee-ring separable dilation, components inlined neighbours, native sha256 under Node, tee-recovery fit typed arrays); verified identical S0-S4 evidence on golden and heritage"
+  ]
 }

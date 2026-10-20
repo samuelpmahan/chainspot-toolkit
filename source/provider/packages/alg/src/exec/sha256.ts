@@ -90,7 +90,26 @@ function toHex(bytes: Uint8Array): string {
 	return Array.from(bytes).map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
+// Same digest from the host's native SHA-256 when the host is Node. Looked up
+// at runtime (no static import), so the browser-safe core stays browser-safe
+// and falls back to the pure-JS digest above.
+type NodeCrypto = {
+	createHash(algorithm: 'sha256'): {
+		update(data: Uint8Array): { digest(encoding: 'hex'): string };
+	};
+};
+const nativeCrypto: NodeCrypto | undefined = (() => {
+	try {
+		const host = globalThis as { process?: { getBuiltinModule?: (id: string) => unknown } };
+		const crypto = host.process?.getBuiltinModule?.('node:crypto') as NodeCrypto | undefined;
+		return typeof crypto?.createHash === 'function' ? crypto : undefined;
+	} catch {
+		return undefined;
+	}
+})();
+
 export function sha256HexSync(bytes: Uint8Array): string {
+	if (nativeCrypto) return nativeCrypto.createHash('sha256').update(bytes).digest('hex');
 	return toHex(sha256Bytes(bytes));
 }
 

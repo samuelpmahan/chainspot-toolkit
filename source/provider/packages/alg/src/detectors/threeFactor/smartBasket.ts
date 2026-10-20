@@ -356,87 +356,154 @@ function translatedObjectBounds(
 	return [x + bounds[0], y + bounds[1], bounds[2], bounds[3]];
 }
 
-function isOccluded(
+/**
+ * Occlusion of every pixel a seed's search can touch, precomputed once per
+ * seed over the search region. Same predicate as the former per-pixel test:
+ * - basket seed: inside its occlusion box (default: bbox grown by margin);
+ * - badge seed: any pixel of its dark component within Chebyshev distance 2
+ *   (clipped to the image); no dark component means nothing is occluded.
+ */
+interface SeedOcclusion {
+	x0: number;
+	y0: number;
+	w: number;
+	mask: Uint8Array;
+	/** Template offsets re-based to the image and to the occlusion region. */
+	whiteImage: Int32Array;
+	whiteRegion: Int32Array;
+	blackImage: Int32Array;
+	blackRegion: Int32Array;
+}
+
+function seedOcclusion(
 	seed: Seed,
-	gx: number,
-	gy: number,
 	darkLabels: Int32Array,
 	width: number,
 	height: number,
-	margin: number
-): boolean {
+	family: PreparedFamily,
+	x0: number,
+	y0: number,
+	x1: number,
+	y1: number
+): SeedOcclusion {
+	const { width: tw, margin } = family;
+	const w = x1 - x0;
+	const h = y1 - y0;
+	const mask = new Uint8Array(w * h);
 	if (seed.kind === 'basket') {
-		const [x, y, w, h] = seed.occlusionBox ?? [
+		const [bx, by, bw, bh] = seed.occlusionBox ?? [
 			seed.x - margin,
 			seed.y - margin,
 			seed.w + margin * 2,
 			seed.h + margin * 2
 		];
-		return (
-			gx >= x &&
-			gx < x + w &&
-			gy >= y &&
-			gy < y + h
-		);
-	}
-	if (!seed.darkLabel) return false;
-	for (let dy = -2; dy <= 2; dy++) {
-		for (let dx = -2; dx <= 2; dx++) {
-			const x = gx + dx;
-			const y = gy + dy;
-			if (x < 0 || x >= width || y < 0 || y >= height) continue;
-			if (darkLabels[y * width + x] === seed.darkLabel) return true;
+		// Integer pixel g is inside [b, b + d) iff ceil(b) <= g < ceil(b + d).
+		const cx0 = Math.max(x0, Math.ceil(bx));
+		const cx1 = Math.min(x1, Math.ceil(bx + bw));
+		const cy0 = Math.max(y0, Math.ceil(by));
+		const cy1 = Math.min(y1, Math.ceil(by + bh));
+		if (cx1 > cx0) for (let y = cy0; y < cy1; y++) mask.fill(1, (y - y0) * w + cx0 - x0, (y - y0) * w + cx1 - x0);
+	} else if (seed.darkLabel) {
+		const label = seed.darkLabel;
+		// Rows y0-2..y1+2 (clipped): horizontal ±2 reach of the label.
+		const ry0 = Math.max(0, y0 - 2);
+		const ry1 = Math.min(height, y1 + 2);
+		const rows = new Uint8Array((ry1 - ry0) * w);
+		for (let y = ry0; y < ry1; y++) {
+			const src = y * width;
+			const dst = (y - ry0) * w;
+			const sx0 = Math.max(0, x0 - 2);
+			const sx1 = Math.min(width, x1 + 2);
+			for (let sx = sx0; sx < sx1; sx++) {
+				if (darkLabels[src + sx] !== label) continue;
+				const a = Math.max(x0, sx - 2);
+				const b = Math.min(x1, sx + 3);
+				for (let x = a; x < b; x++) rows[dst + x - x0] = 1;
+			}
+		}
+		for (let y = y0; y < y1; y++) {
+			const a = Math.max(ry0, y - 2);
+			const b = Math.min(ry1, y + 3);
+			const out = (y - y0) * w;
+			for (let yy = a; yy < b; yy++) {
+				const src = (yy - ry0) * w;
+				for (let x = 0; x < w; x++) if (rows[src + x]) mask[out + x] = 1;
+			}
 		}
 	}
-	return false;
+	const ew = tw + 2 * margin;
+	const rebase = (offsets: Int32Array, stride: number, to: number) => {
+		const out = new Int32Array(offsets.length);
+		for (let k = 0; k < offsets.length; k++) {
+			const o = offsets[k];
+			const rx = o % stride;
+			const ry = (o - rx) / stride;
+			out[k] = ry * to + rx;
+		}
+		return out;
+	};
+	return {
+		x0,
+		y0,
+		w,
+		mask,
+		whiteImage: rebase(family.whiteOffsets, tw, width),
+		whiteRegion: rebase(family.whiteOffsets, tw, w),
+		blackImage: rebase(family.blackOffsets, ew, width),
+		blackRegion: rebase(family.blackOffsets, ew, w)
+	};
 }
 
 function scoreCandidate(
 	x: number,
 	y: number,
-	seed: Seed,
 	bright: Mask,
 	dark: Mask,
 	darkLabels: Int32Array,
-	family: PreparedFamily
+	family: PreparedFamily,
+	occ: SeedOcclusion
 ): CandidateScore | null {
 	const { width, height } = bright;
 	const { width: tw, height: th, margin } = family;
 	if (x < margin || y < margin || x + tw + margin > width || y + th + margin > height) return null;
+	const occluded = occ.mask;
+	const brightData = bright.data;
+	const darkData = dark.data;
 	let availableWhite = 0;
 	let whiteHit = 0;
-	for (let k = 0; k < family.whiteOffsets.length; k++) {
-		const o = family.whiteOffsets[k];
-		const rx = o % tw;
-		const ry = (o - rx) / tw;
-		const gx = x + rx;
-		const gy = y + ry;
-		if (isOccluded(seed, gx, gy, darkLabels, width, height, margin)) continue;
-		availableWhite++;
-		if (bright.data[gy * width + gx]) whiteHit++;
+	{
+		const imageBase = y * width + x;
+		const regionBase = (y - occ.y0) * occ.w + x - occ.x0;
+		const image = occ.whiteImage;
+		const region = occ.whiteRegion;
+		for (let k = 0; k < image.length; k++) {
+			if (occluded[regionBase + region[k]]) continue;
+			availableWhite++;
+			if (brightData[imageBase + image[k]]) whiteHit++;
+		}
 	}
 	if (availableWhite < family.whiteCount * 0.2) return null;
 	const whiteCoverage = whiteHit / availableWhite;
 	const effectiveVisibility = whiteHit / family.whiteCount;
-	const ew = tw + 2 * margin;
 	let availableBlack = 0;
 	let darkHit = 0;
 	let brightInBlack = 0;
 	const darkCounts = new Map<number, number>();
-	for (let k = 0; k < family.blackOffsets.length; k++) {
-		const o = family.blackOffsets[k];
-		const rx = o % ew;
-		const ry = (o - rx) / ew;
-		const gx = x - margin + rx;
-		const gy = y - margin + ry;
-		if (isOccluded(seed, gx, gy, darkLabels, width, height, margin)) continue;
-		availableBlack++;
-		const gi = gy * width + gx;
-		if (bright.data[gi]) brightInBlack++;
-		if (!dark.data[gi]) continue;
-		darkHit++;
-		const label = darkLabels[gi];
-		if (label) darkCounts.set(label, (darkCounts.get(label) ?? 0) + 1);
+	{
+		const imageBase = (y - margin) * width + x - margin;
+		const regionBase = (y - margin - occ.y0) * occ.w + x - margin - occ.x0;
+		const image = occ.blackImage;
+		const region = occ.blackRegion;
+		for (let k = 0; k < image.length; k++) {
+			if (occluded[regionBase + region[k]]) continue;
+			availableBlack++;
+			const gi = imageBase + image[k];
+			if (brightData[gi]) brightInBlack++;
+			if (!darkData[gi]) continue;
+			darkHit++;
+			const label = darkLabels[gi];
+			if (label) darkCounts.set(label, (darkCounts.get(label) ?? 0) + 1);
+		}
 	}
 	if (availableBlack < Math.max(30, family.blackOffsets.length * 0.15)) return null;
 	let dominant = 0;
@@ -464,6 +531,28 @@ function searchSeed(
 	const ymin = Math.max(margin, seed.y - th + 1);
 	const ymax = Math.min(height - th - margin, seed.y + seed.h - 1);
 	if (xmax < xmin || ymax < ymin) return [];
+	// Every pixel any candidate below reads lies in this region (inside the image).
+	const occ = seedOcclusion(
+		seed,
+		darkLabels,
+		width,
+		height,
+		family,
+		xmin - margin,
+		ymin - margin,
+		xmax + tw + margin,
+		ymax + th + margin
+	);
+	const scored = new Map<number, CandidateScore | null>();
+	const score = (x: number, y: number): CandidateScore | null => {
+		const key = y * width + x;
+		let s = scored.get(key);
+		if (s === undefined) {
+			s = scoreCandidate(x, y, bright, dark, darkLabels, family, occ);
+			scored.set(key, s);
+		}
+		return s;
+	};
 	const sx = Math.max(1, Math.floor(tw / 2));
 	const sy = Math.max(1, Math.floor(th / 2));
 	const xs: number[] = [];
@@ -475,8 +564,8 @@ function searchSeed(
 	const coarse: { x: number; y: number; score: CandidateScore }[] = [];
 	for (const y of ys) {
 		for (const x of xs) {
-			const score = scoreCandidate(x, y, seed, bright, dark, darkLabels, family);
-			if (score) coarse.push({ x, y, score });
+			const sc = score(x, y);
+			if (sc) coarse.push({ x, y, score: sc });
 		}
 	}
 	coarse.sort((a, b) => b.score.identity - a.score.identity);
@@ -496,8 +585,8 @@ function searchSeed(
 				const key = `${x}:${y}`;
 				if (seenMid.has(key)) continue;
 				seenMid.add(key);
-				const score = scoreCandidate(x, y, seed, bright, dark, darkLabels, family);
-				if (score) mid.push({ x, y, score });
+				const sc = score(x, y);
+				if (sc) mid.push({ x, y, score: sc });
 			}
 		}
 	}
@@ -510,8 +599,8 @@ function searchSeed(
 				const key = `${x}:${y}`;
 				if (seenFine.has(key)) continue;
 				seenFine.add(key);
-				const score = scoreCandidate(x, y, seed, bright, dark, darkLabels, family);
-				if (score) fine.push({ x, y, score });
+				const sc = score(x, y);
+				if (sc) fine.push({ x, y, score: sc });
 			}
 		}
 	}

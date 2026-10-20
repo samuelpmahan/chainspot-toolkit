@@ -223,17 +223,29 @@ export interface S1Subtraction {
 }
 
 function subtract(image: CompositeResult, parts: readonly Uint32Array[]): S1Subtraction {
-	const muted = new Set<number>();
-	let visits = 0;
-	for (const part of parts)
-		for (const pixel of part) {
-			visits++;
-			muted.add(pixel);
-		}
+	// Distinct pixels counted with a byte mark (a Set only for any pixel past
+	// the raster, where the typed alpha write is a no-op either way).
 	const rgba = new Uint8ClampedArray(image.rgba);
-	for (const pixel of muted) rgba[pixel * 4 + 3] = 0;
+	const pixels = image.widthPx * image.heightPx;
+	const writable = rgba.length >> 2;
+	const mark = new Uint8Array(writable);
+	const offRaster = new Set<number>();
+	let visits = 0;
+	let mutedPx = 0;
+	for (const part of parts)
+		for (let k = 0; k < part.length; k++) {
+			const pixel = part[k];
+			visits++;
+			if (pixel < writable) {
+				if (mark[pixel]) continue;
+				mark[pixel] = 1;
+				mutedPx++;
+				rgba[pixel * 4 + 3] = 0;
+			} else offRaster.add(pixel);
+		}
+	mutedPx += offRaster.size;
 	let remainingOpaquePx = 0;
-	for (let pixel = 0; pixel < image.widthPx * image.heightPx; pixel++)
+	for (let pixel = 0; pixel < pixels; pixel++)
 		if (rgba[pixel * 4 + 3] !== 0) remainingOpaquePx++;
 	return {
 		widthPx: image.widthPx,
@@ -241,8 +253,8 @@ function subtract(image: CompositeResult, parts: readonly Uint32Array[]): S1Subt
 		rgba,
 		badgePx: 0,
 		addedMutePx: 0,
-		mutedPx: muted.size,
-		overlapPx: visits - muted.size,
+		mutedPx,
+		overlapPx: visits - mutedPx,
 		remainingOpaquePx
 	};
 }

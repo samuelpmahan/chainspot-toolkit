@@ -227,25 +227,30 @@ function extractComponents(mask) {
         for (let x = 0; x < width; x++) {
             if (!data[row + x])
                 continue;
+            // Neighbours W, N, NW, NE in that order (inlined: no per-pixel closure).
             let best = 0;
-            const tryNeighbor = (idx) => {
-                const l = labels[idx];
-                if (l) {
+            let l = 0;
+            if (x > 0 && data[row + x - 1] && (l = labels[row + x - 1]))
+                best = l;
+            if (y > 0) {
+                if (data[prev + x] && (l = labels[prev + x])) {
                     if (!best)
                         best = l;
                     else if (l !== best)
                         union(best, l);
                 }
-            };
-            if (x > 0 && data[row + x - 1])
-                tryNeighbor(row + x - 1);
-            if (y > 0) {
-                if (data[prev + x])
-                    tryNeighbor(prev + x);
-                if (x > 0 && data[prev + x - 1])
-                    tryNeighbor(prev + x - 1);
-                if (x < width - 1 && data[prev + x + 1])
-                    tryNeighbor(prev + x + 1);
+                if (x > 0 && data[prev + x - 1] && (l = labels[prev + x - 1])) {
+                    if (!best)
+                        best = l;
+                    else if (l !== best)
+                        union(best, l);
+                }
+                if (x < width - 1 && data[prev + x + 1] && (l = labels[prev + x + 1])) {
+                    if (!best)
+                        best = l;
+                    else if (l !== best)
+                        union(best, l);
+                }
             }
             if (!best) {
                 best = next++;
