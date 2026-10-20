@@ -25,7 +25,7 @@ import { RENDER_PART } from '../../fg/store.mjs';
 import { comparableForkJoin, forkJoinFrames } from '../../fg/forkjoin.mjs';
 import { discoverImplementations } from '../../fg/discover.mjs';
 import { createFileSink } from '../../fg/node-sink.mjs';
-import { framesJson, renderFlipbook } from '../../fg/flipbook.mjs';
+import { writeFlipbook, imageFiles } from '../../fg/node-flipbook.mjs';
 import { canonicalJson } from '../../fg/canon.mjs';
 import { base64 } from '../../fg/png.mjs';
 import contract from '../../contracts/s7.trace@1.mjs';
@@ -146,13 +146,15 @@ export async function runHoleTraceForkJoin({ attempt, specimen, outDir = null, r
   writeFileSync(join(out, 'keyspace.json'), canonicalJson({ schema: 'nctk-keyspace@1', specimen, attempt, store: store.manifest().store, parts: store.keyspace() }) + '\n');
   const doc = instrumentation(), profile = profileSummary(doc);
   writeFileSync(join(out, 'instrumentation.json'), JSON.stringify(doc) + '\n');
+  // every image this run writes is one file under out/img/; the named PNGs are hardlinks to them (fg/node-flipbook.mjs)
+  const images = imageFiles(out);
   // the accepted variant over the whole map at full resolution, coloured by the judge (the render Sam decides on)
   let overview = null;
   if (cmp.accepted) {
     const tr = store.get(HOLE_TRACE_SLOT.part).traces, j = judgeHoleTraces(tr, holePaths, { widthPx: store.get('tk.s7.hallway').widthPx });
     const marks = store.get('tk.s7.holes').holes.flatMap((h) => judgedMarks(tr.find((t) => t.hole === h.hole), j.rows.find((r) => r.hole === h.hole), holePaths.holes.find((p) => p.hole === h.hole), { width: 2 }));
     const png = drawCrop(raster, { x0: 0, y0: 0, w: raster.widthPx, h: raster.heightPx, scale: 1 }, marks, { deflate: (r) => deflateSync(r) });
-    writeFileSync(join(out, 's7trace.overview.png'), Buffer.from(png.png, 'base64'));
+    images.alias(images.png(png.png).src, 's7trace.overview.png');
     overview = { path: join(out, 's7trace.overview.png'), variant: cmp.accepted, legend: LEGEND, labels: tr.map((t) => ({ hole: t.hole, at: t.path[0] ?? store.get('tk.s7.scene').badges[Number(t.hole)] ?? null, status: t.status, ok: j.rows.find((r) => r.hole === t.hole)?.ok ?? null })) };
     writeFileSync(join(out, 's7trace.overview.json'), JSON.stringify(overview, null, 1) + '\n');
   }
@@ -162,15 +164,14 @@ export async function runHoleTraceForkJoin({ attempt, specimen, outDir = null, r
     store.get('tk.s7.routeMatchView');
     const r = store.call(RENDER_PART, { a: 'tk.s7.routeMatchView', deflate: (bytes) => deflateSync(bytes) }).value;
     const png = r.parts.find((q) => q.kind === 'raster');
-    if (png) { writeFileSync(join(out, 's7trace.routeMatch.png'), Buffer.from(png.data.png, 'base64')); routeMatchView = { path: join(out, 's7trace.routeMatch.png'), totals: store.get('tk.s7.routeMatchView').totals, rows: store.get('tk.s7.routeMatchView').rows }; writeFileSync(join(out, 's7trace.routeMatch.view.json'), JSON.stringify(routeMatchView, null, 1) + '\n'); }
+    if (png) { images.alias(images.png(png.data.png).src, 's7trace.routeMatch.png'); routeMatchView = { path: join(out, 's7trace.routeMatch.png'), totals: store.get('tk.s7.routeMatchView').totals, rows: store.get('tk.s7.routeMatchView').rows }; writeFileSync(join(out, 's7trace.routeMatch.view.json'), JSON.stringify(routeMatchView, null, 1) + '\n'); }
   }
   const partPages = store.manifest().parts.map((p) => p.address).filter((a) => a.startsWith('tk.s7.')).sort()
     .map((a) => { const r = store.call(RENDER_PART, { a }).value; return { title: `${a} (${r.kind})`, calculation: 'fg.render', tick: 'render', parts: r.parts, verdicts: [{ name: `${a} renders`, ok: r.kind !== 'unrenderable' && r.parts.length > 0 }] }; });
   const frames = [...forkJoinFrames(result), profileFrame(profile, { wallMs: doc.wallMs }), ...partPages];
   const records = Object.fromEntries(Object.entries(result.branches).map(([n, b]) => [n, { error: b.error, records: b.records }]));
   writeFileSync(join(out, 's7trace.records.json'), canonicalJson({ schema: 'nctk-fg-forkjoin-records@1', slot: result.slot, specimen, attempt, branches: records }) + '\n');
-  writeFileSync(join(out, 's7trace.frames.json'), framesJson(frames) + '\n');
-  writeFileSync(join(out, 's7trace.flipbook.html'), renderFlipbook(frames, { title: `S7 ${HOLE_TRACE_SLOT.slot} fork-join (${specimen}): ${cmp.implementations.join(' vs ')}`, background: loaded.background, records: { branches: records }, stage: 'S7' }));
+  writeFlipbook(out, 's7trace', frames, { images, title: `S7 ${HOLE_TRACE_SLOT.slot} fork-join (${specimen}): ${cmp.implementations.join(' vs ')}`, background: loaded.background, records: { branches: records }, stage: 'S7' });   // images once, as files under out/img/ (fg/node-flipbook.mjs)
   return { out, comparison: v, accepted: cmp.accepted, acceptedBy: accept.decided, variants: cmp.variants, timingsMs: Object.fromEntries(Object.entries(cmp.timingsMs).map(([n, t]) => [n, t.ms])), frames: frames.length, branches: records, profile, overview };
 }
 

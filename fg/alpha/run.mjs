@@ -20,7 +20,7 @@ import zlib from 'node:zlib';
 import { runnerCache, casFlag } from '../casRunner.mjs';
 import { instrumentedStore, profileSummary, profileFrame } from '../profile.mjs';
 import { RENDER_PART } from '../store.mjs';
-import { framesJson, renderFlipbook } from '../flipbook.mjs';
+import { writeFlipbook } from '../node-flipbook.mjs';
 import { canonicalJson } from '../canon.mjs';
 import { loadAttemptParts } from '../../ports/s4recover/run.mjs';
 import { S4_CALCULATIONS } from '../../ports/s4recover/teeRecover.mjs';
@@ -95,8 +95,7 @@ export function runAlphaProfile({ attempt, specimen, outDir = null, root = ROOT,
       verdicts: shot.filter((s) => s.alphaInRange != null).map((s) => ({ name: `${s.class}: alpha as called`, ok: s.alphaInRange })) },
     profileFrame(summary, { wallMs: doc.wallMs })
   ];
-  writeFileSync(join(out, 's7alpha.frames.json'), framesJson(frames) + '\n');
-  writeFileSync(join(out, 's7alpha.flipbook.html'), renderFlipbook(frames, { title: `S7 alpha profile (${specimen})`, stage: 'S7' }));
+  writeFlipbook(out, 's7alpha', frames, { title: `S7 alpha profile (${specimen})`, stage: 'S7' });   // images once, as files under out/img/ (fg/node-flipbook.mjs)
   const sheet = contactSheet(profile, store.get('px.image.cropped'), { title: `${specimen} ${ALPHA_PROFILE_PART}`, deflate: zlib.deflateSync });
   if (sheet) writeFileSync(join(out, 'alphaProfile.png'), sheet);
   return { out, profile: value, shot, profile_: summary };

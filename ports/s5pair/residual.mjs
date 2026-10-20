@@ -30,7 +30,7 @@ import { registerAlphaProfile, loadAssociation } from '../../fg/alpha/run.mjs';
 import { runnerCache, casFlag } from '../../fg/casRunner.mjs';
 import { instrumentedStore, profileSummary, profileFrame } from '../../fg/profile.mjs';
 import { RENDER_PART } from '../../fg/store.mjs';
-import { framesJson, renderFlipbook } from '../../fg/flipbook.mjs';
+import { writeFlipbook } from '../../fg/node-flipbook.mjs';
 import { canonicalJson } from '../../fg/canon.mjs';
 import { loadTestimony } from '../judge/testimony.mjs';
 import { MATCH_PX } from '../judge/judge.mjs';
@@ -87,8 +87,7 @@ export function runResidualProfile({ attempt, specimen, outDir = null, root = RO
     ...crops.map((c) => page(c.address, [c, ...legend]))
   ];
   const frames = [...partPages, profileFrame(profile, { wallMs: doc.wallMs })];
-  writeFileSync(join(out, 's5pair.frames.json'), framesJson(frames) + '\n');
-  writeFileSync(join(out, 's5pair.flipbook.html'), renderFlipbook(frames, { title: `S5 learning (${specimen}): tee axis vs badge ray residual on straight holes`, background: L.background, stage: 'S5' }));
+  writeFlipbook(out, 's5pair', frames, { title: `S5 learning (${specimen}): tee axis vs badge ray residual on straight holes`, background: L.background, stage: 'S5' });   // images once, as files under out/img/ (fg/node-flipbook.mjs)
   return { out, profile: P, referent, calls: profile };
 }
 

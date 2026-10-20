@@ -102,6 +102,9 @@ output.
 - **S4 tee recovery on an attempt:** `node ports/s4recover/run.mjs --specimen golden --attempt ID`.
   Writes `instrumentation.json` and a flipbook with profile and Part pages.
 - **S3 association:** `node ports/s3assoc/run.mjs --specimen golden --attempt ID`.
+- **Disk:** a run writes each image once, as a file under its `img/`, and references it: write flipbooks with
+  `writeFlipbook` (`fg/node-flipbook.mjs`), never inline base64 renders or the source image into frames, flipbooks
+  or SVGs. `node scripts/pxc.mjs prune --dry-run` shows what deleting old attempts and superseded runs frees.
 - **Specimens:** golden, lenard, townelake, heritage, alex, northpark (full courses); lenard1-5 (zoomed views of
   Lenard). Testimony is in `testimony/<specimen>/`. Captures (tiles S0 stitches into one course, `explain boundary`):
   therecCapture, dashsCapture, lenardCapture; therec is The Rec as one raster.

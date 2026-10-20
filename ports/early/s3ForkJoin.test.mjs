@@ -28,7 +28,7 @@ test('golden findFamily fork-join reproduces the expected precision split', (t) 
   assert.ok(value.only.pinned.every((r) => r.pinned.verdict === 'disagrees'));
   assert.match(value.acceptance, /^UNKNOWN/);
   const frames = JSON.parse(readFileSync(attempt.path(FILES[1]), 'utf8'));
-  assert.equal(frames.filter((f) => f.fg === 'cmp.fn.Tee.findFamily' && f.parts.some((p) => p.kind === 'raster' && p.data?.png)).length, 3);
+  assert.equal(frames.filter((f) => f.fg === 'cmp.fn.Tee.findFamily' && f.parts.some((p) => p.kind === 'raster' && (p.data?.src || p.data?.png))).length, 3);   // src: the image file (fg/node-flipbook.mjs); png: attempts written before
   const receipt = JSON.parse(readFileSync(attempt.path(FILES[2]), 'utf8'));
   assert.equal(receipt.experiments.branches.S3FJ.comparison.sha256, JSON.parse(readFileSync(attempt.path(FILES[0]), 'utf8')).sha256);
 });
