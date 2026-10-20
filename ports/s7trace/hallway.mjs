@@ -17,7 +17,7 @@
  * Coordinates: canonical (S0-cropped) px, pixel centres at integer coordinates; angles in radians unless named Deg.
  */
 
-import { samp as sampS6, profileAt, edgePairOf, stationContrastAt, reachFor } from '../s6straight/pathSpace.mjs';
+import { samp as sampS6, profileAt, edgePairOf, edgeGradientOf, edgePairFrom, stationContrastAt, reachFor } from '../s6straight/pathSpace.mjs';
 import { widthSearchRange } from '../s6straight/pathLoss.mjs';
 
 export const TAU = 8.0;                       // lum: edge contrast a ribbon station must exceed on both sides (follow.py)
@@ -56,6 +56,8 @@ export function edgePair(P, Wexp, tolW = 3.0, latLim = 12.0) {
   const e = P ? edgePairOf(P, Wexp, { tolW, latLim }) : null;
   return e && { l: e.lPx, r: e.rPx, c: e.cPx, w: e.wPx, score: e.score, gl: e.gl, gr: e.gr };
 }
+/** edgePair on a gradient computed once (edgeGradientOf): a width search pairs one profile at every width. */
+const edgePairG = (G, Wexp, tolW, latLim) => { const e = edgePairFrom(G, Wexp, { tolW, latLim }); return e && { l: e.lPx, r: e.rPx, c: e.cPx, w: e.wPx, score: e.score, gl: e.gl, gr: e.gr }; };
 /** contrast.py station_contrast -> { cl, cr, okl, okr } per station. */
 export const stationContrast = (S, O, phi, ts, W) => stationContrastAt(S, O, phi, ts, W);
 
@@ -308,16 +310,17 @@ export function polyScore(S, V, W, band = [0.5, 3.0]) {
  * Coordinate search on the inner vertices (vertex 1 slides along the pad axis, +-axisSpanPx, default the prototype's 60 px),
  * ends fixed (polyscore.py refine_vertices).
  */
-export function refineVertices(S, V0, W, padAxis = null, iters = 3, { axisSpanPx = 60, unitPx = null } = {}) {
+export function refineVertices(S, V0, W, padAxis = null, iters = 3, { axisSpanPx = 60, unitPx = null, score = polyScore } = {}) {
+  // score: polyScore, or a scorer bit-identical to it (routeMatch passes ribbonContrastAt, which visits only the px near the legs)
   // unitPx: the search steps and ranges in units of a map-scaled length (routeMatch passes rC1px; the values are the
   // prototype's px over golden's R1 44.5); null keeps the prototype's px for the other tracers
   const k = unitPx == null ? 1 : unitPx / 44.5;
-  let V = V0.map((v) => v.slice()), best = polyScore(S, V, W)[0];
+  let V = V0.map((v) => v.slice()), best = score(S, V, W)[0];
   for (let it = 0; it < iters; it++) for (let i = 1; i < V.length - 1; i++) {
     let cands;
     if (i === 1 && padAxis) cands = [...arange(-axisSpanPx, axisSpanPx + 0.1 * k, (it === 0 ? 1.0 : 0.25) * k)].map((s) => [V[1][0] + padAxis[0] * s, V[1][1] + padAxis[1] * s]);
     else { const st = (it === 0 ? 2.0 : 0.5) * k, rng = it === 0 ? arange(-20 * k, 20 * k + 0.1 * k, st) : arange(-4 * k, 4 * k + 0.01 * k, st); cands = []; for (const dx of rng) for (const dy of rng) cands.push([V[i][0] + dx, V[i][1] + dy]); }
-    for (const c of cands) { const Vt = V.map((v) => v.slice()); Vt[i] = c; const s = polyScore(S, Vt, W)[0]; if (s > best) { best = s; V = Vt; } }
+    for (const c of cands) { const Vt = V.map((v) => v.slice()); Vt[i] = c; const s = score(S, Vt, W)[0]; if (s > best) { best = s; V = Vt; } }
   }
   return [V, best];
 }
@@ -360,7 +363,10 @@ export function widthFromStraight(S, base) {
   const ws = [];
   for (const [h, b] of Object.entries(base)) {
     const s3 = b.straight3; if (!s3 || s3.verdict !== 'STRAIGHT') continue;
-    for (const Wg of arange(...((r) => [r[0], r[1], 2 * r[2]])(widthSearchOf(S)))) { const [e] = segFit(S, b.teeCenter, s3.basketPoint, Wg, 1.0, 3.0, S.L * 0.6, 2); if (e) ws.push([e.score, e.w, h]); }
+    // segFit's profile does not depend on the width: profiled once per hole, paired at every width (the same numbers)
+    const A = b.teeCenter, B = s3.basketPoint, d = [B[0] - A[0], B[1] - A[1]], P = profile(S, A, Math.atan2(d[1], d[0]), S.L * 0.6, Math.hypot(d[0], d[1]) - 2);
+    const G = P ? edgeGradientOf(P) : null;
+    for (const Wg of arange(...((r) => [r[0], r[1], 2 * r[2]])(widthSearchOf(S)))) { const e = G ? edgePairG(G, Wg, 1.0, 3.0) : null; if (e) ws.push([e.score, e.w, h]); }
   }
   const by = new Map(); for (const [sc, w, h] of ws) { if (!by.has(h)) by.set(h, []); by.get(h).push([sc, w]); }
   const per = [...by.values()].map((v) => v.reduce((m, x) => (x[0] > m[0] || (x[0] === m[0] && x[1] > m[1]) ? x : m))[1]);
@@ -375,7 +381,8 @@ export function teeBadgeLearn(S, base) {
     const stop = (B[0] - St[0]) * u[0] + (B[1] - St[1]) * u[1] - S.badgeHalf[Number(h)] - 2;
     if (stop < 25) { rows.push({ hole: Number(h), usable: false, why: `only ${Math.round(stop)} px between tee cap and badge` }); continue; }
     const [wMin, wMax, wStep] = widthSearchOf(S), phi = Math.atan2(u[1], u[0]), P = profile(S, St, phi, 2, stop, 0, 1.0, reachFor(wMax)); let best = null;
-    for (const Wg of arange(wMin, wMax, wStep)) { const e = P ? edgePair(P, Wg, 0.75, 3.0) : null; if (e && (best === null || e.score > best.score)) best = e; }
+    const G = P ? edgeGradientOf(P) : null;
+    for (const Wg of arange(wMin, wMax, wStep)) { const e = G ? edgePairG(G, Wg, 0.75, 3.0) : null; if (e && (best === null || e.score > best.score)) best = e; }
     if (!best) { rows.push({ hole: Number(h), usable: false, why: 'no edge pair', lenPx: round(stop, 1) }); continue; }
     const m = passStats(S, St, phi, arange(2, stop, 1.0), best.w);
     const pct = (xs, q) => { const s = Float64Array.from(xs).sort(); const k = (s.length - 1) * q / 100, f = Math.floor(k), c = Math.min(f + 1, s.length - 1); return s[f] + (s[c] - s[f]) * (k - f); };

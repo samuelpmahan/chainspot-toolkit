@@ -8,6 +8,9 @@ This file is the map; the details are one step away:
   calculations, fg, evidence, lanes (two agents: platform and algorithm, who owns what, how the algorithm lane starts).
 - `node scripts/pxc.mjs doctor [file | --attempt id]` shows what is outside the system, with the fix.
 - `node scripts/pxc.mjs scaffold query | calculation | mixin ...` writes the right shape, with a passing test.
+- `node scripts/pxc.mjs profile --attempt <id>` prints every stage's latest profile: wall, inside vs outside the store,
+  the costliest Calculations by self time, opaque hot spots. `node ports/s7trace/bench.mjs` profiles one S7 rule set
+  without writing artifacts.
 - `node scripts/pxc.mjs state [--retest] [--freeze]` derives the state of every stage on every dev course (goal, expected,
   result, status, freshness) and re-runs only the stale cells. Status is never typed by hand.
 

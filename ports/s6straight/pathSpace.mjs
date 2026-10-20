@@ -113,8 +113,12 @@ export function profileAt(c, O, phi, t0, t1, { lat0 = 0, step = 1, reach = 30 } 
   return { prof, ok, nT: T.length, offs: OFFS };
 }
 
-/** track.py edge_pair(prof, ok, nT, Wexp, tolW, lat_lim): null when there is no pair. */
-export function edgePairOf({ prof, ok, nT, offs = OFFS }, Wexp, { tolW = 3, latLim = 12, minOk = EVIDENCE.edgeMinOk } = {}) {
+/**
+ * track.py edge_pair, the part that does not depend on the expected width: the good offsets, the interpolated, smoothed
+ * profile's gradient and its left (rising) and right (falling) peaks. null when too few offsets are good (no pair at any width).
+ * A width search computes it once per profile and pairs it at every width (edgePairFrom), the same numbers as edgePairOf.
+ */
+export function edgeGradientOf({ prof, ok, nT, offs = OFFS }, { minOk = EVIDENCE.edgeMinOk } = {}) {
   if (!prof) return null;
   const OFFS = offs;
   const M = prof.length, good = new Uint8Array(M), need = Math.max(minOk.count, minOk.ofStations * nT);
@@ -135,6 +139,13 @@ export function edgePairOf({ prof, ok, nT, offs = OFFS }, Wexp, { tolW = 3, latL
   for (let j = 0; j < M; j++) if (j < EVIDENCE.endZero || j >= M - EVIDENCE.endZero || !good[j]) g[j] = 0;
   const L = [], R = [];
   for (let i = 1; i < M - 1; i++) { if (g[i] > 0 && g[i] >= g[i - 1] && g[i] >= g[i + 1]) L.push(i); if (g[i] < 0 && g[i] <= g[i - 1] && g[i] <= g[i + 1]) R.push(i); }
+  return { g, L, R, offs: OFFS };
+}
+
+/** track.py edge_pair at one expected width on a gradient (edgeGradientOf): null when there is no pair. */
+export function edgePairFrom(G, Wexp, { tolW = 3, latLim = 12 } = {}) {
+  if (!G) return null;
+  const { g, L, R, offs: OFFS } = G, dO = EVIDENCE.offsetsPx.step;
   let best = null;
   for (const i of L) for (const j of R) {
     const w = OFFS[j] - OFFS[i]; if (Math.abs(w - Wexp) > tolW) continue;
@@ -147,22 +158,42 @@ export function edgePairOf({ prof, ok, nT, offs = OFFS }, Wexp, { tolW = 3, latL
   return { lPx: l, rPx: r, cPx: (l + r) / 2, wPx: r - l, score: sc, gl: g[i], gr: -g[j] };
 }
 
+/** track.py edge_pair(prof, ok, nT, Wexp, tolW, lat_lim): null when there is no pair. */
+export function edgePairOf(P, Wexp, { tolW = 3, latLim = 12, minOk = EVIDENCE.edgeMinOk } = {}) {
+  return edgePairFrom(edgeGradientOf(P, { minOk }), Wexp, { tolW, latLim });
+}
+
 /** contrast.py station_contrast(C, O, phi, ts, W, band, along): per station left/right contrast and validity. */
 export function stationContrastAt(c, O, phi, ts, W, { band = EVIDENCE.bandPx, along = EVIDENCE.alongPx } = {}) {
   const u = unit(phi), n = [-u[1], u[0]], h = W / 2, ins = arange(band[0], band[1] + 1e-9, 0.5), da = arange(-along, along + 1e-9, 1);
   const N = ts.length, out = { cl: new Float64Array(N), cr: new Float64Array(N), okl: new Uint8Array(N), okr: new Uint8Array(N) };
-  const S = (t, offs) => {   // nanmean over (da x offs), and the unmasked fraction
+  // the four lateral offset sets (left/right x inside/outside), once per call; the samples in the same order as before
+  const offsOf = (sgn, inside) => Float64Array.from(ins, (x) => sgn * (inside ? h - x : h + x));
+  const sets = [offsOf(-1, true), offsOf(-1, false), offsOf(1, true), offsOf(1, false)];
+  const { lum, mask, W: IW, H: IH } = c, O0 = O[0], O1 = O[1], u0 = u[0], u1 = u[1], n0 = n[0], n1 = n[1], nA = da.length, nO = ins.length, tot = nA * nO;
+  const over = EVIDENCE.maskOver, xHi = IW - 2, yHi = IH - 2;
+  let sv = 0, sk = 0;
+  const S = (t, offs) => {   // nanmean over (da x offs), and the unmasked fraction (maskedAt and samp inlined: the same arithmetic)
     let sum = 0, k = 0;
-    for (const d of da) for (const o of offs) {
-      const TT = t + d, x = O[0] + TT * u[0] + o * n[0], y = O[1] + TT * u[1] + o * n[1];
-      if (maskedAt(c, x, y)) continue; sum += samp(c.lum, c.W, c.H, x, y); k++;
+    for (let a = 0; a < nA; a++) {
+      const TT = t + da[a];
+      for (let j = 0; j < nO; j++) {
+        const o = offs[j], x = O0 + TT * u0 + o * n0, y = O1 + TT * u1 + o * n1;
+        if (!(x > 1 && x < xHi && y > 1 && y < yHi)) continue;
+        const x0 = Math.floor(x), y0 = Math.floor(y), fx = x - x0, fy = y - y0;
+        const xa = clampI(x0, IW), xb = clampI(x0 + 1, IW), ya = clampI(y0, IH), yb = clampI(y0 + 1, IH);
+        const iaa = ya * IW + xa, iab = ya * IW + xb, iba = yb * IW + xa, ibb = yb * IW + xb;
+        if (mask && (1 - fy) * ((1 - fx) * mask[iaa] + fx * mask[iab]) + fy * ((1 - fx) * mask[iba] + fx * mask[ibb]) > over) continue;
+        sum += (1 - fy) * ((1 - fx) * lum[iaa] + fx * lum[iab]) + fy * ((1 - fx) * lum[iba] + fx * lum[ibb]); k++;
+      }
     }
-    return [k ? sum / k : NaN, k / (da.length * offs.length)];
+    sv = k ? sum / k : NaN; sk = k / tot;
   };
-  for (let q = 0; q < N; q++) for (const sgn of [-1, 1]) {
-    const [vi, oki] = S(ts[q], Array.from(ins, (x) => sgn * (h - x))), [vo, oko] = S(ts[q], Array.from(ins, (x) => sgn * (h + x)));
+  for (let q = 0; q < N; q++) for (let side = 0; side < 2; side++) {
+    S(ts[q], sets[2 * side]); const vi = sv, oki = sk;
+    S(ts[q], sets[2 * side + 1]); const vo = sv, oko = sk;
     const okv = Math.min(oki, oko) > 0.5 ? 1 : 0;
-    if (sgn < 0) { out.cl[q] = vi - vo; out.okl[q] = okv; } else { out.cr[q] = vi - vo; out.okr[q] = okv; }
+    if (side === 0) { out.cl[q] = vi - vo; out.okl[q] = okv; } else { out.cr[q] = vi - vo; out.okr[q] = okv; }
   }
   return out;
 }
@@ -171,7 +202,8 @@ export function stationContrastAt(c, O, phi, ts, W, { band = EVIDENCE.bandPx, al
 export function widthSearchAt(c, O, phi, t0, t1, { widths = EVIDENCE.widthsPx, tolW = EVIDENCE.widthTolPx, latLim = EVIDENCE.widthLatPx, minOk } = {}) {
   const P = profileAt(c, O, phi, t0, t1, { reach: reachFor(widths[1]) });
   let best = null;
-  for (const Wg of arange(...widths)) { const e = P.prof ? edgePairOf(P, Wg, { tolW, latLim, minOk }) : null; if (e && (!best || e.score > best.score)) best = { ...e, wgPx: Wg }; }
+  const G = P.prof ? edgeGradientOf(P, { minOk }) : null;   // once per profile: only the pairing depends on the width
+  for (const Wg of arange(...widths)) { const e = G ? edgePairFrom(G, Wg, { tolW, latLim }) : null; if (e && (!best || e.score > best.score)) best = { ...e, wgPx: Wg }; }
   return best;
 }
 

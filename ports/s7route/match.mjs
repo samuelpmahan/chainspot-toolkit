@@ -63,19 +63,33 @@ export function assignMinCost(cost) {
 }
 
 const contrast = (S, V, W) => { const [c] = ribbonContrastAt(S, V, W); return c === null ? MATCH.noReadingLum : c; };
+/** polyScore's answer from ribbonContrastAt (the same px in the same order: bit-identical, -99 for no reading). */
+const polyScoreFast = (S, V, W) => { const [c, n] = ribbonContrastAt(S, V, W); return c === null ? [MATCH.noReadingLum, 0] : [c, n]; };
 
-/** match6.py second_bend: B1 on the tee axis (+-80 px around the 1-bend vertex), B2 on a W/2 grid, top 8 refined; sensor-gated. */
-export function secondBend(S, start, V1, E, W, f1, rules = MATCH_RULES) {
-  const R = MATCH.secondBend, u = start.u, St = start.S, r1 = S.R1;
-  const t1 = (V1[1][0] - St[0]) * u[0] + (V1[1][1] - St[1]) * u[1], box = R.bboxR1 * r1, minLeg = R.minLegR1 * r1;
+/** match6.py second_bend's geometry: the B1 axis, the B2 search box, the leg check (shared by the scan and the refine). */
+function secondBendFrame(S, start, E, rules) {
+  const R = MATCH.secondBend, u = start.u, St = start.S, r1 = S.R1, coarse = rules.secondBendGrid === 'coarse' ? 2 : 1;
+  const minLeg = R.minLegR1 * r1;
+  return {
+    R, St, r1, coarse,
+    B1at: (t) => [St[0] + u[0] * t, St[1] + u[1] * t],
+    inside: (p) => p[0] >= 0 && p[0] < S.W && p[1] >= 0 && p[1] < S.H,
+    legsOk: (B1, B2) => !(Math.hypot(B2[0] - B1[0], B2[1] - B1[1]) < minLeg || Math.hypot(B2[0] - E[0], B2[1] - E[1]) < minLeg)
+  };
+}
+
+/**
+ * match6.py second_bend, step 1, the scan: B1 on the tee axis (+-1.8 R1 around the 1-bend vertex), B2 on a 0.47 R1 grid over
+ * the route's box (both at twice the spacing for secondBendGrid 'coarse'). -> the best R.top candidates [contrast, t, B2].
+ */
+export function secondBendScan(S, start, V1, E, W, rules = MATCH_RULES) {
+  const { R, St, r1, coarse, B1at, inside, legsOk } = secondBendFrame(S, start, E, rules), u = start.u;
+  const t1 = (V1[1][0] - St[0]) * u[0] + (V1[1][1] - St[1]) * u[1], box = R.bboxR1 * r1;
   const lo = [Math.min(St[0], E[0]) - box, Math.min(St[1], E[1]) - box], hi = [Math.max(St[0], E[0]) + box, Math.max(St[1], E[1]) + box];
-  const grid = R.gridStepR1 * r1 * (rules.secondBendGrid === 'coarse' ? 2 : 1);   // coarse: half the B2 grid each way, the search starts there
+  const grid = R.gridStepR1 * r1 * coarse;   // coarse: half the B2 grid each way, the search starts there
   const gx = arange(Math.max(lo[0], 0), Math.min(hi[0], S.W), grid), gy = arange(Math.max(lo[1], 0), Math.min(hi[1], S.H), grid);
-  const B1at = (t) => [St[0] + u[0] * t, St[1] + u[1] * t];
-  const inside = (p) => p[0] >= 0 && p[0] < S.W && p[1] >= 0 && p[1] < S.H;
-  const legsOk = (B1, B2) => !(Math.hypot(B2[0] - B1[0], B2[1] - B1[1]) < minLeg || Math.hypot(B2[0] - E[0], B2[1] - E[1]) < minLeg);
   const cands = [];
-  for (const t of arange(t1 - R.axisSpanR1 * r1, t1 + R.axisSpanR1 * r1 + 0.01 * r1, R.axisStepR1 * r1 * (rules.secondBendGrid === 'coarse' ? 2 : 1))) {
+  for (const t of arange(t1 - R.axisSpanR1 * r1, t1 + R.axisSpanR1 * r1 + 0.01 * r1, R.axisStepR1 * r1 * coarse)) {
     const B1 = B1at(t);
     if (!inside(B1)) continue;
     for (const x of gx) for (const y of gy) {
@@ -84,20 +98,26 @@ export function secondBend(S, start, V1, E, W, f1, rules = MATCH_RULES) {
     }
   }
   cands.sort((a, b) => b[0] - a[0]);
+  return { top: cands.slice(0, R.top), read: cands.length };
+}
+
+/** Step 2, one candidate's refine: dense (match6.py) or a coordinate search on (t, B2x, B2y). -> { contrast, verts } (verts null: none). */
+export function secondBendRefine(S, start, E, W, cand, rules = MATCH_RULES) {
+  const { R, St, r1, coarse, B1at, inside, legsOk } = secondBendFrame(S, start, E, rules);
   let best = [MATCH.noReadingLum, null];
   if (rules.secondBendRefine === 'dense') {
     // match6.py's dense refine, its px over golden's R1 (+-8 px every 2 px on the axis, +-W/2 every 2 px for B2)
-    const ax = 0.18 * r1, st = 0.045 * r1, half = W / 2;
-    for (const [, t, B2] of cands.slice(0, R.top)) for (const dt of arange(-ax, ax + 0.01 * r1, st)) {
+    const ax = 0.18 * r1, st = 0.045 * r1, half = W / 2, [, t, B2] = cand;
+    for (const dt of arange(-ax, ax + 0.01 * r1, st)) {
       const B1 = B1at(t + dt);
       for (const dx of arange(-half, half + 0.1, st)) for (const dy of arange(-half, half + 0.1, st)) {
         const Vt = [St, B1, [B2[0] + dx, B2[1] + dy], E], s2 = contrast(S, Vt, W);
         if (s2 > best[0]) best = [s2, Vt];
       }
     }
-  } else for (const [s0, t0, B20] of cands.slice(0, R.top)) {
+  } else {
     // coordinate search on (t, B2x, B2y): try +- step on each, move on the best strict gain, else halve the step
-    let s = s0, t = t0, B2 = B20, step = (rules.secondBendRefine === 'coordWide' ? R.gridStepR1 * (rules.secondBendGrid === 'coarse' ? 2 : 1) : R.refineStartR1) * r1;   // coordWide: start at the coarse grid spacing
+    let [s, t, B2] = cand, step = (rules.secondBendRefine === 'coordWide' ? R.gridStepR1 * coarse : R.refineStartR1) * r1;   // coordWide: start at the coarse grid spacing
     while (step >= R.refineEndR1 * r1) {
       let move = null;
       for (const [dt, dx, dy] of [[step, 0, 0], [-step, 0, 0], [0, step, 0], [0, -step, 0], [0, 0, step], [0, 0, -step]]) {
@@ -110,8 +130,19 @@ export function secondBend(S, start, V1, E, W, f1, rules = MATCH_RULES) {
     }
     if (s > best[0]) best = [s, [St, B1at(t), B2, E]];
   }
+  return { contrast: best[0], verts: best[1] };
+}
+
+/**
+ * match6.py second_bend: the scan, the top candidates refined (the first best kept), sensor-gated. Every step is a call of
+ * `steps` (the S7 store passes fn.q.match.*, so the scan and each refine are profiled store calls).
+ */
+export function secondBend(S, start, V1, E, W, f1, rules = MATCH_RULES, steps = MATCH_STEPS) {
+  const R = MATCH.secondBend, { top } = steps.secondBendScan(S, start, V1, E, W, rules);
+  let best = [MATCH.noReadingLum, null];
+  for (const cand of top) { const r = steps.secondBendRefine(S, start, E, W, cand, rules); if (r.contrast > best[0]) best = [r.contrast, r.verts]; }
   if (!best[1]) return { accepted: false, note: 'no 2-bend candidate' };
-  const r2 = routeSensorAt(S, best[1], W), c1 = contrast(S, V1, W);
+  const r2 = steps.sensor(S, best[1], W), c1 = steps.contrast(S, V1, W);
   const note = `2-bend candidate contrast ${best[0].toFixed(1)} (1-bend ${c1.toFixed(1)}) lum, sensor ${r2.passFrac.toFixed(2)} on ${r2.stations} st vs 1-bend ${f1.toFixed(2)}`;
   const ok = r2.passFrac >= MATCH.tau && r2.passFrac - f1 >= R.gain && r2.stations >= MATCH.minStations;
   return { accepted: ok, verts: best[1], note, sensor: r2 };
@@ -127,10 +158,11 @@ export function secondBend(S, start, V1, E, W, f1, rules = MATCH_RULES) {
  */
 export const MATCH_STEPS = Object.freeze({
   refine: (S, V, W, u, rules = MATCH_RULES) => (rules.refineUnits === 'px'
-    ? refineVertices(S, V, W, u, MATCH.refineIters, { axisSpanPx: 6 })[0]   // E18 as recorded: +-6 px, the prototype's px steps
-    : refineVertices(S, V, W, u, MATCH.refineIters, { axisSpanPx: MATCH.refineAxisSpanR1 * S.R1, unitPx: S.R1 })[0]),
+    ? refineVertices(S, V, W, u, MATCH.refineIters, { axisSpanPx: 6, score: polyScoreFast })[0]   // E18 as recorded: +-6 px, the prototype's px steps
+    : refineVertices(S, V, W, u, MATCH.refineIters, { axisSpanPx: MATCH.refineAxisSpanR1 * S.R1, unitPx: S.R1, score: polyScoreFast })[0]),
   sensor: (S, V, W) => routeSensorAt(S, V, W),
-  secondBend: (S, start, V, E, W, f1, rules = MATCH_RULES) => secondBend(S, start, V, E, W, f1, rules),
+  secondBendScan: (S, start, V, E, W, rules = MATCH_RULES) => secondBendScan(S, start, V, E, W, rules),
+  secondBendRefine: (S, start, E, W, cand, rules = MATCH_RULES) => secondBendRefine(S, start, E, W, cand, rules),
   placeBends: (S, V, W, straight) => refineBendsOf(S, V, W, { straight }),
   contrast: (S, V, W) => contrast(S, V, W)
 });
@@ -207,7 +239,7 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
       const r1 = steps.sensor(S, V, W);
       rec = { verts: V, how: `contrast route (${V.length - 2} bends): sensor ${r1.passFrac.toFixed(2)}; straight read ${straight.passFrac.toFixed(2)}`, sensor: r1 };
       if (secondBends && V.length === 3 && r1.passFrac < MATCH.tau) {
-        const b2 = steps.secondBend(S, start, V, E, W, r1.passFrac, rules);
+        const b2 = secondBend(S, start, V, E, W, r1.passFrac, rules, steps);
         rec = b2.accepted ? { verts: b2.verts, how: `2-bend accepted: ${b2.note}`, sensor: b2.sensor, secondBend: true } : { ...rec, how: `${rec.how}; 2-bend rejected: ${b2.note}` };
       }
     }

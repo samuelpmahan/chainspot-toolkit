@@ -181,10 +181,10 @@ export function registerTraceQueries(store, { matcher = null, board = null } = {
       return { value: r, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, reached: Object.values(r.holes).filter((h) => h.end != null).length } };
     },
   };
-  const units = { refine: 'px (canonical frame): the refined vertices', sensor: 'passFrac / stations', secondBend: 'the 2-bend proposal and its sensor reading',
+  const units = { refine: 'px (canonical frame): the refined vertices', sensor: 'passFrac / stations', secondBendScan: 'lum (edge contrast): the best 2-bend candidates [contrast, t px, B2 px] and the routes read', secondBendRefine: 'lum (edge contrast) and px (canonical frame): one candidate refined',
     placeBends: 'px (canonical frame): the placed bends and their reading', contrast: 'lum (edge contrast) and visible px' };
   for (const [k, f] of Object.entries(MATCH_STEPS)) if (!store.registered(`fn.q.match.${k}`)) store.register(`fn.q.match.${k}`, { note: `routeMatch step: ${k} (ports/s7route/match.mjs)`,
-    calculate: (io) => { const v = f(get(io.args.scene), ...io.args.a); return { value: v, unit: units[k], emits: { computed: 1 } }; } });
+    calculate: (io) => { const v = f(get(io.args.scene), ...io.args.a); return { value: v, unit: units[k], emits: { computed: 1, ...(Number.isFinite(v?.read) ? { routes: v.read } : {}) } }; } });
   const answers = new Map();
   for (const [fn, q] of Object.entries(table)) store.register(fn, { note: 'S7 hallway math behind the PxC boundary (ports/s7trace)',
     calculate: (io) => {

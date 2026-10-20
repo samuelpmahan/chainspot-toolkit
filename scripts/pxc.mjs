@@ -12,6 +12,8 @@
  *   node scripts/pxc.mjs shot <file.html> <outdir> "<hash>"...   full-page screenshots of a render at deep links (inspector)
  *   node scripts/pxc.mjs state [--retest [all]] [--freeze] [--json]   every stage on every dev course: goal, expected,
  *                                                         result, status (derived), freshness; retest re-runs only stale cells
+ *   node scripts/pxc.mjs profile --attempt <id> [--top N]  each stage's latest run: wall, inside/outside the store, the
+ *                                                         costliest Calculations by self time, opaque hot spots
  *   node scripts/pxc.mjs cas --stats                     the persistent cache (attempts/cas): entries, size, age, largest
  *   node scripts/pxc.mjs cas --prune-older-than DAYS      remove entries nothing has used for DAYS days
  * Scaffolds never overwrite a file.
@@ -50,6 +52,23 @@ function doctor(args) {
   say('Boundary debt (advisory: prototype freely; graduate working code - `node scripts/pxc.mjs explain prototyping`)\n');
   for (const [f, c] of Object.entries(now)) say(`  ${f.padEnd(52)} ${Object.entries(c).map(([k, n]) => `${k} ${n}${base[f]?.[k] !== undefined && base[f][k] !== n ? ` (was ${base[f][k]})` : ''}`).join(', ')}`);
   say(`\nFixes:\n  artifactReads: ${FIX.artifactReads}\n  pixelLoops:    ${FIX.pixelLoops}\nPer file: node scripts/pxc.mjs doctor <file>`);
+}
+
+/** pxc profile --attempt <id>: every stage's latest profiled run (instrumentation.json), self time first. */
+async function profileAttempt(id, top = 8) {
+  const { profileLines } = await import('../fg/profile.mjs');
+  const outRoot = join(ROOT, 'attempts/stages', id, 'fork/stage-output');
+  if (!existsSync(outRoot)) return say(`no stage output for ${id} (${relative(ROOT, outRoot)})`);
+  const latest = [];
+  for (const n of readdirSync(outRoot, { withFileTypes: true })) {
+    if (!n.isDirectory()) continue;
+    const d = join(outRoot, n.name);
+    if (existsSync(join(d, 'instrumentation.json'))) latest.push([n.name, join(d, 'instrumentation.json')]);
+    const runs = readdirSync(d).filter((r) => r.startsWith('run-') && existsSync(join(d, r, 'instrumentation.json'))).sort();
+    if (runs.length) latest.push([`${n.name}/${runs.at(-1)}${runs.length > 1 ? ` (latest of ${runs.length})` : ''}`, join(d, runs.at(-1), 'instrumentation.json')]);
+  }
+  if (!latest.length) return say(`no profiled runs under ${relative(ROOT, outRoot)}`);
+  for (const [name, f] of latest) { for (const l of profileLines(JSON.parse(readFileSync(f, 'utf8')), { top, title: name })) say(l); say(); }
 }
 
 async function doctorAttempt(id) {
@@ -192,6 +211,7 @@ else if (cmd === 'cas') {
 }
 else if (cmd === 'state') await (await import('../ports/state/matrix.mjs')).stateCommand(rest, { say });
 else if (cmd === 'shot') { const [file, outDir, ...hashes] = rest; if (!file || !outDir || !hashes.length) say('usage: shot <file.html> <outdir> "<hash>" ...'); else for (const f of await (await import('./pxc/shot.mjs')).shot(file, outDir, hashes)) say(`  wrote ${f}`); }
+else if (cmd === 'profile') { const i = rest.indexOf('--attempt'), t = rest.indexOf('--top'); if (i < 0 || !rest[i + 1]) say('usage: profile --attempt <id> [--top N]'); else await profileAttempt(rest[i + 1], t >= 0 ? Number(rest[t + 1]) : 8); }
 else if (cmd === 'doctor') await doctor(rest);
 else if (cmd === 'scaffold') scaffold(rest);
 else say(readFileSync(new URL(import.meta.url)).toString().split('*/')[0].split('\n').slice(2).map((l) => l.replace(/^ \* ?/, '')).join('\n'));

@@ -135,69 +135,99 @@ function verdicts(c, a, phi, t0, n, W, memo) {
  * every leg is in neither band), minus the intervals deeper than h - 3 px inside a leg (in neither band either). -> [contrast lum, counted px] or [null, 0] when a band has < 30 visible px.
  */
 export function ribbonContrastAt(c, V, W, { band = ROUTE.contrastBandPx } = {}) {
-  const { lum, mask, W: IW, H: IH } = c, h = W / 2, reach = h + band[1] + 1;
+  const { lum, mask, W: IW, H: IH } = c, h = W / 2, b0 = band[0], b1 = band[1], reach = h + b1 + 1;
   let mnx = Infinity, mny = Infinity, mxx = -Infinity, mxy = -Infinity;
   for (const [x, y] of V) { mnx = Math.min(mnx, x); mny = Math.min(mny, y); mxx = Math.max(mxx, x); mxy = Math.max(mxy, y); }
-  const x0 = Math.max(Math.floor(mnx - h - band[1] - 2), 0), y0 = Math.max(Math.floor(mny - h - band[1] - 2), 0);
-  const x1 = Math.min(Math.ceil(mxx + h + band[1] + 3), IW), y1 = Math.min(Math.ceil(mxy + h + band[1] + 3), IH);
-  const segs = []; for (let i = 1; i < V.length; i++) { const a = V[i - 1], b = V[i], dx = b[0] - a[0], dy = b[1] - a[1]; segs.push([a[0], a[1], dx, dy, Math.max(dx * dx + dy * dy, 1e-9)]); }
-  const e0 = V[0], e1 = V[V.length - 1], capR = h + band[1] + 2, capIn2 = (capR + 1) ** 2;
-  const nSeg = segs.length, flat = Float64Array.from(segs.flat());
-  const outer2 = (h + band[1] + 1) ** 2, inner2 = Math.max(0, h - band[1] - 1) ** 2;
+  const x0 = Math.max(Math.floor(mnx - h - b1 - 2), 0), y0 = Math.max(Math.floor(mny - h - b1 - 2), 0);
+  const x1 = Math.min(Math.ceil(mxx + h + b1 + 3), IW), y1 = Math.min(Math.ceil(mxy + h + b1 + 3), IH);
+  // the legs as flat typed arrays (no per-row allocation): start, step, squared length, length
+  const nSeg = V.length - 1, AX = new Float64Array(nSeg), AY = new Float64Array(nSeg), DX = new Float64Array(nSeg), DY = new Float64Array(nSeg),
+    L2 = new Float64Array(nSeg), LL = new Float64Array(nSeg), IL2 = new Float64Array(nSeg);
+  for (let q = 0; q < nSeg; q++) {
+    const a = V[q], b = V[q + 1], dx = b[0] - a[0], dy = b[1] - a[1];
+    AX[q] = a[0]; AY[q] = a[1]; DX[q] = dx; DY[q] = dy; L2[q] = Math.max(dx * dx + dy * dy, 1e-9); LL[q] = Math.sqrt(L2[q]); IL2[q] = 1 / L2[q];
+  }
+  const e0x = V[0][0], e0y = V[0][1], e1x = V[nSeg][0], e1y = V[nSeg][1], capR = h + b1 + 2, capIn2 = (capR + 1) ** 2;
+  const outer2 = (h + b1 + 1) ** 2, inner2 = Math.max(0, h - b1 - 1) ** 2;
+  // the band edges squared (an edge at <= 0 px bounds nothing below; as an upper bound it admits nothing)
+  const sq = (e) => (e > 0 ? e * e : 0), up = (e) => (e > 0 ? e * e : -1);
+  const inLo2 = sq(h - b1), inHi2 = up(h - b0), outLo2 = sq(h + b0), outHi2 = up(h + b1);
+  const m0 = 1e-6 * inLo2 + 1e-9, m1 = 1e-6 * Math.max(inHi2, 0) + 1e-9, m2 = 1e-6 * outLo2 + 1e-9, m3 = 1e-6 * Math.max(outHi2, 0) + 1e-9;
   let si = 0, ni = 0, so = 0, no = 0;
-  const rIn = h - band[1] - 0.01, iv = [], skip = [];
-  const merge = (list) => { list.sort((p, q) => p[0] - q[0]); const out = []; for (const x of list) { const l = out.at(-1); if (l && x[0] <= l[1] + 1) l[1] = Math.max(l[1], x[1]); else out.push([x[0], x[1]]); } return out; };
+  const rIn = h - b1 - 0.01, ivLo = new Int32Array(nSeg), ivHi = new Int32Array(nSeg), skLo = new Int32Array(nSeg), skHi = new Int32Array(nSeg);
+  // sort (insertion, n = legs) and merge touching integer intervals in place; the union does not depend on the order of ties
+  const merge = (lo, hi, n) => {
+    for (let i = 1; i < n; i++) { const a = lo[i], b = hi[i]; let j = i - 1; while (j >= 0 && lo[j] > a) { lo[j + 1] = lo[j]; hi[j + 1] = hi[j]; j--; } lo[j + 1] = a; hi[j + 1] = b; }
+    let m = 0;
+    for (let i = 0; i < n; i++) { if (m && lo[i] <= hi[m - 1] + 1) { if (hi[i] > hi[m - 1]) hi[m - 1] = hi[i]; } else { lo[m] = lo[i]; hi[m] = hi[i]; m++; } }
+    return m;
+  };
   for (let y = y0; y < y1; y++) {
-    iv.length = 0; skip.length = 0;
-    for (const [ax, ay, dx, dy, L2] of segs) {
+    let nIv = 0, nSk = 0;
+    for (let q = 0; q < nSeg; q++) {
+      const ax = AX[q], ay = AY[q], dx = DX[q], dy = DY[q];
       // the x interval of this row within `reach` of the leg (conservative: a superset)
       let ta, tb;
       if (Math.abs(dy) < 1e-12) { if (Math.abs(ay - y) > reach) continue; ta = 0; tb = 1; }
-      else { ta = (y - reach - ay) / dy; tb = (y + reach - ay) / dy; if (ta > tb) [ta, tb] = [tb, ta]; ta = Math.max(ta, 0); tb = Math.min(tb, 1); if (ta > tb) continue; }
+      else { ta = (y - reach - ay) / dy; tb = (y + reach - ay) / dy; if (ta > tb) { const t = ta; ta = tb; tb = t; } ta = Math.max(ta, 0); tb = Math.min(tb, 1); if (ta > tb) continue; }
       const xa = ax + ta * dx, xb = ax + tb * dx;
-      iv.push([Math.max(x0, Math.ceil(Math.min(xa, xb) - reach)), Math.min(x1 - 1, Math.floor(Math.max(xa, xb) + reach))]);
+      ivLo[nIv] = Math.max(x0, Math.ceil(Math.min(xa, xb) - reach)); ivHi[nIv] = Math.min(x1 - 1, Math.floor(Math.max(xa, xb) + reach)); nIv++;
       // the x interval whose px lie deeper than h - 3 px inside the ribbon of this leg (a subset): in no band, skipped
-      if (rIn > 0 && L2 > 1e-9) {
-        const L = Math.sqrt(L2); let lo = -Infinity, hi = Infinity;
-        const slab = (alpha, beta, a0, a1) => {   // a0 < alpha x + beta < a1
-          if (Math.abs(alpha) < 1e-12) { if (!(beta > a0 && beta < a1)) { lo = Infinity; hi = -Infinity; } return; }
-          let u = (a0 - beta) / alpha, v = (a1 - beta) / alpha; if (u > v) [u, v] = [v, u]; lo = Math.max(lo, u); hi = Math.min(hi, v);
-        };
-        slab(-dy / L, (dy * ax + dx * (y - ay)) / L, -rIn, rIn);                 // perpendicular distance < rIn
-        slab(dx / L2, (-dx * ax + dy * (y - ay)) / L2, 1e-9, 1 - 1e-9);            // projection strictly inside the leg
+      if (rIn > 0 && L2[q] > 1e-9) {
+        const L = LL[q]; let lo = -Infinity, hi = Infinity;
+        // a0 < alpha x + beta < a1, twice: perpendicular distance < rIn, projection strictly inside the leg
+        for (let k = 0; k < 2; k++) {
+          const alpha = k ? dx / L2[q] : -dy / L, beta = k ? (-dx * ax + dy * (y - ay)) / L2[q] : (dy * ax + dx * (y - ay)) / L;
+          const a0 = k ? 1e-9 : -rIn, a1 = k ? 1 - 1e-9 : rIn;
+          if (Math.abs(alpha) < 1e-12) { if (!(beta > a0 && beta < a1)) { lo = Infinity; hi = -Infinity; } continue; }
+          let u = (a0 - beta) / alpha, v = (a1 - beta) / alpha; if (u > v) { const t = u; u = v; v = t; } lo = Math.max(lo, u); hi = Math.min(hi, v);
+        }
         const a = Math.ceil(lo + 1e-6), b = Math.floor(hi - 1e-6);
-        if (a <= b) skip.push([a, b]);
+        if (a <= b) { skLo[nSk] = a; skHi[nSk] = b; nSk++; }
       }
     }
-    if (!iv.length) continue;
-    const outer = merge(iv), inner = skip.length ? merge(skip) : [];
+    if (!nIv) continue;
+    const nOut = merge(ivLo, ivHi, nIv), nIn = nSk ? merge(skLo, skHi, nSk) : 0, row = y * IW, c0y = y - e0y, c1y = y - e1y;
     let s = 0;
-    for (const [lo, hi] of outer) for (let x = lo; x <= hi; x++) {
-      while (s < inner.length && inner[s][1] < x) s++;
-      if (s < inner.length && inner[s][0] <= x) { x = Math.min(hi, inner[s][1]); continue; }
-      const i = y * IW + x;
-      if (!(mask[i] < 0.01)) continue;
-      // the same tests as polyScore, the same Math.hypot values: squared distances only pick the nearest leg and skip
-      // px that are certainly outside the bands (margins of 1 px), so the counted px and their sums are unchanged
-      const c0x = x - e0[0], c0y = y - e0[1], c1x = x - e1[0], c1y = y - e1[1];
-      if (c0x * c0x + c0y * c0y <= capIn2 && !(Math.hypot(c0x, c0y) > capR)) continue;
-      if (c1x * c1x + c1y * c1y <= capIn2 && !(Math.hypot(c1x, c1y) > capR)) continue;
-      let best2 = Infinity, bx = 0, by = 0;
-      for (let q = 0; q < nSeg; q++) {
-        const o = 5 * q, ax = flat[o], ay = flat[o + 1], dx = flat[o + 2], dy = flat[o + 3];
-        let t = ((x - ax) * dx + (y - ay) * dy) / flat[o + 4]; t = t < 0 ? 0 : t > 1 ? 1 : t;
-        const ex = x - (ax + t * dx), ey = y - (ay + t * dy), d2 = ex * ex + ey * ey;
-        if (d2 < best2) { best2 = d2; bx = ex; by = ey; }
+    for (let r = 0; r < nOut; r++) {
+      const hiX = ivHi[r];
+      for (let x = ivLo[r]; x <= hiX; x++) {
+        while (s < nIn && skHi[s] < x) s++;
+        if (s < nIn && skLo[s] <= x) { x = Math.min(hiX, skHi[s]); continue; }
+        const i = row + x;
+        if (!(mask[i] < 0.01)) continue;
+        // the same tests as polyScore, the same Math.hypot values: squared distances only pick the nearest leg and skip
+        // px that are certainly outside the bands (margins of 1 px), so the counted px and their sums are unchanged
+        const c0x = x - e0x, c1x = x - e1x;
+        if (c0x * c0x + c0y * c0y <= capIn2 && !(Math.hypot(c0x, c0y) > capR)) continue;
+        if (c1x * c1x + c1y * c1y <= capIn2 && !(Math.hypot(c1x, c1y) > capR)) continue;
+        // the nearest leg's squared distance (times the reciprocal: off by rounding only, which the 1 px early-outs and the
+        // edge margin absorb; the hypot path below divides exactly as polyScore does)
+        let best2 = Infinity;
+        for (let q = 0; q < nSeg; q++) {
+          const ax = AX[q], ay = AY[q], dx = DX[q], dy = DY[q];
+          let t = ((x - ax) * dx + (y - ay) * dy) * IL2[q]; t = t < 0 ? 0 : t > 1 ? 1 : t;
+          const ex = x - (ax + t * dx), ey = y - (ay + t * dy), d2 = ex * ex + ey * ey;
+          if (d2 < best2) best2 = d2;
+        }
+        if (best2 > outer2 || best2 < inner2) continue;
+        // away from the four band edges the squared distance decides the band exactly as the hypot would (they differ by
+        // rounding, ~1e-15 relative, the margin is 1e-6): only px within the margin of an edge take polyScore's hypot path
+        const near = (inLo2 > 0 && Math.abs(best2 - inLo2) <= m0) || (inHi2 > 0 && Math.abs(best2 - inHi2) <= m1)
+          || Math.abs(best2 - outLo2) <= m2 || (outHi2 > 0 && Math.abs(best2 - outHi2) <= m3);
+        if (!near) {
+          if (best2 >= inLo2 && best2 <= inHi2) { si += lum[i]; ni++; } else if (best2 >= outLo2 && best2 <= outHi2) { so += lum[i]; no++; }
+          continue;
+        }
+        let D = Infinity;   // polyScore's min of hypot over the legs (ties between legs give the same value)
+        for (let q = 0; q < nSeg; q++) {
+          const ax = AX[q], ay = AY[q], dx = DX[q], dy = DY[q];
+          let t = ((x - ax) * dx + (y - ay) * dy) / L2[q]; t = t < 0 ? 0 : t > 1 ? 1 : t;
+          const ex = x - (ax + t * dx), ey = y - (ay + t * dy);
+          if (ex * ex + ey * ey <= best2 * (1 + 1e-9) + 1e-12) { const d = Math.hypot(ex, ey); if (d < D) D = d; }
+        }
+        if (D >= h - b1 && D <= h - b0) { si += lum[i]; ni++; } else if (D >= h + b0 && D <= h + b1) { so += lum[i]; no++; }
       }
-      if (best2 > outer2 || best2 < inner2) continue;
-      let D = Infinity;   // polyScore's min of hypot over the legs (ties between legs give the same value)
-      for (let q = 0; q < nSeg; q++) {
-        const o = 5 * q, ax = flat[o], ay = flat[o + 1], dx = flat[o + 2], dy = flat[o + 3];
-        let t = ((x - ax) * dx + (y - ay) * dy) / flat[o + 4]; t = t < 0 ? 0 : t > 1 ? 1 : t;
-        const ex = x - (ax + t * dx), ey = y - (ay + t * dy);
-        if (ex * ex + ey * ey <= best2 * (1 + 1e-9) + 1e-12) { const d = Math.hypot(ex, ey); if (d < D) D = d; }
-      }
-      if (D >= h - band[1] && D <= h - band[0]) { si += lum[i]; ni++; } else if (D >= h + band[0] && D <= h + band[1]) { so += lum[i]; no++; }
     }
   }
   if (ni < ROUTE.contrastMinPx || no < ROUTE.contrastMinPx) return [null, 0];
@@ -302,21 +332,30 @@ export function oneBendAt(c, start, E, W, { memo = null } = {}) {
 }
 
 /** tk.s7.routeRow@<hole>: per BasketPoint, the best route by edge contrast, with the sensor's reading on that route. */
-export function routeRowOf(c, start, bp, W, units = 'r1', search = 'full') {
+/**
+ * The row's per-cell steps. Default: direct calls. The row Calculations pass their own (fn.q.route.*Cell, ROW_STEP_QUERIES),
+ * so every cell's search is a profiled store call: same functions, same arguments, so the same answers.
+ */
+export const ROW_STEPS = Object.freeze({
+  coarse: (c, start, E, W, units, mult) => coarseContrastAt(c, start, E, W, units, mult),
+  contrast: (c, start, E, W, units, search) => (search === 'full' ? contrastRouteAt : contrastRouteFastAt)(c, start, E, W, units),
+  sensor: (c, verts, W, memo) => routeSensorAt(c, verts, W, { memo })
+});
+export function routeRowOf(c, start, bp, W, units = 'r1', search = 'full', steps = ROW_STEPS) {
   if (!(W > 0)) return { schema: 'nctk-s7-route-row@1', hole: start.hole, condition: 'no hallway width', cells: [], emits: { cellsCount: 0 } };
   const memo = new Map(), cells = [];
   let contrastRoutes = 0;
   let lean = null;
   if (search === 'lean') {
-    const coarse = bp.map((E) => coarseContrastAt(c, start, E, W, units, LEAN.coarse));
+    const coarse = bp.map((E) => steps.coarse(c, start, E, W, units, LEAN.coarse));
     coarse.forEach((x) => { contrastRoutes += x.tried; });
     const order = coarse.map((x, k) => [x.best.contrastLum ?? -Infinity, k]).sort((a, b) => b[0] - a[0]).slice(0, LEAN.baskets).map(([, k]) => k);
     lean = { coarse, refine: new Set(order) };
   }
   for (let k = 0; k < bp.length; k++) {
-    const cr = lean ? (lean.refine.has(k) ? contrastRouteFastAt(c, start, bp[k], W, units) : { ...lean.coarse[k], tried: 0 })
-      : (search === 'fast' ? contrastRouteFastAt : contrastRouteAt)(c, start, bp[k], W, units); contrastRoutes += cr.tried;
-    const crs = routeSensorAt(c, cr.best.verts, W, { memo });
+    const cr = lean ? (lean.refine.has(k) ? steps.contrast(c, start, bp[k], W, units, 'fast') : { ...lean.coarse[k], tried: 0 })
+      : steps.contrast(c, start, bp[k], W, units, search === 'fast' ? 'fast' : 'full'); contrastRoutes += cr.tried;
+    const crs = steps.sensor(c, cr.best.verts, W, memo);
     const contrast = { contrastLum: cr.best.contrastLum, edgePx: cr.best.edgePx, bends: cr.best.verts.length - 2, verts: cr.best.verts, bendAlongPx: cr.best.bendAlongPx,
       sensor: { passFrac: crs.passFrac, stations: crs.stations }, condition: cr.best.contrastLum === null ? `fewer than ${ROUTE.contrastMinPx} visible px in an edge band on every route` : null };
     cells.push({ basket: k, contrast });
@@ -412,6 +451,27 @@ const CODE = Object.freeze({
   table: digestOf(routeTableOf, samBasketsOf, argmax, onAxisOf)
 });
 const SCENE = 'tk.s7.sceneS4', HOLES = 'tk.s7.holes';
+/** The row steps as store queries on the S4 scene (one call per cell and step; emits the routes each one read). */
+export const ROW_STEP_QUERIES = Object.freeze({
+  'fn.q.route.coarseCell': (c, a) => { const r = ROW_STEPS.coarse(c, a.start, a.E, a.W, a.units, a.mult); return { value: r, unit: 'lum (edge contrast) of the best coarse route; tried: routes read', emits: { routes: r.tried } }; },
+  'fn.q.route.contrastCell': (c, a) => { const r = ROW_STEPS.contrast(c, a.start, a.E, a.W, a.units, a.search); return { value: r, unit: 'lum (edge contrast) of the best route; tried: routes read', emits: { routes: r.tried } }; },
+  'fn.q.route.sensorCell': (c, a) => ({ value: ROW_STEPS.sensor(c, a.verts, a.W, a.memo), unit: 'passFrac / stations', emits: { routes: 1 } })
+});
+export function registerRowSteps(store) {
+  for (const [fn, f] of Object.entries(ROW_STEP_QUERIES)) if (!store.registered(fn)) store.register(fn, { inParts: [SCENE], note: `route table step (ports/s7route/routeSpace.mjs ROW_STEPS)`,
+    calculate: (io) => f(io.in(SCENE), io.args) });
+}
+/**
+ * A row Calculation's steps, each a profiled call on the row's own store (nested under the row in the profile). Not
+ * declared as `calls`: that would key the row on every root of the store (a called query may read any Part), and a change to
+ * one hole's tee would recompute every row. These steps read only the S4 scene, an inPart of the row, plus their arguments,
+ * so the row's key (code, args, scene) already bounds what they see.
+ */
+const rowStepsOn = (store) => (store ? {
+  coarse: (_c, start, E, W, units, mult) => store.call('fn.q.route.coarseCell', { start, E, W, units, mult }).value,
+  contrast: (_c, start, E, W, units, search) => store.call('fn.q.route.contrastCell', { start, E, W, units, search }).value,
+  sensor: (_c, verts, W, memo) => store.call('fn.q.route.sensorCell', { verts, W, memo }).value
+} : ROW_STEPS);
 
 /** The course-wide Calculations: starts and hallway (lazy: produced on first need). */
 export const ROUTE_CALCULATIONS = Object.freeze([
@@ -421,9 +481,11 @@ export const ROUTE_CALCULATIONS = Object.freeze([
     calculate: (io) => ({ [ROUTE_HALLWAY_PART]: routeHallwayOf(io.in(SCENE), io.in(ROUTE_START_PART)) }) }]
 ]);
 /** One row: registered on a per-hole branch (alias tk.s7.routeRow -> tk.s7.routeRow@<hole>), called with { hole, start, widthPx }. */
-export const ROUTE_ROW_CALCULATION = Object.freeze(['fn.tk.s7.routeRow', { inParts: [SCENE], outParts: [ROUTE_ROW_PART], code: CODE.row,
+/** The row Calculation; on a store with the row steps registered (registerRowSteps), each cell's step is a store call. */
+export const routeRowCalculation = (store = null) => ['fn.tk.s7.routeRow', { inParts: [SCENE], outParts: [ROUTE_ROW_PART], code: CODE.row,
   note: 'one hole x every basket: the best route by edge contrast, with the sensor reading on it',
-  calculate: (io) => { const S = io.in(SCENE); return { [ROUTE_ROW_PART]: routeRowOf(S, io.args.start, S.bp, io.args.widthPx) }; } }]);
+  calculate: (io) => { const S = io.in(SCENE); return { [ROUTE_ROW_PART]: routeRowOf(S, io.args.start, S.bp, io.args.widthPx, 'r1', 'full', rowStepsOn(store)) }; } }];
+export const ROUTE_ROW_CALCULATION = Object.freeze(routeRowCalculation());
 /** The rule set's row in recorded px (tk.s7.routeRowPx@<hole>). */
 export const ROUTE_ROW_PX_CALCULATION = Object.freeze(['fn.tk.s7.routeRowPx', { inParts: [SCENE], outParts: [`${ROUTE_ROW_PART}Px`], code: CODE.row,
   note: 'one hole x every basket, the bend search in match18.py\'s recorded px (rule set tablePx)',
@@ -445,6 +507,7 @@ export const routeSensorTableCalculation = (rowAddresses, sensorAddresses) => ['
  */
 export function routeTableOn(store, { board = null, sensor = false, units = 'r1', search = 'full' } = {}) {
   for (const [fn, spec] of ROUTE_CALCULATIONS) if (!store.registered(fn)) store.register(fn, spec);
+  registerRowSteps(store);
   const start = store.get(ROUTE_START_PART), W = store.get(ROUTE_HALLWAY_PART).widthPx ?? null, rows = [];
   const suffix = `${units === 'px' ? 'Px' : ''}${search === 'fast' ? 'Fast' : search === 'lean' ? 'Lean' : ''}`;
   if (suffix) {   // a rule set's table (px: match18.py's recorded px; Fast: coarse-to-fine bends): its own rows and table Parts
@@ -454,7 +517,7 @@ export function routeTableOn(store, { board = null, sensor = false, units = 'r1'
       if (!store.has(address)) {
         const b = store.branch(board, { name: `s7route/hole ${h.hole} (${suffix})`, alias: { [rowPart]: address }, sharedParts: true });
         b.register(rowFn, { inParts: [SCENE], outParts: [rowPart], code: CODE.row, note: `one hole x every basket, rule set table ${suffix}`,
-          calculate: (io) => { const S = io.in(SCENE); return { [rowPart]: routeRowOf(S, io.args.start, S.bp, io.args.widthPx, units, search) }; } });
+          calculate: (io) => { const S = io.in(SCENE); return { [rowPart]: routeRowOf(S, io.args.start, S.bp, io.args.widthPx, units, search, rowStepsOn(b)) }; } });
         b.call(rowFn, { hole: h.hole, start: h, widthPx: W });
       }
       rows.push(address);
@@ -467,7 +530,7 @@ export function routeTableOn(store, { board = null, sensor = false, units = 'r1'
     const address = rowAddress(h.hole);
     if (!store.has(address)) {
       const b = store.branch(board, { name: `s7route/hole ${h.hole}`, alias: { [ROUTE_ROW_PART]: address }, sharedParts: true });
-      b.register(...ROUTE_ROW_CALCULATION);
+      b.register(...routeRowCalculation(b));
       b.call('fn.tk.s7.routeRow', { hole: h.hole, start: h, widthPx: W });
     }
     rows.push(address);

@@ -70,6 +70,18 @@ export function opaqueHotSpots(doc, { share = HOT_SPOT.share, minMs = HOT_SPOT.m
       fix: 'its own time is spent outside any nested store call, so the profile cannot see its steps: make each step a store query or Calculation' }))
     .sort((a, b) => b.selfMs - a.selfMs);
 }
+/**
+ * The profile as text (pxc profile, the runners' stderr): wall time, time inside store calls and outside them (outside = not
+ * itemised), the costliest Calculations by self time with their emits, then the opaque hot spots.
+ */
+export function profileLines(doc, { top = 8, title = null } = {}) {
+  const calls = doc.calculations ?? [], rootMs = calls.filter((e) => e.parent == null).reduce((s, e) => s + (e.elapsedMs ?? 0), 0);
+  const wall = doc.wallMs > 0 ? doc.wallMs : null, s = (ms) => `${(ms / 1000).toFixed(1)} s`, summary = profileSummary(doc);
+  const out = [`${title ? `${title}: ` : ''}${wall == null ? 'wall not recorded' : `wall ${s(wall)}`}, inside store calls ${s(rootMs)}${wall == null ? '' : `, outside ${s(Math.max(0, wall - rootMs))} (${Math.round((100 * Math.max(0, wall - rootMs)) / wall)}%: not itemised)`}${doc.processMs > 0 ? `; process ${s(doc.processMs)} (module loading included)` : ''}; ${calls.length} calls`];
+  for (const r of summary.slice(0, top)) out.push(`  ${String(Math.round(r.selfMs)).padStart(7)} ms self ${String(Math.round(r.totalMs)).padStart(7)} ms total  ${r.calls}x ${r.calculation}${Object.keys(r.emits).length ? `  (${Object.entries(r.emits).map(([k, v]) => `${k} ${Math.round(v * 100) / 100}`).join(', ')})` : ''}`);
+  for (const l of hotSpotLines(summary.hotSpots)) out.push(`  ${l}`);
+  return out;
+}
 export const hotSpotLines = (spots) => spots.map((h) => `OPAQUE HOT SPOT ${h.calculation}: ${h.calls}x ${h.selfMs} ms (${Math.round(h.shareOfRun * 100)}% of the run) of its own time; ${h.fix}`);
 
 /** One ledger frame (fg/guarantee.mjs FRAME_KINDS) for a flipbook page. */

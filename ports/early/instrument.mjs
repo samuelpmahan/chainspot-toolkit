@@ -53,11 +53,15 @@ import { performance } from 'node:perf_hooks';
 export function createInstrumentation() {
   const ops = [];
   const calculations = [];
+  // wall time from here to the document (fg/profile.mjs profileLines: the time outside every store call is the run's
+  // un-itemised remainder); processMs: since the process started, module loading included
+  const startedMs = performance.now();
   return {
     ops,
     calculations,
     document({ store = null } = {}) {
-      return { schema: 'nctk-instrumentation@1', ops, calculations: [...calculations].sort((a, b) => a.seq - b.seq), ...(store ? { store } : {}) };
+      const at = performance.now();
+      return { schema: 'nctk-instrumentation@1', wallMs: roundMs(at - startedMs), processMs: roundMs(at), ops, calculations: [...calculations].sort((a, b) => a.seq - b.seq), ...(store ? { store } : {}) };
     }
   };
 }

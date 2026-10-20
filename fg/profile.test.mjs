@@ -46,3 +46,15 @@ test('opaque hot spots: a leaf call with a large share of the run is flagged; on
   assert.deepEqual(s.hotSpots.map((h) => h.calculation), ['fn.q.opaque', 'fn.q.step']);
   assert.ok(profileFrame(s).verdicts.some((v) => /opaque hot spot: fn\.q\.opaque/.test(v.name) && v.ok === false));
 });
+
+test('profileLines: wall, the time inside and outside store calls, self time first, then the hot spots', async () => {
+  const { profileLines } = await import('./profile.mjs');
+  const doc = { wallMs: 10000, processMs: 12500, calculations: [
+    { seq: 1, parent: null, calculation: 'fn.q.big', elapsedMs: 6000, emits: { routes: 40 } },
+    { seq: 2, parent: null, calculation: 'fn.q.small', elapsedMs: 1000 }] };
+  const lines = profileLines(doc, { top: 2, title: 's7trace' });
+  assert.match(lines[0], /^s7trace: wall 10\.0 s, inside store calls 7\.0 s, outside 3\.0 s \(30%: not itemised\); process 12\.5 s/);
+  assert.match(lines[1], /6000 ms self .* 1x fn\.q\.big {2}\(routes 40\)/);
+  assert.match(lines[2], /fn\.q\.small/);
+  assert.match(lines[3], /OPAQUE HOT SPOT fn\.q\.big/);
+});
