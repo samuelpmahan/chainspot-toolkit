@@ -248,6 +248,18 @@ function bendsOnAxis(c, start, W, step, units = 'r1') {
  * coarse bends refined at the full step within +- one coarse step. Same scoring, same strict-improvement rule over the 0-bend.
  */
 export const FAST = Object.freeze({ coarse: 4, keep: 2 });
+/** The lean search (rule set tableSearch 'lean'): every basket swept at LEAN.coarse x the step; only the row's best LEAN.baskets
+ *  (by that coarse contrast) refined as 'fast' does. Cells not refined keep their coarse best (a lower bound of the full search). */
+export const LEAN = Object.freeze({ coarse: 8, baskets: 3 });
+function coarseContrastAt(c, start, E, W, units, mult) {
+  const S = start.S, z = ribbonContrastAt(c, [S, E], W), step = (units === 'px' ? 6 : ROUTE.contrastBendStepR1 * c.R1) * mult;
+  let best = { contrastLum: z[0], edgePx: z[1], verts: [S, E], bendAlongPx: null }, tried = 1;
+  for (const [t, B1] of bendsOnAxis(c, start, W, step, units)) {
+    const r = ribbonContrastAt(c, [S, B1, E], W); tried++;
+    if (r[0] !== null && (best.contrastLum === null || r[0] > best.contrastLum)) best = { contrastLum: r[0], edgePx: r[1], verts: [S, B1, E], bendAlongPx: t };
+  }
+  return { best, tried };
+}
 export function contrastRouteFastAt(c, start, E, W, units = 'r1') {
   const S = start.S, z = ribbonContrastAt(c, [S, E], W), step = units === 'px' ? 6 : ROUTE.contrastBendStepR1 * c.R1;
   let best = { contrastLum: z[0], edgePx: z[1], verts: [S, E], bendAlongPx: null }, tried = 1;
@@ -294,8 +306,16 @@ export function routeRowOf(c, start, bp, W, units = 'r1', search = 'full') {
   if (!(W > 0)) return { schema: 'nctk-s7-route-row@1', hole: start.hole, condition: 'no hallway width', cells: [], emits: { cellsCount: 0 } };
   const memo = new Map(), cells = [];
   let contrastRoutes = 0;
+  let lean = null;
+  if (search === 'lean') {
+    const coarse = bp.map((E) => coarseContrastAt(c, start, E, W, units, LEAN.coarse));
+    coarse.forEach((x) => { contrastRoutes += x.tried; });
+    const order = coarse.map((x, k) => [x.best.contrastLum ?? -Infinity, k]).sort((a, b) => b[0] - a[0]).slice(0, LEAN.baskets).map(([, k]) => k);
+    lean = { coarse, refine: new Set(order) };
+  }
   for (let k = 0; k < bp.length; k++) {
-    const cr = (search === 'fast' ? contrastRouteFastAt : contrastRouteAt)(c, start, bp[k], W, units); contrastRoutes += cr.tried;
+    const cr = lean ? (lean.refine.has(k) ? contrastRouteFastAt(c, start, bp[k], W, units) : { ...lean.coarse[k], tried: 0 })
+      : (search === 'fast' ? contrastRouteFastAt : contrastRouteAt)(c, start, bp[k], W, units); contrastRoutes += cr.tried;
     const crs = routeSensorAt(c, cr.best.verts, W, { memo });
     const contrast = { contrastLum: cr.best.contrastLum, edgePx: cr.best.edgePx, bends: cr.best.verts.length - 2, verts: cr.best.verts, bendAlongPx: cr.best.bendAlongPx,
       sensor: { passFrac: crs.passFrac, stations: crs.stations }, condition: cr.best.contrastLum === null ? `fewer than ${ROUTE.contrastMinPx} visible px in an edge band on every route` : null };
@@ -387,7 +407,7 @@ const digestOf = (...fns) => sha256Hex(fns.map(String).join('\n'));
 const CODE = Object.freeze({
   start: digestOf(routeStartOf),
   hallway: digestOf(routeHallwayOf, teeBadgeLearn),
-  row: digestOf(routeRowOf, bendsOnAxis, contrastRouteAt, contrastRouteFastAt, ribbonContrastAt, routeSensorAt, verdicts, stationContrastAt),
+  row: digestOf(routeRowOf, bendsOnAxis, contrastRouteAt, contrastRouteFastAt, coarseContrastAt, ribbonContrastAt, routeSensorAt, verdicts, stationContrastAt),
   sensorRow: digestOf(routeSensorRowOf, bendsOnAxis, oneBendAt, routeSensorAt, verdicts, stationContrastAt),
   table: digestOf(routeTableOf, samBasketsOf, argmax, onAxisOf)
 });
@@ -426,7 +446,7 @@ export const routeSensorTableCalculation = (rowAddresses, sensorAddresses) => ['
 export function routeTableOn(store, { board = null, sensor = false, units = 'r1', search = 'full' } = {}) {
   for (const [fn, spec] of ROUTE_CALCULATIONS) if (!store.registered(fn)) store.register(fn, spec);
   const start = store.get(ROUTE_START_PART), W = store.get(ROUTE_HALLWAY_PART).widthPx ?? null, rows = [];
-  const suffix = `${units === 'px' ? 'Px' : ''}${search === 'fast' ? 'Fast' : ''}`;
+  const suffix = `${units === 'px' ? 'Px' : ''}${search === 'fast' ? 'Fast' : search === 'lean' ? 'Lean' : ''}`;
   if (suffix) {   // a rule set's table (px: match18.py's recorded px; Fast: coarse-to-fine bends): its own rows and table Parts
     const rowPart = `${ROUTE_ROW_PART}${suffix}`, tablePart = `${ROUTE_TABLE_PART}${suffix}`, rowFn = `fn.tk.s7.routeRow${suffix}`, tableFn = `fn.tk.s7.routeTable${suffix}`;
     for (const h of start.holes) {
