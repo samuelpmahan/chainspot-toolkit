@@ -154,9 +154,20 @@ function solve(M, b) {   // Gaussian elimination with partial pivoting; null whe
   return x;
 }
 
-/** The fit over K = 0..maxBends from samples P; V0 = the current route (its bends seed K = its count), K0 = the matching rule's count. */
-export function fitBends(P, S0, E, V0, K0, W) {
+/**
+ * The fit over K = 0..maxBends from samples P; V0 = the current route (its bends seed K = its count), K0 = the matching rule's count.
+ * axis (optional, a unit vector): the first bend stays on the tee axis S0 + t axis (Sam: the tee -> badge segment is straight
+ * hallway, so the first leg runs along the tee's axis); it is fitted by its distance t along the axis alone.
+ */
+export function fitBends(P, S0, E, V0, K0, W, { axis = null } = {}) {
   const R = BENDS, clip = R.clipW * W, sigma = R.sigmaW * W, cands = [], neff = Math.max(P.length * R.stepW / R.windowW, 2);
+  const along = (p) => (p[0] - S0[0]) * axis[0] + (p[1] - S0[1]) * axis[1];
+  const bendsOf = (x, K) => {   // the parameter vector -> the K bends
+    const B = [];
+    if (axis) { B.push([S0[0] + axis[0] * x[0], S0[1] + axis[1] * x[0]]); for (let k = 1; k < K; k++) B.push([x[2 * k - 1], x[2 * k]]); }
+    else for (let k = 0; k < K; k++) B.push([x[2 * k], x[2 * k + 1]]);
+    return B;
+  };
   for (let K = 0; K <= R.maxBends; K++) {
     const inits = [];
     if (K === V0.length - 2) inits.push(V0.slice(1, -1).map((v) => v.slice()));
@@ -166,14 +177,14 @@ export function fitBends(P, S0, E, V0, K0, W) {
       let V;
       if (K === 0) V = [S0, E];
       else {
-        const x0 = B0.flat(), lo = x0.map((v) => v - R.boundW * W), hi = x0.map((v) => v + R.boundW * W);
+        const x0 = axis ? [along(B0[0]), ...B0.slice(1).flat()] : B0.flat(), lo = x0.map((v) => v - R.boundW * W), hi = x0.map((v) => v + R.boundW * W);
         const f = (x) => {
-          const Vt = [S0]; for (let k = 0; k < K; k++) Vt.push([x[2 * k], x[2 * k + 1]]); Vt.push(E);
+          const Vt = [S0, ...bendsOf(x, K), E];
           const out = P.map((p) => Math.min(polyDist(p, Vt), clip));
           for (let i = 0; i < x.length; i++) out.push((x[i] - x0[i]) * R.sigmaW);   // 1 W of travel = one sigma-sample
           return out;
         };
-        const x = boundedLeastSquares(f, x0, lo, hi, {}); V = [S0]; for (let k = 0; k < K; k++) V.push([x[2 * k], x[2 * k + 1]]); V.push(E);
+        const x = boundedLeastSquares(f, x0, lo, hi, {}); V = [S0, ...bendsOf(x, K), E];
       }
       cands.push([costOf(P, V, clip) / (sigma * sigma) * R.stepW / R.windowW + 2 * Math.abs(K - K0) * Math.log(neff), K, V]);
     }
@@ -186,25 +197,28 @@ export function fitBends(P, S0, E, V0, K0, W) {
 /**
  * Refine the bends of one hole's route V (verts: tee cap start, bends, BasketPoint).
  * straight: true when S6 reads the hole STRAIGHT (rule 1: the route is kept). -> { verts, taken, why, ... }
+ * Rule-set options (match.mjs RULE_SETS; absent = the recorded rule): minStations (the gate's visible-station floor; the
+ * matching rule passes it in rC1px when its rule set says so), axis (the tee's unit axis: the first bend is fitted on it).
  */
-export function refineBendsOf(S, V, W, { straight = false } = {}) {
+export function refineBendsOf(S, V, W, { straight = false, minStations = BENDS.gate.minStations, axis = null } = {}) {
   const R = BENDS, K0 = V.length - 2, S0 = V[0], E = V.at(-1);
   if (straight) return { verts: V, taken: false, why: 'S6 reads the hole straight: the matching rule\'s route is kept', K0, K1: K0 };
   let Vc = V, P = [];
   for (let pass = 0; pass < R.passes; pass++) {
     P = centreSamples(S, Vc, W);
     if (P.length < R.minSamples) break;
-    Vc = fitBends(P, S0, E, Vc, K0, W)[2];
+    Vc = fitBends(P, S0, E, Vc, K0, W, { axis })[2];
   }
-  const K1 = Vc.length - 2, a = routeSensorAt(S, V, W), b = routeSensorAt(S, Vc, W), G = R.gate;
+  const K1 = Vc.length - 2, a = routeSensorAt(S, V, W), b = routeSensorAt(S, Vc, W), G = { ...R.gate, minStations };
+  const minSt = Number.isInteger(G.minStations) ? G.minStations : G.minStations.toFixed(1);
   let taken, why;
   if (Vc === V) { taken = false; why = `fewer than ${R.minSamples} centre samples (${P.length})`; }
   else if (K1 !== K0) {
     taken = b.passFrac - a.passFrac > G.gain && b.passFrac >= G.tau && b.stations >= G.minStations;
-    why = `bend count ${K0} -> ${K1}: sensor ${a.passFrac.toFixed(2)} -> ${b.passFrac.toFixed(2)} on ${b.stations} st (needs gain > ${G.gain}, reading >= ${G.tau}, >= ${G.minStations} st)`;
+    why = `bend count ${K0} -> ${K1}: sensor ${a.passFrac.toFixed(2)} -> ${b.passFrac.toFixed(2)} on ${b.stations} st (needs gain > ${G.gain}, reading >= ${G.tau}, >= ${minSt} st)`;
   } else {
     taken = b.stations >= G.minStations && b.passFrac >= a.passFrac - G.dropMax;
-    why = `${K1} bends refitted: sensor ${a.passFrac.toFixed(2)} -> ${b.passFrac.toFixed(2)} on ${b.stations} st (needs no worse than ${G.dropMax}, >= ${G.minStations} st)`;
+    why = `${K1} bends refitted: sensor ${a.passFrac.toFixed(2)} -> ${b.passFrac.toFixed(2)} on ${b.stations} st (needs no worse than ${G.dropMax}, >= ${minSt} st)`;
   }
   return { verts: taken ? Vc : V, taken, why, K0, K1, samples: P.length, sensorOld: a.passFrac, sensorNew: b.passFrac, stationsNew: b.stations, refit: taken ? null : Vc };
 }

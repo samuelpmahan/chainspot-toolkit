@@ -81,3 +81,32 @@ test('routeMatchOf: the step is off without a verdict argument, skipped with a c
   const bent = routeMatchOf(table, S, starts, { straight: { 1: 'bent' } }).holes['1'];
   assert.ok(bent.bendsRefined && bent.verts.length >= 2 && Math.abs(bent.verts.at(-1)[0] - E[0]) < 1e-9, JSON.stringify(bent.bendsRefined));
 });
+
+test('rule-set option axis: the first bend is fitted on the tee axis (by its distance along it) and still lands on the heading change', () => {
+  const S = scene(), P = centreSamples(S, [S0, TRUE_BEND, E], W);
+  const [, K, V] = fitBends(P, S0, E, [S0, [190, 108], E], 1, W, { axis: [1, 0] });
+  assert.equal(K, 1); assert.equal(V[1][1], S0[1], `the first bend left the axis: ${V[1]}`);
+  assert.ok(dist(V[1], TRUE_BEND) < 6, `fitted bend ${V[1]}`);
+  // the step passes it through; absent, the recorded rule is unchanged
+  const free = refineBendsOf(S, [S0, [190, 100], E], W, {}), onAxis = refineBendsOf(S, [S0, [190, 100], E], W, { axis: [1, 0] });
+  assert.ok(onAxis.taken && onAxis.verts[1][1] === S0[1] && dist(onAxis.verts[1], TRUE_BEND) < 6, JSON.stringify(onAxis));
+  assert.ok(free.K1 === onAxis.K1);
+});
+
+test('rule-set option minStations: the gate reads the floor it is given (a map-scaled floor prints with one decimal)', () => {
+  const S = scene(), V = [S0, [225, 104], E];
+  const r = refineBendsOf(S, V, W, {}), loose = refineBendsOf(S, V, W, { minStations: 7.35 }), strict = refineBendsOf(S, V, W, { minStations: 1e6 });
+  assert.match(r.why, />= 20 st\)/); assert.match(loose.why, />= 7\.3 st\)|>= 7\.4 st\)/);
+  assert.equal(strict.taken, false); assert.deepEqual(strict.verts, V);
+});
+
+test('rule-set option straightSecondBend: a straight contrast route the sensor rejects also gets the second-bend search, seeded past the badge', () => {
+  const S = scene(), straightRoute = [S0, E];
+  const table = { widthPx: W, holes: ['1'], baskets: [{ point: E }], contrastMatrix: [[30]], onAxisPrior: [[0]], rows: [{ cells: [{ contrast: { verts: straightRoute } }] }] };
+  const starts = { holes: [{ hole: '1', S: S0, u: [1, 0], badgeAlongPx: 50 }] };
+  const recorded = routeMatchOf(table, S, starts, {}).holes['1'];
+  assert.equal(recorded.verts.length, 2); assert.doesNotMatch(recorded.how, /2-bend/);
+  const searched = routeMatchOf(table, S, starts, { rules: { ...MATCH_RULES, straightSecondBend: true } }).holes['1'];
+  assert.match(searched.how, /2-bend (accepted|rejected)/);
+  if (searched.verts.length === 4) assert.ok(Math.abs(searched.verts[1][1] - S0[1]) < 1e-9, 'B1 is on the tee axis');
+});
