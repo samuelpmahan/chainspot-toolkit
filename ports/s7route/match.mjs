@@ -145,6 +145,18 @@ export const MATCH_STEPS = Object.freeze({
  */
 export const MATCH_RULES = Object.freeze({ straightFromS6: true, secondBendRefine: 'coordWide', refineUnits: 'r1', tableUnits: 'r1' });   // batch 2 (2026-10-20): S6CoordWide
 
+/** The rule sets the S7 pointer vote chooses among: variant name (impl/fn.Hole.trace/) -> its overrides of MATCH_RULES. */
+export const RULE_SETS = Object.freeze({
+  routeMatch: {},
+  routeMatchS6straight: { straightFromS6: true },
+  routeMatchS6CoordWide: { straightFromS6: true, secondBendRefine: 'coordWide' },
+  routeMatchS6Dense: { straightFromS6: true, secondBendRefine: 'dense' },
+  routeMatchS6PxDense: { straightFromS6: true, tableUnits: 'px', refineUnits: 'px', secondBendRefine: 'dense' },
+  routeMatchDenseSecondBend: { secondBendRefine: 'dense' },
+  routeMatchPxRefine: { refineUnits: 'px' },
+  routeMatchPxTable: { tableUnits: 'px', refineUnits: 'px' }
+});
+
 export function routeMatchOf(table, S, starts, { secondBends = true, straight: verdicts = undefined, steps = MATCH_STEPS, rules = MATCH_RULES } = {}) {
   const W = table.widthPx, holes = table.holes;
   if (!(W > 0) || !holes.length) return { holes: {}, assignment: [], widthPx: W ?? null, condition: 'no hallway width or no holes in the route table' };

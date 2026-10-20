@@ -90,12 +90,13 @@ export function captureProvenanceOf(record) {
 }
 
 export const exportCourse = ['fn.tk.export.course', {
-  inParts: ['tk.s7.holes', 'tk.s7.hallway', 'px.badges', 'tk.source.cropReceipt', 'tk.source.sha256', 'tk.source.path', 'tk.source.captureProvenance', 'tk.export.producer'],
+  inParts: ['tk.s7.holes', 'tk.s7.hallway', 'px.badges', 'tk.source.cropReceipt', 'tk.source.sha256', 'tk.source.path', 'tk.source.captureProvenance', 'tk.export.producer', 'tk.export.ruleSet'],
   outParts: [EXPORT_COURSE_PART], calls: ['fn.q.trace.routeMatch'],
   note: 'the toolkit/app boundary: S7 routeMatch holes + S1 badges + unclaimed baskets as chainspot.course-geometry v1 (original-upload frame)',
   calculate: (io) => {
     const path = io.in('tk.source.path');
-    const doc = courseGeometryOf({ solve: io.call('fn.q.trace.routeMatch', {}).value, holesPart: io.in('tk.s7.holes'), hallway: io.in('tk.s7.hallway'), badges: io.in('px.badges'),
+    const ruleSet = io.in('tk.export.ruleSet');   // the S7 rule set the pointer vote accepted (ports/export/run.mjs)
+    const doc = courseGeometryOf({ solve: io.call('fn.q.trace.routeMatch', ruleSet?.rules && Object.keys(ruleSet.rules).length ? { rules: ruleSet.rules } : {}).value, holesPart: io.in('tk.s7.holes'), hallway: io.in('tk.s7.hallway'), badges: io.in('px.badges'),
       crop: io.in('tk.source.cropReceipt'), source: { fileName: String(path).split('/').pop(), sha256: io.in('tk.source.sha256') }, producer: io.in('tk.export.producer'), capture: io.in('tk.source.captureProvenance') });
     const n = (s) => doc.evidence.filter((e) => e.status === s).length;
     return { [EXPORT_COURSE_PART]: { ...doc, emits: { holesCount: doc.holes.length, resolvedHolesCount: n('resolved'), straightHolesCount: n('straight'), partialHolesCount: n('partial'), unresolvedHolesCount: n('unresolved'),

@@ -48,7 +48,7 @@ test('data conditions are recorded, never thrown: no hallway width exports no ho
 });
 
 test('fn.tk.export.course: produces tk.export.course, emits its measures, renders over the course', () => {
-  const parts = { 'tk.s7.holes': holesPart, 'tk.s7.hallway': { widthPx: 41.627 }, 'px.badges': badges, 'tk.source.cropReceipt': crop, 'tk.source.sha256': 'a'.repeat(64), 'tk.source.path': '/x/a.jpg', 'tk.source.captureProvenance': null, 'tk.export.producer': { name: 'chainspot-toolkit' }, 'px.image.cropped': img };
+  const parts = { 'tk.s7.holes': holesPart, 'tk.s7.hallway': { widthPx: 41.627 }, 'px.badges': badges, 'tk.source.cropReceipt': crop, 'tk.source.sha256': 'a'.repeat(64), 'tk.source.path': '/x/a.jpg', 'tk.source.captureProvenance': null, 'tk.export.producer': { name: 'chainspot-toolkit' }, 'tk.export.ruleSet': { variant: 'routeMatch', rules: {}, how: 'test' }, 'px.image.cropped': img };
   const store = createPartStore({ base: { has: (a) => a in parts, get: (a) => parts[a] } });
   store.register('fn.q.trace.routeMatch', { calculate: () => ({ value: solve, unit: 'px (canonical frame)' }) });
   store.register(...exportCourse);
@@ -107,4 +107,14 @@ test('golden fixture vs Sam\'s testimony (agreement, never acceptance): tee 8 px
   }
   const fn = sam.holes.filter((t) => !doc.holes.some((h) => h.number === t.number)).length;
   assert.deepEqual({ tp, fn, fp, wrongHole, judged: sam.holes.length }, { tp: 18, fn: 0, fp: 0, wrongHole: 0, judged: 18 });
+});
+
+test('the export runs the S7 rule set the pointer vote accepted, never a hard-coded default; --variant overrides', async () => {
+  const { exportRuleSet } = await import('./run.mjs');
+  const { RULE_SETS } = await import('../s7route/match.mjs');
+  const given = exportRuleSet('/nonexistent', 'routeMatchS6CoordWide');
+  assert.deepEqual(given.rules, RULE_SETS.routeMatchS6CoordWide); assert.match(given.how, /--variant/);
+  const none = exportRuleSet('/nonexistent');
+  assert.equal(none.variant, 'routeMatch'); assert.match(none.how, /no S7 pointer on record/);
+  assert.match(exportRuleSet('/nonexistent', 'pinned').how, /not a routeMatch rule set/);
 });
