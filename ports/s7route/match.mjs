@@ -143,7 +143,7 @@ export const MATCH_STEPS = Object.freeze({
  *   refineUnits: 'r1' (the 1-bend refine in rC1px) | 'px' (E18 as recorded)
  *   tableUnits: 'r1' (the route table's bend search in rC1px) | 'px' (match18.py's recorded 800 px reach, 6 px step)
  */
-export const MATCH_RULES = Object.freeze({ straightFromS6: false, secondBendRefine: 'coord', refineUnits: 'r1', tableUnits: 'r1' });
+export const MATCH_RULES = Object.freeze({ straightFromS6: true, secondBendRefine: 'coordWide', refineUnits: 'r1', tableUnits: 'r1' });   // batch 2 (2026-10-20): S6CoordWide
 
 export function routeMatchOf(table, S, starts, { secondBends = true, straight: verdicts = undefined, steps = MATCH_STEPS, rules = MATCH_RULES } = {}) {
   const W = table.widthPx, holes = table.holes;

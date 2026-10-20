@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { SCENE_SCHEMA } from '../../fg/s7trace/sceneRender.mjs';
 import { routeSensorAt } from './routeSpace.mjs';
 import { BENDS, centreSamples, initBends, boundedLeastSquares, fitBends, refineBendsOf } from './bends.mjs';
-import { routeMatchOf } from './match.mjs';
+import { routeMatchOf, MATCH_RULES } from './match.mjs';
 
 /**
  * Fixture: a flat 420 x 260 px course (lum 100), one ribbon of width W = 30 px (lum 150) through tee cap (40, 100) -> bend
@@ -72,8 +72,12 @@ test('routeMatchOf: the step is off without a verdict argument, skipped with a c
   assert.equal(off.bendsRefined, null);
   const none = routeMatchOf(table, S, starts, { straight: null }).holes['1'];
   assert.equal(none.bendsRefined.taken, false); assert.match(none.bendsRefined.why, /no S6 straight verdict/); assert.deepEqual(none.verts, off.verts);
-  const kept = routeMatchOf(table, S, starts, { straight: { 1: 'straight' } }).holes['1'];
+  // rule set straightFromS6 false (the matching rule's route kept when S6 reads the hole straight)
+  const kept = routeMatchOf(table, S, starts, { straight: { 1: 'straight' }, rules: { ...MATCH_RULES, straightFromS6: false } }).holes['1'];
   assert.match(kept.bendsRefined.why, /S6 reads the hole straight/); assert.deepEqual(kept.verts, off.verts);
+  // the default (batch 2, S6CoordWide): a hole S6 reads straight is drawn straight, tee cap -> BasketPoint
+  const drawn = routeMatchOf(table, S, starts, { straight: { 1: 'straight' } }).holes['1'];
+  assert.deepEqual(drawn.verts, [S0, E]); assert.match(drawn.how, /S6 reads the hole straight \(rule straightFromS6\)/);
   const bent = routeMatchOf(table, S, starts, { straight: { 1: 'bent' } }).holes['1'];
   assert.ok(bent.bendsRefined && bent.verts.length >= 2 && Math.abs(bent.verts.at(-1)[0] - E[0]) < 1e-9, JSON.stringify(bent.bendsRefined));
 });
