@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { canonical, sha, snapshotPaths } from '../facts.mjs';
 import { compileStageRecipe } from './compile.mjs';
@@ -80,7 +81,7 @@ export function stageFingerprint(state) {
 export async function verifiedEvidence(root,evidence) {
   if(!Array.isArray(evidence)||!evidence.length)return false;
   for(const entry of evidence) {
-    const bytes=await readFile(join(root,entry.path)).catch(()=>null);
+    let bytes=null; try { bytes=readFileSync(join(root,entry.path)); } catch {}
     if(!bytes||bytes.length!==entry.size||sha(bytes)!==entry.sha256)return false;
   }
   return true;

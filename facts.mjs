@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { lstat, readFile, readdir } from 'node:fs/promises';
+import { lstatSync, readFileSync, readdirSync } from 'node:fs';
 import { join, relative, resolve, sep } from 'node:path';
 
 export const BASE = '5433854c72b1dc5aa420934d91e16458c2abe09f';
@@ -12,14 +13,17 @@ export function safePath(root, path) {
   if (full !== resolve(root) && !full.startsWith(resolve(root) + sep)) throw Error(`Outside root: ${path}`);
   return full;
 }
+// Synchronous on purpose: whole-file reads of a closure from page cache are ~3x faster than fs/promises readFile,
+// and the bytes are hashed on the main thread either way (same records, same order, same errors).
 async function walk(root, path, files) {
   const full = safePath(root, path);
-  const stat = await lstat(full).catch(() => { throw Error(`Missing dependency: ${path}`); });
+  let stat;
+  try { stat = lstatSync(full); } catch { throw Error(`Missing dependency: ${path}`); }
   if (stat.isSymbolicLink()) throw Error(`Symlink dependency: ${path}`);
   if (stat.isDirectory()) {
-    for (const child of (await readdir(full)).sort()) await walk(root, `${path}/${child}`, files);
+    for (const child of readdirSync(full).sort()) await walk(root, `${path}/${child}`, files);
   } else if (stat.isFile()) {
-    const bytes = await readFile(full);
+    const bytes = readFileSync(full);
     files.set(path, { path, sha256: sha(bytes), size: bytes.length, mode: stat.mode & 0o777 });
   } else throw Error(`Nonregular dependency: ${path}`);
 }
