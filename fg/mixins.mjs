@@ -36,10 +36,15 @@
  *                        part(s), producedBy, ...body, checks, artifacts } at
  *                        stages.<S>.<key> + materializations.<name>, and the
  *                        lane evidence at experiments.branches.<X>
+ *   emits:<event>        announces an event: { event, payload(s) } lands on the record's events and the FG
+ *                        declares emits: [event]; never changes a value the inner Composition produced
+ *   on:<event>           hears an event: the FG declares subscribes: [event]; the registry runs every emitter
+ *                        first and delivers the payloads (s.heard[event], record heard); check heard:<event>
  *   (defaults, fg/compose.mjs) instrumented, rendered (forced render)
  *   (flow, fg/compose.mjs) branched:<site> = branchRun, forked, forkJoin
  */
 import { decorator } from './compose.mjs';
+import { isEventName } from './guarantee.mjs';
 import { tickEvidence } from './branchOp.mjs';
 import { layerLedger, s1Sets } from './layers.mjs';
 import { legacyArtifact, legacyCanon, prettyJsonBytes, unionOf, zeroAlphaCount } from './legacy.mjs';
@@ -73,6 +78,55 @@ export const gated = (fgId, { checks = [], stage = null } = {}) => {
         env.check(name, canonicalJson(a ?? null) === canonicalJson(b ?? null), { [env.id]: a, [fgId]: b });
       }
       return { records: { ...(s.records ?? {}), [fgId]: record } };
+    }
+  });
+};
+
+// ------------------------------------------------------------- emits, on (events)
+
+const eventName = (who, event) => { if (!isEventName(event)) throw new Error(`${who}: ${JSON.stringify(event)} is not an event name (letters, digits, . _ : -)`); return event; };
+
+/**
+ * emits(event, { payload(s, env) -> value, units? }): C#-style event, announced by a FunctionalGuarantee. After the
+ * inner Composition ran, the payload is built from its state and recorded as { event, payload } on the record's
+ * events (s.out.events); the FG declares emits: [event] and the property emits:<event>. Like published, it only
+ * adds: the returned patch has no key an inner Composition owns, so a value it produced is never changed. The
+ * payload is hashed evidence: deterministic, with units (pass units for fields whose names carry none; unitful
+ * checks them). Subscribers get it through on(event); who hears it is the registry's business, never this FG's.
+ */
+export const emits = (event, { payload, units = {} } = {}) => {
+  eventName('emits', event);
+  if (typeof payload !== 'function') throw new Error(`emits ${event}: payload(s) is required`);
+  return decorator({
+    name: `emits ${event}`, property: `emits:${event}`, emits: [event],
+    after: (env, s) => ({
+      out: { ...(s.out ?? {}), events: [...(s.out?.events ?? []), { event, payload: payload(s, env) }] },
+      units: { ...(s.units ?? {}), ...units }
+    })
+  });
+};
+
+/**
+ * on(event, { expect?(heard, s, env) -> boolean }): hears an event. The FG declares subscribes: [event] (a
+ * subscription names an event, never an FG id, so it is not a requires: the registry derives the ordering from
+ * it). Before the FG's later steps run, the deliveries [{ from, payload }] (emitters in run order) are at
+ * s.heard[event] and summarised on the record under heard; check heard:<event> holds when at least one arrived.
+ * expect (optional) is the subscriber's own acceptance of the payloads: check expected:<event>.
+ * Order among subscribers of one event is the registry's order (requires + emitters first, ties by id); pin an
+ * explicit one with gated(otherSubscriber).
+ */
+export const on = (event, { expect = null } = {}) => {
+  eventName('on', event);
+  return decorator({
+    name: `on ${event}`, property: `on:${event}`, subscribes: [event],
+    after: (env, s) => {
+      const deliveries = env.heard(event);
+      env.check(`heard:${event}`, deliveries.length > 0, { event, from: deliveries.map((d) => d.from) });
+      if (expect) env.check(`expected:${event}`, expect(deliveries, s, env) === true, { event });
+      return {
+        heard: { ...(s.heard ?? {}), [event]: deliveries },
+        out: { ...(s.out ?? {}), heard: [...(s.out?.heard ?? []), { event, from: [...new Set(deliveries.map((d) => d.from))], count: deliveries.length }] }
+      };
     }
   });
 };

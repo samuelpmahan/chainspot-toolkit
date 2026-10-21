@@ -40,6 +40,13 @@
  *               registered on the store (automatic `call:<fn>` check).
  *     requires: FG ids whose RECORDS this FG gates against; the registry
  *               runs them first and ctx.records holds exactly those.
+ *     emits:    event names this FG announces (fg/mixins.mjs emits): each lands on the record's events as
+ *               { event, payload }, and the registry delivers it to every FG that subscribes to the name.
+ *     subscribes: event names this FG hears (fg/mixins.mjs on). A subscription names an EVENT, never an FG id, so
+ *               it is not a requires: the registry derives the ordering edge (every emitter of the event runs first)
+ *               and ctx.heard(event) returns the deliveries; an event not declared here fails by name, like an
+ *               undeclared read. An event nobody emits, and a subscription cycle, fail the cross-check before
+ *               anything runs (fg/registry.mjs eventReport).
  *     lane:     optional lane name; the FG is dormant unless that lane is
  *               enabled (the declared "with lane X ON (default OFF)").
  *     site:     'stage' (default): run once per stage on the run's store by
@@ -128,7 +135,10 @@ const nameList = (list) => Array.isArray(list) && list.every((a) => typeof a ===
 
 export const GUARANTEE_SITES = Object.freeze(['stage', 'forkjoin']);
 
-export function defineGuarantee({ id, guards, reads = guards, calls = [], requires = [], lane = null, site = 'stage', properties = [], plan = null, run, ...rest }) {
+const EVENT = /^[A-Za-z][A-Za-z0-9_.:-]*$/;
+export const isEventName = (name) => typeof name === 'string' && EVENT.test(name);
+
+export function defineGuarantee({ id, guards, reads = guards, calls = [], requires = [], emits = [], subscribes = [], lane = null, site = 'stage', properties = [], plan = null, run, ...rest }) {
   if (typeof id !== 'string' || !ID.test(id)) throw new Error(`defineGuarantee: id ${JSON.stringify(id)} is not an fg.* id`);
   if ('env' in rest)
     throw new Error(`defineGuarantee ${id}: env was removed; declare data as Parts in reads and capabilities as registered fn.* Calculations in calls`);
@@ -141,11 +151,15 @@ export function defineGuarantee({ id, guards, reads = guards, calls = [], requir
   if (!Array.isArray(requires) || !requires.every((r) => typeof r === 'string' && ID.test(r)))
     throw new Error(`defineGuarantee ${id}: requires must be a list of fg.* ids`);
   if (requires.includes(id)) throw new Error(`defineGuarantee ${id}: requires itself`);
+  for (const [field, list] of [['emits', emits], ['subscribes', subscribes]])
+    if (!Array.isArray(list) || !list.every(isEventName)) throw new Error(`defineGuarantee ${id}: ${field} must be a list of event names`);
+  const own = subscribes.find((event) => emits.includes(event));
+  if (own) throw new Error(`defineGuarantee ${id}: subscribes to its own event ${own}`);
   if (lane !== null && (typeof lane !== 'string' || !lane)) throw new Error(`defineGuarantee ${id}: lane must be a lane name or null`);
   if (!GUARANTEE_SITES.includes(site)) throw new Error(`defineGuarantee ${id}: site must be one of ${GUARANTEE_SITES.join(', ')}`);
   if (typeof run !== 'function') throw new Error(`defineGuarantee ${id}: run(ctx) is required`);
   if (!nameList(properties)) throw new Error(`defineGuarantee ${id}: properties must be a list of property names (fg/compose.mjs)`);
-  return Object.freeze({ [GUARANTEE]: true, id, guards: [...guards], reads: [...reads], calls: [...calls], requires: [...requires], lane, site,
+  return Object.freeze({ [GUARANTEE]: true, id, guards: [...guards], reads: [...reads], calls: [...calls], requires: [...requires], emits: [...emits], subscribes: [...subscribes], lane, site,
     properties: Object.freeze([...properties]), plan: plan ? Object.freeze(plan) : null, run });
 }
 
@@ -156,7 +170,8 @@ export const asStore = (storeOrBoard) => (isPartStore(storeOrBoard) ? storeOrBoa
 
 function baseRecord(fg) {
   return { guarantee: fg.id, status: null, reason: null, guards: fg.guards, reads: fg.reads, calls: fg.calls, requires: fg.requires, lane: fg.lane,
-    ...(fg.properties?.length ? { properties: fg.properties } : {}) };
+    ...(fg.properties?.length ? { properties: fg.properties } : {}),
+    ...(fg.emits?.length ? { emits: fg.emits } : {}), ...(fg.subscribes?.length ? { subscribes: fg.subscribes } : {}) };
 }
 
 export function dormantRecord(fg, reason) {
@@ -194,9 +209,11 @@ export function createFrameEmitter({ fg, branch = null, onFail = (reason) => { t
  * hash: bytes -> sha256 hex for the runtime's own artifact hashing (never
  * reachable by the FG); defaults to the pure-JS digest, a Node runner
  * passes node:crypto's (10 MB rasters are hashed 3x each).
+ * events: { [event]: [{ from, payload }] } the deliveries for fg.subscribes (the registry builds it from the
+ * emitters' records); ctx.heard(event) returns that list.
  * Returns { record, frames, outputs }; throws GuaranteeFailure.
  */
-export function runGuarantee(fg, { store, board, records = {}, sink, branch = null, hash = sha256Hex }) {
+export function runGuarantee(fg, { store, board, records = {}, sink, branch = null, hash = sha256Hex, events = {} }) {
   if (!isGuarantee(fg)) throw new Error('runGuarantee: not a defineGuarantee() value');
   if (!sink || typeof sink.putArtifact !== 'function') throw new Error(`runGuarantee ${fg.id}: a sink with putArtifact is required`);
   const parts = asStore(store ?? board);
@@ -239,6 +256,10 @@ export function runGuarantee(fg, { store, board, records = {}, sink, branch = nu
     has(address) {
       if (!fg.reads.includes(address)) abort(`read of undeclared address ${address} (declare it in reads)`);
       return view.has(address);
+    },
+    heard(event) {
+      if (!fg.subscribes.includes(event)) abort(`heard of undeclared event ${event} (declare it in subscribes)`);
+      return Object.freeze((events[event] ?? []).map((d) => Object.freeze({ ...d })));
     },
     call(fn, args) {
       if (!fg.calls.includes(fn)) abort(`call of undeclared Calculation ${fn} (declare it in calls)`);

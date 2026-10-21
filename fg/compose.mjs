@@ -12,7 +12,7 @@
  * families:
  *
  *   decorators (fg/mixins.mjs: materialized, witnessed, conserved, gated,
- *     delta, judged, framed, published, lane, instrumented): run the inner
+ *     delta, judged, framed, published, lane, emits, on, instrumented): run the inner
  *     Composition, then ADD checks / witnesses / artifacts / frames /
  *     record fields; they never change a value the inner one produced.
  *   flow combinators (here: sequence, fork, forkJoin, branchRun, reuse):
@@ -28,7 +28,7 @@
  * store's scoping rule (an undeclared read or call fails by name) holds for
  * every mixin as for hand-written code.
  *
- *   composition({ kind, name, property?, reads?, calls?, requires?, lane?,
+ *   composition({ kind, name, property?, reads?, calls?, requires?, emits?, subscribes?, lane?,
  *                 children?, run(env, s) -> s })       the primitive
  *   read(...addresses)            s.parts[address] = the declared Part
  *   calc(fn, { args?, as? })      s[as ?? fn] = env.call(fn, args?(s))
@@ -36,7 +36,7 @@
  *                                 returns s (or a patch merged into s)
  *   sequence(...cs)               run each on the state in order (a span)
  *   pipe(c, ...decorators)        decorators applied in order (innermost first)
- *   decorator({ name, property, kind?, reads?, calls?, requires?, lane?,
+ *   decorator({ name, property, kind?, reads?, calls?, requires?, emits?, subscribes?, lane?,
  *               after(env, s) })  -> (inner) => Composition: run inner, then after
  *   branchRun({ restore, op?, execute?, site, calculate? | calculateWith(env)?, outputs?, calls? })
  *                                 property branched:<site>. One op on a
@@ -57,7 +57,7 @@
  *   reuse(c, { key })             run c once per key per run (env.cache); a
  *                                 second use replays the patch it produced
  *
- *   guarantee({ id, guards, reads?, calls?, requires?, lane?, site?, result? }, c)
+ *   guarantee({ id, guards, reads?, calls?, requires?, emits?, subscribes?, lane?, site?, result? }, c)
  *     -> defineGuarantee(...) whose run threads s through c, with two
  *     default decorators: instrumented (the FG's Calculation calls, counted,
  *     onto the record) and rendered (forced render: a Composition that
@@ -85,7 +85,7 @@ const COMPOSITION = Symbol.for('chainspot.fg.composition');
 const uniq = (lists) => [...new Set(lists.flat())];
 export const isComposition = (v) => Boolean(v && v[COMPOSITION]);
 
-export function composition({ kind, name, property = null, reads = [], calls = [], requires = [], lane = null, children = [], run }) {
+export function composition({ kind, name, property = null, reads = [], calls = [], requires = [], emits = [], subscribes = [], lane = null, children = [], run }) {
   if (typeof run !== 'function') throw new Error(`composition ${name}: run(env, s) is required`);
   for (const child of children) if (!isComposition(child)) throw new Error(`composition ${name}: child is not a Composition`);
   const lanes = uniq([lane ? [lane] : [], children.map((c) => (c.lane ? [c.lane] : [])).flat()]);
@@ -95,6 +95,8 @@ export function composition({ kind, name, property = null, reads = [], calls = [
     reads: uniq([children.map((c) => c.reads).flat(), reads]),
     calls: uniq([children.map((c) => c.calls).flat(), calls]),
     requires: uniq([children.map((c) => c.requires).flat(), requires]),
+    emits: uniq([children.map((c) => c.emits).flat(), emits]),
+    subscribes: uniq([children.map((c) => c.subscribes).flat(), subscribes]),
     lane: lanes[0] ?? null,
     properties: [...children.flatMap((c) => c.properties), ...(property ? [property] : [])],
     plan: [...children.flatMap((c) => c.plan), { kind, name, property }],
@@ -132,8 +134,8 @@ export const pipe = (c, ...decorators) => decorators.reduce((inner, d) => {
 }, c);
 
 /** A decorator: run inner, then `after` adds verdicts/artifacts/frames/record fields. */
-export const decorator = ({ name, property, kind = 'mixin', reads = [], calls = [], requires = [], lane = null, after }) => (inner) => composition({
-  kind, name, property, reads, calls, requires, lane, children: inner ? [inner] : [],
+export const decorator = ({ name, property, kind = 'mixin', reads = [], calls = [], requires = [], emits = [], subscribes = [], lane = null, after }) => (inner) => composition({
+  kind, name, property, reads, calls, requires, emits, subscribes, lane, children: inner ? [inner] : [],
   run: (env, s) => { const t = inner ? inner.run(env, s) : s; return merge(t, after(env, t)); }
 });
 
@@ -223,7 +225,7 @@ function makeEnv(ctx, fg, { store = null, cache = new Map() } = {}) {
   let frames = 0;
   return {
     id: ctx.id, fg, records: ctx.records, sink: ctx.sink, store, cache, calls, verdicts,
-    get: ctx.get, has: ctx.has, fail: ctx.fail, publish: ctx.publish, artifact: ctx.artifact,
+    get: ctx.get, has: ctx.has, heard: ctx.heard, fail: ctx.fail, publish: ctx.publish, artifact: ctx.artifact,
     call(fn, args) { calls.set(fn, (calls.get(fn) ?? 0) + 1); return ctx.call(fn, args); },
     check(name, ok, detail) { const held = ctx.check(name, ok, detail); verdicts.push({ name, ok: held }); return held; },
     witness(name, fn) { const outcome = ctx.witness(name, fn); verdicts.push({ name, ok: outcome.ok }); return outcome; },
@@ -270,12 +272,13 @@ const rendered = decorator({
  * audit: decorators that run over the assembled record (after result(s)),
  * e.g. [unitful({ units })] from fg/mixins.mjs.
  */
-export function guarantee({ id, guards, reads = [], calls = [], requires = [], lane = null, site = 'stage', result = (s) => ({ totals: s.totals ?? null }), audit = [] }, c, runtime = {}) {
+export function guarantee({ id, guards, reads = [], calls = [], requires = [], emits = [], subscribes = [], lane = null, site = 'stage', result = (s) => ({ totals: s.totals ?? null }), audit = [] }, c, runtime = {}) {
   if (!isComposition(c)) throw new Error(`guarantee ${id}: the second argument must be a Composition`);
   const full = pipe(c, profiled, recorded(result), ...audit, instrumented, rendered);
   return defineGuarantee({
     id, guards, site,
     reads: uniq([reads, full.reads]), calls: uniq([calls, full.calls]), requires: uniq([requires, full.requires]),
+    emits: uniq([emits, full.emits]), subscribes: uniq([subscribes, full.subscribes]),
     lane: full.lane ?? lane,
     properties: full.properties,
     plan: full.plan,
