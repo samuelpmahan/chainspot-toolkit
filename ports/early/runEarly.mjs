@@ -3,6 +3,7 @@
  * Experiments are independent, opt-in branches from that Stage's OFF snapshot.
  * It never writes to the provider tree or edits original pixels/PxC identities.
  */
+import { treeIdentity } from '../../dependencies/provenance.mjs';
 import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
@@ -38,18 +39,6 @@ const json = (value) => JSON.stringify(value, null, 2);
  * measured) and S4 recovers baskets from badges and tees (s4.basketRecovery); later stages record what they lack themselves.
  */
 export const S2_CONDITION_NOT_RUN = Object.freeze([]);
-function treeIdentity(dir, suffixes) {
-  const files = [];
-  const walk = (folder) => {
-    for (const entry of readdirSync(folder, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
-      const path = join(folder, entry.name);
-      if (entry.isDirectory()) walk(path);
-      else if (suffixes.test(entry.name)) files.push([path.slice(dir.length), hash(readFileSync(path))]);
-    }
-  };
-  walk(dir);
-  return hash(JSON.stringify(files));
-}
 
 export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [], until = 'S3' }) {
   const root = resolve(forkRoot);

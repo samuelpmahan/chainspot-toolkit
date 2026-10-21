@@ -108,6 +108,9 @@ output.
 - **Disk:** a run writes each image once, as a file under its `img/`, and references it: write flipbooks with
   `writeFlipbook` (`fg/node-flipbook.mjs`), never inline base64 renders or the source image into frames, flipbooks
   or SVGs. `node scripts/pxc.mjs prune --dry-run` shows what deleting old attempts and superseded runs frees.
+- **Changing the bundled provider** (`source/provider/packages/alg`): change `src` and the committed `dist` together, then
+  `node scripts/pxc.mjs provenance --repin` (and add a `localPatches` note). A merge conflict in `REPLAY-PROVENANCE.json` is
+  resolved the same way: `provenance --repin` unions both sides' notes and re-pins the merged tree.
 - **Cleaning up after yourself:** `node scripts/pxc.mjs clean [--dry-run]` deletes only the attempts your checkout
   created (each attempt records `createdBy.checkout`), never one any checkout's `ATTEMPTS` lists. `attempts/` is shared
   across worktrees by symlink: never delete attempts by hand, by time window or by pattern (2026-10-21 a lane deleted the
