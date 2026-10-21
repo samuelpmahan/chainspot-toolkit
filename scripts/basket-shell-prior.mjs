@@ -15,7 +15,7 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { deserialize } from 'node:v8';
+import { deserialize } from '../fg/pxcCodec.mjs';   // node:v8 with packed typed arrays
 import { join, resolve } from 'node:path';
 import { createPartStore, registerQueries } from '../fg/store.mjs';
 import { registerSpriteQueries, poolOverlaps } from '../fg/queries/sprite.mjs';

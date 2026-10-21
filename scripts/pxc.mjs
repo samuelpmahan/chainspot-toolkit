@@ -30,7 +30,7 @@
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
-import { deserialize } from 'node:v8';
+import { deserialize } from '../fg/pxcCodec.mjs';   // node:v8 with packed typed arrays
 import { ROOT, measure, measureFile, FIX } from './pxc/boundary.mjs';
 
 const [cmd, ...rest] = process.argv.slice(2);

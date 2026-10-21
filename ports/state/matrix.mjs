@@ -34,7 +34,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, rmSync
 import { spawnSync, spawn } from 'node:child_process';
 import { availableParallelism } from 'node:os';
 import { join, resolve } from 'node:path';
-import { deserialize } from 'node:v8';
+import { deserialize } from '../../fg/pxcCodec.mjs';   // node:v8 with packed typed arrays
 import { snapshotPaths, differences, sha, canonical } from '../../facts.mjs';
 import { stageState } from '../../recipes/closure.mjs';
 import { judgeAttempt } from '../judge/judge.mjs';

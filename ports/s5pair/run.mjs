@@ -21,7 +21,7 @@
  */
 import { exitOnEarlyCondition } from '../early/condition.mjs';
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
-import { deserialize } from 'node:v8';
+import { deserialize } from '../../fg/pxcCodec.mjs';   // node:v8 with packed typed arrays
 import { deflateSync } from 'node:zlib';
 import { join, resolve } from 'node:path';
 import { courseSourceOf } from '../capture/capture.mjs';

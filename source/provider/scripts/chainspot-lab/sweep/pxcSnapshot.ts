@@ -1,5 +1,7 @@
 import { createHash } from 'node:crypto';
-import { deserialize, serialize } from 'node:v8';
+// node:v8 serialize/deserialize with typed arrays packed on write, unpacked on read (bitpacked masks, rightsized
+// integer planes, dedupe by content); old plain-v8 snapshots restore unchanged.
+import { deserialize, serialize } from './pxcCodec.mjs';
 import { createExecBoard, type PxC } from '@chainspot/alg/exec/board';
 
 /** Explicit address custody: no reflection into a board's private storage. */

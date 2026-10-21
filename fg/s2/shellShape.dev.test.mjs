@@ -5,7 +5,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { deserialize } from 'node:v8';
+import { deserialize } from '../pxcCodec.mjs';   // node:v8 with packed typed arrays
 import { join } from 'node:path';
 import { createPartStore, registerQueries } from '../store.mjs';
 import { registerSpriteQueries } from '../queries/sprite.mjs';

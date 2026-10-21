@@ -18,7 +18,7 @@
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { deserialize } from 'node:v8';
+import { deserialize } from '../../fg/pxcCodec.mjs';   // node:v8 with packed typed arrays
 import { deflateSync } from 'node:zlib';
 import { cropWindow, encodePngRgb, base64 } from '../../fg/png.mjs';
 import { CELLS, s7Accepted, s4Accepted, s5Accepted, s6Accepted, recoveredHoles } from './matrix.mjs';

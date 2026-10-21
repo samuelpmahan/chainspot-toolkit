@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { deserialize } from 'node:v8';
+import { deserialize } from '../../fg/pxcCodec.mjs';   // node:v8 with packed typed arrays
 
 const sha = value => createHash('sha256').update(value).digest('hex');
 const require = createRequire(import.meta.url);

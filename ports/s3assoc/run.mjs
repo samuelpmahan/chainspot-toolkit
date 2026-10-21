@@ -22,6 +22,7 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 
 import { join, resolve } from 'node:path';
 import { fitPadPose } from './padPose.mjs';
 import { nameCandidates } from '../../fg/names.mjs';
+import { readArtifactBytes } from '../../fg/node-sink.mjs';
 import { associate, basketPoint, pathSide, ASSOC_BOUNDS, ASSOC_UNITS, BASKET_POINT_OFFSET } from './associate.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
@@ -35,7 +36,7 @@ export function runAssociation({ attempt, specimen, root = ROOT }) {
   const A = join(root, 'attempts', 'stages', attempt, 'fork', 'stage-output', 'early', 'artifacts');
   const badgesArt = readJson(join(A, 's1', 'px.badges.json'));
   const { widthPx, heightPx } = badgesArt.image;
-  const rgba = new Uint8Array(readFileSync(join(A, 's1', 'badgePx.rgba.bin')));
+  const rgba = readArtifactBytes(join(A, 's1', 'badgePx.rgba.bin'));
   const raster = { rgba, widthPx, heightPx };
   const baskets = readJson(join(A, 's2', 'px.baskets.json')).baskets;
   const tees = readJson(join(A, 's3fix', 'px.tees.refined.json')).tees;
