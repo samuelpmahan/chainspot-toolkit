@@ -32,6 +32,11 @@ const captureReceipt = (c, manifest) => ({ manifest, overlapRule: c.overlapRule,
   links: c.links.map((l) => ({ a: l.a, b: l.b, evidence: l.evidence, sharedHoles: l.sharedHoles, model: l.model, residualLuma: l.residualLuma, contrast: l.contrast })),
   rejected: c.rejected.map((l) => ({ a: l.a, b: l.b, sharedHoles: l.sharedHoles })), record: 'capture/capture.json' });
 const json = (value) => JSON.stringify(value, null, 2);
+/**
+ * The stages an S2 'no baskets' run does not reach: none. S3 runs on the pinned px tee bounds (no BasketPoint, so rC1 is not
+ * measured) and S4 recovers baskets from badges and tees (s4.basketRecovery); later stages record what they lack themselves.
+ */
+export const S2_CONDITION_NOT_RUN = Object.freeze([]);
 function treeIdentity(dir, suffixes) {
   const files = [];
   const walk = (folder) => {
@@ -108,7 +113,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   }));
 
   const stages = [];
-  let initialPixels, uninstallTee = null;
+  let initialPixels, uninstallTee = null, s2Condition = null;
   for (const id of stageOrder.slice(0, lastIndex + 1)) {
     const started = Date.now();
     const inputSnapshotSha256 = pxc ? store.get(`tk.stage.${stageOrder[stageOrder.indexOf(id) - 1]}.snapshotSha256`) : null;
@@ -131,12 +136,11 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
       return conditionReceipt(error.condition, { badges: 0 });
     }
     pxc = result.pxc;
-    // S2 found no basket (no shell family on this image): S3 scales its tee search from the BasketPoints, so the later
-    // stages are not run; recorded like S1's no badges (BeaverRanch-Gold-full, 2026-10-21)
-    if (id === 'S2' && !(store.has('px.baskets') && store.get('px.baskets')?.length)) {
-      return conditionReceipt({ stage: 'S2', result: 'no baskets', detail: 'S2 found no basket shell family: no BasketPoint on this image' },
-        { badges: store.has('px.badges') ? store.get('px.badges').length : null, baskets: 0 });
-    }
+    // S2 found no basket (no shell family on this image): recorded as the run's condition, and S3 still runs (Sam, 2026-10-21:
+    // "let the tee detection run anyway, so if that's broken we find out sooner"). With no BasketPoint, rC1 is not measured and
+    // S3 runs on the pinned px tee bounds (fg/s3/teeScale.mjs teeBounds(null)), recorded under receipt.scale.condition
+    if (id === 'S2' && !(store.has('px.baskets') && store.get('px.baskets')?.length))
+      s2Condition = { stage: 'S2', result: 'no baskets', detail: 'S2 found no basket shell family: no BasketPoint on this image; S3 ran on the pinned px tee bounds (rC1 not measured)' };
     const image = pxc.get(id === 'S0' ? 'px.course.canonicalPixels' : ComponentPxC.image);
     const canonicalRgbaSha256 = hash(image.rgba);
     if (id === 'S0') {
@@ -308,6 +312,8 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     ...(lastIndex >= 3 ? { scale: (({ r1Px, unit, tee, condition }) => ({ rC1Px: r1Px, unit, s3TeeBounds: tee, condition }))(store.get('tk.scale.rC1')) } : {}),
     ...(capture ? { capture: captureReceipt(store.get('tk.source.capture'), sourcePath) } : {}),
     snapshot: snapshotBytes ? { path: snapshotPath, relativePath: 's3.pxc.bin', sha256: snapshotSha256, addresses: presentAddresses } : null,
+    // a recorded S2 condition rides on the receipt only when it holds, so every receipt with baskets stays byte-identical
+    ...(s2Condition ? { condition: s2Condition, notRun: S2_CONDITION_NOT_RUN } : {}),
     counts: { ...(final.has(BadgePxC.objects.address) ? { badges: final.get(BadgePxC.objects).length } : {}), ...(final.has(BasketPxC.objects.address) ? { baskets: final.get(BasketPxC.objects).length } : {}), ...(final.has(TeePxC.objects.address) ? { tees: final.get(TeePxC.objects).length } : {}) },
     experiments: { gates, branches: branchResults },
     oracle: 'UNKNOWN',

@@ -84,8 +84,9 @@ async function worker() {
       's2-shell-ownership-audit':'S2','fill-consistent-tee-selection':'S3',
       's3-findfamily-structural-fix':'S3FIX','s1-badge-assembly':'S1ASM','s2-basket-assembly':'S2ASM','s3-tee-assembly':'S3ASM','s3-findfamily-forkjoin':'S3FJ'
     })[name])});
-  if(early.condition) {
-    // a recorded data condition (e.g. no badges): nothing later can run; the result says so and the run passes
+  if(early.condition&&(early.notRun??[]).includes('S4')) {
+    // a recorded data condition (e.g. no badges) that the later stages cannot run past: the result says so and the run passes
+    // (S2 'no baskets' still runs S3 and records it: early.condition with S3 counts, notRun from S4)
     const result={schema:'nctk-stage-run@1',request,source:early.source,early:{receiptPath:`${out}/early/run.receipt.json`,snapshot:null},condition:early.condition,notRun:early.notRun,
       stages:early.stages.map(s=>({stage:s.id,source:'compiled gateway',durationMs:s.durationMs,acceptance:'UNKNOWN'})),blockers:[`${early.condition.stage}: ${early.condition.result}; ${early.notRun.join(', ')} not run`],humanAcceptance:'UNKNOWN'};
     await writeFile(join(forkRoot,out,'summary.json'),JSON.stringify(result,null,2)+'\n');
@@ -152,6 +153,8 @@ async function worker() {
   if(request.until>=4&&!late?.s6&&request.until>=6)blockers.push('S6 row absent: no fresh heading proposal');
   if(request.until===7&&!late?.s6)blockers.push('S7 heading proposal unbound: S6 row absent');
   const result={schema:'nctk-stage-run@1',request,source:early.source,
+    // a recorded condition the stages ran past (S2 'no baskets'): only when it holds, so every other summary is byte-identical
+    ...(early.condition?{condition:early.condition,notRun:early.notRun??[]}:{}),
     early:{receiptPath:`${out}/early/run.receipt.json`,snapshot:early.snapshot},
     upstreamVariant:{S4:'S3 clean baseline snapshot',S5:'S4 baseline fresh snapshot',S6:'S5 base fresh calculation',S7:'legacy original JPEG; S6 row only heading hypothesis'},
     late:late?{receiptPath:`${out}/late/run.receipt.json`,s6:late.s6??null}:null,

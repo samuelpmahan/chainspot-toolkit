@@ -15,7 +15,8 @@ import {
 	BasketPxC,
 	registerBasket,
 	type BasketFamily,
-	type BasketShellFamily
+	type BasketShellFamily,
+	type BasketShellShape
 } from './Basket';
 
 export { Basket, BasketFn, BasketPxC } from './Basket';
@@ -32,16 +33,28 @@ export const S2_DETECT_FAMILY_TICK: OperationSpec = {
 	note: 'Basket queries generic bright components for the current white-body family.'
 };
 
+export const S2_LEARN_SHELL_SHAPE_TICK: OperationSpec = {
+	id: 'Basket.learnShellShape',
+	kind: 'compute',
+	gate: 'S2',
+	unit: 'Basket',
+	consumes: [BasketPxC.family.address, ComponentPxC.fields.address],
+	produces: [BasketPxC.shellShape.address],
+	calculations: [BasketFn.learnShellShape.address],
+	accessConformance: 'exact',
+	note: "Overlap the members' dark frames in sprite frame and keep what they share (learned), else the carried dev-course prior."
+};
+
 export const S2_FIND_SHELL_FAMILY_TICK: OperationSpec = {
 	id: 'Basket.findShellFamily',
 	kind: 'compute',
 	gate: 'S2',
 	unit: 'Basket',
-	consumes: [BasketPxC.family.address, ComponentPxC.fields.address],
+	consumes: [BasketPxC.shellShape.address, BasketPxC.family.address, ComponentPxC.fields.address],
 	produces: [BasketPxC.shellFamily.address],
 	calculations: [BasketFn.findShellFamily.address],
 	accessConformance: 'exact',
-	note: 'Find the common smallest-enclosing dark-component perimeter and reject nonmembers.'
+	note: "Read every member's shell as the shell shape on its own dark px; dark px off the shape are not its shell."
 };
 
 export const S2_FIND_PX_TICK: OperationSpec = {
@@ -56,7 +69,7 @@ export const S2_FIND_PX_TICK: OperationSpec = {
 	note: 'Construct Basket objects from exact bright-body and dark-shell component pixels.'
 };
 
-const S2_OPS = [S2_DETECT_FAMILY_TICK, S2_FIND_SHELL_FAMILY_TICK, S2_FIND_PX_TICK] as const;
+const S2_OPS = [S2_DETECT_FAMILY_TICK, S2_LEARN_SHELL_SHAPE_TICK, S2_FIND_SHELL_FAMILY_TICK, S2_FIND_PX_TICK] as const;
 const S2_PLAN: CompiledExecutionPlan = {
 	ops: S2_OPS,
 	bindings: {},
@@ -65,6 +78,10 @@ const S2_PLAN: CompiledExecutionPlan = {
 
 function detectFamily(pxc: PxC): void {
 	pxc.set(BasketPxC.family, Basket.detectFamily(pxc));
+}
+
+function learnShellShape(pxc: PxC): void {
+	pxc.set(BasketPxC.shellShape, Basket.learnShellShape(pxc));
 }
 
 function findShellFamily(pxc: PxC): void {
@@ -78,6 +95,7 @@ function findPx(pxc: PxC): void {
 const S2_RUNTIME: OperationRuntime = {
 	implementations: new Map([
 		[S2_DETECT_FAMILY_TICK.id, detectFamily],
+		[S2_LEARN_SHELL_SHAPE_TICK.id, learnShellShape],
 		[S2_FIND_SHELL_FAMILY_TICK.id, findShellFamily],
 		[S2_FIND_PX_TICK.id, findPx]
 	]),
@@ -85,6 +103,10 @@ const S2_RUNTIME: OperationRuntime = {
 		[
 			S2_DETECT_FAMILY_TICK.id,
 			[{ address: BasketFn.detectFamily.address, calculate: Basket.detectFamily }]
+		],
+		[
+			S2_LEARN_SHELL_SHAPE_TICK.id,
+			[{ address: BasketFn.learnShellShape.address, calculate: Basket.learnShellShape }]
 		],
 		[
 			S2_FIND_SHELL_FAMILY_TICK.id,
@@ -133,6 +155,7 @@ export interface S2BasketsCandidateRun {
 	readonly pxc: PxC;
 	readonly image: CompositeResult;
 	readonly family: BasketFamily;
+	readonly shellShape: BasketShellShape;
 	readonly shellFamily: BasketShellFamily;
 	readonly baskets: readonly Basket[];
 	readonly plan: CompiledExecutionPlan;
@@ -164,6 +187,7 @@ export function executeS2BasketsCandidate(pxc: PxC): S2BasketsCandidateRun {
 		pxc,
 		image: pxc.get(ComponentPxC.image),
 		family: pxc.get(BasketPxC.family),
+		shellShape: pxc.get(BasketPxC.shellShape),
 		shellFamily: pxc.get(BasketPxC.shellFamily),
 		baskets: pxc.get(BasketPxC.objects),
 		plan: S2_PLAN,

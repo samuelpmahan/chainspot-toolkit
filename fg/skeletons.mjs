@@ -108,14 +108,16 @@ export function assemblyGuarantee({ stage, noun, spec, consumes, calculate, note
  * stage 'S2'; noun { one: 'basket', many: 'baskets' }; producedBy 'Basket.findPx'; units;
  * serialize(env, s, { [many], captured }) -> { serialized, totals, ... } (serializeCalls: the Calculations it calls);
  * witness, checks [...], assemble, artifacts, frames: compositions in that order; layered: conserved.layer(stage) after the
- * checks; body(s): the published record body (default { <one>Count, totals }).
+ * checks; body(s): the published record body (default { <one>Count, totals }); emptyIsCondition: the data condition an empty
+ * Part records (S2 'no baskets'), so the empty set is certified and later layers still run, instead of a failed guarantee.
  */
-export function materializeGuarantee({ stage, noun, producedBy, units = {}, serialize, serializeCalls = [], witness, checks = [], layered = false, assemble, artifacts, frames, body = null }) {
+export function materializeGuarantee({ stage, noun, producedBy, units = {}, serialize, serializeCalls = [], witness, checks = [], layered = false, assemble, artifacts, frames, body = null, emptyIsCondition = null }) {
   const { one, many } = noun, Many = cap(many), st = stage.toLowerCase();
   const id = `fg.${st}.px${Many}.materialize`, part = `px.${many}`, captured = `tk.stage.${stage}.captured`, countKey = `${one}Count`;
   const serialized = step(`serialize ${part}`, (env, s) => {
     const objects = s.parts[part], run = s.parts[captured];
-    if (!Array.isArray(objects) || !objects.length) env.fail(`${part} is missing or empty on the board after ${stage}`);
+    // an empty set is certified only where the stage names it a recorded data condition (emptyIsCondition: S2's 'no baskets')
+    if (!Array.isArray(objects) || (!objects.length && !emptyIsCondition)) env.fail(`${part} is missing or empty on the board after ${stage}`);
     if (!run?.[many] || run[many].length !== objects.length) env.fail(`captured ${stage} run ${many} disagree with the board ${part}`);
     return serialize(env, s, { [many]: objects, captured: run });
   }, { calls: serializeCalls });

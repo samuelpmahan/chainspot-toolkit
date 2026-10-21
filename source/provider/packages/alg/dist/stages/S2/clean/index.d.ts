@@ -3,9 +3,10 @@ import type { PxC } from '../../../exec/board';
 import type { CompiledExecutionPlan } from '../../../exec/compile';
 import type { OperationSpec, TickTestimony } from '../../../exec/contract';
 import { type Pcr } from '../../../exec/pcr';
-import { Basket, type BasketFamily, type BasketShellFamily } from './Basket';
+import { Basket, type BasketFamily, type BasketShellFamily, type BasketShellShape } from './Basket';
 export { Basket, BasketFn, BasketPxC } from './Basket';
 export declare const S2_DETECT_FAMILY_TICK: OperationSpec;
+export declare const S2_LEARN_SHELL_SHAPE_TICK: OperationSpec;
 export declare const S2_FIND_SHELL_FAMILY_TICK: OperationSpec;
 export declare const S2_FIND_PX_TICK: OperationSpec;
 export interface S2Subtraction {
@@ -21,6 +22,7 @@ export interface S2BasketsCandidateRun {
     readonly pxc: PxC;
     readonly image: CompositeResult;
     readonly family: BasketFamily;
+    readonly shellShape: BasketShellShape;
     readonly shellFamily: BasketShellFamily;
     readonly baskets: readonly Basket[];
     readonly plan: CompiledExecutionPlan;

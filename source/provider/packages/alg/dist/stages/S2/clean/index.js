@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.S2_FIND_PX_TICK = exports.S2_FIND_SHELL_FAMILY_TICK = exports.S2_DETECT_FAMILY_TICK = exports.BasketPxC = exports.BasketFn = exports.Basket = void 0;
+exports.S2_FIND_PX_TICK = exports.S2_FIND_SHELL_FAMILY_TICK = exports.S2_LEARN_SHELL_SHAPE_TICK = exports.S2_DETECT_FAMILY_TICK = exports.BasketPxC = exports.BasketFn = exports.Basket = void 0;
 exports.materializeS2Subtraction = materializeS2Subtraction;
 exports.executeS2BasketsCandidate = executeS2BasketsCandidate;
 const hash_1 = require("../../../detectors/threeFactor/hash");
@@ -26,16 +26,27 @@ exports.S2_DETECT_FAMILY_TICK = {
     accessConformance: 'exact',
     note: 'Basket queries generic bright components for the current white-body family.'
 };
+exports.S2_LEARN_SHELL_SHAPE_TICK = {
+    id: 'Basket.learnShellShape',
+    kind: 'compute',
+    gate: 'S2',
+    unit: 'Basket',
+    consumes: [Basket_1.BasketPxC.family.address, componentPxC_1.ComponentPxC.fields.address],
+    produces: [Basket_1.BasketPxC.shellShape.address],
+    calculations: [Basket_1.BasketFn.learnShellShape.address],
+    accessConformance: 'exact',
+    note: "Overlap the members' dark frames in sprite frame and keep what they share (learned), else the carried dev-course prior."
+};
 exports.S2_FIND_SHELL_FAMILY_TICK = {
     id: 'Basket.findShellFamily',
     kind: 'compute',
     gate: 'S2',
     unit: 'Basket',
-    consumes: [Basket_1.BasketPxC.family.address, componentPxC_1.ComponentPxC.fields.address],
+    consumes: [Basket_1.BasketPxC.shellShape.address, Basket_1.BasketPxC.family.address, componentPxC_1.ComponentPxC.fields.address],
     produces: [Basket_1.BasketPxC.shellFamily.address],
     calculations: [Basket_1.BasketFn.findShellFamily.address],
     accessConformance: 'exact',
-    note: 'Find the common smallest-enclosing dark-component perimeter and reject nonmembers.'
+    note: "Read every member's shell as the shell shape on its own dark px; dark px off the shape are not its shell."
 };
 exports.S2_FIND_PX_TICK = {
     id: 'Basket.findPx',
@@ -48,7 +59,7 @@ exports.S2_FIND_PX_TICK = {
     accessConformance: 'exact',
     note: 'Construct Basket objects from exact bright-body and dark-shell component pixels.'
 };
-const S2_OPS = [exports.S2_DETECT_FAMILY_TICK, exports.S2_FIND_SHELL_FAMILY_TICK, exports.S2_FIND_PX_TICK];
+const S2_OPS = [exports.S2_DETECT_FAMILY_TICK, exports.S2_LEARN_SHELL_SHAPE_TICK, exports.S2_FIND_SHELL_FAMILY_TICK, exports.S2_FIND_PX_TICK];
 const S2_PLAN = {
     ops: S2_OPS,
     bindings: {},
@@ -56,6 +67,9 @@ const S2_PLAN = {
 };
 function detectFamily(pxc) {
     pxc.set(Basket_1.BasketPxC.family, Basket_1.Basket.detectFamily(pxc));
+}
+function learnShellShape(pxc) {
+    pxc.set(Basket_1.BasketPxC.shellShape, Basket_1.Basket.learnShellShape(pxc));
 }
 function findShellFamily(pxc) {
     pxc.set(Basket_1.BasketPxC.shellFamily, Basket_1.Basket.findShellFamily(pxc));
@@ -66,6 +80,7 @@ function findPx(pxc) {
 const S2_RUNTIME = {
     implementations: new Map([
         [exports.S2_DETECT_FAMILY_TICK.id, detectFamily],
+        [exports.S2_LEARN_SHELL_SHAPE_TICK.id, learnShellShape],
         [exports.S2_FIND_SHELL_FAMILY_TICK.id, findShellFamily],
         [exports.S2_FIND_PX_TICK.id, findPx]
     ]),
@@ -73,6 +88,10 @@ const S2_RUNTIME = {
         [
             exports.S2_DETECT_FAMILY_TICK.id,
             [{ address: Basket_1.BasketFn.detectFamily.address, calculate: Basket_1.Basket.detectFamily }]
+        ],
+        [
+            exports.S2_LEARN_SHELL_SHAPE_TICK.id,
+            [{ address: Basket_1.BasketFn.learnShellShape.address, calculate: Basket_1.Basket.learnShellShape }]
         ],
         [
             exports.S2_FIND_SHELL_FAMILY_TICK.id,
@@ -119,6 +138,7 @@ function executeS2BasketsCandidate(pxc) {
         pxc,
         image: pxc.get(componentPxC_1.ComponentPxC.image),
         family: pxc.get(Basket_1.BasketPxC.family),
+        shellShape: pxc.get(Basket_1.BasketPxC.shellShape),
         shellFamily: pxc.get(Basket_1.BasketPxC.shellFamily),
         baskets: pxc.get(Basket_1.BasketPxC.objects),
         plan: S2_PLAN,
