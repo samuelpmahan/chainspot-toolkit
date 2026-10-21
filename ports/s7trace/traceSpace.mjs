@@ -19,6 +19,7 @@
  *   fn.q.trace.endpoints()       every badge -> basket pair scored, assigned one-to-one, traced back from the basket
  *   the primitives (profile, edge pair, station contrast) are S6's fn.q.path.* math (ports/s6straight/pathSpace.mjs)
  */
+import { violationEmits } from '../../fg/assumptions.mjs';
 import { nameCandidates } from '../../fg/names.mjs';
 import { ownedPx } from '../../fg/pxset.mjs';
 import { BASKET_POINT_OFFSET } from '../../fg/s2/fg.s2.basketInvariants.observe.fg.mjs';
@@ -98,9 +99,9 @@ export const S7_CALCULATIONS = Object.freeze([
     calculate: (io) => ({ 'tk.s7.hallway': hallwayModel(io.in('tk.s7.scene'), io.in('tk.s7.association').holes ?? {}) }) }],
   ['fn.tk.s7.holes', { inParts: ['px.badges', 'px.baskets', 'tk.s4.basketRecovery', 'tk.s7.association', 'tk.s7.recoveredTees'], outParts: ['tk.s7.holes'], note: 'per hole: its tee; every basket named',
     calculate: (io) => ({ 'tk.s7.holes': holesView({ badges: io.in('px.badges'), baskets: io.in('px.baskets'), recoveredBoxes: io.in('tk.s4.basketRecovery').recoveredBoxes ?? [], association: io.in('tk.s7.association'), recovered: io.in('tk.s7.recoveredTees') }) }) }],
-  ['fn.tk.s7.routeMatchView', { inParts: ['tk.s7.holes', 'tk.s7.hallway', 'testimony.source.holePaths'], outParts: ['tk.s7.routeMatchView'], calls: ['fn.q.trace.routeMatch'],
+  ['fn.tk.s7.routeMatchView', { inParts: ['tk.s7.holes', 'tk.s7.hallway', 'tk.s7.sceneS4', 'testimony.source.holePaths'], outParts: ['tk.s7.routeMatchView'], calls: ['fn.q.trace.routeMatch'],
     note: 'the routeMatch traces beside the testimony: route, bends before / after the placement, agreement (tee 8 px, basket 12 px, within W / 2 of the corridor); renders as the course picture',
-    calculate: (io) => ({ 'tk.s7.routeMatchView': routeMatchViewOf({ solve: io.call('fn.q.trace.routeMatch', {}).value, holesPart: io.in('tk.s7.holes'), holePaths: io.in('testimony.source.holePaths'), widthPx: io.in('tk.s7.hallway').widthPx }) }) }],
+    calculate: (io) => ({ 'tk.s7.routeMatchView': routeMatchViewOf({ solve: io.call('fn.q.trace.routeMatch', {}).value, holesPart: io.in('tk.s7.holes'), holePaths: io.in('testimony.source.holePaths'), widthPx: io.in('tk.s7.hallway').widthPx, r1Px: io.in('tk.s7.sceneS4').R1 }) }) }],
 ]);
 
 // ------------------------------------------------------------------------------------------------ the store boundary
@@ -185,7 +186,7 @@ export function registerTraceQueries(store, { matcher = null, board = null } = {
       const regionSteps = seqRegion ? Object.fromEntries(['sensor', 'contrast'].map((k) => [k, (_S, ...a) => store.call(`fn.q.match.${k}`, { scene: REGION_SCENE_PART, a }).value])) : null;
       const r = routeMatchOf(table, S, get('tk.s7.routeStart'), { secondBends, straight, steps, regionSteps, ...(rules ? { rules: { ...MATCH_RULES, ...rules } } : {}) });
       const regionCondition = region ? get(REGION_SCENE_PART).regionCondition : null;
-      return { value: { ...r, scene, ...(region ? { sensor: rules.sensor } : {}), ...(regionCondition ? { condition: regionCondition } : {}) }, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, reached: Object.values(r.holes).filter((h) => h.end != null).length, secondBends: Object.values(r.holes).filter((h) => (h.verts?.length ?? 0) === 4).length, ...(r.sequencing ? { cellsEvaluated: r.sequencing.cellsEvaluated, cellsFullTable: r.sequencing.cellsFullTable, holesWidened: r.sequencing.widened.length } : {}) } };
+      return { value: { ...r, scene, ...(region ? { sensor: rules.sensor } : {}), ...(regionCondition ? { condition: regionCondition } : {}) }, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, reached: Object.values(r.holes).filter((h) => h.end != null).length, secondBends: Object.values(r.holes).filter((h) => (h.verts?.length ?? 0) === 4).length, ...(r.sequencing ? { cellsEvaluated: r.sequencing.cellsEvaluated, cellsFullTable: r.sequencing.cellsFullTable, holesWidened: r.sequencing.widened.length } : {}), ...violationEmits(r.assumptions) } };
     },
     'fn.q.trace.pinned': () => {
       const r = pinnedSolve(get('tk.s7.pinnedTraces'), get('tk.s7.holes'), W());

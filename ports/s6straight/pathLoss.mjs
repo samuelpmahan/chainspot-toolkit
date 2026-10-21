@@ -23,6 +23,7 @@
  *                       agreement, never acceptance.
  * Data conditions are recorded, never thrown. Browser-safe.
  */
+import { violationEmits } from '../../fg/assumptions.mjs';
 import { ALPHA_PROFILE_PART, hasOverlay, noProfile } from '../../contracts/alpha.profile@1.mjs';
 import { registerQueries } from '../../fg/store.mjs';
 import { sha256Hex } from '../../fg/canon.mjs';
@@ -78,7 +79,7 @@ export function pathMaskPart(raster, { baskets, badges, tees, recoveredBoxes = [
   const m = space.pathMaskOf(raster, lists, bps, { extra });
   return { ...m, basketPoints: bps.map((p) => p.map(r3)), recoveredBasketPoints: extra.bps.map((p) => p.map(r3)),
     ownedFrom: { basketsCount: baskets.length, recoveredBasketsCount: recoveredBoxes.length, badgesCount: badges.length, teesCount: (tees ?? []).length },
-    emits: { r1Px: m.r1Px, maskedPx: m.maskedCount, spritePx: m.spriteCount, ringPx: m.ringCount, recoveredBasketsCount: recoveredBoxes.length } };
+    emits: { r1Px: m.r1Px, maskedPx: m.maskedCount, spritePx: m.spriteCount, ringPx: m.ringCount, recoveredBasketsCount: recoveredBoxes.length, ...violationEmits(m.assumptions) } };
 }
 
 // ------------------------------------------------------------------ fn.tk.s6.hallway (teebadge.py learn)

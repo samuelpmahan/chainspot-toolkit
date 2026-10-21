@@ -10,6 +10,7 @@
  */
 import { BASKET_POINT_OFFSET } from '../../fg/s2/fg.s2.basketInvariants.observe.fg.mjs';
 import { SCENE_SCHEMA } from '../../fg/s7trace/sceneRender.mjs';
+import { violationEmits } from '../../fg/assumptions.mjs';
 import { lumPlane, spriteMasks, ringRadius, ringMask, widthFromStraight, teeBadgeLearn, verifyStraight, trace, refineVertices, seedOne, FRONT, round } from './hallway.mjs';
 
 /**
@@ -22,12 +23,13 @@ export function sceneOf({ raster, ownedLists, baskets, badges, pads, template, b
   const { widthPx: W, heightPx: H } = raster;
   const lum = lumPlane(raster), { sprite, occluder } = spriteMasks(W, H, ownedLists);
   const bp = baskets.map(({ bbox: [x, y, w, h] }) => [x + (w - 1) / 2 + basketPointOffset[0], y + h - 1 + basketPointOffset[1]]);
-  const R1 = ringRadius(lum, sprite, W, H, bp), ring = ringMask(W, H, bp, R1);
+  const violations = [], R1 = ringRadius(lum, sprite, W, H, bp, { violations }), ring = ringMask(W, H, bp, R1);
   const mask = new Uint8Array(W * H); for (let i = 0; i < W * H; i++) mask[i] = sprite[i] | ring[i];
   const centre = {}, half = {};
   for (const b of badges) { const n = Number(b.label); centre[n] = [b.bbox[0] + (b.bbox[2] - 1) / 2, b.bbox[1] + (b.bbox[3] - 1) / 2]; half[n] = 0.5 * Math.hypot(b.bbox[2], b.bbox[3]); }
   return { schema: SCENE_SCHEMA, W, H, lum, mask, occluder, bp, badges: centre, badgeHalf: half, pads, L: template.L, Wd: template.W, R1,
-    emits: { R1Px: round(R1, 2), baskets: bp.length, badges: badges.length, pads: pads.length, maskedPx: mask.reduce((s, v) => s + v, 0) } };
+    ...(violations.length ? { assumptions: violations } : {}),
+    emits: { R1Px: round(R1, 2), baskets: bp.length, badges: badges.length, pads: pads.length, maskedPx: mask.reduce((s, v) => s + v, 0), ...violationEmits(violations) } };
 }
 
 /** The hallway model of the image: W from the tee -> badge segments when at least 3 are usable, else the straight holes. */

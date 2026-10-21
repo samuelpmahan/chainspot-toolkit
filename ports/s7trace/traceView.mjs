@@ -20,9 +20,11 @@ export { TRACE_VIEW_SCHEMA };
 export const TRACE_VIEW = Object.freeze({ teeMatchPx: 8, basketMatchPx: 12 });
 /**
  * Confidence of a route with no testimony to agree with (northpark): confirmed = the sensor reads >= MATCH.tau (0.75) on
- * >= MATCH.minStations (20) stations; unconfirmed = a reading below that; noReading = no route or no visible station.
+ * >= MATCH.minStationsR1 x R1 stations (a visible ribbon length: 20 on golden, R1 44.5 px; the recorded 20 stations when no R1 is
+ * given); unconfirmed = a reading below that; noReading = no route or no visible station.
  */
-export const confidenceOf = (verts, sensor, stations) => (!verts?.length || !(stations > 0) ? 'noReading' : sensor >= MATCH.tau && stations >= MATCH.minStations ? 'confirmed' : 'unconfirmed');
+export const confirmFloorOf = (r1Px) => (r1Px > 0 ? MATCH.minStationsR1 * r1Px : MATCH.minStations);
+export const confidenceOf = (verts, sensor, stations, r1Px = null) => (!verts?.length || !(stations > 0) ? 'noReading' : sensor >= MATCH.tau && stations >= confirmFloorOf(r1Px) ? 'confirmed' : 'unconfirmed');
 
 const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 const r1 = (v) => (v == null ? null : Math.round(v * 10) / 10);
@@ -30,7 +32,7 @@ const median = (a) => { if (!a.length) return null; const s = [...a].sort((x, y)
 /** Sam's bend -> the nearest of ours (px); null when we have no bend. The e09 / E13 offset statistic: a missed bend counts at its nearest. */
 const offsetsTo = (sam, ours) => sam.map((q) => (ours.length ? Math.min(...ours.map((v) => dist(v, q))) : null));
 
-export function routeMatchViewOf({ solve, holesPart, holePaths, widthPx }) {
+export function routeMatchViewOf({ solve, holesPart, holePaths, widthPx, r1Px = null }) {
   const rows = [], offAfter = [], offBefore = [];
   let hitsAfter = 0, hitsBefore = 0, samBends = 0;
   for (const h of holesPart.holes) {
@@ -41,7 +43,7 @@ export function routeMatchViewOf({ solve, holesPart, holePaths, widthPx }) {
     const corridorBends = p ? (p.bends ?? p.centre?.slice(1, -1) ?? null) : null;   // old schema: the corridor's midpoints (samples, not bends)
     const row = { hole: String(h.hole), path: verts, after, before, placementTaken: r?.bendsRefined?.taken ?? null, end: verts.length ? verts.at(-1) : null,
       teeCenter: h.tee?.teeCenter ?? null, marginLum: r1(r?.pair?.marginLum ?? null), sensor: asg ? Math.round(asg.sensor * 100) / 100 : null, stations: asg?.stations ?? null,
-      confidence: confidenceOf(verts, asg?.sensor, asg?.stations), samTee: p?.tee ?? null, samBasket: p?.basket ?? null,
+      confidence: confidenceOf(verts, asg?.sensor, asg?.stations, r1Px), samTee: p?.tee ?? null, samBasket: p?.basket ?? null,
       samCentre: corridorBends ? [p.tee, ...corridorBends, p.basket] : null, bendsKnown: Boolean(p?.bends), judged: false, agree: null };
     if (p && corridorBends && verts.length) {
       const j = judgeTrace({ verts, endPoint: verts.at(-1) }, { tee: p.tee, basket: p.basket, bends: corridorBends }, widthPx, TRACE_VIEW.basketMatchPx);
@@ -64,7 +66,7 @@ export function routeMatchViewOf({ solve, holesPart, holePaths, widthPx }) {
       bendOffsetMedianBeforePx: r1(median(offBefore)), bendOffsetMedianAfterPx: r1(median(offAfter)), bendOffsetMaxBeforePx: r1(offBefore.length ? Math.max(...offBefore) : null), bendOffsetMaxAfterPx: r1(offAfter.length ? Math.max(...offAfter) : null),
       confirmed: rows.filter((x) => x.confidence === 'confirmed').length, unconfirmed: rows.filter((x) => x.confidence === 'unconfirmed').length, noReading: rows.filter((x) => x.confidence === 'noReading').length,
       bendPointsKnown: rows.filter((x) => x.bendsKnown).length },
-    sensorTau: MATCH.tau, sensorMinStations: MATCH.minStations, sensorRule: `confirmed = sensor >= ${MATCH.tau} on >= ${MATCH.minStations} stations`,
+    sensorTau: MATCH.tau, sensorMinStations: Math.round(confirmFloorOf(r1Px) * 10) / 10, sensorRule: `confirmed = sensor >= ${MATCH.tau} on >= ${Math.round(confirmFloorOf(r1Px) * 10) / 10} stations${r1Px > 0 ? ` (${MATCH.minStationsR1} R1)` : ''}`,
     units: 'px (canonical frame): path, bends, tee, basket; offsets = Sam bend to our nearest bend; widthPx = the course hallway width W (LOCAL)',
     rule: `agree = tee within ${TRACE_VIEW.teeMatchPx} px of Sam's tee, route ends within ${TRACE_VIEW.basketMatchPx} px of his basket, route within W / 2 = ${r1(widthPx / 2)} px of his corridor; testimony is impeachable: agreement, never acceptance` };
 }
