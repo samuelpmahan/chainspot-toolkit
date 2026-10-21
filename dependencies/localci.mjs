@@ -43,16 +43,22 @@ export async function materializeFork(root, resolved, forkRoot, {objects}={}) {
   const hashes=await hashFiles(paths,resolved.files.map(f=>f.size));
   for(const [i,file] of resolved.files.entries()) {
     const object=paths[i],output=join(forkRoot,file.path),h=hashes[i];
-    if(!h.error&&h.size===file.size&&h.sha256===file.sha256)reused++;
-    else {
-      if(!h.error)rmSync(object,{force:true});
+    // a missing or bad object is rebuilt by an atomic rename over it, never deleted first: runs fork side by side, and a
+    // delete-then-write left a window in which another fork's link found no object (ENOENT, 2026-10-21)
+    const store=()=>{
       const bytes=readFileSync(join(root,file.path));
       if(sha(bytes)!==file.sha256||bytes.length!==file.size)throw Error(`Input changed before LocalCI: ${file.path}`);
       putObject(object,bytes,file.mode??0o644);
-    }
+    };
+    if(!h.error&&h.size===file.size&&h.sha256===file.sha256)reused++;
+    else store();
     const parent=dirname(output);
     if(!dirs.has(parent)){mkdirSync(parent,{recursive:true});dirs.add(parent);}
-    try { linkSync(object,output); linked++; }
+    try {
+      // another run's verifyFork may evict this object between our check and the link: store it again and relink
+      try { linkSync(object,output); } catch(error) { if(error.code!=='ENOENT')throw error; store(); linkSync(object,output); }
+      linked++;
+    }
     catch(error) {
       if(!['EXDEV','EPERM','EMLINK'].includes(error.code))throw error;
       copyFileSync(object,output,1); copied++;   // COPYFILE_EXCL
