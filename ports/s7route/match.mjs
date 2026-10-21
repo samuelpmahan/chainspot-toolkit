@@ -20,6 +20,9 @@
 import { routeSensorAt, ribbonContrastAt, ROUTE, badgeMidAlongPx, badgeMidOf } from './routeSpace.mjs';
 import { refineVertices, arange } from '../s7trace/hallway.mjs';
 import { refineBendsOf } from './bends.mjs';
+import { kCellAt, kChainAt, legContrastsOf } from './kbends.mjs';
+import { straightClaimsOf, neighbourhoodsOf, foreignRingsOf } from './seq.mjs';
+import { ringCrossed, legClearance } from './kbends.mjs';
 
 export const MATCH = Object.freeze({
   tau: 0.75,                 // sensor reading at which a route counts as hallway
@@ -174,7 +177,9 @@ export const MATCH_STEPS = Object.freeze({
   secondBendScan: (S, start, V, E, W, rules = MATCH_RULES) => secondBendScan(S, start, V, E, W, rules),
   secondBendRefine: (S, start, E, W, cand, rules = MATCH_RULES) => secondBendRefine(S, start, E, W, cand, rules),
   placeBends: (S, V, W, straight, opts = {}) => refineBendsOf(S, V, W, { straight, ...opts }),
-  contrast: (S, V, W) => contrast(S, V, W)
+  contrast: (S, V, W) => contrast(S, V, W),
+  // rule set option kBends 'bottleneck' (kbends.mjs): every leg of a route read alone (the K-bend search's one measure)
+  kLegs: (S, V, W) => legContrastsOf(S, V, W)
 });
 
 /**
@@ -199,6 +204,12 @@ export const MATCH_STEPS = Object.freeze({
  *                  B1 seeded on the tee axis 0.5 W past the badge (Sam: the tee -> badge segment is straight hallway; the
  *                  recorded rule searches a second bend only from a 1-bend route)
  *   placeAxis:     true = the bend placement fits the first bend on the tee axis (by its distance along it) instead of freely
+ *   kBends:        'bottleneck' = the fair cost of kbends.mjs (a route is as good as its weakest leg): the assignment scores each
+ *                  cell by its best K <= 1 route under it (B1 on the tee axis at or past the badge-at-0.57 point) plus the on-axis
+ *                  prior; an assigned route the sensor rejects (< tau) is replaced by the K-bend chain S -> B* -> ... -> E when the
+ *                  chain's weakest leg reads higher; then the unconfirmed holes re-solved together (kBendsPass) | 'seq' = sequencing
+ *                  (seq.mjs): straight holes claim their basket first, each other hole scores only its neighbourhood under the
+ *                  weakest-leg cost (K <= 1, the K-bend chain when the sensor rejects that). Absent: the recorded rule.
  */
 export const MATCH_RULES = Object.freeze({ straightFromS6: true, secondBendRefine: 'coordWide', refineUnits: 'r1', tableUnits: 'r1' });   // batch 2 (2026-10-20): S6CoordWide
 
@@ -231,7 +242,12 @@ export const RULE_SETS = Object.freeze({
   routeMatchLeanPxRefineCoarse2TeeAxis: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true },
   // the heritage fixes with the badge-midpoint prior (heritage7 prototype: 18/18 agree, bends 18/1/1), on the lean and the B* tables
   routeMatchTeeAxisBadgePrior: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior' },
-  routeMatchBadgeMidTeeAxisPrior: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior' }
+  routeMatchBadgeMidTeeAxisPrior: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior' },
+  // K bends under one fair cost (lane s7bends, 2026-10-21): the accepted rule set with the weakest-leg assignment and K-bend chains
+  routeMatchKBends: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'bottleneck' },
+  // sequencing (Sam, 2026-10-21: "18x18 is craycray"): straight claims first, then each bent hole's neighbourhood (seq.mjs); the
+  // table is only the B* / start Parts (tableSearch 'badgeMid': 2 reads per cell), the K-bend search only in the neighbourhoods
+  routeMatchKBendsSeq: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq' }
 });
 
 /**
@@ -257,18 +273,25 @@ export const profileOf = (name) => (PROFILES[name] ?? String(name ?? '').split('
 export function routeMatchOf(table, S, starts, { secondBends = true, straight: verdicts = undefined, steps = MATCH_STEPS, rules = MATCH_RULES } = {}) {
   const W = table.widthPx, holes = table.holes;
   if (!(W > 0) || !holes.length) return { holes: {}, assignment: [], widthPx: W ?? null, condition: 'no hallway width or no holes in the route table' };
-  const score = table.contrastMatrix.map((row, i) => row.map((c, k) => (c === null ? MATCH.noReadingLum : c) + (table.onAxisPrior[i]?.[k] ?? 0)));
-  const pairs = assignMinCost(score.map((row) => row.map((v) => -v)));
+  const kb = rules.kBends === 'bottleneck', seq = rules.kBends === 'seq';
+  // kBends: every cell's K <= 1 routes under the weakest-leg cost (one profiled call per cell), else the table's contrast
+  const startOf = (hole) => starts.holes.find((h) => String(h.hole) === String(hole));
+  const legsOf = (Sc, V, Wd) => steps.kLegs(Sc, V, Wd);
+  const kCells = kb ? holes.map((hole, i) => table.baskets.map((b, k) => kCellAt(S, startOf(hole), b.point ?? table.rows[i].cells[k].contrast.verts.at(-1), W, { legsOf }))) : null;
+  const sq = seq ? seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf }) : null;
+  const score = sq ? sq.score : kb ? kCells.map((row, i) => row.map((x, k) => (x.best.bottleneck === null ? MATCH.noReadingLum : x.best.bottleneck) + (table.onAxisPrior[i]?.[k] ?? 0)))
+    : table.contrastMatrix.map((row, i) => row.map((c, k) => (c === null ? MATCH.noReadingLum : c) + (table.onAxisPrior[i]?.[k] ?? 0)));
+  const pairs = sq ? sq.pairs : assignMinCost(score.map((row) => row.map((v) => -v)));
   const out = {}, assignment = [];
   for (const [i, k] of pairs) {
     const hole = holes[i], cell = table.rows[i].cells[k], start = starts.holes.find((h) => String(h.hole) === String(hole));
     const sorted = [...score[i]].sort((a, b) => b - a);
     const E = table.baskets[k].point ?? cell.contrast.verts.at(-1);
-    let V = cell.contrast.verts.map((v) => v.slice());
+    let V = (sq ? sq.route[hole] : kb ? kCells[i][k].best.verts : cell.contrast.verts).map((v) => v.slice());
     const s6Straight = rules.straightFromS6 && verdicts && verdicts[hole] === 'straight';
     // firstBend 'badge': a route through B* keeps it (no refine slide; the bend placement below leaves it where it is)
     const pinB = rules.firstBend === 'badge' && V.length === 3 ? badgeMidOf(start) : null;
-    if (V.length === 3 && !s6Straight && !pinB) V = steps.refine(S, V, W, start.u, rules);
+    if (V.length === 3 && !s6Straight && !pinB && !kb && !sq) V = steps.refine(S, V, W, start.u, rules);
     const straight = steps.sensor(S, [start.S, E], W);
     let rec;
     if (s6Straight) {
@@ -304,9 +327,99 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
       if (rb.stations >= minStationsOf(S, rules) && rb.passFrac >= rec.sensor.passFrac - MATCH.priorDrop)
         rec = { ...rec, verts: Vb, sensor: rb, how: `${rec.how} | first bend at B* (badge-midpoint prior): sensor ${rec.sensor.passFrac.toFixed(2)} -> ${rb.passFrac.toFixed(2)} on ${rb.stations} st` };
     }
+    if (sq) {
+      // the ring rule holds for the final route too: a placement or prior move that enters another basket's ring is undone
+      const foreign = foreignRingsOf(start, table.baskets.map((b, q) => b.point ?? table.rows[i].cells[q].contrast.verts.at(-1)), k, S.R1);
+      const crossing = (Vx) => { for (let q = 0; q + 1 < Vx.length; q++) { const c = ringCrossed(Vx[q], Vx[q + 1], foreign); if (c >= 0) return foreign.idx[c]; } return -1; };
+      const c = crossing(rec.verts);
+      if (c >= 0 && crossing(V) < 0) rec = { ...rec, verts: V, sensor: steps.sensor(S, V, W), how: `${rec.how} | undone: the placed route enters ${table.baskets[c].name}'s ring (no passing through baskets)` };
+    }
     out[hole] = { end: k, verts: rec.verts, how: rec.how, polyScore: steps.contrast(S, rec.verts, W), bendsRefined: rec.bendsRefined ?? null, legs: [{ passFrac: rec.sensor.passFrac }],
       pair: { basket: k, scoreLum: score[i][k], marginLum: sorted[0] === score[i][k] ? sorted[0] - (sorted[1] ?? sorted[0]) : score[i][k] - sorted[0], onAxisPrior: table.onAxisPrior[i]?.[k] ?? 0 } };
     assignment.push({ hole, basket: k, scoreLum: score[i][k], bends: rec.verts.length - 2, sensor: rec.sensor.passFrac, stations: rec.sensor.stations });
   }
-  return { holes: out, assignment, widthPx: W };
+  if (kb && secondBends) kBendsPass({ out, assignment, holes, table, score, kCells, S, W, startOf, steps, rules, legsOf });
+  if (sq) for (const h of Object.keys(out)) out[h] = { ...out[h], how: `${sq.why[h]} | ${out[h].how}`, seq: sq.record[h] ?? null };
+  return { holes: out, assignment, widthPx: W, ...(sq ? { sequencing: sq.summary } : {}) };
+}
+
+/**
+ * kBends 'seq' (seq.mjs): straight holes claim their basket first; each other hole scores only its neighbourhood (SEQ.neighbours
+ * unclaimed forward BasketPoints by joint rank) under the weakest-leg cost: its K <= 1 route (kbends.mjs kCellAt), and the K-bend
+ * chain when the sensor rejects that route; one-to-one over those cells. A hole left without a basket is assigned among the
+ * baskets still free by its K <= 1 routes. -> { pairs, score, route: { [hole]: verts }, why, record, summary }
+ */
+function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf }) {
+  const bp = table.baskets.map((b, k) => b.point ?? table.rows[0].cells[k].contrast.verts.at(-1)), starts = holes.map((h) => startOf(h));
+  const claims = straightClaimsOf(starts, bp, S.R1, verdicts ?? null, []);
+  const nb = neighbourhoodsOf(starts.filter((s) => claims.claims[s.hole] === undefined), bp, claims.claimed);
+  const score = holes.map(() => bp.map(() => -Infinity)), route = {}, why = {}, record = {}, cells = {};
+  holes.forEach((h, i) => {
+    if (claims.claims[h] !== undefined) { const k = claims.claims[h]; score[i][k] = 0; route[`${h}@${k}`] = [starts[i].S, bp[k]]; why[h] = claims.rows.find((r) => r.hole === h).why; record[h] = { claimed: k }; return; }
+    const cands = nb[h] ?? [];
+    record[h] = { candidates: cands.map((c) => ({ basket: c.basket, rank: c.rank, fwdRank: c.fwdRank, nextRank: c.nextRank })) };
+    const rejected = [];
+    for (const c of cands) {
+      const k = c.basket, foreign = foreignRingsOf(starts[i], bp, k, S.R1), kc = kCellAt(S, starts[i], bp[k], W, { legsOf, foreign });
+      const s1 = kc.best.bottleneck === null ? null : steps.sensor(S, kc.best.verts, W);
+      let best = kc.best.bottleneck === null ? null : kc.best;
+      if (!s1 || s1.passFrac < MATCH.tau) {
+        // the chain replaces the K <= 1 route when its weakest leg AND its sensor reading are higher (a bend hidden under a sprite
+        // has unread legs: the weakest leg alone cannot place it)
+        const ch = kChainAt(S, starts[i], bp[k], W, { legsOf, one: kc.one, foreign, sensorOf: (V) => steps.sensor(S, V, W).passFrac });
+        if (ch && ch.bottleneck !== null && (!best || (ch.bottleneck > best.bottleneck && steps.sensor(S, ch.verts, W).passFrac > s1.passFrac))) best = ch;
+      }
+      if (!best) { const q = kc.rejected ? kc.rejected.crosses : null; rejected.push({ basket: k, crosses: q !== null ? foreign.idx[q] : null, clearanceR1: q !== null ? +(legClearance(starts[i].S, bp[k], foreign.pts[q]) / S.R1).toFixed(2) : null }); continue; }
+      score[i][k] = best.bottleneck; route[`${h}@${k}`] = best.verts; cells[`${h}@${k}`] = best;
+      if (foreign.exempt.length) (record[h].exempt ??= {})[k] = foreign.exempt;
+    }
+    record[h].rejected = rejected;
+    const nm = (k) => table.baskets[k]?.name ?? `BP${k}`;
+    why[h] = `neighbourhood (joint rank of distance from the tee and from tee ${Number(h) + 1}): ${cands.map((c) => `${nm(c.basket)} r${c.rank}`).join(', ')}${rejected.length ? `; rejected (every route enters another basket's C1 disc, < 1 R1): ${rejected.map((x) => `${nm(x.basket)}${x.crosses !== null ? ` (the straight route passes ${nm(x.crosses)} at ${x.clearanceR1} R1)` : ''}`).join(', ')}` : ''}`;
+  });
+  let pairs = assignMinCost(score.map((row) => row.map((v) => (Number.isFinite(v) ? -v : Infinity))));
+  // a hole the neighbourhoods leave without a basket: assigned among the free baskets by its K <= 1 routes
+  const usedH = new Set(pairs.map(([i]) => i)), usedK = new Set(pairs.map(([, k]) => k)), leftH = holes.map((_, i) => i).filter((i) => !usedH.has(i)), leftK = bp.map((_, k) => k).filter((k) => !usedK.has(k));
+  if (leftH.length && leftK.length) {
+    const sub = leftH.map((i) => leftK.map((k) => { const kc = kCellAt(S, starts[i], bp[k], W, { legsOf, foreign: foreignRingsOf(starts[i], bp, k, S.R1) }); route[`${holes[i]}@${k}`] = kc.best.verts; return kc.best.bottleneck ?? -Infinity; }));
+    for (const [a, b] of assignMinCost(sub.map((r) => r.map((v) => (Number.isFinite(v) ? -v : Infinity))))) { const i = leftH[a], k = leftK[b]; score[i][k] = sub[a][b]; pairs.push([i, k]); why[holes[i]] = `${why[holes[i]]}; none left in the neighbourhood: assigned among the free baskets by K <= 1 routes`; }
+    pairs = pairs.sort((x, y) => x[0] - y[0]);
+  }
+  const routeOf = Object.fromEntries(pairs.map(([i, k]) => [holes[i], route[`${holes[i]}@${k}`]]));
+  return { pairs, score: score.map((r) => r.map((v) => (Number.isFinite(v) ? v : MATCH.noReadingLum))), route: routeOf, why, record,
+    summary: { straightClaims: Object.keys(claims.claims).length, bentHoles: Object.keys(nb).length, cellsScored: Object.keys(cells).length, chains: Object.values(cells).filter((c) => c.verts.length >= 4).length } };
+}
+
+/**
+ * kBends, the iterated assignment: the holes whose route the sensor still rejects (< tau, or fewer stations than the floor) and
+ * the baskets they hold are re-solved together. Each (hole, basket) of that sub-problem is scored by its best route under the
+ * weakest-leg cost, K <= 1 (with the on-axis prior, as in the first assignment) or the K-bend chain (kbends.mjs kChainAt); the
+ * sub-problem is assigned one to one; a hole takes the chain when the chain's weakest leg AND its sensor reading beat the
+ * route it has (a hole the sensor confirms is never reopened: the course's hallway network cannot pull it onto another
+ * hole's corridor). Mutates out / assignment in place (the caller's records).
+ */
+function kBendsPass({ out, assignment, holes, table, score, kCells, S, W, startOf, steps, rules, legsOf }) {
+  const floor = minStationsOf(S, rules), U = assignment.filter((a) => a.sensor < MATCH.tau || a.stations < floor);
+  if (!U.length) return;
+  const iOf = (hole) => holes.findIndex((h) => String(h) === String(hole)), cols = U.map((a) => a.basket);
+  const cell = U.map((a) => cols.map((k) => {
+    const i = iOf(a.hole), start = startOf(a.hole), E = table.baskets[k].point, ch = kChainAt(S, start, E, W, { legsOf, one: kCells[i][k].one });
+    const k1 = score[i][k], kc = ch && ch.bottleneck !== null ? ch.bottleneck : -Infinity;
+    return { chain: ch, value: Math.max(k1, kc) };
+  }));
+  const pairs = assignMinCost(cell.map((row) => row.map((c) => -c.value)));
+  for (const [u, c] of pairs) {
+    const a = U[u], k = cols[c], i = iOf(a.hole), ch = cell[u][c].chain, rec = out[a.hole];
+    if (!ch || ch.bottleneck === null) continue;
+    const moved = k !== a.basket, cur = moved ? null : steps.kLegs(S, rec.verts, W), curB = cur ? cur.reduce((m, x) => (x !== null && (m === null || x < m) ? x : m), null) : null;
+    const rc = steps.sensor(S, ch.verts, W), curSensor = moved ? -Infinity : rec.legs[0].passFrac;
+    const better = (moved ? ch.bottleneck >= score[i][k] - (table.onAxisPrior[i]?.[k] ?? 0) : curB === null || ch.bottleneck > curB) && rc.passFrac > curSensor;
+    if (!moved && !better) { out[a.hole] = { ...rec, how: `${rec.how} | K-bend pass: chain kept out (weakest leg ${ch.bottleneck.toFixed(1)} vs ${curB === null ? 'none' : curB.toFixed(1)} lum, sensor ${rc.passFrac.toFixed(2)} vs ${curSensor.toFixed(2)})` }; continue; }
+    const kv = kCells[i][k].best, use = better ? ch.verts : kv.verts, us = better ? rc : steps.sensor(S, kv.verts, W);
+    const sorted = [...score[i]].sort((x, y) => y - x);
+    out[a.hole] = { end: k, verts: use, how: `K-bend pass (${U.length} unconfirmed holes re-solved together): ${moved ? `basket ${a.basket} -> ${k}; ` : ''}${better ? `K-bend chain, ${ch.verts.length - 2} bends: weakest leg ${ch.bottleneck.toFixed(1)} lum, sensor ${rc.passFrac.toFixed(2)} on ${rc.stations} st` : `K <= 1 route: weakest leg ${kv.bottleneck?.toFixed(1)} lum`}`,
+      polyScore: steps.contrast(S, use, W), bendsRefined: null, legs: [{ passFrac: us.passFrac }],
+      pair: { basket: k, scoreLum: score[i][k], marginLum: score[i][k] - sorted[0], onAxisPrior: table.onAxisPrior[i]?.[k] ?? 0 } };
+    Object.assign(a, { basket: k, scoreLum: score[i][k], bends: use.length - 2, sensor: us.passFrac, stations: us.stations });
+  }
 }
