@@ -10,7 +10,9 @@
  *   - its BasketPoint (where every C1 spoke meets the stem's bottom edge) is bbox (x + 22.5, y + 71) +
  *     BASKET_POINT_OFFSET, solved from 59 spokes on 5 full courses (not yet re-solved at zoom; the sprite it is measured
  *     in is identical there); Sam's basket points sit at a median 0.88-1.09 px from it;
- *   - VARIABLE: the basket count against the badge count. In a full view (badge labels 1..18) every basket has a badge,
+ *   - VARIABLE: the basket count against the badge count. In a full view (badge labels exactly 1..N, N = the number
+ *     of badges S1 found on this image; Sam, 2026-10-21: "S2's basket count check should be predicated on n badges,
+ *     not 18") every basket has a badge,
  *     so more baskets than badges is a finding and the deficit is S4's hand-off; a partial (zoomed) view can show a
  *     basket whose badge is off-screen (Lenard-4: 7 baskets, 6 badges), so neither is judged there;
  *   - S2 has no false positive on any annotated course; what it misses (stacked or covered baskets) is S4's to recover.
@@ -24,9 +26,11 @@ const PART = 'px.baskets';
 export const BASKET_SIZE = Object.freeze([46, 72]);                 // px [width, height]
 export const BASKET_POINT_OFFSET = Object.freeze([0.34, 0.73]);     // px from the sprite's bottom-centre pixel
 export const basketPoint = ([x, y, w, h]) => [x + (w - 1) / 2 + BASKET_POINT_OFFSET[0], y + h - 1 + BASKET_POINT_OFFSET[1]];
-const UNITS = { basketPoint: 'px', basketPoints: 'px', basketIndices: 'ordinal (S2 basket index)', duplicates: 'ordinal (S2 basket index pairs)', offSize: 'ordinal (S2 basket index)', expectedSize: 'px [width, height]', duplicateWithinPx: 'px', baskets: 'count (baskets)', badges: 'count (badges)', deficit: 'count (baskets S4 must recover; full view only)', view: 'enum (full: badge labels 1..18; partial)' };
-export const FULL_VIEW_LABELS = 18;   // count (badge labels 1..N in a full view)
-export const isFullView = (badges) => { const l = new Set(badges.map((b) => Number(b.label))); return l.size === FULL_VIEW_LABELS && [...Array(FULL_VIEW_LABELS)].every((_, i) => l.has(i + 1)); };
+const UNITS = { basketPoint: 'px', basketPoints: 'px', basketIndices: 'ordinal (S2 basket index)', duplicates: 'ordinal (S2 basket index pairs)', offSize: 'ordinal (S2 basket index)', expectedSize: 'px [width, height]', duplicateWithinPx: 'px', baskets: 'count (baskets)', badges: 'count (badges)', deficit: 'count (baskets S4 must recover; full view only)', view: 'enum (full: badge labels 1..N; partial)', expectedBaskets: 'count (N, badges S1 found on this image)' };
+/** N: the expected basket count is the number of badges S1 found on this image (count), never a fixed 18. */
+export const expectedBasketCount = (badges) => badges.length;
+/** A full view carries every badge label 1..N once, N = its badge count. */
+export const isFullView = (badges) => { const n = expectedBasketCount(badges), l = new Set(badges.map((b) => Number(b.label))); return n > 0 && l.size === n && [...Array(n)].every((_, i) => l.has(i + 1)); };
 const DUPLICATE_WITHIN_PX = 10;
 const touch = (a, b) => !(a[0] + a[2] < b[0] || b[0] + b[2] < a[0] || a[1] + a[3] < b[1] || b[1] + b[3] < a[1]);
 
@@ -46,9 +50,11 @@ export function observeBaskets(baskets, badges) {
   return {
     rows,
     findings: {
-      view: full ? 'full' : 'partial', baskets: rows.length, badges: badges.length, deficit: full ? Math.max(0, badges.length - rows.length) : null,
+      view: full ? 'full' : 'partial', baskets: rows.length, badges: badges.length,
+      expectedBaskets: { n: expectedBasketCount(badges), from: 'px.badges: the badges S1 found on this image' },
+      deficit: full ? Math.max(0, expectedBasketCount(badges) - rows.length) : null,
       sizeConstant: rows.every((r) => r.sizeMatches), offSize: rows.filter((r) => !r.sizeMatches).map((r) => r.name),
-      duplicates: dup, overBadgeCount: full ? rows.length > badges.length : null,
+      duplicates: dup, overBadgeCount: full ? rows.length > expectedBasketCount(badges) : null,
       touchingBadges: rows.filter((r) => r.touchesBadges.length).map((r) => ({ basket: r.name, badges: r.touchesBadges })),
       touchingBaskets: rows.filter((r) => r.touchesBaskets.length).map((r) => ({ basket: r.name, baskets: r.touchesBaskets }))
     }

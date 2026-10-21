@@ -8,7 +8,8 @@
 //   node scripts/generate-badge-glyph-templates.mjs            # write both assets
 //   node scripts/generate-badge-glyph-templates.mjs --check    # bake, compare, write nothing
 //
-// It bakes two assets: the binary templates (badge-glyph-templates.json, from
+// It bakes three assets: the digit templates (badge-digit-templates.json, the
+// black-and-white digit reader, from the dev sprites), the binary templates (badge-glyph-templates.json, from
 // the old-stuff rasters below) and the coverage templates of the second reader
 // (badge-coverage-templates.json, digits/badgeCoverageTemplateMath.ts, from
 // dev-course badge sprites in artifacts/badge-coverage-sources), by the same
@@ -380,8 +381,55 @@ console.log('coverage font (px of the dev sprites):', JSON.stringify({ ...covera
 console.log('coverage composition check (11..18 from lone glyphs):', JSON.stringify(coverageCheck));
 for (const row of coverageConfusion) console.log(`coverage: closest pair in 1..${row.bound}: ${row.closestPair.labels.join(' vs ')} at NCC ${row.closestPair.ncc}`);
 
+// ---- digit templates (the black-and-white digit reader, digits/badgeDigitTemplateMath.ts) -------------
+// Cut from the same dev badge sprites through the reader's own binarization and layout: the lone 1..9 of
+// badges 1..9, the left "1" of 10..18, the right 0..8 of 10..18. So "0" exists only as the right digit of 10
+// and "9" only as the lone 9 (a right-hand 9, as in 19, is read against it).
+
+const DG = dist('digits/badgeDigitTemplateMath.js');
+const DK = DG.DEFAULT_BADGE_DIGIT_TEMPLATE_KNOBS;
+const DIGIT_OUT_PATH = join(ROOT, 'packages/alg/src/detectors/threeFactor/assets/badge-digit-templates.json');
+const digitTemplates = [];
+for (let label = 1; label <= SOURCE_LABELS; label++) {
+	const raster = coverageRasters[label];
+	const layouts = DG.badgeDigitLayouts(DG.sampleBadgeDigits(raster, wholeRaster(raster)), DK);
+	if (label <= 9) digitTemplates.push({ digit: label, from: `${label}`, mask: layouts.one[0] });
+	else {
+		if (!layouts.two) throw new Error(`dev sprite ${label} did not split into two digit cells`);
+		digitTemplates.push({ digit: 1, from: `${label} left`, mask: layouts.two[0] }, { digit: label - 10, from: `${label} right`, mask: layouts.two[1] });
+	}
+}
+const shippedDigits = digitTemplates.map((t) => ({ ...t, mask: DG.decodeDigitRows(rowsOf(t.mask), t.mask.widthPx, t.mask.heightPx) }));
+const digitCheck = [];
+for (let label = 1; label <= SOURCE_LABELS; label++) {
+	const raster = coverageRasters[label];
+	const read = DG.classifyBadgeDigitsAgainstTemplates(raster, wholeRaster(raster), shippedDigits, null, DK);
+	digitCheck.push({ label, read: read.label, margin: round3(read.margin) });
+}
+const digitFailed = digitCheck.filter((c) => c.read !== String(c.label));
+if (digitFailed.length) throw new Error(`digit templates do not read their own sprites: ${JSON.stringify(digitFailed)}`);
+let closestDigits = { digits: null, dice: -1 };
+for (let i = 0; i < shippedDigits.length; i++)
+	for (let j = i + 1; j < shippedDigits.length; j++) {
+		if (shippedDigits[i].digit === shippedDigits[j].digit) continue;
+		const dice = bestMaskScore(shippedDigits[i].mask, shippedDigits[j].mask, DK.maxShiftPx);
+		if (dice > closestDigits.dice) closestDigits = { digits: [shippedDigits[i].from, shippedDigits[j].from], dice };
+	}
+const digitOut = {
+	schema: 'badgeDigitTemplates@1',
+	digitWidthPx: DK.digitWidthPx,
+	digitHeightPx: DK.digitHeightPx,
+	note: 'Digit cells of the dev badge sprites (artifacts/badge-coverage-sources) through sampleBadgeDigits + badgeDigitLayouts. Rows are 0/1 per pixel, top to bottom.',
+	sources: 'lone 1..9 of badges 1..9; left 1 of 10..18; right 0..8 of 10..18. 0 only from 10; 9 only from the lone 9.',
+	selfCheck: { rule: 'each dev sprite 1..18 reads as itself', rows: digitCheck },
+	closestDifferentDigits: { unit: 'shifted Dice', ...closestDigits, dice: round3(closestDigits.dice) },
+	templates: digitTemplates.map(({ digit, from, mask }) => ({ digit, from, rows: rowsOf(mask) }))
+};
+console.log('digit self-check (dev sprites 1..18):', JSON.stringify(digitCheck.map((c) => c.margin)));
+console.log('closest different digits:', JSON.stringify(digitOut.closestDifferentDigits));
+
 // ---- write or check --------------------------------------------------------------------------------
-const outputs = [[OUT_PATH, JSON.stringify(out, null, '\t') + '\n'], [COVERAGE_OUT_PATH, JSON.stringify(coverageOut, null, '\t') + '\n']];
+const outputs = [[OUT_PATH, JSON.stringify(out, null, '\t') + '\n'], [COVERAGE_OUT_PATH, JSON.stringify(coverageOut, null, '\t') + '\n'], [DIGIT_OUT_PATH, JSON.stringify(digitOut, null, '\t') + '\n']];
 if (process.argv.includes('--check')) {
 	let stale = 0;
 	for (const [path, text] of outputs) {
@@ -392,4 +440,4 @@ if (process.argv.includes('--check')) {
 	process.exit(stale ? 1 : 0);
 }
 for (const [path, text] of outputs) writeFileSync(path, text);
-console.log(`wrote ${templates.length} binary and ${coverageTemplates.length} coverage templates (1..${HOLE_LABEL_MAX})`);
+console.log(`wrote ${templates.length} binary and ${coverageTemplates.length} coverage templates (1..${HOLE_LABEL_MAX}), ${digitTemplates.length} digit templates`);

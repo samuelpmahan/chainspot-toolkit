@@ -27,3 +27,11 @@ test('partial view: more baskets than badges is not a finding, and there is no S
     Array.from({ length: 18 }, (_, i) => ({ label: i + 1, bbox: [1100, i * 50, 54, 42] })));
   assert.equal(full.findings.view, 'full'); assert.equal(full.findings.overBadgeCount, true);
 });
+
+test('the expected basket count is N, the badges S1 found (Sam: n badges, not 18); 20 badges labelled 1..20 is a full view', () => {
+  const badges = Array.from({ length: 20 }, (_, i) => ({ label: i + 1, bbox: [1000, i * 50, 54, 42] }));
+  const o = observeBaskets(Array.from({ length: 17 }, (_, i) => ({ bbox: [i * 100, 600, 46, 72] })), badges);
+  assert.equal(o.findings.view, 'full');
+  assert.deepEqual(o.findings.expectedBaskets, { n: 20, from: 'px.badges: the badges S1 found on this image' });
+  assert.equal(o.findings.deficit, 3);
+});

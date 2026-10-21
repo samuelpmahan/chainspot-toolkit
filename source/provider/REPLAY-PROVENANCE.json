@@ -2,12 +2,13 @@
   "schema": "chainspot-bundled-provider-v1",
   "sourceRepository": "samuelpmahan/ChainSpot",
   "sourceCommit": "5433854c72b1dc5aa420934d91e16458c2abe09f",
-  "sourceAlgSha256": "6f007eac72f0c2d3aa9e3f08a17b20c75105fdba90c0df4cfe798c9c455d959f",
-  "compiledAlgSha256": "8689cbb8528d62b76b26aee960f2c5bc6ad51fac381a7c9ea12e04de7ce8db3d",
+  "sourceAlgSha256": "4ceed1678508972bde23ea12045876c3e69950aff47bde5ec05d52482c7551da",
+  "compiledAlgSha256": "190c918e8b9902a6b6ae15a945eaed3449c02dc8682808b3f033b31debf0065c",
   "scope": "Hash of sorted relative file paths and SHA-256 content hashes: .ts/.json/.yaml under packages/alg/src and .js/.json under packages/alg/dist. Git metadata is not included in the core archive.",
   "localPatches": [
     "lane/fastA: output-identical speedups of packages/alg (smartBasket occlusion mask, tee-ring separable dilation, components inlined neighbours, native sha256 under Node, tee-recovery fit typed arrays); verified identical S0-S4 evidence on golden and heritage",
     "lane/badge27: one hole-label vocabulary 1..27 (digits/holeLabels.ts) for the per-digit reader (measure.ts labelCandidates; a well-formed read outside it abstains 'out-of-vocabulary' instead of being projected onto the nearest label) and the glyph-template witness (templates 19..27 composed from the 1..18 rasters' own digit glyphs by scripts/generate-badge-glyph-templates.mjs); every dev S1 read identical",
-    "lane/badge27: a second whole-glyph reader beside the binary one, on anti-aliased glyph coverage (digits/badgeCoverageTemplateMath.ts, features/g1.badgeCoverageTemplate.ts, assets/badge-coverage-templates.json from dev-course badge sprites); not an engine unit, no run changes"
+    "lane/badge27: a second whole-glyph reader beside the binary one, on anti-aliased glyph coverage (digits/badgeCoverageTemplateMath.ts, features/g1.badgeCoverageTemplate.ts, assets/badge-coverage-templates.json from dev-course badge sprites); not an engine unit, no run changes",
+    "lane/badge27: a black-and-white digit reader (digits/badgeDigitTemplateMath.ts, features/g1.badgeDigitTemplate.ts, assets/badge-digit-templates.json from dev-course badge sprites), not an engine unit; labEndpoint's label candidates use the shared 1..27 vocabulary"
   ]
 }

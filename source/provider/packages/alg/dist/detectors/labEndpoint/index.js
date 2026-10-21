@@ -11,6 +11,7 @@ const endpoints_1 = require("./endpoints");
 const logisticInference_1 = require("./digits/logisticInference");
 const readBadges_1 = require("./digits/readBadges");
 const screenChrome_1 = require("./screenChrome");
+const holeLabels_1 = require("../threeFactor/digits/holeLabels");
 exports.LAB_ENDPOINT_ALGO = 'lab-quick-endpoints';
 exports.LAB_ENDPOINT_ALGO_VERSION = '1.0.0';
 const basketTemplate = (0, endpoints_1.prepareSpriteTemplate)(basket_sprite_json_1.default);
@@ -34,7 +35,7 @@ function badgeDarkFraction(badge, dark) {
 function labelCandidates(reading) {
     if (reading.digits.length === 0)
         return [];
-    const raw = Array.from({ length: 18 }, (_, index) => index + 1)
+    const raw = holeLabels_1.HOLE_LABELS
         .filter((n) => String(n).length === reading.digits.length)
         .map((n) => {
         const confidence = [...String(n)].reduce((product, digit, index) => product * (reading.digits[index]?.scores[Number(digit)] ?? 0), 1);

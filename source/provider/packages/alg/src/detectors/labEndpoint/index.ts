@@ -13,6 +13,7 @@ import {
 import { predictProbs, type LogisticModel } from './digits/logisticInference';
 import { readCourseBadges, type BadgeReading, type DigitScorer } from './digits/readBadges';
 import { detectScreenChromeRegions, pointInScreenChrome } from './screenChrome';
+import { HOLE_LABELS } from '../threeFactor/digits/holeLabels';
 
 export const LAB_ENDPOINT_ALGO = 'lab-quick-endpoints';
 export const LAB_ENDPOINT_ALGO_VERSION = '1.0.0';
@@ -42,7 +43,7 @@ function badgeDarkFraction(
 
 function labelCandidates(reading: BadgeReading): { n: number; confidence: number }[] {
 	if (reading.digits.length === 0) return [];
-	const raw = Array.from({ length: 18 }, (_, index) => index + 1)
+	const raw = HOLE_LABELS
 		.filter((n) => String(n).length === reading.digits.length)
 		.map((n) => {
 			const confidence = [...String(n)].reduce(
