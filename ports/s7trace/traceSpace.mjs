@@ -174,7 +174,7 @@ export function registerTraceQueries(store, { matcher = null, board = null } = {
       // every per-hole step is its own profiled store call (fn.q.match.*); the scene is passed by address
       const steps = Object.fromEntries(Object.keys(MATCH_STEPS).map((k) => [k, (_S, ...a) => store.call(`fn.q.match.${k}`, { scene: 'tk.s7.sceneS4', a }).value]));
       const r = routeMatchOf(table, S, get('tk.s7.routeStart'), { secondBends, straight, steps, ...(rules ? { rules: { ...MATCH_RULES, ...rules } } : {}) });
-      return { value: { ...r, scene: 'tk.s7.sceneS4' }, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, reached: Object.values(r.holes).filter((h) => h.end != null).length, secondBends: Object.values(r.holes).filter((h) => (h.verts?.length ?? 0) === 4).length } };
+      return { value: { ...r, scene: 'tk.s7.sceneS4' }, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, reached: Object.values(r.holes).filter((h) => h.end != null).length, secondBends: Object.values(r.holes).filter((h) => (h.verts?.length ?? 0) === 4).length, ...(r.sequencing ? { cellsEvaluated: r.sequencing.cellsEvaluated, cellsFullTable: r.sequencing.cellsFullTable, holesWidened: r.sequencing.widened.length } : {}) } };
     },
     'fn.q.trace.pinned': () => {
       const r = pinnedSolve(get('tk.s7.pinnedTraces'), get('tk.s7.holes'), W());
