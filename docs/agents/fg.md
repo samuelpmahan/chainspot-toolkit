@@ -6,15 +6,17 @@
   `instrumented` (call counts), `rendered` (it must draw at least one frame). The registry lists them in
   `DEFAULT_PROPERTIES`.
 - **Mixins in use:** lane, gated, witnessed (provider / branch / path), conserved, delta, judged, materialized,
-  framed, published, unitful, emits, on.
-- **Events** (`emits(event, { payload })`, `on(event)`): an FG announces a named event and another hears it, with no FG
-  id written in either. `emits` records `{ event, payload }` on the record (`events`) and declares `emits`; `on`
+  framed, published, unitful, raises, on.
+- **Events** (`raises(event, { payload })`, `on(event)`): an FG announces a named event and another hears it, with no FG
+  id written in either. `raises` records `{ event, payload }` on the record (`events`) and declares `raises`; `on`
   declares `subscribes`, puts the payloads at `s.heard[event]` and checks `heard:<event>`. A subscription is its own
-  field and not a `requires` because it names an event; the registry turns it into the same ordering edge (emitters
+  field and not a `requires` because it names an event; the registry turns it into the same ordering edge (raisers
   first, ties by id; pin an order between subscribers with `gated`). Before anything runs, `eventReport` /
-  `crossCheck` flag a subscriber nobody emits for (error), a subscription cycle (error), and an event nobody hears
-  (warning); `createRegistry` refuses the errors. Declare `emits:<event>` and `on:<event>` in `stages/*.json`
-  properties like any other. Fixtures: `fg/fixtures/fgs/events.fixture.mjs`; tests: `fg/events.test.mjs`.
+  `crossCheck` flag a subscriber nobody raises for (error), a subscription cycle (error), and an event nobody hears
+  (warning); `createRegistry` refuses the errors. Declare `raises:<event>` and `on:<event>` in `stages/*.json`
+  properties, and optionally the event names themselves as `raises` / `subscribes` arrays on the guarantee's entry
+  (compared as sets, a mismatch is an error; absent means not compared).
+  Fixtures: `fg/fixtures/fgs/events.fixture.mjs`; tests: `fg/events.test.mjs`.
 - **Skeletons** (`fg/skeletons.mjs`): a stage's FG written once. `assemblyGuarantee` is the S1-S3 assembly chain
   (branchRun, lane, delta, gated, reproduction, witnessed branch and path, materialized with reread, published with
   lane evidence); `materializeGuarantee` is the S1-S3 set materialize chain (read, serialize with the wiring checks,

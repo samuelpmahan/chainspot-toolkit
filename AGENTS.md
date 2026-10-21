@@ -56,7 +56,7 @@ output.
   render, add a case to `fg/render.mjs`; never write a renderer at the call site.
 - **Reusable FG behaviour is a mixin** in `fg/mixins.mjs`, composed with `pipe(...)`. Declare its property in
   `stages/*.json`; the registry test checks it.
-- **FG sequencing by event:** `emits(event, { payload })` and `on(event)` (`fg/mixins.mjs`) wire one FG to another by
+- **FG sequencing by event:** `raises(event, { payload })` and `on(event)` (`fg/mixins.mjs`) wire one FG to another by
   event name instead of by FG id; the registry flags an unheard subscription or a cycle before anything runs
   (`explain fg`).
 
