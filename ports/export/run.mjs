@@ -28,6 +28,9 @@ import { exportCourse, EXPORT_COURSE_PART, captureProvenanceOf } from './course.
 import { courseSourceOf, isCaptureManifest } from '../capture/capture.mjs';
 import { RULE_SETS, profileOf } from '../s7route/match.mjs';
 import { acceptedOnAnnotated } from '../state/matrix.mjs';
+import { registerQueries } from '../../fg/store.mjs';
+import { registerHeaderQueries } from '../../fg/queries/header.mjs';
+import { HEADER_CALCULATION, CAPTURE_HEADER_CALCULATION, HEADER_TEMPLATES, rasterOfPng } from '../../fg/header/header.calc.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 
@@ -49,6 +52,15 @@ export function exportRuleSet(root, variant = null, profile = 'quick') {
   return { variant, rules: RULE_SETS[variant], how, profile, wide };
 }
 
+/** A capture's tiles as rasters for the header reader: the files the capture record names (sha256-checked: an integrity stop). */
+export function captureTilesOf(fork, record) {
+  return record.tiles.map((t) => {
+    const bytes = readFileSync(join(fork, t.path)), sha = createHash('sha256').update(bytes).digest('hex');
+    if (t.sha256 && sha !== t.sha256) throw new Error(`integrity: capture tile ${t.path} hashes to ${sha}, the capture record says ${t.sha256}`);
+    return { name: t.name, ...rasterOfPng(bytes), crop: t.crop };
+  });
+}
+
 export function runExportCourse({ specimen, attempt, attemptsRoot = ROOT, root = ROOT, outDir = null, cas = true, recipe = 'chainspot-s0-s7', variant = null, profile = 'quick' }) {
   const loaded = loadAttemptParts({ attempt, specimen, root: attemptsRoot });
   const record = JSON.parse(readFileSync(join(attemptsRoot, 'attempts', 'stages', `${attempt}.json`), 'utf8'));
@@ -66,6 +78,11 @@ export function runExportCourse({ specimen, attempt, attemptsRoot = ROOT, root =
   store.constant('fn.tk.s7trace.laneOutputs', { ...loaded.values, ...lanes, 'testimony.source.holePaths': { path: null, rule: 'the export is blind: no testimony is read', holes: [] } });
   const stagesRun = [0, 1, 2, 3, 4, ...('tk.s7.straight' in lanes ? [6] : []), 7];
   store.constant('fn.tk.export.source', { 'tk.source.cropReceipt': crop, 'tk.source.sha256': sha256, 'tk.source.path': sourceFile, 'tk.source.captureProvenance': captureProvenanceOf(captureRecord), 'tk.export.producer': { name: 'chainspot-toolkit', recipe, attemptId: attempt, stagesRun }, 'tk.export.ruleSet': exportRuleSet(root, variant, profile) });
+  // the UDisc header (tk.source.header): one raster's from the board's px.source.fullImage and the crop; a capture's from its
+  // tiles (the course raster is stitched from the tiles' crops and has no header), each tile's bytes checked against the record
+  registerHeaderQueries(store, registerQueries, { templates: HEADER_TEMPLATES });
+  if (captureRecord) { store.constant('fn.tk.export.captureTiles', { 'tk.source.captureTiles': captureTilesOf(loaded.fork, captureRecord) }); store.register(...CAPTURE_HEADER_CALCULATION); }
+  else store.register(...HEADER_CALCULATION);
   for (const [fn, spec] of S4_CALCULATIONS) store.register(fn, spec);
   for (const [fn, spec] of S7_CALCULATIONS) store.register(fn, spec);
   registerTraceQueries(store, { matcher: loadMatcher(root), board: loaded.board });
@@ -87,6 +104,6 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   if (!specimen || !attempt) { console.error('usage: node ports/export/run.mjs --specimen golden --attempt ID [--attempts-root DIR] [--out DIR] [--no-cas]'); process.exit(2); }
   exitOnEarlyCondition({ root: ROOT, attempt, specimen, stage: 'export' });   // a recorded early condition: this stage is not run
   const r = runExportCourse({ specimen, attempt, attemptsRoot: arg('--attempts-root') ?? ROOT, outDir: arg('--out'), cas: casFlag(), variant: arg('--variant'), profile: arg('--profile') ?? 'quick' });
-  console.log(JSON.stringify({ out: r.out, file: join(r.out, 'course-geometry.json'), emits: r.emits, conditions: r.doc.conditions, cache: r.cache, hotSpots: hotSpotLines(r.profile.hotSpots),
+  console.log(JSON.stringify({ out: r.out, file: join(r.out, 'course-geometry.json'), emits: r.emits, conditions: r.doc.conditions, udisc: r.doc.udisc, totals: r.doc.totals, cache: r.cache, hotSpots: hotSpotLines(r.profile.hotSpots),
     profile: r.profile.slice(0, 6).map((p) => `${p.calculation}: ${p.calls}x self ${p.selfMs} ms ${JSON.stringify(p.emits)}`) }, null, 1));
 }

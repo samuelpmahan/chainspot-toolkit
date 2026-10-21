@@ -46,7 +46,21 @@ function alternativesOf(hole, number, primaryVerts, primary, alternatives, toSou
   return { agree: all[0]?.ruleSets ?? [], alternatives: all.slice(1) };
 }
 
-export function courseGeometryOf({ solve, primary = 'routeMatch', alternatives = [], holesPart, hallway, badges, crop, source, producer, capture = null, r1Px = null }) {
+/**
+ * The UDisc header's totals beside the export (additive; the app's parser ignores fields it does not read): udisc = what the
+ * header bar says (tk.source.header), totals = the exported holes' summed lengths against it. deltaPct = (feetSum - feet) /
+ * feet x 100, 0.1 %; null when the header's feet is unread or absent.
+ */
+export function udiscTotalsOf(header, evidence) {
+  const udisc = header ? { holes: header.holes ?? null, par: header.par ?? null, feet: header.feet ?? null, text: header.text ?? null, source: header.source ?? null,
+    unreadGlyphs: header.unread?.length ?? 0, ...(header.source === 'tiles' ? { tilesRead: header.tilesRead, tilesOf: header.tilesOf, tilesAgree: header.agree } : {}),
+    ...(header.found ? {} : { condition: header.conditions?.[0] ?? 'no header bar' }) } : { holes: null, par: null, feet: null, condition: 'no header read' };
+  const lengths = evidence.map((e) => e.trace?.lengthFt).filter((v) => Number.isFinite(v)), feetSum = lengths.length ? lengths.reduce((a, b) => a + b, 0) : null;
+  const deltaPct = feetSum != null && udisc.feet > 0 ? Math.round(((feetSum - udisc.feet) / udisc.feet) * 1000) / 10 : null;
+  return { udisc, totals: { feetSum, deltaPct, holesMeasured: lengths.length, holesExported: evidence.length } };
+}
+
+export function courseGeometryOf({ solve, primary = 'routeMatch', alternatives = [], holesPart, hallway, badges, crop, source, producer, capture = null, r1Px = null, header = null }) {
   const dy = crop.upperRowsRemoved, W = crop.originalPx.width, H = crop.originalPx.height;
   const toSource = ([x, y]) => ({ xPx: r2(x), yPx: r2(y + dy) });
   const inFrame = (p) => p.xPx >= 0 && p.yPx >= 0 && p.xPx < W && p.yPx < H;
@@ -91,6 +105,7 @@ export function courseGeometryOf({ solve, primary = 'routeMatch', alternatives =
   }
   const numberBadges = [...best.values()].sort((a, b) => a.number - b.number);
   const candidates = holesPart.baskets.filter((b) => !assigned.has(b.index)).map((b) => ({ label: b.name, ...toSource(b.point), kind: 'basket' })).filter(inFrame);
+  const { udisc, totals } = udiscTotalsOf(header, evidence);
   return {
     format: FORMAT, version: VERSION, producer,
     source: { fileName: source.fileName, sha256: source.sha256, widthPx: W, heightPx: H, frame: 'original-upload', s0Crop: { rowsRemovedTop: dy, rowsRemovedBottom: crop.lowerRowsRemoved }, ...(capture ? { capture } : {}) },
@@ -98,7 +113,11 @@ export function courseGeometryOf({ solve, primary = 'routeMatch', alternatives =
     // the ground scale, from the screenshot itself: the C1 putting circle is 10 m in radius, so 10 m = rC1 px (Sam, 2026-10-20)
     ...(r1Px > 0 ? { scale: { rC1Px: r2(r1Px), metresPerPx: Math.round((10 / r1Px) * 1e6) / 1e6, feetPerPx: Math.round((10 / r1Px / 0.3048) * 1e6) / 1e6,
       rule: 'the C1 circle around every basket is 10 m in radius; rC1Px is its radius measured on this image (LOCAL)' } } : {}),
-    units: { 'xPx/yPx': 'px in source.frame (the original upload, S0 crop added back)', corridorWidthPx: 'px in source.frame; the course hallway W (LOCAL, learned on this screenshot)', lengthPx: 'px in source.frame', lengthFt: 'ft along the route, from the C1 ground scale (10 m = rC1 px)', sensor: 'fraction of stations reading as hallway, 0..1', stations: 'count of sampled stations along the route' }
+    // the UDisc header bar's totals (tk.source.header) and the exported holes' lengths against them: a free answer key
+    udisc, totals,
+    units: { 'xPx/yPx': 'px in source.frame (the original upload, S0 crop added back)', corridorWidthPx: 'px in source.frame; the course hallway W (LOCAL, learned on this screenshot)', lengthPx: 'px in source.frame', lengthFt: 'ft along the route, from the C1 ground scale (10 m = rC1 px)', sensor: 'fraction of stations reading as hallway, 0..1', stations: 'count of sampled stations along the route',
+      'udisc.holes/par/feet': 'the UDisc header bar: holes (count), par (strokes), feet (ft, the course length UDisc states)', 'totals.feetSum': 'ft: the sum of the exported holes\' lengthFt',
+      'totals.deltaPct': '% of udisc.feet: (feetSum - feet) / feet x 100' }
   };
 }
 
@@ -115,7 +134,7 @@ export function captureProvenanceOf(record) {
 }
 
 export const exportCourse = ['fn.tk.export.course', {
-  inParts: ['tk.s7.holes', 'tk.s7.hallway', 'tk.s7.sceneS4', 'px.badges', 'tk.source.cropReceipt', 'tk.source.sha256', 'tk.source.path', 'tk.source.captureProvenance', 'tk.export.producer', 'tk.export.ruleSet'],
+  inParts: ['tk.s7.holes', 'tk.s7.hallway', 'tk.s7.sceneS4', 'px.badges', 'tk.source.cropReceipt', 'tk.source.sha256', 'tk.source.path', 'tk.source.captureProvenance', 'tk.export.producer', 'tk.export.ruleSet', 'tk.source.header'],
   outParts: [EXPORT_COURSE_PART], calls: ['fn.q.trace.routeMatch'],
   note: 'the toolkit/app boundary: S7 routeMatch holes + S1 badges + unclaimed baskets as chainspot.course-geometry v1 (original-upload frame)',
   calculate: (io) => {
@@ -124,9 +143,10 @@ export const exportCourse = ['fn.tk.export.course', {
     const solveOf = (rules) => io.call('fn.q.trace.routeMatch', rules && Object.keys(rules).length ? { rules } : {}).value;
     const alternatives = (ruleSet?.wide ?? []).map((w) => ({ variant: w.variant, solve: solveOf(w.rules) }));
     const doc = courseGeometryOf({ solve: solveOf(ruleSet?.rules), primary: ruleSet?.variant ?? 'routeMatch', alternatives, holesPart: io.in('tk.s7.holes'), hallway: io.in('tk.s7.hallway'), badges: io.in('px.badges'),
-      r1Px: io.in('tk.s7.sceneS4').R1, crop: io.in('tk.source.cropReceipt'), source: { fileName: String(path).split('/').pop(), sha256: io.in('tk.source.sha256') }, producer: io.in('tk.export.producer'), capture: io.in('tk.source.captureProvenance') });
+      r1Px: io.in('tk.s7.sceneS4').R1, crop: io.in('tk.source.cropReceipt'), source: { fileName: String(path).split('/').pop(), sha256: io.in('tk.source.sha256') }, producer: io.in('tk.export.producer'), capture: io.in('tk.source.captureProvenance'), header: io.in('tk.source.header') });
     const n = (s) => doc.evidence.filter((e) => e.status === s).length;
     return { [EXPORT_COURSE_PART]: { ...doc, emits: { holesCount: doc.holes.length, resolvedHolesCount: n('resolved'), straightHolesCount: n('straight'), partialHolesCount: n('partial'), unresolvedHolesCount: n('unresolved'),
-      numberBadgesCount: doc.numberBadges.length, candidatesCount: doc.candidates.length, corridorWidthPx: doc.holes[0]?.corridorWidthPx ?? null } } };
+      numberBadgesCount: doc.numberBadges.length, candidatesCount: doc.candidates.length, corridorWidthPx: doc.holes[0]?.corridorWidthPx ?? null,
+      udiscFeet: doc.udisc.feet ?? -1, feetSum: doc.totals.feetSum ?? -1 } } };
   }
 }];

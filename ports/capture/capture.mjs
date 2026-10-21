@@ -9,6 +9,7 @@
  *                                                              gateway (badges), read as { name, crop, gray, badges } (source px)
  *   tk.source.capture           fn.tk.source.stitch            the placement record (fg/stitch/capture.calc.mjs)
  *   tk.source.courseRaster      fn.tk.source.stitch            the course raster (RGBA) and its owner plane
+ *   tk.source.header            fn.tk.source.captureHeader     every tile's UDisc header bar read, and whether the tiles agree
  *   tk.source.coursePng         fn.tk.source.coursePng         the course raster's PNG bytes (RGBA, zlib stored), the bytes every
  *                                                              legacy reader of the run's source file decodes
  * runCapture writes course.png and capture.json beside the run's early outputs and returns the decode S0 uses (the course
@@ -21,6 +22,8 @@ import { basename, join, resolve } from 'node:path';
 import { createPartStore, registerQueries } from '../../fg/store.mjs';
 import { STITCH_QUERIES, lumaOf } from '../../fg/queries/stitch.mjs';
 import { STITCH_CALCULATION } from '../../fg/stitch/capture.calc.mjs';
+import { registerHeaderQueries } from '../../fg/queries/header.mjs';
+import { CAPTURE_HEADER_CALCULATION, HEADER_TEMPLATES } from '../../fg/header/header.calc.mjs';
 import { badgePointsOf } from '../identity/identitySpace.mjs';
 
 export const CAPTURE_FORMAT = 'chainspot.capture';
@@ -75,24 +78,27 @@ export function createCaptureStore({ root, manifestPath, dist, decodeNodeFile, o
       return { 'tk.source.captureTiles': tiles };
     } });
   store.register(...STITCH_CALCULATION);
+  // every tile's UDisc header (the rows each tile's S0 crop removed) and whether the tiles agree (fg/header/header.calc.mjs)
+  registerHeaderQueries(store, registerQueries, { templates: HEADER_TEMPLATES });
+  store.register(...CAPTURE_HEADER_CALCULATION);
   store.register('fn.tk.source.coursePng', { inParts: ['tk.source.courseRaster'], outParts: ['tk.source.coursePng'], note: 'the course raster as PNG bytes (RGBA; zlib stored)',
     calculate: (io) => { const bytes = encodePngRgba(io.in('tk.source.courseRaster')); return { 'tk.source.coursePng': { bytes, sha256: sha256(bytes), emits: { pngBytes: bytes.length } } }; } });
   return store;
 }
 
 /**
- * Run a capture: tiles -> course raster. Returns { store, capture, courseRaster, coursePath, decode }. `decode` is S0's decode:
+ * Run a capture: tiles -> course raster. Returns { store, capture, courseRaster, coursePath, decode, header }. `decode` is S0's decode:
  * the course raster from memory for coursePath (the same InputAsset decodeNodeFile gives for those bytes), any other path as before.
  */
 export async function runCapture({ root, manifestPath, outDir, dist, decodeNodeFile, onCall = null }) {
   const store = createCaptureStore({ root, manifestPath, dist, decodeNodeFile, onCall });
   await store.call('fn.tk.source.captureTiles');
-  const capture = store.get('tk.source.capture'), courseRaster = store.get('tk.source.courseRaster'), png = store.get('tk.source.coursePng');
+  const capture = store.get('tk.source.capture'), courseRaster = store.get('tk.source.courseRaster'), png = store.get('tk.source.coursePng'), header = store.get('tk.source.header');
   mkdirSync(outDir, { recursive: true });
   const coursePath = join(outDir, 'course.png');
   writeFileSync(coursePath, png.bytes);
   writeFileSync(join(outDir, 'capture.json'), JSON.stringify({ ...capture, emits: undefined, course: { path: coursePath, sha256: png.sha256, widthPx: courseRaster.widthPx, heightPx: courseRaster.heightPx } }, null, 2) + '\n');
   const asset = { imageId: png.sha256, widthPx: courseRaster.widthPx, heightPx: courseRaster.heightPx, rgba: courseRaster.rgba, sourceByteLength: png.bytes.length };
   const decode = async (path) => (resolve(path) === resolve(coursePath) ? asset : decodeNodeFile(path));
-  return { store, capture, courseRaster, coursePath, decode };
+  return { store, capture, courseRaster, coursePath, decode, header };
 }

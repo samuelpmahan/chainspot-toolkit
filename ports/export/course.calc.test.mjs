@@ -48,12 +48,17 @@ test('data conditions are recorded, never thrown: no hallway width exports no ho
 });
 
 test('fn.tk.export.course: produces tk.export.course, emits its measures, renders over the course', () => {
-  const parts = { 'tk.s7.holes': holesPart, 'tk.s7.hallway': { widthPx: 41.627 }, 'px.badges': badges, 'tk.source.cropReceipt': crop, 'tk.source.sha256': 'a'.repeat(64), 'tk.source.path': '/x/a.jpg', 'tk.source.captureProvenance': null, 'tk.export.producer': { name: 'chainspot-toolkit' }, 'tk.export.ruleSet': { variant: 'routeMatch', rules: {}, how: 'test' }, 'tk.s7.sceneS4': { R1: 44.5 }, 'px.image.cropped': img };
+  const parts = { 'tk.s7.holes': holesPart, 'tk.s7.hallway': { widthPx: 41.627 }, 'px.badges': badges, 'tk.source.cropReceipt': crop, 'tk.source.sha256': 'a'.repeat(64), 'tk.source.path': '/x/a.jpg', 'tk.source.captureProvenance': null, 'tk.export.producer': { name: 'chainspot-toolkit' }, 'tk.export.ruleSet': { variant: 'routeMatch', rules: {}, how: 'test' }, 'tk.s7.sceneS4': { R1: 44.5 }, 'px.image.cropped': img,
+    'tk.source.header': { schema: 'nctk-udisc-header@1', source: 'image', found: true, holes: 3, par: 9, feet: 100, text: '3 Holes \u2022 Par 9 \u2022 100 ft', unread: [], conditions: [] } };
   const store = createPartStore({ base: { has: (a) => a in parts, get: (a) => parts[a] } });
   store.register('fn.q.trace.routeMatch', { calculate: () => ({ value: solve, unit: 'px (canonical frame)' }) });
   store.register(...exportCourse);
   const part = store.get('tk.export.course');
   assert.equal(part.source.fileName, 'a.jpg');
+  assert.deepEqual([part.udisc.holes, part.udisc.par, part.udisc.feet], [3, 9, 100], 'the header bar beside the holes (additive)');
+  const sum = part.evidence.map((e) => e.trace.lengthFt).filter(Number.isFinite).reduce((a, b) => a + b, 0);
+  assert.deepEqual([part.totals.feetSum, part.totals.deltaPct], [sum, Math.round(((sum - 100) / 100) * 1000) / 10]);
+  assert.deepEqual(validateCourseGeometry(part), { ok: true, errors: [] }, 'udisc and totals are additive: the format still validates');
   const emits = store.calls().find((e) => e.calculation === 'fn.tk.export.course').emits;
   assert.deepEqual([emits.holesCount, emits.straightHolesCount, emits.partialHolesCount, emits.unresolvedHolesCount, emits.numberBadgesCount, emits.candidatesCount], [3, 1, 1, 1, 3, 1]);
   const r = store.call(RENDER_PART, { a: 'tk.export.course' }).value;

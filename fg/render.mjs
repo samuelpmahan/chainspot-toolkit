@@ -9,6 +9,7 @@
  *   routeTable    { schema: 'nctk-s7-route-table@1', matrix, ... }      -> raster heatmap holes x baskets + legend (fg/s7route/routeRender.mjs)
  *   spriteOverlap { schema: 'nctk-sprite-overlap@1', mean, shape, members } -> mean coverage and shape panels + ledger (fn.q.sprite.overlap)
  *   shellShape    { schema: 'chainspot-basket-shell-shape@1', overlap, learned, carried } -> agreement / learned / carried panels + ledger (S2)
+ *   udiscHeader   { schema: 'nctk-udisc-header@1', bandRaster, glyphs, ... } -> the header band, glyphs boxed by confidence + legend (fg/header/headerRender.mjs)
  *   capture       { schema: 'nctk-capture@1' | 'nctk-capture-view@1', tiles, links, ... } -> the course raster with its tiles,
  *                 seams, links and badges (fg/stitch/captureRender.mjs)
  *   raster        { rgba, widthPx, heightPx }                          -> raster (size; pixels come from the viewer)
@@ -34,6 +35,7 @@ import { isTraceView, renderTraceView } from './s7trace/traceViewRender.mjs';   
 import { isRouteTable, renderRouteTable } from './s7route/routeRender.mjs';   // S7 scoring block: tk.s7.routeTable
 import { isCourseGeometry, renderCourseGeometry } from './export/courseRender.mjs';   // export block: tk.export.course
 import { isCapture, renderCapture } from './stitch/captureRender.mjs';   // S0 capture block: tk.source.capture / tk.source.captureView
+import { isUdiscHeader, renderUdiscHeader } from './header/headerRender.mjs';   // S0 header block: tk.source.header (the UDisc header bar read)
 
 const isTyped = (v) => ArrayBuffer.isView(v) && !(v instanceof DataView);
 const isScalar = (v) => v === null || ['number', 'string', 'boolean'].includes(typeof v);
@@ -41,7 +43,7 @@ const labelOf = (it, i) => it.label ?? it.name ?? it.candidate ?? it.hole ?? Str
 const scalarFields = (o) => Object.fromEntries(Object.entries(o).filter(([, v]) => isScalar(v) || (Array.isArray(v) && v.length <= 6 && v.every(isScalar))).map(([k, v]) => [k, Array.isArray(v) ? v.join(', ') : v]));
 const bboxOf = (it) => (Array.isArray(it.bbox) && it.bbox.length === 4 ? it.bbox : null);
 
-export const PART_KINDS = Object.freeze(['pxset', 'raster', 'alphaProfile', 'plane', 'pxsets', 'boxes', 'points', 'rows', 'strips', 'scalar', 'object', 'pathLoss', 'pathProfile', 'hallwayScene', 'pairFeatures', 'routeTable', 'routeMatchView', 'courseGeometry', 'capture', 'shellShape', 'spriteOverlap']);   // strips: S5-B; alphaProfile: S7-A; pathLoss, pathProfile: S6-B; hallwayScene: S7-B; pairFeatures: S6 scoring; routeTable: S7 scoring
+export const PART_KINDS = Object.freeze(['pxset', 'raster', 'alphaProfile', 'plane', 'pxsets', 'boxes', 'points', 'rows', 'strips', 'scalar', 'object', 'pathLoss', 'pathProfile', 'hallwayScene', 'pairFeatures', 'routeTable', 'routeMatchView', 'courseGeometry', 'capture', 'shellShape', 'spriteOverlap', 'udiscHeader']);   // strips: S5-B; alphaProfile: S7-A; pathLoss, pathProfile: S6-B; hallwayScene: S7-B; pairFeatures: S6 scoring; routeTable: S7 scoring
 
 /** Which case of the union a value is (the dispatch every default property can share). */
 export function partKind(v) {
@@ -52,6 +54,7 @@ export function partKind(v) {
   if (isRouteTable(v)) return 'routeTable';   // S7 scoring block
   if (isCourseGeometry(v)) return 'courseGeometry';   // export block: the exported holes over the course
   if (isCapture(v)) return 'capture';   // S0 capture block: the tiles behind the course raster
+  if (isUdiscHeader(v)) return 'udiscHeader';   // S0 header block: the band, glyphs boxed by confidence
   if (isTraceView(v)) return 'routeMatchView';   // S7 trace lane block: the traces over the course
   if (v && typeof v === 'object' && v.schema === 'chainspot-basket-shell-shape@1') return 'shellShape';   // S2: px.baskets.shellShape
   if (v && typeof v === 'object' && v.schema === 'nctk-sprite-overlap@1') return 'spriteOverlap';   // fn.q.sprite.overlap answers
@@ -85,6 +88,7 @@ export function renderValue(address, v, dims = null, depth = 0, opts = {}) {
     case 'routeMatchView': return renderTraceView(address, v, dims, { canvas: s6Canvas, deflate: opts.deflate ?? null });   // S7 trace lane block: routes, bends before / after, testimony over the course
     case 'courseGeometry': return renderCourseGeometry(address, v, dims, { canvas: s6Canvas, deflate: opts.deflate ?? null });   // export block: holes, bends, badges, candidates over the course
     case 'capture': return renderCapture(address, v, dims, { canvas: s6Canvas, deflate: opts.deflate ?? null });
+    case 'udiscHeader': return renderUdiscHeader(address, v, { canvas: s6Canvas, deflate: opts.deflate ?? null });
     case 'shellShape': return renderShellShape(address, v);   // S2 block below
     case 'spriteOverlap': return renderSpriteOverlap(address, v);   // S2 block below   // S0 capture block: tiles, seams, links, badges over the course
     case 'routeTable': return renderRouteTable(address, v, { canvas: s6Canvas });   // S7 scoring block: holes x baskets heatmap

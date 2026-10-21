@@ -15,6 +15,7 @@ import { createEarlyStore, sealStage, NoBadgesCondition } from './earlyStore.mjs
 import { runStageGuarantees, attachPublished } from './stageGuarantees.mjs';
 import { isCaptureManifest, runCapture } from '../capture/capture.mjs';
 import { CAPTURE_VIEW_CALCULATION } from '../../fg/stitch/capture.calc.mjs';
+import { HEADER_CALCULATION } from '../../fg/header/header.calc.mjs';
 import { RENDER_PART } from '../../fg/store.mjs';
 import { installScaledTee } from '../../fg/s3/teeScale.mjs';
 import { installQueriedShellShape, SHELL_QUERY } from '../../fg/s2/shellShape.mjs';
@@ -86,10 +87,12 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   // through fn.provider.<S>.gateway, producing tk.stage.<S>.captured.
   let pxc;
   const store = createEarlyStore({ forkRoot: root, source, getBoard: () => pxc, dist, restorePxC, instrumentation });
+  // the UDisc header (fg/header/header.calc.mjs): one raster's is read in the rows S0 removes; a capture's is every tile's,
+  // read by the capture store (the course raster S0 sees is stitched from the tiles' crops and carries no header)
   if (capture) {
-    store.constant('fn.tk.source.captureRun', { 'tk.source.capture': capture.capture, 'tk.source.courseRaster': capture.courseRaster });
+    store.constant('fn.tk.source.captureRun', { 'tk.source.capture': capture.capture, 'tk.source.courseRaster': capture.courseRaster, 'tk.source.header': capture.header });
     store.register(...CAPTURE_VIEW_CALCULATION);
-  }
+  } else store.register(...HEADER_CALCULATION);
   store.call('fn.tk.source.intake');
   const sourceSha256 = store.get('tk.source.sha256');
   const captured = (id) => (store.has(`tk.stage.${id}.captured`) ? store.get(`tk.stage.${id}.captured`) : undefined);

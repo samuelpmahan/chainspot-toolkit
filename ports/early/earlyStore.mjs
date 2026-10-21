@@ -25,6 +25,9 @@
  *                                                                         its PCR testimony records that)
  *   tk.stage.S0.canonicalRgbaSha256  fn.tk.S0.canonicalRgbaSha256        px.course.canonicalPixels
  *   tk.source.cropReceipt            fn.tk.S0.cropReceipt                tk.stage.S0.captured
+ *   tk.source.header                 fn.tk.source.header                 px.source.fullImage, tk.source.cropReceipt
+ *                                    (a capture: fn.tk.source.captureRun, the tiles' headers read by the capture store)
+ *   tk.s1.udiscHeader                fn.tk.s1.udiscHeader                tk.source.header, px.badges
  *   tk.stage.<S>.snapshot            fn.provider.<S>.capturePxC          the provider addresses present
  *   tk.stage.<S>.snapshotSha256      fn.provider.<S>.capturePxC            after <S> (registered per stage)
  *   view.source.background           fn.view.source.background           tk.source.bytes, tk.source.cropReceipt
@@ -70,6 +73,8 @@ import { teeBounds } from '../../fg/s3/teeScale.mjs';
 import { createHash } from 'node:crypto';
 import { PURPLE_QUERIES, purpleShare, THROWN_CUT } from '../../fg/queries/purple.mjs';
 import { registerSpriteQueries } from '../../fg/queries/sprite.mjs';
+import { registerHeaderQueries } from '../../fg/queries/header.mjs';
+import { HEADER_CHECK_CALCULATION, HEADER_TEMPLATES } from '../../fg/header/header.calc.mjs';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { createPartStore, registerQueries } from '../../fg/store.mjs';
@@ -185,6 +190,10 @@ export function createEarlyStore({ forkRoot, source, getBoard, dist, restorePxC,
   registerQueries(store, PURPLE_QUERIES);
   // fn.q.sprite.overlap: one sprite's instances overlapped in sprite frame (S2's basket frame shape is its first user)
   registerSpriteQueries(store, registerQueries);
+  // fn.q.header.*: the UDisc header bar (fg/queries/header.mjs); tk.source.header is registered by the runner (one raster, or a
+  // capture's tiles), and fn.tk.s1.udiscHeader checks its hole count against the S1 badges (fg.s1.udiscHeader.observe)
+  registerHeaderQueries(store, registerQueries, { templates: HEADER_TEMPLATES });
+  store.register(...HEADER_CHECK_CALCULATION);
   const isThrown = () => store.get('tk.s0.purple').thrown;
   const { executeCompiledPlan } = dist('exec/gateway');
   const { nullFeatureContext, defaultKnobs } = dist('detectors/threeFactor/features/types');
