@@ -183,7 +183,8 @@ export function registerTraceQueries(store, { matcher = null, board = null } = {
   };
   const units = { refine: 'px (canonical frame): the refined vertices', sensor: 'passFrac / stations', secondBendScan: 'lum (edge contrast): the best 2-bend candidates [contrast, t px, B2 px] and the routes read', secondBendRefine: 'lum (edge contrast) and px (canonical frame): one candidate refined',
     placeBends: 'px (canonical frame): the placed bends and their reading', contrast: 'lum (edge contrast) and visible px',
-    kLegs: 'lum per leg (edge contrast of each leg read alone; null: fewer than 30 visible px in a band)' };
+    kLegs: 'lum per leg (edge contrast of each leg read alone; null: fewer than 30 visible px in a band)',
+    kLegsMany: 'lum per leg of every route in the batch (edge contrast of each leg read alone; null: fewer than 30 visible px in a band)' };
   for (const [k, f] of Object.entries(MATCH_STEPS)) if (!store.registered(`fn.q.match.${k}`)) store.register(`fn.q.match.${k}`, { note: `routeMatch step: ${k} (ports/s7route/match.mjs)`,
     calculate: (io) => { const v = f(get(io.args.scene), ...io.args.a); return { value: v, unit: units[k], emits: { computed: 1, ...(Number.isFinite(v?.read) ? { routes: v.read } : {}) } }; } });
   const answers = new Map();

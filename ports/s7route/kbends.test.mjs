@@ -72,3 +72,19 @@ test('the rule set routeMatchKBends is the accepted rule set plus kBends, and th
   assert.deepEqual(rest, RULE_SETS.routeMatchTeeAxisBadgePrior);
   assert.equal(MATCH_RULES.kBends, undefined);
 });
+
+test('the assignment duals certify the pricing: every cell scores at or below its price, the pairs at it', async () => {
+  const { assignWithDuals, assignMinCost } = await import('./match.mjs');
+  const score = [[30, 12, -Infinity, 8], [25, 28, 10, -Infinity], [5, 26, 22, 14]];
+  const cost = score.map((r) => r.map((v) => (Number.isFinite(v) ? -v : Infinity))), A = assignWithDuals(cost);
+  assert.deepEqual(A.pairs, assignMinCost(cost));
+  score.forEach((r, i) => r.forEach((v, k) => { if (Number.isFinite(v)) assert.ok(v <= A.price(i, k) + 1e-9, `cell ${i},${k}: ${v} > price ${A.price(i, k)}`); }));
+  for (const [i, k] of A.pairs) assert.ok(Math.abs(score[i][k] - A.price(i, k)) < 1e-9);
+});
+
+test('the coarse pass (refines to coarseEndR1, grid coarseGridR1) finds the same bends on the 2-bend fixture as the fine search', () => {
+  const B2 = [300, 260], E = [480, 260], S = scene([T, [140, 100], B2, E]);
+  const fine = kChainAt(S, START, E, W), coarse = kChainAt(S, START, E, W, { endR1: KBENDS.coarseEndR1, gridR1: KBENDS.coarseGridR1 });
+  assert.equal(coarse.verts.length, fine.verts.length);
+  assert.ok(coarse.bottleneck <= fine.bottleneck + 1e-9, 'the coarse pass ranks; it does not out-read the fine search');
+});
