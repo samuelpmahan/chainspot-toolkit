@@ -66,3 +66,10 @@ test('learned abstention: one p* from the stated cost, every reader calibrated, 
   const table = { one: [cell(1)], two: [cell(2), cell(3)] };
   for (let L = 1; L <= 27; L++) assert.ok(K.digitLabelFeatures(table, L)[1] >= 0, `label ${L}`);
 });
+
+test('the coverage digit reader: templates for every digit 0-9, and it reads its own dev sprites', () => {
+  const { BADGE_COVERAGE_DIGIT_TEMPLATES } = dist('features/g1.badgeCoverageDigit.js');
+  assert.deepEqual([...new Set(BADGE_COVERAGE_DIGIT_TEMPLATES.map((t) => t.digit))].sort((a, b) => a - b), [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  const asset = JSON.parse(readFileSync(join(ROOT, 'source/provider/packages/alg/src/detectors/threeFactor/assets/badge-reader-calibration.json'), 'utf8'));
+  assert.equal(asset.readers.coverageDigit.outOfCourse.impostorsAtPStar, 0);
+});

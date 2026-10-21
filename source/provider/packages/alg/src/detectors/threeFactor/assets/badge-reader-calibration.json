@@ -112,6 +112,43 @@
 				"unit": "dev hard negatives and wrong tops, scored by the fold that left their course out"
 			}
 		},
+		"coverageDigit": {
+			"features": [
+				"minDigitNcc",
+				"minDigitMargin",
+				"layoutMargin"
+			],
+			"weights": [
+				42.92235497920684,
+				26.446967615349873,
+				1.995931025397145
+			],
+			"bias": -43.32229527127699,
+			"priorShift": 4.6913478822291435,
+			"trainedOn": {
+				"courses": [
+					"golden",
+					"lenard",
+					"townelake",
+					"heritage",
+					"alex",
+					"northpark"
+				],
+				"badges": 108,
+				"syntheticBadges": 0,
+				"syntheticPerLabelPerCourse": 0,
+				"examples": 216,
+				"rightTops": 108,
+				"wrongTops": 0,
+				"hardNegatives": 108
+			},
+			"outOfCourse": {
+				"maxImpostorP": 0.945,
+				"impostorsAtPStar": 0,
+				"of": 108,
+				"unit": "dev hard negatives and wrong tops, scored by the fold that left their course out"
+			}
+		},
 		"perDigit": {
 			"features": [
 				"geoMeanDigitProb",

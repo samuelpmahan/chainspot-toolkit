@@ -198,8 +198,17 @@ export interface BadgeDigitLayouts {
 	readonly inkColumns: number;
 }
 
-/** The one-cell and two-cell layouts of a sampled glyph (null without ink). */
-export function badgeDigitLayouts(grid: Uint8Array, knobs: BadgeDigitTemplateKnobs = DEFAULT_BADGE_DIGIT_TEMPLATE_KNOBS): BadgeDigitLayouts | null {
+/** Where the digit cells of a sampled glyph lie, in sample columns: the whole ink, and the two sides of the widest
+ * ink-free column run inside it (the emptiest middle column when the digits touch). Shared by every digit reader. */
+export interface BadgeDigitCells {
+	readonly inkHeight: number;
+	readonly one: readonly [number, number];
+	readonly two: readonly [readonly [number, number], readonly [number, number]] | null;
+	readonly gapColumns: number;
+	readonly inkColumns: number;
+}
+
+export function badgeDigitCells(grid: Uint8Array): BadgeDigitCells | null {
 	const e = extentOf(grid, 0, SAMPLE_W - 1);
 	if (!e) return null;
 	const inkHeight = e.maxY - e.minY + 1;
@@ -226,11 +235,23 @@ export function badgeDigitLayouts(grid: Uint8Array, knobs: BadgeDigitTemplateKno
 			}
 		gap = { a: at, b: at, w: 0 };
 	}
-	const one = cellMask(grid, e.minX, e.maxX, inkHeight, knobs);
-	const left = gap.a > 0 ? cellMask(grid, e.minX, e.minX + gap.a - 1, inkHeight, knobs) : null;
-	const right = e.minX + gap.b + 1 <= e.maxX ? cellMask(grid, e.minX + gap.b + 1, e.maxX, inkHeight, knobs) : null;
-	return { one: one ? [one] : [], two: left && right ? [left, right] : null, gapColumns: gap.w, inkColumns: e.maxX - e.minX + 1 };
+	const left: [number, number] = [e.minX, e.minX + gap.a - 1];
+	const right: [number, number] = [e.minX + gap.b + 1, e.maxX];
+	const twoOk = gap.a > 0 && right[0] <= right[1] && !!extentOf(grid, left[0], left[1]) && !!extentOf(grid, right[0], right[1]);
+	return { inkHeight, one: [e.minX, e.maxX], two: twoOk ? [left, right] : null, gapColumns: gap.w, inkColumns: e.maxX - e.minX + 1 };
 }
+
+/** The one-cell and two-cell layouts of a sampled glyph (null without ink). */
+export function badgeDigitLayouts(grid: Uint8Array, knobs: BadgeDigitTemplateKnobs = DEFAULT_BADGE_DIGIT_TEMPLATE_KNOBS): BadgeDigitLayouts | null {
+	const c = badgeDigitCells(grid);
+	if (!c) return null;
+	const one = cellMask(grid, c.one[0], c.one[1], c.inkHeight, knobs);
+	const two = c.two ? c.two.map(([a, b]) => cellMask(grid, a, b, c.inkHeight, knobs)) : null;
+	return { one: one ? [one] : [], two: two && two.every(Boolean) ? (two as NormalizedGlyphMask[]) : null, gapColumns: c.gapColumns, inkColumns: c.inkColumns };
+}
+
+/** The badge's sampling grid geometry, for readers that sample other values on the same grid. */
+export const BADGE_DIGIT_SAMPLE = Object.freeze({ widthPx: SAMPLE_W, heightPx: SAMPLE_H, marginX: MARGIN_X, marginY: MARGIN_Y });
 
 function readDigit(cell: NormalizedGlyphMask, templates: readonly BadgeDigitTemplateEntry[], knobs: BadgeDigitTemplateKnobs): DigitRead {
 	const best = new Map<number, number>();

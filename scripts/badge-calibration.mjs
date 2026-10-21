@@ -32,7 +32,7 @@ import { createRequire } from 'node:module';
 import { deserialize } from 'node:v8';
 import { join, resolve } from 'node:path';
 import { devSprites } from './badge-coverage-sources.mjs';
-import { bakeCoverage, bakeDigits } from '../source/provider/scripts/generate-badge-glyph-templates.mjs';
+import { bakeCoverage, bakeDigits, bakeCoverageDigits } from '../source/provider/scripts/generate-badge-glyph-templates.mjs';
 import { assignMinCost } from '../ports/s7route/match.mjs';
 import { measureDev, synthesize } from './badge-synthesis.mjs';
 
@@ -42,6 +42,8 @@ const dist = (p) => require(join(ROOT, 'source/provider/packages/alg/dist/detect
 const B = dist('digits/badgeGlyphTemplateMath.js'), C = dist('digits/badgeCoverageTemplateMath.js'), DG = dist('digits/badgeDigitTemplateMath.js');
 const { HOLE_LABELS } = dist('digits/holeLabels.js');
 const K = dist('digits/badgeReaderCalibration.js');
+const CD = dist('digits/badgeCoverageDigitMath.js');
+const { BADGE_COVERAGE_DIGIT_TEMPLATES } = dist('features/g1.badgeCoverageDigit.js');
 const { BADGE_GLYPH_TEMPLATES } = dist('features/g1.badgeGlyphTemplate.js');
 const { BADGE_COVERAGE_TEMPLATES } = dist('features/g1.badgeCoverageTemplate.js');
 const { BADGE_DIGIT_TEMPLATES } = dist('features/g1.badgeDigitTemplate.js');
@@ -50,8 +52,8 @@ const CAL_PATH = join(ROOT, 'source/provider/packages/alg/src/detectors/threeFac
 export const COST_WRONG = 100;   // abstentions one wrong label is worth (stated, not fitted)
 export const P_STAR = 1 - 1 / COST_WRONG;   // 0.99
 const FIXED = { minScore: 0.58, minMargin: 0.045 };   // the borrowed constants, for the baseline rows
-const READERS = ['binary', 'digitBW', 'coverage', 'perDigit'];
-const FEATURES = { binary: ['dice', 'margin'], digitBW: ['minDigitDice', 'minDigitMargin', 'layoutMargin'], coverage: ['ncc', 'margin'], perDigit: ['geoMeanDigitProb', 'posteriorMargin'] };
+const READERS = ['binary', 'digitBW', 'coverage', 'coverageDigit', 'perDigit'];
+const FEATURES = { binary: ['dice', 'margin'], digitBW: ['minDigitDice', 'minDigitMargin', 'layoutMargin'], coverage: ['ncc', 'margin'], coverageDigit: ['minDigitNcc', 'minDigitMargin', 'layoutMargin'], perDigit: ['geoMeanDigitProb', 'posteriorMargin'] };
 const ST = join(ROOT, 'attempts/stages');
 const median = (v) => { const s = [...v].sort((a, b) => a - b); return s.length ? s[(s.length - 1) >> 1] : null; };
 const r3 = (v) => Math.round(v * 1000) / 1000;
@@ -70,9 +72,12 @@ function readerScores(bitmap, body, badge, T) {
   const table = DG.badgeDigitScoreTable(bitmap, body, T.digit);
   const joint = new Map(HOLE_LABELS.map((L) => { const ds = [...String(L)].map(Number), cells = ds.length === 1 ? table.one : table.two;
     return [L, cells && cells.length === ds.length ? ds.reduce((a, d, i) => a + cells[i][d], 0) / ds.length : -1]; }));
+  const covTable = CD.badgeCoverageDigitScoreTable(bitmap, body, T.covDigit);
+  const covJoint = new Map(HOLE_LABELS.map((L) => { const ds = [...String(L)].map(Number), cells = ds.length === 1 ? covTable.one : covTable.two;
+    return [L, cells && cells.length === ds.length ? ds.reduce((a, d, i) => a + cells[i][d], 0) / ds.length : -2]; }));
   const digitScores = (badge.digits ?? []).map((d) => d.scores);
   const lik = new Map(HOLE_LABELS.map((L) => [L, String(L).length === digitScores.length ? [...String(L)].reduce((p, d, i) => p * (digitScores[i][+d] ?? 0), 1) : 0]));
-  return { bin, cov, table, joint, digitScores, lik };
+  return { bin, cov, table, joint, covTable, covJoint, digitScores, lik };
 }
 
 /** Features of label L for one reader over the vocabulary `others`: the provider's own definitions. */
@@ -80,9 +85,10 @@ function featuresOf(reader, R, L, others) {
   if (reader === 'binary') return K.templateLabelFeatures((k) => R.bin.get(k), L, others);
   if (reader === 'coverage') return K.templateLabelFeatures((k) => R.cov.get(k), L, others);
   if (reader === 'digitBW') return K.digitLabelFeatures(R.table, L, others);
+  if (reader === 'coverageDigit') return K.digitLabelFeatures(R.covTable, L, others);
   return K.perDigitLabelFeatures(R.digitScores, L, others);
 }
-const scalar = (reader, R, L) => (reader === 'binary' ? R.bin.get(L) : reader === 'coverage' ? R.cov.get(L) : reader === 'digitBW' ? R.joint.get(L) : R.lik.get(L));
+const scalar = (reader, R, L) => (reader === 'binary' ? R.bin.get(L) : reader === 'coverage' ? R.cov.get(L) : reader === 'digitBW' ? R.joint.get(L) : reader === 'coverageDigit' ? R.covJoint.get(L) : R.lik.get(L));
 const topOf = (reader, R, labels) => labels.reduce((a, L) => (scalar(reader, R, L) > scalar(reader, R, a) ? L : a), labels[0]);
 
 /** The reader's own verdict at the fixed (borrowed) thresholds. */
@@ -91,7 +97,8 @@ function fixedVerdicts(bitmap, body, T, n, s1Label) {
   const bin = B.classifyNormalizedGlyph(B.normalizeBadgeGlyphMask(bitmap, body), T.binary);
   const cov = C.classifyNormalizedCoverage(C.normalizeBadgeCoverage(bitmap, body), T.coverage);
   const dig = DG.classifyBadgeDigitsAgainstTemplates(bitmap, body, T.digit, n);
-  return { binary: bin.label ?? null, coverage: cov.label ?? null, digitBW: dig.label == null ? null : Number(dig.label), perDigit: s1Label == null ? null : Number(s1Label) };
+  const cd = CD.readCoverageDigits(CD.badgeCoverageDigitScoreTable(bitmap, body, T.covDigit));
+  return { binary: bin.label ?? null, coverage: cov.label ?? null, digitBW: dig.label == null ? null : Number(dig.label), coverageDigit: cd == null ? null : Number(cd), perDigit: s1Label == null ? null : Number(s1Label) };
 }
 
 // ---- logistic regression (a perceptron with a sigmoid) ----------------------------------------------------
@@ -128,11 +135,12 @@ const prob = (m, x) => sigmoid(logit(m, x) + (m.priorShift ?? 0));
 
 // ---- collect -------------------------------------------------------------------------------------------------
 function templatesFor(exclude) {
-  if (!exclude) return { binary: BADGE_GLYPH_TEMPLATES, coverage: BADGE_COVERAGE_TEMPLATES, digit: BADGE_DIGIT_TEMPLATES };
+  if (!exclude) return { binary: BADGE_GLYPH_TEMPLATES, coverage: BADGE_COVERAGE_TEMPLATES, digit: BADGE_DIGIT_TEMPLATES, covDigit: BADGE_COVERAGE_DIGIT_TEMPLATES };
   const sprites = devSprites({ exclude: [exclude] }), rasters = Object.fromEntries(Object.entries(sprites).map(([l, c]) => [l, c.raster]));
   const { coverageTemplates } = bakeCoverage(rasters, { quiet: true });
   const { shippedDigits } = bakeDigits(rasters, { quiet: true });
-  return { binary: BADGE_GLYPH_TEMPLATES, coverage: coverageTemplates, digit: shippedDigits };
+  const { shippedCoverageDigits } = bakeCoverageDigits(rasters, { quiet: true });
+  return { binary: BADGE_GLYPH_TEMPLATES, coverage: coverageTemplates, digit: shippedDigits, covDigit: shippedCoverageDigits };
 }
 /** "A black plate inside a white box", LOCAL to the badge. mid = midway between the badge's own plate and glyph levels
  * (coverageLevels over the inset). White box: on each of the four sides, over the middle half of the side (clear of the

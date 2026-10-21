@@ -99,8 +99,25 @@ export interface BadgeDigitLayouts {
     readonly gapColumns: number;
     readonly inkColumns: number;
 }
+/** Where the digit cells of a sampled glyph lie, in sample columns: the whole ink, and the two sides of the widest
+ * ink-free column run inside it (the emptiest middle column when the digits touch). Shared by every digit reader. */
+export interface BadgeDigitCells {
+    readonly inkHeight: number;
+    readonly one: readonly [number, number];
+    readonly two: readonly [readonly [number, number], readonly [number, number]] | null;
+    readonly gapColumns: number;
+    readonly inkColumns: number;
+}
+export declare function badgeDigitCells(grid: Uint8Array): BadgeDigitCells | null;
 /** The one-cell and two-cell layouts of a sampled glyph (null without ink). */
 export declare function badgeDigitLayouts(grid: Uint8Array, knobs?: BadgeDigitTemplateKnobs): BadgeDigitLayouts | null;
+/** The badge's sampling grid geometry, for readers that sample other values on the same grid. */
+export declare const BADGE_DIGIT_SAMPLE: Readonly<{
+    widthPx: 96;
+    heightPx: 72;
+    marginX: 0.14;
+    marginY: 0.16;
+}>;
 export declare function classifyBadgeDigitsAgainstTemplates(image: RgbaBitmap, badge: BadgeCropBody, templates: readonly BadgeDigitTemplateEntry[], badgeCount?: number | null, knobs?: BadgeDigitTemplateKnobs): BadgeDigitClassification;
 /** Asset rows: one 0/1 char per pixel, as the binary templates. */
 export declare function decodeDigitRows(rows: readonly string[], widthPx: number, heightPx: number): NormalizedGlyphMask;

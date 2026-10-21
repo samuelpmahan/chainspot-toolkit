@@ -435,6 +435,43 @@ if (!quiet) console.log('closest different digits:', JSON.stringify(digitOut.clo
 	return { digitOut, digitTemplates, shippedDigits };
 }
 
+// ---- coverage digit templates (the coverage digit reader, digits/badgeCoverageDigitMath.ts) -------------
+// The same cells as the digit templates (lone 1..9, left 1 of 10..18, right 0..8 of 10..18), cut from the same dev
+// sprites, as coverage.
+
+const CD = dist('digits/badgeCoverageDigitMath.js');
+const COVERAGE_DIGIT_OUT_PATH = join(ROOT, 'packages/alg/src/detectors/threeFactor/assets/badge-coverage-digit-templates.json');
+/** Coverage digit templates cut from dev sprites (labels 1..18 -> raster); returns the asset and the templates as shipped. */
+export function bakeCoverageDigits(coverageRasters, { quiet = false } = {}) {
+	const templates = [];
+	for (let label = 1; label <= SOURCE_LABELS; label++) {
+		const raster = coverageRasters[label], cells = CD.badgeCoverageDigitCells(raster, wholeRaster(raster));
+		if (label <= 9) { if (!cells.one) throw new Error(`dev sprite ${label} has no glyph`); templates.push({ digit: label, from: `${label}`, coverage: cells.one[0] }); }
+		else {
+			if (!cells.two) throw new Error(`dev sprite ${label} did not split into two digit cells`);
+			templates.push({ digit: 1, from: `${label} left`, coverage: cells.two[0] }, { digit: label - 10, from: `${label} right`, coverage: cells.two[1] });
+		}
+	}
+	const shipped = templates.map((t) => ({ ...t, coverage: C.decodeCoverageRows(C.encodeCoverageRows(t.coverage), t.coverage.widthPx, t.coverage.heightPx) }));
+	const check = [];
+	for (let label = 1; label <= SOURCE_LABELS; label++) {
+		const raster = coverageRasters[label];
+		check.push({ label, read: CD.readCoverageDigits(CD.badgeCoverageDigitScoreTable(raster, wholeRaster(raster), shipped)) });
+	}
+	const failed = check.filter((c) => c.read !== String(c.label));
+	if (failed.length) throw new Error(`coverage digit templates do not read their own sprites: ${JSON.stringify(failed)}`);
+	if (!quiet) console.log('coverage digit self-check (dev sprites 1..18): all read as themselves');
+	const coverageDigitOut = {
+		schema: 'badgeCoverageDigitTemplates@1',
+		digitWidthPx: templates[0].coverage.widthPx,
+		digitHeightPx: templates[0].coverage.heightPx,
+		note: 'Coverage digit cells of the dev badge sprites (artifacts/badge-coverage-sources) through badgeCoverageDigitCells: per pixel the coverage 0..1 as two hex digits (x 255). Rows top to bottom.',
+		sources: 'lone 1..9 of badges 1..9; left 1 of 10..18; right 0..8 of 10..18. 0 only from 10; 9 only from the lone 9.',
+		templates: templates.map(({ digit, from, coverage }) => ({ digit, from, rows: C.encodeCoverageRows(coverage) }))
+	};
+	return { coverageDigitOut, shippedCoverageDigits: shipped };
+}
+
 // ---- write or check --------------------------------------------------------------------------------
 /** The 18 hole-NN.png rasters of a sources directory, by label. */
 export function loadSprites(dir) {
@@ -448,7 +485,8 @@ const { out, templates } = bakeBinary(loadSprites(SOURCES));
 const coverageSprites = loadSprites(COVERAGE_SOURCES);
 const { coverageOut, coverageTemplates } = bakeCoverage(coverageSprites);
 const { digitOut, digitTemplates } = bakeDigits(coverageSprites);
-const outputs = [[OUT_PATH, JSON.stringify(out, null, '\t') + '\n'], [COVERAGE_OUT_PATH, JSON.stringify(coverageOut, null, '\t') + '\n'], [DIGIT_OUT_PATH, JSON.stringify(digitOut, null, '\t') + '\n']];
+const { coverageDigitOut } = bakeCoverageDigits(coverageSprites);
+const outputs = [[OUT_PATH, JSON.stringify(out, null, '\t') + '\n'], [COVERAGE_OUT_PATH, JSON.stringify(coverageOut, null, '\t') + '\n'], [DIGIT_OUT_PATH, JSON.stringify(digitOut, null, '\t') + '\n'], [COVERAGE_DIGIT_OUT_PATH, JSON.stringify(coverageDigitOut, null, '\t') + '\n']];
 if (process.argv.includes('--check')) {
 	let stale = 0;
 	for (const [path, text] of outputs) {

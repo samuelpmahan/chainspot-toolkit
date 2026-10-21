@@ -2,8 +2,8 @@
   "schema": "chainspot-bundled-provider-v1",
   "sourceRepository": "samuelpmahan/ChainSpot",
   "sourceCommit": "5433854c72b1dc5aa420934d91e16458c2abe09f",
-  "sourceAlgSha256": "319c6b4c1f2ad37eac3dee6e15d0af2e72746c441f90a2f2442ce185eb6f62be",
-  "compiledAlgSha256": "21c2c0adf95a09e5da87002d51b06451e1cbab072d167214e1b87f346208ca67",
+  "sourceAlgSha256": "5e7ebdecbe8184922ea7694806ed4cd2e72e27fb222ccc49ce1238e68f4f1b68",
+  "compiledAlgSha256": "86234eb741eed8550b507168d5cbc9eb9998a080eca1d8740ef4bafdee812158",
   "scope": "Hash of sorted relative file paths and SHA-256 content hashes: .ts/.json/.yaml under packages/alg/src and .js/.json under packages/alg/dist. Git metadata is not included in the core archive.",
   "localPatches": [
     "lane/fastA: output-identical speedups of packages/alg (smartBasket occlusion mask, tee-ring separable dilation, components inlined neighbours, native sha256 under Node, tee-recovery fit typed arrays); verified identical S0-S4 evidence on golden and heritage",
@@ -12,6 +12,7 @@
     "lane/badge27: a black-and-white digit reader (digits/badgeDigitTemplateMath.ts, features/g1.badgeDigitTemplate.ts, assets/badge-digit-templates.json from dev-course badge sprites), not an engine unit; labEndpoint's label candidates use the shared 1..27 vocabulary",
     "lane/badge27: learned abstention for the badge readers (digits/badgeReaderCalibration.ts, assets/badge-reader-calibration.json fitted offline by the toolkit's scripts/badge-calibration.mjs), badgeDigitScoreTable; the template baker is importable; nothing a run uses",
     "session: S2 Basket.findPx reads px.components before its no-shell-family early exit (its tick declares the read with exact access): an image with no basket shell family records zero baskets instead of failing the run (BeaverRanch-Gold-full)",
-    "lane/badge27: digitLabelFeatures reads a label as the digit reader would with every better digit of its cell removed (never a negative margin); badge-reader-calibration.json refitted on that (real dev, hard negatives with the true label absent); nothing a run uses"
+    "lane/badge27: digitLabelFeatures reads a label as the digit reader would with every better digit of its cell removed (never a negative margin); badge-reader-calibration.json refitted on that (real dev, hard negatives with the true label absent); nothing a run uses",
+    "lane/badge27: a coverage DIGIT reader (digits/badgeCoverageDigitMath.ts, features/g1.badgeCoverageDigit.ts, assets/badge-coverage-digit-templates.json from dev sprites) sharing badgeDigitCells with the B+W digit reader; calibration refitted with it; nothing a run uses"
   ]
 }
