@@ -1,0 +1,595 @@
+{
+ "window": {
+  "width": 18,
+  "height": 26,
+  "anchorAt": [
+   8.5,
+   12.5
+  ]
+ },
+ "factor": 4,
+ "refinePx": 0.5,
+ "readers": {
+  "digitBW": {
+   "golden": {
+    "badges": 18,
+    "fixed": {
+     "read": 18,
+     "flagged": 0,
+     "wrong": 0,
+     "medianDigitMargin": 0.19,
+     "minDigitMargin": 0.106
+    },
+    "prior": {
+     "read": 18,
+     "flagged": 7,
+     "wrong": 0,
+     "medianDigitMargin": 0.097,
+     "minDigitMargin": 0.016
+    },
+    "image": {
+     "read": 18,
+     "flagged": 10,
+     "wrong": 0,
+     "medianDigitMargin": 0.081,
+     "minDigitMargin": 0.015
+    }
+   },
+   "lenard": {
+    "badges": 18,
+    "fixed": {
+     "read": 18,
+     "flagged": 1,
+     "wrong": 0,
+     "medianDigitMargin": 0.182,
+     "minDigitMargin": 0.06
+    },
+    "prior": {
+     "read": 18,
+     "flagged": 7,
+     "wrong": 0,
+     "medianDigitMargin": 0.097,
+     "minDigitMargin": 0.002
+    },
+    "image": {
+     "read": 18,
+     "flagged": 10,
+     "wrong": 0,
+     "medianDigitMargin": 0.082,
+     "minDigitMargin": 0.005
+    }
+   },
+   "townelake": {
+    "badges": 18,
+    "fixed": {
+     "read": 18,
+     "flagged": 0,
+     "wrong": 0,
+     "medianDigitMargin": 0.188,
+     "minDigitMargin": 0.112
+    },
+    "prior": {
+     "read": 18,
+     "flagged": 7,
+     "wrong": 0,
+     "medianDigitMargin": 0.097,
+     "minDigitMargin": 0.013
+    },
+    "image": {
+     "read": 18,
+     "flagged": 10,
+     "wrong": 0,
+     "medianDigitMargin": 0.082,
+     "minDigitMargin": 0.01
+    }
+   },
+   "heritage": {
+    "badges": 18,
+    "fixed": {
+     "read": 18,
+     "flagged": 1,
+     "wrong": 0,
+     "medianDigitMargin": 0.178,
+     "minDigitMargin": 0.06
+    },
+    "prior": {
+     "read": 18,
+     "flagged": 7,
+     "wrong": 0,
+     "medianDigitMargin": 0.097,
+     "minDigitMargin": 0.002
+    },
+    "image": {
+     "read": 18,
+     "flagged": 10,
+     "wrong": 0,
+     "medianDigitMargin": 0.082,
+     "minDigitMargin": 0.005
+    }
+   },
+   "alex": {
+    "badges": 18,
+    "fixed": {
+     "read": 18,
+     "flagged": 1,
+     "wrong": 0,
+     "medianDigitMargin": 0.188,
+     "minDigitMargin": 0.053
+    },
+    "prior": {
+     "read": 18,
+     "flagged": 7,
+     "wrong": 1,
+     "medianDigitMargin": 0.12,
+     "minDigitMargin": 0.006
+    },
+    "image": {
+     "read": 18,
+     "flagged": 10,
+     "wrong": 1,
+     "medianDigitMargin": 0.082,
+     "minDigitMargin": 0.002
+    }
+   },
+   "northpark": {
+    "badges": 18,
+    "fixed": {
+     "read": 18,
+     "flagged": 0,
+     "wrong": 0,
+     "medianDigitMargin": 0.188,
+     "minDigitMargin": 0.112
+    },
+    "prior": {
+     "read": 18,
+     "flagged": 7,
+     "wrong": 0,
+     "medianDigitMargin": 0.097,
+     "minDigitMargin": 0.013
+    },
+    "image": {
+     "read": 18,
+     "flagged": 10,
+     "wrong": 0,
+     "medianDigitMargin": 0.082,
+     "minDigitMargin": 0.01
+    }
+   },
+   "seatacFull": {
+    "badges": 27,
+    "fixed": {
+     "read": 27,
+     "flagged": 6,
+     "wrong": 0,
+     "medianDigitMargin": 0.169,
+     "minDigitMargin": 0.042
+    },
+    "prior": {
+     "read": 27,
+     "flagged": 9,
+     "wrong": 2,
+     "medianDigitMargin": 0.117,
+     "minDigitMargin": 0.009
+    },
+    "image": {
+     "read": 27,
+     "flagged": 9,
+     "wrong": 2,
+     "medianDigitMargin": 0.12,
+     "minDigitMargin": 0.009
+    }
+   },
+   "seatacCapture": {
+    "badges": 27,
+    "fixed": {
+     "read": 27,
+     "flagged": 6,
+     "wrong": 0,
+     "medianDigitMargin": 0.178,
+     "minDigitMargin": 0.042
+    },
+    "prior": {
+     "read": 27,
+     "flagged": 10,
+     "wrong": 1,
+     "medianDigitMargin": 0.111,
+     "minDigitMargin": 0.013
+    },
+    "image": {
+     "read": 27,
+     "flagged": 10,
+     "wrong": 1,
+     "medianDigitMargin": 0.111,
+     "minDigitMargin": 0.011
+    }
+   },
+   "beaverranchLazy": {
+    "badges": 21,
+    "fixed": {
+     "read": 21,
+     "flagged": 2,
+     "wrong": 0,
+     "medianDigitMargin": 0.182,
+     "minDigitMargin": 0.093
+    },
+    "prior": {
+     "read": 21,
+     "flagged": 9,
+     "wrong": 0,
+     "medianDigitMargin": 0.111,
+     "minDigitMargin": 0.013
+    },
+    "image": {
+     "read": 21,
+     "flagged": 9,
+     "wrong": 0,
+     "medianDigitMargin": 0.099,
+     "minDigitMargin": 0.01
+    }
+   },
+   "beaverranchCapture": {
+    "badges": 21,
+    "fixed": {
+     "read": 21,
+     "flagged": 2,
+     "wrong": 0,
+     "medianDigitMargin": 0.188,
+     "minDigitMargin": 0.047
+    },
+    "prior": {
+     "read": 21,
+     "flagged": 9,
+     "wrong": 0,
+     "medianDigitMargin": 0.097,
+     "minDigitMargin": 0.013
+    },
+    "image": {
+     "read": 21,
+     "flagged": 9,
+     "wrong": 0,
+     "medianDigitMargin": 0.098,
+     "minDigitMargin": 0.01
+    }
+   },
+   "fountainhillsFull": {
+    "badges": 20,
+    "fixed": {
+     "read": 20,
+     "flagged": 2,
+     "wrong": 0,
+     "medianDigitMargin": 0.182,
+     "minDigitMargin": 0.093
+    },
+    "prior": {
+     "read": 20,
+     "flagged": 8,
+     "wrong": 0,
+     "medianDigitMargin": 0.097,
+     "minDigitMargin": 0.013
+    },
+    "image": {
+     "read": 20,
+     "flagged": 14,
+     "wrong": 0,
+     "medianDigitMargin": 0.051,
+     "minDigitMargin": 0.01
+    }
+   },
+   "fountainhillsLazy": {
+    "badges": 20,
+    "fixed": {
+     "read": 20,
+     "flagged": 3,
+     "wrong": 0,
+     "medianDigitMargin": 0.181,
+     "minDigitMargin": 0.066
+    },
+    "prior": {
+     "read": 20,
+     "flagged": 9,
+     "wrong": 0,
+     "medianDigitMargin": 0.097,
+     "minDigitMargin": 0.013
+    },
+    "image": {
+     "read": 20,
+     "flagged": 15,
+     "wrong": 0,
+     "medianDigitMargin": 0.051,
+     "minDigitMargin": 0.01
+    }
+   }
+  },
+  "coverageDigit": {
+   "golden": {
+    "badges": 18,
+    "fixed": {
+     "read": 18,
+     "flagged": 0,
+     "wrong": 0,
+     "medianDigitMargin": 0.228,
+     "minDigitMargin": 0.117
+    },
+    "prior": {
+     "read": 18,
+     "flagged": 3,
+     "wrong": 0,
+     "medianDigitMargin": 0.16,
+     "minDigitMargin": 0.021
+    },
+    "image": {
+     "read": 18,
+     "flagged": 8,
+     "wrong": 1,
+     "medianDigitMargin": 0.139,
+     "minDigitMargin": 0.008
+    }
+   },
+   "lenard": {
+    "badges": 18,
+    "fixed": {
+     "read": 18,
+     "flagged": 0,
+     "wrong": 0,
+     "medianDigitMargin": 0.219,
+     "minDigitMargin": 0.106
+    },
+    "prior": {
+     "read": 18,
+     "flagged": 3,
+     "wrong": 0,
+     "medianDigitMargin": 0.159,
+     "minDigitMargin": 0.021
+    },
+    "image": {
+     "read": 18,
+     "flagged": 7,
+     "wrong": 1,
+     "medianDigitMargin": 0.139,
+     "minDigitMargin": 0.002
+    }
+   },
+   "townelake": {
+    "badges": 18,
+    "fixed": {
+     "read": 18,
+     "flagged": 0,
+     "wrong": 0,
+     "medianDigitMargin": 0.219,
+     "minDigitMargin": 0.117
+    },
+    "prior": {
+     "read": 18,
+     "flagged": 3,
+     "wrong": 0,
+     "medianDigitMargin": 0.161,
+     "minDigitMargin": 0.021
+    },
+    "image": {
+     "read": 18,
+     "flagged": 7,
+     "wrong": 1,
+     "medianDigitMargin": 0.139,
+     "minDigitMargin": 0.002
+    }
+   },
+   "heritage": {
+    "badges": 18,
+    "fixed": {
+     "read": 18,
+     "flagged": 0,
+     "wrong": 0,
+     "medianDigitMargin": 0.219,
+     "minDigitMargin": 0.106
+    },
+    "prior": {
+     "read": 18,
+     "flagged": 3,
+     "wrong": 0,
+     "medianDigitMargin": 0.162,
+     "minDigitMargin": 0.021
+    },
+    "image": {
+     "read": 18,
+     "flagged": 7,
+     "wrong": 1,
+     "medianDigitMargin": 0.139,
+     "minDigitMargin": 0.002
+    }
+   },
+   "alex": {
+    "badges": 18,
+    "fixed": {
+     "read": 18,
+     "flagged": 0,
+     "wrong": 0,
+     "medianDigitMargin": 0.219,
+     "minDigitMargin": 0.106
+    },
+    "prior": {
+     "read": 18,
+     "flagged": 2,
+     "wrong": 0,
+     "medianDigitMargin": 0.159,
+     "minDigitMargin": 0.02
+    },
+    "image": {
+     "read": 18,
+     "flagged": 7,
+     "wrong": 1,
+     "medianDigitMargin": 0.136,
+     "minDigitMargin": 0.008
+    }
+   },
+   "northpark": {
+    "badges": 18,
+    "fixed": {
+     "read": 18,
+     "flagged": 0,
+     "wrong": 0,
+     "medianDigitMargin": 0.212,
+     "minDigitMargin": 0.117
+    },
+    "prior": {
+     "read": 18,
+     "flagged": 2,
+     "wrong": 0,
+     "medianDigitMargin": 0.162,
+     "minDigitMargin": 0.021
+    },
+    "image": {
+     "read": 18,
+     "flagged": 6,
+     "wrong": 1,
+     "medianDigitMargin": 0.149,
+     "minDigitMargin": 0.002
+    }
+   },
+   "seatacFull": {
+    "badges": 27,
+    "fixed": {
+     "read": 27,
+     "flagged": 3,
+     "wrong": 0,
+     "medianDigitMargin": 0.195,
+     "minDigitMargin": 0.068
+    },
+    "prior": {
+     "read": 27,
+     "flagged": 7,
+     "wrong": 1,
+     "medianDigitMargin": 0.162,
+     "minDigitMargin": 0.021
+    },
+    "image": {
+     "read": 27,
+     "flagged": 8,
+     "wrong": 1,
+     "medianDigitMargin": 0.163,
+     "minDigitMargin": 0.019
+    }
+   },
+   "seatacCapture": {
+    "badges": 27,
+    "fixed": {
+     "read": 27,
+     "flagged": 3,
+     "wrong": 0,
+     "medianDigitMargin": 0.212,
+     "minDigitMargin": 0.068
+    },
+    "prior": {
+     "read": 27,
+     "flagged": 7,
+     "wrong": 1,
+     "medianDigitMargin": 0.162,
+     "minDigitMargin": 0.021
+    },
+    "image": {
+     "read": 27,
+     "flagged": 8,
+     "wrong": 1,
+     "medianDigitMargin": 0.163,
+     "minDigitMargin": 0.019
+    }
+   },
+   "beaverranchLazy": {
+    "badges": 21,
+    "fixed": {
+     "read": 21,
+     "flagged": 1,
+     "wrong": 0,
+     "medianDigitMargin": 0.219,
+     "minDigitMargin": 0.101
+    },
+    "prior": {
+     "read": 21,
+     "flagged": 3,
+     "wrong": 0,
+     "medianDigitMargin": 0.162,
+     "minDigitMargin": 0.041
+    },
+    "image": {
+     "read": 21,
+     "flagged": 3,
+     "wrong": 0,
+     "medianDigitMargin": 0.162,
+     "minDigitMargin": 0.04
+    }
+   },
+   "beaverranchCapture": {
+    "badges": 21,
+    "fixed": {
+     "read": 21,
+     "flagged": 1,
+     "wrong": 0,
+     "medianDigitMargin": 0.219,
+     "minDigitMargin": 0.086
+    },
+    "prior": {
+     "read": 21,
+     "flagged": 4,
+     "wrong": 0,
+     "medianDigitMargin": 0.162,
+     "minDigitMargin": 0.041
+    },
+    "image": {
+     "read": 21,
+     "flagged": 4,
+     "wrong": 0,
+     "medianDigitMargin": 0.161,
+     "minDigitMargin": 0.04
+    }
+   },
+   "fountainhillsFull": {
+    "badges": 20,
+    "fixed": {
+     "read": 20,
+     "flagged": 1,
+     "wrong": 0,
+     "medianDigitMargin": 0.212,
+     "minDigitMargin": 0.101
+    },
+    "prior": {
+     "read": 20,
+     "flagged": 4,
+     "wrong": 0,
+     "medianDigitMargin": 0.161,
+     "minDigitMargin": 0.021
+    },
+    "image": {
+     "read": 20,
+     "flagged": 9,
+     "wrong": 1,
+     "medianDigitMargin": 0.138,
+     "minDigitMargin": 0.001
+    }
+   },
+   "fountainhillsLazy": {
+    "badges": 20,
+    "fixed": {
+     "read": 20,
+     "flagged": 1,
+     "wrong": 0,
+     "medianDigitMargin": 0.169,
+     "minDigitMargin": 0.101
+    },
+    "prior": {
+     "read": 20,
+     "flagged": 3,
+     "wrong": 0,
+     "medianDigitMargin": 0.167,
+     "minDigitMargin": 0.021
+    },
+    "image": {
+     "read": 20,
+     "flagged": 8,
+     "wrong": 1,
+     "medianDigitMargin": 0.149,
+     "minDigitMargin": 0.001
+    }
+   }
+  }
+ },
+ "note": "Digit templates by overlap (fn.q.sprite.overlap) vs the fixed dev-sprite templates, both digit readers, every badge read; dev out of course (fixed re-baked and prior pooled without the scored course), validation once. Counts per course: flagged (P < pStar under the shipped calibration, fitted on fixed-template features: indicative only for overlap variants) / wrong; digit margin median / min."
+}

@@ -9,11 +9,12 @@
  *   binary, coverage: [score of the label, its margin over the best other label]
  *   digitBW:          [lowest digit Dice of the label, lowest digit margin to its runner-up once every better digit of
  *                      its cell is removed (never negative), layout margin (the label's layout minus the other layout)]
+ *   coverageDigit:    as digitBW, with each cell's NCC against coverage digit templates in place of Dice
  *   perDigit:         [geometric mean of the label's digit posteriors, its normalized posterior minus the best other]
  * `others` is the vocabulary the label competes in: all of 1..HOLE_LABEL_MAX for a read, fewer for a hard negative
  * (the true label removed) or for the per-image assignment (the labels still free).
  */
-export type BadgeReaderName = 'binary' | 'digitBW' | 'coverage' | 'perDigit';
+export type BadgeReaderName = 'binary' | 'digitBW' | 'coverage' | 'coverageDigit' | 'perDigit';
 /** Read iff P >= READER_P_STAR. */
 export declare const READER_P_STAR: number;
 export declare function readerProbability(reader: BadgeReaderName, features: readonly number[]): number;

@@ -2,8 +2,8 @@
   "schema": "chainspot-bundled-provider-v1",
   "sourceRepository": "samuelpmahan/ChainSpot",
   "sourceCommit": "5433854c72b1dc5aa420934d91e16458c2abe09f",
-  "sourceAlgSha256": "6cc60d10c68c8676c1e5c3ae19f7c48263f72f92ff45611c3778f30728261121",
-  "compiledAlgSha256": "045beec4e62c43bd6235d63ee44e072a65f6f3d3853ef140013da9de1133501f",
+  "sourceAlgSha256": "f8d1b6b1a0575e21eeb0a2089834103f0e04c35ec54326da0e73876cbcd4e015",
+  "compiledAlgSha256": "dce9b588928a210659d98237dc5fa289fd1a44300de78f6b115b6c60c090b769",
   "scope": "Hash of sorted relative file paths and SHA-256 content hashes: .ts/.json/.yaml under packages/alg/src and .js/.json under packages/alg/dist. Git metadata is not included in the core archive.",
   "localPatches": [
     "lane/fastA: output-identical speedups of packages/alg (smartBasket occlusion mask, tee-ring separable dilation, components inlined neighbours, native sha256 under Node, tee-recovery fit typed arrays); verified identical S0-S4 evidence on golden and heritage",
@@ -14,6 +14,8 @@
     "session: S2 Basket.findPx reads px.components before its no-shell-family early exit (its tick declares the read with exact access): an image with no basket shell family records zero baskets instead of failing the run (BeaverRanch-Gold-full)",
     "lane/badge27: digitLabelFeatures reads a label as the digit reader would with every better digit of its cell removed (never a negative margin); badge-reader-calibration.json refitted on that (real dev, hard negatives with the true label absent); nothing a run uses",
     "session: S2 learns and carries in the basket frame shape (Basket.learnShellShape -> px.baskets.shellShape): members' dark frames overlapped in sprite frame, the >= 75 % agreeing component enclosing the body gives the margins and frame px; the dev-course prior (assets/basket-shell.json, scripts/basket-shell-prior.mjs in the toolkit) is used when no agreeing frame encloses the body. Replaces the modal smallest-enclosing-component vote, which tied when every member's shell touched dark canopy (BeaverRanch-Gold-full: 18 of 18). Same margins (2,3,2,3) and frame px on every dev course",
-    "session: S2 learns and carries in the basket frame shape (Basket.learnShellShape -> px.baskets.shellShape): members' dark frames overlapped in sprite frame, the >= 75 % agreeing component enclosing the body gives the margins and frame px; the dev-course prior (assets/basket-shell.json, made by the toolkit's scripts/basket-shell-prior.mjs with its store query fn.q.sprite.overlap, which also serves this Calculation in toolkit runs) is used when no agreeing frame encloses the body. Replaces the modal smallest-enclosing-component vote, which tied when every member's shell touched dark canopy (BeaverRanch-Gold-full: 18 of 18). Same margins (2,3,2,3) and frame px on every dev course"
+    "session: S2 learns and carries in the basket frame shape (Basket.learnShellShape -> px.baskets.shellShape): members' dark frames overlapped in sprite frame, the >= 75 % agreeing component enclosing the body gives the margins and frame px; the dev-course prior (assets/basket-shell.json, made by the toolkit's scripts/basket-shell-prior.mjs with its store query fn.q.sprite.overlap, which also serves this Calculation in toolkit runs) is used when no agreeing frame encloses the body. Replaces the modal smallest-enclosing-component vote, which tied when every member's shell touched dark canopy (BeaverRanch-Gold-full: 18 of 18). Same margins (2,3,2,3) and frame px on every dev course",
+    "lane/badge27: a coverage DIGIT reader (digits/badgeCoverageDigitMath.ts, features/g1.badgeCoverageDigit.ts, assets/badge-coverage-digit-templates.json from dev sprites) sharing badgeDigitCells with the B+W digit reader; calibration refitted with it; nothing a run uses",
+    "lane/badge27: digitTemplateFromFine (digit templates from a super-resolved overlap, made the way each digit reader makes its cells) and badgeDigitCellSpans; nothing a run uses"
   ]
 }

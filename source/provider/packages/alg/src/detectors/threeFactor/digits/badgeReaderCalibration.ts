@@ -9,6 +9,7 @@
  *   binary, coverage: [score of the label, its margin over the best other label]
  *   digitBW:          [lowest digit Dice of the label, lowest digit margin to its runner-up once every better digit of
  *                      its cell is removed (never negative), layout margin (the label's layout minus the other layout)]
+ *   coverageDigit:    as digitBW, with each cell's NCC against coverage digit templates in place of Dice
  *   perDigit:         [geometric mean of the label's digit posteriors, its normalized posterior minus the best other]
  * `others` is the vocabulary the label competes in: all of 1..HOLE_LABEL_MAX for a read, fewer for a hard negative
  * (the true label removed) or for the per-image assignment (the labels still free).
@@ -16,7 +17,7 @@
 
 import calibrationData from '../assets/badge-reader-calibration.json';
 
-export type BadgeReaderName = 'binary' | 'digitBW' | 'coverage' | 'perDigit';
+export type BadgeReaderName = 'binary' | 'digitBW' | 'coverage' | 'coverageDigit' | 'perDigit';
 
 interface ReaderModel {
 	readonly features: readonly string[];
@@ -76,7 +77,7 @@ export function digitLabelFeatures(table: DigitScoreTable, label: number, _other
 	const scores = ds.map((d, i) => cells[i][d]);
 	const margins = ds.map((d, i) => {
 		const below = cells[i].filter((v, e) => e !== d && v <= cells[i][d]);
-		return below.length ? cells[i][d] - Math.max(...below) : cells[i][d];
+		return below.length ? cells[i][d] - Math.max(...below) : 0;   // no digit left below it: no runner-up, no margin
 	});
 	if (margins.some((m) => m < 0)) throw new Error('digitLabelFeatures: a negative digit margin (a read is its cell\'s best digit)');
 	const joint = scores.reduce((a, v) => a + v, 0) / scores.length;
