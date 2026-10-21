@@ -11,8 +11,10 @@
  * Elapsed times are nondeterministic, so they live in the sidecar and in frames, never in hashed records.
  */
 import { createPartStore } from './store.mjs';
+import { assumptionViolations, assumptionLines } from './assumptions.mjs';
 
 export { INSTRUMENTATION_CALLS, callSubtree } from './store.mjs';
+export { assumptionViolations, assumptionLines } from './assumptions.mjs';
 
 /** Kept for runners written before profiling became a default: every store already offers its calls. */
 export function registerInstrumentation() {}
@@ -44,6 +46,8 @@ export function profileSummary(doc) {
   const summary = [...rows.values()].map((r) => ({ ...r, totalMs: round(r.totalMs), selfMs: round(r.selfMs) })).sort((a, b) => b.selfMs - a.selfMs);
   // default property: every summary carries its opaque hot spots, and every profile page shows them (profileFrame)
   Object.defineProperty(summary, 'hotSpots', { value: opaqueHotSpots(doc), enumerable: false });
+  // and its assumption violations (fg/assumptions.mjs): a bound on a variable quantity that a search hit, listed the same way
+  Object.defineProperty(summary, 'assumptions', { value: assumptionViolations(doc), enumerable: false });
   return summary;
 }
 
@@ -80,18 +84,20 @@ export function profileLines(doc, { top = 8, title = null } = {}) {
   const out = [`${title ? `${title}: ` : ''}${wall == null ? 'wall not recorded' : `wall ${s(wall)}`}, inside store calls ${s(rootMs)}${wall == null ? '' : `, outside ${s(Math.max(0, wall - rootMs))} (${Math.round((100 * Math.max(0, wall - rootMs)) / wall)}%: not itemised)`}${doc.processMs > 0 ? `; process ${s(doc.processMs)} (module loading included)` : ''}; ${calls.length} calls`];
   for (const r of summary.slice(0, top)) out.push(`  ${String(Math.round(r.selfMs)).padStart(7)} ms self ${String(Math.round(r.totalMs)).padStart(7)} ms total  ${r.calls}x ${r.calculation}${Object.keys(r.emits).length ? `  (${Object.entries(r.emits).map(([k, v]) => `${k} ${Math.round(v * 100) / 100}`).join(', ')})` : ''}`);
   for (const l of hotSpotLines(summary.hotSpots)) out.push(`  ${l}`);
+  for (const l of assumptionLines(summary.assumptions)) out.push(`  ${l}`);
   return out;
 }
 export const hotSpotLines = (spots) => spots.map((h) => `OPAQUE HOT SPOT ${h.calculation}: ${h.calls}x ${h.selfMs} ms (${Math.round(h.shareOfRun * 100)}% of the run) of its own time; ${h.fix}`);
 
 /** One ledger frame (fg/guarantee.mjs FRAME_KINDS) for a flipbook page. */
-export function profileFrame(summary, { title = 'profile: every Calculation call, self time first', wallMs = null, hotSpots = summary.hotSpots ?? [] } = {}) {
+export function profileFrame(summary, { title = 'profile: every Calculation call, self time first', wallMs = null, hotSpots = summary.hotSpots ?? [], assumptions = summary.assumptions ?? [] } = {}) {
   return {
     title: wallMs == null ? title : `${title} (wall ${Math.round(wallMs)} ms)`,
     calculation: 'fg.profile', tick: 'profile',
     parts: [{ address: 'tk.profile', kind: 'ledger', data: { rows: summary.map((r) => ({ calculation: r.calculation, calls: r.calls, selfMs: r.selfMs, totalMs: r.totalMs,
       emits: Object.entries(r.emits).map(([k, v]) => `${k} ${v}`).join(', '), threw: r.threw })) } }],
     verdicts: [...summary.filter((r) => r.threw).map((r) => ({ name: `${r.calculation} threw ${r.threw}x`, ok: false })),
-      ...hotSpots.map((h) => ({ name: `opaque hot spot: ${h.calculation} ${h.selfMs} ms (${Math.round(h.shareOfRun * 100)}% of the run) of its own time, not itemised in the store`, ok: false }))]
+      ...hotSpots.map((h) => ({ name: `opaque hot spot: ${h.calculation} ${h.selfMs} ms (${Math.round(h.shareOfRun * 100)}% of the run) of its own time, not itemised in the store`, ok: false })),
+      ...assumptionLines(assumptions).map((l) => ({ name: l.toLowerCase().replace('assumption violated', 'assumption violated:'), ok: false }))]
   };
 }
