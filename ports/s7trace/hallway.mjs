@@ -17,7 +17,7 @@
  * Coordinates: canonical (S0-cropped) px, pixel centres at integer coordinates; angles in radians unless named Deg.
  */
 
-import { samp as sampS6, profileAt, edgePairOf, edgeGradientOf, edgePairFrom, stationContrastAt, reachFor } from '../s6straight/pathSpace.mjs';
+import { samp as sampS6, profileAt, edgePairOf, edgeGradientOf, edgePairFrom, stationContrastAt, reachFor, EVIDENCE } from '../s6straight/pathSpace.mjs';
 import { widthSearchRange } from '../s6straight/pathLoss.mjs';
 
 export const TAU = 8.0;                       // lum: edge contrast a ribbon station must exceed on both sides (follow.py)
@@ -60,6 +60,72 @@ export function edgePair(P, Wexp, tolW = 3.0, latLim = 12.0) {
 const edgePairG = (G, Wexp, tolW, latLim) => { const e = edgePairFrom(G, Wexp, { tolW, latLim }); return e && { l: e.lPx, r: e.rPx, c: e.cPx, w: e.wPx, score: e.score, gl: e.gl, gr: e.gr }; };
 /** contrast.py station_contrast -> { cl, cr, okl, okr } per station. */
 export const stationContrast = (S, O, phi, ts, W) => stationContrastAt(S, O, phi, ts, W);
+
+/**
+ * stationContrastAt's answer, bit for bit, with its along-samples shared: a station averages +-EVIDENCE.alongPx px along the
+ * ribbon and stations 1 px apart share most of those samples. A sample (along position TT, lateral offset) is read once and
+ * reused only by stations whose TT is the IDENTICAL float (ts[q] + da[a], as stationContrastAt computes it); each cached row
+ * (one along position, one band) keeps its sum, so a station adds 5 row sums instead of 25 samples. The same samples, summed in
+ * a different grouping: cl / cr can differ from stationContrastAt's in the last bits (the follower's routes were checked
+ * identical on every hole of the dev and validation courses). The follower's hot path.
+ */
+// scratch shared by every call (single-threaded; filled before use): the lateral offset sets per W, the sample cache
+const SHARED = { W: NaN, ins: null, da: null, sets: null, cTT: new Float64Array(0), cV: new Float64Array(0), cS: new Float64Array(0), cK: new Uint8Array(0) };
+export function stationContrastShared(c, O, phi, ts, W) {
+  const band = EVIDENCE.bandPx, along = EVIDENCE.alongPx, u = unit(phi), n = [-u[1], u[0]], h = W / 2;
+  if (SHARED.W !== W) {
+    const ins0 = arange(band[0], band[1] + 1e-9, 0.5), offsOf = (sgn, inside) => Float64Array.from(ins0, (x) => sgn * (inside ? h - x : h + x));
+    Object.assign(SHARED, { W, ins: ins0, da: arange(-along, along + 1e-9, 1), sets: [offsOf(-1, true), offsOf(-1, false), offsOf(1, true), offsOf(1, false)] });
+  }
+  const ins = SHARED.ins, da = SHARED.da, sets = SHARED.sets;
+  const N = ts.length, out = { cl: new Float64Array(N), cr: new Float64Array(N), okl: new Uint8Array(N), okr: new Uint8Array(N) };
+  const { lum, mask, W: IW, H: IH } = c, O0 = O[0], O1 = O[1], u0 = u[0], u1 = u[1], n0 = n[0], n1 = n[1], nA = da.length, nO = ins.length, tot = nA * nO;
+  const over = EVIDENCE.maskOver, xHi = IW - 2, yHi = IH - 2, cl = (i, m) => (i < 0 ? 0 : i >= m ? m - 1 : i);
+  // the sample cache: per along index m = q + a, its TT and, per (set, offset), the value (NaN: masked or out of bounds)
+  const M = N + nA;
+  if (SHARED.cTT.length < M) { SHARED.cTT = new Float64Array(2 * M); SHARED.cV = new Float64Array(2 * M * 4 * nO); SHARED.cS = new Float64Array(2 * M * 4); SHARED.cK = new Uint8Array(2 * M * 4); }
+  const cTT = SHARED.cTT, cV = SHARED.cV, cS = SHARED.cS, cK = SHARED.cK; cTT.fill(NaN, 0, M);
+  const fill = (m, TT) => {
+    cTT[m] = TT;
+    for (let s4 = 0; s4 < 4; s4++) { const offs = sets[s4]; let rs = 0, rk = 0; for (let j = 0; j < nO; j++) {
+      const o = offs[j], x = O0 + TT * u0 + o * n0, y = O1 + TT * u1 + o * n1, at = (m * 4 + s4) * nO + j;
+      if (!(x > 1 && x < xHi && y > 1 && y < yHi)) { cV[at] = NaN; continue; }
+      const x0 = Math.floor(x), y0 = Math.floor(y), fx = x - x0, fy = y - y0;
+      const xa = cl(x0, IW), xb = cl(x0 + 1, IW), ya = cl(y0, IH), yb = cl(y0 + 1, IH);
+      const iaa = ya * IW + xa, iab = ya * IW + xb, iba = yb * IW + xa, ibb = yb * IW + xb;
+      if (mask && (1 - fy) * ((1 - fx) * mask[iaa] + fx * mask[iab]) + fy * ((1 - fx) * mask[iba] + fx * mask[ibb]) > over) { cV[at] = NaN; continue; }
+      cV[at] = (1 - fy) * ((1 - fx) * lum[iaa] + fx * lum[iab]) + fy * ((1 - fx) * lum[iba] + fx * lum[ibb]); rs += cV[at]; rk++;
+    } cS[m * 4 + s4] = rs; cK[m * 4 + s4] = rk; }
+  };
+  const one = (TT, s4, j) => {   // a sample off the cache (its TT is not the cached float): computed as stationContrastAt does
+    const o = sets[s4][j], x = O0 + TT * u0 + o * n0, y = O1 + TT * u1 + o * n1;
+    if (!(x > 1 && x < xHi && y > 1 && y < yHi)) return NaN;
+    const x0 = Math.floor(x), y0 = Math.floor(y), fx = x - x0, fy = y - y0;
+    const xa = cl(x0, IW), xb = cl(x0 + 1, IW), ya = cl(y0, IH), yb = cl(y0 + 1, IH);
+    const iaa = ya * IW + xa, iab = ya * IW + xb, iba = yb * IW + xa, ibb = yb * IW + xb;
+    if (mask && (1 - fy) * ((1 - fx) * mask[iaa] + fx * mask[iab]) + fy * ((1 - fx) * mask[iba] + fx * mask[ibb]) > over) return NaN;
+    return (1 - fy) * ((1 - fx) * lum[iaa] + fx * lum[iab]) + fy * ((1 - fx) * lum[iba] + fx * lum[ibb]);
+  };
+  let sv = 0, sk = 0;
+  const S = (q, s4) => {
+    let sum = 0, k = 0;
+    for (let a = 0; a < nA; a++) {
+      const TT = ts[q] + da[a], m = q + a;
+      if (Number.isNaN(cTT[m])) fill(m, TT);
+      // a cached row adds its sum (the row's samples summed in order once, when filled); a row off the cache, sample by sample
+      if (cTT[m] === TT) { sum += cS[m * 4 + s4]; k += cK[m * 4 + s4]; continue; }
+      for (let j = 0; j < nO; j++) { const v = one(TT, s4, j); if (v === v) { sum += v; k++; } }
+    }
+    sv = k ? sum / k : NaN; sk = k / tot;
+  };
+  for (let q = 0; q < N; q++) for (let side = 0; side < 2; side++) {
+    S(q, 2 * side); const vi = sv, oki = sk;
+    S(q, 2 * side + 1); const vo = sv, oko = sk;
+    const okv = Math.min(oki, oko) > 0.5 ? 1 : 0;
+    if (side === 0) { out.cl[q] = vi - vo; out.okl[q] = okv; } else { out.cr[q] = vi - vo; out.okr[q] = okv; }
+  }
+  return out;
+}
 
 // ------------------------------------------------------------------------------------------------ the scene (course.py)
 
@@ -175,7 +241,7 @@ export function fitFree(S, O, phi0, t0, t1, Wexp, { span = 3.0, dstep = 0.25, to
 
 /** How far the fixed-centreline edge-contrast run goes from t0 (gaps up to G failing stations; masked stations neutral). */
 export function runEnd(S, O, phi, W, t0, tmax = 1500, G = null) {
-  const ts = arange(t0, tmax, 1.0), { cl, cr, okl, okr } = stationContrast(S, O, phi, ts, W);
+  const ts = arange(t0, tmax, 1.0), { cl, cr, okl, okr } = stationContrastShared(S, O, phi, ts, W);
   G = G == null ? Math.trunc(1.0 * W) : G;
   let last = t0, fails = 0;
   for (let k = 0; k < ts.length; k++) {
@@ -212,25 +278,34 @@ export function otherTeeRibbon(V, psi, W, selfC, tees) {
 }
 
 const passStats = (S, V, psi, ts, W) => {
-  const { cl, cr, okl, okr } = stationContrast(S, V, psi, ts, W), m = [];
+  const { cl, cr, okl, okr } = stationContrastShared(S, V, psi, ts, W), m = [];
   for (let k = 0; k < ts.length; k++) if (okl[k] && okr[k]) m.push(Math.min(cl[k], cr[k]));
   return m;
 };
 
-/** The bend near the run end: vertex V on the leg and new heading psi whose next 70 px run best (follow.py find_bend). */
-export function findBend(S, O, phi, W, tEnd, selfC, tees) {
+/** findBend at one vertex position tv on the leg: the best (score, tv, psi, passFrac) over both sides and every heading, or null. */
+export function findBendAt(S, O, phi, W, tv, selfC, tees) {
   let best = null; const u = unit(phi), ts = arange(W * 0.75, W * 0.75 + 70, 1.0);
-  for (const tv of arange(Math.max(W * 0.5, tEnd - 1.2 * W), tEnd + W * 0.9, 1.0)) {
-    const V = [O[0] + u[0] * tv, O[1] + u[1] * tv];
-    for (const side of [1, -1]) for (const d of arange(4, 151, 2.0)) {
-      const psi = phi + side * rad(d);
-      if (selfC != null && otherTeeRibbon(V, psi, W, selfC, tees)) continue;
-      const m = passStats(S, V, psi, ts, W);
-      if (m.length < 25) continue;
-      const pf = m.filter((x) => x > TAU).length / m.length, sc = pf + 0.01 * median(m);
-      if (best === null || sc > best[0]) best = [sc, tv, psi, pf];
-    }
+  const V = [O[0] + u[0] * tv, O[1] + u[1] * tv];
+  for (const side of [1, -1]) for (const d of arange(4, 151, 2.0)) {
+    const psi = phi + side * rad(d);
+    if (selfC != null && otherTeeRibbon(V, psi, W, selfC, tees)) continue;
+    const m = passStats(S, V, psi, ts, W);
+    if (m.length < 25) continue;
+    const pf = m.filter((x) => x > TAU).length / m.length, sc = pf + 0.01 * median(m);
+    if (best === null || sc > best[0]) best = [sc, tv, psi, pf];
   }
+  return best;
+}
+/** The vertex positions findBend tries on the leg (1 px apart around the run end). */
+export const bendPositions = (W, tEnd) => arange(Math.max(W * 0.5, tEnd - 1.2 * W), tEnd + W * 0.9, 1.0);
+/**
+ * The bend near the run end: vertex V on the leg and new heading psi whose next 70 px run best (follow.py find_bend). at: the
+ * per-position step (default findBendAt; the S7 store passes its profiled query); the first strict best wins, as before.
+ */
+export function findBend(S, O, phi, W, tEnd, selfC, tees, at = findBendAt) {
+  let best = null;
+  for (const tv of bendPositions(W, tEnd)) { const b = at(S, O, phi, W, tv, selfC, tees); if (b && (best === null || b[0] > best[0])) best = b; }
   return best;
 }
 
@@ -256,24 +331,26 @@ export function closeOnBp(S, O, phi, W, tEnd, used = []) {
 }
 
 /** Follow a hole from start along phi: legs until a BasketPoint (on the leg, or closed on), lost, or 4 legs (follow.py trace). */
-export function trace(S, start, phi, W, { maxLegs = 4, excludeBp = [], selfC = null, tees = [] } = {}) {
+export function trace(S, start, phi, W, { maxLegs = 4, excludeBp = [], selfC = null, tees = [], steps = null } = {}) {
+  // steps (optional): the follower's steps as calls of the caller's (the S7 store passes profiled queries); defaults: this module's
+  const runEndF = steps?.runEnd ?? runEnd, closeOnBpF = steps?.closeOnBp ?? closeOnBp, findBendAtF = steps?.findBendAt ?? findBendAt;
   let O = [start[0], start[1]]; const verts = [O.slice()], legs = [];
   for (let leg = 0; leg < maxLegs; leg++) {
-    const [tEnd, frac] = runEnd(S, O, phi, W, leg === 0 ? W * 0.6 : W * 0.75);
+    const [tEnd, frac] = runEndF(S, O, phi, W, leg === 0 ? W * 0.6 : W * 0.75);
     const hit = bpOnLeg(S, O, phi, W * 0.5, tEnd + 1.6 * W, 5.0, excludeBp);
     legs.push({ O: O.slice(), phiDeg: deg(phi), tEnd, passFrac: round(frac, 2) });
     if (hit) {
       const [a, k, l] = hit; verts.push(S.bp[k].slice()); Object.assign(legs.at(-1), { endBP: k, endLatPx: round(l, 2), endAlongMinusRun: round(a - tEnd, 1) });
       return { verts, end: k, legs };
     }
-    const cb = closeOnBp(S, O, phi, W, tEnd, excludeBp);
+    const cb = closeOnBpF(S, O, phi, W, tEnd, excludeBp);
     if (cb && cb[0] >= 0.75) {
       const [pf, k, tv, psi] = cb, u = unit(phi), V = [O[0] + u[0] * tv, O[1] + u[1] * tv];
       verts.push(V); legs.at(-1).bendDeg = round(pyMod(deg(psi - phi) + 180, 360) - 180, 1);
       legs.push({ O: V.slice(), phiDeg: deg(psi), tEnd: hyp(S.bp[k], V), passFrac: round(pf, 2), endBP: k, endLatPx: 0.0, closedOnBP: true });
       verts.push(S.bp[k].slice()); return { verts, end: k, legs };
     }
-    const b = findBend(S, O, phi, W, tEnd, selfC, tees);
+    const b = findBend(S, O, phi, W, tEnd, selfC, tees, findBendAtF);
     if (!b || b[3] < 0.6) { legs.at(-1).stop = 'lost'; const u = unit(phi); verts.push([O[0] + u[0] * tEnd, O[1] + u[1] * tEnd]); return { verts, end: null, legs }; }
     const [, tv, psi] = b, u = unit(phi), V = [O[0] + u[0] * tv, O[1] + u[1] * tv];
     verts.push(V); legs.at(-1).bendDeg = round(pyMod(deg(psi - phi) + 180, 360) - 180, 1);
