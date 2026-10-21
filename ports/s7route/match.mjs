@@ -18,7 +18,7 @@
  * Pure functions on the S7 scene ({ lum, mask, W, H }) and the table; no thresholds hide anywhere else.
  */
 import { routeSensorAt, ribbonContrastAt, ROUTE, badgeMidAlongPx, badgeMidOf } from './routeSpace.mjs';
-import { refineVertices, arange, trace as followHallway } from '../s7trace/hallway.mjs';
+import { refineVertices, arange, trace as followHallway, runEnd as followRunEnd, closeOnBp as followCloseOnBp, findBendAt as followBendAt } from '../s7trace/hallway.mjs';
 import { refineBendsOf } from './bends.mjs';
 import { kCellAt, kChainAt, legContrastsOf, KBENDS, turnCostOf, turnsOf, legRunsAlong, bottleneckOf, polishAt } from './kbends.mjs';
 import { straightClaimsOf, neighbourhoodsOf, foreignRingsOf, SEQ } from './seq.mjs';
@@ -213,8 +213,11 @@ export const MATCH_STEPS = Object.freeze({
   kLegs: (S, V, W) => legContrastsOf(S, V, W),
   // the same reads batched: every route of one grid, refine step or sweep in one store call
   kLegsMany: (S, Vs, W) => Vs.map((V) => legContrastsOf(S, V, W)),
-  // rule set option seqFollow: the hallway follower (ports/s7trace/hallway.mjs trace: s7main's ride-the-ribbon) from a tee cap
-  follow: (S, from, phi, W, maxLegs) => followHallway(S, from, phi, W, { maxLegs })
+  // rule set option seqFollow: the hallway follower's steps (ports/s7trace/hallway.mjs trace: s7main's ride-the-ribbon), each a
+  // profiled store call: the edge run along a leg, the close on a BasketPoint, the best bend at one vertex position on the leg
+  followRunEnd: (S, O, phi, W, t0) => followRunEnd(S, O, phi, W, t0),
+  followCloseOnBp: (S, O, phi, W, tEnd, used) => followCloseOnBp(S, O, phi, W, tEnd, used),
+  followBendAt: (S, O, phi, W, tv, selfC, tees) => followBendAt(S, O, phi, W, tv, selfC, tees)
 });
 
 /**
@@ -530,7 +533,9 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
       if (claims.claims[h] !== undefined) return;
       const k0 = byHole.get(i), cur = k0 === undefined ? null : pend.find((c) => c.i === i && c.k === k0);
       if (cur?.best && gateOf(cur.best.verts) >= MATCH.tau) return;
-      const st = starts[i], fr = steps.follow(S, st.S, Math.atan2(st.u[1], st.u[0]), W, SEQ.followLegs);
+      const st = starts[i], fr = followHallway(S, st.S, Math.atan2(st.u[1], st.u[0]), W, { maxLegs: SEQ.followLegs, steps: {
+        runEnd: (Sc, O, phi, Wd, t0) => steps.followRunEnd(Sc, O, phi, Wd, t0), closeOnBp: (Sc, O, phi, Wd, tEnd, used) => steps.followCloseOnBp(Sc, O, phi, Wd, tEnd, used),
+        findBendAt: (Sc, O, phi, Wd, tv, selfC, tees) => steps.followBendAt(Sc, O, phi, Wd, tv, selfC, tees) } });
       if (fr.end === null || fr.end === undefined) { record[h].follow = { reached: null, why: 'the follower lost the ribbon' }; return; }
       const k = fr.end, V = fr.verts, foreign = foreignRingsOf(st, bp, k, S.R1), ow = ownedFor(h);
       const crosses = V.slice(1).some((b, q) => ringCrossed(V[q], b, foreign) >= 0), along = ow && V.slice(1).some((b, q) => legRunsAlong(V[q], b, ow, W));
