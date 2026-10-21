@@ -25,7 +25,8 @@ import { BASKET_POINT_OFFSET } from '../../fg/s2/fg.s2.basketInvariants.observe.
 import { ringMask, dilate4, round } from './hallway.mjs';
 import { sceneOf, hallwayModel, solveS3First, solveBadgeOnly } from './s3first.mjs';
 import { solveEndpoints } from './endpoints.mjs';
-import { routeTableOn } from '../s7route/routeSpace.mjs';
+import { routeTableOn, regionAssignTableOn } from '../s7route/routeSpace.mjs';
+import { registerRegion, REGION_SCENE_PART } from '../s7route/regionSpace.mjs';
 import { routeMatchOf, MATCH_STEPS, MATCH_RULES } from '../s7route/match.mjs';
 import { routeMatchViewOf } from './traceView.mjs';
 
@@ -168,13 +169,19 @@ export function registerTraceQueries(store, { matcher = null, board = null } = {
     },
     'fn.q.trace.routeMatch': ({ secondBends = true, refineBends = true, rules = undefined } = {}) => {
       // S7 after S5 (docs/evidence/s7after): scoring = tk.s7.routeTable (cached rows), matching = ports/s7route/match.mjs
-      const table = routeTableOn(store, { board: board ?? null, units: rules?.tableUnits ?? 'r1', search: rules?.tableSearch ?? 'full' }), S = get('tk.s7.sceneS4');
+      // rule set sensor (ports/s7route/regionSpace.mjs): 'region' = the assignment reads the hallway REGION (tk.s7.sceneRegion), the
+      // routes and the per-hole steps read edges; 'regionAll' = every measure reads the region
+      const region = rules?.sensor === 'region' || rules?.sensor === 'regionAll';
+      if (region) registerRegion(store);
+      const scene = rules?.sensor === 'regionAll' ? REGION_SCENE_PART : 'tk.s7.sceneS4', tableOpts = { board: board ?? null, units: rules?.tableUnits ?? 'r1', search: rules?.tableSearch ?? 'full' };
+      const table = rules?.sensor === 'region' ? regionAssignTableOn(store, { ...tableOpts, regionScene: REGION_SCENE_PART }) : routeTableOn(store, { ...tableOpts, ...(region ? { scene } : {}) }), S = get(scene);
       // rule 1 of the bend placement reads S6's accepted straight verdict (tk.s7.straight, a root input of the S7 runner)
       const straight = !refineBends ? undefined : store.has('tk.s7.straight') ? get('tk.s7.straight').verdicts : null;
       // every per-hole step is its own profiled store call (fn.q.match.*); the scene is passed by address
-      const steps = Object.fromEntries(Object.keys(MATCH_STEPS).map((k) => [k, (_S, ...a) => store.call(`fn.q.match.${k}`, { scene: 'tk.s7.sceneS4', a }).value]));
+      const steps = Object.fromEntries(Object.keys(MATCH_STEPS).map((k) => [k, (_S, ...a) => store.call(`fn.q.match.${k}`, { scene, a }).value]));
       const r = routeMatchOf(table, S, get('tk.s7.routeStart'), { secondBends, straight, steps, ...(rules ? { rules: { ...MATCH_RULES, ...rules } } : {}) });
-      return { value: { ...r, scene: 'tk.s7.sceneS4' }, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, reached: Object.values(r.holes).filter((h) => h.end != null).length, secondBends: Object.values(r.holes).filter((h) => (h.verts?.length ?? 0) === 4).length } };
+      const regionCondition = region ? get(REGION_SCENE_PART).regionCondition : null;
+      return { value: { ...r, scene, ...(region ? { sensor: rules.sensor } : {}), ...(regionCondition ? { condition: regionCondition } : {}) }, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, reached: Object.values(r.holes).filter((h) => h.end != null).length, secondBends: Object.values(r.holes).filter((h) => (h.verts?.length ?? 0) === 4).length } };
     },
     'fn.q.trace.pinned': () => {
       const r = pinnedSolve(get('tk.s7.pinnedTraces'), get('tk.s7.holes'), W());
