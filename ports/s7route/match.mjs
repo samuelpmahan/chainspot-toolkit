@@ -344,8 +344,14 @@ export const PROFILES = Object.freeze({
   // moved to wide (2026-10-20), each the same on every dev course as a cheaper rule set kept here: the fast table's two (heritage
   // Fast 12/7/4, FastPxRefine 13/6/4 bends; their table 15 s of golden's 27 s) and the lean table's fine second-bend grid
   // (Lean = LeanCoarse2, LeanPxRefine = LeanPxRefineCoarse2 on all six; the fine scan 8x the routes, 11 s of golden's 20 s)
-  quick: ['routeMatchLeanCoarse2', 'routeMatchLeanPxRefineCoarse2', 'routeMatchTeeAxisBadgePrior', 'routeMatchBadgeMidTeeAxisPrior']
+  quick: ['routeMatchLeanCoarse2', 'routeMatchLeanPxRefineCoarse2', 'routeMatchTeeAxisBadgePrior', 'routeMatchBadgeMidTeeAxisPrior', 'routeMatchKBendsSeq3SearchW']
 });
+/**
+ * The S7 default (Sam, 2026-10-21: "yes make it default and rerun validation"): the pointer vote's first tie-break. It ties
+ * the faster rule sets on every judged dev course (agreement and bends) and gets Sam's six validation holes right (Beaver
+ * 4/19, Coleto 10/11/18, SeaTac 19), which they do not; a variant that beats it on a judged course still wins.
+ */
+export const S7_DEFAULT = 'routeMatchKBendsSeq3SearchW';
 /**
  * The S7 variants `pxc state --retest` runs: the quick rule sets plus the pinned prototype (1 ms). The old tracers (badgeOnly,
  * endpoints, s3first*: 2-8 min each per course, beaten on every judged course) and the slow rule sets (px table, dense second

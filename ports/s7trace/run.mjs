@@ -25,6 +25,7 @@ import { instrumentedStore, profileSummary, profileFrame, hotSpotLines } from '.
 import { RENDER_PART } from '../../fg/store.mjs';
 import { comparableForkJoin, forkJoinFrames } from '../../fg/forkjoin.mjs';
 import { discoverImplementations } from '../../fg/discover.mjs';
+import { S7_DEFAULT } from '../s7route/match.mjs';
 import { createFileSink } from '../../fg/node-sink.mjs';
 import { writeFlipbook, imageFiles } from '../../fg/node-flipbook.mjs';
 import { canonicalJson } from '../../fg/canon.mjs';
@@ -97,8 +98,8 @@ export function loadS7Lanes({ out, upperRowsRemoved, values }) {
  * Sam (ends at his basket, stays within W / 2 of his corridor), then the fewest bends missed, then the fewest extra;
  * ties: the fastest standalone. A course without testimony takes the variant the annotated courses accepted.
  */
-export function acceptRule({ acceptedElsewhere = null, judged = true } = {}) {
-  const rule = judged ? 'fastest standalone variant whose judged result ties the best (agreeing holes desc, bendsMissed asc, extraBends asc)'
+export function acceptRule({ acceptedElsewhere = null, judged = true, preferred = S7_DEFAULT } = {}) {
+  const rule = judged ? `among the variants whose judged result ties the best (agreeing holes desc, bendsMissed asc, extraBends asc): the S7 default (${preferred}) if it is one, else the fastest standalone`
     : `no testimony: the variant the annotated courses accepted${acceptedElsewhere ? ` (${acceptedElsewhere})` : ' (none on record: no pointer)'}`;
   const accept = (value, { names, branches, timingsMs }) => {
     const live = names.filter((n) => !branches[n].error);
@@ -108,6 +109,7 @@ export function acceptRule({ acceptedElsewhere = null, judged = true } = {}) {
     const sorted = [...live].sort(cmpS);
     if (!sorted.length) { accept.decided = 'nothing'; return null; }
     const tied = sorted.filter((n) => cmpS(n, sorted[0]) === 0);
+    if (tied.length > 1 && preferred && tied.includes(preferred)) { accept.decided = `tie on judged result among ${tied.join(', ')}: the S7 default`; return preferred; }
     accept.decided = tied.length > 1 ? `tie on judged result among ${tied.join(', ')}: fastest standalone` : 'best judged result';
     return tied.sort((a, b) => (timingsMs[a]?.ms ?? Infinity) - (timingsMs[b]?.ms ?? Infinity))[0];
   };

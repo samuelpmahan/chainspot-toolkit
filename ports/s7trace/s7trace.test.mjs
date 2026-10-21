@@ -89,12 +89,16 @@ test('tracesOf names baskets and statuses; pinned is lane not run without native
   assert.equal(simplify([[0, 0], [5, 0.2], [10, 0], [10, 10]], 1).length, 3);
 });
 
-test('the pointer: most agreeing holes, then fewest missed bends, then fewest extra, ties fastest; unjudged follows --accept', () => {
+test('the pointer: most agreeing holes, then fewest missed bends, then fewest extra, ties the S7 default, then fastest; unjudged follows --accept', () => {
   const value = { branches: { a: { agree: 16, bendsMissed: 1, extraBends: 2 }, b: { agree: 16, bendsMissed: 1, extraBends: 2 }, c: { agree: 15, bendsMissed: 0, extraBends: 0 } } };
   const branches = { a: {}, b: {}, c: {} }, timingsMs = { a: { ms: 9 }, b: { ms: 3 }, c: { ms: 1 } };
   assert.equal(acceptRule()(value, { names: ['a', 'b', 'c'], branches, timingsMs }), 'b');
   assert.equal(acceptRule({ judged: false, acceptedElsewhere: 'c' })(value, { names: ['a', 'b', 'c'], branches, timingsMs }), 'c');
   assert.equal(acceptRule({ judged: false })(value, { names: ['a', 'b', 'c'], branches, timingsMs }), null);
+  // the S7 default wins a tie (not a loss): a slower tied default is taken, a better-judged variant still beats it
+  assert.equal(acceptRule({ preferred: 'a' })(value, { names: ['a', 'b', 'c'], branches, timingsMs }), 'a');
+  const better = { branches: { ...value.branches, b: { agree: 17, bendsMissed: 1, extraBends: 2 } } };
+  assert.equal(acceptRule({ preferred: 'a' })(better, { names: ['a', 'b', 'c'], branches, timingsMs }), 'b');
 });
 
 test('identity comparison against a recorded prototype output', () => {
