@@ -2,7 +2,7 @@
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { mkdir, readFile, readdir, rename, rm, stat, writeFile } from 'node:fs/promises';
-import { lstatSync } from 'node:fs';
+import { lstatSync, realpathSync } from 'node:fs';
 import { hashFiles, warmHashPool } from '../dependencies/hashpool.mjs';
 import { dirname, join, resolve } from 'node:path';
 import { neatStages } from '../policies/neat.mjs';
@@ -202,7 +202,9 @@ export async function stageToolkit(root,command,argv) {
 
   const id=`attempt-${Date.now()}-${plan.fingerprint.slice(0,12)}`;
   const forkRoot=join(root,'attempts/stages',id,'fork');
-  const record={schema:'nctk-stage-attempt@1',id,checkpointId:pinned.id,base:pinned.base,
+  // createdBy: the checkout that ran this attempt (attempts/ is shared by symlink across worktrees); `pxc clean` deletes
+  // only the attempts its own checkout created
+  const record={schema:'nctk-stage-attempt@1',id,checkpointId:pinned.id,base:pinned.base,createdBy:{checkout:realpathSync(root)},
     ...(pinned.origin?{origin:pinned.origin}:{}),
     request:resolved.request,fingerprint:plan.fingerprint,execution:'FAIL',acceptance:'UNKNOWN',
     evidence:[],stageObservations:[],blockers:[]};

@@ -14,6 +14,8 @@
  *                                                         result, status (derived), freshness; retest re-runs only stale cells
  *   node scripts/pxc.mjs profile --attempt <id> [--top N]  each stage's latest run: wall, inside/outside the store, the
  *                                                         costliest Calculations by self time, opaque hot spots
+ *   node scripts/pxc.mjs clean [--dry-run]                delete the attempts THIS checkout created (never another's, never one
+ *                                                         an ATTEMPTS file lists): how an agent cleans up after itself
  *   node scripts/pxc.mjs cas --stats                     the persistent cache (attempts/cas): entries, size, age, largest
  *   node scripts/pxc.mjs cas --prune-older-than DAYS      remove entries nothing has used for DAYS days
  *   node scripts/pxc.mjs prune [--dry-run] [--root DIR] [--hours 12] [--json]   delete attempts not in the dev ATTEMPTS
@@ -216,6 +218,7 @@ else if (cmd === 'cas') {
   else say('usage: cas --stats | --prune-older-than DAYS');
 }
 else if (cmd === 'prune') (await import('../ports/state/prune.mjs')).pruneCommand(rest, { say });
+else if (cmd === 'clean') (await import('../ports/state/prune.mjs')).cleanCommand(rest, { say });
 else if (cmd === 'flipbook' && rest[0] === '--inline' && rest[1]) {
   const { inlineFlipbook } = await import('../fg/node-flipbook.mjs'), src = rest[1], out = rest[2] ?? src.replace(/\.html$/, '.inline.html');
   writeFileSync(out, inlineFlipbook(readFileSync(src, 'utf8'), dirname(src))); say(`  wrote ${out}`);

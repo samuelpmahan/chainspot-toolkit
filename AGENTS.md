@@ -108,6 +108,10 @@ output.
 - **Disk:** a run writes each image once, as a file under its `img/`, and references it: write flipbooks with
   `writeFlipbook` (`fg/node-flipbook.mjs`), never inline base64 renders or the source image into frames, flipbooks
   or SVGs. `node scripts/pxc.mjs prune --dry-run` shows what deleting old attempts and superseded runs frees.
+- **Cleaning up after yourself:** `node scripts/pxc.mjs clean [--dry-run]` deletes only the attempts your checkout
+  created (each attempt records `createdBy.checkout`), never one any checkout's `ATTEMPTS` lists. `attempts/` is shared
+  across worktrees by symlink: never delete attempts by hand, by time window or by pattern (2026-10-21 a lane deleted the
+  main checkout's dev attempts that way). Debugging one course, rerun only that course; run `state --retest` once, at the end.
 - **Specimens:** golden, lenard, townelake, heritage, alex, northpark (full courses); lenard1-5 (zoomed views of
   Lenard). Testimony is in `testimony/<specimen>/`. Captures (tiles S0 stitches into one course, `explain boundary`):
   therecCapture, dashsCapture, lenardCapture; therec is The Rec as one raster.

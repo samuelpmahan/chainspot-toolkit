@@ -18,8 +18,9 @@
  * per inode: a hardlinked file frees its bytes only when every link to it is deleted, so the total is what the disk
  * gets back. --dry-run deletes nothing and prints the same report.
  */
-import { existsSync, lstatSync, readdirSync, readFileSync, rmSync } from 'node:fs';
+import { existsSync, lstatSync, readdirSync, readFileSync, realpathSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { execFileSync } from 'node:child_process';
 
 export const ROOT = resolve(import.meta.dirname, '..', '..');
 export const ATTEMPTS_FILE = 'docs/evidence/dev-s1s4/ATTEMPTS';
@@ -66,7 +67,7 @@ export function runPlan(stageOutput, referenced) {
 export function prune({ root = ROOT, dryRun = false, hours = 12, now = Date.now() } = {}) {
   const stages = join(root, 'attempts', 'stages');
   if (!existsSync(stages)) return { root, removedAttempts: [], keptAttempts: [], runs: [], bytes: 0, files: 0 };
-  const listed = existsSync(join(root, ATTEMPTS_FILE)) ? new Set(readFileSync(join(root, ATTEMPTS_FILE), 'utf8').split('\n').map((l) => l.trim().split(/\s+/)[1]).filter(Boolean)) : new Set();
+  const listed = listedAnywhere(root);
   const ids = [...new Set(readdirSync(stages).map((n) => n.replace(/\.json$/, '')).filter((n) => ATTEMPT.test(n)))].sort();
   const pathsOf = (id) => [join(stages, id), join(stages, `${id}.json`)].filter((p) => existsSync(p));
   const cutoff = now - hours * 3600e3, kept = [], removed = [];
@@ -80,10 +81,17 @@ export function prune({ root = ROOT, dryRun = false, hours = 12, now = Date.now(
   const referenced = referencedRuns(root, outs);
   const runs = kept.flatMap((k) => runPlan(join(stages, k.id, 'fork', 'stage-output'), referenced).map((r) => ({ attempt: k.id, ...r }))).filter((r) => r.remove.length);
   const doomed = [...removed.flatMap((r) => r.paths), ...runs.flatMap((r) => r.remove.map((n) => join(r.dir, n)))];
-  // bytes the disk gets back: an inode is freed only when every one of its links is deleted
+  const { bytes, apparent, files } = freedBy(doomed);
+  if (!dryRun) for (const p of doomed) rmSync(p, { recursive: true, force: true });
+  const evidenceNamed = removed.map((r) => r.id).filter((id) => referencedIn(root, id));
+  return { root, dryRun, hours, keptAttempts: kept, removedAttempts: removed.map(({ id, ageHours }) => ({ id, ageHours })), runs, bytes, apparent, files, evidenceNamed };
+}
+
+/** Bytes the disk gets back by deleting `paths`: an inode is freed only when every one of its links is deleted. */
+function freedBy(paths) {
   const inodes = new Map();
   let files = 0;
-  for (const p of doomed) walk(p, (_, st) => {
+  for (const p of paths) walk(p, (_, st) => {
     if (st.isDirectory()) return;
     files++;
     const key = `${st.dev}:${st.ino}`, e = inodes.get(key) ?? { size: st.size, nlink: st.nlink, seen: 0 };
@@ -91,9 +99,51 @@ export function prune({ root = ROOT, dryRun = false, hours = 12, now = Date.now(
   });
   let bytes = 0, apparent = 0;
   for (const e of inodes.values()) { apparent += e.size * e.seen; if (e.seen >= e.nlink) bytes += e.size; }
+  return { bytes, apparent, files };
+}
+
+/**
+ * Every attempt id that any checkout of this repository lists in its ATTEMPTS (the main checkout and every worktree, which
+ * share attempts/ by symlink): an attempt one checkout's state reads is never deleted from another.
+ */
+export function listedAnywhere(root) {
+  let checkouts = [root];
+  try { checkouts = execFileSync('git', ['-C', root, 'worktree', 'list', '--porcelain'], { encoding: 'utf8' }).split('\n').filter((l) => l.startsWith('worktree ')).map((l) => l.slice(9)); } catch { /* not a git checkout: this one only */ }
+  const ids = new Set();
+  for (const c of new Set([root, ...checkouts])) {
+    const f = join(c, ATTEMPTS_FILE);
+    if (existsSync(f)) for (const l of readFileSync(f, 'utf8').split('\n')) { const id = l.trim().split(/\s+/)[1]; if (id) ids.add(id); }
+  }
+  return ids;
+}
+
+/**
+ * `pxc clean`: delete the attempts THIS checkout created (attempts/stages/<id>.json createdBy.checkout, written by the
+ * toolkit run), except any attempt a checkout lists in its ATTEMPTS. Nothing another checkout or session created is ever
+ * touched, whatever its age; an attempt without createdBy (older than the field) is never touched either.
+ */
+export function clean({ root = ROOT, dryRun = false } = {}) {
+  const stages = join(root, 'attempts', 'stages');
+  if (!existsSync(stages)) return { root, dryRun, removed: [], kept: [], bytes: 0, apparent: 0, files: 0 };
+  const me = realpathSync(root), listed = listedAnywhere(root), removed = [], kept = [];
+  for (const n of readdirSync(stages).filter((n) => n.endsWith('.json') && ATTEMPT.test(n.slice(0, -5))).sort()) {
+    const id = n.slice(0, -5);
+    let by = null; try { by = JSON.parse(readFileSync(join(stages, n), 'utf8')).createdBy?.checkout ?? null; } catch { by = null; }
+    if (by !== me) continue;
+    if (listed.has(id)) { kept.push({ id, why: 'listed in an ATTEMPTS file' }); continue; }
+    removed.push({ id, paths: [join(stages, id), join(stages, n)].filter((p) => existsSync(p)) });
+  }
+  const doomed = removed.flatMap((r) => r.paths), freed = freedBy(doomed);
   if (!dryRun) for (const p of doomed) rmSync(p, { recursive: true, force: true });
-  const evidenceNamed = removed.map((r) => r.id).filter((id) => referencedIn(root, id));
-  return { root, dryRun, hours, keptAttempts: kept, removedAttempts: removed.map(({ id, ageHours }) => ({ id, ageHours })), runs, bytes, apparent, files, evidenceNamed };
+  return { root, me, dryRun, removed: removed.map((r) => r.id), kept, ...freed };
+}
+
+export function cleanCommand(args, { say = (s = '') => process.stdout.write(s + '\n') } = {}) {
+  const at = (k) => (args.includes(k) ? args[args.indexOf(k) + 1] : undefined);
+  const r = clean({ root: resolve(at('--root') ?? ROOT), dryRun: args.includes('--dry-run') });
+  if (args.includes('--json')) { say(JSON.stringify(r, null, 1)); return r; }
+  say(`${r.me ?? r.root}: ${r.dryRun ? 'would delete' : 'deleted'} ${r.removed.length} attempts this checkout created${r.kept.length ? `; kept ${r.kept.length} listed in ATTEMPTS` : ''}; ${r.dryRun ? 'would free' : 'freed'} ${mb(r.bytes)}`);
+  return r;
 }
 
 let evidenceText = null;
