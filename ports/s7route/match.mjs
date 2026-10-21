@@ -245,6 +245,9 @@ export const MATCH_STEPS = Object.freeze({
  *   seqNeighbours: (kBends 'seq') the neighbourhood ranks scored first (default SEQ.neighbours, all of them)
  *   seqWiden:      (kBends 'seq') true = a hole whose assigned route reads below tau on the sensor (or got no basket) re-solves
  *                  with its remaining ranks from the unclaimed pool
+ *   seqGate:       (kBends 'seq') 'region' = the sequencing's sensor gates read the region passFrac (regionSpace.mjs) |
+ *                  'regionWiden' = only the widening gate reads it
+ *   seqScore:      (kBends 'seq') 'region' = each neighbourhood cell is assigned by the region support of its (edge-placed) route
  *   sensor:        absent (edges) | 'region' = the assignment reads the hallway REGION (ports/s7route/regionSpace.mjs: each cell's
  *                  best route by region support, -1..1, the on-axis prior in support units); the routes and the per-hole steps (refine,
  *                  sensor gates, second bend, placement) read edges | 'regionAll' = every measure reads the region
@@ -289,6 +292,11 @@ export const RULE_SETS = Object.freeze({
   // Sam (2026-10-21): "cut at least 80% of the 18x18 cells": the neighbourhood's top 3 ranks first (117/120 true baskets on 6
   // courses), widened to ranks 3-4 for a hole whose assigned route then fails the sensor gate
   routeMatchKBendsSeq3: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true },
+  // Seq3 x region (lane s7region's sensor): the sequencing's gates by the region, the cell scores by the region, both
+  routeMatchKBendsSeq3RegionGate: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqGate: 'region' },
+  routeMatchKBendsSeq3RegionScore: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqScore: 'region' },
+  routeMatchKBendsSeq3RegionWiden: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqGate: 'regionWiden' },
+  routeMatchKBendsSeq3Region: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqGate: 'region', seqScore: 'region' },
   // the pointer read as a REGION (lane s7region, 2026-10-21: shade and sidewalks beside the hallway)
   routeMatchTeeAxisBadgePriorRegion: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', sensor: 'region' },
   routeMatchTeeAxisBadgePriorRegionAll: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', sensor: 'regionAll' }
@@ -314,7 +322,7 @@ export const PROFILES = Object.freeze({
 export const RETEST_S7_VARIANTS = Object.freeze(['pinned', ...PROFILES.quick]);
 export const profileOf = (name) => (PROFILES[name] ?? String(name ?? '').split(',').map((s) => s.trim()).filter((s) => s in RULE_SETS));
 
-export function routeMatchOf(table, S, starts, { secondBends = true, straight: verdicts = undefined, steps = MATCH_STEPS, rules = MATCH_RULES } = {}) {
+export function routeMatchOf(table, S, starts, { secondBends = true, straight: verdicts = undefined, steps = MATCH_STEPS, rules = MATCH_RULES, regionSteps = null } = {}) {
   const W = table.widthPx, holes = table.holes;
   if (!(W > 0) || !holes.length) return { holes: {}, assignment: [], widthPx: W ?? null, condition: 'no hallway width or no holes in the route table' };
   const kb = rules.kBends === 'bottleneck', seq = rules.kBends === 'seq';
@@ -322,7 +330,7 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
   const startOf = (hole) => starts.holes.find((h) => String(h.hole) === String(hole));
   const legsOf = (Sc, V, Wd) => steps.kLegs(Sc, V, Wd), legsMany = (Sc, Vs, Wd) => steps.kLegsMany(Sc, Vs, Wd);
   const kCells = kb ? holes.map((hole, i) => table.baskets.map((b, k) => kCellAt(S, startOf(hole), b.point ?? table.rows[i].cells[k].contrast.verts.at(-1), W, { legsOf, legsMany }))) : null;
-  const sq = seq ? seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsMany, rules }) : null;
+  const sq = seq ? seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsMany, rules, regionSteps }) : null;
   const score = sq ? sq.score : kb ? kCells.map((row, i) => row.map((x, k) => (x.best.bottleneck === null ? MATCH.noReadingLum : x.best.bottleneck) + (table.onAxisPrior[i]?.[k] ?? 0)))
     : table.contrastMatrix.map((row, i) => row.map((c, k) => (c === null ? MATCH.noReadingLum : c) + (table.onAxisPrior[i]?.[k] ?? 0)));
   const pairs = sq ? sq.pairs : assignMinCost(score.map((row) => row.map((v) => -v)));
@@ -393,7 +401,16 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
  * chain when the sensor rejects that route; one-to-one over those cells. A hole left without a basket is assigned among the
  * baskets still free by its K <= 1 routes. -> { pairs, score, route: { [hole]: verts }, why, record, summary }
  */
-function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsMany, rules = MATCH_RULES }) {
+function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsMany, rules = MATCH_RULES, regionSteps = null }) {
+  // seqGate 'region': the sequencing's sensor gates (chain trigger, chain vs K <= 1, the per-bend gain, the widening) read the
+  // hallway REGION passFrac (regionSpace.mjs); seqScore 'region': each cell is assigned by the region support of its route.
+  // Bends are always found and placed on edges (the region support is flat along a bend axis)
+  const rg = (rules.seqGate === 'region' || rules.seqGate === 'regionWiden' || rules.seqScore === 'region') && regionSteps ? regionSteps : null;
+  // seqGate 'regionWiden': only the widening gate reads the region (the chain gates stay on edges)
+  const widenGateOf = (V) => (rules.seqGate === 'regionWiden' && rg ? rg.sensor(S, V, W).passFrac : gateOf(V));
+  const gateOf = (V) => (rules.seqGate === 'region' && rg ? rg.sensor(S, V, W) : steps.sensor(S, V, W)).passFrac;
+  const regionScore = rules.seqScore === 'region' && rg;
+  const valueOf = (best) => (!best ? -Infinity : regionScore ? rg.contrast(S, best.verts, W) : best.bottleneck);
   const bp = table.baskets.map((b, k) => b.point ?? table.rows[0].cells[k].contrast.verts.at(-1)), starts = holes.map((h) => startOf(h));
   const claims = straightClaimsOf(starts, bp, S.R1, verdicts ?? null, []);
   const nb = neighbourhoodsOf(starts.filter((s) => claims.claims[s.hole] === undefined), bp, claims.claimed);
@@ -404,9 +421,9 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
   const addCell = (h, i, c) => {
     const k = c.basket, foreign = foreignRingsOf(starts[i], bp, k, S.R1), kc = kCellAt(S, starts[i], bp[k], W, { legsMany, foreign });
     if (kc.firstCap > cap[i]) cap[i] = kc.firstCap;
-    const s1 = kc.best.bottleneck === null ? null : steps.sensor(S, kc.best.verts, W);
-    const cell = { i, k, h, foreign, kc, s1, best: kc.best.bottleneck === null ? null : kc.best, pending: !s1 || s1.passFrac < MATCH.tau };
-    pend.push(cell); score[i][k] = cell.best ? cell.best.bottleneck : -Infinity;
+    const s1 = kc.best.bottleneck === null ? null : gateOf(kc.best.verts);
+    const cell = { i, k, h, foreign, kc, s1, best: kc.best.bottleneck === null ? null : kc.best, pending: s1 === null || s1 < MATCH.tau };
+    pend.push(cell); score[i][k] = valueOf(cell.best);
     record[h].evaluated.push(k);
   };
   holes.forEach((h, i) => {
@@ -425,13 +442,13 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
   // the chain replaces the K <= 1 route when its weakest leg AND its sensor reading are higher (a bend hidden under a sprite has
   // unread legs: the weakest leg alone cannot place it). endR1: the coarse pass ranks cells; the assigned ones are re-run fine
   const chainOf = (cell, endR1, gridR1) => {
-    const ch = kChainAt(S, starts[cell.i], bp[cell.k], W, { legsMany, one: cell.kc.one, foreign: cell.foreign, sensorOf: (V) => steps.sensor(S, V, W).passFrac, endR1, gridR1 });
+    const ch = kChainAt(S, starts[cell.i], bp[cell.k], W, { legsMany, one: cell.kc.one, foreign: cell.foreign, sensorOf: gateOf, endR1, gridR1 });
     const k1 = cell.kc.best.bottleneck === null ? null : cell.kc.best;
-    return ch && ch.bottleneck !== null && (!k1 || (ch.bottleneck > k1.bottleneck && steps.sensor(S, ch.verts, W).passFrac > cell.s1.passFrac)) ? ch : k1;
+    return ch && ch.bottleneck !== null && (!k1 || (ch.bottleneck > k1.bottleneck && gateOf(ch.verts) > cell.s1)) ? ch : k1;
   };
   const settle = (cell) => {
     if (cell.pending) { cell.best = chainOf(cell, KBENDS.coarseEndR1, KBENDS.coarseGridR1); cell.pending = false; cell.coarse = true; chainsRun++; }
-    score[cell.i][cell.k] = cell.best ? cell.best.bottleneck : -Infinity;
+    score[cell.i][cell.k] = valueOf(cell.best);
   };
   let chainsRun = 0, rounds = 0, fineRuns = 0;
   const assignNow = () => assignWithDuals(score.map((row) => row.map((v) => (Number.isFinite(v) ? -v : Infinity))));
@@ -439,13 +456,14 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
     for (;;) {
       rounds++;
       const A = assignNow(), assigned = new Set(A.pairs.map(([i, k]) => `${i}@${k}`));
-      const todo = pend.filter((c) => c.pending && (assigned.has(`${c.i}@${c.k}`) || cap[c.i] > A.price(c.i, c.k) + 1e-9));
+      // (seqScore 'region': the first-leg cap bounds edge readings, not region support: no cell is priced out)
+      const todo = pend.filter((c) => c.pending && (assigned.has(`${c.i}@${c.k}`) || regionScore || cap[c.i] > A.price(c.i, c.k) + 1e-9));
       if (!todo.length) break;
       for (const c of todo) settle(c);
     }
     // the assigned cells' routes at full resolution (the same search to refineEndR1): the coarse pass only ranked them
     const A = assignNow(), on = new Set(A.pairs.map(([i, k]) => `${i}@${k}`));
-    for (const cell of pend) if (cell.coarse && on.has(`${cell.i}@${cell.k}`)) { cell.best = chainOf(cell, KBENDS.refineEndR1, KBENDS.gridR1); cell.coarse = false; fineRuns++; score[cell.i][cell.k] = cell.best ? cell.best.bottleneck : -Infinity; }
+    for (const cell of pend) if (cell.coarse && on.has(`${cell.i}@${cell.k}`)) { cell.best = chainOf(cell, KBENDS.refineEndR1, KBENDS.gridR1); cell.coarse = false; fineRuns++; score[cell.i][cell.k] = valueOf(cell.best); }
     return A;
   };
   const A0 = solve(), widened = [];
@@ -454,7 +472,7 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
     holes.forEach((h, i) => {
       if (claims.claims[h] !== undefined) return;
       const k = byHole.get(i), cell = k === undefined ? null : pend.find((c) => c.i === i && c.k === k);
-      const reading = cell?.best ? steps.sensor(S, cell.best.verts, W).passFrac : null;
+      const reading = cell?.best ? widenGateOf(cell.best.verts) : null;
       if (reading !== null && reading >= MATCH.tau) return;
       const more = (nb[h] ?? []).slice(first);
       if (!more.length) return;
@@ -474,7 +492,7 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
     if (claims.claims[h] !== undefined) return;
     const cands = (nb[h] ?? []).filter((c) => record[h].evaluated.includes(c.basket)), rejected = rejectedOf[h], nm = (k) => table.baskets[k]?.name ?? `BP${k}`;
     const po = record[h].pricedOut ?? [], wd = record[h].widened;
-    why[h] = `neighbourhood (joint rank of distance from the tee and from tee ${Number(h) + 1}): ${cands.map((c) => `${nm(c.basket)} r${c.rank}`).join(', ')}${wd ? ` (widened to ranks ${wd.ranks.join(', ')}: the first ${first} ranks' assigned route read ${wd.reading === null ? 'no route' : wd.reading.toFixed(2)} on the sensor, below ${MATCH.tau})` : ''}${po.length ? `; chain not searched (priced out: no route of this hole reads above its best first leg, ${po[0].capLum} lum, which is below the cell's price): ${po.map((x) => nm(x.basket)).join(', ')}` : ''}${rejected.length ? `; rejected (every route enters another basket's C1 disc, < 1 R1): ${rejected.map((x) => `${nm(x.basket)}${x.crosses !== null ? ` (the straight route passes ${nm(x.crosses)} at ${x.clearanceR1} R1)` : ''}`).join(', ')}` : ''}`;
+    why[h] = `neighbourhood (joint rank of distance from the tee and from tee ${Number(h) + 1}): ${cands.map((c) => `${nm(c.basket)} r${c.rank}`).join(', ')}${wd ? ` (widened to ranks ${wd.ranks.join(', ')}: the first ${first} ranks' assigned route read ${wd.reading === null ? 'no route' : wd.reading.toFixed(2)} on the ${(rules.seqGate === 'region' || rules.seqGate === 'regionWiden') && rg ? 'region' : 'edge'} sensor, below ${MATCH.tau})` : ''}${po.length ? `; chain not searched (priced out: no route of this hole reads above its best first leg, ${po[0].capLum} lum, which is below the cell's price): ${po.map((x) => nm(x.basket)).join(', ')}` : ''}${rejected.length ? `; rejected (every route enters another basket's C1 disc, < 1 R1): ${rejected.map((x) => `${nm(x.basket)}${x.crosses !== null ? ` (the straight route passes ${nm(x.crosses)} at ${x.clearanceR1} R1)` : ''}`).join(', ')}` : ''}`;
   });
   let pairs = assignMinCost(score.map((row) => row.map((v) => (Number.isFinite(v) ? -v : Infinity))));
   // a hole the neighbourhoods leave without a basket: assigned among the free baskets by its K <= 1 routes
