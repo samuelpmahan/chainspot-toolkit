@@ -104,3 +104,9 @@ export declare function badgeDigitLayouts(grid: Uint8Array, knobs?: BadgeDigitTe
 export declare function classifyBadgeDigitsAgainstTemplates(image: RgbaBitmap, badge: BadgeCropBody, templates: readonly BadgeDigitTemplateEntry[], badgeCount?: number | null, knobs?: BadgeDigitTemplateKnobs): BadgeDigitClassification;
 /** Asset rows: one 0/1 char per pixel, as the binary templates. */
 export declare function decodeDigitRows(rows: readonly string[], widthPx: number, heightPx: number): NormalizedGlyphMask;
+/** Best Dice per digit 0..9 in every cell of both layouts: the table the learned abstention reads its features from
+ * (badgeReaderCalibration.ts digitLabelFeatures). Null layouts when the glyph does not form them. */
+export declare function badgeDigitScoreTable(image: RgbaBitmap, badge: BadgeCropBody, templates: readonly BadgeDigitTemplateEntry[], knobs?: BadgeDigitTemplateKnobs): {
+    one: number[][] | null;
+    two: number[][] | null;
+};

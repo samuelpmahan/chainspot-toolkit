@@ -292,3 +292,23 @@ export function classifyBadgeDigitsAgainstTemplates(
 export function decodeDigitRows(rows: readonly string[], widthPx: number, heightPx: number): NormalizedGlyphMask {
 	return { widthPx, heightPx, data: Uint8Array.from(rows.join('').split('').map((c) => (c === '1' ? 1 : 0))) };
 }
+
+/** Best Dice per digit 0..9 in every cell of both layouts: the table the learned abstention reads its features from
+ * (badgeReaderCalibration.ts digitLabelFeatures). Null layouts when the glyph does not form them. */
+export function badgeDigitScoreTable(
+	image: RgbaBitmap,
+	badge: BadgeCropBody,
+	templates: readonly BadgeDigitTemplateEntry[],
+	knobs: BadgeDigitTemplateKnobs = DEFAULT_BADGE_DIGIT_TEMPLATE_KNOBS
+): { one: number[][] | null; two: number[][] | null } {
+	const layouts = badgeDigitLayouts(sampleBadgeDigits(image, badge), knobs);
+	const cellScores = (cell: NormalizedGlyphMask) => {
+		const s = new Array<number>(10).fill(0);
+		for (const t of templates) s[t.digit] = Math.max(s[t.digit], bestMaskScore(cell, t.mask, knobs.maxShiftPx));
+		return s;
+	};
+	return {
+		one: layouts && layouts.one.length ? layouts.one.map(cellScores) : null,
+		two: layouts && layouts.two ? layouts.two.map(cellScores) : null
+	};
+}

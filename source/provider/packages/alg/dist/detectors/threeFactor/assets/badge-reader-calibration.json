@@ -1,0 +1,119 @@
+{
+	"schema": "badgeReaderCalibration@1",
+	"note": "P(label right | features) = sigmoid(bias + priorShift + sum weights_j * features_j) per reader (features: digits/badgeReaderCalibration.ts); priorShift moves the 1:1 training odds (one hard negative per badge) to the out-of-course odds of a top read being right, (right + 1) / (wrong + 1); a reader reads when P >= pStar. Fitted by scripts/badge-calibration.mjs (toolkit) on out-of-course dev scores (templates re-baked without the scored course), with one hard negative per badge (the best label once the true one is removed). The provider never trains at run time.",
+	"costWrong": 100,
+	"pStar": 0.99,
+	"rule": "read iff (1 - P) * costWrong < 1: one wrong label costs costWrong abstentions",
+	"readers": {
+		"binary": {
+			"features": [
+				"dice",
+				"margin"
+			],
+			"weights": [
+				44.502480759147886,
+				13.63103144403215
+			],
+			"bias": -37.193373055948705,
+			"priorShift": 2.3829417231313124,
+			"trainedOn": {
+				"courses": [
+					"golden",
+					"lenard",
+					"townelake",
+					"heritage",
+					"alex",
+					"northpark"
+				],
+				"badges": 108,
+				"examples": 216,
+				"rightTops": 98,
+				"wrongTops": 10,
+				"hardNegatives": 108
+			}
+		},
+		"digitBW": {
+			"features": [
+				"minDigitDice",
+				"minDigitMargin",
+				"layoutMargin"
+			],
+			"weights": [
+				47.19563750290286,
+				28.156488426061166,
+				0.18328853408379736
+			],
+			"bias": -45.132666056445444,
+			"priorShift": 4.6913478822291435,
+			"trainedOn": {
+				"courses": [
+					"golden",
+					"lenard",
+					"townelake",
+					"heritage",
+					"alex",
+					"northpark"
+				],
+				"badges": 108,
+				"examples": 216,
+				"rightTops": 108,
+				"wrongTops": 0,
+				"hardNegatives": 108
+			}
+		},
+		"coverage": {
+			"features": [
+				"ncc",
+				"margin"
+			],
+			"weights": [
+				50.22490483178832,
+				38.36358144587532
+			],
+			"bias": -49.56311699661666,
+			"priorShift": 4.6913478822291435,
+			"trainedOn": {
+				"courses": [
+					"golden",
+					"lenard",
+					"townelake",
+					"heritage",
+					"alex",
+					"northpark"
+				],
+				"badges": 108,
+				"examples": 216,
+				"rightTops": 108,
+				"wrongTops": 0,
+				"hardNegatives": 108
+			}
+		},
+		"perDigit": {
+			"features": [
+				"geoMeanDigitProb",
+				"posteriorMargin"
+			],
+			"weights": [
+				6.205925641237462,
+				6.33085863590374
+			],
+			"bias": -6.639088055204901,
+			"priorShift": 4.6913478822291435,
+			"trainedOn": {
+				"courses": [
+					"golden",
+					"lenard",
+					"townelake",
+					"heritage",
+					"alex",
+					"northpark"
+				],
+				"badges": 108,
+				"examples": 216,
+				"rightTops": 108,
+				"wrongTops": 0,
+				"hardNegatives": 108
+			}
+		}
+	}
+}

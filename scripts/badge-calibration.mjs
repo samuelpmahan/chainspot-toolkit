@@ -1,0 +1,253 @@
+#!/usr/bin/env node
+/**
+ * Learned abstention for the four badge readers (Sam, 2026-10-21: "There's no good reason for something a
+ * perceptron did 75 years ago to not be automatic").
+ *
+ *   node scripts/badge-calibration.mjs --labels DIR [--write] [--report out.json]
+ *
+ * DIR holds truth-<course>.json ({detId: label}) for the validation boards: their S1 reads, checked by eye.
+ *
+ * 1. Honest scores. Every dev badge is scored by readers whose templates come from the OTHER five dev courses
+ *    (leave one course out): the coverage and B+W digit templates are re-baked per held-out course with the
+ *    baker's own functions (source/provider/scripts/generate-badge-glyph-templates.mjs) from devSprites({exclude}).
+ *    The binary reader's templates are old-stuff rasters (no dev course in them). The per-digit reader's logistic
+ *    model is the provider's, as pinned; its training data is not in this repo, so its dev scores may be optimistic.
+ *    Validation courses are scored with the shipped (all-dev) templates; they are never a source.
+ * 2. Per reader, a logistic regression (a perceptron with a sigmoid) learns P(the label is right | features of
+ *    that label): its score, its margin over the best OTHER label, and for the digit reader the layout margin.
+ *    Examples per badge: the reader's top label (right or wrong) and a HARD NEGATIVE, the best label once the
+ *    true one is removed from the vocabulary (what a confident wrong read looks like). Trained with course-level
+ *    cross-validation (5 dev courses in, 1 out) for every reported number; the shipped weights are fitted on all 6.
+ * 3. A reader reads when P >= P_STAR and abstains otherwise. P_STAR is one number for every reader, from a stated
+ *    cost: a wrong label costs COST_WRONG abstentions (an abstention is a visible gap that S4 and the course
+ *    bijection can fill; a wrong label silently sends S4-S7 after the wrong hole). Read iff (1 - P) * COST_WRONG < 1.
+ * 4. Joint assignment per full view (labels exactly 1..N, N = badges found): confident reads (P >= P_STAR) are
+ *    fixed first (a conflict between two confident reads goes to the min-cost assignment); the remaining badges
+ *    are re-scored against the labels still free (margins over free labels only) and assigned one-to-one by
+ *    assignMinCost (ports/s7route/match.mjs) at cost -log P, a badge abstaining at -log P_STAR. It fills gaps;
+ *    it never changes a confident read except to settle a conflict, and it reports every change.
+ */
+import { readFileSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import { deserialize } from 'node:v8';
+import { join, resolve } from 'node:path';
+import { devSprites } from './badge-coverage-sources.mjs';
+import { bakeCoverage, bakeDigits } from '../source/provider/scripts/generate-badge-glyph-templates.mjs';
+import { assignMinCost } from '../ports/s7route/match.mjs';
+
+const ROOT = resolve(import.meta.dirname, '..');
+const require = createRequire(import.meta.url);
+const dist = (p) => require(join(ROOT, 'source/provider/packages/alg/dist/detectors/threeFactor', p));
+const B = dist('digits/badgeGlyphTemplateMath.js'), C = dist('digits/badgeCoverageTemplateMath.js'), DG = dist('digits/badgeDigitTemplateMath.js');
+const { HOLE_LABELS } = dist('digits/holeLabels.js');
+const K = dist('digits/badgeReaderCalibration.js');
+const { BADGE_GLYPH_TEMPLATES } = dist('features/g1.badgeGlyphTemplate.js');
+const { BADGE_COVERAGE_TEMPLATES } = dist('features/g1.badgeCoverageTemplate.js');
+const { BADGE_DIGIT_TEMPLATES } = dist('features/g1.badgeDigitTemplate.js');
+const CAL_PATH = join(ROOT, 'source/provider/packages/alg/src/detectors/threeFactor/assets/badge-reader-calibration.json');
+
+export const COST_WRONG = 100;   // abstentions one wrong label is worth (stated, not fitted)
+export const P_STAR = 1 - 1 / COST_WRONG;   // 0.99
+const FIXED = { minScore: 0.58, minMargin: 0.045 };   // the borrowed constants, for the baseline rows
+const READERS = ['binary', 'digitBW', 'coverage', 'perDigit'];
+const FEATURES = { binary: ['dice', 'margin'], digitBW: ['minDigitDice', 'minDigitMargin', 'layoutMargin'], coverage: ['ncc', 'margin'], perDigit: ['geoMeanDigitProb', 'posteriorMargin'] };
+const ST = join(ROOT, 'attempts/stages');
+const LABELS = process.argv.includes('--labels') ? process.argv[process.argv.indexOf('--labels') + 1] : null;
+if (!LABELS) throw new Error('--labels DIR is required (validation reference labels)');
+const DEV = readFileSync(join(ROOT, 'docs/evidence/dev-s1s4/ATTEMPTS'), 'utf8').trim().split('\n').map((l) => l.split(' '));
+const VALIDATION = [['seatacFull', 'attempt-1792544219787-6842b5719420'], ['seatacCapture', 'attempt-1792544222670-65b244cea36e'], ['beaverranchLazy', 'attempt-1792544226741-5d7292bb6c94'],
+  ['beaverranchCapture', 'attempt-1792544254663-cb63f91b902e'], ['fountainhillsFull', 'attempt-1792544433141-c4d516d9076c'], ['fountainhillsLazy', 'attempt-1792544187979-49c64d5f40fd']];
+
+// ---- per-label scores of each reader ----------------------------------------------------------------------
+/** For one badge: what each reader's per-label features are computed from (badgeReaderCalibration.ts). */
+function readerScores(bitmap, body, badge, T) {
+  const binMask = B.normalizeBadgeGlyphMask(bitmap, body);
+  const bin = new Map(HOLE_LABELS.map((L) => [L, binMask ? B.bestMaskScore(binMask, T.binary.find((t) => t.label === L).mask, 1) : 0]));
+  const covN = C.normalizeBadgeCoverage(bitmap, body);
+  const cov = new Map(HOLE_LABELS.map((L) => [L, covN ? C.bestCoverageScore(covN, T.coverage.find((t) => t.label === L).coverage, 1) : -1]));
+  const table = DG.badgeDigitScoreTable(bitmap, body, T.digit);
+  const joint = new Map(HOLE_LABELS.map((L) => { const ds = [...String(L)].map(Number), cells = ds.length === 1 ? table.one : table.two;
+    return [L, cells && cells.length === ds.length ? ds.reduce((a, d, i) => a + cells[i][d], 0) / ds.length : -1]; }));
+  const digitScores = (badge.digits ?? []).map((d) => d.scores);
+  const lik = new Map(HOLE_LABELS.map((L) => [L, String(L).length === digitScores.length ? [...String(L)].reduce((p, d, i) => p * (digitScores[i][+d] ?? 0), 1) : 0]));
+  return { bin, cov, table, joint, digitScores, lik };
+}
+
+/** Features of label L for one reader over the vocabulary `others`: the provider's own definitions. */
+function featuresOf(reader, R, L, others) {
+  if (reader === 'binary') return K.templateLabelFeatures((k) => R.bin.get(k), L, others);
+  if (reader === 'coverage') return K.templateLabelFeatures((k) => R.cov.get(k), L, others);
+  if (reader === 'digitBW') return K.digitLabelFeatures(R.table, L, others);
+  return K.perDigitLabelFeatures(R.digitScores, L, others);
+}
+const scalar = (reader, R, L) => (reader === 'binary' ? R.bin.get(L) : reader === 'coverage' ? R.cov.get(L) : reader === 'digitBW' ? R.joint.get(L) : R.lik.get(L));
+const topOf = (reader, R, labels) => labels.reduce((a, L) => (scalar(reader, R, L) > scalar(reader, R, a) ? L : a), labels[0]);
+
+/** The reader's own verdict at the fixed (borrowed) thresholds. */
+/** Each reader's own verdict at its fixed (borrowed) thresholds, from the provider classifiers themselves. */
+function fixedVerdicts(bitmap, body, T, n, s1Label) {
+  const bin = B.classifyNormalizedGlyph(B.normalizeBadgeGlyphMask(bitmap, body), T.binary);
+  const cov = C.classifyNormalizedCoverage(C.normalizeBadgeCoverage(bitmap, body), T.coverage);
+  const dig = DG.classifyBadgeDigitsAgainstTemplates(bitmap, body, T.digit, n);
+  return { binary: bin.label ?? null, coverage: cov.label ?? null, digitBW: dig.label == null ? null : Number(dig.label), perDigit: s1Label == null ? null : Number(s1Label) };
+}
+
+// ---- logistic regression (a perceptron with a sigmoid) ----------------------------------------------------
+const sigmoid = (z) => 1 / (1 + Math.exp(-z));
+function fit(X, y) {
+  const d = X[0].length, mu = Array(d).fill(0), sd = Array(d).fill(0);
+  for (const x of X) x.forEach((v, j) => { mu[j] += v / X.length; });
+  for (const x of X) x.forEach((v, j) => { sd[j] += (v - mu[j]) ** 2 / X.length; });
+  for (let j = 0; j < d; j++) sd[j] = Math.sqrt(sd[j]) || 1;
+  const Z = X.map((x) => x.map((v, j) => (v - mu[j]) / sd[j]));
+  let w = Array(d).fill(0), b = 0;
+  const lambda = 1e-3, lr = 0.5;
+  for (let it = 0; it < 4000; it++) {
+    const gw = Array(d).fill(0); let gb = 0;
+    Z.forEach((z, i) => { const e = sigmoid(b + z.reduce((a, v, j) => a + v * w[j], 0)) - y[i]; gb += e / Z.length; z.forEach((v, j) => { gw[j] += (e * v) / Z.length; }); });
+    w = w.map((wj, j) => wj - lr * (gw[j] + lambda * wj)); b -= lr * gb;
+  }
+  // back to raw feature units: P = sigmoid(bias + sum weight_j * x_j)
+  const weights = w.map((wj, j) => wj / sd[j]), bias = b - w.reduce((a, wj, j) => a + (wj * mu[j]) / sd[j], 0);
+  return { weights, bias };
+}
+/** The examples hold one hard negative per badge, so the fit sees right:wrong at about 1:1; real reads are right far
+ * more often. Bayes moves the logit from the training odds to the real odds of a top read being right, estimated by the
+ * rule of succession on the out-of-course top reads: (right + 1) / (wrong + 1). */
+function fitCalibrated(ex) {
+  const m = fit(ex.map((e) => e.x), ex.map((e) => e.y));
+  const n1 = ex.filter((e) => e.y === 1).length, n0 = ex.length - n1;
+  const right = ex.filter((e) => e.kind === 'top' && e.y === 1).length, wrong = ex.filter((e) => e.kind === 'top' && e.y === 0).length;
+  return { ...m, priorShift: Math.log((right + 1) / (wrong + 1)) - Math.log(n1 / n0) };
+}
+const logit = (m, x) => m.bias + x.reduce((a, v, j) => a + v * m.weights[j], 0);
+const probMix = (m, x) => sigmoid(logit(m, x));
+const prob = (m, x) => sigmoid(logit(m, x) + (m.priorShift ?? 0));
+
+// ---- collect -------------------------------------------------------------------------------------------------
+function templatesFor(exclude) {
+  if (!exclude) return { binary: BADGE_GLYPH_TEMPLATES, coverage: BADGE_COVERAGE_TEMPLATES, digit: BADGE_DIGIT_TEMPLATES };
+  const sprites = devSprites({ exclude: [exclude] }), rasters = Object.fromEntries(Object.entries(sprites).map(([l, c]) => [l, c.raster]));
+  const { coverageTemplates } = bakeCoverage(rasters, { quiet: true });
+  const { shippedDigits } = bakeDigits(rasters, { quiet: true });
+  return { binary: BADGE_GLYPH_TEMPLATES, coverage: coverageTemplates, digit: shippedDigits };
+}
+function collect(course, attempt, T, labels = null) {
+  const board = new Map(deserialize(readFileSync(join(ST, attempt, 'fork/stage-output/early/s3.pxc.bin'))));
+  const image = board.get('localImage'), { topPx } = board.get('viewport'), badges = board.get('badges');
+  const bitmap = { width: image.width, height: image.height, data: image.data };
+  return badges.map((b) => {
+    const [x, y, w, h] = b.bbox, body = { xPx: x + w / 2, yPx: y + h / 2 - topPx, widthPx: w, heightPx: h };
+    const truth = labels ? labels[b.detId] : b.label;
+    // the reference is S1's per-digit read under 1..27 (dev: on the board; validation: the lane's run, checked by eye)
+    return { course, detId: b.detId, bboxPx: b.bbox, truth: truth == null ? null : Number(truth), R: readerScores(bitmap, body, b, T), fixed: fixedVerdicts(bitmap, body, T, badges.length, truth), badge: b };
+  });
+}
+
+const median = (v) => { const s = [...v].sort((a, b) => a - b); return s.length ? s[(s.length - 1) >> 1] : null; };
+const r3 = (v) => Math.round(v * 1000) / 1000;
+
+function examples(rows, reader) {
+  const out = [];
+  for (const r of rows) {
+    if (r.truth == null) continue;
+    const top = topOf(reader, r.R, HOLE_LABELS);
+    out.push({ x: featuresOf(reader, r.R, top, HOLE_LABELS), y: top === r.truth ? 1 : 0, kind: 'top', course: r.course });
+    const rest = HOLE_LABELS.filter((L) => L !== r.truth), imp = topOf(reader, r.R, rest);
+    out.push({ x: featuresOf(reader, r.R, imp, rest), y: 0, kind: 'hard-negative', course: r.course });
+  }
+  return out;
+}
+
+/** Per image: confident reads fixed, the rest assigned one-to-one over the free labels 1..N. */
+function bijection(rows, reader, model) {
+  const N = rows.length, labels = HOLE_LABELS.filter((L) => L <= N);
+  const verdict = rows.map((r) => { const top = topOf(reader, r.R, HOLE_LABELS); const p = prob(model, featuresOf(reader, r.R, top, HOLE_LABELS)); return { top, p, label: p >= P_STAR ? top : null }; });
+  const fixed = new Map(), conflicts = [];
+  verdict.forEach((v, i) => { if (v.label != null && v.label <= N) { if (fixed.has(v.label)) conflicts.push(v.label); else fixed.set(v.label, i); } });
+  const final = verdict.map((v) => ({ ...v, assigned: null, how: null }));
+  for (const L of new Set(conflicts)) {   // two confident reads of one label: settle by the assignment over those badges only
+    const who = verdict.map((v, i) => (v.label === L ? i : -1)).filter((i) => i >= 0);
+    who.forEach((i) => { final[i].label = null; final[i].how = 'conflict'; });
+    fixed.delete(L);
+  }
+  for (const [L, i] of fixed) { final[i].assigned = L; final[i].how = 'confident'; }
+  // Rounds: assign the open badges to the free labels one-to-one (cost -log P, margins over the free labels; abstaining
+  // costs -log P_STAR); a pair is accepted when its P, with the labels the assignment gives the OTHER open badges
+  // removed from its competitors, reaches P_STAR. Accepted pairs become fixed; repeat until nothing new is accepted.
+  for (let round = 0; round < 10; round++) {
+    const free = labels.filter((L) => ![...final].some((f) => f.assigned === L)), open = rows.map((_, i) => i).filter((i) => final[i].assigned == null);
+    if (!open.length || !free.length) break;
+    const P = open.map((i) => free.map((L) => prob(model, featuresOf(reader, rows[i].R, L, free))));
+    const cost = P.map((row) => [...row.map((p) => -Math.log(Math.max(p, 1e-12))), ...open.map(() => -Math.log(P_STAR))]);
+    const pairs = assignMinCost(cost).filter(([, j]) => j < free.length);
+    const taken = new Map(pairs.map(([a, j]) => [open[a], free[j]]));
+    let accepted = 0;
+    for (const [i, L] of taken) {
+      const rivals = free.filter((K) => K === L || ![...taken].some(([o, M]) => o !== i && M === K));
+      const p = prob(model, featuresOf(reader, rows[i].R, L, rivals));
+      if (p >= P_STAR) { final[i].assigned = L; final[i].how = 'filled'; final[i].p = p; accepted++; }
+    }
+    if (!accepted) break;
+  }
+  return final;
+}
+
+// ---- run -----------------------------------------------------------------------------------------------------
+const report = { costWrong: COST_WRONG, pStar: P_STAR, readers: {} };
+const devRows = {};
+for (const [course, attempt] of DEV) devRows[course] = collect(course, attempt, templatesFor(course));
+const valRows = {};
+for (const [course, attempt] of VALIDATION)
+  valRows[course] = collect(course, attempt, templatesFor(null), JSON.parse(readFileSync(join(LABELS, `truth-${course}.json`), 'utf8')));
+
+const shipped = {};
+for (const reader of READERS) {
+  const cv = [];   // out-of-course predictions on dev
+  const perCourse = {};
+  for (const [held] of DEV) {
+    const train = DEV.filter(([c]) => c !== held).flatMap(([c]) => examples(devRows[c], reader));
+    const model = fitCalibrated(train);
+    for (const e of examples(devRows[held], reader)) cv.push({ ...e, p: prob(model, e.x), pMix: probMix(model, e.x) });
+    perCourse[held] = { model, rows: devRows[held] };
+  }
+  const all = DEV.flatMap(([c]) => examples(devRows[c], reader));
+  const model = fitCalibrated(all);
+  shipped[reader] = { features: FEATURES[reader], ...model, trainedOn: { courses: DEV.map(([c]) => c), badges: DEV.reduce((a, [c]) => a + devRows[c].length, 0), examples: all.length, rightTops: all.filter((e) => e.y === 1).length, wrongTops: all.filter((e) => e.kind === 'top' && e.y === 0).length, hardNegatives: all.filter((e) => e.kind === 'hard-negative').length } };
+  const table = {};
+  const summarize = (course, rows, m) => {
+    const fixedReads = rows.map((r) => r.fixed[reader]);
+    const bij = bijection(rows, reader, m);
+    const tops = rows.map((r) => { const top = topOf(reader, r.R, HOLE_LABELS); return { top, p: prob(m, featuresOf(reader, r.R, top, HOLE_LABELS)) }; });
+    const count = (reads) => ({ read: reads.filter((v) => v != null).length, abstained: reads.filter((v) => v == null).length, wrong: reads.filter((v, i) => v != null && rows[i].truth != null && Number(v) !== rows[i].truth).length });
+    return { course, badges: rows.length, fixed: count(fixedReads), learned: count(tops.map((t) => (t.p >= P_STAR ? t.top : null))), bijection: count(bij.map((b) => b.assigned)),
+      pMedian: r3(median(tops.map((t) => t.p))), pMin: r3(Math.min(...tops.map((t) => t.p))),
+      filled: bij.map((b, i) => (b.how === 'filled' ? { detId: rows[i].detId, truth: rows[i].truth, top: b.top, pTop: r3(b.p ?? 0), assigned: b.assigned } : null)).filter(Boolean),
+      changed: rows.map((r, i) => ({ detId: r.detId, bboxPx: r.bboxPx, truth: r.truth, fixed: fixedReads[i], learned: tops[i].p >= P_STAR ? tops[i].top : null, p: r3(tops[i].p), final: bij[i].assigned, how: bij[i].how })).filter((c) => (c.fixed ?? null) !== (c.final ?? null)),
+      conflicts: bij.filter((b) => b.how === 'conflict').length,
+      overrides: bij.filter((b, i) => b.label != null && b.assigned != null && b.assigned !== b.label).length };
+  };
+  for (const [course] of DEV) table[course] = summarize(course, devRows[course], perCourse[course].model);
+  for (const [course] of VALIDATION) table[course] = summarize(course, valRows[course], model);
+  // reliability on the out-of-course dev predictions (tops and hard negatives)
+  // reliability on the out-of-course dev predictions: the 1:1 training mix (tops and hard negatives, before the prior shift)
+  const bins = [[0, 0.1], [0.1, 0.5], [0.5, 0.9], [0.9, 1.0001]].map(([lo, hi]) => { const e = cv.filter((x) => x.pMix >= lo && x.pMix < hi); return { bin: `${lo}-${Math.min(hi, 1)}`, n: e.length, meanP: e.length ? r3(e.reduce((a, x) => a + x.pMix, 0) / e.length) : null, observed: e.length ? r3(e.filter((x) => x.y === 1).length / e.length) : null }; });
+  report.readers[reader] = { features: FEATURES[reader], shipped: shipped[reader], reliability: bins, maxImpostorP: r3(Math.max(...cv.filter((x) => x.y === 0).map((x) => x.p))), minRightTopP: r3(Math.min(...cv.filter((x) => x.y === 1).map((x) => x.p))), table };
+}
+
+if (process.argv.includes('--write')) {
+  const asset = {
+    schema: 'badgeReaderCalibration@1',
+    note: 'P(label right | features) = sigmoid(bias + priorShift + sum weights_j * features_j) per reader (features: digits/badgeReaderCalibration.ts); priorShift moves the 1:1 training odds (one hard negative per badge) to the out-of-course odds of a top read being right, (right + 1) / (wrong + 1); a reader reads when P >= pStar. Fitted by scripts/badge-calibration.mjs (toolkit) on out-of-course dev scores (templates re-baked without the scored course), with one hard negative per badge (the best label once the true one is removed). The provider never trains at run time.',
+    costWrong: COST_WRONG, pStar: P_STAR, rule: 'read iff (1 - P) * costWrong < 1: one wrong label costs costWrong abstentions',
+    readers: shipped
+  };
+  writeFileSync(CAL_PATH, JSON.stringify(asset, null, '\t') + '\n');
+}
+const out = process.argv.includes('--report') ? process.argv[process.argv.indexOf('--report') + 1] : null;
+if (out) writeFileSync(out, JSON.stringify(report, null, 1));
+for (const reader of READERS) {
+  const R = report.readers[reader];
+  console.log(`\n${reader}: weights ${R.shipped.weights.map(r3).join(', ')} bias ${r3(R.shipped.bias)} prior shift ${r3(R.shipped.priorShift)}; out-of-course max impostor P ${R.maxImpostorP}, min right-top P ${R.minRightTopP}; reliability ${R.reliability.map((b) => `${b.bin}: n ${b.n} P ${b.meanP} obs ${b.observed}`).join(' | ')}`);
+  for (const t of Object.values(R.table)) console.log(`  ${t.course.padEnd(19)} ${t.badges} | fixed ${t.fixed.read}/${t.fixed.abstained}/${t.fixed.wrong} | learned ${t.learned.read}/${t.learned.abstained}/${t.learned.wrong} | +bijection ${t.bijection.read}/${t.bijection.abstained}/${t.bijection.wrong} | P med ${t.pMedian} min ${t.pMin}${t.filled.length ? ` | filled ${t.filled.map((f) => `${f.truth}->${f.assigned}(top ${f.top})`).join(' ')}` : ''}${t.conflicts ? ` | conflicts ${t.conflicts}` : ''}${t.overrides ? ` | OVERRIDES ${t.overrides}` : ''}`);
+}

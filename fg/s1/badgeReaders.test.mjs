@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { join, resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 const require = createRequire(import.meta.url);
@@ -48,4 +49,17 @@ test('the digit reader: templates for every digit 0-9, and a two-digit read abov
   assert.equal(read.number, '14');
   assert.equal(read.label, null);
   assert.equal(read.abstention, 'above-badge-count');
+});
+
+test('learned abstention: one p* from the stated cost, every reader calibrated, the shipped templates read their own dev sprites confidently', () => {
+  const K = dist('digits/badgeReaderCalibration.js');
+  const asset = JSON.parse(readFileSync(join(ROOT, 'source/provider/packages/alg/src/detectors/threeFactor/assets/badge-reader-calibration.json'), 'utf8'));
+  assert.equal(K.READER_P_STAR, 1 - 1 / asset.costWrong);
+  for (const r of ['binary', 'digitBW', 'coverage', 'perDigit']) {
+    assert.ok(asset.readers[r].trainedOn.courses.length === 6 && asset.readers[r].trainedOn.badges === 108, r);
+    assert.equal(asset.readers[r].weights.length, asset.readers[r].features.length);
+  }
+  // a digit read with every margin wide reads; one with a negative digit margin does not
+  assert.ok(K.readerProbability('digitBW', [0.95, 0.3, 0.3]) >= K.READER_P_STAR);
+  assert.ok(K.readerProbability('digitBW', [0.95, -0.05, 0.3]) < K.READER_P_STAR);
 });

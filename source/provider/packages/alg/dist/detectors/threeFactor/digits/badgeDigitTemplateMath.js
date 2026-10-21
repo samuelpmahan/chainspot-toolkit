@@ -55,6 +55,7 @@ exports.sampleBadgeDigits = sampleBadgeDigits;
 exports.badgeDigitLayouts = badgeDigitLayouts;
 exports.classifyBadgeDigitsAgainstTemplates = classifyBadgeDigitsAgainstTemplates;
 exports.decodeDigitRows = decodeDigitRows;
+exports.badgeDigitScoreTable = badgeDigitScoreTable;
 const badgeGlyphTemplateMath_1 = require("./badgeGlyphTemplateMath");
 const badgeCoverageTemplateMath_1 = require("./badgeCoverageTemplateMath");
 const holeLabels_1 = require("./holeLabels");
@@ -224,5 +225,20 @@ function classifyBadgeDigitsAgainstTemplates(image, badge, templates, badgeCount
 /** Asset rows: one 0/1 char per pixel, as the binary templates. */
 function decodeDigitRows(rows, widthPx, heightPx) {
     return { widthPx, heightPx, data: Uint8Array.from(rows.join('').split('').map((c) => (c === '1' ? 1 : 0))) };
+}
+/** Best Dice per digit 0..9 in every cell of both layouts: the table the learned abstention reads its features from
+ * (badgeReaderCalibration.ts digitLabelFeatures). Null layouts when the glyph does not form them. */
+function badgeDigitScoreTable(image, badge, templates, knobs = exports.DEFAULT_BADGE_DIGIT_TEMPLATE_KNOBS) {
+    const layouts = badgeDigitLayouts(sampleBadgeDigits(image, badge), knobs);
+    const cellScores = (cell) => {
+        const s = new Array(10).fill(0);
+        for (const t of templates)
+            s[t.digit] = Math.max(s[t.digit], (0, badgeGlyphTemplateMath_1.bestMaskScore)(cell, t.mask, knobs.maxShiftPx));
+        return s;
+    };
+    return {
+        one: layouts && layouts.one.length ? layouts.one.map(cellScores) : null,
+        two: layouts && layouts.two ? layouts.two.map(cellScores) : null
+    };
 }
 //# sourceMappingURL=badgeDigitTemplateMath.js.map

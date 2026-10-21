@@ -42,7 +42,7 @@
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { inflateSync } from 'node:zlib';
 
@@ -228,10 +228,9 @@ function closestPair(entries) {
 }
 
 // ---- bake ----------------------------------------------------------------------------------
+/** Binary whole-number templates from 18 source rasters (labels 1..18 -> raster). */
+export function bakeBinary(rasters, { quiet = false } = {}) {
 
-const rasters = {};
-for (let label = 1; label <= SOURCE_LABELS; label++)
-	rasters[label] = decodePng(readFileSync(join(SOURCES, `hole-${String(label).padStart(2, '0')}.png`)));
 const font = measureFont(rasters);
 const real = Array.from({ length: SOURCE_LABELS }, (_, i) => ({ label: i + 1, mask: normalized(rasters[i + 1]) }));
 
@@ -276,9 +275,12 @@ const out = {
 	templates: templates.map(({ label, mask }) => ({ label, rows: rowsOf(mask) }))
 };
 
-console.log('font (px of the source rasters):', JSON.stringify({ ...font, lone: undefined }));
-console.log('composition check (11..18 from lone glyphs):', JSON.stringify(check));
-for (const row of confusion) console.log(`closest pair in 1..${row.bound}: ${row.closestPair.labels.join(' vs ')} at Dice ${row.closestPair.dice}`);
+if (!quiet) console.log('font (px of the source rasters):', JSON.stringify({ ...font, lone: undefined }));
+if (!quiet) console.log('composition check (11..18 from lone glyphs):', JSON.stringify(check));
+for (const row of confusion) if (!quiet) console.log(`closest pair in 1..${row.bound}: ${row.closestPair.labels.join(' vs ')} at Dice ${row.closestPair.dice}`);
+
+	return { out, templates };
+}
 
 // ---- coverage templates (the second reader, digits/badgeCoverageTemplateMath.ts) ------------------
 // Same composition rule, at the glyph's sub-pixel coverage instead of its binary ink. Sources: one clean
@@ -292,9 +294,8 @@ const COVERAGE_OUT_PATH = join(ROOT, 'packages/alg/src/detectors/threeFactor/ass
 const PLATE_GREY = 0;   // grey level of a composed plate; the reader measures both levels per badge, so any two levels do
 const GLYPH_GREY = 255;
 
-const coverageRasters = {};
-for (let label = 1; label <= SOURCE_LABELS; label++)
-	coverageRasters[label] = decodePng(readFileSync(join(COVERAGE_SOURCES, `hole-${String(label).padStart(2, '0')}.png`)));
+/** Coverage templates from dev sprites (labels 1..18 -> raster); returns the asset and the templates as shipped. */
+export function bakeCoverage(coverageRasters, { quiet = false } = {}) {
 const coverageFont = measureFont(coverageRasters);
 /** A glyph's coverage patch: its ink box widened by one px of anti-aliased fringe on every side. */
 const coveragePatch = (raster, glyph) => {
@@ -377,9 +378,11 @@ const coverageOut = {
 	},
 	templates: coverageTemplates.map(({ label, coverage }) => ({ label, rows: C.encodeCoverageRows(coverage) }))
 };
-console.log('coverage font (px of the dev sprites):', JSON.stringify({ ...coverageFont, lone: undefined }));
-console.log('coverage composition check (11..18 from lone glyphs):', JSON.stringify(coverageCheck));
-for (const row of coverageConfusion) console.log(`coverage: closest pair in 1..${row.bound}: ${row.closestPair.labels.join(' vs ')} at NCC ${row.closestPair.ncc}`);
+if (!quiet) console.log('coverage font (px of the dev sprites):', JSON.stringify({ ...coverageFont, lone: undefined }));
+if (!quiet) console.log('coverage composition check (11..18 from lone glyphs):', JSON.stringify(coverageCheck));
+if (!quiet) for (const row of coverageConfusion) console.log(`coverage: closest pair in 1..${row.bound}: ${row.closestPair.labels.join(' vs ')} at NCC ${row.closestPair.ncc}`);
+	return { coverageOut, coverageTemplates };
+}
 
 // ---- digit templates (the black-and-white digit reader, digits/badgeDigitTemplateMath.ts) -------------
 // Cut from the same dev badge sprites through the reader's own binarization and layout: the lone 1..9 of
@@ -389,6 +392,8 @@ for (const row of coverageConfusion) console.log(`coverage: closest pair in 1..$
 const DG = dist('digits/badgeDigitTemplateMath.js');
 const DK = DG.DEFAULT_BADGE_DIGIT_TEMPLATE_KNOBS;
 const DIGIT_OUT_PATH = join(ROOT, 'packages/alg/src/detectors/threeFactor/assets/badge-digit-templates.json');
+/** Digit templates cut from dev sprites (labels 1..18 -> raster); returns the asset and the templates as shipped. */
+export function bakeDigits(coverageRasters, { quiet = false } = {}) {
 const digitTemplates = [];
 for (let label = 1; label <= SOURCE_LABELS; label++) {
 	const raster = coverageRasters[label];
@@ -425,10 +430,24 @@ const digitOut = {
 	closestDifferentDigits: { unit: 'shifted Dice', ...closestDigits, dice: round3(closestDigits.dice) },
 	templates: digitTemplates.map(({ digit, from, mask }) => ({ digit, from, rows: rowsOf(mask) }))
 };
-console.log('digit self-check (dev sprites 1..18):', JSON.stringify(digitCheck.map((c) => c.margin)));
-console.log('closest different digits:', JSON.stringify(digitOut.closestDifferentDigits));
+if (!quiet) console.log('digit self-check (dev sprites 1..18):', JSON.stringify(digitCheck.map((c) => c.margin)));
+if (!quiet) console.log('closest different digits:', JSON.stringify(digitOut.closestDifferentDigits));
+	return { digitOut, digitTemplates, shippedDigits };
+}
 
 // ---- write or check --------------------------------------------------------------------------------
+/** The 18 hole-NN.png rasters of a sources directory, by label. */
+export function loadSprites(dir) {
+	const out = {};
+	for (let label = 1; label <= SOURCE_LABELS; label++) out[label] = decodePng(readFileSync(join(dir, `hole-${String(label).padStart(2, '0')}.png`)));
+	return out;
+}
+
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+const { out, templates } = bakeBinary(loadSprites(SOURCES));
+const coverageSprites = loadSprites(COVERAGE_SOURCES);
+const { coverageOut, coverageTemplates } = bakeCoverage(coverageSprites);
+const { digitOut, digitTemplates } = bakeDigits(coverageSprites);
 const outputs = [[OUT_PATH, JSON.stringify(out, null, '\t') + '\n'], [COVERAGE_OUT_PATH, JSON.stringify(coverageOut, null, '\t') + '\n'], [DIGIT_OUT_PATH, JSON.stringify(digitOut, null, '\t') + '\n']];
 if (process.argv.includes('--check')) {
 	let stale = 0;
@@ -441,3 +460,4 @@ if (process.argv.includes('--check')) {
 }
 for (const [path, text] of outputs) writeFileSync(path, text);
 console.log(`wrote ${templates.length} binary and ${coverageTemplates.length} coverage templates (1..${HOLE_LABEL_MAX}), ${digitTemplates.length} digit templates`);
+}
