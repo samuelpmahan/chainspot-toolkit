@@ -179,7 +179,11 @@ export function registerTraceQueries(store, { matcher = null, board = null } = {
       const straight = !refineBends ? undefined : store.has('tk.s7.straight') ? get('tk.s7.straight').verdicts : null;
       // every per-hole step is its own profiled store call (fn.q.match.*); the scene is passed by address
       const steps = Object.fromEntries(Object.keys(MATCH_STEPS).map((k) => [k, (_S, ...a) => store.call(`fn.q.match.${k}`, { scene, a }).value]));
-      const r = routeMatchOf(table, S, get('tk.s7.routeStart'), { secondBends, straight, steps, ...(rules ? { rules: { ...MATCH_RULES, ...rules } } : {}) });
+      // the sequencing's region reads (rule set seqGate / seqScore 'region'): the same steps on the region scene
+      const seqRegion = rules?.seqGate === 'region' || rules?.seqGate === 'regionWiden' || rules?.seqScore === 'region';
+      if (seqRegion) registerRegion(store);
+      const regionSteps = seqRegion ? Object.fromEntries(['sensor', 'contrast'].map((k) => [k, (_S, ...a) => store.call(`fn.q.match.${k}`, { scene: REGION_SCENE_PART, a }).value])) : null;
+      const r = routeMatchOf(table, S, get('tk.s7.routeStart'), { secondBends, straight, steps, regionSteps, ...(rules ? { rules: { ...MATCH_RULES, ...rules } } : {}) });
       const regionCondition = region ? get(REGION_SCENE_PART).regionCondition : null;
       return { value: { ...r, scene, ...(region ? { sensor: rules.sensor } : {}), ...(regionCondition ? { condition: regionCondition } : {}) }, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, reached: Object.values(r.holes).filter((h) => h.end != null).length, secondBends: Object.values(r.holes).filter((h) => (h.verts?.length ?? 0) === 4).length, ...(r.sequencing ? { cellsEvaluated: r.sequencing.cellsEvaluated, cellsFullTable: r.sequencing.cellsFullTable, holesWidened: r.sequencing.widened.length } : {}) } };
     },
