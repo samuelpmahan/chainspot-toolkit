@@ -70,6 +70,44 @@ const offLeg = (p, a, b) => {
   return Math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dy);
 };
 
+/**
+ * Corridors are owned (rule set option ownCorridors): a leg a -> b RUNS ALONG an owned route when most of it (> 1/2 of its
+ * samples, W/4 apart) lies within W/2 of that route and roughly parallel to it (within 30 deg); crossing one is allowed.
+ * owned: [[x, y], ...] polylines (other holes' confirmed routes). -> true when the leg runs along any of them.
+ */
+export const OWN = Object.freeze({ nearW: 0.5, parallelDeg: 30, alongFrac: 0.5, sampleW: 0.25 });
+export function legRunsAlong(a, b, owned, W) {
+  if (!owned || !owned.length) return false;
+  const L = Math.hypot(b[0] - a[0], b[1] - a[1]); if (L < 1e-6) return false;
+  // only the owned corridors whose box, widened by W/2, meets the leg's box can hold its samples (the same answer, fewer tests)
+  const r = OWN.nearW * W, lx0 = Math.min(a[0], b[0]) - r, lx1 = Math.max(a[0], b[0]) + r, ly0 = Math.min(a[1], b[1]) - r, ly1 = Math.max(a[1], b[1]) + r;
+  owned = owned.filter((O) => { let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity; for (const p of O) { if (p[0] < x0) x0 = p[0]; if (p[0] > x1) x1 = p[0]; if (p[1] < y0) y0 = p[1]; if (p[1] > y1) y1 = p[1]; } return !(x1 < lx0 || x0 > lx1 || y1 < ly0 || y0 > ly1); });
+  if (!owned.length) return false;
+  const u = [(b[0] - a[0]) / L, (b[1] - a[1]) / L], cosMin = Math.cos(OWN.parallelDeg * Math.PI / 180), step = OWN.sampleW * W;
+  let n = 0, along = 0;
+  for (let t = 0; t <= L; t += step) {
+    n++;
+    const p = [a[0] + u[0] * t, a[1] + u[1] * t];
+    let hit = false;
+    for (const O of owned) { for (let i = 0; i + 1 < O.length && !hit; i++) {
+      const c = O[i], d = O[i + 1], dx = d[0] - c[0], dy = d[1] - c[1], L2 = dx * dx + dy * dy; if (L2 < 1e-9) continue;
+      const tt = Math.max(0, Math.min(1, ((p[0] - c[0]) * dx + (p[1] - c[1]) * dy) / L2));
+      if (Math.hypot(p[0] - c[0] - tt * dx, p[1] - c[1] - tt * dy) < OWN.nearW * W && Math.abs((u[0] * dx + u[1] * dy) / Math.sqrt(L2)) >= cosMin) hit = true;
+    } if (hit) break; }
+    if (hit) along++;
+  }
+  return along > OWN.alongFrac * n;
+}
+const routeRunsAlong = (V, owned, W) => { for (let i = 0; i + 1 < V.length; i++) if (legRunsAlong(V[i], V[i + 1], owned, W)) return true; return false; };
+/** A route's turning angles (deg) at its bends. */
+export const turnsOf = (V) => V.slice(1, -1).map((B, i) => { const A = V[i], C = V[i + 2], d1 = [B[0] - A[0], B[1] - A[1]], d2 = [C[0] - B[0], C[1] - B[1]]; return Math.acos(Math.max(-1, Math.min(1, (d1[0] * d2[0] + d1[1] * d2[1]) / (Math.hypot(...d1) * Math.hypot(...d2) || 1)))) * 180 / Math.PI; });
+/**
+ * The price of turning (rule set option turnKappa, lum): kappa x sum over the bends of (1 - cos theta)^2. A 90 deg bend costs kappa,
+ * 35 deg 0.03 kappa, 72 deg 0.48 kappa, 112 deg 1.9 kappa: dev bends (14-72 deg, Sam's testimony) stay cheap, 86-112 deg wanders
+ * pay; sharper doglegs are priced, never forbidden. A route's value = its weakest leg - this price.
+ */
+export const turnCostOf = (V, kappa) => (kappa ? kappa * turnsOf(V).reduce((s, t) => s + (1 - Math.cos(t * Math.PI / 180)) ** 2, 0) : 0);
+
 /** The tee axis from the tee centre: the point at t px, and t's lower bound for B1 (the badge at FIRST_BADGE_FRAC of the first leg). */
 function axisOf(start) {
   const T = start.teeCenter, u = start.u, toS = (start.S[0] - T[0]) * u[0] + (start.S[1] - T[1]) * u[1];
@@ -123,7 +161,7 @@ export function kChainStartAt(S, start, E, W, { legsOf = legContrastsOf, legsMan
  * two more bends leaves one half off the ribbon whatever the split, so their minimum cannot guide the search), every candidate at least offsetW x W off the leg (closer, it stays inside the
  * straight ribbon: not a bend). -> { verts, legs, bottleneck, read, split } or null (nothing to split).
  */
-export function kSplitAt(S, V, legs, W, { legsOf = legContrastsOf, legsMany = legsManyOf(legsOf), foreign = null, endR1 = KBENDS.refineEndR1, gridR1 = KBENDS.gridR1 } = {}) {
+export function kSplitAt(S, V, legs, W, { legsOf = legContrastsOf, legsMany = legsManyOf(legsOf), foreign = null, endR1 = KBENDS.refineEndR1, gridR1 = KBENDS.gridR1, owned = null } = {}) {
   const r1 = S.R1, g = gridR1 * r1, minLeg = KBENDS.minLegR1 * r1;
   let j = -1; legs.forEach((c, i) => { if (c !== null && (j < 0 || c < legs[j])) j = i; });
   if (j <= 0) return null;
@@ -131,7 +169,7 @@ export function kSplitAt(S, V, legs, W, { legsOf = legContrastsOf, legsMany = le
   if (Lg < 2 * minLeg) return null;
   const u = [dx / Lg, dy / Lg], n = [-u[1], u[0]], across = Math.max(KBENDS.acrossMinR1 * r1, Lg / 2);
   let read = 0;
-  const ok = (P) => !(!inside(S, P) || Math.hypot(P[0] - a[0], P[1] - a[1]) < minLeg || Math.hypot(P[0] - b[0], P[1] - b[1]) < minLeg || offLeg(P, a, b) < KBENDS.offsetW * W || ringCrossed(a, P, foreign) >= 0 || ringCrossed(P, b, foreign) >= 0);
+  const ok = (P) => !(!inside(S, P) || Math.hypot(P[0] - a[0], P[1] - a[1]) < minLeg || Math.hypot(P[0] - b[0], P[1] - b[1]) < minLeg || offLeg(P, a, b) < KBENDS.offsetW * W || ringCrossed(a, P, foreign) >= 0 || ringCrossed(P, b, foreign) >= 0 || (owned && (legRunsAlong(a, P, owned, W) || legRunsAlong(P, b, owned, W))));
   // the search explores by how much of the leg the two halves explain (their length-weighted mean); the weakest leg judges.
   // Every candidate set is read in one batch (the grid; each refine step's four moves)
   const fMany = (Ps) => {
@@ -176,37 +214,47 @@ export function meanOf(V, legs) {
  * fewer bends on ties, and is polished on its weakest leg (B1 sliding on the tee axis, the other bends free). K is bounded only
  * by the minimum leg length and by progress.
  */
-export function kChainAt(S, start, E, W, { legsOf = legContrastsOf, legsMany = legsManyOf(legsOf), one = null, foreign = null, sensorOf = null, endR1 = KBENDS.refineEndR1, gridR1 = KBENDS.gridR1 } = {}) {
-  const seeds = [kChainStartAt(S, start, E, W, { legsMany, foreign }), one].filter((r) => r && r.bottleneck !== null);
+export function kChainAt(S, start, E, W, { legsOf = legContrastsOf, legsMany = legsManyOf(legsOf), one = null, foreign = null, sensorOf = null, endR1 = KBENDS.refineEndR1, gridR1 = KBENDS.gridR1,
+  polishEach = false, owned = null, turnKappa = 0, firstCap = null } = {}) {
+  // rule set options: polishEach = every candidate polished on its weakest leg before it competes; owned = other holes' confirmed
+  // corridors no leg may run along; turnKappa = the price of turning (turnCostOf), a route's value = weakest leg - that price
+  const pol = (r) => (polishEach && r ? polishAt(S, r, W, { legsMany, start, foreign, endR1, owned }) : r);
+  const val = (r) => r.bottleneck - turnCostOf(r.verts, turnKappa);
+  const seeds = [kChainStartAt(S, start, E, W, { legsMany, foreign }), one].filter((r) => r && r.bottleneck !== null && !(owned && routeRunsAlong(r.verts, owned, W))).map(pol).filter((r) => r.bottleneck !== null);
   if (!seeds.length) return null;
-  let best = null, splits = 0;
+  let best = null, raw = null, splits = 0;
   const sBest = new Map(), sensorAt = (route) => { if (!sBest.has(route)) sBest.set(route, sensorOf(route.verts)); return sBest.get(route); };
+  const gate = (r, b) => !sensorOf || sensorAt(r) > sensorAt(b) + BENDS.gate.gain * (r.verts.length - b.verts.length);
   for (let r of seeds) {
-    if (!best || r.bottleneck > best.bottleneck) best = r;
+    if (!best || val(r) > val(best)) best = r;
+    if (!raw || r.bottleneck > raw.bottleneck) raw = r;
     for (;;) {
-      // exact stops (they cannot change the answer): the first leg is never split, so no split of r reads above r's first leg;
-      // and a passFrac is at most 1, so once the per-bend sensor gate asks for more, no longer route can become the best
-      if (r.legs[0] !== null && r.legs[0] <= best.bottleneck) break;
+      // exact stops: no later route of r reads above the bound (unpolished: r's first leg, never split; polished: the hole's
+      // best first leg on the axis, firstCap); a passFrac is at most 1, so the per-bend sensor gate ends the search
+      const bound = polishEach ? firstCap : r.legs[0];
+      if (bound !== null && bound <= val(best) && (!turnKappa || bound <= raw.bottleneck)) break;
       if (sensorOf && sensorAt(best) + BENDS.gate.gain * (r.verts.length + 1 - best.verts.length) >= 1) break;
-      const nx = kSplitAt(S, r.verts, r.legs, W, { legsMany, foreign, endR1, gridR1 }); splits++;
+      const nx = kSplitAt(S, r.verts, r.legs, W, { legsMany, foreign, endR1, gridR1, owned }); splits++;
       if (!nx || !(Math.max(...nx.split.halves.map((c) => c ?? -Infinity)) > nx.split.before)) break;
-      r = { verts: nx.verts, legs: nx.legs, bottleneck: nx.bottleneck };
-      // a longer route becomes the best only when its weakest leg rises, and (sensorOf given) the hallway sensor gains too: each
+      r = pol({ verts: nx.verts, legs: nx.legs, bottleneck: nx.bottleneck });
+      // a longer route becomes the best only when its value rises, and (sensorOf given) the hallway sensor gains too: each
       // bend pays on both measures (the weakest leg alone let micro-bends through on SeaTac 21: 10 bends, sensor 0.90)
       // (the recorded gate of a bend-count change, bends.mjs BENDS.gate.gain: the sensor must gain more than 0.05 PER added bend)
-      if (r.bottleneck !== null && r.bottleneck > best.bottleneck && (!sensorOf || sensorAt(r) > sensorAt(best) + BENDS.gate.gain * (r.verts.length - best.verts.length))) best = r;
+      if (r.bottleneck !== null && val(r) > val(best) && gate(r, best)) best = r;
+      if (turnKappa && r.bottleneck !== null && r.bottleneck > raw.bottleneck && gate(r, raw)) raw = r;
     }
   }
-  const p = polishAt(S, best, W, { legsMany, start, foreign, endR1 });
+  const p = polishAt(S, best, W, { legsMany, start, foreign, endR1, owned });
   // a chain whose every split crosses a foreign ring keeps its seed; a seed that crosses one is no route
-  return routeClear(p.verts, foreign) ? { ...p, splits } : null;
+  if (!routeClear(p.verts, foreign)) return null;
+  return { ...p, splits, ...(turnKappa ? { turnCost: turnCostOf(p.verts, turnKappa), turnsDeg: turnsOf(p.verts).map((t) => Math.round(t)), turnDecided: raw !== best ? { rawBends: raw.verts.length - 2, rawTurnsDeg: turnsOf(raw.verts).map((t) => Math.round(t)), rawBottleneck: raw.bottleneck } : null } : {}) };
 }
 
 /**
  * A route's bends polished together: a halving coordinate search on the weakest leg (each move re-reads the two legs at that
  * bend); B1 slides on the tee axis (at or past the badge-at-0.57 point) when `start` is given, else stays; the bend count kept.
  */
-export function polishAt(S, route, W, { legsOf = legContrastsOf, legsMany = legsManyOf(legsOf), start = null, foreign = null, endR1 = KBENDS.refineEndR1 } = {}) {
+export function polishAt(S, route, W, { legsOf = legContrastsOf, legsMany = legsManyOf(legsOf), start = null, foreign = null, endR1 = KBENDS.refineEndR1, owned = null } = {}) {
   if (route.verts.length < 3) return route;
   const r1 = S.R1, minLeg = KBENDS.minLegR1 * r1, ax = start ? axisOf(start) : null;
   let V = route.verts.map((v) => v.slice()), legs = route.legs.slice(), b = bottleneckOf(legs);
@@ -216,7 +264,7 @@ export function polishAt(S, route, W, { legsOf = legContrastsOf, legsMany = legs
     for (let q = ax ? 1 : 2; q + 1 < V.length; q++) {
       const moves = q === 1 ? [step, -step].map((d) => (tOf(V[1]) + d >= ax.lo ? ax.at(tOf(V[1]) + d) : null)) : [[step, 0], [-step, 0], [0, step], [0, -step]].map(([ex, ey]) => [V[q][0] + ex, V[q][1] + ey]);
       // the moves of one bend read in one batch (each re-reads the two legs at the bend; its neighbours do not move meanwhile)
-      const live = moves.filter((P) => P && inside(S, P) && Math.hypot(P[0] - V[q - 1][0], P[1] - V[q - 1][1]) >= (q === 1 ? 0 : minLeg) && Math.hypot(P[0] - V[q + 1][0], P[1] - V[q + 1][1]) >= minLeg && ringCrossed(V[q - 1], P, foreign) < 0 && ringCrossed(P, V[q + 1], foreign) < 0);
+      const live = moves.filter((P) => P && inside(S, P) && Math.hypot(P[0] - V[q - 1][0], P[1] - V[q - 1][1]) >= (q === 1 ? 0 : minLeg) && Math.hypot(P[0] - V[q + 1][0], P[1] - V[q + 1][1]) >= minLeg && ringCrossed(V[q - 1], P, foreign) < 0 && ringCrossed(P, V[q + 1], foreign) < 0 && !(owned && (legRunsAlong(V[q - 1], P, owned, W) || legRunsAlong(P, V[q + 1], owned, W))));
       const got = live.length ? legsMany(S, live.map((P) => [V[q - 1], P, V[q + 1]]), W) : [];
       live.forEach((P, m) => {
         const [x, y] = got[m], nl = [...legs.slice(0, q - 1), x, y, ...legs.slice(q + 1)], nb = bottleneckOf(nl);

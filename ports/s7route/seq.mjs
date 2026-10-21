@@ -16,6 +16,7 @@
 export const SEQ = Object.freeze({
   straightLateralR1: 0.5,   // R1: the tee ray's half-width for the straight claim
   neighbours: 5,            // candidates per bent hole: joint ranks 0..4 (the measured guarantee: <= 4 on all 71 bent holes)
+  followLegs: 8,            // the hallway follower's leg budget per hole (hallway.mjs trace; the s3first prototype used 4)
   ringR1: 1                 // Sam (2026-10-21): "enforce no passing through baskets": no leg enters another basket's C1 ring (1 R1:
                             // C1 = 10 m by definition, R1 measured per image)
 });
