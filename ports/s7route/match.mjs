@@ -245,6 +245,9 @@ export const MATCH_STEPS = Object.freeze({
  *   seqNeighbours: (kBends 'seq') the neighbourhood ranks scored first (default SEQ.neighbours, all of them)
  *   seqWiden:      (kBends 'seq') true = a hole whose assigned route reads below tau on the sensor (or got no basket) re-solves
  *                  with its remaining ranks from the unclaimed pool
+ *   sensor:        absent (edges) | 'region' = the assignment reads the hallway REGION (ports/s7route/regionSpace.mjs: each cell's
+ *                  best route by region support, -1..1, the on-axis prior in support units); the routes and the per-hole steps (refine,
+ *                  sensor gates, second bend, placement) read edges | 'regionAll' = every measure reads the region
  */
 export const MATCH_RULES = Object.freeze({ straightFromS6: true, secondBendRefine: 'coordWide', refineUnits: 'r1', tableUnits: 'r1' });   // batch 2 (2026-10-20): S6CoordWide
 
@@ -285,7 +288,10 @@ export const RULE_SETS = Object.freeze({
   routeMatchKBendsSeq: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq' },
   // Sam (2026-10-21): "cut at least 80% of the 18x18 cells": the neighbourhood's top 3 ranks first (117/120 true baskets on 6
   // courses), widened to ranks 3-4 for a hole whose assigned route then fails the sensor gate
-  routeMatchKBendsSeq3: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true }
+  routeMatchKBendsSeq3: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true },
+  // the pointer read as a REGION (lane s7region, 2026-10-21: shade and sidewalks beside the hallway)
+  routeMatchTeeAxisBadgePriorRegion: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', sensor: 'region' },
+  routeMatchTeeAxisBadgePriorRegionAll: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', sensor: 'regionAll' }
 });
 
 /**

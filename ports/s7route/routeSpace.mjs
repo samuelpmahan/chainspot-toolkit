@@ -36,6 +36,9 @@
  *   tk.s7.routeTable    the join: contrastMatrix (lum), sensorMatrix (match2 reading), contrastRouteSensor (the sensor on
  *                       each contrast route), onAxisPrior (packet E03: 15 or 0, with each cell's alongPx / lateralPx off
  *                       the tee ray), every cell, Sam's basket per hole when testimony exists (judging only, 12 px)
+ * A REGION scene (tk.s7.sceneRegion, ports/s7route/regionSpace.mjs: the scene with { region }) is read as a region by the same
+ * two entry points: ribbonContrastAt answers [supportMean, visible px] and routeSensorAt { passFrac, stations: visible px };
+ * routeTableOn({ scene: 'tk.s7.sceneRegion' }) builds that scene's own table (Parts suffixed Region, on-axis prior in support).
  * Queries:
  *   fn.q.route.sensor   { scene | raster + mask, verts, widthPx } -> { passFrac, stations, passCount, legs }
  *   fn.q.route.contrast { scene | raster + mask, verts, widthPx } -> { contrastLum, edgePx }
@@ -46,6 +49,7 @@ import { stationContrastAt, lumOf } from '../s6straight/pathSpace.mjs';
 import { arange, FRONT, teeBadgeLearn } from '../s7trace/hallway.mjs';
 import { sha256Hex } from '../../fg/canon.mjs';
 import { ROUTE_TABLE_SCHEMA } from '../../fg/s7route/routeRender.mjs';
+import { regionSupportRead, regionSensorRead, REGION, REGION_UNITS, REGION_READ_CODE } from './regionSpace.mjs';
 
 export const ROUTE_START_PART = 'tk.s7.routeStart';
 export const ROUTE_HALLWAY_PART = 'tk.s7.routeHallway';
@@ -97,6 +101,7 @@ export const ROUTE_UNITS = Object.freeze({
  * station reuses the station verdicts already read (the stations are the same floats, so the answer is identical).
  */
 export function routeSensorAt(c, verts, W, { memo = null } = {}) {
+  if (c.region) return regionSensorRead(c, verts, W);   // a region scene reads the band, not its edges
   let P = 0, N = 0;
   const legs = [];
   for (let i = 0; i + 1 < verts.length; i++) {
@@ -150,6 +155,7 @@ export function ribbonContrastAt(c, V, W, { band = ROUTE.contrastBandPx } = {}) 
   return [r[0], r[1]];
 }
 function ribbonContrastRead(c, V, W, band) {
+  if (c.region) return regionSupportRead(c, V, W);   // a region scene: [supportMean, visible px] (regionSpace.mjs)
   const { lum, mask, W: IW, H: IH } = c, h = W / 2, b0 = band[0], b1 = band[1], reach = h + b1 + 1;
   let mnx = Infinity, mny = Infinity, mxx = -Infinity, mxy = -Infinity;
   for (const [x, y] of V) { mnx = Math.min(mnx, x); mny = Math.min(mny, y); mxx = Math.max(mxx, x); mxy = Math.max(mxy, y); }
@@ -442,19 +448,23 @@ export function samBasketsOf(holePaths, bp) {
  * The on-axis prior (packet E03, after-s4/verify_axis_prior.py): per hole, every BasketPoint's along / lateral position
  * relative to the tee ray from S; the nearest one past the badge (along > badge distance) within 0.5 W laterally gets 15.
  */
-export function onAxisOf(start, bp, W) {
+export function onAxisOf(start, bp, W, priorValue = ROUTE.onAxisPriorLum) {
   const { S, u, badgeAlongPx: dB } = start, n = [-u[1], u[0]];
   const pos = bp.map((p) => { const d = [p[0] - S[0], p[1] - S[1]]; return { alongPx: d[0] * u[0] + d[1] * u[1], lateralPx: d[0] * n[0] + d[1] * n[1] }; });
   let k = -1; pos.forEach((q, j) => { if (q.alongPx > dB && Math.abs(q.lateralPx) <= W * ROUTE.onAxisLateralW && (k < 0 || q.alongPx < pos[k].alongPx)) k = j; });
-  return pos.map((q, j) => ({ ...q, onAxisPrior: j === k ? ROUTE.onAxisPriorLum : 0 }));
+  return pos.map((q, j) => ({ ...q, onAxisPrior: j === k ? priorValue : 0 }));
 }
 
 const argmax = (row) => { let j = -1; row.forEach((v, i) => { if (v !== null && (j < 0 || v > row[j])) j = i; }); return j < 0 ? null : j; };
 
 /** tk.s7.routeTable: the holes x baskets matrices (edge contrast, sensor) with every cell's routes. No threshold, no verdict. */
-export function routeTableOf(start, hallway, rows, holesPart, sam, bp, sensorRows = null) {
+/** The measure a table's cells carry: the edge contrast (lum), or on a region scene the region support. */
+const EDGE_MEASURE = Object.freeze({ kind: 'edge', prior: ROUTE.onAxisPriorLum, unit: ROUTE_UNITS.contrastLum, sensorUnit: ROUTE_UNITS.passFrac });
+// built on use: regionSpace.mjs imports this module back (registerRegion), so nothing of it is read at module evaluation
+export const measureOf = (scene) => (scene?.region ? { kind: 'region', prior: REGION.onAxisPrior, unit: REGION_UNITS.supportMean, sensorUnit: REGION_UNITS.passFrac } : EDGE_MEASURE);
+export function routeTableOf(start, hallway, rows, holesPart, sam, bp, sensorRows = null, measure = EDGE_MEASURE) {
   if (sensorRows) rows = rows.map((r, i) => ({ ...r, cells: r.cells.map((c, k) => ({ ...c, sensorBest: sensorRows[i].cells[k]?.sensorBest ?? null })) }));
-  const axis = start.holes.map((h) => (hallway.widthPx > 0 ? onAxisOf(h, bp, hallway.widthPx) : bp.map(() => ({ alongPx: null, lateralPx: null, onAxisPrior: 0 }))));
+  const axis = start.holes.map((h) => (hallway.widthPx > 0 ? onAxisOf(h, bp, hallway.widthPx, measure.prior) : bp.map(() => ({ alongPx: null, lateralPx: null, onAxisPrior: 0 }))));
   const baskets = holesPart.baskets.map((k) => ({ index: k.index, name: k.name, point: k.point, source: k.source }));
   const holes = start.holes.map((h) => h.hole);
   const contrastMatrix = rows.map((r) => r.cells.map((x) => x.contrast.contrastLum));
@@ -463,10 +473,11 @@ export function routeTableOf(start, hallway, rows, holesPart, sam, bp, sensorRow
   return {
     schema: ROUTE_TABLE_SCHEMA,
     rule: 'every hole (tee cap) x every basket (S2 + S4 recovered BasketPoint). contrastMatrix: the best 0- or 1-bend route by render-and-score edge contrast (match18.py best_route; bend on the tee axis past the badge, step 6 px); contrastRouteSensor: the hallway sensor on that route; sensorMatrix: the best reading of the sensor over the 0-bend and the best 1-bend route (match2.py; step 8 px; >= 20 visible stations, else 0)',
-    units: { contrastMatrix: ROUTE_UNITS.contrastLum, contrastRouteSensor: ROUTE_UNITS.passFrac, sensorMatrix: ROUTE_UNITS.passFrac, ...ROUTE_UNITS },
+    units: { contrastMatrix: measure.unit, contrastRouteSensor: measure.sensorUnit, sensorMatrix: ROUTE_UNITS.passFrac, ...ROUTE_UNITS, ...(measure.kind === 'region' ? { onAxisPrior: `support (added by the matching rule): ${measure.prior} for the nearest BasketPoint past the badge along the tee ray within 0.5 W of it, else 0` } : {}) },
+    ...(measure.kind === 'region' ? { measure: { kind: 'region', rule: 'every cell read as a REGION (ports/s7route/regionSpace.mjs): contrastMatrix = the region support of the best route by region support; contrastRouteSensor = the region passFrac on it' } } : {}),
     widthPx: hallway.widthPx, holes, baskets, contrastMatrix, contrastRouteSensor, sensorMatrix,
     onAxisPrior: axis.map((r) => r.map((x) => x.onAxisPrior)),
-    onAxisRule: `packet E03 (after-s4/verify_axis_prior.py): ${ROUTE.onAxisPriorLum} for the nearest BasketPoint past the badge along the tee ray with |lateral| <= ${ROUTE.onAxisLateralW} W, else 0; a column for the matching rule, not added to the contrast here`,
+    onAxisRule: `packet E03 (after-s4/verify_axis_prior.py): ${measure.prior} for the nearest BasketPoint past the badge along the tee ray with |lateral| <= ${ROUTE.onAxisLateralW} W, else 0; a column for the matching rule, not added to the contrast here`,
     rows: rows.map((r, i) => ({ hole: r.hole, condition: r.condition, cells: r.cells.map((c, k) => ({ ...c, axis: axis[i][k] })) })),
     rowBest: holes.map((h, i) => ({ hole: h, contrastBasket: argmax(contrastMatrix[i]), sensorBasket: sensorMatrix ? argmax(sensorMatrix[i]) : null })),
     sensorView: sensorRows ? 'produced (tk.s7.routeSensorRow per hole)' : 'not produced: the matching rule reads only the contrast route and the sensor on it (tk.s7.routeSensorTable carries it)',
@@ -493,9 +504,11 @@ export const ROW_STEP_QUERIES = Object.freeze({
   'fn.q.route.contrastCell': (c, a) => { const r = ROW_STEPS.contrast(c, a.start, a.E, a.W, a.units, a.search); return { value: r, unit: 'lum (edge contrast) of the best route; tried: routes read', emits: { routes: r.tried } }; },
   'fn.q.route.sensorCell': (c, a) => ({ value: ROW_STEPS.sensor(c, a.verts, a.W, a.memo), unit: 'passFrac / stations', emits: { routes: 1 } })
 });
-export function registerRowSteps(store) {
-  for (const [fn, f] of Object.entries(ROW_STEP_QUERIES)) if (!store.registered(fn)) store.register(fn, { inParts: [SCENE], note: `route table step (ports/s7route/routeSpace.mjs ROW_STEPS)`,
-    calculate: (io) => f(io.in(SCENE), io.args) });
+/** The step queries on a scene: fn.q.route.<step> on tk.s7.sceneS4, fn.q.route.<step>@<scene> on any other (the region scene). */
+const stepName = (fn, scene) => (scene === SCENE ? fn : `${fn}@${scene}`);
+export function registerRowSteps(store, scene = SCENE) {
+  for (const [fn0, f] of Object.entries(ROW_STEP_QUERIES)) { const fn = stepName(fn0, scene); if (!store.registered(fn)) store.register(fn, { inParts: [scene], note: `route table step (ports/s7route/routeSpace.mjs ROW_STEPS)${scene === SCENE ? '' : ` on ${scene}`}`,
+    calculate: (io) => f(io.in(scene), io.args) }); }
 }
 /**
  * A row Calculation's steps, each a profiled call on the row's own store (nested under the row in the profile). Not
@@ -503,10 +516,10 @@ export function registerRowSteps(store) {
  * one hole's tee would recompute every row. These steps read only the S4 scene, an inPart of the row, plus their arguments,
  * so the row's key (code, args, scene) already bounds what they see.
  */
-const rowStepsOn = (store) => (store ? {
-  coarse: (_c, start, E, W, units, mult) => store.call('fn.q.route.coarseCell', { start, E, W, units, mult }).value,
-  contrast: (_c, start, E, W, units, search) => store.call('fn.q.route.contrastCell', { start, E, W, units, search }).value,
-  sensor: (_c, verts, W, memo) => store.call('fn.q.route.sensorCell', { verts, W, memo }).value
+const rowStepsOn = (store, scene = SCENE) => (store ? {
+  coarse: (_c, start, E, W, units, mult) => store.call(stepName('fn.q.route.coarseCell', scene), { start, E, W, units, mult }).value,
+  contrast: (_c, start, E, W, units, search) => store.call(stepName('fn.q.route.contrastCell', scene), { start, E, W, units, search }).value,
+  sensor: (_c, verts, W, memo) => store.call(stepName('fn.q.route.sensorCell', scene), { verts, W, memo }).value
 } : ROW_STEPS);
 
 /** The course-wide Calculations: starts and hallway (lazy: produced on first need). */
@@ -530,36 +543,67 @@ export const ROUTE_ROW_PX_CALCULATION = Object.freeze(['fn.tk.s7.routeRowPx', { 
 export const ROUTE_SENSOR_ROW_CALCULATION = Object.freeze(['fn.tk.s7.routeSensorRow', { inParts: [SCENE], outParts: [ROUTE_SENSOR_ROW_PART], code: CODE.sensorRow,
   note: 'one hole x every basket: the sensor\'s own best 0- or 1-bend route (match2.py)',
   calculate: (io) => { const S = io.in(SCENE); return { [ROUTE_SENSOR_ROW_PART]: routeSensorRowOf(S, io.args.start, S.bp, io.args.widthPx) }; } }]);
-export const routeTableCalculation = (rowAddresses) => ['fn.tk.s7.routeTable', { inParts: [ROUTE_START_PART, ROUTE_HALLWAY_PART, HOLES, SCENE, 'testimony.source.holePaths', ...rowAddresses], outParts: [ROUTE_TABLE_PART], code: CODE.table,
+export const routeTableCalculation = (rowAddresses, scene = SCENE) => ['fn.tk.s7.routeTable', { inParts: [ROUTE_START_PART, ROUTE_HALLWAY_PART, HOLES, scene, 'testimony.source.holePaths', ...rowAddresses], outParts: [ROUTE_TABLE_PART], code: CODE.table,
   note: 'holes x baskets: edge contrast and hallway sensor matrices, every cell\'s routes',
-  calculate: (io) => ({ [ROUTE_TABLE_PART]: routeTableOf(io.in(ROUTE_START_PART), io.in(ROUTE_HALLWAY_PART), rowAddresses.map((a) => io.in(a)), io.in(HOLES), samBasketsOf(io.in('testimony.source.holePaths'), io.in(SCENE).bp), io.in(SCENE).bp) }) }];
+  calculate: (io) => ({ [ROUTE_TABLE_PART]: routeTableOf(io.in(ROUTE_START_PART), io.in(ROUTE_HALLWAY_PART), rowAddresses.map((a) => io.in(a)), io.in(HOLES), samBasketsOf(io.in('testimony.source.holePaths'), io.in(scene).bp), io.in(scene).bp, null, measureOf(io.in(scene))) }) }];
 export const routeSensorTableCalculation = (rowAddresses, sensorAddresses) => ['fn.tk.s7.routeSensorTable', { inParts: [ROUTE_START_PART, ROUTE_HALLWAY_PART, HOLES, SCENE, 'testimony.source.holePaths', ...rowAddresses, ...sensorAddresses], outParts: [ROUTE_SENSOR_TABLE_PART], code: CODE.table,
   note: 'the route table with the sensor\'s own best routes joined in (scoring view, render sensor panel, match2.py parity)',
   calculate: (io) => ({ [ROUTE_SENSOR_TABLE_PART]: routeTableOf(io.in(ROUTE_START_PART), io.in(ROUTE_HALLWAY_PART), rowAddresses.map((a) => io.in(a)), io.in(HOLES), samBasketsOf(io.in('testimony.source.holePaths'), io.in(SCENE).bp), io.in(SCENE).bp, sensorAddresses.map((a) => io.in(a))) }) }];
+
+/** A rule set table's suffix: Px (recorded px), Fast / Lean / BadgeMid (the bend search), Region (read on the region scene). */
+export const tableSuffix = (units = 'r1', search = 'full', scene = SCENE) => `${units === 'px' ? 'Px' : ''}${search === 'fast' ? 'Fast' : search === 'lean' ? 'Lean' : search === 'badgeMid' ? 'BadgeMid' : ''}${scene === SCENE ? '' : 'Region'}`;
+export const tablePartOf = (units, search, scene) => `${ROUTE_TABLE_PART}${tableSuffix(units, search, scene)}`;
+
+/**
+ * Which basket by the REGION, the route by the EDGES (rule set sensor 'region'): the edge table with its assignment columns
+ * (contrastMatrix, contrastRouteSensor, onAxisPrior) taken from the region table of the same search. The region support is flat
+ * along a bend axis (a corner cut still lies mostly in the band), so it names the basket but does not place a bend; the edge
+ * table's cell route stays the seed of the per-hole steps. The edge columns are kept as edgeContrastMatrix / edgeOnAxisPrior.
+ */
+export function regionAssignTableOf(edge, region) {
+  return { ...edge, contrastMatrix: region.contrastMatrix, contrastRouteSensor: region.contrastRouteSensor, onAxisPrior: region.onAxisPrior,
+    edgeContrastMatrix: edge.contrastMatrix, edgeContrastRouteSensor: edge.contrastRouteSensor, edgeOnAxisPrior: edge.onAxisPrior,
+    units: { ...edge.units, contrastMatrix: region.units.contrastMatrix, contrastRouteSensor: region.units.contrastRouteSensor, onAxisPrior: region.units.onAxisPrior ?? edge.units.onAxisPrior, edgeContrastMatrix: edge.units.contrastMatrix },
+    measure: { kind: 'regionAssign', rule: 'contrastMatrix / contrastRouteSensor / onAxisPrior from the region table (ports/s7route/regionSpace.mjs; the best route by region support per cell); every cell\'s route (rows) from the edge table' },
+    rowBest: edge.holes.map((h, i) => ({ hole: h, contrastBasket: argmax(region.contrastMatrix[i]), sensorBasket: null, edgeContrastBasket: argmax(edge.contrastMatrix[i]) })),
+    emits: { ...edge.emits, regionReadCellsCount: region.contrastMatrix.flat().filter((v) => v !== null).length } };
+}
+/** tk.s7.routeTable<suffix>AssignRegion on a store with the region scene registered (regionSpace.mjs registerRegion). */
+export function regionAssignTableOn(store, { board = null, units = 'r1', search = 'full', regionScene }) {
+  const part = `${tablePartOf(units, search, SCENE)}AssignRegion`, fn = `fn.tk.s7.routeTable${tableSuffix(units, search, SCENE)}AssignRegion`;
+  if (!store.registered(fn)) {
+    routeTableOn(store, { board, units, search }); routeTableOn(store, { board, units, search, scene: regionScene });
+    const edgePart = tablePartOf(units, search, SCENE), regionPart = tablePartOf(units, search, regionScene);
+    store.register(fn, { inParts: [edgePart, regionPart], outParts: [part], code: sha256Hex(String(regionAssignTableOf)), note: 'the assignment columns from the region table, the routes from the edge table (rule set sensor region)',
+      calculate: (io) => ({ [part]: regionAssignTableOf(io.in(edgePart), io.in(regionPart)) }) });
+  }
+  return store.get(part);
+}
 
 /**
  * Produce tk.s7.routeTable on a store that has tk.s7.sceneS4, tk.s7.holes and testimony.source.holePaths: the starts,
  * the width, one row per hole (each its own cached call), then the join. board: the branch's provider board (the runner's).
  */
-export function routeTableOn(store, { board = null, sensor = false, units = 'r1', search = 'full' } = {}) {
+export function routeTableOn(store, { board = null, sensor = false, units = 'r1', search = 'full', scene = SCENE } = {}) {
   for (const [fn, spec] of ROUTE_CALCULATIONS) if (!store.registered(fn)) store.register(fn, spec);
-  registerRowSteps(store);
+  registerRowSteps(store, scene);
   const start = store.get(ROUTE_START_PART), W = store.get(ROUTE_HALLWAY_PART).widthPx ?? null, rows = [];
-  const suffix = `${units === 'px' ? 'Px' : ''}${search === 'fast' ? 'Fast' : search === 'lean' ? 'Lean' : search === 'badgeMid' ? 'BadgeMid' : ''}`;
+  // scene: the S4 scene (edges) or the region scene (scene.region; its own rows and table, suffixed Region)
+  const suffix = tableSuffix(units, search, scene);
   if (suffix) {   // a rule set's table (px: match18.py's recorded px; Fast: coarse-to-fine bends): its own rows and table Parts
     const rowPart = `${ROUTE_ROW_PART}${suffix}`, tablePart = `${ROUTE_TABLE_PART}${suffix}`, rowFn = `fn.tk.s7.routeRow${suffix}`, tableFn = `fn.tk.s7.routeTable${suffix}`;
     for (const h of start.holes) {
       const address = `${rowPart}@${h.hole}`;
       if (!store.has(address)) {
         const b = store.branch(board, { name: `s7route/hole ${h.hole} (${suffix})`, alias: { [rowPart]: address }, sharedParts: true });
-        b.register(rowFn, { inParts: [SCENE], outParts: [rowPart], code: CODE.row, note: `one hole x every basket, rule set table ${suffix}`,
-          calculate: (io) => { const S = io.in(SCENE); return { [rowPart]: routeRowOf(S, io.args.start, S.bp, io.args.widthPx, units, search, rowStepsOn(b)) }; } });
+        b.register(rowFn, { inParts: [scene], outParts: [rowPart], code: scene === SCENE ? CODE.row : `${CODE.row} ${REGION_READ_CODE}`, note: `one hole x every basket, rule set table ${suffix}`,
+          calculate: (io) => { const S = io.in(scene); return { [rowPart]: routeRowOf(S, io.args.start, S.bp, io.args.widthPx, units, search, rowStepsOn(b, scene)) }; } });
         b.call(rowFn, { hole: h.hole, start: h, widthPx: W });
       }
       rows.push(address);
     }
-    if (!store.registered(tableFn)) store.register(tableFn, { ...routeTableCalculation(rows)[1], outParts: [tablePart],
-      calculate: (io) => ({ [tablePart]: routeTableCalculation(rows)[1].calculate(io)[ROUTE_TABLE_PART] }) });
+    if (!store.registered(tableFn)) store.register(tableFn, { ...routeTableCalculation(rows, scene)[1], outParts: [tablePart],
+      calculate: (io) => ({ [tablePart]: routeTableCalculation(rows, scene)[1].calculate(io)[ROUTE_TABLE_PART] }) });
     return store.get(tablePart);
   }
   for (const h of start.holes) {

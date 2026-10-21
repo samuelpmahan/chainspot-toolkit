@@ -17,7 +17,7 @@ const ramp = (f) => COL.lo.map((a, i) => Math.round(a + (COL.hi[i] - a) * Math.m
 const short = (name) => String(name ?? '').replace(/^Basket /, '');
 
 /** One heatmap panel: values M[i][j] (null = no reading), shown as `fmt(v)`, coloured by (v - lo) / (hi - lo). */
-function panel(v, { canvas, M, lo, hi, fmt, title, sub, maxOf, mark = null }) {
+function panel(v, { canvas, M, lo, hi, fmt, title, sub, maxOf, mark = null, priorLabel = '15' }) {
   const holes = v.holes ?? [], baskets = v.baskets ?? [];
   const cw = 26, ch = 16, left = 46, top = 64, legendH = 70;
   const w = Math.max(left + cw * baskets.length + 12, 640, 16 + 6 * Math.max(title.length, sub.length)), h = top + ch * holes.length + 14 + legendH;
@@ -44,7 +44,7 @@ function panel(v, { canvas, M, lo, hi, fmt, title, sub, maxOf, mark = null }) {
   const sw = (c, label, frame = false) => { if (frame) cv.frame(x, y, 12, 10, c, 2); else cv.fill(x, y, 12, 10, c); x = cv.text(x + 16, y + 2, label) + 14; };
   sw(COL.sam, "SAM'S BASKET (TESTIMONY, 12 PX)", true); sw(COL.best, 'ROW MAXIMUM');
   y += 26; x = 8; sw([235, 235, 235], 'NO READING (TOO FEW VISIBLE PX / STATIONS)');
-  if (mark) sw(COL.prior, 'ON-AXIS PRIOR +15 (E03; NOT IN THE VALUE)');
+  if (mark) sw(COL.prior, `ON-AXIS PRIOR +${priorLabel} (E03; NOT IN THE VALUE)`);
   cv.text(8, y + 16, v.sam?.source ? `TESTIMONY: ${String(v.sam.source).slice(0, 90)}` : 'NO TESTIMONY: NOTHING MARKED', COL.dim);
   return { width: w, height: h, png: base64(encodePngRgb({ width: w, height: h, rgb: cv.rgb })) };
 }
@@ -54,12 +54,16 @@ export function renderRouteTable(address, v, { canvas }) {
   const holes = v.holes ?? [], W = v.widthPx == null ? 'N/A' : Math.round(v.widthPx * 100) / 100;
   const C = v.contrastMatrix ?? [], vals = C.flat().filter((x) => x != null), hi = Math.max(1, Math.ceil(Math.max(0, ...vals)));
   const pct = (x) => String(Math.round(x * 100)), lum = (x) => String(Math.round(x));
+  // a region table (ports/s7route/regionSpace.mjs): the cells are region support -1..1 (shown x 100) and the region passFrac
+  const region = v.measure?.kind === 'region' || v.measure?.kind === 'regionAssign', prior = Math.max(0, ...(v.onAxisPrior ?? []).flat());
   const panels = [
-    ['contrast', C, 0, hi, lum, `S7 ROUTE TABLE: EDGE CONTRAST (LUM), BEST 0/1-BEND ROUTE, HOLE X BASKET (W ${W} PX)`, 'CELL = MEAN LUM 0.5-3 PX INSIDE THE RENDERED RIBBON EDGES MINUS OUTSIDE (MATCH18 BEST_ROUTE, BEND STEP 6 PX)'],
-    ['contrastRouteSensor', v.contrastRouteSensor ?? [], 0, 1, pct, `S7 ROUTE TABLE: HALLWAY SENSOR ON THE CONTRAST ROUTE (%) (W ${W} PX)`, 'CELL = VISIBLE STATIONS WHOSE BOTH EDGES STEP > 8 LUM, ON THE ROUTE OF THE CONTRAST PANEL'],
+    region ? ['contrast', C, 0, 1, pct, `S7 ROUTE TABLE: REGION SUPPORT (X 100), BEST 0/1-BEND ROUTE BY REGION, HOLE X BASKET (W ${W} PX)`, `CELL = MEAN OVER STATIONS OF 2 P(HALLWAY) - 1 (NOT VISIBLE = 0)${v.measure.kind === 'regionAssign' ? '; THE CELL ROUTES ARE THE EDGE TABLE\'S' : ''}`]
+      : ['contrast', C, 0, hi, lum, `S7 ROUTE TABLE: EDGE CONTRAST (LUM), BEST 0/1-BEND ROUTE, HOLE X BASKET (W ${W} PX)`, 'CELL = MEAN LUM 0.5-3 PX INSIDE THE RENDERED RIBBON EDGES MINUS OUTSIDE (MATCH18 BEST_ROUTE, BEND STEP 6 PX)'],
+    region ? ['contrastRouteSensor', v.contrastRouteSensor ?? [], 0, 1, pct, `S7 ROUTE TABLE: REGION PASSFRAC ON THE REGION ROUTE (%) (W ${W} PX)`, 'CELL = VISIBLE STATIONS WITH P(HALLWAY) >= 0.5']
+      : ['contrastRouteSensor', v.contrastRouteSensor ?? [], 0, 1, pct, `S7 ROUTE TABLE: HALLWAY SENSOR ON THE CONTRAST ROUTE (%) (W ${W} PX)`, 'CELL = VISIBLE STATIONS WHOSE BOTH EDGES STEP > 8 LUM, ON THE ROUTE OF THE CONTRAST PANEL'],
     ['sensor', v.sensorMatrix ?? [], 0, 1, pct, `S7 ROUTE TABLE: HALLWAY SENSOR, ITS OWN BEST 0/1-BEND ROUTE (%) (W ${W} PX)`, 'CELL = BEST SENSOR READING (MATCH2: BEND STEP 8 PX, >= 20 VISIBLE STATIONS, ELSE 0)']
   ];
-  const parts = panels.filter(([key, M]) => key !== 'sensor' || v.sensorMatrix).map(([key, M, lo, top, fmt, title, sub]) => ({ address: `${address}#${key}`, kind: 'raster', data: panel(v, { canvas, M, lo, hi: top, fmt, title, sub, maxOf: (i) => argmaxRow(M[i]), mark: key === 'contrast' ? v.onAxisPrior : null }) }));
+  const parts = panels.filter(([key, M]) => key !== 'sensor' || v.sensorMatrix).map(([key, M, lo, top, fmt, title, sub]) => ({ address: `${address}#${key}`, kind: 'raster', data: panel(v, { canvas, M, lo, hi: top, fmt, title, sub, maxOf: (i) => argmaxRow(M[i]), mark: key === 'contrast' ? v.onAxisPrior : null, priorLabel: region ? `${prior} SUPPORT` : '15' }) }));
   const judged = holes.filter((hole) => v.sam?.byHole?.[hole]?.basket != null);
   const agree = (M) => judged.filter((hole) => argmaxRow(M[holes.indexOf(hole)]) === v.sam.byHole[hole].basket).length;
   parts.push(
