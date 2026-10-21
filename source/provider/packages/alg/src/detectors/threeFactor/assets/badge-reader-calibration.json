@@ -26,10 +26,18 @@
 					"northpark"
 				],
 				"badges": 108,
+				"syntheticBadges": 0,
+				"syntheticPerLabelPerCourse": 0,
 				"examples": 216,
 				"rightTops": 98,
 				"wrongTops": 10,
 				"hardNegatives": 108
+			},
+			"outOfCourse": {
+				"maxImpostorP": 0.979,
+				"impostorsAtPStar": 0,
+				"of": 118,
+				"unit": "dev hard negatives and wrong tops, scored by the fold that left their course out"
 			}
 		},
 		"digitBW": {
@@ -39,11 +47,11 @@
 				"layoutMargin"
 			],
 			"weights": [
-				47.19563750290286,
-				28.156488426061166,
-				0.18328853408379736
+				41.17098405730371,
+				34.307844381442806,
+				-0.03488460275850256
 			],
-			"bias": -45.132666056445444,
+			"bias": -40.14614794392884,
 			"priorShift": 4.6913478822291435,
 			"trainedOn": {
 				"courses": [
@@ -55,10 +63,18 @@
 					"northpark"
 				],
 				"badges": 108,
+				"syntheticBadges": 0,
+				"syntheticPerLabelPerCourse": 0,
 				"examples": 216,
 				"rightTops": 108,
 				"wrongTops": 0,
 				"hardNegatives": 108
+			},
+			"outOfCourse": {
+				"maxImpostorP": 0.978,
+				"impostorsAtPStar": 0,
+				"of": 108,
+				"unit": "dev hard negatives and wrong tops, scored by the fold that left their course out"
 			}
 		},
 		"coverage": {
@@ -82,10 +98,18 @@
 					"northpark"
 				],
 				"badges": 108,
+				"syntheticBadges": 0,
+				"syntheticPerLabelPerCourse": 0,
 				"examples": 216,
 				"rightTops": 108,
 				"wrongTops": 0,
 				"hardNegatives": 108
+			},
+			"outOfCourse": {
+				"maxImpostorP": 0.976,
+				"impostorsAtPStar": 0,
+				"of": 108,
+				"unit": "dev hard negatives and wrong tops, scored by the fold that left their course out"
 			}
 		},
 		"perDigit": {
@@ -109,10 +133,18 @@
 					"northpark"
 				],
 				"badges": 108,
+				"syntheticBadges": 0,
+				"syntheticPerLabelPerCourse": 0,
 				"examples": 216,
 				"rightTops": 108,
 				"wrongTops": 0,
 				"hardNegatives": 108
+			},
+			"outOfCourse": {
+				"maxImpostorP": 0.473,
+				"impostorsAtPStar": 0,
+				"of": 108,
+				"unit": "dev hard negatives and wrong tops, scored by the fold that left their course out"
 			}
 		}
 	}

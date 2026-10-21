@@ -7,8 +7,8 @@
  *
  * The feature functions below are the only definition of the features; the fitting script calls them too.
  *   binary, coverage: [score of the label, its margin over the best other label]
- *   digitBW:          [lowest digit Dice of the label, lowest digit margin over the digits that would still spell a
- *                      label of the vocabulary given, layout margin (the label's layout minus the other layout)]
+ *   digitBW:          [lowest digit Dice of the label, lowest digit margin to its runner-up once every better digit of
+ *                      its cell is removed (never negative), layout margin (the label's layout minus the other layout)]
  *   perDigit:         [geometric mean of the label's digit posteriors, its normalized posterior minus the best other]
  * `others` is the vocabulary the label competes in: all of 1..HOLE_LABEL_MAX for a read, fewer for a hard negative
  * (the true label removed) or for the per-image assignment (the labels still free).
@@ -59,20 +59,27 @@ export interface DigitScoreTable {
 const meanBest = (cells: readonly (readonly number[])[] | null) =>
 	cells ? cells.reduce((a, c) => a + Math.max(...c), 0) / cells.length : -1;
 
-export function digitLabelFeatures(table: DigitScoreTable, label: number, others: readonly number[]): number[] {
+/**
+ * digitBW: the features the digit reader would report if it read `label`. The reader reads each cell's best digit, so a
+ * label whose digit is not its cell's best is read only when every better digit in that cell is absent: those digits
+ * are removed, and the label's digit is then the cell's best. Per cell its Dice and its margin to ITS runner-up among
+ * the digits left (the best digit scoring at most as much); the layout margin is the label's layout mean against the
+ * other layout's mean best. For the reader's own read nothing is removed and these are exactly what
+ * classifyBadgeDigits reports. A hard negative (the true label absent) and an assigned label (the bijection) are read
+ * the same way. `others` is accepted for symmetry with the other readers; a digit read does not depend on it.
+ */
+export function digitLabelFeatures(table: DigitScoreTable, label: number, _others: readonly number[] = []): number[] {
 	const ds = [...String(label)].map(Number);
 	const cells = ds.length === 1 ? table.one : table.two;
 	const other = ds.length === 1 ? table.two : table.one;
-	if (!cells || cells.length !== ds.length) return [0, -1, -1];
+	if (!cells || cells.length !== ds.length) return [0, 0, -1];
 	const scores = ds.map((d, i) => cells[i][d]);
-	const joint = scores.reduce((a, v) => a + v, 0) / scores.length;
-	const rest = others.filter((k) => k !== label && String(k).length === ds.length);
 	const margins = ds.map((d, i) => {
-		const alternatives = rest
-			.filter((k) => [...String(k)].every((c, j) => j === i || Number(c) === ds[j]))
-			.map((k) => Number(String(k)[i]));
-		return alternatives.length ? cells[i][d] - Math.max(...alternatives.map((a) => cells[i][a])) : 1;
+		const below = cells[i].filter((v, e) => e !== d && v <= cells[i][d]);
+		return below.length ? cells[i][d] - Math.max(...below) : cells[i][d];
 	});
+	if (margins.some((m) => m < 0)) throw new Error('digitLabelFeatures: a negative digit margin (a read is its cell\'s best digit)');
+	const joint = scores.reduce((a, v) => a + v, 0) / scores.length;
 	return [Math.min(...scores), Math.min(...margins), joint - meanBest(other)];
 }
 

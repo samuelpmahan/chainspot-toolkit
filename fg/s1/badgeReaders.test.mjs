@@ -59,7 +59,10 @@ test('learned abstention: one p* from the stated cost, every reader calibrated, 
     assert.ok(asset.readers[r].trainedOn.courses.length === 6 && asset.readers[r].trainedOn.badges === 108, r);
     assert.equal(asset.readers[r].weights.length, asset.readers[r].features.length);
   }
-  // a digit read with every margin wide reads; one with a negative digit margin does not
+  // a digit read with every margin wide is confident
   assert.ok(K.readerProbability('digitBW', [0.95, 0.3, 0.3]) >= K.READER_P_STAR);
-  assert.ok(K.readerProbability('digitBW', [0.95, -0.05, 0.3]) < K.READER_P_STAR);
+  // a digit read's margin is to its runner-up once every better digit of its cell is removed: never negative, for any label
+  const cell = (seed) => Array.from({ length: 10 }, (_, d) => ((seed * 7 + d * 13) % 17) / 17);
+  const table = { one: [cell(1)], two: [cell(2), cell(3)] };
+  for (let L = 1; L <= 27; L++) assert.ok(K.digitLabelFeatures(table, L)[1] >= 0, `label ${L}`);
 });

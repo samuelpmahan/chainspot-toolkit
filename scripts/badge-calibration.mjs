@@ -53,11 +53,12 @@ const FIXED = { minScore: 0.58, minMargin: 0.045 };   // the borrowed constants,
 const READERS = ['binary', 'digitBW', 'coverage', 'perDigit'];
 const FEATURES = { binary: ['dice', 'margin'], digitBW: ['minDigitDice', 'minDigitMargin', 'layoutMargin'], coverage: ['ncc', 'margin'], perDigit: ['geoMeanDigitProb', 'posteriorMargin'] };
 const ST = join(ROOT, 'attempts/stages');
-const LABELS = process.argv.includes('--labels') ? process.argv[process.argv.indexOf('--labels') + 1] : null;
-if (!LABELS) throw new Error('--labels DIR is required (validation reference labels)');
+const median = (v) => { const s = [...v].sort((a, b) => a - b); return s.length ? s[(s.length - 1) >> 1] : null; };
+const r3 = (v) => Math.round(v * 1000) / 1000;
+const arg = (k) => (process.argv.includes(k) ? process.argv[process.argv.indexOf(k) + 1] : null);
 const DEV = readFileSync(join(ROOT, 'docs/evidence/dev-s1s4/ATTEMPTS'), 'utf8').trim().split('\n').map((l) => l.split(' '));
-const VALIDATION = [['seatacFull', 'attempt-1792544219787-6842b5719420'], ['seatacCapture', 'attempt-1792544222670-65b244cea36e'], ['beaverranchLazy', 'attempt-1792544226741-5d7292bb6c94'],
-  ['beaverranchCapture', 'attempt-1792544254663-cb63f91b902e'], ['fountainhillsFull', 'attempt-1792544433141-c4d516d9076c'], ['fountainhillsLazy', 'attempt-1792544187979-49c64d5f40fd']];
+// validation boards: `--validation FILE` lines "course attempt"; their reference is the board's S1 read (checked by eye)
+const VALIDATION = arg('--validation') ? readFileSync(arg('--validation'), 'utf8').trim().split('\n').map((l) => l.split(' ')) : [];
 
 // ---- per-label scores of each reader ----------------------------------------------------------------------
 /** For one badge: what each reader's per-label features are computed from (badgeReaderCalibration.ts). */
@@ -133,6 +134,21 @@ function templatesFor(exclude) {
   const { shippedDigits } = bakeDigits(rasters, { quiet: true });
   return { binary: BADGE_GLYPH_TEMPLATES, coverage: coverageTemplates, digit: shippedDigits };
 }
+/** "A black plate inside a white box", LOCAL to the badge. mid = midway between the badge's own plate and glyph levels
+ * (coverageLevels over the inset). White box: on each of the four sides, over the middle half of the side (clear of the
+ * rounded corners), the brightest of the outer 3 px has its median above mid. Black plate: more than half the inset is
+ * below mid. */
+function plateInWhiteBox(bitmap, body) {
+  const lv = C.coverageLevels(bitmap, body), mid = (lv.plateLum + lv.glyphLum) / 2;
+  const x0 = Math.round(body.xPx - body.widthPx / 2), y0 = Math.round(body.yPx - body.heightPx / 2), W = body.widthPx, H = body.heightPx;
+  const lumAt = (x, y) => { const o = (Math.max(0, Math.min(bitmap.height - 1, y0 + y)) * bitmap.width + Math.max(0, Math.min(bitmap.width - 1, x0 + x))) * 4; return (bitmap.data[o] + bitmap.data[o + 1] + bitmap.data[o + 2]) / 3; };
+  const side = (n, at) => median(Array.from({ length: Math.ceil(n / 2) }, (_, k) => Math.max(...[0, 1, 2].map((d) => at(Math.floor(n / 4) + k, d)))));
+  const sides = [side(W, (k, d) => lumAt(k, d)), side(W, (k, d) => lumAt(k, H - 1 - d)), side(H, (k, d) => lumAt(d, k)), side(H, (k, d) => lumAt(W - 1 - d, k))];
+  const inset = [];
+  for (let y = Math.ceil(0.16 * H); y < Math.floor(0.84 * H); y++) for (let x = Math.ceil(0.14 * W); x < Math.floor(0.86 * W); x++) inset.push(lumAt(x, y));
+  const plateShare = inset.filter((v) => v < mid).length / inset.length;
+  return { pass: sides.every((v) => v > mid) && plateShare > 0.5, mid: r3(mid), sides: sides.map(r3), plateShare: r3(plateShare) };
+}
 function collect(course, attempt, T, labels = null) {
   const board = new Map(deserialize(readFileSync(join(ST, attempt, 'fork/stage-output/early/s3.pxc.bin'))));
   const image = board.get('localImage'), { topPx } = board.get('viewport'), badges = board.get('badges');
@@ -141,12 +157,10 @@ function collect(course, attempt, T, labels = null) {
     const [x, y, w, h] = b.bbox, body = { xPx: x + w / 2, yPx: y + h / 2 - topPx, widthPx: w, heightPx: h };
     const truth = labels ? labels[b.detId] : b.label;
     // the reference is S1's per-digit read under 1..27 (dev: on the board; validation: the lane's run, checked by eye)
-    return { course, detId: b.detId, bboxPx: b.bbox, truth: truth == null ? null : Number(truth), R: readerScores(bitmap, body, b, T), fixed: fixedVerdicts(bitmap, body, T, badges.length, truth), badge: b };
+    return { course, attempt, detId: b.detId, bboxPx: b.bbox, truth: truth == null ? null : Number(truth), plateBox: plateInWhiteBox(bitmap, body), R: readerScores(bitmap, body, b, T), fixed: fixedVerdicts(bitmap, body, T, badges.length, truth), badge: b };
   });
 }
 
-const median = (v) => { const s = [...v].sort((a, b) => a - b); return s.length ? s[(s.length - 1) >> 1] : null; };
-const r3 = (v) => Math.round(v * 1000) / 1000;
 
 function examples(rows, reader) {
   const out = [];
@@ -194,6 +208,18 @@ function bijection(rows, reader, model) {
   return final;
 }
 
+/** No abstention (Sam, 2026-10-21): every badge gets every reader's best label with its P; P < P_STAR is a flag. The
+ * one-to-one assignment over 1..N (cost -log P of each label read as the reader would read it) is a cross-check. */
+function readAll(rows, reader, m) {
+  const N = rows.length, labels = HOLE_LABELS.filter((L) => L <= N);
+  const reads = rows.map((r) => { const top = topOf(reader, r.R, HOLE_LABELS), x = featuresOf(reader, r.R, top, HOLE_LABELS); return { detId: r.detId, label: top, p: r3(prob(m, x)), margin: r3(x[1]) }; });
+  const cost = rows.map((r) => labels.map((L) => -Math.log(Math.max(1e-12, prob(m, featuresOf(reader, r.R, L, HOLE_LABELS))))));
+  const assigned = new Map(assignMinCost(cost).map(([i, j]) => [i, labels[j]]));
+  reads.forEach((v, i) => { v.assigned = assigned.get(i) ?? null; v.crossCheck = v.assigned === v.label ? 'agrees' : 'conflicts'; v.flag = v.p < P_STAR; v.wrong = rows[i].truth != null && v.label !== rows[i].truth; });
+  return { badges: N, flagged: reads.filter((v) => v.flag).length, wrong: reads.filter((v) => v.wrong).length, wrongFlagged: reads.filter((v) => v.wrong && v.flag).length,
+    agrees: reads.filter((v) => v.crossCheck === 'agrees').length, conflicts: reads.filter((v) => v.crossCheck === 'conflicts').length, reads };
+}
+
 // ---- run -----------------------------------------------------------------------------------------------------
 const report = { costWrong: COST_WRONG, pStar: P_STAR, readers: {} };
 const devRows = {}, synRows = {}, looT = {};
@@ -209,7 +235,7 @@ if (SYN) for (const [course, attempt] of DEV) {
 const trainRows = (c, reader) => [...examples(devRows[c], reader), ...(reader === 'perDigit' ? [] : examples(synRows[c] ?? [], reader))];
 const valRows = {};
 for (const [course, attempt] of VALIDATION)
-  valRows[course] = collect(course, attempt, templatesFor(null), JSON.parse(readFileSync(join(LABELS, `truth-${course}.json`), 'utf8')));
+  valRows[course] = collect(course, attempt, templatesFor(null));
 
 // Diagnosis (dev only): each reader's top-read features on real 1..18, synthetic 1..18, synthetic 1x (10..19) and
 // synthetic 2x (20..27), and the share P >= P_STAR under a model fitted on the real dev badges alone.
@@ -252,7 +278,8 @@ for (const reader of READERS) {
       filled: bij.map((b, i) => (b.how === 'filled' ? { detId: rows[i].detId, truth: rows[i].truth, top: b.top, pTop: r3(b.p ?? 0), assigned: b.assigned } : null)).filter(Boolean),
       changed: rows.map((r, i) => ({ detId: r.detId, bboxPx: r.bboxPx, truth: r.truth, fixed: fixedReads[i], learned: tops[i].p >= P_STAR ? tops[i].top : null, p: r3(tops[i].p), final: bij[i].assigned, how: bij[i].how })).filter((c) => (c.fixed ?? null) !== (c.final ?? null)),
       conflicts: bij.filter((b) => b.how === 'conflict').length,
-      overrides: bij.filter((b, i) => b.label != null && b.assigned != null && b.assigned !== b.label).length };
+      overrides: bij.filter((b, i) => b.label != null && b.assigned != null && b.assigned !== b.label).length,
+      readAll: readAll(rows, reader, m) };
   };
   for (const [course] of DEV) table[course] = summarize(course, devRows[course], perCourse[course].model);
   for (const [course] of VALIDATION) table[course] = summarize(course, valRows[course], model);
@@ -261,6 +288,13 @@ for (const reader of READERS) {
   const bins = [[0, 0.1], [0.1, 0.5], [0.5, 0.9], [0.9, 1.0001]].map(([lo, hi]) => { const e = cv.filter((x) => x.pMix >= lo && x.pMix < hi); return { bin: `${lo}-${Math.min(hi, 1)}`, n: e.length, meanP: e.length ? r3(e.reduce((a, x) => a + x.pMix, 0) / e.length) : null, observed: e.length ? r3(e.filter((x) => x.y === 1).length / e.length) : null }; });
   report.readers[reader] = { features: FEATURES[reader], shipped: shipped[reader], reliability: bins, maxImpostorP: r3(Math.max(...cv.filter((x) => x.y === 0).map((x) => x.p))), impostorsAtPStar: cv.filter((x) => x.y === 0 && x.p >= P_STAR).map((x) => ({ course: x.course, truth: x.truth, read: x.label, kind: x.kind, p: r3(x.p), x: x.x.map(r3) })), minRightTopP: r3(Math.min(...cv.filter((x) => x.y === 1).map((x) => x.p))), table };
 }
+
+// every badge with every reader's read, for the renders and the report
+report.badges = [...DEV.map(([c]) => [c, devRows[c]]), ...VALIDATION.map(([c]) => [c, valRows[c]])].flatMap(([course, rows]) => rows.map((r, i) => ({
+  course, attempt: r.attempt, detId: r.detId, bboxPx: r.bboxPx, reference: r.truth, plateBox: r.plateBox,
+  reads: Object.fromEntries(READERS.map((reader) => { const v = report.readers[reader].table[course].readAll.reads[i]; return [reader, { label: v.label, p: v.p, margin: v.margin, flag: v.flag, crossCheck: v.crossCheck }]; }))
+})));
+report.plateBoxFailures = report.badges.filter((b) => !b.plateBox.pass).length;
 
 if (process.argv.includes('--write')) {
   const asset = {
