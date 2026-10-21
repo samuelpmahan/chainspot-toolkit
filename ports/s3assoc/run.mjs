@@ -17,6 +17,7 @@
  * (agreement is reported, never accepted). Writes <out>/px.tees.association.json
  * (default attempts/stages/<id>/fork/stage-output/s3assoc/).
  */
+import { exitOnEarlyCondition } from '../early/condition.mjs';
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fitPadPose } from './padPose.mjs';
@@ -116,6 +117,7 @@ if (process.argv[1] && resolve(process.argv[1]) === resolve(new URL(import.meta.
   const arg = (k) => { const i = process.argv.indexOf(k); return i >= 0 ? process.argv[i + 1] : null; };
   const attempt = arg('--attempt'), specimen = arg('--specimen');
   if (!attempt || !specimen) { console.error('Usage: node ports/s3assoc/run.mjs --specimen NAME --attempt ATTEMPT_ID [--out DIR]'); process.exit(2); }
+  exitOnEarlyCondition({ root: ROOT, attempt, specimen, stage: 'S3 association' });   // a recorded early condition: this stage is not run
   const out = arg('--out') ?? join(ROOT, 'attempts', 'stages', attempt, 'fork', 'stage-output', 's3assoc');
   const t0 = Date.now(); const res = runAssociation({ attempt, specimen });
   mkdirSync(out, { recursive: true }); writeFileSync(join(out, 'px.tees.association.json'), JSON.stringify(res, null, 1));

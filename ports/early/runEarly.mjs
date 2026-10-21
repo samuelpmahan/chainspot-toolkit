@@ -116,18 +116,27 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     // S3 across zoom levels (fg/s3/teeScale.mjs): the pinned S3 registers its ring and family Calculations with this image's
     // rC1-scaled bounds (measured from the S2 BasketPoints, tk.scale.rC1)
     if (id === 'S3') uninstallTee = installScaledTee(dist, () => store.get('tk.scale.rC1').tee);
-    let result;
-    try { result = await contract.execute({ source, inputLabel: basename(source), decode, ...(pxc ? { pxc } : {}) }); }
-    catch (error) {
-      // a data condition, not an integrity failure: recorded as the run's result, the later stages are not run
-      if (!(error instanceof NoBadgesCondition)) throw error;
-      const receipt = { schema: 'nctk-early@1', source: { path: source, sha256: sourceSha256 }, stages, condition: error.condition, counts: { badges: 0 },
+    // a data condition, not an integrity failure: recorded as the run's result, the later stages are not run
+    const conditionReceipt = (condition, counts) => {
+      const receipt = { schema: 'nctk-early@1', source: { path: source, sha256: sourceSha256 }, stages, condition, counts,
         notRun: stageOrder.slice(stageOrder.indexOf(id) + 1).concat(['S4', 'S5', 'S6', 'S7']), crop: store.has('tk.source.cropReceipt') ? store.get('tk.source.cropReceipt') : null, snapshot: null, experiments: { gates: {}, branches: {} } };
       writeFileSync(join(out, 'run.receipt.json'), json(receipt));
       writeFileSync(join(out, 'instrumentation.json'), json(instrumentation.document({ store: store.manifest() })));
       return receipt;
+    };
+    let result;
+    try { result = await contract.execute({ source, inputLabel: basename(source), decode, ...(pxc ? { pxc } : {}) }); }
+    catch (error) {
+      if (!(error instanceof NoBadgesCondition)) throw error;
+      return conditionReceipt(error.condition, { badges: 0 });
     }
     pxc = result.pxc;
+    // S2 found no basket (no shell family on this image): S3 scales its tee search from the BasketPoints, so the later
+    // stages are not run; recorded like S1's no badges (BeaverRanch-Gold-full, 2026-10-21)
+    if (id === 'S2' && !(store.has('px.baskets') && store.get('px.baskets')?.length)) {
+      return conditionReceipt({ stage: 'S2', result: 'no baskets', detail: 'S2 found no basket shell family: no BasketPoint on this image' },
+        { badges: store.has('px.badges') ? store.get('px.badges').length : null, baskets: 0 });
+    }
     const image = pxc.get(id === 'S0' ? 'px.course.canonicalPixels' : ComponentPxC.image);
     const canonicalRgbaSha256 = hash(image.rgba);
     if (id === 'S0') {

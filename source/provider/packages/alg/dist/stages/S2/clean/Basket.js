@@ -135,9 +135,11 @@ class Basket {
     }
     static findPx(pxc) {
         const shellFamily = pxc.get(exports.BasketPxC.shellFamily);
+        // read before the early exit: the tick declares px.components and its access is exact, so an image with no shell
+        // family records zero baskets (a data condition) instead of failing the run's access check (BeaverRanch-full, 2026-10-21)
+        const fields = pxc.get(componentPxC_1.ComponentPxC.fields);
         if (!shellFamily.margins)
             return [];
-        const fields = pxc.get(componentPxC_1.ComponentPxC.fields);
         const raster = {
             width: fields.bright.mask.width,
             height: fields.bright.mask.height,

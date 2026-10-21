@@ -15,6 +15,7 @@
  *   cmp.fn.Hole.trace.json, keyspace.json, instrumentation.json, s7trace.{records.json,frames.json,flipbook.html},
  *   s7trace.overview.png (the accepted variant over the map, coloured by the judge), artifacts/fn.Hole.trace/<impl>/traces.json
  */
+import { exitOnEarlyCondition } from '../early/condition.mjs';
 import { runnerCache, casFlag } from '../../fg/casRunner.mjs';
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
 import { createRequire } from 'node:module';
@@ -178,6 +179,7 @@ export async function runHoleTraceForkJoin({ attempt, specimen, outDir = null, r
 if (import.meta.url === `file://${process.argv[1]}`) {
   const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1]]] : acc), []));
   if (!args.attempt || !args.specimen) { console.error('usage: node ports/s7trace/run.mjs --specimen golden --attempt ATTEMPT_ID [--attempts-root DIR] [--out DIR] [--accept VARIANT] [--only a,b]'); process.exit(2); }
+  exitOnEarlyCondition({ root: args['attempts-root'] ?? ROOT, attempt: args.attempt, specimen: args.specimen, stage: 'S7' });   // a recorded early condition: this stage is not run
   const r = await runHoleTraceForkJoin({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null, attemptsRoot: args['attempts-root'] ?? ROOT, acceptedElsewhere: args.accept ?? null, only: args.only ? args.only.split(',') : null, cas: casFlag() });
   const c = r.comparison;
   console.log(JSON.stringify({ out: r.out, frames: r.frames, accepted: r.accepted, acceptedBy: r.acceptedBy, widthPx: c.widthPx, timingsMs: r.timingsMs, hotSpots: hotSpotLines(r.profile.hotSpots ?? []),

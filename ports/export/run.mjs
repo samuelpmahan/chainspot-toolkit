@@ -11,6 +11,7 @@
  * is blind. Writes under <out> (default <repo>/attempts/export/<specimen>/run-<ISO time>/): course-geometry.json (the value of
  * the Part tk.export.course, canonical JSON, nothing else crosses), tk.export.course.png (its render), instrumentation.json.
  */
+import { exitOnEarlyCondition } from '../early/condition.mjs';
 import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { join, resolve, basename } from 'node:path';
@@ -84,6 +85,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const arg = (k) => { const i = process.argv.indexOf(k); return i >= 0 ? process.argv[i + 1] : null; };
   const specimen = arg('--specimen'), attempt = arg('--attempt');
   if (!specimen || !attempt) { console.error('usage: node ports/export/run.mjs --specimen golden --attempt ID [--attempts-root DIR] [--out DIR] [--no-cas]'); process.exit(2); }
+  exitOnEarlyCondition({ root: ROOT, attempt, specimen, stage: 'export' });   // a recorded early condition: this stage is not run
   const r = runExportCourse({ specimen, attempt, attemptsRoot: arg('--attempts-root') ?? ROOT, outDir: arg('--out'), cas: casFlag(), variant: arg('--variant'), profile: arg('--profile') ?? 'quick' });
   console.log(JSON.stringify({ out: r.out, file: join(r.out, 'course-geometry.json'), emits: r.emits, conditions: r.doc.conditions, cache: r.cache, hotSpots: hotSpotLines(r.profile.hotSpots),
     profile: r.profile.slice(0, 6).map((p) => `${p.calculation}: ${p.calls}x self ${p.selfMs} ms ${JSON.stringify(p.emits)}`) }, null, 1));

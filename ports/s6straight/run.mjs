@@ -25,6 +25,7 @@
  *   artifacts/fn.Hole.straight/<impl>/straight.json, cmp.fn.Hole.straight.json, keyspace.json, instrumentation.json,
  *   s6straight.{records.json,frames.json,flipbook.html}, s6straight.render.svg (+ .png when ImageMagick is present)
  */
+import { exitOnEarlyCondition } from '../early/condition.mjs';
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
 import { deserialize } from 'node:v8';
 import { join, resolve } from 'node:path';
@@ -223,6 +224,7 @@ function writeRender({ out, specimen, attempt, store, result, judged, background
 if (import.meta.url === `file://${process.argv[1]}`) {
   const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1]]] : acc), []));
   if (!args.attempt || !args.specimen) { console.error('usage: node ports/s6straight/run.mjs --specimen golden --attempt ATTEMPT_ID [--out DIR] [--no-cas  (do not use the persistent cache attempts/cas)] [--accept VARIANT  (for a course without testimony: what the annotated courses accepted)]'); process.exit(2); }
+  exitOnEarlyCondition({ root: ROOT, attempt: args.attempt, specimen: args.specimen, stage: 'S6' });   // a recorded early condition: this stage is not run
   const r = await runHoleStraightForkJoin({ attempt: args.attempt, specimen: args.specimen, outDir: args.out ?? null, acceptedElsewhere: args.accept ?? null, cas: casFlag() });
   const c = r.comparison;
   console.log(JSON.stringify({
