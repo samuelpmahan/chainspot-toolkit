@@ -68,8 +68,7 @@
  *   fn.provider.sha256Text                   args { text } (the provider's sha256HexSyncText)
  *   fn.tk.sha256                             args { bytes } (node:crypto; bytes or text)
  */
-import { ringScale, opaquePlane } from '../../fg/alpha/alphaSpace.mjs';
-import { teeBounds } from '../../fg/s3/teeScale.mjs';
+import { SCALE_RC1_CALCULATION } from '../../fg/s3/scaleRc1.mjs';
 import { createHash } from 'node:crypto';
 import { PURPLE_QUERIES, purpleShare, THROWN_CUT } from '../../fg/queries/purple.mjs';
 import { registerSpriteQueries } from '../../fg/queries/sprite.mjs';
@@ -121,7 +120,6 @@ function locateTestimony(forkRoot, sourceSha256) {
  * current PxC, which the stage gateways may replace between stages), with
  * every toolkit Part producer and provider capability registered.
  */
-const BASKET_POINT_DOCTRINE = Object.freeze([0.34, 0.73]);   // DOCTRINE BasketPoint: px from the sprite's bottom-centre pixel
 /**
  * A capture whose S1 read no badge at all. The pinned provider's S1 plan declares that Badge.findPx reads px.badges.stage and
  * px.components, but it reads them only through a badge, so an empty badge read set fails its own access-conformance check with
@@ -342,19 +340,8 @@ export function createEarlyStore({ forkRoot, source, getBoard, dist, restorePxC,
       return ends.detectTeeRings(fields.bright.mask, { ...ends.DEFAULT_ENDPOINTS_KNOBS, holeDimMax: tee.holeDimMax, holeAreaMax: tee.holeAreaMax, ringMergeProximity: tee.ringMergeProximity });
     }
   });
-  // rC1px: the radius of the basket's C1 circle (a physical 10 m ring, so it follows the map), measured per image from the S2
-  // BasketPoints before S3 (LOCAL); the unit of every map-scaled S3 bound (DOCTRINE: UDisc renders differently at different zooms)
-  store.register('fn.tk.scale.rC1', {
-    inParts: ['px.image.cropped', 'px.badges', 'px.baskets'], outParts: ['tk.scale.rC1'],
-    note: 'rC1px from the C1/C2 rings around every S2 BasketPoint (fg/alpha/alphaSpace.mjs ringScale), and the S3 tee bounds in it',
-    calculate: (io) => {
-      const img = io.in('px.image.cropped'), baskets = io.in('px.baskets');
-      const centres = baskets.map(({ bbox: [x, y, w, h] }) => [x + (w - 1) / 2 + BASKET_POINT_DOCTRINE[0], y + h - 1 + BASKET_POINT_DOCTRINE[1]]);
-      const fit = ringScale(img, centres, opaquePlane(img, [io.in('px.badges'), baskets]), { stepPx: 0.5, angleStepDeg: 2 });
-      const r1Px = Number.isFinite(fit.r1Px) ? fit.r1Px : null;
-      return { 'tk.scale.rC1': { r1Px, unit: 'px (C1 radius)', fit, tee: teeBounds(r1Px), condition: r1Px ? null : `rC1 not measured (${fit.reason ?? 'no fit'}): S3 keeps the pinned px bounds`, emits: { rC1Px: r1Px ?? -1, baskets: centres.length } } };
-    }
-  });
+  // rC1px: the radius of the basket's C1 circle, measured per image from the S2 BasketPoints before S3 (fg/s3/scaleRc1.mjs)
+  store.register(...SCALE_RC1_CALCULATION);
   store.register('fn.provider.S3.makeTee', {
     note: "a provider Tee object for a family member the baseline did not materialize: the member's bright frame component, materialized against the given component fields",
     calculate: ({ args: { member, fields } }) => {

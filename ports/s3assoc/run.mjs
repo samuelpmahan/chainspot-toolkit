@@ -73,9 +73,9 @@ export function runAssociation({ attempt, specimen, root = ROOT }) {
     // Centre of the whole badge sprite (bbox; the dark plate shares it). Not the first bright part: on badges whose
     // white frame is not its own S1 part (lenard 12; heritage 12, 13, 15; alex 18) that part is the digit "1".
     const [x, y, w, h] = b.bbox;
-    return { label: String(b.label), center: [x + (w - 1) / 2, y + (h - 1) / 2] };
+    return { label: String(b.label), center: [x + (w - 1) / 2, y + (h - 1) / 2], sizePx: [w, h] };
   });
-  const rows = associate({ tees: fits.map((f, i) => ({ label: f.label, center: [f.cx, f.cy], thRad: f.thRad, sigmaThRad: (f.sigma.thDeg * Math.PI) / 180, pathSide: pathSide({ raster, occ: occAll, center: [f.cx, f.cy], thRad: f.thRad, L: template.L, W: template.W }) })), badges, baskets: baskets.map((k, i) => ({ index: k.index ?? i, bbox: k.bbox })), padLengthPx: template.L });
+  const rows = associate({ tees: fits.map((f, i) => ({ label: f.label, center: [f.cx, f.cy], thRad: f.thRad, sigmaThRad: (f.sigma.thDeg * Math.PI) / 180, pathSide: pathSide({ raster, occ: occAll, center: [f.cx, f.cy], thRad: f.thRad, L: template.L, W: template.W }) })), badges, baskets: baskets.map((k, i) => ({ index: k.index ?? i, bbox: k.bbox })), padLengthPx: template.L, padWidthPx: template.W });
   const teeNames = nameCandidates('Tee', tees, (t) => t.center);
   rows.forEach((r, i) => { r.candidate = teeNames[i]; r.identity = r.best ? `Tee ${r.best.badge}` : null; const f = fits[i]; r.pose = { cx: r3(f.cx), cy: r3(f.cy), thDeg: r3(f.thDeg), sigmaRaw: { thDeg: r3(f.sigma.thDeg), xPx: r3(f.sigma.xPx), yPx: r3(f.sigma.yPx) }, freeShapeThDeg: r3(f.freeShape.thDeg), L: r3(f.L), W: r3(f.W), se: r3(f.se), ss: r3(f.ss), rmsRgb: r3(f.rms), clean: f.clean, s3AngleDiffDeg: r3(((f.thDeg - f.s3.angleDeg + 90) % 180 + 180) % 180 - 90) }; });
 

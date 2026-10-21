@@ -48,6 +48,7 @@
 import { stationContrastAt, lumOf } from '../s6straight/pathSpace.mjs';
 import { arange, FRONT, teeBadgeLearn } from '../s7trace/hallway.mjs';
 import { sha256Hex } from '../../fg/canon.mjs';
+import { stateAssumption, underAssumption, violationEmits } from '../../fg/assumptions.mjs';
 import { ROUTE_TABLE_SCHEMA } from '../../fg/s7route/routeRender.mjs';
 import { regionSupportRead, regionSensorRead, REGION, REGION_UNITS, REGION_READ_CODE } from './regionSpace.mjs';
 
@@ -64,22 +65,31 @@ export const sensorRowAddress = (hole) => `${ROUTE_SENSOR_ROW_PART}@${hole}`;
 /** The recorded constants of match2.py (Sam, 2026-10-19). */
 export const ROUTE = Object.freeze({
   stepLum: 8.0,              // lum: both edges must step by more than this (contrast.py, s7edge)
-  minStations: 20,           // visible stations a route needs to count (match2.py MIN_ST)
+  minStations: 20,           // visible stations a route needs to count (match2.py MIN_ST): the recorded px twin, read only by the
+                             // rule sets without stationsUnits 'r1' (match.mjs minStationsOf)
+  // the same floor as a map length (stations are 1 px apart: a visible ribbon length): 20 px on golden (R1 44.5 px) is 0.449 R1,
+  // rounded down so golden's floor stays 20 stations; the sensor rows, the confidence labels and the export read it (audit N10)
+  minStationsR1: 0.449,
   firstLegSkipW: 0.75,       // first leg starts 0.75 W along (the tee cap)
   jointSkipW: 0.5,           // later legs start 0.5 W past the joint; every leg ends 0.5 W before its end
   stationStepPx: 1.0,
   bendFromBadgeW: 0.5,       // B1 from 0.5 W past the badge ...
   // map-scaled search distances are in rC1px, the basket C1 radius measured per image (S.R1; DOCTRINE: UDisc renders
   // differently at different zooms). The values are the prototypes' px on golden (R1 44.5 px) rounded: 800 px, 8 px, 6 px.
-  bendReachR1: 18,           // ... up to 18 R1 past it
+  // ... up to the FIRST_BEND_REACH assumption past it (18 R1, stated below, widened when the best bend sits at its end)
   bendStepR1: 0.18,          // every 0.18 R1 (match2.py one_bend step, 8 px on golden)
   contrastBendStepR1: 0.135, // every 0.135 R1 (match18.py best_route step, 6 px on golden)
   contrastBandPx: Object.freeze([0.5, 3.0]),   // polyscore.py band inside / outside the predicted edge
-  contrastMinPx: 30,         // polyscore.py: fewer visible px in either band = no reading (-99 in the prototype)
+  // polyscore.py: fewer visible px than this in either band = no reading (-99 in the prototype). It stays a px COUNT (GLOBAL): it
+  // is the evidence a mean luminance needs, and a mean over n px is as noisy at every zoom (abs-px audit N10, 2026-10-21: read
+  // as a ribbon length, 0.2696 R1 x the 2.5 px band, it fell to 14 px on Heritage (R1 21 px) and its weakest-leg costs read
+  // noise: Seq3SearchW 18/18 -> 17/18 agree, extra bends 1 -> 2; with 30 px, 18/18 and 1)
+  contrastMinPx: 30,
   samMatchPx: 12,            // judging only: the one basket match rule (AGENTS.md)
   onAxisPriorLum: 15.0,      // packet E03 (verified by the lead on 4 courses): the on-axis basket's prior, in the contrast's units
   onAxisLateralW: 0.5        // on the tee ray: lateral offset <= 0.5 W
 });
+const round1 = (v) => Math.round(v * 10) / 10;
 export const ROUTE_UNITS = Object.freeze({
   contrastLum: 'lum (mean lum of the visible px 0.5-3 px inside the rendered ribbon edges minus 0.5-3 px outside; end caps excluded)',
   edgePx: 'px (visible px counted in the smaller of the two bands)',
@@ -286,15 +296,41 @@ export function routeHallwayOf(S, start) {
 
 // ------------------------------------------------------------------ one row (match18.py best_route, match2.py one_bend)
 
-/** The bend points on the tee axis: from 0.5 W past the badge, every `step` px, up to 800 px past it, while inside the image. */
-function bendsOnAxis(c, start, W, step, units = 'r1') {
-  const { S, u, badgeAlongPx: dB } = start, out = [], reach = units === 'px' ? 800 : ROUTE.bendReachR1 * c.R1;   // px: match2.py as recorded
+/**
+ * ASSUMPTION (fg/assumptions.mjs): how far past the badge a hole's first bend lies on the tee axis. A VARIABLE map distance (a
+ * long first leg; Sam, 2026-10-21: a 1,700 ft hole is ~52 R1), kept as the search's bound: a best bend at the bound's end is a
+ * violation, recorded, and the axis is searched again with the bound doubled, up to the image border.
+ */
+export const FIRST_BEND_REACH = stateAssumption({
+  name: 'firstBendReachR1', quantity: 'the first bend past the badge along the tee axis (a map distance)', value: 18, unit: 'R1',
+  evidence: 'the recorded 800 px of match2.py on golden (R1 44.5 px); Sam\'s 27 first bends (golden, heritage, townelake testimony) lie 1.27-6.93 R1 past the badge, median 2.59 R1 (heritage 1 the farthest): 2.6x margin; his holes are at most 15.0 R1 long (TowneLake 2), a 1,700 ft hole is ~52 R1',
+  widening: { factor: 2, limit: 'the image border along the tee axis' }
+});
+/**
+ * The bend points on the tee axis: from 0.5 W past the badge, every `step` px, up to reachPx past it (px tables: the recorded
+ * 800 px), while inside the image. The list's `cut` is true when the reach ended it (not the image border).
+ */
+function bendsOnAxis(c, start, W, step, units = 'r1', reachPx = FIRST_BEND_REACH.value * c.R1) {
+  const { S, u, badgeAlongPx: dB } = start, out = [], reach = units === 'px' ? 800 : reachPx;   // px: match2.py as recorded
+  out.cut = true;
   for (const t of arange(dB + W * ROUTE.bendFromBadgeW, dB + reach, step)) {
     const B1 = [S[0] + u[0] * t, S[1] + u[1] * t];
-    if (!(B1[0] >= 0 && B1[0] < c.W && B1[1] >= 0 && B1[1] < c.H)) break;
+    if (!(B1[0] >= 0 && B1[0] < c.W && B1[1] >= 0 && B1[1] < c.H)) { out.cut = false; break; }
     out.push([t, B1]);
   }
   return out;
+}
+/**
+ * A search over the bends on the tee axis under FIRST_BEND_REACH: search(points) -> { best: { bendAlongPx }, tried }. The best bend
+ * within `step` of the last point of a reach-cut axis is a violation: searched again, the reach doubled up to the image border.
+ * -> the search's answer plus `violation` (null when the assumption held). The px tables keep their recorded 800 px.
+ */
+function underFirstBendReach(c, start, W, step, units, search) {
+  if (units === 'px') return { ...search(bendsOnAxis(c, start, W, step, 'px')), violation: null };
+  const u = underAssumption(FIRST_BEND_REACH, { unitPx: c.R1, limitPx: Math.hypot(c.W, c.H), detail: { hole: start.hole, step: 'route table: first bend on the tee axis' },
+    run: (b) => { const pts = bendsOnAxis(c, start, W, step, units, b), r = search(pts), t = r.best.bendAlongPx, last = pts.at(-1);
+      return { result: r, found: true, atEdge: Boolean(pts.cut && last && t != null && t >= last[0] - step - 1e-9), at: t }; } });
+  return { ...u.result, violation: u.violation };
 }
 
 /**
@@ -307,18 +343,24 @@ export const FAST = Object.freeze({ coarse: 4, keep: 2 });
 export const LEAN = Object.freeze({ coarse: 8, baskets: 3 });
 function coarseContrastAt(c, start, E, W, units, mult) {
   const S = start.S, z = ribbonContrastAt(c, [S, E], W), step = (units === 'px' ? 6 : ROUTE.contrastBendStepR1 * c.R1) * mult;
-  let best = { contrastLum: z[0], edgePx: z[1], verts: [S, E], bendAlongPx: null }, tried = 1;
-  for (const [t, B1] of bendsOnAxis(c, start, W, step, units)) {
-    const r = ribbonContrastAt(c, [S, B1, E], W); tried++;
-    if (r[0] !== null && (best.contrastLum === null || r[0] > best.contrastLum)) best = { contrastLum: r[0], edgePx: r[1], verts: [S, B1, E], bendAlongPx: t };
-  }
-  return { best, tried };
+  return underFirstBendReach(c, start, W, step, units, (pts) => {
+    let best = { contrastLum: z[0], edgePx: z[1], verts: [S, E], bendAlongPx: null }, tried = 1;
+    for (const [t, B1] of pts) {
+      const r = ribbonContrastAt(c, [S, B1, E], W); tried++;
+      if (r[0] !== null && (best.contrastLum === null || r[0] > best.contrastLum)) best = { contrastLum: r[0], edgePx: r[1], verts: [S, B1, E], bendAlongPx: t };
+    }
+    return { best, tried };
+  });
 }
 export function contrastRouteFastAt(c, start, E, W, units = 'r1') {
   const S = start.S, z = ribbonContrastAt(c, [S, E], W), step = units === 'px' ? 6 : ROUTE.contrastBendStepR1 * c.R1;
+  return underFirstBendReach(c, start, W, step * FAST.coarse, units, (pts) => fastOn(c, start, E, W, z, step, pts));
+}
+function fastOn(c, start, E, W, z, step, pts) {
+  const S = start.S;
   let best = { contrastLum: z[0], edgePx: z[1], verts: [S, E], bendAlongPx: null }, tried = 1;
   const coarse = [];
-  for (const [t, B1] of bendsOnAxis(c, start, W, step * FAST.coarse, units)) { const r = ribbonContrastAt(c, [S, B1, E], W); tried++; if (r[0] !== null) coarse.push([r[0], t, r[1], B1]); }
+  for (const [t, B1] of pts) { const r = ribbonContrastAt(c, [S, B1, E], W); tried++; if (r[0] !== null) coarse.push([r[0], t, r[1], B1]); }
   coarse.sort((a, b) => b[0] - a[0]);
   const consider = (t, B1, r) => { if (r[0] !== null && (best.contrastLum === null || r[0] > best.contrastLum)) best = { contrastLum: r[0], edgePx: r[1], verts: [S, B1, E], bendAlongPx: t }; };
   for (const [v, t0, px, B10] of coarse.slice(0, FAST.keep)) {
@@ -353,24 +395,29 @@ export function contrastRouteBadgeAt(c, start, E, W) {
 
 /** match18.py best_route: the 0-bend route, replaced by a 1-bend route only on strict improvement of the edge contrast. */
 export function contrastRouteAt(c, start, E, W, units = 'r1') {
-  const S = start.S, z = ribbonContrastAt(c, [S, E], W);
-  let best = { contrastLum: z[0], edgePx: z[1], verts: [S, E], bendAlongPx: null }, tried = 1;
-  for (const [t, B1] of bendsOnAxis(c, start, W, units === 'px' ? 6 : ROUTE.contrastBendStepR1 * c.R1, units)) {
-    const r = ribbonContrastAt(c, [S, B1, E], W); tried++;
-    if (r[0] !== null && (best.contrastLum === null || r[0] > best.contrastLum)) best = { contrastLum: r[0], edgePx: r[1], verts: [S, B1, E], bendAlongPx: t };
-  }
-  return { best, tried };
+  const S = start.S, z = ribbonContrastAt(c, [S, E], W), step = units === 'px' ? 6 : ROUTE.contrastBendStepR1 * c.R1;
+  return underFirstBendReach(c, start, W, step, units, (pts) => {
+    let best = { contrastLum: z[0], edgePx: z[1], verts: [S, E], bendAlongPx: null }, tried = 1;
+    for (const [t, B1] of pts) {
+      const r = ribbonContrastAt(c, [S, B1, E], W); tried++;
+      if (r[0] !== null && (best.contrastLum === null || r[0] > best.contrastLum)) best = { contrastLum: r[0], edgePx: r[1], verts: [S, B1, E], bendAlongPx: t };
+    }
+    return { best, tried };
+  });
 }
 
-/** match2.py one_bend: the best 1-bend route by the sensor (>= 20 visible stations; first best on ties), or null. */
+/** match2.py one_bend: the best 1-bend route by the sensor (>= ROUTE.minStationsR1 x R1 visible stations; first best on ties), or null. */
 export function oneBendAt(c, start, E, W, { memo = null } = {}) {
   const S = start.S;
-  let best = null, tried = 0;
-  for (const [t, B1] of bendsOnAxis(c, start, W, ROUTE.bendStepR1 * c.R1)) {
-    const r = routeSensorAt(c, [S, B1, E], W, { memo }); tried++;
-    if (r.stations >= ROUTE.minStations && (best === null || r.passFrac > best.passFrac)) best = { passFrac: r.passFrac, stations: r.stations, verts: [S, B1, E], bendAlongPx: t };
-  }
-  return { best, tried };
+  const r = underFirstBendReach(c, start, W, ROUTE.bendStepR1 * c.R1, 'r1', (pts) => {
+    let best = null, tried = 0;
+    for (const [t, B1] of pts) {
+      const r = routeSensorAt(c, [S, B1, E], W, { memo }); tried++;
+      if (r.stations >= ROUTE.minStationsR1 * c.R1 && (best === null || r.passFrac > best.passFrac)) best = { passFrac: r.passFrac, stations: r.stations, verts: [S, B1, E], bendAlongPx: t };
+    }
+    return { best: best ?? { bendAlongPx: null }, tried };
+  });
+  return { ...r, best: r.best.verts ? r.best : null };
 }
 
 /** tk.s7.routeRow@<hole>: per BasketPoint, the best route by edge contrast, with the sensor's reading on that route. */
@@ -399,11 +446,12 @@ export function routeRowOf(c, start, bp, W, units = 'r1', search = 'full', steps
       : steps.contrast(c, start, bp[k], W, units, search === 'fast' || search === 'badgeMid' ? search : 'full'); contrastRoutes += cr.tried;
     const crs = steps.sensor(c, cr.best.verts, W, memo);
     const contrast = { contrastLum: cr.best.contrastLum, edgePx: cr.best.edgePx, bends: cr.best.verts.length - 2, verts: cr.best.verts, bendAlongPx: cr.best.bendAlongPx,
-      sensor: { passFrac: crs.passFrac, stations: crs.stations }, condition: cr.best.contrastLum === null ? `fewer than ${ROUTE.contrastMinPx} visible px in an edge band on every route` : null };
+      sensor: { passFrac: crs.passFrac, stations: crs.stations }, condition: cr.best.contrastLum === null ? `fewer than ${ROUTE.contrastMinPx} visible px in an edge band on every route` : null,
+      ...(cr.violation ? { assumption: { ...cr.violation, basket: k } } : {}) };
     cells.push({ basket: k, contrast });
   }
   return { schema: 'nctk-s7-route-row@1', hole: start.hole, start, widthPx: W, cells, condition: null,
-    emits: { cellsCount: cells.length, contrastRoutesCount: contrastRoutes, contrastReadCellsCount: cells.filter((x) => x.contrast.contrastLum !== null).length } };
+    emits: { cellsCount: cells.length, contrastRoutesCount: contrastRoutes, contrastReadCellsCount: cells.filter((x) => x.contrast.contrastLum !== null).length, ...violationEmits(cells.map((x) => x.contrast.assumption)) } };
 }
 
 /**
@@ -417,17 +465,17 @@ export function routeSensorRowOf(c, start, bp, W) {
   let sensorRoutes = 0;
   for (let k = 0; k < bp.length; k++) {
     const z = routeSensorAt(c, [start.S, bp[k]], W, { memo });
-    const zero = { passFrac: z.passFrac, stations: z.stations, verts: [start.S, bp[k]], counts: z.stations >= ROUTE.minStations };
+    const zero = { passFrac: z.passFrac, stations: z.stations, verts: [start.S, bp[k]], counts: z.stations >= ROUTE.minStationsR1 * c.R1 };
     const o = oneBendAt(c, start, bp[k], W, { memo }); sensorRoutes += o.tried + 2;
     const one = o.best ? { ...o.best, counts: true } : null;
     let best = zero.counts ? 'zero' : null;
     if (one && (best === null || one.passFrac > zero.passFrac)) best = 'one';
     const sensorBest = { passFrac: best === 'zero' ? zero.passFrac : best === 'one' ? one.passFrac : 0, best, bends: best === 'zero' ? 0 : best === 'one' ? 1 : null, zero, one,
-      condition: best ? null : `no route with >= ${ROUTE.minStations} visible stations` };
+      condition: best ? null : `no route with >= ${round1(ROUTE.minStationsR1 * c.R1)} visible stations`, ...(o.violation ? { assumption: { ...o.violation, basket: k } } : {}) };
     cells.push({ basket: k, sensorBest });
   }
   return { schema: 'nctk-s7-route-sensor-row@1', hole: start.hole, start, widthPx: W, cells, condition: null,
-    emits: { cellsCount: cells.length, sensorRoutesCount: sensorRoutes } };
+    emits: { cellsCount: cells.length, sensorRoutesCount: sensorRoutes, ...violationEmits(cells.map((x) => x.sensorBest.assumption)) } };
 }
 
 // ------------------------------------------------------------------ the table

@@ -31,6 +31,7 @@
  * Data conditions are recorded in the answer, never thrown. registerQueries caches each answer by its arguments.
  */
 import { overlayFraction as contractOverlayFraction, hasOverlay, noProfile } from '../../contracts/alpha.profile@1.mjs';
+import { stateAssumption, underAssumption } from '../../fg/assumptions.mjs';
 
 const r3 = (v) => (v == null || Number.isNaN(v) ? null : Math.round(v * 1000) / 1000);
 const median = (xs) => { const s = Float64Array.from(xs).sort(), n = s.length; return n ? (n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2) : null; };
@@ -238,8 +239,33 @@ function uniform1d(x, size) {
   for (let i = 0; i < n; i++) { let s = 0; for (let k = i - h; k < i - h + size; k++) s += at(k); out[i] = s / size; }
   return out;
 }
-/** course.py _r1: the C1 radius from the mean radial luminance around the basket points (sprites masked), C2 = 2 x C1. */
-export function ringRadiusOf(lum, sprite, W, H, bps, { rs = [10, 260, 0.5] } = {}) {
+/**
+ * ASSUMPTION (fg/assumptions.mjs): the C1 / C2 ring pair is searched with C2 (2 R1) up to this fraction of the image's short side.
+ * R1 is VARIABLE across zooms (21-56.5 px on the dev images, 94 px on The Rec), so the search range is a stated bound: a best R1
+ * at its end is a violation, and the range doubles up to the image diagonal. 260 / 1290 = the recorded 260 px on the dev phone
+ * images (short side 1290 px), so every dev image is searched exactly as before.
+ */
+export const R1_SEARCH = stateAssumption({
+  name: 'r1SearchShortSide', quantity: 'the C2 radius (2 R1) the ring search reaches, as a fraction of the image short side', value: 260 / 1290, unit: 'image short side',
+  evidence: 'R1 21-56.5 px on the dev images incl. Lenard\'s zoomed views (2 R1 <= 113 px), validation 23.5-46.5 px, The Rec 94 px (188 px); the recorded 260 px of course.py on 1290 px phone images: 2.3x the largest dev 2 R1',
+  widening: { factor: 2, limit: 'the image diagonal' }
+});
+/** The R1 search's px range [lo, hi, step] for an image (lo 10 px: the ring strokes and the masked sprite leave nothing smaller). */
+export const r1RangeOf = (W, H, hiPx = R1_SEARCH.value * Math.min(W, H)) => [10, hiPx, 0.5];
+/**
+ * fit(range) -> R1 (px) or null, run under R1_SEARCH: an R1 at the end of the range (2 R1 within one step of its top) widens it.
+ * violations: an array the violation is pushed onto (with what the widening found).
+ */
+export function underR1Search(W, H, fit, violations = null) {
+  const u = underAssumption(R1_SEARCH, { unitPx: Math.min(W, H), limitPx: Math.hypot(W, H), detail: { step: 'R1 ring search' },
+    run: (hi) => { const rg = r1RangeOf(W, H, hi), R = arange(...rg), r = fit(rg); return { result: r, found: r != null, atEdge: r != null && R.length > 0 && 2 * r > R[R.length - 1] - 2 * rg[2] - 1e-9, at: r }; } });
+  if (u.violation && violations) violations.push(u.violation);
+  return u.result;
+}
+/** course.py _r1: the C1 radius from the mean radial luminance around the basket points (sprites masked), C2 = 2 x C1. rs: a fixed
+ *  range [lo, hi, step] px, or (default) the R1_SEARCH assumption's, widened on a violation (pushed onto violations). */
+export function ringRadiusOf(lum, sprite, W, H, bps, { rs = null, violations = null } = {}) {
+  if (!rs) return underR1Search(W, H, (rg) => ringRadiusOf(lum, sprite, W, H, bps, { rs: rg }), violations);
   const th = Array.from(arange(0, 360, 1), (d) => (d * Math.PI) / 180), R = arange(...rs), prof = new Float64Array(R.length);
   R.forEach((r, ri) => {
     const v = [];
@@ -273,15 +299,16 @@ export function ringMaskOf(W, H, bps, R1) {
  * and a BasketPoint (S4-recovered baskets: { lists, bps }): their box px join the sprites and their rings join the rings,
  * at the course-constant R1 measured on the base baskets (course.py _r1), so the base mask and R1 are unchanged without them.
  */
-export function pathMaskOf(raster, lists, bps, { r1Range = [10, 260, 0.5], r1Px = null, extra = null } = {}) {
-  const W = raster.widthPx, H = raster.heightPx, base = spriteMaskOf(W, H, lists);
-  const R1 = r1Px ?? ringRadiusOf(lumOf(raster), base.sprite, W, H, bps, { rs: r1Range });
+export function pathMaskOf(raster, lists, bps, { r1Range = null, r1Px = null, extra = null } = {}) {
+  const W = raster.widthPx, H = raster.heightPx, base = spriteMaskOf(W, H, lists), violations = [];
+  const R1 = r1Px ?? ringRadiusOf(lumOf(raster), base.sprite, W, H, bps, { rs: r1Range, violations });
   const sprite = extra?.lists?.length ? spriteMaskOf(W, H, [...lists, ...extra.lists]).sprite : base.sprite;
   const allBps = [...bps, ...(extra?.bps ?? [])];
   const ring = R1 ? ringMaskOf(W, H, allBps, R1) : new Uint8Array(W * H), mask = new Uint8Array(W * H);
   let spriteN = 0, ringN = 0, n = 0;
   for (let i = 0; i < W * H; i++) { if (sprite[i]) spriteN++; if (ring[i]) ringN++; if (sprite[i] || ring[i]) { mask[i] = 1; n++; } }
   return { widthPx: W, heightPx: H, mask, r1Px: R1, spriteCount: spriteN, ringCount: ringN, maskedCount: n, extraBasketsCount: extra?.bps?.length ?? 0,
+    ...(violations.length ? { assumptions: violations } : {}),
     rule: 'course.py MASK: owned sprite px (fill holes, dilate 2, cross) OR rings |d - R1| <= 3.5, |d - 2 R1| <= 4.5 px around BasketPoints; R1 = course.py _r1 on the base baskets' + (extra?.bps?.length ? '; plus S4-recovered baskets: box px as sprite, rings at the same R1' : '') };
 }
 

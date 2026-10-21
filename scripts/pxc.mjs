@@ -95,6 +95,11 @@ async function doctorAttempt(id) {
   let spots = 0;
   for (const f of sidecars) { const lines = hotSpotLines(opaqueHotSpots(JSON.parse(readFileSync(f, 'utf8')))); spots += lines.length; for (const l of lines) say(`${relative(outRoot, f)}: ${l}`); }
   say(spots ? `${spots} opaque hot spot(s) in ${sidecars.length} profiled runs` : `no opaque hot spots in ${sidecars.length} profiled runs`);
+  // stated assumptions a search hit (fg/assumptions.mjs): loud, with what the widening found
+  const { assumptionViolations, assumptionLines } = await import('../fg/assumptions.mjs');
+  let violated = 0;
+  for (const f of sidecars) { const lines = assumptionLines(assumptionViolations(JSON.parse(readFileSync(f, 'utf8')))); violated += lines.length; for (const l of lines) say(`${relative(outRoot, f)}: ${l}`); }
+  say(violated ? `${violated} assumption violation row(s) in ${sidecars.length} profiled runs` : `no assumption violations in ${sidecars.length} profiled runs`);
   for (const side of ['early/instrumentation.json']) {
     const f = join(ROOT, 'attempts/stages', id, 'fork/stage-output', side);
     if (!existsSync(f)) continue;

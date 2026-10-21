@@ -89,19 +89,21 @@ test('the coarse pass (refines to coarseEndR1, grid coarseGridR1) finds the same
   assert.ok(coarse.bottleneck <= fine.bottleneck + 1e-9, 'the coarse pass ranks; it does not out-read the fine search');
 });
 
-test('the hallway follower in W (hallway.mjs FOLLOW_W) traces the same route at two map scales', async () => {
+test('the hallway follower in W (hallway.mjs FOLLOW_W) traces the same route at two map scales and in both W / R1 regimes', async () => {
   const H = await import('../s7trace/hallway.mjs');
-  const runAt = (k) => {
+  // r1: R1 per unit scale; 15 px gives W / R1 = 1.6 (Lenard full's regime), 25.8 px gives 0.93 (golden's and the zoomed views')
+  const runAt = (k, r1 = 15) => {
     const path = [T, [140, 100], [300, 260], [480, 260]].map((p) => p.map((c) => c * k)), Wk = W * k, IW = 640 * k, IH = 480 * k, lum = new Float64Array(IW * IH).fill(100);
     const segD = (p, a, b) => { const dx = b[0] - a[0], dy = b[1] - a[1], L2 = dx * dx + dy * dy; let t = ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / L2; t = Math.max(0, Math.min(1, t)); return Math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dy); };
     for (let y = 0; y < IH; y++) for (let x = 0; x < IW; x++) { let d = Infinity; for (let i = 0; i + 1 < path.length; i++) d = Math.min(d, segD([x, y], path[i], path[i + 1])); if (d <= Wk / 2) lum[y * IW + x] = 150; }
-    const S = { W: IW, H: IH, lum, mask: new Uint8Array(IW * IH), R1: 15 * k, bp: [path.at(-1)] }, res = H.FOLLOW_W;
+    const S = { W: IW, H: IH, lum, mask: new Uint8Array(IW * IH), R1: r1 * k, bp: [path.at(-1)] }, res = H.FOLLOW_W;
     const r = H.trace(S, START.S.map((c) => c * k), 0, Wk, { maxLegs: 4, steps: { runEnd: (Sc, O, p, Wd, t0) => H.runEndW(Sc, O, p, Wd, t0, res), closeOnBp: (Sc, O, p, Wd, tE, u) => H.closeOnBpW(Sc, O, p, Wd, tE, u, res),
+      onLeg: (Sc, O, p, Wd, tE, u) => H.bpOnLegW(Sc, O, p, Wd, tE, u, res),
       findBend: (Sc, O, p, Wd, tE, sC, tz) => H.findBendW(Sc, O, p, Wd, tE, sC, tz, H.findBendAtW, res) } });
     return { r, path, Wk };
   };
-  const a = runAt(1), b = runAt(2);
-  for (const { r, path, Wk } of [a, b]) {
+  const a = runAt(1), b = runAt(2), c = runAt(1, 25.8);
+  for (const { r, path, Wk } of [a, b, c]) {
     assert.equal(r.end, 0, 'reaches the BasketPoint');
     assert.equal(r.verts.length - 2, 2, `bends ${r.verts.length - 2}: ${JSON.stringify(r.verts.map((v) => v.map(Math.round)))}`);
     r.verts.slice(1, -1).forEach((v, i) => assert.ok(dist(v, path[i + 1]) < 0.5 * Wk, `bend ${i + 1} ${v.map(Math.round)} vs ${path[i + 1]} (W ${Wk} px)`));

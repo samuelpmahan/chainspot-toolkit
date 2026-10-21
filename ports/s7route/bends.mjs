@@ -10,7 +10,7 @@
  *      (badge half-diagonal + badgeExclusionW x W) of a badge centre (the badge's mute breaks the edges) is dropped.
  *   2. fit: a piecewise-linear route with the tee cap start and the BasketPoint fixed; K = 0..maxBends bends, each from a DP
  *      segmentation of the ordered samples and from the current bends, refined by bounded least squares on the clipped
- *      point-to-route distance (clip clipW x W, bends within boundW x W of where they started, a weak pull back to it). K is
+ *      point-to-route distance (clip clipW x W, bends within the BEND_MOVE assumption of where they started, a weak pull back to it). K is
  *      chosen BIC-style on independent windows: cost = sum(min(d, clip)^2) / sigma^2 x step/window + 2 |K - K0| ln(n_eff);
  *      a change of the bend count must earn its evidence. Two passes (resample along the new route).
  *   3. gates: RULE 1, a hole S6 reads STRAIGHT keeps the route the matching rule chose (S6's accepted fn.Hole.straight verdict,
@@ -23,6 +23,20 @@
  */
 import { routeSensorAt, ROUTE } from './routeSpace.mjs';
 import { profile, edgePair, arange } from '../s7trace/hallway.mjs';
+import { reachFor } from '../s6straight/pathSpace.mjs';
+import { stateAssumption, underAssumption } from '../../fg/assumptions.mjs';
+
+/**
+ * ASSUMPTION (fg/assumptions.mjs): how far the placement moves a bend from where the matching rule put it. VARIABLE (how wrong
+ * the matched bend is), so a stated bound, not a law: a fitted bend at the edge of its box is a violation, recorded, and the
+ * box widens (x2, up to the image diagonal) and the fit runs again. In R1 (a map distance); 1.4016 R1 is the recorded 1.5 W on
+ * golden (R1 44.5 px, W 41.58 px: 62.37 px); in W it was 2.2 R1 at Lenard full and 1.4 R1 at its zoomed views.
+ */
+export const BEND_MOVE = stateAssumption({
+  name: 'bendMoveR1', quantity: 'a placed bend from its matched position, per coordinate (a map distance)', value: 1.4016, unit: 'R1',
+  evidence: 'the recorded 1.5 W on golden (62.37 px). It binds: the S7 bench (2026-10-21) records fitted bends at the box edge on Heritage 7 and 18, North Park 1 and 12, Alex 13 and Lenard3 9 (and 3-5 holes per validation course); widened, no judged dev result changes',
+  widening: { factor: 2, limit: 'the image diagonal' }
+});
 
 export const BENDS = Object.freeze({
   windowW: 1.0,              // W: length of the window one centre sample is read over
@@ -30,6 +44,12 @@ export const BENDS = Object.freeze({
   minWindowW: 0.5,           // W: a window shorter than this at a leg's end gives no sample
   edgeTolW: 0.15,            // W: the edge pair's width may differ from W by this much
   edgeLatW: 0.45,            // W: the edge pair's centre may lie this far off the route
+  // W: the lateral profile reads a ribbon this wide (pathSpace.mjs reachFor: half of it plus the 3 px outer band and 3 px, never
+  // under the recorded +-30 px). The ribbon (and so the edges the profile must hold) follows W, not px: a fixed +-30 px read
+  // the edges of a W = 52 px ribbon (Lenard's zoomed views) only when the route ran within 2-3 px of its centre, and none on
+  // The Rec (W/2 = 35 px). Reference scale: golden (W 41.58 px), where 1.15 W gives 29.9 px, so the recorded 30 px stands
+  // there and on every dev and validation course (W <= 41.7 px); 36 px at W 52, 46 px at W 70.
+  profileReachW: 1.15,
   c2R1: 2.0,                 // R1: samples inside a BasketPoint's C2 disc are dropped
   badgeExclusionW: 0.5,      // W: plus the badge half-diagonal: samples this near a badge centre are dropped
   maxBends: 3,               // K = 0 .. maxBends are tried
@@ -38,7 +58,6 @@ export const BENDS = Object.freeze({
   passes: 2,                 // refit passes (resample along the new route)
   sigmaW: 1 / 16,            // W: one sample's noise (BIC)
   clipW: 0.25,               // W: the point-to-route distance is clipped here (robust loss)
-  boundW: 1.5,               // W: a bend stays within this of where it started
   gate: Object.freeze({ gain: 0.05, tau: 0.75, dropMax: 0.02, minStations: ROUTE.minStations })
 });
 
@@ -74,7 +93,7 @@ export function centreSamples(S, V, W, legs = null) {
     for (const t of arange(R.stepW * W / 2, L, R.stepW * W)) {
       const t0 = Math.max(t - R.windowW * W / 2, 0), t1 = Math.min(t + R.windowW * W / 2, L);
       if (t1 - t0 < R.minWindowW * W) continue;
-      const e = edgePair(profile(S, a, phi, t0, t1), W, R.edgeTolW * W, R.edgeLatW * W);
+      const e = edgePair(profile(S, a, phi, t0, t1, 0, 1.0, reachFor(R.profileReachW * W)), W, R.edgeTolW * W, R.edgeLatW * W);
       if (!e) continue;
       const q = [a[0] + u[0] * (t0 + t1) / 2 + n[0] * e.c, a[1] + u[1] * (t0 + t1) / 2 + n[1] * e.c];
       let nearBadge = false;
@@ -159,7 +178,7 @@ function solve(M, b) {   // Gaussian elimination with partial pivoting; null whe
  * axis (optional, a unit vector): the first bend stays on the tee axis S0 + t axis (Sam: the tee -> badge segment is straight
  * hallway, so the first leg runs along the tee's axis); it is fitted by its distance t along the axis alone.
  */
-export function fitBends(P, S0, E, V0, K0, W, { axis = null } = {}) {
+export function fitBends(P, S0, E, V0, K0, W, { axis = null, R1, limitPx = Infinity, violations = null } = {}) {
   const R = BENDS, clip = R.clipW * W, sigma = R.sigmaW * W, cands = [], neff = Math.max(P.length * R.stepW / R.windowW, 2);
   const along = (p) => (p[0] - S0[0]) * axis[0] + (p[1] - S0[1]) * axis[1];
   const bendsOf = (x, K) => {   // the parameter vector -> the K bends
@@ -177,14 +196,19 @@ export function fitBends(P, S0, E, V0, K0, W, { axis = null } = {}) {
       let V;
       if (K === 0) V = [S0, E];
       else {
-        const x0 = axis ? [along(B0[0]), ...B0.slice(1).flat()] : B0.flat(), lo = x0.map((v) => v - R.boundW * W), hi = x0.map((v) => v + R.boundW * W);
+        const x0 = axis ? [along(B0[0]), ...B0.slice(1).flat()] : B0.flat();
         const f = (x) => {
           const Vt = [S0, ...bendsOf(x, K), E];
           const out = P.map((p) => Math.min(polyDist(p, Vt), clip));
           for (let i = 0; i < x.length; i++) out.push((x[i] - x0[i]) * R.sigmaW);   // 1 W of travel = one sigma-sample
           return out;
         };
-        const x = boundedLeastSquares(f, x0, lo, hi, {}); V = [S0, ...bendsOf(x, K), E];
+        // the box is the BEND_MOVE assumption: a coordinate at its edge is a violation, and the box widens
+        const fit = underAssumption(BEND_MOVE, { unitPx: R1, limitPx, detail: { K },
+          run: (b) => { const x = boundedLeastSquares(f, x0, x0.map((v) => v - b), x0.map((v) => v + b), {}), d = Math.max(...x.map((v, i) => Math.abs(v - x0[i])));
+            return { result: x, found: true, atEdge: d >= b - 1e-6, at: d }; } });
+        if (fit.violation && violations) violations.push(fit.violation);
+        const x = fit.result; V = [S0, ...bendsOf(x, K), E];
       }
       cands.push([costOf(P, V, clip) / (sigma * sigma) * R.stepW / R.windowW + 2 * Math.abs(K - K0) * Math.log(neff), K, V]);
     }
@@ -204,10 +228,11 @@ export function refineBendsOf(S, V, W, { straight = false, minStations = BENDS.g
   const R = BENDS, K0 = V.length - 2, S0 = V[0], E = V.at(-1);
   if (straight) return { verts: V, taken: false, why: 'S6 reads the hole straight: the matching rule\'s route is kept', K0, K1: K0 };
   let Vc = V, P = [];
+  const violations = [], limitPx = Math.hypot(S.W, S.H);
   for (let pass = 0; pass < R.passes; pass++) {
     P = centreSamples(S, Vc, W);
     if (P.length < R.minSamples) break;
-    Vc = fitBends(P, S0, E, Vc, K0, W, { axis })[2];
+    Vc = fitBends(P, S0, E, Vc, K0, W, { axis, R1: S.R1, limitPx, violations })[2];
   }
   const K1 = Vc.length - 2, a = routeSensorAt(S, V, W), b = routeSensorAt(S, Vc, W), G = { ...R.gate, minStations };
   const minSt = Number.isInteger(G.minStations) ? G.minStations : G.minStations.toFixed(1);
@@ -220,5 +245,6 @@ export function refineBendsOf(S, V, W, { straight = false, minStations = BENDS.g
     taken = b.stations >= G.minStations && b.passFrac >= a.passFrac - G.dropMax;
     why = `${K1} bends refitted: sensor ${a.passFrac.toFixed(2)} -> ${b.passFrac.toFixed(2)} on ${b.stations} st (needs no worse than ${G.dropMax}, >= ${minSt} st)`;
   }
-  return { verts: taken ? Vc : V, taken, why, K0, K1, samples: P.length, sensorOld: a.passFrac, sensorNew: b.passFrac, stationsNew: b.stations, refit: taken ? null : Vc };
+  return { verts: taken ? Vc : V, taken, why, K0, K1, samples: P.length, sensorOld: a.passFrac, sensorNew: b.passFrac, stationsNew: b.stations, refit: taken ? null : Vc,
+    ...(violations.length ? { assumptions: violations } : {}) };
 }

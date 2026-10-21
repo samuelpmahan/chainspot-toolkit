@@ -32,9 +32,9 @@ test('centre samples lie on the ribbon centreline and none falls inside the badg
 test('the DP segmentation puts the bend at the heading change; the bounded fit moves a misplaced bend onto it', () => {
   const S = scene(), P = centreSamples(S, [S0, TRUE_BEND, E], W), B = initBends(P, 1, W);
   assert.equal(B.length, 1); assert.ok(dist(B[0], TRUE_BEND) < 8, `init bend ${B[0]}`);
-  const off = [190, 100], [c, K, V] = fitBends(P, S0, E, [S0, off, E], 1, W);
+  const off = [190, 100], [c, K, V] = fitBends(P, S0, E, [S0, off, E], 1, W, { R1: S.R1 });
   assert.equal(K, 1); assert.ok(dist(V[1], TRUE_BEND) < 6, `fitted bend ${V[1]} (cost ${c})`);
-  // box: a bend never leaves boundW x W of its start, however the samples pull
+  // box: bounded least squares never leaves its box, however the samples pull (the BEND_MOVE assumption widens it, loudly)
   const far = boundedLeastSquares((x) => [x[0] - 1000, x[1]], [0, 0], [-45, -45], [45, 45]);
   assert.deepEqual(far.map((v) => Math.round(v)), [45, 0]);
 });
@@ -44,7 +44,7 @@ test('the bend count is chosen on evidence: a straight ribbon keeps 0 bends, an 
   const r = refineBendsOf(S, V, W, {});
   // the matching rule's 1 bend lies on the straight ribbon; the fit may drop it only on a sensor gain, and never adds one
   assert.ok(r.verts.length <= 3);
-  const P = centreSamples(S, [S0, [330, 100]], W), [, K] = fitBends(P, S0, [330, 100], [S0, [330, 100]], 0, W);
+  const P = centreSamples(S, [S0, [330, 100]], W), [, K] = fitBends(P, S0, [330, 100], [S0, [330, 100]], 0, W, { R1: S.R1 });
   assert.equal(K, 0);
 });
 
@@ -84,7 +84,7 @@ test('routeMatchOf: the step is off without a verdict argument, skipped with a c
 
 test('rule-set option axis: the first bend is fitted on the tee axis (by its distance along it) and still lands on the heading change', () => {
   const S = scene(), P = centreSamples(S, [S0, TRUE_BEND, E], W);
-  const [, K, V] = fitBends(P, S0, E, [S0, [190, 108], E], 1, W, { axis: [1, 0] });
+  const [, K, V] = fitBends(P, S0, E, [S0, [190, 108], E], 1, W, { axis: [1, 0], R1: S.R1 });
   assert.equal(K, 1); assert.equal(V[1][1], S0[1], `the first bend left the axis: ${V[1]}`);
   assert.ok(dist(V[1], TRUE_BEND) < 6, `fitted bend ${V[1]}`);
   // the step passes it through; absent, the recorded rule is unchanged
@@ -109,4 +109,14 @@ test('rule-set option straightSecondBend: a straight contrast route the sensor r
   const searched = routeMatchOf(table, S, starts, { rules: { ...MATCH_RULES, straightSecondBend: true } }).holes['1'];
   assert.match(searched.how, /2-bend (accepted|rejected)/);
   if (searched.verts.length === 4) assert.ok(Math.abs(searched.verts[1][1] - S0[1]) < 1e-9, 'B1 is on the tee axis');
+});
+
+test('profileReachW: the centre samples read a zoomed ribbon (W 52 px, Lenard\'s zoomed views) off a route 8 px from its centre', () => {
+  // the recorded +-30 px profile held the edges of a W 52 ribbon only within 2-4 px of its centre (audit N2); the reach follows W
+  const Wz = 52, IW = 420, IH = 260, lum = new Float64Array(IW * IH).fill(100);
+  for (let y = 0; y < IH; y++) for (let x = 0; x < IW; x++) if (Math.abs(y - 130) <= Wz / 2) lum[y * IW + x] = 150;
+  const S = { W: IW, H: IH, lum, mask: new Uint8Array(IW * IH), bp: [[400, 138]], badges: {}, badgeHalf: {}, R1: 56 };
+  const P = centreSamples(S, [[20, 138], [400, 138]], Wz);
+  assert.ok(P.length >= 20, `${P.length} samples`);
+  for (const p of P) assert.ok(Math.abs(p[1] - 130) < 1.5, `sample ${p} is off the ribbon centre (y 130)`);
 });

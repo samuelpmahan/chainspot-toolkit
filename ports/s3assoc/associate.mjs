@@ -14,14 +14,30 @@
 export const BASKET_POINT_OFFSET = Object.freeze([0.34, 0.73]);
 export const basketPoint = (bbox) => [bbox[0] + (bbox[2] - 1) / 2 + BASKET_POINT_OFFSET[0], bbox[1] + bbox[3] - 1 + BASKET_POINT_OFFSET[1]];
 
+import { stateAssumption } from '../../fg/assumptions.mjs';
+
+/**
+ * ASSUMPTION (fg/assumptions.mjs): how far a pad's own badge sits, centre to centre. A VARIABLE map distance (a 1,700 ft hole's
+ * badge is ~40 pad lengths out), kept as a stated bound where a search uses it (the S5 line-up measurement); widened on a
+ * violation. The S3 association itself applies no distance bound (its 12 pad-length maximum was never read): the z-score
+ * and the one-to-one assignment decide, and the skeleton's no-overlap is the only floor (noOverlapPx).
+ */
+export const TEE_TO_BADGE = stateAssumption({
+  name: 'teeToBadgeR1', quantity: 'pad centre to its own badge centre (a map distance)', value: 9.39, unit: 'R1',
+  evidence: 'S3 association on the six dev courses: 1.74 R1 (golden) to 7.66 R1 (TowneLake); validation Coleto Creek 8.63 R1, SeaTac 8.44 R1. 9.39 R1 is the recorded 230 px at Lenard full (R1 24.5 px): 1.23x the dev maximum, 1.09x the validation maximum',
+  widening: { factor: 2, limit: 'the image diagonal' }
+});
+
 export const ASSOC_BOUNDS = Object.freeze({
   sigma0Px: 0.85,              // px: badge + pad centre error, calibrated on 76 Sam-confirmed pairings (5 courses)
   sigmaThetaFloorRad: 0.0005,  // rad (0.03 deg): floor on a pad's own angle sigma
   zMax: 3,
   zGate: 8,                    // z: loose gate for a pad no consistent badge is left for (assigned ASSOCIATED_WEAK, inspected)
   straight3TlsPx: 1.5,         // px: 3-point (tee, badge, BasketPoint) TLS max residual for a 0-bend hole; calibrated below                     // z: a badge within 3 sigma of the axis is consistent with the pad
-  badgeMinDistPadLengths: 0.6, // pad lengths: nearer badges are overlapping chrome, not a pairing
-  badgeMaxDistPadLengths: 12,  // pad lengths
+  // no distance window on a badge: how far a badge sits from its pad is VARIABLE (a long first leg; Sam, 2026-10-21: "what
+  // happens to your tee-pad-length-to-badge ratio when a hole is 1,700 feet long?"). The skeleton's only bound: a badge cannot
+  // overlap its own pad (noOverlapPx, the measured half-sizes); the z-score and the one-to-one assignment decide the rest.
+  // (Was: 0.6 - 12 pad lengths; the 12 was never read.)
   straightLateralPx: 3.0       // px: axis-to-BasketPoint miss that reads as a straight hole; a coincidental hit on a bent
                                // hole (golden 7, 14 at 507-552 px) is S6's to reject by the ribbon, not a length cutoff
 });
@@ -35,8 +51,20 @@ const dot = (a, b) => a[0] * b[0] + a[1] * b[1];
 const r2 = (v) => Math.round(v * 100) / 100;
 
 /**
- * tees: [{ label, center:[x,y], thRad }]; badges: [{ label, center }]; baskets: [{ index, bbox }];
- * padLengthPx: course pad length. Returns one row per tee.
+ * The skeleton's nearest distance between a pad centre and a badge centre (px) along the unit direction v from the pad to the
+ * badge (DOCTRINE 2026-10-21: a badge cannot overlap its own pad): the sum of the two measured half-sizes along v, the pad an
+ * L x W rectangle on its unit axis ax, the badge its sprite box [w, h] (S1 bbox). Nearer than this the two would overlap along
+ * the line between their centres. A size not measured (null) adds nothing.
+ */
+export function noOverlapPx(v, ax, padL, padW, badgeSize) {
+  const pad = Math.abs(dot(v, ax)) * padL / 2 + (padW ? Math.abs(v[0] * -ax[1] + v[1] * ax[0]) * padW / 2 : 0);
+  const badge = badgeSize ? Math.abs(v[0]) * badgeSize[0] / 2 + Math.abs(v[1]) * badgeSize[1] / 2 : 0;
+  return pad + badge;
+}
+
+/**
+ * tees: [{ label, center:[x,y], thRad }]; badges: [{ label, center, sizePx: [w, h] }]; baskets: [{ index, bbox }];
+ * padLengthPx, padWidthPx: the course pad template. Returns one row per tee.
  */
 /**
  * Which way the hole path leaves a pad: mean RGB-level excess of a strip on the axis just past each end over its
@@ -92,15 +120,16 @@ export function hungarian(a) {
   return row;
 }
 
-export function associate({ tees, badges, baskets, padLengthPx, bounds = ASSOC_BOUNDS }) {
+export function associate({ tees, badges, baskets, padLengthPx, padWidthPx = null, bounds = ASSOC_BOUNDS }) {
   const bps = baskets.map((k) => ({ index: k.index, point: basketPoint(k.bbox) }));
   const per = tees.map((t) => {
     const ax = [Math.cos(t.thRad), Math.sin(t.thRad)], sTh = Math.max(t.sigmaThRad ?? 0, bounds.sigmaThetaFloorRad);
     const all = badges.map((b) => {
       const v = sub(b.center, t.center), dist = Math.hypot(...v);
       const sense = dot(v, ax) > 0 ? 1 : -1, u = [ax[0] * sense, ax[1] * sense], nrm = [-u[1], u[0]], lat = Math.abs(dot(v, nrm));
-      return { badge: String(b.label), z: r2(lat / Math.sqrt(bounds.sigma0Px ** 2 + (dist * sTh) ** 2)), latPx: r2(lat), resDeg: r2((Math.atan2(lat, dot(v, u)) * 180) / Math.PI), distPx: r2(dist), sense };
-    }).filter((k) => k.distPx >= bounds.badgeMinDistPadLengths * padLengthPx).sort((a, b) => a.z - b.z);
+      const apart = dist > 0 && dist >= noOverlapPx([v[0] / dist, v[1] / dist], ax, padLengthPx, padWidthPx, b.sizePx ?? null);
+      return { badge: String(b.label), z: r2(lat / Math.sqrt(bounds.sigma0Px ** 2 + (dist * sTh) ** 2)), latPx: r2(lat), resDeg: r2((Math.atan2(lat, dot(v, u)) * 180) / Math.PI), distPx: r2(dist), sense, apart };
+    }).filter((k) => k.apart).map(({ apart, ...k }) => k).sort((a, b) => a.z - b.z);
     return { t, ax, all, consistent: all.filter((k) => k.z <= bounds.zMax) };
   });
   // Global one-to-one assignment: minimum total cost sum(z^2) over all pads (Hungarian), a pad left without a badge

@@ -13,7 +13,7 @@
  * 0.01 px. A point outside the frame is dropped and recorded in the hole's reasons (never clamped). Data conditions (no tee,
  * no route, no hallway width) are recorded results, never throws.
  */
-import { confidenceOf } from '../s7trace/traceView.mjs';
+import { confidenceOf, confirmFloorOf } from '../s7trace/traceView.mjs';
 import { FORMAT, VERSION } from '../../contracts/export.course@1.mjs';
 import { fillHoles } from '../../fg/queries/header.mjs';
 
@@ -81,10 +81,10 @@ export function courseGeometryOf({ solve, primary = 'routeMatch', alternatives =
     const tee = keep(h.tee?.teeCenter, 'tee');
     const basket = verts.length ? keep(verts.at(-1), 'basket') : null;
     const bends = verts.slice(1, -1).map((p) => keep(p, 'bend')).filter(Boolean);
-    const level = confidenceOf(verts, asg?.sensor, asg?.stations);
+    const level = confidenceOf(verts, asg?.sensor, asg?.stations, r1Px);
     if (!h.tee) reasons.push(h.condition ?? 'no tee');
     if (!verts.length) reasons.push('no route from the tee to a basket');
-    if (level === 'unconfirmed') reasons.push(`the hallway sensor reads ${r3(asg.sensor)} on ${asg.stations} stations (confirmed needs >= 0.75 on >= 20)`);
+    if (level === 'unconfirmed') reasons.push(`the hallway sensor reads ${r3(asg.sensor)} on ${asg.stations} stations (confirmed needs >= 0.75 on >= ${Math.round(confirmFloorOf(r1Px) * 10) / 10})`);
     if (r?.how && level !== 'confirmed') reasons.push(r.how);
     const dropped = reasons.some((s) => s.endsWith('dropped'));
     const status = !tee || !verts.length ? 'unresolved' : level !== 'confirmed' || dropped ? 'partial' : bends.length ? 'resolved' : 'straight';

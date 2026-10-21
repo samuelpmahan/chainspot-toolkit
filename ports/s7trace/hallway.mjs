@@ -17,8 +17,9 @@
  * Coordinates: canonical (S0-cropped) px, pixel centres at integer coordinates; angles in radians unless named Deg.
  */
 
-import { samp as sampS6, profileAt, edgePairOf, edgeGradientOf, edgePairFrom, stationContrastAt, reachFor, EVIDENCE } from '../s6straight/pathSpace.mjs';
+import { samp as sampS6, profileAt, edgePairOf, edgeGradientOf, edgePairFrom, stationContrastAt, reachFor, underR1Search, EVIDENCE } from '../s6straight/pathSpace.mjs';
 import { widthSearchRange } from '../s6straight/pathLoss.mjs';
+import { stateAssumption } from '../../fg/assumptions.mjs';
 
 export const TAU = 8.0;                       // lum: edge contrast a ribbon station must exceed on both sides (follow.py)
 export const FRONT = 10.6 / 25.02;            // pad lengths: the ribbon cap centre ahead of the pad centre (badgeseed.py)
@@ -182,8 +183,10 @@ function uniformFilter1d(a, n) {
  * R1 (C1 radius, px, LOCAL): the mean radial luminance profile around every BasketPoint (sprites masked); C1 is the
  * stronger ring and C2 = 2 x C1, so R1 maximises the high-passed profile at r and 2r (course.py _r1).
  */
-export function ringRadius(lum, sprite, W, H, bp) {
-  const th = arange(0, 360, 1.0).map(rad), rs = arange(10, 260, 0.5), cos = th.map(Math.cos), sin = th.map(Math.sin);
+export function ringRadius(lum, sprite, W, H, bp, { range = null, violations = null } = {}) {
+  // the search range is the R1_SEARCH assumption (ports/s6straight/pathSpace.mjs), widened when R1 lands at its end
+  if (!range) return underR1Search(W, H, (rg) => ringRadius(lum, sprite, W, H, bp, { range: rg }), violations);
+  const th = arange(0, 360, 1.0).map(rad), rs = arange(...range), cos = th.map(Math.cos), sin = th.map(Math.sin);
   const prof = new Float64Array(rs.length);
   for (let ri = 0; ri < rs.length; ri++) {
     const r = rs[ri], v = [];
@@ -320,7 +323,12 @@ export function findBend(S, O, phi, W, tEnd, selfC, tees, at = findBendAt) {
  *                 golden). The heading must be read on a run long enough to hold it: with 1.7 W the long run along the chosen
  *                 heading drifts off the ribbon and findBend adds a 4 deg correction bend (its smallest turn). The px follower does
  *                 this on Beaver 19 (the spurious 3.4 deg bend Sam called), and the W follower with a 1.7 W run did it on SeaTac 8
- *                 and 21 and Beaver 17; with 3.4 W none of the six holes measured gets one (runs of 1.7, 2.0, 2.5, 3.4 W compared)
+ *                 and 21 and Beaver 17; with 3.4 W none of the six holes measured gets one (runs of 1.7, 2.0, 2.5, 3.4 W compared).
+ *                 It stays in W (abs-px audit N8, 2026-10-21): the run is a heading-precision length against the ribbon's width.
+ *                 Read as a map distance at golden's value (3.18 R1) it is 2.0 W where W/R1 = 1.6 (the regime of Lenard full,
+ *                 TowneLake, Heritage, North Park, Coleto Creek), and the 4 deg correction bend comes back on kbends.test.mjs's
+ *                 2-bend hallway (W 24, R1 15 px: a third bend of -4.1 deg 78 px before the BasketPoint), also with the heading
+ *                 step held at 1.05 deg; runs of >= 4 R1 (2.5 W) there do not make it
  *   sampleStepW   stations along every run (a station reads +-EVIDENCE.alongPx along: W/8 leaves no gap at any dev scale)
  *   lateralMissW  the heading step: the run's end misses by at most this between two headings, dtheta = lateralMissW / runW rad.
  *                 W/16 (1.05 deg on a 3.4 W run): at W/8 on a 1.7 W run (4.2 deg) the heading is off by up to 2 deg and the same
@@ -329,10 +337,46 @@ export function findBend(S, O, phi, W, tEnd, selfC, tees, at = findBendAt) {
  *   bendVisibleW / closeVisibleW  the visible run a reading needs (the prototype's 25 and 12 stations, 1 px apart, on golden)
  *   gapW          the run ends after this much failing run (the prototype's G = W stations, 1 px apart)
  *   refineEndW    the winner is polished by halving (vertex step and heading step) down to this vertex step; null: no polish
+ * Where the hole ends is a map distance, so it is in R1 (rC1px; DOCTRINE: W follows its own curve, 1.45x where the map scales
+ * 2.33x). Each equals its recorded W or px value at the reference scale, golden (R1 44.5 px, W 41.58 px):
+ *   onLegLatR1    a BasketPoint this near the leg's centreline ends the hole on the leg (the prototype's 5 px on golden; 5 px was
+ *                 0.20 R1 at Lenard full, 0.09 R1 at its zooms), or nearer than the leg's length x one heading step when that is
+ *                 more (bpOnLegW: the follower's miss grows with the leg)
+ *   onLegPastR1   ... and at most this far past the run's end (the run ends at the C1 ring, ~1 R1 short of the BasketPoint):
+ *                 1.6 W on golden (66.5 px); 1.6 W was 2.4 R1 at Lenard full and 1.19 R1 on The Rec
+ * closeOnBp's reach (how far from the run's end a BasketPoint may be closed on) bounds a VARIABLE distance: it is the stated
+ * assumption CLOSE_ON_BP_REACH below (fg/assumptions.mjs), widened by the caller when the follower ends without a basket.
  * The run's cap is the image diagonal (a run stops at the image border anyway).
  */
-export const FOLLOW_W = Object.freeze({ vertexStepW: 1 / 8, runW: 3.4, sampleStepW: 1 / 8, lateralMissW: 1 / 16, bendVisibleW: 0.6, closeVisibleW: 0.3, gapW: 1.0, refineEndW: 1 / 32 });
+export const FOLLOW_W = Object.freeze({ vertexStepW: 1 / 8, runW: 3.4, sampleStepW: 1 / 8, lateralMissW: 1 / 16, bendVisibleW: 0.6, closeVisibleW: 0.3, gapW: 1.0, refineEndW: 1 / 32,
+  onLegLatR1: 0.1124, onLegPastR1: 1.495 });
+/**
+ * ASSUMPTION: closeOnBp tries the BasketPoints within this of the run's end (res.closeReachR1 overrides it, so a caller can
+ * widen it). A last leg's length is VARIABLE; on a violation (the follower ends without a BasketPoint) the caller re-traces
+ * with the reach widened x2 up to the image diagonal (ports/s7route/match.mjs seqFollow 'w').
+ */
+export const CLOSE_ON_BP_REACH = stateAssumption({
+  name: 'closeOnBpReachR1', quantity: 'the hallway follower\'s run end to the BasketPoint it closes on (a map distance)', value: 7.475, unit: 'R1',
+  evidence: 'the recorded 8 W on golden (R1 44.5 px, W 41.58 px: 332.6 px); in W it was 11.8 R1 at Lenard full and 7.4 R1 at its zoomed views',
+  widening: { factor: 2, limit: 'the image diagonal' }
+});
 export const followHeadingStep = (res = FOLLOW_W) => res.lateralMissW / res.runW;   // rad
+/**
+ * bpOnLeg of the follower in W: from 0.5 W along to onLegPastR1 past the run's end, within max(onLegLatR1 x R1, along x tan(one
+ * heading step)) of the centreline: the follower's heading is known to one step (followHeadingStep, 1.05 deg), so its miss grows
+ * with the leg (a long hole's legs are long: a 260 px leg read 0.6 deg off misses by 2.9 px). The R1 term is the recorded 5 px on
+ * golden and holds every leg shorter than 273 px there.
+ */
+export function bpOnLegW(S, O, phi, W, tEnd, exclude = [], res = FOLLOW_W) {
+  const u = unit(phi), n = [-u[1], u[0]], tLo = W * 0.5, tHi = tEnd + res.onLegPastR1 * S.R1, lat0 = res.onLegLatR1 * S.R1, slope = Math.tan(followHeadingStep(res));
+  let best = null;
+  S.bp.forEach((b, k) => {
+    if (exclude.includes(k)) return;
+    const d = [b[0] - O[0], b[1] - O[1]], a = d[0] * u[0] + d[1] * u[1], l = d[0] * n[0] + d[1] * n[1];
+    if (tLo <= a && a <= tHi && Math.abs(l) <= Math.max(lat0, a * slope) && (best === null || a < best[0] || (a === best[0] && k < best[1]))) best = [a, k, l];
+  });
+  return best;
+}
 const passStatsW = (S, V, psi, ts, W) => {
   const { cl, cr, okl, okr } = stationContrastAt(S, V, psi, ts, W), m = [];
   for (let k = 0; k < ts.length; k++) if (okl[k] && okr[k]) m.push(Math.min(cl[k], cr[k]));
@@ -402,7 +446,7 @@ export function closeOnBpW(S, O, phi, W, tEnd, used = [], res = FOLLOW_W) {
   };
   let best = null;
   S.bp.forEach((b, k) => {
-    if (used.includes(k) || hyp(b, P) > 8 * W) return;
+    if (used.includes(k) || hyp(b, P) > (res.closeReachR1 ?? CLOSE_ON_BP_REACH.value) * S.R1) return;
     for (const tv of arange(lo, hi, res.vertexStepW * W)) { const r = at(b, tv); if (r && (best === null || r[0] > best[0])) best = [r[0], k, r[1], r[2]]; }
   });
   if (!best || res.refineEndW == null) return best;
@@ -438,12 +482,14 @@ export function closeOnBp(S, O, phi, W, tEnd, used = []) {
 export function trace(S, start, phi, W, { maxLegs = 4, excludeBp = [], selfC = null, tees = [], steps = null } = {}) {
   // steps (optional): the follower's steps as calls of the caller's (the S7 store passes profiled queries); defaults: this module's
   // steps.findBend (optional) replaces the whole bend search (the follower in W: findBendW over the caller's per-position step)
+  // steps.onLeg (optional): the BasketPoint-on-the-leg test (the follower in W: bpOnLegW, in R1); default the prototype's 5 px, 1.6 W
   const runEndF = steps?.runEnd ?? runEnd, closeOnBpF = steps?.closeOnBp ?? closeOnBp, findBendAtF = steps?.findBendAt ?? findBendAt;
+  const onLegF = steps?.onLeg ?? ((Sc, Oc, ph, Wd, tE, ex) => bpOnLeg(Sc, Oc, ph, Wd * 0.5, tE + 1.6 * Wd, 5.0, ex));
   const findBendF = steps?.findBend ?? ((Sc, Oc, ph, Wd, tE, sC, tz) => findBend(Sc, Oc, ph, Wd, tE, sC, tz, findBendAtF));
   let O = [start[0], start[1]]; const verts = [O.slice()], legs = [];
   for (let leg = 0; leg < maxLegs; leg++) {
     const [tEnd, frac] = runEndF(S, O, phi, W, leg === 0 ? W * 0.6 : W * 0.75);
-    const hit = bpOnLeg(S, O, phi, W * 0.5, tEnd + 1.6 * W, 5.0, excludeBp);
+    const hit = onLegF(S, O, phi, W, tEnd, excludeBp);
     legs.push({ O: O.slice(), phiDeg: deg(phi), tEnd, passFrac: round(frac, 2) });
     if (hit) {
       const [a, k, l] = hit; verts.push(S.bp[k].slice()); Object.assign(legs.at(-1), { endBP: k, endLatPx: round(l, 2), endAlongMinusRun: round(a - tEnd, 1) });

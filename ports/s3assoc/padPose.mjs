@@ -111,11 +111,21 @@ function solve(obs, B, af, ai, idx) {
 }
 
 /**
+ * The fit window's half-size R (px; the window is 2R x 2R around the seed): the pad's half-diagonal (map-scaled: the fill
+ * follows R1) plus 6 px of local background (the background model's widest sigma, screen px), never less than the recorded
+ * 28 px. 28 px on every dev course and validation capture (largest template 31.2 x 21.5 px, Beaver Ranch: 25 px before the
+ * floor); it grows only where the pad outgrows it (Lenard's zoomed views, 36.9 x 25.3 px: 29 px; The Rec at R1 94: 43 px).
+ * The S5 axis fit (ports/s5pair/pairSpace.mjs fn.q.pair.axis) uses the same rule.
+ */
+export const padWindowR = (tmpl) => Math.max(28, Math.ceil(Math.hypot(tmpl.L, tmpl.W) / 2 + 6));
+
+/**
  * Fit one pad. raster: { rgba, widthPx, heightPx }; occ: Uint8Array (1 = owned by another sprite, never evidence);
- * seed: { cx, cy, th }; tmpl: { L, W, se, ss } starting shape; fixShape: fit pose only with tmpl's shape.
+ * seed: { cx, cy, th }; tmpl: { L, W, se, ss } starting shape; fixShape: fit pose only with tmpl's shape; R: the window's
+ * half-size (default padWindowR(tmpl)).
  * Returns pose/shape in px and rad plus the residual rms (RGB level) and whether any evaluated pixel was occluded.
  */
-export function fitPadPose({ raster, occ, seed, tmpl, fixShape = false, R = 28 }) {
+export function fitPadPose({ raster, occ, seed, tmpl, fixShape = false, R = padWindowR(tmpl) }) {
   const { rgba, widthPx: Wd, heightPx: Ht } = raster, n = 2 * R;
   const x0 = Math.max(0, Math.min(Wd - n, Math.round(seed.cx) - R)), y0 = Math.max(0, Math.min(Ht - n, Math.round(seed.cy) - R));
   const obs = new Float64Array(n * n * 3), occW = new Uint8Array(n * n);

@@ -22,13 +22,14 @@
  * Pure functions on the S7 scene ({ lum, mask, W, H, R1 }); every map-scaled length is in rC1px (S.R1) or W. Every leg read
  * goes through `legsOf` (default: direct); the S7 store passes its profiled query fn.q.match.kLegs, so each read is a store call.
  */
-import { ribbonContrastAt, ROUTE, badgeMidOf } from './routeSpace.mjs';
+import { ribbonContrastAt, ROUTE, badgeMidOf, FIRST_BEND_REACH } from './routeSpace.mjs';
+import { underAssumption } from '../../fg/assumptions.mjs';
 import { BENDS } from './bends.mjs';
 
 export const KBENDS = Object.freeze({
   firstBadgeFrac: 0.57,   // the badge sits at <= 0.57 of the first leg (tee centre -> B1): the recorded 0.51-0.57 band's upper end
   axisStepR1: 0.54,       // the K = 1 sweep along the tee axis: 4 x the table's 0.135 R1 step (routeSpace.mjs FAST.coarse)
-  axisReachR1: ROUTE.bendReachR1,
+  // the K = 1 sweep along the tee axis reaches as far as the route table's: the FIRST_BEND_REACH assumption (routeSpace.mjs), widened on a violation
   refineEndR1: 0.045,     // every refine halves its step down to this (match.mjs MATCH.secondBend.refineEndR1)
   coarseEndR1: 0.5,       // the coarse pass (ranking cells for the assignment) stops its refines here; the assigned route is fine
   coarseGridR1: 1.87,     // and splits on a grid twice as coarse (2 x gridR1)
@@ -40,7 +41,7 @@ export const KBENDS = Object.freeze({
   // the steps above are hallway geometry (bend positions, leg lengths, the split grid), set in R1 on golden, where W = 0.934 R1.
   // Rule set option kUnits 'w' reads them in W instead: the unit is W / goldenWPerR1, so each value in W is value / 0.934 (grid
   // 1.0 W, minimum leg 1.0 W, across 2.0 W, axis step 0.58 W, refine end 0.048 W). W / R1 runs 0.76-1.56 over the 9 courses.
-  // The axis reach (axisReachR1) and the foreign rings stay in R1 (basket and course geometry)
+  // The axis reach (FIRST_BEND_REACH) and the foreign rings stay in R1 (basket and course geometry)
   goldenWPerR1: 0.934
 });
 export const KBENDS_UNITS = Object.freeze({
@@ -135,20 +136,33 @@ export function kCellAt(S, start, E, W, { legsOf = legContrastsOf, legsMany = le
     live.forEach((t, q) => { if (got[q][0] !== null && got[q][0] > firstCap) firstCap = got[q][0]; const b = bottleneckOf(got[q]); m.set(t, b === null ? null : { t, verts: [start.S, ax.at(t), E], legs: got[q], bottleneck: b }); });
     return ts.map((t) => m.get(t) ?? null);
   };
-  const sweep = [];
-  for (let t = ax.lo; t <= ax.toS + start.badgeAlongPx + KBENDS.axisReachR1 * S.R1; t += KBENDS.axisStepR1 * r1) { if (!inside(S, ax.at(t))) break; sweep.push(t); }
-  let one = null, n = 2 + sweep.length;
-  for (const r of readMany(sweep)) if (r && (!one || r.bottleneck > one.bottleneck)) one = r;
-  if (one) for (let step = KBENDS.axisStepR1 * r1 / 2; step >= KBENDS.refineEndR1 * r1;) {
-    const [a, b] = readMany([one.t + step, one.t - step]); n += 2;
-    const m = [a, b].filter((x) => x && x.bottleneck > one.bottleneck).sort((x, y) => y.bottleneck - x.bottleneck)[0];
-    if (m) one = m; else step /= 2;
-  }
+  // the sweep reaches the FIRST_BEND_REACH assumption past the badge (routeSpace.mjs): a best bend on the sweep's last step of a
+  // reach-cut axis is a violation (recorded on the cell), and the sweep runs again with the reach doubled, up to the image border
+  let n = 2;
+  const sweepTo = (reachPx) => {
+    const sweep = []; let cut = true;
+    for (let t = ax.lo; t <= ax.toS + start.badgeAlongPx + reachPx; t += KBENDS.axisStepR1 * r1) { if (!inside(S, ax.at(t))) { cut = false; break; } sweep.push(t); }
+    let one = null; n += sweep.length;
+    const reads = readMany(sweep);
+    for (const r of reads) if (r && (!one || r.bottleneck > one.bottleneck)) one = r;
+    // at the bound: the best bend is the sweep's last, or the tee axis still reads as hallway at the reach's end (its first leg
+    // reads no lower there than the best route's): the hole runs on past the stated reach
+    const last = reads.at(-1), runsOn = Boolean(last && one && last.legs[0] !== null && one.legs[0] !== null && last.legs[0] >= one.legs[0]);
+    const atEdge = Boolean(cut && one && sweep.length && (one.t >= sweep.at(-1) - 1e-9 || runsOn));
+    if (one) for (let step = KBENDS.axisStepR1 * r1 / 2; step >= KBENDS.refineEndR1 * r1;) {
+      const [a, b] = readMany([one.t + step, one.t - step]); n += 2;
+      const m = [a, b].filter((x) => x && x.bottleneck > one.bottleneck).sort((x, y) => y.bottleneck - x.bottleneck)[0];
+      if (m) one = m; else step /= 2;
+    }
+    return { result: one, found: true, atEdge, at: one ? one.t - ax.toS - start.badgeAlongPx : null };
+  };
+  const under = underAssumption(FIRST_BEND_REACH, { unitPx: S.R1, limitPx: Math.hypot(S.W, S.H), detail: { hole: start.hole ?? null, step: 'K <= 1 sweep on the tee axis' }, run: sweepTo });
+  const one = under.result, violation = under.violation;
   const strip = (x) => (x ? { verts: x.verts, legs: x.legs, bottleneck: x.bottleneck } : null);
   const best = one && (zero.bottleneck === null || one.bottleneck > zero.bottleneck) ? strip(one) : zero;
   // every K <= 1 route enters a foreign ring: the cell has no legal route (recorded: the basket the straight route crosses)
-  if (best.bottleneck === null && zc >= 0) return { zero, one: null, best: { ...zero, bottleneck: null }, read: n, firstCap, rejected: { crosses: zc } };
-  return { zero, one: strip(one), best, read: n, firstCap };
+  if (best.bottleneck === null && zc >= 0) return { zero, one: null, best: { ...zero, bottleneck: null }, read: n, firstCap, rejected: { crosses: zc }, ...(violation ? { violation } : {}) };
+  return { zero, one: strip(one), best, read: n, firstCap, ...(violation ? { violation } : {}) };
 }
 
 /** The K >= 2 chain's start: S -> B* -> E (null when B* is outside the image). */
