@@ -1,6 +1,7 @@
 /**
  * The UDisc header reader (fg/queries/header.mjs, fg/header/header.calc.mjs) on training headers: every training image reads
- * exactly; a glyph whose class has no template comes out unread, never guessed; a raster with no header records the condition;
+ * exactly with every glyph read at P >= pStar; a glyph whose class has no template comes out out of vocabulary (?), never
+ * guessed; holes "2?" are filled by the S1 badge count, feet and par never; a raster with no header records the condition;
  * a capture's tiles agree; the Part renders; the template asset is what scripts/header-templates.mjs builds.
  */
 import { test } from 'node:test';
@@ -30,17 +31,22 @@ test('every training header reads exactly (S0 removes the header rows: the band 
     assert.deepEqual({ holes: h.holes, par: h.par, feet: h.feet }, parsed(label), path);
     assert.equal(h.text, label, path);
     assert.equal(h.unread.length, 0, path);
-    assert.ok(h.perGlyph.every(([, score, margin]) => score >= HEADER_TEMPLATES.read.scoreMin && margin >= HEADER_TEMPLATES.read.marginMin), path);
+    assert.ok(h.perGlyph.every(([c, , , p]) => c !== '?' && p >= HEADER_TEMPLATES.read.pStar), path);
+    assert.equal(h.flagged.length, 0, path);
   }
 });
 
-test('a glyph with no template is unread, never guessed (8 dropped from the templates; Heritage 18 / 58)', () => {
+test('a glyph with no template is out of vocabulary, never guessed (8 dropped from the templates; Heritage 18 / 58)', () => {
   const { 8: _drop, ...classes } = HEADER_TEMPLATES.classes;
   const h = storeOn(raster('specimens/dev/HeritagePark-full.png'), 431, { ...HEADER_TEMPLATES, classes }).get('tk.source.header');
   assert.equal(h.text, '1? Holes • Par 5? • 5511 ft');
   assert.equal(h.holes, null); assert.equal(h.par, null); assert.equal(h.feet, 5511);
   assert.equal(h.unread.length, 2);
-  assert.ok(h.conditions.some((c) => c.startsWith('unread glyph')));
+  assert.ok(h.conditions.some((c) => c.startsWith('out-of-vocabulary glyph')));
+  assert.ok(h.glyphs.filter((g) => g.status === 'oov').every((g) => g.best !== '8' && g.p < HEADER_TEMPLATES.read.oovBelow), 'its best read and P are kept beside the ?');
+  const filled = headerCheckOf(h, Array.from({ length: 18 }, (_, i) => ({ label: String(i + 1) })));
+  assert.deepEqual([filled.verdict, filled.holes, filled.holesFilled.filledBy, filled.par], ['filled', 18, 'S1 badge count', null], 'holes 1? completed by 18 S1 badges; par 5? never filled');
+  assert.equal(headerCheckOf(h, Array.from({ length: 21 }, () => ({ label: '1' }))).verdict, 'unread', '21 is not a completion of 1?');
 });
 
 test('no header bar is a recorded condition (S0 removed no header rows; a raster with no navy band)', () => {

@@ -15,6 +15,7 @@
  */
 import { confidenceOf } from '../s7trace/traceView.mjs';
 import { FORMAT, VERSION } from '../../contracts/export.course@1.mjs';
+import { fillHoles } from '../../fg/queries/header.mjs';
 
 export const EXPORT_COURSE_PART = 'tk.export.course';
 const r2 = (v) => Math.round(v * 100) / 100;
@@ -51,9 +52,11 @@ function alternativesOf(hole, number, primaryVerts, primary, alternatives, toSou
  * header bar says (tk.source.header), totals = the exported holes' summed lengths against it. deltaPct = (feetSum - feet) /
  * feet x 100, 0.1 %; null when the header's feet is unread or absent.
  */
-export function udiscTotalsOf(header, evidence) {
-  const udisc = header ? { holes: header.holes ?? null, par: header.par ?? null, feet: header.feet ?? null, text: header.text ?? null, source: header.source ?? null,
-    unreadGlyphs: header.unread?.length ?? 0, ...(header.source === 'tiles' ? { tilesRead: header.tilesRead, tilesOf: header.tilesOf, tilesAgree: header.agree } : {}),
+export function udiscTotalsOf(header, evidence, badgeCount = null) {
+  // holes with an out-of-vocabulary digit ("2?") are filled by the S1 badge count when it is the only consistent completion
+  const fill = header?.found && header.holes == null ? fillHoles(header.fields?.holes, badgeCount) : null;
+  const udisc = header ? { holes: header.holes ?? fill?.value ?? null, ...(fill ? { holesFilledBy: fill.filledBy, holesRead: fill.pattern } : {}), par: header.par ?? null, feet: header.feet ?? null, text: header.text ?? null, source: header.source ?? null,
+    unreadGlyphs: header.unread?.length ?? 0, flaggedGlyphs: header.flagged?.length ?? 0, ...(header.source === 'tiles' ? { tilesRead: header.tilesRead, tilesOf: header.tilesOf, tilesAgree: header.agree } : {}),
     ...(header.found ? {} : { condition: header.conditions?.[0] ?? 'no header bar' }) } : { holes: null, par: null, feet: null, condition: 'no header read' };
   const lengths = evidence.map((e) => e.trace?.lengthFt).filter((v) => Number.isFinite(v)), feetSum = lengths.length ? lengths.reduce((a, b) => a + b, 0) : null;
   const deltaPct = feetSum != null && udisc.feet > 0 ? Math.round(((feetSum - udisc.feet) / udisc.feet) * 1000) / 10 : null;
@@ -105,7 +108,7 @@ export function courseGeometryOf({ solve, primary = 'routeMatch', alternatives =
   }
   const numberBadges = [...best.values()].sort((a, b) => a.number - b.number);
   const candidates = holesPart.baskets.filter((b) => !assigned.has(b.index)).map((b) => ({ label: b.name, ...toSource(b.point), kind: 'basket' })).filter(inFrame);
-  const { udisc, totals } = udiscTotalsOf(header, evidence);
+  const { udisc, totals } = udiscTotalsOf(header, evidence, badges.length);
   return {
     format: FORMAT, version: VERSION, producer,
     source: { fileName: source.fileName, sha256: source.sha256, widthPx: W, heightPx: H, frame: 'original-upload', s0Crop: { rowsRemovedTop: dy, rowsRemovedBottom: crop.lowerRowsRemoved }, ...(capture ? { capture } : {}) },

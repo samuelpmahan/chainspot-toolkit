@@ -17,18 +17,26 @@
  * the earlier badge measurement (docs/evidence/badge-calibration/overlap-templates.json) found super-resolved templates read
  * worse through a reader's own sampling. Not applied.
  *
- * Calibration (all on training):
- *   impostor   leave-one-CLASS-out: each instance scored against every template but its own class's; the highest score is
- *              what a glyph with no template (a 0) can reach.
- *   scaled     every training header resampled (area) to 0.64, 0.75, 0.86, 0.914, 0.963 and 1.1 x (other phones, other glyph
- *              sizes), read against the templates: the lowest own-class score and the lowest margin.
- *   scoreMin  = midpoint of the impostor max and the scaled own-class min; marginMin = half the scaled margin min.
+ * Learned confidence (Sam: no silent abstention, no borrowed thresholds; as scripts/badge-calibration.mjs):
+ *   examples   leave one image out: every glyph of a training header, and of its renders resampled (area) to 0.64, 0.75,
+ *              0.86, 0.914, 0.963, 1.04 and 1.1 x (other phones' glyph sizes), scored against templates made from the OTHER
+ *              images; its top read (right or wrong) and one hard negative (its best class once its own is removed: what a
+ *              glyph whose class has no template looks like). Features [NCC score, margin over the best other class].
+ *   model      logistic regression P(read right | features); prior odds 9:1 that a glyph has a template (9 of the 10 digit
+ *              classes; see PRIOR_ODDS), not the training reads' 1010:0, which no glyph without a template could challenge.
+ *   decision   every glyph keeps its best read and P: P >= pStar (1 - 1 / costWrong, costWrong 100 as for the badges)
+ *              read; 0.5 <= P < pStar read and flagged; P < 0.5 out of vocabulary (?), best read kept beside it.
+ *   heldOut    per training image, its examples under the model fitted without it.
+ * The status-bar clock (10:16, 10:26, 10:36 on dev and demo shots) was tested as a source of a 0 (fn.q.header.* on its
+ * row, capH-normalised): its 1 2 3 6 read as themselves at NCC 0.93-0.95 against the header's templates, below the
+ * header's own renders at other sizes (>= 0.98), and with 0.80-0.86 x the header's ink per capH^2 (a lighter weight).
+ * Not the same weight: its 0 is not borrowed, so a header 0 stays out of vocabulary.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { join, resolve } from 'node:path';
 import { createPartStore, registerQueries } from '../fg/store.mjs';
-import { registerHeaderQueries, ncc, FRAME, GAP_SPLIT, BAND } from '../fg/queries/header.mjs';
+import { registerHeaderQueries, ncc, FRAME, GAP_SPLIT, BAND, glyphFeatures, glyphProbability, GLYPH_FEATURES } from '../fg/queries/header.mjs';
 import { rasterOfPng } from '../fg/header/raster.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..');
@@ -43,7 +51,10 @@ export const TRAINING = Object.freeze([
   ['specimens/wide/dashs5612.png', DASHS], ['specimens/wide/dashs5613.png', DASHS],
   ['specimens/demo/dashs-udisc-capture-3.png', DASHS], ['specimens/demo/dashs-udisc-capture-4.png', DASHS]
 ]);
-const SCALES = Object.freeze([0.64, 0.75, 0.86, 0.914, 0.963, 1.1]);
+const SCALES = Object.freeze([0.64, 0.75, 0.86, 0.914, 0.963, 1.04, 1.1]);
+export const COST_WRONG = 100;   // flags one wrong header number is worth (stated, as for the badge readers; not fitted)
+export const P_STAR = 1 - 1 / COST_WRONG;   // 0.99
+export const OOV_BELOW = 0.5;   // below it a read is likelier a hard negative (no template for its class) than right
 const SCALED_FROM = Object.freeze(['specimens/dev/HeritagePark-full.png', 'specimens/dev/Lenard-full.png', 'specimens/dev/NorthPark-full.png', 'specimens/captures/therec/TheRec-L.png', 'specimens/wide/dashs5612.png']);
 const r4 = (v) => Math.round(v * 1e4) / 1e4, r3 = (v) => Math.round(v * 1e3) / 1e3;
 
@@ -89,19 +100,8 @@ export function buildTemplates(root = ROOT) {
   const classes = [...new Set(instances.map((i) => i.ch))].sort();
   const meanOf = (members) => { const v = new Float64Array(members[0].v.length); for (const m of members) for (let k = 0; k < v.length; k++) v[k] += m.v[k] / members.length; return v; };
   const templates = Object.fromEntries(classes.map((c) => [c, meanOf(instances.filter((i) => i.ch === c))]));
-  // leave-one-image-out own score; leave-one-class-out impostor
-  let looOwnMin = 1, looMarginMin = 1, impostorMax = -1, impostorAt = null;
-  for (const path of new Set(instances.map((i) => i.path))) {
-    const t = Object.fromEntries(classes.map((c) => { const m = instances.filter((i) => i.ch === c && i.path !== path); return [c, m.length ? meanOf(m) : null]; }));
-    for (const i of instances.filter((x) => x.path === path)) {
-      if (!t[i.ch]) continue;
-      const own = ncc(i.v, t[i.ch]), other = Math.max(...classes.filter((c) => c !== i.ch && t[c]).map((c) => ncc(i.v, t[c])));
-      looOwnMin = Math.min(looOwnMin, own); looMarginMin = Math.min(looMarginMin, own - other);
-    }
-  }
-  for (const i of instances) for (const c of classes) if (c !== i.ch) { const s = ncc(i.v, templates[c]); if (s > impostorMax) { impostorMax = s; impostorAt = `${i.ch} scored as ${c} (${i.path})`; } }
-  // scaled renders
-  let scaledOwnMin = 1, scaledMarginMin = 1, scaledWrong = 0, scaledGlyphs = 0; const scaled = [];
+  // scaled renders of five training headers (another phone's glyph size): more examples, from the same source images
+  const scaled = [];
   for (const path of SCALED_FROM) {
     const label = TRAINING.find(([p]) => p === path)[1], chars = [...label.replace(/ /g, '')], src = rasters.get(path);
     for (const s of SCALES) {
@@ -109,28 +109,82 @@ export function buildTemplates(root = ROOT) {
       store.constant(`fn.${address}`, { [address]: raster });
       const r = headerVectors(store, address, raster.heightPx);
       if (!r.vectors || r.vectors.length !== chars.length) { scaled.push({ path, scale: s, condition: r.condition ?? `${r.vectors?.length} glyphs, expected ${chars.length}` }); continue; }
-      let own = 1, margin = 1, wrong = 0;
-      r.vectors.forEach((v, k) => {
-        const sc = classes.map((c) => [c, ncc(v, templates[c])]).sort((a, b) => b[1] - a[1]), o = sc.find((x) => x[0] === chars[k])[1], other = sc.find((x) => x[0] !== chars[k])[1];
-        own = Math.min(own, o); margin = Math.min(margin, o - other); if (sc[0][0] !== chars[k]) wrong++;
-      });
-      scaledOwnMin = Math.min(scaledOwnMin, own); scaledMarginMin = Math.min(scaledMarginMin, margin); scaledWrong += wrong; scaledGlyphs += chars.length;
-      scaled.push({ path, scale: s, capHPx: r.glyphs.line.capHPx, ownMin: r3(own), marginMin: r3(margin), wrong });
+      r.vectors.forEach((v, k) => instances.push({ path, scale: s, ch: chars[k], v }));
+      scaled.push({ path, scale: s, capHPx: r.glyphs.line.capHPx, glyphs: chars.length });
     }
   }
-  const scoreMin = r3((impostorMax + scaledOwnMin) / 2), marginMin = r3(scaledMarginMin / 2);
+  // examples, leave one image out: every glyph of image X (and of X's scaled renders) scored against templates made from the
+  // OTHER images' original headers; its top read (right or wrong) and a hard negative (the best class once its own is removed:
+  // what a glyph with no template looks like)
+  const sources = [...new Set(instances.map((i) => i.path))], examples = [];
+  for (const path of sources) {
+    const own = instances.filter((i) => i.path === path), rest = instances.filter((i) => i.path !== path && i.scale == null);
+    const t = Object.fromEntries(classes.map((c) => { const m = rest.filter((i) => i.ch === c); return [c, m.length ? meanOf(m) : null]; }).filter(([, v]) => v));
+    for (const i of own) {
+      if (!t[i.ch]) continue;
+      const scores = Object.fromEntries(Object.entries(t).map(([c, v]) => [c, ncc(i.v, v)])), labels = Object.keys(scores);
+      const top = labels.reduce((a, c) => (scores[c] > scores[a] ? c : a));
+      examples.push({ path, scale: i.scale ?? 1, ch: i.ch, kind: 'top', read: top, y: top === i.ch ? 1 : 0, x: glyphFeatures(scores, top, labels) });
+      const others = labels.filter((c) => c !== i.ch), hn = others.reduce((a, c) => (scores[c] > scores[a] ? c : a));
+      examples.push({ path, scale: i.scale ?? 1, ch: i.ch, kind: 'hardNegative', read: hn, y: 0, x: glyphFeatures(scores, hn, others) });
+    }
+  }
+  const model = fitCalibrated(examples);
+  // honest numbers: each image's examples under the model fitted without that image
+  const heldOut = sources.map((path) => {
+    const m = fitCalibrated(examples.filter((e) => e.path !== path)), mine = examples.filter((e) => e.path === path);
+    const P = (e) => glyphProbability(m, e.x), right = mine.filter((e) => e.kind === 'top' && e.y), neg = mine.filter((e) => !e.y);
+    return { path, rightTops: right.length, wrongTops: mine.filter((e) => e.kind === 'top' && !e.y).length, minRightTopP: r4(Math.min(...right.map(P))), maxNegativeP: r4(Math.max(...neg.map(P))),
+      rightFlagged: right.filter((e) => P(e) < P_STAR).length, negativesRead: neg.filter((e) => P(e) >= OOV_BELOW).length,
+      negativesReadAs: [...new Set(neg.filter((e) => P(e) >= OOV_BELOW).map((e) => `${e.ch} as ${e.read}`))].sort() };
+  });
+  const range = (v) => [r4(Math.min(...v)), r4(Math.max(...v))];
   return {
-    schema: 'nctk-udisc-header-templates@1', builtBy: 'scripts/header-templates.mjs', frame: FRAME, gapSplitCapH: GAP_SPLIT, band: BAND,
-    read: { scoreMin, marginMin, rule: 'read when NCC to the best class >= scoreMin and its margin over the best other class >= marginMin; else unread (?)' },
+    schema: 'nctk-udisc-header-templates@2', builtBy: 'scripts/header-templates.mjs', frame: FRAME, gapSplitCapH: GAP_SPLIT, band: BAND,
+    read: { model: { features: GLYPH_FEATURES, weights: model.weights.map(r4), bias: r4(model.bias), priorShift: r4(model.priorShift) }, costWrong: COST_WRONG, pStar: P_STAR, oovBelow: OOV_BELOW,
+      rule: 'every glyph is read as its best class, with P(right | NCC score, margin over the best other class) = sigmoid(bias + priorShift + weights . features). P >= pStar: read; oovBelow <= P < pStar: read and flagged (low confidence); P < oovBelow: the read looks like a hard negative (the best template of a glyph whose class has none), so the glyph is out of vocabulary (?), its best read kept beside it. pStar = 1 - 1 / costWrong (a wrong header number costs costWrong flags, the badge calibration\'s stated cost); oovBelow = 0.5, the decision boundary between a right read and a hard negative.' },
     calibration: {
-      unit: 'NCC -1..1; margin = own-class NCC - best other-class NCC',
-      looOwnMin: r4(looOwnMin), looMarginMin: r4(looMarginMin), impostorMax: r4(impostorMax), impostorAt,
-      scaledOwnMin: r4(scaledOwnMin), scaledMarginMin: r4(scaledMarginMin), scaledWrong, scaledGlyphs, scales: SCALES, scaled,
-      sharpening: 'fn.q.sprite.overlap not applied: the training glyphs are pixel-identical renders (looOwnMin above), nothing to sharpen at this size'
+      unit: 'score: NCC -1..1; margin = score - the best other class NCC; P: probability 0..1',
+      examples: { top: examples.filter((e) => e.kind === 'top').length, hardNegative: examples.filter((e) => e.kind === 'hardNegative').length, wrongTops: examples.filter((e) => e.kind === 'top' && !e.y).length },
+      rightTopScore: range(examples.filter((e) => e.kind === 'top' && e.y).map((e) => e.x[0])), hardNegativeScore: range(examples.filter((e) => !e.y).map((e) => e.x[0])),
+      hardNegativeMax: (() => { const e = examples.filter((x) => !x.y).reduce((a, b) => (b.x[0] > a.x[0] ? b : a)); return `${e.ch} as ${e.read} at ${r4(e.x[0])} (${e.path}${e.scale !== 1 ? ` x${e.scale}` : ''})`; })(),
+      heldOut, scales: SCALES, scaled,
+      sharpening: 'fn.q.sprite.overlap not applied: the training glyphs are pixel-identical renders (leave-one-image-out NCC 1.000), nothing to sharpen at this size'
     },
     training,
-    classes: Object.fromEntries(classes.map((c) => [c, { members: instances.filter((i) => i.ch === c).length, vector: [...templates[c]].map(r4) }]))
+    classes: Object.fromEntries(classes.map((c) => [c, { members: instances.filter((i) => i.ch === c && i.scale == null).length, vector: [...templates[c]].map(r4) }]))
   };
+}
+
+// ---- logistic regression (as scripts/badge-calibration.mjs: standardized features, L2 1e-3, gradient descent) ----------
+const sigmoid = (z) => 1 / (1 + Math.exp(-z));
+function fit(X, y) {
+  const d = X[0].length, mu = Array(d).fill(0), sd = Array(d).fill(0);
+  for (const x of X) x.forEach((v, j) => { mu[j] += v / X.length; });
+  for (const x of X) x.forEach((v, j) => { sd[j] += (v - mu[j]) ** 2 / X.length; });
+  for (let j = 0; j < d; j++) sd[j] = Math.sqrt(sd[j]) || 1;
+  const Z = X.map((x) => x.map((v, j) => (v - mu[j]) / sd[j]));
+  let w = Array(d).fill(0), b = 0;
+  const lambda = 1e-3, lr = 0.5;
+  for (let it = 0; it < 4000; it++) {
+    const gw = Array(d).fill(0); let gb = 0;
+    Z.forEach((z, i) => { const e = sigmoid(b + z.reduce((a, v, j) => a + v * w[j], 0)) - y[i]; gb += e / Z.length; z.forEach((v, j) => { gw[j] += (e * v) / Z.length; }); });
+    w = w.map((wj, j) => wj - lr * (gw[j] + lambda * wj)); b -= lr * gb;
+  }
+  return { weights: w.map((wj, j) => wj / sd[j]), bias: b - w.reduce((a, wj, j) => a + (wj * mu[j]) / sd[j], 0) };
+}
+/**
+ * One hard negative per glyph makes the training odds ~1:1. The badge calibration moves them to the odds of a top read being
+ * right on its training reads; here that would be 1010:0, because every training glyph has its template by construction, and a
+ * header that holds a 0 would be read with false confidence. The prior is stated instead: of the ten digit classes a header
+ * number draws on, nine have templates, so a digit glyph has a template at odds 9:1 (PRIOR_ODDS); letters and the bullet are a
+ * fixed vocabulary and fit the same prior conservatively.
+ */
+export const PRIOR_ODDS = 9;
+function fitCalibrated(ex) {
+  const m = fit(ex.map((e) => e.x), ex.map((e) => e.y));
+  const n1 = ex.filter((e) => e.y === 1).length, n0 = ex.length - n1;
+  return { ...m, priorShift: Math.log(PRIOR_ODDS) - Math.log(n1 / n0) };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
@@ -142,7 +196,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   }
   writeFileSync(join(ROOT, TEMPLATE_ASSET), text);
   const c = asset.calibration;
-  console.log(JSON.stringify({ wrote: TEMPLATE_ASSET, classes: Object.keys(asset.classes).join(''), members: Object.values(asset.classes).reduce((s, x) => s + x.members, 0), read: asset.read,
-    looOwnMin: c.looOwnMin, impostorMax: c.impostorMax, impostorAt: c.impostorAt, scaledOwnMin: c.scaledOwnMin, scaledMarginMin: c.scaledMarginMin, scaledWrong: c.scaledWrong,
+  console.log(JSON.stringify({ wrote: TEMPLATE_ASSET, classes: Object.keys(asset.classes).join(''), members: Object.values(asset.classes).reduce((s, x) => s + x.members, 0), model: asset.read.model, pStar: asset.read.pStar,
+    examples: c.examples, rightTopScore: c.rightTopScore, hardNegativeScore: c.hardNegativeScore, hardNegativeMax: c.hardNegativeMax,
+    heldOut: c.heldOut.map((h) => `${h.path.split('/').pop()}: right ${h.rightTops} (min P ${h.minRightTopP}, ${h.rightFlagged} flagged), wrong tops ${h.wrongTops}, max negative P ${h.maxNegativeP} (${h.negativesRead} read)`),
     training: asset.training.map((t) => `${t.path.split('/').pop()}: ${t.used ? 'used' : t.condition}`) }, null, 1));
 }

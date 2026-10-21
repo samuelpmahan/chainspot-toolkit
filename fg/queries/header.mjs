@@ -176,21 +176,34 @@ export function ncc(a, b) {
   return saa > 0 && sbb > 0 ? sab / Math.sqrt(saa * sbb) : 0;
 }
 
+/** The features of reading a glyph as `label` among `labels` (the only definition; the calibration script calls it too). */
+export const GLYPH_FEATURES = Object.freeze(['ncc', 'margin']);
+export function glyphFeatures(scores, label, labels) {
+  const rest = labels.filter((c) => c !== label).map((c) => scores[c]);
+  return [scores[label], rest.length ? scores[label] - Math.max(...rest) : scores[label]];
+}
+/** P(the read is right | features) under a fitted model { weights, bias, priorShift }. */
+export function glyphProbability(model, x) {
+  const z = model.bias + (model.priorShift ?? 0) + x.reduce((a, v, j) => a + v * model.weights[j], 0);
+  return 1 / (1 + Math.exp(-z));
+}
 /**
- * Each glyph's read (pure): NCC against every class template; best, its score, its margin over the best OTHER class. A glyph is
- * read when score >= read.scoreMin and margin >= read.marginMin (calibrated by scripts/header-templates.mjs, recorded in the
- * template asset); otherwise it is unread ('?'), its best guess and scores kept. A glyph with no template (a 0 on training) must
- * come out unread: it never guesses.
+ * Each glyph's read (pure; Sam: no silent abstention). Every glyph gets its best class, its NCC score, its margin over the
+ * best other class and P (the learned confidence, templates.read.model). status: 'read' (P >= pStar), 'flagged' (read, low
+ * confidence: oovBelow <= P < pStar) or 'oov' (P < oovBelow: the read looks like a hard negative, the best template of a
+ * glyph whose class has none; char '?', best kept). A glyph never borrows a threshold: the model and pStar come from the asset.
  */
 export function readGlyphs(vectors, templates) {
-  const classes = Object.keys(templates.classes), { scoreMin, marginMin } = templates.read;
+  const classes = Object.keys(templates.classes), { model, pStar, oovBelow } = templates.read;
   return vectors.map((v) => {
-    const scored = classes.map((c) => [c, ncc(v, templates.classes[c].vector)]).sort((a, b) => b[1] - a[1]);
-    const [best, score] = scored[0] ?? [null, 0], second = scored[1] ?? [null, 0], margin = score - second[1];
-    const read = score >= scoreMin && margin >= marginMin;
-    return { char: read ? best : '?', best, score: r3(score), margin: r3(margin), second: second[0], secondScore: r3(second[1]), read };
+    const scores = Object.fromEntries(classes.map((c) => [c, ncc(v, templates.classes[c].vector)]));
+    const ranked = [...classes].sort((a, b) => scores[b] - scores[a]), best = ranked[0], second = ranked[1] ?? null;
+    const x = glyphFeatures(scores, best, classes), p = glyphProbability(model, x);
+    const status = p >= pStar ? 'read' : p >= oovBelow ? 'flagged' : 'oov';
+    return { char: status === 'oov' ? '?' : best, best, score: r3(x[0]), margin: r3(x[1]), p: r4(p), status, read: status !== 'oov', second, secondScore: second ? r3(scores[second]) : null };
   });
 }
+const r4 = (v) => Math.round(v * 1e4) / 1e4;
 
 const DIGITS = /^[0-9?]+$/;
 /** the grammar of the header: three segments split by bullets, "N Holes", "Par P", "X ft" */
@@ -204,7 +217,7 @@ export const GRAMMAR = Object.freeze([
  * ('2?'). Every departure from the grammar is a recorded condition, never a throw.
  */
 export function parseHeader(glyphsPart, reads) {
-  const tokens = glyphsPart.tokens.map(({ glyphs }) => {
+  const tokens = glyphsPart.tokens.map(({ glyphs }) => {   // the token's glyph indices travel with it
     const text = glyphs.map((k) => reads[k].char).join(''), xs = glyphs.map((k) => glyphsPart.glyphs[k].bbox);
     const x0 = Math.min(...xs.map((b) => b[0])), y0 = Math.min(...xs.map((b) => b[1])), x1 = Math.max(...xs.map((b) => b[0] + b[2])), y1 = Math.max(...xs.map((b) => b[1] + b[3]));
     const kind = text === '\u2022' ? 'bullet' : DIGITS.test(text) && /[0-9]/.test(text) ? 'number' : /^\?+$/.test(text) ? 'unread' : 'word';
@@ -220,16 +233,30 @@ export function parseHeader(glyphsPart, reads) {
     const num = tokens[seg[g.number]], word = tokens[seg[g.word]];
     const wordOk = g.words.includes(word.text);
     const full = num.kind === 'number' && !num.text.includes('?');
-    fields[g.field] = { value: full ? Number(num.text) : null, text: num.text, word: word.text, wordAgrees: wordOk, token: seg[g.number] };
+    const flagged = num.glyphs.filter((k) => reads[k].status === 'flagged');
+    fields[g.field] = { value: full ? Number(num.text) : null, text: num.text, word: word.text, wordAgrees: wordOk, token: seg[g.number], ...(flagged.length ? { flaggedGlyphs: flagged } : {}) };
+    if (full && flagged.length) conditions.push(`low-confidence read: ${g.field} reads "${num.text}" with ${flagged.length} flagged digit${flagged.length > 1 ? 's' : ''} (P below pStar)`);
     if (!wordOk) conditions.push(`header grammar: ${g.field}: the word reads "${word.text}", expected ${g.words.map((w) => `"${w}"`).join(' or ')}`);
     if (num.kind !== 'number') conditions.push(`header grammar: ${g.field}: "${num.text}" is not a number`);
-    else if (!full) conditions.push(`unread glyph: ${g.field} reads "${num.text}" (an unread digit is never guessed)`);
+    else if (!full) conditions.push(`out-of-vocabulary glyph: ${g.field} reads "${num.text}" (a glyph with no template is never guessed)`);
   });
   return { tokens, fields, conditions };
 }
 
+/**
+ * The cross-check fill (as for badges): a holes field with out-of-vocabulary digits ("2?") whose pattern the S1 badge count N
+ * completes (same length, the same digit wherever one was read) has exactly one consistent completion, N: it is filled and
+ * marked. Feet and par are never filled this way (S1 knows nothing about them).
+ */
+export function fillHoles(field, badgeCount) {
+  const text = field?.text ?? null;
+  if (!text || !text.includes('?') || !/^[0-9?]+$/.test(text) || !(badgeCount > 0)) return null;
+  const n = String(badgeCount);
+  return n.length === text.length && [...text].every((c, i) => c === '?' || c === n[i]) ? { value: badgeCount, pattern: text, filledBy: 'S1 badge count' } : null;
+}
+
 export const HEADER_UNIT = 'px (image frame: the original upload; capH = glyph cap height in px), coverage 0..1, levels 0..255 (luma)';
-const SCORE_UNIT = 'score, margin, secondScore: NCC -1..1 against the class templates; char: the read (? = unread)';
+const SCORE_UNIT = 'score, margin, secondScore: NCC -1..1 against the class templates; p: probability 0..1 (learned); char: the read (? = out of vocabulary)';
 /** The query table; templates: the class templates and read thresholds (fg/header/udisc-header-templates.json). */
 export function headerQueries(templates = null) {
   const vectors = Object.assign((_, args, call) => {

@@ -1,5 +1,5 @@
 {
- "schema": "nctk-udisc-header-templates@1",
+ "schema": "nctk-udisc-header-templates@2",
  "builtBy": "scripts/header-templates.mjs",
  "frame": {
   "cellsPerCapH": 20,
@@ -19,26 +19,240 @@
   "minInkContrast": 96
  },
  "read": {
-  "scoreMin": 0.938,
-  "marginMin": 0.04,
-  "rule": "read when NCC to the best class >= scoreMin and its margin over the best other class >= marginMin; else unread (?)"
+  "model": {
+   "features": [
+    "ncc",
+    "margin"
+   ],
+   "weights": [
+    48.8695,
+    15.0408
+   ],
+   "bias": -47.342,
+   "priorShift": 2.1972
+  },
+  "costWrong": 100,
+  "pStar": 0.99,
+  "oovBelow": 0.5,
+  "rule": "every glyph is read as its best class, with P(right | NCC score, margin over the best other class) = sigmoid(bias + priorShift + weights . features). P >= pStar: read; oovBelow <= P < pStar: read and flagged (low confidence); P < oovBelow: the read looks like a hard negative (the best template of a glyph whose class has none), so the glyph is out of vocabulary (?), its best read kept beside it. pStar = 1 - 1 / costWrong (a wrong header number costs costWrong flags, the badge calibration's stated cost); oovBelow = 0.5, the decision boundary between a right read and a hard negative."
  },
  "calibration": {
-  "unit": "NCC -1..1; margin = own-class NCC - best other-class NCC",
-  "looOwnMin": 1,
-  "looMarginMin": 0.1064,
-  "impostorMax": 0.8936,
-  "impostorAt": "o scored as a (specimens/dev/HeritagePark-full.png)",
-  "scaledOwnMin": 0.9822,
-  "scaledMarginMin": 0.0796,
-  "scaledWrong": 0,
-  "scaledGlyphs": 594,
+  "unit": "score: NCC -1..1; margin = score - the best other class NCC; P: probability 0..1",
+  "examples": {
+   "top": 1010,
+   "hardNegative": 1010,
+   "wrongTops": 0
+  },
+  "rightTopScore": [
+   0.9822,
+   1
+  ],
+  "hardNegativeScore": [
+   0.3723,
+   0.9144
+  ],
+  "hardNegativeMax": "a as o at 0.9144 (specimens/wide/dashs5612.png x0.64)",
+  "heldOut": [
+   {
+    "path": "specimens/dev/HeritagePark-full.png",
+    "rightTops": 160,
+    "wrongTops": 0,
+    "minRightTopP": 0.9889,
+    "maxNegativeP": 0.8435,
+    "rightFlagged": 1,
+    "negativesRead": 8,
+    "negativesReadAs": [
+     "a as o"
+    ]
+   },
+   {
+    "path": "specimens/dev/Lenard-full.png",
+    "rightTops": 160,
+    "wrongTops": 0,
+    "minRightTopP": 0.9896,
+    "maxNegativeP": 0.8457,
+    "rightFlagged": 1,
+    "negativesRead": 8,
+    "negativesReadAs": [
+     "a as o"
+    ]
+   },
+   {
+    "path": "specimens/dev/Lenard-1.png",
+    "rightTops": 20,
+    "wrongTops": 0,
+    "minRightTopP": 0.9952,
+    "maxNegativeP": 0.6779,
+    "rightFlagged": 0,
+    "negativesRead": 1,
+    "negativesReadAs": [
+     "a as o"
+    ]
+   },
+   {
+    "path": "specimens/dev/Lenard-2.png",
+    "rightTops": 20,
+    "wrongTops": 0,
+    "minRightTopP": 0.9952,
+    "maxNegativeP": 0.6779,
+    "rightFlagged": 0,
+    "negativesRead": 1,
+    "negativesReadAs": [
+     "a as o"
+    ]
+   },
+   {
+    "path": "specimens/dev/Lenard-3.png",
+    "rightTops": 20,
+    "wrongTops": 0,
+    "minRightTopP": 0.9952,
+    "maxNegativeP": 0.6779,
+    "rightFlagged": 0,
+    "negativesRead": 1,
+    "negativesReadAs": [
+     "a as o"
+    ]
+   },
+   {
+    "path": "specimens/dev/Lenard-4.png",
+    "rightTops": 20,
+    "wrongTops": 0,
+    "minRightTopP": 0.9952,
+    "maxNegativeP": 0.6779,
+    "rightFlagged": 0,
+    "negativesRead": 1,
+    "negativesReadAs": [
+     "a as o"
+    ]
+   },
+   {
+    "path": "specimens/dev/Lenard-5.png",
+    "rightTops": 20,
+    "wrongTops": 0,
+    "minRightTopP": 0.9952,
+    "maxNegativeP": 0.6779,
+    "rightFlagged": 0,
+    "negativesRead": 1,
+    "negativesReadAs": [
+     "a as o"
+    ]
+   },
+   {
+    "path": "specimens/dev/NorthPark-full.png",
+    "rightTops": 160,
+    "wrongTops": 0,
+    "minRightTopP": 0.9894,
+    "maxNegativeP": 0.8482,
+    "rightFlagged": 1,
+    "negativesRead": 8,
+    "negativesReadAs": [
+     "a as o"
+    ]
+   },
+   {
+    "path": "specimens/dev/TowneLake-full.png",
+    "rightTops": 20,
+    "wrongTops": 0,
+    "minRightTopP": 0.9952,
+    "maxNegativeP": 0.6789,
+    "rightFlagged": 0,
+    "negativesRead": 1,
+    "negativesReadAs": [
+     "a as o"
+    ]
+   },
+   {
+    "path": "specimens/captures/therec/TheRec-L.png",
+    "rightTops": 152,
+    "wrongTops": 0,
+    "minRightTopP": 0.9896,
+    "maxNegativeP": 0.8523,
+    "rightFlagged": 1,
+    "negativesRead": 8,
+    "negativesReadAs": [
+     "a as o"
+    ]
+   },
+   {
+    "path": "specimens/captures/therec/TheRec-R.png",
+    "rightTops": 19,
+    "wrongTops": 0,
+    "minRightTopP": 0.9952,
+    "maxNegativeP": 0.6784,
+    "rightFlagged": 0,
+    "negativesRead": 1,
+    "negativesReadAs": [
+     "a as o"
+    ]
+   },
+   {
+    "path": "specimens/wide/therecThrown.png",
+    "rightTops": 19,
+    "wrongTops": 0,
+    "minRightTopP": 0.9952,
+    "maxNegativeP": 0.6784,
+    "rightFlagged": 0,
+    "negativesRead": 1,
+    "negativesReadAs": [
+     "a as o"
+    ]
+   },
+   {
+    "path": "specimens/wide/dashs5612.png",
+    "rightTops": 160,
+    "wrongTops": 0,
+    "minRightTopP": 0.9891,
+    "maxNegativeP": 0.8543,
+    "rightFlagged": 3,
+    "negativesRead": 8,
+    "negativesReadAs": [
+     "a as o"
+    ]
+   },
+   {
+    "path": "specimens/wide/dashs5613.png",
+    "rightTops": 20,
+    "wrongTops": 0,
+    "minRightTopP": 0.9952,
+    "maxNegativeP": 0.6784,
+    "rightFlagged": 0,
+    "negativesRead": 1,
+    "negativesReadAs": [
+     "a as o"
+    ]
+   },
+   {
+    "path": "specimens/demo/dashs-udisc-capture-3.png",
+    "rightTops": 20,
+    "wrongTops": 0,
+    "minRightTopP": 0.9952,
+    "maxNegativeP": 0.6784,
+    "rightFlagged": 0,
+    "negativesRead": 1,
+    "negativesReadAs": [
+     "a as o"
+    ]
+   },
+   {
+    "path": "specimens/demo/dashs-udisc-capture-4.png",
+    "rightTops": 20,
+    "wrongTops": 0,
+    "minRightTopP": 0.9952,
+    "maxNegativeP": 0.6784,
+    "rightFlagged": 0,
+    "negativesRead": 1,
+    "negativesReadAs": [
+     "a as o"
+    ]
+   }
+  ],
   "scales": [
    0.64,
    0.75,
    0.86,
    0.914,
    0.963,
+   1.04,
    1.1
   ],
   "scaled": [
@@ -46,244 +260,214 @@
     "path": "specimens/dev/HeritagePark-full.png",
     "scale": 0.64,
     "capHPx": 32,
-    "ownMin": 0.993,
-    "marginMin": 0.082,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/dev/HeritagePark-full.png",
     "scale": 0.75,
     "capHPx": 38,
-    "ownMin": 0.99,
-    "marginMin": 0.08,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/dev/HeritagePark-full.png",
     "scale": 0.86,
     "capHPx": 43,
-    "ownMin": 0.998,
-    "marginMin": 0.097,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/dev/HeritagePark-full.png",
     "scale": 0.914,
     "capHPx": 46,
-    "ownMin": 0.996,
-    "marginMin": 0.096,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/dev/HeritagePark-full.png",
     "scale": 0.963,
     "capHPx": 48,
-    "ownMin": 0.994,
-    "marginMin": 0.1,
-    "wrong": 0
+    "glyphs": 20
+   },
+   {
+    "path": "specimens/dev/HeritagePark-full.png",
+    "scale": 1.04,
+    "capHPx": 53,
+    "glyphs": 20
    },
    {
     "path": "specimens/dev/HeritagePark-full.png",
     "scale": 1.1,
     "capHPx": 55,
-    "ownMin": 0.995,
-    "marginMin": 0.102,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/dev/Lenard-full.png",
     "scale": 0.64,
     "capHPx": 32,
-    "ownMin": 0.992,
-    "marginMin": 0.081,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/dev/Lenard-full.png",
     "scale": 0.75,
     "capHPx": 38,
-    "ownMin": 0.99,
-    "marginMin": 0.08,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/dev/Lenard-full.png",
     "scale": 0.86,
     "capHPx": 43,
-    "ownMin": 0.998,
-    "marginMin": 0.096,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/dev/Lenard-full.png",
     "scale": 0.914,
     "capHPx": 46,
-    "ownMin": 0.996,
-    "marginMin": 0.093,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/dev/Lenard-full.png",
     "scale": 0.963,
     "capHPx": 48,
-    "ownMin": 0.994,
-    "marginMin": 0.097,
-    "wrong": 0
+    "glyphs": 20
+   },
+   {
+    "path": "specimens/dev/Lenard-full.png",
+    "scale": 1.04,
+    "capHPx": 53,
+    "glyphs": 20
    },
    {
     "path": "specimens/dev/Lenard-full.png",
     "scale": 1.1,
     "capHPx": 55,
-    "ownMin": 0.995,
-    "marginMin": 0.101,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/dev/NorthPark-full.png",
     "scale": 0.64,
     "capHPx": 32,
-    "ownMin": 0.993,
-    "marginMin": 0.081,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/dev/NorthPark-full.png",
     "scale": 0.75,
     "capHPx": 38,
-    "ownMin": 0.991,
-    "marginMin": 0.082,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/dev/NorthPark-full.png",
     "scale": 0.86,
     "capHPx": 43,
-    "ownMin": 0.998,
-    "marginMin": 0.095,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/dev/NorthPark-full.png",
     "scale": 0.914,
     "capHPx": 46,
-    "ownMin": 0.996,
-    "marginMin": 0.093,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/dev/NorthPark-full.png",
     "scale": 0.963,
     "capHPx": 48,
-    "ownMin": 0.994,
-    "marginMin": 0.099,
-    "wrong": 0
+    "glyphs": 20
+   },
+   {
+    "path": "specimens/dev/NorthPark-full.png",
+    "scale": 1.04,
+    "capHPx": 53,
+    "glyphs": 20
    },
    {
     "path": "specimens/dev/NorthPark-full.png",
     "scale": 1.1,
     "capHPx": 55,
-    "ownMin": 0.995,
-    "marginMin": 0.101,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/captures/therec/TheRec-L.png",
     "scale": 0.64,
     "capHPx": 32,
-    "ownMin": 0.992,
-    "marginMin": 0.08,
-    "wrong": 0
+    "glyphs": 19
    },
    {
     "path": "specimens/captures/therec/TheRec-L.png",
     "scale": 0.75,
     "capHPx": 38,
-    "ownMin": 0.991,
-    "marginMin": 0.08,
-    "wrong": 0
+    "glyphs": 19
    },
    {
     "path": "specimens/captures/therec/TheRec-L.png",
     "scale": 0.86,
     "capHPx": 43,
-    "ownMin": 0.998,
-    "marginMin": 0.094,
-    "wrong": 0
+    "glyphs": 19
    },
    {
     "path": "specimens/captures/therec/TheRec-L.png",
     "scale": 0.914,
     "capHPx": 46,
-    "ownMin": 0.996,
-    "marginMin": 0.094,
-    "wrong": 0
+    "glyphs": 19
    },
    {
     "path": "specimens/captures/therec/TheRec-L.png",
     "scale": 0.963,
     "capHPx": 48,
-    "ownMin": 0.994,
-    "marginMin": 0.098,
-    "wrong": 0
+    "glyphs": 19
+   },
+   {
+    "path": "specimens/captures/therec/TheRec-L.png",
+    "scale": 1.04,
+    "capHPx": 53,
+    "glyphs": 19
    },
    {
     "path": "specimens/captures/therec/TheRec-L.png",
     "scale": 1.1,
     "capHPx": 55,
-    "ownMin": 0.995,
-    "marginMin": 0.102,
-    "wrong": 0
+    "glyphs": 19
    },
    {
     "path": "specimens/wide/dashs5612.png",
     "scale": 0.64,
     "capHPx": 32,
-    "ownMin": 0.993,
-    "marginMin": 0.081,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/wide/dashs5612.png",
     "scale": 0.75,
     "capHPx": 38,
-    "ownMin": 0.991,
-    "marginMin": 0.08,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/wide/dashs5612.png",
     "scale": 0.86,
     "capHPx": 43,
-    "ownMin": 0.999,
-    "marginMin": 0.098,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/wide/dashs5612.png",
     "scale": 0.914,
     "capHPx": 46,
-    "ownMin": 0.982,
-    "marginMin": 0.089,
-    "wrong": 0
+    "glyphs": 20
    },
    {
     "path": "specimens/wide/dashs5612.png",
     "scale": 0.963,
     "capHPx": 48,
-    "ownMin": 0.999,
-    "marginMin": 0.101,
-    "wrong": 0
+    "glyphs": 20
+   },
+   {
+    "path": "specimens/wide/dashs5612.png",
+    "scale": 1.04,
+    "capHPx": 52,
+    "glyphs": 20
    },
    {
     "path": "specimens/wide/dashs5612.png",
     "scale": 1.1,
     "capHPx": 56,
-    "ownMin": 0.991,
-    "marginMin": 0.092,
-    "wrong": 0
+    "glyphs": 20
    }
   ],
-  "sharpening": "fn.q.sprite.overlap not applied: the training glyphs are pixel-identical renders (looOwnMin above), nothing to sharpen at this size"
+  "sharpening": "fn.q.sprite.overlap not applied: the training glyphs are pixel-identical renders (leave-one-image-out NCC 1.000), nothing to sharpen at this size"
  },
  "training": [
   {
