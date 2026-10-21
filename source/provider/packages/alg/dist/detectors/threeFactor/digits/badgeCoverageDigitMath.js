@@ -18,6 +18,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.badgeCoverageDigitCells = badgeCoverageDigitCells;
 exports.badgeCoverageDigitScoreTable = badgeCoverageDigitScoreTable;
 exports.readCoverageDigits = readCoverageDigits;
+exports.digitTemplateFromFine = digitTemplateFromFine;
+exports.badgeDigitCellSpans = badgeDigitCellSpans;
 const badgeCoverageTemplateMath_1 = require("./badgeCoverageTemplateMath");
 const badgeDigitTemplateMath_1 = require("./badgeDigitTemplateMath");
 const SUPERSAMPLE = 4;
@@ -113,5 +115,78 @@ function readCoverageDigits(table) {
     const mean = (cells) => (cells ? cells.reduce((a, c) => a + Math.max(...c), 0) / cells.length : -Infinity);
     const cells = mean(table.two) > mean(table.one) ? table.two : table.one;
     return cells ? cells.map((c) => String(c.indexOf(Math.max(...c)))).join('') : null;
+}
+/**
+ * Digit templates from a super-resolved glyph (fn.q.sprite.overlap's mean coverage, `factor` cells per px), made the
+ * way each reader makes its cells, so a template and a cell differ only by the glyph:
+ *  - coverage: the half-coverage box widened by one sample of the badge grid (samplePx = [x, y] px per sample), scaled
+ *    by the ink height plus those two samples onto the digit canvas, area-averaged (badgeCoverageDigitCells);
+ *  - mask (B+W): the half-coverage box with no fringe, scaled by the ink height, nearest sample of coverage >= 0.5
+ *    (badgeDigitTemplateMath cellMask).
+ */
+function digitTemplateFromFine(mean, fineWidth, fineHeight, factor, samplePx) {
+    const W = badgeDigitTemplateMath_1.DEFAULT_BADGE_DIGIT_TEMPLATE_KNOBS.digitWidthPx, H = badgeDigitTemplateMath_1.DEFAULT_BADGE_DIGIT_TEMPLATE_KNOBS.digitHeightPx;
+    let minX = Infinity, maxX = -1, minY = Infinity, maxY = -1;
+    for (let y = 0; y < fineHeight; y++)
+        for (let x = 0; x < fineWidth; x++)
+            if (mean[y * fineWidth + x] >= 0.5) {
+                minX = Math.min(minX, x);
+                maxX = Math.max(maxX, x);
+                minY = Math.min(minY, y);
+                maxY = Math.max(maxY, y);
+            }
+    if (maxX < 0)
+        return null;
+    const inkHeight = maxY - minY + 1;
+    // B+W: no fringe, nearest
+    const mask = new Uint8Array(W * H);
+    {
+        const w = maxX - minX + 1, h = inkHeight;
+        const scale = Math.min((H - 2) / inkHeight, (W - 2) / w);
+        const dw = Math.max(1, Math.round(w * scale)), dh = Math.max(1, Math.round(h * scale));
+        const ox = Math.floor((W - dw) / 2), oy = Math.floor((H - dh) / 2);
+        for (let y = 0; y < dh; y++) {
+            const sy = Math.min(maxY, minY + Math.floor(((y + 0.5) * h) / dh));
+            for (let x = 0; x < dw; x++) {
+                const sx = Math.min(maxX, minX + Math.floor(((x + 0.5) * w) / dw));
+                if (mean[sy * fineWidth + sx] >= 0.5)
+                    mask[(oy + y) * W + ox + x] = 1;
+            }
+        }
+    }
+    // coverage: one sample of fringe, area average
+    const fx = Math.round(samplePx[0] * factor), fy = Math.round(samplePx[1] * factor);
+    const bx0 = Math.max(0, minX - fx), bx1 = Math.min(fineWidth - 1, maxX + fx), by0 = Math.max(0, minY - fy), by1 = Math.min(fineHeight - 1, maxY + fy);
+    const w = bx1 - bx0 + 1, h = by1 - by0 + 1;
+    const scale = Math.min((H - 2) / (inkHeight + 2 * fy), (W - 2) / w);
+    const dw = Math.max(1, Math.round(w * scale)), dh = Math.max(1, Math.round(h * scale));
+    const ox = Math.floor((W - dw) / 2), oy = Math.floor((H - dh) / 2);
+    const data = new Float64Array(W * H);
+    for (let y = 0; y < dh; y++)
+        for (let x = 0; x < dw; x++) {
+            const xa = bx0 + (x * w) / dw, xb = bx0 + ((x + 1) * w) / dw, ya = by0 + (y * h) / dh, yb = by0 + ((y + 1) * h) / dh;
+            let sum = 0, area = 0;
+            for (let gy = Math.floor(ya); gy < Math.ceil(yb); gy++)
+                for (let gx = Math.floor(xa); gx < Math.ceil(xb); gx++) {
+                    const a = (Math.min(xb, gx + 1) - Math.max(xa, gx)) * (Math.min(yb, gy + 1) - Math.max(ya, gy));
+                    if (a > 0) {
+                        sum += a * mean[Math.min(fineHeight - 1, gy) * fineWidth + Math.min(fineWidth - 1, gx)];
+                        area += a;
+                    }
+                }
+            data[(oy + y) * W + ox + x] = area ? sum / area : 0;
+        }
+    return { coverage: { widthPx: W, heightPx: H, data }, mask: { widthPx: W, heightPx: H, data: mask } };
+}
+/** Where a badge's digit cells lie in image px (columns of the readers' sampling grid mapped back to the raster). */
+function badgeDigitCellSpans(image, badge) {
+    const cells = (0, badgeDigitTemplateMath_1.badgeDigitCells)((0, badgeDigitTemplateMath_1.sampleBadgeDigits)(image, badge));
+    if (!cells)
+        return null;
+    const { widthPx: SW, heightPx: SH, marginY } = badgeDigitTemplateMath_1.BADGE_DIGIT_SAMPLE;
+    const left = badge.xPx - badge.widthPx / 2, top = badge.yPx - badge.heightPx / 2;
+    const px = (col) => left + ((col + 0.5) / SW) * badge.widthPx - 0.5;
+    const span = ([a, b]) => [px(a), px(b)];
+    return { one: [span(cells.one)], two: cells.two ? cells.two.map(span) : null, rows: [top + marginY * badge.heightPx, top + (1 - marginY) * badge.heightPx - 1] };
 }
 //# sourceMappingURL=badgeCoverageDigitMath.js.map

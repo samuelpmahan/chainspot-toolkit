@@ -35,3 +35,25 @@ export declare function readCoverageDigits(table: {
     one: number[][] | null;
     two: number[][] | null;
 }): string | null;
+/**
+ * Digit templates from a super-resolved glyph (fn.q.sprite.overlap's mean coverage, `factor` cells per px), made the
+ * way each reader makes its cells, so a template and a cell differ only by the glyph:
+ *  - coverage: the half-coverage box widened by one sample of the badge grid (samplePx = [x, y] px per sample), scaled
+ *    by the ink height plus those two samples onto the digit canvas, area-averaged (badgeCoverageDigitCells);
+ *  - mask (B+W): the half-coverage box with no fringe, scaled by the ink height, nearest sample of coverage >= 0.5
+ *    (badgeDigitTemplateMath cellMask).
+ */
+export declare function digitTemplateFromFine(mean: ArrayLike<number>, fineWidth: number, fineHeight: number, factor: number, samplePx: readonly [number, number]): {
+    coverage: NormalizedCoverage;
+    mask: {
+        widthPx: number;
+        heightPx: number;
+        data: Uint8Array;
+    };
+} | null;
+/** Where a badge's digit cells lie in image px (columns of the readers' sampling grid mapped back to the raster). */
+export declare function badgeDigitCellSpans(image: RgbaBitmap, badge: BadgeCropBody): {
+    one: [number, number][];
+    two: [number, number][] | null;
+    rows: [number, number];
+} | null;
