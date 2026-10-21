@@ -5,8 +5,14 @@
 // packages/alg/dist (this script uses the dist's own math, so there is no
 // mirror to keep in step):
 //
-//   node scripts/generate-badge-glyph-templates.mjs            # write the asset
+//   node scripts/generate-badge-glyph-templates.mjs            # write both assets
 //   node scripts/generate-badge-glyph-templates.mjs --check    # bake, compare, write nothing
+//
+// It bakes two assets: the binary templates (badge-glyph-templates.json, from
+// the old-stuff rasters below) and the coverage templates of the second reader
+// (badge-coverage-templates.json, digits/badgeCoverageTemplateMath.ts, from
+// dev-course badge sprites in artifacts/badge-coverage-sources), by the same
+// composition rule.
 //
 // Sources: artifacts/badge-glyph-sources/hole-01..18.png, the UDisc badge
 // rasters the original 18 templates were baked from (ChainSpot af85a3e,
@@ -272,11 +278,118 @@ const out = {
 console.log('font (px of the source rasters):', JSON.stringify({ ...font, lone: undefined }));
 console.log('composition check (11..18 from lone glyphs):', JSON.stringify(check));
 for (const row of confusion) console.log(`closest pair in 1..${row.bound}: ${row.closestPair.labels.join(' vs ')} at Dice ${row.closestPair.dice}`);
-const text = JSON.stringify(out, null, '\t') + '\n';
-if (process.argv.includes('--check')) {
-	const current = readFileSync(OUT_PATH, 'utf8');
-	console.log(current === text ? 'asset is current' : 'asset differs from a fresh bake');
-	process.exit(current === text ? 0 : 1);
+
+// ---- coverage templates (the second reader, digits/badgeCoverageTemplateMath.ts) ------------------
+// Same composition rule, at the glyph's sub-pixel coverage instead of its binary ink. Sources: one clean
+// badge sprite per label from the DEV courses (artifacts/badge-coverage-sources, written by the toolkit's
+// scripts/badge-coverage-sources.mjs); validation is never a source.
+
+const C = dist('digits/badgeCoverageTemplateMath.js');
+const CK = C.DEFAULT_BADGE_COVERAGE_TEMPLATE_KNOBS;
+const COVERAGE_SOURCES = join(ROOT, 'artifacts/badge-coverage-sources');
+const COVERAGE_OUT_PATH = join(ROOT, 'packages/alg/src/detectors/threeFactor/assets/badge-coverage-templates.json');
+const PLATE_GREY = 0;   // grey level of a composed plate; the reader measures both levels per badge, so any two levels do
+const GLYPH_GREY = 255;
+
+const coverageRasters = {};
+for (let label = 1; label <= SOURCE_LABELS; label++)
+	coverageRasters[label] = decodePng(readFileSync(join(COVERAGE_SOURCES, `hole-${String(label).padStart(2, '0')}.png`)));
+const coverageFont = measureFont(coverageRasters);
+/** A glyph's coverage patch: its ink box widened by one px of anti-aliased fringe on every side. */
+const coveragePatch = (raster, glyph) => {
+	const levels = C.coverageLevels(raster, wholeRaster(raster)), span = Math.max(1, levels.glyphLum - levels.plateLum);
+	const w = glyph.w + 2, h = glyph.h + 2, cov = new Float64Array(w * h);
+	for (let y = 0; y < h; y++)
+		for (let x = 0; x < w; x++) {
+			const px = Math.max(0, Math.min(raster.width - 1, glyph.x0 - 1 + x)), py = Math.max(0, Math.min(raster.height - 1, glyph.y0 - 1 + y)), o = (py * raster.width + px) * 4;
+			cov[y * w + x] = Math.max(0, Math.min(1, ((raster.data[o] + raster.data[o + 1] + raster.data[o + 2]) / 3 - levels.plateLum) / span));
+		}
+	return { w, h, cov, inkW: glyph.w };
+};
+const lonePatch = {};
+for (let label = 1; label <= 9; label++) lonePatch[label] = coveragePatch(coverageRasters[label], coverageFont.lone[label]);
+lonePatch[0] = coveragePatch(coverageRasters[10], coverageFont.lone[0]);
+function composeCoverageRaster(label) {
+	const patches = [...String(label)].map((digit) => lonePatch[Number(digit)]);
+	const span = patches.reduce((sum, p) => sum + p.inkW, 0) + coverageFont.gapPx * (patches.length - 1);
+	const width = Math.max(coverageFont.minWidthPx, span + coverageFont.padPx), height = coverageFont.heightPx;
+	const cov = new Float64Array(width * height);
+	let x = Math.floor((width - span) / 2);
+	for (const p of patches) {
+		for (let yy = 0; yy < p.h; yy++)
+			for (let xx = 0; xx < p.w; xx++) {
+				const X = x - 1 + xx, Y = coverageFont.topPx - 1 + yy;
+				if (X >= 0 && Y >= 0 && X < width && Y < height) cov[Y * width + X] = Math.max(cov[Y * width + X], p.cov[yy * p.w + xx]);
+			}
+		x += p.inkW + coverageFont.gapPx;
+	}
+	const data = new Uint8ClampedArray(width * height * 4);
+	for (let i = 0; i < width * height; i++) {
+		data[i * 4] = data[i * 4 + 1] = data[i * 4 + 2] = Math.round(PLATE_GREY + cov[i] * (GLYPH_GREY - PLATE_GREY));
+		data[i * 4 + 3] = 255;
+	}
+	return { width, height, data };
 }
-writeFileSync(OUT_PATH, text);
-console.log(`wrote ${templates.length} templates (1..${HOLE_LABEL_MAX}) to ${OUT_PATH}`);
+const coverageOf = (raster) => {
+	const coverage = C.normalizeBadgeCoverage(raster, wholeRaster(raster), CK);
+	if (!coverage) throw new Error('coverage normalized to an empty glyph');
+	return C.decodeCoverageRows(C.encodeCoverageRows(coverage), coverage.widthPx, coverage.heightPx);   // as shipped
+};
+const realCoverage = Array.from({ length: SOURCE_LABELS }, (_, i) => ({ label: i + 1, coverage: coverageOf(coverageRasters[i + 1]) }));
+const coverageCheck = [];
+for (let label = 11; label <= SOURCE_LABELS; label++) {
+	const verdict = C.classifyNormalizedCoverage(coverageOf(composeCoverageRaster(label)), realCoverage, { ...CK, minScore: -1, minMargin: 0 });
+	coverageCheck.push({ label, bestLabel: verdict.bestLabel, ncc: round3(verdict.bestScore), margin: round3(verdict.ambiguityMargin) });
+}
+const coverageFailed = coverageCheck.filter((c) => c.bestLabel !== c.label);
+if (coverageFailed.length) throw new Error(`coverage composition rule does not reproduce the font: ${JSON.stringify(coverageFailed)}`);
+const composedCoverageFor = (bound) =>
+	Array.from({ length: Math.max(0, bound - SOURCE_LABELS) }, (_, i) => ({ label: SOURCE_LABELS + 1 + i, coverage: coverageOf(composeCoverageRaster(SOURCE_LABELS + 1 + i)) }));
+const coverageConfusion = CANDIDATE_BOUNDS.map((bound) => {
+	const entries = [...realCoverage, ...composedCoverageFor(bound)].slice(0, bound);
+	let best = { labels: null, ncc: -2 };
+	for (let i = 0; i < entries.length; i++)
+		for (let j = i + 1; j < entries.length; j++) {
+			const ncc = C.bestCoverageScore(entries[i].coverage, entries[j].coverage, CK.maxShiftPx);
+			if (ncc > best.ncc) best = { labels: [entries[i].label, entries[j].label], ncc };
+		}
+	return { bound, closestPair: { labels: best.labels, ncc: round3(best.ncc) } };
+});
+const coverageTemplates = [...realCoverage, ...composedCoverageFor(HOLE_LABEL_MAX)].slice(0, HOLE_LABEL_MAX);
+const coverageOut = {
+	schema: 'badgeCoverageTemplates@1',
+	normalizedWidthPx: CK.normalizedWidthPx,
+	normalizedHeightPx: CK.normalizedHeightPx,
+	note:
+		'Each template is normalizeBadgeCoverage() of a badge raster: per pixel the glyph coverage 0..1 as two hex digits (x 255). Rows top to bottom.',
+	vocabulary: {
+		labels: `1..${HOLE_LABEL_MAX}`,
+		from: 'digits/holeLabels.ts HOLE_LABEL_MAX',
+		raster: `1..${SOURCE_LABELS}: dev-course badge sprites (artifacts/badge-coverage-sources/sources.json)`,
+		composed: `${SOURCE_LABELS + 1}..${HOLE_LABEL_MAX}: those sprites' digit coverage patches side by side (scripts/generate-badge-glyph-templates.mjs)`,
+		font: {
+			gapPx: coverageFont.gapPx, padPx: coverageFont.padPx, topPx: coverageFont.topPx, heightPx: coverageFont.heightPx, minWidthPx: coverageFont.minWidthPx,
+			unit: 'px of the dev badge sprites (medians over 10..18; minWidthPx over 1..9)'
+		},
+		compositionCheck: { rule: '11..18 composed from lone glyphs classify as themselves against the sprite templates', rows: coverageCheck },
+		confusion: { unit: 'normalized cross-correlation between the two closest templates of 1..bound', rows: coverageConfusion }
+	},
+	templates: coverageTemplates.map(({ label, coverage }) => ({ label, rows: C.encodeCoverageRows(coverage) }))
+};
+console.log('coverage font (px of the dev sprites):', JSON.stringify({ ...coverageFont, lone: undefined }));
+console.log('coverage composition check (11..18 from lone glyphs):', JSON.stringify(coverageCheck));
+for (const row of coverageConfusion) console.log(`coverage: closest pair in 1..${row.bound}: ${row.closestPair.labels.join(' vs ')} at NCC ${row.closestPair.ncc}`);
+
+// ---- write or check --------------------------------------------------------------------------------
+const outputs = [[OUT_PATH, JSON.stringify(out, null, '\t') + '\n'], [COVERAGE_OUT_PATH, JSON.stringify(coverageOut, null, '\t') + '\n']];
+if (process.argv.includes('--check')) {
+	let stale = 0;
+	for (const [path, text] of outputs) {
+		const current = (() => { try { return readFileSync(path, 'utf8'); } catch { return null; } })();
+		console.log(`${path}: ${current === text ? 'current' : 'differs from a fresh bake'}`);
+		if (current !== text) stale++;
+	}
+	process.exit(stale ? 1 : 0);
+}
+for (const [path, text] of outputs) writeFileSync(path, text);
+console.log(`wrote ${templates.length} binary and ${coverageTemplates.length} coverage templates (1..${HOLE_LABEL_MAX})`);
