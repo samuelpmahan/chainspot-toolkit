@@ -16,6 +16,7 @@ import { isCaptureManifest, runCapture } from '../capture/capture.mjs';
 import { CAPTURE_VIEW_CALCULATION } from '../../fg/stitch/capture.calc.mjs';
 import { RENDER_PART } from '../../fg/store.mjs';
 import { installScaledTee } from '../../fg/s3/teeScale.mjs';
+import { installQueriedShellShape, SHELL_QUERY } from '../../fg/s2/shellShape.mjs';
 import { deflateSync } from 'node:zlib';
 
 // Experiment code (what run-stages passes) -> lane name (what an FG's
@@ -113,7 +114,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   }));
 
   const stages = [];
-  let initialPixels, uninstallTee = null, s2Condition = null;
+  let initialPixels, uninstallTee = null, uninstallShell = null, s2Condition = null;
   for (const id of stageOrder.slice(0, lastIndex + 1)) {
     const started = Date.now();
     const inputSnapshotSha256 = pxc ? store.get(`tk.stage.${stageOrder[stageOrder.indexOf(id) - 1]}.snapshotSha256`) : null;
@@ -121,6 +122,8 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     // S3 across zoom levels (fg/s3/teeScale.mjs): the pinned S3 registers its ring and family Calculations with this image's
     // rC1-scaled bounds (measured from the S2 BasketPoints, tk.scale.rC1)
     if (id === 'S3') uninstallTee = installScaledTee(dist, () => store.get('tk.scale.rC1').tee);
+    // S2's basket frame shape is asked of the store's fn.q.sprite.overlap (fg/s2/shellShape.mjs): the members' dark frames overlapped
+    if (id === 'S2') uninstallShell = installQueriedShellShape(dist, (args) => store.call(SHELL_QUERY, args).value);
     // a data condition, not an integrity failure: recorded as the run's result, the later stages are not run
     const conditionReceipt = (condition, counts) => {
       const receipt = { schema: 'nctk-early@1', source: { path: source, sha256: sourceSha256 }, stages, condition, counts,
@@ -136,6 +139,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
       return conditionReceipt(error.condition, { badges: 0 });
     }
     pxc = result.pxc;
+    if (id === 'S2') { uninstallShell?.(); uninstallShell = null; }
     // S2 found no basket (no shell family on this image): recorded as the run's condition, and S3 still runs (Sam, 2026-10-21:
     // "let the tee detection run anyway, so if that's broken we find out sooner"). With no BasketPoint, rC1 is not measured and
     // S3 runs on the pinned px tee bounds (fg/s3/teeScale.mjs teeBounds(null)), recorded under receipt.scale.condition

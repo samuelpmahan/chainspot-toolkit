@@ -69,6 +69,7 @@ import { ringScale, opaquePlane } from '../../fg/alpha/alphaSpace.mjs';
 import { teeBounds } from '../../fg/s3/teeScale.mjs';
 import { createHash } from 'node:crypto';
 import { PURPLE_QUERIES, purpleShare, THROWN_CUT } from '../../fg/queries/purple.mjs';
+import { registerSpriteQueries } from '../../fg/queries/sprite.mjs';
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { createPartStore, registerQueries } from '../../fg/store.mjs';
@@ -182,6 +183,8 @@ export function createEarlyStore({ forkRoot, source, getBoard, dist, restorePxC,
   store.register('fn.tk.s0.purple', { inParts: ['px.course.canonicalPixels'], outParts: ['tk.s0.purple'], note: 'share of canonical px that are the round view\'s purple walk line; thrown when >= THROWN_CUT',
     calculate: (io) => { const r = purpleShare(io.in('px.course.canonicalPixels')); return { 'tk.s0.purple': { ...r, thrown: r.share >= THROWN_CUT, cut: THROWN_CUT } }; } });
   registerQueries(store, PURPLE_QUERIES);
+  // fn.q.sprite.overlap: one sprite's instances overlapped in sprite frame (S2's basket frame shape is its first user)
+  registerSpriteQueries(store, registerQueries);
   const isThrown = () => store.get('tk.s0.purple').thrown;
   const { executeCompiledPlan } = dist('exec/gateway');
   const { nullFeatureContext, defaultKnobs } = dist('detectors/threeFactor/features/types');
