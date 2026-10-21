@@ -122,12 +122,21 @@ reliable thing. Every single thing should be built on some known skeleton, but s
 scale specific." The skeleton is the shape of the relations (a badge is a sprite; the badge sits on the first leg; a
 hole runs tee pad -> basket); every size and distance in it is measured on the image at hand, never carried in from
 the courses we learned on. Sam: "You learned and you hardened around one scale and one size of course. What happens to
-your tee-pad-length-to-badge ratio when a hole is 1,700 feet long?" So: no fixed bound on a VARIABLE quantity (hole
-length, leg length, tee-to-badge distance, the reach to a basket), whether written in px, R1, W or pad lengths: a
-1,700 ft hole is about 52 R1 (C1 = 10 m) and its tee-to-badge distance about 40 pad lengths. A bound comes from the
-skeleton (a badge cannot overlap its own pad: the sum of the two measured half-sizes) or from the image (its
-diagonal), and the evidence (a z-score, a cost) decides the rest. A window or step of a measurement (a read-ahead, a
-search step, a lateral precision) is not a bound and takes the unit of what it measures.
+your tee-pad-length-to-badge ratio when a hole is 1,700 feet long?" (about 52 R1 at C1 = 10 m; its tee-to-badge
+distance about 40 pad lengths, past S3's 12.)
+A window or step of a measurement (a read-ahead, a search step, a lateral precision) is not a bound: it takes the unit
+of what it measures.
+
+**Assumptions are stated, fail loudly, and try to correct (Sam, 2026-10-21).** "I can already see this being a giant
+foot gun stripping out optimizations in the name of purity. We need a middle path which states and justifies the
+assumptions but fails loudly AND TRIES TO CORRECT." A bound on a VARIABLE quantity (hole length, leg length,
+tee-to-badge distance, the reach to a basket) stays as an optimization when it is:
+- stated: named, with its value in the unit the quantity follows (R1 for map distances), and justified by its evidence
+  (the measured range on which courses, and the margin);
+- loud when violated: a result at the edge of the bound, or nothing found inside it, is recorded as that assumption's
+  violation (a recorded condition and an emit, listed by the profile and `pxc doctor`), never silently clipped;
+- self-correcting: on a violation the search widens (the bound grows, up to what the skeleton or the image allows) and
+  runs again, as S4 recovers what S1-S3 miss and Seq3 widens a rejected hole; the record says what the widening found.
 
 **A stitched course is one raster (Sam, 2026-10-19).** The tiles of one capture (lenard1-5; Dash's Track's four
 tiles and overview) are not separate images to judge, match or count one by one. Mathematically there is a single
