@@ -41,6 +41,7 @@ function bandRasterOf({ widthPx: W, rgba }, [y0, y1]) {
  */
 export function readHeaderOf(call, image, raster, rows, { name = null } = {}) {
   const base = { schema: HEADER_SCHEMA, ...(name ? { name } : {}), searchedRows: [0, rows ?? 0] };
+  if (raster?.undecoded) return { ...base, found: false, holes: null, par: null, feet: null, text: null, tokens: [], perGlyph: [], glyphs: [], unread: [], conditions: [`no header read: ${raster.undecoded}`] };
   const band = call('fn.q.header.band', { image, rows });
   if (!band.found) return { ...base, found: false, holes: null, par: null, feet: null, text: null, tokens: [], perGlyph: [], glyphs: [], unread: [], band, conditions: [band.condition] };
   const g = call('fn.q.header.glyphs', { image, band });

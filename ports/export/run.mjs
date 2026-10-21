@@ -9,7 +9,8 @@
  * (ports/s7trace/run.mjs loadS7Lanes) and the persistent cache on (fg/cas.mjs). The source bytes are hashed and checked
  * against the attempt record's sourceSha256 (an integrity check: a mismatch stops the run). Testimony is NOT read: the export
  * is blind. Writes under <out> (default <repo>/attempts/export/<specimen>/run-<ISO time>/): course-geometry.json (the value of
- * the Part tk.export.course, canonical JSON, nothing else crosses), tk.export.course.png (its render), instrumentation.json.
+ * the Part tk.export.course, canonical JSON, nothing else crosses), tk.export.course.png (its render), tk.source.header.png (the
+ * header bar's render), instrumentation.json.
  */
 import { exitOnEarlyCondition } from '../early/condition.mjs';
 import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'node:fs';
@@ -57,7 +58,8 @@ export function captureTilesOf(fork, record) {
   return record.tiles.map((t) => {
     const bytes = readFileSync(join(fork, t.path)), sha = createHash('sha256').update(bytes).digest('hex');
     if (t.sha256 && sha !== t.sha256) throw new Error(`integrity: capture tile ${t.path} hashes to ${sha}, the capture record says ${t.sha256}`);
-    return { name: t.name, ...rasterOfPng(bytes), crop: t.crop };
+    const png = bytes.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
+    return { name: t.name, ...(png ? rasterOfPng(bytes) : { widthPx: 0, heightPx: 0, rgba: new Uint8Array(0), undecoded: 'the tile is not a PNG: its header is not read here' }), crop: t.crop };
   });
 }
 
@@ -93,9 +95,11 @@ export function runExportCourse({ specimen, attempt, attemptsRoot = ROOT, root =
   const { emits, ...doc } = part;
   writeFileSync(join(out, 'course-geometry.json'), canonicalJson(doc) + '\n');
   for (const p of render.parts) if (p.kind === 'raster' && p.data?.png) writeFileSync(join(out, `${EXPORT_COURSE_PART}.png`), Buffer.from(p.data.png, 'base64'));
+  // the header bar the udisc / totals came from: its default render (the band, glyphs boxed by confidence, legend)
+  for (const p of store.call(RENDER_PART, { a: 'tk.source.header', deflate: (b) => deflateSync(b) }).value.parts) if (p.kind === 'raster' && p.data?.png) writeFileSync(join(out, 'tk.source.header.png'), Buffer.from(p.data.png, 'base64'));
   const docProfile = instrumentation();
   writeFileSync(join(out, 'instrumentation.json'), JSON.stringify(docProfile) + '\n');
-  return { out, doc, emits, profile: profileSummary(docProfile), cache: cache?.stats?.() ?? null };
+  return { out, doc, emits, header: store.get('tk.source.header'), badges: store.get('px.badges').length, profile: profileSummary(docProfile), cache: cache?.stats?.() ?? null };
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

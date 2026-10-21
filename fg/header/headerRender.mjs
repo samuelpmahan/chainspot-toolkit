@@ -50,7 +50,7 @@ export function renderUdiscHeader(address, v, { canvas, deflate = null }) {
     const fy = by + r.heightPx + 10;
     const f = (k) => (b[k] != null ? String(b[k]) : b.fields?.[k]?.text ? `${b.fields[k].text} (UNREAD)` : '-');
     cv.text(16, fy, `HOLES ${f('holes')}   PAR ${f('par')}   FEET ${f('feet')}${b.unread.length ? `   ${b.unread.length} UNREAD GLYPH${b.unread.length > 1 ? 'S' : ''}` : ''}`, b.unread.length ? COL.unread : COL.high, 2);
-    (b.conditions ?? []).slice(0, 4).forEach((s, i) => cv.text(16, fy + 24 + i * 22, s.slice(0, Math.floor((w - 32) / 12)), COL.dim, 2));
+    (b.conditions ?? []).slice(0, 4).forEach((s, i) => cv.text(16, fy + 24 + i * 22, s.replace(/"/g, "'").replace(/\u2022/g, '*').slice(0, Math.floor((w - 32) / 12)), COL.dim, 2));   // the bitmap font has no double quote
     y0 += panelH(b);
   }
   const png = base64(encodePngRgb({ width: w, height: h, rgb: cv.rgb, ...(deflate ? { deflate } : {}) }));
