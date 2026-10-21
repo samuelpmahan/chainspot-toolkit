@@ -11,6 +11,7 @@ answered once, by pattern matching on the union of Part kinds and backings.
 | `fn.q.pose.overview / searchBadge / occluderSearch / describe / evaluate` | rigid-template poses | `ports/s4recover/poseSpace.mjs` |
 | `fn.q.pair.residual` | a tee axis vs the ray to its badge plate: residual deg, signed perpendicular px (S5) | `ports/s5pair/residualQuery.mjs` (the S5 learning lane's `fn.q.pair.*` replaces it) |
 | `fn.q.stitch.local / full / place / frame / composite / sourcePoint` | a capture's tiles into one course raster: badges place (`fn.q.identity.place`, translation), pixels confirm and tighten (luma search, ChainSpot `stitch.ts`), composite with the overlap rule; a course point back to its tiles | `fg/queries/stitch.mjs` |
+| `fn.q.sprite.overlap` | the instances of one screen-fixed sprite overlapped in sprite frame, registered on a stated sub-pixel anchor: mean coverage and agreement per fine cell (factor x factor per px: many phases give a super-resolved shape), the shape at a stated agreement, each member's phase, shift and residual; mask, component-field or raster sources (LOCAL levels), either polarity | `fg/queries/sprite.mjs` |
 | `fn.q.part.render` | the default render of any Part | `fg/render.mjs` |
 | `fn.tk.instrumentation.calls` | the profile: calls under a caller | `fg/store.mjs` |
 

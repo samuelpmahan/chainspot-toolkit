@@ -7,6 +7,7 @@
  *   pxset         a PixelSet (fg/pxset.mjs)                             -> pxset
  *   routeMatchView { schema: 'nctk-s7-trace-view@1', rows, ... }       -> the course picture with the traces, bends before / after and testimony (fg/s7trace/traceViewRender.mjs)
  *   routeTable    { schema: 'nctk-s7-route-table@1', matrix, ... }      -> raster heatmap holes x baskets + legend (fg/s7route/routeRender.mjs)
+ *   spriteOverlap { schema: 'nctk-sprite-overlap@1', mean, shape, members } -> mean coverage and shape panels + ledger (fn.q.sprite.overlap)
  *   shellShape    { schema: 'chainspot-basket-shell-shape@1', overlap, learned, carried } -> agreement / learned / carried panels + ledger (S2)
  *   capture       { schema: 'nctk-capture@1' | 'nctk-capture-view@1', tiles, links, ... } -> the course raster with its tiles,
  *                 seams, links and badges (fg/stitch/captureRender.mjs)
@@ -40,7 +41,7 @@ const labelOf = (it, i) => it.label ?? it.name ?? it.candidate ?? it.hole ?? Str
 const scalarFields = (o) => Object.fromEntries(Object.entries(o).filter(([, v]) => isScalar(v) || (Array.isArray(v) && v.length <= 6 && v.every(isScalar))).map(([k, v]) => [k, Array.isArray(v) ? v.join(', ') : v]));
 const bboxOf = (it) => (Array.isArray(it.bbox) && it.bbox.length === 4 ? it.bbox : null);
 
-export const PART_KINDS = Object.freeze(['pxset', 'raster', 'alphaProfile', 'plane', 'pxsets', 'boxes', 'points', 'rows', 'strips', 'scalar', 'object', 'pathLoss', 'pathProfile', 'hallwayScene', 'pairFeatures', 'routeTable', 'routeMatchView', 'courseGeometry', 'capture', 'shellShape']);   // strips: S5-B; alphaProfile: S7-A; pathLoss, pathProfile: S6-B; hallwayScene: S7-B; pairFeatures: S6 scoring; routeTable: S7 scoring
+export const PART_KINDS = Object.freeze(['pxset', 'raster', 'alphaProfile', 'plane', 'pxsets', 'boxes', 'points', 'rows', 'strips', 'scalar', 'object', 'pathLoss', 'pathProfile', 'hallwayScene', 'pairFeatures', 'routeTable', 'routeMatchView', 'courseGeometry', 'capture', 'shellShape', 'spriteOverlap']);   // strips: S5-B; alphaProfile: S7-A; pathLoss, pathProfile: S6-B; hallwayScene: S7-B; pairFeatures: S6 scoring; routeTable: S7 scoring
 
 /** Which case of the union a value is (the dispatch every default property can share). */
 export function partKind(v) {
@@ -53,6 +54,7 @@ export function partKind(v) {
   if (isCapture(v)) return 'capture';   // S0 capture block: the tiles behind the course raster
   if (isTraceView(v)) return 'routeMatchView';   // S7 trace lane block: the traces over the course
   if (v && typeof v === 'object' && v.schema === 'chainspot-basket-shell-shape@1') return 'shellShape';   // S2: px.baskets.shellShape
+  if (v && typeof v === 'object' && v.schema === 'nctk-sprite-overlap@1') return 'spriteOverlap';   // fn.q.sprite.overlap answers
   if (v && typeof v === 'object' && v.rgba && Number.isInteger(v.widthPx) && Number.isInteger(v.heightPx)) return 'raster';
   if (Array.isArray(v)) {
     const it = v.find((x) => x && typeof x === 'object');
@@ -83,7 +85,8 @@ export function renderValue(address, v, dims = null, depth = 0, opts = {}) {
     case 'routeMatchView': return renderTraceView(address, v, dims, { canvas: s6Canvas, deflate: opts.deflate ?? null });   // S7 trace lane block: routes, bends before / after, testimony over the course
     case 'courseGeometry': return renderCourseGeometry(address, v, dims, { canvas: s6Canvas, deflate: opts.deflate ?? null });   // export block: holes, bends, badges, candidates over the course
     case 'capture': return renderCapture(address, v, dims, { canvas: s6Canvas, deflate: opts.deflate ?? null });
-    case 'shellShape': return renderShellShape(address, v);   // S2 block below   // S0 capture block: tiles, seams, links, badges over the course
+    case 'shellShape': return renderShellShape(address, v);   // S2 block below
+    case 'spriteOverlap': return renderSpriteOverlap(address, v);   // S2 block below   // S0 capture block: tiles, seams, links, badges over the course
     case 'routeTable': return renderRouteTable(address, v, { canvas: s6Canvas });   // S7 scoring block: holes x baskets heatmap
     case 'pxsets': {
       const px = []; for (const it of v) for (const i of it.px) px.push(i);
@@ -183,6 +186,20 @@ function renderShellShape(address, v) {
     { address: `${address}#legend`, kind: 'ledger', data: { rows: strips.legend.map((l) => ({ colour: `rgb(${l.color.join(', ')})`, meaning: l.meaning })) } },
     { address: strips.strips[0].label, kind: 'raster', data: stripPng(strips.strips[0], strips.scale) }];
   return { kind: 'shellShape', parts };
+}
+
+/** fn.q.sprite.overlap: mean coverage (grey ramp, white = every member covers the cell) and the shape (red), on the fine grid. */
+function renderSpriteOverlap(address, v) {
+  const n = v.fineWidth * v.fineHeight, panel = (paint) => { const rgb = new Uint8Array(n * 3); for (let i = 0; i < n; i++) { const c = paint(i); rgb[i * 3] = c[0]; rgb[i * 3 + 1] = c[1]; rgb[i * 3 + 2] = c[2]; } return { origin: [0, 0], widthPx: v.fineWidth, heightPx: v.fineHeight, rgb }; };
+  const grey = (i) => { const g = Math.round(v.mean[i] * 255); return [g, g, g]; };
+  const strip = { label: `${address}#mean|shape`, panels: [panel(grey), panel((i) => (v.shape[i] ? [230, 40, 40] : grey(i).map((c) => c >> 2)))] };
+  const residuals = v.members.map((m) => m.residual);
+  return { kind: 'spriteOverlap', parts: [
+    { address, kind: 'ledger', data: { rows: Object.entries({ polarity: v.polarity, factor: v.factor, window: `${v.window.width} x ${v.window.height} px`, anchorAt: v.window.anchorAt.join(', '),
+      memberCount: v.memberCount, agreementCount: v.agreementCount, level: v.level, shapeCells: v.shape.reduce((s, x) => s + x, 0),
+      residualMax: residuals.length ? Number(Math.max(...residuals).toFixed(4)) : null }).map(([field, value]) => ({ field, value })) } },
+    { address: `${address}#legend`, kind: 'ledger', data: { rows: [{ colour: 'grey ramp', meaning: 'mean coverage over members (white = 1)' }, { colour: 'rgb(230, 40, 40)', meaning: `the shape: >= ${v.agreementCount} of ${v.memberCount} members cover the cell` }] } },
+    { address: strip.label, kind: 'raster', data: stripPng(strip, Math.max(1, Math.round(4 / v.factor))) }] };
 }
 
 /** A flipbook page for one Part (fg/guarantee.mjs frame shape). */
