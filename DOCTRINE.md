@@ -45,7 +45,7 @@ right and the repo is behind. Every number carries a unit.
   2026-10-17). Every claim carries its scope (`fg/scene/invariants.mjs`,
   `docs/evidence/ledger/`):
   GLOBAL (holds on full courses and zoomed views): basket sprite 46 x 72
-  px; badge sprite size by label; frame and ring strokes in screen px;
+  px; frame and ring strokes in screen px;
   C2 = 2 x C1 (10 m and 20 m by definition: the scale anchor).
   LOCAL (one value per image, measured on every run, free orientation in a
   blind run): R1 (21-56 px), pad template (prior 6 m x 4 m, checked), pad frame px, S3 band fill,
@@ -111,10 +111,23 @@ CV effort moves to non-dev courses, to learn what to nail down and what to adapt
 **UDisc renders differently at different zooms (Sam, 2026-10-20).** A sprite is not one thing that scales; its
 parts follow different laws. Measured on The Rec (single raster vs the zoomed L tile, map 1.66-1.74x): a tee pad's
 grey fill scales with the map (28x17 -> 52x33 px), its white frame stays ~3-4 px at every zoom, and its colours do not
-change (fill 158, frame 255). Badges are fixed-size sprites (54-57 x 42-44 px at 1x and 2.33x). The hallway ribbon
+change (fill 158, frame 255). Badge plates measured 54-57 x 42-44 px at Lenard 1x and 2.33x (an observation on one course, not a law: Sam never
+ruled badges fixed-size; see 2026-10-21 below). The hallway ribbon
 scaled 1.45x where the map scaled 2.33x (E19). So every rule names which law its quantity follows: map-scaled
 (expressed in rC1px, the radius of the basket's C1 circle measured per image; never the hallway width, which follows its own curve), screen-fixed (a constant px, GLOBAL), or a ratio only
 between quantities that follow the same law. Accommodating this variety is the requirement, not an edge case.
+
+**A known skeleton, measured per course and scale (Sam, 2026-10-21).** "Badges are a sprite and they're the most
+reliable thing. Every single thing should be built on some known skeleton, but should be flexible to be course and
+scale specific." The skeleton is the shape of the relations (a badge is a sprite; the badge sits on the first leg; a
+hole runs tee pad -> basket); every size and distance in it is measured on the image at hand, never carried in from
+the courses we learned on. Sam: "You learned and you hardened around one scale and one size of course. What happens to
+your tee-pad-length-to-badge ratio when a hole is 1,700 feet long?" So: no fixed bound on a VARIABLE quantity (hole
+length, leg length, tee-to-badge distance, the reach to a basket), whether written in px, R1, W or pad lengths: a
+1,700 ft hole is about 52 R1 (C1 = 10 m) and its tee-to-badge distance about 40 pad lengths. A bound comes from the
+skeleton (a badge cannot overlap its own pad: the sum of the two measured half-sizes) or from the image (its
+diagonal), and the evidence (a z-score, a cost) decides the rest. A window or step of a measurement (a read-ahead, a
+search step, a lateral precision) is not a bound and takes the unit of what it measures.
 
 **A stitched course is one raster (Sam, 2026-10-19).** The tiles of one capture (lenard1-5; Dash's Track's four
 tiles and overview) are not separate images to judge, match or count one by one. Mathematically there is a single
