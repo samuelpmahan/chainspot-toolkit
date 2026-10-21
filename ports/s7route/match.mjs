@@ -18,7 +18,7 @@
  * Pure functions on the S7 scene ({ lum, mask, W, H }) and the table; no thresholds hide anywhere else.
  */
 import { routeSensorAt, ribbonContrastAt, ROUTE, badgeMidAlongPx, badgeMidOf } from './routeSpace.mjs';
-import { refineVertices, arange, trace as followHallway, runEnd as followRunEnd, closeOnBp as followCloseOnBp, findBendAt as followBendAt } from '../s7trace/hallway.mjs';
+import { refineVertices, arange, trace as followHallway, runEnd as followRunEnd, closeOnBp as followCloseOnBp, findBendAt as followBendAt, runEndW as followRunEndWOf, closeOnBpW as followCloseOnBpWOf, findBendAtW as followBendAtWOf, findBendW, FOLLOW_W } from '../s7trace/hallway.mjs';
 import { refineBendsOf } from './bends.mjs';
 import { kCellAt, kChainAt, legContrastsOf, KBENDS, turnCostOf, turnsOf, legRunsAlong, bottleneckOf, polishAt } from './kbends.mjs';
 import { straightClaimsOf, neighbourhoodsOf, foreignRingsOf, SEQ } from './seq.mjs';
@@ -217,7 +217,11 @@ export const MATCH_STEPS = Object.freeze({
   // profiled store call: the edge run along a leg, the close on a BasketPoint, the best bend at one vertex position on the leg
   followRunEnd: (S, O, phi, W, t0) => followRunEnd(S, O, phi, W, t0),
   followCloseOnBp: (S, O, phi, W, tEnd, used) => followCloseOnBp(S, O, phi, W, tEnd, used),
-  followBendAt: (S, O, phi, W, tv, selfC, tees) => followBendAt(S, O, phi, W, tv, selfC, tees)
+  followBendAt: (S, O, phi, W, tv, selfC, tees) => followBendAt(S, O, phi, W, tv, selfC, tees),
+  // seqFollow 'w': the same steps with every resolution a fraction of W (hallway.mjs FOLLOW_W; res: the rule set's overrides)
+  followRunEndW: (S, O, phi, W, t0, res) => followRunEndWOf(S, O, phi, W, t0, res),
+  followCloseOnBpW: (S, O, phi, W, tEnd, used, res) => followCloseOnBpWOf(S, O, phi, W, tEnd, used, res),
+  followBendAtW: (S, O, phi, W, tv, selfC, tees, psis, res) => followBendAtWOf(S, O, phi, W, tv, selfC, tees, psis, res)
 });
 
 /**
@@ -259,7 +263,12 @@ export const MATCH_STEPS = Object.freeze({
  *                  other holes' chains may not run a leg along one (kbends.mjs legRunsAlong), crossing allowed
  *   seqTurnKappa:  (kBends 'seq') lum: the price of turning, kappa x sum (1 - cos theta)^2 over a route's bends (kbends.mjs turnCostOf)
  *   seqFollow:     (kBends 'seq') true = a hole whose assigned route still fails the gate rides the ribbon with the hallway follower
- *                  (hallway.mjs trace) from its tee cap; the route it finds, polished on its weakest leg, competes for that cell
+ *                  (hallway.mjs trace) from its tee cap; the route it finds, polished on its weakest leg, competes for that cell |
+ *                  'w' = the same follower with every resolution a fraction of W (hallway.mjs FOLLOW_W: vertex positions W/8, a 1.7 W
+ *                  heading run sampled every W/8, headings every (W/8) / 1.7 W rad, the winner polished to W/32)
+ *   followRes:     (seqFollow 'w') overrides of FOLLOW_W, e.g. { vertexStepW: 1/16 }
+ *   kUnits:        (kBends 'seq') 'w' = the K-bend search's hallway steps (kbends.mjs KBENDS: the split grid, minimum leg, axis
+ *                  step, refine end) in W instead of R1 (unit W / KBENDS.goldenWPerR1); the foreign rings and the axis reach stay R1
  *   sensor:        absent (edges) | 'region' = the assignment reads the hallway REGION (ports/s7route/regionSpace.mjs: each cell's
  *                  best route by region support, -1..1, the on-axis prior in support units); the routes and the per-hole steps (refine,
  *                  sensor gates, second bend, placement) read edges | 'regionAll' = every measure reads the region
@@ -308,6 +317,12 @@ export const RULE_SETS = Object.freeze({
   // the search fixed (lane s7bends, 2026-10-21 diagnosis: the edge gate passes Coleto 18's and SeaTac 19's true routes; the chain
   // never proposed them): polish before compare, owned corridors, a price on turning
   routeMatchKBendsSeq3Search: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: true },
+  // Seq3Search with the follower's resolutions in W (Sam 2026-10-21: "do your search resolution as a multiplier of the hallway width")
+  routeMatchKBendsSeq3SearchW: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w' },
+  // the same, vertex positions every W/16
+  routeMatchKBendsSeq3SearchW16: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w', followRes: { vertexStepW: 1 / 16 } },
+  // SearchW with the K-bend search's hallway steps in W as well
+  routeMatchKBendsSeq3SearchWK: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w', kUnits: 'w' },
   routeMatchKBendsSeq3RegionGate: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqGate: 'region' },
   routeMatchKBendsSeq3RegionScore: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqScore: 'region' },
   routeMatchKBendsSeq3RegionWiden: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqGate: 'regionWiden' },
@@ -426,6 +441,7 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
   const gateOf = (V) => (rules.seqGate === 'region' && rg ? rg.sensor(S, V, W) : steps.sensor(S, V, W)).passFrac;
   const regionScore = rules.seqScore === 'region' && rg;
   const kappa = rules.seqTurnKappa ?? 0;
+  const unitPx = rules.kUnits === 'w' ? W / KBENDS.goldenWPerR1 : null;   // kUnits 'w': the K-bend search's hallway steps in W
   const valueOf = (best) => (!best ? -Infinity : regionScore ? rg.contrast(S, best.verts, W) : best.bottleneck - turnCostOf(best.verts, kappa));
   const bp = table.baskets.map((b, k) => b.point ?? table.rows[0].cells[k].contrast.verts.at(-1)), starts = holes.map((h) => startOf(h));
   const claims = straightClaimsOf(starts, bp, S.R1, verdicts ?? null, []);
@@ -435,7 +451,7 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
   const first = Math.min(rules.seqNeighbours ?? SEQ.neighbours, SEQ.neighbours);
   const score = holes.map(() => bp.map(() => -Infinity)), route = {}, why = {}, record = {}, cells = {}, pend = [], cap = holes.map(() => -Infinity), rejectedOf = {};
   const addCell = (h, i, c) => {
-    const k = c.basket, foreign = foreignRingsOf(starts[i], bp, k, S.R1), kc = kCellAt(S, starts[i], bp[k], W, { legsMany, foreign });
+    const k = c.basket, foreign = foreignRingsOf(starts[i], bp, k, S.R1), kc = kCellAt(S, starts[i], bp[k], W, { legsMany, foreign, unitPx });
     if (kc.firstCap > cap[i]) cap[i] = kc.firstCap;
     const s1 = kc.best.bottleneck === null ? null : gateOf(kc.best.verts);
     const cell = { i, k, h, foreign, kc, s1, best: kc.best.bottleneck === null ? null : kc.best, pending: s1 === null || s1 < MATCH.tau, owned: ownedFor(h) };
@@ -463,7 +479,7 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
   // the chain replaces the K <= 1 route when its weakest leg AND its sensor reading are higher (a bend hidden under a sprite has
   // unread legs: the weakest leg alone cannot place it). endR1: the coarse pass ranks cells; the assigned ones are re-run fine
   const chainOf = (cell, endR1, gridR1) => {
-    const ch = kChainAt(S, starts[cell.i], bp[cell.k], W, { legsMany, one: cell.kc.one, foreign: cell.foreign, sensorOf: gateOf, endR1, gridR1,
+    const ch = kChainAt(S, starts[cell.i], bp[cell.k], W, { legsMany, one: cell.kc.one, foreign: cell.foreign, sensorOf: gateOf, endR1, gridR1, unitPx,
       ...(rules.seqPolish ? { polishEach: true, firstCap: cap[cell.i] } : {}), ...(cell.owned?.length ? { owned: cell.owned } : {}), ...(kappa ? { turnKappa: kappa } : {}) });
     const k1 = cell.kc.best.bottleneck === null ? null : cell.kc.best;
     const v = (r) => r.bottleneck - turnCostOf(r.verts, kappa);
@@ -529,13 +545,18 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
     // the gate runs the hallway follower from its tee cap along the tee axis; a route that reaches a BasketPoint competes for
     // that cell under the same rules as a chain (no foreign C1 disc, no owned corridor, value and per-bend sensor gain)
     const A = assignNow(), byHole = new Map(A.pairs.map(([i, k]) => [i, k]));
+    // the follower's steps, each a profiled store call: the prototype's px resolutions, or (seqFollow 'w') fractions of W
+    const res = { ...FOLLOW_W, ...(rules.followRes ?? {}) };
+    const followSteps = rules.seqFollow === 'w' ? {
+      runEnd: (Sc, O, phi, Wd, t0) => steps.followRunEndW(Sc, O, phi, Wd, t0, res), closeOnBp: (Sc, O, phi, Wd, tEnd, used) => steps.followCloseOnBpW(Sc, O, phi, Wd, tEnd, used, res),
+      findBend: (Sc, O, phi, Wd, tEnd, selfC, tees) => findBendW(Sc, O, phi, Wd, tEnd, selfC, tees, (Sx, Ox, px, Wx, tv, sC, tz, psis) => steps.followBendAtW(Sx, Ox, px, Wx, tv, sC, tz, psis, res), res) } : {
+      runEnd: (Sc, O, phi, Wd, t0) => steps.followRunEnd(Sc, O, phi, Wd, t0), closeOnBp: (Sc, O, phi, Wd, tEnd, used) => steps.followCloseOnBp(Sc, O, phi, Wd, tEnd, used),
+      findBendAt: (Sc, O, phi, Wd, tv, selfC, tees) => steps.followBendAt(Sc, O, phi, Wd, tv, selfC, tees) };
     holes.forEach((h, i) => {
       if (claims.claims[h] !== undefined) return;
       const k0 = byHole.get(i), cur = k0 === undefined ? null : pend.find((c) => c.i === i && c.k === k0);
       if (cur?.best && gateOf(cur.best.verts) >= MATCH.tau) return;
-      const st = starts[i], fr = followHallway(S, st.S, Math.atan2(st.u[1], st.u[0]), W, { maxLegs: SEQ.followLegs, steps: {
-        runEnd: (Sc, O, phi, Wd, t0) => steps.followRunEnd(Sc, O, phi, Wd, t0), closeOnBp: (Sc, O, phi, Wd, tEnd, used) => steps.followCloseOnBp(Sc, O, phi, Wd, tEnd, used),
-        findBendAt: (Sc, O, phi, Wd, tv, selfC, tees) => steps.followBendAt(Sc, O, phi, Wd, tv, selfC, tees) } });
+      const st = starts[i], fr = followHallway(S, st.S, Math.atan2(st.u[1], st.u[0]), W, { maxLegs: SEQ.followLegs, steps: followSteps });
       if (fr.end === null || fr.end === undefined) { record[h].follow = { reached: null, why: 'the follower lost the ribbon' }; return; }
       const k = fr.end, V = fr.verts, foreign = foreignRingsOf(st, bp, k, S.R1), ow = ownedFor(h);
       const crosses = V.slice(1).some((b, q) => ringCrossed(V[q], b, foreign) >= 0), along = ow && V.slice(1).some((b, q) => legRunsAlong(V[q], b, ow, W));
@@ -546,7 +567,7 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
       // leg into the rings reads low (SeaTac 19: 7.6 lum unpolished, 43.9 polished). Chains are not polished per candidate: that
       // moved dev routes (golden 18 gained a bend, heritage 9 left Sam's corridor; lane s7bends ablation)
       const legs0 = legsMany(S, [V], W)[0], fb0 = { verts: V, legs: legs0, bottleneck: bottleneckOf(legs0) };
-      const fb = fb0.bottleneck !== null ? polishAt(S, fb0, W, { legsMany, start: st, foreign, owned: ow }) : fb0;
+      const fb = fb0.bottleneck !== null ? polishAt(S, fb0, W, { legsMany, start: st, foreign, owned: ow, unitPx }) : fb0;
       const sf = gateOf(fb.verts), k1 = cell.kc.best.bottleneck === null ? null : cell.kc.best;
       const vf = fb.bottleneck === null ? -Infinity : fb.bottleneck - turnCostOf(fb.verts, kappa), vc = cell.best ? cell.best.bottleneck - turnCostOf(cell.best.verts, kappa) : -Infinity;
       const gainOk = !k1 || sf > (cell.s1 ?? 0) + BENDS_GATE_GAIN * (fb.verts.length - k1.verts.length);
@@ -573,7 +594,7 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
   // a hole the neighbourhoods leave without a basket: assigned among the free baskets by its K <= 1 routes
   const usedH = new Set(pairs.map(([i]) => i)), usedK = new Set(pairs.map(([, k]) => k)), leftH = holes.map((_, i) => i).filter((i) => !usedH.has(i)), leftK = bp.map((_, k) => k).filter((k) => !usedK.has(k));
   if (leftH.length && leftK.length) {
-    const sub = leftH.map((i) => leftK.map((k) => { const kc = kCellAt(S, starts[i], bp[k], W, { legsMany, foreign: foreignRingsOf(starts[i], bp, k, S.R1) }); route[`${holes[i]}@${k}`] = kc.best.verts; return kc.best.bottleneck ?? -Infinity; }));
+    const sub = leftH.map((i) => leftK.map((k) => { const kc = kCellAt(S, starts[i], bp[k], W, { legsMany, foreign: foreignRingsOf(starts[i], bp, k, S.R1), unitPx }); route[`${holes[i]}@${k}`] = kc.best.verts; return kc.best.bottleneck ?? -Infinity; }));
     for (const [a, b] of assignMinCost(sub.map((r) => r.map((v) => (Number.isFinite(v) ? -v : Infinity))))) { const i = leftH[a], k = leftK[b]; score[i][k] = sub[a][b]; pairs.push([i, k]); why[holes[i]] = `${why[holes[i]]}; none left in the neighbourhood: assigned among the free baskets by K <= 1 routes`; }
     pairs = pairs.sort((x, y) => x[0] - y[0]);
   }

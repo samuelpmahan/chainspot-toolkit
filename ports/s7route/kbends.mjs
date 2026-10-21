@@ -36,7 +36,12 @@ export const KBENDS = Object.freeze({
   acrossMinR1: 1.87,      // the split grid reaches max(this, half the leg) across the leg (MATCH.secondBend.bboxR1)
   minLegR1: 0.935,        // no leg shorter than this (MATCH.secondBend.minLegR1)
   top: 3,                 // grid candidates refined per split
-  offsetW: ROUTE.onAxisLateralW   // a bend within 0.5 W of the leg it splits stays inside the straight ribbon: not a bend
+  offsetW: ROUTE.onAxisLateralW,  // a bend within 0.5 W of the leg it splits stays inside the straight ribbon: not a bend
+  // the steps above are hallway geometry (bend positions, leg lengths, the split grid), set in R1 on golden, where W = 0.934 R1.
+  // Rule set option kUnits 'w' reads them in W instead: the unit is W / goldenWPerR1, so each value in W is value / 0.934 (grid
+  // 1.0 W, minimum leg 1.0 W, across 2.0 W, axis step 0.58 W, refine end 0.048 W). W / R1 runs 0.76-1.56 over the 9 courses.
+  // The axis reach (axisReachR1) and the foreign rings stay in R1 (basket and course geometry)
+  goldenWPerR1: 0.934
 });
 export const KBENDS_UNITS = Object.freeze({
   legs: 'lum per leg (edge contrast of the leg read alone; null: fewer than 30 visible px in a band)',
@@ -118,8 +123,8 @@ function axisOf(start) {
  * One cell's K <= 1 routes under the fair cost: the straight route, and the best S -> B1 -> E with B1 on the tee axis at or past
  * the bound (a sweep every axisStepR1, then a halving search). -> { zero, one, best } each { verts, legs, bottleneck }.
  */
-export function kCellAt(S, start, E, W, { legsOf = legContrastsOf, legsMany = legsManyOf(legsOf), foreign = null } = {}) {
-  const r1 = S.R1, ax = axisOf(start), minLeg = KBENDS.minLegR1 * r1;
+export function kCellAt(S, start, E, W, { legsOf = legContrastsOf, legsMany = legsManyOf(legsOf), foreign = null, unitPx = null } = {}) {
+  const r1 = unitPx ?? S.R1, ax = axisOf(start), minLeg = KBENDS.minLegR1 * r1;
   const zc = ringCrossed(start.S, E, foreign), zeroLegs = zc >= 0 ? [null] : legsMany(S, [[start.S, E]], W)[0];
   const zero = { verts: [start.S, E], legs: zeroLegs, bottleneck: zc >= 0 ? null : bottleneckOf(zeroLegs), ...(zc >= 0 ? { crosses: zc } : {}) };
   let firstCap = -Infinity;   // the highest first leg (tee cap -> B1 on the axis) read: what any route of this hole can reach at most
@@ -131,7 +136,7 @@ export function kCellAt(S, start, E, W, { legsOf = legContrastsOf, legsMany = le
     return ts.map((t) => m.get(t) ?? null);
   };
   const sweep = [];
-  for (let t = ax.lo; t <= ax.toS + start.badgeAlongPx + KBENDS.axisReachR1 * r1; t += KBENDS.axisStepR1 * r1) { if (!inside(S, ax.at(t))) break; sweep.push(t); }
+  for (let t = ax.lo; t <= ax.toS + start.badgeAlongPx + KBENDS.axisReachR1 * S.R1; t += KBENDS.axisStepR1 * r1) { if (!inside(S, ax.at(t))) break; sweep.push(t); }
   let one = null, n = 2 + sweep.length;
   for (const r of readMany(sweep)) if (r && (!one || r.bottleneck > one.bottleneck)) one = r;
   if (one) for (let step = KBENDS.axisStepR1 * r1 / 2; step >= KBENDS.refineEndR1 * r1;) {
@@ -161,8 +166,8 @@ export function kChainStartAt(S, start, E, W, { legsOf = legContrastsOf, legsMan
  * two more bends leaves one half off the ribbon whatever the split, so their minimum cannot guide the search), every candidate at least offsetW x W off the leg (closer, it stays inside the
  * straight ribbon: not a bend). -> { verts, legs, bottleneck, read, split } or null (nothing to split).
  */
-export function kSplitAt(S, V, legs, W, { legsOf = legContrastsOf, legsMany = legsManyOf(legsOf), foreign = null, endR1 = KBENDS.refineEndR1, gridR1 = KBENDS.gridR1, owned = null } = {}) {
-  const r1 = S.R1, g = gridR1 * r1, minLeg = KBENDS.minLegR1 * r1;
+export function kSplitAt(S, V, legs, W, { legsOf = legContrastsOf, legsMany = legsManyOf(legsOf), foreign = null, endR1 = KBENDS.refineEndR1, gridR1 = KBENDS.gridR1, owned = null, unitPx = null } = {}) {
+  const r1 = unitPx ?? S.R1, g = gridR1 * r1, minLeg = KBENDS.minLegR1 * r1;
   let j = -1; legs.forEach((c, i) => { if (c !== null && (j < 0 || c < legs[j])) j = i; });
   if (j <= 0) return null;
   const a = V[j], b = V[j + 1], dx = b[0] - a[0], dy = b[1] - a[1], Lg = Math.hypot(dx, dy);
@@ -215,10 +220,10 @@ export function meanOf(V, legs) {
  * by the minimum leg length and by progress.
  */
 export function kChainAt(S, start, E, W, { legsOf = legContrastsOf, legsMany = legsManyOf(legsOf), one = null, foreign = null, sensorOf = null, endR1 = KBENDS.refineEndR1, gridR1 = KBENDS.gridR1,
-  polishEach = false, owned = null, turnKappa = 0, firstCap = null } = {}) {
+  polishEach = false, owned = null, turnKappa = 0, firstCap = null, unitPx = null } = {}) {
   // rule set options: polishEach = every candidate polished on its weakest leg before it competes; owned = other holes' confirmed
   // corridors no leg may run along; turnKappa = the price of turning (turnCostOf), a route's value = weakest leg - that price
-  const pol = (r) => (polishEach && r ? polishAt(S, r, W, { legsMany, start, foreign, endR1, owned }) : r);
+  const pol = (r) => (polishEach && r ? polishAt(S, r, W, { legsMany, start, foreign, endR1, owned, unitPx }) : r);
   const val = (r) => r.bottleneck - turnCostOf(r.verts, turnKappa);
   const seeds = [kChainStartAt(S, start, E, W, { legsMany, foreign }), one].filter((r) => r && r.bottleneck !== null && !(owned && routeRunsAlong(r.verts, owned, W))).map(pol).filter((r) => r.bottleneck !== null);
   if (!seeds.length) return null;
@@ -234,7 +239,7 @@ export function kChainAt(S, start, E, W, { legsOf = legContrastsOf, legsMany = l
       const bound = polishEach ? firstCap : r.legs[0];
       if (bound !== null && bound <= val(best) && (!turnKappa || bound <= raw.bottleneck)) break;
       if (sensorOf && sensorAt(best) + BENDS.gate.gain * (r.verts.length + 1 - best.verts.length) >= 1) break;
-      const nx = kSplitAt(S, r.verts, r.legs, W, { legsMany, foreign, endR1, gridR1, owned }); splits++;
+      const nx = kSplitAt(S, r.verts, r.legs, W, { legsMany, foreign, endR1, gridR1, owned, unitPx }); splits++;
       if (!nx || !(Math.max(...nx.split.halves.map((c) => c ?? -Infinity)) > nx.split.before)) break;
       r = pol({ verts: nx.verts, legs: nx.legs, bottleneck: nx.bottleneck });
       // a longer route becomes the best only when its value rises, and (sensorOf given) the hallway sensor gains too: each
@@ -244,7 +249,7 @@ export function kChainAt(S, start, E, W, { legsOf = legContrastsOf, legsMany = l
       if (turnKappa && r.bottleneck !== null && r.bottleneck > raw.bottleneck && gate(r, raw)) raw = r;
     }
   }
-  const p = polishAt(S, best, W, { legsMany, start, foreign, endR1, owned });
+  const p = polishAt(S, best, W, { legsMany, start, foreign, endR1, owned, unitPx });
   // a chain whose every split crosses a foreign ring keeps its seed; a seed that crosses one is no route
   if (!routeClear(p.verts, foreign)) return null;
   return { ...p, splits, ...(turnKappa ? { turnCost: turnCostOf(p.verts, turnKappa), turnsDeg: turnsOf(p.verts).map((t) => Math.round(t)), turnDecided: raw !== best ? { rawBends: raw.verts.length - 2, rawTurnsDeg: turnsOf(raw.verts).map((t) => Math.round(t)), rawBottleneck: raw.bottleneck } : null } : {}) };
@@ -254,9 +259,9 @@ export function kChainAt(S, start, E, W, { legsOf = legContrastsOf, legsMany = l
  * A route's bends polished together: a halving coordinate search on the weakest leg (each move re-reads the two legs at that
  * bend); B1 slides on the tee axis (at or past the badge-at-0.57 point) when `start` is given, else stays; the bend count kept.
  */
-export function polishAt(S, route, W, { legsOf = legContrastsOf, legsMany = legsManyOf(legsOf), start = null, foreign = null, endR1 = KBENDS.refineEndR1, owned = null } = {}) {
+export function polishAt(S, route, W, { legsOf = legContrastsOf, legsMany = legsManyOf(legsOf), start = null, foreign = null, endR1 = KBENDS.refineEndR1, owned = null, unitPx = null } = {}) {
   if (route.verts.length < 3) return route;
-  const r1 = S.R1, minLeg = KBENDS.minLegR1 * r1, ax = start ? axisOf(start) : null;
+  const r1 = unitPx ?? S.R1, minLeg = KBENDS.minLegR1 * r1, ax = start ? axisOf(start) : null;
   let V = route.verts.map((v) => v.slice()), legs = route.legs.slice(), b = bottleneckOf(legs);
   const tOf = (P) => (P[0] - start.teeCenter[0]) * start.u[0] + (P[1] - start.teeCenter[1]) * start.u[1];
   for (let step = KBENDS.gridR1 * r1 / 2; step >= endR1 * r1;) {
