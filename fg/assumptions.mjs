@@ -8,7 +8,7 @@
  *   stated:          one named entry here (stateAssumption), its value in the unit the quantity follows (R1 for a map
  *                    distance), its evidence (the measured range, on which courses, the margin) and its widening rule;
  *   loud:            a search whose answer sits at the bound's edge, or that finds nothing inside it, records a violation
- *                    (in its Part value, and as emits: assumptionsViolated, assumptionsRecovered, `violated:<name>`),
+ *                    (in its Part value, and as emits: assumptionsViolated, assumptionsRecovered, `violated:<name>`, `recovered:<name>`),
  *                    which profileSummary / `pxc profile` / `pxc doctor --attempt` list beside the opaque hot spots;
  *                    nothing is clipped silently and nothing throws;
  *   self-correcting: on a violation the bound widens (x factor, up to what the skeleton or the image allows) and the search
@@ -72,13 +72,16 @@ export function violationEmits(violations) {
   const v = (violations ?? []).filter(Boolean);
   if (!v.length) return {};
   const out = { assumptionsViolated: v.length, assumptionsRecovered: v.filter((x) => x.recovered).length };
-  for (const x of v) out[`violated:${x.assumption}`] = (out[`violated:${x.assumption}`] ?? 0) + 1;
+  for (const x of v) {
+    out[`violated:${x.assumption}`] = (out[`violated:${x.assumption}`] ?? 0) + 1;
+    if (x.recovered) out[`recovered:${x.assumption}`] = (out[`recovered:${x.assumption}`] ?? 0) + 1;
+  }
   return out;
 }
 
 /**
  * Every assumption violation in an instrumentation document (the store's call log), per Calculation and assumption:
- * [{ calculation, assumption, violated, recovered (of the Calculation, all assumptions), calls }].
+ * [{ calculation, assumption, violated, recovered, calls }].
  */
 export function assumptionViolations(doc) {
   const by = new Map();
@@ -87,7 +90,7 @@ export function assumptionViolations(doc) {
     for (const [k, n] of Object.entries(em)) {
       if (!k.startsWith('violated:') || !(n > 0)) continue;
       const key = `${e.calculation} ${k}`, r = by.get(key) ?? { calculation: e.calculation, assumption: k.slice('violated:'.length), violated: 0, recovered: 0, calls: 0 };
-      r.violated += n; r.recovered += em.assumptionsRecovered ?? 0; r.calls++; by.set(key, r);
+      r.violated += n; r.recovered += em[`recovered:${r.assumption}`] ?? 0; r.calls++; by.set(key, r);
     }
   }
   return [...by.values()].sort((a, b) => b.violated - a.violated);
