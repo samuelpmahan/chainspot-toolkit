@@ -20,7 +20,7 @@
  *       alongPx, distancePx
  */
 import { residual } from './residualQuery.mjs';
-import { fitPadPose } from '../s3assoc/padPose.mjs';
+import { fitPadPose, padWindowR } from '../s3assoc/padPose.mjs';
 import { basketPoint } from '../s3assoc/associate.mjs';
 import { ownedPx, forEach } from '../../fg/pxset.mjs';
 import { unmix, hasOverlay, noProfile, ALPHA_PROFILE_SCHEMA } from '../../contracts/alpha.profile@1.mjs';
@@ -142,7 +142,7 @@ export function pairQueries() {
       const t = tees[teeIndex], { widthPx: Wd, heightPx: Ht } = raster;
       if (!t) return { value: { teeIndex, condition: `no tee ${teeIndex} in px.tees` }, unit: PAIR_UNITS.axis, emits: { missing: 1 } };
       const shape0 = template ?? seedShape(t.px, Wd, t.angleRad);
-      const R = Math.max(28, Math.ceil(Math.hypot(shape0.L, shape0.W) / 2 + 6)), n = 2 * R;
+      const R = padWindowR(shape0), n = 2 * R;
       const x0 = Math.max(0, Math.min(Wd - n, Math.round(t.center[0]) - R)), y0 = Math.max(0, Math.min(Ht - n, Math.round(t.center[1]) - R));
       const cond = profileCondition(alphaProfile);
       const discs = cond.status === 'applied' ? fillDiscs(baskets, alphaProfile) : [];

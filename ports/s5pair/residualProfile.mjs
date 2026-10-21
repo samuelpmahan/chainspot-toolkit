@@ -21,7 +21,9 @@
 import { r3, profileCondition } from './pairSpace.mjs';
 import { nameCandidates } from '../../fg/names.mjs';
 import { ALPHA_PROFILE_PART } from '../../contracts/alpha.profile@1.mjs';
-import { ASSOC_BOUNDS } from '../s3assoc/associate.mjs';
+import { ASSOC_BOUNDS, noOverlapPx, TEE_TO_BADGE } from '../s3assoc/associate.mjs';
+import { underAssumption, violationEmits } from '../../fg/assumptions.mjs';
+import { SCALE_RC1_CALCULATION, SCALE_RC1_PART } from '../../fg/s3/scaleRc1.mjs';
 
 export const RESIDUAL_PROFILE_PART = 'tk.s5.residualProfile';
 export const RESIDUAL_STRIPS_PART = 'tk.s5.residualStrips';
@@ -31,13 +33,19 @@ export const RECORDED_ASSOC_PART = 'tk.s5.recordedAssociation';
 /**
  * The recorded signal (docs/evidence/s7main/README.md "Two independent geometric signals"; docs/evidence/s3assoc):
  * a pad's axis lines up with its own badge when z = lateral / sqrt(sigma0^2 + (dist x sigma_theta)^2) <= 3 with the
- * badge 40-230 px away; sigma0 = 0.85 px (76 confirmed pairings), sigma_theta = the pad's own profile-curvature angle
- * sigma, floored at 0.0005 rad (ports/s3assoc/associate.mjs ASSOC_BOUNDS, the rule as shipped). Recorded: 76/76 real
- * pads on golden, lenard, townelake, heritage, alex; a random angle at the real position 1.7% (own badge).
+ * badge apart from the pad; sigma0 = 0.85 px (76 confirmed pairings), sigma_theta = the pad's own profile-curvature angle
+ * sigma, floored at 0.0005 rad (ports/s3assoc/associate.mjs ASSOC_BOUNDS, the rule as shipped). Recorded: 76/76 real pads on
+ * golden, lenard, townelake, heritage, alex; a random angle at the real position 1.7% (own badge).
+ * Distance (DOCTRINE 2026-10-21: tee to badge is VARIABLE; a 1,700 ft hole puts its badge ~40 pad lengths out): the floor is
+ * the skeleton's (the badge does not overlap its own pad: the measured half-sizes along the ray, associate.mjs noOverlapPx,
+ * the course template L x W and the badge's S1 sprite box); the ceiling is the stated assumption TEE_TO_BADGE (9.39 R1, R1 =
+ * tk.scale.rC1 of this image), loud and widened when a pad that lines up sits past it. Was 40-230 px, which broke at Lenard's
+ * zoomed views (R1 56 px): 6 of 7 lenard1 pairs are 162-385 px away.
  */
-export const LINE_UP_RULE = Object.freeze({ zMax: ASSOC_BOUNDS.zMax, sigma0Px: ASSOC_BOUNDS.sigma0Px, sigmaThetaFloorRad: ASSOC_BOUNDS.sigmaThetaFloorRad, minDistPx: 40, maxDistPx: 230, recorded: '76/76 real pads (golden, lenard, townelake, heritage, alex)' });
+export const LINE_UP_RULE = Object.freeze({ zMax: ASSOC_BOUNDS.zMax, sigma0Px: ASSOC_BOUNDS.sigma0Px, sigmaThetaFloorRad: ASSOC_BOUNDS.sigmaThetaFloorRad, apart: 'badge centre at least the pad and badge half-sizes along the ray from the pad centre (no overlap)', maxDist: `assumption ${TEE_TO_BADGE.name}: ${TEE_TO_BADGE.value} ${TEE_TO_BADGE.unit}, widened x${TEE_TO_BADGE.widening.factor} up to ${TEE_TO_BADGE.widening.limit}`, recorded: '76/76 real pads (golden, lenard, townelake, heritage, alex)' });
 export const zOf = (signedPerpPx, distancePx, sigmaThDeg) => Math.abs(signedPerpPx) / Math.sqrt(LINE_UP_RULE.sigma0Px ** 2 + (distancePx * Math.max((sigmaThDeg * Math.PI) / 180, LINE_UP_RULE.sigmaThetaFloorRad)) ** 2);
-const linesUp = (r) => r.z <= LINE_UP_RULE.zMax && r.distancePx >= LINE_UP_RULE.minDistPx && r.distancePx <= LINE_UP_RULE.maxDistPx;
+/** r: a residual row, with apart (the skeleton's no-overlap test) and within (the tee-to-badge assumption, widened), computed beside it. */
+const linesUp = (r) => r.apart && r.within && r.z <= LINE_UP_RULE.zMax;
 /** How far a fit's |angle residual| may sit from the course's straight-hole mean before the residual indicts it (z). */
 export const INDICT_Z = 3;
 
@@ -68,8 +76,9 @@ const PROFILE_UNITS = Object.freeze({
 });
 
 export const S5_RESIDUAL_CALCULATIONS = Object.freeze([
+  SCALE_RC1_CALCULATION,   // the map unit (rC1px) of the tee-to-badge assumption, measured on the S3 board
   ['fn.tk.s5.residualProfile', {
-    inParts: ['px.tees', 'px.badges', 'px.baskets', 'px.image.cropped', STRAIGHT_TRUTH_PART, RECORDED_ASSOC_PART, ALPHA_PROFILE_PART],
+    inParts: ['px.tees', 'px.badges', 'px.baskets', 'px.image.cropped', STRAIGHT_TRUTH_PART, RECORDED_ASSOC_PART, ALPHA_PROFILE_PART, SCALE_RC1_PART],
     outParts: [RESIDUAL_PROFILE_PART],
     calls: ['fn.q.pair.axis', 'fn.q.pair.plate', 'fn.q.pair.residual'],
     calculate: (io) => {
@@ -93,7 +102,19 @@ export const S5_RESIDUAL_CALCULATIONS = Object.freeze([
       const plates = badges.map((_, j) => q('fn.q.pair.plate', { badges: 'px.badges', index: j }));
       const holes = truth.holes ?? [];
       const matchPx = truth.matchTeePx;
-      const res = (a, j) => { const v = q('fn.q.pair.residual', { center: a.center, axis: a.dirUnit, plate: plates[j].center }); return { ...v, z: r3(zOf(v.signedPerpPx, v.distancePx, a.sigma.thDeg)) }; };
+      // the skeleton's bound: the badge apart from its own pad along the ray (the pad: the template, or a free fit's own shape)
+      const apartOf = (a, j, i, d) => { const p = plates[j].center, v = [(p[0] - a.center[0]) / d, (p[1] - a.center[1]) / d], sh = template ?? free[i].shape ?? null, bb = badges[j].bbox;
+        return d > 0 && d >= noOverlapPx(v, a.dirUnit, sh?.L ?? 0, sh?.W ?? 0, bb ? [bb[2], bb[3]] : null); };
+      // the stated tee-to-badge assumption (R1 of this image), loud and widened (up to the image diagonal) for a pad past it
+      const img = io.in('px.image.cropped'), r1Px = io.in(SCALE_RC1_PART)?.r1Px ?? null, diag = Math.hypot(img.widthPx, img.heightPx), violations = [];
+      const withinOf = (d, z, apart, detail) => {
+        if (!(apart && z <= LINE_UP_RULE.zMax)) return d <= TEE_TO_BADGE.value * (r1Px ?? Infinity);   // only a pad that lines up can violate it
+        const u = underAssumption(TEE_TO_BADGE, { unitPx: r1Px, limitPx: diag, detail, run: (b) => ({ found: d <= b, atEdge: false, result: d <= b, at: d }) });
+        if (u.violation) violations.push({ ...u.violation, distancePx: r3(d), distanceR1: r1Px ? r3(d / r1Px) : null });
+        return u.result;
+      };
+      const res = (a, j, i, what = 'raw') => { const v = q('fn.q.pair.residual', { center: a.center, axis: a.dirUnit, plate: plates[j].center }), z = r3(zOf(v.signedPerpPx, v.distancePx, a.sigma.thDeg)), apart = apartOf(a, j, i, v.distancePx);
+        return { ...v, z, apart, within: withinOf(v.distancePx, z, apart, { tee: names[i], badge: `Badge ${badges[j].label}`, fit: what }) }; };
       const rows = tees.map((t, i) => {
         const a = raw[i];
         const near = holes.map((h) => ({ h, d: Math.hypot(h.tee[0] - a.center[0], h.tee[1] - a.center[1]) })).sort((x, y) => x.d - y.d)[0];
@@ -101,7 +122,7 @@ export const S5_RESIDUAL_CALCULATIONS = Object.freeze([
         if (!near || near.d > matchPx) return { ...base, status: holes.length ? 'no testimony tee within the match rule' : 'no testimony', nearestTestimonyPx: near ? r3(near.d) : null };
         const j = badges.findIndex((b) => String(b.label) === String(near.h.hole));
         if (j < 0) return { ...base, hole: near.h.hole, testimonyPx: r3(near.d), status: `no S1 badge labelled ${near.h.hole}` };
-        const r = res(a, j), u = unmixed ? res(unmixed[i], j) : null;
+        const r = res(a, j, i), u = unmixed ? res(unmixed[i], j, i, 'unmixed') : null;
         return {
           ...base, hole: near.h.hole, identity: `Tee ${near.h.hole}`, testimonyPx: r3(near.d), badge: `Badge ${badges[j].label}`, badgeIndex: j, plateCenter: plates[j].center.map(r3),
           straight: !near.h.bent, status: near.h.bent ? 'bent (referent)' : 'straight',
@@ -119,7 +140,7 @@ export const S5_RESIDUAL_CALCULATIONS = Object.freeze([
       const recorded = io.in(RECORDED_ASSOC_PART);
       const recHoles = recorded?.holes ? Object.entries(recorded.holes).map(([h, b]) => ({ hole: Number(h), z: b.z, latPx: b.latPx, badge: b.badgeLabel })) : [];
       const recLinesUp = recHoles.filter((h) => String(h.badge) === String(h.hole) && h.z <= LINE_UP_RULE.zMax);
-      const ours = paired.filter(linesUp);
+      const ours = paired.filter((r) => r.linesUp);
       const perHole = paired.map((r) => { const h = recHoles.find((x) => x.hole === r.hole); return { hole: r.hole, tee: r.tee, z: r.z, linesUp: r.linesUp, recordedZ: h?.z ?? null, recordedLinesUp: h ? String(h.badge) === String(h.hole) && h.z <= LINE_UP_RULE.zMax : null }; });
       const changed = perHole.filter((p) => p.recordedLinesUp !== null && p.recordedLinesUp !== p.linesUp).map((p) => `Hole ${p.hole}`);
       const lineUp = {
@@ -138,6 +159,7 @@ export const S5_RESIDUAL_CALCULATIONS = Object.freeze([
         alpha: alphaCondition,
         condition,
         lineUp,
+        ...(violations.length ? { assumptions: violations } : {}),
         straight: { raw: rawProfile, ...(unmixed ? { unmixed: profileOf(straight, (r) => r.unmixed) } : { unmixed: alphaCondition }) },
         bentReferent: profileOf(bent, (r) => r),
         counts: { tees: tees.length, paired: paired.length, straightPairs: straight.length, bentPairs: bent.length, unpaired: rows.length - paired.length, indicted: paired.filter((r) => r.status.includes('indicted')).length },
@@ -148,7 +170,8 @@ export const S5_RESIDUAL_CALCULATIONS = Object.freeze([
           allPairsAngleSigmaDeg: lineUp.allPairs.signedAngleResidualDeg.sigmaDeg, allPairsPerpSigmaPx: lineUp.allPairs.signedPerpPx.sigmaPx,
           angleResidualSigmaDeg: rawProfile.signedAngleResidualDeg.sigmaDeg, angleResidualMeanDeg: rawProfile.signedAngleResidualDeg.meanDeg,
           signedPerpSigmaPx: rawProfile.signedPerpPx.sigmaPx, signedPerpMeanPx: rawProfile.signedPerpPx.meanPx,
-          unmixedPx: unmixed ? unmixed.reduce((a, u) => a + (u.unmixedPx ?? 0), 0) : 0, alphaProfile: profiled ? 1 : 0
+          unmixedPx: unmixed ? unmixed.reduce((a, u) => a + (u.unmixedPx ?? 0), 0) : 0, alphaProfile: profiled ? 1 : 0,
+          ...violationEmits(violations)
         }
       };
       return { [RESIDUAL_PROFILE_PART]: value };

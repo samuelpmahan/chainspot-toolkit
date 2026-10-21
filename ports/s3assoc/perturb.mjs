@@ -27,19 +27,19 @@ export function perturbRun({ assoc, attemptRoot, draws = 200, levels = LEVELS, s
   const A = join(attemptRoot, 'early', 'artifacts');
   const bj = JSON.parse(readFileSync(join(A, 's1', 'px.badges.json'), 'utf8')).badges;
   const kj = JSON.parse(readFileSync(join(A, 's2', 'px.baskets.json'), 'utf8')).baskets;
-  const badges0 = bj.map((b) => ({ label: String(b.label), center: [b.bbox[0] + (b.bbox[2] - 1) / 2, b.bbox[1] + (b.bbox[3] - 1) / 2] }));
+  const badges0 = bj.map((b) => ({ label: String(b.label), center: [b.bbox[0] + (b.bbox[2] - 1) / 2, b.bbox[1] + (b.bbox[3] - 1) / 2], sizePx: [b.bbox[2], b.bbox[3]] }));
   const baskets = kj.map((k, i) => ({ index: k.index ?? i, bbox: k.bbox }));
   const tees0 = assoc.rows.map((r) => ({ label: r.tee, center: r.center, thRad: (r.thDeg * Math.PI) / 180, sigmaThRad: (r.pose.sigmaRaw.thDeg * Math.PI) / 180 }));
   // Compare DECISIONS per tee (not perturbed coordinates): its badge (= hole), the 3-point verdict, the straight basket.
   const decide = (rows) => Object.fromEntries(rows.map((r) => [r.tee, { badge: r.best?.badge ?? null, straight: r.straight3?.verdict ?? null, basket: r.straight3?.verdict === 'STRAIGHT' ? r.straight3.basket : null }]));
-  const base = decide(associate({ tees: tees0, badges: badges0, baskets, padLengthPx: assoc.template.L })), g = rng(seed);
+  const base = decide(associate({ tees: tees0, badges: badges0, baskets, padLengthPx: assoc.template.L, padWidthPx: assoc.template.W })), g = rng(seed);
   const holeOf = (tee) => base[tee].badge ?? `tee@${assoc.rows.find((r) => r.tee === tee).center.map(Math.round).join(',')}`;
   return levels.map((lv) => {
     const changed = {};
     for (let d = 0; d < draws; d++) {
       const tees = tees0.map((t) => ({ ...t, center: [t.center[0] + lv.px * g(), t.center[1] + lv.px * g()], thRad: t.thRad + ((lv.thDeg * Math.PI) / 180) * g() }));
       const badges = badges0.map((b) => ({ ...b, center: [b.center[0] + lv.px * g(), b.center[1] + lv.px * g()] }));
-      const cur = decide(associate({ tees, badges, baskets, padLengthPx: assoc.template.L }));
+      const cur = decide(associate({ tees, badges, baskets, padLengthPx: assoc.template.L, padWidthPx: assoc.template.W }));
       for (const [tee, b] of Object.entries(base)) {
         const c = cur[tee], hole = holeOf(tee);
         if (c.badge !== b.badge) changed[`${hole}:badge -> ${c.badge}`] = (changed[`${hole}:badge -> ${c.badge}`] ?? 0) + 1;
