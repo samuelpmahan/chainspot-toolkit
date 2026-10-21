@@ -12,7 +12,7 @@
  * DOCTRINE's BasketPoint offset 0.34, 0.73 px): the difference is an input change, reported, never hidden.
  */
 import { readFileSync, existsSync } from 'node:fs';
-import { deserialize } from 'node:v8';
+import { deserialize } from '../../fg/pxcCodec.mjs';   // node:v8 with packed typed arrays
 import { join, resolve } from 'node:path';
 import { ownedPx } from '../../fg/pxset.mjs';
 import { sceneOf, solveS3First, hallwayModel } from './s3first.mjs';

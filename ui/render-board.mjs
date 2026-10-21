@@ -1,7 +1,7 @@
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
-import { deserialize } from 'node:v8';
+import { deserialize } from '../fg/pxcCodec.mjs';   // node:v8 with packed typed arrays
 import { fileURLToPath } from 'node:url';
 
 const inside = (root, candidate) => {

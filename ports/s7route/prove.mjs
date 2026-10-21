@@ -15,7 +15,7 @@
  * both matrices 1e-6 and every cell's route vertices 1e-6 px. The system run (ports/s7route/run.mjs) reads the system's own inputs; the difference is an input change.
  */
 import { readFileSync, existsSync, writeFileSync } from 'node:fs';
-import { deserialize } from 'node:v8';
+import { deserialize } from '../../fg/pxcCodec.mjs';   // node:v8 with packed typed arrays
 import { join, resolve } from 'node:path';
 import { createPartStore, registerQueries } from '../../fg/store.mjs';
 import { ownedPx } from '../../fg/pxset.mjs';

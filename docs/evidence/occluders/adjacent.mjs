@@ -3,7 +3,7 @@
 // basket, within 2 px) and are mostly owned by no Part. What a Part owns is inferred from its structure (ownedPx in
 // fg/pxset.mjs), never picked by field. Writes them per course for rendering.
 import { readFileSync, writeFileSync } from 'node:fs';
-import { deserialize } from 'node:v8';
+import { deserialize } from '../../../fg/pxcCodec.mjs';   // node:v8 with packed typed arrays
 import { ownedPx } from '../../../fg/pxset.mjs';
 const [course, attempt, outFile] = process.argv.slice(2);
 const out = `/home/user/chainspot-toolkit/attempts/stages/${attempt}/fork/stage-output`, A = `${out}/early/artifacts`;

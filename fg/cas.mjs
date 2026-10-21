@@ -10,8 +10,9 @@
  *   createPartStore({ cache: cas })
  *
  *   one file per key, sharded by the first 2 hex characters:   <root>/ab/abcdef....v8
- *   value                  node:v8 serialize of { key, entry } (typed arrays, Maps, Sets, -0 and shared references
- *                          survive; entry is the store's { result, elapsedMs })
+ *   value                  node:v8 serialize of { key, entry } through the PxC codec (fg/pxcCodec.mjs: typed arrays
+ *                          bitpacked / rightsized / deduped on write, unpacked on read; Maps, Sets, -0 and shared
+ *                          references survive; entry is the store's { result, elapsedMs }); plain-v8 entries still read
  *   write                  tmp file in the shard + rename: a reader sees the whole file or none of it
  *   read                   lazy, once per key and process (the in-memory front); a read touches the file's mtime, so
  *                          `prune --older-than` removes what nothing has used
@@ -21,7 +22,7 @@
  *   a value v8 cannot serialize (a function)        stays in the front only; counted in stats().unserializable
  */
 import { readFileSync, writeFileSync, renameSync, mkdirSync, existsSync, readdirSync, statSync, unlinkSync, utimesSync, rmdirSync } from 'node:fs';
-import { serialize, deserialize } from 'node:v8';
+import { serialize, deserialize } from './pxcCodec.mjs';   // node:v8 with packed typed arrays
 import { join, resolve } from 'node:path';
 
 export const CAS_DIR = 'attempts/cas';

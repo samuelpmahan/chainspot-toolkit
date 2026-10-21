@@ -19,7 +19,7 @@
  */
 import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { deserialize } from 'node:v8';
+import { deserialize } from '../fg/pxcCodec.mjs';   // node:v8 with packed typed arrays
 import { join, resolve } from 'node:path';
 import { BADGE_SIZE_BY_LABEL } from '../fg/s1/fg.s1.badgeInvariants.observe.fg.mjs';
 

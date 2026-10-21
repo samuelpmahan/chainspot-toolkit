@@ -30,6 +30,7 @@ import { renderFlipbook } from '../flipbook.mjs';
 import { analyze, overlaysFor, toPacket, framesFor, contextWindow, exemplarFor, focusOf } from './packet.mjs';
 import { drawCrop, hstack } from './render.mjs';
 import { crossVerify } from './crossverify.mjs';
+import { readArtifactBytes } from '../node-sink.mjs';
 
 const args = Object.fromEntries(process.argv.slice(2).reduce((acc, a, i, all) => (a.startsWith('--') ? [...acc, [a.slice(2), all[i + 1]]] : acc), []));
 const early = (d) => join(d, 'fork/stage-output/early');
@@ -74,7 +75,7 @@ async function main() {
   const t0 = Date.now();
   const stream = args.stream ? JSON.parse(readFileSync(args.stream, 'utf8')) : model.build(loadEvidence({ baseDir, assemblyDir: args.assembly ? early(args.assembly) : null }));
   const rasterPath = args.raster ?? join(baseDir, 'artifacts/s1/badgePx.rgba.bin');
-  const rgba = readFileSync(rasterPath);
+  const rgba = readArtifactBytes(rasterPath);
   const raster = { width: stream.frame.width, height: stream.frame.height, rgba };
   if (rgba.length !== raster.width * raster.height * 4) throw new Error(`raster ${rasterPath}: ${rgba.length} B, expected ${raster.width * raster.height * 4}`);
   const testimony = args.testimony ? testimonyPoints(JSON.parse(readFileSync(args.testimony, 'utf8')), R.crop.upperRowsRemoved) : null;

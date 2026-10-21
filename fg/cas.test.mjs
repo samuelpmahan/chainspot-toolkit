@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, readdirSync, existsSync, truncateSync, utimesSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { serialize, deserialize } from 'node:v8';
+import { serialize, deserialize } from './pxcCodec.mjs';   // node:v8 with packed typed arrays
 import { createCas, casStats, casPrune, CasIntegrityError } from './cas.mjs';
 import { createPartStore } from './store.mjs';
 import { closureSha } from './closure.mjs';

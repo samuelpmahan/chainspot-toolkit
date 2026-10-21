@@ -4,7 +4,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
-import { deserialize } from 'node:v8';
+import { deserialize } from './pxcCodec.mjs';   // node:v8 with packed typed arrays
 import { join } from 'node:path';
 import { pxList, pxLabel, labelBoxes, forEach, intersectCount, ownedPx, pixelListsOf, count } from './pxset.mjs';
 import { pxsetProperties } from './pxset.test.mjs';

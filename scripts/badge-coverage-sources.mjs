@@ -12,7 +12,7 @@
  * neighbour) is cropped at its bbox from the board's localImage. Dev courses only: validation is held out.
  */
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
-import { deserialize } from 'node:v8';
+import { deserialize } from '../fg/pxcCodec.mjs';   // node:v8 with packed typed arrays
 import { join, resolve } from 'node:path';
 import { encodePngRgba } from '../ports/capture/capture.mjs';
 import { BADGE_SIZE_BY_LABEL } from '../fg/s1/fg.s1.badgeInvariants.observe.fg.mjs';

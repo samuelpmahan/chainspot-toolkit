@@ -26,7 +26,7 @@ import { execFile } from 'node:child_process';
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { promisify } from 'node:util';
-import { deserialize, serialize } from 'node:v8';
+import { deserialize, serialize } from '../../fg/pxcCodec.mjs';   // node:v8 with packed typed arrays
 import { extractParts } from './parts.mjs';
 
 const exec = promisify(execFile);

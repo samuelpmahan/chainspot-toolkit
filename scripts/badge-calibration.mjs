@@ -29,7 +29,7 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { deserialize } from 'node:v8';
+import { deserialize } from '../fg/pxcCodec.mjs';   // node:v8 with packed typed arrays
 import { join, resolve } from 'node:path';
 import { devSprites } from './badge-coverage-sources.mjs';
 import { bakeCoverage, bakeDigits, bakeCoverageDigits } from '../source/provider/scripts/generate-badge-glyph-templates.mjs';
