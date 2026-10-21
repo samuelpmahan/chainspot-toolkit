@@ -130,6 +130,12 @@ export function poolOverlaps(overlaps) {
 }
 
 export const SPRITE_UNIT = 'mean: coverage fraction 0..1 per fine cell (1/factor px); agree, memberCount, agreementCount: members; anchor, phase, shift: px; residual: mean |coverage - consensus| per cell';
+/** The string arguments that are words, not Part references: polarity and anchorRule. Every other string is a Part reference. */
+export const SPRITE_WORDS = Object.freeze(['dark', 'bright', 'origin', 'centre']);
+/** Register fn.q.sprite.* on a store: its word arguments pass through, every other string resolves as a Part reference. */
+export function registerSpriteQueries(store, registerQueries) {
+  registerQueries(store, SPRITE_QUERIES, { resolve: (ref) => (SPRITE_WORDS.includes(ref) ? ref : store.get(ref)) });
+}
 export const SPRITE_QUERIES = Object.freeze({
   // source is a Part reference (resolved before the math runs); everything else is given inline
   'fn.q.sprite.overlap': ({ source, ...rest }) => ({ value: spriteOverlap({ source, ...rest }), unit: SPRITE_UNIT })

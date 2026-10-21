@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createPartStore, registerQueries } from '../store.mjs';
 import { renderValue } from '../render.mjs';
-import { SPRITE_QUERIES, spriteOverlap, poolOverlaps } from './sprite.mjs';
+import { registerSpriteQueries, spriteOverlap, poolOverlaps } from './sprite.mjs';
 
 // A synthetic image of one sprite (a hollow 6 x 4 px dark frame) stamped at several places, plus "canopy" that touches
 // a different side of every instance: the overlap keeps the frame and drops the canopy.
@@ -21,8 +21,8 @@ const WINDOW = { width: 10, height: 8, anchorAt: [3, 3] };   // the interior's t
 test('fn.q.sprite.*: unitful, cached, profiled, renderable', () => {
   const { mask, instances } = stamped(4);
   const store = createPartStore({ base: { has: (x) => x === 'px.example', get: () => mask } });
-  registerQueries(store, SPRITE_QUERIES);
-  const args = { source: 'px.example', instances, window: WINDOW, level: 0.75 };
+  registerSpriteQueries(store, registerQueries);
+  const args = { source: 'px.example', polarity: 'dark', anchorRule: 'origin', instances, window: WINDOW, level: 0.75 };
   const first = store.call('fn.q.sprite.overlap', args), again = store.call('fn.q.sprite.overlap', args);
   assert.equal(typeof first.unit, 'string');
   assert.deepEqual(again.emits, { cached: 1 });
