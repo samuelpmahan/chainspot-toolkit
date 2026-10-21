@@ -1,0 +1,3087 @@
+{
+ "costWrong": 100,
+ "pStar": 0.99,
+ "readers": {
+  "binary": {
+   "features": [
+    "dice",
+    "margin"
+   ],
+   "shipped": {
+    "features": [
+     "dice",
+     "margin"
+    ],
+    "weights": [
+     28.71050387458673,
+     15.981722117847493
+    ],
+    "bias": -23.987778167890372,
+    "priorShift": 2.5028868484404674,
+    "trainedOn": {
+     "courses": [
+      "golden",
+      "lenard",
+      "townelake",
+      "heritage",
+      "alex",
+      "northpark"
+     ],
+     "badges": 108,
+     "syntheticBadges": 520,
+     "syntheticPerLabelPerCourse": 4,
+     "examples": 1256,
+     "rightTops": 573,
+     "wrongTops": 55,
+     "hardNegatives": 628
+    },
+    "outOfCourse": {
+     "maxImpostorP": 0.986,
+     "impostorsAtPStar": 0,
+     "of": 118,
+     "unit": "dev hard negatives and wrong tops, scored by the fold that left their course out"
+    }
+   },
+   "reliability": [
+    {
+     "bin": "0-0.1",
+     "n": 43,
+     "meanP": 0.032,
+     "observed": 0
+    },
+    {
+     "bin": "0.1-0.5",
+     "n": 72,
+     "meanP": 0.299,
+     "observed": 0.194
+    },
+    {
+     "bin": "0.5-0.9",
+     "n": 49,
+     "meanP": 0.716,
+     "observed": 0.653
+    },
+    {
+     "bin": "0.9-1",
+     "n": 52,
+     "meanP": 0.979,
+     "observed": 1
+    }
+   ],
+   "maxImpostorP": 0.986,
+   "impostorsAtPStar": [],
+   "minRightTopP": 0.781,
+   "table": {
+    "golden": {
+     "course": "golden",
+     "badges": 18,
+     "fixed": {
+      "read": 13,
+      "abstained": 5,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 9,
+      "abstained": 9,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 14,
+      "abstained": 4,
+      "wrong": 0
+     },
+     "pMedian": 0.987,
+     "pMin": 0.829,
+     "filled": [
+      {
+       "detId": "badge-2",
+       "truth": 3,
+       "top": 3,
+       "pTop": 0.998,
+       "assigned": 3
+      },
+      {
+       "detId": "badge-3",
+       "truth": 4,
+       "top": 4,
+       "pTop": 0.997,
+       "assigned": 4
+      },
+      {
+       "detId": "badge-5",
+       "truth": 5,
+       "top": 8,
+       "pTop": 1,
+       "assigned": 5
+      },
+      {
+       "detId": "badge-6",
+       "truth": 6,
+       "top": 6,
+       "pTop": 0.993,
+       "assigned": 6
+      },
+      {
+       "detId": "badge-14",
+       "truth": 13,
+       "top": 13,
+       "pTop": 0.991,
+       "assigned": 13
+      }
+     ],
+     "changed": [
+      {
+       "detId": "badge-5",
+       "truth": 5,
+       "fixed": null,
+       "learned": null,
+       "p": 0.881,
+       "final": 5,
+       "how": "filled"
+      },
+      {
+       "detId": "badge-6",
+       "truth": 6,
+       "fixed": null,
+       "learned": null,
+       "p": 0.961,
+       "final": 6,
+       "how": "filled"
+      },
+      {
+       "detId": "badge-11",
+       "truth": 15,
+       "fixed": 15,
+       "learned": null,
+       "p": 0.978,
+       "final": null,
+       "how": null
+      }
+     ],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "lenard": {
+     "course": "lenard",
+     "badges": 18,
+     "fixed": {
+      "read": 13,
+      "abstained": 5,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 8,
+      "abstained": 10,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 10,
+      "abstained": 8,
+      "wrong": 0
+     },
+     "pMedian": 0.984,
+     "pMin": 0.8,
+     "filled": [
+      {
+       "detId": "badge-8",
+       "truth": 3,
+       "top": 3,
+       "pTop": 0.997,
+       "assigned": 3
+      },
+      {
+       "detId": "badge-9",
+       "truth": 12,
+       "top": 12,
+       "pTop": 0.992,
+       "assigned": 12
+      }
+     ],
+     "changed": [
+      {
+       "detId": "badge-6",
+       "truth": 4,
+       "fixed": 4,
+       "learned": null,
+       "p": 0.898,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-12",
+       "truth": 13,
+       "fixed": 13,
+       "learned": null,
+       "p": 0.981,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-17",
+       "truth": 15,
+       "fixed": 15,
+       "learned": null,
+       "p": 0.969,
+       "final": null,
+       "how": null
+      }
+     ],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "townelake": {
+     "course": "townelake",
+     "badges": 18,
+     "fixed": {
+      "read": 13,
+      "abstained": 5,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 9,
+      "abstained": 9,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 13,
+      "abstained": 5,
+      "wrong": 0
+     },
+     "pMedian": 0.984,
+     "pMin": 0.827,
+     "filled": [
+      {
+       "detId": "badge-8",
+       "truth": 6,
+       "top": 6,
+       "pTop": 0.99,
+       "assigned": 6
+      },
+      {
+       "detId": "badge-10",
+       "truth": 5,
+       "top": 8,
+       "pTop": 0.999,
+       "assigned": 5
+      },
+      {
+       "detId": "badge-14",
+       "truth": 4,
+       "top": 4,
+       "pTop": 0.994,
+       "assigned": 4
+      },
+      {
+       "detId": "badge-15",
+       "truth": 3,
+       "top": 3,
+       "pTop": 0.997,
+       "assigned": 3
+      }
+     ],
+     "changed": [
+      {
+       "detId": "badge-7",
+       "truth": 13,
+       "fixed": 13,
+       "learned": null,
+       "p": 0.984,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-8",
+       "truth": 6,
+       "fixed": null,
+       "learned": null,
+       "p": 0.959,
+       "final": 6,
+       "how": "filled"
+      },
+      {
+       "detId": "badge-10",
+       "truth": 5,
+       "fixed": null,
+       "learned": null,
+       "p": 0.878,
+       "final": 5,
+       "how": "filled"
+      },
+      {
+       "detId": "badge-13",
+       "truth": 15,
+       "fixed": 15,
+       "learned": null,
+       "p": 0.976,
+       "final": null,
+       "how": null
+      }
+     ],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "heritage": {
+     "course": "heritage",
+     "badges": 18,
+     "fixed": {
+      "read": 11,
+      "abstained": 7,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 9,
+      "abstained": 9,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 13,
+      "abstained": 5,
+      "wrong": 0
+     },
+     "pMedian": 0.98,
+     "pMin": 0.781,
+     "filled": [
+      {
+       "detId": "badge-2",
+       "truth": 6,
+       "top": 6,
+       "pTop": 0.992,
+       "assigned": 6
+      },
+      {
+       "detId": "badge-5",
+       "truth": 5,
+       "top": 8,
+       "pTop": 1,
+       "assigned": 5
+      },
+      {
+       "detId": "badge-8",
+       "truth": 4,
+       "top": 4,
+       "pTop": 0.997,
+       "assigned": 4
+      },
+      {
+       "detId": "badge-13",
+       "truth": 3,
+       "top": 3,
+       "pTop": 0.998,
+       "assigned": 3
+      }
+     ],
+     "changed": [
+      {
+       "detId": "badge-2",
+       "truth": 6,
+       "fixed": null,
+       "learned": null,
+       "p": 0.954,
+       "final": 6,
+       "how": "filled"
+      },
+      {
+       "detId": "badge-5",
+       "truth": 5,
+       "fixed": null,
+       "learned": null,
+       "p": 0.87,
+       "final": 5,
+       "how": "filled"
+      }
+     ],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "alex": {
+     "course": "alex",
+     "badges": 18,
+     "fixed": {
+      "read": 13,
+      "abstained": 5,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 9,
+      "abstained": 9,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 10,
+      "abstained": 8,
+      "wrong": 0
+     },
+     "pMedian": 0.985,
+     "pMin": 0.877,
+     "filled": [
+      {
+       "detId": "badge-15",
+       "truth": 3,
+       "top": 3,
+       "pTop": 0.997,
+       "assigned": 3
+      }
+     ],
+     "changed": [
+      {
+       "detId": "badge-0",
+       "truth": 13,
+       "fixed": 13,
+       "learned": null,
+       "p": 0.983,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-3",
+       "truth": 15,
+       "fixed": 15,
+       "learned": null,
+       "p": 0.972,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-17",
+       "truth": 4,
+       "fixed": 4,
+       "learned": null,
+       "p": 0.877,
+       "final": null,
+       "how": null
+      }
+     ],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "northpark": {
+     "course": "northpark",
+     "badges": 18,
+     "fixed": {
+      "read": 13,
+      "abstained": 5,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 9,
+      "abstained": 9,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 13,
+      "abstained": 5,
+      "wrong": 0
+     },
+     "pMedian": 0.983,
+     "pMin": 0.806,
+     "filled": [
+      {
+       "detId": "badge-6",
+       "truth": 6,
+       "top": 6,
+       "pTop": 0.991,
+       "assigned": 6
+      },
+      {
+       "detId": "badge-13",
+       "truth": 5,
+       "top": 8,
+       "pTop": 1,
+       "assigned": 5
+      },
+      {
+       "detId": "badge-14",
+       "truth": 4,
+       "top": 4,
+       "pTop": 0.997,
+       "assigned": 4
+      },
+      {
+       "detId": "badge-15",
+       "truth": 3,
+       "top": 3,
+       "pTop": 0.997,
+       "assigned": 3
+      }
+     ],
+     "changed": [
+      {
+       "detId": "badge-6",
+       "truth": 6,
+       "fixed": null,
+       "learned": null,
+       "p": 0.951,
+       "final": 6,
+       "how": "filled"
+      },
+      {
+       "detId": "badge-8",
+       "truth": 13,
+       "fixed": 13,
+       "learned": null,
+       "p": 0.983,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-9",
+       "truth": 15,
+       "fixed": 15,
+       "learned": null,
+       "p": 0.972,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-13",
+       "truth": 5,
+       "fixed": null,
+       "learned": null,
+       "p": 0.862,
+       "final": 5,
+       "how": "filled"
+      }
+     ],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "seatacFull": {
+     "course": "seatacFull",
+     "badges": 27,
+     "fixed": {
+      "read": 18,
+      "abstained": 9,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 10,
+      "abstained": 17,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 15,
+      "abstained": 12,
+      "wrong": 0
+     },
+     "pMedian": 0.974,
+     "pMin": 0.825,
+     "filled": [
+      {
+       "detId": "badge-3",
+       "truth": 27,
+       "top": 27,
+       "pTop": 0.996,
+       "assigned": 27
+      },
+      {
+       "detId": "badge-9",
+       "truth": 4,
+       "top": 4,
+       "pTop": 0.997,
+       "assigned": 4
+      },
+      {
+       "detId": "badge-11",
+       "truth": 3,
+       "top": 3,
+       "pTop": 0.994,
+       "assigned": 3
+      },
+      {
+       "detId": "badge-14",
+       "truth": 5,
+       "top": 8,
+       "pTop": 0.999,
+       "assigned": 5
+      },
+      {
+       "detId": "badge-24",
+       "truth": 6,
+       "top": 6,
+       "pTop": 0.991,
+       "assigned": 6
+      }
+     ],
+     "changed": [
+      {
+       "detId": "badge-7",
+       "truth": 20,
+       "fixed": 20,
+       "learned": null,
+       "p": 0.974,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-11",
+       "truth": 3,
+       "fixed": null,
+       "learned": null,
+       "p": 0.972,
+       "final": 3,
+       "how": "filled"
+      },
+      {
+       "detId": "badge-12",
+       "truth": 21,
+       "fixed": 21,
+       "learned": null,
+       "p": 0.919,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-13",
+       "truth": 23,
+       "fixed": 23,
+       "learned": null,
+       "p": 0.969,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-14",
+       "truth": 5,
+       "fixed": null,
+       "learned": null,
+       "p": 0.869,
+       "final": 5,
+       "how": "filled"
+      },
+      {
+       "detId": "badge-15",
+       "truth": 24,
+       "fixed": 24,
+       "learned": null,
+       "p": 0.825,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-16",
+       "truth": 13,
+       "fixed": 13,
+       "learned": null,
+       "p": 0.984,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-19",
+       "truth": 15,
+       "fixed": 15,
+       "learned": null,
+       "p": 0.974,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-24",
+       "truth": 6,
+       "fixed": null,
+       "learned": null,
+       "p": 0.953,
+       "final": 6,
+       "how": "filled"
+      }
+     ],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "seatacCapture": {
+     "course": "seatacCapture",
+     "badges": 27,
+     "fixed": {
+      "read": 19,
+      "abstained": 8,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 10,
+      "abstained": 17,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 15,
+      "abstained": 12,
+      "wrong": 0
+     },
+     "pMedian": 0.974,
+     "pMin": 0.815,
+     "filled": [
+      {
+       "detId": "badge-3",
+       "truth": 27,
+       "top": 27,
+       "pTop": 0.996,
+       "assigned": 27
+      },
+      {
+       "detId": "badge-9",
+       "truth": 4,
+       "top": 4,
+       "pTop": 0.997,
+       "assigned": 4
+      },
+      {
+       "detId": "badge-11",
+       "truth": 3,
+       "top": 3,
+       "pTop": 0.997,
+       "assigned": 3
+      },
+      {
+       "detId": "badge-14",
+       "truth": 5,
+       "top": 8,
+       "pTop": 0.999,
+       "assigned": 5
+      },
+      {
+       "detId": "badge-24",
+       "truth": 6,
+       "top": 6,
+       "pTop": 0.991,
+       "assigned": 6
+      }
+     ],
+     "changed": [
+      {
+       "detId": "badge-7",
+       "truth": 20,
+       "fixed": 20,
+       "learned": null,
+       "p": 0.974,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-12",
+       "truth": 21,
+       "fixed": 21,
+       "learned": null,
+       "p": 0.919,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-13",
+       "truth": 23,
+       "fixed": 23,
+       "learned": null,
+       "p": 0.969,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-14",
+       "truth": 5,
+       "fixed": null,
+       "learned": null,
+       "p": 0.869,
+       "final": 5,
+       "how": "filled"
+      },
+      {
+       "detId": "badge-15",
+       "truth": 24,
+       "fixed": 24,
+       "learned": null,
+       "p": 0.825,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-16",
+       "truth": 13,
+       "fixed": 13,
+       "learned": null,
+       "p": 0.984,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-19",
+       "truth": 15,
+       "fixed": 15,
+       "learned": null,
+       "p": 0.974,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-24",
+       "truth": 6,
+       "fixed": null,
+       "learned": null,
+       "p": 0.953,
+       "final": 6,
+       "how": "filled"
+      }
+     ],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "beaverranchLazy": {
+     "course": "beaverranchLazy",
+     "badges": 21,
+     "fixed": {
+      "read": 16,
+      "abstained": 5,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 10,
+      "abstained": 11,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 16,
+      "abstained": 5,
+      "wrong": 0
+     },
+     "pMedian": 0.979,
+     "pMin": 0.778,
+     "filled": [
+      {
+       "detId": "badge-10",
+       "truth": 20,
+       "top": 20,
+       "pTop": 0.992,
+       "assigned": 20
+      },
+      {
+       "detId": "badge-13",
+       "truth": 4,
+       "top": 4,
+       "pTop": 0.997,
+       "assigned": 4
+      },
+      {
+       "detId": "badge-15",
+       "truth": 21,
+       "top": 21,
+       "pTop": 0.997,
+       "assigned": 21
+      },
+      {
+       "detId": "badge-17",
+       "truth": 3,
+       "top": 3,
+       "pTop": 0.997,
+       "assigned": 3
+      },
+      {
+       "detId": "badge-18",
+       "truth": 5,
+       "top": 8,
+       "pTop": 0.999,
+       "assigned": 5
+      },
+      {
+       "detId": "badge-19",
+       "truth": 6,
+       "top": 6,
+       "pTop": 0.991,
+       "assigned": 6
+      }
+     ],
+     "changed": [
+      {
+       "detId": "badge-2",
+       "truth": 16,
+       "fixed": 16,
+       "learned": null,
+       "p": 0.978,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-6",
+       "truth": 15,
+       "fixed": 15,
+       "learned": null,
+       "p": 0.974,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-18",
+       "truth": 5,
+       "fixed": null,
+       "learned": null,
+       "p": 0.869,
+       "final": 5,
+       "how": "filled"
+      },
+      {
+       "detId": "badge-19",
+       "truth": 6,
+       "fixed": null,
+       "learned": null,
+       "p": 0.953,
+       "final": 6,
+       "how": "filled"
+      }
+     ],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "beaverranchCapture": {
+     "course": "beaverranchCapture",
+     "badges": 21,
+     "fixed": {
+      "read": 16,
+      "abstained": 5,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 10,
+      "abstained": 11,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 16,
+      "abstained": 5,
+      "wrong": 0
+     },
+     "pMedian": 0.979,
+     "pMin": 0.778,
+     "filled": [
+      {
+       "detId": "badge-10",
+       "truth": 20,
+       "top": 20,
+       "pTop": 0.992,
+       "assigned": 20
+      },
+      {
+       "detId": "badge-13",
+       "truth": 4,
+       "top": 4,
+       "pTop": 0.997,
+       "assigned": 4
+      },
+      {
+       "detId": "badge-15",
+       "truth": 21,
+       "top": 21,
+       "pTop": 0.997,
+       "assigned": 21
+      },
+      {
+       "detId": "badge-17",
+       "truth": 3,
+       "top": 3,
+       "pTop": 0.997,
+       "assigned": 3
+      },
+      {
+       "detId": "badge-18",
+       "truth": 5,
+       "top": 8,
+       "pTop": 0.999,
+       "assigned": 5
+      },
+      {
+       "detId": "badge-19",
+       "truth": 6,
+       "top": 6,
+       "pTop": 0.991,
+       "assigned": 6
+      }
+     ],
+     "changed": [
+      {
+       "detId": "badge-2",
+       "truth": 16,
+       "fixed": 16,
+       "learned": null,
+       "p": 0.978,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-6",
+       "truth": 15,
+       "fixed": 15,
+       "learned": null,
+       "p": 0.974,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-18",
+       "truth": 5,
+       "fixed": null,
+       "learned": null,
+       "p": 0.869,
+       "final": 5,
+       "how": "filled"
+      },
+      {
+       "detId": "badge-19",
+       "truth": 6,
+       "fixed": null,
+       "learned": null,
+       "p": 0.953,
+       "final": 6,
+       "how": "filled"
+      }
+     ],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "fountainhillsFull": {
+     "course": "fountainhillsFull",
+     "badges": 20,
+     "fixed": {
+      "read": 14,
+      "abstained": 6,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 9,
+      "abstained": 11,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 14,
+      "abstained": 6,
+      "wrong": 0
+     },
+     "pMedian": 0.979,
+     "pMin": 0.815,
+     "filled": [
+      {
+       "detId": "badge-5",
+       "truth": 20,
+       "top": 20,
+       "pTop": 0.992,
+       "assigned": 20
+      },
+      {
+       "detId": "badge-15",
+       "truth": 6,
+       "top": 6,
+       "pTop": 0.991,
+       "assigned": 6
+      },
+      {
+       "detId": "badge-17",
+       "truth": 4,
+       "top": 4,
+       "pTop": 0.997,
+       "assigned": 4
+      },
+      {
+       "detId": "badge-18",
+       "truth": 3,
+       "top": 3,
+       "pTop": 0.997,
+       "assigned": 3
+      },
+      {
+       "detId": "badge-19",
+       "truth": 5,
+       "top": 8,
+       "pTop": 0.999,
+       "assigned": 5
+      }
+     ],
+     "changed": [
+      {
+       "detId": "badge-0",
+       "truth": 13,
+       "fixed": 13,
+       "learned": null,
+       "p": 0.984,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-4",
+       "truth": 15,
+       "fixed": 15,
+       "learned": null,
+       "p": 0.974,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-15",
+       "truth": 6,
+       "fixed": null,
+       "learned": null,
+       "p": 0.953,
+       "final": 6,
+       "how": "filled"
+      },
+      {
+       "detId": "badge-19",
+       "truth": 5,
+       "fixed": null,
+       "learned": null,
+       "p": 0.869,
+       "final": 5,
+       "how": "filled"
+      }
+     ],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "fountainhillsLazy": {
+     "course": "fountainhillsLazy",
+     "badges": 20,
+     "fixed": {
+      "read": 15,
+      "abstained": 5,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 10,
+      "abstained": 10,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 13,
+      "abstained": 7,
+      "wrong": 0
+     },
+     "pMedian": 0.984,
+     "pMin": 0.815,
+     "filled": [
+      {
+       "detId": "badge-15",
+       "truth": 3,
+       "top": 3,
+       "pTop": 0.997,
+       "assigned": 3
+      },
+      {
+       "detId": "badge-17",
+       "truth": 5,
+       "top": 8,
+       "pTop": 0.999,
+       "assigned": 5
+      },
+      {
+       "detId": "badge-18",
+       "truth": 4,
+       "top": 4,
+       "pTop": 0.997,
+       "assigned": 4
+      }
+     ],
+     "changed": [
+      {
+       "detId": "badge-1",
+       "truth": 13,
+       "fixed": 13,
+       "learned": null,
+       "p": 0.984,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-5",
+       "truth": 15,
+       "fixed": 15,
+       "learned": null,
+       "p": 0.974,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-11",
+       "truth": 20,
+       "fixed": 20,
+       "learned": null,
+       "p": 0.937,
+       "final": null,
+       "how": null
+      },
+      {
+       "detId": "badge-17",
+       "truth": 5,
+       "fixed": null,
+       "learned": null,
+       "p": 0.869,
+       "final": 5,
+       "how": "filled"
+      }
+     ],
+     "conflicts": 0,
+     "overrides": 0
+    }
+   }
+  },
+  "digitBW": {
+   "features": [
+    "minDigitDice",
+    "minDigitMargin",
+    "layoutMargin"
+   ],
+   "shipped": {
+    "features": [
+     "minDigitDice",
+     "minDigitMargin",
+     "layoutMargin"
+    ],
+    "weights": [
+     30.79716930174554,
+     26.339578177207745,
+     3.1938365025038897
+    ],
+    "bias": -29.586715038794758,
+    "priorShift": 6.444131256700441,
+    "trainedOn": {
+     "courses": [
+      "golden",
+      "lenard",
+      "townelake",
+      "heritage",
+      "alex",
+      "northpark"
+     ],
+     "badges": 108,
+     "syntheticBadges": 520,
+     "syntheticPerLabelPerCourse": 4,
+     "examples": 1256,
+     "rightTops": 628,
+     "wrongTops": 0,
+     "hardNegatives": 628
+    },
+    "outOfCourse": {
+     "maxImpostorP": 1,
+     "impostorsAtPStar": 24,
+     "of": 108,
+     "unit": "dev hard negatives and wrong tops, scored by the fold that left their course out"
+    }
+   },
+   "reliability": [
+    {
+     "bin": "0-0.1",
+     "n": 79,
+     "meanP": 0.031,
+     "observed": 0
+    },
+    {
+     "bin": "0.1-0.5",
+     "n": 10,
+     "meanP": 0.195,
+     "observed": 0
+    },
+    {
+     "bin": "0.5-0.9",
+     "n": 22,
+     "meanP": 0.666,
+     "observed": 0.136
+    },
+    {
+     "bin": "0.9-1",
+     "n": 105,
+     "meanP": 0.995,
+     "observed": 1
+    }
+   ],
+   "maxImpostorP": 1,
+   "impostorsAtPStar": [
+    {
+     "course": "golden",
+     "truth": 5,
+     "read": 6,
+     "kind": "hard-negative",
+     "p": 0.999,
+     "x": [
+      0.888,
+      0.079,
+      0.178
+     ]
+    },
+    {
+     "course": "golden",
+     "truth": 16,
+     "read": 15,
+     "kind": "hard-negative",
+     "p": 0.999,
+     "x": [
+      0.882,
+      0.06,
+      0.472
+     ]
+    },
+    {
+     "course": "golden",
+     "truth": 15,
+     "read": 16,
+     "kind": "hard-negative",
+     "p": 0.998,
+     "x": [
+      0.871,
+      0.058,
+      0.44
+     ]
+    },
+    {
+     "course": "lenard",
+     "truth": 5,
+     "read": 6,
+     "kind": "hard-negative",
+     "p": 0.991,
+     "x": [
+      0.86,
+      0.04,
+      0.149
+     ]
+    },
+    {
+     "course": "lenard",
+     "truth": 11,
+     "read": 21,
+     "kind": "hard-negative",
+     "p": 1,
+     "x": [
+      0.64,
+      0.394,
+      0.246
+     ]
+    },
+    {
+     "course": "lenard",
+     "truth": 16,
+     "read": 15,
+     "kind": "hard-negative",
+     "p": 0.999,
+     "x": [
+      0.888,
+      0.065,
+      0.439
+     ]
+    },
+    {
+     "course": "lenard",
+     "truth": 15,
+     "read": 16,
+     "kind": "hard-negative",
+     "p": 0.998,
+     "x": [
+      0.871,
+      0.058,
+      0.421
+     ]
+    },
+    {
+     "course": "townelake",
+     "truth": 11,
+     "read": 21,
+     "kind": "hard-negative",
+     "p": 0.999,
+     "x": [
+      0.64,
+      0.394,
+      0.246
+     ]
+    },
+    {
+     "course": "townelake",
+     "truth": 5,
+     "read": 6,
+     "kind": "hard-negative",
+     "p": 0.998,
+     "x": [
+      0.882,
+      0.076,
+      0.165
+     ]
+    },
+    {
+     "course": "townelake",
+     "truth": 15,
+     "read": 16,
+     "kind": "hard-negative",
+     "p": 0.998,
+     "x": [
+      0.871,
+      0.058,
+      0.421
+     ]
+    },
+    {
+     "course": "townelake",
+     "truth": 16,
+     "read": 15,
+     "kind": "hard-negative",
+     "p": 0.999,
+     "x": [
+      0.888,
+      0.065,
+      0.439
+     ]
+    },
+    {
+     "course": "heritage",
+     "truth": 11,
+     "read": 21,
+     "kind": "hard-negative",
+     "p": 1,
+     "x": [
+      0.64,
+      0.394,
+      0.246
+     ]
+    },
+    {
+     "course": "heritage",
+     "truth": 5,
+     "read": 6,
+     "kind": "hard-negative",
+     "p": 0.998,
+     "x": [
+      0.882,
+      0.076,
+      0.165
+     ]
+    },
+    {
+     "course": "heritage",
+     "truth": 15,
+     "read": 16,
+     "kind": "hard-negative",
+     "p": 0.996,
+     "x": [
+      0.86,
+      0.04,
+      0.406
+     ]
+    },
+    {
+     "course": "heritage",
+     "truth": 16,
+     "read": 15,
+     "kind": "hard-negative",
+     "p": 0.999,
+     "x": [
+      0.888,
+      0.065,
+      0.439
+     ]
+    },
+    {
+     "course": "alex",
+     "truth": 15,
+     "read": 16,
+     "kind": "hard-negative",
+     "p": 0.998,
+     "x": [
+      0.868,
+      0.058,
+      0.42
+     ]
+    },
+    {
+     "course": "alex",
+     "truth": 11,
+     "read": 21,
+     "kind": "hard-negative",
+     "p": 1,
+     "x": [
+      0.64,
+      0.394,
+      0.246
+     ]
+    },
+    {
+     "course": "alex",
+     "truth": 10,
+     "read": 16,
+     "kind": "hard-negative",
+     "p": 0.991,
+     "x": [
+      0.823,
+      0.045,
+      0.445
+     ]
+    },
+    {
+     "course": "alex",
+     "truth": 16,
+     "read": 15,
+     "kind": "hard-negative",
+     "p": 0.999,
+     "x": [
+      0.894,
+      0.071,
+      0.442
+     ]
+    },
+    {
+     "course": "alex",
+     "truth": 5,
+     "read": 6,
+     "kind": "hard-negative",
+     "p": 0.993,
+     "x": [
+      0.864,
+      0.047,
+      0.15
+     ]
+    },
+    {
+     "course": "northpark",
+     "truth": 11,
+     "read": 21,
+     "kind": "hard-negative",
+     "p": 0.999,
+     "x": [
+      0.64,
+      0.394,
+      0.246
+     ]
+    },
+    {
+     "course": "northpark",
+     "truth": 15,
+     "read": 16,
+     "kind": "hard-negative",
+     "p": 0.998,
+     "x": [
+      0.871,
+      0.058,
+      0.421
+     ]
+    },
+    {
+     "course": "northpark",
+     "truth": 16,
+     "read": 15,
+     "kind": "hard-negative",
+     "p": 0.999,
+     "x": [
+      0.888,
+      0.065,
+      0.439
+     ]
+    },
+    {
+     "course": "northpark",
+     "truth": 5,
+     "read": 6,
+     "kind": "hard-negative",
+     "p": 0.998,
+     "x": [
+      0.882,
+      0.076,
+      0.165
+     ]
+    }
+   ],
+   "minRightTopP": 0.999,
+   "table": {
+    "golden": {
+     "course": "golden",
+     "badges": 18,
+     "fixed": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "lenard": {
+     "course": "lenard",
+     "badges": 18,
+     "fixed": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 0.999,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "townelake": {
+     "course": "townelake",
+     "badges": 18,
+     "fixed": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "heritage": {
+     "course": "heritage",
+     "badges": 18,
+     "fixed": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "alex": {
+     "course": "alex",
+     "badges": 18,
+     "fixed": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 0.999,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "northpark": {
+     "course": "northpark",
+     "badges": 18,
+     "fixed": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "seatacFull": {
+     "course": "seatacFull",
+     "badges": 27,
+     "fixed": {
+      "read": 26,
+      "abstained": 1,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 26,
+      "abstained": 1,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 27,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 0.984,
+     "filled": [
+      {
+       "detId": "badge-2",
+       "truth": 22,
+       "top": 22,
+       "pTop": 1,
+       "assigned": 22
+      }
+     ],
+     "changed": [
+      {
+       "detId": "badge-4",
+       "truth": 26,
+       "fixed": null,
+       "learned": 26,
+       "p": 0.995,
+       "final": 26,
+       "how": "confident"
+      }
+     ],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "seatacCapture": {
+     "course": "seatacCapture",
+     "badges": 27,
+     "fixed": {
+      "read": 26,
+      "abstained": 1,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 26,
+      "abstained": 1,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 27,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 0.984,
+     "filled": [
+      {
+       "detId": "badge-2",
+       "truth": 22,
+       "top": 22,
+       "pTop": 1,
+       "assigned": 22
+      }
+     ],
+     "changed": [
+      {
+       "detId": "badge-4",
+       "truth": 26,
+       "fixed": null,
+       "learned": 26,
+       "p": 0.995,
+       "final": 26,
+       "how": "confident"
+      }
+     ],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "beaverranchLazy": {
+     "course": "beaverranchLazy",
+     "badges": 21,
+     "fixed": {
+      "read": 21,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 21,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 21,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "beaverranchCapture": {
+     "course": "beaverranchCapture",
+     "badges": 21,
+     "fixed": {
+      "read": 21,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 21,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 21,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "fountainhillsFull": {
+     "course": "fountainhillsFull",
+     "badges": 20,
+     "fixed": {
+      "read": 20,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 20,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 20,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "fountainhillsLazy": {
+     "course": "fountainhillsLazy",
+     "badges": 20,
+     "fixed": {
+      "read": 20,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 20,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 20,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 0.999,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    }
+   }
+  },
+  "coverage": {
+   "features": [
+    "ncc",
+    "margin"
+   ],
+   "shipped": {
+    "features": [
+     "ncc",
+     "margin"
+    ],
+    "weights": [
+     26.399040001865583,
+     40.74811472628271
+    ],
+    "bias": -26.609836512479923,
+    "priorShift": 3.3021073398990968,
+    "trainedOn": {
+     "courses": [
+      "golden",
+      "lenard",
+      "townelake",
+      "heritage",
+      "alex",
+      "northpark"
+     ],
+     "badges": 108,
+     "syntheticBadges": 520,
+     "syntheticPerLabelPerCourse": 4,
+     "examples": 1256,
+     "rightTops": 605,
+     "wrongTops": 23,
+     "hardNegatives": 628
+    },
+    "outOfCourse": {
+     "maxImpostorP": 0.976,
+     "impostorsAtPStar": 0,
+     "of": 108,
+     "unit": "dev hard negatives and wrong tops, scored by the fold that left their course out"
+    }
+   },
+   "reliability": [
+    {
+     "bin": "0-0.1",
+     "n": 59,
+     "meanP": 0.032,
+     "observed": 0.017
+    },
+    {
+     "bin": "0.1-0.5",
+     "n": 50,
+     "meanP": 0.236,
+     "observed": 0.02
+    },
+    {
+     "bin": "0.5-0.9",
+     "n": 5,
+     "meanP": 0.737,
+     "observed": 0.8
+    },
+    {
+     "bin": "0.9-1",
+     "n": 102,
+     "meanP": 0.981,
+     "observed": 1
+    }
+   ],
+   "maxImpostorP": 0.976,
+   "impostorsAtPStar": [],
+   "minRightTopP": 0.717,
+   "table": {
+    "golden": {
+     "course": "golden",
+     "badges": 18,
+     "fixed": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 0.997,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "lenard": {
+     "course": "lenard",
+     "badges": 18,
+     "fixed": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 17,
+      "abstained": 1,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 0.983,
+     "filled": [
+      {
+       "detId": "badge-3",
+       "truth": 5,
+       "top": 5,
+       "pTop": 1,
+       "assigned": 5
+      }
+     ],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "townelake": {
+     "course": "townelake",
+     "badges": 18,
+     "fixed": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 0.996,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "heritage": {
+     "course": "heritage",
+     "badges": 18,
+     "fixed": {
+      "read": 17,
+      "abstained": 1,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 16,
+      "abstained": 2,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 0.717,
+     "filled": [
+      {
+       "detId": "badge-9",
+       "truth": 13,
+       "top": 13,
+       "pTop": 1,
+       "assigned": 13
+      },
+      {
+       "detId": "badge-12",
+       "truth": 15,
+       "top": 15,
+       "pTop": 0.999,
+       "assigned": 15
+      }
+     ],
+     "changed": [
+      {
+       "detId": "badge-12",
+       "truth": 15,
+       "fixed": null,
+       "learned": null,
+       "p": 0.717,
+       "final": 15,
+       "how": "filled"
+      }
+     ],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "alex": {
+     "course": "alex",
+     "badges": 18,
+     "fixed": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 16,
+      "abstained": 2,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 0.985,
+     "filled": [
+      {
+       "detId": "badge-10",
+       "truth": 18,
+       "top": 18,
+       "pTop": 1,
+       "assigned": 18
+      },
+      {
+       "detId": "badge-16",
+       "truth": 5,
+       "top": 5,
+       "pTop": 1,
+       "assigned": 5
+      }
+     ],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "northpark": {
+     "course": "northpark",
+     "badges": 18,
+     "fixed": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 0.997,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "seatacFull": {
+     "course": "seatacFull",
+     "badges": 27,
+     "fixed": {
+      "read": 25,
+      "abstained": 2,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 21,
+      "abstained": 6,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 27,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 0.999,
+     "pMin": 0.771,
+     "filled": [
+      {
+       "detId": "badge-1",
+       "truth": 18,
+       "top": 18,
+       "pTop": 1,
+       "assigned": 18
+      },
+      {
+       "detId": "badge-4",
+       "truth": 26,
+       "top": 25,
+       "pTop": 1,
+       "assigned": 26
+      },
+      {
+       "detId": "badge-7",
+       "truth": 20,
+       "top": 20,
+       "pTop": 0.991,
+       "assigned": 20
+      },
+      {
+       "detId": "badge-12",
+       "truth": 21,
+       "top": 21,
+       "pTop": 1,
+       "assigned": 21
+      },
+      {
+       "detId": "badge-13",
+       "truth": 23,
+       "top": 23,
+       "pTop": 0.997,
+       "assigned": 23
+      },
+      {
+       "detId": "badge-15",
+       "truth": 24,
+       "top": 24,
+       "pTop": 0.993,
+       "assigned": 24
+      }
+     ],
+     "changed": [
+      {
+       "detId": "badge-4",
+       "truth": 26,
+       "fixed": null,
+       "learned": null,
+       "p": 0.847,
+       "final": 26,
+       "how": "filled"
+      },
+      {
+       "detId": "badge-13",
+       "truth": 23,
+       "fixed": null,
+       "learned": null,
+       "p": 0.771,
+       "final": 23,
+       "how": "filled"
+      }
+     ],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "seatacCapture": {
+     "course": "seatacCapture",
+     "badges": 27,
+     "fixed": {
+      "read": 25,
+      "abstained": 2,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 22,
+      "abstained": 5,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 27,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 0.999,
+     "pMin": 0.771,
+     "filled": [
+      {
+       "detId": "badge-4",
+       "truth": 26,
+       "top": 25,
+       "pTop": 1,
+       "assigned": 26
+      },
+      {
+       "detId": "badge-7",
+       "truth": 20,
+       "top": 20,
+       "pTop": 0.991,
+       "assigned": 20
+      },
+      {
+       "detId": "badge-12",
+       "truth": 21,
+       "top": 21,
+       "pTop": 1,
+       "assigned": 21
+      },
+      {
+       "detId": "badge-13",
+       "truth": 23,
+       "top": 23,
+       "pTop": 0.997,
+       "assigned": 23
+      },
+      {
+       "detId": "badge-15",
+       "truth": 24,
+       "top": 24,
+       "pTop": 0.993,
+       "assigned": 24
+      }
+     ],
+     "changed": [
+      {
+       "detId": "badge-4",
+       "truth": 26,
+       "fixed": null,
+       "learned": null,
+       "p": 0.847,
+       "final": 26,
+       "how": "filled"
+      },
+      {
+       "detId": "badge-13",
+       "truth": 23,
+       "fixed": null,
+       "learned": null,
+       "p": 0.771,
+       "final": 23,
+       "how": "filled"
+      }
+     ],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "beaverranchLazy": {
+     "course": "beaverranchLazy",
+     "badges": 21,
+     "fixed": {
+      "read": 21,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 17,
+      "abstained": 4,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 21,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 0.999,
+     "pMin": 0.948,
+     "filled": [
+      {
+       "detId": "badge-3",
+       "truth": 13,
+       "top": 13,
+       "pTop": 1,
+       "assigned": 13
+      },
+      {
+       "detId": "badge-7",
+       "truth": 10,
+       "top": 10,
+       "pTop": 1,
+       "assigned": 10
+      },
+      {
+       "detId": "badge-10",
+       "truth": 20,
+       "top": 20,
+       "pTop": 1,
+       "assigned": 20
+      },
+      {
+       "detId": "badge-15",
+       "truth": 21,
+       "top": 21,
+       "pTop": 1,
+       "assigned": 21
+      }
+     ],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "beaverranchCapture": {
+     "course": "beaverranchCapture",
+     "badges": 21,
+     "fixed": {
+      "read": 21,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 17,
+      "abstained": 4,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 21,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 0.999,
+     "pMin": 0.948,
+     "filled": [
+      {
+       "detId": "badge-3",
+       "truth": 13,
+       "top": 13,
+       "pTop": 1,
+       "assigned": 13
+      },
+      {
+       "detId": "badge-7",
+       "truth": 10,
+       "top": 10,
+       "pTop": 1,
+       "assigned": 10
+      },
+      {
+       "detId": "badge-10",
+       "truth": 20,
+       "top": 20,
+       "pTop": 1,
+       "assigned": 20
+      },
+      {
+       "detId": "badge-15",
+       "truth": 21,
+       "top": 21,
+       "pTop": 1,
+       "assigned": 21
+      }
+     ],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "fountainhillsFull": {
+     "course": "fountainhillsFull",
+     "badges": 20,
+     "fixed": {
+      "read": 20,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 19,
+      "abstained": 1,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 20,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 0.978,
+     "filled": [
+      {
+       "detId": "badge-5",
+       "truth": 20,
+       "top": 20,
+       "pTop": 1,
+       "assigned": 20
+      }
+     ],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "fountainhillsLazy": {
+     "course": "fountainhillsLazy",
+     "badges": 20,
+     "fixed": {
+      "read": 20,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 18,
+      "abstained": 2,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 20,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 0.999,
+     "pMin": 0.915,
+     "filled": [
+      {
+       "detId": "badge-11",
+       "truth": 20,
+       "top": 20,
+       "pTop": 1,
+       "assigned": 20
+      },
+      {
+       "detId": "badge-12",
+       "truth": 6,
+       "top": 6,
+       "pTop": 1,
+       "assigned": 6
+      }
+     ],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    }
+   }
+  },
+  "perDigit": {
+   "features": [
+    "geoMeanDigitProb",
+    "posteriorMargin"
+   ],
+   "shipped": {
+    "features": [
+     "geoMeanDigitProb",
+     "posteriorMargin"
+    ],
+    "weights": [
+     6.205925641237462,
+     6.33085863590374
+    ],
+    "bias": -6.639088055204901,
+    "priorShift": 4.6913478822291435,
+    "trainedOn": {
+     "courses": [
+      "golden",
+      "lenard",
+      "townelake",
+      "heritage",
+      "alex",
+      "northpark"
+     ],
+     "badges": 108,
+     "syntheticBadges": 0,
+     "syntheticPerLabelPerCourse": 0,
+     "examples": 216,
+     "rightTops": 108,
+     "wrongTops": 0,
+     "hardNegatives": 108
+    },
+    "outOfCourse": {
+     "maxImpostorP": 0.473,
+     "impostorsAtPStar": 0,
+     "of": 108,
+     "unit": "dev hard negatives and wrong tops, scored by the fold that left their course out"
+    }
+   },
+   "reliability": [
+    {
+     "bin": "0-0.1",
+     "n": 108,
+     "meanP": 0.003,
+     "observed": 0
+    },
+    {
+     "bin": "0.1-0.5",
+     "n": 0,
+     "meanP": null,
+     "observed": null
+    },
+    {
+     "bin": "0.5-0.9",
+     "n": 0,
+     "meanP": null,
+     "observed": null
+    },
+    {
+     "bin": "0.9-1",
+     "n": 108,
+     "meanP": 0.997,
+     "observed": 1
+    }
+   ],
+   "maxImpostorP": 0.473,
+   "impostorsAtPStar": [],
+   "minRightTopP": 1,
+   "table": {
+    "golden": {
+     "course": "golden",
+     "badges": 18,
+     "fixed": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "lenard": {
+     "course": "lenard",
+     "badges": 18,
+     "fixed": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "townelake": {
+     "course": "townelake",
+     "badges": 18,
+     "fixed": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "heritage": {
+     "course": "heritage",
+     "badges": 18,
+     "fixed": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "alex": {
+     "course": "alex",
+     "badges": 18,
+     "fixed": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "northpark": {
+     "course": "northpark",
+     "badges": 18,
+     "fixed": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 18,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "seatacFull": {
+     "course": "seatacFull",
+     "badges": 27,
+     "fixed": {
+      "read": 27,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 27,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 27,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "seatacCapture": {
+     "course": "seatacCapture",
+     "badges": 27,
+     "fixed": {
+      "read": 27,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 27,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 27,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "beaverranchLazy": {
+     "course": "beaverranchLazy",
+     "badges": 21,
+     "fixed": {
+      "read": 21,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 21,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 21,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "beaverranchCapture": {
+     "course": "beaverranchCapture",
+     "badges": 21,
+     "fixed": {
+      "read": 21,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 21,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 21,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "fountainhillsFull": {
+     "course": "fountainhillsFull",
+     "badges": 20,
+     "fixed": {
+      "read": 20,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 20,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 20,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    },
+    "fountainhillsLazy": {
+     "course": "fountainhillsLazy",
+     "badges": 20,
+     "fixed": {
+      "read": 20,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "learned": {
+      "read": 20,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "bijection": {
+      "read": 20,
+      "abstained": 0,
+      "wrong": 0
+     },
+     "pMedian": 1,
+     "pMin": 1,
+     "filled": [],
+     "changed": [],
+     "conflicts": 0,
+     "overrides": 0
+    }
+   }
+  }
+ },
+ "diagnosis": {
+  "binary": {
+   "real 1..18": {
+    "n": 108,
+    "topRight": 98,
+    "features": [
+     "dice p10 0.8 p50 0.848",
+     "margin p10 0.009 p50 0.1"
+    ],
+    "readUnderRealOnlyModel": 54
+   },
+   "synthetic 1..9": {
+    "n": 196,
+    "topRight": 184,
+    "features": [
+     "dice p10 0.784 p50 0.869",
+     "margin p10 0.028 p50 0.114"
+    ],
+    "readUnderRealOnlyModel": 115
+   },
+   "synthetic 10..19": {
+    "n": 204,
+    "topRight": 193,
+    "features": [
+     "dice p10 0.805 p50 0.842",
+     "margin p10 0.009 p50 0.073"
+    ],
+    "readUnderRealOnlyModel": 77
+   },
+   "synthetic 20..27": {
+    "n": 120,
+    "topRight": 98,
+    "features": [
+     "dice p10 0.739 p50 0.779",
+     "margin p10 0.005 p50 0.031"
+    ],
+    "readUnderRealOnlyModel": 8
+   },
+   "real 1..9": {
+    "n": 54,
+    "topRight": 50,
+    "features": [
+     "dice p10 0.769 p50 0.866",
+     "margin p10 0.015 p50 0.103"
+    ],
+    "readUnderRealOnlyModel": 32
+   },
+   "real 10..18": {
+    "n": 54,
+    "topRight": 48,
+    "features": [
+     "dice p10 0.8 p50 0.844",
+     "margin p10 0.003 p50 0.079"
+    ],
+    "readUnderRealOnlyModel": 22
+   }
+  },
+  "digitBW": {
+   "real 1..18": {
+    "n": 108,
+    "topRight": 108,
+    "features": [
+     "minDigitDice p10 0.898 p50 1",
+     "minDigitMargin p10 0.112 p50 0.188",
+     "layoutMargin p10 0.236 p50 0.426"
+    ],
+    "readUnderRealOnlyModel": 107
+   },
+   "synthetic 1..9": {
+    "n": 196,
+    "topRight": 196,
+    "features": [
+     "minDigitDice p10 0.895 p50 0.975",
+     "minDigitMargin p10 0.087 p50 0.179",
+     "layoutMargin p10 0.176 p50 0.275"
+    ],
+    "readUnderRealOnlyModel": 175
+   },
+   "synthetic 10..19": {
+    "n": 204,
+    "topRight": 204,
+    "features": [
+     "minDigitDice p10 0.892 p50 0.969",
+     "minDigitMargin p10 0.086 p50 0.169",
+     "layoutMargin p10 0.408 p50 0.462"
+    ],
+    "readUnderRealOnlyModel": 178
+   },
+   "synthetic 20..27": {
+    "n": 120,
+    "topRight": 120,
+    "features": [
+     "minDigitDice p10 0.757 p50 0.86",
+     "minDigitMargin p10 0.064 p50 0.129",
+     "layoutMargin p10 0.297 p50 0.352"
+    ],
+    "readUnderRealOnlyModel": 44
+   },
+   "real 1..9": {
+    "n": 54,
+    "topRight": 54,
+    "features": [
+     "minDigitDice p10 0.898 p50 0.997",
+     "minDigitMargin p10 0.112 p50 0.188",
+     "layoutMargin p10 0.203 p50 0.299"
+    ],
+    "readUnderRealOnlyModel": 53
+   },
+   "real 10..18": {
+    "n": 54,
+    "topRight": 54,
+    "features": [
+     "minDigitDice p10 0.907 p50 1",
+     "minDigitMargin p10 0.112 p50 0.181",
+     "layoutMargin p10 0.426 p50 0.486"
+    ],
+    "readUnderRealOnlyModel": 54
+   }
+  },
+  "coverage": {
+   "real 1..18": {
+    "n": 108,
+    "topRight": 108,
+    "features": [
+     "ncc p10 0.995 p50 1",
+     "margin p10 0.063 p50 0.127"
+    ],
+    "readUnderRealOnlyModel": 106
+   },
+   "synthetic 1..9": {
+    "n": 196,
+    "topRight": 196,
+    "features": [
+     "ncc p10 0.968 p50 0.995",
+     "margin p10 0.062 p50 0.14"
+    ],
+    "readUnderRealOnlyModel": 196
+   },
+   "synthetic 10..19": {
+    "n": 204,
+    "topRight": 197,
+    "features": [
+     "ncc p10 0.949 p50 0.978",
+     "margin p10 0.027 p50 0.113"
+    ],
+    "readUnderRealOnlyModel": 182
+   },
+   "synthetic 20..27": {
+    "n": 120,
+    "topRight": 104,
+    "features": [
+     "ncc p10 0.763 p50 0.87",
+     "margin p10 0.037 p50 0.083"
+    ],
+    "readUnderRealOnlyModel": 39
+   },
+   "real 1..9": {
+    "n": 54,
+    "topRight": 54,
+    "features": [
+     "ncc p10 0.996 p50 1",
+     "margin p10 0.061 p50 0.152"
+    ],
+    "readUnderRealOnlyModel": 54
+   },
+   "real 10..18": {
+    "n": 54,
+    "topRight": 54,
+    "features": [
+     "ncc p10 0.995 p50 1",
+     "margin p10 0.085 p50 0.12"
+    ],
+    "readUnderRealOnlyModel": 52
+   }
+  }
+ },
+ "note": "Learned abstention refitted on real dev + synthetic 1..27 (scripts/badge-synthesis.mjs, 4 per label per dev course, scored out of course). NOT shipped: out of course, 24 of 108 digit-reader hard negatives reach P >= pStar (11 as 21, 5/6, 15/16), so its P is not calibrated for the cost rule. The shipped calibration stays the real-only fit."
+}

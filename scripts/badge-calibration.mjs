@@ -34,6 +34,7 @@ import { join, resolve } from 'node:path';
 import { devSprites } from './badge-coverage-sources.mjs';
 import { bakeCoverage, bakeDigits } from '../source/provider/scripts/generate-badge-glyph-templates.mjs';
 import { assignMinCost } from '../ports/s7route/match.mjs';
+import { measureDev, synthesize } from './badge-synthesis.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..');
 const require = createRequire(import.meta.url);
@@ -152,9 +153,9 @@ function examples(rows, reader) {
   for (const r of rows) {
     if (r.truth == null) continue;
     const top = topOf(reader, r.R, HOLE_LABELS);
-    out.push({ x: featuresOf(reader, r.R, top, HOLE_LABELS), y: top === r.truth ? 1 : 0, kind: 'top', course: r.course });
+    out.push({ x: featuresOf(reader, r.R, top, HOLE_LABELS), y: top === r.truth ? 1 : 0, kind: 'top', course: r.course, truth: r.truth, label: top });
     const rest = HOLE_LABELS.filter((L) => L !== r.truth), imp = topOf(reader, r.R, rest);
-    out.push({ x: featuresOf(reader, r.R, imp, rest), y: 0, kind: 'hard-negative', course: r.course });
+    out.push({ x: featuresOf(reader, r.R, imp, rest), y: 0, kind: 'hard-negative', course: r.course, truth: r.truth, label: imp });
   }
   return out;
 }
@@ -195,25 +196,51 @@ function bijection(rows, reader, model) {
 
 // ---- run -----------------------------------------------------------------------------------------------------
 const report = { costWrong: COST_WRONG, pStar: P_STAR, readers: {} };
-const devRows = {};
-for (const [course, attempt] of DEV) devRows[course] = collect(course, attempt, templatesFor(course));
+const devRows = {}, synRows = {}, looT = {};
+for (const [course, attempt] of DEV) { looT[course] = templatesFor(course); devRows[course] = collect(course, attempt, looT[course]); }
+// synthetic 1..27 composed from each dev course's own sprites, scored with the templates that leave that course out
+// (the same out-of-course scoring as its real badges); the per-digit reader cannot read a crop and takes none
+const SYN = process.argv.includes('--synthetic') ? Number(process.argv[process.argv.indexOf('--synthetic') + 1]) : 0;
+if (SYN) for (const [course, attempt] of DEV) {
+  const M = measureDev([[course, attempt]]);
+  synRows[course] = synthesize(M, HOLE_LABELS, SYN, [...course].reduce((a, c) => a * 31 + c.charCodeAt(0), 7) >>> 0).map((s, k) => ({
+    course, detId: `syn-${s.label}-${k}`, truth: s.label, synthetic: true, R: readerScores(s.raster, s.body, { digits: [] }, looT[course]), badge: null }));
+}
+const trainRows = (c, reader) => [...examples(devRows[c], reader), ...(reader === 'perDigit' ? [] : examples(synRows[c] ?? [], reader))];
 const valRows = {};
 for (const [course, attempt] of VALIDATION)
   valRows[course] = collect(course, attempt, templatesFor(null), JSON.parse(readFileSync(join(LABELS, `truth-${course}.json`), 'utf8')));
+
+// Diagnosis (dev only): each reader's top-read features on real 1..18, synthetic 1..18, synthetic 1x (10..19) and
+// synthetic 2x (20..27), and the share P >= P_STAR under a model fitted on the real dev badges alone.
+const diagnosis = {};
+if (SYN) for (const reader of READERS.filter((r) => r !== 'perDigit')) {
+  const realOnly = fitCalibrated(DEV.flatMap(([c]) => examples(devRows[c], reader)));
+  const groups = { 'real 1..18': DEV.flatMap(([c]) => devRows[c]), 'synthetic 1..9': [], 'synthetic 10..19': [], 'synthetic 20..27': [] };
+  for (const [c] of DEV) for (const r of synRows[c]) groups[r.truth <= 9 ? 'synthetic 1..9' : r.truth <= 19 ? 'synthetic 10..19' : 'synthetic 20..27'].push(r);
+  groups['real 1..9'] = groups['real 1..18'].filter((r) => r.truth <= 9); groups['real 10..18'] = groups['real 1..18'].filter((r) => r.truth >= 10);
+  diagnosis[reader] = Object.fromEntries(Object.entries(groups).map(([g, rows]) => {
+    const f = rows.map((r) => { const top = topOf(reader, r.R, HOLE_LABELS); return { x: featuresOf(reader, r.R, top, HOLE_LABELS), right: top === r.truth }; });
+    const q = (j, t) => r3([...f.map((e) => e.x[j])].sort((a, b) => a - b)[Math.floor(t * (f.length - 1))]);
+    return [g, { n: f.length, topRight: f.filter((e) => e.right).length, features: FEATURES[reader].map((name, j) => `${name} p10 ${q(j, 0.1)} p50 ${q(j, 0.5)}`), readUnderRealOnlyModel: f.filter((e) => prob(realOnly, e.x) >= P_STAR).length }];
+  }));
+}
+report.diagnosis = diagnosis;
 
 const shipped = {};
 for (const reader of READERS) {
   const cv = [];   // out-of-course predictions on dev
   const perCourse = {};
   for (const [held] of DEV) {
-    const train = DEV.filter(([c]) => c !== held).flatMap(([c]) => examples(devRows[c], reader));
+    const train = DEV.filter(([c]) => c !== held).flatMap(([c]) => trainRows(c, reader));
     const model = fitCalibrated(train);
     for (const e of examples(devRows[held], reader)) cv.push({ ...e, p: prob(model, e.x), pMix: probMix(model, e.x) });
     perCourse[held] = { model, rows: devRows[held] };
   }
-  const all = DEV.flatMap(([c]) => examples(devRows[c], reader));
+  const all = DEV.flatMap(([c]) => trainRows(c, reader));
   const model = fitCalibrated(all);
-  shipped[reader] = { features: FEATURES[reader], ...model, trainedOn: { courses: DEV.map(([c]) => c), badges: DEV.reduce((a, [c]) => a + devRows[c].length, 0), examples: all.length, rightTops: all.filter((e) => e.y === 1).length, wrongTops: all.filter((e) => e.kind === 'top' && e.y === 0).length, hardNegatives: all.filter((e) => e.kind === 'hard-negative').length } };
+  shipped[reader] = { features: FEATURES[reader], ...model, trainedOn: { courses: DEV.map(([c]) => c), badges: DEV.reduce((a, [c]) => a + devRows[c].length, 0), syntheticBadges: reader === 'perDigit' ? 0 : DEV.reduce((a, [c]) => a + (synRows[c]?.length ?? 0), 0), syntheticPerLabelPerCourse: reader === 'perDigit' ? 0 : SYN, examples: all.length, rightTops: all.filter((e) => e.y === 1).length, wrongTops: all.filter((e) => e.kind === 'top' && e.y === 0).length, hardNegatives: all.filter((e) => e.kind === 'hard-negative').length },
+    outOfCourse: { maxImpostorP: r3(Math.max(...cv.filter((x) => x.y === 0).map((x) => x.p))), impostorsAtPStar: cv.filter((x) => x.y === 0 && x.p >= P_STAR).length, of: cv.filter((x) => x.y === 0).length, unit: 'dev hard negatives and wrong tops, scored by the fold that left their course out' } };
   const table = {};
   const summarize = (course, rows, m) => {
     const fixedReads = rows.map((r) => r.fixed[reader]);
@@ -232,7 +259,7 @@ for (const reader of READERS) {
   // reliability on the out-of-course dev predictions (tops and hard negatives)
   // reliability on the out-of-course dev predictions: the 1:1 training mix (tops and hard negatives, before the prior shift)
   const bins = [[0, 0.1], [0.1, 0.5], [0.5, 0.9], [0.9, 1.0001]].map(([lo, hi]) => { const e = cv.filter((x) => x.pMix >= lo && x.pMix < hi); return { bin: `${lo}-${Math.min(hi, 1)}`, n: e.length, meanP: e.length ? r3(e.reduce((a, x) => a + x.pMix, 0) / e.length) : null, observed: e.length ? r3(e.filter((x) => x.y === 1).length / e.length) : null }; });
-  report.readers[reader] = { features: FEATURES[reader], shipped: shipped[reader], reliability: bins, maxImpostorP: r3(Math.max(...cv.filter((x) => x.y === 0).map((x) => x.p))), minRightTopP: r3(Math.min(...cv.filter((x) => x.y === 1).map((x) => x.p))), table };
+  report.readers[reader] = { features: FEATURES[reader], shipped: shipped[reader], reliability: bins, maxImpostorP: r3(Math.max(...cv.filter((x) => x.y === 0).map((x) => x.p))), impostorsAtPStar: cv.filter((x) => x.y === 0 && x.p >= P_STAR).map((x) => ({ course: x.course, truth: x.truth, read: x.label, kind: x.kind, p: r3(x.p), x: x.x.map(r3) })), minRightTopP: r3(Math.min(...cv.filter((x) => x.y === 1).map((x) => x.p))), table };
 }
 
 if (process.argv.includes('--write')) {
@@ -246,6 +273,10 @@ if (process.argv.includes('--write')) {
 }
 const out = process.argv.includes('--report') ? process.argv[process.argv.indexOf('--report') + 1] : null;
 if (out) writeFileSync(out, JSON.stringify(report, null, 1));
+for (const [reader, d] of Object.entries(diagnosis)) {
+  console.log(`\ndiagnosis ${reader}:`);
+  for (const [g, v] of Object.entries(d)) console.log(`  ${g.padEnd(17)} n ${v.n} top right ${v.topRight} | ${v.features.join(' | ')} | read under real-only model ${v.readUnderRealOnlyModel}`);
+}
 for (const reader of READERS) {
   const R = report.readers[reader];
   console.log(`\n${reader}: weights ${R.shipped.weights.map(r3).join(', ')} bias ${r3(R.shipped.bias)} prior shift ${r3(R.shipped.priorShift)}; out-of-course max impostor P ${R.maxImpostorP}, min right-top P ${R.minRightTopP}; reliability ${R.reliability.map((b) => `${b.bin}: n ${b.n} P ${b.meanP} obs ${b.observed}`).join(' | ')}`);
