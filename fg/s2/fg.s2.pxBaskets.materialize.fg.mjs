@@ -120,5 +120,6 @@ const frames = framed((s) => {
 export default materializeGuarantee({
   stage: 'S2', noun: { one: 'basket', many: 'baskets' }, producedBy: PRODUCED_BY, units: UNITS,
   serialize, serializeCalls: ['fn.tk.sha256'], witness, checks: [rasterRecount], layered: true, assemble, artifacts, frames,
+  emptyIsCondition: 'S2 no baskets: no basket shell family on this image (S3 still runs, on the pinned px tee bounds)',
   body: (s) => ({ basketCount: s.serialized.length, familyCount: s.parts[CAPTURED].family.members.length, shellMemberCount: s.parts[CAPTURED].shellFamily.members.length, totals: s.totals, witness: s.witnessSummary, layerIntegrity: s.layerIntegrity })
 });
