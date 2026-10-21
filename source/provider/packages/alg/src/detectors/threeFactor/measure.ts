@@ -20,6 +20,7 @@ import {
 import { predictProbs, type LogisticModel } from './digits/logisticInference';
 import { readCourseBadges, type BadgeReading, type DigitScorer } from './digits/readBadges';
 import { DEFAULT_DIGITS_KNOBS, type DigitsKnobs } from './digits/segment';
+import { HOLE_LABELS, isHoleLabel } from './digits/holeLabels';
 import { DEFAULT_HSV_KNOBS, type HsvKnobs } from './raster';
 import {
 	computeRibbonSupport,
@@ -164,7 +165,7 @@ function darkFraction(
 
 function labelCandidates(reading: BadgeReading): { label: number; confidence: number }[] {
 	if (!reading.digits.length) return [];
-	const candidates = Array.from({ length: 18 }, (_, index) => index + 1)
+	const candidates = HOLE_LABELS
 		.filter((label) => String(label).length === reading.digits.length)
 		.map((label) => {
 			const confidence = [...String(label)].reduce(
@@ -229,6 +230,12 @@ export function classifyReading(
 	if (digitCount === 0) return { label: null, bestLabel, abstentionReason: 'empty-glyph' };
 	if (digitCount > 2) return { label: null, bestLabel, abstentionReason: 'too-many-digits' };
 	if (rawLabel[0] === '0') return { label: null, bestLabel, abstentionReason: 'leading-zero' };
+	// The digits read a well-formed number outside the hole-label vocabulary
+	// (digits/holeLabels.ts). It is never projected onto the nearest
+	// in-vocabulary label (that is how a "24" became "14" while the
+	// vocabulary was 1..18): the read abstains, and bestLabel keeps what the
+	// projection would have said.
+	if (!isHoleLabel(Number(rawLabel))) return { label: null, bestLabel, abstentionReason: 'out-of-vocabulary' };
 	// C4 — derived confidence floor, restoring old-stuff's first-class
 	// abstention. bestLabel is retained either way so the receipt can show
 	// what the detector would have said.

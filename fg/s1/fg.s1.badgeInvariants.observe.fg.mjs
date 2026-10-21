@@ -14,8 +14,12 @@
  *     exceptions either way): its frame is then not its own S1 bright part,
  *     and the first bright part is a digit (never use it as the centre);
  *   - the badge bbox centre and its dark plate centre agree within 1 px.
- * A full view carries every label 1..18 once; a partial (zoomed) view a
- * subset, each label at most once.
+ * A full view carries every label 1..N once, N its badge count (18 on the
+ * dev courses, 20, 21 and 27 elsewhere); a partial (zoomed) view a subset,
+ * each label at most once. S1 cannot know N from outside, so a view is full
+ * when it has at least as many badges as its largest label. The reader
+ * guarantees the vocabulary (provider digits/holeLabels.ts); here a label is
+ * in range when it is a whole number from 1.
  */
 import { guarantee, pipe, read, step } from '../compose.mjs';
 import { framed, judged, published, unitful } from '../mixins.mjs';
@@ -44,15 +48,16 @@ export function observeBadges(badges) {
   });
   const labels = rows.map((r) => r.label);
   const dup = [...new Set(labels.filter((l, i) => labels.indexOf(l) !== i))];
-  const outside = labels.filter((l) => !(l && /^\d+$/.test(l) && +l >= 1 && +l <= 18));
-  const full = rows.length === 18;
-  const missing = full ? Array.from({ length: 18 }, (_, i) => String(i + 1)).filter((l) => !labels.includes(l)) : null;
+  const outside = labels.filter((l) => !(l && /^\d+$/.test(l) && +l >= 1));
+  const largest = Math.max(0, ...labels.filter((l) => l && /^\d+$/.test(l)).map(Number));
+  const full = largest > 0 && rows.length >= largest;
+  const missing = full ? Array.from({ length: rows.length }, (_, i) => String(i + 1)).filter((l) => !labels.includes(l)) : null;
   const sizeOffButFramed = rows.filter((r) => r.sizeMatches === false && r.framePart).map((r) => r.label);
   const framelessButSized = rows.filter((r) => r.sizeMatches === true && !r.framePart).map((r) => r.label);
   return {
     rows,
     findings: {
-      view: full ? 'full (18 badges)' : `partial (${rows.length} badges)`,
+      view: full ? `full (${rows.length} badges)` : `partial (${rows.length} badges)`,
       labelsUnique: dup.length === 0, duplicates: dup, labelsInRange: outside.length === 0, outOfRange: outside,
       allLabelsPresent: full ? missing.length === 0 : null, missing,
       mergedWithNeighbour: rows.filter((r) => r.mergedWithNeighbour).map((r) => r.label),

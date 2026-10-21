@@ -15,7 +15,8 @@
  * (the SAME `localImage` slot and the SAME badge bbox the current per-digit
  * reader consumes — see g1.badgeGlyphTemplate.ts), it samples a coarse
  * bright/dark mask, normalizes it to a small canonical canvas, and scores it
- * against 18 pre-normalized canonical hole-number templates by a
+ * against pre-normalized canonical hole-number templates (one per label of
+ * digits/holeLabels.ts) by a
  * translation-tolerant (shifted) Dice coefficient. Abstention is
  * first-class: a low top score or a thin top-vs-runner-up margin refuses to
  * label rather than guessing (house rule: loud UNKNOWN over silent
@@ -70,6 +71,7 @@ export interface BadgeGlyphTemplateKnobs {
     readonly maxShiftPx: number;
 }
 export declare const DEFAULT_BADGE_GLYPH_TEMPLATE_KNOBS: BadgeGlyphTemplateKnobs;
+export declare function brightNeutral(r: number, g: number, b: number, threshold: number): boolean;
 /**
  * Sample a badge crop's foreground, tight-crop it, and re-draw it centered
  * on the canonical normalized canvas (nearest-neighbor, preserving aspect
@@ -113,7 +115,7 @@ export interface BadgeGlyphTemplateClassification {
  */
 export declare function classifyNormalizedGlyph(candidate: NormalizedGlyphMask | null, templates: readonly BadgeGlyphTemplateEntry[], knobs?: BadgeGlyphTemplateKnobs): BadgeGlyphTemplateClassification;
 /**
- * Classify one badge crop against the 18-template vocabulary. Structurally
+ * Classify one badge crop against the template vocabulary. Structurally
  * incapable of emitting a label outside `templates` — the vocabulary
  * constraint the ledger's row 22/23 forensics found the per-digit reader
  * lacks.

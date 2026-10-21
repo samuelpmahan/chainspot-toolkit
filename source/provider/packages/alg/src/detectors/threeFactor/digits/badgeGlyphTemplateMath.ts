@@ -15,7 +15,8 @@
  * (the SAME `localImage` slot and the SAME badge bbox the current per-digit
  * reader consumes — see g1.badgeGlyphTemplate.ts), it samples a coarse
  * bright/dark mask, normalizes it to a small canonical canvas, and scores it
- * against 18 pre-normalized canonical hole-number templates by a
+ * against pre-normalized canonical hole-number templates (one per label of
+ * digits/holeLabels.ts) by a
  * translation-tolerant (shifted) Dice coefficient. Abstention is
  * first-class: a low top score or a thin top-vs-runner-up margin refuses to
  * label rather than guessing (house rule: loud UNKNOWN over silent
@@ -102,7 +103,7 @@ function rgbaAt(image: RgbaBitmap, x: number, y: number): readonly [number, numb
 // A pixel is "glyph foreground" when it is bright AND roughly neutral
 // (small max-min channel spread) — the old classifier's own test for a
 // white/near-white printed digit against a colored badge plate.
-function brightNeutral(r: number, g: number, b: number, threshold: number): boolean {
+export function brightNeutral(r: number, g: number, b: number, threshold: number): boolean {
 	const max = Math.max(r, g, b);
 	const min = Math.min(r, g, b);
 	return max >= threshold && max - min <= 90;
@@ -308,7 +309,7 @@ export function classifyNormalizedGlyph(
 }
 
 /**
- * Classify one badge crop against the 18-template vocabulary. Structurally
+ * Classify one badge crop against the template vocabulary. Structurally
  * incapable of emitting a label outside `templates` — the vocabulary
  * constraint the ledger's row 22/23 forensics found the per-digit reader
  * lacks.
