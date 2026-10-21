@@ -291,6 +291,21 @@ export function createEarlyStore({ forkRoot, source, getBoard, dist, restorePxC,
       });
     }
   });
+  // S1 crosscheck (Sam, 2026-10-21: "Yes, make readers crosscheck"): the per-digit reader sets the label, the coverage
+  // digit reader checks it (confirmed / disagree, the per-digit label kept) and fills a label the per-digit reader could
+  // not give when its own P >= p* (filled); the B+W digit and whole-number coverage readers are recorded as witnesses.
+  store.register('fn.Badge.crosscheck', {
+    inParts: ['localImage', 'viewport', 'badges'], outParts: ['px.badges.crosscheck'],
+    note: "every S1 badge read by every reader, with the coverage digit reader's verdict on the per-digit label (provider g1.badgeCrosscheck)",
+    calculate: (io) => {
+      const { crosscheckBadges } = dist('detectors/threeFactor/features/g1.badgeCrosscheck');
+      const image = io.in('localImage'), { topPx } = io.in('viewport');
+      const rows = crosscheckBadges({ width: image.width, height: image.height, data: image.data }, io.in('badges'), topPx);
+      const count = (v) => rows.filter((r) => r.verdict === v).length;
+      const totals = { badges: rows.length, confirmed: count('confirmed'), disagree: count('disagree'), filled: count('filled'), unread: count('unread') };
+      return { 'px.badges.crosscheck': { badges: rows, totals, unit: 'per badge: labels (hole numbers), P (learned confidence 0..1), bbox (px); totals: count (badges)', emits: totals } };
+    }
+  });
   store.register('fn.provider.S1.classifyBadgeAgainstTemplates', {
     calculate: ({ args: { bitmap, read, topPx } }) => {
       const { classifyBadgeAgainstTemplates } = dist('detectors/threeFactor/features/g1.badgeGlyphTemplate');
