@@ -7,6 +7,7 @@
  *   pxset         a PixelSet (fg/pxset.mjs)                             -> pxset
  *   routeMatchView { schema: 'nctk-s7-trace-view@1', rows, ... }       -> the course picture with the traces, bends before / after and testimony (fg/s7trace/traceViewRender.mjs)
  *   routeTable    { schema: 'nctk-s7-route-table@1', matrix, ... }      -> raster heatmap holes x baskets + legend (fg/s7route/routeRender.mjs)
+ *   shellShape    { schema: 'chainspot-basket-shell-shape@1', overlap, learned, carried } -> agreement / learned / carried panels + ledger (S2)
  *   capture       { schema: 'nctk-capture@1' | 'nctk-capture-view@1', tiles, links, ... } -> the course raster with its tiles,
  *                 seams, links and badges (fg/stitch/captureRender.mjs)
  *   raster        { rgba, widthPx, heightPx }                          -> raster (size; pixels come from the viewer)
@@ -39,7 +40,7 @@ const labelOf = (it, i) => it.label ?? it.name ?? it.candidate ?? it.hole ?? Str
 const scalarFields = (o) => Object.fromEntries(Object.entries(o).filter(([, v]) => isScalar(v) || (Array.isArray(v) && v.length <= 6 && v.every(isScalar))).map(([k, v]) => [k, Array.isArray(v) ? v.join(', ') : v]));
 const bboxOf = (it) => (Array.isArray(it.bbox) && it.bbox.length === 4 ? it.bbox : null);
 
-export const PART_KINDS = Object.freeze(['pxset', 'raster', 'alphaProfile', 'plane', 'pxsets', 'boxes', 'points', 'rows', 'strips', 'scalar', 'object', 'pathLoss', 'pathProfile', 'hallwayScene', 'pairFeatures', 'routeTable', 'routeMatchView', 'courseGeometry', 'capture']);   // strips: S5-B; alphaProfile: S7-A; pathLoss, pathProfile: S6-B; hallwayScene: S7-B; pairFeatures: S6 scoring; routeTable: S7 scoring
+export const PART_KINDS = Object.freeze(['pxset', 'raster', 'alphaProfile', 'plane', 'pxsets', 'boxes', 'points', 'rows', 'strips', 'scalar', 'object', 'pathLoss', 'pathProfile', 'hallwayScene', 'pairFeatures', 'routeTable', 'routeMatchView', 'courseGeometry', 'capture', 'shellShape']);   // strips: S5-B; alphaProfile: S7-A; pathLoss, pathProfile: S6-B; hallwayScene: S7-B; pairFeatures: S6 scoring; routeTable: S7 scoring
 
 /** Which case of the union a value is (the dispatch every default property can share). */
 export function partKind(v) {
@@ -51,6 +52,7 @@ export function partKind(v) {
   if (isCourseGeometry(v)) return 'courseGeometry';   // export block: the exported holes over the course
   if (isCapture(v)) return 'capture';   // S0 capture block: the tiles behind the course raster
   if (isTraceView(v)) return 'routeMatchView';   // S7 trace lane block: the traces over the course
+  if (v && typeof v === 'object' && v.schema === 'chainspot-basket-shell-shape@1') return 'shellShape';   // S2: px.baskets.shellShape
   if (v && typeof v === 'object' && v.rgba && Number.isInteger(v.widthPx) && Number.isInteger(v.heightPx)) return 'raster';
   if (Array.isArray(v)) {
     const it = v.find((x) => x && typeof x === 'object');
@@ -80,7 +82,8 @@ export function renderValue(address, v, dims = null, depth = 0, opts = {}) {
     case 'hallwayScene': return renderHallwayScene(address, v);   // S7 trace lane block: luminance, mask, BasketPoints
     case 'routeMatchView': return renderTraceView(address, v, dims, { canvas: s6Canvas, deflate: opts.deflate ?? null });   // S7 trace lane block: routes, bends before / after, testimony over the course
     case 'courseGeometry': return renderCourseGeometry(address, v, dims, { canvas: s6Canvas, deflate: opts.deflate ?? null });   // export block: holes, bends, badges, candidates over the course
-    case 'capture': return renderCapture(address, v, dims, { canvas: s6Canvas, deflate: opts.deflate ?? null });   // S0 capture block: tiles, seams, links, badges over the course
+    case 'capture': return renderCapture(address, v, dims, { canvas: s6Canvas, deflate: opts.deflate ?? null });
+    case 'shellShape': return renderShellShape(address, v);   // S2 block below   // S0 capture block: tiles, seams, links, badges over the course
     case 'routeTable': return renderRouteTable(address, v, { canvas: s6Canvas });   // S7 scoring block: holes x baskets heatmap
     case 'pxsets': {
       const px = []; for (const it of v) for (const i of it.px) px.push(i);
@@ -155,6 +158,31 @@ function stripPng(strip, scale) {
     for (const m of strip.marks ?? []) for (let e = -3; e <= 3; e++) { put(k, m.at[0] + e / scale, m.at[1], m.color); put(k, m.at[0], m.at[1] + e / scale, m.color); }
   });
   return { width: W, height: H, png: base64(encodePngRgb({ width: W, height: H, rgb })) };
+}
+
+// ====================================================================================================================
+// S2 block: px.baskets.shellShape (provider Basket.learnShellShape). Three panels in the sprite-frame window (the body
+// padded by its own size): how many members are dark at each px (grey ramp; red where at least the agreement count),
+// the learned shape and the carried dev prior (white = frame px, blue = the body bbox), and a ledger of the source, the
+// agreement count and the learned-vs-carried comparison.
+// ====================================================================================================================
+function renderShellShape(address, v) {
+  const { window: win, agree, memberCount } = v.overlap, n = win.width * win.height, need = v.agreementCount;
+  const [bw, bh] = [win.width / 3, win.height / 3];
+  const body = (x, y) => x >= win.bodyX && x < win.bodyX + bw && y >= win.bodyY && y < win.bodyY + bh;
+  const panel = (paint) => { const rgb = new Uint8Array(n * 3); for (let i = 0; i < n; i++) { const c = paint(i, i % win.width, Math.floor(i / win.width)); rgb[i * 3] = c[0]; rgb[i * 3 + 1] = c[1]; rgb[i * 3 + 2] = c[2]; } return { origin: [0, 0], widthPx: win.width, heightPx: win.height, rgb }; };
+  const shapeSet = (g) => { const s = new Set(); if (!g) return s; const [l, t, r] = g.margins, w = bw + l + r; for (const o of g.offsets) { const x = o % w; s.add((win.bodyY - t + (o - x) / w) * win.width + win.bodyX - l + x); } return s; };
+  const shapePanel = (set) => panel((i, x, y) => (set.has(i) ? [255, 255, 255] : body(x, y) ? [40, 70, 140] : [24, 24, 24]));
+  const heat = panel((i) => { const a = memberCount ? agree[i] / memberCount : 0; return agree[i] >= need && memberCount ? [230, 40, 40] : [Math.round(a * 200), Math.round(a * 200), Math.round(a * 200)]; });
+  const strips = { scale: 3, strips: [{ label: `${address}#overlap|learned|carried`, panels: [heat, { ...shapePanel(shapeSet(v.learned)), origin: [0, 0] }, shapePanel(shapeSet(v.carried))] }],
+    legend: [{ color: [230, 40, 40], meaning: `dark in >= ${need} of ${memberCount} members (the agreement)` }, { color: [160, 160, 160], meaning: 'grey ramp: share of members dark at the px' },
+      { color: [255, 255, 255], meaning: 'frame px of the shape (panel 2 learned, panel 3 carried prior)' }, { color: [40, 70, 140], meaning: 'the bright body bbox' }] };
+  const parts = [{ address, kind: 'ledger', data: { rows: Object.entries({ source: v.source, memberCount, agreementCount: need, agreementMin: v.agreementMin, margins: v.margins?.join(', ') ?? null,
+    learnedMargins: v.learned?.margins.join(', ') ?? null, learnedPx: v.learned?.offsets.length ?? null, carriedMargins: v.carried.margins.join(', '), carriedPx: v.carried.offsets.length, carriedFromMembers: v.carried.members,
+    learnedCondition: v.learnedCondition, ...(v.comparison ? { marginsAgree: v.comparison.marginsAgree, sharedPx: v.comparison.sharedPx, iou: Number(v.comparison.iou.toFixed(4)) } : {}) }).map(([field, value]) => ({ field, value })) } },
+    { address: `${address}#legend`, kind: 'ledger', data: { rows: strips.legend.map((l) => ({ colour: `rgb(${l.color.join(', ')})`, meaning: l.meaning })) } },
+    { address: strips.strips[0].label, kind: 'raster', data: stripPng(strips.strips[0], strips.scale) }];
+  return { kind: 'shellShape', parts };
 }
 
 /** A flipbook page for one Part (fg/guarantee.mjs frame shape). */

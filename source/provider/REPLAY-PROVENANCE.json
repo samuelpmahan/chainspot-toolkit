@@ -2,8 +2,8 @@
   "schema": "chainspot-bundled-provider-v1",
   "sourceRepository": "samuelpmahan/ChainSpot",
   "sourceCommit": "5433854c72b1dc5aa420934d91e16458c2abe09f",
-  "sourceAlgSha256": "aab0cd1359f698b307c967d862947a10c09e18c6e63c12d03863009bdcb30502",
-  "compiledAlgSha256": "8c2be6bd97cf9d3bea2357da4726fa6a260bf5e6c35aa38f643875fed2315f03",
+  "sourceAlgSha256": "a05099692b883b7bfbe71d992b47839a4a21f83e9738674417121d62718bcbcb",
+  "compiledAlgSha256": "894f9c2f06d3af7975b59a12e4dc27bf375d41f14e56e3a5a7f00a78cc06f0ec",
   "scope": "Hash of sorted relative file paths and SHA-256 content hashes: .ts/.json/.yaml under packages/alg/src and .js/.json under packages/alg/dist. Git metadata is not included in the core archive.",
   "localPatches": [
     "lane/fastA: output-identical speedups of packages/alg (smartBasket occlusion mask, tee-ring separable dilation, components inlined neighbours, native sha256 under Node, tee-recovery fit typed arrays); verified identical S0-S4 evidence on golden and heritage",
@@ -11,6 +11,7 @@
     "lane/badge27: a second whole-glyph reader beside the binary one, on anti-aliased glyph coverage (digits/badgeCoverageTemplateMath.ts, features/g1.badgeCoverageTemplate.ts, assets/badge-coverage-templates.json from dev-course badge sprites); not an engine unit, no run changes",
     "lane/badge27: a black-and-white digit reader (digits/badgeDigitTemplateMath.ts, features/g1.badgeDigitTemplate.ts, assets/badge-digit-templates.json from dev-course badge sprites), not an engine unit; labEndpoint's label candidates use the shared 1..27 vocabulary",
     "lane/badge27: learned abstention for the badge readers (digits/badgeReaderCalibration.ts, assets/badge-reader-calibration.json fitted offline by the toolkit's scripts/badge-calibration.mjs), badgeDigitScoreTable; the template baker is importable; nothing a run uses",
-    "session: S2 Basket.findPx reads px.components before its no-shell-family early exit (its tick declares the read with exact access): an image with no basket shell family records zero baskets instead of failing the run (BeaverRanch-Gold-full)"
+    "session: S2 Basket.findPx reads px.components before its no-shell-family early exit (its tick declares the read with exact access): an image with no basket shell family records zero baskets instead of failing the run (BeaverRanch-Gold-full)",
+    "session: S2 learns and carries in the basket frame shape (Basket.learnShellShape -> px.baskets.shellShape): members' dark frames overlapped in sprite frame, the >= 75 % agreeing component enclosing the body gives the margins and frame px; the dev-course prior (assets/basket-shell.json, scripts/basket-shell-prior.mjs in the toolkit) is used when no agreeing frame encloses the body. Replaces the modal smallest-enclosing-component vote, which tied when every member's shell touched dark canopy (BeaverRanch-Gold-full: 18 of 18). Same margins (2,3,2,3) and frame px on every dev course"
   ]
 }
