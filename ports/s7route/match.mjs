@@ -20,7 +20,7 @@
 import { routeSensorAt, ribbonContrastAt, ROUTE, badgeMidAlongPx, badgeMidOf } from './routeSpace.mjs';
 import { refineVertices, arange } from '../s7trace/hallway.mjs';
 import { refineBendsOf } from './bends.mjs';
-import { kCellAt, kChainAt, legContrastsOf } from './kbends.mjs';
+import { kCellAt, kChainAt, legContrastsOf, KBENDS } from './kbends.mjs';
 import { straightClaimsOf, neighbourhoodsOf, foreignRingsOf } from './seq.mjs';
 import { ringCrossed, legClearance } from './kbends.mjs';
 
@@ -68,6 +68,36 @@ export function assignMinCost(cost) {
   const pairs = [];
   for (let j = 1; j <= M; j++) if (p[j]) { const [i, jj] = T ? [j - 1, p[j] - 1] : [p[j] - 1, j - 1]; if (Number.isFinite(cost[i][jj])) pairs.push([i, jj]); }
   return pairs.sort((a, b) => a[0] - b[0]);
+}
+
+/**
+ * assignMinCost with the dual potentials: { pairs, price(i, k) } where price is in MAX form for score = -cost: a cell with a score
+ * at or below its price cannot enter an optimal assignment (u_i + v_k <= cost_ik for every cell, equality on the pairs).
+ */
+export function assignWithDuals(cost) {
+  const n = cost.length, m = n ? cost[0].length : 0;
+  if (!n || !m) return { pairs: [], price: () => Infinity };
+  const T = n > m, C = T ? cost[0].map((_, j) => cost.map((row) => row[j])) : cost;
+  const N = C.length, M = C[0].length, BIG = 1e9;
+  const u = new Array(N + 1).fill(0), v = new Array(M + 1).fill(0), p = new Array(M + 1).fill(0), way = new Array(M + 1).fill(0);
+  for (let i = 1; i <= N; i++) {
+    p[0] = i; let j0 = 0;
+    const minv = new Array(M + 1).fill(Infinity), used = new Array(M + 1).fill(false);
+    do {
+      used[j0] = true; const i0 = p[j0]; let delta = Infinity, j1 = 0;
+      for (let j = 1; j <= M; j++) if (!used[j]) {
+        const cur = (Number.isFinite(C[i0 - 1][j - 1]) ? C[i0 - 1][j - 1] : BIG) - u[i0] - v[j];
+        if (cur < minv[j]) { minv[j] = cur; way[j] = j0; }
+        if (minv[j] < delta) { delta = minv[j]; j1 = j; }
+      }
+      for (let j = 0; j <= M; j++) if (used[j]) { u[p[j]] += delta; v[j] -= delta; } else minv[j] -= delta;
+      j0 = j1;
+    } while (p[j0] !== 0);
+    do { const j1 = way[j0]; p[j0] = p[j1]; j0 = j1; } while (j0);
+  }
+  const pairs = [];
+  for (let j = 1; j <= M; j++) if (p[j]) { const [i, jj] = T ? [j - 1, p[j] - 1] : [p[j] - 1, j - 1]; if (Number.isFinite(cost[i][jj])) pairs.push([i, jj]); }
+  return { pairs: pairs.sort((a, b) => a[0] - b[0]), price: (i, k) => (T ? -(u[k + 1] + v[i + 1]) : -(u[i + 1] + v[k + 1])) };
 }
 
 const contrast = (S, V, W) => { const [c] = ribbonContrastAt(S, V, W); return c === null ? MATCH.noReadingLum : c; };
@@ -179,7 +209,9 @@ export const MATCH_STEPS = Object.freeze({
   placeBends: (S, V, W, straight, opts = {}) => refineBendsOf(S, V, W, { straight, ...opts }),
   contrast: (S, V, W) => contrast(S, V, W),
   // rule set option kBends 'bottleneck' (kbends.mjs): every leg of a route read alone (the K-bend search's one measure)
-  kLegs: (S, V, W) => legContrastsOf(S, V, W)
+  kLegs: (S, V, W) => legContrastsOf(S, V, W),
+  // the same reads batched: every route of one grid, refine step or sweep in one store call
+  kLegsMany: (S, Vs, W) => Vs.map((V) => legContrastsOf(S, V, W))
 });
 
 /**
@@ -276,9 +308,9 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
   const kb = rules.kBends === 'bottleneck', seq = rules.kBends === 'seq';
   // kBends: every cell's K <= 1 routes under the weakest-leg cost (one profiled call per cell), else the table's contrast
   const startOf = (hole) => starts.holes.find((h) => String(h.hole) === String(hole));
-  const legsOf = (Sc, V, Wd) => steps.kLegs(Sc, V, Wd);
-  const kCells = kb ? holes.map((hole, i) => table.baskets.map((b, k) => kCellAt(S, startOf(hole), b.point ?? table.rows[i].cells[k].contrast.verts.at(-1), W, { legsOf }))) : null;
-  const sq = seq ? seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf }) : null;
+  const legsOf = (Sc, V, Wd) => steps.kLegs(Sc, V, Wd), legsMany = (Sc, Vs, Wd) => steps.kLegsMany(Sc, Vs, Wd);
+  const kCells = kb ? holes.map((hole, i) => table.baskets.map((b, k) => kCellAt(S, startOf(hole), b.point ?? table.rows[i].cells[k].contrast.verts.at(-1), W, { legsOf, legsMany }))) : null;
+  const sq = seq ? seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsMany }) : null;
   const score = sq ? sq.score : kb ? kCells.map((row, i) => row.map((x, k) => (x.best.bottleneck === null ? MATCH.noReadingLum : x.best.bottleneck) + (table.onAxisPrior[i]?.[k] ?? 0)))
     : table.contrastMatrix.map((row, i) => row.map((c, k) => (c === null ? MATCH.noReadingLum : c) + (table.onAxisPrior[i]?.[k] ?? 0)));
   const pairs = sq ? sq.pairs : assignMinCost(score.map((row) => row.map((v) => -v)));
@@ -349,45 +381,81 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
  * chain when the sensor rejects that route; one-to-one over those cells. A hole left without a basket is assigned among the
  * baskets still free by its K <= 1 routes. -> { pairs, score, route: { [hole]: verts }, why, record, summary }
  */
-function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf }) {
+function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsMany }) {
   const bp = table.baskets.map((b, k) => b.point ?? table.rows[0].cells[k].contrast.verts.at(-1)), starts = holes.map((h) => startOf(h));
   const claims = straightClaimsOf(starts, bp, S.R1, verdicts ?? null, []);
   const nb = neighbourhoodsOf(starts.filter((s) => claims.claims[s.hole] === undefined), bp, claims.claimed);
-  const score = holes.map(() => bp.map(() => -Infinity)), route = {}, why = {}, record = {}, cells = {};
+  const score = holes.map(() => bp.map(() => -Infinity)), route = {}, why = {}, record = {}, cells = {}, pend = [], cap = holes.map(() => -Infinity), rejectedOf = {};
   holes.forEach((h, i) => {
     if (claims.claims[h] !== undefined) { const k = claims.claims[h]; score[i][k] = 0; route[`${h}@${k}`] = [starts[i].S, bp[k]]; why[h] = claims.rows.find((r) => r.hole === h).why; record[h] = { claimed: k }; return; }
     const cands = nb[h] ?? [];
     record[h] = { candidates: cands.map((c) => ({ basket: c.basket, rank: c.rank, fwdRank: c.fwdRank, nextRank: c.nextRank })) };
-    const rejected = [];
+    const rejected = [], capOf = { v: -Infinity };
     for (const c of cands) {
-      const k = c.basket, foreign = foreignRingsOf(starts[i], bp, k, S.R1), kc = kCellAt(S, starts[i], bp[k], W, { legsOf, foreign });
+      const k = c.basket, foreign = foreignRingsOf(starts[i], bp, k, S.R1), kc = kCellAt(S, starts[i], bp[k], W, { legsMany, foreign });
+      if (kc.firstCap > capOf.v) capOf.v = kc.firstCap;
       const s1 = kc.best.bottleneck === null ? null : steps.sensor(S, kc.best.verts, W);
-      let best = kc.best.bottleneck === null ? null : kc.best;
-      if (!s1 || s1.passFrac < MATCH.tau) {
-        // the chain replaces the K <= 1 route when its weakest leg AND its sensor reading are higher (a bend hidden under a sprite
-        // has unread legs: the weakest leg alone cannot place it)
-        const ch = kChainAt(S, starts[i], bp[k], W, { legsOf, one: kc.one, foreign, sensorOf: (V) => steps.sensor(S, V, W).passFrac });
-        if (ch && ch.bottleneck !== null && (!best || (ch.bottleneck > best.bottleneck && steps.sensor(S, ch.verts, W).passFrac > s1.passFrac))) best = ch;
-      }
-      if (!best) { const q = kc.rejected ? kc.rejected.crosses : null; rejected.push({ basket: k, crosses: q !== null ? foreign.idx[q] : null, clearanceR1: q !== null ? +(legClearance(starts[i].S, bp[k], foreign.pts[q]) / S.R1).toFixed(2) : null }); continue; }
-      score[i][k] = best.bottleneck; route[`${h}@${k}`] = best.verts; cells[`${h}@${k}`] = best;
-      if (foreign.exempt.length) (record[h].exempt ??= {})[k] = foreign.exempt;
+      const cell = { i, k, h, foreign, kc, s1, best: kc.best.bottleneck === null ? null : kc.best, pending: !s1 || s1.passFrac < MATCH.tau };
+      pend.push(cell);
     }
+    // the hole's cap: no route of it reads above its best first leg (tee cap -> B1 on the axis, never split), B* included
+    const Bs = badgeMidOf(starts[i]);
+    if (Bs[0] >= 0 && Bs[1] >= 0 && Bs[0] < S.W && Bs[1] < S.H) { const c0 = legsMany(S, [[starts[i].S, Bs]], W)[0][0]; if (c0 !== null && c0 > capOf.v) capOf.v = c0; }
+    cap[i] = capOf.v;
     record[h].rejected = rejected;
-    const nm = (k) => table.baskets[k]?.name ?? `BP${k}`;
-    why[h] = `neighbourhood (joint rank of distance from the tee and from tee ${Number(h) + 1}): ${cands.map((c) => `${nm(c.basket)} r${c.rank}`).join(', ')}${rejected.length ? `; rejected (every route enters another basket's C1 disc, < 1 R1): ${rejected.map((x) => `${nm(x.basket)}${x.crosses !== null ? ` (the straight route passes ${nm(x.crosses)} at ${x.clearanceR1} R1)` : ''}`).join(', ')}` : ''}`;
+    rejectedOf[h] = rejected;
+  });
+  // lazy chains, priced by the assignment's duals: a cell's K-bend chain is searched when the cell is assigned (its route needs it)
+  // or when its hole's cap beats the cell's dual price (only then can a chain move the assignment); repeated until none is left.
+  // Exact when the cap bounds every chain of the hole (it is the best first leg the axis search read)
+  // the chain replaces the K <= 1 route when its weakest leg AND its sensor reading are higher (a bend hidden under a sprite has
+  // unread legs: the weakest leg alone cannot place it). endR1: the coarse pass ranks cells; the assigned ones are re-run fine
+  const chainOf = (cell, endR1, gridR1) => {
+    const ch = kChainAt(S, starts[cell.i], bp[cell.k], W, { legsMany, one: cell.kc.one, foreign: cell.foreign, sensorOf: (V) => steps.sensor(S, V, W).passFrac, endR1, gridR1 });
+    const k1 = cell.kc.best.bottleneck === null ? null : cell.kc.best;
+    return ch && ch.bottleneck !== null && (!k1 || (ch.bottleneck > k1.bottleneck && steps.sensor(S, ch.verts, W).passFrac > cell.s1.passFrac)) ? ch : k1;
+  };
+  const settle = (cell) => {
+    if (cell.pending) { cell.best = chainOf(cell, KBENDS.coarseEndR1, KBENDS.coarseGridR1); cell.pending = false; cell.coarse = true; chainsRun++; }
+    score[cell.i][cell.k] = cell.best ? cell.best.bottleneck : -Infinity;
+  };
+  let chainsRun = 0, rounds = 0, fineRuns = 0;
+  for (const cell of pend) score[cell.i][cell.k] = cell.best ? cell.best.bottleneck : -Infinity;
+  for (;;) {
+    rounds++;
+    const A = assignWithDuals(score.map((row) => row.map((v) => (Number.isFinite(v) ? -v : Infinity))));
+    const assigned = new Set(A.pairs.map(([i, k]) => `${i}@${k}`));
+    const todo = pend.filter((c) => c.pending && (assigned.has(`${c.i}@${c.k}`) || cap[c.i] > A.price(c.i, c.k) + 1e-9));
+    if (!todo.length) break;
+    for (const c of todo) settle(c);
+  }
+  // the assigned cells' routes at full resolution (the same search to refineEndR1): the coarse pass only ranked them
+  { const A = assignWithDuals(score.map((row) => row.map((v) => (Number.isFinite(v) ? -v : Infinity)))), on = new Set(A.pairs.map(([i, k]) => `${i}@${k}`));
+    for (const cell of pend) if (cell.coarse && on.has(`${cell.i}@${cell.k}`)) { cell.best = chainOf(cell, KBENDS.refineEndR1, KBENDS.gridR1); cell.coarse = false; fineRuns++; } }
+  for (const cell of pend) {
+    const { i, k, h, foreign, kc } = cell;
+    if (!cell.best && cell.pending) { (record[h].pricedOut ??= []).push({ basket: k, capLum: +cap[i].toFixed(1) }); score[i][k] = -Infinity; continue; }
+    if (!cell.best) { const q = kc.rejected ? kc.rejected.crosses : null; rejectedOf[h].push({ basket: k, crosses: q !== null ? foreign.idx[q] : null, clearanceR1: q !== null ? +(legClearance(starts[i].S, bp[k], foreign.pts[q]) / S.R1).toFixed(2) : null }); score[i][k] = -Infinity; continue; }
+    route[`${h}@${k}`] = cell.best.verts; cells[`${h}@${k}`] = cell.best;
+    if (foreign.exempt.length) (record[h].exempt ??= {})[k] = foreign.exempt;
+  }
+  holes.forEach((h) => {
+    if (claims.claims[h] !== undefined) return;
+    const cands = nb[h] ?? [], rejected = rejectedOf[h], nm = (k) => table.baskets[k]?.name ?? `BP${k}`;
+    const po = record[h].pricedOut ?? [];
+    why[h] = `neighbourhood (joint rank of distance from the tee and from tee ${Number(h) + 1}): ${cands.map((c) => `${nm(c.basket)} r${c.rank}`).join(', ')}${po.length ? `; chain not searched (priced out: no route of this hole reads above its best first leg, ${po[0].capLum} lum, which is below the cell's price): ${po.map((x) => nm(x.basket)).join(', ')}` : ''}${rejected.length ? `; rejected (every route enters another basket's C1 disc, < 1 R1): ${rejected.map((x) => `${nm(x.basket)}${x.crosses !== null ? ` (the straight route passes ${nm(x.crosses)} at ${x.clearanceR1} R1)` : ''}`).join(', ')}` : ''}`;
   });
   let pairs = assignMinCost(score.map((row) => row.map((v) => (Number.isFinite(v) ? -v : Infinity))));
   // a hole the neighbourhoods leave without a basket: assigned among the free baskets by its K <= 1 routes
   const usedH = new Set(pairs.map(([i]) => i)), usedK = new Set(pairs.map(([, k]) => k)), leftH = holes.map((_, i) => i).filter((i) => !usedH.has(i)), leftK = bp.map((_, k) => k).filter((k) => !usedK.has(k));
   if (leftH.length && leftK.length) {
-    const sub = leftH.map((i) => leftK.map((k) => { const kc = kCellAt(S, starts[i], bp[k], W, { legsOf, foreign: foreignRingsOf(starts[i], bp, k, S.R1) }); route[`${holes[i]}@${k}`] = kc.best.verts; return kc.best.bottleneck ?? -Infinity; }));
+    const sub = leftH.map((i) => leftK.map((k) => { const kc = kCellAt(S, starts[i], bp[k], W, { legsMany, foreign: foreignRingsOf(starts[i], bp, k, S.R1) }); route[`${holes[i]}@${k}`] = kc.best.verts; return kc.best.bottleneck ?? -Infinity; }));
     for (const [a, b] of assignMinCost(sub.map((r) => r.map((v) => (Number.isFinite(v) ? -v : Infinity))))) { const i = leftH[a], k = leftK[b]; score[i][k] = sub[a][b]; pairs.push([i, k]); why[holes[i]] = `${why[holes[i]]}; none left in the neighbourhood: assigned among the free baskets by K <= 1 routes`; }
     pairs = pairs.sort((x, y) => x[0] - y[0]);
   }
   const routeOf = Object.fromEntries(pairs.map(([i, k]) => [holes[i], route[`${holes[i]}@${k}`]]));
   return { pairs, score: score.map((r) => r.map((v) => (Number.isFinite(v) ? v : MATCH.noReadingLum))), route: routeOf, why, record,
-    summary: { straightClaims: Object.keys(claims.claims).length, bentHoles: Object.keys(nb).length, cellsScored: Object.keys(cells).length, chains: Object.values(cells).filter((c) => c.verts.length >= 4).length } };
+    summary: { straightClaims: Object.keys(claims.claims).length, bentHoles: Object.keys(nb).length, cellsScored: Object.keys(cells).length, chainsSearched: chainsRun, fineReruns: fineRuns, pricingRounds: rounds, chains: Object.values(cells).filter((c) => c.verts.length >= 4).length } };
 }
 
 /**
