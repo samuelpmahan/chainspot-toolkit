@@ -163,7 +163,9 @@ const layer = (S) => {
       if (!Array.isArray(badges) || !badges.length) env.fail(`px.badges missing on the board; cannot judge the ${S} layer against S1`);
       const priors = spec.priors.map((p) => {
         const objects = env.get(p.part);
-        if (!Array.isArray(objects) || !objects.length) env.fail(`${p.part} missing on the board; cannot judge the ${S} layer against ${p.layer}`);
+        // an empty prior layer is judged like any other when its own record certified the empty set (S2 'no baskets')
+        const certifiedEmpty = Array.isArray(objects) && !objects.length && env.get(`tk.${p.record}.record`)?.layerIntegrity?.claimedPx === 0;
+        if (!Array.isArray(objects) || (!objects.length && !certifiedEmpty)) env.fail(`${p.part} missing on the board; cannot judge the ${S} layer against ${p.layer}`);
         return { name: p.name, set: unionOf(objects.map((o) => o.px)) };
       });
       const s1 = s1Sets(badges);

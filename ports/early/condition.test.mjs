@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { earlyConditionOf } from './condition.mjs';
+import { earlyConditionOf, stageNotRun } from './condition.mjs';
 
 test('an early run that ended in a data condition is read back with the stages it did not run; a clean run has none', () => {
   const root = mkdtempSync(join(tmpdir(), 'early-condition-'));
@@ -17,4 +17,11 @@ test('an early run that ended in a data condition is read back with the stages i
     assert.equal(earlyConditionOf(root, 'a2'), null);
     assert.equal(earlyConditionOf(root, 'missing'), null);
   } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test('a condition stops only the stages it did not run: no badges stops S2 on; no baskets stops nothing (S3 runs on the pinned bounds)', () => {
+  const noBadges = { stage: 'S1', result: 'no badges', notRun: ['S2', 'S3', 'S4', 'S5', 'S6', 'S7'] };
+  const noBaskets = { stage: 'S2', result: 'no baskets', notRun: [] };
+  assert.deepEqual(['S3 association', 'S4', 'S7', 'export'].map((s) => stageNotRun(noBadges, s)), [true, true, true, true]);
+  assert.deepEqual(['S3 association', 'S4', 'S7', 'export'].map((s) => stageNotRun(noBaskets, s)), [false, false, false, false]);
 });

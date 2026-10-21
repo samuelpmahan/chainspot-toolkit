@@ -12,6 +12,7 @@ export const stageContract: StageContract = {
 			'progression: 1=CroppedImage from S1 PxC · 2=Basket family · 3=common inner/outer perimeters · 4=BasketPx subtraction · 5=Basket objects',
 			`input: ${context.inputLabel}`,
 			`Basket family: ${run.family.members.length}`,
+			`shell shape: ${run.shellShape.source} (${run.shellShape.overlap.memberCount} members overlapped, ${run.shellShape.agreementCount} must agree)`,
 			`common shell margins: ${run.shellFamily.margins?.join(',') ?? 'NONE'}`,
 			`common shell pixels: ${run.shellFamily.shellOffsets.length}`,
 			`Basket objects: ${run.baskets.length}`,
