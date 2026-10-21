@@ -19,6 +19,7 @@ const smartBasket_1 = require("./smartBasket");
 const logisticInference_1 = require("./digits/logisticInference");
 const readBadges_1 = require("./digits/readBadges");
 const segment_1 = require("./digits/segment");
+const holeLabels_1 = require("./digits/holeLabels");
 const raster_1 = require("./raster");
 const ribbon_1 = require("./ribbon");
 const routing_1 = require("./routing");
@@ -128,7 +129,7 @@ function darkFraction(component, dark) {
 function labelCandidates(reading) {
     if (!reading.digits.length)
         return [];
-    const candidates = Array.from({ length: 18 }, (_, index) => index + 1)
+    const candidates = holeLabels_1.HOLE_LABELS
         .filter((label) => String(label).length === reading.digits.length)
         .map((label) => {
         const confidence = [...String(label)].reduce((product, digit, index) => product * (reading.digits[index]?.scores[Number(digit)] ?? 0), 1);
@@ -184,6 +185,13 @@ function classifyReading(rawLabel, digitCount, confidence, candidates, floor, am
         return { label: null, bestLabel, abstentionReason: 'too-many-digits' };
     if (rawLabel[0] === '0')
         return { label: null, bestLabel, abstentionReason: 'leading-zero' };
+    // The digits read a well-formed number outside the hole-label vocabulary
+    // (digits/holeLabels.ts). It is never projected onto the nearest
+    // in-vocabulary label (that is how a "24" became "14" while the
+    // vocabulary was 1..18): the read abstains, and bestLabel keeps what the
+    // projection would have said.
+    if (!(0, holeLabels_1.isHoleLabel)(Number(rawLabel)))
+        return { label: null, bestLabel, abstentionReason: 'out-of-vocabulary' };
     // C4 — derived confidence floor, restoring old-stuff's first-class
     // abstention. bestLabel is retained either way so the receipt can show
     // what the detector would have said.

@@ -39,6 +39,7 @@ exports.badgeGlyphTemplateUnit = exports.badgeGlyphTemplateFeature = exports.BAD
 exports.classifyBadgeAgainstTemplates = classifyBadgeAgainstTemplates;
 const badge_glyph_templates_json_1 = __importDefault(require("../assets/badge-glyph-templates.json"));
 const badgeGlyphTemplateMath_1 = require("../digits/badgeGlyphTemplateMath");
+const holeLabels_1 = require("../digits/holeLabels");
 const g1_badgeGlyphTemplateReceipt_1 = require("./g1.badgeGlyphTemplateReceipt");
 const ASSET = badge_glyph_templates_json_1.default;
 // Standing tripwire (same shape as g1.digits.ts's MODEL_FEATURE_COUNT check):
@@ -55,9 +56,16 @@ if (ASSET.normalizedHeightPx !== badgeGlyphTemplateMath_1.DEFAULT_BADGE_GLYPH_TE
         `${ASSET.normalizedHeightPx}, expected ${badgeGlyphTemplateMath_1.DEFAULT_BADGE_GLYPH_TEMPLATE_KNOBS.normalizedHeightPx} ` +
         `-- see the normalizedWidthPx tripwire above for the fix.`);
 }
-if (ASSET.templates.length !== 18) {
-    throw new Error(`g1.badgeGlyphTemplate: assets/badge-glyph-templates.json carries ` +
-        `${ASSET.templates.length} templates, expected the fixed 1..18 vocabulary.`);
+// The asset carries exactly the shared hole-label vocabulary
+// (digits/holeLabels.ts), one template per label, so the witness and the
+// per-digit reader can only ever name the same labels.
+{
+    const baked = ASSET.templates.map((template) => template.label).sort((a, b) => a - b);
+    if (baked.length !== holeLabels_1.HOLE_LABELS.length || baked.some((label, index) => label !== holeLabels_1.HOLE_LABELS[index])) {
+        throw new Error(`g1.badgeGlyphTemplate: assets/badge-glyph-templates.json carries labels ` +
+            `${baked.join(',')}, expected exactly 1..${holeLabels_1.HOLE_LABELS.length} (digits/holeLabels.ts); ` +
+            `re-bake with scripts/generate-badge-glyph-templates.mjs.`);
+    }
 }
 /** Parsed once at import time: the baked rows (0/1 char strings) decoded to
  * Uint8Array masks, in template-label order. */

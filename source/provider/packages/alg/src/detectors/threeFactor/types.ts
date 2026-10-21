@@ -55,13 +55,16 @@ export interface DigitEvidence {
 /** Fix contract C4 (docs/seven-whys/g1-badge-digit-garbage.md): named,
  * machine-readable reasons a badge read is not emitted as a label, mirroring
  * old-stuff's `BadgeGlyphAbstention` plus the two failure modes this contract
- * closes (`too-many-digits`, `leading-zero`) and C5's `collision`. */
+ * closes (`too-many-digits`, `leading-zero`), C5's `collision`, and
+ * `out-of-vocabulary` (well-formed digits naming no label of
+ * digits/holeLabels.ts). */
 export type BadgeAbstentionReason =
 	| 'empty-glyph'
 	| 'low-score'
 	| 'ambiguous'
 	| 'too-many-digits'
 	| 'leading-zero'
+	| 'out-of-vocabulary'
 	| 'collision';
 
 export interface BadgeEvidence {

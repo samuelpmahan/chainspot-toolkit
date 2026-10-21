@@ -2,10 +2,11 @@
   "schema": "chainspot-bundled-provider-v1",
   "sourceRepository": "samuelpmahan/ChainSpot",
   "sourceCommit": "5433854c72b1dc5aa420934d91e16458c2abe09f",
-  "sourceAlgSha256": "3c1fb28e3ca2428b25900a6fa1bc4b2d9a4cf4d0172ed77382b3cb0a07c7b5dc",
-  "compiledAlgSha256": "e6fae4924b366283a7c10148ebc5eba84f720be9d6cd37340532e1d1061b720b",
+  "sourceAlgSha256": "6bd4078491f9c82ed954f65a7e7ee43f4dd6f455188b9dabb11b256338d4e6bb",
+  "compiledAlgSha256": "158b1a6184e46601825e8a9600033a10f86ad267af69af06e381abdfad57fb79",
   "scope": "Hash of sorted relative file paths and SHA-256 content hashes: .ts/.json/.yaml under packages/alg/src and .js/.json under packages/alg/dist. Git metadata is not included in the core archive.",
   "localPatches": [
-    "lane/fastA: output-identical speedups of packages/alg (smartBasket occlusion mask, tee-ring separable dilation, components inlined neighbours, native sha256 under Node, tee-recovery fit typed arrays); verified identical S0-S4 evidence on golden and heritage"
+    "lane/fastA: output-identical speedups of packages/alg (smartBasket occlusion mask, tee-ring separable dilation, components inlined neighbours, native sha256 under Node, tee-recovery fit typed arrays); verified identical S0-S4 evidence on golden and heritage",
+    "lane/badge27: one hole-label vocabulary 1..27 (digits/holeLabels.ts) for the per-digit reader (measure.ts labelCandidates; a well-formed read outside it abstains 'out-of-vocabulary' instead of being projected onto the nearest label) and the glyph-template witness (templates 19..27 composed from the 1..18 rasters' own digit glyphs by scripts/generate-badge-glyph-templates.mjs); every dev S1 read identical"
   ]
 }

@@ -42,6 +42,7 @@ import {
 	type BadgeGlyphTemplateKnobs,
 	type RgbaBitmap
 } from '../digits/badgeGlyphTemplateMath';
+import { HOLE_LABELS } from '../digits/holeLabels';
 import { badgeGlyphTemplateRender } from './g1.badgeGlyphTemplateReceipt';
 import type { ABFeature, EngineUnit, EvidenceBoard, FeatureContext } from './types';
 
@@ -73,11 +74,18 @@ if (ASSET.normalizedHeightPx !== DEFAULT_BADGE_GLYPH_TEMPLATE_KNOBS.normalizedHe
 			`-- see the normalizedWidthPx tripwire above for the fix.`
 	);
 }
-if (ASSET.templates.length !== 18) {
-	throw new Error(
-		`g1.badgeGlyphTemplate: assets/badge-glyph-templates.json carries ` +
-			`${ASSET.templates.length} templates, expected the fixed 1..18 vocabulary.`
-	);
+// The asset carries exactly the shared hole-label vocabulary
+// (digits/holeLabels.ts), one template per label, so the witness and the
+// per-digit reader can only ever name the same labels.
+{
+	const baked = ASSET.templates.map((template) => template.label).sort((a, b) => a - b);
+	if (baked.length !== HOLE_LABELS.length || baked.some((label, index) => label !== HOLE_LABELS[index])) {
+		throw new Error(
+			`g1.badgeGlyphTemplate: assets/badge-glyph-templates.json carries labels ` +
+				`${baked.join(',')}, expected exactly 1..${HOLE_LABELS.length} (digits/holeLabels.ts); ` +
+				`re-bake with scripts/generate-badge-glyph-templates.mjs.`
+		);
+	}
 }
 
 /** Parsed once at import time: the baked rows (0/1 char strings) decoded to

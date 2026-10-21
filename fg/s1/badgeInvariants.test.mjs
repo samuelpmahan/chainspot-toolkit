@@ -32,3 +32,14 @@ test('a partial view only requires unique in-range labels', () => {
   assert.equal(o.findings.allLabelsPresent, null);
   assert.equal(o.findings.labelsUnique, true);
 });
+
+test('a full view of more than 18 holes is full; a label beyond its badge count is missing its own', () => {
+  const size = (label) => BADGE_SIZE_BY_LABEL[label] ?? [56, 42];
+  const at = (label, x) => { const [w, h] = size(label); return { label, bbox: [x, 20, w, h], confidence: 0.99, has: { findPx: { parts: [{ polarity: 'dark', bbox: [x + (w - 48) / 2, 20 + (h - 36) / 2, 48, 36] }, { polarity: 'bright', bbox: [x, 20, w, h] }] } } }; };
+  const o = observeBadges(Array.from({ length: 27 }, (_, i) => at(String(i + 1), 10 + 70 * i)));
+  assert.equal(o.findings.view, 'full (27 badges)');
+  assert.equal(o.findings.labelsInRange, true);
+  assert.equal(o.findings.allLabelsPresent, true);
+  const p = observeBadges([at('24', 0), at('14', 80)]);
+  assert.equal(p.findings.view, 'partial (2 badges)');
+});
