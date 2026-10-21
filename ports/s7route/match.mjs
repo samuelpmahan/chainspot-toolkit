@@ -18,9 +18,9 @@
  * Pure functions on the S7 scene ({ lum, mask, W, H }) and the table; no thresholds hide anywhere else.
  */
 import { routeSensorAt, ribbonContrastAt, ROUTE, badgeMidAlongPx, badgeMidOf } from './routeSpace.mjs';
-import { refineVertices, arange } from '../s7trace/hallway.mjs';
+import { refineVertices, arange, trace as followHallway } from '../s7trace/hallway.mjs';
 import { refineBendsOf } from './bends.mjs';
-import { kCellAt, kChainAt, legContrastsOf, KBENDS } from './kbends.mjs';
+import { kCellAt, kChainAt, legContrastsOf, KBENDS, turnCostOf, turnsOf, legRunsAlong, bottleneckOf, polishAt } from './kbends.mjs';
 import { straightClaimsOf, neighbourhoodsOf, foreignRingsOf, SEQ } from './seq.mjs';
 import { ringCrossed, legClearance } from './kbends.mjs';
 
@@ -100,6 +100,7 @@ export function assignWithDuals(cost) {
   return { pairs: pairs.sort((a, b) => a[0] - b[0]), price: (i, k) => (T ? -(u[k + 1] + v[i + 1]) : -(u[i + 1] + v[k + 1])) };
 }
 
+const BENDS_GATE_GAIN = 0.05;   // bends.mjs BENDS.gate.gain: a changed bend count must gain this much sensor per bend
 const contrast = (S, V, W) => { const [c] = ribbonContrastAt(S, V, W); return c === null ? MATCH.noReadingLum : c; };
 /** polyScore's answer from ribbonContrastAt (the same px in the same order: bit-identical, -99 for no reading). */
 const polyScoreFast = (S, V, W) => { const [c, n] = ribbonContrastAt(S, V, W); return c === null ? [MATCH.noReadingLum, 0] : [c, n]; };
@@ -211,7 +212,9 @@ export const MATCH_STEPS = Object.freeze({
   // rule set option kBends 'bottleneck' (kbends.mjs): every leg of a route read alone (the K-bend search's one measure)
   kLegs: (S, V, W) => legContrastsOf(S, V, W),
   // the same reads batched: every route of one grid, refine step or sweep in one store call
-  kLegsMany: (S, Vs, W) => Vs.map((V) => legContrastsOf(S, V, W))
+  kLegsMany: (S, Vs, W) => Vs.map((V) => legContrastsOf(S, V, W)),
+  // rule set option seqFollow: the hallway follower (ports/s7trace/hallway.mjs trace: s7main's ride-the-ribbon) from a tee cap
+  follow: (S, from, phi, W, maxLegs) => followHallway(S, from, phi, W, { maxLegs })
 });
 
 /**
@@ -248,6 +251,12 @@ export const MATCH_STEPS = Object.freeze({
  *   seqGate:       (kBends 'seq') 'region' = the sequencing's sensor gates read the region passFrac (regionSpace.mjs) |
  *                  'regionWiden' = only the widening gate reads it
  *   seqScore:      (kBends 'seq') 'region' = each neighbourhood cell is assigned by the region support of its (edge-placed) route
+ *   seqPolish:     (kBends 'seq') true = every chain candidate polished on its weakest leg before it competes (kbends.mjs polishEach)
+ *   seqOwn:        (kBends 'seq') true = confirmed routes own their corridors (straight claims, then routes passing the gate); the
+ *                  other holes' chains may not run a leg along one (kbends.mjs legRunsAlong), crossing allowed
+ *   seqTurnKappa:  (kBends 'seq') lum: the price of turning, kappa x sum (1 - cos theta)^2 over a route's bends (kbends.mjs turnCostOf)
+ *   seqFollow:     (kBends 'seq') true = a hole whose assigned route still fails the gate rides the ribbon with the hallway follower
+ *                  (hallway.mjs trace) from its tee cap; the route it finds, polished on its weakest leg, competes for that cell
  *   sensor:        absent (edges) | 'region' = the assignment reads the hallway REGION (ports/s7route/regionSpace.mjs: each cell's
  *                  best route by region support, -1..1, the on-axis prior in support units); the routes and the per-hole steps (refine,
  *                  sensor gates, second bend, placement) read edges | 'regionAll' = every measure reads the region
@@ -293,6 +302,9 @@ export const RULE_SETS = Object.freeze({
   // courses), widened to ranks 3-4 for a hole whose assigned route then fails the sensor gate
   routeMatchKBendsSeq3: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true },
   // Seq3 x region (lane s7region's sensor): the sequencing's gates by the region, the cell scores by the region, both
+  // the search fixed (lane s7bends, 2026-10-21 diagnosis: the edge gate passes Coleto 18's and SeaTac 19's true routes; the chain
+  // never proposed them): polish before compare, owned corridors, a price on turning
+  routeMatchKBendsSeq3Search: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: true },
   routeMatchKBendsSeq3RegionGate: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqGate: 'region' },
   routeMatchKBendsSeq3RegionScore: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqScore: 'region' },
   routeMatchKBendsSeq3RegionWiden: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqGate: 'regionWiden' },
@@ -410,7 +422,8 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
   const widenGateOf = (V) => (rules.seqGate === 'regionWiden' && rg ? rg.sensor(S, V, W).passFrac : gateOf(V));
   const gateOf = (V) => (rules.seqGate === 'region' && rg ? rg.sensor(S, V, W) : steps.sensor(S, V, W)).passFrac;
   const regionScore = rules.seqScore === 'region' && rg;
-  const valueOf = (best) => (!best ? -Infinity : regionScore ? rg.contrast(S, best.verts, W) : best.bottleneck);
+  const kappa = rules.seqTurnKappa ?? 0;
+  const valueOf = (best) => (!best ? -Infinity : regionScore ? rg.contrast(S, best.verts, W) : best.bottleneck - turnCostOf(best.verts, kappa));
   const bp = table.baskets.map((b, k) => b.point ?? table.rows[0].cells[k].contrast.verts.at(-1)), starts = holes.map((h) => startOf(h));
   const claims = straightClaimsOf(starts, bp, S.R1, verdicts ?? null, []);
   const nb = neighbourhoodsOf(starts.filter((s) => claims.claims[s.hole] === undefined), bp, claims.claimed);
@@ -422,10 +435,15 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
     const k = c.basket, foreign = foreignRingsOf(starts[i], bp, k, S.R1), kc = kCellAt(S, starts[i], bp[k], W, { legsMany, foreign });
     if (kc.firstCap > cap[i]) cap[i] = kc.firstCap;
     const s1 = kc.best.bottleneck === null ? null : gateOf(kc.best.verts);
-    const cell = { i, k, h, foreign, kc, s1, best: kc.best.bottleneck === null ? null : kc.best, pending: s1 === null || s1 < MATCH.tau };
+    const cell = { i, k, h, foreign, kc, s1, best: kc.best.bottleneck === null ? null : kc.best, pending: s1 === null || s1 < MATCH.tau, owned: ownedFor(h) };
     pend.push(cell); score[i][k] = valueOf(cell.best);
     record[h].evaluated.push(k);
   };
+  // ownCorridors: confirmed routes own their corridors (state passed forward, the pads-owned pattern): the straight claims from the
+  // start, then (after the first solve) every hole whose assigned route passes the sensor gate
+  const owned = new Map();
+  if (rules.seqOwn) holes.forEach((h, i) => { if (claims.claims[h] !== undefined) owned.set(h, [starts[i].S, bp[claims.claims[h]]]); });
+  const ownedFor = (h) => (rules.seqOwn ? [...owned].filter(([o]) => o !== h).map(([, V]) => V) : null);
   holes.forEach((h, i) => {
     if (claims.claims[h] !== undefined) { const k = claims.claims[h]; score[i][k] = 0; route[`${h}@${k}`] = [starts[i].S, bp[k]]; why[h] = claims.rows.find((r) => r.hole === h).why; record[h] = { claimed: k }; return; }
     const cands = nb[h] ?? [];
@@ -442,9 +460,15 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
   // the chain replaces the K <= 1 route when its weakest leg AND its sensor reading are higher (a bend hidden under a sprite has
   // unread legs: the weakest leg alone cannot place it). endR1: the coarse pass ranks cells; the assigned ones are re-run fine
   const chainOf = (cell, endR1, gridR1) => {
-    const ch = kChainAt(S, starts[cell.i], bp[cell.k], W, { legsMany, one: cell.kc.one, foreign: cell.foreign, sensorOf: gateOf, endR1, gridR1 });
+    const ch = kChainAt(S, starts[cell.i], bp[cell.k], W, { legsMany, one: cell.kc.one, foreign: cell.foreign, sensorOf: gateOf, endR1, gridR1,
+      ...(rules.seqPolish ? { polishEach: true, firstCap: cap[cell.i] } : {}), ...(cell.owned?.length ? { owned: cell.owned } : {}), ...(kappa ? { turnKappa: kappa } : {}) });
     const k1 = cell.kc.best.bottleneck === null ? null : cell.kc.best;
-    return ch && ch.bottleneck !== null && (!k1 || (ch.bottleneck > k1.bottleneck && gateOf(ch.verts) > cell.s1)) ? ch : k1;
+    const v = (r) => r.bottleneck - turnCostOf(r.verts, kappa);
+    const takeChain = ch && ch.bottleneck !== null && (!k1 || (v(ch) > v(k1) && gateOf(ch.verts) > cell.s1));
+    // turning decided: the price of turning chose a different route than the weakest leg alone would have
+    cell.turnNote = kappa ? (ch?.turnDecided ? `turning price chose ${ch.verts.length - 2} bends (turns ${ch.turnsDeg.join('/')} deg) over ${ch.turnDecided.rawBends} bends (turns ${ch.turnDecided.rawTurnsDeg.join('/')} deg, weakest leg ${ch.turnDecided.rawBottleneck.toFixed(1)} lum)`
+      : ch && k1 && ch.bottleneck > k1.bottleneck && !takeChain && gateOf(ch.verts) > cell.s1 ? `turning price kept the K <= 1 route over a ${ch.verts.length - 2}-bend chain (turns ${ch.turnsDeg.join('/')} deg)` : null) : null;
+    return takeChain ? ch : k1;
   };
   const settle = (cell) => {
     if (cell.pending) { cell.best = chainOf(cell, KBENDS.coarseEndR1, KBENDS.coarseGridR1); cell.pending = false; cell.coarse = true; chainsRun++; }
@@ -481,6 +505,52 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
     });
     if (widened.length) solve();
   }
+  let reowned = [];
+  if (rules.seqOwn) {
+    // the confirmed holes (assigned route passes the gate) own their corridors; the others re-search their chains around them
+    const A = assignNow(), byHole = new Map(A.pairs.map(([i, k]) => [i, k])), unconfirmed = [];
+    holes.forEach((h, i) => {
+      if (claims.claims[h] !== undefined) return;
+      const k = byHole.get(i), cell = k === undefined ? null : pend.find((c) => c.i === i && c.k === k);
+      if (cell?.best && gateOf(cell.best.verts) >= MATCH.tau) owned.set(h, cell.best.verts); else unconfirmed.push(i);
+    });
+    for (const c of pend) if (unconfirmed.includes(c.i) && (c.s1 === null || c.s1 < MATCH.tau)) {
+      c.owned = ownedFor(c.h); c.best = c.kc.best.bottleneck === null ? null : c.kc.best; c.pending = true; c.coarse = false; score[c.i][c.k] = valueOf(c.best);
+    }
+    reowned = unconfirmed.map((i) => holes[i]);
+    if (reowned.length) solve();
+  }
+  const followed = [];
+  if (rules.seqFollow) {
+    // ride the ribbon (the S7 doctrine: "find the path signal and ride it"): every bent hole whose assigned route still fails
+    // the gate runs the hallway follower from its tee cap along the tee axis; a route that reaches a BasketPoint competes for
+    // that cell under the same rules as a chain (no foreign C1 disc, no owned corridor, value and per-bend sensor gain)
+    const A = assignNow(), byHole = new Map(A.pairs.map(([i, k]) => [i, k]));
+    holes.forEach((h, i) => {
+      if (claims.claims[h] !== undefined) return;
+      const k0 = byHole.get(i), cur = k0 === undefined ? null : pend.find((c) => c.i === i && c.k === k0);
+      if (cur?.best && gateOf(cur.best.verts) >= MATCH.tau) return;
+      const st = starts[i], fr = steps.follow(S, st.S, Math.atan2(st.u[1], st.u[0]), W, SEQ.followLegs);
+      if (fr.end === null || fr.end === undefined) { record[h].follow = { reached: null, why: 'the follower lost the ribbon' }; return; }
+      const k = fr.end, V = fr.verts, foreign = foreignRingsOf(st, bp, k, S.R1), ow = ownedFor(h);
+      const crosses = V.slice(1).some((b, q) => ringCrossed(V[q], b, foreign) >= 0), along = ow && V.slice(1).some((b, q) => legRunsAlong(V[q], b, ow, W));
+      if (claims.claimed.includes(k) || crosses || along) { record[h].follow = { reached: k, why: claims.claimed.includes(k) ? 'its basket is claimed straight' : crosses ? 'it enters a foreign C1 disc' : 'it runs along an owned corridor' }; return; }
+      let cell = pend.find((c) => c.i === i && c.k === k);
+      if (!cell) { addCell(h, i, { basket: k }); cell = pend.at(-1); }   // the follower widens the neighbourhood to the basket it reached
+      // polished on its weakest leg before it competes: the follower's bends sit where its edge runs ended, and an unpolished last
+      // leg into the rings reads low (SeaTac 19: 7.6 lum unpolished, 43.9 polished). Chains are not polished per candidate: that
+      // moved dev routes (golden 18 gained a bend, heritage 9 left Sam's corridor; lane s7bends ablation)
+      const legs0 = legsMany(S, [V], W)[0], fb0 = { verts: V, legs: legs0, bottleneck: bottleneckOf(legs0) };
+      const fb = fb0.bottleneck !== null ? polishAt(S, fb0, W, { legsMany, start: st, foreign, owned: ow }) : fb0;
+      const sf = gateOf(fb.verts), k1 = cell.kc.best.bottleneck === null ? null : cell.kc.best;
+      const vf = fb.bottleneck === null ? -Infinity : fb.bottleneck - turnCostOf(fb.verts, kappa), vc = cell.best ? cell.best.bottleneck - turnCostOf(cell.best.verts, kappa) : -Infinity;
+      const gainOk = !k1 || sf > (cell.s1 ?? 0) + BENDS_GATE_GAIN * (fb.verts.length - k1.verts.length);
+      const win = fb.bottleneck !== null && vf > vc && gainOk;
+      record[h].follow = { reached: k, bends: V.length - 2, weakestLegLum: fb.bottleneck === null ? null : +fb.bottleneck.toFixed(1), sensor: +sf.toFixed(2), taken: win };
+      if (win) { cell.best = fb; cell.pending = false; cell.coarse = false; score[i][k] = valueOf(fb); followed.push(h); }
+    });
+    if (followed.length) solve();
+  }
   for (const cell of pend) {
     const { i, k, h, foreign, kc } = cell;
     if (!cell.best && cell.pending) { (record[h].pricedOut ??= []).push({ basket: k, capLum: +cap[i].toFixed(1) }); score[i][k] = -Infinity; continue; }
@@ -492,7 +562,7 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
     if (claims.claims[h] !== undefined) return;
     const cands = (nb[h] ?? []).filter((c) => record[h].evaluated.includes(c.basket)), rejected = rejectedOf[h], nm = (k) => table.baskets[k]?.name ?? `BP${k}`;
     const po = record[h].pricedOut ?? [], wd = record[h].widened;
-    why[h] = `neighbourhood (joint rank of distance from the tee and from tee ${Number(h) + 1}): ${cands.map((c) => `${nm(c.basket)} r${c.rank}`).join(', ')}${wd ? ` (widened to ranks ${wd.ranks.join(', ')}: the first ${first} ranks' assigned route read ${wd.reading === null ? 'no route' : wd.reading.toFixed(2)} on the ${(rules.seqGate === 'region' || rules.seqGate === 'regionWiden') && rg ? 'region' : 'edge'} sensor, below ${MATCH.tau})` : ''}${po.length ? `; chain not searched (priced out: no route of this hole reads above its best first leg, ${po[0].capLum} lum, which is below the cell's price): ${po.map((x) => nm(x.basket)).join(', ')}` : ''}${rejected.length ? `; rejected (every route enters another basket's C1 disc, < 1 R1): ${rejected.map((x) => `${nm(x.basket)}${x.crosses !== null ? ` (the straight route passes ${nm(x.crosses)} at ${x.clearanceR1} R1)` : ''}`).join(', ')}` : ''}`;
+    why[h] = `neighbourhood (joint rank of distance from the tee and from tee ${Number(h) + 1}): ${cands.map((c) => `${nm(c.basket)} r${c.rank}`).join(', ')}${wd ? ` (widened to ranks ${wd.ranks.join(', ')}: the first ${first} ranks' assigned route read ${wd.reading === null ? 'no route' : wd.reading.toFixed(2)} on the ${(rules.seqGate === 'region' || rules.seqGate === 'regionWiden') && rg ? 'region' : 'edge'} sensor, below ${MATCH.tau})` : ''}${rules.seqOwn && reowned.includes(h) ? `; chains re-searched around the corridors of the ${owned.size} confirmed holes (${[...owned.keys()].join(', ')})` : ''}${pend.filter((c) => c.h === h && c.turnNote).map((c) => `; ${nm(c.k)}: ${c.turnNote}`).join('')}${record[h].follow ? `; hallway follower: ${record[h].follow.reached === null ? record[h].follow.why : `${nm(record[h].follow.reached)}${record[h].follow.why ? ` rejected (${record[h].follow.why})` : `, ${record[h].follow.bends} bends, weakest leg ${record[h].follow.weakestLegLum} lum, sensor ${record[h].follow.sensor}${record[h].follow.taken ? ': taken' : ': kept out'}`}`}` : ''}${po.length ? `; chain not searched (priced out: no route of this hole reads above its best first leg, ${po[0].capLum} lum, which is below the cell's price): ${po.map((x) => nm(x.basket)).join(', ')}` : ''}${rejected.length ? `; rejected (every route enters another basket's C1 disc, < 1 R1): ${rejected.map((x) => `${nm(x.basket)}${x.crosses !== null ? ` (the straight route passes ${nm(x.crosses)} at ${x.clearanceR1} R1)` : ''}`).join(', ')}` : ''}`;
   });
   let pairs = assignMinCost(score.map((row) => row.map((v) => (Number.isFinite(v) ? -v : Infinity))));
   // a hole the neighbourhoods leave without a basket: assigned among the free baskets by its K <= 1 routes
@@ -504,7 +574,7 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
   }
   const routeOf = Object.fromEntries(pairs.map(([i, k]) => [holes[i], route[`${holes[i]}@${k}`]]));
   return { pairs, score: score.map((r) => r.map((v) => (Number.isFinite(v) ? v : MATCH.noReadingLum))), route: routeOf, why, record,
-    summary: { straightClaims: Object.keys(claims.claims).length, bentHoles: Object.keys(nb).length, cellsEvaluated: pend.length, cellsFullTable: holes.length * bp.length, neighbours: first, widened, cellsScored: Object.keys(cells).length, chainsSearched: chainsRun, fineReruns: fineRuns, pricingRounds: rounds, chains: Object.values(cells).filter((c) => c.verts.length >= 4).length } };
+    summary: { straightClaims: Object.keys(claims.claims).length, bentHoles: Object.keys(nb).length, cellsEvaluated: pend.length, cellsFullTable: holes.length * bp.length, neighbours: first, widened, ...(rules.seqOwn ? { ownedHoles: [...owned.keys()], reownedHoles: reowned } : {}), ...(rules.seqFollow ? { followed } : {}), cellsScored: Object.keys(cells).length, chainsSearched: chainsRun, fineReruns: fineRuns, pricingRounds: rounds, chains: Object.values(cells).filter((c) => c.verts.length >= 4).length } };
 }
 
 /**
