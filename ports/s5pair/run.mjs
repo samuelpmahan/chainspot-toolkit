@@ -38,18 +38,10 @@ import { loadTestimony } from '../judge/testimony.mjs';
 import { PAIR_SLOT } from './pairBadge.mjs';
 import { GUARANTEES } from './guarantees.mjs';
 import { comparePairs, pairsSvg } from './compare.mjs';
+import { pointerRule } from '../lib/pointerRule.mjs';
+import { readJson, readOpt, latestRun, findKey } from '../lib/files.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
-const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
-const readOpt = (p, absent) => (existsSync(p) ? readJson(p) : absent);
-const latestRun = (dir) => (existsSync(dir) ? readdirSync(dir).filter((d) => d.startsWith('run-')).sort().at(-1) ?? null : null);
-
-function findKey(obj, key) {
-  if (!obj || typeof obj !== 'object') return undefined;
-  if (key in obj) return obj[key];
-  for (const v of Object.values(obj)) { const r = findKey(v, key); if (r !== undefined) return r; }
-  return undefined;
-}
 
 /** The pinned S5 in the canonical frame, or why there is none. */
 export function latePinnedPart(late, upper) {
@@ -108,24 +100,12 @@ export function loadAttemptParts({ attempt, specimen, root = ROOT }) {
  * without testimony takes the variant the annotated courses accepted (acceptedElsewhere); with none on record there is
  * no pointer, and that is recorded, not thrown.
  */
-export function acceptRule({ acceptedElsewhere = null, judged = true } = {}) {
-  const rule = judged
-    ? 'fastest standalone variant whose judged result ties the best (right desc, wrong asc, none asc); a variant whose lane did not run is not a candidate'
-    : `no testimony: the variant the annotated courses accepted${acceptedElsewhere ? ` (${acceptedElsewhere})` : ' (none on record: no pointer)'}`;
-  const accept = (value, { names, branches, timingsMs }) => {
-    const live = names.filter((n) => !branches[n].error && !value.variants[n]?.laneNotRun);
-    if (!judged) { accept.decided = acceptedElsewhere && live.includes(acceptedElsewhere) ? 'annotated courses' : 'nothing'; return accept.decided === 'nothing' ? null : acceptedElsewhere; }
-    const score = (n) => { const b = value.variants[n]; return [-(b.right ?? -1), b.wrong ?? Infinity, b.none ?? Infinity]; };
-    const cmpScore = (a, b) => { const A = score(a), B = score(b); for (let i = 0; i < A.length; i++) if (A[i] !== B[i]) return A[i] - B[i]; return 0; };
-    const sorted = [...live].sort(cmpScore);
-    if (!sorted.length) { accept.decided = 'nothing'; return null; }
-    const tied = sorted.filter((n) => cmpScore(n, sorted[0]) === 0);
-    accept.decided = tied.length > 1 ? `tie on judged result among ${tied.join(', ')}: fastest standalone` : 'best judged result';
-    return tied.sort((a, b) => (timingsMs[a]?.ms ?? Infinity) - (timingsMs[b]?.ms ?? Infinity))[0];
-  };
-  accept.rule = rule; accept.decided = null;
-  return accept;
-}
+export const acceptRule = pointerRule({
+  judgedRule: 'fastest standalone variant whose judged result ties the best (right desc, wrong asc, none asc); a variant whose lane did not run is not a candidate',
+  variantsOf: (v) => v.variants,
+  score: (b) => [-(b.right ?? -1), b.wrong ?? Infinity, b.none ?? Infinity],
+  excludeLaneNotRun: true,
+});
 
 export async function runPairBadgeForkJoin({ attempt, specimen, outDir = null, root = ROOT, acceptedElsewhere = null, cas = true }) {
   const loaded = loadAttemptParts({ attempt, specimen, root });

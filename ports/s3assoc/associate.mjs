@@ -9,6 +9,7 @@
  *  - on a straight hole the pad axis passes the basket's BasketPoint: 0.05-2.58 px at 130-415 px on 4 annotated courses;
  *  - BasketPoint = basket sprite tip (bbox x + 22.5, bbox y + 71) + BASKET_POINT_OFFSET, solved from 59 C1 spokes on 5 courses.
  */
+import { assignSquare } from '../lib/assign.mjs';
 
 /** BasketPoint offset from the sprite's bottom-centre pixel (px): the spokes cross the stem's bottom edge here. */
 export const BASKET_POINT_OFFSET = Object.freeze([0.34, 0.73]);
@@ -71,26 +72,8 @@ export function pathSide({ raster, occ = null, center, thRad, L, W }) {
  * cannot rule out is settled by the pad it actually belongs to. Nothing is dropped: every pad keeps its 3 lowest-z badges.
  */
 /** Hungarian algorithm (square cost matrix, minimisation); returns row -> column. O(n^3), n = pads + badges. */
-export function hungarian(a) {
-  const n = a.length, u = new Array(n + 1).fill(0), v = new Array(n + 1).fill(0), p = new Array(n + 1).fill(0), way = new Array(n + 1).fill(0);
-  for (let i = 1; i <= n; i++) {
-    p[0] = i; let j0 = 0; const minv = new Array(n + 1).fill(Infinity), used = new Array(n + 1).fill(false);
-    do {
-      used[j0] = true; const i0 = p[j0]; let delta = Infinity, j1 = 0;
-      for (let j = 1; j <= n; j++) if (!used[j]) {
-        const cur = a[i0 - 1][j - 1] - u[i0] - v[j];
-        if (cur < minv[j]) { minv[j] = cur; way[j] = j0; }
-        if (minv[j] < delta) { delta = minv[j]; j1 = j; }
-      }
-      for (let j = 0; j <= n; j++) if (used[j]) { u[p[j]] += delta; v[j] -= delta; } else minv[j] -= delta;
-      j0 = j1;
-    } while (p[j0] !== 0);
-    do { const j1 = way[j0]; p[j0] = p[j1]; j0 = j1; } while (j0);
-  }
-  const row = new Array(n);
-  for (let j = 1; j <= n; j++) if (p[j]) row[p[j] - 1] = j - 1;
-  return row;
-}
+/** Square cost matrix -> row[i] = assigned column (ports/lib/assign.mjs). */
+export const hungarian = assignSquare;
 
 export function associate({ tees, badges, baskets, padLengthPx, bounds = ASSOC_BOUNDS }) {
   const bps = baskets.map((k) => ({ index: k.index, point: basketPoint(k.bbox) }));

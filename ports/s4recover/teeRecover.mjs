@@ -96,6 +96,7 @@ export const RULES = Object.freeze({
 });
 
 import { nameCandidates } from '../../fg/names.mjs';
+import { assignMinCost } from '../lib/assign.mjs';
 import { greedyLoop, localQueries } from './poseSpace.mjs';
 import { ownedPx, componentStats, ownerPlane } from '../../fg/pxset.mjs';
 import { basketPoint } from '../../fg/s2/fg.s2.basketInvariants.observe.fg.mjs';
@@ -260,36 +261,6 @@ export function buildOccluders({ widthPx: W, heightPx: H }, { badges = [], baske
 
 // ---------------------------------------------------------------- badges
 
-/** Min-cost assignment (Hungarian, rows <= cols after transpose). cost[i][j]; Infinity = forbidden. */
-function hungarian(cost) {
-  const n = cost.length, m = n ? cost[0].length : 0;
-  if (!n || !m) return [];
-  const T = n > m;
-  const C = T ? cost[0].map((_, j) => cost.map((row) => row[j])) : cost;
-  const N = C.length, M = C[0].length, BIG = 1e9;
-  const u = new Array(N + 1).fill(0), v = new Array(M + 1).fill(0), p = new Array(M + 1).fill(0), way = new Array(M + 1).fill(0);
-  for (let i = 1; i <= N; i++) {
-    p[0] = i; let j0 = 0;
-    const minv = new Array(M + 1).fill(Infinity), used = new Array(M + 1).fill(false);
-    do {
-      used[j0] = true; const i0 = p[j0]; let delta = Infinity, j1 = 0;
-      for (let j = 1; j <= M; j++) if (!used[j]) {
-        const cur = (Number.isFinite(C[i0 - 1][j - 1]) ? C[i0 - 1][j - 1] : BIG) - u[i0] - v[j];
-        if (cur < minv[j]) { minv[j] = cur; way[j] = j0; }
-        if (minv[j] < delta) { delta = minv[j]; j1 = j; }
-      }
-      for (let j = 0; j <= M; j++) if (used[j]) { u[p[j]] += delta; v[j] -= delta; } else minv[j] -= delta;
-      j0 = j1;
-    } while (p[j0] !== 0);
-    do { const j1 = way[j0]; p[j0] = p[j1]; j0 = j1; } while (j0);
-  }
-  const pairs = [];
-  for (let j = 1; j <= M; j++) if (p[j]) {
-    const [i, jj] = T ? [j - 1, p[j] - 1] : [p[j] - 1, j - 1];
-    if (Number.isFinite(cost[i][jj])) pairs.push([i, jj]);
-  }
-  return pairs;
-}
 
 export const badgeRayDeg = (center, angleRad, plateCenter) =>
   axisDiffDeg(angleRad, Math.atan2(plateCenter[1] - center[1], plateCenter[0] - center[0]));
@@ -308,7 +279,7 @@ export function assignTeesToBadges(tees, badges) {
     if (d * Math.sin(res / DEG) > b.plateHalfMinPx) return Infinity;
     return d;
   }));
-  const pairs = hungarian(cost);
+  const pairs = assignMinCost(cost);
   return pairs.map(([ti, bi]) => ({
     tee: ti, badge: bi, label: badges[bi].label,
     residualDeg: r3(badgeRayDeg(tees[ti].center, tees[ti].angleRad, badges[bi].plateCenter)),

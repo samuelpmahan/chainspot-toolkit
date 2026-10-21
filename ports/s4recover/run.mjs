@@ -40,13 +40,14 @@ import { registerPoseQueries } from './poseSpace.mjs';
 import { GUARANTEES } from './guarantees.mjs';
 import { compareRecovered } from './compare.mjs';
 import { loadTestimony, TESTIMONY_DY as JUDGE_TESTIMONY_DY } from '../judge/testimony.mjs';
+import { pointerRule } from '../lib/pointerRule.mjs';
+import { readJson, readOpt, findKey } from '../lib/files.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 
 /** Measured annotation-frame -> canonical-frame row offsets (px), per testimony/<specimen>/README.md. */
 export const TESTIMONY_DY = JUDGE_TESTIMONY_DY;   // one table: ports/judge/testimony.mjs
 
-const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
 
 export function loadAttemptParts({ attempt, specimen, root = ROOT }) {
   const fork = join(root, 'attempts', 'stages', attempt, 'fork');
@@ -59,7 +60,6 @@ export function loadAttemptParts({ attempt, specimen, root = ROOT }) {
   const board = Object.freeze({ has: (a) => pxc.has(a), get: (a) => pxc.get(a), addresses: [...pxc.keys()] });
   const { widthPx, heightPx } = pxc.get('px.image.cropped');
   // Optional upstream outputs: absent means that lane did not run; record it and feed forward with nothing from it.
-  const readOpt = (p, absent) => (existsSync(p) ? readJson(p) : absent);
   const bridge = readOpt(join(out, 'basket-bridge', 'basket-recovery.part.json'), { comparisons: { accepted: [] }, absent: 'basket-bridge lane not run: no recovered basket boxes' });
   const recoveredBoxes = (bridge.comparisons?.accepted ?? []).filter((d) => d.classification !== 'existing-s2-exact').map((d) => d.semanticBbox);
   const refined = readJson(join(A, 's3fix', 'px.tees.refined.json')).tees.map((t) => ({ label: t.label, center: t.center, angleRad: t.angleRad, bbox: t.bbox, px: t.px }));
@@ -111,37 +111,17 @@ export function loadAttemptParts({ attempt, specimen, root = ROOT }) {
   };
 }
 
-function findKey(obj, key) {
-  if (!obj || typeof obj !== 'object') return undefined;
-  if (key in obj) return obj[key];
-  for (const v of Object.values(obj)) { const r = findKey(v, key); if (r !== undefined) return r; }
-  return undefined;
-}
-
 /**
  * The pointer rule (Sam, 2026-10-18: "ship one S4 recovery per course, fastest at 18/18"): among the variants whose
  * judged result ties the best (own hole, then impostors, other hole, still missing), the fastest standalone. A course
  * without testimony takes the variant the annotated courses accepted (acceptedElsewhere); with none on record there is
  * no pointer, and that is recorded, not thrown.
  */
-export function acceptRule({ acceptedElsewhere = null, judged = true } = {}) {
-  const rule = judged
-    ? 'fastest standalone variant whose judged result ties the best (landsOwnHole desc, impostors asc, landsOtherHole asc, stillMissing asc)'
-    : `no testimony: the variant the annotated courses accepted${acceptedElsewhere ? ` (${acceptedElsewhere})` : ' (none on record: no pointer)'}`;
-  const accept = (value, { names, branches, timingsMs }) => {
-    const live = names.filter((n) => !branches[n].error);
-    if (!judged) { accept.decided = acceptedElsewhere && live.includes(acceptedElsewhere) ? 'annotated courses' : 'nothing'; return accept.decided === 'nothing' ? null : acceptedElsewhere; }
-    const score = (n) => { const b = value.branches[n]; return [-(b.landsOwnHole ?? -1), b.impostors ?? Infinity, b.landsOtherHole ?? Infinity, b.stillMissing ?? Infinity]; };
-    const cmpScore = (a, b) => { const A = score(a), B = score(b); for (let i = 0; i < A.length; i++) if (A[i] !== B[i]) return A[i] - B[i]; return 0; };
-    const sorted = [...live].sort(cmpScore);
-    if (!sorted.length) { accept.decided = 'nothing'; return null; }
-    const tied = sorted.filter((n) => cmpScore(n, sorted[0]) === 0);
-    accept.decided = tied.length > 1 ? `tie on judged result among ${tied.join(', ')}: fastest standalone` : 'best judged result';
-    return tied.sort((a, b) => (timingsMs[a]?.ms ?? Infinity) - (timingsMs[b]?.ms ?? Infinity))[0];
-  };
-  accept.rule = rule; accept.decided = null;
-  return accept;
-}
+export const acceptRule = pointerRule({
+  judgedRule: 'fastest standalone variant whose judged result ties the best (landsOwnHole desc, impostors asc, landsOtherHole asc, stillMissing asc)',
+  variantsOf: (v) => v.branches,
+  score: (b) => [-(b.landsOwnHole ?? -1), b.impostors ?? Infinity, b.landsOtherHole ?? Infinity, b.stillMissing ?? Infinity],
+});
 
 export async function runTeeRecoverForkJoin({ attempt, specimen, outDir = null, root = ROOT, acceptedElsewhere = null, cas = true }) {
   const loaded = loadAttemptParts({ attempt, specimen, root });

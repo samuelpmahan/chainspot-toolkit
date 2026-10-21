@@ -37,6 +37,7 @@ import { HOLE_TRACE_SLOT, S7_CALCULATIONS, registerTraceQueries } from './traceS
 import { GUARANTEES } from './guarantees.mjs';
 import { compareTraces, drawCrop, judgedMarks, LEGEND } from './compare.mjs';
 import { judgeHoleTraces } from './judgeBends.mjs';
+import { pointerRule } from '../lib/pointerRule.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
@@ -96,23 +97,11 @@ export function loadS7Lanes({ out, upperRowsRemoved, values }) {
  * Sam (ends at his basket, stays within W / 2 of his corridor), then the fewest bends missed, then the fewest extra;
  * ties: the fastest standalone. A course without testimony takes the variant the annotated courses accepted.
  */
-export function acceptRule({ acceptedElsewhere = null, judged = true } = {}) {
-  const rule = judged ? 'fastest standalone variant whose judged result ties the best (agreeing holes desc, bendsMissed asc, extraBends asc)'
-    : `no testimony: the variant the annotated courses accepted${acceptedElsewhere ? ` (${acceptedElsewhere})` : ' (none on record: no pointer)'}`;
-  const accept = (value, { names, branches, timingsMs }) => {
-    const live = names.filter((n) => !branches[n].error);
-    if (!judged) { accept.decided = acceptedElsewhere && live.includes(acceptedElsewhere) ? 'annotated courses' : 'nothing'; return accept.decided === 'nothing' ? null : acceptedElsewhere; }
-    const score = (n) => { const b = value.branches[n]; return [-(b.agree ?? -1), b.bendsMissed ?? Infinity, b.extraBends ?? Infinity]; };
-    const cmpS = (a, b) => { const A = score(a), B = score(b); for (let i = 0; i < A.length; i++) if (A[i] !== B[i]) return A[i] - B[i]; return 0; };
-    const sorted = [...live].sort(cmpS);
-    if (!sorted.length) { accept.decided = 'nothing'; return null; }
-    const tied = sorted.filter((n) => cmpS(n, sorted[0]) === 0);
-    accept.decided = tied.length > 1 ? `tie on judged result among ${tied.join(', ')}: fastest standalone` : 'best judged result';
-    return tied.sort((a, b) => (timingsMs[a]?.ms ?? Infinity) - (timingsMs[b]?.ms ?? Infinity))[0];
-  };
-  accept.rule = rule; accept.decided = null;
-  return accept;
-}
+export const acceptRule = pointerRule({
+  judgedRule: 'fastest standalone variant whose judged result ties the best (agreeing holes desc, bendsMissed asc, extraBends asc)',
+  variantsOf: (v) => v.branches,
+  score: (b) => [-(b.agree ?? -1), b.bendsMissed ?? Infinity, b.extraBends ?? Infinity],
+});
 
 export async function runHoleTraceForkJoin({ attempt, specimen, outDir = null, root = ROOT, attemptsRoot = root, acceptedElsewhere = null, only = null, cas = true }) {
   const loaded = loadAttemptParts({ attempt, specimen, root: attemptsRoot });   // attemptsRoot: where attempts/stages/<ID> lives (read only)

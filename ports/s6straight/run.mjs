@@ -48,21 +48,14 @@ import { registerPathLoss as registerPathMeasurement } from './pathLoss.mjs';
 import { registerPairFeatures } from './pairFeatures.mjs';
 import { loadAttemptParts } from '../s4recover/run.mjs';
 import { registerAlphaProfile, s4LaneOutputsFor, loadAssociation } from '../../fg/alpha/run.mjs';
+import { pointerRule } from '../lib/pointerRule.mjs';
+import { readJson, readOpt, latestRun, findKey } from '../lib/files.mjs';
+export { latestRun };
 
 const ROOT = resolve(import.meta.dirname, '..', '..');
-const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
-const readOpt = (p, absent) => (existsSync(p) ? readJson(p) : absent);
 export const PINNED_CANDIDATE = 'TWO_RAY_ZERO_BEND_GEOMETRY_CANDIDATE_UNOWNED';
 
-function findKey(obj, key) {
-  if (!obj || typeof obj !== 'object') return undefined;
-  if (key in obj) return obj[key];
-  for (const v of Object.values(obj)) { const r = findKey(v, key); if (r !== undefined) return r; }
-  return undefined;
-}
-
 /** The latest run directory of a post-recipe step, or null. */
-export const latestRun = (dir) => (existsSync(dir) ? readdirSync(dir).filter((d) => d.startsWith('run-')).sort().at(-1) ?? null : null);
 
 export function loadS6Inputs({ attempt, specimen, root = ROOT }) {
   const fork = join(root, 'attempts', 'stages', attempt, 'fork'), out = join(fork, 'stage-output');
@@ -123,24 +116,12 @@ export function loadS6Inputs({ attempt, specimen, root = ROOT }) {
  * fewest FP, then fewest FN; ties -> fastest standalone. A course without testimony takes the variant the annotated
  * courses accepted (acceptedElsewhere); with none on record there is no pointer, recorded, not thrown.
  */
-export function acceptRule({ acceptedElsewhere = null, judged = true } = {}) {
-  const rule = judged
-    ? 'fastest standalone variant whose judged result ties the best (FP asc, then FN asc); variants with lane not run are excluded'
-    : `no testimony: the variant the annotated courses accepted${acceptedElsewhere ? ` (${acceptedElsewhere})` : ' (none on record: no pointer)'}`;
-  const accept = (value, { names, branches, timingsMs }) => {
-    const live = names.filter((n) => !branches[n].error && !value.branches[n]?.laneNotRun);
-    if (!judged) { accept.decided = acceptedElsewhere && live.includes(acceptedElsewhere) ? 'annotated courses' : 'nothing'; return accept.decided === 'nothing' ? null : acceptedElsewhere; }
-    const score = (n) => { const b = value.branches[n]; return [b.FP ?? Infinity, b.FN ?? Infinity]; };
-    const cmpScore = (a, b) => { const A = score(a), B = score(b); for (let i = 0; i < A.length; i++) if (A[i] !== B[i]) return A[i] - B[i]; return 0; };
-    const sorted = [...live].sort(cmpScore);
-    if (!sorted.length) { accept.decided = 'nothing'; return null; }
-    const tied = sorted.filter((n) => cmpScore(n, sorted[0]) === 0);
-    accept.decided = tied.length > 1 ? `tie on judged result among ${tied.join(', ')}: fastest standalone` : 'best judged result';
-    return tied.sort((a, b) => (timingsMs[a]?.ms ?? Infinity) - (timingsMs[b]?.ms ?? Infinity))[0];
-  };
-  accept.rule = rule; accept.decided = null;
-  return accept;
-}
+export const acceptRule = pointerRule({
+  judgedRule: 'fastest standalone variant whose judged result ties the best (FP asc, then FN asc); variants with lane not run are excluded',
+  variantsOf: (v) => v.branches,
+  score: (b) => [b.FP ?? Infinity, b.FN ?? Infinity],
+  excludeLaneNotRun: true,
+});
 
 /**
  * The S6 store of an attempt: the S3 board, the lane outputs as constants, every S6 Calculation and query (hole, path,

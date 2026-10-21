@@ -18,6 +18,7 @@
  * Pure functions on the S7 scene ({ lum, mask, W, H }) and the table; no thresholds hide anywhere else.
  */
 import { routeSensorAt, ribbonContrastAt, ROUTE, badgeMidAlongPx, badgeMidOf } from './routeSpace.mjs';
+import { assignMinCost as assignByColumn } from '../lib/assign.mjs';
 import { refineVertices, arange } from '../s7trace/hallway.mjs';
 import { refineBendsOf } from './bends.mjs';
 
@@ -40,32 +41,8 @@ export const MATCH = Object.freeze({
   secondBend: Object.freeze({ gain: 0.15, axisSpanR1: 1.8, axisStepR1: 0.18, gridStepR1: 0.47, bboxR1: 1.87, minLegR1: 0.935, top: 8, refineStartR1: 0.25, refineEndR1: 0.045 })
 });
 
-/** Rectangular min-cost assignment (Hungarian; Infinity = forbidden). -> [[row, col], ...] */
-export function assignMinCost(cost) {
-  const n = cost.length, m = n ? cost[0].length : 0;
-  if (!n || !m) return [];
-  const T = n > m, C = T ? cost[0].map((_, j) => cost.map((row) => row[j])) : cost;
-  const N = C.length, M = C[0].length, BIG = 1e9;
-  const u = new Array(N + 1).fill(0), v = new Array(M + 1).fill(0), p = new Array(M + 1).fill(0), way = new Array(M + 1).fill(0);
-  for (let i = 1; i <= N; i++) {
-    p[0] = i; let j0 = 0;
-    const minv = new Array(M + 1).fill(Infinity), used = new Array(M + 1).fill(false);
-    do {
-      used[j0] = true; const i0 = p[j0]; let delta = Infinity, j1 = 0;
-      for (let j = 1; j <= M; j++) if (!used[j]) {
-        const cur = (Number.isFinite(C[i0 - 1][j - 1]) ? C[i0 - 1][j - 1] : BIG) - u[i0] - v[j];
-        if (cur < minv[j]) { minv[j] = cur; way[j] = j0; }
-        if (minv[j] < delta) { delta = minv[j]; j1 = j; }
-      }
-      for (let j = 0; j <= M; j++) if (used[j]) { u[p[j]] += delta; v[j] -= delta; } else minv[j] -= delta;
-      j0 = j1;
-    } while (p[j0] !== 0);
-    do { const j1 = way[j0]; p[j0] = p[j1]; j0 = j1; } while (j0);
-  }
-  const pairs = [];
-  for (let j = 1; j <= M; j++) if (p[j]) { const [i, jj] = T ? [j - 1, p[j] - 1] : [p[j] - 1, j - 1]; if (Number.isFinite(cost[i][jj])) pairs.push([i, jj]); }
-  return pairs.sort((a, b) => a[0] - b[0]);
-}
+/** Rectangular min-cost assignment (Hungarian; Infinity = forbidden). -> [[row, col], ...] in row order (the algorithm is ports/lib/assign.mjs) */
+export const assignMinCost = (cost) => assignByColumn(cost).sort((a, b) => a[0] - b[0]);
 
 const contrast = (S, V, W) => { const [c] = ribbonContrastAt(S, V, W); return c === null ? MATCH.noReadingLum : c; };
 /** polyScore's answer from ribbonContrastAt (the same px in the same order: bit-identical, -99 for no reading). */
