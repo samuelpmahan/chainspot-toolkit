@@ -198,6 +198,9 @@ export function registerTraceQueries(store, { matcher = null, board = null } = {
     followRunEnd: 'px along the leg (where its edge-contrast run ends) and the passing fraction of its visible stations',
     followCloseOnBp: 'the last leg onto a BasketPoint: [passFrac, basket index, vertex px along the leg, heading rad] or null',
     followBendAt: 'the best bend at one vertex position: [score, vertex px along the leg, heading rad, passFrac] or null',
+    followRunEndW: 'px along the leg (where its edge-contrast run ends, stations every sampleStepW x W) and the passing fraction of its visible stations',
+    followCloseOnBpW: 'the last leg onto a BasketPoint (resolutions in W): [passFrac, basket index, vertex px along the leg, heading rad] or null',
+    followBendAtW: 'the best bend at one vertex position (resolutions in W): [score, vertex px along the leg, heading rad, passFrac] or null',
     kLegsMany: 'lum per leg of every route in the batch (edge contrast of each leg read alone; null: fewer than 30 visible px in a band)' };
   for (const [k, f] of Object.entries(MATCH_STEPS)) if (!store.registered(`fn.q.match.${k}`)) store.register(`fn.q.match.${k}`, { note: `routeMatch step: ${k} (ports/s7route/match.mjs)`,
     calculate: (io) => { const v = f(get(io.args.scene), ...io.args.a); return { value: v, unit: units[k], emits: { computed: 1, ...(Number.isFinite(v?.read) ? { routes: v.read } : {}) } }; } });

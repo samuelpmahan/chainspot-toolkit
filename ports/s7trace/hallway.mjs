@@ -309,6 +309,110 @@ export function findBend(S, O, phi, W, tEnd, selfC, tees, at = findBendAt) {
   return best;
 }
 
+/**
+ * THE FOLLOWER IN HALLWAY WIDTHS (lane s7bends, 2026-10-21; Sam: "what if you do your search resolution as a multiplier of the
+ * hallway width?"). The prototype's follower above searches in absolute px (vertex positions 1 px apart, a 70 px run sampled
+ * every 1 px, headings every 2 deg, closeOnBp's vertex every 1 px, a 1500 px run cap): W/42 per step on golden, W/30 on SeaTac,
+ * and no tolerance behind any of it. The tolerance is W: a bend moved 0.25 W sideways drops the edge sensor from 0.9 to
+ * 0.55-0.6 (lane s7bends, the joins measurement). Every resolution here is a fraction of W:
+ *   vertexStepW   vertex positions on the leg (findBend's and closeOnBp's)
+ *   runW          the run a new heading is read on: 3.4 W (the prototype's 70 px is 1.7-2.3 W over the 9 courses, 1.7 W on
+ *                 golden). The heading must be read on a run long enough to hold it: with 1.7 W the long run along the chosen
+ *                 heading drifts off the ribbon and findBend adds a 4 deg correction bend (its smallest turn). The px follower does
+ *                 this on Beaver 19 (the spurious 3.4 deg bend Sam called), and the W follower with a 1.7 W run did it on SeaTac 8
+ *                 and 21 and Beaver 17; with 3.4 W none of the six holes measured gets one (runs of 1.7, 2.0, 2.5, 3.4 W compared)
+ *   sampleStepW   stations along every run (a station reads +-EVIDENCE.alongPx along: W/8 leaves no gap at any dev scale)
+ *   lateralMissW  the heading step: the run's end misses by at most this between two headings, dtheta = lateralMissW / runW rad.
+ *                 W/16 (1.05 deg on a 3.4 W run): at W/8 on a 1.7 W run (4.2 deg) the heading is off by up to 2 deg and the same
+ *                 correction bends appear: on a 2-bend synthetic hallway a 4/-4 deg zigzag at every scale (the px follower's 2 deg
+ *                 grid makes the same zigzag at 1.5x and 2x; kbends.test.mjs; lane s7bends 2026-10-21)
+ *   bendVisibleW / closeVisibleW  the visible run a reading needs (the prototype's 25 and 12 stations, 1 px apart, on golden)
+ *   gapW          the run ends after this much failing run (the prototype's G = W stations, 1 px apart)
+ *   refineEndW    the winner is polished by halving (vertex step and heading step) down to this vertex step; null: no polish
+ * The run's cap is the image diagonal (a run stops at the image border anyway).
+ */
+export const FOLLOW_W = Object.freeze({ vertexStepW: 1 / 8, runW: 3.4, sampleStepW: 1 / 8, lateralMissW: 1 / 16, bendVisibleW: 0.6, closeVisibleW: 0.3, gapW: 1.0, refineEndW: 1 / 32 });
+export const followHeadingStep = (res = FOLLOW_W) => res.lateralMissW / res.runW;   // rad
+const passStatsW = (S, V, psi, ts, W) => {
+  const { cl, cr, okl, okr } = stationContrastAt(S, V, psi, ts, W), m = [];
+  for (let k = 0; k < ts.length; k++) if (okl[k] && okr[k]) m.push(Math.min(cl[k], cr[k]));
+  return m;
+};
+/** runEnd with its stations every sampleStepW x W and its gap in W (stationContrastAt: the stations share no samples). */
+export function runEndW(S, O, phi, W, t0, res = FOLLOW_W) {
+  const step = res.sampleStepW * W, ts = arange(t0, Math.hypot(S.W, S.H), step), { cl, cr, okl, okr } = stationContrastAt(S, O, phi, ts, W);
+  const G = Math.trunc(res.gapW / res.sampleStepW);
+  let last = t0, fails = 0;
+  for (let k = 0; k < ts.length; k++) {
+    const t = ts[k], x = O[0] + t * Math.cos(phi), y = O[1] + t * Math.sin(phi);
+    if (!(x > 2 && x < S.W - 3 && y > 2 && y < S.H - 3)) break;
+    if (!(okl[k] && okr[k])) continue;
+    if (Math.min(cl[k], cr[k]) > TAU) { last = t; fails = 0; } else { fails++; if (fails > G) break; }
+  }
+  let n = 0, p = 0;
+  for (let k = 0; k < ts.length; k++) if (ts[k] >= t0 && ts[k] <= last && okl[k] && okr[k]) { n++; if (Math.min(cl[k], cr[k]) > TAU) p++; }
+  return [last, n ? p / n : 0.0];
+}
+/**
+ * findBendAt in W: the best (score, tv, psi, passFrac) at vertex position tv over both sides and every heading (turns 4-150 deg,
+ * every followHeadingStep), or, with psis given, over those headings only (the winner's polish). Scored as the prototype.
+ */
+export function findBendAtW(S, O, phi, W, tv, selfC, tees, psis = null, res = FOLLOW_W) {
+  let best = null; const u = unit(phi), step = res.sampleStepW * W, ts = arange(W * 0.75, W * 0.75 + res.runW * W, step), minN = res.bendVisibleW / res.sampleStepW;
+  const V = [O[0] + u[0] * tv, O[1] + u[1] * tv], dth = followHeadingStep(res);
+  const list = psis ?? [1, -1].flatMap((side) => Array.from(arange(rad(4), rad(150) + 1e-9, dth), (d) => phi + side * d));
+  for (const psi of list) {
+    const turn = Math.abs(pyMod(deg(psi - phi) + 180, 360) - 180);
+    if (turn < 4 - 1e-9 || turn > 150 + 1e-9) continue;
+    if (selfC != null && otherTeeRibbon(V, psi, W, selfC, tees)) continue;
+    const m = passStatsW(S, V, psi, ts, W);
+    if (m.length < minN) continue;
+    const pf = m.filter((x) => x > TAU).length / m.length, sc = pf + 0.01 * median(m);
+    if (best === null || sc > best[0]) best = [sc, tv, psi, pf];
+  }
+  return best;
+}
+/** findBend in W: vertex positions every vertexStepW x W (the prototype's range), the winner polished (halving) to refineEndW. */
+export function findBendW(S, O, phi, W, tEnd, selfC, tees, at = findBendAtW, res = FOLLOW_W) {
+  const lo = Math.max(W * 0.5, tEnd - 1.2 * W), hi = tEnd + W * 0.9;
+  let best = null;
+  for (const tv of arange(lo, hi, res.vertexStepW * W)) { const b = at(S, O, phi, W, tv, selfC, tees, null, res); if (b && (best === null || b[0] > best[0])) best = b; }
+  if (!best || res.refineEndW == null) return best;
+  for (let ds = res.vertexStepW * W / 2, dh = followHeadingStep(res) / 2; ds >= res.refineEndW * W - 1e-9;) {
+    const [, tv, psi] = best, c = [];
+    for (const t of [tv + ds, tv - ds]) if (t >= lo && t <= hi) c.push(at(S, O, phi, W, t, selfC, tees, [psi], res));
+    c.push(at(S, O, phi, W, tv, selfC, tees, [psi + dh, psi - dh], res));
+    const m = c.filter((b) => b && b[0] > best[0]).sort((x, y) => y[0] - x[0])[0];
+    if (m) best = m; else { ds /= 2; dh /= 2; }
+  }
+  return best;
+}
+/** closeOnBp in W: vertex positions every vertexStepW x W, stations every sampleStepW x W; the winner's vertex polished to refineEndW. */
+export function closeOnBpW(S, O, phi, W, tEnd, used = [], res = FOLLOW_W) {
+  const u = unit(phi), step = res.sampleStepW * W, minN = res.closeVisibleW / res.sampleStepW, P = [O[0] + u[0] * tEnd, O[1] + u[1] * tEnd];
+  const lo = Math.max(W * 0.5, tEnd - 1.5 * W), hi = tEnd + 0.6 * W;
+  const at = (b, tv) => {
+    const V = [O[0] + u[0] * tv, O[1] + u[1] * tv], d = [b[0] - V[0], b[1] - V[1]], Lg = Math.hypot(d[0], d[1]);
+    if (Lg < 1.2 * W) return null;
+    const psi = Math.atan2(d[1], d[0]), turn = Math.abs(pyMod(deg(psi - phi) + 180, 360) - 180);
+    if (turn < 4 || turn > 150) return null;
+    const m = passStatsW(S, V, psi, arange(W * 0.75, Lg - W * 0.5, step), W);
+    if (m.length < minN) return null;
+    return [m.filter((x) => x > TAU).length / m.length, tv, psi];
+  };
+  let best = null;
+  S.bp.forEach((b, k) => {
+    if (used.includes(k) || hyp(b, P) > 8 * W) return;
+    for (const tv of arange(lo, hi, res.vertexStepW * W)) { const r = at(b, tv); if (r && (best === null || r[0] > best[0])) best = [r[0], k, r[1], r[2]]; }
+  });
+  if (!best || res.refineEndW == null) return best;
+  for (let ds = res.vertexStepW * W / 2; ds >= res.refineEndW * W - 1e-9;) {
+    const b = S.bp[best[1]], m = [best[2] + ds, best[2] - ds].filter((t) => t >= lo && t <= hi).map((t) => at(b, t)).filter((r) => r && r[0] > best[0]).sort((x, y) => y[0] - x[0])[0];
+    if (m) best = [m[0], best[1], m[1], m[2]]; else ds /= 2;
+  }
+  return best;
+}
+
 /** Work back from a BasketPoint: a last leg V -> BP with V on the current leg near the run end (follow.py close_on_bp). */
 export function closeOnBp(S, O, phi, W, tEnd, used = []) {
   const u = unit(phi); let best = null;
@@ -333,7 +437,9 @@ export function closeOnBp(S, O, phi, W, tEnd, used = []) {
 /** Follow a hole from start along phi: legs until a BasketPoint (on the leg, or closed on), lost, or 4 legs (follow.py trace). */
 export function trace(S, start, phi, W, { maxLegs = 4, excludeBp = [], selfC = null, tees = [], steps = null } = {}) {
   // steps (optional): the follower's steps as calls of the caller's (the S7 store passes profiled queries); defaults: this module's
+  // steps.findBend (optional) replaces the whole bend search (the follower in W: findBendW over the caller's per-position step)
   const runEndF = steps?.runEnd ?? runEnd, closeOnBpF = steps?.closeOnBp ?? closeOnBp, findBendAtF = steps?.findBendAt ?? findBendAt;
+  const findBendF = steps?.findBend ?? ((Sc, Oc, ph, Wd, tE, sC, tz) => findBend(Sc, Oc, ph, Wd, tE, sC, tz, findBendAtF));
   let O = [start[0], start[1]]; const verts = [O.slice()], legs = [];
   for (let leg = 0; leg < maxLegs; leg++) {
     const [tEnd, frac] = runEndF(S, O, phi, W, leg === 0 ? W * 0.6 : W * 0.75);
@@ -350,7 +456,7 @@ export function trace(S, start, phi, W, { maxLegs = 4, excludeBp = [], selfC = n
       legs.push({ O: V.slice(), phiDeg: deg(psi), tEnd: hyp(S.bp[k], V), passFrac: round(pf, 2), endBP: k, endLatPx: 0.0, closedOnBP: true });
       verts.push(S.bp[k].slice()); return { verts, end: k, legs };
     }
-    const b = findBend(S, O, phi, W, tEnd, selfC, tees, findBendAtF);
+    const b = findBendF(S, O, phi, W, tEnd, selfC, tees);
     if (!b || b[3] < 0.6) { legs.at(-1).stop = 'lost'; const u = unit(phi); verts.push([O[0] + u[0] * tEnd, O[1] + u[1] * tEnd]); return { verts, end: null, legs }; }
     const [, tv, psi] = b, u = unit(phi), V = [O[0] + u[0] * tv, O[1] + u[1] * tv];
     verts.push(V); legs.at(-1).bendDeg = round(pyMod(deg(psi - phi) + 180, 360) - 180, 1);
