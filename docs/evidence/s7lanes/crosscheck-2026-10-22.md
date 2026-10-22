@@ -85,3 +85,38 @@ beaverranchLazy 10, coletocreekLazy 5 and 10, seatacFull 8). Re-solving with the
 `node ports/s7route/laneRun.mjs --specimen S --attempt ID --out DIR` writes `tk.s7.laneCrosscheck.course.png` (both
 routes, labelled, coloured by verdict, legend) and `tk.s7.laneCrosscheck.hole<N>.png` per flagged hole.
 `node ports/s7route/laneEval.mjs --courses FILE --out DIR` runs a list and writes `lane-eval.json`.
+
+## Attempts read
+
+Dev (docs/evidence/dev-s1s4/ATTEMPTS at 2f9a214) and the validation re-run of 2026-10-21 (S0-S7 + export, S7 default):
+
+```
+golden attempt-1792617926445-6542c821d4da
+lenard attempt-1792617926412-8523bcfbfd96
+townelake attempt-1792617926491-9cf1913c669b
+heritage attempt-1792617926476-4d788613517e
+alex attempt-1792617978305-9a875b2a5413
+northpark attempt-1792618020513-356e8b893fef
+beaverranchCapture attempt-1792618257326-00630715f986
+beaverranchFull attempt-1792618369122-34b6a5d924b8
+beaverranchLazy attempt-1792618441707-a8e4a7dc74bd
+coletocreekCapture attempt-1792618474672-90c295eb5dff
+coletocreekFull attempt-1792618257291-da2c0dacca0e
+coletocreekLazy attempt-1792618478543-861de75c9462
+fountainhillsCapture attempt-1792618519285-404368bdf5df
+fountainhillsFull attempt-1792618572142-63e97cb0bea0
+fountainhillsLazy attempt-1792618638513-f75d8ab50191
+seatacCapture attempt-1792618257288-7e7f64ad625b
+seatacFull attempt-1792618648618-84b445604547
+```
+
+## Dev retest
+
+The lane adds a render case under `fg/` (in every stage's closure), so all 54 dev cells went stale and were re-run
+(`ports/state/matrix.mjs` retest(), called directly: the CLI's `state --retest` prunes every attempt this checkout's
+docs/evidence does not name, and `attempts/` is shared across worktrees). Result: 54/54 VERIFIED, same as frozen, after
+one correction: under the 4-way parallel retest, heritage's S4 pointer (rule: among judged ties, the fastest standalone)
+flipped from greedyOccluded to greedyOccludedNoBadgeRay (145 vs 121 ms; frozen run 102 vs 138 ms), which moved heritage
+tees 5 and 6 (up to 6.5 px) and the S7 default to 17/18 on heritage (hole 5). Re-run alone with no cache, S4 timed 112 vs
+125 ms, took greedyOccluded again, and S5-S7 re-run on it give the frozen result. The timing tie-break is a pre-existing
+nondeterminism of the S4 pointer under load, not a change of this lane.
