@@ -39,7 +39,7 @@ import { snapshotPaths, differences, sha, canonical } from '../../facts.mjs';
 import { stageState } from '../../recipes/closure.mjs';
 import { judgeAttempt } from '../judge/judge.mjs';
 import { loadHolePaths } from '../s7trace/holePaths.mjs';
-import { RETEST_S7_VARIANTS } from '../s7route/match.mjs';   // the S7 variants the retest runs (the rest: ports/s7trace/sweep.mjs --profile wide)   // S7 trace lane: Sam's corridors for the inspector
+import { RETEST_S7_VARIANTS, S7_DEFAULT } from '../s7route/match.mjs';   // the S7 variants the retest runs (the rest: ports/s7trace/sweep.mjs --profile wide)   // S7 trace lane: Sam's corridors for the inspector
 import { createPartStore } from '../../fg/store.mjs';
 import { partFrame } from '../../fg/render.mjs';
 import { renderFlipbook } from '../../fg/flipbook.mjs';
@@ -58,6 +58,19 @@ export const s5Accepted = (course) => course.s5?.accepted ?? null;
 export const s6Accepted = (course) => course.s6?.accepted ?? null;
 /** The S7 trace variant a course ships: the pointer ports/s7trace/run.mjs set by its stated rule (cmp.fn.Hole.trace.json accepted). */
 export const s7Accepted = (course) => course.s7?.accepted ?? null;
+/**
+ * A recorded, loud condition: the course's S7 pointer is not the S7 default (the pointer vote fell back to another variant, or the
+ * default did not run). The S7 cell is judged on the pointer, so without this a default that regressed on a course hides behind
+ * a variant that did not (golden, 2026-10-22: the default 17/18 after a 0.3 px S4 tee move, the pointer on routeMatchTeeAxisBadgePrior
+ * 18/18, the matrix "same"). -> null or { condition, pointer, default, defaultJudged, decidedBy }.
+ */
+export function s7PointerConditionOf(course) {
+  const s7 = course.s7, pointer = s7?.accepted ?? null;
+  if (!s7 || pointer === S7_DEFAULT) return null;
+  const ran = Object.prototype.hasOwnProperty.call(s7.timingsMs ?? {}, S7_DEFAULT), j = course.judgement?.S7bends?.branches?.[S7_DEFAULT] ?? null;
+  const defaultJudged = !ran ? 'did not run' : course.testimony && j ? `${j.agree}/${j.judged} agree, bends ${j.bendsHit}/${j.bendsMissed}/${j.extraBends} hit/missed/extra` : s7.reached?.[S7_DEFAULT] != null ? `${s7.reached[S7_DEFAULT]} of N = ${course.N} reach a basket` : 'unjudged';
+  return { condition: `S7 POINTER IS NOT THE S7 DEFAULT: the pointer is ${pointer ?? 'none'}${s7.decidedBy ? ` (${s7.decidedBy})` : ''}; the default ${S7_DEFAULT} ${defaultJudged}`, pointer, default: S7_DEFAULT, defaultJudged, decidedBy: s7.decidedBy ?? null };
+}
 
 /** The cells of a course, in stage order, and which closures each was computed with. */
 export const CELLS = Object.freeze([
@@ -191,12 +204,12 @@ export function matrixRows(inputs, frozen = null) {
       ...(cell.key === 'S4tees' && present ? { variants: variantsOf(course) } : {}),
       ...(cell.key === 'S5pairs' && present ? { variants: pairVariantsOf(course) } : {}),
       ...(cell.key === 'S6straight' && present ? { variants: s6VariantsOf(course) } : {}),
-      ...(cell.key === 'S7trace' && present ? { variants: variantsOfS7(course) } : {})
+      ...(cell.key === 'S7trace' && present ? { variants: variantsOfS7(course), ...(s7PointerConditionOf(course) ? { condition: s7PointerConditionOf(course) } : {}) } : {})
     });
   }
   const count = (s) => rows.filter((r) => r.status === s).length;
   return { rows, courses: inputs.courses.map((c) => c.course), cells: CELLS.map((c) => c.key),
-    emits: { cells: rows.length, met: count('met'), unmet: count('unmet'), unjudged: count('unjudged'), missing: count('missing'), stale: count('stale') }, units: UNITS };
+    emits: { cells: rows.length, met: count('met'), unmet: count('unmet'), unjudged: count('unjudged'), missing: count('missing'), stale: count('stale'), s7PointerNotDefault: rows.filter((r) => r.condition).length }, units: UNITS };
 }
 
 /**
@@ -250,7 +263,7 @@ export function matrixMarkdown(m) {
   const L = ['| course | cell | expected | result | status | freshness' + (m.rows.some((r) => r.vsFrozen) ? ' | vs frozen' : '') + ' |', '|---|---|---|---|---|---' + (m.rows.some((r) => r.vsFrozen) ? '|---' : '') + '|'];
   for (const r of m.rows) {
     const fresh = r.freshness + (r.changedPaths.length ? ` (${r.changedPaths.length} path${r.changedPaths.length > 1 ? 's' : ''}: ${r.changedPaths.slice(0, 3).join(', ')}${r.changedPaths.length > 3 ? ', ...' : ''})` : '');
-    L.push(`| ${r.course} | ${r.key} ${r.what} | ${r.expected} | ${r.result ?? '-'} | **${r.status}** | ${fresh}${r.vsFrozen ? ` | ${r.vsFrozen}` : ''} |`);
+    L.push(`| ${r.course} | ${r.key} ${r.what} | ${r.expected} | ${r.result ?? '-'}${r.condition ? ` **[${r.condition.condition}]**` : ''} | **${r.status}** | ${fresh}${r.vsFrozen ? ` | ${r.vsFrozen}` : ''} |`);
   }
   const e = m.emits;
   const frontier = m.rows.filter((r) => r.key === 'S4tees' && r.variants?.length);
@@ -261,7 +274,9 @@ export function matrixMarkdown(m) {
   if (s6f.length) L.push('', 'S6 straight variants per course (→ the pointer; ms = standalone; by the rule in cmp.fn.Hole.straight.json):', ...s6f.map((r) => `- ${r.course}: ${variantsText(r.variants)}`));
   const s7f = m.rows.filter((r) => r.key === 'S7trace' && r.variants?.length);
   if (s7f.length) L.push('', 'S7 trace variants per course (→ the pointer; ms = standalone; by the rule in cmp.fn.Hole.trace.json):', ...s7f.map((r) => `- ${r.course}: ${variantsText(r.variants)}`));
-  L.push('', `${e.cells} cells: ${e.met} met, ${e.unmet} unmet, ${e.unjudged} unjudged, ${e.missing} missing, ${e.stale} stale.`);
+  const notDefault = m.rows.filter((r) => r.condition);
+  if (notDefault.length) L.push('', `**${notDefault.length} course${notDefault.length > 1 ? 's' : ''}: S7 POINTER IS NOT THE S7 DEFAULT (${S7_DEFAULT}); the S7 cell is judged on the pointer:**`, ...notDefault.map((r) => `- **${r.course}: ${r.condition.condition}**`));
+  L.push('', `${e.cells} cells: ${e.met} met, ${e.unmet} unmet, ${e.unjudged} unjudged, ${e.missing} missing, ${e.stale} stale${e.s7PointerNotDefault ? `; ${e.s7PointerNotDefault} S7 pointer${e.s7PointerNotDefault > 1 ? 's' : ''} not the S7 default` : ''}.`);
   const goals = new Map(m.rows.map((r) => [r.stage, r.goal]));
   L.push('', 'Goals (stages/*.json responsibility):', ...[...goals].map(([s, g]) => `- ${s}: ${g}`));
   return L.join('\n');
@@ -579,6 +594,8 @@ export async function stateCommand(args, { root = ROOT, say = (s = '') => proces
   if (args.includes('--freeze')) { const inputs = store.get('tk.state.inputs'); const doc = await freeze(root, matrix, inputs); written.push(FROZEN_FILE); say(`frozen ${doc.rows.length} rows at ${doc.at}`); }
   say(args.includes('--json') ? JSON.stringify(matrix, null, 1) : matrixMarkdown(matrix));
   if (!args.includes('--json') && attention?.length) { say(`\nLook here first (${attention.length} items; the inspector links each):`); for (const a of attention.slice(0, 25)) say(`  ${a.course} ${a.cell}${a.name ? ` ${a.name}` : ''}${a.hole != null ? ` (hole ${a.hole})` : ''}: ${a.why}  ${a.link}`); if (attention.length > 25) say(`  ... ${attention.length - 25} more in attempts/state/inspector.html`); }
+  const nd = matrix.rows.filter((r) => r.condition);
+  if (nd.length) say(`\n${nd.length} S7 POINTER${nd.length > 1 ? 'S ARE' : ' IS'} NOT THE S7 DEFAULT (${S7_DEFAULT}): ${nd.map((r) => `${r.course} (pointer ${r.condition.pointer}; the default ${r.condition.defaultJudged})`).join('; ')}`);
   say(`\nwritten: ${written.join(', ')}`);
   return matrix;
 }

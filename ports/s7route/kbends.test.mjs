@@ -111,3 +111,22 @@ test('the hallway follower in W (hallway.mjs FOLLOW_W) traces the same route at 
   // the same route in units of W at both scales
   a.r.verts.forEach((v, i) => assert.ok(dist(v, b.r.verts[i].map((c) => c / 2)) < 0.25 * W, `vertex ${i}: ${v.map(Math.round)} vs ${b.r.verts[i].map((c) => Math.round(c / 2))} (x 1/2)`));
 });
+
+test('kRefineStarts: a bend peak narrower than the axis sweep step is found whatever the grid phase (golden 5, 2026-10-22)', () => {
+  // the K = 1 objective along the axis: a tent peaking at 28 lum (half-width 20 px) between sweep samples, a plateau of 8 lum, and
+  // far down the axis routes whose last leg is unread (null: masked) reading their first leg alone, 22 lum
+  const R1 = 44.5, S = { W: 2000, H: 2000, R1 }, st = { hole: '5', S: [100, 500], u: [1, 0], teeCenter: [90, 500], badgeAlongPx: 60 };
+  const E = [400, 300];
+  for (const phase of [0, 6, 12, 18]) {
+    const tPeak = (10 + 60) / KBENDS.firstBadgeFrac + 12 + phase;   // measured from the tee centre, as kCellAt's axis is
+    const legsMany = (_S, Vs) => Vs.map((V) => {
+      if (V.length === 2) return [-3];
+      const t = V[1][0] - st.teeCenter[0];
+      return t > tPeak + 70 ? [22, null] : [30, Math.max(8, 28 - Math.abs(t - tPeak))];
+    });
+    const one = kCellAt(S, st, E, 40, { legsMany }), many = kCellAt(S, st, E, 40, { legsMany, refineStarts: 3 });
+    assert.ok(Math.abs(many.best.verts[1][0] - st.teeCenter[0] - tPeak) < 3, `phase ${phase}: refineStarts 3 finds the peak (t ${many.best.verts[1][0] - st.teeCenter[0]} vs ${tPeak})`);
+    assert.ok(many.best.bottleneck >= 26);
+    if (phase === 0) assert.equal(one.best.bottleneck, 22, 'one start keeps the far route whose last leg is unread');
+  }
+});

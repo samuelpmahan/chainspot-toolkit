@@ -64,7 +64,7 @@ test('the matrix: one row per stage x course, emits, units, markdown, frozen com
   const inputs = { declarations: { S1: { responsibility: 'badges' }, S2: { responsibility: 'baskets' }, S3: { responsibility: 'tees' }, S4: { responsibility: 'recover' } }, courses: [golden, northpark] };
   const m = matrixRows(inputs);
   assert.equal(m.rows.length, 2 * CELLS.length);
-  assert.deepEqual(m.emits, { cells: 18, met: 6, unmet: 2, unjudged: 8, missing: 2, stale: 0 }, 'no S4 rows in this fixture, so the S2 and S3 FNs stay unmet; no S7 run, so S7trace is missing');
+  assert.deepEqual(m.emits, { cells: 18, met: 6, unmet: 2, unjudged: 8, missing: 2, stale: 0, s7PointerNotDefault: 0 }, 'no S4 rows in this fixture, so the S2 and S3 FNs stay unmet; no S7 run, so S7trace is missing');
   assert.ok(Object.keys(m.units).includes('stale'));
   const np = m.rows.find((r) => r.course === 'northpark' && r.key === 'S4tees');
   assert.equal(np.status, 'unjudged'); assert.equal(np.freshness, 'UNVERIFIED'); assert.equal(np.result, '18 of N = 18');
@@ -152,4 +152,21 @@ test('the S7trace cell (S7 trace lane): met only when every judged hole agrees w
   assert.deepEqual(row.variants.map((v) => [v.name, v.accepted]), [['endpoints', true], ['s3first', false]]);
   const np = matrixRows({ declarations: {}, courses: [{ ...g, course: 'northpark', testimony: null, counts: { ...g.counts, s7reached: 17 } }] }).rows.find((r) => r.key === 'S7trace');
   assert.equal(np.status, 'unjudged'); assert.equal(np.result, '17 of N = 18 holes reach a basket');
+});
+
+test('an S7 pointer that is not the S7 default is a recorded, loud condition on the S7trace row, in the emits and the markdown', async () => {
+  const { S7_DEFAULT } = await import('../s7route/match.mjs');
+  const { s7PointerConditionOf } = await import('./matrix.mjs');
+  const t = (agree, judged, extra) => ({ judged, agree, bendsSam: 10, bendsHit: 10, bendsMissed: 0, extraBends: extra, reachedBasket: agree, rows: [], notAgreeing: [] });
+  const s7 = (accepted) => ({ accepted, decidedBy: 'best judged result', timingsMs: { [S7_DEFAULT]: { ms: 900 }, other: { ms: 1200 } }, reached: { [S7_DEFAULT]: 18, other: 18 } });
+  const g = (accepted) => ({ ...golden, outputs: { ...outputs, s7trace: true }, freshness: { ...fresh, s7trace: { state: 'VERIFIED', changed: [] } }, s7: s7(accepted),
+    judgement: { ...golden.judgement, S7bends: { branches: { [S7_DEFAULT]: t(17, 18, 1), other: t(18, 18, 0) } } } });
+  assert.equal(s7PointerConditionOf(g(S7_DEFAULT)), null);
+  const c = s7PointerConditionOf(g('other'));
+  assert.equal(c.pointer, 'other'); assert.match(c.condition, /S7 POINTER IS NOT THE S7 DEFAULT/); assert.match(c.defaultJudged, /^17\/18 agree, bends 10\/0\/1/);
+  const m = matrixRows({ declarations: {}, courses: [g('other')] });
+  assert.equal(m.rows.find((r) => r.key === 'S7trace').condition.pointer, 'other');
+  assert.equal(m.emits.s7PointerNotDefault, 1);
+  assert.match(matrixMarkdown(m), /S7 POINTER IS NOT THE S7 DEFAULT/);
+  assert.equal(matrixRows({ declarations: {}, courses: [g(S7_DEFAULT)] }).emits.s7PointerNotDefault, 0);
 });

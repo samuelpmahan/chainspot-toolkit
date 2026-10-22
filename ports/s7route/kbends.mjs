@@ -139,7 +139,7 @@ function axisOf(start) {
  * One cell's K <= 1 routes under the fair cost: the straight route, and the best S -> B1 -> E with B1 on the tee axis at or past
  * the bound (a sweep every axisStepR1, then a halving search). -> { zero, one, best } each { verts, legs, bottleneck }.
  */
-export function kCellAt(S, start, E, W, { legsOf = legContrastsOf, legsMany = legsManyOf(legsOf), foreign = null, unitPx = null, owned = null } = {}) {
+export function kCellAt(S, start, E, W, { legsOf = legContrastsOf, legsMany = legsManyOf(legsOf), foreign = null, unitPx = null, owned = null, refineStarts = 1 } = {}) {
   const r1 = unitPx ?? S.R1, ax = axisOf(start), minLeg = KBENDS.minLegR1 * r1;
   // owned (rule set option seqFirstLegs): corridors no leg may run along; the straight route along one is ruled out like a crossing
   const zOwned = Boolean(owned && routeRunsAlong([start.S, E], owned, W));
@@ -162,16 +162,29 @@ export function kCellAt(S, start, E, W, { legsOf = legContrastsOf, legsMany = le
     let one = null; n += sweep.length;
     const reads = readMany(sweep);
     for (const r of reads) if (r && (!one || r.bottleneck > one.bottleneck)) one = r;
+    // refineStarts > 1 (rule set option kRefineStarts): the halving refine starts from the sweep's best local maxima, not its best
+    // read alone. A bend's peak along the axis is a few px wide (the edge band over the sine of the turn: golden 5, ~6 px above
+    // 22 lum), far narrower than the sweep's step (0.54 R1, 24 px on golden), so which sample lands near it depends on the grid's
+    // phase: a 0.3 px tee move made golden 5's sweep miss its 28 lum bend and keep a 22 lum one whose last leg is unread
+    // (a run of equal reads is one maximum: its first sample)
+    const starts = refineStarts > 1 ? reads.map((r, q) => (r && (!reads[q - 1] || reads[q - 1].bottleneck < r.bottleneck) && (!reads[q + 1] || reads[q + 1].bottleneck <= r.bottleneck) ? r : null))
+      .filter(Boolean).sort((x, y) => y.bottleneck - x.bottleneck).slice(0, refineStarts) : null;
+    const coarseBest = one;
     // at the bound: the best bend is the sweep's last, or the tee axis still reads as hallway at the reach's end (its first leg
     // reads no lower there than the best route's): the hole runs on past the stated reach
     const last = reads.at(-1), runsOn = Boolean(last && one && last.legs[0] !== null && one.legs[0] !== null && last.legs[0] >= one.legs[0]);
     const atEdge = Boolean(cut && one && sweep.length && (one.t >= sweep.at(-1) - 1e-9 || runsOn));
-    if (one) for (let step = KBENDS.axisStepR1 * r1 / 2; step >= KBENDS.refineEndR1 * r1;) {
-      const [a, b] = readMany([one.t + step, one.t - step]); n += 2;
-      const m = [a, b].filter((x) => x && x.bottleneck > one.bottleneck).sort((x, y) => y.bottleneck - x.bottleneck)[0];
-      if (m) one = m; else step /= 2;
-    }
-    return { result: one, found: true, atEdge, at: one ? one.t - ax.toS - start.badgeAlongPx : null };
+    const refineFrom = (o) => {
+      for (let step = KBENDS.axisStepR1 * r1 / 2; step >= KBENDS.refineEndR1 * r1;) {
+        const [a, b] = readMany([o.t + step, o.t - step]); n += 2;
+        const m = [a, b].filter((x) => x && x.bottleneck > o.bottleneck).sort((x, y) => y.bottleneck - x.bottleneck)[0];
+        if (m) o = m; else step /= 2;
+      }
+      return o;
+    };
+    if (starts?.length) { one = null; for (const o of starts) { const r = refineFrom(o); if (!one || r.bottleneck > one.bottleneck) one = r; } }
+    else if (one) one = refineFrom(one);
+    return { result: one, found: true, atEdge, at: coarseBest ? one.t - ax.toS - start.badgeAlongPx : null };
   };
   const under = underAssumption(FIRST_BEND_REACH, { unitPx: S.R1, limitPx: Math.hypot(S.W, S.H), detail: { hole: start.hole ?? null, step: 'K <= 1 sweep on the tee axis' }, run: sweepTo });
   const one = under.result, violation = under.violation;
