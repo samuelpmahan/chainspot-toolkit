@@ -56,3 +56,19 @@ test('pxc clean and prune: attempts/sweeps, keeping the sweeps docs/evidence cit
     assert.ok(!existsSync(join(sweeps, 'mine-1')) && existsSync(join(sweeps, 'mine-cited')) && existsSync(join(sweeps, 'theirs-1')));
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
+
+// 2026-10-22: the retest's automatic prune deleted unlisted attempts whoever created them; now only this checkout's own.
+test("the retest prune deletes only this checkout's own old unlisted attempts", async () => {
+  const { pruneAttempts } = await import('./matrix.mjs');
+  const { utimesSync } = await import('node:fs');
+  const root = realpathSync(mkdtempSync(join(tmpdir(), 'pxc-retestprune-'))), stages = join(root, 'attempts', 'stages');
+  try {
+    mkdirSync(stages, { recursive: true });
+    const old = new Date(Date.now() - 48 * 3600e3);
+    const make = (id, checkout) => { mkdirSync(join(stages, id)); writeFileSync(join(stages, `${id}.json`), JSON.stringify(checkout ? { createdBy: { checkout } } : {})); for (const p of [join(stages, id), join(stages, `${id}.json`)]) utimesSync(p, old, old); };
+    make('attempt-1-aaaa', root); make('attempt-2-bbbb', '/another/worktree'); make('attempt-3-cccc', null);
+    const r = pruneAttempts(root);
+    assert.deepEqual(r.removed.sort(), ['attempt-1-aaaa', 'attempt-1-aaaa.json']);
+    assert.ok(existsSync(join(stages, 'attempt-2-bbbb')) && existsSync(join(stages, 'attempt-3-cccc')));
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});

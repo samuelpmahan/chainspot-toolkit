@@ -30,7 +30,8 @@
  *                                              automatically once it has finished
  */
 import { loadTestimony } from '../judge/testimony.mjs';
-import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, rmSync, statSync, realpathSync } from 'node:fs';
+import { listedAnywhere } from './prune.mjs';
 import { spawnSync, spawn } from 'node:child_process';
 import { availableParallelism } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -561,13 +562,16 @@ const dirBytes = (dir) => { let n = 0; for (const e of readdirSync(dir, { withFi
  * Returns what was (or would be) removed.
  */
 export function pruneAttempts(root = ROOT, { dryRun = false, hours = 12 } = {}) {
-  const keep = referencedAttempts(root), dir = join(root, 'attempts', 'stages'), recentAfter = Date.now() - hours * 3600e3;
+  const keep = new Set([...referencedAttempts(root), ...listedAnywhere(root)]), dir = join(root, 'attempts', 'stages'), recentAfter = Date.now() - hours * 3600e3;
   if (!existsSync(dir)) return { removed: [], kept: [], bytes: 0 };
+  // only attempts THIS checkout created (createdBy.checkout, as `pxc clean`): attempts/ is shared by every worktree, and a
+  // retest here must never delete another checkout's work (2026-10-22: lanes found it would delete 16-24 of theirs)
+  const me = realpathSync(root), mine = (id) => { try { return JSON.parse(readFileSync(join(dir, `${id}.json`), 'utf8')).createdBy?.checkout === me; } catch { return false; } };
   const all = readdirSync(dir).filter((d) => d.startsWith('attempt-')), removed = [], kept = [];
   let bytes = 0;
   for (const name of all) {
     const id = name.replace(/\.json$/, '');
-    if (keep.has(id) || statSync(join(dir, name)).mtimeMs > recentAfter) { kept.push(id); continue; }
+    if (keep.has(id) || !mine(id) || statSync(join(dir, name)).mtimeMs > recentAfter) { kept.push(id); continue; }
     const p = join(dir, name); bytes += statSync(p).isDirectory() ? dirBytes(p) : statSync(p).size;
     removed.push(name); if (!dryRun) rmSync(p, { recursive: true, force: true });
   }
