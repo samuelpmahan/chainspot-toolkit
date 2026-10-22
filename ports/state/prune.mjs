@@ -3,7 +3,7 @@
  * pile up (heritage's dev attempt held 4 S6 runs, 3 S7 runs and 2 S4 and S5 runs; attempts/stages held 99 attempts,
  * 12 GB). Attempts are reproducible from the recipe (DOCTRINE: "the ReproducibleRecipe is the artifact"). Keep rule:
  *
- *   attempts   every attempt named in docs/evidence/dev-s1s4/ATTEMPTS, plus every attempt with anything modified in the
+ *   attempts   every attempt named in an ATTEMPTS file (KEEP_FILES: dev and validation), plus every attempt with anything modified in the
  *              last H hours (default 12: another agent may be running a course right now); every other attempt
  *              (its directory and its attempts/stages/<id>.json record) is deleted
  *   runs       inside a kept attempt, every directory of run-<ISO time>/ folders keeps
@@ -24,6 +24,9 @@ import { execFileSync } from 'node:child_process';
 
 export const ROOT = resolve(import.meta.dirname, '..', '..');
 export const ATTEMPTS_FILE = 'docs/evidence/dev-s1s4/ATTEMPTS';
+// every file whose attempts are kept: the dev courses `pxc state` reads, and the validation views the evidence cites
+// (2026-10-22: the validation attempts were listed nowhere, so a retest's prune would have deleted them)
+export const KEEP_FILES = Object.freeze([ATTEMPTS_FILE, 'docs/evidence/validation-s7/ATTEMPTS']);
 const ATTEMPT = /^attempt-\d+-[0-9a-f]+$/;
 const RUN = /^run-\d{4}-\d\d-\d\dT[\d-]+Z$/;
 
@@ -111,8 +114,10 @@ export function listedAnywhere(root) {
   try { checkouts = execFileSync('git', ['-C', root, 'worktree', 'list', '--porcelain'], { encoding: 'utf8' }).split('\n').filter((l) => l.startsWith('worktree ')).map((l) => l.slice(9)); } catch { /* not a git checkout: this one only */ }
   const ids = new Set();
   for (const c of new Set([root, ...checkouts])) {
-    const f = join(c, ATTEMPTS_FILE);
-    if (existsSync(f)) for (const l of readFileSync(f, 'utf8').split('\n')) { const id = l.trim().split(/\s+/)[1]; if (id) ids.add(id); }
+    for (const rel of KEEP_FILES) {
+      const f = join(c, rel);
+      if (existsSync(f)) for (const l of readFileSync(f, 'utf8').split('\n')) { const id = l.trim().split(/\s+/)[1]; if (id) ids.add(id); }
+    }
   }
   return ids;
 }

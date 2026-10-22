@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, existsSync, rmSync, realpathSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { clean } from './prune.mjs';
+import { clean, listedAnywhere } from './prune.mjs';
 
 // 2026-10-21: a lane cleaning up "every attempt newer than my first run" deleted the main checkout's dev attempts. clean
 // deletes only attempts this checkout created (createdBy.checkout), never one an ATTEMPTS file lists, never an unmarked one.
@@ -23,5 +23,15 @@ test('pxc clean: only the attempts this checkout created and no ATTEMPTS file li
     assert.deepEqual(r.removed, ['attempt-1-aaaa']); assert.deepEqual(r.kept.map((k) => k.id), ['attempt-2-bbbb']);
     assert.ok(!existsSync(join(stages, 'attempt-1-aaaa')) && !existsSync(join(stages, 'attempt-1-aaaa.json')));
     for (const id of ['attempt-2-bbbb', 'attempt-3-cccc', 'attempt-4-dddd']) assert.ok(existsSync(join(stages, id)), id);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+// 2026-10-22: the validation attempts were listed in no ATTEMPTS file, so a retest's prune would have deleted them.
+test('the validation ATTEMPTS file protects its attempts too', () => {
+  const root = realpathSync(mkdtempSync(join(tmpdir(), 'pxc-keep-')));
+  try {
+    mkdirSync(join(root, 'docs', 'evidence', 'validation-s7'), { recursive: true });
+    writeFileSync(join(root, 'docs', 'evidence', 'validation-s7', 'ATTEMPTS'), 'seatacFull attempt-5-eeee\n');
+    assert.ok(listedAnywhere(root).has('attempt-5-eeee'));
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
