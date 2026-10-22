@@ -28,7 +28,8 @@ import { sceneOf, hallwayModel, solveS3First, solveBadgeOnly } from './s3first.m
 import { solveEndpoints } from './endpoints.mjs';
 import { routeTableOn, regionAssignTableOn } from '../s7route/routeSpace.mjs';
 import { registerRegion, REGION_SCENE_PART } from '../s7route/regionSpace.mjs';
-import { routeMatchOf, MATCH_STEPS, MATCH_RULES } from '../s7route/match.mjs';
+import { routeMatchOf, seqCellsOf, cellRulesOf, MATCH_STEPS, MATCH_RULES } from '../s7route/match.mjs';
+import { registerEvidence, evidenceRankOf, CELL_EVIDENCE_PART } from '../s7route/evidenceSpace.mjs';
 import { routeMatchViewOf } from './traceView.mjs';
 
 export const HOLE_TRACE_SLOT = Object.freeze({
@@ -106,7 +107,7 @@ export const S7_CALCULATIONS = Object.freeze([
 
 // ------------------------------------------------------------------------------------------------ the store boundary
 
-export const TRACE_QUERY_NAMES = Object.freeze(['s3first', 'badgeOnly', 'endpoints', 'pinned', 'routeMatch']);
+export const TRACE_QUERY_NAMES = Object.freeze(['s3first', 'badgeOnly', 'endpoints', 'pinned', 'routeMatch', 'seqCells']);
 
 /** Douglas-Peucker: the vertices of a walked polyline that leave the chord by more than eps px. */
 export function simplify(pts, eps) {
@@ -153,6 +154,28 @@ export function registerTraceQueries(store, { matcher = null, board = null } = {
   const holeList = (S) => get('tk.s7.holes').holes.map((h) => ({ n: Number(h.hole), c: S.badges[Number(h.hole)], half: S.badgeHalf[Number(h.hole)], tee: h.tee }));
   const seedsS4 = () => Object.fromEntries(get('tk.s7.holes').holes.filter((h) => h.tee?.source.startsWith('S4')).map((h) => [h.hole, { ...h.tee }]));
   const teesOf = () => [...Object.values(base()).map((b) => [b.teeCenter, b.u]), ...Object.values(seedsS4()).map((s) => [s.teeCenter, s.u])];
+  // what every routeMatch solve reads: its table and scene, S6's straight verdicts, the per-hole steps as profiled store calls
+  const solveContext = (rules, refineBends = true) => {
+    // rule set sensor (ports/s7route/regionSpace.mjs): 'region' = the assignment reads the hallway REGION (tk.s7.sceneRegion), the
+    // routes and the per-hole steps read edges; 'regionAll' = every measure reads the region
+    const region = rules?.sensor === 'region' || rules?.sensor === 'regionAll';
+    if (region) registerRegion(store);
+    const scene = rules?.sensor === 'regionAll' ? REGION_SCENE_PART : 'tk.s7.sceneS4', tableOpts = { board: board ?? null, units: rules?.tableUnits ?? 'r1', search: rules?.tableSearch ?? 'full' };
+    const tbl = rules?.sensor === 'region' ? regionAssignTableOn(store, { ...tableOpts, regionScene: REGION_SCENE_PART }) : routeTableOn(store, { ...tableOpts, ...(region ? { scene } : {}) }), S = get(scene);
+    // rule 1 of the bend placement reads S6's accepted straight verdict (tk.s7.straight, a root input of the S7 runner)
+    const straight = !refineBends ? undefined : store.has('tk.s7.straight') ? get('tk.s7.straight').verdicts : null;
+    // every per-hole step is its own profiled store call (fn.q.match.*); the scene is passed by address
+    const steps = Object.fromEntries(Object.keys(MATCH_STEPS).map((k) => [k, (_S, ...a) => store.call(`fn.q.match.${k}`, { scene, a }).value]));
+    // the sequencing's cells: one store call per cell rule set (the final-assignment options left out, keys sorted)
+    steps.seqCells = (ruleSet) => store.call('fn.q.trace.seqCells', { rules: cellRulesOf(ruleSet), ...(refineBends ? {} : { refineBends: false }) }).value;
+    // seqScore 'evidence': the cells ranked by the combined evidence (tk.s7.cellEvidence, ports/s7route/evidenceSpace.mjs)
+    steps.evidenceRank = (cells, ruleSet) => { registerEvidence(store); return evidenceRankOf(get(CELL_EVIDENCE_PART), cells, ruleSet, cellRulesOf(ruleSet)); };
+    // the sequencing's region reads (rule set seqGate / seqScore 'region'): the same steps on the region scene
+    const seqRegion = rules?.seqGate === 'region' || rules?.seqGate === 'regionWiden' || rules?.seqScore === 'region';
+    if (seqRegion) registerRegion(store);
+    const regionSteps = seqRegion ? Object.fromEntries(['sensor', 'contrast'].map((k) => [k, (_S, ...a) => store.call(`fn.q.match.${k}`, { scene: REGION_SCENE_PART, a }).value])) : null;
+    return { table: tbl, S, scene, region, straight, steps, regionSteps };
+  };
   const table = {
     'fn.q.trace.s3first': ({ s4 = false } = {}) => {
       const S = get(s4 ? 'tk.s7.sceneS4' : 'tk.s7.scene');
@@ -170,23 +193,18 @@ export function registerTraceQueries(store, { matcher = null, board = null } = {
     },
     'fn.q.trace.routeMatch': ({ secondBends = true, refineBends = true, rules = undefined } = {}) => {
       // S7 after S5 (docs/evidence/s7after): scoring = tk.s7.routeTable (cached rows), matching = ports/s7route/match.mjs
-      // rule set sensor (ports/s7route/regionSpace.mjs): 'region' = the assignment reads the hallway REGION (tk.s7.sceneRegion), the
-      // routes and the per-hole steps read edges; 'regionAll' = every measure reads the region
-      const region = rules?.sensor === 'region' || rules?.sensor === 'regionAll';
-      if (region) registerRegion(store);
-      const scene = rules?.sensor === 'regionAll' ? REGION_SCENE_PART : 'tk.s7.sceneS4', tableOpts = { board: board ?? null, units: rules?.tableUnits ?? 'r1', search: rules?.tableSearch ?? 'full' };
-      const table = rules?.sensor === 'region' ? regionAssignTableOn(store, { ...tableOpts, regionScene: REGION_SCENE_PART }) : routeTableOn(store, { ...tableOpts, ...(region ? { scene } : {}) }), S = get(scene);
-      // rule 1 of the bend placement reads S6's accepted straight verdict (tk.s7.straight, a root input of the S7 runner)
-      const straight = !refineBends ? undefined : store.has('tk.s7.straight') ? get('tk.s7.straight').verdicts : null;
-      // every per-hole step is its own profiled store call (fn.q.match.*); the scene is passed by address
-      const steps = Object.fromEntries(Object.keys(MATCH_STEPS).map((k) => [k, (_S, ...a) => store.call(`fn.q.match.${k}`, { scene, a }).value]));
-      // the sequencing's region reads (rule set seqGate / seqScore 'region'): the same steps on the region scene
-      const seqRegion = rules?.seqGate === 'region' || rules?.seqGate === 'regionWiden' || rules?.seqScore === 'region';
-      if (seqRegion) registerRegion(store);
-      const regionSteps = seqRegion ? Object.fromEntries(['sensor', 'contrast'].map((k) => [k, (_S, ...a) => store.call(`fn.q.match.${k}`, { scene: REGION_SCENE_PART, a }).value])) : null;
+      const { table, S, scene, region, straight, steps, regionSteps } = solveContext(rules, refineBends);
       const r = routeMatchOf(table, S, get('tk.s7.routeStart'), { secondBends, straight, steps, regionSteps, ...(rules ? { rules: { ...MATCH_RULES, ...rules } } : {}) });
       const regionCondition = region ? get(REGION_SCENE_PART).regionCondition : null;
       return { value: { ...r, scene, ...(region ? { sensor: rules.sensor } : {}), ...(regionCondition ? { condition: regionCondition } : {}) }, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, reached: Object.values(r.holes).filter((h) => h.end != null).length, secondBends: Object.values(r.holes).filter((h) => (h.verts?.length ?? 0) === 4).length, ...(r.sequencing ? { cellsEvaluated: r.sequencing.cellsEvaluated, cellsFullTable: r.sequencing.cellsFullTable, holesWidened: r.sequencing.widened.length } : {}), ...violationEmits(r.assumptions) } };
+    },
+    // the sequencing's cells under one rule set (kBends 'seq'; match.mjs seqCellsOf): every cell's route and value before the final
+    // assignment. The rule sets whose cells are the same (the S7 default and its evidence sibling) share this one answer
+    'fn.q.trace.seqCells': ({ rules, refineBends = true }) => {
+      const { table, S, straight, steps, regionSteps } = solveContext(rules, refineBends), st = get('tk.s7.routeStart');
+      const startOf = (hole) => st.holes.find((h) => String(h.hole) === String(hole)), W = table.widthPx;
+      const c = seqCellsOf({ table, holes: table.holes, S, W, startOf, verdicts: straight, steps, legsOf: (Sc, V, Wd) => steps.kLegs(Sc, V, Wd), legsMany: (Sc, Vs, Wd) => steps.kLegsMany(Sc, Vs, Wd), rules, regionSteps });
+      return { value: c, unit: 'lum (cell values: weakest-leg edge contrast minus the turning price); px (canonical frame): routes', emits: { cellsEvaluated: c.summary.cellsEvaluated, cellsScored: c.summary.cellsScored, ...violationEmits(c.violations) } };
     },
     'fn.q.trace.pinned': () => {
       const r = pinnedSolve(get('tk.s7.pinnedTraces'), get('tk.s7.holes'), W());
@@ -203,8 +221,17 @@ export function registerTraceQueries(store, { matcher = null, board = null } = {
     followCloseOnBpW: 'the last leg onto a BasketPoint (resolutions in W): [passFrac, basket index, vertex px along the leg, heading rad] or null',
     followBendAtW: 'the best bend at one vertex position (resolutions in W): [score, vertex px along the leg, heading rad, passFrac] or null',
     kLegsMany: 'lum per leg of every route in the batch (edge contrast of each leg read alone; null: fewer than 30 visible px in a band)' };
+  // the follower's steps are cached by their arguments (pure, and asked again: the default's seqFollow and the evidence's forward
+  // follower ride the same holes); the other steps are cheap or carry whole routes in their arguments
+  const stepAnswers = new Map();
   for (const [k, f] of Object.entries(MATCH_STEPS)) if (!store.registered(`fn.q.match.${k}`)) store.register(`fn.q.match.${k}`, { note: `routeMatch step: ${k} (ports/s7route/match.mjs)`,
-    calculate: (io) => { const v = f(get(io.args.scene), ...io.args.a); return { value: v, unit: units[k], emits: { computed: 1, ...(Number.isFinite(v?.read) ? { routes: v.read } : {}) } }; } });
+    calculate: (io) => {
+      const key = k.startsWith('follow') ? `${k} ${JSON.stringify(io.args)}` : null;
+      if (key && stepAnswers.has(key)) return { value: stepAnswers.get(key), unit: units[k], emits: { cached: 1 } };
+      const v = f(get(io.args.scene), ...io.args.a);
+      if (key) stepAnswers.set(key, v);
+      return { value: v, unit: units[k], emits: { computed: 1, ...(Number.isFinite(v?.read) ? { routes: v.read } : {}) } };
+    } });
   const answers = new Map();
   for (const [fn, q] of Object.entries(table)) store.register(fn, { note: 'S7 hallway math behind the PxC boundary (ports/s7trace)',
     calculate: (io) => {

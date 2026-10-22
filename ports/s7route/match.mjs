@@ -201,6 +201,8 @@ export function secondBend(S, start, V1, E, W, f1, rules = MATCH_RULES, steps = 
  * The per-hole steps of the matching rule. Default: direct calls. The S7 store passes its own (fn.q.match.*, ports/s7trace/
  * traceSpace.mjs) so every step is a profiled store call: same functions, same arguments, so the same answers.
  */
+/** The follower's resolutions without its closing reach (closeReachR1): what runEndW and findBendAtW read. */
+export const stepResOf = (res) => { const { closeReachR1, ...r } = res; return r; };
 export const MATCH_STEPS = Object.freeze({
   refine: (S, V, W, u, rules = MATCH_RULES) => (rules.refineUnits === 'px'
     ? refineVertices(S, V, W, u, MATCH.refineIters, { axisSpanPx: 6, score: polyScoreFast })[0]   // E18 as recorded: +-6 px, the prototype's px steps
@@ -259,6 +261,8 @@ export const MATCH_STEPS = Object.freeze({
  *   seqGate:       (kBends 'seq') 'region' = the sequencing's sensor gates read the region passFrac (regionSpace.mjs) |
  *                  'regionWiden' = only the widening gate reads it
  *   seqScore:      (kBends 'seq') 'region' = each neighbourhood cell is assigned by the region support of its (edge-placed) route
+ *                  | 'evidence' = the cells are the default's (cellRulesOf), the final assignment ranks them by log P of the combined
+ *                  evidence (evidenceSpace.mjs; weights: evidenceWeights, else EVIDENCE_WEIGHTS)
  *   seqPolish:     (kBends 'seq') true = every chain candidate polished on its weakest leg before it competes (kbends.mjs polishEach)
  *   seqOwn:        (kBends 'seq') true = confirmed routes own their corridors (straight claims, then routes passing the gate); the
  *                  other holes' chains may not run a leg along one (kbends.mjs legRunsAlong), crossing allowed
@@ -321,6 +325,10 @@ export const RULE_SETS = Object.freeze({
   routeMatchKBendsSeq3Search: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: true },
   // Seq3Search with the follower's resolutions in W (Sam 2026-10-21: "do your search resolution as a multiplier of the hallway width")
   routeMatchKBendsSeq3SearchW: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w' },
+  // the evidence sibling (Sam, 2026-10-22: "take out earlier algorithm and use that as just another piece of ranking evidence"): the
+  // default's cells (the same store call, every guard kept), the final assignment ranked by the combined evidence of every perspective
+  // on those cells (ports/s7route/evidenceSpace.mjs tk.s7.cellEvidence: basket backwards, the lanes, the follower, the sensors, B*)
+  routeMatchKBendsSeq3SearchWEvidence: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w', seqScore: 'evidence' },
   // the same, vertex positions every W/16
   routeMatchKBendsSeq3SearchW16: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w', followRes: { vertexStepW: 1 / 16 } },
   // SearchW with the K-bend search's hallway steps in W as well
@@ -360,6 +368,18 @@ export const S7_DEFAULT = 'routeMatchKBendsSeq3SearchW';
 export const RETEST_S7_VARIANTS = Object.freeze(['pinned', ...PROFILES.quick]);
 export const profileOf = (name) => (PROFILES[name] ?? String(name ?? '').split(',').map((s) => s.trim()).filter((s) => s in RULE_SETS));
 
+/**
+ * The options that shape the sequencing's cells (seqCellsOf), keys sorted: the final assignment's own options (seqScore 'evidence'
+ * and its weights) left out, so the S7 default and its evidence sibling ask the store for the same cells.
+ */
+export const FINAL_ONLY = Object.freeze(['evidenceWeights']);
+export function cellRulesOf(rules) {
+  const r = { ...MATCH_RULES, ...(rules ?? {}) };
+  if (r.seqScore === 'evidence') delete r.seqScore;
+  for (const k of FINAL_ONLY) delete r[k];
+  return Object.fromEntries(Object.keys(r).sort().map((k) => [k, r[k]]));
+}
+
 export function routeMatchOf(table, S, starts, { secondBends = true, straight: verdicts = undefined, steps = MATCH_STEPS, rules = MATCH_RULES, regionSteps = null } = {}) {
   const W = table.widthPx, holes = table.holes;
   if (!(W > 0) || !holes.length) return { holes: {}, assignment: [], widthPx: W ?? null, condition: 'no hallway width or no holes in the route table' };
@@ -368,7 +388,10 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
   const startOf = (hole) => starts.holes.find((h) => String(h.hole) === String(hole));
   const legsOf = (Sc, V, Wd) => steps.kLegs(Sc, V, Wd), legsMany = (Sc, Vs, Wd) => steps.kLegsMany(Sc, Vs, Wd);
   const kCells = kb ? holes.map((hole, i) => table.baskets.map((b, k) => { const kc = kCellAt(S, startOf(hole), b.point ?? table.rows[i].cells[k].contrast.verts.at(-1), W, { legsOf, legsMany }); if (kc.violation) violated.push({ ...kc.violation, hole, basket: k }); return kc; })) : null;
-  const sq = seq ? seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsMany, rules, regionSteps }) : null;
+  // the sequencing's cells (steps.seqCells: a store call shared by every rule set with the same cells), then its final
+  // assignment; seqScore 'evidence' ranks the cells by the combined evidence (steps.evidenceRank, evidenceSpace.mjs)
+  const sqArgs = { table, holes, S, W, startOf, verdicts, steps, legsOf, legsMany, rules, regionSteps };
+  const sq = seq ? seqFinalOf(steps.seqCells ? steps.seqCells(rules) : seqCellsOf(sqArgs), { ...sqArgs, rescore: rules.seqScore === 'evidence' && steps.evidenceRank ? (c) => steps.evidenceRank(c, rules) : null }) : null;
   const score = sq ? sq.score : kb ? kCells.map((row, i) => row.map((x, k) => (x.best.bottleneck === null ? MATCH.noReadingLum : x.best.bottleneck) + (table.onAxisPrior[i]?.[k] ?? 0)))
     : table.contrastMatrix.map((row, i) => row.map((c, k) => (c === null ? MATCH.noReadingLum : c) + (table.onAxisPrior[i]?.[k] ?? 0)));
   const pairs = sq ? sq.pairs : assignMinCost(score.map((row) => row.map((v) => -v)));
@@ -442,7 +465,16 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
  * chain when the sensor rejects that route; one-to-one over those cells. A hole left without a basket is assigned among the
  * baskets still free by its K <= 1 routes. -> { pairs, score, route: { [hole]: verts }, why, record, summary }
  */
-function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsMany, rules = MATCH_RULES, regionSteps = null }) {
+export function seqAssign(args) { return seqFinalOf(seqCellsOf(args), args); }
+
+/**
+ * The sequencing up to (not including) its final one-to-one assignment: the straight claims, the neighbourhoods, every cell's
+ * route and value, the widening, the owned corridors and the follower. -> { score (holes x baskets, -Infinity: no route or
+ * rejected), route ({ 'hole@basket': verts } of every scored cell), why, record, violations, summary, claims, starts, bp }.
+ * A pure answer: seqFinalOf never mutates it, so the S7 store serves it once (fn.q.trace.seqCells) to every rule set that
+ * shares these cells (the S7 default and its evidence sibling).
+ */
+export function seqCellsOf({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsMany, rules = MATCH_RULES, regionSteps = null }) {
   const violations = [];   // the stated assumptions (fg/assumptions.mjs) this sequencing's searches hit
   // seqGate 'region': the sequencing's sensor gates (chain trigger, chain vs K <= 1, the per-bend gain, the widening) read the
   // hallway REGION passFrac (regionSpace.mjs); seqScore 'region': each cell is assigned by the region support of its route.
@@ -561,9 +593,10 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
     // the follower's steps, each a profiled store call: the prototype's px resolutions, or (seqFollow 'w') fractions of W
     const res0 = { ...FOLLOW_W, ...(rules.followRes ?? {}) };
     const followStepsOf = (res) => (rules.seqFollow === 'w' ? {
-      runEnd: (Sc, O, phi, Wd, t0) => steps.followRunEndW(Sc, O, phi, Wd, t0, res), closeOnBp: (Sc, O, phi, Wd, tEnd, used) => steps.followCloseOnBpW(Sc, O, phi, Wd, tEnd, used, res),
+      // the run and the bend read no reach: they are asked without it, so a widened re-trace re-asks the same (cached) steps
+      runEnd: (Sc, O, phi, Wd, t0) => steps.followRunEndW(Sc, O, phi, Wd, t0, stepResOf(res)), closeOnBp: (Sc, O, phi, Wd, tEnd, used) => steps.followCloseOnBpW(Sc, O, phi, Wd, tEnd, used, res),
       onLeg: (Sc, O, phi, Wd, tEnd, used) => bpOnLegW(Sc, O, phi, Wd, tEnd, used, res),
-      findBend: (Sc, O, phi, Wd, tEnd, selfC, tees) => findBendW(Sc, O, phi, Wd, tEnd, selfC, tees, (Sx, Ox, px, Wx, tv, sC, tz, psis) => steps.followBendAtW(Sx, Ox, px, Wx, tv, sC, tz, psis, res), res) } : {
+      findBend: (Sc, O, phi, Wd, tEnd, selfC, tees) => findBendW(Sc, O, phi, Wd, tEnd, selfC, tees, (Sx, Ox, px, Wx, tv, sC, tz, psis) => steps.followBendAtW(Sx, Ox, px, Wx, tv, sC, tz, psis, stepResOf(res)), res) } : {
       runEnd: (Sc, O, phi, Wd, t0) => steps.followRunEnd(Sc, O, phi, Wd, t0), closeOnBp: (Sc, O, phi, Wd, tEnd, used) => steps.followCloseOnBp(Sc, O, phi, Wd, tEnd, used),
       findBendAt: (Sc, O, phi, Wd, tv, selfC, tees) => steps.followBendAt(Sc, O, phi, Wd, tv, selfC, tees) });
     holes.forEach((h, i) => {
@@ -612,7 +645,22 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
     const po = record[h].pricedOut ?? [], wd = record[h].widened;
     why[h] = `neighbourhood (joint rank of distance from the tee and from tee ${Number(h) + 1}): ${cands.map((c) => `${nm(c.basket)} r${c.rank}`).join(', ')}${wd ? ` (widened to ranks ${wd.ranks.join(', ')}: the first ${first} ranks' assigned route read ${wd.reading === null ? 'no route' : wd.reading.toFixed(2)} on the ${(rules.seqGate === 'region' || rules.seqGate === 'regionWiden') && rg ? 'region' : 'edge'} sensor, below ${MATCH.tau})` : ''}${rules.seqOwn && reowned.includes(h) ? `; chains re-searched around the corridors of the ${owned.size} confirmed holes (${[...owned.keys()].join(', ')})` : ''}${pend.filter((c) => c.h === h && c.turnNote).map((c) => `; ${nm(c.k)}: ${c.turnNote}`).join('')}${record[h].follow ? `; hallway follower: ${record[h].follow.reached === null ? record[h].follow.why : `${nm(record[h].follow.reached)}${record[h].follow.why ? ` rejected (${record[h].follow.why})` : `, ${record[h].follow.bends} bends, weakest leg ${record[h].follow.weakestLegLum} lum, sensor ${record[h].follow.sensor}${record[h].follow.taken ? ': taken' : ': kept out'}`}`}` : ''}${po.length ? `; chain not searched (priced out: no route of this hole reads above its best first leg, ${po[0].capLum} lum, which is below the cell's price): ${po.map((x) => nm(x.basket)).join(', ')}` : ''}${rejected.length ? `; rejected (every route enters another basket's C1 disc, < 1 R1): ${rejected.map((x) => `${nm(x.basket)}${x.crosses !== null ? ` (the straight route passes ${nm(x.crosses)} at ${x.clearanceR1} R1)` : ''}`).join(', ')}` : ''}`;
   });
-  let pairs = assignMinCost(score.map((row) => row.map((v) => (Number.isFinite(v) ? -v : Infinity))));
+  return { score, route, why, record, violations, claims: claims.claims, starts, bp,
+    summary: { straightClaims: Object.keys(claims.claims).length, bentHoles: Object.keys(nb).length, cellsEvaluated: pend.length, cellsFullTable: holes.length * bp.length, neighbours: first, widened, ...(rules.seqOwn ? { ownedHoles: [...owned.keys()], reownedHoles: reowned } : {}), ...(rules.seqFollow ? { followed } : {}), cellsScored: Object.keys(cells).length, chainsSearched: chainsRun, fineReruns: fineRuns, pricingRounds: rounds, chains: Object.values(cells).filter((c) => c.verts.length >= 4).length } };
+}
+
+/**
+ * The sequencing's final one-to-one assignment over the cells of seqCellsOf (never mutated: its rows, routes and notes are
+ * copied). rescore (optional): (cells) -> a holes x baskets matrix ranking the cells instead of their values (null: no cell;
+ * the evidence sibling's combined evidence, ports/s7route/evidenceSpace.mjs); a cell the value matrix forbids stays forbidden.
+ * A hole left without a basket is then assigned among the free baskets by its K <= 1 routes, as before.
+ */
+export function seqFinalOf(cells, { holes, S, W, legsMany, rules = MATCH_RULES, rescore = null }) {
+  const { starts, bp } = cells, unitPx = rules.kUnits === 'w' ? W / KBENDS.goldenWPerR1 : null;
+  const score = cells.score.map((r) => r.slice()), route = { ...cells.route }, why = { ...cells.why }, violations = [...cells.violations];
+  const ranked = rescore ? rescore(cells) : null;
+  const rank = ranked ? score.map((r, i) => r.map((v, k) => (Number.isFinite(v) && Number.isFinite(ranked[i]?.[k]) ? ranked[i][k] : -Infinity))) : score;
+  let pairs = assignMinCost(rank.map((row) => row.map((v) => (Number.isFinite(v) ? -v : Infinity))));
   // a hole the neighbourhoods leave without a basket: assigned among the free baskets by its K <= 1 routes
   const usedH = new Set(pairs.map(([i]) => i)), usedK = new Set(pairs.map(([, k]) => k)), leftH = holes.map((_, i) => i).filter((i) => !usedH.has(i)), leftK = bp.map((_, k) => k).filter((k) => !usedK.has(k));
   if (leftH.length && leftK.length) {
@@ -621,8 +669,8 @@ function seqAssign({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsM
     pairs = pairs.sort((x, y) => x[0] - y[0]);
   }
   const routeOf = Object.fromEntries(pairs.map(([i, k]) => [holes[i], route[`${holes[i]}@${k}`]]));
-  return { pairs, score: score.map((r) => r.map((v) => (Number.isFinite(v) ? v : MATCH.noReadingLum))), route: routeOf, why, record, violations,
-    summary: { straightClaims: Object.keys(claims.claims).length, bentHoles: Object.keys(nb).length, cellsEvaluated: pend.length, cellsFullTable: holes.length * bp.length, neighbours: first, widened, ...(rules.seqOwn ? { ownedHoles: [...owned.keys()], reownedHoles: reowned } : {}), ...(rules.seqFollow ? { followed } : {}), cellsScored: Object.keys(cells).length, chainsSearched: chainsRun, fineReruns: fineRuns, pricingRounds: rounds, chains: Object.values(cells).filter((c) => c.verts.length >= 4).length } };
+  return { pairs, score: score.map((r) => r.map((v) => (Number.isFinite(v) ? v : MATCH.noReadingLum))), route: routeOf, why, record: cells.record, violations, summary: cells.summary,
+    ...(ranked ? { ranked: rank.map((r) => r.map((v) => (Number.isFinite(v) ? v : null))) } : {}) };
 }
 
 /**
