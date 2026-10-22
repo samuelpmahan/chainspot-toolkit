@@ -24,6 +24,7 @@ import { refineBendsOf } from './bends.mjs';
 import { kCellAt, kChainAt, legContrastsOf, KBENDS, turnCostOf, turnsOf, legRunsAlong, bottleneckOf, polishAt } from './kbends.mjs';
 import { straightClaimsOf, neighbourhoodsOf, foreignRingsOf, SEQ } from './seq.mjs';
 import { ringCrossed, legClearance, crossedOf, segmentHitsBox } from './kbends.mjs';
+import { NAMED_CONFIGS, resolveConfig, S7_DEFAULT_NAME } from './features.mjs';
 
 export const MATCH = Object.freeze({
   tau: 0.75,                 // sensor reading at which a route counts as hallway
@@ -283,74 +284,19 @@ export const MATCH_STEPS = Object.freeze({
  *   sensor:        absent (edges) | 'region' = the assignment reads the hallway REGION (ports/s7route/regionSpace.mjs: each cell's
  *                  best route by region support, -1..1, the on-axis prior in support units); the routes and the per-hole steps (refine,
  *                  sensor gates, second bend, placement) read edges | 'regionAll' = every measure reads the region
+ *   bendGateGain:  frac, the per-bend sensor gate (absent: BENDS.gate.gain 0.05): the bend placement's bend-count change, the K-bend
+ *                  chain's split and the follower's route each must gain this much sensor per added bend (features.mjs bendGate)
  */
 export const MATCH_RULES = Object.freeze({ straightFromS6: true, secondBendRefine: 'coordWide', refineUnits: 'r1', tableUnits: 'r1' });   // batch 2 (2026-10-20): S6CoordWide
 
-/** The rule sets the S7 pointer vote chooses among: variant name (impl/fn.Hole.trace/) -> its overrides of MATCH_RULES. */
-export const RULE_SETS = Object.freeze({
-  routeMatch: {},
-  routeMatchS6straight: { straightFromS6: true },
-  routeMatchS6CoordWide: { straightFromS6: true, secondBendRefine: 'coordWide' },
-  routeMatchS6Dense: { straightFromS6: true, secondBendRefine: 'dense' },
-  routeMatchS6PxDense: { straightFromS6: true, tableUnits: 'px', refineUnits: 'px', secondBendRefine: 'dense' },
-  routeMatchDenseSecondBend: { secondBendRefine: 'dense' },
-  routeMatchPxRefine: { refineUnits: 'px' },
-  routeMatchPxTable: { tableUnits: 'px', refineUnits: 'px' },
-  routeMatchFast: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'fast' },
-  routeMatchFastPxRefine: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'fast', refineUnits: 'px' },
-  routeMatchLean: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean' },
-  routeMatchLeanPxRefine: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px' },
-  routeMatchLeanCoarse2: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', secondBendGrid: 'coarse' },
-  routeMatchLeanPxRefineCoarse2: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse' },
-  // the badge-midpoint rule (2026-10-20): the first bend at B* = tee + 2 x (badge along the tee axis), one route read per cell
-  routeMatchBadgeMid: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse' },
-  routeMatchBadgeMidPinned: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', secondBendB1: 'badge', firstBend: 'badge' },
-  routeMatchLeanBadgeMid2: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', secondBendB1: 'badge' },
-  routeMatchLeanBadgePrior: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', firstBend: 'badgePrior' },
-  routeMatchBadgeMidPrior: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', firstBend: 'badgePrior' },
-  // heritage S7 bends (2026-10-20, lane heritage7): the pointer plus one fix each, then all three together
-  routeMatchLeanPxRefineCoarse2R1St: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1' },
-  routeMatchLeanPxRefineCoarse2StraightB2: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', straightSecondBend: true },
-  routeMatchLeanPxRefineCoarse2AxisB1: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', placeAxis: true },
-  routeMatchLeanPxRefineCoarse2TeeAxis: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true },
-  // the heritage fixes with the badge-midpoint prior (heritage7 prototype: 18/18 agree, bends 18/1/1), on the lean and the B* tables
-  routeMatchTeeAxisBadgePrior: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior' },
-  routeMatchBadgeMidTeeAxisPrior: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior' },
-  // K bends under one fair cost (lane s7bends, 2026-10-21): the accepted rule set with the weakest-leg assignment and K-bend chains
-  routeMatchKBends: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'bottleneck' },
-  // sequencing (Sam, 2026-10-21: "18x18 is craycray"): straight claims first, then each bent hole's neighbourhood (seq.mjs); the
-  // table is only the B* / start Parts (tableSearch 'badgeMid': 2 reads per cell), the K-bend search only in the neighbourhoods
-  routeMatchKBendsSeq: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq' },
-  // Sam (2026-10-21): "cut at least 80% of the 18x18 cells": the neighbourhood's top 3 ranks first (117/120 true baskets on 6
-  // courses), widened to ranks 3-4 for a hole whose assigned route then fails the sensor gate
-  routeMatchKBendsSeq3: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true },
-  // Seq3 x region (lane s7region's sensor): the sequencing's gates by the region, the cell scores by the region, both
-  // the search fixed (lane s7bends, 2026-10-21 diagnosis: the edge gate passes Coleto 18's and SeaTac 19's true routes; the chain
-  // never proposed them): polish before compare, owned corridors, a price on turning
-  routeMatchKBendsSeq3Search: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: true },
-  // Seq3Search with the follower's resolutions in W (Sam 2026-10-21: "do your search resolution as a multiplier of the hallway width")
-  // + kRefineStarts 3 (2026-10-22, golden 5): the K <= 1 axis refine starts from the sweep's 3 best local maxima, so a bend's few-px peak is
-  // found whatever the sweep grid's phase (kbends.mjs kCellAt); a 0.3 px S4 tee move flipped golden 5 to a 2-bend route without it
-  routeMatchKBendsSeq3SearchW: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w' , kRefineStarts: 3 },
-  // the evidence sibling (Sam, 2026-10-22: "take out earlier algorithm and use that as just another piece of ranking evidence"): the
-  // default's cells (the same store call, every guard kept), the final assignment ranked by the combined evidence of every perspective
-  // on those cells (ports/s7route/evidenceSpace.mjs tk.s7.cellEvidence: basket backwards, the lanes, the follower, the sensors, B*)
-  routeMatchKBendsSeq3SearchWEvidence: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w', seqScore: 'evidence' , kRefineStarts: 3 },
-  // first legs owned from the start (coordinator, 2026-10-22, from the seatacFull 16 render): every hole's tee cap -> B* is owned by its
-  // hole and its badge plate is foreign to the others; a route may cross another hole's first leg but not run along it (firstLegs.mjs)
-  routeMatchKBendsSeq3SearchWFirstLegs: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w', seqFirstLegs: true , kRefineStarts: 3 },
-  // the same, vertex positions every W/16
-  routeMatchKBendsSeq3SearchW16: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w', followRes: { vertexStepW: 1 / 16 } },
-  // SearchW with the K-bend search's hallway steps in W as well
-  routeMatchKBendsSeq3SearchWK: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w', kUnits: 'w' },
-  routeMatchKBendsSeq3RegionGate: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqGate: 'region' },
-  routeMatchKBendsSeq3RegionScore: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqScore: 'region' },
-  routeMatchKBendsSeq3RegionWiden: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqGate: 'regionWiden' },
-  routeMatchKBendsSeq3Region: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqGate: 'region', seqScore: 'region' },
-  // the pointer read as a REGION (lane s7region, 2026-10-21: shade and sidewalks beside the hallway)
-  routeMatchTeeAxisBadgePriorRegion: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', sensor: 'region' },
-  routeMatchTeeAxisBadgePriorRegionAll: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', sensor: 'regionAll' }
-});
+/**
+ * The rule sets the S7 pointer vote chooses among: variant name (impl/fn.Hole.trace/) -> its options. Each rule set is a CONFIG
+ * (ports/s7route/features.mjs NAMED_CONFIGS: a sparse config over the S7 default, resolved against the feature registry and
+ * hashed); this table is each config compiled to the options routeMatch reads (rulesOf: MATCH_RULES' keys and every option not
+ * at its absent value, keys sorted). features.test.mjs proves every one is exactly the options the literal table held at 31f2968
+ * (fixtures/rule-sets.legacy.json). A new rule set is a new named config, or any config: `pxc sweep --grid`.
+ */
+export const RULE_SETS = Object.freeze(Object.fromEntries(Object.keys(NAMED_CONFIGS).map((name) => [name, Object.freeze(resolveConfig(name).rules)])));
 
 /**
  * Profiles: named lists of rule sets (Sam, 2026-10-20: "include multiple possibilities, make wide testing easy, then make it
@@ -369,7 +315,7 @@ export const PROFILES = Object.freeze({
  * the faster rule sets on every judged dev course (agreement and bends) and gets Sam's six validation holes right (Beaver
  * 4/19, Coleto 10/11/18, SeaTac 19), which they do not; a variant that beats it on a judged course still wins.
  */
-export const S7_DEFAULT = 'routeMatchKBendsSeq3SearchW';
+export const S7_DEFAULT = S7_DEFAULT_NAME;   // features.mjs: resolveConfig({}) is this rule set (every knob's default is its value)
 /**
  * The S7 variants `pxc state --retest` runs: the quick rule sets plus the pinned prototype (1 ms). The old tracers (badgeOnly,
  * endpoints, s3first*: 2-8 min each per course, beaten on every judged course) and the slow rule sets (px table, dense second
@@ -436,7 +382,7 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
       if (verdicts === null) rec = { ...rec, bendsRefined: { taken: false, why: 'no S6 straight verdict on record: bend placement not run' } };
       else {
         // rule-set options of the placement, passed only when set (the recorded rule's calls keep their arguments)
-        const placeOpts = { ...(rules.stationsUnits === 'r1' ? { minStations: minStationsOf(S, rules) } : {}), ...(rules.placeAxis ? { axis: start.u } : {}) };
+        const placeOpts = { ...(rules.stationsUnits === 'r1' ? { minStations: minStationsOf(S, rules) } : {}), ...(rules.placeAxis ? { axis: start.u } : {}), ...(rules.bendGateGain !== undefined ? { gain: rules.bendGateGain } : {}) };
         let r = Object.keys(placeOpts).length ? steps.placeBends(S, rec.verts, W, verdicts[hole] === 'straight', placeOpts) : steps.placeBends(S, rec.verts, W, verdicts[hole] === 'straight');
         if (r.assumptions) violated.push(...r.assumptions.map((v) => ({ ...v, hole, step: 'bend placement' })));
         if (pinB && r.taken && rec.verts.length >= 3 && r.verts.length === rec.verts.length) r = { ...r, verts: [r.verts[0], rec.verts[1], ...r.verts.slice(2)], why: `${r.why}; the first bend kept at B* (rule firstBend badge)` };
@@ -550,7 +496,7 @@ export function seqCellsOf({ table, holes, S, W, startOf, verdicts, steps, legsO
   // unread legs: the weakest leg alone cannot place it). endR1: the coarse pass ranks cells; the assigned ones are re-run fine
   const chainOf = (cell, endR1, gridR1) => {
     const ch = kChainAt(S, starts[cell.i], bp[cell.k], W, { legsMany, one: cell.kc.one, foreign: cell.foreign, sensorOf: gateOf, endR1, gridR1, unitPx,
-      ...(rules.seqPolish ? { polishEach: true, firstCap: cap[cell.i] } : {}), ...(cell.owned?.length ? { owned: cell.owned } : {}), ...(kappa ? { turnKappa: kappa } : {}) });
+      ...(rules.seqPolish ? { polishEach: true, firstCap: cap[cell.i] } : {}), ...(cell.owned?.length ? { owned: cell.owned } : {}), ...(kappa ? { turnKappa: kappa } : {}), ...(rules.bendGateGain !== undefined ? { bendGain: rules.bendGateGain } : {}) });
     const k1 = cell.kc.best.bottleneck === null ? null : cell.kc.best;
     const v = (r) => r.bottleneck - turnCostOf(r.verts, kappa);
     const takeChain = ch && ch.bottleneck !== null && (!k1 || (v(ch) > v(k1) && gateOf(ch.verts) > cell.s1));
@@ -650,7 +596,7 @@ export function seqCellsOf({ table, holes, S, W, startOf, verdicts, steps, legsO
       const fb = fb0.bottleneck !== null ? polishAt(S, fb0, W, { legsMany, start: st, foreign, owned: ow, unitPx }) : fb0;
       const sf = gateOf(fb.verts), k1 = cell.kc.best.bottleneck === null ? null : cell.kc.best;
       const vf = fb.bottleneck === null ? -Infinity : fb.bottleneck - turnCostOf(fb.verts, kappa), vc = cell.best ? cell.best.bottleneck - turnCostOf(cell.best.verts, kappa) : -Infinity;
-      const gainOk = !k1 || sf > (cell.s1 ?? 0) + BENDS_GATE_GAIN * (fb.verts.length - k1.verts.length);
+      const gainOk = !k1 || sf > (cell.s1 ?? 0) + (rules.bendGateGain ?? BENDS_GATE_GAIN) * (fb.verts.length - k1.verts.length);
       const win = fb.bottleneck !== null && vf > vc && gainOk;
       record[h].follow = { reached: k, bends: V.length - 2, weakestLegLum: fb.bottleneck === null ? null : +fb.bottleneck.toFixed(1), sensor: +sf.toFixed(2), taken: win };
       if (win) { cell.best = fb; cell.pending = false; cell.coarse = false; score[i][k] = valueOf(fb); followed.push(h); }
