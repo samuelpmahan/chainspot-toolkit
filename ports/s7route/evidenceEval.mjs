@@ -6,8 +6,9 @@
  *       ports/s7route/evidenceRun.mjs on one course: tk.s7.cellEvidence and its renders under DIR/S/, and DIR/S/summary.json:
  *       the table, Sam's basket per hole (testimony, BasketPoint within 12 px: judging only), both rule sets' ends, route lengths
  *       (R1) and judged totals, the timings. --weights: the evidence sibling run with those weights (a LOCO fold's).
- *   train --dir DIR [--courses golden,heritage,townelake,lenard,alex]
- *       the logistic fitted leave-one-course-out on the dev testimony (cells of the default's neighbourhoods, y = Sam's basket),
+ *   train --dir DIR [--courses golden,heritage,townelake,lenard,alex] [--features a,b] [--l2 X]
+ *       the feature set and L2 penalty chosen on the dev testimony alone (SELECTION: the lowest leave-one-course-out held-out log
+ *       loss), the logistic fitted leave-one-course-out (cells of the default's neighbourhoods, y = Sam's basket),
  *       each held-out course's picks by the evidence ranking vs the default's vs Sam's; then the fit on all of them (the weights
  *       EVIDENCE_WEIGHTS carries). Writes DIR/train.json.
  *   validate --dir DIR
@@ -19,7 +20,7 @@ import { join, resolve } from 'node:path';
 import { runEvidence, EVIDENCE_VARIANT } from './evidenceRun.mjs';
 import { samBasketsOf } from './routeSpace.mjs';
 import { S7_DEFAULT } from './match.mjs';
-import { FEATURES, EVIDENCE_WEIGHTS } from './evidenceSpace.mjs';
+import { FEATURES, EVIDENCE_WEIGHTS, zOf, logSigmoid } from './evidenceSpace.mjs';
 import { fitLogistic, picksOf, top1Of } from './evidenceModel.mjs';
 import { KNOWN } from './laneEval.mjs';
 
@@ -53,16 +54,43 @@ function picksTally(s, weights) {
   return { holes: rows.length, defaultRight: rows.filter((x) => x.default === x.sam).length, evidenceRight: rows.filter((x) => x.evidence === x.sam).length, changed: rows.filter((x) => x.default !== x.evidence).map((x) => `${x.hole}: ${x.default} -> ${x.evidence} (Sam ${x.sam})`), bent: rows.filter((x) => !x.claimed).length, samAmongCandidates: rows.filter((x) => x.samAmongCandidates).length };
 }
 
-export function train(dir, courses = DEV_TESTIMONY, { l2 } = {}) {
+/**
+ * The candidate feature sets and penalties the dev selection compares (stated before the fit): every perspective; without the
+ * route-level sensors that re-read the backbone's route (edge, region, B*); the backbone with the meeting only; the tracks (the
+ * backbone, the forward lanes, basket backwards by the follower, the meeting); the backbone alone.
+ */
+export const SELECTION = Object.freeze({
+  sets: Object.freeze({ all: FEATURES, noSensors: ['backbone', 'laneFwd', 'followFwd', 'laneBack', 'followBack', 'meet'], backboneMeet: ['backbone', 'meet'], tracks: ['backbone', 'laneFwd', 'followBack', 'meet'], backbone: ['backbone'] }),
+  l2: Object.freeze([0.3, 1, 3])
+});
+const heldOutLogLoss = (all, dev, features, l2) => {
+  let ll = 0, n = 0;
+  for (const held of dev) {
+    const w = fitLogistic(dev.filter((c) => c !== held).flatMap((c) => cellRows(all[c])), { features, l2 });
+    for (const r of cellRows(all[held])) { const z = zOf(r.readings, w); ll -= r.y ? logSigmoid(z) : logSigmoid(-z); n++; }
+  }
+  return { logLoss: n ? ll / n : null, cells: n };
+};
+/** Model selection on the dev testimony only: the feature set and penalty with the lowest leave-one-course-out held-out log loss. */
+export function selectModel(all, dev) {
+  const grid = [];
+  for (const [name, features] of Object.entries(SELECTION.sets)) for (const l2 of SELECTION.l2) grid.push({ name, features, l2, ...heldOutLogLoss(all, dev, features, l2) });
+  grid.sort((a, b) => a.logLoss - b.logLoss);
+  return { best: grid[0], grid: grid.map((g) => ({ set: g.name, l2: g.l2, heldOutLogLoss: Math.round(g.logLoss * 10000) / 10000, cells: g.cells })) };
+}
+
+export function train(dir, courses = DEV_TESTIMONY, { l2: l2Given, features: fGiven } = {}) {
   const all = load(dir), dev = courses.filter((c) => all[c]);
+  const sel = selectModel(all, dev), features = fGiven ?? sel.best.features, l2 = l2Given ?? sel.best.l2;
   const folds = dev.map((held) => {
-    const rows = dev.filter((c) => c !== held).flatMap((c) => cellRows(all[c])), w = fitLogistic(rows, { ...(l2 ? { l2 } : {}) });
+    const rows = dev.filter((c) => c !== held).flatMap((c) => cellRows(all[c])), w = fitLogistic(rows, { features, l2 });
     const s = all[held], lab = (h) => s.labels[h];
     return { held, trainCells: rows.length, weights: w, picks: picksTally(s, w), cellTop1: top1Of(s.table, w, lab), backboneOnlyTop1: top1Of(s.table, { bias: 0, backbone: 1 }, lab) };
   });
-  const full = fitLogistic(dev.flatMap((c) => cellRows(all[c])), { ...(l2 ? { l2 } : {}) });
+  const full = fitLogistic(dev.flatMap((c) => cellRows(all[c])), { features, l2 });
+  const allFeatures = fitLogistic(dev.flatMap((c) => cellRows(all[c])), { features: FEATURES, l2 });
   const sum = (k) => folds.reduce((a, f) => a + f.picks[k], 0);
-  const result = { features: FEATURES, l2: full.fit.l2, folds, loco: { holes: sum('holes'), defaultRight: sum('defaultRight'), evidenceRight: sum('evidenceRight'), bentHoles: sum('bent'), cellTop1: folds.reduce((a, f) => a + f.cellTop1.top1, 0), cellHoles: folds.reduce((a, f) => a + f.cellTop1.holes, 0), backboneTop1: folds.reduce((a, f) => a + f.backboneOnlyTop1.top1, 0) }, full,
+  const result = { selection: sel.grid, features, l2, allFeatures, folds, loco: { holes: sum('holes'), defaultRight: sum('defaultRight'), evidenceRight: sum('evidenceRight'), bentHoles: sum('bent'), cellTop1: folds.reduce((a, f) => a + f.cellTop1.top1, 0), cellHoles: folds.reduce((a, f) => a + f.cellTop1.holes, 0), backboneTop1: folds.reduce((a, f) => a + f.backboneOnlyTop1.top1, 0) }, full,
     fullPicks: Object.fromEntries(Object.entries(all).map(([c, s]) => [c, picksTally(s, full)])) };
   writeFileSync(join(dir, 'train.json'), JSON.stringify(result, null, 1) + '\n');
   return result;
@@ -102,10 +130,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     const ch = Object.keys(s.default.holes).filter((h) => s.default.holes[h].end !== s.sibling.holes[h]?.end);
     console.log(`${s.specimen}: ${s.emits.cells} cells, ${s.emits.meets}/${s.emits.meetCells} meet; default ${s.timingsMs.default} ms, evidence ${s.timingsMs.cellEvidence} ms; ${S7_DEFAULT} ${s.default.judged ? `${s.default.judged.agree}/${s.default.judged.judged} bends ${s.default.judged.bendsHit}/${s.default.judged.bendsMissed}/${s.default.judged.extraBends}` : '-'}; ${EVIDENCE_VARIANT} ${s.sibling.judged ? `${s.sibling.judged.agree}/${s.sibling.judged.judged} bends ${s.sibling.judged.bendsHit}/${s.sibling.judged.bendsMissed}/${s.sibling.judged.extraBends}` : '-'}; changed ${ch.join(', ') || 'none'}`);
   } else if (cmd === 'train') {
-    const r = train(dir, arg('--courses') ? arg('--courses').split(',') : DEV_TESTIMONY, { l2: arg('--l2') ? Number(arg('--l2')) : undefined });
+    const r = train(dir, arg('--courses') ? arg('--courses').split(',') : DEV_TESTIMONY, { l2: arg('--l2') ? Number(arg('--l2')) : undefined, features: arg('--features') ? arg('--features').split(',') : undefined });
     for (const f of r.folds) console.log(`held out ${f.held}: picks right default ${f.picks.defaultRight}/${f.picks.holes}, evidence ${f.picks.evidenceRight}/${f.picks.holes}; cell top-1 ${f.cellTop1.top1}/${f.cellTop1.holes} (backbone alone ${f.backboneOnlyTop1.top1}); changed ${f.picks.changed.join('; ') || 'none'}`);
     console.log(`LOCO: ${JSON.stringify(r.loco)}`);
-    console.log(`full fit (${r.full.fit.n} cells, ${r.full.fit.positives} positive, log loss ${r.full.fit.logLoss}): ${['bias', ...FEATURES].map((f) => `${f} ${r.full[f].toFixed(3)}`).join(', ')}`);
+    console.log(`selection (dev LOCO held-out log loss): ${r.selection.map((g) => `${g.set}@${g.l2} ${g.heldOutLogLoss}`).join(', ')}`);
+    console.log(`full fit, ${r.features.join(' + ')}, L2 ${r.l2} (${r.full.fit.n} cells, ${r.full.fit.positives} positive, log loss ${r.full.fit.logLoss}): ${['bias', ...r.features].map((f) => `${f} ${r.full[f].toFixed(3)}`).join(', ')}`);
+    console.log(`every perspective, L2 ${r.l2}: ${['bias', ...FEATURES].map((f) => `${f} ${r.allFeatures[f].toFixed(3)}`).join(', ')}`);
   } else {
     const r = validate(dir);
     console.log(JSON.stringify({ known: r.known.map((k) => `${k.view} ${k.hole} (${k.call}): default ${k.defaultBasket}, evidence ${k.evidenceBasket}${k.same ? ' (same route)' : ''}`), crossView: { default: `${r.crossView.default.agree}/${r.crossView.default.compared}`, sibling: `${r.crossView.sibling.agree}/${r.crossView.sibling.compared}` }, changed: r.changed }, null, 1));

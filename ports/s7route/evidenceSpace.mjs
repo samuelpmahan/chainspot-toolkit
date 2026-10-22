@@ -86,11 +86,16 @@ export const EVIDENCE_UNITS = Object.freeze({
 });
 
 /**
- * The combination (a perceptron with a sigmoid, one weight per perspective plus the agreement feature): fitted leave-one-course-out
- * on the dev testimony (golden, heritage, townelake, lenard, alex; ports/s7route/evidenceEval.mjs, docs/evidence/s7evidence/);
- * these are the weights fitted on all five courses. Placeholder until trained: the backbone alone.
+ * The combination (a perceptron with a sigmoid, one weight per perspective plus the agreement feature), fitted on the dev testimony
+ * (golden, heritage, townelake, lenard, alex: 89 candidate cells, 30 of them Sam's basket; ports/s7route/evidenceEval.mjs train,
+ * docs/evidence/s7evidence/). The feature set and the L2 penalty were chosen on dev alone, by leave-one-course-out held-out log loss
+ * over five stated sets x L2 0.3 / 1 / 3 (evidenceEval.mjs SELECTION): the tracks (backbone, forward lanes, basket backwards by the
+ * follower, the meeting) at L2 0.3 read 0.059, every perspective at L2 0.3 0.066, the backbone alone 0.177. The other perspectives
+ * are recorded and rendered with weight 0. The dev cells are separable (the backbone alone ranks Sam's basket first on all 30 bent
+ * holes), so the weights are the penalty's choice among separating ones; leave-one-course-out picks equal the default's on all 75
+ * judged dev holes.
  */
-export const EVIDENCE_WEIGHTS = Object.freeze({ bias: 0, backbone: 1, edge: 0, region: 0, badgeMid: 0, laneFwd: 0, followFwd: 0, laneBack: 0, followBack: 0, meet: 0 });
+export const EVIDENCE_WEIGHTS = Object.freeze({ bias: -1.507, backbone: 1.996, edge: 0, region: 0, badgeMid: 0, laneFwd: 2.396, followFwd: 0, laneBack: 0, followBack: 1.218, meet: 1.553 });
 
 const r2 = (v) => (Number.isFinite(v) ? Math.round(v * 100) / 100 : v ?? null);
 const r3 = (v) => (Number.isFinite(v) ? Math.round(v * 1000) / 1000 : v ?? null);

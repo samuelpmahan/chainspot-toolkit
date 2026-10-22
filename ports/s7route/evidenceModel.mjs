@@ -2,7 +2,7 @@
  * The combination of the S7 evidence (browser-safe, pure): a logistic over the perspectives' readings (a perceptron with a sigmoid;
  * Sam: "a perceptron could do this 75 years ago"), fitted by Newton steps with an L2 penalty on the weights (not the bias), and the
  * evidence ranking's assignment over a tk.s7.cellEvidence table without the store (the offline twin of match.mjs seqFinalOf with
- * rescore: the same cells, the straight claims certain; a hole with no candidate keeps no basket here). Judging lives in
+ * rescore: the same cells, the straight claims certain; a hole with no candidate keeps the default's leftover basket when it is free). Judging lives in
  * ports/s7route/evidenceEval.mjs; nothing here reads testimony.
  */
 import { assignMinCost } from './match.mjs';
@@ -52,6 +52,9 @@ export function picksOf(table, weights) {
   rows.forEach((r, i) => { if (r.claimed !== undefined) M[i][r.claimed] = 0; else for (const x of r.cells) M[i][x.k] = -logSigmoid(zOf(x.readings, weights)); });
   const picks = Object.fromEntries(rows.map((r) => [r.hole, null]));
   for (const [i, k] of assignMinCost(M)) picks[rows[i].hole] = k;
+  // a hole with no candidate cell got its basket from the default's leftover step (K <= 1 among the free baskets): kept when still free
+  const used = new Set(Object.values(picks).filter((k) => k !== null));
+  for (const r of rows) if (picks[r.hole] === null && !r.cells?.length && r.claimed === undefined && r.defaultBasket != null && !used.has(r.defaultBasket)) { picks[r.hole] = r.defaultBasket; used.add(r.defaultBasket); }
   return picks;
 }
 
