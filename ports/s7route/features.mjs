@@ -378,9 +378,9 @@ function axisValues(axis) {
   throw new Error('S7 grid: an axis is { feature, values } | { knob, values } | { name, options }');
 }
 /**
- * Expand a grid spec into configs: { base?: sparse config | named config, axes: [...], include?: [named], sample?: { n, seed } }.
- * The cartesian product of the axes over the base; optionally a seeded random subsample of n of it (the base and the included
- * named configs are always kept); invalid combinations recorded (skipped, with the errors); duplicates by config hash merged.
+ * Expand a grid spec into configs: { base?: sparse config | named config, axes: [...], cross?: [...], include?: [named],
+ * sample?: { n, seed } }. The cartesian product of the axes over the base; optionally a seeded random subsample of n of it (the base
+ * and the included named configs are always kept), then crossed with every value of the cross axes; invalid combinations recorded (skipped, with the errors); duplicates by config hash merged.
  * -> { product, sampled, configs: [{ hash, short, labels, names, sparse, canonical, rules }], skipped: [{ labels, errors }], duplicates }
  */
 export function expandGrid(spec) {
@@ -389,12 +389,15 @@ export function expandGrid(spec) {
   const axes = (spec.axes ?? []).map(axisValues);
   let combos = [[]];
   for (const vals of axes) combos = combos.flatMap((c) => vals.map((v) => [...c, v]));
-  const product = combos.length;
+  const product = combos.length * (spec.cross ?? []).reduce((a, x) => a * axisValues(x).length, 1);
   if (spec.sample?.n && spec.sample.n < combos.length) {
     const rnd = prng(spec.sample.seed ?? 1), idx = combos.map((_, i) => i);
     for (let i = idx.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [idx[i], idx[j]] = [idx[j], idx[i]]; }
     combos = idx.slice(0, spec.sample.n).sort((a, b) => a - b).map((i) => combos[i]);
   }
+  // cross: axes crossed with every kept combination after the subsample (e.g. a final-assignment option whose twin shares the
+  // sequencing's cells, so it costs only the final ranking)
+  for (const vals of (spec.cross ?? []).map(axisValues)) combos = combos.flatMap((c) => vals.map((v) => [...c, v]));
   const entries = [{ labels: ['base'], names: typeof spec.base === 'string' ? [spec.base] : spec.base ? [] : [S7_DEFAULT_NAME], sparse: { features: base.features ?? {} } },
     ...(spec.include ?? []).map((n) => { if (!NAMED_CONFIGS[n]) throw new Error(`S7 grid: no named config '${n}'`); return { labels: [`named ${n}`], names: [n], sparse: NAMED_CONFIGS[n] }; }),
     ...combos.map((c) => ({ labels: c.map((v) => v.label), names: [], sparse: { features: c.reduce((acc, v) => merge(acc, v.fragment), base.features ?? {}) } }))];

@@ -14,8 +14,13 @@
  *                                                         result, status (derived), freshness; retest re-runs only stale cells
  *   node scripts/pxc.mjs profile --attempt <id> [--top N]  each stage's latest run: wall, inside/outside the store, the
  *                                                         costliest Calculations by self time, opaque hot spots
- *   node scripts/pxc.mjs clean [--dry-run]                delete the attempts THIS checkout created (never another's, never one
- *                                                         an ATTEMPTS file lists): how an agent cleans up after itself
+ *   node scripts/pxc.mjs sweep --grid <spec.json> [--courses a,b] [--jobs N] [--chunk N] [--id ID] [--dry-run]
+ *                                                         S7 grid search over the feature registry (ports/s7route/features.mjs):
+ *                                                         every config x course (dev with testimony + validation views, S7 only),
+ *                                                         resumable; results, Pareto front and shortlist under attempts/sweeps/<id>/
+ *   node scripts/pxc.mjs sweep --registry                 the S7 features and knobs (unit, default, sweep values, assumption)
+ *   node scripts/pxc.mjs clean [--dry-run]                delete the attempts and sweeps THIS checkout created (never another's,
+ *                                                         never one an ATTEMPTS file lists or docs/evidence cites)
  *   node scripts/pxc.mjs provenance [--repin]           the bundled provider's pinned src/dist hashes: verify, or re-pin after a
  *                                                         provider change (in a conflicted merge, unions both sides' localPatches)
  *   node scripts/pxc.mjs cas --stats                     the persistent cache (attempts/cas): entries, size, age, largest
@@ -226,6 +231,12 @@ else if (cmd === 'cas') {
 }
 else if (cmd === 'prune') (await import('../ports/state/prune.mjs')).pruneCommand(rest, { say });
 else if (cmd === 'clean') (await import('../ports/state/prune.mjs')).cleanCommand(rest, { say });
+else if (cmd === 'sweep' && rest.includes('--registry')) {
+  const { registryRows } = await import('../ports/s7route/features.mjs'), fmt = (v) => (typeof v === 'number' ? +v.toFixed(4) : v === null ? 'null' : v);
+  for (const r of registryRows()) say(r.knob ? `    ${r.knob.padEnd(14)} ${r.unit.padEnd(6)} default ${String(fmt(r.default)).padEnd(10)} sweep ${(r.sweep ?? []).map(fmt).join('/')}${r.assumption ? `  [assumption ${r.assumption}]` : ''}`
+    : `${r.feature} (${r.kind}, ${r.required ? 'required' : r.enabled ? 'on' : 'off'}${r.needs ? `; ${r.needs}` : ''}${r.conflicts.length ? `; conflicts ${r.conflicts.join(', ')}` : ''}${r.assumptions.length ? `; assumptions ${r.assumptions.join(', ')}` : ''})`);
+}
+else if (cmd === 'sweep') { const r = await (await import('../ports/s7trace/gridSweep.mjs')).sweepCommand(rest); if (!r) process.exitCode = 2; }
 else if (cmd === 'provenance') { const r = (await import('../dependencies/provenance.mjs')).provenance((await import('./pxc/boundary.mjs')).ROOT, { repin: rest.includes('--repin') }); say(JSON.stringify(r, null, 1)); if (!r.ok && !r.repinned) process.exitCode = 1; }
 else if (cmd === 'flipbook' && rest[0] === '--inline' && rest[1]) {
   const { inlineFlipbook } = await import('../fg/node-flipbook.mjs'), src = rest[1], out = rest[2] ?? src.replace(/\.html$/, '.inline.html');
