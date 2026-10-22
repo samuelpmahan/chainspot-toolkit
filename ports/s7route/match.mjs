@@ -276,6 +276,8 @@ export const MATCH_STEPS = Object.freeze({
  *   seqFirstLegs:  (kBends 'seq') true = every hole's first leg (tee cap -> B*) is owned from the start and its badge plate is foreign to
  *                  the other holes (ports/s7route/firstLegs.mjs): no leg runs along another hole's first leg (the owned-corridor test), no
  *                  leg passes over another hole's badge plate, a straight claim that would is not made; the final route keeps both
+ *   kRefineStarts: (kBends 'seq') N = each cell's K <= 1 refine on the tee axis starts from the sweep's N best local maxima, not its best read
+ *                  alone (kbends.mjs kCellAt): the sweep's 0.54 R1 step is coarser than a bend's peak, a few px wide
  *   kUnits:        (kBends 'seq') 'w' = the K-bend search's hallway steps (kbends.mjs KBENDS: the split grid, minimum leg, axis
  *                  step, refine end) in W instead of R1 (unit W / KBENDS.goldenWPerR1); the foreign rings and the axis reach stay R1
  *   sensor:        absent (edges) | 'region' = the assignment reads the hallway REGION (ports/s7route/regionSpace.mjs: each cell's
@@ -327,14 +329,16 @@ export const RULE_SETS = Object.freeze({
   // never proposed them): polish before compare, owned corridors, a price on turning
   routeMatchKBendsSeq3Search: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: true },
   // Seq3Search with the follower's resolutions in W (Sam 2026-10-21: "do your search resolution as a multiplier of the hallway width")
-  routeMatchKBendsSeq3SearchW: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w' },
+  // + kRefineStarts 3 (2026-10-22, golden 5): the K <= 1 axis refine starts from the sweep's 3 best local maxima, so a bend's few-px peak is
+  // found whatever the sweep grid's phase (kbends.mjs kCellAt); a 0.3 px S4 tee move flipped golden 5 to a 2-bend route without it
+  routeMatchKBendsSeq3SearchW: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w' , kRefineStarts: 3 },
   // the evidence sibling (Sam, 2026-10-22: "take out earlier algorithm and use that as just another piece of ranking evidence"): the
   // default's cells (the same store call, every guard kept), the final assignment ranked by the combined evidence of every perspective
   // on those cells (ports/s7route/evidenceSpace.mjs tk.s7.cellEvidence: basket backwards, the lanes, the follower, the sensors, B*)
-  routeMatchKBendsSeq3SearchWEvidence: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w', seqScore: 'evidence' },
+  routeMatchKBendsSeq3SearchWEvidence: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w', seqScore: 'evidence' , kRefineStarts: 3 },
   // first legs owned from the start (coordinator, 2026-10-22, from the seatacFull 16 render): every hole's tee cap -> B* is owned by its
   // hole and its badge plate is foreign to the others; a route may cross another hole's first leg but not run along it (firstLegs.mjs)
-  routeMatchKBendsSeq3SearchWFirstLegs: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w', seqFirstLegs: true },
+  routeMatchKBendsSeq3SearchWFirstLegs: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w', seqFirstLegs: true , kRefineStarts: 3 },
   // the same, vertex positions every W/16
   routeMatchKBendsSeq3SearchW16: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w', followRes: { vertexStepW: 1 / 16 } },
   // SearchW with the K-bend search's hallway steps in W as well
@@ -516,7 +520,7 @@ export function seqCellsOf({ table, holes, S, W, startOf, verdicts, steps, legsO
   const first = Math.min(rules.seqNeighbours ?? SEQ.neighbours, SEQ.neighbours);
   const score = holes.map(() => bp.map(() => -Infinity)), route = {}, why = {}, record = {}, cells = {}, pend = [], cap = holes.map(() => -Infinity), rejectedOf = {};
   const addCell = (h, i, c) => {
-    const k = c.basket, foreign = foreignOf(i, k), kc = kCellAt(S, starts[i], bp[k], W, { legsMany, foreign, unitPx, ...(bound(h) ? { owned: ownedFor(h) } : {}) });
+    const k = c.basket, foreign = foreignOf(i, k), kc = kCellAt(S, starts[i], bp[k], W, { legsMany, foreign, unitPx, ...(bound(h) ? { owned: ownedFor(h) } : {}), ...(rules.kRefineStarts ? { refineStarts: rules.kRefineStarts } : {}) });
     if (kc.violation) violations.push({ ...kc.violation, hole: holes[i], basket: k });
     if (kc.firstCap > cap[i]) cap[i] = kc.firstCap;
     const s1 = kc.best.bottleneck === null ? null : gateOf(kc.best.verts);
@@ -690,7 +694,7 @@ export function seqFinalOf(cells, { holes, S, W, legsMany, rules = MATCH_RULES, 
   // a hole the neighbourhoods leave without a basket: assigned among the free baskets by its K <= 1 routes
   const usedH = new Set(pairs.map(([i]) => i)), usedK = new Set(pairs.map(([, k]) => k)), leftH = holes.map((_, i) => i).filter((i) => !usedH.has(i)), leftK = bp.map((_, k) => k).filter((k) => !usedK.has(k));
   if (leftH.length && leftK.length) {
-    const sub = leftH.map((i) => leftK.map((k) => { const fb = cells.plates && !cells.contradicted.includes(String(holes[i])); const kc = kCellAt(S, starts[i], bp[k], W, { legsMany, foreign: foreignRingsOf(starts[i], bp, k, S.R1, fb ? cells.plates : null), unitPx, ...(fb ? { owned: cells.firstLegs.filter((g) => g.hole !== String(holes[i])).map((g) => g.leg) } : {}) }); if (kc.violation) violations.push({ ...kc.violation, hole: holes[i], basket: k }); route[`${holes[i]}@${k}`] = kc.best.verts; return kc.best.bottleneck ?? -Infinity; }));
+    const sub = leftH.map((i) => leftK.map((k) => { const fb = cells.plates && !cells.contradicted.includes(String(holes[i])); const kc = kCellAt(S, starts[i], bp[k], W, { legsMany, foreign: foreignRingsOf(starts[i], bp, k, S.R1, fb ? cells.plates : null), unitPx, ...(fb ? { owned: cells.firstLegs.filter((g) => g.hole !== String(holes[i])).map((g) => g.leg) } : {}), ...(rules.kRefineStarts ? { refineStarts: rules.kRefineStarts } : {}) }); if (kc.violation) violations.push({ ...kc.violation, hole: holes[i], basket: k }); route[`${holes[i]}@${k}`] = kc.best.verts; return kc.best.bottleneck ?? -Infinity; }));
     for (const [a, b] of assignMinCost(sub.map((r) => r.map((v) => (Number.isFinite(v) ? -v : Infinity))))) { const i = leftH[a], k = leftK[b]; score[i][k] = sub[a][b]; pairs.push([i, k]); why[holes[i]] = `${why[holes[i]]}; none left in the neighbourhood: assigned among the free baskets by K <= 1 routes`; }
     pairs = pairs.sort((x, y) => x[0] - y[0]);
   }
