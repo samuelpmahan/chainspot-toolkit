@@ -13,6 +13,7 @@
  * 0.01 px. A point outside the frame is dropped and recorded in the hole's reasons (never clamped). Data conditions (no tee,
  * no route, no hallway width) are recorded results, never throws.
  */
+import { RULE_SETS } from '../s7route/match.mjs';
 import { confidenceOf, confirmFloorOf } from '../s7trace/traceView.mjs';
 import { FORMAT, VERSION } from '../../contracts/export.course@1.mjs';
 import { fillHoles } from '../../fg/queries/header.mjs';
@@ -143,9 +144,10 @@ export const exportCourse = ['fn.tk.export.course', {
   calculate: (io) => {
     const path = io.in('tk.source.path');
     const ruleSet = io.in('tk.export.ruleSet');   // the S7 rule set the pointer vote accepted (ports/export/run.mjs)
-    const solveOf = (rules) => io.call('fn.q.trace.routeMatch', rules && Object.keys(rules).length ? { rules } : {}).value;
-    const alternatives = (ruleSet?.wide ?? []).map((w) => ({ variant: w.variant, solve: solveOf(w.rules) }));
-    const doc = courseGeometryOf({ solve: solveOf(ruleSet?.rules), primary: ruleSet?.variant ?? 'routeMatch', alternatives, holesPart: io.in('tk.s7.holes'), hallway: io.in('tk.s7.hallway'), badges: io.in('px.badges'),
+    // a rule set is a config over the steps' declared args (ports/s7route/match.mjs RULE_SETS); none on record: the recorded rule
+    const solveOf = (config) => io.call('fn.q.trace.routeMatch', { config: config ?? RULE_SETS.routeMatch }).value;
+    const alternatives = (ruleSet?.wide ?? []).map((w) => ({ variant: w.variant, solve: solveOf(w.config) }));
+    const doc = courseGeometryOf({ solve: solveOf(ruleSet?.config), primary: ruleSet?.variant ?? 'routeMatch', alternatives, holesPart: io.in('tk.s7.holes'), hallway: io.in('tk.s7.hallway'), badges: io.in('px.badges'),
       r1Px: io.in('tk.s7.sceneS4').R1, crop: io.in('tk.source.cropReceipt'), source: { fileName: String(path).split('/').pop(), sha256: io.in('tk.source.sha256') }, producer: io.in('tk.export.producer'), capture: io.in('tk.source.captureProvenance'), header: io.in('tk.source.header') });
     const n = (s) => doc.evidence.filter((e) => e.status === s).length;
     return { [EXPORT_COURSE_PART]: { ...doc, emits: { holesCount: doc.holes.length, resolvedHolesCount: n('resolved'), straightHolesCount: n('straight'), partialHolesCount: n('partial'), unresolvedHolesCount: n('unresolved'),

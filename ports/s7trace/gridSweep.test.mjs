@@ -46,7 +46,7 @@ test('aggregate and markdownOf: one row per config, the default as the reference
   const judged = { judged: { totals: { agree: 18, judged: 18, bendsHit: 10, bendsMissed: 0, extraBends: 0, notAgreeing: [] } } };
   const cells = { D: { g: cell('g', { 1: hole('a', [[0, 0], [1, 1]]) }, judged), xCapture: cell('xCapture', { 1: hole('a', [], 10) }), xFull: cell('xFull', { 1: hole('a', [], 10.5) }) },
     E: { g: cell('g', { 1: hole('b', [[0, 0], [2, 2]]) }, judged), xCapture: cell('xCapture', { 1: hole('a', [], 10) }), xFull: cell('xFull', { 1: hole('a', [], 13) }, { violations: { seqFirstRanks: { violated: 2, recovered: 2 } } }) } };
-  const configs = [{ hash: 'D', short: 'D', names: ['routeMatchKBendsSeq3SearchW'], labels: ['base'], sparse: { features: {} } }, { hash: 'E', short: 'E', names: [], labels: ['x'], sparse: { features: { firstLegs: { enabled: true } } } }];
+  const configs = [{ hash: 'D', short: 'D', names: ['routeMatchKBendsSeq3SearchW'], labels: ['base'], sparse: {} }, { hash: 'E', short: 'E', names: [], labels: ['x'], sparse: { 'fn.q.trace.seqCells': { firstLegs: true } } }];
   const agg = aggregate({ configs, courses, cellsOf: (c, h) => cells[h][c], samSixRef: { holes: [] }, defaultHash: 'D' });
   const E = agg.rows.find((r) => r.hash === 'E');
   assert.equal(agg.reference, 'D');
@@ -55,5 +55,5 @@ test('aggregate and markdownOf: one row per config, the default as the reference
   assert.deepEqual(E.violations.seqFirstRanks, { violated: 2, recovered: 2, courses: 1 });
   const md = markdownOf({ ...agg, id: 't', specFile: 's.json', spec: { name: 't' }, grid: { product: 2, sampled: 2, skipped: [], duplicates: 0 }, courses, codeDigest: 'c', sharedMs: {}, wallMs: 1, jobs: 1 });
   assert.match(md, /Referents: dev agree = holes whose route ends within 12 px of Sam's basket/);
-  assert.match(md, /firstLegs on/);
+  assert.match(md, /seqCells firstLegs=true/);
 });

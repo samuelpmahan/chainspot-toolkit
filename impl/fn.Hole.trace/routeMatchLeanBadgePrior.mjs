@@ -9,6 +9,6 @@ export const reads = ['tk.s7.holes'];
 export const calls = [...TRACE_CALLS];
 
 export default function routeMatchLeanBadgePrior(parts) {
-  return tracesOf(traceQueries(parts.call)('routeMatch', { rules: RULE_SETS.routeMatchLeanBadgePrior }), parts.get('tk.s7.holes'),
+  return tracesOf(traceQueries(parts.call)('routeMatch', { config: RULE_SETS.routeMatchLeanBadgePrior }), parts.get('tk.s7.holes'),
     { rule: 'routeMatch, rule set routeMatchLeanBadgePrior: lean table; after the bend placement the first bend moves to the badge midpoint B* when the sensor reads no worse' });
 }

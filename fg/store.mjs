@@ -37,7 +37,7 @@
  *              the address among its outParts is invoked once, lazily, and
  *              its outParts are written. get of an unresolvable address
  *              throws a PartStoreError naming it; has returns false.
- *   store.register(fn, { inParts, outParts, calls, calculate, note })
+ *   store.register(fn, { inParts, outParts, calls, calculate, note, args?, needs? })
  *              a Calculation at address fn.*. calculate(io) where
  *                io.in(address)   one of the declared inParts (resolved
  *                                 before calculate runs; any other address
@@ -56,6 +56,21 @@
  *              (a Calculation that needs call-time args, such as a stage
  *              gateway); reading its Part before the explicit call throws
  *              by name.
+ *              args: the Calculation's DECLARED ARGUMENTS, its knobs: { knob: { default, unit, note, values?, validate?,
+ *              sweep?, assumption? } } (unit: R1, W, deg, lum, frac, count, ranks, bool or enum; assumption: the
+ *              fg/assumptions.mjs entry a knob that bounds a VARIABLE quantity rests on). At call time the store fills
+ *              every knob (the call's own argument, else the active config's value, else the default), validates it
+ *              (a bad value throws: an input's integrity) and hands calculate the resolved args; the cache key is
+ *              taken on them, so a call that names a default and one that omits it share one answer. needs:
+ *              { fn: { knob: value | [values] } }: the Calculation acts only when those knobs hold (a sweep drops its
+ *              knobs from a config's canonical form otherwise, and refuses a config that sets them).
+ *              Registering a step declares its knobs: store.declaredArgs() is the registry of every knob a run can
+ *              set (Sam, 2026-10-22: features obeying PxC compose and register automatically).
+ *   config     a call may carry args.config = { fn: { knob: value } }: the call and every call nested under it
+ *              resolve their declared args under it (an inner config overrides an outer one, a call's own argument
+ *              overrides both); a Part produced on first need is produced under no config. A Calculation whose nested calls read the config carries their entries in its cache
+ *              key (io.nestedConfig), so two configs share exactly the answers whose knobs they share.
+ *   store.declaredArgs()   { fn: { args, needs, note } } for every registered Calculation that declares args
  *   store.constant(fn, { [address]: value })
  *              register a Calculation with no inParts that produces exactly
  *              these values: how a root input (a fixture, a file the runner
@@ -115,7 +130,7 @@
 
 import { PXSET_QUERIES, resolvePxSet } from './pxset.mjs';
 import { renderValue } from './render.mjs';
-import { digest, sha256Hex, plain } from './canon.mjs';
+import { digest, sha256Hex, plain, canonicalJson } from './canon.mjs';
 
 /** Every store renders any Part by address (renderable, a default property of Parts). */
 export const RENDER_PART = 'fn.q.part.render';
@@ -188,9 +203,10 @@ export function imageDims(store) {
 export function registerQueries(store, table, { resolve = (ref) => store.get(ref), note = 'PxC query' } = {}) {
   const answers = new Map();
   // a query that asks other queries declares them as q.calls; it is then handed call(fn, args) -> value (a profiled, cached store call)
-  for (const [fn, q] of Object.entries(table)) store.register(fn, { note, ...(q.calls?.length ? { calls: q.calls } : {}),
+  // a query that declares knobs (q.args, q.needs: fg/store.mjs register) is handed them resolved in its args
+  for (const [fn, q] of Object.entries(table)) store.register(fn, { note, ...(q.calls?.length ? { calls: q.calls } : {}), ...(q.args ? { args: q.args } : {}), ...(q.needs ? { needs: q.needs } : {}),
     calculate: (io) => {
-      const args = io.args ?? {}, key = `${fn} ${JSON.stringify(args)}`;
+      const args = io.args ?? {}, key = `${fn} ${JSON.stringify(args)}${io.nestedConfig ? ` ${io.nestedConfig}` : ''}`;
       if (answers.has(key)) return { ...answers.get(key), emits: { cached: 1 } };
       const resolved = Object.fromEntries(Object.entries(args).map(([k, v]) => [k, typeof v === 'string' ? resolve(v) : v]));
       const ans = q.calls?.length ? q(resolved, args, (inner, a) => io.call(inner, a).value) : q(resolved, args);
@@ -217,7 +233,7 @@ export function callSubtree(entries, caller) {
  */
 export function createPartStore({ base = null, name = 'root', onCall = null, cache = new Map(), codeSalt = null } = {}) {
   const log = [];
-  const store = makeStore({ base, name, parent: null, shared: { seq: 0, stack: [], log, cache, codeSalt, baseKeys: new WeakMap(), onCall: (entry) => { log.push(entry); onCall?.(entry); } } });
+  const store = makeStore({ base, name, parent: null, shared: { seq: 0, stack: [], configs: [], log, cache, codeSalt, baseKeys: new WeakMap(), onCall: (entry) => { log.push(entry); onCall?.(entry); } } });
   // The PxC is queryable: pixel-set math lives in fg/pxset.mjs and is invoked from outside by Part address.
   registerQueries(store, PXSET_QUERIES, { resolve: (ref) => resolvePxSet((a) => store.get(a), ref, () => imageDims(store)) });
   // renderable is a default property of every Part: any address renders by the shape of its value (fg/render.mjs)
@@ -232,6 +248,56 @@ export function createPartStore({ base = null, name = 'root', onCall = null, cac
   store.register(INSTRUMENTATION_CALLS, { note: 'the calls made by args.caller and nested under them (timings: sidecar data, never hashed)',
     calculate: (io) => callSubtree(log, io.args?.caller ?? null).filter((e) => e.calculation !== INSTRUMENTATION_CALLS) });
   return store;
+}
+
+/** The units a declared knob may carry (DOCTRINE: every number names its unit; R1 for map distances, W for ribbon things). */
+export const KNOB_UNITS = Object.freeze(['R1', 'W', 'px', 'deg', 'lum', 'frac', 'count', 'ranks', 'bool', 'enum']);
+/** A declared knob's value check: its values list (enum), its unit's type, its own validate. -> null | error */
+export function knobError(spec, v) {
+  if (spec.values && !spec.values.some((x) => x === v)) return `must be one of ${spec.values.map((x) => JSON.stringify(x)).join(', ')} (got ${JSON.stringify(v)})`;
+  if (spec.unit === 'bool' && typeof v !== 'boolean') return `must be a boolean (got ${JSON.stringify(v)})`;
+  if (['R1', 'W', 'px', 'deg', 'lum', 'frac'].includes(spec.unit) && !(v === null && spec.nullable) && !(typeof v === 'number' && Number.isFinite(v))) return `must be a number in ${spec.unit} (got ${JSON.stringify(v)})`;
+  if (['count', 'ranks'].includes(spec.unit) && !Number.isInteger(v)) return `must be an integer ${spec.unit} (got ${JSON.stringify(v)})`;
+  return spec.validate ? spec.validate(v) : null;
+}
+function declaredArgsOf(fn, args) {
+  if (!args) return null;
+  const out = {};
+  for (const [k, spec] of Object.entries(args)) {
+    if (k === 'config') throw new PartStoreError(`register ${fn}: 'config' is the store's own argument, not a knob`);
+    if (!spec || !('default' in spec) || !KNOB_UNITS.includes(spec.unit) || !spec.note) throw new PartStoreError(`register ${fn}: knob '${k}' needs a default, a unit (${KNOB_UNITS.join(', ')}) and a note`);
+    const e = knobError(spec, spec.default);
+    if (e) throw new PartStoreError(`register ${fn}: knob '${k}' default ${e}`);
+    for (const v of spec.sweep ?? []) { const ev = knobError(spec, v); if (ev) throw new PartStoreError(`register ${fn}: knob '${k}' sweep value ${ev}`); }
+    out[k] = Object.freeze({ ...spec, ...(spec.values ? { values: Object.freeze([...spec.values]) } : {}), ...(spec.sweep ? { sweep: Object.freeze([...spec.sweep]) } : {}) });
+  }
+  return Object.freeze(out);
+}
+/** A call's args with every declared knob filled: its own argument, else the config's value, else the default; validated. */
+function resolveArgs(fn, declared, args, fromConfig) {
+  const out = { ...(args ?? {}) };
+  for (const k of Object.keys(fromConfig ?? {})) if (!(k in declared)) throw new PartStoreError(`${fn}: the config sets '${k}', which is not one of its declared args (${Object.keys(declared).join(', ')})`);
+  for (const [k, spec] of Object.entries(declared)) {
+    const v = args && Object.hasOwn(args, k) ? args[k] : fromConfig && Object.hasOwn(fromConfig, k) ? fromConfig[k] : spec.default;
+    const e = knobError(spec, v);
+    if (e) throw new PartStoreError(`${fn}: arg '${k}' ${e}`);
+    out[k] = v;
+  }
+  return out;
+}
+const mergeConfig = (outer, inner) => {
+  const out = { ...(outer ?? {}) };
+  for (const [fn, knobs] of Object.entries(inner ?? {})) out[fn] = { ...(out[fn] ?? {}), ...knobs };
+  return out;
+};
+/** The config entries of every Calculation spec calls, transitively (canonical JSON; '' when none). */
+function nestedConfigOf(spec, config, findCalc) {
+  const seen = new Set(), todo = [...(spec.calls ?? [])];
+  while (todo.length) { const f = todo.pop(); if (seen.has(f)) continue; seen.add(f); const c = findCalc(f); if (c) todo.push(...(c.calls ?? [])); }
+  // a value equal to its declared default is no deviation: a config that names it and one that omits it key alike
+  const rows = [...seen].sort().map((f) => { const d = findCalc(f)?.args, e = Object.entries(config[f] ?? {}).filter(([k, v]) => !d?.[k] || canonicalJson(v) !== canonicalJson(d[k].default)); return [f, Object.fromEntries(e)]; })
+    .filter(([, e]) => Object.keys(e).length);
+  return rows.length ? canonicalJson(rows) : '';
 }
 
 function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false }) {
@@ -335,7 +401,7 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
 
     _produce: produceHere,
 
-    register(fn, { inParts = [], outParts = [], calls = [], calculate, lazy = true, note = null, code = null, rootKey = null } = {}) {
+    register(fn, { inParts = [], outParts = [], calls = [], calculate, lazy = true, note = null, code = null, rootKey = null, args = null, needs = null } = {}) {
       if (typeof fn !== 'string' || !FN.test(fn)) throw new PartStoreError(`register: ${JSON.stringify(fn)} is not a fn.* Calculation address`);
       if (findCalc(fn)) throw new PartStoreError(`register: Calculation '${fn}' is already registered`);
       if (typeof calculate !== 'function') throw new PartStoreError(`register ${fn}: calculate(io) is required`);
@@ -346,6 +412,8 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
         inParts: addressList(inParts, `register ${fn}: inParts`).map(A),
         outParts: addressList(outParts, `register ${fn}: outParts`).map(A),
         calls: addressList(calls, `register ${fn}: calls`),
+        args: declaredArgsOf(fn, args),
+        needs: needs ? Object.freeze(JSON.parse(JSON.stringify(needs))) : null,
         calculate
       });
       for (const address of spec.outParts) {
@@ -374,6 +442,13 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
     call(fn, args, { caller = null } = {}) {
       const spec = findCalc(fn);
       if (!spec) throw new PartStoreError(`Calculation '${fn}' is not registered on store ${name}`);
+      // the active config (an outer call's overlay, merged with this call's own args.config), then the declared args resolved
+      // a Part produced on first need is produced under no config: its value never depends on which call first needed it
+      const lazy = typeof caller === 'string' && caller.startsWith('lazy:');
+      const outer = lazy ? null : shared.configs.at(-1) ?? null, config = args?.config ? mergeConfig(outer, args.config) : outer;
+      // the config is the store's business: the call's args are its own (resolved), what it calls is keyed by io.nestedConfig
+      if (args && Object.hasOwn(args, 'config')) { const { config: _given, ...own } = args; args = Object.keys(own).length ? own : undefined; }
+      args = spec.args ? resolveArgs(fn, spec.args, args, config?.[fn]) : args;
       const entry = {
         seq: shared.seq++, parent: shared.stack.at(-1) ?? null, depth: shared.stack.length,
         calculation: fn, store: name, caller, site: typeof args?.site === 'string' ? args.site : null,
@@ -403,17 +478,20 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
           if (!inputs.has(address)) throw new PartStoreError(`${fn} read '${address}', which is not among its declared inParts`);
           return inputs.get(address);
         };
+        // the config entries of the Calculations this one calls (transitively): part of its answer's identity
+        const nestedConfig = config ? nestedConfigOf(spec, config, findCalc) : '';
         const io = Object.freeze({
           in: read,
           board: Object.freeze({ get: read, has: (address) => inputs.has(address) }),
           args,
+          nestedConfig,
           call: (inner, innerArgs) => {
             if (!spec.calls.includes(inner)) throw new PartStoreError(`${fn} called '${inner}', which is not among its declared calls`);
             return self.call(inner, innerArgs, { caller: fn });
           }
         });
         // the cache key of this call: the Calculation, its code, its arguments and the content keys of its inputs
-        key = spec.outParts.length && !spec.rootKey && cacheable(args) ? digest({ fn, code: spec.code, args: plain(args ?? null), inputs: spec.inParts.map((a) => [a, keyOf(a)]), ...(spec.calls?.length ? { roots: rootsKey() } : {}) }) : null;
+        key = spec.outParts.length && !spec.rootKey && cacheable(args) ? digest({ fn, code: spec.code, args: plain(args ?? null), inputs: spec.inParts.map((a) => [a, keyOf(a)]), ...(spec.calls?.length ? { roots: rootsKey() } : {}), ...(nestedConfig ? { config: nestedConfig } : {}) }) : null;
         entry.key = key;
         const finish = (result, fromCache = false) => {
           if (spec.outParts.length) {
@@ -435,7 +513,9 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
           const out = finish(hit.result, true); entry.computedMs = hit.elapsedMs ?? null;   // a hit is charged what it cost to compute, once
           exit('ok'); return out;
         }
-        const result = spec.calculate(io);
+        shared.configs.push(config);
+        let result;
+        try { result = spec.calculate(io); } finally { shared.configs.pop(); }   // an asynchronous calculate's later calls see no config
         if (isPromise(result)) {
           pop();
           return result.then((value) => { const out = finish(value); exit('ok'); return out; }, (error) => { exit('threw', error); throw error; });
@@ -467,6 +547,13 @@ function makeStore({ base, name, parent, shared, alias = {}, sharedParts = false
 
     /** Every call this store and its branches made so far (the default profile). */
     calls: () => [...shared.log],
+
+    /** Every registered Calculation that declares args (this store and its parents): { fn: { args, needs, note } }. */
+    declaredArgs() {
+      const out = {};
+      for (const st of chain()) for (const [fn, spec] of st._calcs) if (spec.args && !out[fn]) out[fn] = { args: spec.args, needs: spec.needs, note: spec.note };
+      return Object.fromEntries(Object.keys(out).sort().map((fn) => [fn, out[fn]]));
+    },
 
     branch(branchBase, { name: branchName = `${name}/branch`, alias: branchAlias = {}, sharedParts: branchShared = false } = {}) {
       return makeStore({ base: branchBase, name: branchName, parent: self, shared, alias: branchAlias, sharedParts: branchShared });

@@ -9,6 +9,6 @@ export const reads = ['tk.s7.holes'];
 export const calls = [...TRACE_CALLS];
 
 export default function routeMatchBadgeMidPrior(parts) {
-  return tracesOf(traceQueries(parts.call)('routeMatch', { rules: RULE_SETS.routeMatchBadgeMidPrior }), parts.get('tk.s7.holes'),
+  return tracesOf(traceQueries(parts.call)('routeMatch', { config: RULE_SETS.routeMatchBadgeMidPrior }), parts.get('tk.s7.holes'),
     { rule: 'routeMatch, rule set routeMatchBadgeMidPrior: the first bend seeded at B*; after the bend placement it moves back to B* when the sensor reads no worse' });
 }

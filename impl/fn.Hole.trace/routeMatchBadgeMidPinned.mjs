@@ -9,6 +9,6 @@ export const reads = ['tk.s7.holes'];
 export const calls = [...TRACE_CALLS];
 
 export default function routeMatchBadgeMidPinned(parts) {
-  return tracesOf(traceQueries(parts.call)('routeMatch', { rules: RULE_SETS.routeMatchBadgeMidPinned }), parts.get('tk.s7.holes'),
+  return tracesOf(traceQueries(parts.call)('routeMatch', { config: RULE_SETS.routeMatchBadgeMidPinned }), parts.get('tk.s7.holes'),
     { rule: 'routeMatch, rule set routeMatchBadgeMidPinned: the first bend at the badge midpoint B* and kept there; the second bend searched with B1 = B*' });
 }

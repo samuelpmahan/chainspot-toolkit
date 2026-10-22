@@ -9,6 +9,6 @@ export const reads = ['tk.s7.holes'];
 export const calls = [...TRACE_CALLS];
 
 export default function routeMatchLeanPxRefine(parts) {
-  return tracesOf(traceQueries(parts.call)('routeMatch', { rules: RULE_SETS.routeMatchLeanPxRefine }), parts.get('tk.s7.holes'),
+  return tracesOf(traceQueries(parts.call)('routeMatch', { config: RULE_SETS.routeMatchLeanPxRefine }), parts.get('tk.s7.holes'),
     { rule: 'routeMatch, rule set routeMatchLeanPxRefine: S6-straight holes straight, coordinate second bend, route table refined only for each row best 3 baskets' });
 }

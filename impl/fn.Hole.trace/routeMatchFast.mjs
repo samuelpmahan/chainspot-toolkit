@@ -9,6 +9,6 @@ export const reads = ['tk.s7.holes'];
 export const calls = [...TRACE_CALLS];
 
 export default function routeMatchFast(parts) {
-  return tracesOf(traceQueries(parts.call)('routeMatch', { rules: RULE_SETS.routeMatchFast }), parts.get('tk.s7.holes'),
+  return tracesOf(traceQueries(parts.call)('routeMatch', { config: RULE_SETS.routeMatchFast }), parts.get('tk.s7.holes'),
     { rule: 'routeMatch, rule set routeMatchFast: S6-straight holes straight, coordinate second bend, coarse-to-fine route table' });
 }

@@ -9,6 +9,6 @@ export const reads = ['tk.s7.holes'];
 export const calls = [...TRACE_CALLS];
 
 export default function routeMatchBadgeMidTeeAxisPrior(parts) {
-  return tracesOf(traceQueries(parts.call)('routeMatch', { rules: RULE_SETS.routeMatchBadgeMidTeeAxisPrior }), parts.get('tk.s7.holes'),
+  return tracesOf(traceQueries(parts.call)('routeMatch', { config: RULE_SETS.routeMatchBadgeMidTeeAxisPrior }), parts.get('tk.s7.holes'),
     { rule: 'routeMatch, rule set routeMatchBadgeMidTeeAxisPrior: B* table (2 route reads per cell); station floor in rC1, second bend from a straight route, first bend fitted on the tee axis, then back to B* when the sensor reads no worse' });
 }

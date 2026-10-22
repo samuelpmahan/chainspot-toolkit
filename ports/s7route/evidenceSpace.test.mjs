@@ -4,7 +4,7 @@ import { createPartStore, registerQueries } from '../../fg/store.mjs';
 import { laneStepAt, LANE_QUERIES } from './laneSpace.mjs';
 import { laneExitsOf, laneBackOf, legWalked, meetOf, evidenceRankOf, zOf, logSigmoid, EVIDENCE_QUERIES, FEATURES } from './evidenceSpace.mjs';
 import { fitLogistic, picksOf } from './evidenceModel.mjs';
-import { seqFinalOf, cellRulesOf, RULE_SETS, S7_DEFAULT } from './match.mjs';
+import { seqFinalOf } from './match.mjs';
 
 /** The lane tests' L: ground lum 100, a ribbon (lum 145, width 20) east from (10, 100) to (130, 100), then south-east to the
  *  BasketPoint (195, 165), C1 = R1 = 10 px; hole 1's tee cap at (20, 100), its badge at (60, 100), axis east. */
@@ -57,14 +57,13 @@ test('the evidence queries answer with units on a store', () => {
   assert.equal(none.emits?.cached ?? 1, 1);
 });
 
-test('the evidence ranking: log P per candidate cell, a straight claim certain, nothing for another cell rule set', () => {
-  const cellRules = cellRulesOf(RULE_SETS[S7_DEFAULT]);
-  const part = { cellRules, rows: [{ hole: '1', i: 0, claimed: 1 }, { hole: '2', i: 1, cells: [{ k: 0, readings: { backbone: 0.5 } }, { k: 2, readings: { backbone: -0.5, meet: 1 } }] }] };
-  const cells = { score: [[-Infinity, 0, -Infinity], [3, -Infinity, -1]] }, w = { bias: 0, backbone: 2, meet: 3 };
-  const M = evidenceRankOf(part, cells, { evidenceWeights: w }, cellRules);
+test('the evidence ranking: log P per candidate cell, a straight claim certain, nothing for cells of another identity', () => {
+  const part = { cellsIdentity: 'cells of the default', rows: [{ hole: '1', i: 0, claimed: 1 }, { hole: '2', i: 1, cells: [{ k: 0, readings: { backbone: 0.5 } }, { k: 2, readings: { backbone: -0.5, meet: 1 } }] }] };
+  const cells = { identity: 'cells of the default', score: [[-Infinity, 0, -Infinity], [3, -Infinity, -1]] }, w = { bias: 0, backbone: 2, meet: 3 };
+  const M = evidenceRankOf(part, cells, w);
   assert.equal(M[0][1], 0);
   assert.equal(M[1][0], logSigmoid(1)); assert.equal(M[1][2], logSigmoid(2)); assert.equal(M[1][1], null);
-  assert.equal(evidenceRankOf(part, cells, {}, { other: true }), null);
+  assert.equal(evidenceRankOf(part, { ...cells, identity: 'cells under other knobs' }), null);
   assert.equal(zOf({ backbone: null, meet: 1 }, w), 3, 'an UNKNOWN reading adds nothing');
 });
 

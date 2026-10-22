@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 /**
- * `pxc sweep --grid <spec.json> [--courses a,b] [--jobs N] [--id ID] [--chunk N] [--dry-run]`: an S7 grid search over the
- * feature registry (ports/s7route/features.mjs), the capability the ABFeature era had (Sam, 2026-10-22: "With ABFeatures I was
- * able to grid search").
+ * `pxc sweep --grid <spec.json> [--courses a,b] [--jobs N] [--id ID] [--chunk N] [--dry-run]`: an S7 grid search over the knobs
+ * the S7 steps declare (store.declaredArgs(): ports/s7trace/traceSpace.mjs registers each step with its args), the capability the
+ * ABFeature era had (Sam, 2026-10-22: "With ABFeatures I was able to grid search"). A new Calculation with declared args is
+ * sweepable with no other registration.
  *
- * The spec ({ schema: 's7-grid@1', name, base?, include?: [named configs], axes: [...], sample?: { n, seed } }, features.mjs
+ * The spec ({ schema: 's7-grid@1', name, base?: sparse config | RULE_SETS name, include?: [RULE_SETS names], axes: [{ knob:
+ * 'fn#knob', values } | { name, options: { label: sparse config } }], cross?: [...], sample?: { n, seed } }; fg/config.mjs
  * expandGrid) expands to the cartesian product of its axes over the base (the S7 default unless given), optionally a seeded random
  * subsample; invalid combinations are recorded as skipped, duplicates merged by config hash. The S7 default is always a config:
  * it is the reference every judgement compares with.
@@ -26,7 +28,9 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, realpathSync, readdirSync } from 'node:fs';
 import { join, resolve, basename } from 'node:path';
 import { fork } from 'node:child_process';
-import { expandGrid, resolveConfig, S7_DEFAULT_NAME } from '../s7route/features.mjs';
+import { expandGrid, resolveConfig, declaredRows } from '../../fg/config.mjs';
+import { RULE_SETS, S7_DEFAULT } from '../s7route/match.mjs';
+import { s7DeclaredArgs } from './traceSpace.mjs';
 import { matchBends } from './judgeBends.mjs';
 import { canonicalJson, sha256Hex } from '../../fg/canon.mjs';
 
@@ -145,7 +149,7 @@ export function aggregate({ configs, courses, cellsOf, samSixRef, defaultHash })
 
 // ------------------------------------------------------------------------------------------------ the report
 const short = (r) => `\`${r.short}\`${r.names.length ? ` (${r.names.join(', ')})` : ''}`;
-const diffOf = (r) => { const f = r.sparse.features; const parts = Object.entries(f).map(([id, d]) => `${id}${d.enabled === false ? ' off' : d.enabled === true && !d.knobs ? ' on' : ''}${d.knobs ? ` ${Object.entries(d.knobs).map(([k, v]) => `${k}=${typeof v === 'number' ? +v.toFixed(4) : v}`).join(' ')}` : ''}`); return parts.length ? parts.join('; ') : 'the S7 default'; };
+const diffOf = (r) => { const parts = Object.entries(r.sparse).map(([fn, d]) => `${fn.replace(/^fn\.q\.(trace|match)\./, '')} ${Object.entries(d).map(([k, v]) => `${k}=${typeof v === 'number' ? +v.toFixed(4) : v}`).join(' ')}`); return parts.length ? parts.join('; ') : 'the S7 default'; };
 const viol = (r) => Object.entries(r.violations).map(([a, v]) => `${a} ${v.violated} (${v.recovered} recovered)`).join(', ') || 'none';
 export function markdownOf(res) {
   const by = new Map(res.rows.map((r) => [r.hash, r])), ref = by.get(res.reference), C = res.courses;
@@ -185,18 +189,25 @@ function courseWeights(root, defaultHash, codeDigest) {
 const say = (s) => process.stderr.write(s + '\n');
 export async function sweepCommand(args, { root = ROOT } = {}) {
   const at = (k) => (args.includes(k) ? args[args.indexOf(k) + 1] : undefined);
+  if (args.includes('--registry')) {
+    const fmt = (v) => (typeof v === 'number' ? +v.toFixed(4) : v === null ? 'null' : v);
+    for (const r of declaredRows(s7DeclaredArgs())) process.stdout.write(`${r.path.padEnd(42)} ${r.unit.padEnd(6)} default ${String(fmt(r.default)).padEnd(10)} sweep ${(r.sweep ?? []).map(fmt).join('/')}${r.assumption ? `  [assumption ${r.assumption}]` : ''}${r.needs ? `  [acts when ${JSON.stringify(r.needs)}]` : ''}\n`);
+    return { registry: true };
+  }
   const specFile = at('--grid');
   if (!specFile) { say('usage: pxc sweep --grid <spec.json> [--courses a,b] [--jobs N] [--chunk N] [--id ID] [--dry-run]'); return null; }
-  const spec = JSON.parse(readFileSync(resolve(specFile), 'utf8')), grid = expandGrid(spec);
-  const def = resolveConfig({});
-  if (!grid.configs.some((c) => c.hash === def.hash)) grid.configs.unshift({ hash: def.hash, short: def.short, labels: ['the S7 default (reference)'], names: [S7_DEFAULT_NAME], sparse: { features: {} }, canonical: def.canonical, rules: def.rules });
+  const spec = JSON.parse(readFileSync(resolve(specFile), 'utf8')), declared = s7DeclaredArgs();
+  const named = (n) => { if (!(n in RULE_SETS)) throw new Error(`sweep: no rule set '${n}' (ports/s7route/match.mjs RULE_SETS)`); return RULE_SETS[n]; };
+  const grid = expandGrid(declared, { ...spec, base: typeof spec.base === 'string' ? named(spec.base) : spec.base ?? {}, include: Object.fromEntries((spec.include ?? []).map((n) => [n, named(n)])) }, { named: RULE_SETS });
+  const def = resolveConfig(declared, {});
+  if (!grid.configs.some((c) => c.hash === def.hash)) grid.configs.unshift({ hash: def.hash, short: def.short, labels: ['the S7 default (reference)'], names: [S7_DEFAULT], sparse: {}, canonical: def.canonical });
   const courses = sweepCourses(root, at('--courses')?.split(',') ?? null), jobs = Number(at('--jobs') ?? 1);
   const id = at('--id') ?? `${(spec.name ?? basename(specFile, '.json')).replace(/[^A-Za-z0-9_-]+/g, '-')}-${sha256Hex(canonicalJson(spec)).slice(0, 8)}`;
   const dir = join(root, SWEEPS_DIR, id);
   const { cellCodeDigest, recordedCell } = await import('./gridCell.mjs');
   const codeDigest = cellCodeDigest(root);
   // configs sharing their cells (the evidence ranking reads the default's cells) run next to each other, in one task
-  const cellKey = (c) => { const { seqScore, ...rest } = c.rules; return canonicalJson(rest); };
+  const cellKey = (c) => { const { 'fn.q.trace.routeMatch': rm, ...steps } = c.canonical, { evidenceRank, ...own } = rm; return canonicalJson([own, steps]); };
   const configs = [...grid.configs].sort((a, b) => (a.hash === def.hash ? -1 : b.hash === def.hash ? 1 : cellKey(a).localeCompare(cellKey(b))));
   const todo = courses.map((c) => ({ ...c, configs: configs.filter((g) => !recordedCell(dir, { course: c.course, attempt: c.attempt, hash: g.hash, codeDigest })) }));
   const nTodo = todo.reduce((a, c) => a + c.configs.length, 0), nAll = configs.length * courses.length;
@@ -205,7 +216,7 @@ export async function sweepCommand(args, { root = ROOT } = {}) {
   mkdirSync(dir, { recursive: true });
   const meta = { schema: 's7-sweep@1', id, specFile, spec, createdBy: { checkout: realpathSync(root) }, createdAt: existsSync(join(dir, 'sweep.json')) ? JSON.parse(readFileSync(join(dir, 'sweep.json'), 'utf8')).createdAt : new Date().toISOString(), codeDigest };
   writeFileSync(join(dir, 'sweep.json'), JSON.stringify(meta, null, 1) + '\n');
-  writeFileSync(join(dir, 'configs.json'), JSON.stringify(configs.map(({ hash, short, labels, names, sparse, canonical, rules }) => ({ hash, short, labels, names, sparse, canonical, rules })), null, 1) + '\n');
+  writeFileSync(join(dir, 'configs.json'), JSON.stringify(configs.map(({ hash, short, labels, names, sparse, canonical }) => ({ hash, short, labels, names, sparse, canonical })), null, 1) + '\n');
   // tasks: course x chunk of configs (--chunk, default every config of the course in one task)
   // configs that share their cells stay in one task; the heaviest courses start first (the default's ownMs in any earlier sweep)
   const chunk = Number(at('--chunk') ?? 0) || Infinity, tasks = [];
@@ -213,7 +224,7 @@ export async function sweepCommand(args, { root = ROOT } = {}) {
     let cur = [], key = null;
     for (const g of c.configs) {
       if (cur.length >= chunk && cellKey(g) !== key) { tasks.push({ course: c.course, attempt: c.attempt, configs: cur }); cur = []; }
-      cur.push({ hash: g.hash, rules: g.rules }); key = cellKey(g);
+      cur.push({ hash: g.hash, sparse: g.sparse, canonical: g.canonical }); key = cellKey(g);
     }
     if (cur.length) tasks.push({ course: c.course, attempt: c.attempt, configs: cur });
   }

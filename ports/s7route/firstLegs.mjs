@@ -20,7 +20,7 @@
  *                        against the other holes' first legs and badge plates, and the first-legs sibling's routes where they
  *                        differ; renders one crop per route that violates and one per changed hole (before / after)
  *                        (fg/s7route/firstLegRender.mjs). Recorded, never a gate.
- * The rule set routeMatchKBendsSeq3SearchWFirstLegs (match.mjs seqFirstLegs) applies both rules inside the default's search.
+ * The rule set routeMatchKBendsSeq3SearchWFirstLegs (fn.q.trace.seqCells#firstLegs) applies both rules inside the default's search.
  */
 import { legRunsAlong, segmentHitsBox } from './kbends.mjs';
 export { segmentHitsBox };
@@ -85,7 +85,7 @@ export const FIRST_LEG_CALCULATIONS = Object.freeze([
   ['fn.tk.s7.firstLegCheck', { inParts: [FIRST_LEGS_PART, ROUTE_HALLWAY_PART, 'tk.s7.sceneS4', 'tk.s7.holes', 'testimony.source.holePaths'], outParts: [FIRST_LEG_CHECK_PART], calls: ['fn.q.trace.routeMatch'], code: CODE,
     note: 'Sam\'s routes and the default\'s against the other holes\' first legs and badge plates (judging; recorded, never a gate)',
     calculate: (io) => ({ [FIRST_LEG_CHECK_PART]: firstLegCheckOf({ firstLegs: io.in(FIRST_LEGS_PART), W: io.in(ROUTE_HALLWAY_PART).widthPx, R1: io.in('tk.s7.sceneS4').R1, holePaths: io.in('testimony.source.holePaths'),
-      solve: io.call('fn.q.trace.routeMatch', { rules: RULE_SETS[S7_DEFAULT] }).value, holesPart: io.in('tk.s7.holes'),
-      sibling: io.call('fn.q.trace.routeMatch', { rules: RULE_SETS.routeMatchKBendsSeq3SearchWFirstLegs }).value }) }) }]
+      solve: io.call('fn.q.trace.routeMatch', { config: RULE_SETS[S7_DEFAULT] }).value, holesPart: io.in('tk.s7.holes'),
+      sibling: io.call('fn.q.trace.routeMatch', { config: RULE_SETS.routeMatchKBendsSeq3SearchWFirstLegs }).value }) }) }]
 ]);
 export function registerFirstLegs(store) { for (const [fn, spec] of FIRST_LEG_CALCULATIONS) if (!store.registered(fn)) store.register(fn, spec); }

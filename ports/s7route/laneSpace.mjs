@@ -43,7 +43,7 @@
  *   fn.q.route.laneTrack  { scene, lanes, start, widthPx } -> one hole's track from its tee cap, a laneStep call per step
  * Parts (Calculations, LANE_CALCULATIONS):
  *   tk.s7.laneTracksFour / tk.s7.laneTracksThree   every hole's track (tk.s7.routeStart starts, W from tk.s7.routeHallway)
- *   tk.s7.laneCrosscheck   both variants against the S7 default's routes (fn.q.trace.routeMatch, rules RULE_SETS[S7_DEFAULT]):
+ *   tk.s7.laneCrosscheck   both variants against the S7 default's routes (fn.q.trace.routeMatch, config RULE_SETS[S7_DEFAULT]):
  *                          per hole same basket?, the max lateral distance between the polylines (W), the verdict. Recorded,
  *                          never a gate: the S7 default's output is unchanged. Renders as the course picture
  *                          (fg/s7route/laneRender.mjs).
@@ -389,7 +389,7 @@ export const LANE_CALCULATIONS = Object.freeze([
   ['fn.tk.s7.laneCrosscheck', { inParts: [LANE_TRACKS_PART[4], LANE_TRACKS_PART[3], 'tk.s7.holes', ROUTE_HALLWAY_PART, SCENE], outParts: [LANE_CROSSCHECK_PART], calls: ['fn.q.trace.routeMatch'], code: CODE,
     note: `the four- and three-lane tracks against the S7 default (${S7_DEFAULT}): same basket, max lateral distance (W), verdict; recorded, never a gate`,
     calculate: (io) => {
-      const solve = io.call('fn.q.trace.routeMatch', { rules: RULE_SETS[S7_DEFAULT] }).value, holes = io.in('tk.s7.holes'), W = io.in(ROUTE_HALLWAY_PART).widthPx, S = io.in(SCENE);
+      const solve = io.call('fn.q.trace.routeMatch', { config: RULE_SETS[S7_DEFAULT] }).value, holes = io.in('tk.s7.holes'), W = io.in(ROUTE_HALLWAY_PART).widthPx, S = io.in(SCENE);
       const variants = Object.fromEntries([4, 3].map((lanes) => { const t = io.in(LANE_TRACKS_PART[lanes]); return [lanes === 4 ? 'fourLane' : 'threeLane', { ...crosscheckOf(t, solve, holes, W), emitsOfTracks: t.emits }]; }));
       return { [LANE_CROSSCHECK_PART]: { schema: LANE_CROSSCHECK_SCHEMA, reference: S7_DEFAULT, widthPx: W, R1Px: S.R1, agreeLateralW: LANE.agreeLateralW, variants,
         baskets: holes.baskets.map((b) => ({ name: b.name, point: b.point })),

@@ -76,7 +76,7 @@ export function courseStore({ specimen, attempt, root = ROOT }) {
 }
 
 /**
- * Run configs ([{ hash, rules }]) on one course; every finished cell is written and passed to onCell. Configs already recorded
+ * Run configs ([{ hash, sparse, canonical }]: fg/config.mjs, over the store's declared args) on one course; every finished cell is written and passed to onCell. Configs already recorded
  * under the same key are skipped. -> { cells: n computed, skipped, sharedMs }
  */
 export function runCourseCells({ specimen, attempt, configs, dir, root = ROOT, codeDigest = cellCodeDigest(root), onCell = () => {} }) {
@@ -87,7 +87,8 @@ export function runCourseCells({ specimen, attempt, configs, dir, root = ROOT, c
   // the shared Parts, before any config is timed: the scene, the hallway, the route starts, S6's verdicts, each edge route table
   const holesPart = store.get('tk.s7.holes'), W = store.get('tk.s7.hallway').widthPx;
   store.get('tk.s7.sceneS4'); if (store.has('tk.s7.straight')) store.get('tk.s7.straight');
-  const tables = new Set(todo.filter((c) => !c.rules.sensor).map((c) => `${c.rules.tableUnits ?? 'r1'} ${c.rules.tableSearch ?? 'full'}`));
+  const rm = (c) => c.canonical['fn.q.trace.routeMatch'];
+  const tables = new Set(todo.filter((c) => rm(c).sensor === 'edge').map((c) => `${rm(c).tableUnits} ${rm(c).tableSearch}`));
   for (const t of tables) { const [units, search] = t.split(' '); routeTableOn(store, { board, units, search }); }
   attribution.top.shared = 0;
   const warmMs = performance.now() - t0;
@@ -95,7 +96,7 @@ export function runCourseCells({ specimen, attempt, configs, dir, root = ROOT, c
   let n = 0;
   for (const c of todo) {
     let r = null, condition = null;
-    try { r = store.call('fn.q.trace.routeMatch', { rules: c.rules }).value; } catch (e) { condition = `routeMatch threw: ${e?.message ?? e}`; }
+    try { r = store.call('fn.q.trace.routeMatch', { config: c.sparse }).value; } catch (e) { condition = `routeMatch threw: ${e?.message ?? e}`; }
     const f = store.lastFrame, paidMs = f.dt, ownMs = f.dt - f.shared + f.saved;
     const S = r ? store.get(r.scene ?? 'tk.s7.sceneS4') : null, R1 = S?.R1 ?? null;
     const traces = r ? tracesOf(r, holesPart, { rule: c.hash }).traces : [];
