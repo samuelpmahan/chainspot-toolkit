@@ -30,6 +30,7 @@ import { routeTableOn, regionAssignTableOn } from '../s7route/routeSpace.mjs';
 import { registerRegion, REGION_SCENE_PART } from '../s7route/regionSpace.mjs';
 import { routeMatchOf, seqCellsOf, cellRulesOf, MATCH_STEPS, MATCH_RULES } from '../s7route/match.mjs';
 import { registerEvidence, evidenceRankOf, CELL_EVIDENCE_PART } from '../s7route/evidenceSpace.mjs';
+import { registerFirstLegs, FIRST_LEGS_PART } from '../s7route/firstLegs.mjs';
 import { routeMatchViewOf } from './traceView.mjs';
 
 export const HOLE_TRACE_SLOT = Object.freeze({
@@ -154,6 +155,8 @@ export function registerTraceQueries(store, { matcher = null, board = null } = {
   const holeList = (S) => get('tk.s7.holes').holes.map((h) => ({ n: Number(h.hole), c: S.badges[Number(h.hole)], half: S.badgeHalf[Number(h.hole)], tee: h.tee }));
   const seedsS4 = () => Object.fromEntries(get('tk.s7.holes').holes.filter((h) => h.tee?.source.startsWith('S4')).map((h) => [h.hole, { ...h.tee }]));
   const teesOf = () => [...Object.values(base()).map((b) => [b.teeCenter, b.u]), ...Object.values(seedsS4()).map((s) => [s.teeCenter, s.u])];
+  // rule set option seqFirstLegs: every hole's first leg and badge plate (tk.s7.firstLegs, ports/s7route/firstLegs.mjs), read on first need
+  const firstLegsFor = (rules) => { if (!rules?.seqFirstLegs) return null; registerFirstLegs(store); return get(FIRST_LEGS_PART); };
   // what every routeMatch solve reads: its table and scene, S6's straight verdicts, the per-hole steps as profiled store calls
   const solveContext = (rules, refineBends = true) => {
     // rule set sensor (ports/s7route/regionSpace.mjs): 'region' = the assignment reads the hallway REGION (tk.s7.sceneRegion), the
@@ -194,7 +197,7 @@ export function registerTraceQueries(store, { matcher = null, board = null } = {
     'fn.q.trace.routeMatch': ({ secondBends = true, refineBends = true, rules = undefined } = {}) => {
       // S7 after S5 (docs/evidence/s7after): scoring = tk.s7.routeTable (cached rows), matching = ports/s7route/match.mjs
       const { table, S, scene, region, straight, steps, regionSteps } = solveContext(rules, refineBends);
-      const r = routeMatchOf(table, S, get('tk.s7.routeStart'), { secondBends, straight, steps, regionSteps, ...(rules ? { rules: { ...MATCH_RULES, ...rules } } : {}) });
+      const r = routeMatchOf(table, S, get('tk.s7.routeStart'), { secondBends, straight, steps, regionSteps, firstLegs: firstLegsFor(rules), ...(rules ? { rules: { ...MATCH_RULES, ...rules } } : {}) });
       const regionCondition = region ? get(REGION_SCENE_PART).regionCondition : null;
       return { value: { ...r, scene, ...(region ? { sensor: rules.sensor } : {}), ...(regionCondition ? { condition: regionCondition } : {}) }, unit: 'px (canonical frame)', emits: { holes: Object.keys(r.holes).length, reached: Object.values(r.holes).filter((h) => h.end != null).length, secondBends: Object.values(r.holes).filter((h) => (h.verts?.length ?? 0) === 4).length, ...(r.sequencing ? { cellsEvaluated: r.sequencing.cellsEvaluated, cellsFullTable: r.sequencing.cellsFullTable, holesWidened: r.sequencing.widened.length } : {}), ...violationEmits(r.assumptions) } };
     },
@@ -203,7 +206,7 @@ export function registerTraceQueries(store, { matcher = null, board = null } = {
     'fn.q.trace.seqCells': ({ rules, refineBends = true }) => {
       const { table, S, straight, steps, regionSteps } = solveContext(rules, refineBends), st = get('tk.s7.routeStart');
       const startOf = (hole) => st.holes.find((h) => String(h.hole) === String(hole)), W = table.widthPx;
-      const c = seqCellsOf({ table, holes: table.holes, S, W, startOf, verdicts: straight, steps, legsOf: (Sc, V, Wd) => steps.kLegs(Sc, V, Wd), legsMany: (Sc, Vs, Wd) => steps.kLegsMany(Sc, Vs, Wd), rules, regionSteps });
+      const c = seqCellsOf({ table, holes: table.holes, S, W, startOf, verdicts: straight, steps, legsOf: (Sc, V, Wd) => steps.kLegs(Sc, V, Wd), legsMany: (Sc, Vs, Wd) => steps.kLegsMany(Sc, Vs, Wd), rules, regionSteps, firstLegs: firstLegsFor(rules) });
       return { value: c, unit: 'lum (cell values: weakest-leg edge contrast minus the turning price); px (canonical frame): routes', emits: { cellsEvaluated: c.summary.cellsEvaluated, cellsScored: c.summary.cellsScored, ...violationEmits(c.violations) } };
     },
     'fn.q.trace.pinned': () => {

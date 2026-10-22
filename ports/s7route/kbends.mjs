@@ -62,8 +62,23 @@ export function ringCrossed(a, b, foreign) {
     const p = foreign.pts[q], t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / L2));
     if (Math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dy) < foreign.r) return q;
   }
+  // rule set option seqFirstLegs (firstLegs.mjs): the other holes' badge plates are foreign too; a plate's index follows the rings'
+  if (foreign.boxes) for (let q = 0; q < foreign.boxes.length; q++) if (segmentHitsBox(a, b, foreign.boxes[q].box)) return foreign.pts.length + q;
   return -1;
 }
+/** Does the segment a -> b pass over the box [x, y, w, h] (px)? Liang-Barsky clipping. */
+export function segmentHitsBox(a, b, [x, y, w, h]) {
+  const dx = b[0] - a[0], dy = b[1] - a[1];
+  let t0 = 0, t1 = 1;
+  for (const [p, q] of [[-dx, a[0] - x], [dx, x + w - a[0]], [-dy, a[1] - y], [dy, y + h - a[1]]]) {
+    if (p === 0) { if (q < 0) return false; continue; }
+    const r = q / p;
+    if (p < 0) { if (r > t1) return false; if (r > t0) t0 = r; } else { if (r < t0) return false; if (r < t1) t1 = r; }
+  }
+  return t0 <= t1;
+}
+/** What a foreign crossing index names: { basket: index } for a ring, { badge: label } for a badge plate. */
+export const crossedOf = (foreign, q) => (q < 0 ? null : q < foreign.pts.length ? { basket: foreign.idx[q] } : { badge: foreign.boxes[q - foreign.pts.length].hole });
 /** The clearance (px) of a leg a -> b from the point p. */
 export const legClearance = (a, b, p) => { const dx = b[0] - a[0], dy = b[1] - a[1], L2 = Math.max(dx * dx + dy * dy, 1e-9), t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / L2)); return Math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dy); };
 const routeClear = (V, foreign) => { for (let i = 0; i + 1 < V.length; i++) if (ringCrossed(V[i], V[i + 1], foreign) >= 0) return false; return true; };
@@ -124,12 +139,14 @@ function axisOf(start) {
  * One cell's K <= 1 routes under the fair cost: the straight route, and the best S -> B1 -> E with B1 on the tee axis at or past
  * the bound (a sweep every axisStepR1, then a halving search). -> { zero, one, best } each { verts, legs, bottleneck }.
  */
-export function kCellAt(S, start, E, W, { legsOf = legContrastsOf, legsMany = legsManyOf(legsOf), foreign = null, unitPx = null } = {}) {
+export function kCellAt(S, start, E, W, { legsOf = legContrastsOf, legsMany = legsManyOf(legsOf), foreign = null, unitPx = null, owned = null } = {}) {
   const r1 = unitPx ?? S.R1, ax = axisOf(start), minLeg = KBENDS.minLegR1 * r1;
-  const zc = ringCrossed(start.S, E, foreign), zeroLegs = zc >= 0 ? [null] : legsMany(S, [[start.S, E]], W)[0];
-  const zero = { verts: [start.S, E], legs: zeroLegs, bottleneck: zc >= 0 ? null : bottleneckOf(zeroLegs), ...(zc >= 0 ? { crosses: zc } : {}) };
+  // owned (rule set option seqFirstLegs): corridors no leg may run along; the straight route along one is ruled out like a crossing
+  const zOwned = Boolean(owned && routeRunsAlong([start.S, E], owned, W));
+  const zc0 = ringCrossed(start.S, E, foreign), zc = zc0 < 0 && zOwned ? Infinity : zc0, zeroLegs = zc >= 0 ? [null] : legsMany(S, [[start.S, E]], W)[0];
+  const zero = { verts: [start.S, E], legs: zeroLegs, bottleneck: zc >= 0 ? null : bottleneckOf(zeroLegs), ...(zc >= 0 ? { crosses: zc === Infinity ? null : zc, ...(zc === Infinity ? { runsAlong: true } : {}) } : {}) };
   let firstCap = -Infinity;   // the highest first leg (tee cap -> B1 on the axis) read: what any route of this hole can reach at most
-  const ok = (t) => { const B = ax.at(t); return !(t < ax.lo || !inside(S, B) || Math.hypot(E[0] - B[0], E[1] - B[1]) < minLeg || !routeClear([start.S, B, E], foreign)); };
+  const ok = (t) => { const B = ax.at(t); return !(t < ax.lo || !inside(S, B) || Math.hypot(E[0] - B[0], E[1] - B[1]) < minLeg || !routeClear([start.S, B, E], foreign) || (owned && routeRunsAlong([start.S, B, E], owned, W))); };
   // every t's route read in one batch; null where the geometry rules it out or no leg reads
   const readMany = (ts) => {
     const live = ts.filter(ok), got = live.length ? legsMany(S, live.map((t) => [start.S, ax.at(t), E]), W) : [], m = new Map();
@@ -161,7 +178,7 @@ export function kCellAt(S, start, E, W, { legsOf = legContrastsOf, legsMany = le
   const strip = (x) => (x ? { verts: x.verts, legs: x.legs, bottleneck: x.bottleneck } : null);
   const best = one && (zero.bottleneck === null || one.bottleneck > zero.bottleneck) ? strip(one) : zero;
   // every K <= 1 route enters a foreign ring: the cell has no legal route (recorded: the basket the straight route crosses)
-  if (best.bottleneck === null && zc >= 0) return { zero, one: null, best: { ...zero, bottleneck: null }, read: n, firstCap, rejected: { crosses: zc }, ...(violation ? { violation } : {}) };
+  if (best.bottleneck === null && zc >= 0) return { zero, one: null, best: { ...zero, bottleneck: null }, read: n, firstCap, rejected: { crosses: zc === Infinity ? null : zc, ...(zc === Infinity ? { runsAlong: true } : {}) }, ...(violation ? { violation } : {}) };
   return { zero, one: strip(one), best, read: n, firstCap, ...(violation ? { violation } : {}) };
 }
 

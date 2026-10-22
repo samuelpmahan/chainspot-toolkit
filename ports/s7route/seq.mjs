@@ -25,10 +25,11 @@ export const SEQ = Object.freeze({
  * The foreign rings of a route from a start to basket k: every other BasketPoint's C1 (SEQ.ringR1 x R1), except a basket whose
  * ring already holds the tee cap S (a tee pad beside the previous basket). -> { pts, idx, r, exempt }
  */
-export function foreignRingsOf(start, bp, k, R1) {
+export function foreignRingsOf(start, bp, k, R1, plates = null) {
   const r = SEQ.ringR1 * R1, idx = [], exempt = [];
   bp.forEach((p, q) => { if (q === k) return; if (Math.hypot(p[0] - start.S[0], p[1] - start.S[1]) < r) exempt.push(q); else idx.push(q); });
-  return { pts: idx.map((q) => bp[q]), idx, r, exempt };
+  // plates (rule set option seqFirstLegs): every other hole's badge plate is foreign as well (firstLegs.mjs)
+  return { pts: idx.map((q) => bp[q]), idx, r, exempt, ...(plates ? { boxes: plates.filter((p) => p.hole !== String(start.hole)) } : {}) };
 }
 
 const frame = (start, p) => { const d = [p[0] - start.S[0], p[1] - start.S[1]]; return { along: d[0] * start.u[0] + d[1] * start.u[1], lateral: Math.abs(-d[0] * start.u[1] + d[1] * start.u[0]) }; };
@@ -37,12 +38,15 @@ const frame = (start, p) => { const d = [p[0] - start.S[0], p[1] - start.S[1]]; 
  * Step 1: the straight claims, in hole order. claimed (the state passed in) -> { claims: { [hole]: basket }, claimed, rows }.
  * verdicts: S6's { [hole]: 'straight' | ... } (null or absent: no claim).
  */
-export function straightClaimsOf(starts, bp, R1, verdicts, claimed = []) {
+export function straightClaimsOf(starts, bp, R1, verdicts, claimed = [], guard = null) {
   const taken = new Set(claimed), claims = {}, rows = [];
   for (const s of starts) {
     if (verdicts?.[s.hole] !== 'straight') continue;
     const on = bp.map((p, k) => ({ k, ...frame(s, p) })).filter((x) => x.along > 0 && x.lateral <= SEQ.straightLateralR1 * R1).sort((a, b) => a.along - b.along);
     const first = on[0];
+    // guard (rule set option seqFirstLegs): the claim's straight route breaks a rule (why), the hole is treated as bent
+    const broken = first && guard ? guard(s, first.k) : null;
+    if (broken) { rows.push({ hole: s.hole, basket: null, why: `S6 straight, but the straight route to its first on-ray BasketPoint (${first.k}) ${broken}: treated as bent` }); continue; }
     if (first && !taken.has(first.k)) { claims[s.hole] = first.k; taken.add(first.k); rows.push({ hole: s.hole, basket: first.k, why: `S6 straight: the first forward BasketPoint on the tee ray (along ${(first.along / R1).toFixed(1)} R1, off ${(first.lateral / R1).toFixed(2)} R1)` }); }
     else rows.push({ hole: s.hole, basket: null, why: first ? `S6 straight, but its first on-ray BasketPoint (${first.k}) is already claimed: treated as bent` : 'S6 straight, but no forward BasketPoint within the tee ray: treated as bent' });
   }
