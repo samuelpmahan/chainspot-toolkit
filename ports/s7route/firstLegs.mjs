@@ -9,10 +9,16 @@
  *                parallel)
  *   badge plate  a leg of hole h may not pass over another hole's badge plate (the S1 badge box, screen-fixed px: the sprite)
  *
+ *   contradicted a hole whose OWN first leg passes over another hole's badge plate contradicts the skeleton (tee -> its badge -> B*):
+ *                its tee's badge association is the suspect (measured 2026-10-22: seatacFull 10 over badge 13, 11 over badges 5 and 12,
+ *                fountainhillsLazy 2 over badge 17; none on dev). Its first leg is owned by nobody and the rules do not bind its routes
+ *                (recorded in its why); its badge plate stays foreign to the others
+ *
  * Parts (Calculations, registerFirstLegs):
  *   tk.s7.firstLegs      per hole with a tee: S, B*, the first leg [S, B*], its badge plate box; every badge plate by label
  *   tk.s7.firstLegCheck  judging view (reads testimony when the course has it): Sam's routes and the S7 default's routes checked
- *                        against the other holes' first legs and badge plates; renders one crop per route that violates
+ *                        against the other holes' first legs and badge plates, and the first-legs sibling's routes where they
+ *                        differ; renders one crop per route that violates and one per changed hole (before / after)
  *                        (fg/s7route/firstLegRender.mjs). Recorded, never a gate.
  * The rule set routeMatchKBendsSeq3SearchWFirstLegs (match.mjs seqFirstLegs) applies both rules inside the default's search.
  */
@@ -50,7 +56,7 @@ export function firstLegViolationsOf(V, hole, firstLegs, W, { exemptPlate = null
 }
 
 /** The judging view: Sam's routes (testimony) and the default's routes, each checked. */
-export function firstLegCheckOf({ firstLegs, W, R1, holePaths, solve, holesPart }) {
+export function firstLegCheckOf({ firstLegs, W, R1, holePaths, solve, holesPart, sibling = null }) {
   const routes = [];
   for (const p of holePaths?.holes ?? []) {
     const V = p.bends ? [p.tee, ...p.bends, p.basket] : p.centre;
@@ -58,10 +64,17 @@ export function firstLegCheckOf({ firstLegs, W, R1, holePaths, solve, holesPart 
     routes.push({ source: 'testimony', hole: String(p.hole), verts: V.map((q) => q.map(r2)), violations: firstLegViolationsOf(V, p.hole, firstLegs, W) });
   }
   for (const [h, r] of Object.entries(solve?.holes ?? {})) if (r.verts?.length >= 2) routes.push({ source: 'default', hole: String(h), basket: holesPart.baskets[r.end]?.name ?? null, verts: r.verts.map((q) => q.map(r2)), violations: firstLegViolationsOf(r.verts, h, firstLegs, W) });
+  // the first-legs sibling's routes where they differ from the default's (before / after)
+  for (const [h, r] of Object.entries(sibling?.holes ?? {})) {
+    const d = solve?.holes?.[h];
+    if (!(r.verts?.length >= 2) || (d && d.end === r.end && JSON.stringify(d.verts) === JSON.stringify(r.verts))) continue;
+    routes.push({ source: 'firstLegs', hole: String(h), basket: holesPart.baskets[r.end]?.name ?? null, verts: r.verts.map((q) => q.map(r2)), violations: firstLegViolationsOf(r.verts, h, firstLegs, W),
+      before: d?.verts?.length ? { basket: holesPart.baskets[d.end]?.name ?? null, verts: d.verts.map((q) => q.map(r2)), violations: firstLegViolationsOf(d.verts, h, firstLegs, W) } : null });
+  }
   const n = (src, k) => routes.filter((r) => r.source === src && (!k || r.violations.some((v) => v.kind === k))).length;
   return { schema: FIRST_LEG_CHECK_SCHEMA, reference: S7_DEFAULT, widthPx: W, R1Px: R1, firstLegs, routes, baskets: holesPart.baskets.map((b) => ({ name: b.name, point: b.point })),
     rule: `a route of hole h may cross another hole's first leg but not run along it (> 1/2 of a leg within W/2 and within 30 deg of parallel), and may not pass over another hole's badge plate`,
-    totals: { testimony: n('testimony'), testimonyRunsAlong: n('testimony', 'runs along'), testimonyBadgePlate: n('testimony', 'badge plate'), default: n('default'), defaultRunsAlong: n('default', 'runs along'), defaultBadgePlate: n('default', 'badge plate') },
+    totals: { changed: n('firstLegs'), testimony: n('testimony'), testimonyRunsAlong: n('testimony', 'runs along'), testimonyBadgePlate: n('testimony', 'badge plate'), default: n('default'), defaultRunsAlong: n('default', 'runs along'), defaultBadgePlate: n('default', 'badge plate') },
     emits: { testimonyViolating: routes.filter((r) => r.source === 'testimony' && r.violations.length).length, defaultViolating: routes.filter((r) => r.source === 'default' && r.violations.length).length } };
 }
 
@@ -72,6 +85,7 @@ export const FIRST_LEG_CALCULATIONS = Object.freeze([
   ['fn.tk.s7.firstLegCheck', { inParts: [FIRST_LEGS_PART, ROUTE_HALLWAY_PART, 'tk.s7.sceneS4', 'tk.s7.holes', 'testimony.source.holePaths'], outParts: [FIRST_LEG_CHECK_PART], calls: ['fn.q.trace.routeMatch'], code: CODE,
     note: 'Sam\'s routes and the default\'s against the other holes\' first legs and badge plates (judging; recorded, never a gate)',
     calculate: (io) => ({ [FIRST_LEG_CHECK_PART]: firstLegCheckOf({ firstLegs: io.in(FIRST_LEGS_PART), W: io.in(ROUTE_HALLWAY_PART).widthPx, R1: io.in('tk.s7.sceneS4').R1, holePaths: io.in('testimony.source.holePaths'),
-      solve: io.call('fn.q.trace.routeMatch', { rules: RULE_SETS[S7_DEFAULT] }).value, holesPart: io.in('tk.s7.holes') }) }) }]
+      solve: io.call('fn.q.trace.routeMatch', { rules: RULE_SETS[S7_DEFAULT] }).value, holesPart: io.in('tk.s7.holes'),
+      sibling: io.call('fn.q.trace.routeMatch', { rules: RULE_SETS.routeMatchKBendsSeq3SearchWFirstLegs }).value }) }) }]
 ]);
 export function registerFirstLegs(store) { for (const [fn, spec] of FIRST_LEG_CALCULATIONS) if (!store.registered(fn)) store.register(fn, spec); }
