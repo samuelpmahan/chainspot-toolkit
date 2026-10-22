@@ -31,7 +31,8 @@ const T = (j) => (j ? { agree: j.totals.agree, judged: j.totals.judged, bendsHit
 
 export function collect({ specimen, attempt, dir, weights = null, attemptsRoot = ROOT }) {
   const out = join(dir, specimen);
-  const r = runEvidence({ specimen, attempt, attemptsRoot, outDir: out, weights, cas: true });
+  // no persistent cache (the evidence Parts hold planes; the disk is the limit) and only the changed holes' crops written
+  const r = runEvidence({ specimen, attempt, attemptsRoot, outDir: out, weights, cas: false, renders: 'changed' });
   const table = r.evidence, sam = samBasketsOf(r.holePaths, table.baskets.map((b) => b.point));
   const holes = (s) => Object.fromEntries(Object.entries(s.solve.holes).map(([h, v]) => [h, { end: v.end, bends: Math.max(0, (v.verts?.length ?? 2) - 2), lengthR1: lengthR1(v.verts, table.R1Px), verts: v.verts }]));
   const summary = { specimen, attempt, R1Px: table.R1Px, widthPx: table.widthPx, weights: weights ?? EVIDENCE_WEIGHTS, labels: Object.fromEntries(Object.entries(sam.byHole).map(([h, v]) => [h, v.basket])),

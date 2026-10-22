@@ -3,7 +3,7 @@
  * Runner for the S7 evidence table: tk.s7.cellEvidence on a completed attempt (node-only; never re-runs the provider), and the S7
  * default beside its evidence sibling on the same store (the cells are one store call, shared).
  *
- *   node ports/s7route/evidenceRun.mjs --specimen golden --attempt ID [--attempts-root DIR] [--out DIR] [--no-cas] [--no-write]
+ *   node ports/s7route/evidenceRun.mjs --specimen golden --attempt ID [--attempts-root DIR] [--out DIR] [--no-cas] [--no-write] [--renders all|changed|none]
  *
  * The store is the S7 runner's (ports/s7trace/bench.mjs): the attempt's S3 PxC as its board, S7's lane outputs as root inputs, the
  * S4 and S7 Calculations, the fn.q.trace.* queries; plus the evidence (ports/s7route/evidenceSpace.mjs registerEvidence). Writes
@@ -60,7 +60,8 @@ export function evidenceTimings(doc) {
   return Object.fromEntries(Object.entries(out).sort((a, b) => b[1] - a[1]).map(([k, v]) => [k, Math.round(v)]));
 }
 
-export function runEvidence({ specimen, attempt, attemptsRoot = ROOT, root = ROOT, outDir = null, cas = true, write = true, weights = null }) {
+/** renders: 'all' (every hole's crop), 'changed' (the holes whose basket the evidence sibling changes), 'none'. */
+export function runEvidence({ specimen, attempt, attemptsRoot = ROOT, root = ROOT, outDir = null, cas = true, write = true, weights = null, renders: which = 'all' }) {
   const { store, document, holePaths } = evidenceStore({ specimen, attempt, attemptsRoot, root, cas });
   const out = outDir ?? join(root, 'attempts', 's7evidence', specimen, `run-${new Date().toISOString().replace(/[:.]/g, '-')}`);
   const t0 = performance.now(), base = solveOn(store, holePaths, RULE_SETS[S7_DEFAULT], S7_DEFAULT), tDefault = performance.now() - t0;
@@ -74,7 +75,8 @@ export function runEvidence({ specimen, attempt, attemptsRoot = ROOT, root = ROO
     const { emits, ...value } = ev;
     writeFileSync(join(out, `${CELL_EVIDENCE_PART}.json`), canonicalJson({ specimen, attempt, ...value }) + '\n');
     const r = store.call(RENDER_PART, { a: CELL_EVIDENCE_PART, deflate: (b) => deflateSync(b) }).value, images = imageFiles(out);
-    for (const p of r.parts) if (p.kind === 'raster' && p.data?.png) { const name = `${CELL_EVIDENCE_PART}.${p.address.split('#')[1]}.png`; images.alias(images.png(p.data.png).src, name); renders.push(join(out, name)); }
+    const changed = new Set(Object.keys(base.solve.holes).filter((h) => base.solve.holes[h]?.end !== sib.solve.holes[h]?.end).concat(Object.keys(sib.solve.holes).filter((h) => !base.solve.holes[h])).map((h) => `hole${h}`));
+    for (const p of r.parts) if (p.kind === 'raster' && p.data?.png && (which === 'all' || (which === 'changed' && changed.has(p.address.split('#')[1])))) { const name = `${CELL_EVIDENCE_PART}.${p.address.split('#')[1]}.png`; images.alias(images.png(p.data.png).src, name); renders.push(join(out, name)); }
     writeFileSync(join(out, 'instrumentation.json'), JSON.stringify(document()) + '\n');
   }
   return { out, specimen, attempt, evidence: ev, base, sibling: sib, timingsMs, profile, renders, holePaths, R1Px: ev.R1Px, widthPx: ev.widthPx };
@@ -84,7 +86,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const arg = (k) => { const i = process.argv.indexOf(k); return i >= 0 ? process.argv[i + 1] : null; };
   const specimen = arg('--specimen'), attempt = arg('--attempt');
   if (!specimen || !attempt) { console.error('usage: node ports/s7route/evidenceRun.mjs --specimen golden --attempt ID [--attempts-root DIR] [--out DIR] [--no-cas] [--no-write]'); process.exit(2); }
-  const r = runEvidence({ specimen, attempt, attemptsRoot: arg('--attempts-root') ?? ROOT, outDir: arg('--out'), cas: casFlag(), write: !process.argv.includes('--no-write') });
+  const r = runEvidence({ specimen, attempt, attemptsRoot: arg('--attempts-root') ?? ROOT, outDir: arg('--out'), cas: casFlag(), write: !process.argv.includes('--no-write'), renders: arg('--renders') ?? 'all' });
   const T = (j) => (j ? `${j.totals.agree}/${j.totals.judged}, bends ${j.totals.bendsHit}/${j.totals.bendsMissed}/${j.totals.extraBends}` : 'no testimony');
   const ends = (s) => Object.fromEntries(Object.entries(s.solve.holes).map(([h, v]) => [h, v.end]));
   const eb = ends(r.base), es = ends(r.sibling);

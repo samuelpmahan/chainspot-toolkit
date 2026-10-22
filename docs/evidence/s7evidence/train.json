@@ -1,0 +1,493 @@
+{
+ "selection": [
+  {
+   "set": "tracks",
+   "l2": 0.3,
+   "heldOutLogLoss": 0.0592,
+   "cells": 89
+  },
+  {
+   "set": "all",
+   "l2": 0.3,
+   "heldOutLogLoss": 0.0664,
+   "cells": 89
+  },
+  {
+   "set": "noSensors",
+   "l2": 0.3,
+   "heldOutLogLoss": 0.0763,
+   "cells": 89
+  },
+  {
+   "set": "all",
+   "l2": 1,
+   "heldOutLogLoss": 0.0805,
+   "cells": 89
+  },
+  {
+   "set": "tracks",
+   "l2": 1,
+   "heldOutLogLoss": 0.0836,
+   "cells": 89
+  },
+  {
+   "set": "noSensors",
+   "l2": 1,
+   "heldOutLogLoss": 0.0961,
+   "cells": 89
+  },
+  {
+   "set": "all",
+   "l2": 3,
+   "heldOutLogLoss": 0.1119,
+   "cells": 89
+  },
+  {
+   "set": "tracks",
+   "l2": 3,
+   "heldOutLogLoss": 0.1239,
+   "cells": 89
+  },
+  {
+   "set": "noSensors",
+   "l2": 3,
+   "heldOutLogLoss": 0.1334,
+   "cells": 89
+  },
+  {
+   "set": "backboneMeet",
+   "l2": 0.3,
+   "heldOutLogLoss": 0.146,
+   "cells": 89
+  },
+  {
+   "set": "backbone",
+   "l2": 0.3,
+   "heldOutLogLoss": 0.1768,
+   "cells": 89
+  },
+  {
+   "set": "backboneMeet",
+   "l2": 1,
+   "heldOutLogLoss": 0.1911,
+   "cells": 89
+  },
+  {
+   "set": "backbone",
+   "l2": 1,
+   "heldOutLogLoss": 0.2304,
+   "cells": 89
+  },
+  {
+   "set": "backboneMeet",
+   "l2": 3,
+   "heldOutLogLoss": 0.2369,
+   "cells": 89
+  },
+  {
+   "set": "backbone",
+   "l2": 3,
+   "heldOutLogLoss": 0.3144,
+   "cells": 89
+  }
+ ],
+ "features": [
+  "backbone",
+  "laneFwd",
+  "followBack",
+  "meet"
+ ],
+ "l2": 0.3,
+ "allFeatures": {
+  "bias": -1.2253086100280162,
+  "backbone": 1.7494272112181264,
+  "edge": 0.5045093826979251,
+  "region": 1.0142879771691145,
+  "badgeMid": 0.19431560005661858,
+  "laneFwd": 2.2316815061890836,
+  "followFwd": 0.13073612925244704,
+  "laneBack": 0.2343911823048864,
+  "followBack": 1.2017371462827113,
+  "meet": 1.3333864734626044,
+  "fit": {
+   "n": 89,
+   "positives": 30,
+   "logLoss": 0.024,
+   "iters": 9,
+   "l2": 0.3
+  }
+ },
+ "folds": [
+  {
+   "held": "golden",
+   "trainCells": 64,
+   "weights": {
+    "bias": -1.5411460344111647,
+    "backbone": 1.9764423580390345,
+    "laneFwd": 2.3058441058358174,
+    "followBack": 1.1897597420783212,
+    "meet": 1.5273165500359376,
+    "fit": {
+     "n": 64,
+     "positives": 21,
+     "logLoss": 0.041,
+     "iters": 8,
+     "l2": 0.3
+    }
+   },
+   "picks": {
+    "holes": 18,
+    "defaultRight": 18,
+    "evidenceRight": 18,
+    "changed": [],
+    "bent": 9,
+    "samAmongCandidates": 18
+   },
+   "cellTop1": {
+    "holes": 9,
+    "top1": 9
+   },
+   "backboneOnlyTop1": {
+    "holes": 9,
+    "top1": 9
+   }
+  },
+  {
+   "held": "heritage",
+   "trainCells": 41,
+   "weights": {
+    "bias": -0.9245609157576682,
+    "backbone": 1.372917251328821,
+    "laneFwd": 1.758316427963819,
+    "followBack": 0.5319506615578852,
+    "meet": 1.6815233638516114,
+    "fit": {
+     "n": 41,
+     "positives": 15,
+     "logLoss": 0.022,
+     "iters": 8,
+     "l2": 0.3
+    }
+   },
+   "picks": {
+    "holes": 18,
+    "defaultRight": 18,
+    "evidenceRight": 18,
+    "changed": [],
+    "bent": 15,
+    "samAmongCandidates": 18
+   },
+   "cellTop1": {
+    "holes": 15,
+    "top1": 15
+   },
+   "backboneOnlyTop1": {
+    "holes": 15,
+    "top1": 15
+   }
+  },
+  {
+   "held": "townelake",
+   "trainCells": 81,
+   "weights": {
+    "bias": -1.2982103614272134,
+    "backbone": 1.7913348017333908,
+    "laneFwd": 2.423482917315206,
+    "followBack": 1.4458005367387812,
+    "meet": 1.2591524162917405,
+    "fit": {
+     "n": 81,
+     "positives": 27,
+     "logLoss": 0.025,
+     "iters": 8,
+     "l2": 0.3
+    }
+   },
+   "picks": {
+    "holes": 18,
+    "defaultRight": 18,
+    "evidenceRight": 18,
+    "changed": [],
+    "bent": 3,
+    "samAmongCandidates": 18
+   },
+   "cellTop1": {
+    "holes": 3,
+    "top1": 3
+   },
+   "backboneOnlyTop1": {
+    "holes": 3,
+    "top1": 3
+   }
+  },
+  {
+   "held": "lenard",
+   "trainCells": 89,
+   "weights": {
+    "bias": -1.5068841996471583,
+    "backbone": 1.99639013987514,
+    "laneFwd": 2.396096570369367,
+    "followBack": 1.2181128663176422,
+    "meet": 1.553240366463625,
+    "fit": {
+     "n": 89,
+     "positives": 30,
+     "logLoss": 0.029,
+     "iters": 8,
+     "l2": 0.3
+    }
+   },
+   "picks": {
+    "holes": 18,
+    "defaultRight": 18,
+    "evidenceRight": 18,
+    "changed": [],
+    "bent": 0,
+    "samAmongCandidates": 18
+   },
+   "cellTop1": {
+    "holes": 0,
+    "top1": 0
+   },
+   "backboneOnlyTop1": {
+    "holes": 0,
+    "top1": 0
+   }
+  },
+  {
+   "held": "alex",
+   "trainCells": 81,
+   "weights": {
+    "bias": -1.5124884693059295,
+    "backbone": 1.9875771560535902,
+    "laneFwd": 2.370158737350486,
+    "followBack": 1.2023639652922098,
+    "meet": 1.5410664870608286,
+    "fit": {
+     "n": 81,
+     "positives": 27,
+     "logLoss": 0.032,
+     "iters": 8,
+     "l2": 0.3
+    }
+   },
+   "picks": {
+    "holes": 3,
+    "defaultRight": 3,
+    "evidenceRight": 3,
+    "changed": [],
+    "bent": 3,
+    "samAmongCandidates": 3
+   },
+   "cellTop1": {
+    "holes": 3,
+    "top1": 3
+   },
+   "backboneOnlyTop1": {
+    "holes": 3,
+    "top1": 3
+   }
+  }
+ ],
+ "loco": {
+  "holes": 75,
+  "defaultRight": 75,
+  "evidenceRight": 75,
+  "bentHoles": 30,
+  "cellTop1": 30,
+  "cellHoles": 30,
+  "backboneTop1": 30
+ },
+ "full": {
+  "bias": -1.5068841996471583,
+  "backbone": 1.99639013987514,
+  "laneFwd": 2.396096570369367,
+  "followBack": 1.2181128663176422,
+  "meet": 1.553240366463625,
+  "fit": {
+   "n": 89,
+   "positives": 30,
+   "logLoss": 0.029,
+   "iters": 8,
+   "l2": 0.3
+  }
+ },
+ "fullPicks": {
+  "alex": {
+   "holes": 3,
+   "defaultRight": 3,
+   "evidenceRight": 3,
+   "changed": [],
+   "bent": 3,
+   "samAmongCandidates": 3
+  },
+  "beaverranchCapture": {
+   "holes": 0,
+   "defaultRight": 0,
+   "evidenceRight": 0,
+   "changed": [],
+   "bent": 0,
+   "samAmongCandidates": 0
+  },
+  "beaverranchFull": {
+   "holes": 0,
+   "defaultRight": 0,
+   "evidenceRight": 0,
+   "changed": [],
+   "bent": 0,
+   "samAmongCandidates": 0
+  },
+  "beaverranchLazy": {
+   "holes": 0,
+   "defaultRight": 0,
+   "evidenceRight": 0,
+   "changed": [],
+   "bent": 0,
+   "samAmongCandidates": 0
+  },
+  "coletocreekCapture": {
+   "holes": 0,
+   "defaultRight": 0,
+   "evidenceRight": 0,
+   "changed": [],
+   "bent": 0,
+   "samAmongCandidates": 0
+  },
+  "coletocreekFull": {
+   "holes": 0,
+   "defaultRight": 0,
+   "evidenceRight": 0,
+   "changed": [],
+   "bent": 0,
+   "samAmongCandidates": 0
+  },
+  "coletocreekLazy": {
+   "holes": 0,
+   "defaultRight": 0,
+   "evidenceRight": 0,
+   "changed": [],
+   "bent": 0,
+   "samAmongCandidates": 0
+  },
+  "fountainhillsCapture": {
+   "holes": 0,
+   "defaultRight": 0,
+   "evidenceRight": 0,
+   "changed": [],
+   "bent": 0,
+   "samAmongCandidates": 0
+  },
+  "fountainhillsFull": {
+   "holes": 0,
+   "defaultRight": 0,
+   "evidenceRight": 0,
+   "changed": [],
+   "bent": 0,
+   "samAmongCandidates": 0
+  },
+  "fountainhillsLazy": {
+   "holes": 0,
+   "defaultRight": 0,
+   "evidenceRight": 0,
+   "changed": [],
+   "bent": 0,
+   "samAmongCandidates": 0
+  },
+  "golden": {
+   "holes": 18,
+   "defaultRight": 18,
+   "evidenceRight": 18,
+   "changed": [],
+   "bent": 9,
+   "samAmongCandidates": 18
+  },
+  "heritage": {
+   "holes": 18,
+   "defaultRight": 18,
+   "evidenceRight": 18,
+   "changed": [],
+   "bent": 15,
+   "samAmongCandidates": 18
+  },
+  "lenard": {
+   "holes": 18,
+   "defaultRight": 18,
+   "evidenceRight": 18,
+   "changed": [],
+   "bent": 0,
+   "samAmongCandidates": 18
+  },
+  "lenard1": {
+   "holes": 0,
+   "defaultRight": 0,
+   "evidenceRight": 0,
+   "changed": [],
+   "bent": 0,
+   "samAmongCandidates": 0
+  },
+  "lenard2": {
+   "holes": 0,
+   "defaultRight": 0,
+   "evidenceRight": 0,
+   "changed": [],
+   "bent": 0,
+   "samAmongCandidates": 0
+  },
+  "lenard3": {
+   "holes": 0,
+   "defaultRight": 0,
+   "evidenceRight": 0,
+   "changed": [],
+   "bent": 0,
+   "samAmongCandidates": 0
+  },
+  "lenard4": {
+   "holes": 0,
+   "defaultRight": 0,
+   "evidenceRight": 0,
+   "changed": [],
+   "bent": 0,
+   "samAmongCandidates": 0
+  },
+  "lenard5": {
+   "holes": 0,
+   "defaultRight": 0,
+   "evidenceRight": 0,
+   "changed": [],
+   "bent": 0,
+   "samAmongCandidates": 0
+  },
+  "northpark": {
+   "holes": 0,
+   "defaultRight": 0,
+   "evidenceRight": 0,
+   "changed": [],
+   "bent": 0,
+   "samAmongCandidates": 0
+  },
+  "seatacCapture": {
+   "holes": 0,
+   "defaultRight": 0,
+   "evidenceRight": 0,
+   "changed": [],
+   "bent": 0,
+   "samAmongCandidates": 0
+  },
+  "seatacFull": {
+   "holes": 0,
+   "defaultRight": 0,
+   "evidenceRight": 0,
+   "changed": [],
+   "bent": 0,
+   "samAmongCandidates": 0
+  },
+  "townelake": {
+   "holes": 18,
+   "defaultRight": 18,
+   "evidenceRight": 18,
+   "changed": [],
+   "bent": 3,
+   "samAmongCandidates": 18
+  }
+ }
+}
