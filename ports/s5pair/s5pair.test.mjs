@@ -52,6 +52,10 @@ test('acceptRule: best judged result, ties to the fastest; a lane not run is no 
   assert.equal(blind(value, { names: ['a', 'b', 'c'], branches, timingsMs }), 'a'); assert.equal(blind.decided, 'annotated courses');
   const none = acceptRule({ judged: false });
   assert.equal(none(value, { names: ['a', 'b', 'c'], branches, timingsMs }), null); assert.equal(none.decided, 'nothing');
+  // the stage default takes a tie whatever the timings (a slower tied default still wins); it never beats a better result
+  const pref = acceptRule({ preferred: 'a' });
+  assert.equal(pref(value, { names: ['a', 'b', 'c'], branches, timingsMs }), 'a'); assert.match(pref.decided, /the stage default/);
+  assert.equal(acceptRule({ preferred: 'a' })({ variants: { ...value.variants, a: { right: 17, wrong: 1, none: 0 } } }, { names: ['a', 'b', 'c'], branches, timingsMs }), 'b');
 });
 
 test('latePinnedPart: a missing pinned S5 is a recorded result, never a throw', () => {

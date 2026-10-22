@@ -125,9 +125,16 @@ function findKey(obj, key) {
  * without testimony takes the variant the annotated courses accepted (acceptedElsewhere); with none on record there is
  * no pointer, and that is recorded, not thrown.
  */
-export function acceptRule({ acceptedElsewhere = null, judged = true } = {}) {
+/**
+ * The stage's default (2026-10-22): the first tie-break among variants whose judged result ties the best, so a tie never
+ * depends on wall-clock timing under load (a 4-way parallel retest flipped heritage's S4 pointer by speed, moved tees 5
+ * and 6 by up to 6.5 px and cost S7 a hole). It decides only ties; a better-judged variant still wins.
+ */
+export const S4_DEFAULT = 'greedyOccluded';
+
+export function acceptRule({ acceptedElsewhere = null, judged = true, preferred = S4_DEFAULT } = {}) {
   const rule = judged
-    ? 'fastest standalone variant whose judged result ties the best (landsOwnHole desc, impostors asc, landsOtherHole asc, stillMissing asc)'
+    ? `among the variants whose judged result ties the best (landsOwnHole desc, impostors asc, landsOtherHole asc, stillMissing asc): the stage default (${preferred}) if it is one, else the fastest standalone`
     : `no testimony: the variant the annotated courses accepted${acceptedElsewhere ? ` (${acceptedElsewhere})` : ' (none on record: no pointer)'}`;
   const accept = (value, { names, branches, timingsMs }) => {
     const live = names.filter((n) => !branches[n].error);
@@ -137,6 +144,7 @@ export function acceptRule({ acceptedElsewhere = null, judged = true } = {}) {
     const sorted = [...live].sort(cmpScore);
     if (!sorted.length) { accept.decided = 'nothing'; return null; }
     const tied = sorted.filter((n) => cmpScore(n, sorted[0]) === 0);
+    if (tied.length > 1 && preferred && tied.includes(preferred)) { accept.decided = `tie on judged result among ${tied.join(', ')}: the stage default`; return preferred; }
     accept.decided = tied.length > 1 ? `tie on judged result among ${tied.join(', ')}: fastest standalone` : 'best judged result';
     return tied.sort((a, b) => (timingsMs[a]?.ms ?? Infinity) - (timingsMs[b]?.ms ?? Infinity))[0];
   };
