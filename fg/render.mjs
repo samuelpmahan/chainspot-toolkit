@@ -10,6 +10,7 @@
  *   regionHeat    { schema: 'nctk-s7-region-heat@1', P, gridW, ... }    -> station P(hallway) heat + training segments + legend (fg/s7route/regionRender.mjs)
  *   regionMean    { schema: 'nctk-s7-region-mean@1', rgb, cover, ... }  -> the window's unmasked cover + ledger (fg/s7route/regionRender.mjs)
  *   laneCrosscheck { schema: 'nctk-s7-lane-crosscheck@1', variants, ... } -> the default routes and the lane tracks over the course + one crop per flagged hole (fg/s7route/laneRender.mjs)
+ *   cellEvidence  { schema: 'nctk-s7-cell-evidence@1', rows, backTracks, ... } -> one crop per bent hole: every perspective's route, the picks, the readings (fg/s7route/evidenceRender.mjs)
  *   spriteOverlap { schema: 'nctk-sprite-overlap@1', mean, shape, members } -> mean coverage and shape panels + ledger (fn.q.sprite.overlap)
  *   shellShape    { schema: 'chainspot-basket-shell-shape@1', overlap, learned, carried } -> agreement / learned / carried panels + ledger (S2)
  *   udiscHeader   { schema: 'nctk-udisc-header@1', bandRaster, glyphs, ... } -> the header band, glyphs boxed by confidence + legend (fg/header/headerRender.mjs)
@@ -38,6 +39,7 @@ import { isTraceView, renderTraceView } from './s7trace/traceViewRender.mjs';   
 import { isRouteTable, renderRouteTable } from './s7route/routeRender.mjs';   // S7 scoring block: tk.s7.routeTable
 import { isRegionHeat, renderRegionHeat, isRegionMean, renderRegionMean } from './s7route/regionRender.mjs';   // S7 region block: tk.s7.regionHeat, tk.s7.regionMean
 import { isLaneCrosscheck, renderLaneCrosscheck } from './s7route/laneRender.mjs';   // S7 lanes block: tk.s7.laneCrosscheck
+import { isCellEvidence, renderCellEvidence } from './s7route/evidenceRender.mjs';   // S7 evidence block: tk.s7.cellEvidence
 import { isCourseGeometry, renderCourseGeometry } from './export/courseRender.mjs';   // export block: tk.export.course
 import { isCapture, renderCapture } from './stitch/captureRender.mjs';   // S0 capture block: tk.source.capture / tk.source.captureView
 import { isUdiscHeader, renderUdiscHeader } from './header/headerRender.mjs';   // S0 header block: tk.source.header (the UDisc header bar read)
@@ -48,7 +50,7 @@ const labelOf = (it, i) => it.label ?? it.name ?? it.candidate ?? it.hole ?? Str
 const scalarFields = (o) => Object.fromEntries(Object.entries(o).filter(([, v]) => isScalar(v) || (Array.isArray(v) && v.length <= 6 && v.every(isScalar))).map(([k, v]) => [k, Array.isArray(v) ? v.join(', ') : v]));
 const bboxOf = (it) => (Array.isArray(it.bbox) && it.bbox.length === 4 ? it.bbox : null);
 
-export const PART_KINDS = Object.freeze(['pxset', 'raster', 'alphaProfile', 'plane', 'pxsets', 'boxes', 'points', 'rows', 'strips', 'scalar', 'object', 'pathLoss', 'pathProfile', 'hallwayScene', 'pairFeatures', 'routeTable', 'routeMatchView', 'courseGeometry', 'capture', 'shellShape', 'spriteOverlap', 'udiscHeader', 'regionHeat', 'regionMean', 'laneCrosscheck']);   // strips: S5-B; alphaProfile: S7-A; pathLoss, pathProfile: S6-B; hallwayScene: S7-B; pairFeatures: S6 scoring; routeTable: S7 scoring
+export const PART_KINDS = Object.freeze(['pxset', 'raster', 'alphaProfile', 'plane', 'pxsets', 'boxes', 'points', 'rows', 'strips', 'scalar', 'object', 'pathLoss', 'pathProfile', 'hallwayScene', 'pairFeatures', 'routeTable', 'routeMatchView', 'courseGeometry', 'capture', 'shellShape', 'spriteOverlap', 'udiscHeader', 'regionHeat', 'regionMean', 'laneCrosscheck', 'cellEvidence']);   // strips: S5-B; alphaProfile: S7-A; pathLoss, pathProfile: S6-B; hallwayScene: S7-B; pairFeatures: S6 scoring; routeTable: S7 scoring
 
 /** Which case of the union a value is (the dispatch every default property can share). */
 export function partKind(v) {
@@ -60,6 +62,7 @@ export function partKind(v) {
   if (isRegionHeat(v)) return 'regionHeat';   // S7 region block
   if (isRegionMean(v)) return 'regionMean';   // S7 region block
   if (isLaneCrosscheck(v)) return 'laneCrosscheck';   // S7 lanes block
+  if (isCellEvidence(v)) return 'cellEvidence';   // S7 evidence block
   if (isCourseGeometry(v)) return 'courseGeometry';   // export block: the exported holes over the course
   if (isCapture(v)) return 'capture';   // S0 capture block: the tiles behind the course raster
   if (isUdiscHeader(v)) return 'udiscHeader';   // S0 header block: the band, glyphs boxed by confidence
@@ -102,7 +105,8 @@ export function renderValue(address, v, dims = null, depth = 0, opts = {}) {
     case 'routeTable': return renderRouteTable(address, v, { canvas: s6Canvas });   // S7 scoring block: holes x baskets heatmap
     case 'regionHeat': return renderRegionHeat(address, v, { canvas: s6Canvas });   // S7 region block: station P heat, training segments
     case 'regionMean': return renderRegionMean(address, v, { canvas: s6Canvas });   // S7 region block: the window's cover
-    case 'laneCrosscheck': return renderLaneCrosscheck(address, v, dims, { canvas: s6Canvas, deflate: opts.deflate ?? null });   // S7 lanes block: default routes vs lane tracks over the course, flagged holes cropped
+    case 'laneCrosscheck': return renderLaneCrosscheck(address, v, dims, { canvas: s6Canvas, deflate: opts.deflate ?? null });
+    case 'cellEvidence': return renderCellEvidence(address, v, dims, { canvas: s6Canvas, deflate: opts.deflate ?? null });   // S7 evidence block: one crop per hole, every perspective's route, the picks   // S7 lanes block: default routes vs lane tracks over the course, flagged holes cropped
     case 'pxsets': {
       const px = []; for (const it of v) for (const i of it.px) px.push(i);
       const boxes = v.map((it, i) => (bboxOf(it) ? [...bboxOf(it), labelOf(it, i)] : null)).filter(Boolean);

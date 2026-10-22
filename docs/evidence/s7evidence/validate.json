@@ -1,0 +1,165 @@
+{
+ "views": [
+  "beaverranchCapture",
+  "beaverranchFull",
+  "beaverranchLazy",
+  "coletocreekCapture",
+  "coletocreekFull",
+  "coletocreekLazy",
+  "fountainhillsCapture",
+  "fountainhillsFull",
+  "fountainhillsLazy",
+  "seatacCapture",
+  "seatacFull"
+ ],
+ "known": [
+  {
+   "view": "seatacFull",
+   "hole": "10",
+   "call": "wrong",
+   "why": "swapped with 11 (old and new)",
+   "defaultBasket": 18,
+   "evidenceBasket": 18,
+   "same": true,
+   "defaultR1": 12.24,
+   "evidenceR1": 12.24
+  },
+  {
+   "view": "seatacFull",
+   "hole": "11",
+   "call": "wrong",
+   "why": "swapped with 10 (old and new)",
+   "defaultBasket": 13,
+   "evidenceBasket": 13,
+   "same": true,
+   "defaultR1": 8.05,
+   "evidenceR1": 8.05
+  },
+  {
+   "view": "seatacFull",
+   "hole": "16",
+   "call": "wrong",
+   "why": "the S7 default goes 5 bends to another basket, 1037 ft vs 368 ft in seatacCapture",
+   "defaultBasket": 25,
+   "evidenceBasket": 25,
+   "same": true,
+   "defaultR1": 32.17,
+   "evidenceR1": 32.17
+  },
+  {
+   "view": "beaverranchCapture",
+   "hole": "4",
+   "call": "right",
+   "why": "Sam: Beaver 4/19 switched baskets (old); now right",
+   "defaultBasket": 14,
+   "evidenceBasket": 14,
+   "same": true,
+   "defaultR1": 10.3,
+   "evidenceR1": 10.3
+  },
+  {
+   "view": "beaverranchCapture",
+   "hole": "19",
+   "call": "right",
+   "why": "Sam: Beaver 4/19 (old); now right",
+   "defaultBasket": 12,
+   "evidenceBasket": 12,
+   "same": true,
+   "defaultR1": 13.18,
+   "evidenceR1": 13.18
+  },
+  {
+   "view": "coletocreekFull",
+   "hole": "10",
+   "call": "right",
+   "why": "Sam: Colette 10/11 switch (old); now right",
+   "defaultBasket": 16,
+   "evidenceBasket": 16,
+   "same": true,
+   "defaultR1": 17.29,
+   "evidenceR1": 17.29
+  },
+  {
+   "view": "coletocreekFull",
+   "hole": "11",
+   "call": "right",
+   "why": "Sam: 10/11 (old); now right",
+   "defaultBasket": 0,
+   "evidenceBasket": 0,
+   "same": true,
+   "defaultR1": 12.6,
+   "evidenceR1": 12.6
+  },
+  {
+   "view": "coletocreekFull",
+   "hole": "18",
+   "call": "right",
+   "why": "Sam: 18 misses bends (old); now right",
+   "defaultBasket": 5,
+   "evidenceBasket": 5,
+   "same": true,
+   "defaultR1": 26.74,
+   "evidenceR1": 26.74
+  },
+  {
+   "view": "seatacCapture",
+   "hole": "19",
+   "call": "right",
+   "why": "Sam: SeaTac H19 missing + misplaced bend (old); now right",
+   "defaultBasket": 8,
+   "evidenceBasket": 8,
+   "same": true,
+   "defaultR1": 16.57,
+   "evidenceR1": 16.57
+  }
+ ],
+ "crossView": {
+  "default": {
+   "compared": 133,
+   "agree": 123,
+   "disagree": [
+    "beaverranchLazy 2: 10.68 vs 7.37 R1",
+    "beaverranchLazy 3: 19.05 vs 10.62 R1",
+    "beaverranchLazy 17: 12.9 vs 9.75 R1",
+    "beaverranchLazy 20: 10.92 vs 8.06 R1",
+    "coletocreekLazy 7: 10.25 vs 6.8 R1",
+    "coletocreekLazy 14: 10.23 vs 7.62 R1",
+    "fountainhillsLazy 14: 12.21 vs 8.92 R1",
+    "seatacFull 10: 12.24 vs 8.63 R1",
+    "seatacFull 11: 8.05 vs 11.92 R1",
+    "seatacFull 16: 32.17 vs 11.19 R1"
+   ]
+  },
+  "sibling": {
+   "compared": 133,
+   "agree": 123,
+   "disagree": [
+    "beaverranchLazy 2: 10.68 vs 7.37 R1",
+    "beaverranchLazy 3: 19.05 vs 10.62 R1",
+    "beaverranchLazy 17: 12.9 vs 9.75 R1",
+    "beaverranchLazy 20: 10.92 vs 8.06 R1",
+    "coletocreekLazy 7: 10.25 vs 6.8 R1",
+    "coletocreekLazy 14: 10.23 vs 7.62 R1",
+    "fountainhillsLazy 14: 12.21 vs 8.92 R1",
+    "seatacFull 10: 12.24 vs 8.63 R1",
+    "seatacFull 11: 8.05 vs 11.92 R1",
+    "seatacFull 16: 32.17 vs 11.19 R1"
+   ]
+  }
+ },
+ "changed": {
+  "beaverranchCapture": [],
+  "beaverranchFull": [],
+  "beaverranchLazy": [],
+  "coletocreekCapture": [],
+  "coletocreekFull": [],
+  "coletocreekLazy": [],
+  "fountainhillsCapture": [],
+  "fountainhillsFull": [],
+  "fountainhillsLazy": [],
+  "seatacCapture": [],
+  "seatacFull": [
+   "8: 20 -> 21"
+  ]
+ }
+}

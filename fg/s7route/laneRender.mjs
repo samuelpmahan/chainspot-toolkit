@@ -27,7 +27,7 @@ const wrap = (lines, W) => {
   }
   return out;
 };
-function draw(canvas, dims, { x0, y0, w, h, scale, bandLines: lines0 }, paint) {
+export function draw(canvas, dims, { x0, y0, w, h, scale, bandLines: lines0 }, paint) {
   const S = scale, W = Math.round(w * S), bandLines = wrap(lines0, W), bandH = 12 + bandLines.length * 22, H = Math.round(h * S) + bandH, cv = canvas(W, H), rgb = cv.rgb, IW = dims.widthPx, IH = dims.heightPx;
   for (let i = 0; i < W * bandH * 3; i++) rgb[i] = 18;
   for (let y = bandH; y < H; y++) for (let x = 0; x < W; x++) {
