@@ -222,9 +222,10 @@ export function fitBends(P, S0, E, V0, K0, W, { axis = null, R1, limitPx = Infin
  * Refine the bends of one hole's route V (verts: tee cap start, bends, BasketPoint).
  * straight: true when S6 reads the hole STRAIGHT (rule 1: the route is kept). -> { verts, taken, why, ... }
  * Rule-set options (match.mjs RULE_SETS; absent = the recorded rule): minStations (the gate's visible-station floor; the
- * matching rule passes it in rC1px when its rule set says so), axis (the tee's unit axis: the first bend is fitted on it).
+ * matching rule passes it in rC1px when its rule set says so), axis (the tee's unit axis: the first bend is fitted on it), gain (the
+ * per-bend gate, rule set option bendGateGain; absent: BENDS.gate.gain).
  */
-export function refineBendsOf(S, V, W, { straight = false, minStations = BENDS.gate.minStations, axis = null } = {}) {
+export function refineBendsOf(S, V, W, { straight = false, minStations = BENDS.gate.minStations, axis = null, gain = undefined } = {}) {
   const R = BENDS, K0 = V.length - 2, S0 = V[0], E = V.at(-1);
   if (straight) return { verts: V, taken: false, why: 'S6 reads the hole straight: the matching rule\'s route is kept', K0, K1: K0 };
   let Vc = V, P = [];
@@ -234,7 +235,7 @@ export function refineBendsOf(S, V, W, { straight = false, minStations = BENDS.g
     if (P.length < R.minSamples) break;
     Vc = fitBends(P, S0, E, Vc, K0, W, { axis, R1: S.R1, limitPx, violations })[2];
   }
-  const K1 = Vc.length - 2, a = routeSensorAt(S, V, W), b = routeSensorAt(S, Vc, W), G = { ...R.gate, minStations };
+  const K1 = Vc.length - 2, a = routeSensorAt(S, V, W), b = routeSensorAt(S, Vc, W), G = { ...R.gate, minStations, ...(gain !== undefined ? { gain } : {}) };
   const minSt = Number.isInteger(G.minStations) ? G.minStations : G.minStations.toFixed(1);
   let taken, why;
   if (Vc === V) { taken = false; why = `fewer than ${R.minSamples} centre samples (${P.length})`; }

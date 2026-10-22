@@ -28,7 +28,7 @@ export function benchRouteMatches({ specimen, attempt, variants, root = ROOT }) 
   registerTraceQueries(store, { matcher: loadMatcher(root), board: loaded.board });
   return variants.map((variant) => {
     const t0 = performance.now();
-    const r = store.call('fn.q.trace.routeMatch', { rules: RULE_SETS[variant] }).value;
+    const r = store.call('fn.q.trace.routeMatch', { config: RULE_SETS[variant] }).value;
     const ms = performance.now() - t0, doc = document();
     // agreement with Sam's testimony when the course has it (the same judge as the S7 runner: tee 8 px, basket 12 px)
     const judged = holePaths.path ? judgeHoleTraces(tracesOf(r, store.get('tk.s7.holes'), { rule: variant }).traces, holePaths, { widthPx: store.get('tk.s7.hallway').widthPx }) : null;

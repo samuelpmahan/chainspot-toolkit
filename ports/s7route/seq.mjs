@@ -13,6 +13,19 @@
  *   3. Claimed baskets are state: an argument passed from one step to the next, never shared mutation.
  * Pure functions on the route starts, the BasketPoints and S6's verdicts.
  */
+import { stateAssumption } from '../../fg/assumptions.mjs';
+
+/**
+ * ASSUMPTION (fg/assumptions.mjs): the rule set option seqNeighbours scores only a bent hole's first joint ranks (a bound on a
+ * VARIABLE quantity: where the true basket ranks). Loud and self-correcting through seqWiden: a hole whose assigned route then
+ * fails the sensor gate re-solves with its remaining ranks (routeMatch emits holesWidened: that bound's violations).
+ */
+export const SEQ_FIRST_RANKS = stateAssumption({
+  name: 'seqFirstRanks', quantity: 'the joint neighbourhood rank of a bent hole\'s true basket (a rank count, never px)', value: 3, unit: 'ranks',
+  evidence: 'the true basket at joint rank <= 2 on 69/71 bent holes (golden, heritage, townelake, Coleto, Beaver, SeaTac; coordinator guar.py, 2026-10-21) and on 117/120 holes of 6 courses; <= 4 on all 71 (SEQ.neighbours = 5)',
+  widening: { factor: 2, limit: 'SEQ.neighbours = 5 ranks (rule set option seqWiden: the remaining ranks from the unclaimed pool)' }
+});
+
 export const SEQ = Object.freeze({
   straightLateralR1: 0.5,   // R1: the tee ray's half-width for the straight claim
   neighbours: 5,            // candidates per bent hole: joint ranks 0..4 (the measured guarantee: <= 4 on all 71 bent holes)

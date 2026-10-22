@@ -118,7 +118,7 @@ test('the export runs the S7 rule set the pointer vote accepted, never a hard-co
   const { exportRuleSet } = await import('./run.mjs');
   const { RULE_SETS } = await import('../s7route/match.mjs');
   const given = exportRuleSet('/nonexistent', 'routeMatchS6CoordWide');
-  assert.deepEqual(given.rules, RULE_SETS.routeMatchS6CoordWide); assert.match(given.how, /--variant/);
+  assert.deepEqual(given.config, RULE_SETS.routeMatchS6CoordWide); assert.match(given.how, /--variant/);
   const none = exportRuleSet('/nonexistent');
   assert.equal(none.variant, 'routeMatch'); assert.match(none.how, /no S7 pointer on record/);
   assert.match(exportRuleSet('/nonexistent', 'pinned').how, /not a routeMatch rule set/);

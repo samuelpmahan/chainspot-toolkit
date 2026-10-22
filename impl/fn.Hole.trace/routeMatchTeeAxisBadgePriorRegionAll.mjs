@@ -10,6 +10,6 @@ export const reads = ['tk.s7.holes'];
 export const calls = [...TRACE_CALLS];
 
 export default function routeMatchTeeAxisBadgePriorRegionAll(parts) {
-  return tracesOf(traceQueries(parts.call)('routeMatch', { rules: RULE_SETS.routeMatchTeeAxisBadgePriorRegionAll }), parts.get('tk.s7.holes'),
+  return tracesOf(traceQueries(parts.call)('routeMatch', { config: RULE_SETS.routeMatchTeeAxisBadgePriorRegionAll }), parts.get('tk.s7.holes'),
     { rule: 'routeMatch, rule set routeMatchTeeAxisBadgePriorRegionAll: every route measure (table, refine, sensor gates, second bend, placement) read as the hallway region' });
 }

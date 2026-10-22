@@ -68,17 +68,17 @@ test('routeMatchOf: the step is off without a verdict argument, skipped with a c
   const S = scene(), V = [S0, TRUE_BEND, E];
   const table = { widthPx: W, holes: ['1'], baskets: [{ point: E }], contrastMatrix: [[30]], onAxisPrior: [[0]], rows: [{ cells: [{ contrast: { verts: V } }] }] };
   const starts = { holes: [{ hole: '1', S: S0, u: [1, 0], badgeAlongPx: 50 }] };
-  const off = routeMatchOf(table, S, starts, {}).holes['1'];
+  const off = routeMatchOf(table, S, starts, { rules: MATCH_RULES }).holes['1'];
   assert.equal(off.bendsRefined, null);
-  const none = routeMatchOf(table, S, starts, { straight: null }).holes['1'];
+  const none = routeMatchOf(table, S, starts, { straight: null, rules: MATCH_RULES }).holes['1'];
   assert.equal(none.bendsRefined.taken, false); assert.match(none.bendsRefined.why, /no S6 straight verdict/); assert.deepEqual(none.verts, off.verts);
   // rule set straightFromS6 false (the matching rule's route kept when S6 reads the hole straight)
   const kept = routeMatchOf(table, S, starts, { straight: { 1: 'straight' }, rules: { ...MATCH_RULES, straightFromS6: false } }).holes['1'];
   assert.match(kept.bendsRefined.why, /S6 reads the hole straight/); assert.deepEqual(kept.verts, off.verts);
   // the default (batch 2, S6CoordWide): a hole S6 reads straight is drawn straight, tee cap -> BasketPoint
-  const drawn = routeMatchOf(table, S, starts, { straight: { 1: 'straight' } }).holes['1'];
+  const drawn = routeMatchOf(table, S, starts, { straight: { 1: 'straight' }, rules: MATCH_RULES }).holes['1'];
   assert.deepEqual(drawn.verts, [S0, E]); assert.match(drawn.how, /S6 reads the hole straight \(rule straightFromS6\)/);
-  const bent = routeMatchOf(table, S, starts, { straight: { 1: 'bent' } }).holes['1'];
+  const bent = routeMatchOf(table, S, starts, { straight: { 1: 'bent' }, rules: MATCH_RULES }).holes['1'];
   assert.ok(bent.bendsRefined && bent.verts.length >= 2 && Math.abs(bent.verts.at(-1)[0] - E[0]) < 1e-9, JSON.stringify(bent.bendsRefined));
 });
 
@@ -104,7 +104,7 @@ test('rule-set option straightSecondBend: a straight contrast route the sensor r
   const S = scene(), straightRoute = [S0, E];
   const table = { widthPx: W, holes: ['1'], baskets: [{ point: E }], contrastMatrix: [[30]], onAxisPrior: [[0]], rows: [{ cells: [{ contrast: { verts: straightRoute } }] }] };
   const starts = { holes: [{ hole: '1', S: S0, u: [1, 0], badgeAlongPx: 50 }] };
-  const recorded = routeMatchOf(table, S, starts, {}).holes['1'];
+  const recorded = routeMatchOf(table, S, starts, { rules: MATCH_RULES }).holes['1'];
   assert.equal(recorded.verts.length, 2); assert.doesNotMatch(recorded.how, /2-bend/);
   const searched = routeMatchOf(table, S, starts, { rules: { ...MATCH_RULES, straightSecondBend: true } }).holes['1'];
   assert.match(searched.how, /2-bend (accepted|rejected)/);

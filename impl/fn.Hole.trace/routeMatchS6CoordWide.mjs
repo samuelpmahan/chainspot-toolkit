@@ -9,6 +9,6 @@ export const reads = ['tk.s7.holes'];
 export const calls = [...TRACE_CALLS];
 
 export default function routeMatchS6CoordWide(parts) {
-  return tracesOf(traceQueries(parts.call)('routeMatch', { rules: RULE_SETS.routeMatchS6CoordWide }), parts.get('tk.s7.holes'),
+  return tracesOf(traceQueries(parts.call)('routeMatch', { config: RULE_SETS.routeMatchS6CoordWide }), parts.get('tk.s7.holes'),
     { rule: 'routeMatch, rule set: S6-straight holes drawn straight; the second bend by a coordinate search from the coarse grid spacing' });
 }

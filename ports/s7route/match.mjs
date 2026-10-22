@@ -22,7 +22,8 @@ import { refineVertices, arange, trace as followHallway, runEnd as followRunEnd,
 import { underAssumption } from '../../fg/assumptions.mjs';
 import { refineBendsOf } from './bends.mjs';
 import { kCellAt, kChainAt, legContrastsOf, KBENDS, turnCostOf, turnsOf, legRunsAlong, bottleneckOf, polishAt } from './kbends.mjs';
-import { straightClaimsOf, neighbourhoodsOf, foreignRingsOf, SEQ } from './seq.mjs';
+import { straightClaimsOf, neighbourhoodsOf, foreignRingsOf, SEQ, SEQ_FIRST_RANKS } from './seq.mjs';
+import { BENDS } from './bends.mjs';
 import { ringCrossed, legClearance, crossedOf, segmentHitsBox } from './kbends.mjs';
 
 export const MATCH = Object.freeze({
@@ -101,17 +102,16 @@ export function assignWithDuals(cost) {
   return { pairs: pairs.sort((a, b) => a[0] - b[0]), price: (i, k) => (T ? -(u[k + 1] + v[i + 1]) : -(u[i + 1] + v[k + 1])) };
 }
 
-const BENDS_GATE_GAIN = 0.05;   // bends.mjs BENDS.gate.gain: a changed bend count must gain this much sensor per bend
 const contrast = (S, V, W) => { const [c] = ribbonContrastAt(S, V, W); return c === null ? MATCH.noReadingLum : c; };
 /** polyScore's answer from ribbonContrastAt (the same px in the same order: bit-identical, -99 for no reading). */
 const polyScoreFast = (S, V, W) => { const [c, n] = ribbonContrastAt(S, V, W); return c === null ? [MATCH.noReadingLum, 0] : [c, n]; };
-/** The visible-station floor of a route reading under the rule set: MATCH.minStations stations, or (stationsUnits 'r1') minStationsR1 x R1. */
-export const minStationsOf = (S, rules = MATCH_RULES) => (rules.stationsUnits === 'r1' ? MATCH.minStationsR1 * S.R1 : MATCH.minStations);
+/** The visible-station floor of a route reading: MATCH.minStations stations, or (routeMatch's stationsUnits 'r1') minStationsR1 x R1. */
+export const minStationsOf = (S, stationsUnits = 'px') => (stationsUnits === 'r1' ? MATCH.minStationsR1 * S.R1 : MATCH.minStations);
 const stLabel = (m) => (Number.isInteger(m) ? String(m) : m.toFixed(1));
 
 /** match6.py second_bend's geometry: the B1 axis, the B2 search box, the leg check (shared by the scan and the refine). */
-function secondBendFrame(S, start, E, rules) {
-  const R = MATCH.secondBend, u = start.u, St = start.S, r1 = S.R1, coarse = rules.secondBendGrid === 'coarse' ? 2 : 1;
+function secondBendFrame(S, start, E, k) {
+  const R = MATCH.secondBend, u = start.u, St = start.S, r1 = S.R1, coarse = k.grid === 'coarse' ? 2 : 1;
   const minLeg = R.minLegR1 * r1;
   return {
     R, St, r1, coarse,
@@ -125,15 +125,15 @@ function secondBendFrame(S, start, E, rules) {
  * match6.py second_bend, step 1, the scan: B1 on the tee axis (+-1.8 R1 around the 1-bend vertex), B2 on a 0.47 R1 grid over
  * the route's box (both at twice the spacing for secondBendGrid 'coarse'). -> the best R.top candidates [contrast, t, B2].
  */
-export function secondBendScan(S, start, V1, E, W, rules = MATCH_RULES) {
-  const { R, St, r1, coarse, B1at, inside, legsOk } = secondBendFrame(S, start, E, rules), u = start.u;
+export function secondBendScan(S, start, V1, E, W, k = knobsOf(STEP_ARGS.secondBendScan)) {
+  const { R, St, r1, coarse, B1at, inside, legsOk } = secondBendFrame(S, start, E, k), u = start.u;
   const t1 = (V1[1][0] - St[0]) * u[0] + (V1[1][1] - St[1]) * u[1], box = R.bboxR1 * r1;
   const lo = [Math.min(St[0], E[0]) - box, Math.min(St[1], E[1]) - box], hi = [Math.max(St[0], E[0]) + box, Math.max(St[1], E[1]) + box];
   const grid = R.gridStepR1 * r1 * coarse;   // coarse: half the B2 grid each way, the search starts there
   const gx = arange(Math.max(lo[0], 0), Math.min(hi[0], S.W), grid), gy = arange(Math.max(lo[1], 0), Math.min(hi[1], S.H), grid);
   const cands = [];
   // secondBendB1 'badge': the first bend stays at the badge midpoint B* (the scan and the refine move B2 only)
-  const axis = rules.secondBendB1 === 'badge' ? [badgeMidAlongPx(start)] : arange(t1 - R.axisSpanR1 * r1, t1 + R.axisSpanR1 * r1 + 0.01 * r1, R.axisStepR1 * r1 * coarse);
+  const axis = k.b1 === 'badge' ? [badgeMidAlongPx(start)] : arange(t1 - R.axisSpanR1 * r1, t1 + R.axisSpanR1 * r1 + 0.01 * r1, R.axisStepR1 * r1 * coarse);
   for (const t of axis) {
     const B1 = B1at(t);
     if (!inside(B1)) continue;
@@ -147,13 +147,13 @@ export function secondBendScan(S, start, V1, E, W, rules = MATCH_RULES) {
 }
 
 /** Step 2, one candidate's refine: dense (match6.py) or a coordinate search on (t, B2x, B2y). -> { contrast, verts } (verts null: none). */
-export function secondBendRefine(S, start, E, W, cand, rules = MATCH_RULES) {
-  const { R, St, r1, coarse, B1at, inside, legsOk } = secondBendFrame(S, start, E, rules);
+export function secondBendRefine(S, start, E, W, cand, k = knobsOf(STEP_ARGS.secondBendRefine)) {
+  const { R, St, r1, coarse, B1at, inside, legsOk } = secondBendFrame(S, start, E, k);
   let best = [MATCH.noReadingLum, null];
-  if (rules.secondBendRefine === 'dense') {
+  if (k.refine === 'dense') {
     // match6.py's dense refine, its px over golden's R1 (+-8 px every 2 px on the axis, +-W/2 every 2 px for B2)
     const ax = 0.18 * r1, st = 0.045 * r1, half = W / 2, [, t, B2] = cand;
-    for (const dt of rules.secondBendB1 === 'badge' ? [0] : arange(-ax, ax + 0.01 * r1, st)) {
+    for (const dt of k.b1 === 'badge' ? [0] : arange(-ax, ax + 0.01 * r1, st)) {
       const B1 = B1at(t + dt);
       for (const dx of arange(-half, half + 0.1, st)) for (const dy of arange(-half, half + 0.1, st)) {
         const Vt = [St, B1, [B2[0] + dx, B2[1] + dy], E], s2 = contrast(S, Vt, W);
@@ -162,10 +162,10 @@ export function secondBendRefine(S, start, E, W, cand, rules = MATCH_RULES) {
     }
   } else {
     // coordinate search on (t, B2x, B2y): try +- step on each, move on the best strict gain, else halve the step
-    let [s, t, B2] = cand, step = (rules.secondBendRefine === 'coordWide' ? R.gridStepR1 * coarse : R.refineStartR1) * r1;   // coordWide: start at the coarse grid spacing
+    let [s, t, B2] = cand, step = (k.refine === 'coordWide' ? R.gridStepR1 * coarse : R.refineStartR1) * r1;   // coordWide: start at the coarse grid spacing
     while (step >= R.refineEndR1 * r1) {
       let move = null;
-      for (const [dt, dx, dy] of rules.secondBendB1 === 'badge' ? [[0, step, 0], [0, -step, 0], [0, 0, step], [0, 0, -step]] : [[step, 0, 0], [-step, 0, 0], [0, step, 0], [0, -step, 0], [0, 0, step], [0, 0, -step]]) {
+      for (const [dt, dx, dy] of k.b1 === 'badge' ? [[0, step, 0], [0, -step, 0], [0, 0, step], [0, 0, -step]] : [[step, 0, 0], [-step, 0, 0], [0, step, 0], [0, -step, 0], [0, 0, step], [0, 0, -step]]) {
         const tt = t + dt, B1 = B1at(tt), P = [B2[0] + dx, B2[1] + dy];
         if (!inside(B1) || !inside(P) || !legsOk(B1, P)) continue;
         const v = contrast(S, [St, B1, P, E], W);
@@ -182,14 +182,14 @@ export function secondBendRefine(S, start, E, W, cand, rules = MATCH_RULES) {
  * match6.py second_bend: the scan, the top candidates refined (the first best kept), sensor-gated. Every step is a call of
  * `steps` (the S7 store passes fn.q.match.*, so the scan and each refine are profiled store calls).
  */
-export function secondBend(S, start, V1, E, W, f1, rules = MATCH_RULES, steps = MATCH_STEPS) {
-  const R = MATCH.secondBend, { top } = steps.secondBendScan(S, start, V1, E, W, rules);
+export function secondBend(S, start, V1, E, W, f1, minStations, steps = MATCH_STEPS) {
+  const R = MATCH.secondBend, { top } = steps.secondBendScan(S, start, V1, E, W);
   let best = [MATCH.noReadingLum, null];
-  for (const cand of top) { const r = steps.secondBendRefine(S, start, E, W, cand, rules); if (r.contrast > best[0]) best = [r.contrast, r.verts]; }
+  for (const cand of top) { const r = steps.secondBendRefine(S, start, E, W, cand); if (r.contrast > best[0]) best = [r.contrast, r.verts]; }
   if (!best[1]) return { accepted: false, note: 'no 2-bend candidate' };
   const r2 = steps.sensor(S, best[1], W), c1 = steps.contrast(S, V1, W);
   const note = `2-bend candidate contrast ${best[0].toFixed(1)} (1-bend ${c1.toFixed(1)}) lum, sensor ${r2.passFrac.toFixed(2)} on ${r2.stations} st vs 1-bend ${f1.toFixed(2)}`;
-  const ok = r2.passFrac >= MATCH.tau && r2.passFrac - f1 >= R.gain && r2.stations >= minStationsOf(S, rules);
+  const ok = r2.passFrac >= MATCH.tau && r2.passFrac - f1 >= R.gain && r2.stations >= minStations;
   return { accepted: ok, verts: best[1], note, sensor: r2 };
 }
 
@@ -203,14 +203,98 @@ export function secondBend(S, start, V1, E, W, f1, rules = MATCH_RULES, steps = 
  */
 /** The follower's resolutions without its closing reach (closeReachR1): what runEndW and findBendAtW read. */
 export const stepResOf = (res) => { const { closeReachR1, ...r } = res; return r; };
+// ------------------------------------------------------------------------------------------------ declared args (the knobs)
+/**
+ * Every S7 option is a DECLARED ARG of the step that reads it (fg/store.mjs register { args, needs }; Sam, 2026-10-22: "features
+ * obeying PxC should automatically compose and then they're automatically registered as Calculations"). The S7 store registers
+ * each step with its knobs (ports/s7trace/traceSpace.mjs), so store.declaredArgs() lists every knob a run can set; a config is
+ * a sparse { fn: { knob: value } } over them (fg/config.mjs) and the store resolves each call's knobs under it. Defaults are the S7
+ * default's values (S7_DEFAULT), so the empty config IS the S7 default. Units: bool, enum, frac (a fraction of a route's visible
+ * sensor stations), lum (edge contrast), count, ranks, W (the hallway width: ribbon resolutions), R1 (map distances).
+ */
+const knob = (dflt, unit, note, extra = {}) => Object.freeze({ default: dflt, unit, note, ...extra });
+const oneOf = (values, dflt, note) => knob(dflt, 'enum', note, { values, sweep: values });
+const flag = (dflt, note) => knob(dflt, 'bool', note, { sweep: [false, true] });
+export const RM_FN = 'fn.q.trace.routeMatch', SEQ_FN = 'fn.q.trace.seqCells';
+/** fn.q.trace.routeMatch: which steps the matching calls and which Parts it reads (Sam: routeMatch reads no options beyond that). */
+export const ROUTE_MATCH_ARGS = Object.freeze({
+  kBends: oneOf(['off', 'bottleneck', 'seq'], 'seq', 'off: the recorded rule (the contrast table, 1 or 2 bends); bottleneck: every cell by its best K <= 1 route under the weakest-leg cost, K-bend chains for the unconfirmed holes (lane s7bends); seq: the sequencing step fn.q.trace.seqCells (Sam: "18x18 is craycray")'),
+  tableUnits: oneOf(['r1', 'px'], 'r1', 'the route table Part read: its bend search in rC1px, or px (match18.py\'s recorded 800 px reach and 6 px step: an absolute px bound on a map distance, kept to compare)'),
+  tableSearch: oneOf(['full', 'fast', 'lean', 'badgeMid'], 'badgeMid', 'the route table Part read: full (every bend on the axis), fast (coarse sweep at 4x the step, the best 2 refined), lean (every basket at 8x the step, the row\'s best 3 refined), badgeMid (2 reads per cell: S -> basket and S -> B* -> basket)'),
+  sensor: oneOf(['edge', 'region', 'regionAll'], 'edge', 'the scene the assignment reads: edges; region (the hallway REGION table, regionSpace.mjs; routes and steps on edges); regionAll (every measure on the region; lane s7region 2026-10-21)'),
+  straightFromS6: flag(true, 'a hole S6 reads straight is drawn straight (tee cap -> BasketPoint), no bend search (rule 1 of the placement)'),
+  straightSecondBend: flag(true, 'a straight contrast route the sensor rejects also gets the second-bend steps, B1 seeded 0.5 W past the badge (Sam: "the tee -> badge segment is straight hallway"; heritage7, 2026-10-20)'),
+  firstBend: oneOf(['free', 'badge', 'badgePrior'], 'badgePrior', 'free: refined and placed; badge: a 1-bend route through B* keeps it; badgePrior: after the placement the first bend moves to B* when the sensor reads no worse there (within 0.02 frac; heritage7 18/18 agree)'),
+  stationsUnits: oneOf(['px', 'r1'], 'r1', 'the visible-station floor of the straight read, the second bend and the placement: 20 stations (px), or 0.449 R1 (the same 20 on golden, map-scaled; abs-px audit). DEBT: one floor read by three steps, passed to the placement as its minStations argument'),
+  evidenceRank: flag(false, 'the final assignment ranks the sequencing\'s cells by log P of the combined evidence (evidenceSpace.mjs tk.s7.cellEvidence; weights fitted leave-one-course-out on the dev testimony; Sam 2026-10-22: "use that as just another piece of ranking evidence"); off: by their values'),
+  secondBends: flag(true, 'call the second-bend steps at all (false: the cheap variant)'),
+  refineBends: flag(true, 'call the bend placement (bends.mjs) at all')
+});
+/** fn.q.trace.seqCells: the sequencing (seq.mjs), its cells before the final assignment. Acts only under kBends 'seq'. */
+export const SEQ_CELLS_ARGS = Object.freeze({
+  neighbours: knob(SEQ_FIRST_RANKS.value, 'ranks', `a bent hole scores its first joint neighbourhood ranks (Sam: "cut at least 80% of the 18x18 cells"; 3 ranks hold 117/120 true baskets on 6 courses; ${SEQ.neighbours} = every rank)`, { validate: (v) => (v >= 1 && v <= SEQ.neighbours ? null : `must be 1..${SEQ.neighbours}`), sweep: [3, 5], assumption: SEQ_FIRST_RANKS.name }),
+  widen: flag(true, 'a hole whose assigned route reads below tau on the sensor (or got no basket) re-solves with its remaining ranks: the self-correction of the seqFirstRanks bound (Beaver 7/8/21, Coleto 18)'),
+  gate: oneOf(['edge', 'region', 'regionWiden'], 'edge', 'the sensor its gates read: edges; region (every gate on the region passFrac); regionWiden (the widening gate only). Measured 2026-10-21: region moves golden 5 to 2 bends and trades Coleto 15/18'),
+  score: oneOf(['bottleneck', 'region'], 'bottleneck', 'a cell\'s value: its weakest leg minus the turning price; region: the region support of its edge-placed route (measured: the same Coleto 15/18 trade)'),
+  polish: flag(false, 'every chain candidate polished on its weakest leg before it competes (kbends.mjs polishEach); measured: golden 18 gains a bend, heritage 9 leaves Sam\'s corridor'),
+  own: flag(true, 'confirmed routes own their corridors (straight claims, then routes passing the gate); no other leg runs along one, crossing allowed (kept SeaTac 19\'s chain off hole 20\'s corridor)'),
+  turnKappa: knob(10, 'lum', 'the price of turning: a route\'s value is its weakest leg minus kappa x sum (1 - cos theta)^2 (kbends.mjs turnCostOf); 0: no price. At 10 lum a 35 deg bend costs 0.3, 72 deg 4.8, 90 deg 10; Sam\'s dev bends turn 14-72 deg', { validate: (v) => (v >= 0 ? null : 'must be >= 0'), sweep: [0, 5, 10, 20] }),
+  follow: oneOf(['off', 'px', 'w'], 'w', 'a hole whose assigned route still fails the gate rides the ribbon from its tee cap: px (the prototype\'s px follower) or w (the step fn.q.match.followW, every resolution a fraction of W); its route, polished, competes for the cell (found Coleto 18 and SeaTac 19)'),
+  firstLegs: flag(false, 'every hole\'s first leg (tee cap -> B*) is owned from the start and its badge plate is foreign to the others (firstLegs.mjs; from the seatacFull 16 render): fixes seatacFull 16 and beaverranchLazy 3/17/20, swaps beaverranchLazy 1/21'),
+  refineStarts: knob(3, 'count', 'each cell\'s K <= 1 refine on the tee axis starts from the sweep\'s N best local maxima (kbends.mjs kCellAt): the 0.54 R1 sweep is coarser than a bend\'s few-px peak; 3 fixed golden 5 (2026-10-22)', { validate: (v) => (v >= 1 && v <= 8 ? null : 'must be 1..8'), sweep: [1, 3, 5] }),
+  kUnits: oneOf(['r1', 'w'], 'r1', 'the K-bend search\'s hallway steps (split grid, minimum leg, axis step, refine end) in R1 or in W (unit W / 0.934, golden\'s W per R1); foreign rings and the axis reach stay R1'),
+  bendGain: knob(BENDS.gate.gain, 'frac', 'the per-bend gate of the K-bend chain and the follower\'s route: a route with more bends must read higher on the sensor by this much PER added bend (the recorded 0.05 of the bend placement, bends.mjs BENDS.gate)', { validate: (v) => (v >= 0 && v < 1 ? null : 'must be in [0, 1)'), sweep: [0.03, 0.05, 0.08] })
+});
+export const SEQ_CELLS_NEEDS = Object.freeze({ [RM_FN]: { kBends: 'seq' } });
+const wKnob = (key, unit, note, sweep, extra = {}) => knob(FOLLOW_W[key], unit, note, { sweep, ...extra });
+/** The per-step knobs: fn.q.match.<step>. */
+export const STEP_ARGS = Object.freeze({
+  refine: Object.freeze({ units: oneOf(['r1', 'px'], 'px', 'the assigned 1-bend route\'s coordinate refine (E18): px as recorded (+-6 px, 2 iterations) or the same in rC1px') }),
+  secondBendScan: Object.freeze({
+    grid: oneOf(['fine', 'coarse'], 'coarse', 'the B1 axis and B2 grid at the recorded spacing or twice it (coarse = fine on all six dev courses, 8x fewer routes; 2026-10-20). Read by the refine too: set both'),
+    b1: oneOf(['axis', 'badge'], 'axis', 'B1 searched on the tee axis, or kept at B* (only B2 searched). Read by the refine too: set both')
+  }),
+  secondBendRefine: Object.freeze({
+    refine: oneOf(['coord', 'coordWide', 'dense'], 'coordWide', 'coord: halving coordinate search from 0.25 R1; coordWide: from the coarse grid spacing, 0.47 R1 (batch 2, 2026-10-20); dense: match6.py\'s dense grid'),
+    grid: oneOf(['fine', 'coarse'], 'coarse', 'the grid the coordinate search starts from (as the scan\'s)'),
+    b1: oneOf(['axis', 'badge'], 'axis', 'B1 moves on the axis, or stays at B* (as the scan\'s)')
+  }),
+  placeBends: Object.freeze({
+    axis: flag(true, 'the bend placement (bends.mjs) fits the first bend on the tee axis, by its distance along it, instead of freely (heritage7, 2026-10-20)'),
+    gain: knob(BENDS.gate.gain, 'frac', 'the placement\'s per-bend gate: a changed bend count must gain this much sensor per bend (bends.mjs BENDS.gate.gain, after-s4-e09)', { validate: (v) => (v >= 0 && v < 1 ? null : 'must be in [0, 1)'), sweep: [0.03, 0.05, 0.08] })
+  }),
+  followW: Object.freeze({
+    vertexStepW: wKnob('vertexStepW', 'W', 'vertex positions on the leg (findBend\'s and closeOnBp\'s); W/16 was routeMatchKBendsSeq3SearchW16', [1 / 16, 1 / 8]),
+    runW: wKnob('runW', 'W', 'the run a new heading is read on: 3.4 W; with 1.7 W the run drifts off the ribbon and findBend adds a 4 deg correction bend (SeaTac 8 and 21, Beaver 17; runs of 1.7, 2.0, 2.5, 3.4 W compared, hallway.mjs)', [2.4, 3.4, 4.4]),
+    sampleStepW: wKnob('sampleStepW', 'W', 'stations along every run (W/8 leaves no gap at any dev scale)', [1 / 16, 1 / 8]),
+    lateralMissW: wKnob('lateralMissW', 'W', 'the heading step: the run\'s end misses by at most this between two headings (W/16: 1.05 deg on a 3.4 W run)', [1 / 32, 1 / 16]),
+    bendVisibleW: wKnob('bendVisibleW', 'W', 'the visible run a bend reading needs (the prototype\'s 25 stations on golden)', [0.4, 0.6, 0.8]),
+    closeVisibleW: wKnob('closeVisibleW', 'W', 'the visible run the close on a BasketPoint needs (the prototype\'s 12 stations on golden)', [0.2, 0.3, 0.4]),
+    gapW: wKnob('gapW', 'W', 'the run ends after this much failing run (the prototype\'s G = W stations)', [0.75, 1, 1.5]),
+    refineEndW: wKnob('refineEndW', 'W', 'the winner is polished by halving down to this vertex step; null: no polish', [null, 1 / 32], { nullable: true, validate: (v) => (v === null || v > 0 ? null : 'must be > 0 or null') }),
+    onLegLatR1: wKnob('onLegLatR1', 'R1', 'a BasketPoint this near the leg\'s centreline ends the hole on the leg (the prototype\'s 5 px on golden): a precision, not a bound', [0.1124]),
+    onLegPastR1: wKnob('onLegPastR1', 'R1', 'how far past the run\'s end (which stops at the C1 ring, ~1 R1 short) that BasketPoint may lie: 1.6 W on golden; a read-ahead window, not a bound on the hole', [1.495])
+  })
+});
+export const STEP_NEEDS = Object.freeze({ followW: Object.freeze({ [SEQ_FN]: { follow: 'w' } }) });
+/** A declared knob set filled from given values (direct calls, no store): the given value, else the default. */
+export const knobsOf = (declared, given = {}) => Object.fromEntries(Object.entries(declared).map(([k, s]) => [k, given && Object.hasOwn(given, k) ? given[k] : s.default]));
+/** The args routeMatch hands the sequencing step: which table, scene and verdicts its cells read (not knobs of its own). */
+export const seqCellsArgsOf = (k) => ({ tableUnits: k.tableUnits, tableSearch: k.tableSearch, sensor: k.sensor, refineBends: k.refineBends });
+
+/**
+ * The steps' functions, each with its knobs as its last parameter (the store hands the resolved knobs; a direct call gets the
+ * defaults, or stepsOf(config)). The S7 store registers each as fn.q.match.<step> with STEP_ARGS[step] declared.
+ */
 export const MATCH_STEPS = Object.freeze({
-  refine: (S, V, W, u, rules = MATCH_RULES) => (rules.refineUnits === 'px'
+  refine: (S, V, W, u, k = knobsOf(STEP_ARGS.refine)) => (k.units === 'px'
     ? refineVertices(S, V, W, u, MATCH.refineIters, { axisSpanPx: 6, score: polyScoreFast })[0]   // E18 as recorded: +-6 px, the prototype's px steps
     : refineVertices(S, V, W, u, MATCH.refineIters, { axisSpanPx: MATCH.refineAxisSpanR1 * S.R1, unitPx: S.R1, score: polyScoreFast })[0]),
   sensor: (S, V, W) => routeSensorAt(S, V, W),
-  secondBendScan: (S, start, V, E, W, rules = MATCH_RULES) => secondBendScan(S, start, V, E, W, rules),
-  secondBendRefine: (S, start, E, W, cand, rules = MATCH_RULES) => secondBendRefine(S, start, E, W, cand, rules),
-  placeBends: (S, V, W, straight, opts = {}) => refineBendsOf(S, V, W, { straight, ...opts }),
+  secondBendScan: (S, start, V, E, W, k = knobsOf(STEP_ARGS.secondBendScan)) => secondBendScan(S, start, V, E, W, k),
+  secondBendRefine: (S, start, E, W, cand, k = knobsOf(STEP_ARGS.secondBendRefine)) => secondBendRefine(S, start, E, W, cand, k),
+  // opts: minStations (the routeMatch floor, when stationsUnits 'r1') and axisU (the tee's unit axis, used when the axis knob is on)
+  placeBends: (S, V, W, straight, opts = {}, k = knobsOf(STEP_ARGS.placeBends)) => refineBendsOf(S, V, W, { straight, ...(opts.minStations !== undefined ? { minStations: opts.minStations } : {}), ...(k.axis && opts.axisU ? { axis: opts.axisU } : {}), gain: k.gain }),
   contrast: (S, V, W) => contrast(S, V, W),
   // rule set option kBends 'bottleneck' (kbends.mjs): every leg of a route read alone (the K-bend search's one measure)
   kLegs: (S, V, W) => legContrastsOf(S, V, W),
@@ -224,12 +308,37 @@ export const MATCH_STEPS = Object.freeze({
   // seqFollow 'w': the same steps with every resolution a fraction of W (hallway.mjs FOLLOW_W; res: the rule set's overrides)
   followRunEndW: (S, O, phi, W, t0, res) => followRunEndWOf(S, O, phi, W, t0, res),
   followCloseOnBpW: (S, O, phi, W, tEnd, used, res) => followCloseOnBpWOf(S, O, phi, W, tEnd, used, res),
-  followBendAtW: (S, O, phi, W, tv, selfC, tees, psis, res) => followBendAtWOf(S, O, phi, W, tv, selfC, tees, psis, res)
+  followBendAtW: (S, O, phi, W, tv, selfC, tees, psis, res) => followBendAtWOf(S, O, phi, W, tv, selfC, tees, psis, res),
+  // the W follower for one hole from its tee cap (hallway.mjs trace), its resolutions the step's knobs; closeReachR1 is the
+  // CLOSE_ON_BP_REACH bound of this try (state of the caller's widening, never a knob); its leaf steps are the ones above
+  followW: (S, O, phi, W, closeReachR1, maxLegs, k = knobsOf(STEP_ARGS.followW)) => followWOf(S, O, phi, W, closeReachR1, maxLegs, k, MATCH_STEPS)
 });
 
+/** The W follower (seqCells follow 'w'): the leaf steps given (the store's profiled ones, or MATCH_STEPS'). */
+export function followWOf(S, O, phi, W, closeReachR1, maxLegs, k, leaf) {
+  const res = { ...Object.fromEntries(Object.keys(FOLLOW_W).map((key) => [key, k[key]])), closeReachR1 };
+  return followHallway(S, O, phi, W, { maxLegs, steps: {
+    // the run and the bend read no reach: they are asked without it, so a widened re-trace re-asks the same (cached) steps
+    runEnd: (Sc, Ox, ph, Wd, t0) => leaf.followRunEndW(Sc, Ox, ph, Wd, t0, stepResOf(res)), closeOnBp: (Sc, Ox, ph, Wd, tEnd, used) => leaf.followCloseOnBpW(Sc, Ox, ph, Wd, tEnd, used, res),
+    onLeg: (Sc, Ox, ph, Wd, tEnd, used) => bpOnLegW(Sc, Ox, ph, Wd, tEnd, used, res),
+    findBend: (Sc, Ox, ph, Wd, tEnd, selfC, tees) => findBendW(Sc, Ox, ph, Wd, tEnd, selfC, tees, (Sx, Oy, px, Wx, tv, sC, tz, psis) => leaf.followBendAtW(Sx, Oy, px, Wx, tv, sC, tz, psis, stepResOf(res)), res) } });
+}
+/** MATCH_STEPS with the knobs of a config (direct calls without a store): each declared step gets config['fn.q.match.<step>']. */
+export const stepsOf = (config = {}) => {
+  const out = Object.fromEntries(Object.entries(MATCH_STEPS).map(([k, f]) => [k, STEP_ARGS[k] ? (S, ...a) => f(S, ...a, knobsOf(STEP_ARGS[k], config[`fn.q.match.${k}`])) : f]));
+  out.followW = (S, O, phi, W, cr, maxLegs) => followWOf(S, O, phi, W, cr, maxLegs, knobsOf(STEP_ARGS.followW, config['fn.q.match.followW']), out);
+  return Object.freeze(out);
+};
+
 /**
- * Rule sets (Sam, 2026-10-20: "have a bunch of possible rule sets so you can optimize over a wide batch"). Each is a
- * routeMatch variant in impl/fn.Hole.trace/ and the S7 pointer vote picks among them on the judged courses.
+ * The RECORDED option names (Sam, 2026-10-20: "have a bunch of possible rule sets so you can optimize over a wide batch"): each rule
+ * set was an object of these, merged over MATCH_RULES. They are now knobs of the steps that read them (declared args above;
+ * configOfRules maps each name to its fn#knob): straightFromS6, straightSecondBend, firstBend, stationsUnits, kBends, tableUnits,
+ * tableSearch, sensor -> fn.q.trace.routeMatch; seqScore 'evidence' -> routeMatch#evidenceRank; seqNeighbours, seqWiden, seqGate,
+ * seqScore 'region', seqPolish, seqOwn, seqTurnKappa, seqFollow, seqFirstLegs, kRefineStarts, kUnits -> fn.q.trace.seqCells;
+ * followRes -> fn.q.match.followW; refineUnits -> fn.q.match.refine; secondBendGrid, secondBendB1 -> fn.q.match.secondBendScan and
+ * secondBendRefine; secondBendRefine -> fn.q.match.secondBendRefine#refine; placeAxis -> fn.q.match.placeBends#axis;
+ * bendGateGain -> seqCells#bendGain and placeBends#gain. What each meant:
  *   straightFromS6: a hole S6 reads straight is drawn straight (tee cap -> BasketPoint), no bend search
  *   secondBendRefine: 'coord' (halving coordinate search from 0.25 R1) | 'coordWide' (from the coarse grid spacing, 0.47 R1)
  *                     | 'dense' (match6.py's dense grid, in rC1px)
@@ -261,7 +370,7 @@ export const MATCH_STEPS = Object.freeze({
  *   seqGate:       (kBends 'seq') 'region' = the sequencing's sensor gates read the region passFrac (regionSpace.mjs) |
  *                  'regionWiden' = only the widening gate reads it
  *   seqScore:      (kBends 'seq') 'region' = each neighbourhood cell is assigned by the region support of its (edge-placed) route
- *                  | 'evidence' = the cells are the default's (cellRulesOf), the final assignment ranks them by log P of the combined
+ *                  | 'evidence' = the cells are the default's (the same seqCells answer), the final assignment ranks them by log P of the combined
  *                  evidence (evidenceSpace.mjs; weights: evidenceWeights, else EVIDENCE_WEIGHTS)
  *   seqPolish:     (kBends 'seq') true = every chain candidate polished on its weakest leg before it competes (kbends.mjs polishEach)
  *   seqOwn:        (kBends 'seq') true = confirmed routes own their corridors (straight claims, then routes passing the gate); the
@@ -283,73 +392,82 @@ export const MATCH_STEPS = Object.freeze({
  *   sensor:        absent (edges) | 'region' = the assignment reads the hallway REGION (ports/s7route/regionSpace.mjs: each cell's
  *                  best route by region support, -1..1, the on-axis prior in support units); the routes and the per-hole steps (refine,
  *                  sensor gates, second bend, placement) read edges | 'regionAll' = every measure reads the region
+ *   bendGateGain:  frac, the per-bend sensor gate (absent: BENDS.gate.gain 0.05): the bend placement's bend-count change, the K-bend
+ *                  chain's split and the follower's route each must gain this much sensor per added bend
  */
 export const MATCH_RULES = Object.freeze({ straightFromS6: true, secondBendRefine: 'coordWide', refineUnits: 'r1', tableUnits: 'r1' });   // batch 2 (2026-10-20): S6CoordWide
 
-/** The rule sets the S7 pointer vote chooses among: variant name (impl/fn.Hole.trace/) -> its overrides of MATCH_RULES. */
+/**
+ * A recorded rule set's options (the names above; routeMatch merged them over MATCH_RULES) as a config over the declared args:
+ * each option goes to the knob of the step that reads it. The reader of the recorded names (match.test.mjs proves RULE_SETS
+ * equal it on fixtures/rule-sets.legacy.json, the literal table at 31f2968); new configs are written as { fn: { knob } } directly.
+ */
+export function configOfRules(rules) {
+  const E = { ...MATCH_RULES, ...(rules ?? {}) };
+  const known = ['straightFromS6', 'secondBendRefine', 'refineUnits', 'tableUnits', 'tableSearch', 'secondBendGrid', 'secondBendB1', 'firstBend', 'stationsUnits', 'straightSecondBend', 'placeAxis', 'bendGateGain',
+    'kBends', 'kRefineStarts', 'kUnits', 'seqNeighbours', 'seqWiden', 'seqGate', 'seqScore', 'seqPolish', 'seqOwn', 'seqTurnKappa', 'seqFollow', 'followRes', 'seqFirstLegs', 'sensor'];
+  for (const key of Object.keys(E)) if (!known.includes(key)) throw new Error(`configOfRules: '${key}' is not a recorded option`);
+  const gain = E.bendGateGain ?? BENDS.gate.gain, grid = E.secondBendGrid ?? 'fine', b1 = E.secondBendB1 ?? 'axis';
+  return {
+    [RM_FN]: { kBends: E.kBends ?? 'off', tableUnits: E.tableUnits ?? 'r1', tableSearch: E.tableSearch ?? 'full', sensor: E.sensor ?? 'edge', straightFromS6: Boolean(E.straightFromS6), straightSecondBend: Boolean(E.straightSecondBend),
+      firstBend: E.firstBend ?? 'free', stationsUnits: E.stationsUnits ?? 'px', evidenceRank: E.seqScore === 'evidence', secondBends: true, refineBends: true },
+    [SEQ_FN]: { neighbours: E.seqNeighbours ?? SEQ.neighbours, widen: Boolean(E.seqWiden), gate: E.seqGate ?? 'edge', score: E.seqScore === 'region' ? 'region' : 'bottleneck', polish: Boolean(E.seqPolish), own: Boolean(E.seqOwn),
+      turnKappa: E.seqTurnKappa ?? 0, follow: E.seqFollow === 'w' ? 'w' : E.seqFollow ? 'px' : 'off', firstLegs: Boolean(E.seqFirstLegs), refineStarts: E.kRefineStarts ?? 1, kUnits: E.kUnits ?? 'r1', bendGain: gain },
+    'fn.q.match.refine': { units: E.refineUnits ?? 'r1' },
+    'fn.q.match.secondBendScan': { grid, b1 },
+    'fn.q.match.secondBendRefine': { refine: E.secondBendRefine ?? 'coord', grid, b1 },
+    'fn.q.match.placeBends': { axis: Boolean(E.placeAxis), gain },
+    'fn.q.match.followW': Object.fromEntries(Object.keys(FOLLOW_W).map((key) => [key, (E.followRes ?? {})[key] ?? FOLLOW_W[key]]))
+  };
+}
+
+/**
+ * The rule sets the S7 pointer vote chooses among: variant name (impl/fn.Hole.trace/) -> its CONFIG, a sparse { fn: { knob: value } }
+ * over the steps' declared args (only what differs from the S7 default; the impl passes it as routeMatch's args.config and every
+ * nested step resolves its knobs under it). Each is exactly its recorded rule set (match.test.mjs; bench.mjs gives byte-identical
+ * routes). Any other config is a new rule set: `pxc sweep --grid`.
+ */
 export const RULE_SETS = Object.freeze({
-  routeMatch: {},
-  routeMatchS6straight: { straightFromS6: true },
-  routeMatchS6CoordWide: { straightFromS6: true, secondBendRefine: 'coordWide' },
-  routeMatchS6Dense: { straightFromS6: true, secondBendRefine: 'dense' },
-  routeMatchS6PxDense: { straightFromS6: true, tableUnits: 'px', refineUnits: 'px', secondBendRefine: 'dense' },
-  routeMatchDenseSecondBend: { secondBendRefine: 'dense' },
-  routeMatchPxRefine: { refineUnits: 'px' },
-  routeMatchPxTable: { tableUnits: 'px', refineUnits: 'px' },
-  routeMatchFast: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'fast' },
-  routeMatchFastPxRefine: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'fast', refineUnits: 'px' },
-  routeMatchLean: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean' },
-  routeMatchLeanPxRefine: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px' },
-  routeMatchLeanCoarse2: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', secondBendGrid: 'coarse' },
-  routeMatchLeanPxRefineCoarse2: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse' },
-  // the badge-midpoint rule (2026-10-20): the first bend at B* = tee + 2 x (badge along the tee axis), one route read per cell
-  routeMatchBadgeMid: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse' },
-  routeMatchBadgeMidPinned: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', secondBendB1: 'badge', firstBend: 'badge' },
-  routeMatchLeanBadgeMid2: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', secondBendB1: 'badge' },
-  routeMatchLeanBadgePrior: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', firstBend: 'badgePrior' },
-  routeMatchBadgeMidPrior: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', firstBend: 'badgePrior' },
-  // heritage S7 bends (2026-10-20, lane heritage7): the pointer plus one fix each, then all three together
-  routeMatchLeanPxRefineCoarse2R1St: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1' },
-  routeMatchLeanPxRefineCoarse2StraightB2: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', straightSecondBend: true },
-  routeMatchLeanPxRefineCoarse2AxisB1: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', placeAxis: true },
-  routeMatchLeanPxRefineCoarse2TeeAxis: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true },
-  // the heritage fixes with the badge-midpoint prior (heritage7 prototype: 18/18 agree, bends 18/1/1), on the lean and the B* tables
-  routeMatchTeeAxisBadgePrior: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior' },
-  routeMatchBadgeMidTeeAxisPrior: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior' },
-  // K bends under one fair cost (lane s7bends, 2026-10-21): the accepted rule set with the weakest-leg assignment and K-bend chains
-  routeMatchKBends: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'bottleneck' },
-  // sequencing (Sam, 2026-10-21: "18x18 is craycray"): straight claims first, then each bent hole's neighbourhood (seq.mjs); the
-  // table is only the B* / start Parts (tableSearch 'badgeMid': 2 reads per cell), the K-bend search only in the neighbourhoods
-  routeMatchKBendsSeq: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq' },
-  // Sam (2026-10-21): "cut at least 80% of the 18x18 cells": the neighbourhood's top 3 ranks first (117/120 true baskets on 6
-  // courses), widened to ranks 3-4 for a hole whose assigned route then fails the sensor gate
-  routeMatchKBendsSeq3: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true },
-  // Seq3 x region (lane s7region's sensor): the sequencing's gates by the region, the cell scores by the region, both
-  // the search fixed (lane s7bends, 2026-10-21 diagnosis: the edge gate passes Coleto 18's and SeaTac 19's true routes; the chain
-  // never proposed them): polish before compare, owned corridors, a price on turning
-  routeMatchKBendsSeq3Search: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: true },
-  // Seq3Search with the follower's resolutions in W (Sam 2026-10-21: "do your search resolution as a multiplier of the hallway width")
-  // + kRefineStarts 3 (2026-10-22, golden 5): the K <= 1 axis refine starts from the sweep's 3 best local maxima, so a bend's few-px peak is
-  // found whatever the sweep grid's phase (kbends.mjs kCellAt); a 0.3 px S4 tee move flipped golden 5 to a 2-bend route without it
-  routeMatchKBendsSeq3SearchW: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w' , kRefineStarts: 3 },
-  // the evidence sibling (Sam, 2026-10-22: "take out earlier algorithm and use that as just another piece of ranking evidence"): the
-  // default's cells (the same store call, every guard kept), the final assignment ranked by the combined evidence of every perspective
-  // on those cells (ports/s7route/evidenceSpace.mjs tk.s7.cellEvidence: basket backwards, the lanes, the follower, the sensors, B*)
-  routeMatchKBendsSeq3SearchWEvidence: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w', seqScore: 'evidence' , kRefineStarts: 3 },
-  // first legs owned from the start (coordinator, 2026-10-22, from the seatacFull 16 render): every hole's tee cap -> B* is owned by its
-  // hole and its badge plate is foreign to the others; a route may cross another hole's first leg but not run along it (firstLegs.mjs)
-  routeMatchKBendsSeq3SearchWFirstLegs: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w', seqFirstLegs: true , kRefineStarts: 3 },
-  // the same, vertex positions every W/16
-  routeMatchKBendsSeq3SearchW16: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w', followRes: { vertexStepW: 1 / 16 } },
-  // SearchW with the K-bend search's hallway steps in W as well
-  routeMatchKBendsSeq3SearchWK: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqOwn: true, seqTurnKappa: 10, seqFollow: 'w', kUnits: 'w' },
-  routeMatchKBendsSeq3RegionGate: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqGate: 'region' },
-  routeMatchKBendsSeq3RegionScore: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqScore: 'region' },
-  routeMatchKBendsSeq3RegionWiden: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqGate: 'regionWiden' },
-  routeMatchKBendsSeq3Region: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'badgeMid', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', kBends: 'seq', seqNeighbours: 3, seqWiden: true, seqGate: 'region', seqScore: 'region' },
-  // the pointer read as a REGION (lane s7region, 2026-10-21: shade and sidewalks beside the hallway)
-  routeMatchTeeAxisBadgePriorRegion: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', sensor: 'region' },
-  routeMatchTeeAxisBadgePriorRegionAll: { straightFromS6: true, secondBendRefine: 'coordWide', tableSearch: 'lean', refineUnits: 'px', secondBendGrid: 'coarse', stationsUnits: 'r1', straightSecondBend: true, placeAxis: true, firstBend: 'badgePrior', sensor: 'regionAll' }
+  routeMatch: {'fn.q.match.placeBends': {axis: false}, 'fn.q.match.refine': {units: 'r1'}, 'fn.q.match.secondBendRefine': {grid: 'fine'}, 'fn.q.match.secondBendScan': {grid: 'fine'}, 'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', stationsUnits: 'px', straightSecondBend: false, tableSearch: 'full'}},
+  routeMatchS6straight: {'fn.q.match.placeBends': {axis: false}, 'fn.q.match.refine': {units: 'r1'}, 'fn.q.match.secondBendRefine': {grid: 'fine'}, 'fn.q.match.secondBendScan': {grid: 'fine'}, 'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', stationsUnits: 'px', straightSecondBend: false, tableSearch: 'full'}},
+  routeMatchS6CoordWide: {'fn.q.match.placeBends': {axis: false}, 'fn.q.match.refine': {units: 'r1'}, 'fn.q.match.secondBendRefine': {grid: 'fine'}, 'fn.q.match.secondBendScan': {grid: 'fine'}, 'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', stationsUnits: 'px', straightSecondBend: false, tableSearch: 'full'}},
+  routeMatchS6Dense: {'fn.q.match.placeBends': {axis: false}, 'fn.q.match.refine': {units: 'r1'}, 'fn.q.match.secondBendRefine': {grid: 'fine', refine: 'dense'}, 'fn.q.match.secondBendScan': {grid: 'fine'}, 'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', stationsUnits: 'px', straightSecondBend: false, tableSearch: 'full'}},
+  routeMatchS6PxDense: {'fn.q.match.placeBends': {axis: false}, 'fn.q.match.secondBendRefine': {grid: 'fine', refine: 'dense'}, 'fn.q.match.secondBendScan': {grid: 'fine'}, 'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', stationsUnits: 'px', straightSecondBend: false, tableSearch: 'full', tableUnits: 'px'}},
+  routeMatchDenseSecondBend: {'fn.q.match.placeBends': {axis: false}, 'fn.q.match.refine': {units: 'r1'}, 'fn.q.match.secondBendRefine': {grid: 'fine', refine: 'dense'}, 'fn.q.match.secondBendScan': {grid: 'fine'}, 'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', stationsUnits: 'px', straightSecondBend: false, tableSearch: 'full'}},
+  routeMatchPxRefine: {'fn.q.match.placeBends': {axis: false}, 'fn.q.match.secondBendRefine': {grid: 'fine'}, 'fn.q.match.secondBendScan': {grid: 'fine'}, 'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', stationsUnits: 'px', straightSecondBend: false, tableSearch: 'full'}},
+  routeMatchPxTable: {'fn.q.match.placeBends': {axis: false}, 'fn.q.match.secondBendRefine': {grid: 'fine'}, 'fn.q.match.secondBendScan': {grid: 'fine'}, 'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', stationsUnits: 'px', straightSecondBend: false, tableSearch: 'full', tableUnits: 'px'}},
+  routeMatchFast: {'fn.q.match.placeBends': {axis: false}, 'fn.q.match.refine': {units: 'r1'}, 'fn.q.match.secondBendRefine': {grid: 'fine'}, 'fn.q.match.secondBendScan': {grid: 'fine'}, 'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', stationsUnits: 'px', straightSecondBend: false, tableSearch: 'fast'}},
+  routeMatchFastPxRefine: {'fn.q.match.placeBends': {axis: false}, 'fn.q.match.secondBendRefine': {grid: 'fine'}, 'fn.q.match.secondBendScan': {grid: 'fine'}, 'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', stationsUnits: 'px', straightSecondBend: false, tableSearch: 'fast'}},
+  routeMatchLean: {'fn.q.match.placeBends': {axis: false}, 'fn.q.match.refine': {units: 'r1'}, 'fn.q.match.secondBendRefine': {grid: 'fine'}, 'fn.q.match.secondBendScan': {grid: 'fine'}, 'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', stationsUnits: 'px', straightSecondBend: false, tableSearch: 'lean'}},
+  routeMatchLeanPxRefine: {'fn.q.match.placeBends': {axis: false}, 'fn.q.match.secondBendRefine': {grid: 'fine'}, 'fn.q.match.secondBendScan': {grid: 'fine'}, 'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', stationsUnits: 'px', straightSecondBend: false, tableSearch: 'lean'}},
+  routeMatchLeanCoarse2: {'fn.q.match.placeBends': {axis: false}, 'fn.q.match.refine': {units: 'r1'}, 'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', stationsUnits: 'px', straightSecondBend: false, tableSearch: 'lean'}},
+  routeMatchLeanPxRefineCoarse2: {'fn.q.match.placeBends': {axis: false}, 'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', stationsUnits: 'px', straightSecondBend: false, tableSearch: 'lean'}},
+  routeMatchBadgeMid: {'fn.q.match.placeBends': {axis: false}, 'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', stationsUnits: 'px', straightSecondBend: false}},
+  routeMatchBadgeMidPinned: {'fn.q.match.placeBends': {axis: false}, 'fn.q.match.secondBendRefine': {b1: 'badge'}, 'fn.q.match.secondBendScan': {b1: 'badge'}, 'fn.q.trace.routeMatch': {firstBend: 'badge', kBends: 'off', stationsUnits: 'px', straightSecondBend: false}},
+  routeMatchLeanBadgeMid2: {'fn.q.match.placeBends': {axis: false}, 'fn.q.match.secondBendRefine': {b1: 'badge'}, 'fn.q.match.secondBendScan': {b1: 'badge'}, 'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', stationsUnits: 'px', straightSecondBend: false, tableSearch: 'lean'}},
+  routeMatchLeanBadgePrior: {'fn.q.match.placeBends': {axis: false}, 'fn.q.trace.routeMatch': {kBends: 'off', stationsUnits: 'px', straightSecondBend: false, tableSearch: 'lean'}},
+  routeMatchBadgeMidPrior: {'fn.q.match.placeBends': {axis: false}, 'fn.q.trace.routeMatch': {kBends: 'off', stationsUnits: 'px', straightSecondBend: false}},
+  routeMatchLeanPxRefineCoarse2R1St: {'fn.q.match.placeBends': {axis: false}, 'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', straightSecondBend: false, tableSearch: 'lean'}},
+  routeMatchLeanPxRefineCoarse2StraightB2: {'fn.q.match.placeBends': {axis: false}, 'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', stationsUnits: 'px', tableSearch: 'lean'}},
+  routeMatchLeanPxRefineCoarse2AxisB1: {'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', stationsUnits: 'px', straightSecondBend: false, tableSearch: 'lean'}},
+  routeMatchLeanPxRefineCoarse2TeeAxis: {'fn.q.trace.routeMatch': {firstBend: 'free', kBends: 'off', tableSearch: 'lean'}},
+  routeMatchTeeAxisBadgePrior: {'fn.q.trace.routeMatch': {kBends: 'off', tableSearch: 'lean'}},
+  routeMatchBadgeMidTeeAxisPrior: {'fn.q.trace.routeMatch': {kBends: 'off'}},
+  routeMatchKBends: {'fn.q.trace.routeMatch': {kBends: 'bottleneck', tableSearch: 'lean'}},
+  routeMatchKBendsSeq: {'fn.q.trace.seqCells': {follow: 'off', neighbours: 5, own: false, refineStarts: 1, turnKappa: 0, widen: false}},
+  routeMatchKBendsSeq3: {'fn.q.trace.seqCells': {follow: 'off', own: false, refineStarts: 1, turnKappa: 0}},
+  routeMatchKBendsSeq3Search: {'fn.q.trace.seqCells': {follow: 'px', refineStarts: 1}},
+  routeMatchKBendsSeq3SearchW: {},
+  routeMatchKBendsSeq3SearchWEvidence: {'fn.q.trace.routeMatch': {evidenceRank: true}},
+  routeMatchKBendsSeq3SearchWFirstLegs: {'fn.q.trace.seqCells': {firstLegs: true}},
+  routeMatchKBendsSeq3SearchW16: {'fn.q.match.followW': {vertexStepW: 1 / 16}, 'fn.q.trace.seqCells': {refineStarts: 1}},
+  routeMatchKBendsSeq3SearchWK: {'fn.q.trace.seqCells': {kUnits: 'w', refineStarts: 1}},
+  routeMatchKBendsSeq3RegionGate: {'fn.q.trace.seqCells': {follow: 'off', gate: 'region', own: false, refineStarts: 1, turnKappa: 0}},
+  routeMatchKBendsSeq3RegionScore: {'fn.q.trace.seqCells': {follow: 'off', own: false, refineStarts: 1, score: 'region', turnKappa: 0}},
+  routeMatchKBendsSeq3RegionWiden: {'fn.q.trace.seqCells': {follow: 'off', gate: 'regionWiden', own: false, refineStarts: 1, turnKappa: 0}},
+  routeMatchKBendsSeq3Region: {'fn.q.trace.seqCells': {follow: 'off', gate: 'region', own: false, refineStarts: 1, score: 'region', turnKappa: 0}},
+  routeMatchTeeAxisBadgePriorRegion: {'fn.q.trace.routeMatch': {kBends: 'off', sensor: 'region', tableSearch: 'lean'}},
+  routeMatchTeeAxisBadgePriorRegionAll: {'fn.q.trace.routeMatch': {kBends: 'off', sensor: 'regionAll', tableSearch: 'lean'}}
 });
 
 /**
@@ -369,7 +487,7 @@ export const PROFILES = Object.freeze({
  * the faster rule sets on every judged dev course (agreement and bends) and gets Sam's six validation holes right (Beaver
  * 4/19, Coleto 10/11/18, SeaTac 19), which they do not; a variant that beats it on a judged course still wins.
  */
-export const S7_DEFAULT = 'routeMatchKBendsSeq3SearchW';
+export const S7_DEFAULT = 'routeMatchKBendsSeq3SearchW';   // its config is {}: every declared knob's default is its value
 /**
  * The S7 variants `pxc state --retest` runs: the quick rule sets plus the pinned prototype (1 ms). The old tracers (badgeOnly,
  * endpoints, s3first*: 2-8 min each per course, beaten on every judged course) and the slow rule sets (px table, dense second
@@ -379,29 +497,27 @@ export const RETEST_S7_VARIANTS = Object.freeze(['pinned', ...PROFILES.quick]);
 export const profileOf = (name) => (PROFILES[name] ?? String(name ?? '').split(',').map((s) => s.trim()).filter((s) => s in RULE_SETS));
 
 /**
- * The options that shape the sequencing's cells (seqCellsOf), keys sorted: the final assignment's own options (seqScore 'evidence'
- * and its weights) left out, so the S7 default and its evidence sibling ask the store for the same cells.
+ * The matching. knobs: fn.q.trace.routeMatch's (ROUTE_MATCH_ARGS, resolved); steps: the per-step calls (the store's fn.q.match.*,
+ * each resolving its own knobs, or stepsOf(config)), plus steps.seqCells() (the sequencing step) and steps.evidenceRank(cells).
+ * Direct calls without a store: { config } (a sparse { fn: { knob } } config: RULE_SETS.<name>) or { rules } (a recorded rule
+ * set's options, read by configOfRules).
  */
-export const FINAL_ONLY = Object.freeze(['evidenceWeights']);
-export function cellRulesOf(rules) {
-  const r = { ...MATCH_RULES, ...(rules ?? {}) };
-  if (r.seqScore === 'evidence') delete r.seqScore;
-  for (const k of FINAL_ONLY) delete r[k];
-  return Object.fromEntries(Object.keys(r).sort().map((k) => [k, r[k]]));
-}
-
-export function routeMatchOf(table, S, starts, { secondBends = true, straight: verdicts = undefined, steps = MATCH_STEPS, rules = MATCH_RULES, regionSteps = null, firstLegs = null } = {}) {
+export function routeMatchOf(table, S, starts, { straight: verdicts = undefined, steps = null, knobs = null, config = null, rules = null, regionSteps = null, firstLegs = null, seqKnobs = null } = {}) {
+  const cfg = config ?? (rules ? configOfRules(rules) : {});
+  const rk = knobs ?? knobsOf(ROUTE_MATCH_ARGS, cfg[RM_FN]);
+  steps ??= stepsOf(cfg);
+  const secondBends = rk.secondBends, minSt = minStationsOf(S, rk.stationsUnits);
   const W = table.widthPx, holes = table.holes;
   if (!(W > 0) || !holes.length) return { holes: {}, assignment: [], widthPx: W ?? null, condition: 'no hallway width or no holes in the route table' };
-  const kb = rules.kBends === 'bottleneck', seq = rules.kBends === 'seq', violated = [];
+  const kb = rk.kBends === 'bottleneck', seq = rk.kBends === 'seq', violated = [];
   // kBends: every cell's K <= 1 routes under the weakest-leg cost (one profiled call per cell), else the table's contrast
   const startOf = (hole) => starts.holes.find((h) => String(h.hole) === String(hole));
   const legsOf = (Sc, V, Wd) => steps.kLegs(Sc, V, Wd), legsMany = (Sc, Vs, Wd) => steps.kLegsMany(Sc, Vs, Wd);
   const kCells = kb ? holes.map((hole, i) => table.baskets.map((b, k) => { const kc = kCellAt(S, startOf(hole), b.point ?? table.rows[i].cells[k].contrast.verts.at(-1), W, { legsOf, legsMany }); if (kc.violation) violated.push({ ...kc.violation, hole, basket: k }); return kc; })) : null;
   // the sequencing's cells (steps.seqCells: a store call shared by every rule set with the same cells), then its final
   // assignment; seqScore 'evidence' ranks the cells by the combined evidence (steps.evidenceRank, evidenceSpace.mjs)
-  const sqArgs = { table, holes, S, W, startOf, verdicts, steps, legsOf, legsMany, rules, regionSteps, firstLegs };
-  const sq = seq ? seqFinalOf(steps.seqCells ? steps.seqCells(rules) : seqCellsOf(sqArgs), { ...sqArgs, rescore: rules.seqScore === 'evidence' && steps.evidenceRank ? (c) => steps.evidenceRank(c, rules) : null }) : null;
+  const sqArgs = { table, holes, S, W, startOf, verdicts, steps, legsOf, legsMany, regionSteps, firstLegs, knobs: seqKnobs ?? knobsOf(SEQ_CELLS_ARGS, cfg[SEQ_FN]) };
+  const sq = seq ? seqFinalOf(steps.seqCells ? steps.seqCells() : seqCellsOf(sqArgs), { ...sqArgs, rescore: rk.evidenceRank && steps.evidenceRank ? (c) => steps.evidenceRank(c) : null }) : null;
   const score = sq ? sq.score : kb ? kCells.map((row, i) => row.map((x, k) => (x.best.bottleneck === null ? MATCH.noReadingLum : x.best.bottleneck) + (table.onAxisPrior[i]?.[k] ?? 0)))
     : table.contrastMatrix.map((row, i) => row.map((c, k) => (c === null ? MATCH.noReadingLum : c) + (table.onAxisPrior[i]?.[k] ?? 0)));
   const pairs = sq ? sq.pairs : assignMinCost(score.map((row) => row.map((v) => -v)));
@@ -411,23 +527,23 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
     const sorted = [...score[i]].sort((a, b) => b - a);
     const E = table.baskets[k].point ?? cell.contrast.verts.at(-1);
     let V = (sq ? sq.route[hole] : kb ? kCells[i][k].best.verts : cell.contrast.verts).map((v) => v.slice());
-    const s6Straight = rules.straightFromS6 && verdicts && verdicts[hole] === 'straight';
+    const s6Straight = rk.straightFromS6 && verdicts && verdicts[hole] === 'straight';
     // firstBend 'badge': a route through B* keeps it (no refine slide; the bend placement below leaves it where it is)
-    const pinB = rules.firstBend === 'badge' && V.length === 3 ? badgeMidOf(start) : null;
-    if (V.length === 3 && !s6Straight && !pinB && !kb && !sq) V = steps.refine(S, V, W, start.u, rules);
+    const pinB = rk.firstBend === 'badge' && V.length === 3 ? badgeMidOf(start) : null;
+    if (V.length === 3 && !s6Straight && !pinB && !kb && !sq) V = steps.refine(S, V, W, start.u);
     const straight = steps.sensor(S, [start.S, E], W);
     let rec;
     if (s6Straight) {
       rec = { verts: [start.S, E], how: `straight: S6 reads the hole straight (rule straightFromS6); sensor ${straight.passFrac.toFixed(2)} on ${straight.stations} st`, sensor: straight };
-    } else if (straight.stations >= minStationsOf(S, rules) && straight.passFrac >= MATCH.tau) {
+    } else if (straight.stations >= minSt && straight.passFrac >= MATCH.tau) {
       rec = { verts: [start.S, E], how: `straight: sensor ${straight.passFrac.toFixed(2)} on ${straight.stations} st`, sensor: straight };
     } else {
       const r1 = steps.sensor(S, V, W);
       rec = { verts: V, how: `contrast route (${V.length - 2} bends): sensor ${r1.passFrac.toFixed(2)}; straight read ${straight.passFrac.toFixed(2)}`, sensor: r1 };
       // straightSecondBend: a straight contrast route the sensor rejects seeds B1 on the tee axis 0.5 W past the badge
-      const seed = V.length === 2 && rules.straightSecondBend ? (() => { const t = start.badgeAlongPx + ROUTE.bendFromBadgeW * W; return [start.S, [start.S[0] + start.u[0] * t, start.S[1] + start.u[1] * t], E]; })() : V;
+      const seed = V.length === 2 && rk.straightSecondBend ? (() => { const t = start.badgeAlongPx + ROUTE.bendFromBadgeW * W; return [start.S, [start.S[0] + start.u[0] * t, start.S[1] + start.u[1] * t], E]; })() : V;
       if (secondBends && seed.length === 3 && r1.passFrac < MATCH.tau) {
-        const b2 = secondBend(S, start, seed, E, W, r1.passFrac, rules, steps);
+        const b2 = secondBend(S, start, seed, E, W, r1.passFrac, minSt, steps);
         rec = b2.accepted ? { verts: b2.verts, how: `2-bend accepted: ${b2.note}`, sensor: b2.sensor, secondBend: true } : { ...rec, how: `${rec.how}; 2-bend rejected: ${b2.note}` };
       }
     }
@@ -436,19 +552,20 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
       if (verdicts === null) rec = { ...rec, bendsRefined: { taken: false, why: 'no S6 straight verdict on record: bend placement not run' } };
       else {
         // rule-set options of the placement, passed only when set (the recorded rule's calls keep their arguments)
-        const placeOpts = { ...(rules.stationsUnits === 'r1' ? { minStations: minStationsOf(S, rules) } : {}), ...(rules.placeAxis ? { axis: start.u } : {}) };
-        let r = Object.keys(placeOpts).length ? steps.placeBends(S, rec.verts, W, verdicts[hole] === 'straight', placeOpts) : steps.placeBends(S, rec.verts, W, verdicts[hole] === 'straight');
+        // the placement's own knobs (axis, gain) are its declared args; it is handed the floor and the tee axis
+        const placeOpts = { ...(rk.stationsUnits === 'r1' ? { minStations: minSt } : {}), axisU: start.u };
+        let r = steps.placeBends(S, rec.verts, W, verdicts[hole] === 'straight', placeOpts);
         if (r.assumptions) violated.push(...r.assumptions.map((v) => ({ ...v, hole, step: 'bend placement' })));
         if (pinB && r.taken && rec.verts.length >= 3 && r.verts.length === rec.verts.length) r = { ...r, verts: [r.verts[0], rec.verts[1], ...r.verts.slice(2)], why: `${r.why}; the first bend kept at B* (rule firstBend badge)` };
         rec = { ...rec, verts: r.verts, how: `${rec.how} | bends ${r.taken ? 'placed' : 'kept'}: ${r.why}`, sensor: r.taken ? steps.sensor(S, r.verts, W) : rec.sensor,
           bendsRefined: { taken: r.taken, why: r.why, bendsBefore: r.K0, bendsAfter: r.taken ? r.K1 : r.K0, samples: r.samples ?? null, before: before.slice(1, -1) } };
       }
     }
-    if (rules.firstBend === 'badgePrior' && rec.verts.length >= 3) {
+    if (rk.firstBend === 'badgePrior' && rec.verts.length >= 3) {
       // the badge-midpoint prior: the first bend moves to B* when the sensor reads no worse there (within MATCH.priorDrop, on
       // >= the rule set's station floor, minStationsOf); the route's other vertices stay
       const Vb = [rec.verts[0], badgeMidOf(start), ...rec.verts.slice(2)], rb = steps.sensor(S, Vb, W);
-      if (rb.stations >= minStationsOf(S, rules) && rb.passFrac >= rec.sensor.passFrac - MATCH.priorDrop)
+      if (rb.stations >= minSt && rb.passFrac >= rec.sensor.passFrac - MATCH.priorDrop)
         rec = { ...rec, verts: Vb, sensor: rb, how: `${rec.how} | first bend at B* (badge-midpoint prior): sensor ${rec.sensor.passFrac.toFixed(2)} -> ${rb.passFrac.toFixed(2)} on ${rb.stations} st` };
     }
     if (sq) {
@@ -465,7 +582,7 @@ export function routeMatchOf(table, S, starts, { secondBends = true, straight: v
       pair: { basket: k, scoreLum: score[i][k], marginLum: sorted[0] === score[i][k] ? sorted[0] - (sorted[1] ?? sorted[0]) : score[i][k] - sorted[0], onAxisPrior: table.onAxisPrior[i]?.[k] ?? 0 } };
     assignment.push({ hole, basket: k, scoreLum: score[i][k], bends: rec.verts.length - 2, sensor: rec.sensor.passFrac, stations: rec.sensor.stations });
   }
-  if (kb && secondBends) kBendsPass({ out, assignment, holes, table, score, kCells, S, W, startOf, steps, rules, legsOf });
+  if (kb && secondBends) kBendsPass({ out, assignment, holes, table, score, kCells, S, W, startOf, steps, floor: minSt, legsOf });
   if (sq) for (const h of Object.keys(out)) out[h] = { ...out[h], how: `${sq.why[h]} | ${out[h].how}`, seq: sq.record[h] ?? null };
   if (sq?.violations?.length) violated.push(...sq.violations);
   // the stated assumptions (fg/assumptions.mjs) a search of this solve hit, each with what its widening found
@@ -487,23 +604,23 @@ export function seqAssign(args) { return seqFinalOf(seqCellsOf(args), args); }
  * A pure answer: seqFinalOf never mutates it, so the S7 store serves it once (fn.q.trace.seqCells) to every rule set that
  * shares these cells (the S7 default and its evidence sibling).
  */
-export function seqCellsOf({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsMany, rules = MATCH_RULES, regionSteps = null, firstLegs = null }) {
+export function seqCellsOf({ table, holes, S, W, startOf, verdicts, steps, legsOf, legsMany, knobs: kn = knobsOf(SEQ_CELLS_ARGS), regionSteps = null, firstLegs = null }) {
   const violations = [];   // the stated assumptions (fg/assumptions.mjs) this sequencing's searches hit
   // seqGate 'region': the sequencing's sensor gates (chain trigger, chain vs K <= 1, the per-bend gain, the widening) read the
   // hallway REGION passFrac (regionSpace.mjs); seqScore 'region': each cell is assigned by the region support of its route.
   // Bends are always found and placed on edges (the region support is flat along a bend axis)
-  const rg = (rules.seqGate === 'region' || rules.seqGate === 'regionWiden' || rules.seqScore === 'region') && regionSteps ? regionSteps : null;
+  const rg = (kn.gate === 'region' || kn.gate === 'regionWiden' || kn.score === 'region') && regionSteps ? regionSteps : null;
   // seqGate 'regionWiden': only the widening gate reads the region (the chain gates stay on edges)
-  const widenGateOf = (V) => (rules.seqGate === 'regionWiden' && rg ? rg.sensor(S, V, W).passFrac : gateOf(V));
-  const gateOf = (V) => (rules.seqGate === 'region' && rg ? rg.sensor(S, V, W) : steps.sensor(S, V, W)).passFrac;
-  const regionScore = rules.seqScore === 'region' && rg;
-  const kappa = rules.seqTurnKappa ?? 0;
-  const unitPx = rules.kUnits === 'w' ? W / KBENDS.goldenWPerR1 : null;   // kUnits 'w': the K-bend search's hallway steps in W
+  const widenGateOf = (V) => (kn.gate === 'regionWiden' && rg ? rg.sensor(S, V, W).passFrac : gateOf(V));
+  const gateOf = (V) => (kn.gate === 'region' && rg ? rg.sensor(S, V, W) : steps.sensor(S, V, W)).passFrac;
+  const regionScore = kn.score === 'region' && rg;
+  const kappa = kn.turnKappa;
+  const unitPx = kn.kUnits === 'w' ? W / KBENDS.goldenWPerR1 : null;   // kUnits 'w': the K-bend search's hallway steps in W
   const valueOf = (best) => (!best ? -Infinity : regionScore ? rg.contrast(S, best.verts, W) : best.bottleneck - turnCostOf(best.verts, kappa));
   const bp = table.baskets.map((b, k) => b.point ?? table.rows[0].cells[k].contrast.verts.at(-1)), starts = holes.map((h) => startOf(h));
   // seqFirstLegs (firstLegs.mjs): every hole's first leg (tee cap -> B*) is owned from the start, and its badge plate is foreign to
   // every other hole: a route may cross another hole's first leg but not run along it, and may not pass over its badge plate
-  const FL = rules.seqFirstLegs && firstLegs?.holes ? firstLegs : null, plates0 = FL ? FL.plates : null;
+  const FL = kn.firstLegs && firstLegs?.holes ? firstLegs : null, plates0 = FL ? FL.plates : null;
   // a hole whose own first leg passes over another hole's badge plate contradicts the skeleton (tee -> its badge -> B*): its tee's
   // badge association is the suspect, so its first leg is owned by nobody and the rules do not bind its routes (a recorded condition)
   const contradicted = new Set(FL ? FL.holes.filter((g) => FL.plates.some((p) => p.hole !== String(g.hole) && segmentHitsBox(g.leg[0], g.leg[1], p.box))).map((g) => String(g.hole)) : []);
@@ -517,10 +634,10 @@ export function seqCellsOf({ table, holes, S, W, startOf, verdicts, steps, legsO
   const nb = neighbourhoodsOf(starts.filter((s) => claims.claims[s.hole] === undefined), bp, claims.claimed);
   // seqNeighbours: the ranks scored first (default all SEQ.neighbours); seqWiden: a hole whose assigned route fails the sensor
   // gate re-solves with the rest of its ranks from the unclaimed pool (S1-S3 a fast first pass, S4 recovers)
-  const first = Math.min(rules.seqNeighbours ?? SEQ.neighbours, SEQ.neighbours);
+  const first = Math.min(kn.neighbours, SEQ.neighbours);
   const score = holes.map(() => bp.map(() => -Infinity)), route = {}, why = {}, record = {}, cells = {}, pend = [], cap = holes.map(() => -Infinity), rejectedOf = {};
   const addCell = (h, i, c) => {
-    const k = c.basket, foreign = foreignOf(i, k), kc = kCellAt(S, starts[i], bp[k], W, { legsMany, foreign, unitPx, ...(bound(h) ? { owned: ownedFor(h) } : {}), ...(rules.kRefineStarts ? { refineStarts: rules.kRefineStarts } : {}) });
+    const k = c.basket, foreign = foreignOf(i, k), kc = kCellAt(S, starts[i], bp[k], W, { legsMany, foreign, unitPx, ...(bound(h) ? { owned: ownedFor(h) } : {}), refineStarts: kn.refineStarts });
     if (kc.violation) violations.push({ ...kc.violation, hole: holes[i], basket: k });
     if (kc.firstCap > cap[i]) cap[i] = kc.firstCap;
     const s1 = kc.best.bottleneck === null ? null : gateOf(kc.best.verts);
@@ -531,8 +648,8 @@ export function seqCellsOf({ table, holes, S, W, startOf, verdicts, steps, legsO
   // ownCorridors: confirmed routes own their corridors (state passed forward, the pads-owned pattern): the straight claims from the
   // start, then (after the first solve) every hole whose assigned route passes the sensor gate
   const owned = new Map();
-  if (rules.seqOwn) holes.forEach((h, i) => { if (claims.claims[h] !== undefined) owned.set(h, [starts[i].S, bp[claims.claims[h]]]); });
-  const ownedFor = (h) => (FL ? [...(rules.seqOwn ? [...owned].filter(([o]) => o !== h).map(([, V]) => V) : []), ...firstLegsBut(h)] : rules.seqOwn ? [...owned].filter(([o]) => o !== h).map(([, V]) => V) : null);
+  if (kn.own) holes.forEach((h, i) => { if (claims.claims[h] !== undefined) owned.set(h, [starts[i].S, bp[claims.claims[h]]]); });
+  const ownedFor = (h) => (FL ? [...(kn.own ? [...owned].filter(([o]) => o !== h).map(([, V]) => V) : []), ...firstLegsBut(h)] : kn.own ? [...owned].filter(([o]) => o !== h).map(([, V]) => V) : null);
   holes.forEach((h, i) => {
     if (claims.claims[h] !== undefined) { const k = claims.claims[h]; score[i][k] = 0; route[`${h}@${k}`] = [starts[i].S, bp[k]]; why[h] = claims.rows.find((r) => r.hole === h).why; record[h] = { claimed: k }; return; }
     const cands = nb[h] ?? [];
@@ -550,7 +667,7 @@ export function seqCellsOf({ table, holes, S, W, startOf, verdicts, steps, legsO
   // unread legs: the weakest leg alone cannot place it). endR1: the coarse pass ranks cells; the assigned ones are re-run fine
   const chainOf = (cell, endR1, gridR1) => {
     const ch = kChainAt(S, starts[cell.i], bp[cell.k], W, { legsMany, one: cell.kc.one, foreign: cell.foreign, sensorOf: gateOf, endR1, gridR1, unitPx,
-      ...(rules.seqPolish ? { polishEach: true, firstCap: cap[cell.i] } : {}), ...(cell.owned?.length ? { owned: cell.owned } : {}), ...(kappa ? { turnKappa: kappa } : {}) });
+      ...(kn.polish ? { polishEach: true, firstCap: cap[cell.i] } : {}), ...(cell.owned?.length ? { owned: cell.owned } : {}), ...(kappa ? { turnKappa: kappa } : {}), bendGain: kn.bendGain });
     const k1 = cell.kc.best.bottleneck === null ? null : cell.kc.best;
     const v = (r) => r.bottleneck - turnCostOf(r.verts, kappa);
     const takeChain = ch && ch.bottleneck !== null && (!k1 || (v(ch) > v(k1) && gateOf(ch.verts) > cell.s1));
@@ -580,7 +697,7 @@ export function seqCellsOf({ table, holes, S, W, startOf, verdicts, steps, legsO
     return A;
   };
   const A0 = solve(), widened = [];
-  if (rules.seqWiden && first < SEQ.neighbours) {
+  if (kn.widen && first < SEQ.neighbours) {
     const byHole = new Map(A0.pairs.map(([i, k]) => [i, k]));
     holes.forEach((h, i) => {
       if (claims.claims[h] !== undefined) return;
@@ -595,7 +712,7 @@ export function seqCellsOf({ table, holes, S, W, startOf, verdicts, steps, legsO
     if (widened.length) solve();
   }
   let reowned = [];
-  if (rules.seqOwn) {
+  if (kn.own) {
     // the confirmed holes (assigned route passes the gate) own their corridors; the others re-search their chains around them
     const A = assignNow(), byHole = new Map(A.pairs.map(([i, k]) => [i, k])), unconfirmed = [];
     holes.forEach((h, i) => {
@@ -610,33 +727,27 @@ export function seqCellsOf({ table, holes, S, W, startOf, verdicts, steps, legsO
     if (reowned.length) solve();
   }
   const followed = [];
-  if (rules.seqFollow) {
+  if (kn.follow !== 'off') {
     // ride the ribbon (the S7 doctrine: "find the path signal and ride it"): every bent hole whose assigned route still fails
     // the gate runs the hallway follower from its tee cap along the tee axis; a route that reaches a BasketPoint competes for
     // that cell under the same rules as a chain (no foreign C1 disc, no owned corridor, value and per-bend sensor gain)
     const A = assignNow(), byHole = new Map(A.pairs.map(([i, k]) => [i, k]));
-    // the follower's steps, each a profiled store call: the prototype's px resolutions, or (seqFollow 'w') fractions of W
-    const res0 = { ...FOLLOW_W, ...(rules.followRes ?? {}) };
-    const followStepsOf = (res) => (rules.seqFollow === 'w' ? {
-      // the run and the bend read no reach: they are asked without it, so a widened re-trace re-asks the same (cached) steps
-      runEnd: (Sc, O, phi, Wd, t0) => steps.followRunEndW(Sc, O, phi, Wd, t0, stepResOf(res)), closeOnBp: (Sc, O, phi, Wd, tEnd, used) => steps.followCloseOnBpW(Sc, O, phi, Wd, tEnd, used, res),
-      onLeg: (Sc, O, phi, Wd, tEnd, used) => bpOnLegW(Sc, O, phi, Wd, tEnd, used, res),
-      findBend: (Sc, O, phi, Wd, tEnd, selfC, tees) => findBendW(Sc, O, phi, Wd, tEnd, selfC, tees, (Sx, Ox, px, Wx, tv, sC, tz, psis) => steps.followBendAtW(Sx, Ox, px, Wx, tv, sC, tz, psis, stepResOf(res)), res) } : {
-      runEnd: (Sc, O, phi, Wd, t0) => steps.followRunEnd(Sc, O, phi, Wd, t0), closeOnBp: (Sc, O, phi, Wd, tEnd, used) => steps.followCloseOnBp(Sc, O, phi, Wd, tEnd, used),
-      findBendAt: (Sc, O, phi, Wd, tv, selfC, tees) => steps.followBendAt(Sc, O, phi, Wd, tv, selfC, tees) });
+    // follow 'w': the step fn.q.match.followW (its resolutions are its own knobs); 'px': the prototype's px steps
+    const pxSteps = { runEnd: (Sc, O, phi, Wd, t0) => steps.followRunEnd(Sc, O, phi, Wd, t0), closeOnBp: (Sc, O, phi, Wd, tEnd, used) => steps.followCloseOnBp(Sc, O, phi, Wd, tEnd, used),
+      findBendAt: (Sc, O, phi, Wd, tv, selfC, tees) => steps.followBendAt(Sc, O, phi, Wd, tv, selfC, tees) };
     holes.forEach((h, i) => {
       if (claims.claims[h] !== undefined) return;
       const k0 = byHole.get(i), cur = k0 === undefined ? null : pend.find((c) => c.i === i && c.k === k0);
       if (cur?.best && gateOf(cur.best.verts) >= MATCH.tau) return;
-      const st = starts[i], follow = (res) => followHallway(S, st.S, Math.atan2(st.u[1], st.u[0]), W, { maxLegs: SEQ.followLegs, steps: followStepsOf(res) });
+      const st = starts[i], phi = Math.atan2(st.u[1], st.u[0]);
       // the follower in W closes on BasketPoints within the CLOSE_ON_BP_REACH assumption: a trace that ends without one is a
       // violation, and it re-traces with the reach widened (x2, up to the image diagonal); the px follower keeps its recorded 8 W
       let fr;
-      if (rules.seqFollow === 'w') {
+      if (kn.follow === 'w') {
         const u = underAssumption(CLOSE_ON_BP_REACH, { unitPx: S.R1, limitPx: Math.hypot(S.W, S.H), detail: { hole: h, step: 'hallway follower' },
-          run: (b) => { const t = follow({ ...res0, closeReachR1: b / S.R1 }); return { result: t, found: t.end !== null && t.end !== undefined, atEdge: false, at: t.end ?? null }; } });
+          run: (b) => { const t = steps.followW(S, st.S, phi, W, b / S.R1, SEQ.followLegs); return { result: t, found: t.end !== null && t.end !== undefined, atEdge: false, at: t.end ?? null }; } });
         fr = u.result; if (u.violation) violations.push(u.violation);
-      } else fr = follow(res0);
+      } else fr = followHallway(S, st.S, phi, W, { maxLegs: SEQ.followLegs, steps: pxSteps });
       if (fr.end === null || fr.end === undefined) { record[h].follow = { reached: null, why: 'the follower lost the ribbon' }; return; }
       const k = fr.end, V = fr.verts, foreign = foreignOf(i, k), ow = ownedFor(h);
       const crosses = V.slice(1).some((b, q) => ringCrossed(V[q], b, foreign) >= 0), along = ow && V.slice(1).some((b, q) => legRunsAlong(V[q], b, ow, W));
@@ -650,7 +761,7 @@ export function seqCellsOf({ table, holes, S, W, startOf, verdicts, steps, legsO
       const fb = fb0.bottleneck !== null ? polishAt(S, fb0, W, { legsMany, start: st, foreign, owned: ow, unitPx }) : fb0;
       const sf = gateOf(fb.verts), k1 = cell.kc.best.bottleneck === null ? null : cell.kc.best;
       const vf = fb.bottleneck === null ? -Infinity : fb.bottleneck - turnCostOf(fb.verts, kappa), vc = cell.best ? cell.best.bottleneck - turnCostOf(cell.best.verts, kappa) : -Infinity;
-      const gainOk = !k1 || sf > (cell.s1 ?? 0) + BENDS_GATE_GAIN * (fb.verts.length - k1.verts.length);
+      const gainOk = !k1 || sf > (cell.s1 ?? 0) + kn.bendGain * (fb.verts.length - k1.verts.length);
       const win = fb.bottleneck !== null && vf > vc && gainOk;
       record[h].follow = { reached: k, bends: V.length - 2, weakestLegLum: fb.bottleneck === null ? null : +fb.bottleneck.toFixed(1), sensor: +sf.toFixed(2), taken: win };
       if (win) { cell.best = fb; cell.pending = false; cell.coarse = false; score[i][k] = valueOf(fb); followed.push(h); }
@@ -672,11 +783,11 @@ export function seqCellsOf({ table, holes, S, W, startOf, verdicts, steps, legsO
     if (claims.claims[h] !== undefined) return;
     const cands = (nb[h] ?? []).filter((c) => record[h].evaluated.includes(c.basket)), rejected = rejectedOf[h], nm = (k) => table.baskets[k]?.name ?? `BP${k}`;
     const po = record[h].pricedOut ?? [], wd = record[h].widened;
-    why[h] = `neighbourhood (joint rank of distance from the tee and from tee ${Number(h) + 1}): ${cands.map((c) => `${nm(c.basket)} r${c.rank}`).join(', ')}${wd ? ` (widened to ranks ${wd.ranks.join(', ')}: the first ${first} ranks' assigned route read ${wd.reading === null ? 'no route' : wd.reading.toFixed(2)} on the ${(rules.seqGate === 'region' || rules.seqGate === 'regionWiden') && rg ? 'region' : 'edge'} sensor, below ${MATCH.tau})` : ''}${rules.seqOwn && reowned.includes(h) ? `; chains re-searched around the corridors of the ${owned.size} confirmed holes (${[...owned.keys()].join(', ')})` : ''}${pend.filter((c) => c.h === h && c.turnNote).map((c) => `; ${nm(c.k)}: ${c.turnNote}`).join('')}${record[h].follow ? `; hallway follower: ${record[h].follow.reached === null ? record[h].follow.why : `${nm(record[h].follow.reached)}${record[h].follow.why ? ` rejected (${record[h].follow.why})` : `, ${record[h].follow.bends} bends, weakest leg ${record[h].follow.weakestLegLum} lum, sensor ${record[h].follow.sensor}${record[h].follow.taken ? ': taken' : ': kept out'}`}`}` : ''}${po.length ? `; chain not searched (priced out: no route of this hole reads above its best first leg, ${po[0].capLum} lum, which is below the cell's price): ${po.map((x) => nm(x.basket)).join(', ')}` : ''}${rejected.length ? `; rejected (every route enters another basket's C1 disc, < 1 R1${FL ? ', passes over another badge plate or runs along another first leg' : ''}): ${rejected.map((x) => `${nm(x.basket)}${x.crosses !== null ? ` (the straight route passes ${nm(x.crosses)} at ${x.clearanceR1} R1)` : x.overBadge !== undefined ? ` (the straight route passes over badge ${x.overBadge})` : x.runsAlong ? ' (the straight route runs along another first leg)' : ''}`).join(', ')}` : ''}`;
+    why[h] = `neighbourhood (joint rank of distance from the tee and from tee ${Number(h) + 1}): ${cands.map((c) => `${nm(c.basket)} r${c.rank}`).join(', ')}${wd ? ` (widened to ranks ${wd.ranks.join(', ')}: the first ${first} ranks' assigned route read ${wd.reading === null ? 'no route' : wd.reading.toFixed(2)} on the ${(kn.gate === 'region' || kn.gate === 'regionWiden') && rg ? 'region' : 'edge'} sensor, below ${MATCH.tau})` : ''}${kn.own && reowned.includes(h) ? `; chains re-searched around the corridors of the ${owned.size} confirmed holes (${[...owned.keys()].join(', ')})` : ''}${pend.filter((c) => c.h === h && c.turnNote).map((c) => `; ${nm(c.k)}: ${c.turnNote}`).join('')}${record[h].follow ? `; hallway follower: ${record[h].follow.reached === null ? record[h].follow.why : `${nm(record[h].follow.reached)}${record[h].follow.why ? ` rejected (${record[h].follow.why})` : `, ${record[h].follow.bends} bends, weakest leg ${record[h].follow.weakestLegLum} lum, sensor ${record[h].follow.sensor}${record[h].follow.taken ? ': taken' : ': kept out'}`}`}` : ''}${po.length ? `; chain not searched (priced out: no route of this hole reads above its best first leg, ${po[0].capLum} lum, which is below the cell's price): ${po.map((x) => nm(x.basket)).join(', ')}` : ''}${rejected.length ? `; rejected (every route enters another basket's C1 disc, < 1 R1${FL ? ', passes over another badge plate or runs along another first leg' : ''}): ${rejected.map((x) => `${nm(x.basket)}${x.crosses !== null ? ` (the straight route passes ${nm(x.crosses)} at ${x.clearanceR1} R1)` : x.overBadge !== undefined ? ` (the straight route passes over badge ${x.overBadge})` : x.runsAlong ? ' (the straight route runs along another first leg)' : ''}`).join(', ')}` : ''}`;
   });
   if (FL) holes.forEach((h) => { if (contradicted.has(String(h))) why[h] = `${why[h] ?? ''}; first legs: hole ${h}'s own first leg (tee cap -> B*) passes over another hole's badge plate, a skeleton contradiction (its tee's badge association is the suspect): the first-leg rules do not bind it`; });
-  return { score, route, why, record, violations, claims: claims.claims, starts, bp, ...(FL ? { plates: plates0, firstLegs: [...firstLegOf].map(([hole, leg]) => ({ hole, leg })), contradicted: [...contradicted] } : {}),
-    summary: { straightClaims: Object.keys(claims.claims).length, bentHoles: Object.keys(nb).length, cellsEvaluated: pend.length, cellsFullTable: holes.length * bp.length, neighbours: first, widened, ...(rules.seqOwn ? { ownedHoles: [...owned.keys()], reownedHoles: reowned } : {}), ...(rules.seqFollow ? { followed } : {}), cellsScored: Object.keys(cells).length, chainsSearched: chainsRun, fineReruns: fineRuns, pricingRounds: rounds, chains: Object.values(cells).filter((c) => c.verts.length >= 4).length } };
+  return { score, route, why, record, violations, claims: claims.claims, starts, bp, knobs: kn, ...(FL ? { plates: plates0, firstLegs: [...firstLegOf].map(([hole, leg]) => ({ hole, leg })), contradicted: [...contradicted] } : {}),
+    summary: { straightClaims: Object.keys(claims.claims).length, bentHoles: Object.keys(nb).length, cellsEvaluated: pend.length, cellsFullTable: holes.length * bp.length, neighbours: first, widened, ...(kn.own ? { ownedHoles: [...owned.keys()], reownedHoles: reowned } : {}), ...(kn.follow !== 'off' ? { followed } : {}), cellsScored: Object.keys(cells).length, chainsSearched: chainsRun, fineReruns: fineRuns, pricingRounds: rounds, chains: Object.values(cells).filter((c) => c.verts.length >= 4).length } };
 }
 
 /**
@@ -685,8 +796,9 @@ export function seqCellsOf({ table, holes, S, W, startOf, verdicts, steps, legsO
  * the evidence sibling's combined evidence, ports/s7route/evidenceSpace.mjs); a cell the value matrix forbids stays forbidden.
  * A hole left without a basket is then assigned among the free baskets by its K <= 1 routes, as before.
  */
-export function seqFinalOf(cells, { holes, S, W, legsMany, rules = MATCH_RULES, rescore = null }) {
-  const { starts, bp } = cells, unitPx = rules.kUnits === 'w' ? W / KBENDS.goldenWPerR1 : null;
+export function seqFinalOf(cells, { holes, S, W, legsMany, rescore = null }) {
+  // the sequencing step's own knobs (cells.knobs) for the holes it left without a basket
+  const { starts, bp } = cells, kn = cells.knobs ?? knobsOf(SEQ_CELLS_ARGS), unitPx = kn.kUnits === 'w' ? W / KBENDS.goldenWPerR1 : null;
   const score = cells.score.map((r) => r.slice()), route = { ...cells.route }, why = { ...cells.why }, violations = [...cells.violations];
   const ranked = rescore ? rescore(cells) : null;
   const rank = ranked ? score.map((r, i) => r.map((v, k) => (Number.isFinite(v) && Number.isFinite(ranked[i]?.[k]) ? ranked[i][k] : -Infinity))) : score;
@@ -694,7 +806,7 @@ export function seqFinalOf(cells, { holes, S, W, legsMany, rules = MATCH_RULES, 
   // a hole the neighbourhoods leave without a basket: assigned among the free baskets by its K <= 1 routes
   const usedH = new Set(pairs.map(([i]) => i)), usedK = new Set(pairs.map(([, k]) => k)), leftH = holes.map((_, i) => i).filter((i) => !usedH.has(i)), leftK = bp.map((_, k) => k).filter((k) => !usedK.has(k));
   if (leftH.length && leftK.length) {
-    const sub = leftH.map((i) => leftK.map((k) => { const fb = cells.plates && !cells.contradicted.includes(String(holes[i])); const kc = kCellAt(S, starts[i], bp[k], W, { legsMany, foreign: foreignRingsOf(starts[i], bp, k, S.R1, fb ? cells.plates : null), unitPx, ...(fb ? { owned: cells.firstLegs.filter((g) => g.hole !== String(holes[i])).map((g) => g.leg) } : {}), ...(rules.kRefineStarts ? { refineStarts: rules.kRefineStarts } : {}) }); if (kc.violation) violations.push({ ...kc.violation, hole: holes[i], basket: k }); route[`${holes[i]}@${k}`] = kc.best.verts; return kc.best.bottleneck ?? -Infinity; }));
+    const sub = leftH.map((i) => leftK.map((k) => { const fb = cells.plates && !cells.contradicted.includes(String(holes[i])); const kc = kCellAt(S, starts[i], bp[k], W, { legsMany, foreign: foreignRingsOf(starts[i], bp, k, S.R1, fb ? cells.plates : null), unitPx, ...(fb ? { owned: cells.firstLegs.filter((g) => g.hole !== String(holes[i])).map((g) => g.leg) } : {}), refineStarts: kn.refineStarts }); if (kc.violation) violations.push({ ...kc.violation, hole: holes[i], basket: k }); route[`${holes[i]}@${k}`] = kc.best.verts; return kc.best.bottleneck ?? -Infinity; }));
     for (const [a, b] of assignMinCost(sub.map((r) => r.map((v) => (Number.isFinite(v) ? -v : Infinity))))) { const i = leftH[a], k = leftK[b]; score[i][k] = sub[a][b]; pairs.push([i, k]); why[holes[i]] = `${why[holes[i]]}; none left in the neighbourhood: assigned among the free baskets by K <= 1 routes`; }
     pairs = pairs.sort((x, y) => x[0] - y[0]);
   }
@@ -711,8 +823,8 @@ export function seqFinalOf(cells, { holes, S, W, legsMany, rules = MATCH_RULES, 
  * route it has (a hole the sensor confirms is never reopened: the course's hallway network cannot pull it onto another
  * hole's corridor). Mutates out / assignment in place (the caller's records).
  */
-function kBendsPass({ out, assignment, holes, table, score, kCells, S, W, startOf, steps, rules, legsOf }) {
-  const floor = minStationsOf(S, rules), U = assignment.filter((a) => a.sensor < MATCH.tau || a.stations < floor);
+function kBendsPass({ out, assignment, holes, table, score, kCells, S, W, startOf, steps, floor, legsOf }) {
+  const U = assignment.filter((a) => a.sensor < MATCH.tau || a.stations < floor);
   if (!U.length) return;
   const iOf = (hole) => holes.findIndex((h) => String(h) === String(hole)), cols = U.map((a) => a.basket);
   const cell = U.map((a) => cols.map((k) => {

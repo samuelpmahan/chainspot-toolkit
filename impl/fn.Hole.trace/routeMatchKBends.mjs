@@ -9,6 +9,6 @@ export const reads = ['tk.s7.holes'];
 export const calls = [...TRACE_CALLS];
 
 export default function routeMatchKBends(parts) {
-  return tracesOf(traceQueries(parts.call)('routeMatch', { rules: RULE_SETS.routeMatchKBends }), parts.get('tk.s7.holes'),
+  return tracesOf(traceQueries(parts.call)('routeMatch', { config: RULE_SETS.routeMatchKBends }), parts.get('tk.s7.holes'),
     { rule: 'routeMatch, rule set routeMatchKBends: routeMatchTeeAxisBadgePrior with the weakest-leg cost: the assignment on each cell\'s best K <= 1 route (first bend at or past the badge-at-0.57 point), then a K-bend chain from B* for a route the sensor rejects' });
 }

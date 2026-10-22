@@ -9,6 +9,6 @@ export const reads = ['tk.s7.holes'];
 export const calls = [...TRACE_CALLS];
 
 export default function routeMatchLeanCoarse2(parts) {
-  return tracesOf(traceQueries(parts.call)('routeMatch', { rules: RULE_SETS.routeMatchLeanCoarse2 }), parts.get('tk.s7.holes'),
+  return tracesOf(traceQueries(parts.call)('routeMatch', { config: RULE_SETS.routeMatchLeanCoarse2 }), parts.get('tk.s7.holes'),
     { rule: 'routeMatch, rule set routeMatchLeanCoarse2: S6-straight holes straight, coordinate second bend, lean table, second bend on a coarse grid' });
 }

@@ -105,6 +105,26 @@ output.
 - **S4 tee recovery on an attempt:** `node ports/s4recover/run.mjs --specimen golden --attempt ID`.
   Writes `instrumentation.json` and a flipbook with profile and Part pages.
 - **S3 association:** `node ports/s3assoc/run.mjs --specimen golden --attempt ID`.
+- **S7 grid search:** `node scripts/pxc.mjs sweep --grid <spec.json> [--courses a,b] [--jobs N] [--chunk N] [--id ID] [--dry-run]`.
+  - **A knob is a declared arg of the step that reads it.** Declare it with
+    `store.register(fn, { args: { knob: { default, unit, note, values?, validate?, sweep?, assumption? } }, needs? })`, or as a
+    query table entry's `args`. The store fills and validates the knob at call time, and resolves it under a call's
+    `args.config`. It keys answers on the resolved args. `store.declaredArgs()` lists every knob, and
+    `pxc sweep --registry` prints them as `fn#knob`.
+  - Never thread options through one opaque object. Never keep a registry beside the store.
+  - **A config is a sparse `{ fn: { knob: value } }`.** `fg/config.mjs` resolves it into canonical resolved knobs and a sha256
+    hash. A rule set is a named config (`ports/s7route/match.mjs RULE_SETS`).
+  - **The spec** lists `axes` (`{ knob: 'fn#knob', values }` or `{ name, options }`) and optional `cross`, `sample: { n, seed }`
+    and `include`. See `ports/s7trace/grids/first.json`.
+    - It runs S7 only, on the dev courses with testimony and the validation views, on their existing attempts.
+    - A course's configs share one store, so a config costs only the steps it changes.
+    - A cell already recorded under the same config hash and code digest is skipped, so rerunning the command resumes.
+  - **Output** under `attempts/sweeps/<id>/`: `results.md` and `results.json`. They hold:
+    - dev agreement and bends;
+    - Sam's six (`docs/evidence/validation-s7/sam-six.json`);
+    - the cross-view count, the time, and the assumption violations;
+    - the Pareto front and the shortlist.
+  - `pxc clean` deletes your own sweeps and `pxc prune` stale ones. A sweep cited under `docs/evidence` is kept.
 - **Disk:** a run writes each image once, as a file under its `img/`, and references it: write flipbooks with
   `writeFlipbook` (`fg/node-flipbook.mjs`), never inline base64 renders or the source image into frames, flipbooks
   or SVGs. `node scripts/pxc.mjs prune --dry-run` shows what deleting old attempts and superseded runs frees.

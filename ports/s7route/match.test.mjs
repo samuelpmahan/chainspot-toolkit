@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { createPartStore } from '../../fg/store.mjs';
 import { SCENE_SCHEMA } from '../../fg/s7trace/sceneRender.mjs';
 import { routeTableOn, ROUTE_START_PART } from './routeSpace.mjs';
-import { assignMinCost, routeMatchOf, MATCH } from './match.mjs';
+import { assignMinCost, routeMatchOf, MATCH, MATCH_RULES, configOfRules, RM_FN } from './match.mjs';
 
 // ------------------------------------------------------------------ assignMinCost vs brute force
 
@@ -64,7 +64,9 @@ function scene({ faded = false } = {}) {
 const holes = { holes: [1, 2, 3].map((n) => ({ hole: String(n), tee: { teeCenter: [20 - (10.6 / 25.02) * 24, [30, 110, 220][n - 1]], u: [1, 0], source: 'fixture' } })),
   baskets: [0, 1, 2].map((k) => ({ index: k, name: `Basket c${'abc'[k]}`, point: [[290, 30], [230, 170], [200, 260]][k], source: 'S2' })) };
 const tables = new Map();   // one route table per scene variant, shared by the tests
-function matchOn(S, opts, key = 'plain') {
+// the recorded rule (MATCH_RULES: kBends off), the rule these tests were written for; opts may override routeMatch's own knobs
+const recorded = (rm = {}) => { const c = configOfRules(MATCH_RULES); return { config: { ...c, [RM_FN]: { ...c[RM_FN], ...rm } } }; };
+function matchOn(S, opts = recorded(), key = 'plain') {
   if (tables.has(key)) return { table: tables.get(key).table, m: routeMatchOf(tables.get(key).table, S, tables.get(key).start, opts) };
   const store = createPartStore({ name: 'match-fixture' });
   store.constant('fn.tk.fixture.inputs', { 'tk.s7.sceneS4': S, 'tk.s7.holes': holes, 'testimony.source.holePaths': { path: null, rule: 'fixture', holes: [] } });
@@ -87,11 +89,11 @@ test('routeMatchOf: one to one; a straight hole stays straight, a bent hole take
 });
 
 test('routeMatchOf: a second bend the sensor cannot confirm is rejected, and secondBends: false never tries one', () => {
-  const { m } = matchOn(scene({ faded: true }), undefined, 'faded');
+  const { m } = matchOn(scene({ faded: true }), recorded(), 'faded');
   const h3 = m.holes['3'];
   assert.equal(h3.end, 2);
   assert.equal(h3.verts.length, 3, h3.how); assert.match(h3.how, /2-bend rejected/);
-  const { m: cheap } = matchOn(scene(), { secondBends: false });
+  const { m: cheap } = matchOn(scene(), recorded({ secondBends: false }));
   assert.equal(cheap.holes['3'].verts.length, 3); assert.doesNotMatch(cheap.holes['3'].how, /2-bend/);
   assert.equal(cheap.holes['1'].verts.length, 2); assert.equal(cheap.holes['2'].verts.length, 3);
 });
@@ -107,10 +109,40 @@ test('E18: each refine iteration moves the bend at most one contrast grid step (
 });
 
 test('minStationsOf: 20 stations by default; stationsUnits r1 is 0.449 R1 (golden R1 44.5 px keeps its floor of 20 stations)', async () => {
-  const { minStationsOf, MATCH_RULES } = await import('./match.mjs');
+  const { minStationsOf } = await import('./match.mjs');
   assert.equal(minStationsOf({ R1: 21 }), MATCH.minStations);
-  assert.equal(minStationsOf({ R1: 21 }, MATCH_RULES), 20);
-  const golden = minStationsOf({ R1: 44.5 }, { stationsUnits: 'r1' });
+  assert.equal(minStationsOf({ R1: 21 }, 'px'), 20);
+  const golden = minStationsOf({ R1: 44.5 }, 'r1');
   assert.ok(golden <= 20 && golden > 19, `golden floor ${golden}`);
-  assert.ok(Math.abs(minStationsOf({ R1: 21 }, { stationsUnits: 'r1' }) - 0.449 * 21) < 1e-12);
+  assert.ok(Math.abs(minStationsOf({ R1: 21 }, 'r1') - 0.449 * 21) < 1e-12);
+});
+
+// ------------------------------------------------------------------ rule sets are configs over the steps' declared args
+test('every recorded rule set is a named config that resolves to exactly its old options (31f2968, fixtures/rule-sets.legacy.json)', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { RULE_SETS, PROFILES, S7_DEFAULT, MATCH_RULES: MR } = await import('./match.mjs');
+  const { resolveConfig } = await import('../../fg/config.mjs');
+  const { s7DeclaredArgs } = await import('../s7trace/traceSpace.mjs');
+  const L = JSON.parse(readFileSync(new URL('./fixtures/rule-sets.legacy.json', import.meta.url), 'utf8')), declared = s7DeclaredArgs();
+  assert.deepEqual(Object.keys(RULE_SETS), Object.keys(L.RULE_SETS));
+  assert.deepEqual(PROFILES, L.PROFILES); assert.equal(S7_DEFAULT, L.S7_DEFAULT); assert.deepEqual(MR, L.MATCH_RULES);
+  for (const [name, old] of Object.entries(L.RULE_SETS)) {
+    const want = resolveConfig(declared, configOfRules(old), { lenient: true }), got = resolveConfig(declared, RULE_SETS[name]);
+    assert.ok(got.ok, `${name}: ${got.errors}`);
+    assert.equal(got.hash, want.hash, name);
+    assert.deepEqual(RULE_SETS[name], want.sparse, `${name} is the sparse form`);
+  }
+  assert.deepEqual(RULE_SETS[S7_DEFAULT], {}, 'the S7 default is the empty config: every knob\'s default is its value');
+});
+
+test('the S7 knobs are the store\'s declarations: units, notes, needs, and the neighbourhood bound linked to its stated assumption', async () => {
+  const { s7DeclaredArgs } = await import('../s7trace/traceSpace.mjs');
+  const { ASSUMPTIONS } = await import('../../fg/assumptions.mjs');
+  const d = s7DeclaredArgs();
+  assert.deepEqual(Object.keys(d), ['fn.q.match.followW', 'fn.q.match.placeBends', 'fn.q.match.refine', 'fn.q.match.secondBendRefine', 'fn.q.match.secondBendScan', 'fn.q.trace.routeMatch', 'fn.q.trace.seqCells']);
+  assert.deepEqual(d['fn.q.trace.seqCells'].needs, { 'fn.q.trace.routeMatch': { kBends: 'seq' } });
+  assert.deepEqual(d['fn.q.match.followW'].needs, { 'fn.q.trace.seqCells': { follow: 'w' } });
+  assert.ok(ASSUMPTIONS.has(d['fn.q.trace.seqCells'].args.neighbours.assumption));
+  for (const [fn, { args }] of Object.entries(d)) for (const [k, s] of Object.entries(args)) assert.ok(s.unit && s.note && 'default' in s, `${fn}#${k}`);
+  assert.equal(d['fn.q.match.followW'].args.runW.unit, 'W'); assert.equal(d['fn.q.trace.seqCells'].args.turnKappa.unit, 'lum'); assert.equal(d['fn.q.match.placeBends'].args.gain.unit, 'frac');
 });

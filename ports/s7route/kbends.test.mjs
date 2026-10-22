@@ -66,10 +66,11 @@ test('every leg read goes through legsOf (the store passes its profiled query)',
   assert.ok(n > 10); assert.deepEqual(a, b);
 });
 
-test('the rule set routeMatchKBends is the accepted rule set plus kBends, and the default rules do not use it', () => {
-  const { kBends, ...rest } = RULE_SETS.routeMatchKBends;
+test('the rule set routeMatchKBends is the accepted rule set plus kBends, and the recorded rule does not use it', () => {
+  const rm = 'fn.q.trace.routeMatch', { kBends, ...rest } = RULE_SETS.routeMatchKBends[rm];
   assert.equal(kBends, 'bottleneck');
-  assert.deepEqual(rest, RULE_SETS.routeMatchTeeAxisBadgePrior);
+  assert.deepEqual({ ...RULE_SETS.routeMatchKBends, [rm]: rest }, { ...RULE_SETS.routeMatchTeeAxisBadgePrior, [rm]: (({ kBends: _k, ...r }) => r)(RULE_SETS.routeMatchTeeAxisBadgePrior[rm]) });
+  assert.equal(RULE_SETS.routeMatchTeeAxisBadgePrior[rm].kBends, 'off');
   assert.equal(MATCH_RULES.kBends, undefined);
 });
 

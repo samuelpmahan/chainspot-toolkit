@@ -1,0 +1,457 @@
+{
+ "note": "RULE_SETS and MATCH_RULES of ports/s7route/match.mjs as literal objects at 31f2968 (2026-10-22), before rule sets became configs (ports/s7route/features.mjs). features.test.mjs proves every named config resolves to exactly these options.",
+ "commit": "31f2968",
+ "MATCH_RULES": {
+  "straightFromS6": true,
+  "secondBendRefine": "coordWide",
+  "refineUnits": "r1",
+  "tableUnits": "r1"
+ },
+ "S7_DEFAULT": "routeMatchKBendsSeq3SearchW",
+ "PROFILES": {
+  "wide": [
+   "routeMatch",
+   "routeMatchS6straight",
+   "routeMatchS6CoordWide",
+   "routeMatchS6Dense",
+   "routeMatchS6PxDense",
+   "routeMatchDenseSecondBend",
+   "routeMatchPxRefine",
+   "routeMatchPxTable",
+   "routeMatchFast",
+   "routeMatchFastPxRefine",
+   "routeMatchLean",
+   "routeMatchLeanPxRefine",
+   "routeMatchLeanCoarse2",
+   "routeMatchLeanPxRefineCoarse2",
+   "routeMatchBadgeMid",
+   "routeMatchBadgeMidPinned",
+   "routeMatchLeanBadgeMid2",
+   "routeMatchLeanBadgePrior",
+   "routeMatchBadgeMidPrior",
+   "routeMatchLeanPxRefineCoarse2R1St",
+   "routeMatchLeanPxRefineCoarse2StraightB2",
+   "routeMatchLeanPxRefineCoarse2AxisB1",
+   "routeMatchLeanPxRefineCoarse2TeeAxis",
+   "routeMatchTeeAxisBadgePrior",
+   "routeMatchBadgeMidTeeAxisPrior",
+   "routeMatchKBends",
+   "routeMatchKBendsSeq",
+   "routeMatchKBendsSeq3",
+   "routeMatchKBendsSeq3Search",
+   "routeMatchKBendsSeq3SearchW",
+   "routeMatchKBendsSeq3SearchWEvidence",
+   "routeMatchKBendsSeq3SearchWFirstLegs",
+   "routeMatchKBendsSeq3SearchW16",
+   "routeMatchKBendsSeq3SearchWK",
+   "routeMatchKBendsSeq3RegionGate",
+   "routeMatchKBendsSeq3RegionScore",
+   "routeMatchKBendsSeq3RegionWiden",
+   "routeMatchKBendsSeq3Region",
+   "routeMatchTeeAxisBadgePriorRegion",
+   "routeMatchTeeAxisBadgePriorRegionAll"
+  ],
+  "quick": [
+   "routeMatchLeanCoarse2",
+   "routeMatchLeanPxRefineCoarse2",
+   "routeMatchTeeAxisBadgePrior",
+   "routeMatchBadgeMidTeeAxisPrior",
+   "routeMatchKBendsSeq3SearchW"
+  ]
+ },
+ "RULE_SETS": {
+  "routeMatch": {},
+  "routeMatchS6straight": {
+   "straightFromS6": true
+  },
+  "routeMatchS6CoordWide": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide"
+  },
+  "routeMatchS6Dense": {
+   "straightFromS6": true,
+   "secondBendRefine": "dense"
+  },
+  "routeMatchS6PxDense": {
+   "straightFromS6": true,
+   "tableUnits": "px",
+   "refineUnits": "px",
+   "secondBendRefine": "dense"
+  },
+  "routeMatchDenseSecondBend": {
+   "secondBendRefine": "dense"
+  },
+  "routeMatchPxRefine": {
+   "refineUnits": "px"
+  },
+  "routeMatchPxTable": {
+   "tableUnits": "px",
+   "refineUnits": "px"
+  },
+  "routeMatchFast": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "fast"
+  },
+  "routeMatchFastPxRefine": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "fast",
+   "refineUnits": "px"
+  },
+  "routeMatchLean": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "lean"
+  },
+  "routeMatchLeanPxRefine": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "lean",
+   "refineUnits": "px"
+  },
+  "routeMatchLeanCoarse2": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "lean",
+   "secondBendGrid": "coarse"
+  },
+  "routeMatchLeanPxRefineCoarse2": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "lean",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse"
+  },
+  "routeMatchBadgeMid": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "badgeMid",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse"
+  },
+  "routeMatchBadgeMidPinned": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "badgeMid",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "secondBendB1": "badge",
+   "firstBend": "badge"
+  },
+  "routeMatchLeanBadgeMid2": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "lean",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "secondBendB1": "badge"
+  },
+  "routeMatchLeanBadgePrior": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "lean",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "firstBend": "badgePrior"
+  },
+  "routeMatchBadgeMidPrior": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "badgeMid",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "firstBend": "badgePrior"
+  },
+  "routeMatchLeanPxRefineCoarse2R1St": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "lean",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1"
+  },
+  "routeMatchLeanPxRefineCoarse2StraightB2": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "lean",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "straightSecondBend": true
+  },
+  "routeMatchLeanPxRefineCoarse2AxisB1": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "lean",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "placeAxis": true
+  },
+  "routeMatchLeanPxRefineCoarse2TeeAxis": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "lean",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1",
+   "straightSecondBend": true,
+   "placeAxis": true
+  },
+  "routeMatchTeeAxisBadgePrior": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "lean",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1",
+   "straightSecondBend": true,
+   "placeAxis": true,
+   "firstBend": "badgePrior"
+  },
+  "routeMatchBadgeMidTeeAxisPrior": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "badgeMid",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1",
+   "straightSecondBend": true,
+   "placeAxis": true,
+   "firstBend": "badgePrior"
+  },
+  "routeMatchKBends": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "lean",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1",
+   "straightSecondBend": true,
+   "placeAxis": true,
+   "firstBend": "badgePrior",
+   "kBends": "bottleneck"
+  },
+  "routeMatchKBendsSeq": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "badgeMid",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1",
+   "straightSecondBend": true,
+   "placeAxis": true,
+   "firstBend": "badgePrior",
+   "kBends": "seq"
+  },
+  "routeMatchKBendsSeq3": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "badgeMid",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1",
+   "straightSecondBend": true,
+   "placeAxis": true,
+   "firstBend": "badgePrior",
+   "kBends": "seq",
+   "seqNeighbours": 3,
+   "seqWiden": true
+  },
+  "routeMatchKBendsSeq3Search": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "badgeMid",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1",
+   "straightSecondBend": true,
+   "placeAxis": true,
+   "firstBend": "badgePrior",
+   "kBends": "seq",
+   "seqNeighbours": 3,
+   "seqWiden": true,
+   "seqOwn": true,
+   "seqTurnKappa": 10,
+   "seqFollow": true
+  },
+  "routeMatchKBendsSeq3SearchW": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "badgeMid",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1",
+   "straightSecondBend": true,
+   "placeAxis": true,
+   "firstBend": "badgePrior",
+   "kBends": "seq",
+   "seqNeighbours": 3,
+   "seqWiden": true,
+   "seqOwn": true,
+   "seqTurnKappa": 10,
+   "seqFollow": "w",
+   "kRefineStarts": 3
+  },
+  "routeMatchKBendsSeq3SearchWEvidence": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "badgeMid",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1",
+   "straightSecondBend": true,
+   "placeAxis": true,
+   "firstBend": "badgePrior",
+   "kBends": "seq",
+   "seqNeighbours": 3,
+   "seqWiden": true,
+   "seqOwn": true,
+   "seqTurnKappa": 10,
+   "seqFollow": "w",
+   "seqScore": "evidence",
+   "kRefineStarts": 3
+  },
+  "routeMatchKBendsSeq3SearchWFirstLegs": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "badgeMid",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1",
+   "straightSecondBend": true,
+   "placeAxis": true,
+   "firstBend": "badgePrior",
+   "kBends": "seq",
+   "seqNeighbours": 3,
+   "seqWiden": true,
+   "seqOwn": true,
+   "seqTurnKappa": 10,
+   "seqFollow": "w",
+   "seqFirstLegs": true,
+   "kRefineStarts": 3
+  },
+  "routeMatchKBendsSeq3SearchW16": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "badgeMid",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1",
+   "straightSecondBend": true,
+   "placeAxis": true,
+   "firstBend": "badgePrior",
+   "kBends": "seq",
+   "seqNeighbours": 3,
+   "seqWiden": true,
+   "seqOwn": true,
+   "seqTurnKappa": 10,
+   "seqFollow": "w",
+   "followRes": {
+    "vertexStepW": 0.0625
+   }
+  },
+  "routeMatchKBendsSeq3SearchWK": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "badgeMid",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1",
+   "straightSecondBend": true,
+   "placeAxis": true,
+   "firstBend": "badgePrior",
+   "kBends": "seq",
+   "seqNeighbours": 3,
+   "seqWiden": true,
+   "seqOwn": true,
+   "seqTurnKappa": 10,
+   "seqFollow": "w",
+   "kUnits": "w"
+  },
+  "routeMatchKBendsSeq3RegionGate": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "badgeMid",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1",
+   "straightSecondBend": true,
+   "placeAxis": true,
+   "firstBend": "badgePrior",
+   "kBends": "seq",
+   "seqNeighbours": 3,
+   "seqWiden": true,
+   "seqGate": "region"
+  },
+  "routeMatchKBendsSeq3RegionScore": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "badgeMid",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1",
+   "straightSecondBend": true,
+   "placeAxis": true,
+   "firstBend": "badgePrior",
+   "kBends": "seq",
+   "seqNeighbours": 3,
+   "seqWiden": true,
+   "seqScore": "region"
+  },
+  "routeMatchKBendsSeq3RegionWiden": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "badgeMid",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1",
+   "straightSecondBend": true,
+   "placeAxis": true,
+   "firstBend": "badgePrior",
+   "kBends": "seq",
+   "seqNeighbours": 3,
+   "seqWiden": true,
+   "seqGate": "regionWiden"
+  },
+  "routeMatchKBendsSeq3Region": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "badgeMid",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1",
+   "straightSecondBend": true,
+   "placeAxis": true,
+   "firstBend": "badgePrior",
+   "kBends": "seq",
+   "seqNeighbours": 3,
+   "seqWiden": true,
+   "seqGate": "region",
+   "seqScore": "region"
+  },
+  "routeMatchTeeAxisBadgePriorRegion": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "lean",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1",
+   "straightSecondBend": true,
+   "placeAxis": true,
+   "firstBend": "badgePrior",
+   "sensor": "region"
+  },
+  "routeMatchTeeAxisBadgePriorRegionAll": {
+   "straightFromS6": true,
+   "secondBendRefine": "coordWide",
+   "tableSearch": "lean",
+   "refineUnits": "px",
+   "secondBendGrid": "coarse",
+   "stationsUnits": "r1",
+   "straightSecondBend": true,
+   "placeAxis": true,
+   "firstBend": "badgePrior",
+   "sensor": "regionAll"
+  }
+ }
+}

@@ -1,0 +1,13 @@
+{
+  "schema": "s7-sam-six@1",
+  "note": "Sam's six validation holes (sam-2026-10-21.md, his calls by eye on the S0-S7 validation renders, verbatim) as the reference the grid sweep (ports/s7trace/gridSweep.mjs) judges each config by. Not testimony and not ground truth: a reading of his calls. basket: the basket his call implies (Excel-style name on the view's attempt in docs/evidence/validation-s7/ATTEMPTS). bends: for the two holes he called for bends, the lane's hand trace along the visible hallway (sam-2026-10-21.md 'Why the edge gate rejects ...', canonical px); a route's bends must match them one to one within W / 2 (the dev judge's bend rule, judgeBends.mjs matchBends), none missed and none extra. A hole is right when its route ends at that basket and, where bends are listed, matches them.",
+  "rule": "right = route ends at the called basket (by name) AND (bends listed) every hand-trace bend within W / 2 of one of the route's, one to one, and no extra bend",
+  "holes": [
+    { "view": "beaverranchCapture", "hole": "4", "basket": "Basket cp", "sam": "Beaver: 4/19 switched baskets" },
+    { "view": "beaverranchCapture", "hole": "19", "basket": "Basket cn", "sam": "Beaver: 4/19 switched baskets" },
+    { "view": "coletocreekFull", "hole": "10", "basket": "Basket cc", "sam": "Colette: 10/11 switch baskets due to missing bends" },
+    { "view": "coletocreekFull", "hole": "11", "basket": "Basket ca", "sam": "Colette: 10/11 switch baskets due to missing bends" },
+    { "view": "coletocreekFull", "hole": "18", "basket": "Basket ch", "bends": [[783, 1446], [900, 1258]], "sam": "Colette: 18 misses bends" },
+    { "view": "seatacCapture", "hole": "19", "basket": "Basket ci", "bends": [[534, 383], [503, 526], [544, 707]], "sam": "SeaTac: H19 missing bend + misplaced bend" }
+  ]
+}

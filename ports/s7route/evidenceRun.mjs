@@ -44,9 +44,9 @@ export function evidenceStore({ specimen, attempt, attemptsRoot = ROOT, root = R
   return { store, document, holePaths, loaded };
 }
 
-/** A rule set's solve on the store, its traces and (testimony) its judged rows. */
-export function solveOn(store, holePaths, rules, name) {
-  const solve = store.call('fn.q.trace.routeMatch', { rules }).value;
+/** A config's solve on the store (a RULE_SETS config; extra: routeMatch args such as evidenceWeights), its traces and judged rows. */
+export function solveOn(store, holePaths, config, name, extra = {}) {
+  const solve = store.call('fn.q.trace.routeMatch', { config, ...extra }).value;
   const traces = tracesOf(solve, store.get('tk.s7.holes'), { rule: name }).traces;
   const judged = holePaths?.path ? judgeHoleTraces(traces, holePaths, { widthPx: store.get('tk.s7.hallway').widthPx }) : null;
   return { solve, traces, judged };
@@ -66,7 +66,7 @@ export function runEvidence({ specimen, attempt, attemptsRoot = ROOT, root = ROO
   const out = outDir ?? join(root, 'attempts', 's7evidence', specimen, `run-${new Date().toISOString().replace(/[:.]/g, '-')}`);
   const t0 = performance.now(), base = solveOn(store, holePaths, RULE_SETS[S7_DEFAULT], S7_DEFAULT), tDefault = performance.now() - t0;
   const t1 = performance.now(), ev = store.get(CELL_EVIDENCE_PART), tEvidence = performance.now() - t1;
-  const t2 = performance.now(), sib = solveOn(store, holePaths, { ...RULE_SETS[EVIDENCE_VARIANT], ...(weights ? { evidenceWeights: weights } : {}) }, EVIDENCE_VARIANT), tSibling = performance.now() - t2;
+  const t2 = performance.now(), sib = solveOn(store, holePaths, RULE_SETS[EVIDENCE_VARIANT], EVIDENCE_VARIANT, weights ? { evidenceWeights: weights } : {}), tSibling = performance.now() - t2;
   const doc = document(), profile = profileSummary(doc);
   const timingsMs = { default: Math.round(tDefault), cellEvidence: Math.round(tEvidence), siblingAfterEvidence: Math.round(tSibling), parts: evidenceTimings(doc), wall: Math.round(doc.wallMs) };
   const renders = [];

@@ -9,6 +9,6 @@ export const reads = ['tk.s7.holes'];
 export const calls = [...TRACE_CALLS];
 
 export default function routeMatchKBendsSeq3SearchWK(parts) {
-  return tracesOf(traceQueries(parts.call)('routeMatch', { rules: RULE_SETS.routeMatchKBendsSeq3SearchWK }), parts.get('tk.s7.holes'),
+  return tracesOf(traceQueries(parts.call)('routeMatch', { config: RULE_SETS.routeMatchKBendsSeq3SearchWK }), parts.get('tk.s7.holes'),
     { rule: 'routeMatch, rule set routeMatchKBendsSeq3SearchWK: sequencing (ports/s7route/seq.mjs): S6-straight holes claim the first forward basket on their tee ray; every other hole scores the top 3 ranks of its neighbourhood (unclaimed forward baskets by joint distance rank from its tee and from the next tee), widened to ranks 3-4 when its assigned route fails the sensor gate; chain candidates polished before they compete, confirmed corridors owned, turning priced under the weakest-leg cost, K-bend chains where the sensor rejects the K <= 1 route; the resolutions of the hallway follower in W and the hallway steps of the K-bend search (split grid, minimum leg, axis step, refine end) in W' });
 }

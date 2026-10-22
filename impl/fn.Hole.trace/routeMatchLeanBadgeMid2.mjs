@@ -9,6 +9,6 @@ export const reads = ['tk.s7.holes'];
 export const calls = [...TRACE_CALLS];
 
 export default function routeMatchLeanBadgeMid2(parts) {
-  return tracesOf(traceQueries(parts.call)('routeMatch', { rules: RULE_SETS.routeMatchLeanBadgeMid2 }), parts.get('tk.s7.holes'),
+  return tracesOf(traceQueries(parts.call)('routeMatch', { config: RULE_SETS.routeMatchLeanBadgeMid2 }), parts.get('tk.s7.holes'),
     { rule: 'routeMatch, rule set routeMatchLeanBadgeMid2: lean table; the second bend searched with B1 at the badge midpoint B*' });
 }

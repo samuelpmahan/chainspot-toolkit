@@ -48,9 +48,9 @@ export function exportRuleSet(root, variant = null, profile = 'quick') {
     how = variant ? 'the S7 pointer vote on the annotated dev courses' : null;
   }
   // the alternatives: every rule set in the profile besides the primary (each route a one-click choice in the app)
-  const wide = profileOf(profile).filter((n) => n !== variant).map((n) => ({ variant: n, rules: RULE_SETS[n] }));
-  if (!variant || !(variant in RULE_SETS)) return { variant: 'routeMatch', rules: {}, how: variant ? `${variant} is not a routeMatch rule set: routeMatch's defaults` : 'no S7 pointer on record: routeMatch\'s defaults', profile, wide };
-  return { variant, rules: RULE_SETS[variant], how, profile, wide };
+  const wide = profileOf(profile).filter((n) => n !== variant).map((n) => ({ variant: n, config: RULE_SETS[n] }));
+  if (!variant || !(variant in RULE_SETS)) return { variant: 'routeMatch', config: RULE_SETS.routeMatch, how: variant ? `${variant} is not a routeMatch rule set: routeMatch's defaults` : 'no S7 pointer on record: routeMatch\'s defaults', profile, wide };
+  return { variant, config: RULE_SETS[variant], how, profile, wide };
 }
 
 /** A capture's tiles as rasters for the header reader: the files the capture record names (sha256-checked: an integrity stop). */

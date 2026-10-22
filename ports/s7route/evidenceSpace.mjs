@@ -56,7 +56,7 @@ import { CELL_EVIDENCE_SCHEMA } from '../../fg/s7route/evidenceRender.mjs';
 import { LANE, LANE_REACH, LANE_UNKNOWN_RUN, LANE_TRACKS_PART, discEntered, inBox, samplePoly, fourLaneAt, registerLanes } from './laneSpace.mjs';
 import { ROUTE_START_PART, ROUTE_HALLWAY_PART, badgeMidOf } from './routeSpace.mjs';
 import { registerRegion, REGION_SCENE_PART } from './regionSpace.mjs';
-import { RULE_SETS, S7_DEFAULT, cellRulesOf, seqFinalOf, minStationsOf, stepResOf } from './match.mjs';
+import { S7_DEFAULT, seqFinalOf, minStationsOf, stepResOf, knobsOf, ROUTE_MATCH_ARGS, seqCellsArgsOf } from './match.mjs';
 import { SEQ } from './seq.mjs';
 import { trace as followTrace, closeOnBpW, bpOnLegW, findBendW, stationContrast, arange, FOLLOW_W, CLOSE_ON_BP_REACH, TAU } from '../s7trace/hallway.mjs';
 
@@ -312,11 +312,11 @@ const vote = (reached, k) => (reached === null || reached === undefined ? null :
 const mean = (xs) => { const v = xs.filter((x) => x !== null && x !== undefined); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; };
 
 /**
- * The evidence on the default's candidate cells. cells: fn.q.trace.seqCells (the default's cell rules); call(fn, args) -> value.
+ * The evidence on the default's candidate cells. cells: fn.q.trace.seqCells under no config (the default's knobs); call(fn, args) -> value.
  * -> { schema, rows: per hole { hole, claimed | cells: [{ k, basket, route, value, readings, reasons, meetAt, z, P }], tracks } }.
  */
-export function cellEvidenceOf({ cells, c, W, lanes4, lanes3, holesPart, call, rules, weights = EVIDENCE_WEIGHTS }) {
-  const names = holesPart.baskets.map((b) => b.name), floor = minStationsOf(c, rules), boxes = holesPart.baskets.map((b) => b.bbox);
+export function cellEvidenceOf({ cells, c, W, lanes4, lanes3, holesPart, call, stationsUnits = ROUTE_MATCH_ARGS.stationsUnits.default, weights = EVIDENCE_WEIGHTS }) {
+  const names = holesPart.baskets.map((b) => b.name), floor = minStationsOf(c, stationsUnits), boxes = holesPart.baskets.map((b) => b.bbox);
   const legs = cells.starts.map((s) => ({ hole: s.hole, S: s.S, u: s.u, badge: c.badges[Number(s.hole)] ?? null }));
   const regionOk = !call('fn.tk.s7.regionCondition', {});
   const candidates = [];
@@ -374,12 +374,13 @@ export function cellEvidenceOf({ cells, c, W, lanes4, lanes3, holesPart, call, r
 }
 
 /**
- * The evidence ranking (rule set seqScore 'evidence'): log P(cell) for the default's candidate cells, 0 (certain) for a straight claim,
- * null elsewhere. part: tk.s7.cellEvidence; null when the Part was made for other cells (another cell rule set) or holds a condition.
+ * The evidence ranking (routeMatch's evidenceRank knob): log P(cell) for the default's candidate cells, 0 (certain) for a straight
+ * claim, null elsewhere. part: tk.s7.cellEvidence; null when the Part was made for other cells (the sequencing step under other knobs:
+ * cells.identity differs) or holds a condition. weights: EVIDENCE_WEIGHTS unless given (a LOCO fold's).
  */
-export function evidenceRankOf(part, cells, rules, cellRules) {
-  if (!part || part.condition || JSON.stringify(part.cellRules) !== JSON.stringify(cellRules)) return null;
-  const w = rules?.evidenceWeights ?? EVIDENCE_WEIGHTS, M = cells.score.map((r) => r.map(() => null));
+export function evidenceRankOf(part, cells, weights = null) {
+  if (!part || part.condition || part.cellsIdentity !== cells.identity) return null;
+  const w = weights ?? EVIDENCE_WEIGHTS, M = cells.score.map((r) => r.map(() => null));
   for (const row of part.rows) {
     if (row.claimed !== undefined) { M[row.i][row.claimed] = 0; continue; }
     for (const x of row.cells) M[row.i][x.k] = logSigmoid(zOf(x.readings, w));
@@ -397,23 +398,24 @@ export function registerEvidence(store) {
   registerQueries(store, EVIDENCE_QUERIES, { note: 'S7 evidence: basket backwards, the forward follower, meetings (ports/s7route/evidenceSpace.mjs)' });
   // whether the image has a region model (the region perspective reads UNKNOWN without one): a query, so the Part stays lazy
   store.register('fn.tk.s7.regionCondition', { inParts: [REGION_SCENE_PART], note: 'the region scene\'s condition (null: the region sensor reads)', calculate: (io) => ({ value: io.in(REGION_SCENE_PART).regionCondition ?? null, unit: 'condition' }) });
-  const cellRules = cellRulesOf(RULE_SETS[S7_DEFAULT]);
+  // the default's cells: the sequencing step under no config (the declared defaults are the S7 default's)
+  const cellArgs = seqCellsArgsOf(knobsOf(ROUTE_MATCH_ARGS));
   store.register('fn.tk.s7.cellEvidence', { inParts: [SCENE, ROUTE_START_PART, ROUTE_HALLWAY_PART, 'tk.s7.holes', LANE_TRACKS_PART[4], LANE_TRACKS_PART[3]], outParts: [CELL_EVIDENCE_PART], code: CODE,
     calls: ['fn.q.trace.seqCells', 'fn.tk.s7.regionCondition', 'fn.q.route.region', 'fn.q.match.sensor', 'fn.q.match.kLegsMany', ...Object.keys(EVIDENCE_QUERIES)],
     note: `every perspective's reading on the S7 default's candidate cells (${S7_DEFAULT}): basket backwards, the lanes, the follower, the sensors, B*, meetings`,
     calculate: (io) => {
       const call = (fn, args) => io.call(fn, args).value, W = io.in(ROUTE_HALLWAY_PART).widthPx, c = io.in(SCENE), holesPart = io.in('tk.s7.holes');
-      if (!(W > 0)) return { [CELL_EVIDENCE_PART]: { schema: CELL_EVIDENCE_SCHEMA, condition: 'no hallway width: no evidence', cellRules, rows: [], emits: { cells: 0 } } };
-      const cells = call('fn.q.trace.seqCells', { rules: cellRules }), rules = { ...RULE_SETS[S7_DEFAULT] };
-      const ev = cellEvidenceOf({ cells, c, W, lanes4: io.in(LANE_TRACKS_PART[4]), lanes3: io.in(LANE_TRACKS_PART[3]), holesPart, call, rules });
+      if (!(W > 0)) return { [CELL_EVIDENCE_PART]: { schema: CELL_EVIDENCE_SCHEMA, condition: 'no hallway width: no evidence', cellsIdentity: null, rows: [], emits: { cells: 0 } } };
+      const cells = call('fn.q.trace.seqCells', cellArgs);
+      const ev = cellEvidenceOf({ cells, c, W, lanes4: io.in(LANE_TRACKS_PART[4]), lanes3: io.in(LANE_TRACKS_PART[3]), holesPart, call });
       // the picks: the default's final assignment and the evidence ranking's (EVIDENCE_WEIGHTS), over the same cells
       const holes = cells.starts.map((s) => s.hole), legsMany = (Sc, Vs, Wd) => call('fn.q.match.kLegsMany', { scene: SCENE, a: [Vs, Wd] });
-      const part0 = { cellRules, rows: ev.rows };
-      const pick = (rescore) => Object.fromEntries(seqFinalOf(cells, { holes, S: c, W, legsMany, rules: { ...rules }, rescore }).pairs.map(([i, k]) => [holes[i], k]));
-      const byDefault = pick(null), byEvidence = pick((cl) => evidenceRankOf(part0, cl, {}, cellRules));
+      const part0 = { cellsIdentity: cells.identity, rows: ev.rows };
+      const pick = (rescore) => Object.fromEntries(seqFinalOf(cells, { holes, S: c, W, legsMany, rescore }).pairs.map(([i, k]) => [holes[i], k]));
+      const byDefault = pick(null), byEvidence = pick((cl) => evidenceRankOf(part0, cl));
       const rows = ev.rows.map((r) => ({ ...r, defaultBasket: byDefault[r.hole] ?? null, evidenceBasket: byEvidence[r.hole] ?? null }));
       const nCells = rows.reduce((s, r) => s + (r.cells?.length ?? 0), 0), changed = rows.filter((r) => r.defaultBasket !== r.evidenceBasket).map((r) => r.hole);
-      return { [CELL_EVIDENCE_PART]: { schema: CELL_EVIDENCE_SCHEMA, reference: S7_DEFAULT, cellRules, widthPx: W, R1Px: c.R1, features: FEATURES, weights: EVIDENCE_WEIGHTS, evidence: EVIDENCE, units: EVIDENCE_UNITS,
+      return { [CELL_EVIDENCE_PART]: { schema: CELL_EVIDENCE_SCHEMA, reference: S7_DEFAULT, cellsIdentity: cells.identity, widthPx: W, R1Px: c.R1, features: FEATURES, weights: EVIDENCE_WEIGHTS, evidence: EVIDENCE, units: EVIDENCE_UNITS,
         baskets: holesPart.baskets.map((b) => ({ name: b.name, point: b.point })), rows, backTracks: ev.backTracks, changed, violations: ev.violations,
         rule: `per candidate cell of the S7 default (${S7_DEFAULT}: straight claims, top-3 neighbourhoods widened on reject, K-bend search, follower, owned corridors, no foreign C1): every perspective's reading in -1 .. 1 or UNKNOWN; combined P = logistic(EVIDENCE_WEIGHTS)`,
         emits: { cells: nCells, holes: rows.filter((r) => r.cells).length, basketsTraced: Object.keys(ev.backTracks).length, meets: ev.meets.met, meetCells: ev.meets.cells, changedPicks: changed.length, ...violationEmits(ev.violations) } } };

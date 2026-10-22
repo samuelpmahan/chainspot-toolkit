@@ -9,6 +9,6 @@ export const reads = ['tk.s7.holes'];
 export const calls = [...TRACE_CALLS];
 
 export default function routeMatchDenseSecondBend(parts) {
-  return tracesOf(traceQueries(parts.call)('routeMatch', { rules: RULE_SETS.routeMatchDenseSecondBend }), parts.get('tk.s7.holes'),
+  return tracesOf(traceQueries(parts.call)('routeMatch', { config: RULE_SETS.routeMatchDenseSecondBend }), parts.get('tk.s7.holes'),
     { rule: 'routeMatch, rule set: the second bend refined on match6.py\'s dense grid (rC1px)' });
 }

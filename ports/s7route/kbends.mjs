@@ -264,16 +264,17 @@ export function meanOf(V, legs) {
  * by the minimum leg length and by progress.
  */
 export function kChainAt(S, start, E, W, { legsOf = legContrastsOf, legsMany = legsManyOf(legsOf), one = null, foreign = null, sensorOf = null, endR1 = KBENDS.refineEndR1, gridR1 = KBENDS.gridR1,
-  polishEach = false, owned = null, turnKappa = 0, firstCap = null, unitPx = null } = {}) {
+  polishEach = false, owned = null, turnKappa = 0, firstCap = null, unitPx = null, bendGain = BENDS.gate.gain } = {}) {
   // rule set options: polishEach = every candidate polished on its weakest leg before it competes; owned = other holes' confirmed
-  // corridors no leg may run along; turnKappa = the price of turning (turnCostOf), a route's value = weakest leg - that price
+  // corridors no leg may run along; turnKappa = the price of turning (turnCostOf), a route's value = weakest leg - that price;
+  // bendGain = the per-bend sensor gate (rule set option bendGateGain; BENDS.gate.gain when absent)
   const pol = (r) => (polishEach && r ? polishAt(S, r, W, { legsMany, start, foreign, endR1, owned, unitPx }) : r);
   const val = (r) => r.bottleneck - turnCostOf(r.verts, turnKappa);
   const seeds = [kChainStartAt(S, start, E, W, { legsMany, foreign }), one].filter((r) => r && r.bottleneck !== null && !(owned && routeRunsAlong(r.verts, owned, W))).map(pol).filter((r) => r.bottleneck !== null);
   if (!seeds.length) return null;
   let best = null, raw = null, splits = 0;
   const sBest = new Map(), sensorAt = (route) => { if (!sBest.has(route)) sBest.set(route, sensorOf(route.verts)); return sBest.get(route); };
-  const gate = (r, b) => !sensorOf || sensorAt(r) > sensorAt(b) + BENDS.gate.gain * (r.verts.length - b.verts.length);
+  const gate = (r, b) => !sensorOf || sensorAt(r) > sensorAt(b) + bendGain * (r.verts.length - b.verts.length);
   for (let r of seeds) {
     if (!best || val(r) > val(best)) best = r;
     if (!raw || r.bottleneck > raw.bottleneck) raw = r;
@@ -282,7 +283,7 @@ export function kChainAt(S, start, E, W, { legsOf = legContrastsOf, legsMany = l
       // best first leg on the axis, firstCap); a passFrac is at most 1, so the per-bend sensor gate ends the search
       const bound = polishEach ? firstCap : r.legs[0];
       if (bound !== null && bound <= val(best) && (!turnKappa || bound <= raw.bottleneck)) break;
-      if (sensorOf && sensorAt(best) + BENDS.gate.gain * (r.verts.length + 1 - best.verts.length) >= 1) break;
+      if (sensorOf && sensorAt(best) + bendGain * (r.verts.length + 1 - best.verts.length) >= 1) break;
       const nx = kSplitAt(S, r.verts, r.legs, W, { legsMany, foreign, endR1, gridR1, owned, unitPx }); splits++;
       if (!nx || !(Math.max(...nx.split.halves.map((c) => c ?? -Infinity)) > nx.split.before)) break;
       r = pol({ verts: nx.verts, legs: nx.legs, bottleneck: nx.bottleneck });

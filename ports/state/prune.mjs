@@ -14,7 +14,9 @@
  *                  s4r JSON, notes) and the attempt's <stage-output>/state/*,
  *              and deletes the rest
  *
- * Nothing outside attempts/stages is touched (attempts/cas has its own `pxc cas --prune-older-than`). Bytes are counted
+ *   sweeps     attempts/sweeps/<id> (S7 grid sweeps): deleted when nothing modified it for H hours and no docs/evidence file names it
+ *
+ * Nothing else outside attempts/stages is touched (attempts/cas has its own `pxc cas --prune-older-than`). Bytes are counted
  * per inode: a hardlinked file frees its bytes only when every link to it is deleted, so the total is what the disk
  * gets back. --dry-run deletes nothing and prints the same report.
  */
@@ -69,7 +71,12 @@ export function runPlan(stageOutput, referenced) {
 /** The plan for <root>/attempts/stages, and (unless dryRun) its execution. */
 export function prune({ root = ROOT, dryRun = false, hours = 12, now = Date.now() } = {}) {
   const stages = join(root, 'attempts', 'stages');
-  if (!existsSync(stages)) return { root, removedAttempts: [], keptAttempts: [], runs: [], bytes: 0, files: 0 };
+  const sweeps = sweepsOf(root, { now }), sweepsRemoved = sweeps.filter((w) => !w.cited && w.ageHours >= hours);
+  if (!existsSync(stages)) {
+    const f = freedBy(sweepsRemoved.map((w) => w.path));
+    if (!dryRun) for (const w of sweepsRemoved) rmSync(w.path, { recursive: true, force: true });
+    return { root, dryRun, hours, removedAttempts: [], keptAttempts: [], runs: [], evidenceNamed: [], sweepsRemoved: sweepsRemoved.map((w) => w.id), sweepsKept: sweeps.filter((w) => !sweepsRemoved.includes(w)).map((w) => w.id), ...f };
+  }
   const listed = listedAnywhere(root);
   const ids = [...new Set(readdirSync(stages).map((n) => n.replace(/\.json$/, '')).filter((n) => ATTEMPT.test(n)))].sort();
   const pathsOf = (id) => [join(stages, id), join(stages, `${id}.json`)].filter((p) => existsSync(p));
@@ -83,11 +90,12 @@ export function prune({ root = ROOT, dryRun = false, hours = 12, now = Date.now(
   const outs = kept.map((k) => join(stages, k.id, 'fork', 'stage-output')).filter((p) => existsSync(p));
   const referenced = referencedRuns(root, outs);
   const runs = kept.flatMap((k) => runPlan(join(stages, k.id, 'fork', 'stage-output'), referenced).map((r) => ({ attempt: k.id, ...r }))).filter((r) => r.remove.length);
-  const doomed = [...removed.flatMap((r) => r.paths), ...runs.flatMap((r) => r.remove.map((n) => join(r.dir, n)))];
+  const doomed = [...removed.flatMap((r) => r.paths), ...runs.flatMap((r) => r.remove.map((n) => join(r.dir, n))), ...sweepsRemoved.map((w) => w.path)];
   const { bytes, apparent, files } = freedBy(doomed);
   if (!dryRun) for (const p of doomed) rmSync(p, { recursive: true, force: true });
   const evidenceNamed = removed.map((r) => r.id).filter((id) => referencedIn(root, id));
-  return { root, dryRun, hours, keptAttempts: kept, removedAttempts: removed.map(({ id, ageHours }) => ({ id, ageHours })), runs, bytes, apparent, files, evidenceNamed };
+  return { root, dryRun, hours, keptAttempts: kept, removedAttempts: removed.map(({ id, ageHours }) => ({ id, ageHours })), runs, bytes, apparent, files, evidenceNamed,
+    sweepsRemoved: sweepsRemoved.map((w) => w.id), sweepsKept: sweeps.filter((w) => !sweepsRemoved.includes(w)).map((w) => w.id) };
 }
 
 /** Bytes the disk gets back by deleting `paths`: an inode is freed only when every one of its links is deleted. */
@@ -129,32 +137,49 @@ export function listedAnywhere(root) {
  */
 export function clean({ root = ROOT, dryRun = false } = {}) {
   const stages = join(root, 'attempts', 'stages');
-  if (!existsSync(stages)) return { root, dryRun, removed: [], kept: [], bytes: 0, apparent: 0, files: 0 };
   const me = realpathSync(root), listed = listedAnywhere(root), removed = [], kept = [];
-  for (const n of readdirSync(stages).filter((n) => n.endsWith('.json') && ATTEMPT.test(n.slice(0, -5))).sort()) {
+  const sweeps = sweepsOf(root).filter((w) => w.mine), sweepsRemoved = sweeps.filter((w) => !w.cited);
+  for (const n of (existsSync(stages) ? readdirSync(stages) : []).filter((n) => n.endsWith('.json') && ATTEMPT.test(n.slice(0, -5))).sort()) {
     const id = n.slice(0, -5);
     let by = null; try { by = JSON.parse(readFileSync(join(stages, n), 'utf8')).createdBy?.checkout ?? null; } catch { by = null; }
     if (by !== me) continue;
     if (listed.has(id)) { kept.push({ id, why: 'listed in an ATTEMPTS file' }); continue; }
     removed.push({ id, paths: [join(stages, id), join(stages, n)].filter((p) => existsSync(p)) });
   }
-  const doomed = removed.flatMap((r) => r.paths), freed = freedBy(doomed);
+  const doomed = [...removed.flatMap((r) => r.paths), ...sweepsRemoved.map((w) => w.path)], freed = freedBy(doomed);
   if (!dryRun) for (const p of doomed) rmSync(p, { recursive: true, force: true });
-  return { root, me, dryRun, removed: removed.map((r) => r.id), kept, ...freed };
+  return { root, me, dryRun, removed: removed.map((r) => r.id), kept, sweepsRemoved: sweepsRemoved.map((w) => w.id), sweepsKept: sweeps.filter((w) => w.cited).map((w) => ({ id: w.id, why: 'named under docs/evidence' })), ...freed };
 }
 
 export function cleanCommand(args, { say = (s = '') => process.stdout.write(s + '\n') } = {}) {
   const at = (k) => (args.includes(k) ? args[args.indexOf(k) + 1] : undefined);
   const r = clean({ root: resolve(at('--root') ?? ROOT), dryRun: args.includes('--dry-run') });
   if (args.includes('--json')) { say(JSON.stringify(r, null, 1)); return r; }
-  say(`${r.me ?? r.root}: ${r.dryRun ? 'would delete' : 'deleted'} ${r.removed.length} attempts this checkout created${r.kept.length ? `; kept ${r.kept.length} listed in ATTEMPTS` : ''}; ${r.dryRun ? 'would free' : 'freed'} ${mb(r.bytes)}`);
+  say(`${r.me ?? r.root}: ${r.dryRun ? 'would delete' : 'deleted'} ${r.removed.length} attempts this checkout created${r.kept.length ? `; kept ${r.kept.length} listed in ATTEMPTS` : ''}; ${r.sweepsRemoved.length} sweeps (attempts/sweeps)${r.sweepsKept.length ? `, kept ${r.sweepsKept.length} named under docs/evidence (${r.sweepsKept.map((k) => k.id).join(', ')})` : ''}; ${r.dryRun ? 'would free' : 'freed'} ${mb(r.bytes)}`);
   return r;
 }
 
-let evidenceText = null;
+const evidenceText = new Map();   // root -> every evidence file's text, read once per process
 function referencedIn(root, id) {
-  if (evidenceText === null) { evidenceText = ''; walk(join(root, 'docs', 'evidence'), (f, st) => { if (st.isFile() && /\.(md|json|txt|mjs|py)$/.test(f) && st.size < 64e6) evidenceText += readFileSync(f, 'utf8'); }); }
-  return evidenceText.includes(id);
+  if (!evidenceText.has(root)) { let t = ''; walk(join(root, 'docs', 'evidence'), (f, st) => { if (st.isFile() && /\.(md|json|txt|mjs|py)$/.test(f) && st.size < 64e6) t += readFileSync(f, 'utf8'); }); evidenceText.set(root, t); }
+  return evidenceText.get(root).includes(id);
+}
+
+/**
+ * S7 grid sweeps (attempts/sweeps/<id>/, ports/s7trace/gridSweep.mjs): small (cells of routes and metrics, no images) and
+ * reproducible from their spec. A sweep whose id a file under docs/evidence names is kept (its results are cited); otherwise
+ * `pxc clean` deletes the sweeps this checkout created (sweep.json createdBy.checkout) and `pxc prune` the sweeps nothing has
+ * modified for H hours. -> [{ id, path, mine, ageHours, cited }]
+ */
+export function sweepsOf(root, { now = Date.now() } = {}) {
+  const base = join(root, 'attempts', 'sweeps');
+  if (!existsSync(base)) return [];
+  let me = null; try { me = realpathSync(root); } catch { me = root; }
+  return readdirSync(base).filter((id) => lstatSync(join(base, id)).isDirectory()).sort().map((id) => {
+    const path = join(base, id);
+    let by = null; try { by = JSON.parse(readFileSync(join(path, 'sweep.json'), 'utf8')).createdBy?.checkout ?? null; } catch { by = null; }
+    return { id, path, mine: by === me, ageHours: Math.round((now - newestMtime([path])) / 3600e3 * 10) / 10, cited: referencedIn(root, id) };
+  });
 }
 
 const mb = (n) => `${(n / 1e6).toFixed(1)} MB`;
@@ -166,6 +191,7 @@ export function pruneCommand(args, { say = (s = '') => process.stdout.write(s + 
   say(`${r.root}/attempts/stages: keep ${r.keptAttempts.length} attempts (${r.keptAttempts.map((k) => `${k.id} [${k.why}]`).join(', ')})`);
   say(`  delete ${r.removedAttempts.length} attempts${r.evidenceNamed.length ? `; ${r.evidenceNamed.length} of them are named under docs/evidence (those citations will dangle): ${r.evidenceNamed.join(', ')}` : ''}`);
   for (const run of r.runs) say(`  ${run.attempt} ${run.dir.split('stage-output/')[1] ?? run.dir}: keep ${run.keep.join(', ')}; delete ${run.remove.length} older run(s)`);
+  say(`  attempts/sweeps: delete ${r.sweepsRemoved.length} (unmodified for ${r.hours} h and named nowhere under docs/evidence)${r.sweepsRemoved.length ? `: ${r.sweepsRemoved.join(', ')}` : ''}; keep ${r.sweepsKept.length}`);
   say(`${verb} ${mb(r.bytes)} (${(r.bytes / 1e9).toFixed(2)} GB) on disk; ${r.files} files, ${mb(r.apparent)} apparent (hardlinked files count once, and only when every link goes)${r.dryRun ? '; dry run: nothing deleted' : ''}`);
   return r;
 }

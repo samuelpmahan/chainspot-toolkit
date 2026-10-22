@@ -1,0 +1,19 @@
+{
+  "schema": "s7-grid@1",
+  "name": "s7-first-grid",
+  "note": "The first S7 grid (2026-10-22): six knobs the lanes changed one sibling at a time, over the S7 default, subsampled (seeded: the same 220 of the 324 combinations whatever n up to 220, since a larger n keeps the same permutation's prefix); the evidence ranking is crossed with every kept config, because its twin shares the sequencing's cells and costs only the final ranking. The per-bend gate is one option over two steps' knobs (the sequencing's chain and follower gate, the placement's gate), as the recorded gate was one constant.",
+  "axes": [
+    { "knob": "fn.q.trace.seqCells#firstLegs", "values": [false, true] },
+    { "knob": "fn.q.trace.seqCells#refineStarts", "values": [1, 3, 5] },
+    { "knob": "fn.q.trace.seqCells#neighbours", "values": [3, 5] },
+    { "name": "bendGate", "options": {
+      "0.03": { "fn.q.trace.seqCells": { "bendGain": 0.03 }, "fn.q.match.placeBends": { "gain": 0.03 } },
+      "0.05": { "fn.q.trace.seqCells": { "bendGain": 0.05 }, "fn.q.match.placeBends": { "gain": 0.05 } },
+      "0.08": { "fn.q.trace.seqCells": { "bendGain": 0.08 }, "fn.q.match.placeBends": { "gain": 0.08 } } } },
+    { "knob": "fn.q.trace.seqCells#turnKappa", "values": [5, 10, 20] },
+    { "knob": "fn.q.match.followW#runW", "values": [2.4, 3.4, 4.4] }
+  ],
+  "cross": [{ "knob": "fn.q.trace.routeMatch#evidenceRank", "values": [false, true] }],
+  "sample": { "n": 220, "seed": 2026 },
+  "include": ["routeMatchKBendsSeq3SearchWFirstLegs", "routeMatchKBendsSeq3SearchWEvidence"]
+}

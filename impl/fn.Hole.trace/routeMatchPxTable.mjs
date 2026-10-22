@@ -10,6 +10,6 @@ export const reads = ['tk.s7.holes'];
 export const calls = [...TRACE_CALLS];
 
 export default function routeMatchPxTable(parts) {
-  return tracesOf(traceQueries(parts.call)('routeMatch', { rules: RULE_SETS.routeMatchPxTable }), parts.get('tk.s7.holes'),
+  return tracesOf(traceQueries(parts.call)('routeMatch', { config: RULE_SETS.routeMatchPxTable }), parts.get('tk.s7.holes'),
     { rule: 'routeMatch, rule set: the table and the 1-bend refine in the recorded px' });
 }
