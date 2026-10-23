@@ -53,15 +53,21 @@ import { performance } from 'node:perf_hooks';
 export function createInstrumentation() {
   const ops = [];
   const calculations = [];
+  // per-stage wall times of the early run (runEarly): sidecar only, never in run.receipt.json, whose bytes are hashed
+  const stages = [];
+  // the clock fields withoutTime() took out of run.receipt.json (the provider's Tick testimony times)
+  const receiptTimings = [];
   // wall time from here to the document (fg/profile.mjs profileLines: the time outside every store call is the run's
   // un-itemised remainder); processMs: since the process started, module loading included
   const startedMs = performance.now();
   return {
     ops,
     calculations,
+    stages,
+    receiptTimings,
     document({ store = null } = {}) {
       const at = performance.now();
-      return { schema: 'nctk-instrumentation@1', wallMs: roundMs(at - startedMs), processMs: roundMs(at), ops, calculations: [...calculations].sort((a, b) => a.seq - b.seq), ...(store ? { store } : {}) };
+      return { schema: 'nctk-instrumentation@1', wallMs: roundMs(at - startedMs), processMs: roundMs(at), ops, ...(stages.length ? { stages } : {}), ...(receiptTimings.length ? { receiptTimings } : {}), calculations: [...calculations].sort((a, b) => a.seq - b.seq), ...(store ? { store } : {}) };
     }
   };
 }
@@ -100,4 +106,24 @@ export function executePlanInstrumented(instrumentation, site, executeCompiledPl
     });
   }
   return ticks;
+}
+
+/**
+ * A hashed record without its clock: every `startedAtMs` / `durationMs` field (the provider's Tick testimony carries both)
+ * is removed from `record` and returned beside it as `timings` [{ path, startedAtMs?, durationMs? }], for a sidecar. A
+ * receipt's bytes are hashed into attempt evidence, so two identical runs must write identical receipts (2026-10-23:
+ * claude-ed found stage durations and tick times inside run.receipt.json).
+ */
+export const TIME_FIELDS = Object.freeze(['startedAtMs', 'durationMs']);
+export function withoutTime(record) {
+  const timings = [];
+  const strip = (v, path) => {
+    if (Array.isArray(v)) return v.map((x, i) => strip(x, `${path}[${i}]`));
+    if (!v || typeof v !== 'object' || ArrayBuffer.isView(v)) return v;
+    const out = {}, t = {};
+    for (const [k, x] of Object.entries(v)) { if (TIME_FIELDS.includes(k) && typeof x === 'number') t[k] = x; else out[k] = strip(x, `${path}.${k}`); }
+    if (Object.keys(t).length) timings.push({ path, ...t });
+    return out;
+  };
+  return { record: strip(record, '$'), timings };
 }

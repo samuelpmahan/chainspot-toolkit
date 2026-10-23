@@ -256,8 +256,10 @@ export async function runBasketRecovery({ forkRoot, receiptPath, sourcePath, out
   writeFileSync(join(out, 'basket-bridge.tick-traffic.json'), pretty({ ticks: testimonies.map((testimony) => ({
     id: testimony.opId, declared: { consumes: op.consumes, produces: op.produces, calculations: op.calculations },
     actual: { consumes: testimony.actualConsumes, produces: testimony.actualProduces, writes: testimony.writes },
-    frozenCalculations: testimony.frozenCalculations, durationMs: testimony.durationMs
+    frozenCalculations: testimony.frozenCalculations
   })) }));
+  // tick wall times: a sidecar, never in the hashed tick traffic (two identical runs must write identical records)
+  writeFileSync(join(out, 'basket-bridge.instrumentation.json'), pretty({ schema: 'nctk-instrumentation@1', ticks: testimonies.map((testimony) => ({ id: testimony.opId, durationMs: testimony.durationMs })) }));
   return receipt;
 }
 

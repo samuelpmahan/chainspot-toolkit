@@ -10,7 +10,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 
 import { basename, extname, join, relative, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-import { createInstrumentation } from './instrument.mjs';
+import { createInstrumentation, withoutTime } from './instrument.mjs';
 import { createEarlyStore, sealStage, NoBadgesCondition } from './earlyStore.mjs';
 import { runStageGuarantees, attachPublished } from './stageGuarantees.mjs';
 import { isCaptureManifest, runCapture } from '../capture/capture.mjs';
@@ -66,6 +66,8 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
   // (instrumentation.json) beside run.receipt.json at the end of the run;
   // it never enters the receipt, whose bytes are hashed into evidence.
   const instrumentation = createInstrumentation();
+  // run.receipt.json is hashed evidence: written without its clock fields, which go to the instrumentation sidecar
+  const writeReceipt = (receipt) => { const { record, timings } = withoutTime(receipt); instrumentation.receiptTimings.splice(0, Infinity, ...timings); writeFileSync(join(out, 'run.receipt.json'), json(record)); };
 
   // S0 takes a capture (ports/capture/capture.mjs): a *.capture.json source is 2..N tiles of one course, stitched into one
   // course raster before the stage gateways run; from here on the run's source is that raster (S1-S7 see one course).
@@ -120,7 +122,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     const conditionReceipt = (condition, counts) => {
       const receipt = { schema: 'nctk-early@1', source: { path: source, sha256: sourceSha256 }, stages, condition, counts,
         notRun: stageOrder.slice(stageOrder.indexOf(id) + 1).concat(['S4', 'S5', 'S6', 'S7']), crop: store.has('tk.source.cropReceipt') ? store.get('tk.source.cropReceipt') : null, snapshot: null, experiments: { gates: {}, branches: {} } };
-      writeFileSync(join(out, 'run.receipt.json'), json(receipt));
+      writeReceipt(receipt);
       writeFileSync(join(out, 'instrumentation.json'), json(instrumentation.document({ store: store.manifest() })));
       return receipt;
     };
@@ -149,7 +151,6 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
       receipt: result.receiptText,
       pcr: captured(id).pcr,
       ticks: tickView(captured(id).pcr),
-      durationMs: Date.now() - started,
       invocationLimit: 'one clean gateway invocation for this stage in this run',
       inputSourceSha256: id === 'S0' ? sourceSha256 : null,
       inputCanonicalRgbaSha256: id === 'S0' ? null : (stages.at(-1)?.canonicalRgbaSha256 ?? null),
@@ -159,6 +160,8 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
       panels: result.panels.map((panel) => ({ label: panel.label, widthPx: panel.widthPx, heightPx: panel.heightPx }))
     };
     stages.push(stage);
+    // the stage's wall time goes to the instrumentation sidecar, never into run.receipt.json (its bytes are hashed evidence)
+    instrumentation.stages.push({ id, wallMs: Date.now() - started });
     const addresses = [...new Set([
       'px.source.selectedInput', 'px.source.fullImage', 'px.course.canonicalPixels',
       'localImage', 'viewport',
@@ -316,7 +319,7 @@ export async function runEarly({ forkRoot, sourcePath, outDir, experiments = [],
     testimonyScope: 'Compiled gateway PCR operation testimony: declared/actual Part traffic, writes, frozen calculation bindings, and artifact hashes. It does not independently prove semantic correctness or every internal read/cache effect.'
   };
   uninstallTee?.();
-  writeFileSync(join(out, 'run.receipt.json'), json(receipt));
+  writeReceipt(receipt);
   writeFileSync(join(out, 'tick-traffic.json'), json({ stages: Object.fromEntries(stages.map(({ id, ticks }) => [id, ticks])), experiments: branchResults }));
   // Auto-instrumentation sidecar: per-op timing and verbatim emits for every
   // compiled-plan op this runner executed. A sidecar, not receipt content,

@@ -7,6 +7,7 @@ import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { safePath, sha } from '../facts.mjs';
 import { installModules, verifyModules } from '../dependencies/localci.mjs';
+import { withoutTime } from './early/instrument.mjs';
 const exec=promisify(execFile);
 
 export async function outputFiles(root,path='stage-output') {
@@ -110,7 +111,9 @@ async function worker() {
       earlyOutDir:join(forkRoot,out,'early'),until:Math.min(request.until,6),
       lanes:request.lanes.filter(x=>['s4.openFrame','s4.singletonPropagation','s5.exactCellPose','s5.globalAssignment','s6.axisPropagation'].includes(x)),
       basketBridge});
-    await writeFile(join(forkRoot,out,'late/run.receipt.json'),JSON.stringify(late,null,2)+'\n');
+    {const {record,timings}=withoutTime(late);   // hashed evidence without its clock; the Tick times go to a sidecar
+    await writeFile(join(forkRoot,out,'late/run.receipt.json'),JSON.stringify(record,null,2)+'\n');
+    if(timings.length)await writeFile(join(forkRoot,out,'late/run.timings.json'),JSON.stringify({schema:'nctk-instrumentation@1',receiptTimings:timings},null,2)+'\n');}
   }
   if(request.until===7) {
     const {runS7}=await import('./s7.mjs');

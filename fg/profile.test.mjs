@@ -58,3 +58,12 @@ test('profileLines: wall, the time inside and outside store calls, self time fir
   assert.match(lines[2], /fn\.q\.small/);
   assert.match(lines[3], /OPAQUE HOT SPOT fn\.q\.big/);
 });
+
+// 2026-10-23 (claude-ed's review of the remainder): the time outside store calls is kept signed; a negative one is a
+// conservation violation printed loudly, never clamped to zero.
+test('profileLines: the outside remainder is signed, a negative one is a conservation violation', async () => {
+  const { profileLines } = await import('./profile.mjs');
+  const call = (ms) => ({ seq: 1, parent: null, depth: 0, calculation: 'fn.x', elapsedMs: ms, status: 'ok', emits: null });
+  assert.match(profileLines({ wallMs: 1000, calculations: [call(600)] })[0], /outside 0\.4 s \(40%: not itemised\)/);
+  assert.match(profileLines({ wallMs: 1000, calculations: [call(1500)] })[0], /outside -0\.5 s: CONSERVATION VIOLATED/);
+});

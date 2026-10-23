@@ -127,6 +127,13 @@ distance about 40 pad lengths, past S3's 12.)
 A window or step of a measurement (a read-ahead, a search step, a lateral precision) is not a bound: it takes the unit
 of what it measures.
 
+**The budget: under 5 seconds on a phone (Sam, since August 2026; written down 2026-10-23).** "5s has been my budget since
+August. Not my fault YOU didn't put together that people might use the app on a phone." People use ChainSpot on a phone,
+so the whole automatic pass is judged against 5 s on a phone, not desktop wall time. Until 2026-10-23 no repository
+recorded it, and nothing has been measured on a phone yet: every timing on record is desktop Node or desktop headless Chromium
+(the app's 4 s browser deadline, `src/lib/autoAnnotation/activeReview.ts`, is the nearest). Time is still a sidecar: it
+orders and budgets work, it never decides an answer (S4-S6 ties go to a named default, not to the fastest).
+
 **Assumptions are stated, fail loudly, and try to correct (Sam, 2026-10-21).** "I can already see this being a giant
 foot gun stripping out optimizations in the name of purity. We need a middle path which states and justifies the
 assumptions but fails loudly AND TRIES TO CORRECT." A bound on a VARIABLE quantity (hole length, leg length,

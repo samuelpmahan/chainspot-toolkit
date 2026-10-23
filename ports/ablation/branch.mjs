@@ -28,6 +28,7 @@ import { dirname, join, resolve } from 'node:path';
 import { promisify } from 'node:util';
 import { deserialize, serialize } from '../../fg/pxcCodec.mjs';   // node:v8 with packed typed arrays
 import { extractParts } from './parts.mjs';
+import { withoutTime } from '../early/instrument.mjs';
 
 const exec = promisify(execFile);
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
@@ -93,13 +94,13 @@ export async function runBranch({ upstream, fork: forkSpec, ctx, outDir, modules
   writeFileSync(join(earlyDir, 's3.pxc.bin'), bytes);
   const early = { ...upstream.early, snapshot: { ...upstream.early.snapshot, path: join(earlyDir, 's3.pxc.bin'), sha256: snapshotSha256 },
     ablation: { fork: { id: forkSpec.id, at: forkSpec.at }, sealedUpstreamSnapshotSha256: upstream.early.snapshot.sha256, delta } };
-  writeFileSync(join(earlyDir, 'run.receipt.json'), JSON.stringify(early, null, 2) + '\n');
+  writeFileSync(join(earlyDir, 'run.receipt.json'), JSON.stringify(withoutTime(early).record, null, 2) + '\n');   // hashed evidence: no clock fields
   timings.forkMs = ms(t);
   // 2. S4..S6, re-executed by the Attempt's own runLate.
   t = performance.now();
   const late = await modules.runLate({ forkRoot: root, sourcePath: upstream.request.sourcePath, outDir: join(outDir, 'late'),
     early, earlyOutDir: earlyDir, until: Math.min(upstream.request.until, 6), lanes: lanes.filter((x) => LATE_LANES.includes(x)), basketBridge: null });
-  writeFileSync(join(outDir, 'late/run.receipt.json'), JSON.stringify(late, null, 2) + '\n');
+  writeFileSync(join(outDir, 'late/run.receipt.json'), JSON.stringify(withoutTime(late).record, null, 2) + '\n');   // hashed evidence: no clock fields
   timings.s4s6Ms = ms(t);
   // 3. observe px.s4.teeBadge.state (same runS4 call runLate makes).
   t = performance.now();
